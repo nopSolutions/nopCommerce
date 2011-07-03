@@ -1,0 +1,3713 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:ed="urn:ebay:apis:EnhancedDataTypes" xmlns:ebl="urn:ebay:apis:eBLBaseComponents" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:ns="urn:ebay:api:PayPalAPI" xmlns:cc="urn:ebay:apis:CoreComponentTypes" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ns:version="63.0" targetNamespace="urn:ebay:api:PayPalAPI" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema xmlns="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="urn:ebay:api:PayPalAPI">
+      <xsd:import schemaLocation="CoreComponentTypes.xsd" namespace="urn:ebay:apis:CoreComponentTypes" />
+      <xsd:import schemaLocation="eBLBaseComponents.xsd" namespace="urn:ebay:apis:eBLBaseComponents" />
+      <xsd:import schemaLocation="EnhancedDataTypes.xsd" namespace="urn:ebay:apis:EnhancedDataTypes" />
+      <xsd:element name="RequesterCredentials" type="ebl:CustomSecurityHeaderType" />
+      <xsd:complexType name="InstallmentDetailsType">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="BillingPeriod" type="ebl:BillingPeriodType">
+            <xsd:annotation>
+              <xsd:documentation>
+							Installment Period.
+								<br /><b>Optional</b><br /></xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="BillingFrequency" type="xsd:int">
+            <xsd:annotation>
+              <xsd:documentation>
+							Installment Frequency.
+								<br /><b>Optional</b><br /></xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="TotalBillingCycles" type="xsd:int">
+            <xsd:annotation>
+              <xsd:documentation>
+							Installment Cycles.
+								<br /><b>Optional</b><br /></xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="Amount" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+							Installment Amount.
+								<br /><b>Optional</b><br /></xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="ShippingAmount" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+							Installment Amount.
+								<br /><b>Optional</b><br /></xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="TaxAmount" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+							Installment Amount.
+								<br /><b>Optional</b><br /></xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="OptionSelectionDetailsType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="OptionSelection" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+								Option Selection.
+								<br /><b>Required</b><br />
+								Character length and limitations: 12 single-byte alphanumeric characters
+							</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="Price" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+								Option Price.
+								<br /><b>Optional</b><br /></xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="OptionType" type="ebl:OptionTypeListType">
+            <xsd:annotation>
+              <xsd:documentation>
+								Option Type
+								<br /><b>Optional</b><br /></xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="10" name="PaymentPeriod" type="ns:InstallmentDetailsType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="OptionDetailsType">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="OptionName" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+								Option Name.
+								<br /><b>Optional</b><br /></xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="100" name="OptionSelectionDetails" type="ns:OptionSelectionDetailsType" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="BMCreateButtonRequest" type="ns:BMCreateButtonRequestType" />
+      <xsd:element name="BMCreateButtonResponse" type="ns:BMCreateButtonResponseType" />
+      <xsd:element name="BMCreateButtonReq">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="ns:BMCreateButtonRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="BMCreateButtonRequestType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractRequestType">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="ButtonType" type="ebl:ButtonTypeType">
+                <xsd:annotation>
+                  <xsd:documentation>
+										Type of Button to create.
+										<br /><br /><b>Required</b><br /><br />
+						Must be one of the following: BUYNOW, CART, GIFTCERTIFICATE. SUBSCRIBE, PAYMENTPLAN, AUTOBILLING, DONATE, VIEWCART or UNSUBSCRIBE
+									</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="ButtonCode" type="ebl:ButtonCodeType">
+                <xsd:annotation>
+                  <xsd:documentation>
+										button code.
+										<br /><br /><b>optional</b><br /><br />
+						Must be one of the following: hosted, encrypted or cleartext
+									</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="ButtonSubType" type="ebl:ButtonSubTypeType">
+                <xsd:annotation>
+                  <xsd:documentation>
+										Button sub type.
+										<br /><br /><b>optional for button types buynow and cart only</b><br /><br />
+						Must Be either PRODUCTS or SERVICES
+									</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1000" name="ButtonVar" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation>
+										Button Variable information
+										<br /><br /><b>At least one required recurring</b><br /><br />
+						Character length and limitations: 63 single-byte alphanumeric characters
+									</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="5" name="OptionDetails" type="ns:OptionDetailsType" />
+              <xsd:element minOccurs="0" maxOccurs="2" name="TextBox" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation>
+										Details of each option for the button.
+										<br /><br /><b>Optional</b><br /></xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="ButtonImage" type="ebl:ButtonImageType">
+                <xsd:annotation>
+                  <xsd:documentation>
+										Button image to use.
+										<br /><br /><b>Optional</b><br /><br />
+						Must be one of: REG, SML, or CC
+									</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="ButtonImageURL" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation>
+										Button URL for custom button image.
+										<br /><br /><b>Optional</b><br /><br />
+						Character length and limitations: 127 single-byte alphanumeric characters
+									</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="BuyNowText" type="ebl:BuyNowTextType">
+                <xsd:annotation>
+                  <xsd:documentation>
+										Text to use on Buy Now Button.
+										<br /><br /><b>Optional</b><br /><br />
+						Must be either BUYNOW or PAYNOW
+									</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="SubscribeText" type="ebl:SubscribeTextType">
+                <xsd:annotation>
+                  <xsd:documentation>
+										Text to use on Subscribe button.
+										<br /><br /><b>Optional</b><br /><br />
+						Must be either BUYNOW or SUBSCRIBE
+									</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="ButtonCountry" type="ebl:CountryCodeType">
+                <xsd:annotation>
+                  <xsd:documentation>
+										Button Country.
+										<br /><br /><b>Optional</b><br /><br />
+						Must be valid ISO country code
+									</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="ButtonLanguage" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation>
+										Button language code.
+										<br /><br /><b>Optional</b><br /><br />
+						Character length and limitations: 3 single-byte alphanumeric characters
+									</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="BMCreateButtonResponseType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractResponseType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="Website" type="xsd:string" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="Email" type="xsd:string" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="Mobile" type="xsd:string" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="HostedButtonID" type="xsd:string" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="BMUpdateButtonRequest" type="ns:BMUpdateButtonRequestType" />
+      <xsd:element name="BMUpdateButtonResponse" type="ns:BMUpdateButtonResponseType" />
+      <xsd:element name="BMUpdateButtonReq">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="ns:BMUpdateButtonRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="BMUpdateButtonRequestType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractRequestType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="HostedButtonID" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation>
+										Hosted Button id of the button to update.
+										<br /><br /><b>Required</b><br /><br />
+					Character length and limitations: 10 single-byte numeric characters
+									</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="ButtonType" type="ebl:ButtonTypeType">
+                <xsd:annotation>
+                  <xsd:documentation>
+										Type of Button to create.
+										<br /><br /><b>Required</b><br /><br />
+						Must be one of the following: BUYNOW, CART, GIFTCERTIFICATE. SUBSCRIBE, PAYMENTPLAN, AUTOBILLING, DONATE, VIEWCART or UNSUBSCRIBE
+									</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="ButtonCode" type="ebl:ButtonCodeType">
+                <xsd:annotation>
+                  <xsd:documentation>
+										button code.
+										<br /><br /><b>optional</b><br /><br />
+						Must be one of the following: hosted, encrypted or cleartext
+									</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="ButtonSubType" type="ebl:ButtonSubTypeType">
+                <xsd:annotation>
+                  <xsd:documentation>
+										Button sub type.
+										<br /><br /><b>optional for button types buynow and cart only</b><br /><br />
+						Must Be either PRODUCTS or SERVICES
+									</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1000" name="ButtonVar" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation>
+										Button Variable information
+										<br /><br /><b>At least one required recurring</b><br /><br />
+						Character length and limitations: 63 single-byte alphanumeric characters
+									</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="5" name="OptionDetails" type="ns:OptionDetailsType" />
+              <xsd:element minOccurs="0" maxOccurs="2" name="TextBox" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation>
+										Details of each option for the button.
+										<br /><br /><b>Optional</b><br /></xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="ButtonImage" type="ebl:ButtonImageType">
+                <xsd:annotation>
+                  <xsd:documentation>
+										Button image to use.
+										<br /><br /><b>Optional</b><br /><br />
+						Must be one of: REG, SML, or CC
+									</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="ButtonImageURL" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation>
+										Button URL for custom button image.
+										<br /><br /><b>Optional</b><br /><br />
+						Character length and limitations: 127 single-byte alphanumeric characters
+									</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="BuyNowText" type="ebl:BuyNowTextType">
+                <xsd:annotation>
+                  <xsd:documentation>
+										Text to use on Buy Now Button.
+										<br /><br /><b>Optional</b><br /><br />
+						Must be either BUYNOW or PAYNOW
+									</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="SubscribeText" type="ebl:SubscribeTextType">
+                <xsd:annotation>
+                  <xsd:documentation>
+										Text to use on Subscribe button.
+										<br /><br /><b>Optional</b><br /><br />
+						Must be either BUYNOW or SUBSCRIBE
+									</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="ButtonCountry" type="ebl:CountryCodeType">
+                <xsd:annotation>
+                  <xsd:documentation>
+										Button Country.
+										<br /><br /><b>Optional</b><br /><br />
+						Must be valid ISO country code
+									</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="ButtonLanguage" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation>
+										Button language code.
+										<br /><br /><b>Optional</b><br /><br />
+						Character length and limitations: 2 single-byte alphanumeric characters
+									</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="BMUpdateButtonResponseType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractResponseType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="Website" type="xsd:string" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="Email" type="xsd:string" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="Mobile" type="xsd:string" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="HostedButtonID" type="xsd:string" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="BMManageButtonStatusRequest" type="ns:BMManageButtonStatusRequestType" />
+      <xsd:element name="BMManageButtonStatusResponse" type="ns:BMManageButtonStatusResponseType" />
+      <xsd:element name="BMManageButtonStatusReq">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="ns:BMManageButtonStatusRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="BMManageButtonStatusRequestType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractRequestType">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="HostedButtonID" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation>
+										Button ID of Hosted button.
+										<br /><br /><b>Required</b><br /><br />
+				Character length and limitations: 10 single-byte numeric characters
+									</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="ButtonStatus" type="ebl:ButtonStatusType">
+                <xsd:annotation>
+                  <xsd:documentation>
+										Requested Status change for hosted button.
+										<br /><br /><b>Required</b><br /><br />
+				Character length and limitations: 1 single-byte alphanumeric characters
+									</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="BMManageButtonStatusResponseType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractResponseType" />
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="BMGetButtonDetailsRequest" type="ns:BMGetButtonDetailsRequestType" />
+      <xsd:element name="BMGetButtonDetailsResponse" type="ns:BMGetButtonDetailsResponseType" />
+      <xsd:element name="BMGetButtonDetailsReq">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="ns:BMGetButtonDetailsRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="BMGetButtonDetailsRequestType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractRequestType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="HostedButtonID" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation>
+										Button ID of button to return.
+										<br /><br /><b>Required</b><br /><br />
+				Character length and limitations: 10 single-byte numeric characters
+									</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="BMGetButtonDetailsResponseType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractResponseType">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="Website" type="xsd:string" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="Email" type="xsd:string" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="Mobile" type="xsd:string" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="HostedButtonID" type="xsd:string" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="ButtonType" type="ebl:ButtonTypeType">
+                <xsd:annotation>
+                  <xsd:documentation>
+                                                                                Type of button.
+                                                                                <br /><br />
+                                                                                One of the following: BUYNOW, CART, GIFTCERTIFICATE. SUBSCRIBE, PAYMENTPLAN, AUTOBILLING, DONATE, VIEWCART or UNSUBSCRIBE
+                                                                        </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="ButtonCode" type="ebl:ButtonCodeType">
+                <xsd:annotation>
+                  <xsd:documentation>
+                                                                                Type of button code.
+                                                                                <br /><br />
+                                                                                One of the following: hosted, encrypted or cleartext
+                                                                        </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="ButtonSubType" type="ebl:ButtonSubTypeType">
+                <xsd:annotation>
+                  <xsd:documentation>
+                                                                                Button sub type.
+                                                                                <br /><br /><b>optional for button types buynow and cart only</b><br /><br />
+                                                                                Either PRODUCTS or SERVICES
+                                                                        </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1000" name="ButtonVar" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation>
+                                                                                Button Variable information
+                                                                                <br /><br />
+                                                                                Character length and limitations: 63 single-byte alphanumeric characters
+                                                                        </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="5" name="OptionDetails" type="ns:OptionDetailsType" />
+              <xsd:element minOccurs="0" maxOccurs="2" name="TextBox" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation>
+                                                                                Text field
+                                                                                <br /><br /></xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="ButtonImage" type="ebl:ButtonImageType">
+                <xsd:annotation>
+                  <xsd:documentation>
+                                                                                Button image to use.
+                                                                                <br /><br />
+                                                                                One of: REG, SML, or CC
+                                                                        </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="ButtonImageURL" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation>
+                                                                                Button URL for custom button image.
+                                                                                <br /><br /></xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="BuyNowText" type="ebl:BuyNowTextType">
+                <xsd:annotation>
+                  <xsd:documentation>
+                                                                                Text to use on Buy Now Button.
+                                                                                <br /><br />
+                                                                                Either BUYNOW or PAYNOW
+                                                                        </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="SubscribeText" type="ebl:SubscribeTextType">
+                <xsd:annotation>
+                  <xsd:documentation>
+                                                                                Text to use on Subscribe button.
+                                                                                <br /><br />
+                                                                                Must be either BUYNOW or SUBSCRIBE
+                                                                        </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="ButtonCountry" type="ebl:CountryCodeType">
+                <xsd:annotation>
+                  <xsd:documentation>
+                                                                                Button Country.
+                                                                                <br /><br />
+                                                                                Valid ISO country code or 'International'
+                                                                        </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="ButtonLanguage" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation>
+                                                                                Button language code.
+                                                                                <br /><br />
+                                                                                Character length and limitations: 3 single-byte alphanumeric characters
+                                                                        </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="BMSetInventoryRequest" type="ns:BMSetInventoryRequestType" />
+      <xsd:element name="BMSetInventoryResponse" type="ns:BMSetInventoryResponseType" />
+      <xsd:element name="BMSetInventoryReq">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="ns:BMSetInventoryRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="BMSetInventoryRequestType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractRequestType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="HostedButtonID" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation>
+										Hosted Button ID of button you wish to change.
+										<br /><br /><b>Required</b><br /><br />
+				Character length and limitations: 10 single-byte numeric characters
+									</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="1" maxOccurs="1" name="TrackInv" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation>
+										Is Inventory tracked.
+										<br /><br /><b>Required</b><br /><br />
+				0 or 1
+									</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="1" maxOccurs="1" name="TrackPnl" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation>
+										Is PNL Tracked.
+										<br /><br /><b>Required</b><br /><br />
+				0 or 1
+									</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" ref="ebl:ItemTrackingDetails" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="OptionIndex" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation>
+										Option Index.
+										<br /><br /><b>Optional</b><br /><br />
+				Character length and limitations: 1 single-byte alphanumeric characters
+									</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="10" ref="ebl:OptionTrackingDetails" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="SoldoutURL" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation>
+										URL of page to display when an item is soldout.
+										<br /><br /><b>Optional</b><br /><br />
+				Character length and limitations: 127 single-byte alphanumeric characters
+									</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="ReuseDigitalDownloadKeys" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation>
+										Whether to use the same digital download key repeatedly.
+										<br /><br /><b>Optional</b></xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="AppendDigitalDownloadKeys" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation>
+										Whether to append these keys to the list or not (replace).
+										<br /><br /><b>Optional</b></xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1000" name="DigitalDownloadKeys" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation>
+										Zero or more digital download keys to distribute to customers after transaction is completed.
+										<br /><br /><b>Optional</b><br /><br />
+				Character length and limitations: 1000 single-byte alphanumeric characters
+									</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="BMSetInventoryResponseType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractResponseType">
+            <xsd:sequence>
+              <xsd:element name="TransactionID" type="xsd:string" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="BMGetInventoryRequest" type="ns:BMGetInventoryRequestType" />
+      <xsd:element name="BMGetInventoryResponse" type="ns:BMGetInventoryResponseType" />
+      <xsd:element name="BMGetInventoryReq">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="ns:BMGetInventoryRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="BMGetInventoryRequestType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractRequestType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="HostedButtonID" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation>
+										Hosted Button ID of the button to return inventory for.
+										<br /><br /><b>Required</b><br /><br />
+				Character length and limitations: 10 single-byte numeric characters
+									</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="BMGetInventoryResponseType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractResponseType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="HostedButtonID" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="TrackInv" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="TrackPnl" type="xsd:string" />
+              <xsd:element minOccurs="0" maxOccurs="1" ref="ebl:ItemTrackingDetails" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="OptionIndex" type="xsd:string" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="OptionName" type="xsd:string" />
+              <xsd:element minOccurs="0" maxOccurs="10" ref="ebl:OptionTrackingDetails" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="SoldoutURL" type="xsd:string" />
+              <xsd:element minOccurs="0" maxOccurs="1000" name="DigitalDownloadKeys" type="xsd:string" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="BMButtonSearchRequest" type="ns:BMButtonSearchRequestType" />
+      <xsd:element name="BMButtonSearchResponse" type="ns:BMButtonSearchResponseType" />
+      <xsd:element name="BMButtonSearchReq">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="ns:BMButtonSearchRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="BMButtonSearchRequestType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractRequestType">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="StartDate" type="xsd:dateTime">
+                <xsd:annotation>
+                  <xsd:documentation>
+										The earliest transaction date at which to start the search. No wildcards are allowed. 
+										<br /><br /><b>Required</b></xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="EndDate" type="xsd:dateTime">
+                <xsd:annotation>
+                  <xsd:documentation>
+										The latest transaction date to be included in the search 
+										<br /><br />
+										Optional
+									</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="BMButtonSearchResponseType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractResponseType">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="100" ref="ebl:ButtonSearchResult" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="RefundTransactionRequest" type="ns:RefundTransactionRequestType" />
+      <xsd:element name="RefundTransactionResponse" type="ns:RefundTransactionResponseType" />
+      <xsd:element name="RefundTransactionReq">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="ns:RefundTransactionRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="RefundTransactionRequestType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractRequestType">
+            <xsd:sequence>
+              <xsd:element name="TransactionID" type="ebl:TransactionId">
+                <xsd:annotation>
+                  <xsd:documentation>Unique identifier of the  transaction you are refunding.
+<br /><br /><b>Required</b><br /><br />
+Character length and limitations: 17 single-byte alphanumeric characters 
+</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="InvoiceID" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation>Invoice number corresponding to transaction details for tracking the refund of a payment. This parameter is passed by the merchant or recipient while refunding the transaction. This parameter does not affect the business logic, it is persisted in the DB for transaction reference
+										<br /><b>Optional</b></xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="RefundType" type="ebl:RefundType">
+                <xsd:annotation>
+                  <xsd:documentation>Type of refund you are making
+<br /><br /><b>Required</b></xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="Amount" type="cc:BasicAmountType">
+                <xsd:annotation>
+                  <xsd:documentation>Refund amount. 
+<br /><br />
+Amount is <b>required</b>  if RefundType is Partial.
+<br /><br />
+NOTE: If RefundType is Full, do not set Amount.
+</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="Memo" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation>Custom memo about the refund. 
+<br /><br />
+Optional
+<br /><br />
+Character length and limitations: 255 single-byte alphanumeric characters
+</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="RefundTransactionResponseType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractResponseType">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="RefundTransactionID" nillable="true" type="ebl:TransactionId">
+                <xsd:annotation>
+                  <xsd:documentation>Unique transaction ID of the refund. 
+<br /><br />
+Character length and limitations:17 single-byte characters
+</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="NetRefundAmount" type="cc:BasicAmountType">
+                <xsd:annotation>
+                  <xsd:documentation>Amount subtracted from PayPal balance of original recipient of payment to make this refund 
+</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="FeeRefundAmount" type="cc:BasicAmountType">
+                <xsd:annotation>
+                  <xsd:documentation>Transaction fee refunded to original recipient of payment 
+</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="GrossRefundAmount" type="cc:BasicAmountType">
+                <xsd:annotation>
+                  <xsd:documentation>Amount of money refunded to original payer </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="TotalRefundedAmount" type="cc:BasicAmountType">
+                <xsd:annotation>
+                  <xsd:documentation>Total of all previous refunds</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="GetTransactionDetailsRequest" type="ns:GetTransactionDetailsRequestType" />
+      <xsd:element name="GetTransactionDetailsResponse" type="ns:GetTransactionDetailsResponseType" />
+      <xsd:element name="GetTransactionDetailsReq">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="ns:GetTransactionDetailsRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="GetTransactionDetailsRequestType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractRequestType">
+            <xsd:sequence>
+              <xsd:element name="TransactionID" type="ebl:TransactionId">
+                <xsd:annotation>
+                  <xsd:documentation>Unique identifier of a transaction. 
+<br /><br /><b>Required</b><br /><br />
+The details for some kinds of transactions cannot be retrieved with GetTransactionDetailsRequest. You cannot obtain details of bank transfer withdrawals, for example. 
+<br /><br />
+Character length and limitations: 17 single-byte alphanumeric characters
+</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetTransactionDetailsResponseType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractResponseType">
+            <xsd:sequence>
+              <xsd:element ref="ebl:PaymentTransactionDetails" />
+              <xsd:element ref="ebl:ThreeDSecureDetails" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="BillUserRequest" type="ns:BillUserRequestType" />
+      <xsd:element name="BillUserResponse" type="ns:BillUserResponseType" />
+      <xsd:element name="BillUserReq">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="ns:BillUserRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="BillUserRequestType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractRequestType">
+            <xsd:sequence>
+              <xsd:element ref="ebl:MerchantPullPaymentDetails" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="ReturnFMFDetails" type="xsd:int">
+                <xsd:annotation>
+                  <xsd:documentation>This flag indicates that the response should include FMFDetails</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="BillUserResponseType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractResponseType">
+            <xsd:sequence>
+              <xsd:element ref="ebl:BillUserResponseDetails" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="FMFDetails" type="ebl:FMFDetailsType" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="TransactionSearchRequest" type="ns:TransactionSearchRequestType" />
+      <xsd:element name="TransactionSearchResponse" type="ns:TransactionSearchResponseType" />
+      <xsd:element name="TransactionSearchReq">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="ns:TransactionSearchRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="TransactionSearchRequestType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractRequestType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="StartDate" type="xsd:dateTime">
+                <xsd:annotation>
+                  <xsd:documentation>The earliest transaction date at which to start the search. No wildcards are allowed. 
+<br /><br /><b>Required</b></xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" name="EndDate" type="xsd:dateTime">
+                <xsd:annotation>
+                  <xsd:documentation>The latest transaction date to be included in the search 
+<br /><br />
+Optional
+</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="Payer" type="ebl:EmailAddressType">
+                <xsd:annotation>
+                  <xsd:documentation>Search by the buyer's email address 
+<br /><br />
+Optional
+<br /><br />
+Character length and limitations: 127 single-byte alphanumeric characters
+</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="Receiver" type="ebl:EmailAddressType">
+                <xsd:annotation>
+                  <xsd:documentation>Search by the receiver's email address. If the merchant account has only one email, this is the primary email. Can also be a non-primary email.
+<br /><br />
+Optional
+</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="ReceiptID" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation>Search by the PayPal Account Optional receipt ID
+<br /><br />
+Optional
+</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="TransactionID" type="ebl:TransactionId">
+                <xsd:annotation>
+                  <xsd:documentation>Search by the transaction ID. 
+<br /><br />
+Optional
+<br /><br />
+The returned results are from the merchant's transaction records. 
+<br /><br />
+Character length and limitations: 19 single-byte characters maximum
+</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="ProfileID" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation>Search by Recurring Payment Profile id.  The ProfileID is returned as part of the CreateRecurringPaymentsProfile API response. 
+<br /><br />
+Optional
+</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="PayerName" type="ebl:PersonNameType">
+                <xsd:annotation>
+                  <xsd:documentation>Search by the buyer's name 
+<br /><br />
+Optional
+<br /><br />
+Salutation: 20 single-byte character limit.
+<br /><br />
+FirstName: 25 single-byte character limit.
+<br /><br />
+MiddleName: 25 single-byte character limit.
+<br /><br />
+LastName: 25 single-byte character limit.
+<br /><br />
+Suffix: 12 single-byte character limit.
+</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="AuctionItemNumber" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation>Search by item number of the purchased goods.
+<br /><br />
+Optional
+<br /><br />
+To search for purchased items not related to auctions, set the AuctionItemNumber element to the value of the HTML item_number variable set in the shopping cart for the original transaction.</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="InvoiceID" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation>Search by invoice identification key, as set by you for the original transaction. InvoiceID searches the invoice records for items sold by the merchant, not the items purchased. 
+<br /><br />
+Optional
+<br /><br />
+The value for InvoiceID must exactly match an invoice identification number. No wildcards are allowed. 
+<br /><br />
+Character length and limitations: 127 single-byte characters maximum</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="CardNumber" type="xsd:string" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="TransactionClass" type="ebl:PaymentTransactionClassCodeType">
+                <xsd:annotation>
+                  <xsd:documentation>
+								Search by classification of transaction. Some kinds of possible classes of transactions are not searchable with TransactionSearchRequest. You cannot search for bank transfer withdrawals, for example. 
+<br /><br />
+Optional
+<br /><br />
+All: all transaction classifications.
+<br /><br />
+Sent: only payments sent.
+<br /><br />
+Received: only payments received.
+<br /><br />
+MassPay: only mass payments.
+<br /><br />
+MoneyRequest: only money requests.
+<br /><br />
+FundsAdded: only funds added to balance.
+<br /><br />
+FundsWithdrawn: only funds withdrawn from balance.
+<br /><br />
+Referral: only transactions involving referrals.
+<br /><br />
+Fee: only transactions involving fees.
+<br /><br />
+Subscription: only transactions involving subscriptions.
+<br /><br />
+Dividend: only transactions involving dividends.
+<br /><br />
+Billpay: only transactions involving BillPay Transactions.
+<br /><br />
+Refund: only transactions involving funds.
+<br /><br />
+CurrencyConversions: only transactions involving currency conversions.
+<br /><br />
+BalanceTransfer: only transactions involving balance transfers.
+<br /><br />
+Reversal: only transactions involving BillPay reversals.
+<br /><br />
+Shipping: only transactions involving UPS shipping fees.
+<br /><br />
+BalanceAffecting: only transactions that affect the account balance.
+<br /><br />
+ECheck: only transactions involving eCheck
+</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="Amount" type="cc:BasicAmountType">
+                <xsd:annotation>
+                  <xsd:documentation>Search by transaction amount 
+<br /><br />
+Optional
+<br /><br />
+You must set the currencyID attribute to one of the three-character currency codes for any of the supported PayPal currencies. </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="CurrencyCode" type="ebl:CurrencyCodeType">
+                <xsd:annotation>
+                  <xsd:documentation>Search by currency code
+<br /><br />
+Optional
+</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="Status" type="ebl:PaymentTransactionStatusCodeType">
+                <xsd:annotation>
+                  <xsd:documentation>Search by transaction status 
+<br /><br />
+Optional
+<br /><br />
+Pending: The payment is pending. The specific reason the payment is pending is returned by the GetTransactionDetails APIPendingReason element. For more information, see PendingReason.
+<br /><br />
+Processing: The payment is being processed.
+<br /><br />
+Success: The payment has been completed and the funds have been added successfully to your account balance.
+<br /><br />
+Denied: You denied the payment. This happens only if the payment was previously pending.
+<br /><br />
+Reversed: A payment was reversed due to a chargeback or other type of reversal. The funds have been removed from your account balance and returned to the buyer.
+</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="TransactionSearchResponseType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractResponseType">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="unbounded" ref="ebl:PaymentTransactions">
+                <xsd:annotation>
+                  <xsd:documentation>Results of a Transaction Search.</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="MassPayRequest" type="ns:MassPayRequestType" />
+      <xsd:element name="MassPayResponse" type="ns:MassPayResponseType" />
+      <xsd:element name="MassPayReq">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="ns:MassPayRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="MassPayRequestType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractRequestType">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="EmailSubject" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation>Subject line of the email sent to all recipients. This subject is not contained in the input file; you must create it with your application. 
+<br /><br />
+Optional
+<br /><br />
+Character length and limitations: 255 single-byte alphanumeric characters
+</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="ReceiverType" type="ebl:ReceiverInfoCodeType">
+                <xsd:annotation>
+                  <xsd:documentation>Indicates how you identify the recipients of payments in all MassPayItems: either by EmailAddress (ReceiverEmail in MassPayItem), PhoneNumber (ReceiverPhone in MassPayItem), or by UserID (ReceiverID in MassPayItem). 
+<br /><br /><b>Required. </b>You must specify one or the other of EmailAddress or UserID.
+</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="ButtonSource" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation>Known as BN code, to track the partner referred merchant transactions. 
+<br /><br />
+Optional
+<br /><br />
+Character length and limitations: 32 single-byte alphanumeric characters
+</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="1" maxOccurs="250" name="MassPayItem" type="ns:MassPayRequestItemType">
+                <xsd:annotation>
+                  <xsd:documentation>Details of each payment. A single MassPayRequest can include up to 250 MassPayItems. 
+<br /><br /><b>Required</b></xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="MassPayResponseType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractResponseType" />
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="MassPayRequestItemType">
+        <xsd:annotation>
+          <xsd:documentation>
+					MassPayRequestItemType
+				</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="ReceiverEmail" type="ebl:EmailAddressType">
+            <xsd:annotation>
+              <xsd:documentation>Email address of recipient. 
+<br /><br /><b>Required</b><br /><br />
+You must specify ReceiverEmail, ReceiverPhone, or ReceiverID, but all MassPayItems in a request must use the same field to specify recipients.
+<br /><br />
+Character length and limitations: 127 single-byte characters maximum.
+</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="ReceiverPhone" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>Phone number of recipient. 
+<br /><br /><b>Required</b><br /><br />
+You must specify ReceiverEmail, ReceiverPhone, or ReceiverID, but all MassPayItems in a request must use the same field to specify recipients.
+<br /><br /></xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="ReceiverID" type="ebl:UserIDType">
+            <xsd:annotation>
+              <xsd:documentation>Unique PayPal customer account number. This value corresponds to the value of PayerID returned by GetTransactionDetails. 
+<br /><br /><b>Required</b><br /><br />
+You must specify ReceiverEmail, ReceiverPhone, or ReceiverID, but all MassPayItems in a request must use the same field to specify recipients.
+<br /><br />
+Character length and limitations: 17 single-byte characters maximum.
+</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="1" maxOccurs="1" name="Amount" type="cc:BasicAmountType">
+            <xsd:annotation>
+              <xsd:documentation>Payment amount. You must set the currencyID attribute to one of the three-character currency codes for any of the supported PayPal currencies. 
+<br /><br /><b>Required</b><br /><br />
+You cannot mix currencies in a single MassPayRequest. A single request must include items that are of the same currency.
+</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="UniqueId" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>Transaction-specific identification number for tracking in an accounting system. 
+<br /><br />
+Optional
+<br /><br />
+Character length and limitations: 30 single-byte characters. No whitespace allowed.
+</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+          <xsd:element minOccurs="0" maxOccurs="1" name="Note" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>Custom note for each recipient. 
+<br /><br />
+Optional
+<br /><br />
+Character length and limitations: 4,000 single-byte alphanumeric characters
+</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="BAUpdateRequest" type="ns:BAUpdateRequestType" />
+      <xsd:element name="BAUpdateResponse" type="ns:BAUpdateResponseType" />
+      <xsd:element name="BillAgreementUpdateReq">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="ns:BAUpdateRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="BAUpdateRequestType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractRequestType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="ReferenceID" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation />
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="BillingAgreementDescription" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation />
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="BillingAgreementStatus" type="ebl:MerchantPullStatusCodeType">
+                <xsd:annotation>
+                  <xsd:documentation />
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="BillingAgreementCustom" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation />
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="BAUpdateResponseType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractResponseType">
+            <xsd:sequence>
+              <xsd:element ref="ebl:BAUpdateResponseDetails" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="AddressVerifyRequest" type="ns:AddressVerifyRequestType" />
+      <xsd:element name="AddressVerifyResponse" type="ns:AddressVerifyResponseType" />
+      <xsd:element name="AddressVerifyReq">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="ns:AddressVerifyRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="AddressVerifyRequestType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractRequestType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="Email" type="ebl:EmailAddressType">
+                <xsd:annotation>
+                  <xsd:documentation>Email address of buyer to be verified. 
+<br /><br /><b>Required</b><br /><br />
+Maximum string length: 255 single-byte characters Input mask: ?@?.??
+
+</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="1" maxOccurs="1" name="Street" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation>First line of buyer’s billing or shipping street address to be verified. 
+<br /><br /><b>Required</b><br /><br />For verification, input value of street address must match the first three single-byte characters of the street address on file for the PayPal account.
+<br /><br />
+Maximum string length: 35 single-byte characters Alphanumeric plus - , . ‘ # \ Whitespace and case of input value are ignored.
+</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="1" maxOccurs="1" name="Zip" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation>Postal code to be verified. 
+<br /><br /><b>Required</b><br /><br />
+
+For verification, input value of postal code must match the first five single-byte characters of the postal code on file for the PayPal account.
+<br /><br />
+Maximum string length: 16 single-byte characters Whitespace and case of input value are ignored.
+</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="AddressVerifyResponseType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractResponseType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="ConfirmationCode" type="ebl:AddressStatusCodeType">
+                <xsd:annotation>
+                  <xsd:documentation>Confirmation of a match, with one of the following tokens:
+							<br /><br />
+None: The input value of the Email object does not match any email address on file at PayPal.
+	<br /><br />
+Confirmed: If the value of the StreetMatch object is Matched, PayPal responds that the entire postal address is confirmed.
+	<br /><br />
+Unconfirmed: PayPal responds that the postal address is unconfirmed</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="1" maxOccurs="1" name="StreetMatch" type="ebl:MatchStatusCodeType">
+                <xsd:annotation>
+                  <xsd:documentation>PayPal has compared the postal address you want to verify with the postal address on file at PayPal.
+								<br /><br />
+								None: The input value of the Email object does not match any email address on file at PayPal. In addition, an error response is returned. No further comparison of other input values has been made.
+									<br /><br />
+Matched: The street address matches the street address on file at PayPal.
+	<br /><br />
+Unmatched: The street address does not match the street address on file at PayPal. 
+</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="ZipMatch" type="ebl:MatchStatusCodeType">
+                <xsd:annotation>
+                  <xsd:documentation>PayPal has compared the zip code you want to verify with the zip code on file for the email address. 
+								<br /><br />
+								None: The street address was unmatched. No further comparison of other input values has been made.
+																<br /><br />Matched: The zip code matches the zip code on file at PayPal.
+																								<br /><br />Unmatched: The zip code does not match the zip code on file at PayPal. 
+</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="CountryCode" type="ebl:CountryCodeType">
+                <xsd:annotation>
+                  <xsd:documentation>Two-character country code (ISO 3166) on file for the PayPal email address. </xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="PayPalToken" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation>The token prevents a buyer from using any street address other than the address on file at PayPal during additional purchases he might make from the merchant. It contains encrypted information about the user’s street address and email address. You can pass the value of the token with the Buy Now button HTML address_api_token variable so that PayPal prevents the buyer from using any street address or email address other than those verified by PayPal. The token is valid for 24 hours. 
+								<br />
+Character length and limitations: 94 single-byte characters
+								</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="EnterBoardingRequest" type="ns:EnterBoardingRequestType" />
+      <xsd:element name="EnterBoardingResponse" type="ns:EnterBoardingResponseType" />
+      <xsd:element name="EnterBoardingReq">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="ns:EnterBoardingRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="EnterBoardingRequestType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractRequestType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" ref="ebl:EnterBoardingRequestDetails" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="EnterBoardingResponseType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractResponseType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="Token" type="ebl:ExpressCheckoutTokenType">
+                <xsd:annotation>
+                  <xsd:documentation>
+								A unique token that identifies this boarding session. 
+Use this token with the GetBoarding Details API call.
+<br /><br />
+Character length and limitations: 64 alphanumeric characters. The token has the following format:
+<br /><br />
+OB-61characterstring</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="GetBoardingDetailsRequest" type="ns:GetBoardingDetailsRequestType" />
+      <xsd:element name="GetBoardingDetailsResponse" type="ns:GetBoardingDetailsResponseType" />
+      <xsd:element name="GetBoardingDetailsReq">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="ns:GetBoardingDetailsRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="GetBoardingDetailsRequestType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractRequestType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="Token" type="ebl:ExpressCheckoutTokenType">
+                <xsd:annotation>
+                  <xsd:documentation>
+								A unique token returned by the EnterBoarding API call that identifies this boarding session. 
+<br /><br /><b>Required</b><br /><br />
+Character length and limitations: 64 alphanumeric characters. The token has the following format:
+<br /><br />
+OB-61characterstring</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetBoardingDetailsResponseType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractResponseType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" ref="ebl:GetBoardingDetailsResponseDetails" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="SetAuthFlowParamRequest" type="ns:SetAuthFlowParamRequestType" />
+      <xsd:element name="SetAuthFlowParamResponse" type="ns:SetAuthFlowParamResponseType" />
+      <xsd:element name="SetAuthFlowParamReq">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="ns:SetAuthFlowParamRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="SetAuthFlowParamRequestType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractRequestType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" ref="ebl:SetAuthFlowParamRequestDetails" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="SetAuthFlowParamResponseType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractResponseType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="Token" type="ebl:AuthFlowTokenType">
+                <xsd:annotation>
+                  <xsd:documentation>A timestamped token by which you identify to PayPal that you are processing this user. The token expires after three hours.
+								<br /><br />
+Character length and limitations: 20 single-byte characters
+</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="GetAuthDetailsRequest" type="ns:GetAuthDetailsRequestType" />
+      <xsd:element name="GetAuthDetailsResponse" type="ns:GetAuthDetailsResponseType" />
+      <xsd:element name="GetAuthDetailsReq">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="ns:GetAuthDetailsRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="GetAuthDetailsRequestType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractRequestType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="Token" type="ebl:AuthFlowTokenType">
+                <xsd:annotation>
+                  <xsd:documentation>A timestamped token, the value of which was returned by SetAuthFlowParam Response. 
+<br /><br /><b>Required</b><br /><br />
+Character length and limitations: 20 single-byte characters
+</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetAuthDetailsResponseType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractResponseType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" ref="ebl:GetAuthDetailsResponseDetails" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="SetAccessPermissionsRequest" type="ns:SetAccessPermissionsRequestType" />
+      <xsd:element name="SetAccessPermissionsResponse" type="ns:SetAccessPermissionsResponseType" />
+      <xsd:element name="SetAccessPermissionsReq">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="ns:SetAccessPermissionsRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="SetAccessPermissionsRequestType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractRequestType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" ref="ebl:SetAccessPermissionsRequestDetails" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="SetAccessPermissionsResponseType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractResponseType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="Token" type="ebl:AuthFlowTokenType">
+                <xsd:annotation>
+                  <xsd:documentation>A timestamped token by which you identify to PayPal that you are processing this user. The token expires after three hours.
+								<br /><br />
+Character length and limitations: 20 single-byte characters
+</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="UpdateAccessPermissionsRequest" type="ns:UpdateAccessPermissionsRequestType" />
+      <xsd:element name="UpdateAccessPermissionsResponse" type="ns:UpdateAccessPermissionsResponseType" />
+      <xsd:element name="UpdateAccessPermissionsReq">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="ns:UpdateAccessPermissionsRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="UpdateAccessPermissionsRequestType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractRequestType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="PayerID" type="ebl:UserIDType">
+                <xsd:annotation>
+                  <xsd:documentation>Unique PayPal customer account number, the value of which was returned by GetAuthDetails Response.
+									<br /><br /><b>Required</b><br /><br />
+									Character length and limitations: 20 single-byte characters
+									</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="UpdateAccessPermissionsResponseType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractResponseType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="Status" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation>The status of the update call, Success/Failure.
+									<br /><br />
+									Character length and limitations: 20 single-byte characters
+									</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="GetAccessPermissionDetailsRequest" type="ns:GetAccessPermissionDetailsRequestType" />
+      <xsd:element name="GetAccessPermissionDetailsResponse" type="ns:GetAccessPermissionDetailsResponseType" />
+      <xsd:element name="GetAccessPermissionDetailsReq">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="ns:GetAccessPermissionDetailsRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="GetAccessPermissionDetailsRequestType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractRequestType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="Token" type="ebl:AuthFlowTokenType">
+                <xsd:annotation>
+                  <xsd:documentation>A timestamped token, the value of which was returned by SetAuthFlowParam Response. 
+									<br /><br /><b>Required</b><br /><br />
+									Character length and limitations: 20 single-byte characters
+								</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetAccessPermissionDetailsResponseType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractResponseType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" ref="ebl:GetAccessPermissionDetailsResponseDetails" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="SetExpressCheckoutRequest" type="ns:SetExpressCheckoutRequestType" />
+      <xsd:element name="SetExpressCheckoutResponse" type="ns:SetExpressCheckoutResponseType" />
+      <xsd:element name="SetExpressCheckoutReq">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="ns:SetExpressCheckoutRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="SetExpressCheckoutRequestType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractRequestType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" ref="ebl:SetExpressCheckoutRequestDetails" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="SetExpressCheckoutResponseType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractResponseType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="Token" type="ebl:ExpressCheckoutTokenType">
+                <xsd:annotation>
+                  <xsd:documentation>A timestamped token by which you identify to PayPal that you are processing this payment with Express Checkout. The token expires after three hours. If you set Token in the SetExpressCheckoutRequest, the value of Token in the response is identical to the value in the request. 
+								<br /><br />
+Character length and limitations: 20 single-byte characters
+</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="GetExpressCheckoutDetailsRequest" type="ns:GetExpressCheckoutDetailsRequestType" />
+      <xsd:element name="GetExpressCheckoutDetailsResponse" type="ns:GetExpressCheckoutDetailsResponseType" />
+      <xsd:element name="GetExpressCheckoutDetailsReq">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="ns:GetExpressCheckoutDetailsRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="GetExpressCheckoutDetailsRequestType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractRequestType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="Token" type="ebl:ExpressCheckoutTokenType">
+                <xsd:annotation>
+                  <xsd:documentation>A timestamped token, the value of which was returned by SetExpressCheckoutResponse. 
+<br /><br /><b>Required</b><br /><br />
+Character length and limitations: 20 single-byte characters
+</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetExpressCheckoutDetailsResponseType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractResponseType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" ref="ebl:GetExpressCheckoutDetailsResponseDetails" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="DoExpressCheckoutPaymentRequest" type="ns:DoExpressCheckoutPaymentRequestType" />
+      <xsd:element name="DoExpressCheckoutPaymentResponse" type="ns:DoExpressCheckoutPaymentResponseType" />
+      <xsd:element name="DoExpressCheckoutPaymentReq">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="ns:DoExpressCheckoutPaymentRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="DoExpressCheckoutPaymentRequestType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractRequestType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" ref="ebl:DoExpressCheckoutPaymentRequestDetails" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="ReturnFMFDetails" type="xsd:int">
+                <xsd:annotation>
+                  <xsd:documentation>This flag indicates that the response should include FMFDetails</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="DoExpressCheckoutPaymentResponseType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractResponseType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" ref="ebl:DoExpressCheckoutPaymentResponseDetails" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="FMFDetails" type="ebl:FMFDetailsType" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="DoUATPExpressCheckoutPaymentRequest" type="ns:DoUATPExpressCheckoutPaymentRequestType" />
+      <xsd:element name="DoUATPExpressCheckoutPaymentResponse" type="ns:DoUATPExpressCheckoutPaymentResponseType" />
+      <xsd:element name="DoUATPExpressCheckoutPaymentReq">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="ns:DoUATPExpressCheckoutPaymentRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="DoUATPExpressCheckoutPaymentRequestType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ns:DoExpressCheckoutPaymentRequestType" />
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="DoUATPExpressCheckoutPaymentResponseType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ns:DoExpressCheckoutPaymentResponseType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" ref="ebl:UATPDetails" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="ManagePendingTransactionStatusRequest" type="ns:ManagePendingTransactionStatusRequestType" />
+      <xsd:element name="ManagePendingTransactionStatusResponse" type="ns:ManagePendingTransactionStatusResponseType" />
+      <xsd:element name="ManagePendingTransactionStatusReq">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="ns:ManagePendingTransactionStatusRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="ManagePendingTransactionStatusRequestType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractRequestType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="TransactionID" type="ebl:TransactionId" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="Action" type="ebl:FMFPendingTransactionActionType" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ManagePendingTransactionStatusResponseType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractResponseType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="TransactionID" type="ebl:TransactionId" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="Status" type="xsd:string" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="DoDirectPaymentRequest" type="ns:DoDirectPaymentRequestType" />
+      <xsd:element name="DoDirectPaymentResponse" type="ns:DoDirectPaymentResponseType" />
+      <xsd:element name="DoDirectPaymentReq">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="ns:DoDirectPaymentRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="DoDirectPaymentRequestType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractRequestType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" ref="ebl:DoDirectPaymentRequestDetails" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="ReturnFMFDetails" type="xsd:int">
+                <xsd:annotation>
+                  <xsd:documentation>This flag indicates that the response should include FMFDetails</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="DoDirectPaymentResponseType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractResponseType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="Amount" type="cc:BasicAmountType">
+                <xsd:annotation>
+                  <xsd:documentation>
+							The amount of the payment as specified by you on DoDirectPaymentRequest.</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="1" maxOccurs="1" name="AVSCode" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation>
+					Address Verification System response code. Character limit: One single-byte alphanumeric character
+				<table><tr><th>AVS Code</th><th>Meaning</th><th>Matched Details</th></tr><tr><td>A </td><td>Address</td><td>Address only (no ZIP) </td></tr><tr><td>B </td><td>International “A”</td><td>Address only (no ZIP)</td></tr><tr><td>C</td><td>International “N”</td><td> None </td></tr><tr><td>D</td><td>International “X” </td><td>Address and Postal Code</td></tr><tr><td>E </td><td>Not allowed for MOTO (Internet/Phone) transactions </td><td>Not applicable</td></tr><tr><td>F </td><td>UK-specific “X”</td><td>Address and Postal Code </td></tr><tr><td>G </td><td>Global Unavailable</td><td> Not applicable </td></tr><tr><td>I </td><td>International Unavailable</td><td>Not applicable </td></tr><tr><td>N </td><td>No</td><td>None</td></tr><tr><td>P</td><td>Postal (International “Z”)</td><td>Postal Code only (no Address) </td></tr><tr><td>R</td><td>Retry</td><td>Not applicable</td></tr><tr><td>S </td><td>Service not Supported </td><td>Not applicable </td></tr><tr><td>U </td><td>Unavailable</td><td>Not applicable </td></tr><tr><td>W </td><td>Whole ZIP</td><td>Nine-digit ZIP code (no Address) </td></tr><tr><td>X </td><td>Exact match </td><td>Address and nine-digit ZIP code</td></tr><tr><td>Y </td><td>Yes</td><td>Address and five-digit ZIP</td></tr><tr><td>Z </td><td>ZIP</td><td> Five-digit ZIP code (no Address)</td></tr><tr><td>All others </td><td>Error Not applicable</td><td></td></tr></table></xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="1" maxOccurs="1" name="CVV2Code" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation>
+								Result of the CVV2 check by PayPal.
+								<table><tr><th>CVV2 Code</th><th>Meaning</th><th>Matched Details</th></tr><tr><td>M </td><td>Match</td><td>CVV2 </td></tr><tr><td>N </td><td>No match </td><td>None</td></tr><tr><td>P </td><td>Not Processed</td><td>Not applicable</td></tr><tr><td>S</td><td>Service not Supported</td><td>Not applicable</td></tr><tr><td>U </td><td>Unavailable</td><td>Not applicable</td></tr><tr><td>X</td><td>No response</td><td>  Not applicable</td></tr><tr><td>All others </td><td>Error</td><td>Not applicable </td></tr></table></xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="1" maxOccurs="1" name="TransactionID" type="ebl:TransactionId">
+                <xsd:annotation>
+                  <xsd:documentation>
+							Transaction identification number.
+							<br /><br />
+							Character length and limitations: 19 characters maximum.</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" name="PendingReason" type="ebl:PendingStatusCodeType">
+                <xsd:annotation>
+                  <xsd:documentation>
+							The reason why a particular transaction went in pending.
+							</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" name="PaymentStatus" type="ebl:PaymentStatusCodeType">
+                <xsd:annotation>
+                  <xsd:documentation>
+							This will identify the actual transaction status.
+							</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="FMFDetails" type="ebl:FMFDetailsType" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="ThreeDSecureResponse" type="ebl:ThreeDSecureResponseType" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="DoCaptureRequest" type="ns:DoCaptureRequestType" />
+      <xsd:element name="DoCaptureResponse" type="ns:DoCaptureResponseType" />
+      <xsd:element name="DoCaptureReq">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="ns:DoCaptureRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="DoCaptureRequestType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractRequestType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="AuthorizationID" type="ebl:AuthorizationId">
+                <xsd:annotation>
+                  <xsd:documentation>The authorization identification number of the payment you want to capture. 
+<br /><br /><b>Required</b><br /><br />
+Character length and limits: 19 single-byte characters maximum
+</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="1" maxOccurs="1" name="Amount" type="cc:BasicAmountType">
+                <xsd:annotation>
+                  <xsd:documentation>Amount to authorize. You must set the currencyID attribute to USD. 
+<br /><br /><b>Required</b><br /><br />
+Limitations: Must not exceed $10,000 USD in any currency. No currency symbol. Decimal separator must be a period (.), and the thousands separator must be a comma (,)
+</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="1" maxOccurs="1" name="CompleteType" type="ebl:CompleteCodeType">
+                <xsd:annotation>
+                  <xsd:documentation>Indicates if this capture is the last capture you intend to make. The default is Complete. If CompleteType is Complete, any remaining amount of the original reauthorized transaction is automatically voided. 
+<br /><br /><b>Required</b><br /><br />
+Character length and limits: 12 single-byte alphanumeric characters
+</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="Note" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation>An informational note about this settlement that is displayed to the payer in email and in  transaction history. 
+<br /><br />
+Optional
+<br /><br />
+Character length and limits: 255 single-byte characters
+</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="InvoiceID" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation>Your invoice number or other identification number. 
+<br /><br />
+The InvoiceID value is recorded only if the authorization you are capturing is an order authorization, not a basic authorization.
+<br /><br />
+Optional
+<br /><br />
+Character length and limits: 127 single-byte alphanumeric characters
+</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" ref="ebl:EnhancedData">
+                <xsd:annotation>
+                  <xsd:documentation>Contains enhanced data like airline itinerary information.
+										<br /><br /><b>Not Required</b><br /></xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="Descriptor" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation>dynamic descriptor
+										<br /><br />
+Dynamic descriptor is used for merchant to provide detail of a transaction appears on statement
+										<br /><br /><b>Optional</b><br /><br />
+Character length and limits: &lt;18 characters alphanumeric characters
+</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="DoCaptureResponseType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractResponseType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" ref="ebl:DoCaptureResponseDetails" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="DoReauthorizationRequest" type="ns:DoReauthorizationRequestType" />
+      <xsd:element name="DoReauthorizationResponse" type="ns:DoReauthorizationResponseType" />
+      <xsd:element name="DoReauthorizationReq">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="ns:DoReauthorizationRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="DoReauthorizationRequestType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractRequestType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="AuthorizationID" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation>The value of a previously authorized transaction identification number returned by a PayPal product. You can obtain a buyer's transaction number from the TransactionID element of the PayerInfo structure returned by GetTransactionDetailsResponse. 
+<br /><br /><b>Required</b><br /><br />
+Character length and limits: 19 single-byte characters maximum
+</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="1" maxOccurs="1" name="Amount" type="cc:BasicAmountType">
+                <xsd:annotation>
+                  <xsd:documentation>Amount to reauthorize. 
+<br /><br /><b>Required</b><br /><br />
+Limitations: Must not exceed $10,000 USD in any currency. No currency symbol. Decimal separator must be a period (.), and the thousands separator must be a comma (,).
+</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="DoReauthorizationResponseType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractResponseType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="AuthorizationID" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation>A new authorization identification number.
+								<br /><br />Character length and limits: 19 single-byte characters 
+</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" ref="ebl:AuthorizationInfo" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="DoVoidRequest" type="ns:DoVoidRequestType" />
+      <xsd:element name="DoVoidResponse" type="ns:DoVoidResponseType" />
+      <xsd:element name="DoVoidReq">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="ns:DoVoidRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="DoVoidRequestType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractRequestType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="AuthorizationID" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation>The value of the original authorization identification number returned by a PayPal product. 
+<br /><br />
+If you are voiding a transaction that has been reauthorized, use the ID from the original authorization, and not the reauthorization.
+<br /><br /><b>Required</b><br /><br />
+Character length and limits: 19 single-byte characters
+</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="Note" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation>An informational note about this settlement that is displayed to the payer in email and in  transaction history. 
+<br /><br />
+Optional
+<br /><br />
+Character length and limits: 255 single-byte characters
+</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="DoVoidResponseType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractResponseType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="AuthorizationID" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation>The authorization identification number you specified in the request. 
+<br /><br />
+Character length and limits: 19 single-byte characters
+</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="DoAuthorizationRequest" type="ns:DoAuthorizationRequestType" />
+      <xsd:element name="DoAuthorizationResponse" type="ns:DoAuthorizationResponseType" />
+      <xsd:element name="DoAuthorizationReq">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="ns:DoAuthorizationRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="DoAuthorizationRequestType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractRequestType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="TransactionID" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation>The value of the order’s transaction identification number returned by a PayPal product. 
+<br /><br /><b>Required</b><br /><br />Character length and limits: 19 single-byte characters maximum
+</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="TransactionEntity" type="ebl:TransactionEntityType">
+                <xsd:annotation>
+                  <xsd:documentation>Type of transaction to authorize. The only allowable value is <b>Order</b>, which means that the transaction represents a customer order that can be fulfilled over 29 days. 
+<br /><br />
+Optional
+</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="1" maxOccurs="1" name="Amount" type="cc:BasicAmountType">
+                <xsd:annotation>
+                  <xsd:documentation>Amount to authorize. 
+<br /><br /><b>Required</b><br /><br />
+Limitations: Must not exceed $10,000 USD in any currency. No currency symbol. Decimal separator must be a period (.), and the thousands separator must be a comma (,).
+</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="DoAuthorizationResponseType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractResponseType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="TransactionID" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation>An authorization identification number. 
+								<br /><br />
+Character length and limits: 19 single-byte characters
+</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="1" maxOccurs="1" name="Amount" type="cc:BasicAmountType">
+                <xsd:annotation>
+                  <xsd:documentation>The amount and currency you specified in the request. 
+</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" ref="ebl:AuthorizationInfo" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="DoUATPAuthorizationRequest" type="ns:DoUATPAuthorizationRequestType" />
+      <xsd:element name="DoUATPAuthorizationResponse" type="ns:DoUATPAuthorizationResponseType" />
+      <xsd:element name="DoUATPAuthorizationReq">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="ns:DoUATPAuthorizationRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="DoUATPAuthorizationRequestType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractRequestType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" ref="ebl:UATPDetails">
+                <xsd:annotation>
+                  <xsd:documentation>UATP card details
+<br /><br /><b>Required</b><br /></xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="TransactionEntity" type="ebl:TransactionEntityType">
+                <xsd:annotation>
+                  <xsd:documentation>Type of transaction to authorize. The only allowable value is <b>Order</b>, which means that the transaction represents a customer order that can be fulfilled over 29 days. 
+<br /><br />
+Optional
+</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="1" maxOccurs="1" name="Amount" type="cc:BasicAmountType">
+                <xsd:annotation>
+                  <xsd:documentation>Amount to authorize. 
+<br /><br /><b>Required</b><br /><br />
+Limitations: Must not exceed $10,000 USD in any currency. No currency symbol. Decimal separator must be a period (.), and the thousands separator must be a comma (,).
+</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="InvoiceID" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation> Invoice ID. A pass through.
+									</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="DoUATPAuthorizationResponseType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ns:DoAuthorizationResponseType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" ref="ebl:UATPDetails" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="AuthorizationCode" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation> Auth Authorization Code.
+									</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="0" maxOccurs="1" name="InvoiceID" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation> Invoice ID. A pass through.
+									</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="CreateMobilePaymentRequest" type="ns:CreateMobilePaymentRequestType" />
+      <xsd:element name="CreateMobilePaymentResponse" type="ns:CreateMobilePaymentResponseType" />
+      <xsd:element name="CreateMobilePaymentReq">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="ns:CreateMobilePaymentRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="CreateMobilePaymentRequestType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractRequestType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" ref="ebl:CreateMobilePaymentRequestDetails" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="CreateMobilePaymentResponseType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractResponseType">
+            <xsd:sequence />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="GetMobileStatusRequest" type="ns:GetMobileStatusRequestType" />
+      <xsd:element name="GetMobileStatusResponse" type="ns:GetMobileStatusResponseType" />
+      <xsd:element name="GetMobileStatusReq">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="ns:GetMobileStatusRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="GetMobileStatusRequestType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractRequestType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" ref="ebl:GetMobileStatusRequestDetails" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetMobileStatusResponseType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractResponseType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="IsActivated" type="xsd:integer">
+                <xsd:annotation>
+                  <xsd:documentation>Indicates whether the phone is activated for mobile payments
+<br /><br /></xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+              <xsd:element minOccurs="1" maxOccurs="1" name="PaymentPending" type="xsd:integer">
+                <xsd:annotation>
+                  <xsd:documentation>Indicates whether there is a payment pending from the phone
+<br /><br /></xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="SetMobileCheckoutRequest" type="ns:SetMobileCheckoutRequestType" />
+      <xsd:element name="SetMobileCheckoutResponse" type="ns:SetMobileCheckoutResponseType" />
+      <xsd:element name="SetMobileCheckoutReq">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="ns:SetMobileCheckoutRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="SetMobileCheckoutRequestType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractRequestType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" ref="ebl:SetMobileCheckoutRequestDetails" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="SetMobileCheckoutResponseType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractResponseType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="Token" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation>A timestamped token by which you identify to PayPal that you are processing this payment with Mobile Checkout. The token expires after three hours.
+								<br /><br />
+Character length and limitations: 20 single-byte characters
+</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="DoMobileCheckoutPaymentRequest" type="ns:DoMobileCheckoutPaymentRequestType" />
+      <xsd:element name="DoMobileCheckoutPaymentResponse" type="ns:DoMobileCheckoutPaymentResponseType" />
+      <xsd:element name="DoMobileCheckoutPaymentReq">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="ns:DoMobileCheckoutPaymentRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="DoMobileCheckoutPaymentRequestType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractRequestType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="Token" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation>A timestamped token, the value of which was returned by SetMobileCheckoutResponse. 
+<br /><br /><b>Required</b><br /><br />
+Character length and limitations: 20 single-byte characters
+</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="DoMobileCheckoutPaymentResponseType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractResponseType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" ref="ebl:DoMobileCheckoutPaymentResponseDetails" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="GetBalanceRequest" type="ns:GetBalanceRequestType" />
+      <xsd:element name="GetBalanceResponse" type="ns:GetBalanceResponseType" />
+      <xsd:element name="GetBalanceReq">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="ns:GetBalanceRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="GetBalanceRequestType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractRequestType">
+            <xsd:sequence>
+              <xsd:element minOccurs="0" maxOccurs="1" name="ReturnAllCurrencies" type="xsd:string" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetBalanceResponseType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractResponseType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="Balance" type="cc:BasicAmountType" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="BalanceTimeStamp" type="xsd:dateTime" />
+              <xsd:element minOccurs="0" maxOccurs="unbounded" name="BalanceHoldings" type="cc:BasicAmountType" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="SetCustomerBillingAgreementRequest" type="ns:SetCustomerBillingAgreementRequestType" />
+      <xsd:element name="SetCustomerBillingAgreementResponse" type="ns:SetCustomerBillingAgreementResponseType" />
+      <xsd:element name="SetCustomerBillingAgreementReq">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="ns:SetCustomerBillingAgreementRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="SetCustomerBillingAgreementRequestType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractRequestType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" ref="ebl:SetCustomerBillingAgreementRequestDetails" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="SetCustomerBillingAgreementResponseType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractResponseType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="Token" type="ebl:ExpressCheckoutTokenType">
+                <xsd:annotation>
+                  <xsd:documentation />
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="GetBillingAgreementCustomerDetailsRequest" type="ns:GetBillingAgreementCustomerDetailsRequestType" />
+      <xsd:element name="GetBillingAgreementCustomerDetailsResponse" type="ns:GetBillingAgreementCustomerDetailsResponseType" />
+      <xsd:element name="GetBillingAgreementCustomerDetailsReq">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="ns:GetBillingAgreementCustomerDetailsRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="GetBillingAgreementCustomerDetailsRequestType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractRequestType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="Token" type="ebl:ExpressCheckoutTokenType">
+                <xsd:annotation>
+                  <xsd:documentation />
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetBillingAgreementCustomerDetailsResponseType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractResponseType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" ref="ebl:GetBillingAgreementCustomerDetailsResponseDetails" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="CreateBillingAgreementRequest" type="ns:CreateBillingAgreementRequestType" />
+      <xsd:element name="CreateBillingAgreementResponse" type="ns:CreateBillingAgreementResponseType" />
+      <xsd:element name="CreateBillingAgreementReq">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="ns:CreateBillingAgreementRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="CreateBillingAgreementRequestType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractRequestType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="Token" type="ebl:ExpressCheckoutTokenType">
+                <xsd:annotation>
+                  <xsd:documentation />
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="CreateBillingAgreementResponseType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractResponseType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="BillingAgreementID" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation />
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="DoReferenceTransactionRequest" type="ns:DoReferenceTransactionRequestType" />
+      <xsd:element name="DoReferenceTransactionResponse" type="ns:DoReferenceTransactionResponseType" />
+      <xsd:element name="DoReferenceTransactionReq">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="ns:DoReferenceTransactionRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="DoReferenceTransactionRequestType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractRequestType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" ref="ebl:DoReferenceTransactionRequestDetails" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="ReturnFMFDetails" type="xsd:int">
+                <xsd:annotation>
+                  <xsd:documentation>This flag indicates that the response should include FMFDetails</xsd:documentation>
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="DoReferenceTransactionResponseType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractResponseType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" ref="ebl:DoReferenceTransactionResponseDetails" />
+              <xsd:element minOccurs="0" maxOccurs="1" name="FMFDetails" type="ebl:FMFDetailsType" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="DoNonReferencedCreditRequest" type="ns:DoNonReferencedCreditRequestType" />
+      <xsd:element name="DoNonReferencedCreditResponse" type="ns:DoNonReferencedCreditResponseType" />
+      <xsd:element name="DoNonReferencedCreditReq">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="ns:DoNonReferencedCreditRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="DoNonReferencedCreditRequestType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractRequestType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" ref="ebl:DoNonReferencedCreditRequestDetails" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="DoNonReferencedCreditResponseType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractResponseType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" ref="ebl:DoNonReferencedCreditResponseDetails" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="CreateRecurringPaymentsProfileRequest" type="ns:CreateRecurringPaymentsProfileRequestType" />
+      <xsd:element name="CreateRecurringPaymentsProfileResponse" type="ns:CreateRecurringPaymentsProfileResponseType" />
+      <xsd:element name="CreateRecurringPaymentsProfileReq">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="ns:CreateRecurringPaymentsProfileRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="CreateRecurringPaymentsProfileRequestType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractRequestType">
+            <xsd:sequence>
+              <xsd:element ref="ebl:CreateRecurringPaymentsProfileRequestDetails" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="CreateRecurringPaymentsProfileResponseType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractResponseType">
+            <xsd:sequence>
+              <xsd:element ref="ebl:CreateRecurringPaymentsProfileResponseDetails" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="GetRecurringPaymentsProfileDetailsRequest" type="ns:GetRecurringPaymentsProfileDetailsRequestType" />
+      <xsd:element name="GetRecurringPaymentsProfileDetailsResponse" type="ns:GetRecurringPaymentsProfileDetailsResponseType" />
+      <xsd:element name="GetRecurringPaymentsProfileDetailsReq">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="ns:GetRecurringPaymentsProfileDetailsRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="GetRecurringPaymentsProfileDetailsRequestType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractRequestType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="ProfileID" type="xsd:string">
+                <xsd:annotation>
+                  <xsd:documentation />
+                </xsd:annotation>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetRecurringPaymentsProfileDetailsResponseType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractResponseType">
+            <xsd:sequence>
+              <xsd:element ref="ebl:GetRecurringPaymentsProfileDetailsResponseDetails" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="ManageRecurringPaymentsProfileStatusRequest" type="ns:ManageRecurringPaymentsProfileStatusRequestType" />
+      <xsd:element name="ManageRecurringPaymentsProfileStatusResponse" type="ns:ManageRecurringPaymentsProfileStatusResponseType" />
+      <xsd:element name="ManageRecurringPaymentsProfileStatusReq">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="ns:ManageRecurringPaymentsProfileStatusRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="ManageRecurringPaymentsProfileStatusRequestType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractRequestType">
+            <xsd:sequence>
+              <xsd:element ref="ebl:ManageRecurringPaymentsProfileStatusRequestDetails" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ManageRecurringPaymentsProfileStatusResponseType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractResponseType">
+            <xsd:sequence>
+              <xsd:element ref="ebl:ManageRecurringPaymentsProfileStatusResponseDetails" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="BillOutstandingAmountRequest" type="ns:BillOutstandingAmountRequestType" />
+      <xsd:element name="BillOutstandingAmountResponse" type="ns:BillOutstandingAmountResponseType" />
+      <xsd:element name="BillOutstandingAmountReq">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="ns:BillOutstandingAmountRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="BillOutstandingAmountRequestType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractRequestType">
+            <xsd:sequence>
+              <xsd:element ref="ebl:BillOutstandingAmountRequestDetails" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="BillOutstandingAmountResponseType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractResponseType">
+            <xsd:sequence>
+              <xsd:element ref="ebl:BillOutstandingAmountResponseDetails" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="UpdateRecurringPaymentsProfileRequest" type="ns:UpdateRecurringPaymentsProfileRequestType" />
+      <xsd:element name="UpdateRecurringPaymentsProfileResponse" type="ns:UpdateRecurringPaymentsProfileResponseType" />
+      <xsd:element name="UpdateRecurringPaymentsProfileReq">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="ns:UpdateRecurringPaymentsProfileRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="UpdateRecurringPaymentsProfileRequestType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractRequestType">
+            <xsd:sequence>
+              <xsd:element ref="ebl:UpdateRecurringPaymentsProfileRequestDetails" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="UpdateRecurringPaymentsProfileResponseType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractResponseType">
+            <xsd:sequence>
+              <xsd:element ref="ebl:UpdateRecurringPaymentsProfileResponseDetails" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="GetPalDetailsRequest" type="ns:GetPalDetailsRequestType" />
+      <xsd:element name="GetPalDetailsResponse" type="ns:GetPalDetailsResponseType" />
+      <xsd:element name="GetPalDetailsReq">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="ns:GetPalDetailsRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="GetPalDetailsRequestType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractRequestType">
+            <xsd:sequence />
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="GetPalDetailsResponseType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractResponseType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" name="Pal" type="xsd:string" />
+              <xsd:element minOccurs="1" maxOccurs="1" name="Locale" type="xsd:string" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:element name="ReverseTransactionRequest" type="ns:ReverseTransactionRequestType" />
+      <xsd:element name="ReverseTransactionResponse" type="ns:ReverseTransactionResponseType" />
+      <xsd:element name="ReverseTransactionReq">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element ref="ns:ReverseTransactionRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:complexType name="ReverseTransactionRequestType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractRequestType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" ref="ebl:ReverseTransactionRequestDetails" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="ReverseTransactionResponseType">
+        <xsd:complexContent mixed="false">
+          <xsd:extension base="ebl:AbstractResponseType">
+            <xsd:sequence>
+              <xsd:element minOccurs="1" maxOccurs="1" ref="ebl:ReverseTransactionResponseDetails" />
+            </xsd:sequence>
+          </xsd:extension>
+        </xsd:complexContent>
+      </xsd:complexType>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="RequesterCredentials">
+    <wsdl:part name="RequesterCredentials" element="ns:RequesterCredentials" />
+  </wsdl:message>
+  <wsdl:message name="RefundTransactionRequest">
+    <wsdl:part name="RefundTransactionRequest" element="ns:RefundTransactionReq" />
+  </wsdl:message>
+  <wsdl:message name="RefundTransactionResponse">
+    <wsdl:part name="RefundTransactionResponse" element="ns:RefundTransactionResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetTransactionDetailsRequest">
+    <wsdl:part name="GetTransactionDetailsRequest" element="ns:GetTransactionDetailsReq" />
+  </wsdl:message>
+  <wsdl:message name="GetTransactionDetailsResponse">
+    <wsdl:part name="GetTransactionDetailsResponse" element="ns:GetTransactionDetailsResponse" />
+  </wsdl:message>
+  <wsdl:message name="BMCreateButtonRequest">
+    <wsdl:part name="BMCreateButtonRequest" element="ns:BMCreateButtonReq" />
+  </wsdl:message>
+  <wsdl:message name="BMCreateButtonResponse">
+    <wsdl:part name="BMCreateButtonResponse" element="ns:BMCreateButtonResponse" />
+  </wsdl:message>
+  <wsdl:message name="BMUpdateButtonRequest">
+    <wsdl:part name="BMUpdateButtonRequest" element="ns:BMUpdateButtonReq" />
+  </wsdl:message>
+  <wsdl:message name="BMUpdateButtonResponse">
+    <wsdl:part name="BMUpdateButtonResponse" element="ns:BMUpdateButtonResponse" />
+  </wsdl:message>
+  <wsdl:message name="BMManageButtonStatusRequest">
+    <wsdl:part name="BMManageButtonStatusRequest" element="ns:BMManageButtonStatusReq" />
+  </wsdl:message>
+  <wsdl:message name="BMManageButtonStatusResponse">
+    <wsdl:part name="BMManageButtonStatusResponse" element="ns:BMManageButtonStatusResponse" />
+  </wsdl:message>
+  <wsdl:message name="BMGetButtonDetailsRequest">
+    <wsdl:part name="BMGetButtonDetailsRequest" element="ns:BMGetButtonDetailsReq" />
+  </wsdl:message>
+  <wsdl:message name="BMGetButtonDetailsResponse">
+    <wsdl:part name="BMGetButtonDetailsResponse" element="ns:BMGetButtonDetailsResponse" />
+  </wsdl:message>
+  <wsdl:message name="BMSetInventoryRequest">
+    <wsdl:part name="BMSetInventoryRequest" element="ns:BMSetInventoryReq" />
+  </wsdl:message>
+  <wsdl:message name="BMSetInventoryResponse">
+    <wsdl:part name="BMSetInventoryResponse" element="ns:BMSetInventoryResponse" />
+  </wsdl:message>
+  <wsdl:message name="BMGetInventoryRequest">
+    <wsdl:part name="BMGetInventoryRequest" element="ns:BMGetInventoryReq" />
+  </wsdl:message>
+  <wsdl:message name="BMGetInventoryResponse">
+    <wsdl:part name="BMGetInventoryResponse" element="ns:BMGetInventoryResponse" />
+  </wsdl:message>
+  <wsdl:message name="BMButtonSearchRequest">
+    <wsdl:part name="BMButtonSearchRequest" element="ns:BMButtonSearchReq" />
+  </wsdl:message>
+  <wsdl:message name="BMButtonSearchResponse">
+    <wsdl:part name="BMButtonSearchResponse" element="ns:BMButtonSearchResponse" />
+  </wsdl:message>
+  <wsdl:message name="BillUserRequest">
+    <wsdl:part name="BillUserRequest" element="ns:BillUserReq" />
+  </wsdl:message>
+  <wsdl:message name="BillUserResponse">
+    <wsdl:part name="BillUserResponse" element="ns:BillUserResponse" />
+  </wsdl:message>
+  <wsdl:message name="TransactionSearchRequest">
+    <wsdl:part name="TransactionSearchRequest" element="ns:TransactionSearchReq" />
+  </wsdl:message>
+  <wsdl:message name="TransactionSearchResponse">
+    <wsdl:part name="TransactionSearchResponse" element="ns:TransactionSearchResponse" />
+  </wsdl:message>
+  <wsdl:message name="MassPayRequest">
+    <wsdl:part name="MassPayRequest" element="ns:MassPayReq" />
+  </wsdl:message>
+  <wsdl:message name="MassPayResponse">
+    <wsdl:part name="MassPayResponse" element="ns:MassPayResponse" />
+  </wsdl:message>
+  <wsdl:message name="BillAgreementUpdateRequest">
+    <wsdl:part name="BillAgreementUpdateRequest" element="ns:BillAgreementUpdateReq" />
+  </wsdl:message>
+  <wsdl:message name="BAUpdateResponse">
+    <wsdl:part name="body" element="ns:BAUpdateResponse" />
+  </wsdl:message>
+  <wsdl:message name="AddressVerifyRequest">
+    <wsdl:part name="AddressVerifyRequest" element="ns:AddressVerifyReq" />
+  </wsdl:message>
+  <wsdl:message name="AddressVerifyResponse">
+    <wsdl:part name="AddressVerifyResponse" element="ns:AddressVerifyResponse" />
+  </wsdl:message>
+  <wsdl:message name="EnterBoardingRequest">
+    <wsdl:part name="EnterBoardingRequest" element="ns:EnterBoardingReq" />
+  </wsdl:message>
+  <wsdl:message name="EnterBoardingResponse">
+    <wsdl:part name="EnterBoardingResponse" element="ns:EnterBoardingResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetBoardingDetailsRequest">
+    <wsdl:part name="GetBoardingDetailsRequest" element="ns:GetBoardingDetailsReq" />
+  </wsdl:message>
+  <wsdl:message name="GetBoardingDetailsResponse">
+    <wsdl:part name="GetBoardingDetailsResponse" element="ns:GetBoardingDetailsResponse" />
+  </wsdl:message>
+  <wsdl:message name="DoExpressCheckoutPaymentRequest">
+    <wsdl:part name="DoExpressCheckoutPaymentRequest" element="ns:DoExpressCheckoutPaymentReq" />
+  </wsdl:message>
+  <wsdl:message name="DoExpressCheckoutPaymentResponse">
+    <wsdl:part name="DoExpressCheckoutPaymentResponse" element="ns:DoExpressCheckoutPaymentResponse" />
+  </wsdl:message>
+  <wsdl:message name="DoUATPExpressCheckoutPaymentRequest">
+    <wsdl:part name="DoUATPExpressCheckoutPaymentRequest" element="ns:DoUATPExpressCheckoutPaymentReq" />
+  </wsdl:message>
+  <wsdl:message name="DoUATPExpressCheckoutPaymentResponse">
+    <wsdl:part name="DoUATPExpressCheckoutPaymentResponse" element="ns:DoUATPExpressCheckoutPaymentResponse" />
+  </wsdl:message>
+  <wsdl:message name="SetAuthFlowParamRequest">
+    <wsdl:part name="SetAuthFlowParamRequest" element="ns:SetAuthFlowParamReq" />
+  </wsdl:message>
+  <wsdl:message name="SetAuthFlowParamResponse">
+    <wsdl:part name="SetAuthFlowParamResponse" element="ns:SetAuthFlowParamResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetAuthDetailsRequest">
+    <wsdl:part name="GetAuthDetailsRequest" element="ns:GetAuthDetailsReq" />
+  </wsdl:message>
+  <wsdl:message name="GetAuthDetailsResponse">
+    <wsdl:part name="GetAuthDetailsResponse" element="ns:GetAuthDetailsResponse" />
+  </wsdl:message>
+  <wsdl:message name="SetAccessPermissionsRequest">
+    <wsdl:part name="SetAccessPermissionsRequest" element="ns:SetAccessPermissionsReq" />
+  </wsdl:message>
+  <wsdl:message name="SetAccessPermissionsResponse">
+    <wsdl:part name="SetAccessPermissionsResponse" element="ns:SetAccessPermissionsResponse" />
+  </wsdl:message>
+  <wsdl:message name="UpdateAccessPermissionsRequest">
+    <wsdl:part name="UpdateAccessPermissionsRequest" element="ns:UpdateAccessPermissionsReq" />
+  </wsdl:message>
+  <wsdl:message name="UpdateAccessPermissionsResponse">
+    <wsdl:part name="UpdateAccessPermissionsResponse" element="ns:UpdateAccessPermissionsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetAccessPermissionDetailsRequest">
+    <wsdl:part name="GetAccessPermissionDetailsRequest" element="ns:GetAccessPermissionDetailsReq" />
+  </wsdl:message>
+  <wsdl:message name="GetAccessPermissionDetailsResponse">
+    <wsdl:part name="GetAccessPermissionDetailsResponse" element="ns:GetAccessPermissionDetailsResponse" />
+  </wsdl:message>
+  <wsdl:message name="SetExpressCheckoutRequest">
+    <wsdl:part name="SetExpressCheckoutRequest" element="ns:SetExpressCheckoutReq" />
+  </wsdl:message>
+  <wsdl:message name="SetExpressCheckoutResponse">
+    <wsdl:part name="SetExpressCheckoutResponse" element="ns:SetExpressCheckoutResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetExpressCheckoutDetailsRequest">
+    <wsdl:part name="GetExpressCheckoutDetailsRequest" element="ns:GetExpressCheckoutDetailsReq" />
+  </wsdl:message>
+  <wsdl:message name="GetExpressCheckoutDetailsResponse">
+    <wsdl:part name="GetExpressCheckoutDetailsResponse" element="ns:GetExpressCheckoutDetailsResponse" />
+  </wsdl:message>
+  <wsdl:message name="DoDirectPaymentRequest">
+    <wsdl:part name="DoDirectPaymentRequest" element="ns:DoDirectPaymentReq" />
+  </wsdl:message>
+  <wsdl:message name="DoDirectPaymentResponse">
+    <wsdl:part name="DoDirectPaymentResponse" element="ns:DoDirectPaymentResponse" />
+  </wsdl:message>
+  <wsdl:message name="ManagePendingTransactionStatusRequest">
+    <wsdl:part name="ManagePendingTransactionStatusRequest" element="ns:ManagePendingTransactionStatusReq" />
+  </wsdl:message>
+  <wsdl:message name="ManagePendingTransactionStatusResponse">
+    <wsdl:part name="ManagePendingTransactionStatusResponse" element="ns:ManagePendingTransactionStatusResponse" />
+  </wsdl:message>
+  <wsdl:message name="DoCaptureRequest">
+    <wsdl:part name="DoCaptureRequest" element="ns:DoCaptureReq" />
+  </wsdl:message>
+  <wsdl:message name="DoCaptureResponse">
+    <wsdl:part name="DoCaptureResponse" element="ns:DoCaptureResponse" />
+  </wsdl:message>
+  <wsdl:message name="DoReauthorizationRequest">
+    <wsdl:part name="DoReauthorizationRequest" element="ns:DoReauthorizationReq" />
+  </wsdl:message>
+  <wsdl:message name="DoReauthorizationResponse">
+    <wsdl:part name="DoReauthorizationResponse" element="ns:DoReauthorizationResponse" />
+  </wsdl:message>
+  <wsdl:message name="DoVoidRequest">
+    <wsdl:part name="DoVoidRequest" element="ns:DoVoidReq" />
+  </wsdl:message>
+  <wsdl:message name="DoVoidResponse">
+    <wsdl:part name="DoVoidResponse" element="ns:DoVoidResponse" />
+  </wsdl:message>
+  <wsdl:message name="DoAuthorizationRequest">
+    <wsdl:part name="DoAuthorizationRequest" element="ns:DoAuthorizationReq" />
+  </wsdl:message>
+  <wsdl:message name="DoAuthorizationResponse">
+    <wsdl:part name="DoAuthorizationResponse" element="ns:DoAuthorizationResponse" />
+  </wsdl:message>
+  <wsdl:message name="DoUATPAuthorizationRequest">
+    <wsdl:part name="DoUATPAuthorizationRequest" element="ns:DoUATPAuthorizationReq" />
+  </wsdl:message>
+  <wsdl:message name="DoUATPAuthorizationResponse">
+    <wsdl:part name="DoUATPAuthorizationResponse" element="ns:DoUATPAuthorizationResponse" />
+  </wsdl:message>
+  <wsdl:message name="CreateMobilePaymentRequest">
+    <wsdl:part name="CreateMobilePaymentRequest" element="ns:CreateMobilePaymentReq" />
+  </wsdl:message>
+  <wsdl:message name="CreateMobilePaymentResponse">
+    <wsdl:part name="CreateMobilePaymentResponse" element="ns:CreateMobilePaymentResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetMobileStatusRequest">
+    <wsdl:part name="GetMobileStatusRequest" element="ns:GetMobileStatusReq" />
+  </wsdl:message>
+  <wsdl:message name="GetMobileStatusResponse">
+    <wsdl:part name="GetMobileStatusResponse" element="ns:GetMobileStatusResponse" />
+  </wsdl:message>
+  <wsdl:message name="SetCustomerBillingAgreementRequest">
+    <wsdl:part name="SetCustomerBillingAgreementRequest" element="ns:SetCustomerBillingAgreementReq" />
+  </wsdl:message>
+  <wsdl:message name="SetCustomerBillingAgreementResponse">
+    <wsdl:part name="SetCustomerBillingAgreementResponse" element="ns:SetCustomerBillingAgreementResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetBillingAgreementCustomerDetailsRequest">
+    <wsdl:part name="GetBillingAgreementCustomerDetailsRequest" element="ns:GetBillingAgreementCustomerDetailsReq" />
+  </wsdl:message>
+  <wsdl:message name="GetBillingAgreementCustomerDetailsResponse">
+    <wsdl:part name="GetBillingAgreementCustomerDetailsResponse" element="ns:GetBillingAgreementCustomerDetailsResponse" />
+  </wsdl:message>
+  <wsdl:message name="CreateBillingAgreementRequest">
+    <wsdl:part name="CreateBillingAgreementRequest" element="ns:CreateBillingAgreementReq" />
+  </wsdl:message>
+  <wsdl:message name="CreateBillingAgreementResponse">
+    <wsdl:part name="CreateBillingAgreementResponse" element="ns:CreateBillingAgreementResponse" />
+  </wsdl:message>
+  <wsdl:message name="DoReferenceTransactionRequest">
+    <wsdl:part name="DoReferenceTransactionRequest" element="ns:DoReferenceTransactionReq" />
+  </wsdl:message>
+  <wsdl:message name="DoReferenceTransactionResponse">
+    <wsdl:part name="DoReferenceTransactionResponse" element="ns:DoReferenceTransactionResponse" />
+  </wsdl:message>
+  <wsdl:message name="DoNonReferencedCreditRequest">
+    <wsdl:part name="DoNonReferencedCreditRequest" element="ns:DoNonReferencedCreditReq" />
+  </wsdl:message>
+  <wsdl:message name="DoNonReferencedCreditResponse">
+    <wsdl:part name="DoNonReferencedCreditResponse" element="ns:DoNonReferencedCreditResponse" />
+  </wsdl:message>
+  <wsdl:message name="SetMobileCheckoutRequest">
+    <wsdl:part name="SetMobileCheckoutRequest" element="ns:SetMobileCheckoutReq" />
+  </wsdl:message>
+  <wsdl:message name="SetMobileCheckoutResponse">
+    <wsdl:part name="SetMobileCheckoutResponse" element="ns:SetMobileCheckoutResponse" />
+  </wsdl:message>
+  <wsdl:message name="DoMobileCheckoutPaymentRequest">
+    <wsdl:part name="DoMobileCheckoutPaymentRequest" element="ns:DoMobileCheckoutPaymentReq" />
+  </wsdl:message>
+  <wsdl:message name="DoMobileCheckoutPaymentResponse">
+    <wsdl:part name="DoMobileCheckoutPaymentResponse" element="ns:DoMobileCheckoutPaymentResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetBalanceRequest">
+    <wsdl:part name="GetBalanceRequest" element="ns:GetBalanceReq" />
+  </wsdl:message>
+  <wsdl:message name="GetBalanceResponse">
+    <wsdl:part name="GetBalanceResponse" element="ns:GetBalanceResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetPalDetailsRequest">
+    <wsdl:part name="GetPalDetailsRequest" element="ns:GetPalDetailsReq" />
+  </wsdl:message>
+  <wsdl:message name="GetPalDetailsResponse">
+    <wsdl:part name="GetPalDetailsResponse" element="ns:GetPalDetailsResponse" />
+  </wsdl:message>
+  <wsdl:message name="CreateRecurringPaymentsProfileRequest">
+    <wsdl:part name="CreateRecurringPaymentsProfileRequest" element="ns:CreateRecurringPaymentsProfileReq" />
+  </wsdl:message>
+  <wsdl:message name="CreateRecurringPaymentsProfileResponse">
+    <wsdl:part name="CreateRecurringPaymentsProfileResponse" element="ns:CreateRecurringPaymentsProfileResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetRecurringPaymentsProfileDetailsRequest">
+    <wsdl:part name="GetRecurringPaymentsProfileDetailsRequest" element="ns:GetRecurringPaymentsProfileDetailsReq" />
+  </wsdl:message>
+  <wsdl:message name="GetRecurringPaymentsProfileDetailsResponse">
+    <wsdl:part name="GetRecurringPaymentsProfileDetailsResponse" element="ns:GetRecurringPaymentsProfileDetailsResponse" />
+  </wsdl:message>
+  <wsdl:message name="ManageRecurringPaymentsProfileStatusRequest">
+    <wsdl:part name="ManageRecurringPaymentsProfileStatusRequest" element="ns:ManageRecurringPaymentsProfileStatusReq" />
+  </wsdl:message>
+  <wsdl:message name="ManageRecurringPaymentsProfileStatusResponse">
+    <wsdl:part name="ManageRecurringPaymentsProfileStatusResponse" element="ns:ManageRecurringPaymentsProfileStatusResponse" />
+  </wsdl:message>
+  <wsdl:message name="BillOutstandingAmountRequest">
+    <wsdl:part name="BillOutstandingAmountRequest" element="ns:BillOutstandingAmountReq" />
+  </wsdl:message>
+  <wsdl:message name="BillOutstandingAmountResponse">
+    <wsdl:part name="BillOutstandingAmountResponse" element="ns:BillOutstandingAmountResponse" />
+  </wsdl:message>
+  <wsdl:message name="UpdateRecurringPaymentsProfileRequest">
+    <wsdl:part name="UpdateRecurringPaymentsProfileRequest" element="ns:UpdateRecurringPaymentsProfileReq" />
+  </wsdl:message>
+  <wsdl:message name="UpdateRecurringPaymentsProfileResponse">
+    <wsdl:part name="UpdateRecurringPaymentsProfileResponse" element="ns:UpdateRecurringPaymentsProfileResponse" />
+  </wsdl:message>
+  <wsdl:message name="ReverseTransactionRequest">
+    <wsdl:part name="ReverseTransactionRequest" element="ns:ReverseTransactionReq" />
+  </wsdl:message>
+  <wsdl:message name="ReverseTransactionResponse">
+    <wsdl:part name="ReverseTransactionResponse" element="ns:ReverseTransactionResponse" />
+  </wsdl:message>
+  <wsdl:portType name="PayPalAPIInterface">
+    <wsdl:operation name="RefundTransaction">
+      <wsdl:input message="ns:RefundTransactionRequest" />
+      <wsdl:output message="ns:RefundTransactionResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTransactionDetails">
+      <wsdl:input message="ns:GetTransactionDetailsRequest" />
+      <wsdl:output message="ns:GetTransactionDetailsResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="BMCreateButton">
+      <wsdl:input message="ns:BMCreateButtonRequest" />
+      <wsdl:output message="ns:BMCreateButtonResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="BMUpdateButton">
+      <wsdl:input message="ns:BMUpdateButtonRequest" />
+      <wsdl:output message="ns:BMUpdateButtonResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="BMManageButtonStatus">
+      <wsdl:input message="ns:BMManageButtonStatusRequest" />
+      <wsdl:output message="ns:BMManageButtonStatusResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="BMGetButtonDetails">
+      <wsdl:input message="ns:BMGetButtonDetailsRequest" />
+      <wsdl:output message="ns:BMGetButtonDetailsResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="BMSetInventory">
+      <wsdl:input message="ns:BMSetInventoryRequest" />
+      <wsdl:output message="ns:BMSetInventoryResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="BMGetInventory">
+      <wsdl:input message="ns:BMGetInventoryRequest" />
+      <wsdl:output message="ns:BMGetInventoryResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="BMButtonSearch">
+      <wsdl:input message="ns:BMButtonSearchRequest" />
+      <wsdl:output message="ns:BMButtonSearchResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="BillUser">
+      <wsdl:input message="ns:BillUserRequest" />
+      <wsdl:output message="ns:BillUserResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="TransactionSearch">
+      <wsdl:input message="ns:TransactionSearchRequest" />
+      <wsdl:output message="ns:TransactionSearchResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="MassPay">
+      <wsdl:input message="ns:MassPayRequest" />
+      <wsdl:output message="ns:MassPayResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="BillAgreementUpdate">
+      <wsdl:input message="ns:BillAgreementUpdateRequest" />
+      <wsdl:output message="ns:BAUpdateResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="AddressVerify">
+      <wsdl:input message="ns:AddressVerifyRequest" />
+      <wsdl:output message="ns:AddressVerifyResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="EnterBoarding">
+      <wsdl:input message="ns:EnterBoardingRequest" />
+      <wsdl:output message="ns:EnterBoardingResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="GetBoardingDetails">
+      <wsdl:input message="ns:GetBoardingDetailsRequest" />
+      <wsdl:output message="ns:GetBoardingDetailsResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateMobilePayment">
+      <wsdl:input message="ns:CreateMobilePaymentRequest" />
+      <wsdl:output message="ns:CreateMobilePaymentResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="GetMobileStatus">
+      <wsdl:input message="ns:GetMobileStatusRequest" />
+      <wsdl:output message="ns:GetMobileStatusResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="SetMobileCheckout">
+      <wsdl:input message="ns:SetMobileCheckoutRequest" />
+      <wsdl:output message="ns:SetMobileCheckoutResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="DoMobileCheckoutPayment">
+      <wsdl:input message="ns:DoMobileCheckoutPaymentRequest" />
+      <wsdl:output message="ns:DoMobileCheckoutPaymentResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="GetBalance">
+      <wsdl:input message="ns:GetBalanceRequest" />
+      <wsdl:output message="ns:GetBalanceResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="GetPalDetails">
+      <wsdl:input message="ns:GetPalDetailsRequest" />
+      <wsdl:output message="ns:GetPalDetailsResponse" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="PayPalAPIAAInterface">
+    <wsdl:operation name="DoExpressCheckoutPayment">
+      <wsdl:input message="ns:DoExpressCheckoutPaymentRequest" />
+      <wsdl:output message="ns:DoExpressCheckoutPaymentResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="DoUATPExpressCheckoutPayment">
+      <wsdl:input message="ns:DoUATPExpressCheckoutPaymentRequest" />
+      <wsdl:output message="ns:DoUATPExpressCheckoutPaymentResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="SetAuthFlowParam">
+      <wsdl:input message="ns:SetAuthFlowParamRequest" />
+      <wsdl:output message="ns:SetAuthFlowParamResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAuthDetails">
+      <wsdl:input message="ns:GetAuthDetailsRequest" />
+      <wsdl:output message="ns:GetAuthDetailsResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="SetAccessPermissions">
+      <wsdl:input message="ns:SetAccessPermissionsRequest" />
+      <wsdl:output message="ns:SetAccessPermissionsResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateAccessPermissions">
+      <wsdl:input message="ns:UpdateAccessPermissionsRequest" />
+      <wsdl:output message="ns:UpdateAccessPermissionsResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAccessPermissionDetails">
+      <wsdl:input message="ns:GetAccessPermissionDetailsRequest" />
+      <wsdl:output message="ns:GetAccessPermissionDetailsResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="SetExpressCheckout">
+      <wsdl:input message="ns:SetExpressCheckoutRequest" />
+      <wsdl:output message="ns:SetExpressCheckoutResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="GetExpressCheckoutDetails">
+      <wsdl:input message="ns:GetExpressCheckoutDetailsRequest" />
+      <wsdl:output message="ns:GetExpressCheckoutDetailsResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="DoDirectPayment">
+      <wsdl:input message="ns:DoDirectPaymentRequest" />
+      <wsdl:output message="ns:DoDirectPaymentResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="ManagePendingTransactionStatus">
+      <wsdl:input message="ns:ManagePendingTransactionStatusRequest" />
+      <wsdl:output message="ns:ManagePendingTransactionStatusResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="DoCapture">
+      <wsdl:input message="ns:DoCaptureRequest" />
+      <wsdl:output message="ns:DoCaptureResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="DoReauthorization">
+      <wsdl:input message="ns:DoReauthorizationRequest" />
+      <wsdl:output message="ns:DoReauthorizationResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="DoVoid">
+      <wsdl:input message="ns:DoVoidRequest" />
+      <wsdl:output message="ns:DoVoidResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="DoAuthorization">
+      <wsdl:input message="ns:DoAuthorizationRequest" />
+      <wsdl:output message="ns:DoAuthorizationResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="SetCustomerBillingAgreement">
+      <wsdl:input message="ns:SetCustomerBillingAgreementRequest" />
+      <wsdl:output message="ns:SetCustomerBillingAgreementResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="GetBillingAgreementCustomerDetails">
+      <wsdl:input message="ns:GetBillingAgreementCustomerDetailsRequest" />
+      <wsdl:output message="ns:GetBillingAgreementCustomerDetailsResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateBillingAgreement">
+      <wsdl:input message="ns:CreateBillingAgreementRequest" />
+      <wsdl:output message="ns:CreateBillingAgreementResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="DoReferenceTransaction">
+      <wsdl:input message="ns:DoReferenceTransactionRequest" />
+      <wsdl:output message="ns:DoReferenceTransactionResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="DoNonReferencedCredit">
+      <wsdl:input message="ns:DoNonReferencedCreditRequest" />
+      <wsdl:output message="ns:DoNonReferencedCreditResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="DoUATPAuthorization">
+      <wsdl:input message="ns:DoUATPAuthorizationRequest" />
+      <wsdl:output message="ns:DoUATPAuthorizationResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateRecurringPaymentsProfile">
+      <wsdl:input message="ns:CreateRecurringPaymentsProfileRequest" />
+      <wsdl:output message="ns:CreateRecurringPaymentsProfileResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="GetRecurringPaymentsProfileDetails">
+      <wsdl:input message="ns:GetRecurringPaymentsProfileDetailsRequest" />
+      <wsdl:output message="ns:GetRecurringPaymentsProfileDetailsResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="ManageRecurringPaymentsProfileStatus">
+      <wsdl:input message="ns:ManageRecurringPaymentsProfileStatusRequest" />
+      <wsdl:output message="ns:ManageRecurringPaymentsProfileStatusResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="BillOutstandingAmount">
+      <wsdl:input message="ns:BillOutstandingAmountRequest" />
+      <wsdl:output message="ns:BillOutstandingAmountResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateRecurringPaymentsProfile">
+      <wsdl:input message="ns:UpdateRecurringPaymentsProfileRequest" />
+      <wsdl:output message="ns:UpdateRecurringPaymentsProfileResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="ReverseTransaction">
+      <wsdl:input message="ns:ReverseTransactionRequest" />
+      <wsdl:output message="ns:ReverseTransactionResponse" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="PayPalAPISoapBinding" type="ns:PayPalAPIInterface">
+    <wsdlsoap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="RefundTransaction">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTransactionDetails">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="BMCreateButton">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="BMUpdateButton">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="BMSetInventory">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="BMGetButtonDetails">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="BMGetInventory">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="BMManageButtonStatus">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="BMButtonSearch">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="BillUser">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="TransactionSearch">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MassPay">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="BillAgreementUpdate">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddressVerify">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="EnterBoarding">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetBoardingDetails">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateMobilePayment">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMobileStatus">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetMobileCheckout">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DoMobileCheckoutPayment">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetBalance">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetPalDetails">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="PayPalAPIAASoapBinding" type="ns:PayPalAPIAAInterface">
+    <wsdlsoap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="DoExpressCheckoutPayment">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DoUATPExpressCheckoutPayment">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetAuthFlowParam">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAuthDetails">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetAccessPermissions">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateAccessPermissions">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAccessPermissionDetails">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetExpressCheckout">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetExpressCheckoutDetails">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DoDirectPayment">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ManagePendingTransactionStatus">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DoCapture">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DoReauthorization">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DoVoid">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DoAuthorization">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DoUATPAuthorization">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetCustomerBillingAgreement">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetBillingAgreementCustomerDetails">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateBillingAgreement">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DoReferenceTransaction">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateRecurringPaymentsProfile">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetRecurringPaymentsProfileDetails">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ManageRecurringPaymentsProfileStatus">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="BillOutstandingAmount">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateRecurringPaymentsProfile">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DoNonReferencedCredit">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReverseTransaction">
+      <wsdlsoap:operation soapAction="" />
+      <wsdl:input>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsdlsoap:header message="ns:RequesterCredentials" part="RequesterCredentials" use="literal" />
+        <wsdlsoap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="PayPalAPIInterfaceService">
+    <wsdl:port name="PayPalAPI" binding="ns:PayPalAPISoapBinding">
+      <wsdlsoap:address location="https://api.sandbox.paypal.com/2.0/" />
+    </wsdl:port>
+    <wsdl:port name="PayPalAPIAA" binding="ns:PayPalAPIAASoapBinding">
+      <wsdlsoap:address location="https://api-aa.sandbox.paypal.com/2.0/" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

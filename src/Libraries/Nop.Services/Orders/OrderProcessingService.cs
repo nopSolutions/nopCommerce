@@ -797,6 +797,7 @@ namespace Nop.Services.Orders
                                     break;
                                 case RecurringPaymentType.Automatic:
                                     //payment is processed on payment gateway site
+                                    processPaymentResult = new ProcessPaymentResult();
                                     break;
                                 default:
                                     throw new NopException("Not supported recurring payment type");

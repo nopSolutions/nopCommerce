@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:ns="urn:ebay:apis:CoreComponentTypes" xmlns:ebl="urn:ebay:apis:eBLBaseComponents" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="urn:ebay:apis:CoreComponentTypes" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="eBLBaseComponents.xsd" namespace="urn:ebay:apis:eBLBaseComponents" />
+  <xs:complexType name="AmountType">
+    <xs:simpleContent>
+      <xs:extension base="xs:double">
+        <xs:attribute name="currencyID" type="ebl:CurrencyCodeType" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="BasicAmountType">
+    <xs:annotation>
+      <xs:documentation>On requests, you must set the currencyID attribute to one of the three-character currency codes for any of the supported PayPal currencies. 
+<br /><br />
+Limitations: Must not exceed $10,000 USD in any currency. No currency symbol. Decimal separator must be a period (.), and the thousands separator must be a comma (,).
+</xs:documentation>
+    </xs:annotation>
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="currencyID" type="ebl:CurrencyCodeType" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="MeasureType">
+    <xs:simpleContent>
+      <xs:extension base="xs:double">
+        <xs:attribute name="unit" type="xs:token" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="QuantityType">
+    <xs:simpleContent>
+      <xs:extension base="xs:double">
+        <xs:attribute name="unit" type="xs:token" use="optional" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:simpleType name="UUIDType">
+    <xs:annotation>
+      <xs:documentation>
+			    Specifies a universally unique identifier. The UUID can 
+			    only contain digits from 0-9 and letters from A-F. The 
+			    UUID must be 32 characters long.  For example, 
+			    1FB02B2-9D27-3acb-ABA2-9D539C374228       
+			</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:length value="36" />
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>
