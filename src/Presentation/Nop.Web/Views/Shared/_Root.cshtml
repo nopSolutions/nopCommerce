@@ -27,6 +27,7 @@
     @Html.Partial("Head")
     @*Favicon - upload upload favicon.ico file to the root direcotry*@
     @Html.Action("Favicon", "Common")
+    @Html.Action("GoogleAnalytics", "Common", new { placement = "head" })
 </head>
 <body>
     <div class="master-wrapper-page">
@@ -73,5 +74,6 @@
             </div>
         </div>
     </div>
+@Html.Action("GoogleAnalytics", "Common", new { placement = "body" })
 </body>
 </html>

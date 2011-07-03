@@ -59,6 +59,7 @@ namespace Nop.Web.Controllers
         private readonly BlogSettings _blogSettings;
         private readonly ForumSettings _forumSettings;
         private readonly LocalizationSettings _localizationSettings;
+        private readonly GoogleAnalyticsSettings _googleAnalyticsSettings;
 
         public CommonController(ICategoryService categoryService, IProductService productService,
             IManufacturerService manufacturerService, ITopicService topicService,
@@ -74,7 +75,7 @@ namespace Nop.Web.Controllers
             TaxSettings taxSettings, CatalogSettings catalogSettings,
             StoreInformationSettings storeInformationSettings, EmailAccountSettings emailAccountSettings,
             CommonSettings commonSettings, BlogSettings blogSettings, ForumSettings forumSettings,
-            LocalizationSettings localizationSettings)
+            LocalizationSettings localizationSettings, GoogleAnalyticsSettings googleAnalyticsSettings)
         {
             this._categoryService = categoryService;
             this._productService = productService;
@@ -104,6 +105,7 @@ namespace Nop.Web.Controllers
             this._blogSettings = blogSettings;
             this._forumSettings = forumSettings;
             this._localizationSettings = localizationSettings;
+            this._googleAnalyticsSettings = googleAnalyticsSettings;
         }
 
         //language
@@ -428,6 +430,22 @@ namespace Nop.Web.Controllers
             };
             
             return PartialView(model);
+        }
+
+        [ChildActionOnly]
+        public ActionResult GoogleAnalytics(string placement)
+        {
+            if (!_googleAnalyticsSettings.Enabled)
+                return Content("");
+
+            //compare placement
+            if (String.IsNullOrEmpty(placement))
+                throw new ArgumentNullException("placement");
+
+            if (!placement.Equals(_googleAnalyticsSettings.Placement, StringComparison.InvariantCultureIgnoreCase))
+                return Content("");
+
+            return PartialView("GoogleAnalytics", _googleAnalyticsSettings.JavaScript);
         }
 
     }

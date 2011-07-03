@@ -21,6 +21,7 @@
 {
     x.Add().Text(T("Admin.Configuration.Settings.GeneralCommon.StoreInformationSettings").Text).Content(TabStoreInformationSettings().ToHtmlString()).Selected(true);
     x.Add().Text(T("Admin.Configuration.Settings.GeneralCommon.SEOSettings").Text).Content(TabSEOSettings().ToHtmlString());
+    x.Add().Text(T("Admin.Configuration.Settings.GeneralCommon.GoogleAnalytics").Text).Content(TabGoogleAnalyticsSettings().ToHtmlString());
     x.Add().Text(T("Admin.Configuration.Settings.GeneralCommon.SecuritySettings").Text).Content(TabSecuritySettings().ToHtmlString());
     x.Add().Text(T("Admin.Configuration.Settings.GeneralCommon.PdfSettings").Text).Content(TabPdfSettings().ToHtmlString());
     x.Add().Text(T("Admin.Configuration.Settings.GeneralCommon.LocalizationSettings").Text).Content(TabLocalizationSettings().ToHtmlString());
@@ -119,6 +120,78 @@
         </tr>
     </table>
 }
+@helper TabGoogleAnalyticsSettings()
+    {    
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle" colspan="2">
+                Google Analytics is a free website stats tool from Google. It keeps track of statistics
+                about the visitors and ecommerce conversion on your website.
+                <br />
+                <br />
+                Follow the next steps to enable Google Analytics integration:
+                <ul>
+                    <li><a href="http://www.google.com/analytics/" target="_blank">Create a Google Analytics
+                        account</a> and follow the wizard to add your website</li>
+                    <li>Copy the Google Analytics ID into the 'ID' box below</li>
+                    <li>Copy the tracking code from Google Analytics into the 'Tracking Code' box below</li>
+                    <li>Click the 'Save' button below and Google Analytics will be integrated into your
+                        store</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.GoogleAnalyticsSettings.Enabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.GoogleAnalyticsSettings.Enabled)
+                @Html.ValidationMessageFor(model => model.GoogleAnalyticsSettings.Enabled)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.GoogleAnalyticsSettings.GoogleId):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.GoogleAnalyticsSettings.GoogleId)
+                @Html.ValidationMessageFor(model => model.GoogleAnalyticsSettings.GoogleId)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.GoogleAnalyticsSettings.JavaScript):
+            </td>
+            <td class="adminData">
+                @Html.TextAreaFor(model => model.GoogleAnalyticsSettings.JavaScript, new { style = "Width: 300px; Height: 100px;" })
+                @Html.ValidationMessageFor(model => model.GoogleAnalyticsSettings.JavaScript)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.GoogleAnalyticsSettings.Placement):
+            </td>
+            <td class="adminData">
+                @{
+                var gaPlacementList = new List<SelectListItem>();
+                gaPlacementList.Add(new SelectListItem()
+                {
+                    Text = T("Admin.Configuration.Settings.GeneralCommon.GoogleAnalyticsPlacement.BeforeHead").Text,
+                    Value ="head"
+                });
+                gaPlacementList.Add(new SelectListItem()
+                {
+                    Text = T("Admin.Configuration.Settings.GeneralCommon.GoogleAnalyticsPlacement.BeforeBody").Text,
+                    Value ="body"
+                });
+                    @Html.DropDownListFor(model => model.GoogleAnalyticsSettings.Placement, gaPlacementList)
+                    
+                }
+                @Html.ValidationMessageFor(model => model.GoogleAnalyticsSettings.Placement)
+            </td>
+        </tr>
+    </table>
+}
 @helper TabSecuritySettings()
     {
     <table class="adminContent">
@@ -145,7 +218,7 @@
 }
 @helper TabPdfSettings()
     {
-<table class="adminContent">
+    <table class="adminContent">
         <tr>
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.PdfSettings.Enabled):
@@ -159,7 +232,7 @@
 }
 @helper TabLocalizationSettings()
     {
-<table class="adminContent">
+    <table class="adminContent">
         <tr>
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.LocalizationSettings.UseImagesForLanguageSelection):

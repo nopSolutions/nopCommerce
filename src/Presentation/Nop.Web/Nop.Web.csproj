@@ -1336,6 +1336,7 @@
     <Content Include="Views\Profile\Posts.cshtml" />
     <Content Include="Views\Common\Favicon.cshtml" />
     <Content Include="Views\Customer\ForumSubscriptions.cshtml" />
+    <Content Include="Views\Common\GoogleAnalytics.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
