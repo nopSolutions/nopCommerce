@@ -31,6 +31,8 @@ namespace Nop.Web.Framework.EmbeddedViews
 
             //return virtualPathAppRelative.StartsWith("~/Views/", StringComparison.InvariantCultureIgnoreCase)
             //       && _embeddedViews.ContainsEmbeddedView(virtualPathAppRelative);
+            if (string.IsNullOrEmpty(virtualPath))
+                return false;
 
             string virtualPathAppRelative = VirtualPathUtility.ToAppRelative(virtualPath);
             if (!virtualPathAppRelative.StartsWith("~/Views/", StringComparison.InvariantCultureIgnoreCase))
