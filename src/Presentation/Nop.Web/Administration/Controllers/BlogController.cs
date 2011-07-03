@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using Nop.Admin.Models.Blogs;
 using Nop.Core.Domain.Blogs;
+using Nop.Core.Domain.Common;
 using Nop.Services.Blogs;
 using Nop.Services.Customers;
 using Nop.Services.Helpers;
@@ -27,6 +28,7 @@ namespace Nop.Admin.Controllers
         private readonly ICustomerContentService _customerContentService;
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
+        private readonly AdminAreaSettings _adminAreaSettings;
 
         #endregion
 
@@ -34,7 +36,8 @@ namespace Nop.Admin.Controllers
 
         public BlogController(IBlogService blogService, ILanguageService languageService,
             IDateTimeHelper dateTimeHelper, ICustomerContentService customerContentService,
-            ILocalizationService localizationService, IPermissionService permissionService)
+            ILocalizationService localizationService, IPermissionService permissionService,
+            AdminAreaSettings adminAreaSettings)
         {
             this._blogService = blogService;
             this._languageService = languageService;
@@ -42,6 +45,7 @@ namespace Nop.Admin.Controllers
             this._customerContentService = customerContentService;
             this._localizationService = localizationService;
             this._permissionService = permissionService;
+            this._adminAreaSettings = adminAreaSettings;
 		}
 
 		#endregion 
@@ -58,7 +62,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
                 return AccessDeniedView();
 
-			var blogPosts = _blogService.GetAllBlogPosts(0, null, null, 0, 10);
+            var blogPosts = _blogService.GetAllBlogPosts(0, null, null, 0, _adminAreaSettings.GridPageSize);
             var gridModel = new GridModel<BlogPostModel>
             {
                 Data = blogPosts.Select(x =>

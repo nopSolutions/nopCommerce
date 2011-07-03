@@ -1,5 +1,9 @@
 ﻿@model Telerik.Web.Mvc.GridModel<OnlineCustomerModel>
 @using Telerik.Web.Mvc.UI
+
+@{
+    var gridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSize;
+}
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Administration/Content/images/ico-customers.png")" />
@@ -26,7 +30,7 @@
                             .Width(150);
                         columns.Bound(x => x.LastVisitedPage);
                     })
-                    .Pageable(settings => settings.Total(Model.Total).PageSize(10).Position(GridPagerPosition.Both))
+                    .Pageable(settings => settings.Total(Model.Total).PageSize(gridPageSize).Position(GridPagerPosition.Both))
                     .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "OnlineCustomer"))
                     .EnableCustomBinding(true))
         </td>

@@ -13,6 +13,7 @@ using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
 using Nop.Services.Security;
+using Nop.Core.Domain.Common;
 
 namespace Nop.Admin.Controllers
 {
@@ -23,15 +24,17 @@ namespace Nop.Admin.Controllers
 		private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
+        private readonly AdminAreaSettings _adminAreaSettings;
 
 		public NewsLetterSubscriptionController(INewsLetterSubscriptionService newsLetterSubscriptionService,
 			IDateTimeHelper dateTimeHelper,ILocalizationService localizationService,
-            IPermissionService permissionService)
+            IPermissionService permissionService, AdminAreaSettings adminAreaSettings)
 		{
 			this._newsLetterSubscriptionService = newsLetterSubscriptionService;
 			this._dateTimeHelper = dateTimeHelper;
             this._localizationService = localizationService;
             this._permissionService = permissionService;
+            this._adminAreaSettings = adminAreaSettings;
 		}
 
 		public ActionResult Index()
@@ -44,7 +47,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNewsletterSubscribers))
                 return AccessDeniedView();
 
-			var newsletterSubscriptions = _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions(String.Empty, 0, 10, true);
+            var newsletterSubscriptions = _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions(String.Empty, 0, _adminAreaSettings.GridPageSize, true);
 			var model = new NewsLetterSubscriptionListModel();
 
 			model.NewsLetterSubscriptions = new GridModel<NewsLetterSubscriptionModel>

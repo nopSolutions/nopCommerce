@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Nop.Admin.Models.Catalog;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Discounts;
 using Nop.Services.Catalog;
 using Nop.Services.Discounts;
@@ -36,6 +37,7 @@ namespace Nop.Admin.Controllers
         private readonly IExportManager _exportManager;
         private readonly IWorkContext _workContext;
         private readonly ICustomerActivityService _customerActivityService;
+        private readonly AdminAreaSettings _adminAreaSettings;
 
         #endregion
         
@@ -46,7 +48,7 @@ namespace Nop.Admin.Controllers
             ILocalizationService localizationService, ILocalizedEntityService localizedEntityService,
             IDiscountService discountService, IPermissionService permissionService,
             IExportManager exportManager, IWorkContext workContext,
-            ICustomerActivityService customerActivityService)
+            ICustomerActivityService customerActivityService, AdminAreaSettings adminAreaSettings)
         {
             this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
@@ -59,6 +61,7 @@ namespace Nop.Admin.Controllers
             this._exportManager = exportManager;
             this._workContext = workContext;
             this._customerActivityService = customerActivityService;
+            this._adminAreaSettings = adminAreaSettings;
         }
 
         #endregion
@@ -116,7 +119,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
 
-            var categories = _categoryService.GetAllCategories(0, 10, true);
+            var categories = _categoryService.GetAllCategories(0, _adminAreaSettings.GridPageSize, true);
             var gridModel = new GridModel<CategoryModel>
             {
                 Data = categories.Select(x =>
@@ -530,7 +533,7 @@ namespace Nop.Admin.Controllers
 
             var products = _productService.SearchProducts(0, 0, null, null, null, 0, 0, string.Empty, false,
                 _workContext.WorkingLanguage.Id, new List<int>(),
-                ProductSortingEnum.Position, 0, 10, true);
+                ProductSortingEnum.Position, 0, _adminAreaSettings.GridPageSize, true);
 
             var model = new CategoryModel.AddCategoryProductModel();
             model.Products = new GridModel<ProductModel>

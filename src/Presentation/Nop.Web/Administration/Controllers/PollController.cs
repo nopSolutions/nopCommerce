@@ -9,6 +9,7 @@ using Nop.Services.Polls;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
 using Nop.Services.Security;
+using Nop.Core.Domain.Common;
 
 namespace Nop.Admin.Controllers
 {
@@ -22,6 +23,7 @@ namespace Nop.Admin.Controllers
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
+        private readonly AdminAreaSettings _adminAreaSettings;
 
 		#endregion
 
@@ -29,13 +31,14 @@ namespace Nop.Admin.Controllers
 
         public PollController(IPollService pollService, ILanguageService languageService,
             IDateTimeHelper dateTimeHelper, ILocalizationService localizationService,
-            IPermissionService permissionService)
+            IPermissionService permissionService, AdminAreaSettings adminAreaSettings)
         {
             this._pollService = pollService;
             this._languageService = languageService;
             this._dateTimeHelper = dateTimeHelper;
             this._localizationService = localizationService;
             this._permissionService = permissionService;
+            this._adminAreaSettings = adminAreaSettings;
 		}
 
 		#endregion 
@@ -52,7 +55,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedView();
 
-            var polls = _pollService.GetPolls(0, false, 0, 10, true);
+            var polls = _pollService.GetPolls(0, false, 0, _adminAreaSettings.GridPageSize, true);
             var gridModel = new GridModel<PollModel>
             {
                 Data = polls.Select(x =>

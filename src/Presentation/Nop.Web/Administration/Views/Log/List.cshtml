@@ -1,5 +1,8 @@
 ﻿@model LogListModel
 @using Telerik.Web.Mvc.UI
+@{
+    var gridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSize;
+}
 @using (Html.BeginForm())
 {
     <div class="section-header">
@@ -70,7 +73,7 @@
                                 .Centered()
                                 .Title("Edit");
                         })
-                        .Pageable(settings => settings.PageSize(10).Position(GridPagerPosition.Both))
+                        .Pageable(settings => settings.PageSize(gridPageSize).Position(GridPagerPosition.Both))
                         .DataBinding(dataBinding => dataBinding.Ajax().Select("LogList", "Log", Model))
                         .EnableCustomBinding(true))
             </td>

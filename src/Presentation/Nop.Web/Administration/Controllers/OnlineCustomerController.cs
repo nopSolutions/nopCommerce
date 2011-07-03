@@ -1,31 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Web.Mvc;
-using Nop.Admin.Models.Common;
 using Nop.Admin.Models.Customers;
-using Nop.Admin.Models.ShoppingCart;
-using Nop.Core;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Directory;
-using Nop.Core.Domain.Orders;
-using Nop.Core.Domain.Payments;
-using Nop.Core.Domain.Shipping;
-using Nop.Core.Domain.Tax;
-using Nop.Services.Catalog;
-using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
-using Nop.Services.ExportImport;
 using Nop.Services.Helpers;
-using Nop.Services.Localization;
-using Nop.Services.Logging;
-using Nop.Services.Orders;
-using Nop.Services.Tax;
-using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
-using Nop.Web.Framework.Mvc;
 using Telerik.Web.Mvc;
 
 namespace Nop.Admin.Controllers
@@ -39,6 +21,7 @@ namespace Nop.Admin.Controllers
         private readonly IGeoCountryLookup _geoCountryLookup;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly CustomerSettings _customerSettings;
+        private readonly AdminAreaSettings _adminAreaSettings;
 
         #endregion
 
@@ -46,12 +29,13 @@ namespace Nop.Admin.Controllers
 
         public OnlineCustomerController(ICustomerService customerService,
             IGeoCountryLookup geoCountryLookup, IDateTimeHelper dateTimeHelper,
-            CustomerSettings customerSettings)
+            CustomerSettings customerSettings, AdminAreaSettings adminAreaSettings)
         {
             this._customerService = customerService;
             this._geoCountryLookup = geoCountryLookup;
             this._dateTimeHelper = dateTimeHelper;
             this._customerSettings = customerSettings;
+            this._adminAreaSettings = adminAreaSettings;
         }
 
         #endregion
@@ -61,7 +45,7 @@ namespace Nop.Admin.Controllers
         public ActionResult List()
         {
             var customers = _customerService.GetOnlineCustomers(DateTime.UtcNow.AddMinutes(-_customerSettings.OnlineCustomerMinutes),
-                null, 0, 10);
+                null, 0, _adminAreaSettings.GridPageSize);
 
             var model = new GridModel<OnlineCustomerModel>
             {

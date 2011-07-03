@@ -4411,6 +4411,12 @@ namespace Nop.Services.Installation
                     ConvertNonWesternChars = false,
                 });
 
+            EngineContext.Current.Resolve<IConfigurationProvider<AdminAreaSettings>>()
+                .SaveSettings(new AdminAreaSettings()
+                {
+                    GridPageSize = 15,
+                });
+            
             EngineContext.Current.Resolve<IConfigurationProvider<GoogleAnalyticsSettings>>()
                 .SaveSettings(new GoogleAnalyticsSettings()
                 {

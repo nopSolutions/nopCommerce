@@ -13,6 +13,7 @@ using Nop.Web.Framework.Mvc;
 using Telerik.Web.Mvc;
 using Telerik.Web.Mvc.UI;
 using Nop.Services.Security;
+using Nop.Core.Domain.Common;
 
 namespace Nop.Admin.Controllers
 {
@@ -26,19 +27,22 @@ namespace Nop.Admin.Controllers
         private readonly IExportManager _exportManager;
         private readonly IImportManager _importManager;
         private readonly IPermissionService _permissionService;
+        private readonly AdminAreaSettings _adminAreaSettings;
 
 		#endregion
 
 		#region Constructors
 
 		public LanguageController(ILanguageService languageService, ILocalizationService localizationService,
-            IExportManager exportManager, IImportManager importManager, IPermissionService permissionService)
+            IExportManager exportManager, IImportManager importManager, IPermissionService permissionService,
+            AdminAreaSettings adminAreaSettings)
 		{
 			this._localizationService = localizationService;
             this._languageService = languageService;
             this._exportManager = exportManager;
             this._importManager = importManager;
             this._permissionService = permissionService;
+            this._adminAreaSettings = adminAreaSettings;
 		}
 
 		#endregion 
@@ -183,7 +187,7 @@ namespace Nop.Admin.Controllers
 			var resources = _localizationService.GetAllResourcesByLanguageId(languageId);
 			var gridModel = new GridModel<LanguageResourceModel>
 			{
-				Data = resources.Take(20).Select(x => x.Value.ToModel()),
+                Data = resources.Take(_adminAreaSettings.GridPageSize).Select(x => x.Value.ToModel()),
 				Total = resources.Count
 			};
 			return View(gridModel);

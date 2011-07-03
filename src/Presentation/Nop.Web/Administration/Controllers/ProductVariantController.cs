@@ -19,6 +19,7 @@ using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
 using Nop.Services.Security;
+using Nop.Core.Domain.Common;
 
 namespace Nop.Admin.Controllers
 {
@@ -46,6 +47,7 @@ namespace Nop.Admin.Controllers
         private readonly CurrencySettings _currencySettings;
         private readonly IMeasureService _measureService;
         private readonly MeasureSettings _measureSettings;
+        private readonly AdminAreaSettings _adminAreaSettings;
         #endregion
 
         #region Constructors
@@ -59,7 +61,8 @@ namespace Nop.Admin.Controllers
             IProductAttributeParser productAttributeParser, ICustomerActivityService customerActivityService,
             IPermissionService permissionService,
             ICurrencyService currencyService, CurrencySettings currencySettings,
-            IMeasureService measureService, MeasureSettings measureSettings)
+            IMeasureService measureService, MeasureSettings measureSettings,
+            AdminAreaSettings adminAreaSettings)
         {
             this._localizedEntityService = localizedEntityService;
             this._languageService = languageService;
@@ -80,6 +83,7 @@ namespace Nop.Admin.Controllers
             this._currencySettings = currencySettings;
             this._measureService = measureService;
             this._measureSettings = measureSettings;
+            this._adminAreaSettings = adminAreaSettings;
         }
         
         #endregion
@@ -402,7 +406,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
 
-            var variants = _productService.GetLowStockProductVariants().Take(20).ToList();
+            var variants = _productService.GetLowStockProductVariants().Take(_adminAreaSettings.GridPageSize).ToList();
             var model = new GridModel<ProductVariantModel>()
             {
                 Data = variants.Select(x =>

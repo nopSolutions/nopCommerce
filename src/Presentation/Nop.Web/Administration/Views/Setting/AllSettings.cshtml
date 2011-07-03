@@ -1,5 +1,8 @@
 ﻿@model Telerik.Web.Mvc.GridModel<SettingModel>
 
+@{
+    var gridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSize;
+}
 @using Telerik.Web.Mvc.UI;
 @using System.Linq;
 <div class="section-header">
@@ -34,7 +37,7 @@
                         x.Mode(GridEditMode.InLine);
                     })
                     .Filterable()
-                    .Pageable(settings => settings.PageSize(20).Total(Model.Total).Position(GridPagerPosition.Both))
+                    .Pageable(settings => settings.PageSize(gridPageSize).Total(Model.Total).Position(GridPagerPosition.Both))
                     .DataBinding(dataBinding =>
                     {
                         dataBinding.Ajax().Select("AllSettings", "Setting")

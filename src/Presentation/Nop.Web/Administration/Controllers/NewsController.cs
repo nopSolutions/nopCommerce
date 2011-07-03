@@ -13,6 +13,7 @@ using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
 using Nop.Services.Security;
+using Nop.Core.Domain.Common;
 
 namespace Nop.Admin.Controllers
 {
@@ -27,6 +28,7 @@ namespace Nop.Admin.Controllers
         private readonly ICustomerContentService _customerContentService;
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
+        private readonly AdminAreaSettings _adminAreaSettings;
         
 		#endregion
 
@@ -34,7 +36,8 @@ namespace Nop.Admin.Controllers
 
         public NewsController(INewsService newsService, ILanguageService languageService,
             IDateTimeHelper dateTimeHelper, ICustomerContentService customerContentService,
-            ILocalizationService localizationService, IPermissionService permissionService)
+            ILocalizationService localizationService, IPermissionService permissionService,
+            AdminAreaSettings adminAreaSettings)
         {
             this._newsService = newsService;
             this._languageService = languageService;
@@ -42,6 +45,7 @@ namespace Nop.Admin.Controllers
             this._customerContentService = customerContentService;
             this._localizationService = localizationService;
             this._permissionService = permissionService;
+            this._adminAreaSettings = adminAreaSettings;
 		}
 
 		#endregion 
@@ -58,7 +62,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNews))
                 return AccessDeniedView();
 
-            var news = _newsService.GetAllNews(0, null, null, 0, 10, true);
+            var news = _newsService.GetAllNews(0, null, null, 0, _adminAreaSettings.GridPageSize, true);
             var gridModel = new GridModel<NewsItemModel>
             {
                 Data = news.Select(x =>

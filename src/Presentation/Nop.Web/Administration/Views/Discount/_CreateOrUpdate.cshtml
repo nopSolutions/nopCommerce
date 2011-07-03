@@ -356,6 +356,7 @@
 @helper TabHistory()
     { 
     
+        var gridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSize;
     @(Html.Telerik().Grid<DiscountModel.DiscountUsageHistoryModel>()
                     .Name("usagehistory-grid")
                     .DataKeys(x =>
@@ -376,7 +377,7 @@
                         }).Width(100).Title("Admin.Common.Delete");
 
                     })
-                    .Pageable(settings => settings.PageSize(20).Position(GridPagerPosition.Both))
+                    .Pageable(settings => settings.PageSize(gridPageSize).Position(GridPagerPosition.Both))
                     .DataBinding(dataBinding =>
                     {
                         dataBinding.Ajax().Select("UsageHistoryList", "Discount", new { discountId = Model.Id })

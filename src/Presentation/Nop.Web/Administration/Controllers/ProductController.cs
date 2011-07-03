@@ -19,6 +19,7 @@ using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
 using Telerik.Web.Mvc;
 using Nop.Services.Security;
+using Nop.Core.Domain.Common;
 
 namespace Nop.Admin.Controllers
 {
@@ -44,6 +45,7 @@ namespace Nop.Admin.Controllers
         private readonly IImportManager _importManager;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IPermissionService _permissionService;
+        private readonly AdminAreaSettings _adminAreaSettings;
 
         #endregion
 
@@ -58,7 +60,7 @@ namespace Nop.Admin.Controllers
             ICopyProductService copyProductService, IPdfService pdfService,
             IExportManager exportManager, IImportManager importManager,
             ICustomerActivityService customerActivityService,
-            IPermissionService permissionService)
+            IPermissionService permissionService, AdminAreaSettings adminAreaSettings)
         {
             this._productService = productService;
             this._categoryService = categoryService;
@@ -77,6 +79,7 @@ namespace Nop.Admin.Controllers
             this._importManager = importManager;
             this._customerActivityService = customerActivityService;
             this._permissionService = permissionService;
+            this._adminAreaSettings = adminAreaSettings;
         }
 
         #endregion 
@@ -370,7 +373,7 @@ namespace Nop.Admin.Controllers
 
             var products = _productService.SearchProducts(0, 0, null, null, null, 0, 0, string.Empty, false,
                 _workContext.WorkingLanguage.Id, new List<int>(),
-                ProductSortingEnum.Position, 0, 10, true);
+                ProductSortingEnum.Position, 0, _adminAreaSettings.GridPageSize, true);
 
             var model = new ProductListModel();
             model.Products = new GridModel<ProductModel>
@@ -897,7 +900,7 @@ namespace Nop.Admin.Controllers
 
             var products = _productService.SearchProducts(0, 0, null, null, null, 0, 0, string.Empty, false,
                 _workContext.WorkingLanguage.Id, new List<int>(),
-                ProductSortingEnum.Position, 0, 10, true);
+                ProductSortingEnum.Position, 0, _adminAreaSettings.GridPageSize, true);
 
             var model = new ProductModel.AddRelatedProductModel();
             model.Products = new GridModel<ProductModel>
@@ -1031,7 +1034,7 @@ namespace Nop.Admin.Controllers
 
             var products = _productService.SearchProducts(0, 0, null, null, null, 0, 0, string.Empty, false,
                 _workContext.WorkingLanguage.Id, new List<int>(),
-                ProductSortingEnum.Position, 0, 10, true);
+                ProductSortingEnum.Position, 0, _adminAreaSettings.GridPageSize, true);
 
             var model = new ProductModel.AddCrossSellProductModel();
             model.Products = new GridModel<ProductModel>
@@ -1306,7 +1309,7 @@ namespace Nop.Admin.Controllers
             var tags = _productTagService.GetAllProductTags();
             var model = new GridModel<ProductTagModel>
             {
-                Data = tags.Take(20).Select(x =>
+                Data = tags.Take(_adminAreaSettings.GridPageSize).Select(x =>
                 {
                     return new ProductTagModel()
                     {

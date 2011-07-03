@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web.Mvc;
 using Nop.Admin.Models.Logging;
+using Nop.Core.Domain.Common;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -20,6 +21,7 @@ namespace Nop.Admin.Controllers
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
+
         #endregion Fields
 
         #region Constructors

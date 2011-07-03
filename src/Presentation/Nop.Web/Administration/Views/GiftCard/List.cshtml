@@ -2,6 +2,9 @@
            
 @using Telerik.Web.Mvc.UI
 
+@{
+    var gridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSize;
+}
 
 @using (Html.BeginForm())
 {
@@ -60,7 +63,7 @@
                                 .HeaderTemplate("Edit")
                                 .Filterable(false);
                         })
-                        .Pageable(settings => settings.PageSize(10).Position(GridPagerPosition.Both))
+                        .Pageable(settings => settings.PageSize(gridPageSize).Position(GridPagerPosition.Both))
                         .DataBinding(dataBinding => dataBinding.Ajax().Select("GiftCardList", "GiftCard", Model))
                         .EnableCustomBinding(true))
             </td>

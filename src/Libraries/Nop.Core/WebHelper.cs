@@ -251,15 +251,18 @@ namespace Nop.Core
 
             switch (extension.ToLower())
             {
-                case ".css":
-                case ".ico":
-                case ".gif":
-                case ".png":
-                case ".jpg":
-                case ".jpeg":
-                case ".js":
                 case ".axd":
                 case ".ashx":
+                case ".bmp":
+                case ".css":
+                case ".gif":
+                case ".ico":
+                case ".jpeg":
+                case ".jpg":
+                case ".js":
+                case ".png":
+                case ".rar":
+                case ".zip":
                     return true;
             }
 

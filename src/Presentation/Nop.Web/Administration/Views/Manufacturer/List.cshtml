@@ -1,6 +1,9 @@
 ﻿@model Telerik.Web.Mvc.GridModel<ManufacturerModel>
 @using Telerik.Web.Mvc.UI
 
+@{
+    var gridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSize;
+}
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Administration/Content/images/ico-catalog.png")" />
@@ -33,7 +36,7 @@
                             .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
                             .Title(T("Admin.Common.Edit").Text);
                     })
-                    .Pageable(settings => settings.Total(Model.Total).PageSize(10).Position(GridPagerPosition.Both))
+                    .Pageable(settings => settings.Total(Model.Total).PageSize(gridPageSize).Position(GridPagerPosition.Both))
                     .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "Manufacturer"))
                     .EnableCustomBinding(true))
         </td>

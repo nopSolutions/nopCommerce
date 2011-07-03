@@ -78,6 +78,7 @@ namespace Nop.Admin.Controllers
         private readonly PdfSettings _pdfSettings;
         private readonly LocalizationSettings _localizationSettings;
         private readonly GoogleAnalyticsSettings _googleAnalyticsSettings;
+        private readonly AdminAreaSettings _adminAreaSettings;
 
 		#endregion
 
@@ -100,7 +101,8 @@ namespace Nop.Admin.Controllers
             CustomerSettings customerSettings,
             DateTimeSettings dateTimeSettings, StoreInformationSettings storeInformationSettings,
             SeoSettings seoSettings,SecuritySettings securitySettings, PdfSettings pdfSettings,
-            LocalizationSettings localizationSettings, GoogleAnalyticsSettings googleAnalyticsSettings)
+            LocalizationSettings localizationSettings, GoogleAnalyticsSettings googleAnalyticsSettings,
+            AdminAreaSettings adminAreaSettings)
         {
             this._settingService = settingService;
             this._countryService = countryService;
@@ -137,6 +139,7 @@ namespace Nop.Admin.Controllers
             this._pdfSettings = pdfSettings;
             this._localizationSettings = localizationSettings;
             this._googleAnalyticsSettings = googleAnalyticsSettings;
+            this._adminAreaSettings = adminAreaSettings;
         }
 
 		#endregion 
@@ -844,7 +847,7 @@ namespace Nop.Admin.Controllers
             var settings = _settingService.GetAllSettings().Select(x => x.Value).OrderBy(x => x.Name).ToList();
             var model = new GridModel<SettingModel>
             {
-                Data = settings.Take(20).Select(x => 
+                Data = settings.Take(_adminAreaSettings.GridPageSize).Select(x => 
                 {
                     return new SettingModel()
                     {

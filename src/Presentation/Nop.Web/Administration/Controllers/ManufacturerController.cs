@@ -14,6 +14,7 @@ using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
 using Telerik.Web.Mvc;
 using Nop.Services.Security;
+using Nop.Core.Domain.Common;
 
 namespace Nop.Admin.Controllers
 {
@@ -32,6 +33,7 @@ namespace Nop.Admin.Controllers
         private readonly IWorkContext _workContext;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IPermissionService _permissionService;
+        private readonly AdminAreaSettings _adminAreaSettings;
 
         #endregion
         
@@ -41,7 +43,8 @@ namespace Nop.Admin.Controllers
             IProductService productService,  ILanguageService languageService,
             ILocalizationService localizationService, ILocalizedEntityService localizedEntityService,
             IExportManager exportManager, IWorkContext workContext,
-            ICustomerActivityService customerActivityService, IPermissionService permissionService)
+            ICustomerActivityService customerActivityService, IPermissionService permissionService,
+            AdminAreaSettings adminAreaSettings)
         {
             this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
@@ -53,6 +56,7 @@ namespace Nop.Admin.Controllers
             this._workContext = workContext;
             this._customerActivityService = customerActivityService;
             this._permissionService = permissionService;
+            this._adminAreaSettings = adminAreaSettings;
         }
 
         #endregion
@@ -110,7 +114,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
 
-            var manufacturers = _manufacturerService.GetAllManufacturers(0, 10, true);
+            var manufacturers = _manufacturerService.GetAllManufacturers(0, _adminAreaSettings.GridPageSize, true);
             var gridModel = new GridModel<ManufacturerModel>
             {
                 Data = manufacturers.Select(x =>x.ToModel()),
@@ -359,7 +363,7 @@ namespace Nop.Admin.Controllers
 
             var products = _productService.SearchProducts(0, 0, null, null, null, 0, 0, string.Empty, false,
                 _workContext.WorkingLanguage.Id, new List<int>(),
-                ProductSortingEnum.Position, 0, 10, true);
+                ProductSortingEnum.Position, 0, _adminAreaSettings.GridPageSize, true);
 
             var model = new ManufacturerModel.AddManufacturerProductModel();
             model.Products = new GridModel<ProductModel>

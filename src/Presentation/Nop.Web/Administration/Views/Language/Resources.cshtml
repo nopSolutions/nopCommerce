@@ -1,6 +1,9 @@
 ﻿@model Telerik.Web.Mvc.GridModel<LanguageResourceModel>
 @using Telerik.Web.Mvc.UI;
 @using System.Linq;
+@{
+    var gridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSize;
+}
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Administration/Content/images/ico-content.png")" />
@@ -32,7 +35,8 @@
         <td>
             @(Html.Telerik().Grid(Model.Data)
                     .Name("resources-grid")
-                    .DataKeys(x => {
+                    .DataKeys(x =>
+                    {
                         x.Add(y => y.Id).RouteKey("Id");
                         x.Add(y => y.LanguageId).RouteKey("languageId");
                     })
@@ -49,11 +53,12 @@
 
                     })
                     .ToolBar(x => x.Insert())
-                    .Editable(x =>{
+                    .Editable(x =>
+                    {
                         x.Mode(GridEditMode.InLine);
                     })
                     .Filterable()
-                    .Pageable(settings => settings.PageSize(20).Total(Model.Total).Position(GridPagerPosition.Both))
+                    .Pageable(settings => settings.PageSize(gridPageSize).Total(Model.Total).Position(GridPagerPosition.Both))
                     .DataBinding(dataBinding =>
                     {
                         dataBinding.Ajax().Select("Resources", "Language")

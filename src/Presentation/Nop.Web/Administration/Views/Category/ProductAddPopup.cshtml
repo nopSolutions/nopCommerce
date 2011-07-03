@@ -4,6 +4,9 @@
 
 @model CategoryModel.AddCategoryProductModel
 
+@{
+    var gridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSize;
+}
 @using Telerik.Web.Mvc.UI;
 @using (Html.BeginForm())
 {
@@ -79,7 +82,7 @@
                             .Template(x => x.Published.ToString().ToLower())
                             .Centered();
                     })
-                    .Pageable(settings => settings.Total(Model.Products.Total).PageSize(10).Position(GridPagerPosition.Both))
+                    .Pageable(settings => settings.Total(Model.Products.Total).PageSize(gridPageSize).Position(GridPagerPosition.Both))
                     .DataBinding(dataBinding => dataBinding.Ajax().Select("ProductAddPopupList", "Category"))
                     .ClientEvents(events => events.OnDataBinding("onDataBinding"))
                     .EnableCustomBinding(true))

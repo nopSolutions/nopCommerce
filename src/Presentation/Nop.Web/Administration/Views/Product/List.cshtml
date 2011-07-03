@@ -1,5 +1,8 @@
 ﻿@model ProductListModel
 @using Telerik.Web.Mvc.UI
+@{
+    var gridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSize;
+}
 @using (Html.BeginForm())
 {
     <div class="section-header">
@@ -126,7 +129,7 @@
 
                                             )
                                             )
-                                            .Pageable(settings => settings.Total(Model.Products.Total).PageSize(10).Position(GridPagerPosition.Both))
+                                            .Pageable(settings => settings.Total(Model.Products.Total).PageSize(gridPageSize).Position(GridPagerPosition.Both))
                                             .DataBinding(dataBinding => dataBinding.Ajax().Select("ProductList", "Product"))
                                             .ClientEvents(events => events.OnDataBinding("onDataBinding"))
                                             .EnableCustomBinding(true))

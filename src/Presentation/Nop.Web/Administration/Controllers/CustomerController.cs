@@ -28,6 +28,7 @@ using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
 using Telerik.Web.Mvc;
 using Nop.Services.Security;
+using Nop.Core.Domain.Common;
 
 namespace Nop.Admin.Controllers
 {
@@ -55,6 +56,7 @@ namespace Nop.Admin.Controllers
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IPriceCalculationService _priceCalculationService;
         private readonly IPermissionService _permissionService;
+        private readonly AdminAreaSettings _adminAreaSettings;
 
         #endregion
 
@@ -71,7 +73,7 @@ namespace Nop.Admin.Controllers
             IOrderService orderService, IExportManager exportManager,
             ICustomerActivityService customerActivityService,
             IPriceCalculationService priceCalculationService,
-            IPermissionService permissionService)
+            IPermissionService permissionService, AdminAreaSettings adminAreaSettings)
         {
             this._customerService = customerService;
             this._customerReportService = customerReportService;
@@ -92,6 +94,7 @@ namespace Nop.Admin.Controllers
             this._customerActivityService = customerActivityService;
             this._priceCalculationService = priceCalculationService;
             this._permissionService = permissionService;
+            this._adminAreaSettings = adminAreaSettings;
         }
 
         #endregion
@@ -171,8 +174,8 @@ namespace Nop.Admin.Controllers
                 AvailableCustomerRoles = _customerService.GetAllCustomerRoles(true).ToList(),
                 SearchCustomerRoleIds = defaultRoleIds
             };
-            
-            var customers = _customerService.GetAllCustomers(null, null, defaultRoleIds, null, null, false, null, 0, 10);
+
+            var customers = _customerService.GetAllCustomers(null, null, defaultRoleIds, null, null, false, null, 0, _adminAreaSettings.GridPageSize);
             //customer list
             listModel.Customers = new GridModel<CustomerModel>
             {
