@@ -41,10 +41,12 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\AutoMapper.1.1.0.118\lib\AutoMapper.dll</HintPath>
     </Reference>
-    <Reference Include="FluentValidation">
+    <Reference Include="FluentValidation, Version=2.0.0.0, Culture=neutral, PublicKeyToken=a82054b837897c66, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\FluentValidation.2.0.0.0\lib\NET35\FluentValidation.dll</HintPath>
     </Reference>
-    <Reference Include="FluentValidation.Mvc">
+    <Reference Include="FluentValidation.Mvc, Version=2.0.0.0, Culture=neutral, PublicKeyToken=a82054b837897c66, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\FluentValidation.MVC3.2.0.0.0\lib\NET4\FluentValidation.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Web.Mvc">
@@ -53,8 +55,9 @@
     <Reference Include="MvcContrib">
       <HintPath>..\..\packages\MvcContrib.2.0.95.0\lib\MvcContrib.dll</HintPath>
     </Reference>
-    <Reference Include="RouteDebugger">
-      <HintPath>..\..\packages\routedebugger.1.0.0.1\lib\net35\RouteDebugger.dll</HintPath>
+    <Reference Include="RouteDebugger, Version=2.0.0.6, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\routedebugger.2.0.0.6\lib\net40\RouteDebugger.dll</HintPath>
     </Reference>
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -243,7 +246,6 @@
     <Content Include="App_Data\defaultResources.public.nopres.xml">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="App_Readme\RouteDebugger.Readme.txt" />
     <Content Include="Content\2011.1.315\Black\editor.png" />
     <Content Include="Content\2011.1.315\Black\imagebrowser.png" />
     <Content Include="Content\2011.1.315\Black\loading.gif" />
