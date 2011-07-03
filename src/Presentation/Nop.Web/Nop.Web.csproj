@@ -979,8 +979,6 @@
     <Content Include="Content\Images\ui-icons_888888_256x240.png" />
     <Content Include="Content\Images\ui-icons_cd0a0a_256x240.png" />
     <Content Include="license.txt" />
-    <Content Include="Plugins\bin\Index.htm" />
-    <Content Include="Plugins\Index.htm" />
     <Content Include="Scripts\2011.1.315\jquery-1.5.1.min.js" />
     <Content Include="Scripts\2011.1.315\jquery.validate.min.js" />
     <Content Include="Scripts\2011.1.315\telerik.autocomplete.min.js" />
@@ -1143,7 +1141,9 @@
     <Content Include="Scripts\MicrosoftMvcValidation.js" />
     <Content Include="Scripts\MicrosoftMvcValidation.debug.js" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Plugins\" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Libraries\Nop.Core\Nop.Core.csproj">
       <Project>{6BDA8332-939F-45B7-A25E-7A797260AE59}</Project>
