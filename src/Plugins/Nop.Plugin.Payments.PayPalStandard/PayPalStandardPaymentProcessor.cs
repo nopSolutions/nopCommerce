@@ -435,7 +435,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
             {
                 UseSandbox = true,
                 BusinessEmail = "test@test.com",
-                PdtToken= "Your PDT toekn here...",
+                PdtToken= "Your PDT token here...",
                 PdtValidateOrderTotal = true,
             };
             _settingService.SaveSetting(settings);
