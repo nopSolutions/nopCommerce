@@ -10,9 +10,8 @@
 	<PropertyGroup>
 		<RootFolder>$(MSBuildProjectDirectory)\..</RootFolder>
 		<Version Condition="'$(Version)' == ''">2.0</Version>
-		<DeployPrefix>nop_$(Version)_</DeployPrefix>
-		<DeployFolder>$(RootFolder)\output</DeployFolder>
-		<TempFolder>$(RootFolder)\output\temp\</TempFolder>
+		<DeployPrefix>nop_$(Version)</DeployPrefix>
+		<DeployFolder>$(RootFolder)\Deployable</DeployFolder>
         <PluginsFolder>$(RootFolder)\Plugins</PluginsFolder>
         <WebFolder>$(RootFolder)\Presentation\Nop.Web</WebFolder>
         <WebPluginsFolder>$(WebFolder)\Plugins</WebPluginsFolder>
@@ -31,5 +30,40 @@
 		<CallTarget Targets="Framework-Build"/>
         <CallTarget Targets="Plugins-CopyToWeb"/>
 	</Target>
+
+    <Target Name="Deploy" DependsOnTargets="Build">
+        <!--Lets delete the old deployed files-->
+        <RemoveDir Directories="$(DeployFolder)" />
+        <MakeDir Directories="$(DeployFolder)" />
+        <MakeDir Directories="$(DeployFolder)\$(DeployPrefix)" />
+
+        <!--Lets publish Nop.Web-->
+        <MSBuild Projects="$(RootFolder)\Presentation\Nop.Web\Nop.Web.csproj"
+           Targets="ResolveReferences;_CopyWebApplication"
+           Properties="WebProjectOutputDir=$(DeployFolder)\$(DeployPrefix)\;
+           OutDir=$(DeployFolder)\$(DeployPrefix)\bin\" />
+        
+        <!--Lets copy the plugins to the deployed directory-->
+        <MSBuild Projects ="$(MSBuildProjectFullPath)"
+                        Targets="Plugins-CopyToWeb"
+                        Properties="
+                        PluginOutput=$(DeployFolder)\$(DeployPrefix)\Plugins\"/>
+        
+        <!--Now lets publish Nop.Admin-->
+        <MSBuild Projects="$(RootFolder)\Presentation\Nop.Web\Administration\Nop.Admin.csproj"
+           Targets="ResolveReferences;_CopyWebApplication"
+           Properties="WebProjectOutputDir=$(DeployFolder)\$(DeployPrefix)\Administration\;
+           OutDir=$(DeployFolder)\$(DeployPrefix)\Administration\bin\" />
+
+        <!--Now lets move the Nop.Admin/bin/ to the root bin/-->
+        <RoboCopy SourceFolder="$(DeployFolder)\$(DeployPrefix)\Administration\bin\" DestinationFolder="$(DeployFolder)\$(DeployPrefix)\bin\"/>
+        
+        <!--Lets delete the bin in Nop.Admin-->
+        <RemoveDir Directories="$(DeployFolder)\$(DeployPrefix)\Administration\bin\" />
+        
+        <!--Lets delete the packages.config files-->
+        <Delete  Files="$(DeployFolder)\$(DeployPrefix)\Administration\packages.config;
+                 $(DeployFolder)\$(DeployPrefix)\packages.config"/>
+    </Target>
 
 </Project>

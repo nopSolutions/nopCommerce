@@ -3,9 +3,19 @@
     <UsingTask AssemblyFile="$(RootFolder)\build\lib\Extensions\MSBuild.ExtensionPack.dll" TaskName="MSBuild.ExtensionPack.Framework.TextString"/>
     <PropertyGroup>
         <PluginProjectName></PluginProjectName>
+        <PluginOutput>$(WebPluginsFolder)</PluginOutput>
     </PropertyGroup>
     
-    <Target Name="Plugins-CopyToWeb" DependsOnTargets="Plugins-CopyDiscounts;Plugins-CopyExchangeRates;Plugins-CopyFeeds;Plugins-CopyLiveChats;Plugins-CopyPayments;Plugins-CopyShippings;Plugins-CopySms;Plugins-CopyTaxes">
+    <Target Name="Plugins-CopyToWeb" 
+            DependsOnTargets="
+            Plugins-CopyDiscounts;
+            Plugins-CopyExchangeRates;
+            Plugins-CopyFeeds;
+            Plugins-CopyLiveChats;
+            Plugins-CopyPayments;
+            Plugins-CopyShippings;
+            Plugins-CopySms;
+            Plugins-CopyTaxes">
         <Message Text="Copied plugins to $(WebPluginsFolder)" />
     </Target>
 
@@ -183,12 +193,12 @@
         </MSBuild.ExtensionPack.Framework.TextString>
         <PropertyGroup>
             <From>$(PluginsFolder)\$(PluginProjectName)\bin\$(Configuration)\</From>
-            <To>$(WebPluginsFolder)\$(PluginDestination)</To>
+            <To>$(PluginOutput)\$(PluginDestination)</To>
         </PropertyGroup>
         <RemoveDir Directories="$(To)" />
         <MakeDir Directories="$(To)" />
         <RoboCopy SourceFolder="$(From)" DestinationFolder="$(To)"/>
+        <Error Condition="!Exists('$(To)')" Text="There was a problem coping plugin '$(PluginProjectName)'." />
         <Message Text="Succesfully copied plugin '$(PluginProjectName)'" Condition="Exists('$(To)')"  />
-        <Message Text="Error copying plugin '$(PluginProjectName)'" Condition="!Exists('$(To)')"  />
     </Target>
 </Project>
