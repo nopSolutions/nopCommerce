@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+
+	<!-- GENERAL -->
+
+	<Target Name="Echo">
+		<Message Text="Hello from $(MSBuildProjectDirectory)" />
+	</Target>
+
+	<PropertyGroup>
+		<RootFolder>$(MSBuildProjectDirectory)\..</RootFolder>
+		<Version Condition="'$(Version)' == ''">2.0</Version>
+		<DeployPrefix>nop_$(Version)_</DeployPrefix>
+		<DeployFolder>$(RootFolder)\output</DeployFolder>
+		<TempFolder>$(RootFolder)\output\temp\</TempFolder>
+        <PluginsFolder>$(RootFolder)\Plugins</PluginsFolder>
+        <WebFolder>$(RootFolder)\Presentation\Nop.Web</WebFolder>
+        <WebPluginsFolder>$(WebFolder)\Plugins</WebPluginsFolder>
+		<Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
+		<Platform Condition="'$(Platform)' == ''">Any CPU</Platform>
+		<Platform Condition="'$(Platform)' == 'MCD'">Any CPU</Platform>
+		<MSBuildCommunityTasksPath>$(RootFolder)\lib</MSBuildCommunityTasksPath>
+	</PropertyGroup>
+
+	<Import Project="$(RootFolder)\build\lib\MSBuild.Community.Tasks.targets"/>
+	<Import Project="nop.framework.targets"/>
+    <Import Project="nop.plugins.targets"/>
+
+	<Target Name="Build">
+		<Message Text="Building Everything"/>
+		<CallTarget Targets="Framework-Build"/>
+        <CallTarget Targets="Plugins-CopyToWeb"/>
+	</Target>
+
+</Project>

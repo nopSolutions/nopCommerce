@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+    <UsingTask AssemblyFile="$(RootFolder)\build\lib\Extensions\MSBuild.ExtensionPack.dll" TaskName="MSBuild.ExtensionPack.Framework.TextString"/>
+    <PropertyGroup>
+        <PluginProjectName></PluginProjectName>
+    </PropertyGroup>
+    
+    <Target Name="Plugins-CopyToWeb" DependsOnTargets="Plugins-CopyDiscounts;Plugins-CopyExchangeRates;Plugins-CopyFeeds;Plugins-CopyLiveChats;Plugins-CopyPayments;Plugins-CopyShippings;Plugins-CopySms;Plugins-CopyTaxes">
+        <Message Text="Copied plugins to $(WebPluginsFolder)" />
+    </Target>
+
+    <!--Discount plugins-->
+    <Target Name="Plugins-CopyDiscounts">
+        <MSBuild Projects ="$(MSBuildProjectFullPath)"
+                        Targets="Plugin-CopyToWeb"
+                        Properties="PluginProjectName=Nop.Plugin.DiscountRules.BillingCountry"/>
+        <MSBuild Projects ="$(MSBuildProjectFullPath)"
+                        Targets="Plugin-CopyToWeb"
+                        Properties="
+                        PluginProjectName=Nop.Plugin.DiscountRules.CustomerRoles"/>
+        <MSBuild Projects ="$(MSBuildProjectFullPath)"
+                        Targets="Plugin-CopyToWeb"
+                        Properties="
+                        PluginProjectName=Nop.Plugin.DiscountRules.HadSpentAmount"/>
+        <MSBuild Projects ="$(MSBuildProjectFullPath)"
+                        Targets="Plugin-CopyToWeb"
+                        Properties="
+                        PluginProjectName=Nop.Plugin.DiscountRules.HasAllProducts"/>
+        <MSBuild Projects ="$(MSBuildProjectFullPath)"
+                        Targets="Plugin-CopyToWeb"
+                        Properties="
+                        PluginProjectName=Nop.Plugin.DiscountRules.HasOneProduct"/>
+        <MSBuild Projects ="$(MSBuildProjectFullPath)"
+                        Targets="Plugin-CopyToWeb"
+                        Properties="
+                        PluginProjectName=Nop.Plugin.DiscountRules.PurchasedAllProducts"/>
+        <MSBuild Projects ="$(MSBuildProjectFullPath)"
+                        Targets="Plugin-CopyToWeb"
+                        Properties="
+                        PluginProjectName=Nop.Plugin.DiscountRules.PurchasedOneProduct"/>
+        <MSBuild Projects ="$(MSBuildProjectFullPath)"
+                        Targets="Plugin-CopyToWeb"
+                        Properties="
+                        PluginProjectName=Nop.Plugin.DiscountRules.ShippingCountry"/>
+    </Target>
+
+    <!--Exchange rate plugins-->
+    <Target Name="Plugins-CopyExchangeRates">
+        <MSBuild Projects ="$(MSBuildProjectFullPath)"
+                        Targets="Plugin-CopyToWeb"
+                        Properties="
+                        PluginProjectName=Nop.Plugin.ExchangeRate.EcbExchange"/>
+        <MSBuild Projects ="$(MSBuildProjectFullPath)"
+                        Targets="Plugin-CopyToWeb"
+                        Properties="
+                        PluginProjectName=Nop.Plugin.ExchangeRate.McExchange"/>
+    </Target>
+    
+    <!--Feed plugins-->
+    <Target Name="Plugins-CopyFeeds">
+        <MSBuild Projects ="$(MSBuildProjectFullPath)"
+                        Targets="Plugin-CopyToWeb"
+                        Properties="
+                        PluginProjectName=Nop.Plugin.Feed.Become"/>
+        <MSBuild Projects ="$(MSBuildProjectFullPath)"
+                        Targets="Plugin-CopyToWeb"
+                        Properties="
+                        PluginProjectName=Nop.Plugin.Feed.Froogle"/>
+    </Target>
+    
+    <!--Live chat plugins-->
+    <Target Name="Plugins-CopyLiveChats">
+        <MSBuild Projects ="$(MSBuildProjectFullPath)"
+                        Targets="Plugin-CopyToWeb"
+                        Properties="
+                        PluginProjectName=Nop.Plugin.LiveChat.LivePerson"/>
+    </Target>
+    
+    <!--Payment plugins-->
+    <Target Name="Plugins-CopyPayments">
+        <MSBuild Projects ="$(MSBuildProjectFullPath)"
+                        Targets="Plugin-CopyToWeb"
+                        Properties="
+                        PluginProjectName=Nop.Plugin.Payments.AuthorizeNet"/>
+        <MSBuild Projects ="$(MSBuildProjectFullPath)"
+                        Targets="Plugin-CopyToWeb"
+                        Properties="
+                        PluginProjectName=Nop.Plugin.Payments.CashOnDelivery"/>
+        <MSBuild Projects ="$(MSBuildProjectFullPath)"
+                        Targets="Plugin-CopyToWeb"
+                        Properties="
+                        PluginProjectName=Nop.Plugin.Payments.CheckMoneyOrder"/>
+        <MSBuild Projects ="$(MSBuildProjectFullPath)"
+                        Targets="Plugin-CopyToWeb"
+                        Properties="
+                        PluginProjectName=Nop.Plugin.Payments.Manual"/>
+        <MSBuild Projects ="$(MSBuildProjectFullPath)"
+                        Targets="Plugin-CopyToWeb"
+                        Properties="
+                        PluginProjectName=Nop.Plugin.Payments.PayInStore"/>
+        <MSBuild Projects ="$(MSBuildProjectFullPath)"
+                        Targets="Plugin-CopyToWeb"
+                        Properties="
+                        PluginProjectName=Nop.Plugin.Payments.PayPalDirect"/>
+        <MSBuild Projects ="$(MSBuildProjectFullPath)"
+                        Targets="Plugin-CopyToWeb"
+                        Properties="
+                        PluginProjectName=Nop.Plugin.Payments.PayPalStandard"/>
+        <MSBuild Projects ="$(MSBuildProjectFullPath)"
+                        Targets="Plugin-CopyToWeb"
+                        Properties="
+                        PluginProjectName=Nop.Plugin.Payments.PurchaseOrder"/>
+    </Target>
+    
+    <!--Shipping plugins-->
+    <Target Name="Plugins-CopyShippings">
+        <MSBuild Projects ="$(MSBuildProjectFullPath)"
+                        Targets="Plugin-CopyToWeb"
+                        Properties="
+                        PluginProjectName=Nop.Plugin.Shipping.AustraliaPost"/>
+        <MSBuild Projects ="$(MSBuildProjectFullPath)"
+                        Targets="Plugin-CopyToWeb"
+                        Properties="
+                        PluginProjectName=Nop.Plugin.Shipping.ByWeight"/>
+        <MSBuild Projects ="$(MSBuildProjectFullPath)"
+                        Targets="Plugin-CopyToWeb"
+                        Properties="
+                        PluginProjectName=Nop.Plugin.Shipping.CanadaPost"/>
+        <MSBuild Projects ="$(MSBuildProjectFullPath)"
+                        Targets="Plugin-CopyToWeb"
+                        Properties="
+                        PluginProjectName=Nop.Plugin.Shipping.Fedex"/>
+        <MSBuild Projects ="$(MSBuildProjectFullPath)"
+                        Targets="Plugin-CopyToWeb"
+                        Properties="
+                        PluginProjectName=Nop.Plugin.Shipping.FixedRateShipping"/>
+        <MSBuild Projects ="$(MSBuildProjectFullPath)"
+                        Targets="Plugin-CopyToWeb"
+                        Properties="
+                        PluginProjectName=Nop.Plugin.Shipping.UPS"/>
+        <MSBuild Projects ="$(MSBuildProjectFullPath)"
+                        Targets="Plugin-CopyToWeb"
+                        Properties="
+                        PluginProjectName=Nop.Plugin.Shipping.USPS"/>
+    </Target>
+
+    <!--Sms plugins-->
+    <Target Name="Plugins-CopySms">
+        <MSBuild Projects ="$(MSBuildProjectFullPath)"
+                        Targets="Plugin-CopyToWeb"
+                        Properties="
+                        PluginProjectName=Nop.Plugin.SMS.Clickatell"/>
+        <MSBuild Projects ="$(MSBuildProjectFullPath)"
+                        Targets="Plugin-CopyToWeb"
+                        Properties="
+                        PluginProjectName=Nop.Plugin.SMS.Verizon"/>
+    </Target>
+
+    <!--Tax plugins-->
+    <Target Name="Plugins-CopyTaxes">
+        <MSBuild Projects ="$(MSBuildProjectFullPath)"
+                        Targets="Plugin-CopyToWeb"
+                        Properties="
+                        PluginProjectName=Nop.Plugin.Tax.CountryStateZip"/>
+        <MSBuild Projects ="$(MSBuildProjectFullPath)"
+                        Targets="Plugin-CopyToWeb"
+                        Properties="
+                        PluginProjectName=Nop.Plugin.Tax.FixedRate"/>
+        <MSBuild Projects ="$(MSBuildProjectFullPath)"
+                        Targets="Plugin-CopyToWeb"
+                        Properties="
+                        PluginProjectName=Nop.Plugin.Tax.Free"/>
+        <MSBuild Projects ="$(MSBuildProjectFullPath)"
+                        Targets="Plugin-CopyToWeb"
+                        Properties="
+                        PluginProjectName=Nop.Plugin.Tax.StrikeIron"/>
+    </Target>
+    
+    <!--This is used for moving all individual plugins-->
+    <Target Name="Plugin-CopyToWeb">
+        <MSBuild.ExtensionPack.Framework.TextString TaskAction="Replace" OldString="$(PluginProjectName)" OldValue="Nop.Plugin." NewValue="">
+            <Output PropertyName="PluginDestination" TaskParameter="NewString"/>
+        </MSBuild.ExtensionPack.Framework.TextString>
+        <PropertyGroup>
+            <From>$(PluginsFolder)\$(PluginProjectName)\bin\$(Configuration)\</From>
+            <To>$(WebPluginsFolder)\$(PluginDestination)</To>
+        </PropertyGroup>
+        <RemoveDir Directories="$(To)" />
+        <MakeDir Directories="$(To)" />
+        <RoboCopy SourceFolder="$(From)" DestinationFolder="$(To)"/>
+        <Message Text="Succesfully copied plugin '$(PluginProjectName)'" Condition="Exists('$(To)')"  />
+        <Message Text="Error copying plugin '$(PluginProjectName)'" Condition="!Exists('$(To)')"  />
+    </Target>
+</Project>

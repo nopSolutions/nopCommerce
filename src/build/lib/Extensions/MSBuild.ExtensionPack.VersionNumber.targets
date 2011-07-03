@@ -1,0 +1,127 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+     This task is based on the AssemblyInfo task written by Neil Enns (http://code.msdn.microsoft.com/AssemblyInfoTaskvers). It is used here with permission.
+    
+     This targets file includes all the necessary information to automatically increment build numbers as part of
+     a regular build process. To use it simply include it in your project file after any other includes. The typical
+     include line looks like this:
+     
+     <Import Project="$(MSBuildExtensionsPath)\ExtensionPack\MSBuild.ExtensionPack.VersionNumber.targets"/>
+  -->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <!-- Properties for controlling the Assembly Version -->
+    <PropertyGroup>
+        <AssemblyMajorVersion>1</AssemblyMajorVersion>
+        <AssemblyMinorVersion>0</AssemblyMinorVersion>
+        <AssemblyBuildNumber></AssemblyBuildNumber>
+        <AssemblyRevision></AssemblyRevision>
+        <AssemblyBuildNumberType>DateString</AssemblyBuildNumberType>
+        <AssemblyBuildNumberFormat>MMdd</AssemblyBuildNumberFormat>
+        <AssemblyRevisionType>AutoIncrement</AssemblyRevisionType>
+        <AssemblyRevisionFormat>00</AssemblyRevisionFormat>
+    </PropertyGroup>
+
+    <!-- Properties for controlling the Assembly File Version -->
+    <PropertyGroup>
+        <AssemblyFileMajorVersion>1</AssemblyFileMajorVersion>
+        <AssemblyFileMinorVersion>0</AssemblyFileMinorVersion>
+        <AssemblyFileBuildNumber></AssemblyFileBuildNumber>
+        <AssemblyFileRevision></AssemblyFileRevision>
+        <AssemblyFileBuildNumberType>DateString</AssemblyFileBuildNumberType>
+        <AssemblyFileBuildNumberFormat>MMdd</AssemblyFileBuildNumberFormat>
+        <AssemblyFileRevisionType>AutoIncrement</AssemblyFileRevisionType>
+        <AssemblyFileRevisionFormat>00</AssemblyFileRevisionFormat>
+    </PropertyGroup>
+
+    <!-- Properties for controlling COM visibility -->
+    <PropertyGroup>
+        <AssemblyComVisible></AssemblyComVisible>
+        <AssemblyGuid></AssemblyGuid>
+    </PropertyGroup>
+
+    <!-- Propeties for controlling extended assembly attributes -->
+    <PropertyGroup>
+        <AssemblyCompany></AssemblyCompany>
+        <AssemblyConfiguration></AssemblyConfiguration>
+        <AssemblyCopyright></AssemblyCopyright>
+        <AssemblyCulture></AssemblyCulture>
+        <AssemblyDescription></AssemblyDescription>
+        <AssemblyProduct></AssemblyProduct>
+        <AssemblyTitle></AssemblyTitle>
+    </PropertyGroup>
+
+    <!-- Properties for controlling key signing through assemblyinfo files -->
+    <PropertyGroup>
+        <AssemblyIncludeSigningInformation>false</AssemblyIncludeSigningInformation>
+        <AssemblyDelaySign>false</AssemblyDelaySign>
+        <AssemblyKeyFile></AssemblyKeyFile>
+        <AssemblyKeyName></AssemblyKeyName>
+    </PropertyGroup>
+
+    <!-- The items that get processed by the task -->
+    <ItemGroup>
+        <AssemblyInfoFiles Include="**\AssemblyInfo.*"/>
+    </ItemGroup>
+
+    <!-- Import the task -->
+    <UsingTask AssemblyFile="MSBuild.ExtensionPack.dll" TaskName="MSBuild.ExtensionPack.Framework.AssemblyInfo"/>
+
+    <!-- Re-define CoreCompileDependsOn to ensure the assemblyinfo files are updated before compilation. -->
+    <PropertyGroup>
+        <CoreCompileDependsOn>
+            $(CoreCompileDependsOn);
+            UpdateAssemblyInfoFiles
+        </CoreCompileDependsOn>
+    </PropertyGroup>
+
+    <!-- The target that actually does all the work. The inputs are the same as the CoreCompileDependsOn target
+  (with the addition of @(AssemblyInfoFiles) to ensure that we only ever update the AssemblyInfo files if a 
+  compile is actually going to take place. The outputs are the AssemblyInfoFiles that were passed in for update. -->
+    <Target Name="UpdateAssemblyInfoFiles"
+            Inputs="$(MSBuildAllProjects);
+                @(Compile);
+                @(ManifestResourceWithNoCulture);
+                $(ApplicationIcon);
+                $(AssemblyOriginatorKeyFile);
+                @(ManifestNonResxWithNoCultureOnDisk);
+                @(ReferencePath);
+                @(CompiledLicenseFile);
+                @(EmbeddedDocumentation);                
+                @(CustomAdditionalCompileInputs);
+                @(AssemblyInfoFiles)"
+            Outputs="@(AssemblyInfoFiles);@(IntermediateAssembly)">
+        <AssemblyInfo AssemblyInfoFiles="@(AssemblyInfoFiles)"
+                      AssemblyMajorVersion="$(AssemblyMajorVersion)"
+                      AssemblyMinorVersion="$(AssemblyMinorVersion)"
+                      AssemblyBuildNumber="$(AssemblyBuildNumber)"
+                      AssemblyRevision="$(AssemblyRevision)"
+                      AssemblyBuildNumberType="$(AssemblyBuildNumberType)"
+                      AssemblyBuildNumberFormat="$(AssemblyBuildNumberFormat)"
+                      AssemblyRevisionType="$(AssemblyRevisionType)"
+                      AssemblyRevisionFormat="$(AssemblyRevisionFormat)"
+                      AssemblyFileMajorVersion="$(AssemblyFileMajorVersion)"
+                      AssemblyFileMinorVersion="$(AssemblyFileMinorVersion)"
+                      AssemblyFileBuildNumber="$(AssemblyFileBuildNumber)"
+                      AssemblyFileRevision="$(AssemblyFileRevision)"
+                      AssemblyFileBuildNumberType="$(AssemblyFileBuildNumberType)"
+                      AssemblyFileBuildNumberFormat="$(AssemblyFileBuildNumberFormat)"
+                      AssemblyFileRevisionType="$(AssemblyFileRevisionType)"
+                      AssemblyFileRevisionFormat="$(AssemblyFileRevisionFormat)"
+                      ComVisible="$(AssemblyComVisible)"
+                      AssemblyGuid="$(AssemblyGuid)"
+                      AssemblyCompany="$(AssemblyCompany)"
+                      AssemblyConfiguration="$(AssemblyConfiguration)"
+                      AssemblyCopyright="$(AssemblyCopyright)"
+                      AssemblyCulture="$(AssemblyCulture)"
+                      AssemblyDescription="$(AssemblyDescription)"
+                      AssemblyProduct="$(AssemblyProduct)"
+                      AssemblyTitle="$(AssemblyTitle)"
+                      AssemblyIncludeSigningInformation="$(AssemblyIncludeSigningInformation)"
+                      AssemblyDelaySign="$(AssemblyDelaySign)"
+                      AssemblyKeyFile="$(AssemblyKeyFile)"
+                      AssemblyKeyName="$(AssemblyKeyName)">
+            <Output TaskParameter="MaxAssemblyVersion" PropertyName="MaxAssemblyVersion"/>
+            <Output TaskParameter="MaxAssemblyFileVersion" PropertyName="MaxAssemblyFileVersion"/>
+        </AssemblyInfo>
+    </Target>
+</Project>
