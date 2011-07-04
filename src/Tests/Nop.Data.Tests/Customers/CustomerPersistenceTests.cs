@@ -40,6 +40,8 @@ namespace Nop.Data.Tests.Customers
             fromDb.GiftCardCouponCodes.ShouldEqual("GiftCardCouponCodes 1");
             fromDb.Active.ShouldEqual(true);
             fromDb.Deleted.ShouldEqual(false);
+            fromDb.IsSystemAccount.ShouldEqual(true);
+            fromDb.SystemName.ShouldEqual("SystemName 1");
             fromDb.LastIpAddress.ShouldEqual("192.168.1.1");
             fromDb.CreatedOnUtc.ShouldEqual(new DateTime(2010, 01, 01));
             fromDb.LastLoginDateUtc.ShouldEqual(new DateTime(2010, 01, 02));
@@ -326,6 +328,8 @@ namespace Nop.Data.Tests.Customers
                 GiftCardCouponCodes = "GiftCardCouponCodes 1",
                 Active = true,
                 Deleted = false,
+                IsSystemAccount = true,
+                SystemName = "SystemName 1",
                 LastIpAddress = "192.168.1.1",
                 CreatedOnUtc = new DateTime(2010, 01, 01),
                 LastLoginDateUtc = new DateTime(2010, 01, 02),

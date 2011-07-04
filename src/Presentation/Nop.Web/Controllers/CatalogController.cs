@@ -177,8 +177,7 @@ namespace Nop.Web.Controllers
                         var productVariant = productVariants[0];
 
                         if (!_catalogSettings.HidePricesForNonRegistered ||
-                            (_workContext.CurrentCustomer != null &&
-                            !_workContext.CurrentCustomer.IsGuest()))
+                            !_workContext.CurrentCustomer.IsGuest())
                         {
                             if (!productVariant.CustomerEntersPrice)
                             {
@@ -223,8 +222,7 @@ namespace Nop.Web.Controllers
                         if (productVariant != null)
                         {
                             if (!_catalogSettings.HidePricesForNonRegistered ||
-                                (_workContext.CurrentCustomer != null &&
-                                !_workContext.CurrentCustomer.IsGuest()))
+                                !_workContext.CurrentCustomer.IsGuest())
                             {
                                 if (!productVariant.CustomerEntersPrice)
                                 {
@@ -270,8 +268,7 @@ namespace Nop.Web.Controllers
                         var productVariant = productVariants[0];
                         model.DisableBuyButton = productVariant.DisableBuyButton;
                         if (!_catalogSettings.HidePricesForNonRegistered ||
-                            (_workContext.CurrentCustomer != null &&
-                            !_workContext.CurrentCustomer.IsGuest()))
+                            !_workContext.CurrentCustomer.IsGuest())
                         {
                             //invert condition
                         }
@@ -483,8 +480,7 @@ namespace Nop.Web.Controllers
             model.ProductVariantPrice.ProductVariantId = productVariant.Id;
             model.ProductVariantPrice.DynamicPriceUpdate = _catalogSettings.EnableDynamicPriceUpdate;
             if (!_catalogSettings.HidePricesForNonRegistered ||
-                        (_workContext.CurrentCustomer != null &&
-                        !_workContext.CurrentCustomer.IsGuest()))
+                !_workContext.CurrentCustomer.IsGuest())
             {
                 model.ProductVariantPrice.HidePrices = false;
                 if (productVariant.CustomerEntersPrice)
@@ -547,8 +543,7 @@ namespace Nop.Web.Controllers
                 model.AddToCart.DisableWishlistButton = true;
             }
             if (!_catalogSettings.HidePricesForNonRegistered ||
-                        (_workContext.CurrentCustomer != null &&
-                        !_workContext.CurrentCustomer.IsGuest()))
+                !_workContext.CurrentCustomer.IsGuest())
             {
                 //invert condition
             }
@@ -578,11 +573,8 @@ namespace Nop.Web.Controllers
             if (model.GiftCard.IsGiftCard)
             {
                 model.GiftCard.GiftCardType = productVariant.GiftCardType;
-                var customer = _workContext.CurrentCustomer;
-                if (customer != null)
-                    model.GiftCard.SenderName = customer.GetFullName();
-                if (_workContext.CurrentCustomer != null)
-                    model.GiftCard.SenderEmail = _workContext.CurrentCustomer.Email;
+                model.GiftCard.SenderName = _workContext.CurrentCustomer.GetFullName();
+                model.GiftCard.SenderEmail = _workContext.CurrentCustomer.Email;
             }
 
             #endregion
@@ -620,8 +612,7 @@ namespace Nop.Web.Controllers
                         
                         //display price if allowed
                         if (!_catalogSettings.HidePricesForNonRegistered ||
-                            (_workContext.CurrentCustomer != null &&
-                            !_workContext.CurrentCustomer.IsGuest()))
+                            !_workContext.CurrentCustomer.IsGuest())
                         {
                             decimal taxRate = decimal.Zero;
                             decimal priceAdjustmentBase = _taxService.GetProductPrice(productVariant, pvaValue.PriceAdjustment, out taxRate);
@@ -1296,8 +1287,7 @@ namespace Nop.Web.Controllers
         public ActionResult ProductTierPrices(int productVariantId)
         {
             if (!_catalogSettings.HidePricesForNonRegistered ||
-                            (_workContext.CurrentCustomer != null &&
-                            !_workContext.CurrentCustomer.IsGuest()))
+                !_workContext.CurrentCustomer.IsGuest())
             {
                 var variant = _productService.GetProductVariantById(productVariantId);
                 if (variant == null)
@@ -1829,7 +1819,7 @@ namespace Nop.Web.Controllers
             model.ProductId = product.Id;
             model.ProductName = product.GetLocalized(x => x.Name);
             model.ProductSeName = product.GetSeName();
-            model.YourEmailAddress = _workContext.CurrentCustomer != null ? _workContext.CurrentCustomer.Email : null;
+            model.YourEmailAddress = _workContext.CurrentCustomer.Email;
             return View(model);
         }
 

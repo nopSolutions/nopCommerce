@@ -124,8 +124,7 @@ namespace Nop.Web.Controllers
         [NonAction]
         private bool IsCurrentUserRegistered()
         {
-            return _workContext.CurrentCustomer != null &&
-                _workContext.CurrentCustomer.IsRegistered();
+            return _workContext.CurrentCustomer.IsRegistered();
         }
 
         [NonAction]

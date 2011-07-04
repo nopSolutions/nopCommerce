@@ -58,8 +58,17 @@ namespace Nop.Services
             Customer customer = null;
             if (_httpContext != null)
             {
+                //check whether request is made by a search engine
+                //in this case return built-in customer record for search engines 
+                //or comment the following two lines of code in order to disable this functionality
+                if (_webHelper.IsSearchEngine(_httpContext.Request))
+                    customer = _customerService.GetCustomerBySystemName(SystemCustomerNames.SearchEngine);
+
                 //registered user
-                customer = _authenticationService.GetAuthenticatedCustomer();
+                if (customer == null || customer.Deleted || !customer.Active)
+                {
+                    customer = _authenticationService.GetAuthenticatedCustomer();
+                }
 
                 //impersonate user if required (currently used for 'phone order' support)
                 //and validate that the current user is admin
@@ -89,8 +98,11 @@ namespace Nop.Services
                         if (Guid.TryParse(customerCookie.Value, out customerGuid))
                         {
                             var customerByCookie = _customerService.GetCustomerByGuid(customerGuid);
-                            //this customer (from cookie) should not be registered
-                            if (customerByCookie != null && !customerByCookie.IsRegistered())
+                            if (customerByCookie != null &&
+                                //this customer (from cookie) should not be registered
+                                !customerByCookie.IsRegistered() &&
+                                //it should not be a built-in 'search engine' customer account
+                                !customerByCookie.IsSearchEngineAccount())
                                 customer = customerByCookie;
                         }
                     }
@@ -116,13 +128,6 @@ namespace Nop.Services
                 //create guest if not exists
                 if (customer == null || customer.Deleted || !customer.Active)
                 {
-                    //TODO we should not create guest customer if request is made by search engine?
-                    //perhaps, use a single built-in system record for search engines
-                    //don't allow it to be registered
-                    //ensure that it can't be loaded by GUID from cookie (below) - so noone can be impersonated as search engine
-                    //ensure that it'll not be deleted in ICustomerService.DeleteGuestCustomers
-
-
                     customer = _customerService.InsertGuestCustomer();
                 }
 
