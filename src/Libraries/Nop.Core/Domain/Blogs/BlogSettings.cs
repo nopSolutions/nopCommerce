@@ -24,5 +24,10 @@ namespace Nop.Core.Domain.Blogs
         /// Gets or sets a value indicating whether to notify about new blog comments
         /// </summary>
         public bool NotifyAboutNewBlogComments { get; set; }
+
+        /// <summary>
+        /// Gets or sets a number of blog tags that appear in the tag cloud
+        /// </summary>
+        public int NumberOfTags { get; set; }
     }
 }

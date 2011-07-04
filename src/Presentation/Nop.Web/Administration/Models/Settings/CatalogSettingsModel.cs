@@ -75,5 +75,8 @@ namespace Nop.Admin.Models.Settings
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.EnableDynamicPriceUpdate")]
         public bool EnableDynamicPriceUpdate { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.NumberOfProductTags")]
+        public int NumberOfProductTags { get; set; }
     }
 }

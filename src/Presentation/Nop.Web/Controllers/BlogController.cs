@@ -293,7 +293,7 @@ namespace Nop.Web.Controllers
             //get tags
             var tags = _blogService.GetAllBlogPostTags(_workContext.WorkingLanguage.Id)
                 .OrderByDescending(x => x.BlogPostCount)
-                .Take(15)
+                .Take(_blogSettings.NumberOfTags)
                 .ToList();
             //sorting
             tags = tags.OrderBy(x => x.Name).ToList();

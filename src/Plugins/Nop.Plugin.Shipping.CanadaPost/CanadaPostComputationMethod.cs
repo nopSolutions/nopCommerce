@@ -55,11 +55,7 @@ namespace Nop.Plugin.Shipping.CanadaPost
             this._workContext = workContext;
         }
         #endregion
-
-        #region Utilities
-
-        #endregion
-
+        
         #region Utilities
 
         /// <summary>

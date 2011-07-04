@@ -705,12 +705,12 @@ namespace Nop.Services.Common
                         section.AddImage(_pictureService.GetPictureLocalPath(pic, 200, true));
                     }
 
-                    section.AddParagraph(String.Format("{0}: {1} {2}", _localizationService.GetResource("PDFProductCatalog.Price"), productVariant.Price, _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode));
+                    section.AddParagraph(String.Format("{0}: {1} {2}", _localizationService.GetResource("PDFProductCatalog.Price"), productVariant.Price.ToString("0.00"), _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode));
                     section.AddParagraph(String.Format("{0}: {1}", _localizationService.GetResource("PDFProductCatalog.SKU"), productVariant.Sku));
 
                     if (productVariant.Weight > Decimal.Zero)
                     {
-                        section.AddParagraph(String.Format("{0}: {1} {2}", _localizationService.GetResource("PDFProductCatalog.Weight"), productVariant.Weight, _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).Name));
+                        section.AddParagraph(String.Format("{0}: {1} {2}", _localizationService.GetResource("PDFProductCatalog.Weight"), productVariant.Weight.ToString("0.00"), _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).Name));
                     }
 
                     if (productVariant.ManageInventoryMethod == ManageInventoryMethod.ManageStock)
