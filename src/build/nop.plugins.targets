@@ -19,6 +19,30 @@
         <Message Text="Copied plugins to $(WebPluginsFolder)" />
     </Target>
 
+    <!--This is used for moving all individual plugins-->
+    <Target Name="Plugin-CopyToWeb">
+        
+        <MSBuild.ExtensionPack.Framework.TextString TaskAction="Replace" OldString="$(PluginProjectName)" OldValue="Nop.Plugin." NewValue="">
+            <Output PropertyName="PluginDestination" TaskParameter="NewString"/>
+        </MSBuild.ExtensionPack.Framework.TextString>
+        <PropertyGroup>
+            <From>$(PluginsFolder)\$(PluginProjectName)\bin\$(Configuration)\</From>
+            <To>$(PluginOutput)\$(PluginDestination)</To>
+        </PropertyGroup>
+        <RemoveDir Directories="$(To)" />
+        <MakeDir Directories="$(To)" />
+
+        <CreateItem Include="$(From)\*.*">
+            <Output TaskParameter="Include" ItemName="CompileOutput" />
+        </CreateItem>
+        <Copy SourceFiles="@(CompileOutput)"
+                DestinationFolder="$(To)" />
+        
+        <!--<RoboCopy SourceFolder="$(From)" DestinationFolder="$(To)"/>-->
+        <Error Condition="!Exists('$(To)')" Text="There was a problem coping plugin '$(PluginProjectName)'." />
+        <Message Text="Succesfully copied plugin '$(PluginProjectName)'" Condition="Exists('$(To)')"  />
+    </Target>
+
     <!--Discount plugins-->
     <Target Name="Plugins-CopyDiscounts">
         <MSBuild Projects ="$(MSBuildProjectFullPath)"
@@ -186,19 +210,5 @@
                         PluginProjectName=Nop.Plugin.Tax.StrikeIron"/>
     </Target>
     
-    <!--This is used for moving all individual plugins-->
-    <Target Name="Plugin-CopyToWeb">
-        <MSBuild.ExtensionPack.Framework.TextString TaskAction="Replace" OldString="$(PluginProjectName)" OldValue="Nop.Plugin." NewValue="">
-            <Output PropertyName="PluginDestination" TaskParameter="NewString"/>
-        </MSBuild.ExtensionPack.Framework.TextString>
-        <PropertyGroup>
-            <From>$(PluginsFolder)\$(PluginProjectName)\bin\$(Configuration)\</From>
-            <To>$(PluginOutput)\$(PluginDestination)</To>
-        </PropertyGroup>
-        <RemoveDir Directories="$(To)" />
-        <MakeDir Directories="$(To)" />
-        <RoboCopy SourceFolder="$(From)" DestinationFolder="$(To)"/>
-        <Error Condition="!Exists('$(To)')" Text="There was a problem coping plugin '$(PluginProjectName)'." />
-        <Message Text="Succesfully copied plugin '$(PluginProjectName)'" Condition="Exists('$(To)')"  />
-    </Target>
+    
 </Project>
