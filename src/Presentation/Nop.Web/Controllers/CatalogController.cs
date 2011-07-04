@@ -1295,28 +1295,38 @@ namespace Nop.Web.Controllers
         [ChildActionOnly]
         public ActionResult ProductTierPrices(int productVariantId)
         {
-            var variant = _productService.GetProductVariantById(productVariantId);
-            if (variant == null)
-                throw new ArgumentException("No product variant found with the specified id");
-
-            var model = _productService.GetTierPricesByProductVariantId(productVariantId)
-                .FilterForCustomer(_workContext.CurrentCustomer)
-                .Select(tierPrice =>
-                {
-                    var m  = new ProductModel.ProductVariantModel.TierPriceModel()
+            if (!_catalogSettings.HidePricesForNonRegistered ||
+                            (_workContext.CurrentCustomer != null &&
+                            !_workContext.CurrentCustomer.IsGuest()))
+            {
+                var variant = _productService.GetProductVariantById(productVariantId);
+                if (variant == null)
+                    throw new ArgumentException("No product variant found with the specified id");
+                
+                var model = _productService.GetTierPricesByProductVariantId(productVariantId)
+                    .FilterForCustomer(_workContext.CurrentCustomer)
+                    .Select(tierPrice =>
                     {
-                        Quantity = tierPrice.Quantity,
-                    };
-                    decimal taxRate = decimal.Zero;
-                    decimal priceBase = _taxService.GetProductPrice(variant, tierPrice.Price, out taxRate);
-                    decimal price = _currencyService.ConvertFromPrimaryStoreCurrency(priceBase, _workContext.WorkingCurrency);
-                    m.Price = _priceFormatter.FormatPrice(price, false, false);
+                        var m = new ProductModel.ProductVariantModel.TierPriceModel()
+                        {
+                            Quantity = tierPrice.Quantity,
+                        };
+                        decimal taxRate = decimal.Zero;
+                        decimal priceBase = _taxService.GetProductPrice(variant, tierPrice.Price, out taxRate);
+                        decimal price = _currencyService.ConvertFromPrimaryStoreCurrency(priceBase, _workContext.WorkingCurrency);
+                        m.Price = _priceFormatter.FormatPrice(price, false, false);
 
-                    return m;
-                })
-                .ToList();
+                        return m;
+                    })
+                    .ToList();
 
-            return PartialView(model);
+                return PartialView(model);
+            }
+            else
+            {
+                //hide prices
+                return Content("");
+            }
         }
 
         [ChildActionOnly]
