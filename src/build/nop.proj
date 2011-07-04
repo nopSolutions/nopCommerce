@@ -56,8 +56,12 @@
            OutDir=$(DeployFolder)\$(DeployPrefix)\Administration\bin\" />
 
         <!--Now lets move the Nop.Admin/bin/ to the root bin/-->
-        <RoboCopy SourceFolder="$(DeployFolder)\$(DeployPrefix)\Administration\bin\" DestinationFolder="$(DeployFolder)\$(DeployPrefix)\bin\"/>
-        
+        <CreateItem Include="$(DeployFolder)\$(DeployPrefix)\Administration\bin\*.*">
+            <Output TaskParameter="Include" ItemName="CompileOutput" />
+        </CreateItem>
+        <Copy SourceFiles="@(CompileOutput)"
+                DestinationFolder="$(DeployFolder)\$(DeployPrefix)\bin\" />
+
         <!--Lets delete the bin in Nop.Admin-->
         <RemoveDir Directories="$(DeployFolder)\$(DeployPrefix)\Administration\bin\" />
         
