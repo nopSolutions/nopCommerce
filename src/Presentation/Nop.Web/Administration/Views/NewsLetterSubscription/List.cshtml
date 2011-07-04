@@ -27,7 +27,7 @@
         </tr>
         <tr>
             <td colspan="2">
-                <button type="submit" name="search-newsLetterSubscriptions" value="search-newsLetterSubscriptions" class="t-button">@T("Admin.Common.Search")</button>        
+                <button type="submit" id="search-newsLetterSubscriptions" value="search-newsLetterSubscriptions" class="t-button">@T("Admin.Common.Search")</button>     
             </td>
         </tr>
     </table>
@@ -37,100 +37,51 @@
         <tr>
             <td>
                 @(Html.Telerik().Grid<NewsLetterSubscriptionModel>()
-                        .Name("newsLetterSubscriptions-grid")                        
+                        .Name("newsLetterSubscriptions-grid")
                         .BindTo(Model.NewsLetterSubscriptions.Data)
+                        .DataKeys(x =>
+                        {
+                            x.Add(y => y.Id).RouteKey("Id");
+                        })
                         .Columns(columns =>
                         {
-                            columns.Bound(x => x.Id)
-                                .ClientTemplate("<input type='checkbox' name='checkedRecords' value='<#= Id #>' class='checkboxGroups'/>")
-                                .Title("<input id='mastercheckbox' type='checkbox'/>")
-                                .Width(50)
-                                .HtmlAttributes(new { style = "text-align:center" })
-                                .HeaderHtmlAttributes(new { style = "text-align:center" })
-                                .Filterable(false); 
-
-                            columns.Bound(x => x.Email)
-                                .Filterable(false);
-                            columns.Bound(x => x.Active)
-                                .Filterable(false); ;
+                            columns.Bound(x => x.Email);
+                            columns.Bound(x => x.Active);
                             columns.Bound(x => x.CreatedOn)
-                                .Filterable(false); ;
-                            columns.Bound(x => x.SearchCustomerEmail)
-                                .Filterable(false)
-                                .Hidden(true);
+                                .ReadOnly();
+                            columns.Command(commands =>
+                            {
+                                commands.Edit();
+                                commands.Delete();
+                            }).Width(180);
 
                         })
                         .Pageable(settings => settings.Total(Model.NewsLetterSubscriptions.Total).PageSize(gridPageSize).Position(GridPagerPosition.Both))
-                        .DataBinding(dataBinding => dataBinding.Ajax().Select("SubscriptionList", "NewsLetterSubscription"))
-                        .Filterable(filtering => filtering.Filters(filters =>
-                        {
-                            //customer email
-                            if (!String.IsNullOrEmpty(ViewData["searchCustomerEmail"] as string))
-                            {
-                                filters.Add(x => x.SearchCustomerEmail).Contains((string)ViewData["searchCustomerEmail"]);
-                            }
-                        }))
+                        .DataBinding(dataBinding => dataBinding.Ajax()
+                            .Select("SubscriptionList", "NewsLetterSubscription")
+                            .Update("SubscriptionUpdate", "NewsLetterSubscription")
+                            .Delete("SubscriptionDelete", "NewsLetterSubscription"))
+                        .ClientEvents(events => events.OnDataBinding("onDataBinding"))
                         .EnableCustomBinding(true))
             </td>
         </tr>
     </table>
-    //TODO add update/delete support
     <script type="text/javascript">
-        var selectedIds = [];
-
         $(document).ready(function () {
-
-            $('#mastercheckbox').click(function () {
-                $('.checkboxGroups').attr('checked', $(this).is(':checked') ? 'checked' : '').change();
-            });
-
-            //wire up checkboxes. 
-            $('#newsLetterSubscriptions-grid input[type=checkbox][id!=mastercheckbox]').live('change', function (e) {
-                var $check = $(this);
-                if ($check.attr("checked") == true) {
-                    var checked = jQuery.inArray($check.val(), selectedIds);
-                    if (checked == -1) {
-                        //add id to selectedIds.  
-                        selectedIds.push($check.val());
-                    }
-                }
-                else {
-                    var checked = jQuery.inArray($check.val(), selectedIds);
-                    if (checked > -1) {
-                        //remove id from selectedIds.  
-                        selectedIds = $.grep(selectedIds, function (item, index) {
-                            return item != $check.val();
-                        });
-                    }
-                }
-                updateMasterCheckbox();
+            $('#search-newsLetterSubscriptions').click(function () {
+                var grid = $('#newsLetterSubscriptions-grid').data('tGrid');
+                grid.ajaxRequest();
+                return false;
             });
         });
 
-        function onDataBound(e) {
-            alert('1');
-            $('#newsLetterSubscriptions-grid input[type=checkbox][id!=mastercheckbox]').each(function () {
-                var currentId = $(this).val();
-                var checked = jQuery.inArray(currentId, selectedIds);
-                //set checked based on if current checkbox's value is in selectedIds.  
-                $(this).attr('checked', checked > -1);
-            });
-
-            updateMasterCheckbox();
+        function onDataBinding(e) {
+            var searchModel = {
+                SearchEmail: $('#@Html.FieldIdFor(model => model.SearchEmail)').val()
+            };
+            e.data = searchModel;
         }
-
-        function updateMasterCheckbox() {
-            var numChkBoxes = $('#newsLetterSubscriptions-grid input[type=checkbox][id!=mastercheckbox]').length;
-            var numChkBoxesChecked = $('#newsLetterSubscriptions-grid input[type=checkbox][checked][id!=mastercheckbox]').length;
-            if (numChkBoxes == numChkBoxesChecked && numChkBoxes > 0) {
-                $('#mastercheckbox').attr('checked', 'checked');
-            }
-            else {
-                $('#mastercheckbox').attr('checked', '');
-            }
-
-        }
-   </script>    
+    </script>  
 }
 
 @*import emails form*@

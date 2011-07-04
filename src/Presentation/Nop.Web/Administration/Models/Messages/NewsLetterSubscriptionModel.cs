@@ -16,8 +16,5 @@ namespace Nop.Admin.Models.Messages
 
         [NopResourceDisplayName("Admin.Promotions.NewsLetterSubscriptions.Fields.CreatedOn")]
         public DateTime CreatedOn { get; set; }
-
-        //properties used for filtering (subscription list page)
-        public string SearchCustomerEmail { get; set; }
     }
 }
