@@ -195,9 +195,6 @@ namespace Nop.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.Published")]
         public bool Published { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.Deleted")]
-        public bool Deleted { get; set; }
-
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
 
