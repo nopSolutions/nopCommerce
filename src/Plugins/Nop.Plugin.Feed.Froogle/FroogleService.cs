@@ -115,7 +115,12 @@ namespace Nop.Plugin.Feed.Froogle
                         var productUrl = string.Format("{0}p/{1}/{2}", _webHelper.GetStoreLocation(false), product.Id, product.GetSeName());
                         writer.WriteStartElement("item");
                         writer.WriteElementString("link", productUrl);
-                        writer.WriteElementString("title", productVariant.FullProductName);
+
+                        writer.WriteStartElement("title");
+                        writer.WriteCData(productVariant.FullProductName);
+                        writer.WriteEndElement(); // title
+
+                        //description
                         writer.WriteStartElement("description");
                         string description = productVariant.Description;
                         if (String.IsNullOrEmpty(description))

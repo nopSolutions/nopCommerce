@@ -31,7 +31,6 @@ namespace Nop.Plugin.Feed.Become
         private readonly ICurrencyService _currencyService;
         private readonly ISettingService _settingService;
         private readonly IWebHelper _webHelper;
-        private readonly StoreInformationSettings _storeInformationSettings;
         private readonly BecomeSettings _becomeSettings;
         private readonly CurrencySettings _currencySettings;
 
@@ -43,7 +42,6 @@ namespace Nop.Plugin.Feed.Become
             IManufacturerService manufacturerService, IPictureService pictureService,
             ICurrencyService currencyService, IWebHelper webHelper,
             ISettingService settingService,
-            StoreInformationSettings storeInformationSettings,
             BecomeSettings becomeSettings, CurrencySettings currencySettings)
         {
             this._productService = productService;
@@ -53,7 +51,6 @@ namespace Nop.Plugin.Feed.Become
             this._currencyService = currencyService;
             this._webHelper = webHelper;
             this._settingService = settingService;
-            this._storeInformationSettings = storeInformationSettings;
             this._becomeSettings = becomeSettings;
             this._currencySettings = currencySettings;
         }
