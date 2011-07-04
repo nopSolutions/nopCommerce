@@ -64,14 +64,12 @@ namespace Nop.Admin.Controllers
 		}
 
 		[HttpPost, GridAction(EnableCustomBinding = true)]
-		public ActionResult SubscriptionList(GridCommand command)
+		public ActionResult SubscriptionList(GridCommand command, NewsLetterSubscriptionListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNewsletterSubscribers))
                 return AccessDeniedView();
 
-			string searchCustomerEmail = command.FilterDescriptors.GetValueFromAppliedFilters("searchCustomerEmail");
-
-			var newsletterSubscriptions = _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions(searchCustomerEmail, 
+            var newsletterSubscriptions = _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions(model.SearchEmail, 
                 command.Page - 1, command.PageSize, true);
 
             var gridModel = new GridModel<NewsLetterSubscriptionModel>
@@ -90,31 +88,31 @@ namespace Nop.Admin.Controllers
             };
 		}
 
-		[HttpPost, ActionName("List")]
-		[FormValueRequired("search-newsLetterSubscriptions")]
-		public ActionResult Search(NewsLetterSubscriptionListModel model)
+        [GridAction(EnableCustomBinding = true)]
+        public ActionResult SubscriptionUpdate(NewsLetterSubscriptionModel model, GridCommand command)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageNewsletterSubscribers))
+                return AccessDeniedView();
+            
+            var subscription = _newsLetterSubscriptionService.GetNewsLetterSubscriptionById(model.Id);
+            subscription.Email = model.Email;
+            subscription.Active = model.Active;
+            _newsLetterSubscriptionService.UpdateNewsLetterSubscription(subscription);
+
+            return SubscriptionList(command, new NewsLetterSubscriptionListModel());
+        }
+
+        [GridAction(EnableCustomBinding = true)]
+        public ActionResult SubscriptionDelete(int id, GridCommand command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNewsletterSubscribers))
                 return AccessDeniedView();
 
-			ViewData["searchCustomerEmail"] = model.SearchEmail;
+            var subscription = _newsLetterSubscriptionService.GetNewsLetterSubscriptionById(id);
+            _newsLetterSubscriptionService.DeleteNewsLetterSubscription(subscription);
 
-            //TODO add paging support
-			var newsletterSubscriptions = _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions(model.SearchEmail, 0, 10, true);
-
-			model.NewsLetterSubscriptions = new GridModel<NewsLetterSubscriptionModel>
-			{
-				Data = newsletterSubscriptions.Select(x =>
-				{
-					var m = x.ToModel();
-					m.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
-					return m;
-				}),
-				Total = newsletterSubscriptions.TotalCount
-			};
-
-			return View(model);
-		}
+            return SubscriptionList(command, new NewsLetterSubscriptionListModel());
+        }
 
 		public ActionResult ExportCsv(NewsLetterSubscriptionListModel model)
         {

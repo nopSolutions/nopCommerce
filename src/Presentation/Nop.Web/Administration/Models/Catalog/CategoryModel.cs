@@ -76,7 +76,6 @@ namespace Nop.Admin.Models.Catalog
         
         public IList<CategoryLocalizedModel> Locales { get; set; }
 
-        [NopResourceDisplayName("Admin.Catalog.Categories.Fields.Breadcrumb")]
         public string Breadcrumb { get; set; }
 
 

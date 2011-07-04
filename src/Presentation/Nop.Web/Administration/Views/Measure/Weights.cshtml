@@ -11,6 +11,12 @@
 <table class="adminContent">
     <tr>
         <td>
+            <b>NOTE: if you change your primary weight, then do not forget to update the appropriate
+                ratios of the units</b>
+        </td>
+    </tr>
+    <tr>
+        <td>
             @(Html.Telerik().Grid(Model.Data)
                     .Name("measureweight-grid")
                     .DataKeys(x => {
