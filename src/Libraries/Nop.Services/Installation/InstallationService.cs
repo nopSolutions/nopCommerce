@@ -4455,6 +4455,7 @@ namespace Nop.Services.Installation
                     ProductsAlsoPurchasedEnabled = true,
                     ProductsAlsoPurchasedNumber = 3,
                     EnableDynamicPriceUpdate = false,
+                    NumberOfProductTags = 15,
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<LocalizationSettings>>()
@@ -4658,7 +4659,8 @@ namespace Nop.Services.Installation
                     Enabled = true,
                     PostsPageSize = 10,
                     AllowNotRegisteredUsersToLeaveComments = true,
-                    NotifyAboutNewBlogComments = false
+                    NotifyAboutNewBlogComments = false,
+                    NumberOfTags = 15,
                 });
             EngineContext.Current.Resolve<IConfigurationProvider<NewsSettings>>()
                 .SaveSettings(new NewsSettings()

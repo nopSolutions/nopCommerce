@@ -51,5 +51,14 @@
                 @Html.ValidationMessageFor(model => model.NotifyAboutNewBlogComments)
             </td>
         </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.NumberOfTags):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.NumberOfTags)
+                @Html.ValidationMessageFor(model => model.NumberOfTags)
+            </td>
+        </tr>
     </table>
 }

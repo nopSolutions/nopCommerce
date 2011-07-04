@@ -3041,6 +3041,14 @@
                             </LocaleResource>
                           </Children>
                         </LocaleResource>
+                        <LocaleResource Name="NumberOfTags">
+                          <Value>Number of tags (cloud)</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>The number of blog tags that appear in the tag cloud.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
                       </Children>
                   </LocaleResource>
                   <LocaleResource Name="Catalog">
@@ -3235,6 +3243,14 @@
                         <Children>
                           <LocaleResource Name="Hint">
                             <Value>Check if you want to enable dynamic price update on product details page in case a product has product attributes with price adjustments.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="NumberOfProductTags">
+                        <Value>Number of product tags (cloud)</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>The number of product tags that appear in the tag cloud</Value>
                           </LocaleResource>
                         </Children>
                       </LocaleResource>

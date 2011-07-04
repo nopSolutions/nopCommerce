@@ -135,5 +135,10 @@ namespace Nop.Core.Domain.Catalog
         /// </summary>
         public bool EnableDynamicPriceUpdate { get; set; }
 
+        /// <summary>
+        /// Gets or sets a number of product tags that appear in the tag cloud
+        /// </summary>
+        public int NumberOfProductTags { get; set; }
+
     }
 }

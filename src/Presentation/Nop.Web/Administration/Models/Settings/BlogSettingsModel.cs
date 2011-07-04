@@ -16,5 +16,8 @@ namespace Nop.Admin.Models.Settings
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Blog.NotifyAboutNewBlogComments")]
         public bool NotifyAboutNewBlogComments { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Blog.NumberOfTags")]
+        public int NumberOfTags { get; set; }
     }
 }
