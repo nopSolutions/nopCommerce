@@ -284,6 +284,14 @@ namespace Nop.Web.Controllers
                 }
             }
 
+
+            //Consider granting access rights to the resource to the ASP.NET request identity. 
+            //ASP.NET has a base process identity 
+            //(typically {MACHINE}\ASPNET on IIS 5 or Network Service on IIS 6 and IIS 7, 
+            //and the configured application pool identity on IIS 7.5) that is used if the application is not impersonating.
+            //If the application is impersonating via <identity impersonate="true"/>, 
+            //the identity will be the anonymous user (typically IUSR_MACHINENAME) or the authenticated request user.
+
             //validate permissions
             string rootDir = Server.MapPath("~/");
             var dirsToCheck = new List<string>();
@@ -299,7 +307,6 @@ namespace Nop.Web.Controllers
             foreach (string dir in dirsToCheck)
                 if (!CheckPermissions(dir, false, true, true, true))
                     ModelState.AddModelError("", string.Format("The '{0}' account is not granted with Modify permission on folder '{1}'. Please configure these permissions.", WindowsIdentity.GetCurrent().Name, dir));
-                
 
             var filesToCheck = new List<string>();
             filesToCheck.Add(rootDir + "web.config");

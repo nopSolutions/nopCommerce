@@ -10,7 +10,7 @@ using Nop.Web.Models.Topics;
 
 namespace Nop.Web.Extensions
 {
-    public static class ModelExtensions
+    public static class MappingExtensions
     {
         //category
         public static CategoryModel ToModel(this Category entity)

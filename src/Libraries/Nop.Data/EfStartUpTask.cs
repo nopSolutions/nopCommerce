@@ -9,12 +9,15 @@ namespace Nop.Data
     {
         public void Execute()
         {
+            if (!DataSettingsHelper.DatabaseIsInstalled())
+                return;
+
             var settings = EngineContext.Current.Resolve<DataSettings>();
             if (settings != null && settings.IsValid())
             {
                 var provider = EngineContext.Current.Resolve<IEfDataProvider>();
                 if (provider == null)
-                    throw new NopException("No IEfDataProvider found");
+                    throw new NopException("No EfDataProvider found");
                 provider.SetDatabaseInitializer();
             }
         }

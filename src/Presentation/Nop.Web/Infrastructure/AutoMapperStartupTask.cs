@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Directory;
@@ -28,6 +29,9 @@ namespace Nop.Web.Infrastructure
 
         public void Execute()
         {
+            if (!DataSettingsHelper.DatabaseIsInstalled())
+                return;
+
             //language
             Mapper.CreateMap<Language, LanguageModel>();
             //currency

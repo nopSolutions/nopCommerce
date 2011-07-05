@@ -19,6 +19,7 @@ using Nop.Admin.Models.Settings;
 using Nop.Admin.Models.Shipping;
 using Nop.Admin.Models.Tax;
 using Nop.Admin.Models.Topics;
+using Nop.Core.Data;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -51,6 +52,8 @@ namespace Nop.Admin.Infrastructure
     {
         public void Execute()
         {
+            if (!DataSettingsHelper.DatabaseIsInstalled())
+                return;
             //TODO remove 'CreatedOnUtc' ignore mappings because now presentation layer models have 'CreatedOn' property and core entities have 'CreatedOnUtc' property (distinct names)
 
 

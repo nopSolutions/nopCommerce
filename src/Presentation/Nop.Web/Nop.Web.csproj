@@ -108,7 +108,7 @@
     <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Extensions\EditorExtensions.cs" />
-    <Compile Include="Extensions\ModelExtensions.cs" />
+    <Compile Include="Extensions\MappingExtensions.cs" />
     <Compile Include="Extensions\PagerHtmlExtension.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
