@@ -226,7 +226,7 @@ namespace Nop.Web.Controllers
                 //ConfirmPassword = "admin",
                 InstallSampleData = true,
                 DatabaseConnectionString = "",
-                DataProvider = "sqlce",
+                DataProvider = "sqlserver",
                 SqlAuthenticationType = "sqlauthentication",
                 SqlConnectionInfo = "sqlconnectioninfo_values"
             };

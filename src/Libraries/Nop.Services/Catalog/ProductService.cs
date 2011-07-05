@@ -215,220 +215,134 @@ namespace Nop.Services.Catalog
             IList<int> filteredSpecs, ProductSortingEnum orderBy,
             int pageIndex, int pageSize, bool showHidden = false)
         {
-            //TODO temporary solution (requires optimization)
-
-            var allProducts = GetAllProducts(showHidden);
-            var filteredProducts = new List<Product>();
-            foreach (var prod in allProducts)
+            //products
+            var query = _productRepository.Table;
+            query = query.Where(p => !p.Deleted);
+            if (!showHidden)
             {
-                var productVariants = prod.ProductVariants.Where(pv => (showHidden || !pv.Deleted) && (showHidden || pv.Published)).ToList();
-
-                //filter by category
-                bool categoryOK = false;
-                if (categoryId > 0)
-                {
-                    var pc = prod.ProductCategories.FirstOrDefault(pc1 => pc1.CategoryId == categoryId);
-                    if (pc != null)
-                    {
-                        if (featuredProducts.HasValue)
-                        {
-                            categoryOK = featuredProducts.Value == pc.IsFeaturedProduct;
-                        }
-                        else
-                        {
-                            categoryOK = true;
-                        }
-                    }
-                }
-                else
-                    categoryOK = true;
-
-                //filter by manufacturer
-                bool manufacturerOK = false;
-                if (manufacturerId > 0)
-                {
-                    var pm = prod.ProductManufacturers.FirstOrDefault(pm1 => pm1.ManufacturerId == manufacturerId);
-                    if (pm != null)
-                    {
-                        if (featuredProducts.HasValue)
-                        {
-                            manufacturerOK = featuredProducts.Value == pm.IsFeaturedProduct;
-                        }
-                        else
-                        {
-                            manufacturerOK = true;
-                        }
-                    }
-                }
-                else
-                    manufacturerOK = true;
-
-                //filter by price
-                bool priceMinOK = false;
-                if (priceMin.HasValue)
-                {
-                    foreach (var pv in productVariants)
-                    {
-                        if (pv.Price > priceMin.Value)
-                        {
-                            priceMinOK = true;
-                            break;
-                        }
-                    }
-                }
-                else
-                    priceMinOK = true;
-                bool priceMaxOK = false;
-                if (priceMax.HasValue)
-                {
-                    foreach (var pv in productVariants)
-                    {
-                        if (pv.Price < priceMax.Value)
-                        {
-                            priceMaxOK = true;
-                            break;
-                        }
-                    }
-                }
-                else
-                    priceMaxOK = true;
-
-
-                //filter by related products
-                bool relatedProductOK = false;
-                if (relatedToProductId > 0)
-                {
-                    var relatedProducts = GetRelatedProductsByProductId1(relatedToProductId, showHidden);
-                    foreach (var rp in relatedProducts)
-                    {
-                        if (rp.ProductId2 == prod.Id)
-                        {
-                            relatedProductOK = true;
-                            break;
-                        }
-                    }
-                }
-                else
-                    relatedProductOK = true;
-
-
-                //filter by product tags
-                bool productTagOK = false; 
-                if (productTagId > 0)
-                {
-                    //UNDONE use productTagId parameter
-                    productTagOK = true;
-                }
-                else
-                    productTagOK = true;
-
-                //filter by keywords
-                bool keywordsOK = false;
-                if (!String.IsNullOrWhiteSpace(keywords))
-                {
-                    keywords = keywords.ToLowerInvariant();
-                    //UNDONE search localized values (languageId parameter)
-                    if (!String.IsNullOrEmpty(prod.Name) && prod.Name.ToLowerInvariant().Contains(keywords))
-                    {
-                        keywordsOK = true;
-                    }
-
-                    if (!keywordsOK)
-                    {
-                        if (searchDescriptions)
-                        {
-                            if (!String.IsNullOrEmpty(prod.ShortDescription) && prod.ShortDescription.ToLowerInvariant().Contains(keywords))
-                            {
-                                keywordsOK = true;
-                            }
-
-                            if (!String.IsNullOrEmpty(prod.FullDescription) && prod.FullDescription.ToLowerInvariant().Contains(keywords))
-                            {
-                                keywordsOK = true;
-                            }
-                        }
-                    }
-
-                    if (!keywordsOK)
-                    {
-                        foreach (var pv in productVariants)
-                        {
-                            if (!String.IsNullOrEmpty(pv.Name) && pv.Name.ToLowerInvariant().Contains(keywords))
-                            {
-                                keywordsOK = true;
-                                break;
-                            }
-                        }
-                    }
-
-                    if (!keywordsOK)
-                    {
-                        if (searchDescriptions)
-                        {
-                            foreach (var pv in productVariants)
-                            {
-                                if (!String.IsNullOrEmpty(pv.Description) && pv.Description.ToLowerInvariant().Contains(keywords))
-                                {
-                                    keywordsOK = true;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-                else
-                    keywordsOK = true;
-
-                //filter by specs
-                bool specificationsOK = true;
-                if (filteredSpecs != null && filteredSpecs.Count > 0)
-                {
-                    for (int i = 0; i < filteredSpecs.Count; i++)
-                    {
-                        bool specIsFound = false;
-                        foreach (var psa in prod.ProductSpecificationAttributes.Where(psa => psa.AllowFiltering))
-                            if (psa.SpecificationAttributeOptionId == filteredSpecs[i])
-                            {
-                                specIsFound = true;
-                                break;
-                            }
-                        if (!specIsFound)
-                        {
-                            specificationsOK = false;
-                            break;
-                        }
-                    }
-                }
-                else
-                    specificationsOK = true;
-
-                if (categoryOK && manufacturerOK && priceMinOK && priceMaxOK 
-                    && relatedProductOK && productTagOK && specificationsOK && keywordsOK)
-                    filteredProducts.Add(prod);
+                query = query.Where(p => p.Published);
             }
 
+            //searching by keyword
+            if (!String.IsNullOrWhiteSpace(keywords))
+            {
+                query = from p in query
+                        //join pv in _productVariantRepository.Table on p.Id equals pv.ProductId into p_pv
+                        //from pv in p_pv.DefaultIfEmpty()
+                        from pv in p.ProductVariants.DefaultIfEmpty()
+                        where (p.Name.Contains(keywords)) ||
+                        (searchDescriptions && p.ShortDescription.Contains(keywords)) ||
+                        (searchDescriptions && p.FullDescription.Contains(keywords)) ||
+                        (pv.Name.Contains(keywords)) ||
+                        (searchDescriptions && pv.Description.Contains(keywords))
+                        select p;
+                //TODO search localized values
+            }
+
+            //product variants
+            query = from p in query
+                    //join pv in _productVariantRepository.Table on p.Id equals pv.ProductId into p_pv
+                    //from pv in p_pv.DefaultIfEmpty()
+                    from pv in p.ProductVariants.DefaultIfEmpty()
+                    where (showHidden || !pv.Deleted) &&
+                    (showHidden || pv.Published) &&
+                    (!priceMin.HasValue || pv.Price >= priceMin.Value) &&
+                    (!priceMax.HasValue || pv.Price <= priceMax.Value)
+                    select p;
+
+
+            //search by specs
+            if (filteredSpecs != null && filteredSpecs.Count > 0)
+            {
+                query = from p in query
+                        where !filteredSpecs
+                        .Except(p.ProductSpecificationAttributes.Where(psa => psa.AllowFiltering).Select(psa => psa.SpecificationAttributeOptionId))
+                        .Any()
+                        select p;
+            }
+
+            //category filtering
+            if (categoryId > 0)
+            {
+                query = from p in query
+                        from pc in p.ProductCategories.Where(pc => pc.CategoryId == categoryId)
+                        where (!featuredProducts.HasValue || featuredProducts.Value == pc.IsFeaturedProduct)
+                        select p;
+            }
+
+            //manufacturer filtering
+            if (manufacturerId > 0)
+            {
+                query = from p in query
+                        from pm in p.ProductManufacturers.Where(pm => pm.ManufacturerId == manufacturerId)
+                        where (!featuredProducts.HasValue || featuredProducts.Value == pm.IsFeaturedProduct)
+                        select p;
+            }
+
+            //related products filtering
+            if (relatedToProductId > 0)
+            {
+                query = from p in query
+                        join rp in _relatedProductRepository.Table on p.Id equals rp.ProductId2
+                        where (relatedToProductId == rp.ProductId1)
+                        select p;
+            }
+
+            //tag filtering
+            if (productTagId > 0)
+            {
+                query = from p in query
+                        from pt in p.ProductTags.Where(pt => pt.Id == productTagId)
+                        select p;
+            }
+
+            //only distinct products (group by ID)
+            //if we use standard Distinct() method, then all fields will be compared (low performance)
+            //it'll don't work in SQl Server Compact when searching products by a keyword)
+            query = from p in query
+                         group p by p.Id into pGroup
+                         orderby pGroup.Key
+                         select pGroup.FirstOrDefault();
+            
             //sort products
-            var sortedProducts = new List<Product>();
             if (orderBy == ProductSortingEnum.Position && categoryId > 0)
-                sortedProducts = filteredProducts.AsQueryable().OrderBy(p => p.ProductCategories.First().DisplayOrder).ToList();
+            {
+                //category position
+                query = query.OrderBy(p => p.ProductCategories.FirstOrDefault().DisplayOrder);
+            }
             else if (orderBy == ProductSortingEnum.Position && manufacturerId > 0)
-                sortedProducts = filteredProducts.AsQueryable().OrderBy(p => p.ProductManufacturers.First().DisplayOrder).ToList();
+            {
+                //manufacturer position
+                query = query.OrderBy(p => p.ProductManufacturers.FirstOrDefault().DisplayOrder);
+            }
             else if (orderBy == ProductSortingEnum.Position && relatedToProductId > 0)
             {
-                //sortedProducts = filteredProducts.AsQueryable().OrderBy(p => p.RelatedProducts.First().DisplayOrder).ToList();
-                //UNDONE sort by related product ID
-                sortedProducts = filteredProducts.AsQueryable().OrderBy(p => p.Name).ToList();
+                //sort by related product display order
+                query = from p in query
+                        join rp in _relatedProductRepository.Table on p.Id equals rp.ProductId2
+                        where (relatedToProductId == rp.ProductId1)
+                        orderby rp.DisplayOrder
+                        select p;
+                //query = query.OrderBy(p => p.Name);
             }
             else if (orderBy == ProductSortingEnum.Position)
-                sortedProducts = filteredProducts.AsQueryable().OrderBy(p => p.Name).ToList();
+            {
+                query = query.OrderBy(p => p.Name);
+            }
             else if (orderBy == ProductSortingEnum.Name)
-                sortedProducts = filteredProducts.AsQueryable().OrderBy(p => p.Name).ToList();
+            {
+                query = query.OrderBy(p => p.Name);
+            }
             else if (orderBy == ProductSortingEnum.Price)
-                sortedProducts = filteredProducts.AsQueryable().OrderBy(p => p.ProductVariants.First().Price).ToList();
+            {
+                query = query.OrderBy(p => p.ProductVariants.FirstOrDefault().Price);
+            }
             else if (orderBy == ProductSortingEnum.CreatedOn)
-                sortedProducts = filteredProducts.AsQueryable().OrderByDescending(p => p.CreatedOnUtc).ToList();
-            
-            var products = new PagedList<Product>(sortedProducts, pageIndex, pageSize);
+                query = query.OrderByDescending(p => p.CreatedOnUtc);
+            else
+                query = query.OrderBy(p => p.Name);
+
+            var products = new PagedList<Product>(query, pageIndex, pageSize);
             return products;
         }
 
