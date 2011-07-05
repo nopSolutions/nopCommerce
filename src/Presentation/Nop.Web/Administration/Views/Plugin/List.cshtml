@@ -1,6 +1,5 @@
 ﻿@model Telerik.Web.Mvc.GridModel<PluginModel>
 @using Telerik.Web.Mvc.UI
-
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" />
@@ -11,6 +10,18 @@
     </div>
 </div>
 <table class="adminContent">
+    <tr>
+        <td>
+            <h4>Manual plugin installation:</h4>
+            <ol>
+                <li>Upload the plugin to the /plugins folder in your nopCommerce directory. </li>
+                <li>Restart your application. </li>
+                <li>Scroll down through the list of plugins to find the newly installed plugin.
+                </li>
+                <li>Click on the 'Install' link to install the plugin. </li>
+            </ol>
+        </td>
+    </tr>
     <tr>
         <td>
             @(Html.Telerik().Grid<PluginModel>()
@@ -42,7 +53,7 @@
                              .Centered();
                         columns.Bound(x => x.SystemName)
                             .Template(x =>
-                                Html.ActionLink(x.Installed ? T("Admin.Configuration.Plugins.Fields.Uninstall").Text : T("Admin.Configuration.Plugins.Fields.Install").Text, 
+                                Html.ActionLink(x.Installed ? T("Admin.Configuration.Plugins.Fields.Uninstall").Text : T("Admin.Configuration.Plugins.Fields.Install").Text,
                                 x.Installed ? "Uninstall" : "Install", new { systemName = x.SystemName }))
                             .Width(50)
                             .Centered()

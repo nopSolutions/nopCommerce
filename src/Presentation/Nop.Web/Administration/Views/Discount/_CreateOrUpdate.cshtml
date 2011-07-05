@@ -108,7 +108,7 @@
                 @Html.NopLabelFor(model => model.DiscountPercentage):
             </td>
             <td class="adminData">
-                @Html.Telerik().NumericTextBoxFor(model => model.DiscountPercentage).MinValue(0).MaxValue(100)
+                @Html.EditorFor(model => model.DiscountPercentage)
                 @Html.ValidationMessageFor(model => model.DiscountPercentage)
             </td>
         </tr>

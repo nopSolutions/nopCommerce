@@ -3,6 +3,7 @@
 
 @(Html.Telerik().NumericTextBox()
         .Name(ViewData.TemplateInfo.GetFullHtmlFieldName(string.Empty))
-        .Value(Model)
+            .Value(Model)
+            .DecimalDigits(4)   //always display 4 digits
 )
 

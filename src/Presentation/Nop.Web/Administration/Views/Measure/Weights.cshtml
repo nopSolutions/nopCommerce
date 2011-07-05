@@ -28,7 +28,8 @@
                         columns.Bound(x => x.SystemKeyword).Width(200);
                         columns.Bound(x => x.Ratio).Width(100);
                         columns.Bound(x => x.DisplayOrder).Width(100);
-                        columns.Bound(x => x.IsPrimaryWeight).Width(100).ReadOnly();
+                        columns.Bound(x => x.IsPrimaryWeight).Width(100)
+                            .Template(x => x.IsPrimaryWeight.ToString().ToLower()).ReadOnly();
                         columns.Command(commands => commands.Select()).Title("Mark as primary weight").Width(100);
                         columns.Command(commands =>
                         {

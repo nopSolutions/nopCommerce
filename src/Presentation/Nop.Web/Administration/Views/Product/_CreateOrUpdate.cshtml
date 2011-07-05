@@ -583,7 +583,7 @@
                     @Html.NopLabelFor(model => model.AddPictureModel.DisplayOrder):
                 </td>
                 <td class="adminData">
-                    @Html.Telerik().NumericTextBoxFor(model => model.AddPictureModel.DisplayOrder).DecimalDigits(0)
+                    @Html.EditorFor(model => model.AddPictureModel.DisplayOrder)
                     @Html.ValidationMessageFor(model => model.AddPictureModel.DisplayOrder)
                 </td>
             </tr>
@@ -736,7 +736,7 @@
                 @Html.NopLabelFor(model => model.AddSpecificationAttributeModel.DisplayOrder):
             </td>
             <td class="adminData">
-                @Html.Telerik().NumericTextBoxFor(model => model.AddSpecificationAttributeModel.DisplayOrder).DecimalDigits(0)
+                @Html.EditorFor(model => model.AddSpecificationAttributeModel.DisplayOrder)
                 @Html.ValidationMessageFor(model => model.AddSpecificationAttributeModel.DisplayOrder)
             </td>
         </tr>
