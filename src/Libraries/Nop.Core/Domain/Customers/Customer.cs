@@ -135,6 +135,16 @@ namespace Nop.Core.Domain.Customers
         public virtual bool Deleted { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the customer account is system
+        /// </summary>
+        public virtual bool IsSystemAccount { get; set; }
+
+        /// <summary>
+        /// Gets or sets the customer system name
+        /// </summary>
+        public virtual string SystemName { get; set; }
+
+        /// <summary>
         /// Gets or sets the last IP address
         /// </summary>
         public virtual string LastIpAddress { get; set; }

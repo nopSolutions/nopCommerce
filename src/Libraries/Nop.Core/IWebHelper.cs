@@ -129,5 +129,12 @@ namespace Nop.Core
         /// </summary>
         /// <param name="redirectUrl">Redirect URL; empty string if you want to redirect to the current page URL</param>
         void RestartAppDomain(string redirectUrl = "");
+        
+        /// <summary>
+        /// Get a value indicating whether the request is made by search engine (web crawler)
+        /// </summary>
+        /// <param name="request">HTTP Request</param>
+        /// <returns>Result</returns>
+        bool IsSearchEngine(HttpRequestBase request);
     }
 }

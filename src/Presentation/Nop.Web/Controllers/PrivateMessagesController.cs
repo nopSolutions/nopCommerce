@@ -47,7 +47,7 @@ namespace Nop.Web.Controllers
                 return RedirectToAction("index", "home");
             }
 
-            if (_workContext.CurrentCustomer == null || _workContext.CurrentCustomer.IsGuest())
+            if (_workContext.CurrentCustomer.IsGuest())
             {
                 return new HttpUnauthorizedResult();
             }
@@ -262,7 +262,7 @@ namespace Nop.Web.Controllers
                 return RedirectToAction("index", "home");
             }
 
-            if (_workContext.CurrentCustomer == null || _workContext.CurrentCustomer.IsGuest())
+            if (_workContext.CurrentCustomer.IsGuest())
             {
                 return new HttpUnauthorizedResult();
             }
@@ -307,7 +307,7 @@ namespace Nop.Web.Controllers
                 return RedirectToAction("index", "home");
             }
 
-            if (_workContext.CurrentCustomer == null || _workContext.CurrentCustomer.IsGuest())
+            if (_workContext.CurrentCustomer.IsGuest())
             {
                 return new HttpUnauthorizedResult();
             }
@@ -404,7 +404,7 @@ namespace Nop.Web.Controllers
                 return RedirectToAction("index", "home");
             }
 
-            if (_workContext.CurrentCustomer == null || _workContext.CurrentCustomer.IsGuest())
+            if (_workContext.CurrentCustomer.IsGuest())
             {
                 return new HttpUnauthorizedResult();
             }
@@ -448,7 +448,7 @@ namespace Nop.Web.Controllers
                 return RedirectToAction("index", "home");
             }
 
-            if (_workContext.CurrentCustomer == null || _workContext.CurrentCustomer.IsGuest())
+            if (_workContext.CurrentCustomer.IsGuest())
             {
                 return new HttpUnauthorizedResult();
             }

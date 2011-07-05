@@ -189,8 +189,7 @@ namespace Nop.Web.Controllers
 
                         //display price if allowed
                         if (!_catalogSettings.HidePricesForNonRegistered ||
-                            (_workContext.CurrentCustomer != null &&
-                            !_workContext.CurrentCustomer.IsGuest()))
+                            !_workContext.CurrentCustomer.IsGuest())
                         {
                             decimal priceAdjustmentBase = _taxService.GetCheckoutAttributePrice(caValue);
                             decimal priceAdjustment = _currencyService.ConvertFromPrimaryStoreCurrency(priceAdjustmentBase, _workContext.WorkingCurrency);
@@ -205,45 +204,41 @@ namespace Nop.Web.Controllers
 
 
                 //set already selected attributes
-                if (_workContext.CurrentCustomer != null)
+                string selectedCheckoutAttributes = _workContext.CurrentCustomer.CheckoutAttributes;
+                switch (attribute.AttributeControlType)
                 {
-                    string selectedCheckoutAttributes = _workContext.CurrentCustomer.CheckoutAttributes;
-                    switch (attribute.AttributeControlType)
-                    {
-                        case AttributeControlType.DropdownList:
-                        case AttributeControlType.RadioList:
-                        case AttributeControlType.Checkboxes:
+                    case AttributeControlType.DropdownList:
+                    case AttributeControlType.RadioList:
+                    case AttributeControlType.Checkboxes:
+                        {
+                            if (!String.IsNullOrEmpty(selectedCheckoutAttributes))
                             {
-                                if (!String.IsNullOrEmpty(selectedCheckoutAttributes))
-                                {
-                                    //clear default selection
+                                //clear default selection
+                                foreach (var item in caModel.Values)
+                                    item.IsPreSelected = false;
+
+                                //select new values
+                                var selectedCaValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(selectedCheckoutAttributes);
+                                foreach (var caValue in selectedCaValues)
                                     foreach (var item in caModel.Values)
-                                        item.IsPreSelected = false;
-
-                                    //select new values
-                                    var selectedCaValues = _checkoutAttributeParser.ParseCheckoutAttributeValues(selectedCheckoutAttributes);
-                                    foreach (var caValue in selectedCaValues)
-                                        foreach (var item in caModel.Values)
-                                            if (caValue.Id == item.Id)
-                                                item.IsPreSelected = true;
-                                }
+                                        if (caValue.Id == item.Id)
+                                            item.IsPreSelected = true;
                             }
-                            break;
-                        case AttributeControlType.TextBox:
-                        case AttributeControlType.MultilineTextbox:
+                        }
+                        break;
+                    case AttributeControlType.TextBox:
+                    case AttributeControlType.MultilineTextbox:
+                        {
+                            if (!String.IsNullOrEmpty(selectedCheckoutAttributes))
                             {
-                                if (!String.IsNullOrEmpty(selectedCheckoutAttributes))
-                                {
-                                    var enteredText = _checkoutAttributeParser.ParseValues(selectedCheckoutAttributes, attribute.Id);
-                                    if (enteredText.Count > 0)
-                                        caModel.DefaultValue = enteredText[0];
-                                }
+                                var enteredText = _checkoutAttributeParser.ParseValues(selectedCheckoutAttributes, attribute.Id);
+                                if (enteredText.Count > 0)
+                                    caModel.DefaultValue = enteredText[0];
                             }
-                            break;
-                        default:
-                            break;
-                    }
-
+                        }
+                        break;
+                    default:
+                        break;
                 }
 
                 model.CheckoutAttributes.Add(caModel);
@@ -1018,8 +1013,10 @@ namespace Nop.Web.Controllers
             if (!_shoppingCartSettings.MiniShoppingCartEnabled)
                 return Content("");
 
-            var model = new MiniShoppingCartModel();
-            model.DisplayProducts = _shoppingCartSettings.MiniShoppingCartDisplayProducts;
+            var model = new MiniShoppingCartModel()
+            {
+                DisplayProducts = _shoppingCartSettings.MiniShoppingCartDisplayProducts
+            };
 
             var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
             model.TotalProducts = cart.GetTotalProducts();
@@ -1155,8 +1152,10 @@ namespace Nop.Web.Controllers
             if (cart.Count == 0)
                 return RedirectToAction("Index", "Home");
 
-            var model = new WishlistEmailAFriendModel();
-            model.YourEmailAddress = _workContext.CurrentCustomer != null ? _workContext.CurrentCustomer.Email : null;
+            var model = new WishlistEmailAFriendModel()
+            {
+                YourEmailAddress = _workContext.CurrentCustomer.Email
+            };
             return View(model);
         }
 

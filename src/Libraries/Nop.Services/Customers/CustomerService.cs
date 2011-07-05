@@ -188,6 +188,9 @@ namespace Nop.Services.Customers
             if (customer == null)
                 throw new ArgumentNullException("customer");
 
+            if (customer.IsSystemAccount)
+                throw new NopException(string.Format("System customer account ({0}) could not be deleted", customer.SystemName));
+
             customer.Deleted = true;
             UpdateCustomer(customer);
         }
@@ -237,6 +240,24 @@ namespace Nop.Services.Customers
             var query = from c in _customerRepository.Table
                         orderby c.Id
                         where c.Email == email
+                        select c;
+            var customer = query.FirstOrDefault();
+            return customer;
+        }
+
+        /// <summary>
+        /// Get customer by email
+        /// </summary>
+        /// <param name="systemName">System name</param>
+        /// <returns>Customer</returns>
+        public virtual Customer GetCustomerBySystemName(string systemName)
+        {
+            if (string.IsNullOrWhiteSpace(systemName))
+                return null;
+
+            var query = from c in _customerRepository.Table
+                        orderby c.Id
+                        where c.SystemName == systemName
                         select c;
             var customer = query.FirstOrDefault();
             return customer;
@@ -325,6 +346,11 @@ namespace Nop.Services.Customers
             if (request.Customer == null)
             {
                 result.AddError("Can't load current customer");
+                return result;
+            }
+            if (request.Customer.IsSearchEngineAccount())
+            {
+                result.AddError("Search engine can't be registered");
                 return result;
             }
             if (request.Customer.IsRegistered())
@@ -670,6 +696,8 @@ namespace Nop.Services.Customers
             //ensure that customers doesn't have forum posts or topics
             query = query.Where(c => c.ForumTopics.Count() == 0);
             query = query.Where(c => c.ForumPosts.Count() == 0);
+            //don't delete system accounts
+            query = query.Where(c => !c.IsSystemAccount);
             var customers = query.ToList();
 
 

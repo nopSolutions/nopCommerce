@@ -652,13 +652,21 @@ namespace Nop.Admin.Controllers
             if (customer == null) 
                 throw new ArgumentException("No customer found with the specified id", "id");
 
-            _customerService.DeleteCustomer(customer);
+            try
+            {
+                _customerService.DeleteCustomer(customer);
 
-            //activity log
-            _customerActivityService.InsertActivity("DeleteCustomer", _localizationService.GetResource("ActivityLog.DeleteCustomer"), customer.Id);
+                //activity log
+                _customerActivityService.InsertActivity("DeleteCustomer", _localizationService.GetResource("ActivityLog.DeleteCustomer"), customer.Id);
 
-            SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.Deleted"));
-            return RedirectToAction("List");
+                SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.Deleted"));
+                return RedirectToAction("List");
+            }
+            catch (Exception exc)
+            {
+                ErrorNotification(exc.Message);
+                return RedirectToAction("Edit", new { id = customer.Id });
+            }
         }
 
         [HttpPost, ActionName("Edit")]

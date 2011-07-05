@@ -74,6 +74,7 @@
     <Compile Include="Domain\Common\GoogleAnalyticsSettings.cs" />
     <Compile Include="Domain\Common\SeoSettings.cs" />
     <Compile Include="Domain\Common\LiveChatSettings.cs" />
+    <Compile Include="Domain\Customers\SystemCustomerNames.cs" />
     <Compile Include="Domain\Polls\PollVotingRecord.cs" />
     <Compile Include="Domain\Polls\PollAnswer.cs" />
     <Compile Include="Domain\Polls\Poll.cs" />

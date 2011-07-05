@@ -75,6 +75,13 @@ namespace Nop.Services.Customers
         /// <param name="email">Email</param>
         /// <returns>Customer</returns>
         Customer GetCustomerByEmail(string email);
+        
+        /// <summary>
+        /// Get customer by email
+        /// </summary>
+        /// <param name="systemName">System name</param>
+        /// <returns>Customer</returns>
+        Customer GetCustomerBySystemName(string systemName);
 
         /// <summary>
         /// Get customer by username

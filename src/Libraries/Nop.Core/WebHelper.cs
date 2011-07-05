@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Hosting;
 
@@ -521,6 +523,34 @@ namespace Nop.Core
             {
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Get a value indicating whether the request is made by search engine (web crawler)
+        /// </summary>
+        /// <param name="request">HTTP Request</param>
+        /// <returns>Result</returns>
+        public virtual bool IsSearchEngine(HttpRequestBase request)
+        {
+            if (request == null)
+                return false;
+
+            bool result = false;
+            try
+            {
+                result = request.Browser.Crawler;
+                if (!result)
+                {
+                    //put any additional known crawlers in the Regex below for some custom validation
+                    //var regEx = new Regex("Twiceler|twiceler|BaiDuSpider|baduspider|Slurp|slurp|ask|Ask|Teoma|teoma|Yahoo|yahoo");
+                    //result = regEx.Match(request.UserAgent).Success;
+                }
+            }
+            catch(Exception exc)
+            {
+                Debug.WriteLine(exc);
+            }
+            return result;
         }
     }
 }

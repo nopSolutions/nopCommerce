@@ -3977,6 +3977,7 @@ namespace Nop.Services.Installation
 
         protected virtual void InstallCustomersAndUsers(string defaultUserEmail, string defaultUserPassword)
         {
+            //admin user
             var adminUser = new Customer()
             {
                 //TODO set default first and last name
@@ -3990,7 +3991,6 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 LastActivityDateUtc= DateTime.UtcNow,
             };
-
             adminUser.AddAddress(new Address()
             {
                 FirstName = "John",
@@ -4008,6 +4008,20 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
             });
             _customerRepository.Insert(adminUser);
+
+            //search engine (crawler) built-in user
+            var searchEngineUser = new Customer()
+            {
+                Email = "builtin@search_engine_record.com",
+                CustomerGuid = Guid.NewGuid(),
+                PasswordFormat = PasswordFormat.Clear,
+                Active = true,
+                IsSystemAccount = true,
+                SystemName = SystemCustomerNames.SearchEngine,
+                CreatedOnUtc = DateTime.UtcNow,
+                LastActivityDateUtc = DateTime.UtcNow,
+            };
+            _customerRepository.Insert(searchEngineUser);
 
             var crAdministrators = new CustomerRole
             {
@@ -4040,6 +4054,7 @@ namespace Nop.Services.Installation
                 IsSystemRole = true,
                 SystemName = SystemCustomerRoleNames.Guests,
             };
+            crGuests.Customers.Add(searchEngineUser);
             var customerRoles = new List<CustomerRole>
                                 {
                                     crAdministrators,

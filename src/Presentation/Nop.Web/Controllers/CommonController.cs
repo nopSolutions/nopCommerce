@@ -195,8 +195,8 @@ namespace Nop.Web.Controllers
                 unreadMessage = string.Format(_localizationService.GetResource("PrivateMessages.TotalUnread"), unreadMessageCount);
 
                 //notifications here
-                if (_forumSettings.ShowAlertForPM &&
-                   !customer.GetAttribute<bool>(SystemCustomerAttributeNames.NotifiedAboutNewPrivateMessages))
+                if (_forumSettings.ShowAlertForPM && 
+                    !customer.GetAttribute<bool>(SystemCustomerAttributeNames.NotifiedAboutNewPrivateMessages))
                 {
                     _customerService.SaveCustomerAttribute<bool>(customer, SystemCustomerAttributeNames.NotifiedAboutNewPrivateMessages, true);
                     alertMessage = string.Format(_localizationService.GetResource("PrivateMessages.YouHaveUnreadPM"), unreadMessageCount);
@@ -208,9 +208,8 @@ namespace Nop.Web.Controllers
                 IsAuthenticated = customer.IsRegistered(),
                 CustomerEmailUsername = customer.IsRegistered() ? (_customerSettings.UsernamesEnabled ? customer.Username : customer.Email) : "",
                 IsCustomerImpersonated = _workContext.OriginalCustomerIfImpersonated != null,
-                //DisplayAdminLink = customer != null && customer.IsAdmin(), //old implementation
                 DisplayAdminLink = _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel),
-                ShoppingCartItems = customer != null ? customer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList().GetTotalProducts() : 0,
+                ShoppingCartItems = customer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList().GetTotalProducts(),
                 WishlistEnabled = _shoppingCartSettings.WishlistEnabled,
                 WishlistItems = customer != null ? customer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist).ToList().GetTotalProducts() : 0,
                 AllowPrivateMessages = _forumSettings.AllowPrivateMessages,
@@ -273,9 +272,11 @@ namespace Nop.Web.Controllers
         //contact us page
         public ActionResult ContactUs()
         {
-            var model = new ContactUsModel();
-            model.Email = _workContext.CurrentCustomer != null ? _workContext.CurrentCustomer.Email : null;
-            model.FullName = _workContext.CurrentCustomer != null ? _workContext.CurrentCustomer.GetFullName() : null;
+            var model = new ContactUsModel()
+            {
+                Email = _workContext.CurrentCustomer.Email,
+                FullName = _workContext.CurrentCustomer.GetFullName()
+            };
             return View(model);
         }
 

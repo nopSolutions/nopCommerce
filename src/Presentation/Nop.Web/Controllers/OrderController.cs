@@ -398,8 +398,6 @@ namespace Nop.Web.Controllers
         [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult Details(int orderId)
         {
-            if (_workContext.CurrentCustomer == null) 
-                return new HttpUnauthorizedResult();
             var order = _orderService.GetOrderById(orderId);
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
                 return new HttpUnauthorizedResult();
@@ -412,8 +410,6 @@ namespace Nop.Web.Controllers
         [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult PrintOrderDetails(int orderId)
         {
-            if (_workContext.CurrentCustomer == null)
-                return new HttpUnauthorizedResult();
             var order = _orderService.GetOrderById(orderId);
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
                 return new HttpUnauthorizedResult();
@@ -426,8 +422,6 @@ namespace Nop.Web.Controllers
 
         public ActionResult GetPdfInvoice(int orderId)
         {
-            if (_workContext.CurrentCustomer == null)
-                return new HttpUnauthorizedResult();
             var order = _orderService.GetOrderById(orderId);
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
                 return new HttpUnauthorizedResult();
@@ -443,8 +437,6 @@ namespace Nop.Web.Controllers
         [FormValueRequired("reorder")]
         public ActionResult Reorder(int orderId)
         {
-            if (_workContext.CurrentCustomer == null)
-                return new HttpUnauthorizedResult();
             var order = _orderService.GetOrderById(orderId);
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
                 return new HttpUnauthorizedResult();
@@ -460,8 +452,6 @@ namespace Nop.Web.Controllers
         [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult ReturnRequest(int orderId)
         {
-            if (_workContext.CurrentCustomer == null)
-                return new HttpUnauthorizedResult();
             var order = _orderService.GetOrderById(orderId);
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
                 return new HttpUnauthorizedResult();
@@ -478,8 +468,6 @@ namespace Nop.Web.Controllers
         [ValidateInput(false)]
         public ActionResult ReturnRequestSubmit(int orderId, SubmitReturnRequestModel model, FormCollection form)
         {
-            if (_workContext.CurrentCustomer == null)
-                return new HttpUnauthorizedResult();
             var order = _orderService.GetOrderById(orderId);
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
                 return new HttpUnauthorizedResult();
