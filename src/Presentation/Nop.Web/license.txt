@@ -1,0 +1,2 @@
+﻿nopCommerce open source edition is licensed under nopCommerce Public License Version 2.0 ("NPL"). 
+Please find more info here: http://www.nopcommerce.com/licensev2.aspx
