@@ -8130,6 +8130,9 @@
                             </LocaleResource>
                         </Children>
                     </LocaleResource>
+                    <LocaleResource Name="Up">
+                      <Value>Upload</Value>
+                    </LocaleResource>
                 </Children>
             </LocaleResource>
         </Children>

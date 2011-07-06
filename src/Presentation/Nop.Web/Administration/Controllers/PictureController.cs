@@ -35,35 +35,35 @@ namespace Nop.Admin.Controllers
             //that's why we manually update it here
             //http://www.sfsu.edu/training/mimetype.htm
             string contentType = httpPostedFile.ContentType;
-            string fileExtension = Path.GetExtension(httpPostedFile.FileName);
-            if (!String.IsNullOrEmpty(fileExtension))
-                fileExtension = fileExtension.ToLowerInvariant();
-            switch (fileExtension)
-            {
-                case ".bmp":
-                    contentType = "image/bmp";
-                    break;
-                case ".gif":
-                    contentType = "image/gif";
-                    break;
-                case ".jpeg":
-                case ".jpg":
-                case ".jpe":
-                case ".jfif":
-                case ".pjpeg":
-                case ".pjp":
-                    contentType = "image/jpeg";
-                    break;
-                case ".png":
-                    contentType = "image/png";
-                    break;
-                case ".tiff":
-                case ".tif":
-                    contentType = "image/tiff";
-                    break;
-                default:
-                    break;
-            }
+            //string fileExtension = Path.GetExtension(httpPostedFile.FileName);
+            //if (!String.IsNullOrEmpty(fileExtension))
+            //    fileExtension = fileExtension.ToLowerInvariant();
+            //switch (fileExtension)
+            //{
+            //    case ".bmp":
+            //        contentType = "image/bmp";
+            //        break;
+            //    case ".gif":
+            //        contentType = "image/gif";
+            //        break;
+            //    case ".jpeg":
+            //    case ".jpg":
+            //    case ".jpe":
+            //    case ".jfif":
+            //    case ".pjpeg":
+            //    case ".pjp":
+            //        contentType = "image/jpeg";
+            //        break;
+            //    case ".png":
+            //        contentType = "image/png";
+            //        break;
+            //    case ".tiff":
+            //    case ".tif":
+            //        contentType = "image/tiff";
+            //        break;
+            //    default:
+            //        break;
+            //}
 
             var picture = _pictureService.InsertPicture(pictureBinary, contentType, true);
             return Json(new { pictureId = picture.Id, imageUrl = _pictureService.GetPictureUrl(picture, 100) });
