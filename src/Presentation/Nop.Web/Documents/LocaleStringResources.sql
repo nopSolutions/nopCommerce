@@ -1,4 +1,7 @@
-﻿--new locale resources
+﻿--UNDONE separate upgrade utility will be provided later
+
+
+--new locale resources
 declare @resources xml
 set @resources='
 <Language>
