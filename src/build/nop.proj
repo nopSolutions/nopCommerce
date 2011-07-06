@@ -56,10 +56,18 @@
            OutDir=$(DeployFolder)\$(DeployPrefix)\Administration\bin\" />
 
         <!--Now lets move the Nop.Admin/bin/ to the root bin/-->
-        <CreateItem Include="$(DeployFolder)\$(DeployPrefix)\Administration\bin\*.*">
+        <CreateItem Include="$(DeployFolder)\$(DeployPrefix)\Administration\bin\*.dll">
             <Output TaskParameter="Include" ItemName="CompileOutput" />
         </CreateItem>
         <Copy SourceFiles="@(CompileOutput)"
+                DestinationFolder="$(DeployFolder)\$(DeployPrefix)\bin\" />
+
+
+        <!--Lets move the deployable-bin directory to the /bin-->
+        <CreateItem Include="$(RootFolder)\Presentation\Nop.Web\_bin_deployableAssemblies\*.dll">
+            <Output TaskParameter="Include" ItemName="deployableAssemblies" />
+        </CreateItem>
+        <Copy SourceFiles="@(deployableAssemblies)"
                 DestinationFolder="$(DeployFolder)\$(DeployPrefix)\bin\" />
 
         <!--Lets delete the bin in Nop.Admin-->
