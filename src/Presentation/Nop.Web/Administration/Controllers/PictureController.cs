@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net.Mime;
 using System.Web;
 using System.Web.Mvc;
@@ -24,27 +26,9 @@ namespace Nop.Admin.Controllers
             this._authenticationService = authenticationService;
         }
 
-        public ActionResult InsertPicture(string authToken, HttpPostedFileBase httpPostedFile)
+        public ActionResult InsertPicture(HttpPostedFileBase httpPostedFile)
         {
-            //Workaround for flash cookie bug
-            //http://stackoverflow.com/questions/1729179/uploadify-session-and-authentication-with-asp-net-mvc
-            //http://geekswithblogs.net/apopovsky/archive/2009/05/06/working-around-flash-cookie-bug-in-asp.net-mvc.aspx
-
-            var ticket = FormsAuthentication.Decrypt(authToken);
-            if (ticket == null)
-                throw new Exception("No token provided");
-
-            var identity = new FormsIdentity(ticket);
-            if (!identity.IsAuthenticated)
-                throw new Exception("User is not authenticated");
-            
-            var customer = ((FormsAuthenticationService)_authenticationService).GetAuthenticatedCustomerFromTicket(ticket);
-            if (!customer.IsAdmin())
-                throw new Exception("User is not admin");
-
             byte[] pictureBinary = httpPostedFile.GetPictureBits();
-
-
 
             //TODO: find a better solution: little hack here
             //'Uploadify' component uploads all files with "application/octet-stream" mime type
@@ -85,9 +69,14 @@ namespace Nop.Admin.Controllers
             return Json(new { pictureId = picture.Id, imageUrl = _pictureService.GetPictureUrl(picture, 100) });
         }
 
-        public ActionResult AsyncUpload(string authToken)
+        public ActionResult AsyncUpload(IEnumerable<HttpPostedFileBase> attachments)
         {
-            return InsertPicture(authToken, Request.Files[0]);
+            var attachment = attachments.ToList().SingleOrDefault();
+            if (attachment != null)
+            {
+                return InsertPicture(attachment);
+            }
+            return Content("No image provided.");
         }
     }
 }
