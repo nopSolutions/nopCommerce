@@ -64,11 +64,11 @@
 
 
         <!--Lets move the deployable-bin directory to the /bin-->
-        <CreateItem Include="$(RootFolder)\Presentation\Nop.Web\_bin_deployableAssemblies\*.dll">
+        <CreateItem Include="$(RootFolder)\Presentation\Nop.Web\_bin_deployableAssemblies\**\*.dll">
             <Output TaskParameter="Include" ItemName="deployableAssemblies" />
         </CreateItem>
         <Copy SourceFiles="@(deployableAssemblies)"
-                DestinationFolder="$(DeployFolder)\$(DeployPrefix)\bin\" />
+                DestinationFolder="$(DeployFolder)\$(DeployPrefix)\bin\%(RecursiveDir)" />
 
         <!--Lets delete the bin in Nop.Admin-->
         <RemoveDir Directories="$(DeployFolder)\$(DeployPrefix)\Administration\bin\" />
