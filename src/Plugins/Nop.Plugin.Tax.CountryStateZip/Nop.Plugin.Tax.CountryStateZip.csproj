@@ -34,18 +34,22 @@
     <Reference Include="Autofac, Version=2.4.5.724, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Autofac.2.4.5.724\lib\NET40\Autofac.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Autofac.Configuration, Version=2.4.5.724, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Autofac.2.4.5.724\lib\NET40\Autofac.Configuration.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Autofac.Integration.Mvc, Version=2.4.5.724, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Autofac.Mvc3.2.4.5.724\lib\NET40\Autofac.Integration.Mvc.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="EntityFramework, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\EntityFramework.4.1.10331.0\lib\EntityFramework.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -63,6 +67,7 @@
     <Reference Include="Telerik.Web.Mvc, Version=2011.1.315.340, Culture=neutral, PublicKeyToken=121fae78165ba3d4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\TelerikMvcExtensions.2011.1.315\lib\net40\Telerik.Web.Mvc.dll</HintPath>
+      <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -84,18 +89,22 @@
     <ProjectReference Include="..\..\Libraries\Nop.Core\Nop.Core.csproj">
       <Project>{6BDA8332-939F-45B7-A25E-7A797260AE59}</Project>
       <Name>Nop.Core</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Libraries\Nop.Data\Nop.Data.csproj">
       <Project>{CCD7F2C9-6A2C-4CF0-8E89-076B8FC0F144}</Project>
       <Name>Nop.Data</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Libraries\Nop.Services\Nop.Services.csproj">
       <Project>{210541AD-F659-47DA-8763-16F36C5CD2F4}</Project>
       <Name>Nop.Services</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Presentation\Nop.Web.Framework\Nop.Web.Framework.csproj">
       <Project>{75FD4163-333C-4DD5-854D-2EF294E45D94}</Project>
       <Name>Nop.Web.Framework</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -105,6 +114,7 @@
     <Content Include="Description.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Notes.txt" />
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

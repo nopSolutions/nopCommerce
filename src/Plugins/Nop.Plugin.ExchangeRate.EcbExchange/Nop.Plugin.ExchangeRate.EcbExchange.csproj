@@ -47,16 +47,19 @@
     <ProjectReference Include="..\..\Libraries\Nop.Core\Nop.Core.csproj">
       <Project>{6BDA8332-939F-45B7-A25E-7A797260AE59}</Project>
       <Name>Nop.Core</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\Libraries\Nop.Services\Nop.Services.csproj">
       <Project>{210541AD-F659-47DA-8763-16F36C5CD2F4}</Project>
       <Name>Nop.Services</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Description.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Notes.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

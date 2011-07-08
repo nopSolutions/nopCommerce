@@ -1,0 +1,3 @@
+﻿'Copy local' property of the referenced assemblies is set to 'false'.
+We know that they're referenced by them main web applciations. So there's no need to delpoy them.
+It can dramatically reduce package size.
