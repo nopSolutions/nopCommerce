@@ -97,7 +97,7 @@ namespace Nop.Services.Common
             Table table = sec.AddTable();
             table.Borders.Visible = false;
 
-            string logoFilePath = HttpContext.Current.Request.PhysicalApplicationPath + "images/pdflogo.img";
+            string logoFilePath = HttpContext.Current.Request.PhysicalApplicationPath + "content/images/pdflogo.img";
             bool logoExists = !String.IsNullOrEmpty(logoFilePath) && File.Exists(logoFilePath);
 
             table.AddColumn(Unit.FromCentimeter(10));
