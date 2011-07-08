@@ -299,10 +299,12 @@ namespace Nop.Web.Controllers
             dirsToCheck.Add(rootDir + "App_Data");
             dirsToCheck.Add(rootDir + "App_Data\\InstalledPlugins.txt");
             dirsToCheck.Add(rootDir + "App_Data\\Settings.txt");
+            dirsToCheck.Add(rootDir + "bin");
             dirsToCheck.Add(rootDir + "content");
             dirsToCheck.Add(rootDir + "content\\images");
             dirsToCheck.Add(rootDir + "content\\images\\thumbs");
             dirsToCheck.Add(rootDir + "content\files\\exportimport");
+            dirsToCheck.Add(rootDir + "plugins");
             dirsToCheck.Add(rootDir + "plugins\bin");
             foreach (string dir in dirsToCheck)
                 if (!CheckPermissions(dir, false, true, true, true))
