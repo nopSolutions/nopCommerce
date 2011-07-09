@@ -38,7 +38,7 @@
             </td>
             <td class="adminData">
                 <div>@Html.DropDownListFor(model => model.CustomerRoleId, Model.AvailableCustomerRoles) <button type="button" name="savecustomerrolesrequirement@(Model.RequirementId)" id="savecustomerrolesrequirement@(Model.RequirementId)" class="t-button">Save</button></div>
-                <div id="pnl-save-requirement-result@(Model.RequirementId)" style="display:none;">@("Plugins.DiscountRules.Saved")</div>
+                <div id="pnl-save-requirement-result@(Model.RequirementId)" style="display:none;">@T("Plugins.DiscountRules.Saved")</div>
             </td>
         </tr>
     </table>

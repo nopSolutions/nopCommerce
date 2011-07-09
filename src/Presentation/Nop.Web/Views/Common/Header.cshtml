@@ -12,22 +12,22 @@
         @if (Model.IsAuthenticated)
         {
             <li><a href="@Url.Action("myaccount", "customer")" class="account">@Model.CustomerEmailUsername</a></li>
-            <li><a href="@Url.RouteUrl("Logout")" class="account">@T("Account.Logout")</a></li>
+            <li><a href="@Url.RouteUrl("Logout")" class="ico-logout">@T("Account.Logout")</a></li>
             
-                                                             if (Model.AllowPrivateMessages)
-                                                             {
+            if (Model.AllowPrivateMessages)
+            {
             <li><a href="@Url.RouteUrl("PrivateMessages", new { tab = "" })" class="ico-inbox">@T("PrivateMessages.Inbox")</a>
                 @Model.UnreadPrivateMessages</li>
-           if (!string.IsNullOrEmpty(Model.AlertMessage))
-           {
-               //using $(document).bind instead of $(document).ready to execute the alert after tabs load (on privatemessages page)
-            <script type="text/javascript">
-                $(document).bind("ready", function () {
-                    alert('@Model.AlertMessage');
-                });
-            </script>
+               if (!string.IsNullOrEmpty(Model.AlertMessage))
+               {
+                    //using $(document).bind instead of $(document).ready to execute the alert after tabs load (on privatemessages page)
+                    <script type="text/javascript">
+                        $(document).bind("ready", function () {
+                            alert('@Model.AlertMessage');
+                        });
+                    </script>
+               }
            }
-                                                             }
         }
         else
         {

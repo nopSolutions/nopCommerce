@@ -152,10 +152,10 @@ namespace Nop.Services.Localization
         /// <param name="languageId">Language identifier</param>
         /// <param name="logIfNotFound">A value indicating whether to log error if locale string resource is not found</param>
         /// <param name="defaultValue">Default value</param>
-        /// <param name="returnEmptyIfNotNotFound">A value indicating whether to empty string will be returned if a resource is not found and default value is set to empty string</param>
+        /// <param name="returnEmptyIfNotFound">A value indicating whether to empty string will be returned if a resource is not found and default value is set to empty string</param>
         /// <returns>A string representing the requested resource string.</returns>
         public virtual string GetResource(string resourceKey, int languageId,
-            bool logIfNotFound = true, string defaultValue = "", bool returnEmptyIfNotNotFound = false)
+            bool logIfNotFound = true, string defaultValue = "", bool returnEmptyIfNotFound = false)
         {
             string result = string.Empty;
             var resourceKeyValue = resourceKey;
@@ -181,7 +181,7 @@ namespace Nop.Services.Localization
                 }
                 else
                 {
-                    if (!returnEmptyIfNotNotFound)
+                    if (!returnEmptyIfNotFound)
                         result = resourceKey;
                 }
             }

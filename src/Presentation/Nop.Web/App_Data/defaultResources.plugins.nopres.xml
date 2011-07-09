@@ -23,7 +23,7 @@
       <LocaleResource Name="DiscountRules">
         <Children>
           <LocaleResource Name="Saved">
-            <Value>Discount requirement is saved</Value>
+            <Value>Discount requirement saved</Value>
           </LocaleResource>
           <LocaleResource Name="BillingCountry">
             <Children>

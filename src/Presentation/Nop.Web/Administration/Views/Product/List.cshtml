@@ -49,7 +49,7 @@
             </td>
             <td class="adminData">
                 @Html.EditorFor(model => Model.GoDirectlyToSku)
-                <button type="submit" name="go-to-product-by-sku" value="go-to-product-by-sku" class="t-button">@T("Admin.Common.Go")</button>
+                <button type="submit" id="go-to-product-by-sku" name="go-to-product-by-sku" value="go-to-product-by-sku" class="t-button">@T("Admin.Common.Go")</button>
             </td>
         </tr>
         <tr>
@@ -143,6 +143,18 @@
                 var grid = $('#products-grid').data('tGrid');
                 grid.ajaxRequest();
                 return false;
+            });
+            $("#SearchProductName").keydown(function (event) {
+                if (event.keyCode == 13) {
+                    $("#search-products").click();
+                    return false;
+                }
+            });
+            $("#GoDirectlyToSku").keydown(function (event) {
+                if (event.keyCode == 13) {
+                    $("#go-to-product-by-sku").click();
+                    return false;
+                }
             });
         });
 

@@ -1862,7 +1862,7 @@
             <Value>Product(s)</Value>
             <Children>
               <LocaleResource Name="SKU">
-                <Value>SKU</Value>
+                <Value>SKU: {0}</Value>
               </LocaleResource>
               <LocaleResource Name="Name">
                 <Value>Name</Value>
@@ -2315,6 +2315,14 @@
       </LocaleResource>
       <LocaleResource Name="OrderNotes">
         <Value>Order notes:</Value>
+        <Children>
+          <LocaleResource Name="CreatedOn">
+            <Value>Created on</Value>
+          </LocaleResource>
+          <LocaleResource Name="Note">
+            <Value>Note</Value>
+          </LocaleResource>
+        </Children>
       </LocaleResource>
       <LocaleResource Name="CreatedOn">
         <Value>Created on</Value>
