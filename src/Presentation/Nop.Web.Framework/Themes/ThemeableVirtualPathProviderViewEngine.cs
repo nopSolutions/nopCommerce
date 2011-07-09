@@ -183,6 +183,10 @@ namespace Nop.Web.Framework.Themes
             {
                 return new ViewEngineResult(this.CreateView(controllerContext, str2, str3), this);
             }
+            if(strArray2 == null)
+            {
+                strArray2 = new string[0];
+            }
             return new ViewEngineResult(strArray.Union<string>(strArray2));
 
         }
