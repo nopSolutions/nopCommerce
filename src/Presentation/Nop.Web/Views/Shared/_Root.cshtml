@@ -1,9 +1,6 @@
 ﻿@using Nop.Core.Infrastructure.DependencyManagement
 @using Nop.Core.Infrastructure
 @using Nop.Core
-@{
-    var storeLocation = EngineContext.Current.Resolve<IWebHelper>().GetStoreLocation();
-}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -32,47 +29,13 @@
 <body>
     <div class="master-wrapper-page">
         <div class="master-wrapper-content">
-            <div class="header">
-                <div class="header-logo">
-                    <a href="@storeLocation" class="logo">&nbsp; </a>
-                </div>
-                <div class="header-links-wrapper">
-                    @Html.Action("Header", "Common")
-                </div>
-                <div class="header-selectors-wrapper">
-                    <div class="header-taxDisplayTypeSelector">
-                        @Html.Action("TaxTypeSelector", "Common")
-                    </div>
-                    <div class="header-currencyselector">
-                        @Html.Action("CurrencySelector", "Common")
-                    </div>
-                    <div class="header-languageselector">
-                        @Html.Action("LanguageSelector", "Common")
-                    </div>
-                </div>
-            </div>
-            <div class="headermenu">
-                @Html.Partial("~/Views/Catalog/_SearchBox.cshtml")
-                @Html.Action("Menu", "Common")
-            </div>
+            @Html.Partial("Header")
+            @Html.Partial("HeaderMenu")
             @RenderBody()
             <div class="clear">
             </div>
         </div>
-        <div class="footer">
-            <div class="footer-poweredby">
-                Powered by <a href="http://www.nopcommerce.com/">nopCommerce</a>
-                <!--Would you like
-                to remove the "Powered by nopCommerce" link in the bottom of the footer? Find more
-                info here http://www.nopcommerce.com/copyrightremoval.aspx -->
-            </div>
-            <div class="footer-disclaimer">
-                @T("Content.CopyrightNotice", DateTime.Now.Year.ToString(), "Store name here")
-            </div>
-            <div class="footer-storetheme">
-                @Html.Action("StoreThemeSelector", "Common")
-            </div>
-        </div>
+        @Html.Partial("Footer")
     </div>
 @Html.Action("GoogleAnalytics", "Common", new { placement = "body" })
 </body>

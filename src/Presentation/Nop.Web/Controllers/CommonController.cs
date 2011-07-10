@@ -181,9 +181,9 @@ namespace Nop.Web.Controllers
             return PartialView("TaxTypeSelector", model);
         }
 
-        //header
+        //header links
         [ChildActionOnly]
-        public ActionResult Header()
+        public ActionResult HeaderLinks()
         {
             var customer = _workContext.CurrentCustomer;
 

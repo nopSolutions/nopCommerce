@@ -1,0 +1,22 @@
+﻿@{
+    var storeLocation = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Core.IWebHelper>().GetStoreLocation();
+}
+<div class="header">
+    <div class="header-logo">
+        <a href="@storeLocation" class="logo">&nbsp; </a>
+    </div>
+    <div class="header-links-wrapper">
+        @Html.Action("HeaderLinks", "Common")
+    </div>
+    <div class="header-selectors-wrapper">
+        <div class="header-taxDisplayTypeSelector">
+            @Html.Action("TaxTypeSelector", "Common")
+        </div>
+        <div class="header-currencyselector">
+            @Html.Action("CurrencySelector", "Common")
+        </div>
+        <div class="header-languageselector">
+            @Html.Action("LanguageSelector", "Common")
+        </div>
+    </div>
+</div>

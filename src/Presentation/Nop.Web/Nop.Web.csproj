@@ -1143,6 +1143,9 @@
     <Content Include="Themes\Web.config">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Views\Shared\Header.cshtml" />
+    <Content Include="Views\Shared\HeaderMenu.cshtml" />
+    <Content Include="Views\Shared\Footer.cshtml" />
     <None Include="_bin_deployableAssemblies\amd64\Microsoft.VC90.CRT\README_ENU.txt" />
     <None Include="_bin_deployableAssemblies\amd64\Microsoft.VC90.CRT\msvcr90.dll" />
     <None Include="_bin_deployableAssemblies\amd64\Microsoft.VC90.CRT\Microsoft.VC90.CRT.manifest" />
@@ -1303,7 +1306,7 @@
     <Content Include="Views\Customer\AccountActivation.cshtml" />
     <Content Include="Views\Common\ContactUs.cshtml" />
     <Content Include="Views\Common\CurrencySelector.cshtml" />
-    <Content Include="Views\Common\Header.cshtml" />
+    <Content Include="Views\Common\HeaderLinks.cshtml" />
     <Content Include="Views\Common\InfoBlock.cshtml" />
     <Content Include="Views\Common\LanguageSelector.cshtml" />
     <Content Include="Views\Common\List.cshtml" />
