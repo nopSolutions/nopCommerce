@@ -2,7 +2,6 @@ using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using Nop.Core;
 using Nop.Data;
-using Nop.Plugin.Tax.CountryStateZip.Domain;
 
 namespace Nop.Plugin.Tax.CountryStateZip.Data
 {
@@ -17,7 +16,6 @@ namespace Nop.Plugin.Tax.CountryStateZip.Data
             //((IObjectContextAdapter) this).ObjectContext.ContextOptions.LazyLoadingEnabled = true;
         }
 
-        public DbSet<TaxRate> TaxRate { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

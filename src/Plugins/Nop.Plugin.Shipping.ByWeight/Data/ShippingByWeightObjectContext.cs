@@ -2,7 +2,6 @@ using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using Nop.Core;
 using Nop.Data;
-using Nop.Plugin.Shipping.ByWeight.Domain;
 
 namespace Nop.Plugin.Shipping.ByWeight.Data
 {
@@ -17,7 +16,6 @@ namespace Nop.Plugin.Shipping.ByWeight.Data
             //((IObjectContextAdapter) this).ObjectContext.ContextOptions.LazyLoadingEnabled = true;
         }
 
-        public DbSet<ShippingByWeightRecord> ShippingByWeightRecords { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
