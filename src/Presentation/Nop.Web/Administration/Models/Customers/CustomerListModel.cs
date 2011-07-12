@@ -19,12 +19,20 @@ namespace Nop.Admin.Models.Customers
         public int[] SearchCustomerRoleIds { get; set; }
 
         [NopResourceDisplayName("Admin.Customers.Customers.List.SearchEmail")]
+        [AllowHtml]
         public string SearchEmail { get; set; }
 
         [NopResourceDisplayName("Admin.Customers.Customers.List.SearchUsername")]
         [AllowHtml]
         public string SearchUsername { get; set; }
-
         public bool UsernamesEnabled { get; set; }
+
+        [NopResourceDisplayName("Admin.Customers.Customers.List.SearchFirstName")]
+        [AllowHtml]
+        public string SearchFirstName { get; set; }
+
+        [NopResourceDisplayName("Admin.Customers.Customers.List.SearchLastName")]
+        [AllowHtml]
+        public string SearchLastName { get; set; }
     }
 }

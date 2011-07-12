@@ -150,6 +150,8 @@ namespace Nop.Admin.Models.Customers
         public string SearchCustomerRoleIds { get; set; }
         public string SearchCustomerEmail { get; set; }
         public string SearchCustomerUsername { get; set; }
+        public string SearchCustomerFirstName { get; set; }
+        public string SearchCustomerLastName { get; set; }
         
         //send email model
         public SendEmailModel SendEmail { get; set; }

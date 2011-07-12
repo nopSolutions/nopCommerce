@@ -54,6 +54,22 @@
             </tr>
         }
         <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SearchFirstName):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => Model.SearchFirstName)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SearchLastName):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => Model.SearchLastName)
+            </td>
+        </tr>
+        <tr>
             <td colspan="2">
                 <button type="submit" name="search-customers" value="search-customers" class="t-button">@T("Admin.Common.Search")</button>
             </td>
@@ -99,6 +115,14 @@
                             .Width(5)
                             .Filterable(false)
                             .Hidden(true);
+                        columns.Bound(x => x.SearchCustomerFirstName)
+                            .Width(5)
+                            .Filterable(false)
+                            .Hidden(true);
+                        columns.Bound(x => x.SearchCustomerLastName)
+                            .Width(5)
+                            .Filterable(false)
+                            .Hidden(true);
                         columns.Bound(x => x.Active)
                              .Width(100)
                              .Template(x => x.Active.ToString().ToLower())
@@ -136,6 +160,16 @@
                         if (!String.IsNullOrEmpty(ViewData["searchCustomerUsername"] as string))
                         {
                             filters.Add(x => x.SearchCustomerUsername).Contains((string)ViewData["searchCustomerUsername"]);
+                        }
+                        //customer first name
+                        if (!String.IsNullOrEmpty(ViewData["searchCustomerFirstName"] as string))
+                        {
+                            filters.Add(x => x.SearchCustomerFirstName).Contains((string)ViewData["searchCustomerFirstName"]);
+                        }
+                        //customer last name
+                        if (!String.IsNullOrEmpty(ViewData["searchCustomerLastName"] as string))
+                        {
+                            filters.Add(x => x.SearchCustomerLastName).Contains((string)ViewData["searchCustomerLastName"]);
                         }
                     }))
                     .EnableCustomBinding(true))

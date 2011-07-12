@@ -84,6 +84,8 @@ namespace Nop.Services.Customers
         /// <param name="customerRoleIds">A list of customer role identifiers to filter by (at least one match); pass null or empty list in order to load all customers; </param>
         /// <param name="email">Email; null to load all customers</param>
         /// <param name="username">Username; null to load all customers</param>
+        /// <param name="firstName">First name; null to load all customers</param>
+        /// <param name="lastName">Last name; null to load all customers</param>
         /// <param name="loadOnlyWithShoppingCart">Value indicating whther to load customers only with shopping cart</param>
         /// <param name="sct">Value indicating what shopping cart type to filter; userd when 'loadOnlyWithShoppingCart' param is 'true'</param>
         /// <param name="pageIndex">Page index</param>
@@ -91,6 +93,7 @@ namespace Nop.Services.Customers
         /// <returns>Customer collection</returns>
         public virtual IPagedList<Customer> GetAllCustomers(DateTime? registrationFrom,
             DateTime? registrationTo, int[] customerRoleIds, string email, string username,
+            string firstName, string lastName, 
             bool loadOnlyWithShoppingCart, ShoppingCartType? sct, int pageIndex, int pageSize)
         {
             var query = _customerRepository.Table;
@@ -105,6 +108,11 @@ namespace Nop.Services.Customers
                 query = query.Where(c => c.Email.Contains(email));
             if (!String.IsNullOrWhiteSpace(username))
                 query = query.Where(c => c.Username.Contains(username));
+            if (!String.IsNullOrWhiteSpace(firstName))
+                query = query.Where(c => c.CustomerAttributes.Where(ca => ca.Key == SystemCustomerAttributeNames.FirstName && ca.Value.Contains(firstName)).Count() > 0);
+            if (!String.IsNullOrWhiteSpace(lastName))
+                query = query.Where(c => c.CustomerAttributes.Where(ca => ca.Key == SystemCustomerAttributeNames.LastName && ca.Value.Contains(lastName)).Count() > 0);
+
             if (loadOnlyWithShoppingCart)
             {
                 int? sctId = null;

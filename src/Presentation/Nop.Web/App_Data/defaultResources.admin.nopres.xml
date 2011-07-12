@@ -5595,6 +5595,22 @@
                             </LocaleResource>
                           </Children>
                         </LocaleResource>
+                        <LocaleResource Name="SearchFirstName">
+                          <Value>First name</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>Search by a first name.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="SearchLastName">
+                          <Value>Last name</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>Search by a last name.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
                       </Children>
                     </LocaleResource>
                     <LocaleResource Name="Orders">

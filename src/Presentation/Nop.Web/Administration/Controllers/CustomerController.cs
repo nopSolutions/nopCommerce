@@ -192,7 +192,7 @@ namespace Nop.Admin.Controllers
                 SearchCustomerRoleIds = defaultRoleIds
             };
 
-            var customers = _customerService.GetAllCustomers(null, null, defaultRoleIds, null, null, false, null, 0, _adminAreaSettings.GridPageSize);
+            var customers = _customerService.GetAllCustomers(null, null, defaultRoleIds, null, null, null, null, false, null, 0, _adminAreaSettings.GridPageSize);
             //customer list
             listModel.Customers = new GridModel<CustomerModel>
             {
@@ -232,9 +232,12 @@ namespace Nop.Admin.Controllers
 
             string searchCustomerEmail = command.FilterDescriptors.GetValueFromAppliedFilters("searchCustomerEmail");
             string searchCustomerUsername = command.FilterDescriptors.GetValueFromAppliedFilters("searchCustomerUsername");
+            string searchCustomerFirstName = command.FilterDescriptors.GetValueFromAppliedFilters("searchCustomerFirstName");
+            string searchCustomerLastName = command.FilterDescriptors.GetValueFromAppliedFilters("searchCustomerLastName");
 
             var customers = _customerService.GetAllCustomers(null, null,
-                searchCustomerRoleIds.ToArray(), searchCustomerEmail, searchCustomerUsername, 
+                searchCustomerRoleIds.ToArray(), searchCustomerEmail, searchCustomerUsername,
+                searchCustomerFirstName, searchCustomerLastName,
                 false, null, command.Page - 1, command.PageSize);
             var gridModel = new GridModel<CustomerModel>
             {
@@ -281,6 +284,8 @@ namespace Nop.Admin.Controllers
 
             ViewData["searchCustomerEmail"] = model.SearchEmail;
             ViewData["searchCustomerUsername"] = model.SearchUsername;
+            ViewData["searchCustomerFirstName"] = model.SearchFirstName;
+            ViewData["searchCustomerLastName"] = model.SearchLastName;
 
             //customer roles
             var customerRoles = _customerService.GetAllCustomerRoles(true);
@@ -288,7 +293,8 @@ namespace Nop.Admin.Controllers
 
             //laod customers
             var customers = _customerService.GetAllCustomers(null, null,
-               model.SearchCustomerRoleIds, model.SearchEmail, model.SearchUsername, false, null, 0, 10);
+               model.SearchCustomerRoleIds, model.SearchEmail, model.SearchUsername,
+               model.SearchFirstName, model.SearchLastName, false, null, 0, _adminAreaSettings.GridPageSize);
             //customer list
             model.Customers = new GridModel<CustomerModel>
             {
@@ -1252,7 +1258,7 @@ namespace Nop.Admin.Controllers
 
             try
             {
-                var customers = _customerService.GetAllCustomers(null, null, null, null, null, false, null, 0, int.MaxValue);
+                var customers = _customerService.GetAllCustomers(null, null, null, null, null,null, null, false, null, 0, int.MaxValue);
 
                 string fileName = string.Format("customers_{0}_{1}.xls", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
                 string filePath = string.Format("{0}content\\files\\ExportImport\\{1}", Request.PhysicalApplicationPath, fileName);
@@ -1276,7 +1282,7 @@ namespace Nop.Admin.Controllers
 
             try
             {
-                var customers = _customerService.GetAllCustomers(null, null, null, null, null, false, null, 0, int.MaxValue);
+                var customers = _customerService.GetAllCustomers(null, null, null, null, null, null, null, false, null, 0, int.MaxValue);
                 
                 var fileName = string.Format("customers_{0}.xml", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
                 var xml = _exportManager.ExportCustomersToXml(customers);
