@@ -34,6 +34,7 @@ using Nop.Core.Infrastructure;
 using Nop.Core.IO;
 using Nop.Services.Helpers;
 using Nop.Services.Media;
+using Nop.Services.Customers;
 
 namespace Nop.Services.Installation
 {
@@ -68,6 +69,7 @@ namespace Nop.Services.Installation
         private readonly IRepository<ShippingMethod> _shippingMethodRepository;
         private readonly IRepository<ActivityLogType> _activityLogTypeRepository;
         private readonly IRepository<ProductTag> _productTagRepository;
+        private readonly ICustomerService _customerService;
 
         #endregion
 
@@ -99,7 +101,8 @@ namespace Nop.Services.Installation
             IRepository<Poll> pollRepository,
             IRepository<ShippingMethod> shippingMethodRepository,
             IRepository<ActivityLogType> activityLogTypeRepository,
-            IRepository<ProductTag> productTagRepository)
+            IRepository<ProductTag> productTagRepository,
+            ICustomerService customerService)
         {
             this._measureDimensionRepository = measureDimensionRepository;
             this._measureWeightRepository = measureWeightRepository;
@@ -128,6 +131,7 @@ namespace Nop.Services.Installation
             this._shippingMethodRepository = shippingMethodRepository;
             this._activityLogTypeRepository = activityLogTypeRepository;
             this._productTagRepository = productTagRepository;
+            this._customerService = customerService;
         }
 
         #endregion
@@ -4008,6 +4012,10 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
             });
             _customerRepository.Insert(adminUser);
+            //set default customer name
+            _customerService.SaveCustomerAttribute<string>(adminUser, SystemCustomerAttributeNames.FirstName, "John");
+            _customerService.SaveCustomerAttribute<string>(adminUser, SystemCustomerAttributeNames.LastName, "Smith");
+
 
             //search engine (crawler) built-in user
             var searchEngineUser = new Customer()
