@@ -50,7 +50,7 @@ using Nop.Web.Framework.UI;
 
 namespace Nop.Web.Framework
 {
-    public class DependencyRegistar : IDependencyRegistar
+    public class DependencyRegistrar : IDependencyRegistrar
     {
         public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder)
         {

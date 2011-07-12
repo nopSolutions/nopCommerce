@@ -11,7 +11,7 @@ using Nop.Plugin.Tax.CountryStateZip.Services;
 
 namespace Nop.Plugin.Tax.CountryStateZip
 {
-    public class DependencyRegistar : IDependencyRegistar
+    public class DependencyRegistrar : IDependencyRegistrar
     {
         public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder)
         {

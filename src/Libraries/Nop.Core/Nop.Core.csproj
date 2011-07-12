@@ -169,7 +169,7 @@
     <Compile Include="Infrastructure\EngineContext.cs" />
     <Compile Include="Infrastructure\AppDomainTypeFinder.cs" />
     <Compile Include="Infrastructure\DependencyManagement\AttributeInfo.cs" />
-    <Compile Include="Infrastructure\DependencyManagement\IDependencyRegistar.cs" />
+    <Compile Include="Infrastructure\DependencyManagement\IDependencyRegistrar.cs" />
     <Compile Include="Infrastructure\DependencyManagement\ComponentRegistrationException.cs" />
     <Compile Include="Infrastructure\DependencyManagement\ContainerConfigurer.cs" />
     <Compile Include="Infrastructure\DependencyManagement\ContainerManager.cs" />

@@ -75,7 +75,7 @@
     <Compile Include="CountryStateZipTaxProvider.cs" />
     <Compile Include="Data\TaxRateMap.cs" />
     <Compile Include="Data\TaxRateObjectContext.cs" />
-    <Compile Include="DependencyRegistar.cs" />
+    <Compile Include="DependencyRegistrar.cs" />
     <Compile Include="Domain\TaxRate.cs" />
     <Compile Include="Models\TaxRateListModel.cs" />
     <Compile Include="Models\TaxRateModel.cs" />

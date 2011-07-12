@@ -70,7 +70,7 @@
     <Compile Include="Controllers\ShippingByWeightController.cs" />
     <Compile Include="Data\ShippingByWeightRecordMap.cs" />
     <Compile Include="Data\ShippingByWeightObjectContext.cs" />
-    <Compile Include="DependencyRegistar.cs" />
+    <Compile Include="DependencyRegistrar.cs" />
     <Compile Include="Domain\ShippingByWeightRecord.cs" />
     <Compile Include="ByWeightShippingComputationMethod.cs" />
     <Compile Include="Models\ShippingByWeightListModel.cs" />

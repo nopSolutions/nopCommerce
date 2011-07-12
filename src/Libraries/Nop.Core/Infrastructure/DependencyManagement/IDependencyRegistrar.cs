@@ -2,7 +2,7 @@
 
 namespace Nop.Core.Infrastructure.DependencyManagement
 {
-    public interface IDependencyRegistar
+    public interface IDependencyRegistrar
     {
         void Register(ContainerBuilder builder, ITypeFinder typeFinder);
 

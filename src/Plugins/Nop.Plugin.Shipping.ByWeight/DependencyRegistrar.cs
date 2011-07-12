@@ -11,7 +11,7 @@ using Nop.Plugin.Shipping.ByWeight.Services;
 
 namespace Nop.Plugin.Shipping.ByWeight
 {
-    public class DependencyRegistar : IDependencyRegistar
+    public class DependencyRegistrar : IDependencyRegistrar
     {
         public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder)
         {
