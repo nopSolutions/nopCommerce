@@ -16,6 +16,7 @@ namespace Nop.Admin.Models.Customers
         public CustomerModel()
         {
             AvailableTimeZones = new List<SelectListItem>();
+            SendEmail = new SendEmailModel();
         }
 
         public bool AllowUsersToChangeUsernames { get; set; }
@@ -149,9 +150,12 @@ namespace Nop.Admin.Models.Customers
         public string SearchCustomerEmail { get; set; }
         public string SearchCustomerUsername { get; set; }
         
+        //send email model
+        public SendEmailModel SendEmail { get; set; }
 
         
         #region Nested classes
+
         public class RewardPointsHistoryModel : BaseNopEntityModel
         {
             [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.Points")]
@@ -168,20 +172,13 @@ namespace Nop.Admin.Models.Customers
             public DateTime CreatedOn { get; set; }
         }
 
-        public class UserAccountModel : BaseNopEntityModel
+        public class SendEmailModel : BaseNopModel
         {
-            [NopResourceDisplayName("Admin.Customers.Customers.UserAccount.Fields.Email")]
-            public string Email { get; set; }
+            [NopResourceDisplayName("Admin.Customers.Customers.SendEmail.Subject")]
+            public string Subject { get; set; }
 
-            [NopResourceDisplayName("Admin.Customers.Customers.UserAccount.Fields.IsApproved")]
-            public bool IsApproved { get; set; }
-
-            [NopResourceDisplayName("Admin.Customers.Customers.UserAccount.Fields.IsLockedOut")]
-            public bool IsLockedOut { get; set; }
-
-            [NopResourceDisplayName("Admin.Customers.Customers.UserAccount.Fields.CreatedOn")]
-            public DateTime CreatedOn { get; set; }
-
+            [NopResourceDisplayName("Admin.Customers.Customers.SendEmail.Body")]
+            public string Body { get; set; }
         }
 
         public class OrderModel : BaseNopEntityModel
@@ -204,6 +201,7 @@ namespace Nop.Admin.Models.Customers
             [NopResourceDisplayName("Admin.Customers.Customers.Orders.CreatedOn")]
             public DateTime CreatedOn { get; set; }
         }
+
         #endregion
     }
 }

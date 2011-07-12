@@ -1,16 +1,17 @@
 ﻿@model CustomerModel
-
+@using Telerik.Web.Mvc.UI
 @using (Html.BeginForm())
 {
     <div class="section-header">
         <div class="title">
-        <img src="@Url.Content("~/Administration/Content/images/ico-customers.png")" alt="" />
-            @T("Admin.Customers.Customers.EditCustomerDetails") - @Model.LastName @Model.FirstName  @Html.ActionLink("(" + T("Admin.Customers.Customers.BackToList") + ")", "List")
+            <img src="@Url.Content("~/Administration/Content/images/ico-customers.png")" alt="" />
+            @T("Admin.Customers.Customers.EditCustomerDetails") - @Model.LastName @Model.FirstName
+            @Html.ActionLink("(" + T("Admin.Customers.Customers.BackToList") + ")", "List")
         </div>
         <div class="options">
             <button type="submit" name="save" value="save" class="t-button">@T("Admin.Common.Save")</button>
             <button type="submit" name="save" value="save-continue" class="t-button">@T("Admin.Common.SaveContinue")</button>
-            @*TODO send email button (Telerik window pop-up)*@
+            <button type="submit" id="sendemail" name="sendemail" value="sendemail" class="t-button">@T("Admin.Customers.Customers.SendEmail")</button>
             @*TODO send PM button (Telerik window pop-up) if PM option is enabled and customer is registered*@
             <span id="customer-delete" class="t-button">@T("Admin.Common.Delete")</span>
         </div>
@@ -18,3 +19,52 @@
     @Html.Partial("_CreateOrUpdate", Model)
 }
 @Html.DeleteConfirmation("customer-delete")
+@*import products form*@
+@{Html.Telerik().Window()
+        .Name("sendemail-window")
+        .Title(T("Admin.Customers.Customers.SendEmail").Text)
+        .Content(@<text>
+    @using (Html.BeginForm("SendEmail", "Customer", new { id = Model.Id }))
+    {
+        <table style="text-align: left;">
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.SendEmail.Subject):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(model => model.SendEmail.Subject)
+                    @Html.ValidationMessageFor(model => model.SendEmail.Subject)
+                </td>
+            </tr>
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.SendEmail.Body):
+                </td>
+                <td class="adminData">
+                    @Html.TextAreaFor(model => model.SendEmail.Body, new { style = "Width: 450px; Height: 350px;" })
+                    @Html.ValidationMessageFor(model => model.SendEmail.Body)
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <button type="submit" class="t-button t-state-default">@T("Admin.Customers.Customers.SendEmail")</button>
+                </td>
+            </tr>
+        </table>
+    }
+    </text>)
+        .Width(600)
+        .Draggable(true)
+        .Modal(true)
+        .Visible(false)
+        .Render();
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#sendemail").click(function (e) {
+            e.preventDefault();
+            $('#sendemail-window').data('tWindow').center().open();
+        });
+    });
+</script>

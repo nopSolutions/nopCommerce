@@ -179,7 +179,7 @@
                 @Html.NopLabelFor(model => model.AdminComment):
             </td>
             <td class="adminData">
-                @Html.EditorFor(model => model.AdminComment)
+                @Html.TextAreaFor(model => model.AdminComment, new { style = "Width: 250px; Height: 200px;" })
                 @Html.ValidationMessageFor(model => model.AdminComment)
             </td>
         </tr>

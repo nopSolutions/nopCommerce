@@ -4026,6 +4026,7 @@ namespace Nop.Services.Installation
                 Email = "builtin@search_engine_record.com",
                 CustomerGuid = Guid.NewGuid(),
                 PasswordFormat = PasswordFormat.Clear,
+                AdminComment = "Built-in system guest record used for requests from search engines.",
                 Active = true,
                 IsSystemAccount = true,
                 SystemName = SystemCustomerNames.SearchEngine,

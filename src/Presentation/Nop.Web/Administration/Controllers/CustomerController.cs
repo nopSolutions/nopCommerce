@@ -29,6 +29,8 @@ using Nop.Web.Framework.Mvc;
 using Telerik.Web.Mvc;
 using Nop.Services.Security;
 using Nop.Core.Domain.Common;
+using Nop.Services.Messages;
+using Nop.Core.Domain.Messages;
 
 namespace Nop.Admin.Controllers
 {
@@ -57,6 +59,9 @@ namespace Nop.Admin.Controllers
         private readonly IPriceCalculationService _priceCalculationService;
         private readonly IPermissionService _permissionService;
         private readonly AdminAreaSettings _adminAreaSettings;
+        private readonly IQueuedEmailService _queuedEmailService;
+        private readonly EmailAccountSettings _emailAccountSettings;
+        private readonly IEmailAccountService _emailAccountService;
 
         #endregion
 
@@ -73,7 +78,9 @@ namespace Nop.Admin.Controllers
             IOrderService orderService, IExportManager exportManager,
             ICustomerActivityService customerActivityService,
             IPriceCalculationService priceCalculationService,
-            IPermissionService permissionService, AdminAreaSettings adminAreaSettings)
+            IPermissionService permissionService, AdminAreaSettings adminAreaSettings,
+            IQueuedEmailService queuedEmailService, EmailAccountSettings emailAccountSettings,
+            IEmailAccountService emailAccountService)
         {
             this._customerService = customerService;
             this._customerReportService = customerReportService;
@@ -95,6 +102,9 @@ namespace Nop.Admin.Controllers
             this._priceCalculationService = priceCalculationService;
             this._permissionService = permissionService;
             this._adminAreaSettings = adminAreaSettings;
+            this._queuedEmailService = queuedEmailService;
+            this._emailAccountSettings = emailAccountSettings;
+            this._emailAccountService = emailAccountService;
         }
 
         #endregion
@@ -685,6 +695,54 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("Index", "Home", new { area = "" });
         }
 
+        public ActionResult SendEmail(CustomerModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
+            var customer = _customerService.GetCustomerById(model.Id);
+            if (customer == null)
+                throw new ArgumentException("No customer found with the specified id");
+
+            try
+            {
+                if (String.IsNullOrWhiteSpace(customer.Email))
+                    throw new NopException("Customer email is empty");
+                if (!CommonHelper.IsValidEmail(customer.Email))
+                    throw new NopException("Customer email is not valid");
+                if (String.IsNullOrWhiteSpace(model.SendEmail.Subject))
+                    throw new NopException("Email subject is empty");
+                if (String.IsNullOrWhiteSpace(model.SendEmail.Body))
+                    throw new NopException("Email body is empty");
+
+                var emailAccount = _emailAccountService.GetEmailAccountById(_emailAccountSettings.DefaultEmailAccountId);
+                if (emailAccount == null)
+                    emailAccount = _emailAccountService.GetAllEmailAccounts().FirstOrDefault();
+                if (emailAccount == null)
+                    throw new NopException("Email account can't be loaded");
+
+                var email = new QueuedEmail()
+                {
+                    EmailAccountId = emailAccount.Id,
+                    FromName = emailAccount.DisplayName,
+                    From = emailAccount.Email,
+                    ToName = customer.GetFullName(),
+                    To = customer.Email,
+                    Subject = model.SendEmail.Subject,
+                    Body = model.SendEmail.Body,
+                    CreatedOnUtc = DateTime.UtcNow,
+                };
+                _queuedEmailService.InsertQueuedEmail(email);
+                SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.SendEmail.Queued"));
+            }
+            catch (Exception exc)
+            {
+                ErrorNotification(exc.Message);
+            }
+
+            return RedirectToAction("Edit", new { id = customer.Id });
+        }
+        
         #endregion
         
         #region Reward points history

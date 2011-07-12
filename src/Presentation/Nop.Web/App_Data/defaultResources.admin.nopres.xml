@@ -5663,6 +5663,33 @@
                         </LocaleResource>
                       </Children>
                     </LocaleResource>
+                    <LocaleResource Name="SendEmail">
+                      <Value>Send email</Value>
+                      <Children>
+                        <LocaleResource Name="Sent">
+                          <Value>The email has been queued successfully.</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="Subject">
+                          <Value>The subject</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>Enter the subject of email.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="Body">
+                          <Value>The email body</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>Enter the message of email.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="Queued">
+                          <Value>The email has been queued successfully.</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
                     <LocaleResource Name="Added">
                       <Value>The new customer has been added successfully.</Value>
                     </LocaleResource>
