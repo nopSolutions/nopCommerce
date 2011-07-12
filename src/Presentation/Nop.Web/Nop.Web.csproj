@@ -963,6 +963,8 @@
     <Content Include="Content\smoothness\jquery-ui-1.8.13.custom.css" />
     <Content Include="Documents\LocaleStringResources.sql" />
     <Content Include="Documents\Upgrade.sql" />
+    <Content Include="ErrorPage.htm" />
+    <Content Include="FileNotFound.htm" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Content\Images\ui-bg_flat_0_aaaaaa_40x100.png" />
