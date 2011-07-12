@@ -6,7 +6,7 @@
     @Html.HiddenFor(model => model.SystemName)
     <div class="section-header">
         <div class="title">
-            <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" />
+            <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
             @T("Admin.Configuration.Shipping.Providers.Configure") - @Model.FriendlyName @Html.ActionLink("(" + T("Admin.Configuration.Shipping.Providers.BackToList") + ")", "Providers")
         </div>
     </div>

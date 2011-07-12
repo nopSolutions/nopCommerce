@@ -5,7 +5,7 @@
 {
 <div class="section-header">
     <div class="title">
-        <img src="@Url.Content("~/Administration/Content/images/ico-catalog.png")" />
+        <img src="@Url.Content("~/Administration/Content/images/ico-catalog.png")" alt="" />
         @string.Format(T("Admin.Catalog.Products.Variants.ProductVariantAttributes.Attributes.Values.EditAttributeDetails").Text, Model.ProductVariantAttributeName, Model.ProductVariantName)
         @Html.ActionLink("(" + T("Admin.Catalog.Products.Variants.ProductVariantAttributes.Attributes.Values.BackToProductVariant") + ")", "Edit", "ProductVariant", new { Id = Model.ProductVariantId }, null)
     </div>
