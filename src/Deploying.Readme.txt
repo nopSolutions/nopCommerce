@@ -1,0 +1,7 @@
+Manually:
+1. Nop.Web and Nop.Admin are two web applications. They both need to be published to the same directory. “Nop.Web” to “Published\Web\”. “Nop.Admin” to “Published\Web\ Administration\”. Make sure the .dlls from Nop.Admin (Published\Web\Administration\bin\) are moved and exist in (Published\Web\bin\).
+2. Ensure that plugins are copied into \Published\Web\Plugins\ directory
+
+
+Automatic:
+nopCommerce package with source code contains two .bat files for deploying that will deploy everything correctly for you to a "\ Deployable\" folder.”. The first file is src\Prepare.bat. This file will build the project in release mode and move the plugins to the correct directory. The second file is src\Deploy.bat. This file will do what Prepare.bat does, but will also move all the websites and files to src\Deployable\Nop_2.X.
