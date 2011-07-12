@@ -5666,9 +5666,6 @@
                     <LocaleResource Name="SendEmail">
                       <Value>Send email</Value>
                       <Children>
-                        <LocaleResource Name="Sent">
-                          <Value>The email has been queued successfully.</Value>
-                        </LocaleResource>
                         <LocaleResource Name="Subject">
                           <Value>The subject</Value>
                           <Children>
@@ -5687,6 +5684,30 @@
                         </LocaleResource>
                         <LocaleResource Name="Queued">
                           <Value>The email has been queued successfully.</Value>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
+                    <LocaleResource Name="SendPM">
+                      <Value>Send private message</Value>
+                      <Children>
+                        <LocaleResource Name="Sent">
+                          <Value>The PM has been sent successfully.</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="Subject">
+                          <Value>The subject</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>Enter the subject of PM.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="Message">
+                          <Value>The message</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>Enter the message of PM.</Value>
+                            </LocaleResource>
+                          </Children>
                         </LocaleResource>
                       </Children>
                     </LocaleResource>

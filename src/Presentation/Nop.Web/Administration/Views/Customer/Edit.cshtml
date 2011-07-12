@@ -12,14 +12,14 @@
             <button type="submit" name="save" value="save" class="t-button">@T("Admin.Common.Save")</button>
             <button type="submit" name="save" value="save-continue" class="t-button">@T("Admin.Common.SaveContinue")</button>
             <button type="submit" id="sendemail" name="sendemail" value="sendemail" class="t-button">@T("Admin.Customers.Customers.SendEmail")</button>
-            @*TODO send PM button (Telerik window pop-up) if PM option is enabled and customer is registered*@
+            <button type="submit" id="sendprivatemessage" name="sendprivatemessage" value="sendprivatemessage" class="t-button">@T("Admin.Customers.Customers.SendPM")</button>
             <span id="customer-delete" class="t-button">@T("Admin.Common.Delete")</span>
         </div>
     </div>
     @Html.Partial("_CreateOrUpdate", Model)
 }
 @Html.DeleteConfirmation("customer-delete")
-@*import products form*@
+@*send email form*@
 @{Html.Telerik().Window()
         .Name("sendemail-window")
         .Title(T("Admin.Customers.Customers.SendEmail").Text)
@@ -65,6 +65,56 @@
         $("#sendemail").click(function (e) {
             e.preventDefault();
             $('#sendemail-window').data('tWindow').center().open();
+        });
+    });
+</script>
+
+@*send PM form*@
+@{Html.Telerik().Window()
+        .Name("sendprivatemessage-window")
+        .Title(T("Admin.Customers.Customers.SendPM").Text)
+        .Content(@<text>
+    @using (Html.BeginForm("SendPm", "Customer", new { id = Model.Id }))
+    {
+        <table style="text-align: left;">
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.SendPm.Subject):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(model => model.SendPm.Subject)
+                    @Html.ValidationMessageFor(model => model.SendPm.Subject)
+                </td>
+            </tr>
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.SendPm.Message):
+                </td>
+                <td class="adminData">
+                    @Html.TextAreaFor(model => model.SendPm.Message, new { style = "Width: 350px; Height: 250px;" })
+                    @Html.ValidationMessageFor(model => model.SendPm.Message)
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <button type="submit" class="t-button t-state-default">@T("Admin.Customers.Customers.SendPM")</button>
+                </td>
+            </tr>
+        </table>
+    }
+    </text>)
+        .Width(500)
+        .Draggable(true)
+        .Modal(true)
+        .Visible(false)
+        .Render();
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#sendprivatemessage").click(function (e) {
+            e.preventDefault();
+            $('#sendprivatemessage-window').data('tWindow').center().open();
         });
     });
 </script>

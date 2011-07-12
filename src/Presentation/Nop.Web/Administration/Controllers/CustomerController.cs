@@ -31,6 +31,8 @@ using Nop.Services.Security;
 using Nop.Core.Domain.Common;
 using Nop.Services.Messages;
 using Nop.Core.Domain.Messages;
+using Nop.Core.Domain.Forums;
+using Nop.Services.Forums;
 
 namespace Nop.Admin.Controllers
 {
@@ -62,6 +64,8 @@ namespace Nop.Admin.Controllers
         private readonly IQueuedEmailService _queuedEmailService;
         private readonly EmailAccountSettings _emailAccountSettings;
         private readonly IEmailAccountService _emailAccountService;
+        private readonly ForumSettings _forumSettings;
+        private readonly IForumService _forumService;
 
         #endregion
 
@@ -80,7 +84,8 @@ namespace Nop.Admin.Controllers
             IPriceCalculationService priceCalculationService,
             IPermissionService permissionService, AdminAreaSettings adminAreaSettings,
             IQueuedEmailService queuedEmailService, EmailAccountSettings emailAccountSettings,
-            IEmailAccountService emailAccountService)
+            IEmailAccountService emailAccountService, ForumSettings forumSettings,
+            IForumService forumService)
         {
             this._customerService = customerService;
             this._customerReportService = customerReportService;
@@ -105,6 +110,8 @@ namespace Nop.Admin.Controllers
             this._queuedEmailService = queuedEmailService;
             this._emailAccountSettings = emailAccountSettings;
             this._emailAccountService = emailAccountService;
+            this._forumSettings = forumSettings;
+            this._forumService = forumService;
         }
 
         #endregion
@@ -734,6 +741,50 @@ namespace Nop.Admin.Controllers
                 };
                 _queuedEmailService.InsertQueuedEmail(email);
                 SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.SendEmail.Queued"));
+            }
+            catch (Exception exc)
+            {
+                ErrorNotification(exc.Message);
+            }
+
+            return RedirectToAction("Edit", new { id = customer.Id });
+        }
+
+        public ActionResult SendPm(CustomerModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
+            var customer = _customerService.GetCustomerById(model.Id);
+            if (customer == null)
+                throw new ArgumentException("No customer found with the specified id");
+
+            try
+            {
+                if (!_forumSettings.AllowPrivateMessages)
+                    throw new NopException("Private messages are disabled");
+                if (customer.IsGuest())
+                    throw new NopException("Customer should be registered");
+                if (String.IsNullOrWhiteSpace(model.SendPm.Subject))
+                    throw new NopException("PM subject is empty");
+                if (String.IsNullOrWhiteSpace(model.SendPm.Message))
+                    throw new NopException("PM message is empty");
+
+
+                var privateMessage = new PrivateMessage
+                {
+                    ToCustomerId = customer.Id,
+                    FromCustomerId = _workContext.CurrentCustomer.Id,
+                    Subject = model.SendPm.Subject,
+                    Text = model.SendPm.Message,
+                    IsDeletedByAuthor = false,
+                    IsDeletedByRecipient = false,
+                    IsRead = false,
+                    CreatedOnUtc = DateTime.UtcNow
+                };
+
+                _forumService.InsertPrivateMessage(privateMessage);
+                SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.SendPM.Sent"));
             }
             catch (Exception exc)
             {

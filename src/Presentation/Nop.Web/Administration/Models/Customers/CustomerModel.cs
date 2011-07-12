@@ -17,6 +17,7 @@ namespace Nop.Admin.Models.Customers
         {
             AvailableTimeZones = new List<SelectListItem>();
             SendEmail = new SendEmailModel();
+            SendPm = new SendPmModel();
         }
 
         public bool AllowUsersToChangeUsernames { get; set; }
@@ -152,6 +153,8 @@ namespace Nop.Admin.Models.Customers
         
         //send email model
         public SendEmailModel SendEmail { get; set; }
+        //send PM model
+        public SendPmModel SendPm { get; set; }
 
         
         #region Nested classes
@@ -179,6 +182,15 @@ namespace Nop.Admin.Models.Customers
 
             [NopResourceDisplayName("Admin.Customers.Customers.SendEmail.Body")]
             public string Body { get; set; }
+        }
+
+        public class SendPmModel : BaseNopModel
+        {
+            [NopResourceDisplayName("Admin.Customers.Customers.SendPM.Subject")]
+            public string Subject { get; set; }
+
+            [NopResourceDisplayName("Admin.Customers.Customers.SendPM.Message")]
+            public string Message { get; set; }
         }
 
         public class OrderModel : BaseNopEntityModel
