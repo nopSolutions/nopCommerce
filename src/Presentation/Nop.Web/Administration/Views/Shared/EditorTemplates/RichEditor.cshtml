@@ -10,7 +10,7 @@ Now we have to manually decode values*/
 /*TODO 'View Generated HTML' button doesn't work when we several languages enabled (hence several editorson the same page)*/
 .Value(Model)
 .Tools(tools => tools
-.Custom(settings => settings.HtmlAttributes(new { @class = "t-html", onclick = "viewRichHtmlEditorSource" + random + "(event)" }))))
+.Custom(settings => settings.HtmlAttributes(new { @class = "t-html", onclick = "viewRichHtmlEditorSource" + random + "(event)", title="Edit HTML" }))))
 <script type="text/javascript">
     var htmlSourcePopup;
 
