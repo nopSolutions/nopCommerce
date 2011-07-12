@@ -125,7 +125,8 @@ namespace Nop.Web.Controllers
         #region Utilities
 
         [NonAction]
-        private ShoppingCartModel PrepareShoppingCartModel(ShoppingCartModel model, IList<ShoppingCartItem> cart, bool isEditable)
+        private ShoppingCartModel PrepareShoppingCartModel(ShoppingCartModel model, 
+            IList<ShoppingCartItem> cart, bool isEditable, bool setEstimateShippingDefaultAddress = true)
         {
             if (cart == null)
                 throw new ArgumentNullException("cart");
@@ -252,18 +253,29 @@ namespace Nop.Web.Controllers
             if (model.EstimateShipping.Enabled)
             {
                 //countries
+                int? defaultEstimateCountryId = (setEstimateShippingDefaultAddress && _workContext.CurrentCustomer.ShippingAddress != null) ? _workContext.CurrentCustomer.ShippingAddress.CountryId : model.EstimateShipping.CountryId;
                 model.EstimateShipping.AvailableCountries.Add(new SelectListItem() { Text = _localizationService.GetResource("Address.SelectCountry"), Value = "0" });
                 foreach (var c in _countryService.GetAllCountries())
-                    model.EstimateShipping.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == model.EstimateShipping.CountryId) });
+                    model.EstimateShipping.AvailableCountries.Add(new SelectListItem() { 
+                        Text = c.Name, 
+                        Value = c.Id.ToString(),
+                        Selected = c.Id == defaultEstimateCountryId
+                    });
                 //states
-                var states = model.EstimateShipping.CountryId.HasValue ? _stateProvinceService.GetStateProvincesByCountryId(model.EstimateShipping.CountryId.Value).ToList() : new List<StateProvince>();
+                int? defaultEstimateStateId = (setEstimateShippingDefaultAddress && _workContext.CurrentCustomer.ShippingAddress != null) ? _workContext.CurrentCustomer.ShippingAddress.StateProvinceId : model.EstimateShipping.StateProvinceId;
+                var states = defaultEstimateCountryId.HasValue ? _stateProvinceService.GetStateProvincesByCountryId(defaultEstimateCountryId.Value).ToList() : new List<StateProvince>();
                 if (states.Count > 0)
-                {
                     foreach (var s in states)
-                        model.EstimateShipping.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == model.EstimateShipping.StateProvinceId) });
-                }
+                        model.EstimateShipping.AvailableStates.Add(new SelectListItem() { 
+                            Text = s.Name,
+                            Value = s.Id.ToString(),
+                            Selected = s.Id == defaultEstimateStateId
+                        });
                 else
                     model.EstimateShipping.AvailableStates.Add(new SelectListItem() { Text = _localizationService.GetResource("Address.OtherNonUS"), Value = "0" });
+
+                if (setEstimateShippingDefaultAddress && _workContext.CurrentCustomer.ShippingAddress != null)
+                    model.EstimateShipping.ZipPostalCode = _workContext.CurrentCustomer.ShippingAddress.ZipPostalCode;
             }
 
             #endregion
@@ -763,7 +775,7 @@ namespace Nop.Web.Controllers
             model.EstimateShipping.CountryId = shippingModel.CountryId;
             model.EstimateShipping.StateProvinceId = shippingModel.StateProvinceId;
             model.EstimateShipping.ZipPostalCode = shippingModel.ZipPostalCode;
-            model = PrepareShoppingCartModel(model, cart, true);
+            model = PrepareShoppingCartModel(model, cart, true, false);
 
             if (cart.RequiresShipping())
             {

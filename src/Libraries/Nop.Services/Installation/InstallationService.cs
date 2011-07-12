@@ -3995,7 +3995,7 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 LastActivityDateUtc= DateTime.UtcNow,
             };
-            adminUser.AddAddress(new Address()
+            var defaultAdminUserAddress = new Address()
             {
                 FirstName = "John",
                 LastName = "Smith",
@@ -4010,7 +4010,10 @@ namespace Nop.Services.Installation
                 Country = _countryRepository.Table.Where(c => c.ThreeLetterIsoCode == "USA").FirstOrDefault(),
                 ZipPostalCode = "10021",
                 CreatedOnUtc = DateTime.UtcNow,
-            });
+            };
+            adminUser.AddAddress(defaultAdminUserAddress);
+            adminUser.SetBillingAddress(defaultAdminUserAddress);
+            adminUser.SetShippingAddress(defaultAdminUserAddress);
             _customerRepository.Insert(adminUser);
             //set default customer name
             _customerService.SaveCustomerAttribute<string>(adminUser, SystemCustomerAttributeNames.FirstName, "John");
