@@ -384,13 +384,13 @@ namespace Nop.Web.Controllers
                 throw new ArgumentNullException("model");
 
             model.EmailWishlistEnabled = _shoppingCartSettings.EmailWishlistEnabled;
+            model.IsEditable = isEditable;
 
             if (cart.Count == 0)
                 return model;
 
             #region Simple properties
 
-            model.IsEditable = isEditable;
             var customer = cart.FirstOrDefault().Customer;
             model.CustomerGuid = customer.CustomerGuid;
             model.CustomerFullname = customer.GetFullName();
