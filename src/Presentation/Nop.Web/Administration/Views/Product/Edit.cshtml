@@ -8,6 +8,7 @@
             @T("Admin.Catalog.Products.EditProductDetails") - @Model.Name @Html.ActionLink("(" + T("Admin.Catalog.Products.BackToList") + ")", "List")
         </div>
         <div class="options">
+            <input type="submit" value="@T("Admin.Common.Preview")" onclick="javascript:OpenWindow('@Url.RouteUrl("Product", new { productId = Model.Id, SeName = "" })', 800, 600, true); return false;" class="t-button" />
             <button type="submit" name="save" value="save" class="t-button">@T("Admin.Common.Save")</button>
             <button type="submit" name="save" value="save-continue" class="t-button">@T("Admin.Common.SaveContinue")</button>
             <button type="submit" id="copyproduct" name="copyproduct" value="copyproduct" class="t-button">@T("Admin.Catalog.Products.Copy")</button>

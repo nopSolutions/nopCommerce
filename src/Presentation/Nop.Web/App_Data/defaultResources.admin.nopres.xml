@@ -2117,6 +2117,9 @@
                   <LocaleResource Name="NoCancel">
                     <Value>No, cancel</Value>
                   </LocaleResource>
+                  <LocaleResource Name="Preview">
+                    <Value>Preview</Value>
+                  </LocaleResource>
                   <LocaleResource Name="Save">
                     <Value>Save</Value>
                   </LocaleResource>

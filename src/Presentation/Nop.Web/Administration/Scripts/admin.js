@@ -29,6 +29,10 @@ function openModalWindow(modalId) {
 }
 
 
+function setLocation(url) {
+    window.location.href = url;
+}
+
 function getE(name) {
     if (document.getElementById)
         var elem = document.getElementById(name);
