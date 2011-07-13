@@ -61,7 +61,7 @@
                         columns.Bound(x => x.Id)
                             .Width(100)
                             .Template(x => Html.ActionLink(T("Admin.Common.View").Text, "Edit", "Customer", new { id = x.Id }, new { }))
-                            .ClientTemplate("<a href=\"/Admin/Customer/Edit/<#= Id #>\">" + T("Admin.Common.View").Text + "</a>")
+                            .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/Customer/Edit/") + "<#= Id #>\">" + T("Admin.Common.View").Text + "</a>")
                             .Title(T("Admin.Common.View").Text);
                     })
                     .Pageable(settings => settings.PageSize(gridPageSize).Position(GridPagerPosition.Both))
@@ -83,7 +83,7 @@
                         columns.Bound(x => x.Id)
                             .Width(100)
                             .Template(x => Html.ActionLink(T("Admin.Common.View").Text, "Edit", "Order", new { id = x.Id }, new { }))
-                            .ClientTemplate("<a href=\"/Admin/Order/Edit/<#= Id #>\">" + T("Admin.Common.View").Text + "</a>");
+                            .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/Order/Edit/") + "<#= Id #>\">" + T("Admin.Common.View").Text + "</a>");
                         columns.Bound(x => x.OrderStatus).Width(200);
                         columns.Bound(x => x.PaymentStatus).Width(200);
                         columns.Bound(x => x.ShippingStatus).Width(200);

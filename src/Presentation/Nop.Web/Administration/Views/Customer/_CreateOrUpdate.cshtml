@@ -318,7 +318,7 @@
                         columns.Bound(x => x.Id)
                             .Width(100)
                             .Template(x => Html.ActionLink(T("Admin.Common.View").Text, "Edit", "Order", new { id = x.Id }, new { }))
-                            .ClientTemplate("<a href=\"/Admin/Order/Edit/<#= Id #>\">" + T("Admin.Common.View").Text + "</a>");
+                            .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/Order/Edit/") + "<#= Id #>\">" + T("Admin.Common.View").Text + "</a>");
                         columns.Bound(x => x.OrderStatus).Width(200);
                         columns.Bound(x => x.PaymentStatus).Width(200);
                         columns.Bound(x => x.ShippingStatus).Width(200);
@@ -442,7 +442,7 @@
                     + "</div>")
             .Title("Address");
         columns.Bound(x => x.Id)
-            .ClientTemplate("<a href=\"/Admin/Customer/AddressEdit?customerId=" + @Model.Id + "&addressid=<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
+            .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/Customer/AddressEdit?customerId=") + @Model.Id + "&addressid=<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
             .Title("Edit");
         columns.Command(commands =>
         {
@@ -469,7 +469,7 @@
                             {
                                 columns.Bound(sci => sci.FullProductName)
                                 .Template(sci => Html.ActionLink(sci.FullProductName, "Edit", "ProductVariant", new { id = sci.ProductVariantId }, new { }))
-                                .ClientTemplate("<a href=\"/Admin/ProductVariant/Edit/<#= ProductVariantId #>\"><#= FullProductName #></a>");
+                                .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/ProductVariant/Edit/") + "<#= ProductVariantId #>\"><#= FullProductName #></a>");
                                 columns.Bound(sci => sci.Quantity).Width(100);
                                 columns.Bound(sci => sci.UnitPrice).Width(100);
                                 columns.Bound(sci => sci.Total).Width(100);
@@ -497,7 +497,7 @@
                             {
                                 columns.Bound(sci => sci.FullProductName)
                                 .Template(sci => Html.ActionLink(sci.FullProductName, "Edit", "ProductVariant", new { id = sci.ProductVariantId }, new { }))
-                                .ClientTemplate("<a href=\"/Admin/ProductVariant/Edit/<#= ProductVariantId #>\"><#= FullProductName #></a>");
+                                .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/ProductVariant/Edit/") + "<#= ProductVariantId #>\"><#= FullProductName #></a>");
                                 columns.Bound(sci => sci.Quantity).Width(100);
                                 columns.Bound(sci => sci.UnitPrice).Width(100);
                                 columns.Bound(sci => sci.Total).Width(100);

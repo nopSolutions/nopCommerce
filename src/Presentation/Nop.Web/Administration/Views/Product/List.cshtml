@@ -87,7 +87,7 @@
                             {
                                 columns.Bound(pv => pv.Name)
                                 .Template(pv => Html.ActionLink(pv.Name, "Edit", "ProductVariant", new { id = pv.Id }, new { }))
-                                .ClientTemplate("<a href=\"/Admin/ProductVariant/Edit/<#= Id #>\"><#= Name #></a>");
+                                .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/ProductVariant/Edit/") + "<#= Id #>\"><#= Name #></a>");
                                 columns.Bound(pv => pv.Sku).Width(100);
                                 columns.Bound(pv => pv.Price).Width(100);
                                 columns.Bound(pv => pv.StockQuantity).Width(100);
@@ -114,7 +114,7 @@
                                     {
                                         columns.Bound(pv => pv.Name)
                                         .Template(pv => Html.ActionLink(pv.Name, "Edit", "ProductVariant", new { id = pv.Id }, new { }))
-                                        .ClientTemplate("<a href=\"/Admin/ProductVariant/Edit/<#= Id #>\"><#= Name #></a>");
+                                        .ClientTemplate("<a href=\""+ @Url.Content("~/Admin/ProductVariant/Edit/") + "<#= Id #>\"><#= Name #></a>");
                                         columns.Bound(pv => pv.Sku).Width(100);
                                         columns.Bound(pv => pv.Price).Width(100);
                                         columns.Bound(pv => pv.StockQuantity).Width(100);

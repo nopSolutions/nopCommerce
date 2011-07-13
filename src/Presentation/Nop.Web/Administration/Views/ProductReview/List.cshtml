@@ -24,11 +24,11 @@
                         columns.Bound(x => x.ProductName)
                             .Width(200)
                             .Template(x => Html.ActionLink(x.ProductName, "Edit", "Product", new { id = x.ProductId }, new { }))
-                            .ClientTemplate("<a href=\"/Admin/Product/Edit/<#= ProductId #>\"><#= ProductName #></a>");
+                            .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/Product/Edit/") + "<#= ProductId #>\"><#= ProductName #></a>");
                         columns.Bound(x => x.CustomerId)
                             .Width(50)
                             .Template(x => Html.ActionLink(T("Admin.Common.View").Text, "Edit", "Customer", new { id = x.CustomerId }, new { }))
-                            .ClientTemplate("<a href=\"/Admin/Customer/Edit/<#= CustomerId #>\">" + T("Admin.Common.View").Text + "</a>");
+                            .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/Customer/Edit/") + "<#= CustomerId #>\">" + T("Admin.Common.View").Text + "</a>");
                         columns.Bound(x => x.Title)
                             .Width(150)
                             .Centered();

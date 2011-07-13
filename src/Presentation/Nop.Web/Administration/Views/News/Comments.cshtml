@@ -30,11 +30,11 @@
                         columns.Bound(x => x.NewsItemTitle)
                             .Width(200)
                             .Template(x => Html.ActionLink(x.NewsItemTitle, "Edit", "News", new { id = x.NewsItemId }, new { }))
-                            .ClientTemplate("<a href=\"/Admin/News/Edit/<#= NewsItemId #>\"><#= NewsItemTitle #></a>");
+                            .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/News/Edit/") + "<#= NewsItemId #>\"><#= NewsItemTitle #></a>");
                         columns.Bound(x => x.CustomerId)
                             .Width(50)
                             .Template(x => Html.ActionLink(T("Admin.Common.View").Text, "Edit", "Customer", new { id = x.CustomerId }, new { }))
-                            .ClientTemplate("<a href=\"/Admin/Customer/Edit/<#= CustomerId #>\">" + T("Admin.Common.View").Text + "</a>");
+                            .ClientTemplate("<a href=\""+ @Url.Content("~/Admin/Customer/Edit/") + "<#= CustomerId #>\">" + T("Admin.Common.View").Text + "</a>");
                         columns.Bound(x => x.CommentTitle)
                             .Width(150)
                             .Centered();
@@ -46,7 +46,7 @@
                             .Width(100)
                             .Centered();
                         columns.Bound(x => x.CreatedOn)
-                            .Width(100)
+                            .Width(150)
                             .Centered();
                         columns.Command(commands =>
                         {

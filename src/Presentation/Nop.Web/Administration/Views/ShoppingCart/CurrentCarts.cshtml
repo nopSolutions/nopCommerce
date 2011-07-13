@@ -22,7 +22,7 @@
                     {
                         columns.Bound(x => x.CustomerId)
                             .Template(x => Html.ActionLink(x.CustomerName + " (" + T("Admin.Common.View").Text + ")", "Edit", "Customer", new { id = x.CustomerId }, new { }))
-                            .ClientTemplate("<a href=\"/Admin/Customer/Edit/<#= CustomerId #>\"><#= CustomerName #> (" + T("Admin.Common.View").Text + ")</a>");
+                            .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/Customer/Edit/") + "<#= CustomerId #>\"><#= CustomerName #> (" + T("Admin.Common.View").Text + ")</a>");
                         columns.Bound(x => x.TotalItems).Width(100);
                     })
                     .DetailView(details => details.ClientTemplate(
@@ -32,7 +32,7 @@
                             {
                                 columns.Bound(sci => sci.FullProductName)
                                 .Template(sci => Html.ActionLink(sci.FullProductName, "Edit", "ProductVariant", new { id = sci.ProductVariantId }, new { }))
-                                .ClientTemplate("<a href=\"/Admin/ProductVariant/Edit/<#= ProductVariantId #>\"><#= FullProductName #></a>");
+                                .ClientTemplate("<a href=\""+ @Url.Content("~/Admin/ProductVariant/Edit/") + "<#= ProductVariantId #>\"><#= FullProductName #></a>");
                                 columns.Bound(sci => sci.Quantity).Width(100);
                                 columns.Bound(sci => sci.UnitPrice).Width(100);
                                 columns.Bound(sci => sci.Total).Width(100);
