@@ -34,5 +34,10 @@ namespace Nop.Core.Domain.News
         /// Gets or sets the page size for news archive
         /// </summary>
         public int NewsArchivePageSize { get; set; }
+
+        /// <summary>
+        /// Enable the news RSS feed link in customers browser address bar
+        /// </summary>
+        public bool ShowHeaderRssUrl { get; set; }
     }
 }

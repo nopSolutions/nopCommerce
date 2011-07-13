@@ -21,5 +21,8 @@ namespace Nop.Admin.Models.Settings
 
         [NopResourceDisplayName("Admin.Configuration.Settings.News.NewsArchivePageSize")]
         public int NewsArchivePageSize { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.News.ShowHeaderRSSUrl")]
+        public bool ShowHeaderRssUrl { get; set; }
     }
 }

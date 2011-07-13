@@ -3011,7 +3011,7 @@
                   </LocaleResource>
                   <LocaleResource Name="Blog">
                   <Value>Blog settings</Value>
-                  <Children>
+                    <Children>
                         <LocaleResource Name="Enabled">
                           <Value>Blog enabled</Value>
                           <Children>
@@ -3049,6 +3049,14 @@
                           <Children>
                             <LocaleResource Name="Hint">
                               <Value>The number of blog tags that appear in the tag cloud.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                        <LocaleResource Name="ShowHeaderRSSUrl">
+                          <Value>Display blog RSS feed link in the browser address bar</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>Check to enable the blog RSS feed link in customers browser address bar</Value>
                             </LocaleResource>
                           </Children>
                         </LocaleResource>
@@ -3896,6 +3904,14 @@
                             </LocaleResource>
                           </Children>
                         </LocaleResource>
+                      <LocaleResource Name="ShowHeaderRSSUrl">
+                        <Value>Display news RSS feed link in the browser address bar</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Check to enable the news RSS feed link in customers browser address bar</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
                       </Children>
                 </LocaleResource>
                   <LocaleResource Name="Order">

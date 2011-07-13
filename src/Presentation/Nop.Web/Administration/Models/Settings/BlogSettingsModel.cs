@@ -19,5 +19,8 @@ namespace Nop.Admin.Models.Settings
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Blog.NumberOfTags")]
         public int NumberOfTags { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Blog.ShowHeaderRSSUrl")]
+        public bool ShowHeaderRssUrl { get; set; }
     }
 }

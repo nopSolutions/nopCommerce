@@ -68,5 +68,14 @@
                 @Html.ValidationMessageFor(model => model.NewsArchivePageSize)
             </td>
         </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ShowHeaderRssUrl):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ShowHeaderRssUrl)
+                @Html.ValidationMessageFor(model => model.ShowHeaderRssUrl)
+            </td>
+        </tr>
     </table>
 }

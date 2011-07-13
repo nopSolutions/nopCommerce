@@ -4688,6 +4688,7 @@ namespace Nop.Services.Installation
                     AllowNotRegisteredUsersToLeaveComments = true,
                     NotifyAboutNewBlogComments = false,
                     NumberOfTags = 15,
+                    ShowHeaderRssUrl = false,
                 });
             EngineContext.Current.Resolve<IConfigurationProvider<NewsSettings>>()
                 .SaveSettings(new NewsSettings()
@@ -4698,6 +4699,7 @@ namespace Nop.Services.Installation
                     ShowNewsOnMainPage = true,
                     MainPageNewsCount = 3,
                     NewsArchivePageSize = 10,
+                    ShowHeaderRssUrl = false,
                 });
             EngineContext.Current.Resolve<IConfigurationProvider<ForumSettings>>()
                 .SaveSettings(new ForumSettings()

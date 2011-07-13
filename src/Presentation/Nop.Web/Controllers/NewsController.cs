@@ -292,6 +292,18 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
+        [ChildActionOnly]
+        public ActionResult RssHeaderLink()
+        {
+            if (!_newsSettings.Enabled || !_newsSettings.ShowHeaderRssUrl)
+                return Content("");
+
+            string link = string.Format("<link href=\"{0}\" rel=\"alternate\" type=\"application/rss+xml\" title=\"{1}: News\" />",
+                Url.RouteUrl("NewsRSS", new { languageId = _workContext.WorkingLanguage.Id }, "http"), _storeInformationSettings.StoreName);
+
+            return Content(link);
+        }
+
         #endregion
     }
 }

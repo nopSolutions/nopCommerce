@@ -364,6 +364,17 @@ namespace Nop.Web.Controllers
             return PartialView(model);
         }
 
+        [ChildActionOnly]
+        public ActionResult RssHeaderLink()
+        {
+            if (!_blogSettings.Enabled || !_blogSettings.ShowHeaderRssUrl)
+                return Content("");
+
+            string link = string.Format("<link href=\"{0}\" rel=\"alternate\" type=\"application/rss+xml\" title=\"{1}: Blog\" />",
+                Url.RouteUrl("BlogRSS", new { languageId = _workContext.WorkingLanguage.Id }, "http"), _storeInformationSettings.StoreName);
+
+            return Content(link);
+        }
         #endregion
     }
 }
