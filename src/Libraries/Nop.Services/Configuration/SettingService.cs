@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
 using Nop.Core.Data;
@@ -127,7 +128,7 @@ namespace Nop.Services.Configuration
             key = key.Trim().ToLowerInvariant();
 
             Setting setting = null;
-            string valueStr = TypeDescriptor.GetConverter(typeof(T)).ConvertToInvariantString(value);
+            string valueStr = CommonHelper.GetNopCustomTypeConverter(typeof(T)).ConvertToInvariantString(value);
             if (settings.ContainsKey(key))
             {
                 //update

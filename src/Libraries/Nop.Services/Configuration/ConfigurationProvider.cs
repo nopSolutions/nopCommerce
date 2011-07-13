@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Linq;
+using Nop.Core;
 using Nop.Core.Configuration;
 
 namespace Nop.Services.Configuration
@@ -26,8 +27,8 @@ namespace Nop.Services.Configuration
                              where prop.CanWrite && prop.CanRead
                              let setting = _settingService.GetSettingByKey<string>(typeof(TSettings).Name + "." + prop.Name)
                              where setting != null
-                             where TypeDescriptor.GetConverter(prop.PropertyType).CanConvertFrom(typeof(string))
-                             let value = TypeDescriptor.GetConverter(prop.PropertyType).ConvertFromInvariantString(setting)
+                             where CommonHelper.GetNopCustomTypeConverter(prop.PropertyType).CanConvertFrom(typeof(string))
+                             let value = CommonHelper.GetNopCustomTypeConverter(prop.PropertyType).ConvertFromInvariantString(setting)
                              select new { prop, value };
 
             // assign properties
@@ -38,7 +39,7 @@ namespace Nop.Services.Configuration
         {
             var properties = from prop in typeof(TSettings).GetProperties()
                              where prop.CanWrite && prop.CanRead
-                             where TypeDescriptor.GetConverter(prop.PropertyType).CanConvertFrom(typeof(string))
+                             where CommonHelper.GetNopCustomTypeConverter(prop.PropertyType).CanConvertFrom(typeof(string))
                              select prop;
             foreach (var prop in properties)
             {

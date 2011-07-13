@@ -228,7 +228,7 @@ namespace Nop.Admin.Controllers
             foreach (var str1 in searchCustomerRoleIdsStr.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                 searchCustomerRoleIds.Add(Convert.ToInt32(str1));
             //List<int> converter should be registered
-            //var searchCustomerRoleIds = TypeDescriptor.GetConverter(typeof(List<int>)).ConvertFrom(searchCustomerRoleIdsStr) as List<int>;
+            //var searchCustomerRoleIds = CommonHelper.GetNopCustomTypeConverter(typeof(List<int>)).ConvertFrom(searchCustomerRoleIdsStr) as List<int>;
 
             string searchCustomerEmail = command.FilterDescriptors.GetValueFromAppliedFilters("searchCustomerEmail");
             string searchCustomerUsername = command.FilterDescriptors.GetValueFromAppliedFilters("searchCustomerUsername");
@@ -280,7 +280,7 @@ namespace Nop.Admin.Controllers
             ViewData["searchCustomerRoleIds"] = searchCustomerRoleIdsStr;
             //if (model.SearchCustomerRoleIds != null)
                 //List<int> converter should be registered
-                //ViewData["searchCustomerRoleIds"] = TypeDescriptor.GetConverter(typeof(List<int>)).ConvertTo(model.SearchCustomerRoleIds, typeof(string)) as string;
+            //ViewData["searchCustomerRoleIds"] = CommonHelper.GetNopCustomTypeConverter(typeof(List<int>)).ConvertTo(model.SearchCustomerRoleIds, typeof(string)) as string;
 
             ViewData["searchCustomerEmail"] = model.SearchEmail;
             ViewData["searchCustomerUsername"] = model.SearchUsername;

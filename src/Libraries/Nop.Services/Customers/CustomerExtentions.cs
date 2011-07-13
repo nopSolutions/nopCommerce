@@ -111,9 +111,9 @@ namespace Nop.Services.Customers
             }
             else
             {
-                if (!TypeDescriptor.GetConverter(typeof(T)).CanConvertFrom(typeof(string)))
+                if (!CommonHelper.GetNopCustomTypeConverter(typeof(T)).CanConvertFrom(typeof(string)))
                     throw new NopException("Not supported customer attribute type");
-                var attributeValue = (T)(TypeDescriptor.GetConverter(typeof(T)).ConvertFromInvariantString(customerAttribute.Value));
+                var attributeValue = (T)(CommonHelper.GetNopCustomTypeConverter(typeof(T)).ConvertFromInvariantString(customerAttribute.Value));
                 return attributeValue;
 
                 //use the code below in order to support all serializable types (for example, ShippingOption)

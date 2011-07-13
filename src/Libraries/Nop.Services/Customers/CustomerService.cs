@@ -928,10 +928,10 @@ namespace Nop.Services.Customers
             if (customer == null)
                 throw new ArgumentNullException("customer");
 
-            if (!TypeDescriptor.GetConverter(typeof(T)).CanConvertTo(typeof(string)))
+            if (!CommonHelper.GetNopCustomTypeConverter(typeof(T)).CanConvertTo(typeof(string)))
                 throw new NopException("Not supported customer attribute type");
 
-            string valueStr = TypeDescriptor.GetConverter(typeof(T)).ConvertToInvariantString(value);
+            string valueStr = CommonHelper.GetNopCustomTypeConverter(typeof(T)).ConvertToInvariantString(value);
             //use the code below in order to support all serializable types (for example, ShippingOption)
             //or use custom TypeConverters like it's implemented for ISettings
             //using (var tr = new StringReader(customerAttribute.Value))

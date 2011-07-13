@@ -1,10 +1,13 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
+using Nop.Core.ComponentModel;
+using Nop.Core.Domain.Shipping;
 
 namespace Nop.Core
 {
@@ -164,6 +167,59 @@ namespace Nop.Core
             pi.SetValue(instance, value, new object[0]);
         }
 
+        public static TypeConverter GetNopCustomTypeConverter(Type type)
+        {
+            //we can't use the following code in order to register our custom type descriptors
+            //TypeDescriptor.AddAttributes(typeof(List<int>), new TypeConverterAttribute(typeof(GenericListTypeConverter<int>)));
+            //so we do it manually here
+
+            #region Old code (doesn't work in meidum trust)
+
+            //            namespace Nop.Core
+            //{
+            //    public class TypeDescriptorRegistrationStartUpTask : IStartupTask
+            //    {
+            //        public void Execute()
+            //        {
+            //            //List<int>
+            //            TypeDescriptor.AddAttributes(typeof(List<int>), 
+            //                new TypeConverterAttribute(typeof(GenericListTypeConverter<int>)));
+
+            //            //List<decimal>
+            //            TypeDescriptor.AddAttributes(typeof(List<decimal>),
+            //                new TypeConverterAttribute(typeof(GenericListTypeConverter<decimal>)));
+
+            //            //List<string>
+            //            TypeDescriptor.AddAttributes(typeof(List<string>),
+            //                new TypeConverterAttribute(typeof(GenericListTypeConverter<string>)));
+
+            //            //ShippingOption
+            //            TypeDescriptor.AddAttributes(typeof(ShippingOption),
+            //                new TypeConverterAttribute(typeof(ShippingOptionTypeConverter)));
+            //        }
+
+            //        public int Order
+            //        {
+            //            get { return 1; }
+            //        }
+            //    }
+            //}
+
+
+            #endregion
+
+            if (type == typeof(List<int>))
+                return new GenericListTypeConverter<int>();
+            if (type == typeof(List<decimal>))
+                return new GenericListTypeConverter<decimal>();
+            if (type == typeof(List<string>))
+                return new GenericListTypeConverter<string>();
+            if (type == typeof(ShippingOption))
+                return new ShippingOptionTypeConverter();
+
+            return TypeDescriptor.GetConverter(type);
+        }
+
         /// <summary>
         /// Converts a value to a destination type.
         /// </summary>
@@ -186,8 +242,10 @@ namespace Nop.Core
         {
             if (value != null)
             {
-                TypeConverter destinationConverter = TypeDescriptor.GetConverter(destinationType);
-                TypeConverter sourceConverter = TypeDescriptor.GetConverter(value.GetType());
+                var sourceType = value.GetType();
+
+                TypeConverter destinationConverter = GetNopCustomTypeConverter(destinationType);
+                TypeConverter sourceConverter = GetNopCustomTypeConverter(sourceType);
                 if (destinationConverter != null && destinationConverter.CanConvertFrom(value.GetType()))
                     return destinationConverter.ConvertFrom(null, culture, value);
                 if (sourceConverter != null && sourceConverter.CanConvertTo(destinationType))
