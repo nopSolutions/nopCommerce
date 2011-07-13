@@ -228,6 +228,15 @@
                 @Html.ValidationMessageFor(model => model.PdfSettings.Enabled)
             </td>
         </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.PdfSettings.LogoPictureId):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.PdfSettings.LogoPictureId)
+                @Html.ValidationMessageFor(model => model.PdfSettings.LogoPictureId)
+            </td>
+        </tr>
     </table>
 }
 @helper TabLocalizationSettings()

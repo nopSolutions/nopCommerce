@@ -3640,6 +3640,14 @@
                           </LocaleResource>
                         </Children>
                       </LocaleResource>
+                      <LocaleResource Name="PdfLogo">
+                        <Value>PDF logo</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Image file what will be displayed in PDF order invoices.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
                       <LocaleResource Name="PageTitleSeparator">
                         <Value>Page title separator</Value>
                         <Children>

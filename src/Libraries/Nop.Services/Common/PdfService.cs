@@ -97,9 +97,14 @@ namespace Nop.Services.Common
             Table table = sec.AddTable();
             table.Borders.Visible = false;
 
-            string logoFilePath = HttpContext.Current.Request.PhysicalApplicationPath + "content/images/pdflogo.img";
-            bool logoExists = !String.IsNullOrEmpty(logoFilePath) && File.Exists(logoFilePath);
-
+            //little hack here because MigraDoc doesn't support loading image from stream (only from file system)
+            //that's why we save an image to a file system
+            var logoPicture = _pictureService.GetPictureById(_pdfSettings.LogoPictureId);
+            var logoExists = logoPicture != null;
+            string logoFilePath = "";
+            if (logoExists)
+                logoFilePath = _pictureService.GetPictureLocalPath(logoPicture, 0, false);
+            
             table.AddColumn(Unit.FromCentimeter(10));
             if (logoExists)
             {

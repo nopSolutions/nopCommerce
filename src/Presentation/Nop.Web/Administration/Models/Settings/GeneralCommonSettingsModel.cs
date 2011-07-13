@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
@@ -85,6 +86,10 @@ namespace Nop.Admin.Models.Settings
         {
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.PdfEnabled")]
             public bool Enabled { get; set; }
+
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.PdfLogo")]
+            [UIHint("Picture")]
+            public int LogoPictureId { get; set; }
         }
 
         public class LocalizationSettingsModel

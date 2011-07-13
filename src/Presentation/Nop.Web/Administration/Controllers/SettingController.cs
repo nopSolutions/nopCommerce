@@ -687,6 +687,7 @@ namespace Nop.Admin.Controllers
 
             //PDF settings
             model.PdfSettings.Enabled = _pdfSettings.Enabled;
+            model.PdfSettings.LogoPictureId = _pdfSettings.LogoPictureId;
 
             //lcoalization
             model.LocalizationSettings.UseImagesForLanguageSelection = _localizationSettings.UseImagesForLanguageSelection;
@@ -742,6 +743,7 @@ namespace Nop.Admin.Controllers
 
             //PDF settings
             _pdfSettings.Enabled = model.PdfSettings.Enabled;
+            _pdfSettings.LogoPictureId = model.PdfSettings.LogoPictureId;
             _settingService.SaveSetting(_pdfSettings);
 
 
