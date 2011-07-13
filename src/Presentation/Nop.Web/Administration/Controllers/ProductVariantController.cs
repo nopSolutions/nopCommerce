@@ -832,13 +832,14 @@ namespace Nop.Admin.Controllers
                     {
                         Id = x.Id,
                         ProductVariantId = x.ProductVariantId,
-                        AttributesXml = _productAttributeFormatter.FormatAttributes(x.ProductVariant, x.AttributesXml),
+                        AttributesXml = _productAttributeFormatter.FormatAttributes(x.ProductVariant, 
+                            x.AttributesXml, _workContext.CurrentCustomer, "<br />", true, true, true, false),
                         StockQuantity1 = x.StockQuantity,
                         AllowOutOfStockOrders1 = x.AllowOutOfStockOrders,
                     };
                     //warnings
-                    var warnings = _shoppingCartService.GetShoppingCartItemWarnings(ShoppingCartType.ShoppingCart,
-                            x.ProductVariant, x.AttributesXml, decimal.Zero, 1);
+                    var warnings = _shoppingCartService.GetShoppingCartItemAttributeWarnings(ShoppingCartType.ShoppingCart,
+                            x.ProductVariant, x.AttributesXml);
                     for (int i = 0; i < warnings.Count;i++ )
                     {
                         pvacModel.Warnings +=warnings[i];
@@ -1025,8 +1026,8 @@ namespace Nop.Admin.Controllers
 
             #endregion
 
-            var warnings = _shoppingCartService.GetShoppingCartItemWarnings(ShoppingCartType.ShoppingCart,
-                variant, attributes, decimal.Zero, 1);
+            var warnings = _shoppingCartService.GetShoppingCartItemAttributeWarnings(ShoppingCartType.ShoppingCart,
+                variant, attributes);
             if (warnings.Count == 0)
             {
                 //save combination

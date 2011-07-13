@@ -74,7 +74,42 @@ namespace Nop.Services.Orders
 
         #endregion
 
-        #region Utilities
+        #region Methods
+        
+        /// <summary>
+        /// Delete shopping cart item
+        /// </summary>
+        /// <param name="shoppingCartItem">Shopping cart item</param>
+        /// <param name="resetCheckoutData">A value indicating whether to reset checkout data</param>
+        public virtual void DeleteShoppingCartItem(ShoppingCartItem shoppingCartItem, bool resetCheckoutData = true)
+        {
+            if (shoppingCartItem == null)
+                throw new ArgumentNullException("shoppingCartItem");
+
+
+            if (resetCheckoutData)
+            {
+                //reset checkout data
+                _customerService.ResetCheckoutData(shoppingCartItem.Customer, false);
+            }
+
+            _sciRepository.Delete(shoppingCartItem);
+        }
+
+        /// <summary>
+        /// Deletes expired shopping cart items
+        /// </summary>
+        /// <param name="olderThanUtc">Older than date and time</param>
+        public virtual void DeleteExpiredShoppingCartItems(DateTime olderThanUtc)
+        {
+            var query = from sci in _sciRepository.Table
+                           where sci.UpdatedOnUtc < olderThanUtc
+                           select sci;
+
+            var cartItems = query.ToList();
+            foreach (var cartItem in cartItems)
+                _sciRepository.Delete(cartItem);
+        }
 
         /// <summary>
         /// Validates shopping cart item attributes
@@ -82,10 +117,9 @@ namespace Nop.Services.Orders
         /// <param name="shoppingCartType">Shopping cart type</param>
         /// <param name="productVariant">Product variant</param>
         /// <param name="selectedAttributes">Selected attributes</param>
-        /// <param name="quantity">Quantity</param>
         /// <returns>Warnings</returns>
-        protected IList<string> GetShoppingCartItemAttributeWarnings(ShoppingCartType shoppingCartType,
-            ProductVariant productVariant, string selectedAttributes, int quantity)
+        public virtual IList<string> GetShoppingCartItemAttributeWarnings(ShoppingCartType shoppingCartType,
+            ProductVariant productVariant, string selectedAttributes)
         {
             if (productVariant == null)
                 throw new ArgumentNullException("productVariant");
@@ -160,7 +194,7 @@ namespace Nop.Services.Orders
         /// <param name="productVariant">Product variant</param>
         /// <param name="selectedAttributes">Selected attributes</param>
         /// <returns>Warnings</returns>
-        protected IList<string> GetShoppingCartItemGiftCardWarnings(ShoppingCartType shoppingCartType,
+        public virtual IList<string> GetShoppingCartItemGiftCardWarnings(ShoppingCartType shoppingCartType,
             ProductVariant productVariant, string selectedAttributes)
         {
             if (productVariant == null)
@@ -204,45 +238,6 @@ namespace Nop.Services.Orders
             return warnings;
         }
 
-        #endregion
-
-        #region Methods
-        
-        /// <summary>
-        /// Delete shopping cart item
-        /// </summary>
-        /// <param name="shoppingCartItem">Shopping cart item</param>
-        /// <param name="resetCheckoutData">A value indicating whether to reset checkout data</param>
-        public virtual void DeleteShoppingCartItem(ShoppingCartItem shoppingCartItem, bool resetCheckoutData = true)
-        {
-            if (shoppingCartItem == null)
-                throw new ArgumentNullException("shoppingCartItem");
-
-
-            if (resetCheckoutData)
-            {
-                //reset checkout data
-                _customerService.ResetCheckoutData(shoppingCartItem.Customer, false);
-            }
-
-            _sciRepository.Delete(shoppingCartItem);
-        }
-
-        /// <summary>
-        /// Deletes expired shopping cart items
-        /// </summary>
-        /// <param name="olderThanUtc">Older than date and time</param>
-        public virtual void DeleteExpiredShoppingCartItems(DateTime olderThanUtc)
-        {
-            var query = from sci in _sciRepository.Table
-                           where sci.UpdatedOnUtc < olderThanUtc
-                           select sci;
-
-            var cartItems = query.ToList();
-            foreach (var cartItem in cartItems)
-                _sciRepository.Delete(cartItem);
-        }
-        
         /// <summary>
         /// Validates shopping cart item
         /// </summary>
@@ -384,7 +379,7 @@ namespace Nop.Services.Orders
             }
 
             //selected attributes
-            warnings.AddRange(GetShoppingCartItemAttributeWarnings(shoppingCartType, productVariant, selectedAttributes, quantity));
+            warnings.AddRange(GetShoppingCartItemAttributeWarnings(shoppingCartType, productVariant, selectedAttributes));
 
             //gift cards
             warnings.AddRange(GetShoppingCartItemGiftCardWarnings(shoppingCartType, productVariant, selectedAttributes));

@@ -23,6 +23,26 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="olderThanUtc">Older than date and time</param>
         void DeleteExpiredShoppingCartItems(DateTime olderThanUtc);
+        
+        /// <summary>
+        /// Validates shopping cart item attributes
+        /// </summary>
+        /// <param name="shoppingCartType">Shopping cart type</param>
+        /// <param name="productVariant">Product variant</param>
+        /// <param name="selectedAttributes">Selected attributes</param>
+        /// <returns>Warnings</returns>
+        IList<string> GetShoppingCartItemAttributeWarnings(ShoppingCartType shoppingCartType,
+            ProductVariant productVariant, string selectedAttributes);
+        
+        /// <summary>
+        /// Validates shopping cart item (gift card)
+        /// </summary>
+        /// <param name="shoppingCartType">Shopping cart type</param>
+        /// <param name="productVariant">Product variant</param>
+        /// <param name="selectedAttributes">Selected attributes</param>
+        /// <returns>Warnings</returns>
+        IList<string> GetShoppingCartItemGiftCardWarnings(ShoppingCartType shoppingCartType,
+            ProductVariant productVariant, string selectedAttributes);
 
         /// <summary>
         /// Validates shopping cart item

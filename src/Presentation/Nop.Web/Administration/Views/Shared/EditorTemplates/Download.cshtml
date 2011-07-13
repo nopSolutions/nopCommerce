@@ -96,7 +96,7 @@
 
                             $("#@clientId").uploadify({
                                 "uploader": "@(Url.Content("~/Content/Flash/uploadify.swf"))",
-                                "script": "/Admin/Download/AsyncUpload",
+                                "script": "@(Url.Content("~/Admin/Download/AsyncUpload"))",
                                 "scriptData": { authToken: authToken },
                                 "multi": "false",
                                 "auto": true,

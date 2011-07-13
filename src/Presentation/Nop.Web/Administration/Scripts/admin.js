@@ -54,6 +54,7 @@ function OpenWindow(query, w, h, scroll) {
 
 $(document).ready(function () {
     //Setup the ajax indicator
+    //TODO We'll not be able to load ajax-loading.gif when site is run in virtual directory. Fix it
     $('body').append('<div id="ajaxBusy"><p><img src="/administration/content/images/ajax-loading.gif"></p></div>');
     $('#ajaxBusy').css({
         display: "none",

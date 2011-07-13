@@ -27,7 +27,7 @@ else
 
             $("#@clientId").uploadify({
                 "uploader": "@(Url.Content("~/Content/Flash/uploadify.swf"))",
-                "script": "/Admin/Picture/AsyncUpload",
+                "script": "@(Url.Content("~/Admin/Picture/AsyncUpload"))",
                 "scriptData": { authToken: authToken },
                 "multi": "false",
                 "auto": true,
