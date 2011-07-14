@@ -240,6 +240,9 @@ namespace Nop.Services.Catalog
             }
 
             //product variants
+            //The function 'CurrentUtcDateTime' is not supported by SQL Server Compact. 
+            //That's why we pass the date value
+            var nowUtc = DateTime.UtcNow;
             query = from p in query
                     //join pv in _productVariantRepository.Table on p.Id equals pv.ProductId into p_pv
                     //from pv in p_pv.DefaultIfEmpty()
@@ -247,7 +250,9 @@ namespace Nop.Services.Catalog
                     where (showHidden || !pv.Deleted) &&
                     (showHidden || pv.Published) &&
                     (!priceMin.HasValue || pv.Price >= priceMin.Value) &&
-                    (!priceMax.HasValue || pv.Price <= priceMax.Value)
+                    (!priceMax.HasValue || pv.Price <= priceMax.Value) &&
+                    (showHidden || (!pv.AvailableStartDateTimeUtc.HasValue || pv.AvailableStartDateTimeUtc.Value < nowUtc)) &&
+                    (showHidden || (!pv.AvailableEndDateTimeUtc.HasValue || pv.AvailableEndDateTimeUtc.Value > nowUtc))
                     select p;
 
 
@@ -493,12 +498,10 @@ namespace Nop.Services.Catalog
                     //The function 'CurrentUtcDateTime' is not supported by SQL Server Compact. 
                     //That's why we pass the date value
                     var nowUtc = DateTime.UtcNow;
-                    query = query.Where(
-                            pv =>
+                    query = query.Where(pv =>
                             !pv.AvailableStartDateTimeUtc.HasValue ||
                             pv.AvailableStartDateTimeUtc <= nowUtc);
-                    query = query.Where(
-                            pv =>
+                    query = query.Where(pv =>
                             !pv.AvailableEndDateTimeUtc.HasValue ||
                             pv.AvailableEndDateTimeUtc >= nowUtc);
                 }

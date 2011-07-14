@@ -359,13 +359,19 @@ namespace Nop.Services.Catalog
                 throw new ArgumentException("Category identifier could not be null", "categoryId");
 
 
+            //The function 'CurrentUtcDateTime' is not supported by SQL Server Compact. 
+            //That's why we pass the date value
+            var nowUtc = DateTime.UtcNow;
+
             var query = from p in _productRepository.Table
                         from pv in p.ProductVariants.DefaultIfEmpty()
                         from pc in p.ProductCategories.Where(pc => pc.CategoryId == categoryId)
                         join psa in _productSpecificationAttributeRepository.Table on p.Id equals psa.ProductId
                         join sao in _specificationAttributeOptionRepository.Table on psa.SpecificationAttributeOptionId equals sao.Id
                         join sa in _specificationAttributeRepository.Table on sao.SpecificationAttributeId equals sa.Id
-                        where p.Published && pv.Published && !p.Deleted && psa.AllowFiltering
+                        where p.Published && pv.Published && !p.Deleted && psa.AllowFiltering &&
+                        (!pv.AvailableStartDateTimeUtc.HasValue || pv.AvailableStartDateTimeUtc.Value < nowUtc) &&
+                        (!pv.AvailableEndDateTimeUtc.HasValue || pv.AvailableEndDateTimeUtc.Value > nowUtc)
                         select new {sa, sao};
             
             //only distinct attributes (group by ID)
