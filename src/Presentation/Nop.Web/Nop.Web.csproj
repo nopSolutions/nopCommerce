@@ -194,7 +194,7 @@
     <Compile Include="Models\Common\TaxTypeSelectorModel.cs" />
     <Compile Include="Models\Common\CurrencyModel.cs" />
     <Compile Include="Models\Common\CurrencySelectorModel.cs" />
-    <Compile Include="Models\Common\HeaderModel.cs" />
+    <Compile Include="Models\Common\HeaderLinksModel.cs" />
     <Compile Include="Models\Common\LanguageModel.cs" />
     <Compile Include="Models\Common\StoreThemeSelectorModel.cs" />
     <Compile Include="Models\Catalog\PagingFilteringModel.cs" />

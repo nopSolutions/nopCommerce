@@ -203,7 +203,7 @@ namespace Nop.Web.Controllers
                 }
             }
 
-            var model = new HeaderModel()
+            var model = new HeaderLinksModel()
             {
                 IsAuthenticated = customer.IsRegistered(),
                 CustomerEmailUsername = customer.IsRegistered() ? (_customerSettings.UsernamesEnabled ? customer.Username : customer.Email) : "",
