@@ -41,6 +41,6 @@
         }
     </div>
     <div class="pager">
-        @MvcHtmlString.Create(Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber").ToString())
+        @Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber")
     </div>
 </div>

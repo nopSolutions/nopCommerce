@@ -2003,27 +2003,39 @@ namespace Nop.Web.Controllers
                 }
                 else
                 {
+                    int categoryId = 0;
+                    int manufacturerId = 0;
                     decimal? minPriceConverted = null;
                     decimal? maxPriceConverted = null;
-                    //min price
-                    if (!string.IsNullOrEmpty(model.Pf))
+                    bool searchInDescriptions = false;
+                    if (model.As)
                     {
-                        decimal minPrice = decimal.Zero;
-                        if (decimal.TryParse(model.Pf, out minPrice))
-                            minPriceConverted = _currencyService.ConvertToPrimaryStoreCurrency(minPrice, _workContext.WorkingCurrency);
-                    }
-                    //max price
-                    if (!string.IsNullOrEmpty(model.Pt))
-                    {
-                        decimal maxPrice = decimal.Zero;
-                        if (decimal.TryParse(model.Pt, out maxPrice))
-                            maxPriceConverted = _currencyService.ConvertToPrimaryStoreCurrency(maxPrice, _workContext.WorkingCurrency);
+                        //advanced search
+                        categoryId = model.Cid;
+                        manufacturerId = model.Mid;
+
+                        //min price
+                        if (!string.IsNullOrEmpty(model.Pf))
+                        {
+                            decimal minPrice = decimal.Zero;
+                            if (decimal.TryParse(model.Pf, out minPrice))
+                                minPriceConverted = _currencyService.ConvertToPrimaryStoreCurrency(minPrice, _workContext.WorkingCurrency);
+                        }
+                        //max price
+                        if (!string.IsNullOrEmpty(model.Pt))
+                        {
+                            decimal maxPrice = decimal.Zero;
+                            if (decimal.TryParse(model.Pt, out maxPrice))
+                                maxPriceConverted = _currencyService.ConvertToPrimaryStoreCurrency(maxPrice, _workContext.WorkingCurrency);
+                        }
+
+                        searchInDescriptions = model.Sid;
                     }
 
                     //products
-                    products = _productService.SearchProducts(model.Cid, model.Mid, null,
+                    products = _productService.SearchProducts(categoryId, manufacturerId, null,
                         minPriceConverted, maxPriceConverted, 0, 0,
-                        model.Q, model.Sid, _workContext.WorkingLanguage.Id, null,
+                        model.Q, searchInDescriptions, _workContext.WorkingLanguage.Id, null,
                     ProductSortingEnum.Position, command.PageNumber - 1, command.PageSize);
                     model.Products = products.Select(x => PrepareProductOverviewModel(x)).ToList();
                 }

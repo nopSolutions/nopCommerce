@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
+using System.Collections.Generic;
 
 namespace Nop.Web.Framework.UI.Paging
 {
@@ -28,12 +29,14 @@ namespace Nop.Web.Framework.UI.Paging
         protected bool showIndividualPages = true;
         protected int individualPagesDisplayedCount = 5;
         protected Func<int, string> urlBuilder;
+        protected IList<string> booleanParameterNames;
 
 		public Pager(IPageableModel model, ViewContext context)
 		{
             this.model = model;
             this.viewContext = context;
             this.urlBuilder = CreateDefaultUrl;
+            this.booleanParameterNames = new List<string>();
 		}
 
 		protected ViewContext ViewContext 
@@ -91,6 +94,13 @@ namespace Nop.Web.Framework.UI.Paging
             this.urlBuilder = value;
 			return this;
 		}
+        //little hack here due to ugly MVC implementation
+        //find more info here: http://www.mindstorminteractive.com/blog/topics/jquery-fix-asp-net-mvc-checkbox-truefalse-value/
+        public Pager BooleanParameterName(string paramName)
+        {
+            booleanParameterNames.Add(paramName);
+            return this;
+        }
 
         public override string ToString()
         {
@@ -235,7 +245,17 @@ namespace Nop.Web.Framework.UI.Paging
 
 			foreach (var key in viewContext.RequestContext.HttpContext.Request.QueryString.AllKeys.Where(key => key != null))
 			{
-				routeValues[key] = viewContext.RequestContext.HttpContext.Request.QueryString[key];
+                var value = viewContext.RequestContext.HttpContext.Request.QueryString[key];
+                if (booleanParameterNames.Contains(key, StringComparer.InvariantCultureIgnoreCase))
+                {
+                    //little hack here due to ugly MVC implementation
+                    //find more info here: http://www.mindstorminteractive.com/blog/topics/jquery-fix-asp-net-mvc-checkbox-truefalse-value/
+                    if (!String.IsNullOrEmpty(value) && value.Equals("true,false", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        value = "true";
+                    }
+                }
+				routeValues[key] = value;
 			}
 
 			routeValues[pageQueryName] = pageNumber;
