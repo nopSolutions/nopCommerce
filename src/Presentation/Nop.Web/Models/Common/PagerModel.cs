@@ -422,7 +422,7 @@ namespace Nop.Web.Models
     /// <summary>
     /// Class that has search options for route values. Used for Search result pagination
     /// </summary>
-    public class SearchRouteValues : IRouteValues
+    public class ForumSearchRouteValues : IRouteValues
     {
         public string searchterms { get; set; }
         public string adv { get; set; }
