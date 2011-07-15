@@ -12,7 +12,7 @@ namespace Nop.Web.Models.Catalog
             PictureModel = new PictureModel();
             FeaturedProducts = new List<ProductModel>();
             Products = new List<ProductModel>();
-            PagingFilteringContext = new PagingFilteringModel();
+            PagingFilteringContext = new CatalogPagingFilteringModel();
             AvailableSortOptions = new List<SelectListItem>();
             AvailableViewModes = new List<SelectListItem>();
         }
@@ -32,7 +32,7 @@ namespace Nop.Web.Models.Catalog
 
         public PictureModel PictureModel { get; set; }
 
-        public PagingFilteringModel PagingFilteringContext { get; set; }
+        public CatalogPagingFilteringModel PagingFilteringContext { get; set; }
         public bool AllowProductFiltering { get; set; }
         public IList<SelectListItem> AvailableSortOptions { get; set; }
         public bool AllowProductViewModeChanging { get; set; }

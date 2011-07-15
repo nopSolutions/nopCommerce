@@ -8,12 +8,16 @@ using Nop.Core.Domain.Forums;
 using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
 using Nop.Services.Seo;
+using Nop.Web.Framework.UI.Paging;
 using Nop.Web.Models;
 
 namespace Nop.Web
 {
     public static class PagerHtmlExtension
     {
+        //we have two pagers:
+        //The first one can have custom routes
+        //The second one just addeds query string parameter
         public static MvcHtmlString Pager<TModel>(this HtmlHelper<TModel> html, PagerModel model)
         {
             var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
@@ -148,7 +152,6 @@ namespace Nop.Web
             }
             return MvcHtmlString.Create(links.ToString());
         }
-
         public static MvcHtmlString Pager<TModel>(this HtmlHelper<TModel> html, PagedList<ForumPost> model)
         {
             var localizationService= EngineContext.Current.Resolve<ILocalizationService>();
@@ -197,6 +200,23 @@ namespace Nop.Web
                 return MvcHtmlString.Create(String.Format(localizationService.GetResource("Forum.Topics.GotoPostPager"), links.ToString()));
             }
             return MvcHtmlString.Create(string.Empty);
+        }
+
+        public static Pager Pager(this HtmlHelper helper, IPageableModel pagination)
+        {
+            return new Pager(pagination, helper.ViewContext);
+        }
+        public static Pager Pager(this HtmlHelper helper, string viewDataKey)
+        {
+            var dataSource = helper.ViewContext.ViewData.Eval(viewDataKey) as IPageableModel;
+
+            if (dataSource == null)
+            {
+                throw new InvalidOperationException(string.Format("Item in ViewData with key '{0}' is not an IPagination.",
+                                                                  viewDataKey));
+            }
+
+            return helper.Pager(dataSource);
         }
     }
 }

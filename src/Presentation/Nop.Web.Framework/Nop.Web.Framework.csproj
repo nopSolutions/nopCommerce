@@ -135,6 +135,9 @@
     <Compile Include="UI\NotifyType.cs" />
     <Compile Include="UI\PageTitleBuilder.cs" />
     <Compile Include="UI\DataListExtensions.cs" />
+    <Compile Include="UI\Paging\BasePageableModel.cs" />
+    <Compile Include="UI\Paging\IPageableModel.cs" />
+    <Compile Include="UI\Paging\Pager.cs" />
     <Compile Include="Validators\ValidatorExtensions .cs" />
     <Compile Include="Validators\CreditCardPropertyValidator.cs" />
     <Compile Include="ViewEngines\Razor\WebViewPage.cs" />

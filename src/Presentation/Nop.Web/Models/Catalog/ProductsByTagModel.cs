@@ -9,14 +9,14 @@ namespace Nop.Web.Models.Catalog
         public ProductsByTagModel()
         {
             Products = new List<ProductModel>();
-            PagingFilteringContext = new PagingFilteringModel();
+            PagingFilteringContext = new CatalogPagingFilteringModel();
             AvailableSortOptions = new List<SelectListItem>();
             AvailableViewModes = new List<SelectListItem>();
         }
 
         public string TagName { get; set; }
 
-        public PagingFilteringModel PagingFilteringContext { get; set; }
+        public CatalogPagingFilteringModel PagingFilteringContext { get; set; }
         public bool AllowProductFiltering { get; set; }
         public IList<SelectListItem> AvailableSortOptions { get; set; }
         public bool AllowProductViewModeChanging { get; set; }

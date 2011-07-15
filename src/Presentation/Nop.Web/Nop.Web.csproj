@@ -197,7 +197,7 @@
     <Compile Include="Models\Common\HeaderLinksModel.cs" />
     <Compile Include="Models\Common\LanguageModel.cs" />
     <Compile Include="Models\Common\StoreThemeSelectorModel.cs" />
-    <Compile Include="Models\Catalog\PagingFilteringModel.cs" />
+    <Compile Include="Models\Catalog\CatalogPagingFilteringModel.cs" />
     <Compile Include="Models\Media\PictureModel.cs" />
     <Compile Include="Models\Order\SubmitReturnRequestModel.cs" />
     <Compile Include="Models\Order\OrderDetailsModel.cs" />

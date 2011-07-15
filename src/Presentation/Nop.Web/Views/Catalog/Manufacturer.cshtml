@@ -5,10 +5,9 @@
     Html.AddMetaDescriptionParts(Model.MetaDescription);
     Html.AddMetaKeywordParts(Model.MetaKeywords);
 }
-@using MvcContrib.UI.Pager;
-@using MvcContrib.Pagination;
 @using Nop.Core;
 @using Nop.Core.Infrastructure;
+@using Nop.Web;
 @using Nop.Web.Framework.UI;
 @using Nop.Web.Models.Catalog;
 <div class="manufacturer-page">
@@ -119,6 +118,8 @@
             </div>  
     
     @*TODO allow customer to select page size*@
-    @*pager*@
-    @MvcHtmlString.Create(Html.Pager(Model.PagingFilteringContext as MvcContrib.Pagination.IPagination).QueryParam("pageNumber").ToString())
+    
+    <div class="pager">
+    @MvcHtmlString.Create(Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber").ToString())
+    </div>
 </div>

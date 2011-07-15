@@ -961,6 +961,35 @@ ul.languagelist li:hover
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
 
+	PAGER
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+.pager
+{
+	text-align: center;
+}
+
+.pager a
+{
+	font-size: 1em;
+}
+
+.pager a:link
+{
+	text-align: center;
+	color: #555;
+}
+
+.pager span
+{
+	color: #ff9933;
+	font-size: 1.2em;
+	font-weight: bold;
+}
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
+
 	NAVIGATIONS
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -2375,29 +2404,6 @@ ul.languagelist li:hover
 	PAGES
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-
-.category-page .product-pager, .manufacturer-page .product-pager, .producttag-page .product-pager
-{
-	text-align: center;
-}
-
-.category-page .product-pager a, .manufacturer-page .product-pager a, .producttag-page .product-pager a
-{
-	font-size: 1em;
-}
-
-.category-page .product-pager a:link, .manufacturer-page .product-pager a:link, .producttag-page .product-pager a:link
-{
-	text-align: center;
-	color: #555;
-}
-
-.category-page .product-pager span, .manufacturer-page .product-pager span, .producttag-page .product-pager span
-{
-	color: #ff9933;
-	font-size: 1.3em;
-	font-weight: bold;
-}
 
 .category-page, .manufacturer-page, .manufacturerlist-page, .producttag-page
 {
@@ -4446,7 +4452,8 @@ ul.languagelist li:hover
 	background: #eeeeee;
 	vertical-align: middle;
 }
- .pmgridpagerstyle span, .latestpostsgridpagerstyle span, .pager span, .fsgridpagerstyle span
+
+.pmgridpagerstyle span, .latestpostsgridpagerstyle span, .fsgridpagerstyle span
  {
 	font-weight: bold;
 	font-size: 1.1em;
@@ -4854,18 +4861,6 @@ ul.languagelist li:hover
 	padding: 5px 3px 5px 0;
 }
 
-.forum .pager a:link
-{
-	color: #555;
-}
-
-.forum .pager span
-{
-	color: #ff9933;
-	font-size: 1.2em;
-	font-weight: bold;
-}
-
 .active-rss, .forum-rss
 {
 	background: url(images/icon_rss.gif) no-repeat;
@@ -5003,9 +4998,6 @@ ul.languagelist li:hover
 {
 	float: left;
 	font-size: 12px;
-	height: 28px;
-	overflow: hidden;
-	width: 670px;
 }
 
 .forumtopic .title .manage
@@ -5048,6 +5040,11 @@ ul.languagelist li:hover
 	background: #F3F3F3;
 	border-top: solid 1px #6a6a6a;
 	height: 16px;
+}
+
+.forumtopic .pager, .topicfooter .pager
+{
+     text-align: left;
 }
 
 .forumpost
@@ -5364,17 +5361,6 @@ ul.languagelist li:hover
 	padding: 5px 3px 5px 0;
 }
 
-.forumsearch .pager a:link, .pager a:link
-{
-	color: #555;
-}
-
-.forumsearch .pager span
-{
-	color: #ff9933;
-	font-size: 1.2em;
-	font-weight: bold;
-}
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
 
 	PROFILE PAGE
@@ -5623,6 +5609,11 @@ ul.languagelist li:hover
 }
 
 .activediscussions table.topics tr.topic td.topicname .topicstarter
+{
+	font-size: 0.9em;
+	color: #555;
+}
+.activediscussions table.topics tr.topic td.topicname .topicspager
 {
 	font-size: 0.9em;
 	color: #555;

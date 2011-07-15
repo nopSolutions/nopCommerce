@@ -1,5 +1,5 @@
 ﻿@model Nop.Web.Models.Blogs.BlogPostListModel
-@using MvcContrib.UI.Pager;
+@using Nop.Web;
 @{
     Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
 
@@ -86,6 +86,6 @@
     </div>
     <div class="pager">
         @*pager*@
-        @MvcHtmlString.Create(Html.Pager(Model.PagingFilteringContext as MvcContrib.Pagination.IPagination).QueryParam("pageNumber").ToString())
+        @MvcHtmlString.Create(Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber").ToString())
     </div>
 </div>

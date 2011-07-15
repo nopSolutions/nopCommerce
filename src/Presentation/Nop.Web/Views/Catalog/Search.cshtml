@@ -5,10 +5,9 @@
     //title
     Html.AddTitleParts(T("PageTitle.Search").Text);
 }
-@using MvcContrib.UI.Pager;
-@using MvcContrib.Pagination;
 @using Nop.Core;
 @using Nop.Core.Infrastructure;
+@using Nop.Web;
 @using Nop.Web.Framework;
 @using Nop.Web.Framework.UI;
 @using Nop.Web.Models.Catalog;
@@ -47,7 +46,7 @@
                         @Html.LabelFor(model => model.Q):
                     </td>
                     <td class="data">
-                        @Html.TextBoxFor(model => model.Q, new {@class ="searchtext" })
+                        @Html.TextBoxFor(model => model.Q, new { @class = "searchtext" })
                     </td>
                 </tr>
                 <tr>
@@ -138,8 +137,7 @@
         <div class="clear">
         </div>
         <div class="pager">
-            @*pager*@
-            @MvcHtmlString.Create(Html.Pager(Model.PagingFilteringContext as MvcContrib.Pagination.IPagination).QueryParam("pageNumber").ToString())
+            @MvcHtmlString.Create(Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber").ToString())
         </div>
     </div>
 }

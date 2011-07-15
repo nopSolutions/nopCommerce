@@ -1,9 +1,9 @@
-﻿@model PagingFilteringModel.PriceRangeFilterModel
+﻿@model CatalogPagingFilteringModel.PriceRangeFilterModel
 @using Nop.Web.Models.Catalog
 @{
     var selectedItem = Model.Items.Where(x => x.Selected).FirstOrDefault();
 }
-@helper FormatPriceRangeText(PagingFilteringModel.PriceRangeFilterItem filterItem)
+@helper FormatPriceRangeText(CatalogPagingFilteringModel.PriceRangeFilterItem filterItem)
     {
     string rangeText = "";
     if (String.IsNullOrWhiteSpace(filterItem.From))

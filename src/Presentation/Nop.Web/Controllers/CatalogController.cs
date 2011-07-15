@@ -639,7 +639,7 @@ namespace Nop.Web.Controllers
 
         #region Categories
 
-        public ActionResult Category(int categoryId, PagingFilteringModel command)
+        public ActionResult Category(int categoryId, CatalogPagingFilteringModel command)
         {
             var category = _categoryService.GetCategoryById(categoryId);
             if (category == null || category.Deleted || !category.Published)
@@ -809,7 +809,7 @@ namespace Nop.Web.Controllers
 
         #region Manufacturers
 
-        public ActionResult Manufacturer(int manufacturerId, PagingFilteringModel command)
+        public ActionResult Manufacturer(int manufacturerId, CatalogPagingFilteringModel command)
         {
             var manufacturer = _manufacturerService.GetManufacturerById(manufacturerId);
             if (manufacturer == null || manufacturer.Deleted || !manufacturer.Published)
@@ -1582,7 +1582,7 @@ namespace Nop.Web.Controllers
             return PartialView(model);
         }
 
-        public ActionResult ProductsByTag(int productTagId, PagingFilteringModel command)
+        public ActionResult ProductsByTag(int productTagId, CatalogPagingFilteringModel command)
         {
             var productTag = _productTagService.GetProductById(productTagId);
             if (productTag == null)
