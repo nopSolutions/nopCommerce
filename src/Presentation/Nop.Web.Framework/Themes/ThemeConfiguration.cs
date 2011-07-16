@@ -11,6 +11,7 @@ namespace Nop.Web.Framework.Themes
             var node = doc.SelectSingleNode("Theme");
             if (node != null)
             {
+                ConfigurationNode = node;
                 var attribute = node.Attributes["title"];
                 ThemeTitle = attribute == null ? string.Empty : attribute.Value;
                 attribute = node.Attributes["previewImageUrl"];
@@ -19,6 +20,8 @@ namespace Nop.Web.Framework.Themes
                 PreviewText = attribute == null ? string.Empty : attribute.Value;
             }
         }
+
+        public XmlNode ConfigurationNode { get; protected set; }
 
         public string Path { get; protected set; }
 
