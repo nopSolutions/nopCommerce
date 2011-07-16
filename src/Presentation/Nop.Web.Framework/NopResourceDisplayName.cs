@@ -7,24 +7,33 @@ namespace Nop.Web.Framework
 {
     public class NopResourceDisplayName : System.ComponentModel.DisplayNameAttribute, IModelAttribute
     {
+        private string _resourceValue = string.Empty;
+        private bool _resourceValueRetrived;
+
         public NopResourceDisplayName(string resourceKey)
-            : base(GetResource(resourceKey))
+            : base(resourceKey)
         {
             ResourceKey = resourceKey;
         }
 
         public string ResourceKey { get; set; }
 
-        private static string GetResource(string resourceKey)
+        public override string DisplayName
         {
-            var value = EngineContext.Current.Resolve<ILocalizationService>().GetResource(resourceKey,
+            get
+            {
+                if (!_resourceValueRetrived)
+                {
+                    _resourceValue = EngineContext.Current.Resolve<ILocalizationService>().GetResource(ResourceKey,
                                                                                      EngineContext.Current.Resolve
                                                                                          <IWorkContext>().
                                                                                          WorkingLanguage.Id, true,
-                                                                                     resourceKey);
-            return value;
+                                                                                     ResourceKey);
+                    _resourceValueRetrived = true;
+                }
+                return _resourceValue;
+            }
         }
-
 
         public string Name
         {
