@@ -68,6 +68,8 @@ namespace Nop.Plugin.Feed.PriceGrabber
 
         private static string RemoveSpecChars(string s)
         {
+            if (String.IsNullOrEmpty(s))
+                return s;
             s = s.Replace(';', ',');
             s = s.Replace('\r', ' ');
             s = s.Replace('\n', ' ');

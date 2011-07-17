@@ -31,9 +31,7 @@ namespace Nop.Services.Messages
         /// <returns>SMS provider list</returns>
         public virtual IList<ISmsProvider> LoadAllSmsProviders()
         {
-            //TODO Do not return plugin instances, return a list of PluginDescriptor
-            var smsProviders = _pluginFinder.GetPlugins<ISmsProvider>();
-            return smsProviders.ToList();
+            return _pluginFinder.GetPlugins<ISmsProvider>().ToList();
         }
 
         /// <summary>
@@ -43,9 +41,11 @@ namespace Nop.Services.Messages
         /// <returns>SMS provider</returns>
         public virtual ISmsProvider LoadSmsProviderBySystemName(string systemName)
         {
-            var providers = LoadAllSmsProviders();
-            var provider = providers.SingleOrDefault(p => p.PluginDescriptor.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
-            return provider;
+            var descriptor = _pluginFinder.GetPluginDescriptorBySystemName<ISmsProvider>(systemName);
+            if (descriptor != null)
+                return descriptor.Instance<ISmsProvider>();
+
+            return null;
         }
 
         /// <summary>

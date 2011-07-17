@@ -47,16 +47,18 @@ namespace Nop.Services.Common
                    .ToList();
         }
 
-       /// <summary>
+        /// <summary>
         /// Load live chat provider by system name
         /// </summary>
         /// <param name="systemName">System name</param>
         /// <returns>Found live chat provider</returns>
         public virtual ILiveChatProvider LoadLiveChatProviderBySystemName(string systemName)
         {
-            var providers = LoadAllLiveChatProviders();
-            var provider = providers.SingleOrDefault(p => p.PluginDescriptor.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
-            return provider;
+            var descriptor = _pluginFinder.GetPluginDescriptorBySystemName<ILiveChatProvider>(systemName);
+            if (descriptor != null)
+                return descriptor.Instance<ILiveChatProvider>();
+
+            return null;
         }
 
         /// <summary>
@@ -65,9 +67,7 @@ namespace Nop.Services.Common
         /// <returns>Live chat providers</returns>
         public virtual IList<ILiveChatProvider> LoadAllLiveChatProviders()
         {
-            //TODO Do not return plugin instances, return a list of PluginDescriptor
-            var providers = _pluginFinder.GetPlugins<ILiveChatProvider>();
-            return providers.ToList();
+            return _pluginFinder.GetPlugins<ILiveChatProvider>().ToList();
         }
         
         #endregion

@@ -53,9 +53,11 @@ namespace Nop.Services.Payments
         /// <returns>Found payment provider</returns>
         public virtual IPaymentMethod LoadPaymentMethodBySystemName(string systemName)
         {
-            var providers = LoadAllPaymentMethods();
-            var provider = providers.SingleOrDefault(p => p.PluginDescriptor.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
-            return provider;
+            var descriptor = _pluginFinder.GetPluginDescriptorBySystemName<IPaymentMethod>(systemName);
+            if (descriptor != null)
+                return descriptor.Instance<IPaymentMethod>();
+
+            return null;
         }
 
         /// <summary>
@@ -64,9 +66,7 @@ namespace Nop.Services.Payments
         /// <returns>Payment providers</returns>
         public virtual IList<IPaymentMethod> LoadAllPaymentMethods()
         {
-            //TODO Do not return plugin instances, return a list of PluginDescriptor
-            var providers = _pluginFinder.GetPlugins<IPaymentMethod>();
-            return providers.ToList();
+            return _pluginFinder.GetPlugins<IPaymentMethod>().ToList();
         }
 
 

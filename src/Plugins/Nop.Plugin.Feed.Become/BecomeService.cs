@@ -69,6 +69,9 @@ namespace Nop.Plugin.Feed.Become
 
         private static string RemoveSpecChars(string s)
         {
+            if (String.IsNullOrEmpty(s))
+                return s;
+
             s = s.Replace(';', ',');
             s = s.Replace('\r', ' ');
             s = s.Replace('\n', ' ');

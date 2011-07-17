@@ -92,9 +92,11 @@ namespace Nop.Services.Shipping
         /// <returns>Found Shipping rate computation method</returns>
         public virtual IShippingRateComputationMethod LoadShippingRateComputationMethodBySystemName(string systemName)
         {
-            var providers = LoadAllShippingRateComputationMethods();
-            var provider = providers.SingleOrDefault(p => p.PluginDescriptor.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
-            return provider;
+            var descriptor = _pluginFinder.GetPluginDescriptorBySystemName<IShippingRateComputationMethod>(systemName);
+            if (descriptor != null)
+                return descriptor.Instance<IShippingRateComputationMethod>();
+
+            return null;
         }
 
         /// <summary>
@@ -103,9 +105,7 @@ namespace Nop.Services.Shipping
         /// <returns>Shipping rate computation methods</returns>
         public virtual IList<IShippingRateComputationMethod> LoadAllShippingRateComputationMethods()
         {
-            //TODO Do not return plugin instances, return a list of PluginDescriptor
-            var providers = _pluginFinder.GetPlugins<IShippingRateComputationMethod>();
-            return providers.ToList();
+            return _pluginFinder.GetPlugins<IShippingRateComputationMethod>().ToList();
         }
 
         #endregion

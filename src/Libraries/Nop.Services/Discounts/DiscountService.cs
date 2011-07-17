@@ -227,9 +227,11 @@ namespace Nop.Services.Discounts
         /// <returns>Found discount requirement rule</returns>
         public virtual IDiscountRequirementRule LoadDiscountRequirementRuleBySystemName(string systemName)
         {
-            var rules = LoadAllDiscountRequirementRules();
-            var rule = rules.SingleOrDefault(r => r.PluginDescriptor.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
-            return rule;
+            var descriptor = _pluginFinder.GetPluginDescriptorBySystemName<IDiscountRequirementRule>(systemName);
+            if (descriptor != null)
+                return descriptor.Instance<IDiscountRequirementRule>();
+
+            return null;
         }
 
         /// <summary>
@@ -238,7 +240,6 @@ namespace Nop.Services.Discounts
         /// <returns>Discount requirement rules</returns>
         public virtual IList<IDiscountRequirementRule> LoadAllDiscountRequirementRules()
         {
-            //TODO Do not return plugin instances, return a list of PluginDescriptor
             var rules = _pluginFinder.GetPlugins<IDiscountRequirementRule>();
             return rules.ToList();
         }

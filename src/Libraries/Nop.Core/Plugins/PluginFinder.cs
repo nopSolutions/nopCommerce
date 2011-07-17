@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Infrastructure;
 using Nop.Core.Infrastructure.DependencyManagement;
@@ -47,6 +48,18 @@ namespace Nop.Core.Plugins
                 if (typeof(T).IsAssignableFrom(plugin.PluginType))
                     if (!installedOnly || plugin.Installed)
                         yield return plugin;
+        }
+
+        public virtual PluginDescriptor GetPluginDescriptorBySystemName(string systemName, bool installedOnly = true)
+        {
+            return GetPluginDescriptors(installedOnly)
+                .SingleOrDefault(p => p.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
+        }
+
+        public virtual PluginDescriptor GetPluginDescriptorBySystemName<T>(string systemName, bool installedOnly = true) where T : class, IPlugin
+        {
+            return GetPluginDescriptors<T>(installedOnly)
+                .SingleOrDefault(p => p.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
         }
 
         /// <summary>

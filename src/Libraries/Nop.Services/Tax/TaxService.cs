@@ -162,9 +162,11 @@ namespace Nop.Services.Tax
         /// <returns>Found tax provider</returns>
         public virtual ITaxProvider LoadTaxProviderBySystemName(string systemName)
         {
-            var providers = LoadAllTaxProviders();
-            var provider = providers.SingleOrDefault(p => p.PluginDescriptor.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
-            return provider;
+            var descriptor = _pluginFinder.GetPluginDescriptorBySystemName<ITaxProvider>(systemName);
+            if (descriptor != null)
+                return descriptor.Instance<ITaxProvider>();
+
+            return null;
         }
 
         /// <summary>
@@ -173,9 +175,7 @@ namespace Nop.Services.Tax
         /// <returns>Tax providers</returns>
         public virtual IList<ITaxProvider> LoadAllTaxProviders()
         {
-            //TODO Do not return plugin instances, return a list of PluginDescriptor
-            var taxProviders = _pluginFinder.GetPlugins<ITaxProvider>();
-            return taxProviders.ToList();
+            return _pluginFinder.GetPlugins<ITaxProvider>().ToList();
         }
 
 

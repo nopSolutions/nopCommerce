@@ -287,9 +287,11 @@ namespace Nop.Services.Directory
         /// <returns>Found exchange rate provider</returns>
         public virtual IExchangeRateProvider LoadExchangeRateProviderBySystemName(string systemName)
         {
-            var providers = LoadAllExchangeRateProviders();
-            var provider = providers.SingleOrDefault(p => p.PluginDescriptor.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
-            return provider;
+            var descriptor = _pluginFinder.GetPluginDescriptorBySystemName<IExchangeRateProvider>(systemName);
+            if (descriptor != null)
+                return descriptor.Instance<IExchangeRateProvider>();
+
+            return null;
         }
 
         /// <summary>
@@ -298,7 +300,6 @@ namespace Nop.Services.Directory
         /// <returns>Exchange rate providers</returns>
         public virtual IList<IExchangeRateProvider> LoadAllExchangeRateProviders()
         {
-            //TODO Do not return plugin instances, return a list of PluginDescriptor
             var exchangeRateProviders = _pluginFinder.GetPlugins<IExchangeRateProvider>();
             return exchangeRateProviders
                 .OrderBy(tp => tp.PluginDescriptor)

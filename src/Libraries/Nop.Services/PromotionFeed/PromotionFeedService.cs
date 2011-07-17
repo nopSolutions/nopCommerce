@@ -37,9 +37,11 @@ namespace Nop.Services.PromotionFeed
         /// <returns>Found promotion feed</returns>
         public virtual IPromotionFeed LoadPromotionFeedBySystemName(string systemName)
         {
-            var providers = LoadAllPromotionFeeds();
-            var provider = providers.SingleOrDefault(p => p.PluginDescriptor.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
-            return provider;
+            var descriptor = _pluginFinder.GetPluginDescriptorBySystemName<IPromotionFeed>(systemName);
+            if (descriptor != null)
+                return descriptor.Instance<IPromotionFeed>();
+
+            return null;
         }
 
         /// <summary>
@@ -48,7 +50,6 @@ namespace Nop.Services.PromotionFeed
         /// <returns>Promotion feeds</returns>
         public virtual IList<IPromotionFeed> LoadAllPromotionFeeds()
         {
-            //TODO Do not return plugin instances, return a list of PluginDescriptor
             var providers = _pluginFinder.GetPlugins<IPromotionFeed>();
             return providers.ToList();
         }
