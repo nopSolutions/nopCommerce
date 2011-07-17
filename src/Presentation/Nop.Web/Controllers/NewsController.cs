@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.ServiceModel.Syndication;
 using System.Text;
 using System.Web.Mvc;
 using System.Xml;
@@ -16,6 +18,7 @@ using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.News;
 using Nop.Services.Seo;
+using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Models.News;
 
@@ -173,58 +176,26 @@ namespace Nop.Web.Controllers
 
         public ActionResult ListRss(int languageId)
         {
-            if (!_newsSettings.Enabled)
-                return Content("");
+            var feed = new SyndicationFeed(
+                                    string.Format("{0}: News", _storeInformationSettings.StoreName),
+                                    "News",
+                                    new Uri(_webHelper.GetStoreLocation(false)),
+                                    "NewsRSS",
+                                    DateTime.UtcNow);
 
+            if (!_newsSettings.Enabled)
+                return new RssActionResult() { Feed = feed };
+
+            var items = new List<SyndicationItem>();
             var newsItems = _newsService.GetAllNews(languageId,
                 null, null, 0, int.MaxValue);
-
-            var sb = new StringBuilder();
-            var settings = new XmlWriterSettings
+            foreach (var n in newsItems)
             {
-                Encoding = Encoding.UTF8
-            };
-            using (var writer = XmlWriter.Create(sb, settings))
-            {
-                writer.WriteStartDocument();
-                writer.WriteStartElement("rss");
-                writer.WriteAttributeString("version", "2.0");
-                writer.WriteStartElement("channel");
-                writer.WriteElementString("title", string.Format("{0}: News", _storeInformationSettings.StoreName));
-                writer.WriteElementString("link", _webHelper.GetStoreLocation(false));
-                writer.WriteElementString("description", "Information about products");
-                writer.WriteElementString("copyright", string.Format("Copyright {0} by {1}", DateTime.Now.Year, _storeInformationSettings.StoreName));
-
-                foreach (var n in newsItems)
-                {
-                    writer.WriteStartElement("item");
-
-                    writer.WriteStartElement("title");
-                    writer.WriteCData(n.Title);
-                    writer.WriteEndElement(); // title
-                    writer.WriteStartElement("author");
-                    writer.WriteCData(_storeInformationSettings.StoreName);
-                    writer.WriteEndElement(); // author
-                    writer.WriteStartElement("description");
-                    writer.WriteCData(n.Short);
-                    writer.WriteEndElement(); // description
-                    writer.WriteStartElement("link");
-                    writer.WriteCData(Url.RouteUrl("NewsItem", new { newsItemId = n.Id, SeName = n.GetSeName() }, "http"));
-                    writer.WriteEndElement(); // link
-                    writer.WriteStartElement("pubDate");
-                    writer.WriteCData(string.Format("{0:R}", _dateTimeHelper.ConvertToUserTime(n.CreatedOnUtc, DateTimeKind.Utc)));
-                    writer.WriteEndElement(); // pubDate
-
-
-                    writer.WriteEndElement(); // item
-                }
-
-                writer.WriteEndElement(); // channel
-                writer.WriteEndElement(); // rss
-                writer.WriteEndDocument();
+                string newsUrl = Url.RouteUrl("NewsItem", new { newsItemId = n.Id, SeName = n.GetSeName() }, "http");
+                items.Add(new SyndicationItem(n.Title, n.Short, new Uri(newsUrl), String.Format("Blog:{0}", n.Id), n.CreatedOnUtc));
             }
-
-            return this.Content(sb.ToString(), "text/xml");
+            feed.Items = items;
+            return new RssActionResult() { Feed = feed };
         }
 
         public ActionResult NewsItem(int newsItemId)

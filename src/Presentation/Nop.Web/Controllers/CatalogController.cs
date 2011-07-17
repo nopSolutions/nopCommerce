@@ -22,9 +22,11 @@ using Nop.Services.Orders;
 using Nop.Services.Seo;
 using Nop.Services.Tax;
 using Nop.Web.Extensions;
+using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Models.Catalog;
 using Nop.Web.Models.Media;
+using System.ServiceModel.Syndication;
 
 namespace Nop.Web.Controllers
 {
@@ -1421,61 +1423,27 @@ namespace Nop.Web.Controllers
 
         public ActionResult RecentlyAddedProductsRss()
         {
-            if (_catalogSettings.RecentlyAddedProductsEnabled)
+            var feed = new SyndicationFeed(
+                                    string.Format("{0}: Recently added products", _storeInformationSettings.StoreName),
+                                    "Information about products",
+                                    new Uri(_webHelper.GetStoreLocation(false)),
+                                    "RecentlyAddedProductsRSS",
+                                    DateTime.UtcNow);
+
+            if (!_catalogSettings.RecentlyAddedProductsEnabled)
+                return new RssActionResult() { Feed = feed };
+            
+            var items = new List<SyndicationItem>();
+            var products = _productService.SearchProducts(0, 0, null, null,
+                null, 0, 0, null, false, _workContext.WorkingLanguage.Id,
+                null, ProductSortingEnum.CreatedOn, 0, _catalogSettings.RecentlyAddedProductsNumber);
+            foreach (var product in products)
             {
-                var products = _productService.SearchProducts(0, 0, null, null,
-                    null, 0, 0, null, false, _workContext.WorkingLanguage.Id,
-                    null, ProductSortingEnum.CreatedOn, 0, _catalogSettings.RecentlyAddedProductsNumber);
-                
-                var sb = new StringBuilder();
-                var settings = new XmlWriterSettings
-                {
-                    Encoding = Encoding.UTF8
-                };
-                using (var writer = XmlWriter.Create(sb, settings))
-                {
-                    writer.WriteStartDocument();
-                    writer.WriteStartElement("rss");
-                    writer.WriteAttributeString("version", "2.0");
-                    writer.WriteStartElement("channel");
-                    writer.WriteElementString("title", string.Format("{0}: Recently added products", _storeInformationSettings.StoreName));
-                    writer.WriteElementString("link", _webHelper.GetStoreLocation(false));
-                    writer.WriteElementString("description", "Information about products");
-                    writer.WriteElementString("copyright", string.Format("Copyright {0} by {1}", DateTime.Now.Year, _storeInformationSettings.StoreName));
-
-                    foreach (var product in products)
-                    {
-                        writer.WriteStartElement("item");
-                        
-                        writer.WriteStartElement("title");
-                        writer.WriteCData(product.GetLocalized(x => x.Name));
-                        writer.WriteEndElement(); // title
-                        writer.WriteStartElement("author");
-                        writer.WriteCData(_storeInformationSettings.StoreName);
-                        writer.WriteEndElement(); // author
-                        writer.WriteStartElement("description");
-                        writer.WriteCData(product.GetLocalized(x => x.ShortDescription));
-                        writer.WriteEndElement(); // description
-                        writer.WriteStartElement("link");
-                        writer.WriteCData(Url.RouteUrl("Product", new { productId = product.Id, SeName = product.GetSeName() }, "http"));
-                        writer.WriteEndElement(); // link
-                        writer.WriteStartElement("pubDate");
-                        writer.WriteCData(string.Format("{0:R}", _dateTimeHelper.ConvertToUserTime(product.CreatedOnUtc, DateTimeKind.Utc)));
-                        writer.WriteEndElement(); // pubDate
-
-
-                        writer.WriteEndElement(); // item
-                    }
-
-                    writer.WriteEndElement(); // channel
-                    writer.WriteEndElement(); // rss
-                    writer.WriteEndDocument();
-                }
-
-                return this.Content(sb.ToString(), "text/xml");
+                string productUrl = Url.RouteUrl("Product", new { productId = product.Id, SeName = product.GetSeName() }, "http");
+                items.Add(new SyndicationItem(product.GetLocalized(x => x.Name), product.GetLocalized(x => x.ShortDescription), new Uri(productUrl), String.Format("RecentlyAddedProduct:{0}", product.Id), product.CreatedOnUtc));
             }
-
-            return Content("");
+            feed.Items = items;
+            return new RssActionResult() { Feed = feed };
         }
 
         [ChildActionOnly]

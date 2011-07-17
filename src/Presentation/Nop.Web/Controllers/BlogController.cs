@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.ServiceModel.Syndication;
 using System.Text;
 using System.Web.Mvc;
 using System.Xml;
@@ -17,6 +18,7 @@ using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.Seo;
+using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Models.Blogs;
 
@@ -163,58 +165,26 @@ namespace Nop.Web.Controllers
 
         public ActionResult ListRss(int languageId)
         {
-            if (!_blogSettings.Enabled)
-                return Content("");
+            var feed = new SyndicationFeed(
+                                    string.Format("{0}: Blog", _storeInformationSettings.StoreName),
+                                    "Blog",
+                                    new Uri(_webHelper.GetStoreLocation(false)),
+                                    "BlogRSS",
+                                    DateTime.UtcNow);
 
+            if (!_blogSettings.Enabled)
+                return new RssActionResult() { Feed = feed };
+
+            var items = new List<SyndicationItem>();
             var blogPosts = _blogService.GetAllBlogPosts(languageId,
                 null, null, 0, int.MaxValue);
-
-            var sb = new StringBuilder();
-            var settings = new XmlWriterSettings
+            foreach (var blogPost in blogPosts)
             {
-                Encoding = Encoding.UTF8
-            };
-            using (var writer = XmlWriter.Create(sb, settings))
-            {
-                writer.WriteStartDocument();
-                writer.WriteStartElement("rss");
-                writer.WriteAttributeString("version", "2.0");
-                writer.WriteStartElement("channel");
-                writer.WriteElementString("title", string.Format("{0}: Blog", _storeInformationSettings.StoreName));
-                writer.WriteElementString("link", _webHelper.GetStoreLocation(false));
-                writer.WriteElementString("description", "Information about products");
-                writer.WriteElementString("copyright", string.Format("Copyright {0} by {1}", DateTime.Now.Year, _storeInformationSettings.StoreName));
-
-                foreach (var blogPost in blogPosts)
-                {
-                    writer.WriteStartElement("item");
-
-                    writer.WriteStartElement("title");
-                    writer.WriteCData(blogPost.Title);
-                    writer.WriteEndElement(); // title
-                    writer.WriteStartElement("author");
-                    writer.WriteCData(_storeInformationSettings.StoreName);
-                    writer.WriteEndElement(); // author
-                    writer.WriteStartElement("description");
-                    writer.WriteCData(blogPost.Body);
-                    writer.WriteEndElement(); // description
-                    writer.WriteStartElement("link");
-                    writer.WriteCData(Url.RouteUrl("BlogPost", new { blogPostId = blogPost.Id, SeName = blogPost.GetSeName() }, "http"));
-                    writer.WriteEndElement(); // link
-                    writer.WriteStartElement("pubDate");
-                    writer.WriteCData(string.Format("{0:R}", _dateTimeHelper.ConvertToUserTime(blogPost.CreatedOnUtc, DateTimeKind.Utc)));
-                    writer.WriteEndElement(); // pubDate
-
-
-                    writer.WriteEndElement(); // item
-                }
-
-                writer.WriteEndElement(); // channel
-                writer.WriteEndElement(); // rss
-                writer.WriteEndDocument();
+                string topicUrl = Url.RouteUrl("BlogPost", new { blogPostId = blogPost.Id, SeName = blogPost.GetSeName() }, "http");
+                items.Add(new SyndicationItem(blogPost.Title, blogPost.Body, new Uri(topicUrl), String.Format("Blog:{0}", blogPost.Id), blogPost.CreatedOnUtc));
             }
-
-            return this.Content(sb.ToString(), "text/xml");
+            feed.Items = items;
+            return new RssActionResult() { Feed = feed };
         }
 
         public ActionResult BlogPost(int blogPostId)
