@@ -1,5 +1,6 @@
 ﻿@model Nop.Web.Models.Customer.RegisterModel
 @using Nop.Web.Framework;
+@using Nop.Web.Framework.UI.Captcha;
 @{
     Layout = "~/Views/Shared/_ColumnsThree.cshtml";
 
@@ -245,11 +246,14 @@
                                 @Html.ValidationMessageFor(model => model.ConfirmPassword)
                             </td>
                         </tr>
-                        @*<tr class="row">
-                                        <td colspan="2">
-                                            TODO add Captcha (if enabled)
-                                        </td>
-                                    </tr>*@
+                        @if (Model.DisplayCaptcha)
+                        {
+                        <tr class="row">
+                            <td colspan="2">
+                                @Html.Raw(Html.GenerateCaptcha())
+                            </td>
+                        </tr>
+                        }
                     </tbody>
                 </table>
             </div>

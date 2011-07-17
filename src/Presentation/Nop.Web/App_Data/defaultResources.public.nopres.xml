@@ -942,6 +942,9 @@
       <LocaleResource Name="Wait...">
         <Value>Wait...</Value>
       </LocaleResource>
+      <LocaleResource Name="WrongCaptcha">
+        <Value>The characters didn't match the picture. Please try again.</Value>
+      </LocaleResource>
       <LocaleResource Name="WrongEmail">
         <Value>Wrong email</Value>
       </LocaleResource>

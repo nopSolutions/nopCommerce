@@ -3762,6 +3762,30 @@
                           </LocaleResource>
                         </Children>
                       </LocaleResource>
+                      <LocaleResource Name="CaptchaEnabled">
+                        <Value>CAPTCHA enabled</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Check to enable CAPTCHA</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="reCaptchaPublicKey">
+                        <Value>reCAPTCHA public key</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Enter reCAPTCHA public key (if enabled)</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="reCaptchaPrivateKey">
+                        <Value>reCAPTCHA private key</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Enter reCAPTCHA private key (if enabled)</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
                     </Children>
                   </LocaleResource>
                   <LocaleResource Name="Media">

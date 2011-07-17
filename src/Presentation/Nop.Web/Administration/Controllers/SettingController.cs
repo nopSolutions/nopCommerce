@@ -34,6 +34,7 @@ using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Themes;
 using Telerik.Web.Mvc;
+using Nop.Web.Framework.UI.Captcha;
 
 namespace Nop.Admin.Controllers
 {
@@ -79,6 +80,7 @@ namespace Nop.Admin.Controllers
         private readonly LocalizationSettings _localizationSettings;
         private readonly GoogleAnalyticsSettings _googleAnalyticsSettings;
         private readonly AdminAreaSettings _adminAreaSettings;
+        private readonly CaptchaSettings _captchaSettings;
 
 		#endregion
 
@@ -102,7 +104,7 @@ namespace Nop.Admin.Controllers
             DateTimeSettings dateTimeSettings, StoreInformationSettings storeInformationSettings,
             SeoSettings seoSettings,SecuritySettings securitySettings, PdfSettings pdfSettings,
             LocalizationSettings localizationSettings, GoogleAnalyticsSettings googleAnalyticsSettings,
-            AdminAreaSettings adminAreaSettings)
+            AdminAreaSettings adminAreaSettings, CaptchaSettings captchaSettings)
         {
             this._settingService = settingService;
             this._countryService = countryService;
@@ -140,6 +142,7 @@ namespace Nop.Admin.Controllers
             this._localizationSettings = localizationSettings;
             this._googleAnalyticsSettings = googleAnalyticsSettings;
             this._adminAreaSettings = adminAreaSettings;
+            this._captchaSettings = captchaSettings;
         }
 
 		#endregion 
@@ -683,6 +686,9 @@ namespace Nop.Admin.Controllers
                     if (i != _securitySettings.AdminAreaAllowedIpAddresses.Count - 1)
                         model.SecuritySettings.AdminAreaAllowedIpAddresses += ",";
                 }
+            model.SecuritySettings.CaptchaEnabled = _captchaSettings.Enabled;
+            model.SecuritySettings.ReCaptchaPublicKey = _captchaSettings.ReCaptchaPublicKey;
+            model.SecuritySettings.ReCaptchaPrivateKey = _captchaSettings.ReCaptchaPrivateKey;
             
 
             //PDF settings
@@ -740,6 +746,11 @@ namespace Nop.Admin.Controllers
                     if (!String.IsNullOrWhiteSpace(s))
                         _securitySettings.AdminAreaAllowedIpAddresses.Add(s.Trim());
             _settingService.SaveSetting(_securitySettings);
+            _captchaSettings.Enabled = model.SecuritySettings.CaptchaEnabled;
+            _captchaSettings.ReCaptchaPublicKey = model.SecuritySettings.ReCaptchaPublicKey;
+            _captchaSettings.ReCaptchaPrivateKey = model.SecuritySettings.ReCaptchaPrivateKey;
+            _settingService.SaveSetting(_captchaSettings);
+
 
             //PDF settings
             _pdfSettings.Enabled = model.PdfSettings.Enabled;

@@ -80,6 +80,17 @@ namespace Nop.Admin.Models.Settings
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.AdminAreaAllowedIpAddresses")]
             [AllowHtml]
             public string AdminAreaAllowedIpAddresses { get; set; }
+
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.CaptchaEnabled")]
+            public bool CaptchaEnabled { get; set; }
+
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.reCaptchaPublicKey")]
+            [AllowHtml]
+            public string ReCaptchaPublicKey { get; set; }
+
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.reCaptchaPrivateKey")]
+            [AllowHtml]
+            public string ReCaptchaPrivateKey { get; set; }
         }
 
         public class PdfSettingsModel

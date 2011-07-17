@@ -49,6 +49,9 @@
     <Reference Include="FluentValidation">
       <HintPath>..\..\packages\FluentValidation.2.0.0.0\lib\NET35\FluentValidation.dll</HintPath>
     </Reference>
+    <Reference Include="Recaptcha">
+      <HintPath>..\..\packages\recaptcha.1.0.5.0\lib\.NetFramework 4.0\Recaptcha.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -127,6 +130,9 @@
     <Compile Include="Themes\ThemableRazorViewEngine.cs" />
     <Compile Include="Themes\ThemeProvider.cs" />
     <Compile Include="Themes\ThemeContext.cs" />
+    <Compile Include="UI\Captcha\CaptchaSettings.cs" />
+    <Compile Include="UI\Captcha\HtmlExtensions.cs" />
+    <Compile Include="UI\Captcha\CaptchaValidatorAttribute.cs" />
     <Compile Include="UI\LayoutExtensions.cs" />
     <Compile Include="UI\IPageTitleBuilder.cs" />
     <Compile Include="UI\NotifyType.cs" />

@@ -77,5 +77,7 @@ namespace Nop.Web.Models.Customer
         public string VatNumber { get; set; }
         public string VatNumberStatusNote { get; set; }
         public bool DisplayVatNumber { get; set; }
+
+        public bool DisplayCaptcha { get; set; }
     }
 }

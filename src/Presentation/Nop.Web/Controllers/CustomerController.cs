@@ -31,6 +31,7 @@ using Nop.Web.Framework.Security;
 using Nop.Web.Models;
 using Nop.Web.Models.Common;
 using Nop.Web.Models.Customer;
+using Nop.Web.Framework.UI.Captcha;
 
 namespace Nop.Web.Controllers
 {
@@ -65,6 +66,7 @@ namespace Nop.Web.Controllers
         private readonly MediaSettings _mediaSettings;
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly LocalizationSettings _localizationSettings;
+        private readonly CaptchaSettings _captchaSettings;
 
         #endregion
 
@@ -85,7 +87,8 @@ namespace Nop.Web.Controllers
             IPictureService pictureService, INewsLetterSubscriptionService newsLetterSubscriptionService,
             IForumService forumService, IShoppingCartService shoppingCartService,
             MediaSettings mediaSettings,
-            IWorkflowMessageService workflowMessageService, LocalizationSettings localizationSettings)
+            IWorkflowMessageService workflowMessageService, LocalizationSettings localizationSettings,
+            CaptchaSettings captchaSettings)
         {
             this._authenticationService = authenticationService;
             this._dateTimeHelper = dateTimeHelper;
@@ -115,6 +118,7 @@ namespace Nop.Web.Controllers
             this._mediaSettings = mediaSettings;
             this._workflowMessageService = workflowMessageService;
             this._localizationSettings = localizationSettings;
+            this._captchaSettings = captchaSettings;
         }
 
         #endregion
@@ -203,6 +207,7 @@ namespace Nop.Web.Controllers
             model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
             model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
             model.LocationEnabled = _customerSettings.ShowCustomersLocation;
+            model.DisplayCaptcha = _captchaSettings.Enabled;
             if (_customerSettings.ShowCustomersLocation)
             {
                 foreach (var c in _countryService.GetAllCountries())
@@ -215,13 +220,13 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult Register(RegisterModel model)
+        [CaptchaValidator]
+        public ActionResult Register(RegisterModel model, bool? captchaValid)
         {
             //check whether registration is allowed
             if (_customerSettings.UserRegistrationType == UserRegistrationType.Disabled)
                 return RedirectToAction("RegisterResult", new { resultId = (int)UserRegistrationType.Disabled });
-
-
+            
             if (_workContext.CurrentCustomer.IsRegistered())
             {
                 //Already registered customer. 
@@ -231,6 +236,11 @@ namespace Nop.Web.Controllers
                 _workContext.CurrentCustomer = _customerService.InsertGuestCustomer();
             }
             var customer = _workContext.CurrentCustomer;
+
+
+            if (captchaValid.HasValue && !captchaValid.Value)
+                ModelState.AddModelError("", _localizationService.GetResource("Common.WrongCaptcha"));
+
             if (ModelState.IsValid)
             {
                 bool isApproved = _customerSettings.UserRegistrationType == UserRegistrationType.Standard;
@@ -366,6 +376,8 @@ namespace Nop.Web.Controllers
             model.NewsletterEnabled = _customerSettings.NewsletterEnabled;
             model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
             model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
+            model.LocationEnabled = _customerSettings.ShowCustomersLocation;
+            model.DisplayCaptcha = _captchaSettings.Enabled;
             if (_customerSettings.ShowCustomersLocation)
             {
                 foreach (var c in _countryService.GetAllCountries())

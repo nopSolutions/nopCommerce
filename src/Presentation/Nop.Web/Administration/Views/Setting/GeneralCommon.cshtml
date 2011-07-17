@@ -214,6 +214,40 @@
                 @Html.ValidationMessageFor(model => model.SecuritySettings.AdminAreaAllowedIpAddresses)
             </td>
         </tr>
+        <tr>
+            <td colspan="2">
+                <hr />
+                <br />
+                A CAPTCHA is a program that can tell whether its user is a human or a computer. You've probably seen them — colorful images with distorted text at the bottom of Web registration forms. CAPTCHAs are used by many websites to prevent abuse from "bots," or automated programs usually written to generate spam. No computer program can read distorted text as well as humans can, so bots cannot navigate sites protected by CAPTCHAs. nopCommerce uses <a href="http://www.google.com/recaptcha" target="_blank">reCAPTCHA</a>.
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SecuritySettings.CaptchaEnabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SecuritySettings.CaptchaEnabled)
+                @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaEnabled)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SecuritySettings.ReCaptchaPublicKey):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SecuritySettings.ReCaptchaPublicKey)
+                @Html.ValidationMessageFor(model => model.SecuritySettings.ReCaptchaPublicKey)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SecuritySettings.ReCaptchaPrivateKey):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SecuritySettings.ReCaptchaPrivateKey)
+                @Html.ValidationMessageFor(model => model.SecuritySettings.ReCaptchaPrivateKey)
+            </td>
+        </tr>
     </table>
 }
 @helper TabPdfSettings()
