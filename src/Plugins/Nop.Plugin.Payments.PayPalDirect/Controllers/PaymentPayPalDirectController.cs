@@ -184,6 +184,7 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
             return paymentInfo;
         }
 
+        [ValidateInput(false)]
         public ActionResult IPNHandler()
         {
             byte[] param = Request.BinaryRead(Request.ContentLength);

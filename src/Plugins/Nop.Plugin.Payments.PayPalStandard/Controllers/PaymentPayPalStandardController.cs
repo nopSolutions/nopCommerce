@@ -102,6 +102,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             return paymentInfo;
         }
 
+        [ValidateInput(false)]
         public ActionResult PDTHandler(FormCollection form)
         {
             string tx = _webHelper.QueryString<string>("tx");
@@ -225,6 +226,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             }
         }
 
+        [ValidateInput(false)]
         public ActionResult IPNHandler()
         {
             byte[] param = Request.BinaryRead(Request.ContentLength);
