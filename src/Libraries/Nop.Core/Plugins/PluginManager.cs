@@ -49,9 +49,7 @@ namespace Nop.Core.Plugins
                 _shadowCopyFolder = new DirectoryInfo(HostingEnvironment.MapPath(_shadowCopyPath));
 
                 var referencedPlugins = new List<PluginDescriptor>();
-
-                var pluginFiles = Enumerable.Empty<FileInfo>();
-
+                
                 try
                 {
                     var installedPluginSystemNames = ParseInstalledPluginsFile();
@@ -91,7 +89,8 @@ namespace Nop.Core.Plugins
                                 .FirstOrDefault() != null;
                             
                             //get list of all DLLs in plugins (not in bin!)
-                            pluginFiles = descriptionFile.Directory.GetFiles("*.dll", SearchOption.AllDirectories)
+                            //var pluginFiles = Enumerable.Empty<FileInfo>();
+                            var pluginFiles = descriptionFile.Directory.GetFiles("*.dll", SearchOption.AllDirectories)
                                 //just make sure we're not registering shadow copied plugins
                                 .Where(x => !binFiles.Select(q => q.FullName).Contains(x.FullName))
                                 .Where(x => IsPackagePluginFolder(x.Directory))
@@ -103,10 +102,11 @@ namespace Nop.Core.Plugins
                             
                             //shadow copy files
                             description.ReferencedAssembly = PerformFileDeploy(mainPluginFile);
-                            //TODO uncomment code below in order to load all referenced assemblies
-                            //ensure that the same assemblies are not be loaded twice
-                            //foreach (var plugin in alreadyLoadedDomainFiles.Where(x => !x.Name.Equals(mainPluginFile.Name, StringComparison.InvariantCultureIgnoreCase)))
-                            //    PerformFileDeploy(plugin);
+
+                            //load all other assemblies now
+                            //TODO ensure that the same assembly will not be loaded twice
+                            foreach (var plugin in pluginFiles.Where(x => !x.Name.Equals(mainPluginFile.Name, StringComparison.InvariantCultureIgnoreCase)))
+                                PerformFileDeploy(plugin);
 
 
                             //init plugin type (only one plguin per assembly is allowed)

@@ -239,6 +239,18 @@ namespace Nop.Services.Orders
 
             _orderNoteRepository.Delete(orderNote);
         }
+
+        public virtual Order GetOrderByAuthorizationTransactionIdAndPaymentMethod(string authorizationTransactionId, 
+            string paymentMethodSystemName)
+        {
+            var query = from o in _orderRepository.Table
+                        orderby o.CreatedOnUtc descending
+                        where o.AuthorizationTransactionId == authorizationTransactionId &&
+                        o.PaymentMethodSystemName == paymentMethodSystemName
+                        select o;
+            var order = query.FirstOrDefault();
+            return order;
+        }
         
         #endregion
         

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<new-order-notification xmlns="http://checkout.google.com/schema/2" serial-number="723519039115672-00001-7">
+  <timestamp>2009-01-14T16:59:39.958Z</timestamp>
+  <shopping-cart>
+    <merchant-private-data>
+      
+      
+      <CustomerInfo CustomerID="1" CustomerLanguageID="7" CustomerCurrencyID="4" />
+      
+    
+    </merchant-private-data>
+    <items>
+      <item>
+        <item-name>Systemax Intel socket 775 Gaming PC</item-name>
+        <item-description></item-description>
+        <quantity>3</quantity>
+        <unit-price currency="GBP">1400.0</unit-price>
+        <merchant-item-id>93</merchant-item-id>
+      </item>
+      <item>
+        <item-name>Apple iPod Touch 32GB MP3/MP4 Player</item-name>
+        <item-description></item-description>
+        <quantity>1</quantity>
+        <unit-price currency="GBP">500.0</unit-price>
+        <merchant-item-id>96</merchant-item-id>
+      </item>
+      <item>
+        <item-name>Discount</item-name>
+        <item-description></item-description>
+        <quantity>1</quantity>
+        <unit-price currency="GBP">-470.0</unit-price>
+      </item>
+    </items>
+  </shopping-cart>
+  <order-adjustment>
+    <merchant-codes />
+    <total-tax currency="GBP">0.0</total-tax>
+    <shipping>
+      <flat-rate-shipping-adjustment>
+        <shipping-name>By Air</shipping-name>
+        <shipping-cost currency="GBP">611.0</shipping-cost>
+      </flat-rate-shipping-adjustment>
+    </shipping>
+    <adjustment-total currency="GBP">611.0</adjustment-total>
+  </order-adjustment>
+  <buyer-id>871308334455116</buyer-id>
+  <google-order-number>723519039115672</google-order-number>
+  <buyer-shipping-address>
+    <email>l.quick1983@gmail.com</email>
+    <company-name></company-name>
+    <contact-name>Cardholder name 1</contact-name>
+    <phone></phone>
+    <fax></fax>
+    <address1>1-ya Portovaya, 21 ,164</address1>
+    <address2></address2>
+    <country-code>GB</country-code>
+    <city>London</city>
+    <region>UNITED KINGDOM</region>
+    <postal-code>SW1A 0AA</postal-code>
+  </buyer-shipping-address>
+  <buyer-billing-address>
+    <email>l.quick1983@gmail.com</email>
+    <company-name></company-name>
+    <contact-name>Cardholder name 1</contact-name>
+    <phone></phone>
+    <fax></fax>
+    <address1>1-ya Portovaya, 21 ,164</address1>
+    <address2></address2>
+    <country-code>GB</country-code>
+    <city>London</city>
+    <region>UNITED KINGDOM</region>
+    <postal-code>SW1A 0AA</postal-code>
+  </buyer-billing-address>
+  <buyer-marketing-preferences>
+    <email-allowed>true</email-allowed>
+  </buyer-marketing-preferences>
+  <order-total currency="GBP">4841.0</order-total>
+  <fulfillment-order-state>NEW</fulfillment-order-state>
+  <financial-order-state>REVIEWING</financial-order-state>
+</new-order-notification>
+

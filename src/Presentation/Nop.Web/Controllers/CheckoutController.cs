@@ -516,11 +516,14 @@ namespace Nop.Web.Controllers
                     model.RewardPointsBalance = rewardPointsBalance;
                 }
             }
-            
-            var boundPaymentMethods = _paymentService.LoadActivePaymentMethods();
+
+            var boundPaymentMethods = _paymentService
+                .LoadActivePaymentMethods()
+                .Where(pm => pm.PaymentMethodType == PaymentMethodType.Standard)
+                .ToList();
             foreach (var pm in boundPaymentMethods)
             {
-                if (cart.IsRecurring() && _paymentService.GetRecurringPaymentType(pm.PluginDescriptor.SystemName) == RecurringPaymentType.NotSupported)
+                if (cart.IsRecurring() && pm.RecurringPaymentType == RecurringPaymentType.NotSupported)
                     continue;
 
                 var pmModel = new CheckoutPaymentMethodModel.PaymentMethodModel()

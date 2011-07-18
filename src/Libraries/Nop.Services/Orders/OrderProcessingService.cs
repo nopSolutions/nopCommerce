@@ -375,6 +375,8 @@ namespace Nop.Services.Orders
             {
                 #region Order details (customer, addresses, totals)
 
+
+
                 //Recurring orders. Load initial order
                 Order initialOrder = processPaymentRequest.InitialOrder;
                 if (processPaymentRequest.IsRecurringPayment)
@@ -450,6 +452,9 @@ namespace Nop.Services.Orders
                     //load shopping cart
                     cart = customer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
 
+                    if (cart.Count == 0)
+                        throw new NopException("Cart is empty");
+
                     //validate the entire shopping cart
                     var warnings = _shoppingCartService.GetShoppingCartWarnings(cart, customer.CheckoutAttributes, true);
                     if (warnings.Count > 0)
@@ -481,7 +486,7 @@ namespace Nop.Services.Orders
                         }
                     }
                 }
-
+                
                 //tax display type
                 var customerTaxDisplayType = TaxDisplayType.IncludingTax;
                 if (!processPaymentRequest.IsRecurringPayment)

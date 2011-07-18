@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+  <risk-information-notification xmlns="http://checkout.google.com/schema/2" serial-number="28bc7c91-55c1-4772-9c9d-6490f6eb99f2">
+  <timestamp>2006-07-04T01:38:23.705Z</timestamp>
+  <google-order-number>300411910397875</google-order-number>
+  <risk-information>
+    <billing-address>
+      <email>am@nopCommmerce.com</email>
+      <company-name />
+      <contact-name>Andrei Mazoulnitsyn</contact-name>
+      <phone />
+      <fax />
+      <address1>Some street</address1>
+      <address2 />
+      <country-code>US</country-code>
+      <city>New Tork</city>
+      <region>NY</region>
+      <postal-code>10001</postal-code>
+    </billing-address>
+    <ip-address>11.222.33.111</ip-address>
+    <eligible-for-protection>false</eligible-for-protection>
+    <avs-response>U</avs-response>
+    <cvn-response>U</cvn-response>
+    <partial-cc-number>1111</partial-cc-number>
+    <buyer-account-age>4</buyer-account-age>
+  </risk-information>
+</risk-information-notification>

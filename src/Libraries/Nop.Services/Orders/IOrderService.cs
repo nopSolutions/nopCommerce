@@ -89,6 +89,7 @@ namespace Nop.Services.Orders
         /// <param name="orderNote">The order note</param>
         void DeleteOrderNote(OrderNote orderNote);
 
+        Order GetOrderByAuthorizationTransactionIdAndPaymentMethod(string authorizationTransactionId, string paymentMethodSystemName);
         #endregion
 
         #region Orders product variants

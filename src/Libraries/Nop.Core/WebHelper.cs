@@ -466,11 +466,14 @@ namespace Nop.Core
         /// <returns>Query string value</returns>
         public virtual T QueryString<T>(string name)
         {
-            string queryParam = string.Empty;
+            string queryParam = null;
             if (HttpContext.Current != null && HttpContext.Current.Request.QueryString[name] != null)
                 queryParam = HttpContext.Current.Request.QueryString[name];
 
-            return CommonHelper.To<T>(queryParam);
+            if (!String.IsNullOrEmpty(queryParam))
+                return CommonHelper.To<T>(queryParam);
+
+            return default(T);
         }
         
         /// <summary>

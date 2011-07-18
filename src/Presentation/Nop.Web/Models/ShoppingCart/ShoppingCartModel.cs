@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Web.Routing;
 using Nop.Core.Domain.Catalog;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Models.Media;
@@ -13,6 +14,10 @@ namespace Nop.Web.Models.ShoppingCart
             Warnings = new List<string>();
             EstimateShipping = new EstimateShippingModel();
             CheckoutAttributes = new List<CheckoutAttributeModel>();
+
+            ButtonPaymentMethodActionNames = new List<string>();
+            ButtonPaymentMethodControllerNames = new List<string>();
+            ButtonPaymentMethodRouteValues = new List<RouteValueDictionary>();
         }
 
         public bool ShowSku { get; set; }
@@ -40,6 +45,10 @@ namespace Nop.Web.Models.ShoppingCart
         public EstimateShippingModel EstimateShipping { get; set; }
 
         public IList<CheckoutAttributeModel> CheckoutAttributes { get; set; }
+
+        public IList<string> ButtonPaymentMethodActionNames { get; set; }
+        public IList<string> ButtonPaymentMethodControllerNames { get; set; }
+        public IList<RouteValueDictionary> ButtonPaymentMethodRouteValues { get; set; }
 
 		#region Nested Classes
 

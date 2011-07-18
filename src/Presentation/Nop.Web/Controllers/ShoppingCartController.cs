@@ -26,8 +26,10 @@ using Nop.Services.Shipping;
 using Nop.Services.Tax;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Security;
+using Nop.Web.Models.Checkout;
 using Nop.Web.Models.Media;
 using Nop.Web.Models.ShoppingCart;
+using System.Web.Routing;
 
 namespace Nop.Web.Controllers
 {
@@ -367,6 +369,29 @@ namespace Nop.Web.Controllers
                     cartItemModel.Warnings.Add(warning);
 
                 model.Items.Add(cartItemModel);
+            }
+
+            #endregion
+
+            #region Button payment methods
+
+            var boundPaymentMethods = _paymentService
+                .LoadActivePaymentMethods()
+                .Where(pm => pm.PaymentMethodType == PaymentMethodType.Button)
+                .ToList();
+            foreach (var pm in boundPaymentMethods)
+            {
+                if (cart.IsRecurring() && pm.RecurringPaymentType == RecurringPaymentType.NotSupported)
+                    continue;
+
+                string actionName;
+                string controllerName;
+                RouteValueDictionary routeValues;
+                pm.GetPaymentInfoRoute(out actionName, out controllerName, out routeValues);
+
+                model.ButtonPaymentMethodActionNames.Add(actionName);
+                model.ButtonPaymentMethodControllerNames.Add(controllerName);
+                model.ButtonPaymentMethodRouteValues.Add(routeValues);
             }
 
             #endregion
