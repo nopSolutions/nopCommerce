@@ -31,19 +31,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Autofac, Version=2.4.5.724, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Autofac.2.4.5.724\lib\NET40\Autofac.dll</HintPath>
+    <Reference Include="Autofac">
+      <HintPath>..\..\packages\Autofac.2.5.1.827\lib\NET40\Autofac.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Autofac.Configuration, Version=2.4.5.724, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Autofac.2.4.5.724\lib\NET40\Autofac.Configuration.dll</HintPath>
+    <Reference Include="Autofac.Configuration">
+      <HintPath>..\..\packages\Autofac.2.5.1.827\lib\NET40\Autofac.Configuration.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Autofac.Integration.Mvc, Version=2.4.5.724, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Autofac.Mvc3.2.4.5.724\lib\NET40\Autofac.Integration.Mvc.dll</HintPath>
+    <Reference Include="Autofac.Integration.Mvc">
+      <HintPath>..\..\packages\Autofac.Mvc3.2.5.1.827\lib\NET40\Autofac.Integration.Mvc.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="EntityFramework, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
