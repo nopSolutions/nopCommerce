@@ -18,7 +18,7 @@ namespace Nop.Data
             {
                 //check whether tables are already created
                 int numberOfTables = 0;
-                foreach (var t1 in context.Database.SqlQuery<int>("SELECT COUNT(*) from information_schema.tables WHERE table_type = 'base table' "))
+                foreach (var t1 in context.Database.SqlQuery<int>("SELECT COUNT(*) from INFORMATION_SCHEMA.TABLES WHERE table_type = 'base table' "))
                     numberOfTables = t1;
                 
                 if (numberOfTables == 0)
