@@ -55,9 +55,9 @@
     <Reference Include="Recaptcha">
       <HintPath>..\..\packages\recaptcha.1.0.5.0\lib\.NetFramework 4.0\Recaptcha.dll</HintPath>
     </Reference>
-    <Reference Include="RouteDebugger, Version=2.0.0.6, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="RouteDebugger, Version=2.0.0.7, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\routedebugger.2.0.0.6\lib\net40\RouteDebugger.dll</HintPath>
+      <HintPath>..\..\packages\routedebugger.2.0.0.7\lib\net40\RouteDebugger.dll</HintPath>
     </Reference>
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
