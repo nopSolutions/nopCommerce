@@ -544,6 +544,7 @@ namespace Nop.Plugin.Payments.GoogleCheckout
         public GCheckoutResponse PostCartToGoogle(CheckoutShoppingCartRequest req,
             IList<Core.Domain.Orders.ShoppingCartItem> cart)
         {
+            //there's no need to round prices (Math.Round(,2)) because GCheckout library does it for us
             //items
             foreach (Core.Domain.Orders.ShoppingCartItem sci in cart)
             {

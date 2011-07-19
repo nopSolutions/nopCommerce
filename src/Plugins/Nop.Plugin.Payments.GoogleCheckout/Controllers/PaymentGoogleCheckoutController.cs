@@ -200,10 +200,8 @@ namespace Nop.Plugin.Payments.GoogleCheckout.Controllers
             //authorize google callback request
             if (!processor.VerifyMessageAuthentication(Request.Headers["Authorization"]))
             {
-                //TODO return 401 error in MVC way
-                Response.StatusCode = 401;
-                Response.StatusDescription = "Access Denied";
-                Response.End();
+                return new HttpStatusCodeResult(401, "Access Denied");
+                //return new HttpUnauthorizedResult("Access Denied");
             }
 
             bool debugModeEnabled = _settingService.GetSettingByKey<bool>("googlecheckoutpaymentsettings.debugmodeenabled");
