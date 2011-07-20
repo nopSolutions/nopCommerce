@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net.Mail;
 using System.Web.Mvc;
 using Nop.Admin.Models.Messages;
+using Nop.Core;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Messages;
 using Nop.Services.Configuration;
@@ -173,16 +174,20 @@ namespace Nop.Admin.Controllers
 
             try
             {
+                if (!string.IsNullOrWhiteSpace(model.SendTestEmailTo))
+                    throw new NopException("Enter test email address");
+
+
                 var from = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
                 var to = new MailAddress(model.SendTestEmailTo);
-                string subject = _storeSettings.StoreName + ". Testing email functionaly.";
+                string subject = _storeSettings.StoreName + ". Testing email functionality.";
                 string body = "Email works fine.";
                 _emailSender.SendEmail(emailAccount, subject, body, from, to);
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.EmailAccounts.SendTestEmail.Success"), false);
             }
             catch (Exception exc)
             {
-                ErrorNotification(exc, false);
+                ErrorNotification(exc.Message, false);
             }
 
             //If we got this far, something failed, redisplay form
