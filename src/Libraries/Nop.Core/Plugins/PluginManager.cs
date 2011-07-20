@@ -11,8 +11,8 @@ using System.Web.Hosting;
 using Nop.Core.ComponentModel;
 using Nop.Core.Plugins;
 
-//Contributor: Umbraco (http://www.umbraco.com)
-// SEE THIS POST for full details of what this does
+//Contributor: Umbraco (http://www.umbraco.com). Thanks a lot!
+//SEE THIS POST for full details of what this does
 //http://shazwazza.com/post/Developing-a-plugin-framework-in-ASPNET-with-medium-trust.aspx
 
 [assembly: PreApplicationStartMethod(typeof(PluginManager), "Initialize")]
