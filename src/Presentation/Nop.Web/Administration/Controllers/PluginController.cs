@@ -48,7 +48,7 @@ namespace Nop.Admin.Controllers
             {
                 Data = pluginDescriptors.Select(x => x.ToModel())
                 .OrderBy(x => x.Group)
-                .ThenBy(x => x.DisplayOrder),
+                .ThenBy(x => x.DisplayOrder).ToList(),
                 Total = pluginDescriptors.Count()
             };
             return View(model);

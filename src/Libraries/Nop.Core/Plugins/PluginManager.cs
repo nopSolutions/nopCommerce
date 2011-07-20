@@ -59,13 +59,20 @@ namespace Nop.Core.Plugins
                     Directory.CreateDirectory(pluginFolder.FullName);
                     Directory.CreateDirectory(_shadowCopyFolder.FullName);
 
-                    //get list of all DLLs in bin
-                    var binFiles = _shadowCopyFolder.GetFiles("*.dll", SearchOption.AllDirectories);
+                    //get list of all files in bin
+                    var binFiles = _shadowCopyFolder.GetFiles("*", SearchOption.AllDirectories);
                     //clear out shadow copied plugins
                     foreach (var f in binFiles)
                     {
                         Debug.WriteLine("Deleting " + f.Name);
-                        File.Delete(f.FullName);
+                        try
+                        {
+                            File.Delete(f.FullName);
+                        }
+                        catch (Exception exc)
+                        {
+                            Debug.WriteLine("Error deleting file " + f.Name + ". Exception: " + exc);
+                        }
                     }
 
                     //load description files
