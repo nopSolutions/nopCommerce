@@ -693,16 +693,7 @@ namespace Nop.Web.Controllers
             model.NavigationModel = GetCustomerNavigationModel(customer);
             model.NavigationModel.SelectedTab = CustomerNavigationEnum.Addresses;
             foreach (var address in customer.Addresses)
-            {
-                //use auto-mapper
-                var addressModel = address.ToModel();
-                if (address.Country != null)
-                    addressModel.CountryName = address.Country.Name;
-                if (address.StateProvince != null)
-                    addressModel.StateProvinceName = address.StateProvince.Name;
-
-                model.Addresses.Add(addressModel);
-            }
+                model.Addresses.Add(address.ToModel());
             return View(model);
         }
 

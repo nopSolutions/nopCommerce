@@ -110,11 +110,6 @@ namespace Nop.Web.Controllers
             {
                 model.IsShippable = true;
                 model.ShippingAddress = order.ShippingAddress.ToModel();
-                if (order.ShippingAddress.Country != null)
-                    model.ShippingAddress.CountryName = order.ShippingAddress.Country.Name;
-                if (order.ShippingAddress.StateProvince != null)
-                    model.ShippingAddress.StateProvinceName = order.ShippingAddress.StateProvince.Name;
-
                 model.ShippingMethod = order.ShippingMethod;
                 model.OrderWeight = order.OrderWeight;
                 var baseWeight = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId);
@@ -133,10 +128,6 @@ namespace Nop.Web.Controllers
 
             //billing info
             model.BillingAddress = order.BillingAddress.ToModel();
-            if (order.BillingAddress.Country != null)
-                model.BillingAddress.CountryName = order.BillingAddress.Country.Name;
-            if (order.BillingAddress.StateProvince != null)
-                model.BillingAddress.StateProvinceName = order.BillingAddress.StateProvince.Name;
 
             //VAT number
             model.VatNumber = order.VatNumber;
