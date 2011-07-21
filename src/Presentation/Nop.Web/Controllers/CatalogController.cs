@@ -292,22 +292,28 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        private ProductModel PrepareProductOverviewModel(Product product)
+        private ProductModel PrepareProductOverviewModel(Product product, bool preparePriceModel = true, bool preparePictureModel = true)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
 
             var model = product.ToModel();
             //price
-            model.ProductPrice = PrepareProductPriceModel(product);
+            if (preparePriceModel)
+            {
+                model.ProductPrice = PrepareProductPriceModel(product);
+            }
             //picture
-            var picture = product.GetDefaultProductPicture(_pictureService);
-            if (picture != null)
-                model.DefaultPictureModel.ImageUrl = _pictureService.GetPictureUrl(picture, _mediaSetting.ProductThumbPictureSize, true);
-            else
-                model.DefaultPictureModel.ImageUrl = _pictureService.GetDefaultPictureUrl(_mediaSetting.ProductThumbPictureSize);
-            model.DefaultPictureModel.Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), model.Name);
-            model.DefaultPictureModel.AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), model.Name);
+            if (preparePictureModel)
+            {
+                var picture = product.GetDefaultProductPicture(_pictureService);
+                if (picture != null)
+                    model.DefaultPictureModel.ImageUrl = _pictureService.GetPictureUrl(picture, _mediaSetting.ProductThumbPictureSize, true);
+                else
+                    model.DefaultPictureModel.ImageUrl = _pictureService.GetDefaultPictureUrl(_mediaSetting.ProductThumbPictureSize);
+                model.DefaultPictureModel.Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), model.Name);
+                model.DefaultPictureModel.AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), model.Name);
+            }
             return model;
         }
 
@@ -1406,7 +1412,7 @@ namespace Nop.Web.Controllers
             {
                 var products = _recentlyViewedProductsService.GetRecentlyViewedProducts(_catalogSettings.RecentlyViewedProductsNumber);
                 foreach (var product in products)
-                    model.Add(PrepareProductOverviewModel(product));
+                    model.Add(PrepareProductOverviewModel(product, false, false));
             }
             return PartialView(model);
         }
