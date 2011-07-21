@@ -175,7 +175,7 @@
                                 columns.Bound(x => x.Id)
                                     .Width(50)
                                     .Centered()
-                                    .ClientTemplate("<input type='submit' id='btnEditValue<#= Id #>' name='btnEditValue<#= Id #>' value='Edit' onclick=\"javascript:OpenWindow('/Admin/CheckoutAttribute/ValueEditPopup/<#= Id #>?btnId=btnRefresh', 800, 300, true); return false;\" class='t-button' />")
+                                    .ClientTemplate("<input type='submit' id='btnEditValue<#= Id #>' name='btnEditValue<#= Id #>' value='Edit' onclick=\"" + "javascript:OpenWindow('" + @Url.Content("~/Admin/CheckoutAttribute/ValueEditPopup/") + "<#= Id #>?btnId=btnRefresh&formId=checkoutattribute-form', 800, 300, true); return false;\" class='t-button' />")
                                     .Title(T("Admin.Common.Edit").Text);
                                 columns.Command(commands =>
                                 {
@@ -192,7 +192,7 @@
                 </tr>
                 <tr>
                     <td width="100%">
-                        <input type="submit" id="btnAddNewValue" name="btnAddNewValue" value="@T("Admin.Catalog.Attributes.CheckoutAttributes.Values.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ValueCreatePopup", "CheckoutAttribute", new { checkoutAttributeId = Model.Id, btnId = "btnRefresh" }))', 800, 300, true); return false;" class="t-button" />
+                        <input type="submit" id="btnAddNewValue" name="btnAddNewValue" value="@T("Admin.Catalog.Attributes.CheckoutAttributes.Values.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ValueCreatePopup", "CheckoutAttribute", new { checkoutAttributeId = Model.Id, btnId = "btnRefresh", formId = "checkoutattribute-form" }))', 800, 300, true); return false;" class="t-button" />
                         <input type="submit" id="btnRefresh" name="btnRefresh" style="display: none" />
                         <script type="text/javascript">
                             $(document).ready(function () {

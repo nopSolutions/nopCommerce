@@ -3,7 +3,7 @@
 @using Telerik.Web.Mvc.UI;
 @using Nop.Core.Domain.Tax;
 @using Nop.Core.Domain.Catalog;
-@using (Html.BeginForm())
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "order-form" }))
 {
 
     <div class="section-header">
@@ -624,11 +624,11 @@
                 }
                 @if (Model.CanPartiallyRefund)
                 {
-                    <input type="submit" id="partiallyrefundorder" name="partiallyrefundorder" value="@T("Admin.Orders.Fields.PartialRefund")" onclick="javascript:OpenWindow('@(Url.Action("PartiallyRefundOrderPopup", "Order", new { id = Model.Id, online = true, btnId = "btnRefreshPage" }))', 500, 300, true); return false;" class="adminButton" /><text>&nbsp;</text>
+                    <input type="submit" id="partiallyrefundorder" name="partiallyrefundorder" value="@T("Admin.Orders.Fields.PartialRefund")" onclick="javascript:OpenWindow('@(Url.Action("PartiallyRefundOrderPopup", "Order", new { id = Model.Id, online = true, btnId = "btnRefreshPage", formId = "order-form" }))', 500, 300, true); return false;" class="adminButton" /><text>&nbsp;</text>
                 }
                 @if (Model.CanPartiallyRefundOffline)
                 {
-                    <input type="submit" id="partiallyrefundorderoffline" name="partiallyrefundorderoffline" value="@T("Admin.Orders.Fields.PartialRefundOffline")" onclick="javascript:OpenWindow('@(Url.Action("PartiallyRefundOrderPopup", "Order", new { id = Model.Id, online = false, btnId = "btnRefreshPage" }))', 500, 300, true); return false;" class="adminButton" /><text>&nbsp;</text>
+                    <input type="submit" id="partiallyrefundorderoffline" name="partiallyrefundorderoffline" value="@T("Admin.Orders.Fields.PartialRefundOffline")" onclick="javascript:OpenWindow('@(Url.Action("PartiallyRefundOrderPopup", "Order", new { id = Model.Id, online = false, btnId = "btnRefreshPage", formId = "order-form" }))', 500, 300, true); return false;" class="adminButton" /><text>&nbsp;</text>
                 }
                 @if (Model.CanVoid)
                 {
@@ -1087,7 +1087,7 @@
                                                     <a href="@Url.Action("DownloadFile", "Download", new { downloadId = item.LicenseDownloadId.Value })">@T("Admin.Orders.Products.License.DownloadLicense")</a>
                                                 }
                                                 <br />
-                                                <input type="submit" id="pvlicensefile" name="pvlicensefile" value="@T("Admin.Orders.Products.License.UploadFile")" onclick="javascript:OpenWindow('@(Url.Action("UploadLicenseFilePopup", "Order", new { id = Model.Id, opvId = item.Id, btnId = "btnRefreshPage" }))', 500, 300, true); return false;" class="adminButton" />
+                                                <input type="submit" id="pvlicensefile" name="pvlicensefile" value="@T("Admin.Orders.Products.License.UploadFile")" onclick="javascript:OpenWindow('@(Url.Action("UploadLicenseFilePopup", "Order", new { id = Model.Id, opvId = item.Id, btnId = "btnRefreshPage", formId = "order-form" }))', 500, 300, true); return false;" class="adminButton" />
                                             </div>
                                         }
                                     </td>

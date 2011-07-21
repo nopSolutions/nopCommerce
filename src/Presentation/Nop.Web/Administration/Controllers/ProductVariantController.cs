@@ -725,7 +725,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ProductAttributeValueCreatePopup(string btnId, ProductVariantModel.ProductVariantAttributeValueModel model)
+        public ActionResult ProductAttributeValueCreatePopup(string btnId, string formId, ProductVariantModel.ProductVariantAttributeValueModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
@@ -751,6 +751,7 @@ namespace Nop.Admin.Controllers
 
                 ViewBag.RefreshPage = true;
                 ViewBag.btnId = btnId;
+                ViewBag.formId = formId;
                 return View(model);
             }
 
@@ -786,7 +787,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ProductAttributeValueEditPopup(string btnId, ProductVariantModel.ProductVariantAttributeValueModel model)
+        public ActionResult ProductAttributeValueEditPopup(string btnId, string formId, ProductVariantModel.ProductVariantAttributeValueModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
@@ -807,6 +808,7 @@ namespace Nop.Admin.Controllers
 
                 ViewBag.RefreshPage = true;
                 ViewBag.btnId = btnId;
+                ViewBag.formId = formId;
                 return View(model);
             }
 
@@ -916,7 +918,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult AddAttributeCombinationPopup(string btnId, int productVariantId, 
+        public ActionResult AddAttributeCombinationPopup(string btnId, string formId, int productVariantId, 
             AddProductVariantAttributeCombinationModel model, FormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
@@ -1042,6 +1044,7 @@ namespace Nop.Admin.Controllers
 
                 ViewBag.RefreshPage = true;
                 ViewBag.btnId = btnId;
+                ViewBag.formId = formId;
                 return View(model);
             }
             else

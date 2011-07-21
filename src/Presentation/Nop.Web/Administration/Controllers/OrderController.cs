@@ -917,7 +917,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("partialrefundorder")]
-        public ActionResult PartiallyRefundOrderPopup(string btnId, int id, bool online, OrderModel model)
+        public ActionResult PartiallyRefundOrderPopup(string btnId, string formId, int id, bool online, OrderModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -947,6 +947,7 @@ namespace Nop.Admin.Controllers
                     //success
                     ViewBag.RefreshPage = true;
                     ViewBag.btnId = btnId;
+                    ViewBag.formId = formId;
 
                     PrepareOrderDetailsModel(model, order);
                     return View(model);
@@ -1123,7 +1124,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("uploadlicense")]
-        public ActionResult UploadLicenseFilePopup(string btnId, OrderModel.UploadLicenseModel model)
+        public ActionResult UploadLicenseFilePopup(string btnId, string formId, OrderModel.UploadLicenseModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -1146,13 +1147,14 @@ namespace Nop.Admin.Controllers
             //success
             ViewBag.RefreshPage = true;
             ViewBag.btnId = btnId;
+            ViewBag.formId = formId;
 
             return View(model);
         }
 
         [HttpPost, ActionName("UploadLicenseFilePopup")]
         [FormValueRequired("deletelicense")]
-        public ActionResult DeleteLicenseFilePopup(string btnId, OrderModel.UploadLicenseModel model)
+        public ActionResult DeleteLicenseFilePopup(string btnId, string formId, OrderModel.UploadLicenseModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -1172,6 +1174,7 @@ namespace Nop.Admin.Controllers
             //success
             ViewBag.RefreshPage = true;
             ViewBag.btnId = btnId;
+            ViewBag.formId = formId;
 
             return View(model);
         }

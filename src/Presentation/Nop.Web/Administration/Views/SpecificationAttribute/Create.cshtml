@@ -1,6 +1,6 @@
 ﻿@model SpecificationAttributeModel
 
-@using (Html.BeginForm())
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "specificationattribute-form" }))
 {
     <div class="section-header">
         <div class="title">

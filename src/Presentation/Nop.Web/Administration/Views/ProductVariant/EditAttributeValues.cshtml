@@ -1,7 +1,7 @@
 ﻿@model ProductVariantModel.ProductVariantAttributeValueListModel
 
 @using Telerik.Web.Mvc.UI;
-@using (Html.BeginForm())
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "productvariantattribute-form" }))
 {
 <div class="section-header">
     <div class="title">
@@ -43,7 +43,7 @@
                                 columns.Bound(x => x.Id)
                                     .Width(50)
                                     .Centered()
-                                    .ClientTemplate("<input type='submit' id='btnEditValue<#= Id #>' name='btnEditValue<#= Id #>' value='Edit' onclick=\"javascript:OpenWindow('/Admin/ProductVariant/ProductAttributeValueEditPopup/<#= Id #>?btnId=btnRefresh', 800, 250, true); return false;\" class='t-button' />")
+                                    .ClientTemplate("<input type='submit' id='btnEditValue<#= Id #>' name='btnEditValue<#= Id #>' value='Edit' onclick=\"" + "javascript:OpenWindow('" + @Url.Content("~/Admin/ProductVariant/ProductAttributeValueEditPopup/") + "<#= Id #>?btnId=btnRefresh&formId=productvariantattribute-form', 800, 250, true); return false;\" class='t-button' />")
                                     .Title(T("Admin.Common.Edit").Text);
                                 columns.Command(commands =>
                                 {
@@ -61,7 +61,7 @@
     </tr>
     <tr>
         <td width="100%">
-            <input type="submit" id="btnAddNewValue" name="btnAddNewValue" value="@T("Admin.Catalog.Products.Variants.ProductVariantAttributes.Attributes.Values.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ProductAttributeValueCreatePopup", "ProductVariant", new { productAttributeAttributeId = Model.ProductVariantAttributeId, btnId = "btnRefresh" }))', 800, 400, true); return false;" class="t-button" />
+            <input type="submit" id="btnAddNewValue" name="btnAddNewValue" value="@T("Admin.Catalog.Products.Variants.ProductVariantAttributes.Attributes.Values.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("ProductAttributeValueCreatePopup", "ProductVariant", new { productAttributeAttributeId = Model.ProductVariantAttributeId, btnId = "btnRefresh", formId="productvariantattribute-form" }))', 800, 400, true); return false;" class="t-button" />
             <input type="submit" id="btnRefresh" name="btnRefresh" style="display: none" />
             <script type="text/javascript">
                 $(document).ready(function () {

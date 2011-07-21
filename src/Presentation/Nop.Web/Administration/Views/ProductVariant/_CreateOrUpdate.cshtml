@@ -211,11 +211,10 @@
                     })
                     .Width(180);
                 })
-                .ClientEvents(events => events.OnEdit("onProductVariantAttributeEdit"))
                 .EnableCustomBinding(true))
     </div>
     <div>
-        <input type="submit" id="btnAddNewCombination" name="btnAddNewCombination" value="@T("Admin.Catalog.Products.Variants.ProductVariantAttributes.AttributeCombinations.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("AddAttributeCombinationPopup", "ProductVariant", new { productVariantId = Model.Id, btnId = "btnRefreshCombinations" }))', 800, 550, true); return false;" class="t-button" />
+        <input type="submit" id="btnAddNewCombination" name="btnAddNewCombination" value="@T("Admin.Catalog.Products.Variants.ProductVariantAttributes.AttributeCombinations.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("AddAttributeCombinationPopup", "ProductVariant", new { productVariantId = Model.Id, btnId = "btnRefreshCombinations", formId = "productvariant-form" }))', 800, 550, true); return false;" class="t-button" />
         <input type="submit" id="btnRefreshCombinations" name="btnRefreshCombinations" style="display: none" />
         <script type="text/javascript">
                             $(document).ready(function () {

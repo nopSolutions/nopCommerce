@@ -310,7 +310,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ValueCreatePopup(string btnId, CheckoutAttributeValueModel model)
+        public ActionResult ValueCreatePopup(string btnId, string formId, CheckoutAttributeValueModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
@@ -331,6 +331,7 @@ namespace Nop.Admin.Controllers
 
                 ViewBag.RefreshPage = true;
                 ViewBag.btnId = btnId;
+                ViewBag.formId = formId;
                 return View(model);
             }
 
@@ -361,7 +362,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult ValueEditPopup(string btnId, CheckoutAttributeValueModel model)
+        public ActionResult ValueEditPopup(string btnId, string formId, CheckoutAttributeValueModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
@@ -381,6 +382,7 @@ namespace Nop.Admin.Controllers
 
                 ViewBag.RefreshPage = true;
                 ViewBag.btnId = btnId;
+                ViewBag.formId = formId;
                 return View(model);
             }
 

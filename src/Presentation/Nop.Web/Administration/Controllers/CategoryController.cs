@@ -575,7 +575,7 @@ namespace Nop.Admin.Controllers
         
         [HttpPost]
         [FormValueRequired("save")]
-        public ActionResult ProductAddPopup(string btnId, CategoryModel.AddCategoryProductModel model)
+        public ActionResult ProductAddPopup(string btnId, string formId, CategoryModel.AddCategoryProductModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
@@ -605,6 +605,7 @@ namespace Nop.Admin.Controllers
 
             ViewBag.RefreshPage = true;
             ViewBag.btnId = btnId;
+            ViewBag.formId = formId;
             model.Products = new GridModel<ProductModel>();
             return View(model);
         }

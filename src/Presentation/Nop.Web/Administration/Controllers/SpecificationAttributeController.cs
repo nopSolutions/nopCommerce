@@ -255,7 +255,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult OptionCreatePopup(string btnId, SpecificationAttributeOptionModel model)
+        public ActionResult OptionCreatePopup(string btnId, string formId, SpecificationAttributeOptionModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
@@ -273,6 +273,7 @@ namespace Nop.Admin.Controllers
 
                 ViewBag.RefreshPage = true;
                 ViewBag.btnId = btnId;
+                ViewBag.formId = formId;
                 return View(model);
             }
 
@@ -300,7 +301,7 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost]
-        public ActionResult OptionEditPopup(string btnId, SpecificationAttributeOptionModel model)
+        public ActionResult OptionEditPopup(string btnId, string formId, SpecificationAttributeOptionModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
@@ -317,6 +318,7 @@ namespace Nop.Admin.Controllers
 
                 ViewBag.RefreshPage = true;
                 ViewBag.btnId = btnId;
+                ViewBag.formId = formId;
                 return View(model);
             }
 

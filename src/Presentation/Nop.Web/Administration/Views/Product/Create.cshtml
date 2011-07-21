@@ -1,6 +1,6 @@
 ﻿@model ProductModel
 
-@using (Html.BeginForm())
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "product-form" }))
 {
     <div class="section-header">
         <div class="title">

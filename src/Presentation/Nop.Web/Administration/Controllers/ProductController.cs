@@ -942,7 +942,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("save")]
-        public ActionResult RelatedProductAddPopup(string btnId, ProductModel.AddRelatedProductModel model)
+        public ActionResult RelatedProductAddPopup(string btnId, string formId, ProductModel.AddRelatedProductModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
@@ -971,6 +971,7 @@ namespace Nop.Admin.Controllers
 
             ViewBag.RefreshPage = true;
             ViewBag.btnId = btnId;
+            ViewBag.formId = formId;
             model.Products = new GridModel<ProductModel>();
             return View(model);
         }
@@ -1077,7 +1078,7 @@ namespace Nop.Admin.Controllers
 
         [HttpPost]
         [FormValueRequired("save")]
-        public ActionResult CrossSellProductAddPopup(string btnId, ProductModel.AddCrossSellProductModel model)
+        public ActionResult CrossSellProductAddPopup(string btnId, string formId, ProductModel.AddCrossSellProductModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
@@ -1105,6 +1106,7 @@ namespace Nop.Admin.Controllers
 
             ViewBag.RefreshPage = true;
             ViewBag.btnId = btnId;
+            ViewBag.formId = formId;
             model.Products = new GridModel<ProductModel>();
             return View(model);
         }
