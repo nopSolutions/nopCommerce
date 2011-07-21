@@ -29,7 +29,7 @@ namespace Nop.Services.Tests.Configuration
             return defaultValue;
         }
 
-        public void SetSetting<T>(string key, T value)
+        public void SetSetting<T>(string key, T value, bool clearCache = true)
         {
             throw new NotImplementedException();
         }
@@ -46,6 +46,11 @@ namespace Nop.Services.Tests.Configuration
         }
 
         public void SaveSetting<T>(T settingInstance) where T : ISettings, new()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ClearCache()
         {
             throw new NotImplementedException();
         }

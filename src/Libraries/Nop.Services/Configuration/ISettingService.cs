@@ -31,7 +31,8 @@ namespace Nop.Services.Configuration
         /// <typeparam name="T">Type</typeparam>
         /// <param name="key">Key</param>
         /// <param name="value">Value</param>
-        void SetSetting<T>(string key, T value);
+        /// <param name="clearCache">A value indicating whether to clear cache after setting update</param>
+        void SetSetting<T>(string key, T value, bool clearCache = true);
 
         /// <summary>
         /// Deletes a setting
@@ -51,5 +52,10 @@ namespace Nop.Services.Configuration
         /// <typeparam name="T">Type</typeparam>
         /// <param name="settingInstance">Setting instance</param>
         void SaveSetting<T>(T settingInstance) where T : ISettings, new();
+
+        /// <summary>
+        /// Clear cache
+        /// </summary>
+        void ClearCache();
     }
 }

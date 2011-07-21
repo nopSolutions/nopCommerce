@@ -41,17 +41,23 @@ namespace Nop.Services.Configuration
                              where prop.CanWrite && prop.CanRead
                              where CommonHelper.GetNopCustomTypeConverter(prop.PropertyType).CanConvertFrom(typeof(string))
                              select prop;
+
+            /* We do not clear cache after each setting update.
+             * This behavior can increase performance because cached settings will not be cleared 
+             * and loaded from database after each update */
             foreach (var prop in properties)
             {
                 string key = typeof(TSettings).Name + "." + prop.Name;
                 //Duck typing is not supported in C#. That's why we're using dynamic type
                 dynamic value = prop.GetValue(settings, null);
                 if (value != null)
-                    _settingService.SetSetting(key, value);
+                    _settingService.SetSetting(key, value, false);
                 else
-                    _settingService.SetSetting(key, "");
+                    _settingService.SetSetting(key, "", false);
             }
 
+            //and now clear cache
+            _settingService.ClearCache();
 
             this.Settings = settings;
         }

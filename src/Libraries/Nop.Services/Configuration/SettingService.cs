@@ -49,7 +49,8 @@ namespace Nop.Services.Configuration
         /// Adds a setting
         /// </summary>
         /// <param name="setting">Setting</param>
-        public virtual void InsertSetting(Setting setting)
+        /// <param name="clearCache">A value indicating whether to clear cache after setting update</param>
+        public virtual void InsertSetting(Setting setting, bool clearCache = true)
         {
             if (setting == null)
                 throw new ArgumentNullException("setting");
@@ -57,14 +58,16 @@ namespace Nop.Services.Configuration
             _settingRepository.Insert(setting);
 
             //cache
-            _cacheManager.RemoveByPattern(SETTINGS_ALL_KEY);
+            if (clearCache)
+                _cacheManager.RemoveByPattern(SETTINGS_ALL_KEY);
         }
 
         /// <summary>
         /// Updates a setting
         /// </summary>
         /// <param name="setting">Setting</param>
-        public virtual void UpdateSetting(Setting setting)
+        /// <param name="clearCache">A value indicating whether to clear cache after setting update</param>
+        public virtual void UpdateSetting(Setting setting, bool clearCache = true)
         {
             if (setting == null)
                 throw new ArgumentNullException("setting");
@@ -72,7 +75,8 @@ namespace Nop.Services.Configuration
             _settingRepository.Update(setting);
 
             //cache
-            _cacheManager.RemoveByPattern(SETTINGS_ALL_KEY);
+            if (clearCache)
+                _cacheManager.RemoveByPattern(SETTINGS_ALL_KEY);
         }
 
         #endregion
@@ -121,7 +125,8 @@ namespace Nop.Services.Configuration
         /// <typeparam name="T">Type</typeparam>
         /// <param name="key">Key</param>
         /// <param name="value">Value</param>
-        public virtual void SetSetting<T>(string key, T value)
+        /// <param name="clearCache">A value indicating whether to clear cache after setting update</param>
+        public virtual void SetSetting<T>(string key, T value, bool clearCache = true)
         {
             var settings = GetAllSettings();
 
@@ -136,7 +141,7 @@ namespace Nop.Services.Configuration
                 //little hack here because of EF issue
                 setting = GetSettingById(setting.Id);
                 setting.Value = valueStr;
-                UpdateSetting(setting);
+                UpdateSetting(setting, clearCache);
             }
             else
             {
@@ -146,7 +151,7 @@ namespace Nop.Services.Configuration
                                   Name = key,
                                   Value = valueStr,
                               };
-                InsertSetting(setting);
+                InsertSetting(setting, clearCache);
             }
         }
 
@@ -195,6 +200,13 @@ namespace Nop.Services.Configuration
             EngineContext.Current.Resolve<IConfigurationProvider<T>>().SaveSettings(settingInstance);
         }
 
+        /// <summary>
+        /// Clear cache
+        /// </summary>
+        public virtual void ClearCache()
+        {
+            _cacheManager.RemoveByPattern(SETTINGS_ALL_KEY);
+        }
         #endregion
     }
 }
