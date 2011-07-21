@@ -1141,9 +1141,6 @@
     <Content Include="Scripts\MicrosoftMvcAjax.debug.js" />
     <Content Include="Scripts\MicrosoftMvcValidation.js" />
     <Content Include="Scripts\MicrosoftMvcValidation.debug.js" />
-    <Content Include="Themes\Web.config">
-      <SubType>Designer</SubType>
-    </Content>
     <Content Include="Views\Shared\Header.cshtml" />
     <Content Include="Views\Shared\HeaderMenu.cshtml" />
     <Content Include="Views\Shared\Footer.cshtml" />
