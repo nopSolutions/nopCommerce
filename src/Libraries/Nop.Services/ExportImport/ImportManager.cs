@@ -40,6 +40,9 @@ namespace Nop.Services.ExportImport
                 DataTable dt = excelHelper.ReadTable("Products");
                 foreach (DataRow dr in dt.Rows)
                 {
+                    if (dr.ItemArray.All(i => string.IsNullOrEmpty(i.ToString())))
+                        continue;
+
                     string name = dr["Name"].ToString();
                     string shortDescription = dr["ShortDescription"].ToString();
                     string fullDescription = dr["FullDescription"].ToString();
