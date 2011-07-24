@@ -1500,7 +1500,7 @@ namespace Nop.Web.Controllers
         public ActionResult HomepageProducts()
         {
             var model = _productService.GetAllProductsDisplayedOnHomePage()
-                .Select(x => PrepareProductOverviewModel(x))
+                .Select(x => PrepareProductOverviewModel(x, false, true))
                 .ToList();
 
             return PartialView(model);
