@@ -245,7 +245,7 @@
             .Filterable(false)
             .Template(x => x.Published.ToString().ToLower())
             .Centered();
-        columns.Template((x) => Html.ActionLink(T("Admin.Common.View").ToString(), "Edit", "ProductVariant", new { id = x.Id }, new { })).Title(T("Admin.Common.View").ToString());
+        columns.Template((x) => Html.ActionLink(T("Admin.Common.Edit").ToString(), "Edit", "ProductVariant", new { id = x.Id }, new { })).Title(T("Admin.Common.Edit").ToString());
     })
     .Footer(false))
     <div class="clear">
