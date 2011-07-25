@@ -55,6 +55,7 @@
                             .Width(100)
                             .ReadOnly();
                         columns.Bound(x => x.IsActive)
+                            .Template(x => x.IsActive.ToString().ToLower())
                             .Width(100);
                         columns.Command(commands =>
                         {

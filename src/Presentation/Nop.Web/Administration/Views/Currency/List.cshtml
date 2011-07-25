@@ -50,34 +50,31 @@
                         columns.Bound(x => x.Name);
                         columns.Bound(x => x.CurrencyCode)
                             .Centered();
-                        columns.Bound(x => x.DisplayLocale)
-                            .Centered();
                         columns.Bound(x => x.Rate)
                             .Centered();
-                        columns.Bound(x => x.DisplayOrder)
-                            .Centered();
                         columns.Bound(x => x.IsPrimaryExchangeRateCurrency)
-                            .Centered();        
+                            .Centered()
+                            .Width(100);        
                         columns.Bound(x => x.Id)
                             .Template(x => Html.ActionLink(T("Admin.Telerik.GridLocalization.Select").Text, "MarkAsPrimaryExchangeRateCurrency", new { id = x.Id }, new { @class = "t-button" }))
                             .Centered()
                             .HeaderTemplate(T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryExchangeRateCurrency").Text)
-                            .Filterable(false);
+                            .Width("100px");
                         columns.Bound(x => x.IsPrimaryStoreCurrency)
-                            .Centered();
+                            .Centered()
+                            .Width(100);
                         columns.Bound(x => x.Id)
                             .Template(x => Html.ActionLink(T("Admin.Telerik.GridLocalization.Select").Text, "MarkAsPrimaryStoreCurrency", new { id = x.Id }, new { @class = "t-button" }))
                             .Centered()
                             .HeaderTemplate(T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryStoreCurrency").Text)
-                            .Filterable(false);
+                            .Width(100);
                         columns.Bound(x => x.Published)
                             .Centered();
                         columns.Bound(x => x.Id)
                             .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "Edit", new { id = x.Id }))
                             .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
                             .Centered()
-                            .HeaderTemplate("Edit")
-                            .Filterable(false);
+                            .HeaderTemplate("Edit");
                     })
                     .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "Currency"))
                     .EnableCustomBinding(true)

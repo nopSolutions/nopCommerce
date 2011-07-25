@@ -67,11 +67,11 @@ namespace Nop.Admin.Controllers
             LogLevel? logLevel = model.LogLevelId > 0 ? (LogLevel?)(model.LogLevelId) : null;
 
 
-            var orders = _logger.GetAllLogs(createdOnFromValue, createdToFromValue, model.Message,
+            var logItems = _logger.GetAllLogs(createdOnFromValue, createdToFromValue, model.Message,
                 logLevel, command.Page - 1, command.PageSize);
             var gridModel = new GridModel<LogModel>
             {
-                Data = orders.Select(x =>
+                Data = logItems.Select(x =>
                 {
                     return new LogModel()
                     {
@@ -87,7 +87,7 @@ namespace Nop.Admin.Controllers
                         CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc)
                     };
                 }),
-                Total = orders.TotalCount
+                Total = logItems.TotalCount
             };
             return new JsonResult
             {

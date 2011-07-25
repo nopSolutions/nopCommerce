@@ -714,7 +714,7 @@ namespace Nop.Admin.Controllers
             productCategory.DisplayOrder = model.DisplayOrder;
             _categoryService.UpdateProductCategory(productCategory);
 
-            return ProductCategoryList(command, model.ProductId);
+            return ProductCategoryList(command, productCategory.ProductId);
         }
 
         [GridAction(EnableCustomBinding = true)]
@@ -805,7 +805,7 @@ namespace Nop.Admin.Controllers
             productManufacturer.DisplayOrder = model.DisplayOrder;
             _manufacturerService.UpdateProductManufacturer(productManufacturer);
 
-            return ProductManufacturerList(command, model.ProductId);
+            return ProductManufacturerList(command, productManufacturer.ProductId);
         }
 
         [GridAction(EnableCustomBinding = true)]
@@ -874,7 +874,7 @@ namespace Nop.Admin.Controllers
             relatedProduct.DisplayOrder = model.DisplayOrder;
             _productService.UpdateRelatedProduct(relatedProduct);
 
-            return RelatedProductList(command, model.ProductId1);
+            return RelatedProductList(command, relatedProduct.ProductId1);
         }
 
         [GridAction(EnableCustomBinding = true)]
@@ -1191,12 +1191,12 @@ namespace Nop.Admin.Controllers
         }
 
         [GridAction(EnableCustomBinding = true)]
-        public ActionResult ProductPictureDelete(int productPictureId, GridCommand command)
+        public ActionResult ProductPictureDelete(int id, GridCommand command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
 
-            var productPicture = _productService.GetProductPictureById(productPictureId);
+            var productPicture = _productService.GetProductPictureById(id);
             if (productPicture == null)
                 throw new ArgumentException("No product picture found with the specified id");
 

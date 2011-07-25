@@ -507,7 +507,7 @@ namespace Nop.Admin.Controllers
             productCategory.DisplayOrder = model.DisplayOrder1;
             _categoryService.UpdateProductCategory(productCategory);
 
-            return ProductList(command, model.CategoryId);
+            return ProductList(command, productCategory.CategoryId);
         }
 
         [GridAction(EnableCustomBinding = true)]

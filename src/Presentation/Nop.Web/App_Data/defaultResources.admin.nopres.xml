@@ -2924,16 +2924,16 @@
                             <Value>Supports capture</Value>
                           </LocaleResource>
                           <LocaleResource Name="SupportPartiallyRefund">
-                            <Value>Supports partial refund</Value>
+                            <Value>Partial refund</Value>
                           </LocaleResource>
                           <LocaleResource Name="SupportRefund">
-                            <Value>Supports refund</Value>
+                            <Value>Refund</Value>
                           </LocaleResource>
                           <LocaleResource Name="SupportVoid">
-                            <Value>Supports void</Value>
+                            <Value>Void</Value>
                           </LocaleResource>
                           <LocaleResource Name="RecurringPaymentType">
-                            <Value>Recurring payment type</Value>
+                            <Value>Recurring support</Value>
                           </LocaleResource>
                         </Children>
                       </LocaleResource>
@@ -8245,8 +8245,39 @@
                             </LocaleResource>
                         </Children>
                     </LocaleResource>
-                    <LocaleResource Name="Up">
-                      <Value>Upload</Value>
+                    <LocaleResource Name="UploadLocalization">
+                      <Children>
+                      <LocaleResource Name="Cancel">
+                        <Value>Cancel</Value>
+                      </LocaleResource>
+                        <LocaleResource Name="DropFilesHere">
+                          <Value></Value>
+                        </LocaleResource>
+                        <LocaleResource Name="drop files here to upload">
+                          <Value></Value>
+                        </LocaleResource>
+                        <LocaleResource Name="Remove">
+                          <Value>Remove</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="Retry">
+                          <Value>Retry</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="Select">
+                          <Value>Select...</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="StatusFailed">
+                          <Value>failed</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="StatusUploaded">
+                          <Value>uploaded</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="StatusUploading">
+                          <Value>uploading</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="UploadSelectedFiles">
+                          <Value>Upload files</Value>
+                        </LocaleResource>
+                    </Children>
                     </LocaleResource>
                 </Children>
             </LocaleResource>

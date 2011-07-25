@@ -518,7 +518,7 @@ namespace Nop.Admin.Controllers
             tierPrice.Price = model.Price1;
             _productService.UpdateTierPrice(tierPrice);
 
-            return TierPriceList(command, model.ProductVariantId);
+            return TierPriceList(command, tierPrice.ProductVariantId);
         }
 
         [GridAction(EnableCustomBinding = true)]
@@ -624,7 +624,7 @@ namespace Nop.Admin.Controllers
             pva.DisplayOrder = model.DisplayOrder1;
             _productAttributeService.UpdateProductVariantAttribute(pva);
 
-            return ProductVariantAttributeList(command, model.ProductVariantId);
+            return ProductVariantAttributeList(command, pva.ProductVariantId);
         }
 
         [GridAction(EnableCustomBinding = true)]
@@ -879,7 +879,7 @@ namespace Nop.Admin.Controllers
             pvac.AllowOutOfStockOrders = model.AllowOutOfStockOrders1;
             _productAttributeService.UpdateProductVariantAttributeCombination(pvac);
 
-            return ProductVariantAttributeCombinationList(command, model.ProductVariantId);
+            return ProductVariantAttributeCombinationList(command, pvac.ProductVariantId);
         }
 
         [GridAction(EnableCustomBinding = true)]

@@ -171,7 +171,7 @@ namespace Nop.Admin.Controllers
 
 
         [GridAction(EnableCustomBinding = true)]
-        public ActionResult StateUpdate(int countryId, StateProvinceModel model, GridCommand command)
+        public ActionResult StateUpdate(StateProvinceModel model, GridCommand command)
         {
             if (!ModelState.IsValid)
             {
@@ -180,27 +180,31 @@ namespace Nop.Admin.Controllers
                 //here is solution (not the best one) - http://www.telerik.com/community/forums/aspnet-mvc/grid/how-to-return-error-information-to-grid-in-ajax-editing-mode.aspx
                 return new JsonResult { Data = "error" };
             }
-
+            
             var state = _stateProvinceService.GetStateProvinceById(model.Id);
+            //ensure that country is set because it's not passed countryId is not passed
+            var countryId = state.CountryId;
             state = model.ToEntity(state);
+            state.CountryId = countryId;
+            //ensure that country is set because it's not passed countryId is not passed
             _stateProvinceService.UpdateStateProvince(state);
 
-            return States(model.CountryId, command);
+            return States(state.CountryId, command);
         }
 
         [GridAction(EnableCustomBinding = true)]
-        public ActionResult StateAdd(int countryId, StateProvinceModel model, GridCommand command)
+        public ActionResult StateAdd(StateProvinceModel model, GridCommand command)
         {
             if (!ModelState.IsValid)
             {
                 return new JsonResult { Data = "error" };
             }
             
-            var state = new StateProvince { CountryId = countryId };
+            var state = new StateProvince { CountryId = model.CountryId };
             state = model.ToEntity(state);
             _stateProvinceService.InsertStateProvince(state);
 
-            return States(countryId, command);
+            return States(state.CountryId, command);
         }
 
 

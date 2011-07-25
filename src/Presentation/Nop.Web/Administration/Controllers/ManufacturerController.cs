@@ -337,7 +337,7 @@ namespace Nop.Admin.Controllers
             productManufacturer.DisplayOrder = model.DisplayOrder1;
             _manufacturerService.UpdateProductManufacturer(productManufacturer);
 
-            return ProductList(command, model.ManufacturerId);
+            return ProductList(command, productManufacturer.ManufacturerId);
         }
 
         [GridAction(EnableCustomBinding = true)]
