@@ -32,6 +32,7 @@ namespace Nop.Web.Controllers
         {
             var model = new PollModel()
             {
+                Id = poll.Id,
                 AlreadyVoted = poll.AlreadyVoted(_workContext.CurrentCustomer),
                 Name = poll.Name
             };
