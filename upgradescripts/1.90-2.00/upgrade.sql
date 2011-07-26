@@ -16,6 +16,48 @@ GO
 
 
 
+--move campaigns
+DELETE FROM [Campaign]
+GO
+PRINT 'moving campaign'
+DECLARE @OriginalCampaignId int
+DECLARE cur_originalcampaign CURSOR FOR
+SELECT CampaignId
+FROM [Nop_Campaign]
+ORDER BY [CreatedOn]
+OPEN cur_originalcampaign
+FETCH NEXT FROM cur_originalcampaign INTO @OriginalCampaignId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving campaign. ID ' + cast(@OriginalCampaignId as nvarchar(10))
+	INSERT INTO [Campaign] ([Name], [Subject], [Body], [CreatedOnUtc])
+	SELECT [Name], [Subject], [Body], [CreatedOn]
+	FROM [Nop_Campaign]
+	WHERE CampaignId = @OriginalCampaignId
+
+	--new ID
+	DECLARE @NewCampaignId int
+	SET @NewCampaignId = @@IDENTITY
+
+	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
+	VALUES (@OriginalCampaignId, @NewCampaignId, N'Campaign')
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalcampaign INTO @OriginalCampaignId
+END
+CLOSE cur_originalcampaign
+DEALLOCATE cur_originalcampaign
+GO
+
+
+
+
+
+
+
+
+
+
+
 --move countries
 DELETE FROM [Address]
 GO
@@ -262,3 +304,5 @@ GO
 --drop temporary table
 DROP TABLE #IDs
 GO
+
+--TODO drop old tables, store procedures, functions
