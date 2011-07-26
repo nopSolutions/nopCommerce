@@ -841,8 +841,6 @@
     <Content Include="Content\smoothness\images\ui-icons_888888_256x240.png" />
     <Content Include="Content\smoothness\images\ui-icons_cd0a0a_256x240.png" />
     <Content Include="Content\smoothness\jquery-ui-1.8.13.custom.css" />
-    <Content Include="Documents\LocaleStringResources.sql" />
-    <Content Include="Documents\Upgrade.sql" />
     <Content Include="ErrorPage.htm" />
     <Content Include="FileNotFound.htm" />
     <Content Include="Global.asax" />
@@ -1115,7 +1113,7 @@
     <Content Include="Content\samples\product_PokerFace_1.zip" />
     <Content Include="Content\samples\product_SingleLadies_1.zip" />
     <None Include="App_Data\GeoIP.dat" />
-    <None Include="Documents\Resources.xsd">
+    <None Include="App_Data\Resources.xsd">
       <SubType>Designer</SubType>
     </None>
     <Content Include="Views\Customer\Login.cshtml" />
