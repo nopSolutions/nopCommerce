@@ -9,7 +9,93 @@ CREATE TABLE #IDs
 	)
 GO
 
+
+
+
+
+
+
+
+--move countries
+DELETE FROM [Address]
+GO
+DELETE FROM [Country]
+GO
+PRINT 'moving countries'
+DECLARE @OriginalCountryId int
+DECLARE cur_originalcountry CURSOR FOR
+SELECT CountryId
+FROM [Nop_Country]
+ORDER BY [DisplayOrder], [Name]
+OPEN cur_originalcountry
+FETCH NEXT FROM cur_originalcountry INTO @OriginalCountryId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving country. ID ' + cast(@OriginalCountryId as nvarchar(10))
+	INSERT INTO [Country] ([Name], [AllowsBilling], [AllowsShipping], [TwoLetterIsoCode], [ThreeLetterIsoCode], [NumericIsoCode], [SubjectToVat], [Published], [DisplayOrder])
+	SELECT [Name], [AllowsBilling], [AllowsShipping], [TwoLetterIsoCode], [ThreeLetterIsoCode], [NumericIsoCode], [SubjectToVat], [Published], [DisplayOrder]
+	FROM [Nop_Country]
+	WHERE CountryId = @OriginalCountryId
+
+	--new ID
+	DECLARE @NewCountryId int
+	SET @NewCountryId = @@IDENTITY
+
+	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
+	VALUES (@OriginalCountryId, @NewCountryId, N'Country')
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalcountry INTO @OriginalCountryId
+END
+CLOSE cur_originalcountry
+DEALLOCATE cur_originalcountry
+GO
+
+
+
+
+
+
+--move states
+DELETE FROM [StateProvince]
+GO
+PRINT 'moving states'
+DECLARE @OriginalStateProvinceId int
+DECLARE cur_originalstateprovince CURSOR FOR
+SELECT StateProvinceId
+FROM [Nop_StateProvince]
+ORDER BY [DisplayOrder], [Name]
+OPEN cur_originalstateprovince
+FETCH NEXT FROM cur_originalstateprovince INTO @OriginalStateProvinceId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving state. ID ' + cast(@OriginalStateProvinceId as nvarchar(10))
+	INSERT INTO [StateProvince] ([CountryId], [Name], [Abbreviation], [Published], [DisplayOrder])
+	SELECT (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Country' and [OriginalId]=original_sp.CountryId), [Name], [Abbreviation], 1 /*published*/, [DisplayOrder]
+	FROM [Nop_StateProvince] original_sp
+	WHERE StateProvinceId = @OriginalStateProvinceId
+
+	--new ID
+	DECLARE @NewStateProvinceId int
+	SET @NewStateProvinceId = @@IDENTITY
+
+	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
+	VALUES (@OriginalStateProvinceId, @NewStateProvinceId, N'StateProvince')
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalstateprovince INTO @OriginalStateProvinceId
+END
+CLOSE cur_originalstateprovince
+DEALLOCATE cur_originalstateprovince
+GO
+
+
+
+
+
+
+
+
 --move customer roles
+PRINT 'moving customer roles'
 DECLARE @OriginalCustomerRoleId int
 DECLARE cur_originalcustomerrole CURSOR FOR
 SELECT CustomerRoleId
@@ -19,7 +105,7 @@ OPEN cur_originalcustomerrole
 FETCH NEXT FROM cur_originalcustomerrole INTO @OriginalCustomerRoleId
 WHILE @@FETCH_STATUS = 0
 BEGIN	
-	PRINT 'moving customer role id ' + cast(@OriginalCustomerRoleId as nvarchar(10))
+	PRINT 'moving customer role. ID ' + cast(@OriginalCustomerRoleId as nvarchar(10))
 	INSERT INTO [CustomerRole] ([Name], [FreeShipping], [TaxExempt], [Active], [IsSystemRole])
 	SELECT [Name], [FreeShipping], [TaxExempt], [Active], 0
 	FROM [Nop_CustomerRole]
@@ -29,7 +115,6 @@ BEGIN
 	DECLARE @NewCustomerRoleId int
 	SET @NewCustomerRoleId = @@IDENTITY
 
-	--TODO should we delete old built-in customer roles? Solution: Just add a note to upgrade readme file
 	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
 	VALUES (@OriginalCustomerRoleId, @NewCustomerRoleId, N'CustomerRole')
 	--fetch next identifier
@@ -40,12 +125,19 @@ DEALLOCATE cur_originalcustomerrole
 GO
 
 
+
+
+
+
+
+
+
+
 --move customers
---delete default admin record from Customer table
+PRINT 'moving customers'
 DELETE FROM [Customer]
 WHERE IsSystemAccount=0
 GO
-
 DECLARE @OriginalCustomerId int
 DECLARE cur_originalcustomer CURSOR FOR
 SELECT CustomerId
@@ -55,7 +147,7 @@ OPEN cur_originalcustomer
 FETCH NEXT FROM cur_originalcustomer INTO @OriginalCustomerId
 WHILE @@FETCH_STATUS = 0
 BEGIN	
-	PRINT 'moving customer id ' + cast(@OriginalCustomerId as nvarchar(10))
+	PRINT 'moving customer. ID ' + cast(@OriginalCustomerId as nvarchar(10))
 	--TODO insert AffiliateId
 	INSERT INTO [Customer] ([CustomerGuid], [Username], [Email], [Password], [PasswordFormatId], [PasswordSalt], [AdminComment], [TaxDisplayTypeId], [IsTaxExempt], [VatNumberStatusId], [UseRewardPointsDuringCheckout], [TimeZoneId], [Active], [Deleted], [IsSystemAccount], [CreatedOnUtc], [LastActivityDateUtc])
 	SELECT [CustomerGuid], [Username], [Email], [PasswordHash], 1 /*hashed*/, [SaltKey], [AdminComment], 0 /*IncludingTax now*/, [IsTaxExempt], 10 /*Empty now*/, 0, [TimeZoneId], [Active], [Deleted], 0, [RegistrationDate], [RegistrationDate]
@@ -144,7 +236,7 @@ BEGIN
 	END
 	--map customer to customer roles(old roles)
 	INSERT INTO [Customer_CustomerRole_Mapping] ([CustomerRole_Id],[Customer_Id])
-	SELECT (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'CustomerRole' and [OriginalId]=original_ccrm.CustomerRoleId ), @NewCustomerId
+	SELECT (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'CustomerRole' and [OriginalId]=original_ccrm.CustomerRoleId), @NewCustomerId
 	FROM [Nop_Customer_CustomerRole_Mapping] original_ccrm
 	WHERE original_ccrm.CustomerID = @OriginalCustomerId
 
@@ -154,6 +246,18 @@ END
 CLOSE cur_originalcustomer
 DEALLOCATE cur_originalcustomer
 GO
+
+
+
+
+
+
+
+
+
+
+
+
 
 --drop temporary table
 DROP TABLE #IDs
