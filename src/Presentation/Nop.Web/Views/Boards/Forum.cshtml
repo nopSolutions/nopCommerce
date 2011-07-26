@@ -26,8 +26,8 @@
             <br />
             @if (Model.ForumFeedsEnabled)
             {            
-                <span>                    
-                    @Html.RouteLink(" ", "ForumRSS", new { id = @Model.Forum.Id }, new { @class = "forum-rss", title = T("Forum.ForumRSSLinkTitle") })</span>
+               <a href="@Url.RouteUrl("ForumRSS", new { id = @Model.Forum.Id })">
+                    <img title="@T("Forum.ForumRSSLinkTitle")" src="@Url.Content("~/content/images/icon_rss.gif")" alt="@T("Forum.RSS")" style="border-width:0px;" /></a>
             }
         </div>
         <div class="actions">            

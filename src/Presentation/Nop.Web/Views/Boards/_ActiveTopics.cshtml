@@ -16,7 +16,8 @@
         @T("Forum.ActiveDiscussions")
         @if (Model.ActiveDiscussionsFeedEnabled == true)
         {
-            @Html.RouteLink("  ", "ActiveDiscussionsRSS", new { }, new { @class = "active-rss", title = T("Forum.ActiveDiscussionsRSSLinkTitle") })
+            <a href="@Url.RouteUrl("ActiveDiscussionsRSS")" class="rss">
+                <img title="@T("Forum.ActiveDiscussionsRSSLinkTitle")" src="@Url.Content("~/content/images/icon_rss.gif")" alt="@T("Forum.RSS")" style="border-width:0px;" /></a> 
         }
         @if (Model.ViewAllLinkEnabled == false)
         {        

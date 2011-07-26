@@ -1632,6 +1632,9 @@
             <LocaleResource Name="Reply">
                 <Value>Reply</Value>
             </LocaleResource>
+            <LocaleResource Name="RSS">
+              <Value>RSS</Value>
+            </LocaleResource>
             <LocaleResource Name="Search">
                 <Value>Search Forums</Value>
                 <Children>

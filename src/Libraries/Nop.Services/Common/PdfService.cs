@@ -546,7 +546,7 @@ namespace Nop.Services.Common
             {
                 if (order.ShippingAddress != null)
                 {
-                    Paragraph p1 = section.AddParagraph(String.Format("{0} #{1}", _localizationService.GetResource("PDFPackagingSlip.Order"), order.Id));
+                    Paragraph p1 = section.AddParagraph(String.Format("{0}# {1}", _localizationService.GetResource("PDFPackagingSlip.Order"), order.Id));
                     p1.Format.Font.Bold = true;
                     p1.Format.Font.Color = Colors.Black;
                     p1.Format.Font.Underline = Underline.None;
@@ -608,7 +608,7 @@ namespace Nop.Services.Common
                         p2.Format.Font.Italic = true;
 
                         row.Cells[2].Format.Alignment = ParagraphAlignment.Center;
-                        row.Cells[2].AddParagraph(pv.Sku);
+                        row.Cells[2].AddParagraph(pv.Sku ?? String.Empty);
                     }
                 }
 

@@ -103,7 +103,7 @@
             @Html.RouteLink(@T("Forum.QuotePost").Text, "PostCreateQuote", new { id = @Model.ForumPost.TopicId, quote = @Model.ForumPost.Id }, new { @class = "quotepostlinkbutton" })
             @if (@ViewBag.Page > 1)
             {                
-                @Html.RouteLink(String.Format("#{0}", @Model.ForumPost.Id.ToString()), "TopicSlugPaged", "http", string.Empty, @Model.ForumPost.Id.ToString(), new { id = @Model.ForumPost.TopicId, slug = @Model.ForumPost.ForumTopic.GetSeName(), page = @ViewBag.Page }, new { @class = "postlink", tittle = @T("Forum.PostLinkTitle") })
+                @Html.RouteLink(String.Format("#{0}", @Model.ForumPost.Id.ToString()), "TopicSlugPaged", "http", string.Empty, @Model.ForumPost.Id.ToString(), new { id = @Model.ForumPost.TopicId, slug = @Model.ForumPost.ForumTopic.GetSeName(), page = @ViewBag.Page }, new { @class = "postlink", title = @T("Forum.PostLinkTitle") })
             }
             else
             {                

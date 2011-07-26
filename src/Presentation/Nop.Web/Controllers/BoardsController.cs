@@ -61,7 +61,7 @@ namespace Nop.Web.Controllers
         {
             return _forumSettings.ForumsEnabled;
         }
-        
+
         [NonAction]
         protected IEnumerable<SelectListItem> ForumTopicTypesList()
         {
@@ -1196,16 +1196,16 @@ namespace Nop.Web.Controllers
                     pageSize = _forumSettings.PostsPageSize;
                 }
                 int pageIndex = (_forumService.CalculateTopicPageIndex(forumPost.TopicId, pageSize, forumPost.Id) + 1);
+                var url = string.Empty;
                 if (pageIndex > 1)
                 {
-                    return RedirectToRoute("TopicSlugPaged",
-                        new { id = forumPost.TopicId, slug = forumPost.ForumTopic.GetSeName(), page = pageIndex });
+                    url = Url.RouteUrl("TopicSlugPaged", new { id = forumPost.TopicId, slug = forumPost.ForumTopic.GetSeName(), page = pageIndex });
                 }
                 else
                 {
-                    return RedirectToRoute("TopicSlug",
-                        new { id = forumPost.TopicId, slug = forumPost.ForumTopic.GetSeName() });
+                    url = Url.RouteUrl("TopicSlug", new { id = forumPost.TopicId, slug = forumPost.ForumTopic.GetSeName() });
                 }
+                return Redirect(string.Format("{0}#{1}", url, forumPost.Id));
             }
             catch (Exception ex)
             {
@@ -1386,14 +1386,16 @@ namespace Nop.Web.Controllers
                     pageSize = _forumSettings.PostsPageSize;
                 }
                 int pageIndex = (_forumService.CalculateTopicPageIndex(forumPost.TopicId, pageSize, forumPost.Id) + 1);
+                var url = string.Empty;
                 if (pageIndex > 1)
                 {
-                    return RedirectToRoute("TopicSlugPaged",
-                        new { id = forumPost.TopicId, slug = forumPost.ForumTopic.GetSeName(), page = pageIndex });
+                    url = Url.RouteUrl("TopicSlugPaged", new { id = forumPost.TopicId, slug = forumPost.ForumTopic.GetSeName(), page = pageIndex });
                 }
-
-                return RedirectToRoute("TopicSlug",
-                    new { id = forumPost.TopicId, slug = forumPost.ForumTopic.GetSeName() });
+                else
+                {
+                    url = Url.RouteUrl("TopicSlug", new { id = forumPost.TopicId, slug = forumPost.ForumTopic.GetSeName() });
+                }
+                return Redirect(string.Format("{0}#{1}", url, forumPost.Id));
             }
             catch (Exception ex)
             {
@@ -1427,7 +1429,7 @@ namespace Nop.Web.Controllers
             {
                 return RedirectToAction("index", "home");
             }
-            
+
             int pageSize = 10;
 
             var model = new SearchModel();

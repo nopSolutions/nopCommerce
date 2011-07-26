@@ -361,7 +361,7 @@ a.logo
 .searchbox
 {
 	float: left;
-	width: 180px;
+	width: 210px;
 	display: inline;
 	padding-left: 5px;
 }
@@ -4695,20 +4695,6 @@ ul.languagelist li:hover
 {
 	text-align: right;
 	padding: 5px 3px 5px 0;
-}
-
-.active-rss, .forum-rss
-{
-	background: url(images/icon_rss.gif) no-repeat;
-	background-position:center bottom;
-	height:14px;
-	width:20px;
-	display:inline-block;
-}
-.forum-rss
-{    
-	margin-top:5px;
-	background-position:left bottom;
 }
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*

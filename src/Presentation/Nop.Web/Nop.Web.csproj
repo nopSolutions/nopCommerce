@@ -940,7 +940,6 @@
     <Content Include="Themes\DarkOrange\Content\images\ico-pm.png" />
     <Content Include="Themes\DarkOrange\Content\images\ico-register.gif" />
     <Content Include="Themes\DarkOrange\Content\images\ico-wishlist.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\icon_rss.gif" />
     <Content Include="Themes\DarkOrange\Content\images\loading.gif" />
     <Content Include="Themes\DarkOrange\Content\images\logo.gif" />
     <Content Include="Themes\DarkOrange\Content\images\nextlabel.gif" />
@@ -985,7 +984,6 @@
     <Content Include="Themes\nopClassic\Content\images\ico-pm.png" />
     <Content Include="Themes\nopClassic\Content\images\ico-register.gif" />
     <Content Include="Themes\nopClassic\Content\images\ico-wishlist.gif" />
-    <Content Include="Themes\nopClassic\Content\images\icon_rss.gif" />
     <Content Include="Themes\nopClassic\Content\images\loading.gif" />
     <Content Include="Themes\nopClassic\Content\images\logo.gif" />
     <Content Include="Themes\nopClassic\Content\images\nextlabel.gif" />
