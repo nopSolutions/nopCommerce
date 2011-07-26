@@ -14,7 +14,8 @@ namespace Nop.Data
 
         public virtual void SetDatabaseInitializer()
         {
-            var initializer = new CreateTablesIfNotExist<NopObjectContext>();
+            //pass some table names to ensure that we have nopCommerce 2.X installed
+            var initializer = new CreateTablesIfNotExist<NopObjectContext>(new[] { "Customer", "Discount", "Order", "Product", "ShoppingCartItem" });
             Database.SetInitializer<NopObjectContext>(initializer);
         }
 
