@@ -314,6 +314,7 @@ BEGIN
 	([value] is not null)
 	--move 'ForumPostCount' customer attribute
 	DECLARE @ForumPostCount int
+	SET @ForumPostCount = null -- clear cache (variable scope)
 	SELECT @ForumPostCount = [TotalForumPosts]
 	FROM [Nop_Customer]
 	WHERE CustomerId = @OriginalCustomerId 
@@ -324,6 +325,7 @@ BEGIN
 	END
 	--move 'Signature' customer attribute
 	DECLARE @Signature nvarchar(1000)
+	SET @Signature = null -- clear cache (variable scope)
 	SELECT @Signature = [Signature]
 	FROM [Nop_Customer]
 	WHERE CustomerId = @OriginalCustomerId 
@@ -469,8 +471,6 @@ BEGIN
 	VALUES (@OriginalBlogPostId, @NewBlogPostId, N'BlogPost')
 
 
-	
-
 
 	--fetch next identifier
 	FETCH NEXT FROM cur_originalblogpost INTO @OriginalBlogPostId
@@ -478,6 +478,75 @@ END
 CLOSE cur_originalblogpost
 DEALLOCATE cur_originalblogpost
 GO
+
+
+
+
+
+
+
+--move blog comments
+PRINT 'moving blog comments'
+DECLARE @OriginalBlogCommentId int
+DECLARE cur_originalblogcomment CURSOR FOR
+SELECT BlogCommentId
+FROM [Nop_BlogComment]
+ORDER BY [CreatedOn]
+OPEN cur_originalblogcomment
+FETCH NEXT FROM cur_originalblogcomment INTO @OriginalBlogCommentId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving blog comment. ID ' + cast(@OriginalBlogCommentId as nvarchar(10))
+
+	DECLARE @BlogCommentCustomerId int
+	SET @BlogCommentCustomerId = null -- clear cache (variable scope)
+	SELECT @BlogCommentCustomerId = [NewId] 
+	FROM #IDs 
+	WHERE [EntityName]=N'Customer' and [OriginalId]=(SELECT CustomerID FROM [Nop_BlogComment] WHERE BlogCommentId = @OriginalBlogCommentId)
+	--ensure that @BlogCommentCustomerId is not null
+	IF ((@BlogCommentCustomerId is null) or (@BlogCommentCustomerId = 0))
+	BEGIN
+		--insert guest customer	
+		print 'inserting guest customer for blog comment'
+		INSERT INTO [Customer] ([CustomerGuid], [PasswordFormatId], [TaxDisplayTypeId], [IsTaxExempt], [VatNumberStatusId], [UseRewardPointsDuringCheckout], [Active], [Deleted], [IsSystemAccount], [CreatedOnUtc], [LastActivityDateUtc])
+		VALUES (NEWID(), 0 /*clear*/, 0 /*IncludingTax now*/, 0, 10 /*Empty now*/, 0, 1, 0, 0, getutcdate(),getutcdate())
+		SET @BlogCommentCustomerId = @@IDENTITY
+				
+		DECLARE @GuestCustomerRoleId int
+		SELECT @GuestCustomerRoleId = Id
+		FROM [CustomerRole]
+		WHERE IsSystemRole=1 and [SystemName] = N'Guests'
+		INSERT INTO Customer_CustomerRole_Mapping ([CustomerRole_Id], [Customer_Id])
+		VALUES (@GuestCustomerRoleId, @BlogCommentCustomerId)
+
+	END
+
+	INSERT INTO [CustomerContent] ([CustomerId], [IpAddress], [IsApproved], [CreatedOnUtc], [UpdatedOnUtc])
+	SELECT @BlogCommentCustomerId, [IpAddress], 1 /*approved*/, [CreatedOn], [CreatedOn]
+	FROM [Nop_BlogComment]
+	WHERE BlogCommentId = @OriginalBlogCommentId
+
+	--new ID
+	DECLARE @NewBlogCommentId int
+	SET @NewBlogCommentId = @@IDENTITY
+
+	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
+	VALUES (@OriginalBlogCommentId, @NewBlogCommentId, N'BlogComment')
+
+
+	INSERT INTO [BlogComment] ([Id], [CommentText], [BlogPostId])
+	SELECT @NewBlogCommentId, [CommentText], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'BlogPost' and [OriginalId]=[BlogPostID])
+	FROM [Nop_BlogComment]
+	WHERE BlogCommentId = @OriginalBlogCommentId	
+
+
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalblogcomment INTO @OriginalBlogCommentId
+END
+CLOSE cur_originalblogcomment
+DEALLOCATE cur_originalblogcomment
+GO
+
 
 
 
