@@ -479,7 +479,7 @@ CLOSE cur_originalblogpost
 DEALLOCATE cur_originalblogpost
 GO
 
---move blog comments
+--BLOG COMMENTS
 PRINT 'moving blog comments'
 DECLARE @OriginalBlogCommentId int
 DECLARE cur_originalblogcomment CURSOR FOR
@@ -640,6 +640,117 @@ BEGIN
 END
 CLOSE cur_originalnewscomment
 DEALLOCATE cur_originalnewscomment
+GO
+
+
+
+
+
+
+
+--POLLS
+PRINT 'moving polls'
+DECLARE @OriginalPollId int
+DECLARE cur_originalpoll CURSOR FOR
+SELECT PollId
+FROM [Nop_Poll]
+ORDER BY [PollId]
+OPEN cur_originalpoll
+FETCH NEXT FROM cur_originalpoll INTO @OriginalPollId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving poll. ID ' + cast(@OriginalPollId as nvarchar(10))
+	INSERT INTO [Poll] ([LanguageId], [Name], [SystemKeyword], [Published], [ShowOnHomePage], [DisplayOrder], [StartDateUtc], [EndDateUtc])
+	SELECT (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Language' and [OriginalId]=[LanguageId]), [Name], [SystemKeyword], [Published], [ShowOnHomePage], [DisplayOrder], [StartDate], [EndDate]
+	FROM [Nop_Poll]
+	WHERE PollId = @OriginalPollId
+
+	--new ID
+	DECLARE @NewPollId int
+	SET @NewPollId = @@IDENTITY
+
+	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
+	VALUES (@OriginalPollId, @NewPollId, N'Poll')
+
+
+
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalpoll INTO @OriginalPollId
+END
+CLOSE cur_originalpoll
+DEALLOCATE cur_originalpoll
+GO
+
+--POLL ANSWERS
+PRINT 'moving poll answers'
+DECLARE @OriginalPollAnswerId int
+DECLARE cur_originalpollanswer CURSOR FOR
+SELECT PollAnswerId
+FROM [Nop_PollAnswer]
+ORDER BY [DisplayOrder]
+OPEN cur_originalpollanswer
+FETCH NEXT FROM cur_originalpollanswer INTO @OriginalPollAnswerId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving poll answer. ID ' + cast(@OriginalPollAnswerId as nvarchar(10))
+	INSERT INTO [PollAnswer] ([PollId], [Name], [NumberOfVotes], [DisplayOrder])
+	SELECT (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Poll' and [OriginalId]=[PollId]), [Name], [Count], [DisplayOrder]
+	FROM [Nop_PollAnswer]
+	WHERE PollAnswerId = @OriginalPollAnswerId
+
+	--new ID
+	DECLARE @NewPollAnswerId int
+	SET @NewPollAnswerId = @@IDENTITY
+
+	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
+	VALUES (@OriginalPollAnswerId, @NewPollAnswerId, N'PollAnswer')
+
+
+
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalpollanswer INTO @OriginalPollAnswerId
+END
+CLOSE cur_originalpollanswer
+DEALLOCATE cur_originalpollanswer
+GO
+
+--POLL VOTING RECORDS
+PRINT 'moving poll voting records'
+DECLARE @OriginalPollVotingRecordId int
+DECLARE cur_originalpollvotingrecord CURSOR FOR
+SELECT PollVotingRecordId
+FROM [Nop_PollVotingRecord]
+ORDER BY [PollVotingRecordID]
+OPEN cur_originalpollvotingrecord
+FETCH NEXT FROM cur_originalpollvotingrecord INTO @OriginalPollVotingRecordId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving poll voting record. ID ' + cast(@OriginalPollVotingRecordId as nvarchar(10))
+
+	INSERT INTO [CustomerContent] ([CustomerId], [IpAddress], [IsApproved], [CreatedOnUtc], [UpdatedOnUtc])
+	SELECT (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Customer' and [OriginalId]=[CustomerId]), null, 1 /*approved*/, getutcdate(), getutcdate()
+	FROM [Nop_PollVotingRecord]
+	WHERE PollVotingRecordId = @OriginalPollVotingRecordId
+
+	--new ID
+	DECLARE @NewPollVotingRecordId int
+	SET @NewPollVotingRecordId = @@IDENTITY
+
+	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
+	VALUES (@OriginalPollVotingRecordId, @NewPollVotingRecordId, N'PollVotingRecord')
+
+
+	INSERT INTO [PollVotingRecord] ([Id], [PollAnswerId])
+	SELECT @NewPollVotingRecordId, (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'PollAnswer' and [OriginalId]=[PollAnswerID])
+	FROM [Nop_PollVotingRecord]
+	WHERE PollVotingRecordId = @OriginalPollVotingRecordId	
+
+
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalpollvotingrecord INTO @OriginalPollVotingRecordId
+END
+CLOSE cur_originalpollvotingrecord
+DEALLOCATE cur_originalpollvotingrecord
 GO
 
 
