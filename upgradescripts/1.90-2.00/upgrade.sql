@@ -25,7 +25,7 @@ GO
 
 
 
---move languages
+--LANGUAGES
 PRINT 'moving languages'
 DECLARE @NewDefaultLanguageId int
 SELECT @NewDefaultLanguageId = Id FROM [Language]
@@ -82,7 +82,7 @@ GO
 
 
 
---move campaigns
+--CAMPAIGNS
 PRINT 'moving campaigns'
 DECLARE @OriginalCampaignId int
 DECLARE cur_originalcampaign CURSOR FOR
@@ -122,7 +122,7 @@ GO
 
 
 
---move countries
+--COUNTRIES
 PRINT 'moving countries'
 DECLARE @OriginalCountryId int
 DECLARE cur_originalcountry CURSOR FOR
@@ -157,7 +157,7 @@ GO
 
 
 
---move states
+--STATES
 PRINT 'moving states'
 DECLARE @OriginalStateProvinceId int
 DECLARE cur_originalstateprovince CURSOR FOR
@@ -194,7 +194,7 @@ GO
 
 
 
---move affiliates
+--AFFILIATES
 PRINT 'moving affiliates'
 DECLARE @OriginalAffiliateId int
 DECLARE cur_originalaffiliate CURSOR FOR
@@ -240,7 +240,7 @@ GO
 
 
 
---move customer roles
+--CUSTOMER ROLES
 PRINT 'moving customer roles'
 DECLARE @OriginalCustomerRoleId int
 DECLARE cur_originalcustomerrole CURSOR FOR
@@ -280,7 +280,7 @@ GO
 
 
 
---move customers
+--CUSTOMERS
 PRINT 'moving customers'
 DECLARE @OriginalCustomerId int
 DECLARE cur_originalcustomer CURSOR FOR
@@ -400,7 +400,7 @@ GO
 
 
 
---move customer addresses
+--CUSTOMER ADDRESSES
 PRINT 'moving customer addresses'
 DECLARE @OriginalAddressId int
 DECLARE cur_originaladdress CURSOR FOR
@@ -446,7 +446,7 @@ GO
 
 
 
---move blog posts
+--BLOG POSTS
 PRINT 'moving blog posts'
 DECLARE @OriginalBlogPostId int
 DECLARE cur_originalblogpost CURSOR FOR
@@ -478,12 +478,6 @@ END
 CLOSE cur_originalblogpost
 DEALLOCATE cur_originalblogpost
 GO
-
-
-
-
-
-
 
 --move blog comments
 PRINT 'moving blog comments'
@@ -545,6 +539,107 @@ BEGIN
 END
 CLOSE cur_originalblogcomment
 DEALLOCATE cur_originalblogcomment
+GO
+
+
+
+
+
+
+
+--NEWS ITEMS
+PRINT 'moving news items'
+DECLARE @OriginalNewsItemId int
+DECLARE cur_originalnewsitem CURSOR FOR
+SELECT NewsId
+FROM [Nop_News]
+ORDER BY [CreatedOn]
+OPEN cur_originalnewsitem
+FETCH NEXT FROM cur_originalnewsitem INTO @OriginalNewsItemId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving news item. ID ' + cast(@OriginalNewsItemId as nvarchar(10))
+	INSERT INTO [News] ([LanguageId], [Title], [Short], [Full], [Published], [AllowComments], [CreatedOnUtc])
+	SELECT (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Language' and [OriginalId]=[LanguageId]), [Title], [Short], [Full], [Published], [AllowComments], [CreatedOn]
+	FROM [Nop_News]
+	WHERE NewsId = @OriginalNewsItemId
+
+	--new ID
+	DECLARE @NewNewsItemId int
+	SET @NewNewsItemId = @@IDENTITY
+
+	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
+	VALUES (@OriginalNewsItemId, @NewNewsItemId, N'NewsItem')
+
+
+
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalnewsitem INTO @OriginalNewsItemId
+END
+CLOSE cur_originalnewsitem
+DEALLOCATE cur_originalnewsitem
+GO
+
+--NEWS COMMENTS
+PRINT 'moving news comments'
+DECLARE @OriginalNewsCommentId int
+DECLARE cur_originalnewscomment CURSOR FOR
+SELECT NewsCommentId
+FROM [Nop_NewsComment]
+ORDER BY [CreatedOn]
+OPEN cur_originalnewscomment
+FETCH NEXT FROM cur_originalnewscomment INTO @OriginalNewsCommentId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving news comment. ID ' + cast(@OriginalNewsCommentId as nvarchar(10))
+
+	DECLARE @NewsCommentCustomerId int
+	SET @NewsCommentCustomerId = null -- clear cache (variable scope)
+	SELECT @NewsCommentCustomerId = [NewId] 
+	FROM #IDs 
+	WHERE [EntityName]=N'Customer' and [OriginalId]=(SELECT CustomerID FROM [Nop_NewsComment] WHERE NewsCommentId = @OriginalNewsCommentId)
+	--ensure that @NewsCommentCustomerId is not null
+	IF ((@NewsCommentCustomerId is null) or (@NewsCommentCustomerId = 0))
+	BEGIN
+		--insert guest customer	
+		print 'inserting guest customer for news comment'
+		INSERT INTO [Customer] ([CustomerGuid], [PasswordFormatId], [TaxDisplayTypeId], [IsTaxExempt], [VatNumberStatusId], [UseRewardPointsDuringCheckout], [Active], [Deleted], [IsSystemAccount], [CreatedOnUtc], [LastActivityDateUtc])
+		VALUES (NEWID(), 0 /*clear*/, 0 /*IncludingTax now*/, 0, 10 /*Empty now*/, 0, 1, 0, 0, getutcdate(),getutcdate())
+		SET @NewsCommentCustomerId = @@IDENTITY
+				
+		DECLARE @GuestCustomerRoleId int
+		SELECT @GuestCustomerRoleId = Id
+		FROM [CustomerRole]
+		WHERE IsSystemRole=1 and [SystemName] = N'Guests'
+		INSERT INTO Customer_CustomerRole_Mapping ([CustomerRole_Id], [Customer_Id])
+		VALUES (@GuestCustomerRoleId, @NewsCommentCustomerId)
+
+	END
+
+	INSERT INTO [CustomerContent] ([CustomerId], [IpAddress], [IsApproved], [CreatedOnUtc], [UpdatedOnUtc])
+	SELECT @NewsCommentCustomerId, [IpAddress], 1 /*approved*/, [CreatedOn], [CreatedOn]
+	FROM [Nop_NewsComment]
+	WHERE NewsCommentId = @OriginalNewsCommentId
+
+	--new ID
+	DECLARE @NewNewsCommentId int
+	SET @NewNewsCommentId = @@IDENTITY
+
+	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
+	VALUES (@OriginalNewsCommentId, @NewNewsCommentId, N'NewsComment')
+
+
+	INSERT INTO [NewsComment] ([Id], [CommentTitle], [CommentText], [NewsItemId])
+	SELECT @NewNewsCommentId, [Title], [Comment], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'NewsItem' and [OriginalId]=[NewsID])
+	FROM [Nop_NewsComment]
+	WHERE NewsCommentId = @OriginalNewsCommentId	
+
+
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalnewscomment INTO @OriginalNewsCommentId
+END
+CLOSE cur_originalnewscomment
+DEALLOCATE cur_originalnewscomment
 GO
 
 
