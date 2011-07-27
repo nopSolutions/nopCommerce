@@ -1,5 +1,19 @@
 ﻿--upgrade scripts from nopCommerce 1.90 to nopCommerce 2.00
 
+
+DELETE FROM [Customer]
+WHERE IsSystemAccount=0
+GO
+DELETE FROM [Address]
+GO
+DELETE FROM [Country]
+GO
+DELETE FROM [StateProvince]
+GO
+
+
+
+
 --temporary table for identifiers
 CREATE TABLE #IDs
 	(
@@ -14,11 +28,7 @@ GO
 
 
 
-
-
 --move campaigns
-DELETE FROM [Campaign]
-GO
 PRINT 'moving campaign'
 DECLARE @OriginalCampaignId int
 DECLARE cur_originalcampaign CURSOR FOR
@@ -59,10 +69,6 @@ GO
 
 
 --move countries
-DELETE FROM [Address]
-GO
-DELETE FROM [Country]
-GO
 PRINT 'moving countries'
 DECLARE @OriginalCountryId int
 DECLARE cur_originalcountry CURSOR FOR
@@ -98,8 +104,6 @@ GO
 
 
 --move states
-DELETE FROM [StateProvince]
-GO
 PRINT 'moving states'
 DECLARE @OriginalStateProvinceId int
 DECLARE cur_originalstateprovince CURSOR FOR
@@ -142,6 +146,7 @@ DECLARE @OriginalCustomerRoleId int
 DECLARE cur_originalcustomerrole CURSOR FOR
 SELECT CustomerRoleId
 FROM [Nop_CustomerRole]
+WHERE Deleted=0
 ORDER BY CustomerRoleId
 OPEN cur_originalcustomerrole
 FETCH NEXT FROM cur_originalcustomerrole INTO @OriginalCustomerRoleId
@@ -151,7 +156,7 @@ BEGIN
 	INSERT INTO [CustomerRole] ([Name], [FreeShipping], [TaxExempt], [Active], [IsSystemRole])
 	SELECT [Name], [FreeShipping], [TaxExempt], [Active], 0
 	FROM [Nop_CustomerRole]
-	WHERE CustomerRoleId = @OriginalCustomerRoleId and Deleted=0
+	WHERE CustomerRoleId = @OriginalCustomerRoleId
 
 	--new ID
 	DECLARE @NewCustomerRoleId int
@@ -177,9 +182,6 @@ GO
 
 --move customers
 PRINT 'moving customers'
-DELETE FROM [Customer]
-WHERE IsSystemAccount=0
-GO
 DECLARE @OriginalCustomerId int
 DECLARE cur_originalcustomer CURSOR FOR
 SELECT CustomerId
@@ -287,6 +289,53 @@ BEGIN
 END
 CLOSE cur_originalcustomer
 DEALLOCATE cur_originalcustomer
+GO
+
+
+
+
+
+
+
+
+--move customer addresses
+PRINT 'moving customer addresses'
+DECLARE @OriginalAddressId int
+DECLARE cur_originaladdress CURSOR FOR
+SELECT [AddressId]
+FROM [Nop_Address]
+WHERE [IsBillingAddress]=1 --move only billing addresses
+ORDER BY AddressId
+OPEN cur_originaladdress
+FETCH NEXT FROM cur_originaladdress INTO @OriginalAddressId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving addresses. ID ' + cast(@OriginalAddressId as nvarchar(10))
+	INSERT INTO [Address] ([FirstName], [LastName], [PhoneNumber], [Email], [FaxNumber], [Company], [Address1], [Address2], [City], [StateProvinceID], [ZipPostalCode], [CountryID], [CreatedOnUtc])
+	SELECT [FirstName], [LastName], [PhoneNumber], [Email], [FaxNumber], [Company], [Address1], [Address2], [City], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'StateProvince' and [OriginalId]=[StateProvinceID]), [ZipPostalCode], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Country' and [OriginalId]=[CountryId]), [CreatedOn]
+	FROM [Nop_Address]
+	WHERE AddressId = @OriginalAddressId
+
+	--new ID
+	DECLARE @NewAddressId int
+	SET @NewAddressId = @@IDENTITY
+
+	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
+	VALUES (@OriginalAddressId, @NewAddressId, N'Address')
+
+	
+	--map customers to addresses (now we have a new CustomerAddresses table)
+	INSERT INTO [CustomerAddresses] ([Customer_Id],[Address_Id])
+	SELECT (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Customer' and [OriginalId]=original_a.CustomerID), @NewAddressId
+	FROM [Nop_Address] original_a
+	WHERE original_a.AddressId = @OriginalAddressId
+
+
+	--fetch next identifier
+	FETCH NEXT FROM cur_originaladdress INTO @OriginalAddressId
+END
+CLOSE cur_originaladdress
+DEALLOCATE cur_originaladdress
 GO
 
 
