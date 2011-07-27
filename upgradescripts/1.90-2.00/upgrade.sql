@@ -25,6 +25,60 @@ GO
 
 
 
+--move languages
+PRINT 'moving languages'
+DECLARE @NewDefaultLanguageId int
+SELECT @NewDefaultLanguageId = Id FROM [Language]
+DECLARE @OriginalLanguageId int
+DECLARE cur_originallanguage CURSOR FOR
+SELECT LanguageId
+FROM [Nop_Language]
+ORDER BY [LanguageId]
+OPEN cur_originallanguage
+FETCH NEXT FROM cur_originallanguage INTO @OriginalLanguageId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving language. ID ' + cast(@OriginalLanguageId as nvarchar(10))
+	INSERT INTO [Language] ([Name], [LanguageCulture], [FlagImageFileName], [Published], [DisplayOrder])
+	SELECT [Name], [LanguageCulture], [FlagImageFileName], [Published], [DisplayOrder]
+	FROM [Nop_Language]
+	WHERE LanguageId = @OriginalLanguageId
+
+	--new ID
+	DECLARE @NewLanguageId int
+	SET @NewLanguageId = @@IDENTITY
+
+	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
+	VALUES (@OriginalLanguageId, @NewLanguageId, N'Language')
+
+
+	--insert new locale recources (not old ones)
+	IF (@NewDefaultLanguageId > 0)
+	BEGIN
+		INSERT INTO [LocaleStringResource] ([LanguageId], [ResourceName], [ResourceValue])
+		SELECT @NewLanguageId, [ResourceName], [ResourceValue]
+		FROM [LocaleStringResource]
+		WHERE [LanguageId]=@NewDefaultLanguageId ORDER BY [ResourceName]
+	END
+
+	--fetch next identifier
+	FETCH NEXT FROM cur_originallanguage INTO @OriginalLanguageId
+END
+CLOSE cur_originallanguage
+DEALLOCATE cur_originallanguage
+--now delete default language
+IF (@NewDefaultLanguageId > 0)
+BEGIN
+	DELETE FROM [Language]
+	WHERE [Id]=@NewDefaultLanguageId
+END
+GO
+
+
+
+
+
+
 
 
 
