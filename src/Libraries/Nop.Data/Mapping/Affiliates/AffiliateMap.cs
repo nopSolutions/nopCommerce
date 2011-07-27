@@ -10,7 +10,7 @@ namespace Nop.Data.Mapping.Affiliates
             this.ToTable("Affiliate");
             this.HasKey(a => a.Id);
 
-            this.HasRequired(a => a.Address).WithOptional().WillCascadeOnDelete(false);
+            this.HasRequired(a => a.Address).WithMany().HasForeignKey(x => x.AddressId).WillCascadeOnDelete(false);
 
             this.HasMany(a => a.AffiliatedCustomers)
                 .WithOptional(c => c.Affiliate)

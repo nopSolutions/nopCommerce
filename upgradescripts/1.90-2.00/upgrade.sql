@@ -29,7 +29,7 @@ GO
 
 
 --move campaigns
-PRINT 'moving campaign'
+PRINT 'moving campaigns'
 DECLARE @OriginalCampaignId int
 DECLARE cur_originalcampaign CURSOR FOR
 SELECT CampaignId
@@ -140,6 +140,52 @@ GO
 
 
 
+--move affiliates
+PRINT 'moving affiliates'
+DECLARE @OriginalAffiliateId int
+DECLARE cur_originalaffiliate CURSOR FOR
+SELECT AffiliateId
+FROM [Nop_Affiliate]
+ORDER BY [AffiliateId]
+OPEN cur_originalaffiliate
+FETCH NEXT FROM cur_originalaffiliate INTO @OriginalAffiliateId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving affiliate. ID ' + cast(@OriginalAffiliateId as nvarchar(10))
+
+	INSERT INTO [Address] ([FirstName], [LastName], [PhoneNumber], [Email], [FaxNumber], [Company], [Address1], [Address2], [City], [StateProvinceID], [ZipPostalCode], [CountryID], [CreatedOnUtc])
+	SELECT [FirstName], [LastName], [PhoneNumber], [Email], [FaxNumber], [Company], [Address1], [Address2], [City], null /*no state province*/, [ZipPostalCode], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Country' and [OriginalId]=[CountryId]), getutcdate()
+	FROM [Nop_Affiliate]
+	WHERE AffiliateId = @OriginalAffiliateId
+
+	DECLARE @NewAffiliateAddressId int
+	SET @NewAffiliateAddressId = @@IDENTITY
+
+	INSERT INTO [Affiliate] ([AddressId], [Active], [Deleted])
+	SELECT @NewAffiliateAddressId, [Active], [Deleted]
+	FROM [Nop_Affiliate]
+	WHERE AffiliateId = @OriginalAffiliateId
+
+	--new ID
+	DECLARE @NewAffiliateId int
+	SET @NewAffiliateId = @@IDENTITY
+
+	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
+	VALUES (@OriginalAffiliateId, @NewAffiliateId, N'Affiliate')
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalaffiliate INTO @OriginalAffiliateId
+END
+CLOSE cur_originalaffiliate
+DEALLOCATE cur_originalaffiliate
+GO
+
+
+
+
+
+
+
+
 --move customer roles
 PRINT 'moving customer roles'
 DECLARE @OriginalCustomerRoleId int
@@ -192,9 +238,9 @@ FETCH NEXT FROM cur_originalcustomer INTO @OriginalCustomerId
 WHILE @@FETCH_STATUS = 0
 BEGIN	
 	PRINT 'moving customer. ID ' + cast(@OriginalCustomerId as nvarchar(10))
-	--TODO insert AffiliateId
-	INSERT INTO [Customer] ([CustomerGuid], [Username], [Email], [Password], [PasswordFormatId], [PasswordSalt], [AdminComment], [TaxDisplayTypeId], [IsTaxExempt], [VatNumberStatusId], [UseRewardPointsDuringCheckout], [TimeZoneId], [Active], [Deleted], [IsSystemAccount], [CreatedOnUtc], [LastActivityDateUtc])
-	SELECT [CustomerGuid], [Username], [Email], [PasswordHash], 1 /*hashed*/, [SaltKey], [AdminComment], 0 /*IncludingTax now*/, [IsTaxExempt], 10 /*Empty now*/, 0, [TimeZoneId], [Active], [Deleted], 0, [RegistrationDate], [RegistrationDate]
+
+	INSERT INTO [Customer] ([CustomerGuid], [Username], [Email], [Password], [PasswordFormatId], [PasswordSalt], [AffiliateId], [AdminComment], [TaxDisplayTypeId], [IsTaxExempt], [VatNumberStatusId], [UseRewardPointsDuringCheckout], [TimeZoneId], [Active], [Deleted], [IsSystemAccount], [CreatedOnUtc], [LastActivityDateUtc])
+	SELECT [CustomerGuid], [Username], [Email], [PasswordHash], 1 /*hashed*/, [SaltKey], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Affiliate' and [OriginalId]=[AffiliateId]) ,[AdminComment], 0 /*IncludingTax now*/, [IsTaxExempt], 10 /*Empty now*/, 0, [TimeZoneId], [Active], [Deleted], 0, [RegistrationDate], [RegistrationDate]
 	FROM [Nop_Customer]
 	WHERE CustomerId = @OriginalCustomerId
 
@@ -337,9 +383,6 @@ END
 CLOSE cur_originaladdress
 DEALLOCATE cur_originaladdress
 GO
-
-
-
 
 
 
