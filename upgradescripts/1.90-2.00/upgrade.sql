@@ -466,7 +466,12 @@ BEGIN
 	SET @NewBlogPostId = @@IDENTITY
 
 	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
-	VALUES (@OriginalBlogPostId, @NewBlogPostId, N'Campaign')
+	VALUES (@OriginalBlogPostId, @NewBlogPostId, N'BlogPost')
+
+
+	
+
+
 	--fetch next identifier
 	FETCH NEXT FROM cur_originalblogpost INTO @OriginalBlogPostId
 END
