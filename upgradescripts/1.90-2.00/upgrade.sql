@@ -444,6 +444,38 @@ GO
 
 
 
+--move blog posts
+PRINT 'moving blog posts'
+DECLARE @OriginalBlogPostId int
+DECLARE cur_originalblogpost CURSOR FOR
+SELECT BlogPostId
+FROM [Nop_BlogPost]
+ORDER BY [CreatedOn]
+OPEN cur_originalblogpost
+FETCH NEXT FROM cur_originalblogpost INTO @OriginalBlogPostId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving blog post. ID ' + cast(@OriginalBlogPostId as nvarchar(10))
+	INSERT INTO [BlogPost] ([LanguageId], [Title], [Body], [AllowComments], [Tags], [CreatedOnUtc])
+	SELECT (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Language' and [OriginalId]=[LanguageId]), [BlogPostTitle], [BlogPostBody], [BlogPostAllowComments], [Tags], [CreatedOn]
+	FROM [Nop_BlogPost]
+	WHERE BlogPostId = @OriginalBlogPostId
+
+	--new ID
+	DECLARE @NewBlogPostId int
+	SET @NewBlogPostId = @@IDENTITY
+
+	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
+	VALUES (@OriginalBlogPostId, @NewBlogPostId, N'Campaign')
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalblogpost INTO @OriginalBlogPostId
+END
+CLOSE cur_originalblogpost
+DEALLOCATE cur_originalblogpost
+GO
+
+
+
 
 
 
