@@ -1463,6 +1463,62 @@ GO
 
 
 
+
+--PRODUCTS
+PRINT 'moving products'
+DECLARE @OriginalProductId int
+DECLARE cur_originalproduct CURSOR FOR
+SELECT ProductId
+FROM [Nop_Product]
+ORDER BY [ProductId]
+OPEN cur_originalproduct
+FETCH NEXT FROM cur_originalproduct INTO @OriginalProductId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving product. ID ' + cast(@OriginalProductId as nvarchar(10))
+	INSERT INTO [Product] ([Name], [ShortDescription], [FullDescription], [AdminComment], [ShowOnHomePage], [MetaKeywords], [MetaDescription], [MetaTitle], [SeName], [AllowCustomerReviews], [ApprovedRatingSum], [NotApprovedRatingSum], [ApprovedTotalReviews], [NotApprovedTotalReviews], [Published], [Deleted], [CreatedOnUtc], [UpdatedOnUtc])
+	SELECT [Name], [ShortDescription], [FullDescription], [AdminComment], [ShowOnHomePage], [MetaKeywords], [MetaDescription], [MetaTitle], [SeName], [AllowCustomerReviews], 0, 0, 0, 0, [Published], [Deleted], [CreatedOn], [UpdatedOn]
+	FROM [Nop_Product]
+	WHERE ProductId = @OriginalProductId
+
+	--new ID
+	DECLARE @NewProductId int
+	SET @NewProductId = @@IDENTITY
+
+	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
+	VALUES (@OriginalProductId, @NewProductId, N'Product')
+
+	--category mappings
+	INSERT INTO [Product_Category_Mapping] ([ProductId], [CategoryId], [IsFeaturedProduct], [DisplayOrder])
+	SELECT @NewProductId, (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Category' and [OriginalId]=[CategoryId]), [IsFeaturedProduct], [DisplayOrder]
+	FROM [Nop_Product_Category_Mapping]
+	WHERE ProductId = @OriginalProductId
+
+	--manufacturer mappings
+	INSERT INTO [Product_Manufacturer_Mapping] ([ProductId], [ManufacturerId], [IsFeaturedProduct], [DisplayOrder])
+	SELECT @NewProductId, (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Manufacturer' and [OriginalId]=[ManufacturerId]), [IsFeaturedProduct], [DisplayOrder]
+	FROM [Nop_Product_Manufacturer_Mapping]
+	WHERE ProductId = @OriginalProductId
+
+
+	
+
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalproduct INTO @OriginalProductId
+END
+CLOSE cur_originalproduct
+DEALLOCATE cur_originalproduct
+GO
+--TODO Update [ApprovedRatingSum], [NotApprovedRatingSum], [ApprovedTotalReviews], [NotApprovedTotalReviews] columns
+
+
+
+
+
+
+
+
+
 --drop temporary table
 DROP TABLE #IDs
 GO
