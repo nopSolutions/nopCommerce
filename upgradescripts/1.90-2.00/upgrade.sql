@@ -2023,6 +2023,83 @@ GO
 
 
 
+
+
+
+--DOWNLOADS
+PRINT 'moving discounts'
+DECLARE @OriginalDiscountId int
+DECLARE cur_originaldiscount CURSOR FOR
+SELECT DiscountId
+FROM [Nop_Discount]
+WHERE Deleted=0
+ORDER BY [DiscountId]
+OPEN cur_originaldiscount
+FETCH NEXT FROM cur_originaldiscount INTO @OriginalDiscountId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving discount. ID ' + cast(@OriginalDiscountId as nvarchar(10))
+
+	DECLARE @NewDiscountLimitationId int
+	SET @NewDiscountLimitationId = null -- clear cache (variable scope)
+	DECLARE @NewLimitationTimes int
+	SET @NewLimitationTimes = null -- clear cache (variable scope)
+	SELECT @NewDiscountLimitationId = [DiscountLimitationId], @NewLimitationTimes = [LimitationTimes]
+	FROM [Nop_Discount]
+	WHERE DiscountId = @OriginalDiscountId
+	--we removed the following discount limitation types: OneTimeOnly, OneTimePerCustomer
+	IF (@NewDiscountLimitationId = 10) -- OneTimeOnly
+	BEGIN
+		SET @NewDiscountLimitationId  = 15
+		SET @NewLimitationTimes  = 1
+	END
+	IF (@NewDiscountLimitationId = 20) -- OneTimePerCustomer
+	BEGIN
+		SET @NewDiscountLimitationId  = 25
+		SET @NewLimitationTimes  = 1
+	END
+
+	INSERT INTO [Discount] ([Name], [DiscountTypeId], [UsePercentage], [DiscountPercentage], [DiscountAmount], [StartDateUtc], [EndDateUtc], [RequiresCouponCode], [CouponCode], [DiscountLimitationId], [LimitationTimes])
+	SELECT [Name], [DiscountTypeId], [UsePercentage], [DiscountPercentage], [DiscountAmount], [StartDate], [EndDate], [RequiresCouponCode], [CouponCode], @NewDiscountLimitationId, @NewLimitationTimes
+	FROM [Nop_Discount]
+	WHERE DiscountId = @OriginalDiscountId
+
+	--new ID
+	DECLARE @NewDiscountId int
+	SET @NewDiscountId = @@IDENTITY
+
+	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
+	VALUES (@OriginalDiscountId, @NewDiscountId, N'Discount')
+
+	--category mappings
+	INSERT INTO [Discount_AppliedToCategories] ([Discount_Id], [Category_Id])
+	SELECT @NewDiscountId, (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Category' and [OriginalId]=[CategoryID])
+	FROM [Nop_Category_Discount_Mapping]
+	WHERE DiscountID = @OriginalDiscountId
+
+	--product variant mappings
+	INSERT INTO [Discount_AppliedToProductVariants] ([Discount_Id], [ProductVariant_Id])
+	SELECT @NewDiscountId, (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'ProductVariant' and [OriginalId]=[ProductVariantID])
+	FROM [Nop_ProductVariant_Discount_Mapping]
+	WHERE DiscountID = @OriginalDiscountId
+
+
+
+
+	--fetch next identifier
+	FETCH NEXT FROM cur_originaldiscount INTO @OriginalDiscountId
+END
+CLOSE cur_originaldiscount
+DEALLOCATE cur_originaldiscount
+GO
+
+
+
+
+
+
+
+
 --drop temporary table
 DROP TABLE #IDs
 GO
