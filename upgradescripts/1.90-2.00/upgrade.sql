@@ -1733,6 +1733,89 @@ GO
 
 
 
+
+
+
+--CHECKOUT ATTRIBUTES
+PRINT 'moving checkout attributes'
+DECLARE @OriginalCheckoutAttributeId int
+DECLARE cur_originalcheckoutattribute CURSOR FOR
+SELECT CheckoutAttributeId
+FROM [Nop_CheckoutAttribute]
+ORDER BY [CheckoutAttributeId]
+OPEN cur_originalcheckoutattribute
+FETCH NEXT FROM cur_originalcheckoutattribute INTO @OriginalCheckoutAttributeId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving checkout attribute. ID ' + cast(@OriginalCheckoutAttributeId as nvarchar(10))
+	INSERT INTO [CheckoutAttribute] ([Name], [TextPrompt], [IsRequired], [ShippableProductRequired], [IsTaxExempt], [TaxCategoryID], [AttributeControlTypeID], [DisplayOrder])
+	SELECT [Name], [TextPrompt], [IsRequired], [ShippableProductRequired], [IsTaxExempt], COALESCE((SELECT [NewId] FROM #IDs WHERE [EntityName]=N'TaxCategory' and [OriginalId]=[TaxCategoryID]), 0), [AttributeControlTypeID], [DisplayOrder]
+	FROM [Nop_CheckoutAttribute]
+	WHERE CheckoutAttributeId = @OriginalCheckoutAttributeId
+
+	--new ID
+	DECLARE @NewCheckoutAttributeId int
+	SET @NewCheckoutAttributeId = @@IDENTITY
+
+	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
+	VALUES (@OriginalCheckoutAttributeId, @NewCheckoutAttributeId, N'CheckoutAttribute')
+
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalcheckoutattribute INTO @OriginalCheckoutAttributeId
+END
+CLOSE cur_originalcheckoutattribute
+DEALLOCATE cur_originalcheckoutattribute
+GO
+
+
+
+
+
+
+
+
+
+
+
+--CHECKOUT ATTRIBUTE VALUES
+PRINT 'moving checkout attribute values'
+DECLARE @OriginalCheckoutAttributeValueId int
+DECLARE cur_originalcheckoutattributevalue CURSOR FOR
+SELECT CheckoutAttributeValueId
+FROM [Nop_CheckoutAttributeValue]
+ORDER BY [CheckoutAttributeValueId]
+OPEN cur_originalcheckoutattributevalue
+FETCH NEXT FROM cur_originalcheckoutattributevalue INTO @OriginalCheckoutAttributeValueId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving checkout attribute value. ID ' + cast(@OriginalCheckoutAttributeValueId as nvarchar(10))
+	INSERT INTO [CheckoutAttributeValue] ([CheckoutAttributeId], [Name], [PriceAdjustment], [WeightAdjustment], [IsPreSelected], [DisplayOrder])
+	SELECT COALESCE((SELECT [NewId] FROM #IDs WHERE [EntityName]=N'CheckoutAttribute' and [OriginalId]=[CheckoutAttributeId]), 0), [Name], [PriceAdjustment], [WeightAdjustment], [IsPreSelected], [DisplayOrder]
+	FROM [Nop_CheckoutAttributeValue]
+	WHERE CheckoutAttributeValueId = @OriginalCheckoutAttributeValueId
+
+	--new ID
+	DECLARE @NewCheckoutAttributeValueId int
+	SET @NewCheckoutAttributeValueId = @@IDENTITY
+
+	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
+	VALUES (@OriginalCheckoutAttributeValueId, @NewCheckoutAttributeValueId, N'CheckoutAttributeValue')
+
+
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalcheckoutattributevalue INTO @OriginalCheckoutAttributeValueId
+END
+CLOSE cur_originalcheckoutattributevalue
+DEALLOCATE cur_originalcheckoutattributevalue
+GO
+
+
+
+
+
+
+
+
 --drop temporary table
 DROP TABLE #IDs
 GO
