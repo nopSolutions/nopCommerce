@@ -14,7 +14,7 @@
 	6e. Update your message templates (some tokens were changed)
 	6f. Configure your payment, shipping, tax providers
 	6g. Update topics (can't be automated)
-
-
+	6h. Recreate product variant attribute combination (if you had ones)
+	6i. Reconfigure prices by customer roles (Now we have new implementation of tier prices based on customer roles)
 Notes:
 1. Now there're several built-in customer roles. You can delete some old ones if you don't need them (e.g. 'Global Administrators' became 'Administrators')

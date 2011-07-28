@@ -1982,6 +1982,47 @@ GO
 
 
 
+
+
+
+--TIER PRICES
+PRINT 'moving tier prices'
+DECLARE @OriginalTierPriceId int
+DECLARE cur_originaltierprice CURSOR FOR
+SELECT TierPriceId
+FROM [Nop_TierPrice]
+ORDER BY [TierPriceId]
+OPEN cur_originaltierprice
+FETCH NEXT FROM cur_originaltierprice INTO @OriginalTierPriceId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving tier price. ID ' + cast(@OriginalTierPriceId as nvarchar(10))
+	INSERT INTO [TierPrice] ([ProductVariantId], [Quantity], [Price])
+	SELECT (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'ProductVariant' and [OriginalId]=[ProductVariantID]), [Quantity], [Price]
+	FROM [Nop_TierPrice]
+	WHERE TierPriceId = @OriginalTierPriceId
+
+	--new ID
+	DECLARE @NewTierPriceId int
+	SET @NewTierPriceId = @@IDENTITY
+
+	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
+	VALUES (@OriginalTierPriceId, @NewTierPriceId, N'TierPrice')
+
+	--fetch next identifier
+	FETCH NEXT FROM cur_originaltierprice INTO @OriginalTierPriceId
+END
+CLOSE cur_originaltierprice
+DEALLOCATE cur_originaltierprice
+GO
+
+
+
+
+
+
+
+
 --drop temporary table
 DROP TABLE #IDs
 GO
