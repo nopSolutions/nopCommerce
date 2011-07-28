@@ -1519,6 +1519,97 @@ GO
 
 
 
+
+
+
+--SPECIFICATION ATTRIBUTES
+PRINT 'moving specification attributes'
+DECLARE @OriginalSpecificationAttributeId int
+DECLARE cur_originalspecificationattribute CURSOR FOR
+SELECT SpecificationAttributeId
+FROM [Nop_SpecificationAttribute]
+ORDER BY [SpecificationAttributeId]
+OPEN cur_originalspecificationattribute
+FETCH NEXT FROM cur_originalspecificationattribute INTO @OriginalSpecificationAttributeId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving specification attribute. ID ' + cast(@OriginalSpecificationAttributeId as nvarchar(10))
+	INSERT INTO [SpecificationAttribute] ([Name], [DisplayOrder])
+	SELECT [Name], [DisplayOrder]
+	FROM [Nop_SpecificationAttribute]
+	WHERE SpecificationAttributeId = @OriginalSpecificationAttributeId
+
+	--new ID
+	DECLARE @NewSpecificationAttributeId int
+	SET @NewSpecificationAttributeId = @@IDENTITY
+
+	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
+	VALUES (@OriginalSpecificationAttributeId, @NewSpecificationAttributeId, N'SpecificationAttribute')
+
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalspecificationattribute INTO @OriginalSpecificationAttributeId
+END
+CLOSE cur_originalspecificationattribute
+DEALLOCATE cur_originalspecificationattribute
+GO
+
+
+
+
+
+
+
+
+
+
+
+--SPECIFICATION ATTRIBUTE OPTIONS
+PRINT 'moving specification attribute options'
+DECLARE @OriginalSpecificationAttributeOptionId int
+DECLARE cur_originalspecificationattributeoption CURSOR FOR
+SELECT SpecificationAttributeOptionId
+FROM [Nop_SpecificationAttributeOption]
+ORDER BY [SpecificationAttributeOptionId]
+OPEN cur_originalspecificationattributeoption
+FETCH NEXT FROM cur_originalspecificationattributeoption INTO @OriginalSpecificationAttributeOptionId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving specification attribute option. ID ' + cast(@OriginalSpecificationAttributeOptionId as nvarchar(10))
+	INSERT INTO [SpecificationAttributeOption] ([SpecificationAttributeId], [Name], [DisplayOrder])
+	SELECT COALESCE((SELECT [NewId] FROM #IDs WHERE [EntityName]=N'SpecificationAttribute' and [OriginalId]=[SpecificationAttributeId]), 0), [Name], [DisplayOrder]
+	FROM [Nop_SpecificationAttributeOption]
+	WHERE SpecificationAttributeOptionId = @OriginalSpecificationAttributeOptionId
+
+	--new ID
+	DECLARE @NewSpecificationAttributeOptionId int
+	SET @NewSpecificationAttributeOptionId = @@IDENTITY
+
+	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
+	VALUES (@OriginalSpecificationAttributeOptionId, @NewSpecificationAttributeOptionId, N'SpecificationAttributeOption')
+
+
+
+	--product mapping
+	INSERT INTO [Product_SpecificationAttribute_Mapping] ([ProductId], [SpecificationAttributeOptionId], [AllowFiltering], [ShowOnProductPage], [DisplayOrder])
+	SELECT (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Product' and [OriginalId]=[ProductId]), @NewSpecificationAttributeOptionId, [AllowFiltering], [ShowOnProductPage], [DisplayOrder]
+	FROM [Nop_Product_SpecificationAttribute_Mapping]
+	WHERE SpecificationAttributeOptionId = @OriginalSpecificationAttributeOptionId
+
+
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalspecificationattributeoption INTO @OriginalSpecificationAttributeOptionId
+END
+CLOSE cur_originalspecificationattributeoption
+DEALLOCATE cur_originalspecificationattributeoption
+GO
+
+
+
+
+
+
+
+
 --drop temporary table
 DROP TABLE #IDs
 GO
