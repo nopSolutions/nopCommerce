@@ -1344,6 +1344,125 @@ GO
 
 
 
+
+--CATEGORIES
+PRINT 'moving categories'
+DECLARE @OriginalCategoryId int
+DECLARE cur_originalcategory CURSOR FOR
+SELECT CategoryId
+FROM [Nop_Category]
+ORDER BY [CategoryId]
+OPEN cur_originalcategory
+FETCH NEXT FROM cur_originalcategory INTO @OriginalCategoryId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving category. ID ' + cast(@OriginalCategoryId as nvarchar(10))
+	INSERT INTO [Category] ([Name], [Description], [MetaKeywords], [MetaDescription], [MetaTitle], [SeName], [ParentCategoryId], [PictureId], [PageSize], [PriceRanges], [ShowOnHomePage], [Published], [Deleted], [DisplayOrder], [CreatedOnUtc], [UpdatedOnUtc])
+	SELECT [Name], [Description], [MetaKeywords], [MetaDescription], [MetaTitle], [SeName], 0 /*0 for now*/, COALESCE((SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Picture' and [OriginalId]=[PictureId]), 0), [PageSize], [PriceRanges], [ShowOnHomePage], [Published], [Deleted], [DisplayOrder], [CreatedOn], [UpdatedOn]
+	FROM [Nop_Category]
+	WHERE CategoryId = @OriginalCategoryId
+
+	--new ID
+	DECLARE @NewCategoryId int
+	SET @NewCategoryId = @@IDENTITY
+
+	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
+	VALUES (@OriginalCategoryId, @NewCategoryId, N'Category')
+
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalcategory INTO @OriginalCategoryId
+END
+CLOSE cur_originalcategory
+DEALLOCATE cur_originalcategory
+GO
+--UPDATE PARENT CATEGORIES
+PRINT 'update parent categories'
+DECLARE @OriginalCategoryId int
+DECLARE cur_originalcategory CURSOR FOR
+SELECT CategoryId
+FROM [Nop_Category]
+ORDER BY [CategoryId]
+OPEN cur_originalcategory
+FETCH NEXT FROM cur_originalcategory INTO @OriginalCategoryId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'updating parent category. ID ' + cast(@OriginalCategoryId as nvarchar(10))
+	
+	DECLARE @NewCategoryId int
+	SELECT @NewCategoryId = [NewId] 
+	FROM #IDs 
+	WHERE [EntityName]=N'Category' and [OriginalId]=@OriginalCategoryId
+
+
+	DECLARE @OldParentCategoryId int
+	SET @OldParentCategoryId = null -- clear cache (variable scope)
+	SELECT @OldParentCategoryId = [ParentCategoryId] 
+	FROM [Nop_Category] 
+	WHERE [CategoryId]= @OriginalCategoryId
+	
+
+	UPDATE [Category]
+	SET [ParentCategoryId] = COALESCE((SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Category' and [OriginalId]=@OldParentCategoryId), 0)
+	WHERE [Id] = @NewCategoryId
+
+
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalcategory INTO @OriginalCategoryId
+END
+CLOSE cur_originalcategory
+DEALLOCATE cur_originalcategory
+GO
+
+
+
+
+
+
+
+
+
+
+
+--MANUFACTURERS
+PRINT 'moving manufacturers'
+DECLARE @OriginalManufacturerId int
+DECLARE cur_originalmanufacturer CURSOR FOR
+SELECT ManufacturerId
+FROM [Nop_Manufacturer]
+ORDER BY [ManufacturerId]
+OPEN cur_originalmanufacturer
+FETCH NEXT FROM cur_originalmanufacturer INTO @OriginalManufacturerId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving manufacturer. ID ' + cast(@OriginalManufacturerId as nvarchar(10))
+	INSERT INTO [Manufacturer] ([Name], [Description], [MetaKeywords], [MetaDescription], [MetaTitle], [SeName], [PictureId], [PageSize], [PriceRanges], [Published], [Deleted], [DisplayOrder], [CreatedOnUtc], [UpdatedOnUtc])
+	SELECT [Name], [Description], [MetaKeywords], [MetaDescription], [MetaTitle], [SeName], COALESCE((SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Picture' and [OriginalId]=[PictureId]), 0), [PageSize], [PriceRanges], [Published], [Deleted], [DisplayOrder], [CreatedOn], [UpdatedOn]
+	FROM [Nop_Manufacturer]
+	WHERE ManufacturerId = @OriginalManufacturerId
+
+	--new ID
+	DECLARE @NewManufacturerId int
+	SET @NewManufacturerId = @@IDENTITY
+
+	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
+	VALUES (@OriginalManufacturerId, @NewManufacturerId, N'Manufacturer')
+
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalmanufacturer INTO @OriginalManufacturerId
+END
+CLOSE cur_originalmanufacturer
+DEALLOCATE cur_originalmanufacturer
+GO
+
+
+
+
+
+
+
+
+
+
 --drop temporary table
 DROP TABLE #IDs
 GO
