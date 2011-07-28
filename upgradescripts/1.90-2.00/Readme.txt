@@ -8,7 +8,7 @@
 7. If your pictures were stored on the file system, then manually copy them into \Content\Images (previously they were stored into \images directory)
 6. Now manually complete the following steps: 
 	6a. Confifure Store settings (Admin area > Configuration > Settings)
-	6b. Configure your currencies (Admin area > Configuration > Currencies)
+	6b. Configure your currencies (Admin area > Configuration > Currencies). Ensure primary store currency and primary exchange currencies are the same
 	6c. Configure your measure units (Admin area > Configuration > Measures)
 	6d. Configure your email accounts (Admin area > Configuration > Email accounts)
 	6e. Update your message templates (some tokens were changed)

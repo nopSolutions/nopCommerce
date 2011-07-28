@@ -44,10 +44,8 @@ namespace Nop.Data.Mapping.Orders
                 .WithMany(c => c.Orders)
                 .HasForeignKey(o => o.CustomerId);
 
-            //TODO add the following integer properties to 'Order' entity 
-            //and use them to configure as foreign keys: "int BillingAddressId, int? ShippingAddressId"
-            this.HasRequired(o => o.BillingAddress).WithOptional().WillCascadeOnDelete(false);
-            this.HasOptional(o => o.ShippingAddress).WithOptionalDependent().WillCascadeOnDelete(false);
+            this.HasRequired(o => o.BillingAddress).WithOptional().Map(x => x.MapKey("BillingAddressId")).WillCascadeOnDelete(false);
+            this.HasOptional(o => o.ShippingAddress).WithOptionalDependent().Map(x => x.MapKey("ShippingAddressId")).WillCascadeOnDelete(false);
 
         }
     }

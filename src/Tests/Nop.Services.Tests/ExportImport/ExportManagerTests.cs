@@ -106,7 +106,6 @@ namespace Nop.Services.Tests.ExportImport
                 ShippingStatus = ShippingStatus.Shipped,
                 PaymentStatus = PaymentStatus.Paid,
                 PaymentMethodSystemName = "PaymentMethodSystemName1",
-                PrimaryCurrencyCode = "USD",
                 CustomerCurrencyCode = "RUR",
                 CurrencyRate = 1.1M,
                 CustomerTaxDisplayType = TaxDisplayType.ExcludingTax,

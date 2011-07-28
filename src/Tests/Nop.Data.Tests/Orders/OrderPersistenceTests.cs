@@ -29,7 +29,6 @@ namespace Nop.Data.Tests.Orders
                 ShippingStatus = ShippingStatus.Shipped,
                 PaymentStatus = PaymentStatus.Paid,
                 PaymentMethodSystemName = "PaymentMethodSystemName1",
-                PrimaryCurrencyCode = "USD",
                 CustomerCurrencyCode = "RUR",
                 CurrencyRate = 1.1M,
                 CustomerTaxDisplayType = TaxDisplayType.ExcludingTax,
@@ -86,7 +85,6 @@ namespace Nop.Data.Tests.Orders
             fromDb.ShippingStatus.ShouldEqual(ShippingStatus.Shipped);
             fromDb.PaymentStatus.ShouldEqual(PaymentStatus.Paid);
             fromDb.PaymentMethodSystemName.ShouldEqual("PaymentMethodSystemName1");
-            fromDb.PrimaryCurrencyCode.ShouldEqual("USD");
             fromDb.CustomerCurrencyCode.ShouldEqual("RUR");
             fromDb.CurrencyRate.ShouldEqual(1.1M);
             fromDb.CustomerTaxDisplayType.ShouldEqual(TaxDisplayType.ExcludingTax);

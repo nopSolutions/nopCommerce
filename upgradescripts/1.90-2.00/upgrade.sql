@@ -2100,6 +2100,176 @@ GO
 
 
 
+
+
+
+--ORDERS
+PRINT 'moving orders'
+DECLARE @OriginalOrderId int
+DECLARE cur_originalorder CURSOR FOR
+SELECT OrderId
+FROM [Nop_Order]
+ORDER BY [OrderId]
+OPEN cur_originalorder
+FETCH NEXT FROM cur_originalorder INTO @OriginalOrderId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving order. ID ' + cast(@OriginalOrderId as nvarchar(10))
+
+	--TODO set @PaymentMethodSystemName
+	DECLARE @PaymentMethodSystemName nvarchar(100)
+	SET @PaymentMethodSystemName = null -- clear cache (variable scope)
+
+	
+	DECLARE @CurrencyRate decimal(18, 4)
+	SET @CurrencyRate = null -- clear cache (variable scope)
+	SELECT @CurrencyRate = c.Rate
+	FROM Nop_Currency c
+	WHERE c.CurrencyCode = (SELECT o.[CustomerCurrencyCode] FROM [Nop_Order] o WHERE o.OrderId = @OriginalOrderId)
+	IF (@CurrencyRate is null)
+	BEGIN
+		--no currency found
+		SET @CurrencyRate = 1
+	END
+
+	--TODO set @ShippingRateComputationMethodSystemName (although it's not used)
+	DECLARE @ShippingRateComputationMethodSystemName  nvarchar(100)
+	SET @ShippingRateComputationMethodSystemName = null -- clear cache (variable scope)
+
+	--insert billing address (now stored into [Address] table
+	DECLARE @BillingAddressId int
+	SET @BillingAddressId = null -- clear cache (variable scope)
+	INSERT INTO [Address] ([FirstName], [LastName], [PhoneNumber], [Email], [FaxNumber], [Company], [Address1], [Address2], [City], [StateProvinceID], [ZipPostalCode], [CountryID], [CreatedOnUtc])
+	SELECT [BillingFirstName], [BillingLastName], [BillingPhoneNumber], [BillingEmail], [BillingFaxNumber], [BillingCompany], [BillingAddress1], [BillingAddress2], [BillingCity], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'StateProvince' and [OriginalId]=[BillingStateProvinceID]), [BillingZipPostalCode], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Country' and [OriginalId]=[BillingCountryID]), getutcdate()
+	FROM [Nop_Order]
+	WHERE OrderId = @OriginalOrderId
+	SET @BillingAddressId = @@IDENTITY
+
+	--insert shipping address
+	DECLARE @ShippingStatusId int
+	SELECT @ShippingStatusId = ShippingStatusId
+	FROM [Nop_Order]
+	WHERE OrderId = @OriginalOrderId
+
+	DECLARE @ShippingAddressId int
+	SET @ShippingAddressId = null -- clear cache (variable scope)
+
+	IF (@ShippingStatusId <> 10)
+	BEGIN
+		--shipping is required
+		INSERT INTO [Address] ([FirstName], [LastName], [PhoneNumber], [Email], [FaxNumber], [Company], [Address1], [Address2], [City], [StateProvinceID], [ZipPostalCode], [CountryID], [CreatedOnUtc])
+		SELECT [ShippingFirstName], [ShippingLastName], [ShippingPhoneNumber], [ShippingEmail], [ShippingFaxNumber], [ShippingCompany], [ShippingAddress1], [ShippingAddress2], [ShippingCity], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'StateProvince' and [OriginalId]=[ShippingStateProvinceID]), [ShippingZipPostalCode], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Country' and [OriginalId]=[ShippingCountryID]), getutcdate()
+		FROM [Nop_Order]
+		WHERE OrderId = @OriginalOrderId
+		SET @ShippingAddressId = @@IDENTITY
+	END
+
+
+	INSERT INTO [Order] ([OrderGuid], [CustomerId], [OrderStatusId], [ShippingStatusId], [PaymentStatusId], [PaymentMethodSystemName], [CustomerCurrencyCode], [CurrencyRate], [CustomerTaxDisplayTypeId], [VatNumber], [OrderSubtotalInclTax], [OrderSubtotalExclTax], [OrderSubTotalDiscountInclTax], [OrderSubTotalDiscountExclTax], [OrderShippingInclTax], [OrderShippingExclTax], [PaymentMethodAdditionalFeeInclTax], [PaymentMethodAdditionalFeeExclTax], [TaxRates], [OrderTax], [OrderDiscount], [OrderTotal], [RefundedAmount], [CheckoutAttributeDescription], [CheckoutAttributesXml], [CustomerLanguageId], [AffiliateId], [CustomerIp], [AllowStoringCreditCardNumber], [CardType], [CardName], [CardNumber], [MaskedCreditCardNumber], [CardCvv2], [CardExpirationMonth], [CardExpirationYear], [AuthorizationTransactionId], [AuthorizationTransactionCode], [AuthorizationTransactionResult], [CaptureTransactionId], [CaptureTransactionResult], [SubscriptionTransactionId], [PurchaseOrderNumber], [PaidDateUtc], [ShippingMethod], [ShippingRateComputationMethodSystemName], [ShippedDateUtc], [DeliveryDateUtc], [OrderWeight], [TrackingNumber], [Deleted], [CreatedOnUtc], [BillingAddressId], [ShippingAddressId])
+	SELECT [OrderGuid], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Customer' and [OriginalId]=[CustomerId]), [OrderStatusId], [ShippingStatusId], [PaymentStatusId], @PaymentMethodSystemName, [CustomerCurrencyCode], @CurrencyRate, [CustomerTaxDisplayTypeId], [VatNumber], [OrderSubtotalInclTax], [OrderSubtotalExclTax], [OrderSubTotalDiscountInclTax], [OrderSubTotalDiscountExclTax], [OrderShippingInclTax], [OrderShippingExclTax], [PaymentMethodAdditionalFeeInclTax], [PaymentMethodAdditionalFeeExclTax], [TaxRates], [OrderTax], [OrderDiscount], [OrderTotal], [RefundedAmount], [CheckoutAttributeDescription], cast([CheckoutAttributesXml] as nvarchar(MAX)), COALESCE((SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Language' and [OriginalId]=[CustomerLanguageId]), 0), (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Affiliate' and [OriginalId]=[AffiliateId]), [CustomerIp], [AllowStoringCreditCardNumber], [CardType], [CardName], [CardNumber], [MaskedCreditCardNumber], [CardCvv2], [CardExpirationMonth], [CardExpirationYear], [AuthorizationTransactionId], [AuthorizationTransactionCode], [AuthorizationTransactionResult], [CaptureTransactionId], [CaptureTransactionResult], [SubscriptionTransactionId], [PurchaseOrderNumber], [PaidDate], [ShippingMethod], @ShippingRateComputationMethodSystemName, [ShippedDate], [DeliveryDate], [OrderWeight], [TrackingNumber], [Deleted], [CreatedOn], @BillingAddressId, @ShippingAddressId
+	FROM [Nop_Order]
+	WHERE OrderId = @OriginalOrderId
+
+	--new ID
+	DECLARE @NewOrderId int
+	SET @NewOrderId = @@IDENTITY
+
+	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
+	VALUES (@OriginalOrderId, @NewOrderId, N'Order')
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalorder INTO @OriginalOrderId
+END
+CLOSE cur_originalorder
+DEALLOCATE cur_originalorder
+GO
+
+
+
+
+
+
+
+
+
+
+
+--ORDER PRODUCT VARIANTS
+PRINT 'moving order product variants'
+DECLARE @OriginalOrderProductVariantId int
+DECLARE cur_originalorderproductvariant CURSOR FOR
+SELECT OrderProductVariantId
+FROM [Nop_OrderProductVariant]
+ORDER BY [OrderProductVariantId]
+OPEN cur_originalorderproductvariant
+FETCH NEXT FROM cur_originalorderproductvariant INTO @OriginalOrderProductVariantId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving order product variant. ID ' + cast(@OriginalOrderProductVariantId as nvarchar(10))
+	INSERT INTO [OrderProductVariant] ([OrderProductVariantGuid], [OrderId], [ProductVariantId], [Quantity], [UnitPriceInclTax], [UnitPriceExclTax], [PriceInclTax], [PriceExclTax], [DiscountAmountInclTax], [DiscountAmountExclTax], [AttributeDescription], [AttributesXml], [DownloadCount], [IsDownloadActivated], [LicenseDownloadId])
+	SELECT [OrderProductVariantGuid], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Order' and [OriginalId]=[OrderId]), (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'ProductVariant' and [OriginalId]=[ProductVariantId]), [Quantity], [UnitPriceInclTax], [UnitPriceExclTax], [PriceInclTax], [PriceExclTax], [DiscountAmountInclTax], [DiscountAmountExclTax], [AttributeDescription], cast([AttributesXml] as nvarchar(MAX)), [DownloadCount], [IsDownloadActivated], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Download' and [OriginalId]=[LicenseDownloadId])
+	FROM [Nop_OrderProductVariant]
+	WHERE OrderProductVariantId = @OriginalOrderProductVariantId
+
+	--new ID
+	DECLARE @NewOrderProductVariantId int
+	SET @NewOrderProductVariantId = @@IDENTITY
+
+	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
+	VALUES (@OriginalOrderProductVariantId, @NewOrderProductVariantId, N'OrderProductVariant')
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalorderproductvariant INTO @OriginalOrderProductVariantId
+END
+CLOSE cur_originalorderproductvariant
+DEALLOCATE cur_originalorderproductvariant
+GO
+
+
+
+
+
+
+
+
+
+
+
+--ORDER NOTES
+PRINT 'moving order notes'
+DECLARE @OriginalOrderNoteId int
+DECLARE cur_originalordernote CURSOR FOR
+SELECT OrderNoteId
+FROM [Nop_OrderNote]
+ORDER BY [OrderNoteId]
+OPEN cur_originalordernote
+FETCH NEXT FROM cur_originalordernote INTO @OriginalOrderNoteId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving order note. ID ' + cast(@OriginalOrderNoteId as nvarchar(10))
+	INSERT INTO [OrderNote] ([OrderId], [Note], [DisplayToCustomer], [CreatedOnUtc])
+	SELECT (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Order' and [OriginalId]=[OrderId]), [Note], [DisplayToCustomer], [CreatedOn]
+	FROM [Nop_OrderNote]
+	WHERE OrderNoteId = @OriginalOrderNoteId
+
+	--new ID
+	DECLARE @NewOrderNoteId int
+	SET @NewOrderNoteId = @@IDENTITY
+
+	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
+	VALUES (@OriginalOrderNoteId, @NewOrderNoteId, N'OrderNote')
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalordernote INTO @OriginalOrderNoteId
+END
+CLOSE cur_originalordernote
+DEALLOCATE cur_originalordernote
+GO
+
+
+
+
+
+
+
+
 --drop temporary table
 DROP TABLE #IDs
 GO

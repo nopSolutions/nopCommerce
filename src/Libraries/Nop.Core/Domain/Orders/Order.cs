@@ -95,11 +95,6 @@ namespace Nop.Core.Domain.Orders
         public virtual string PaymentMethodSystemName { get; set; }
 
         /// <summary>
-        /// Gets or sets the currency code of the primary currency (at the moment of order placing)
-        /// </summary>
-        public virtual string PrimaryCurrencyCode { get; set; }
-
-        /// <summary>
         /// Gets or sets the customer currency code (at the moment of order placing)
         /// </summary>
         public virtual string CustomerCurrencyCode { get; set; }
