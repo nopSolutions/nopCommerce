@@ -1857,6 +1857,131 @@ GO
 
 
 
+
+
+
+--PRODUCT ATTRIBUTES
+PRINT 'moving product attributes'
+DECLARE @OriginalProductAttributeId int
+DECLARE cur_originalproductattribute CURSOR FOR
+SELECT ProductAttributeId
+FROM [Nop_ProductAttribute]
+ORDER BY [ProductAttributeId]
+OPEN cur_originalproductattribute
+FETCH NEXT FROM cur_originalproductattribute INTO @OriginalProductAttributeId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving product attribute. ID ' + cast(@OriginalProductAttributeId as nvarchar(10))
+	INSERT INTO [ProductAttribute] ([Name], [Description])
+	SELECT [Name], [Description]
+	FROM [Nop_ProductAttribute]
+	WHERE ProductAttributeId = @OriginalProductAttributeId
+
+	--new ID
+	DECLARE @NewProductAttributeId int
+	SET @NewProductAttributeId = @@IDENTITY
+
+	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
+	VALUES (@OriginalProductAttributeId, @NewProductAttributeId, N'ProductAttribute')
+
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalproductattribute INTO @OriginalProductAttributeId
+END
+CLOSE cur_originalproductattribute
+DEALLOCATE cur_originalproductattribute
+GO
+
+
+
+
+
+
+
+
+
+
+
+--PRODUCT VARIANT ATTRIBUTES (MAPPING)
+PRINT 'moving product variant attributes'
+DECLARE @OriginalProductVariantAttributeId int
+DECLARE cur_originalproductvariantattribute CURSOR FOR
+SELECT ProductVariantAttributeID
+FROM [Nop_ProductVariant_ProductAttribute_Mapping]
+ORDER BY [ProductVariantAttributeID]
+OPEN cur_originalproductvariantattribute
+FETCH NEXT FROM cur_originalproductvariantattribute INTO @OriginalProductVariantAttributeId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving product variant attribute. ID ' + cast(@OriginalProductVariantAttributeId as nvarchar(10))
+	INSERT INTO [ProductVariant_ProductAttribute_Mapping] ([ProductVariantId], [ProductAttributeId], [TextPrompt], [IsRequired], [AttributeControlTypeId], [DisplayOrder])
+	SELECT (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'ProductVariant' and [OriginalId]=[ProductVariantId]), (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'ProductAttribute' and [OriginalId]=[ProductAttributeId]), [TextPrompt], [IsRequired], [AttributeControlTypeId], [DisplayOrder]
+	FROM [Nop_ProductVariant_ProductAttribute_Mapping]
+	WHERE ProductVariantAttributeID = @OriginalProductVariantAttributeId
+
+	--new ID
+	DECLARE @NewProductVariantAttributeId int
+	SET @NewProductVariantAttributeId = @@IDENTITY
+
+	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
+	VALUES (@OriginalProductVariantAttributeId, @NewProductVariantAttributeId, N'ProductVariantAttribute')
+
+
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalproductvariantattribute INTO @OriginalProductVariantAttributeId
+END
+CLOSE cur_originalproductvariantattribute
+DEALLOCATE cur_originalproductvariantattribute
+GO
+
+
+
+
+
+
+
+
+
+
+
+--PRODUCT VARIANT ATTRIBUTE VALUES
+PRINT 'moving product variant attribute values'
+DECLARE @OriginalProductVariantAttributeValueId int
+DECLARE cur_originalproductvariantattributevalue CURSOR FOR
+SELECT ProductVariantAttributeValueId
+FROM [Nop_ProductVariantAttributeValue]
+ORDER BY [ProductVariantAttributeValueId]
+OPEN cur_originalproductvariantattributevalue
+FETCH NEXT FROM cur_originalproductvariantattributevalue INTO @OriginalProductVariantAttributeValueId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving product variant attribute value. ID ' + cast(@OriginalProductVariantAttributeValueId as nvarchar(10))
+	INSERT INTO [ProductVariantAttributeValue] ([ProductVariantAttributeId], [Name], [PriceAdjustment], [WeightAdjustment], [IsPreSelected], [DisplayOrder])
+	SELECT COALESCE((SELECT [NewId] FROM #IDs WHERE [EntityName]=N'ProductVariantAttribute' and [OriginalId]=[ProductVariantAttributeId]), 0), [Name], [PriceAdjustment], [WeightAdjustment], [IsPreSelected], [DisplayOrder]
+	FROM [Nop_ProductVariantAttributeValue]
+	WHERE ProductVariantAttributeValueId = @OriginalProductVariantAttributeValueId
+
+	--new ID
+	DECLARE @NewProductVariantAttributeValueId int
+	SET @NewProductVariantAttributeValueId = @@IDENTITY
+
+	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
+	VALUES (@OriginalProductVariantAttributeValueId, @NewProductVariantAttributeValueId, N'ProductVariantAttributeValue')
+
+
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalproductvariantattributevalue INTO @OriginalProductVariantAttributeValueId
+END
+CLOSE cur_originalproductvariantattributevalue
+DEALLOCATE cur_originalproductvariantattributevalue
+GO
+
+
+
+
+
+
+
+
 --drop temporary table
 DROP TABLE #IDs
 GO
