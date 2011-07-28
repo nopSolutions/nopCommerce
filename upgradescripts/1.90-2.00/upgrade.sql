@@ -10,7 +10,8 @@ DELETE FROM [Country]
 GO
 DELETE FROM [StateProvince]
 GO
-
+DELETE FROM [ShippingMethod]
+GO
 
 
 
@@ -1242,6 +1243,55 @@ END
 CLOSE cur_originalqueuedemail
 DEALLOCATE cur_originalqueuedemail
 GO
+
+
+
+
+
+
+
+
+
+
+
+--SHIPPING METHODS
+PRINT 'moving shipping methods'
+DECLARE @OriginalShippingMethodId int
+DECLARE cur_originalshippingmethod CURSOR FOR
+SELECT ShippingMethodId
+FROM [Nop_ShippingMethod]
+ORDER BY [ShippingMethodId]
+OPEN cur_originalshippingmethod
+FETCH NEXT FROM cur_originalshippingmethod INTO @OriginalShippingMethodId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving shipping method. ID ' + cast(@OriginalShippingMethodId as nvarchar(10))
+	INSERT INTO [ShippingMethod] ([Name], [Description], [DisplayOrder])
+	SELECT [Name], [Description], [DisplayOrder]
+	FROM [Nop_ShippingMethod]
+	WHERE ShippingMethodId = @OriginalShippingMethodId
+
+	--new ID
+	DECLARE @NewShippingMethodId int
+	SET @NewShippingMethodId = @@IDENTITY
+
+	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
+	VALUES (@OriginalShippingMethodId, @NewShippingMethodId, N'ShippingMethod')
+
+
+	--shipping method restrictions
+	INSERT INTO [ShippingMethodRestrictions] ([ShippingMethod_Id], [Country_Id])
+	SELECT @NewShippingMethodId, (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Country' and [OriginalId]=[CountryID])
+	FROM [Nop_ShippingMethod_RestrictedCountries]
+	WHERE ShippingMethodId = @OriginalShippingMethodId
+
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalshippingmethod INTO @OriginalShippingMethodId
+END
+CLOSE cur_originalshippingmethod
+DEALLOCATE cur_originalshippingmethod
+GO
+
 
 
 
