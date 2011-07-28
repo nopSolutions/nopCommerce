@@ -1464,6 +1464,47 @@ GO
 
 
 
+--PRODUCT TAG
+PRINT 'moving product tag'
+DECLARE @OriginalProductTagId int
+DECLARE cur_originalproducttag CURSOR FOR
+SELECT ProductTagId
+FROM [Nop_ProductTag]
+ORDER BY [ProductTagId]
+OPEN cur_originalproducttag
+FETCH NEXT FROM cur_originalproducttag INTO @OriginalProductTagId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving product tag. ID ' + cast(@OriginalProductTagId as nvarchar(10))
+	INSERT INTO [ProductTag] ([Name], [ProductCount])
+	SELECT [Name], [ProductCount]
+	FROM [Nop_ProductTag]
+	WHERE ProductTagId = @OriginalProductTagId
+
+	--new ID
+	DECLARE @NewProductTagId int
+	SET @NewProductTagId = @@IDENTITY
+
+	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
+	VALUES (@OriginalProductTagId, @NewProductTagId, N'ProductTag')
+
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalproducttag INTO @OriginalProductTagId
+END
+CLOSE cur_originalproducttag
+DEALLOCATE cur_originalproducttag
+GO
+
+
+
+
+
+
+
+
+
+
+
 --PRODUCTS
 PRINT 'moving products'
 DECLARE @OriginalProductId int
@@ -1498,6 +1539,18 @@ BEGIN
 	INSERT INTO [Product_Manufacturer_Mapping] ([ProductId], [ManufacturerId], [IsFeaturedProduct], [DisplayOrder])
 	SELECT @NewProductId, (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Manufacturer' and [OriginalId]=[ManufacturerId]), [IsFeaturedProduct], [DisplayOrder]
 	FROM [Nop_Product_Manufacturer_Mapping]
+	WHERE ProductId = @OriginalProductId
+
+	--picture mappings
+	INSERT INTO [Product_Picture_Mapping] ([ProductId], [PictureId], [DisplayOrder])
+	SELECT @NewProductId, (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Picture' and [OriginalId]=[PictureId]), [DisplayOrder]
+	FROM [Nop_ProductPicture]
+	WHERE ProductId = @OriginalProductId
+
+	--product tag mappings
+	INSERT INTO [Product_ProductTag_Mapping] ([Product_Id], [ProductTag_Id])
+	SELECT @NewProductId, (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'ProductTag' and [OriginalId]=[ProductTagId])
+	FROM [Nop_ProductTag_Product_Mapping]
 	WHERE ProductId = @OriginalProductId
 
 
