@@ -25,6 +25,86 @@ GO
 
 
 
+
+
+
+
+
+
+
+
+--DOWNLOADS
+PRINT 'moving downloads'
+DECLARE @OriginalDownloadId int
+DECLARE cur_originaldownload CURSOR FOR
+SELECT DownloadId
+FROM [Nop_Download]
+ORDER BY [DownloadId]
+OPEN cur_originaldownload
+FETCH NEXT FROM cur_originaldownload INTO @OriginalDownloadId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving download. ID ' + cast(@OriginalDownloadId as nvarchar(10))
+	INSERT INTO [Download] ([UseDownloadUrl], [DownloadUrl], [DownloadBinary], [ContentType], [Filename], [Extension], [IsNew])
+	SELECT [UseDownloadUrl], [DownloadUrl], [DownloadBinary], [ContentType], [Filename], [Extension], [IsNew]
+	FROM [Nop_Download]
+	WHERE DownloadId = @OriginalDownloadId
+
+	--new ID
+	DECLARE @NewDownloadId int
+	SET @NewDownloadId = @@IDENTITY
+
+	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
+	VALUES (@OriginalDownloadId, @NewDownloadId, N'Download')
+	--fetch next identifier
+	FETCH NEXT FROM cur_originaldownload INTO @OriginalDownloadId
+END
+CLOSE cur_originaldownload
+DEALLOCATE cur_originaldownload
+GO
+
+
+
+
+
+
+
+
+
+
+
+--PICTURES
+PRINT 'moving pictures'
+DECLARE @OriginalPictureId int
+DECLARE cur_originalpicture CURSOR FOR
+SELECT PictureId
+FROM [Nop_Picture]
+ORDER BY [PictureId]
+OPEN cur_originalpicture
+FETCH NEXT FROM cur_originalpicture INTO @OriginalPictureId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving picture. ID ' + cast(@OriginalPictureId as nvarchar(10))
+	INSERT INTO [Picture] ([PictureBinary], [IsNew], [MimeType])
+	SELECT [PictureBinary], [IsNew], [MimeType]
+	FROM [Nop_Picture]
+	WHERE PictureId = @OriginalPictureId
+
+	--new ID
+	DECLARE @NewPictureId int
+	SET @NewPictureId = @@IDENTITY
+
+	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
+	VALUES (@OriginalPictureId, @NewPictureId, N'Picture')
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalpicture INTO @OriginalPictureId
+END
+CLOSE cur_originalpicture
+DEALLOCATE cur_originalpicture
+GO
+
+
+
 --LANGUAGES
 PRINT 'moving languages'
 DECLARE @NewDefaultLanguageId int
