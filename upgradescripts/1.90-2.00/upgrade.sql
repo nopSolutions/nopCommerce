@@ -1464,8 +1464,8 @@ GO
 
 
 
---PRODUCT TAG
-PRINT 'moving product tag'
+--PRODUCT TAGS
+PRINT 'moving product tags'
 DECLARE @OriginalProductTagId int
 DECLARE cur_originalproducttag CURSOR FOR
 SELECT ProductTagId
@@ -1564,6 +1564,76 @@ DEALLOCATE cur_originalproduct
 GO
 --TODO Update [ApprovedRatingSum], [NotApprovedRatingSum], [ApprovedTotalReviews], [NotApprovedTotalReviews] columns
 
+
+
+
+
+
+
+
+
+
+
+
+--RELATED PRODUCTS
+PRINT 'moving related products'
+DECLARE @OriginalRelatedProductId int
+DECLARE cur_originalrelatedproduct CURSOR FOR
+SELECT RelatedProductId
+FROM [Nop_RelatedProduct]
+ORDER BY [RelatedProductId]
+OPEN cur_originalrelatedproduct
+FETCH NEXT FROM cur_originalrelatedproduct INTO @OriginalRelatedProductId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving related product. ID ' + cast(@OriginalRelatedProductId as nvarchar(10))
+
+	INSERT INTO [RelatedProduct] ([ProductId1], [ProductId2], [DisplayOrder])
+	SELECT COALESCE((SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Product' and [OriginalId]=[ProductID1]), 0), COALESCE((SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Product' and [OriginalId]=[ProductID2]), 0), [DisplayOrder]
+	FROM [Nop_RelatedProduct]
+	WHERE RelatedProductId = @OriginalRelatedProductId
+	
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalrelatedproduct INTO @OriginalRelatedProductId
+END
+CLOSE cur_originalrelatedproduct
+DEALLOCATE cur_originalrelatedproduct
+GO
+
+
+
+
+
+
+
+
+
+
+
+--CROSSSELL PRODUCTS
+PRINT 'moving crosssell products'
+DECLARE @OriginalCrossSellProductId int
+DECLARE cur_originalcrosssellproduct CURSOR FOR
+SELECT CrossSellProductId
+FROM [Nop_CrossSellProduct]
+ORDER BY [CrossSellProductId]
+OPEN cur_originalcrosssellproduct
+FETCH NEXT FROM cur_originalcrosssellproduct INTO @OriginalCrossSellProductId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving crosssell product. ID ' + cast(@OriginalCrossSellProductId as nvarchar(10))
+
+	INSERT INTO [CrossSellProduct] ([ProductId1], [ProductId2])
+	SELECT COALESCE((SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Product' and [OriginalId]=[ProductID1]), 0), COALESCE((SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Product' and [OriginalId]=[ProductID2]), 0)
+	FROM [Nop_CrossSellProduct]
+	WHERE CrossSellProductId = @OriginalCrossSellProductId
+	
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalcrosssellproduct INTO @OriginalCrossSellProductId
+END
+CLOSE cur_originalcrosssellproduct
+DEALLOCATE cur_originalcrosssellproduct
+GO
 
 
 
