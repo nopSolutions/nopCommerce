@@ -1209,6 +1209,48 @@ GO
 
 
 
+
+
+--QUEUED EMAILS
+PRINT 'moving queued emails'
+DECLARE @DefaultEmailAccount int
+SELECT @DefaultEmailAccount = cast([value] as int) FROM [Setting] WHERE [name] = 'emailaccountsettings.defaultemailaccountid'
+DECLARE @OriginalQueuedEmailId int
+DECLARE cur_originalqueuedemail CURSOR FOR
+SELECT QueuedEmailId
+FROM [Nop_QueuedEmail]
+ORDER BY [QueuedEmailId]
+OPEN cur_originalqueuedemail
+FETCH NEXT FROM cur_originalqueuedemail INTO @OriginalQueuedEmailId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving queued email. ID ' + cast(@OriginalQueuedEmailId as nvarchar(10))
+	INSERT INTO [QueuedEmail] ([Priority], [From], [FromName], [To], [ToName], [Cc], [Bcc], [Subject], [Body], [CreatedOnUtc], [SentTries], [SentOnUtc], [EmailAccountId])
+	SELECT [Priority], [From], [FromName], [To], [ToName], [Cc], [Bcc], [Subject], [Body], [CreatedOn], [SendTries], [SentOn], @DefaultEmailAccount
+	FROM [Nop_QueuedEmail]
+	WHERE QueuedEmailId = @OriginalQueuedEmailId
+
+	--new ID
+	DECLARE @NewQueuedEmailId int
+	SET @NewQueuedEmailId = @@IDENTITY
+
+	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
+	VALUES (@OriginalQueuedEmailId, @NewQueuedEmailId, N'@QueuedEmail')
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalqueuedemail INTO @OriginalQueuedEmailId
+END
+CLOSE cur_originalqueuedemail
+DEALLOCATE cur_originalqueuedemail
+GO
+
+
+
+
+
+
+
+
+
 --drop temporary table
 DROP TABLE #IDs
 GO

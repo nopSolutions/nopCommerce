@@ -15,4 +15,4 @@
 	6f. Configure your payment, shipping, tax providers
 
 Notes:
-1. Now there're several built-in customer roles. You can delete some ones you don't need them (e.g. 'Global Administrators' became 'Administrators')
+1. Now there're several built-in customer roles. You can delete some old ones if you don't need them (e.g. 'Global Administrators' became 'Administrators')
