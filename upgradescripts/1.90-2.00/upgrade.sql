@@ -12,6 +12,8 @@ DELETE FROM [StateProvince]
 GO
 DELETE FROM [ShippingMethod]
 GO
+DELETE FROM [TaxCategory]
+GO
 
 
 
@@ -1290,6 +1292,47 @@ BEGIN
 END
 CLOSE cur_originalshippingmethod
 DEALLOCATE cur_originalshippingmethod
+GO
+
+
+
+
+
+
+
+
+
+
+
+--TAX CATEGORIES
+PRINT 'moving tax categories'
+DECLARE @OriginalTaxCategoryId int
+DECLARE cur_originaltaxcategory CURSOR FOR
+SELECT TaxCategoryId
+FROM [Nop_TaxCategory]
+ORDER BY [TaxCategoryId]
+OPEN cur_originaltaxcategory
+FETCH NEXT FROM cur_originaltaxcategory INTO @OriginalTaxCategoryId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving tax category. ID ' + cast(@OriginalTaxCategoryId as nvarchar(10))
+	INSERT INTO [TaxCategory] ([Name], [DisplayOrder])
+	SELECT [Name], [DisplayOrder]
+	FROM [Nop_TaxCategory]
+	WHERE TaxCategoryId = @OriginalTaxCategoryId
+
+	--new ID
+	DECLARE @NewTaxCategoryId int
+	SET @NewTaxCategoryId = @@IDENTITY
+
+	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
+	VALUES (@OriginalTaxCategoryId, @NewTaxCategoryId, N'TaxCategory')
+
+	--fetch next identifier
+	FETCH NEXT FROM cur_originaltaxcategory INTO @OriginalTaxCategoryId
+END
+CLOSE cur_originaltaxcategory
+DEALLOCATE cur_originaltaxcategory
 GO
 
 
