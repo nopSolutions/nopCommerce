@@ -1169,6 +1169,46 @@ GO
 
 
 
+
+
+--NEWSLETTER SUBSCRIPTIONS
+PRINT 'moving newsletter subscriptions'
+DECLARE @OriginalNewsLetterSubscriptionId int
+DECLARE cur_originalnewslettersubscription CURSOR FOR
+SELECT NewsLetterSubscriptionId
+FROM [Nop_NewsLetterSubscription]
+ORDER BY [NewsLetterSubscriptionId]
+OPEN cur_originalnewslettersubscription
+FETCH NEXT FROM cur_originalnewslettersubscription INTO @OriginalNewsLetterSubscriptionId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving newsletter subscription. ID ' + cast(@OriginalNewsLetterSubscriptionId as nvarchar(10))
+	INSERT INTO [NewsLetterSubscription] ([NewsLetterSubscriptionGuid], [Email], [Active], [CreatedOnUtc])
+	SELECT [NewsLetterSubscriptionGuid], [Email], [Active], [CreatedOn]
+	FROM [Nop_NewsLetterSubscription]
+	WHERE NewsLetterSubscriptionId = @OriginalNewsLetterSubscriptionId
+
+	--new ID
+	DECLARE @NewNewsLetterSubscriptionId int
+	SET @NewNewsLetterSubscriptionId = @@IDENTITY
+
+	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
+	VALUES (@OriginalNewsLetterSubscriptionId, @NewNewsLetterSubscriptionId, N'NewsLetterSubscription')
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalnewslettersubscription INTO @OriginalNewsLetterSubscriptionId
+END
+CLOSE cur_originalnewslettersubscription
+DEALLOCATE cur_originalnewslettersubscription
+GO
+
+
+
+
+
+
+
+
+
 --drop temporary table
 DROP TABLE #IDs
 GO
