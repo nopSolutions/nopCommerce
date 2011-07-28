@@ -1816,6 +1816,47 @@ GO
 
 
 
+
+
+
+--PRODUCT VARIANTS
+PRINT 'moving product variants'
+DECLARE @OriginalProductVariantId int
+DECLARE cur_originalproductvariant CURSOR FOR
+SELECT ProductVariantId
+FROM [Nop_ProductVariant]
+ORDER BY [ProductVariantId]
+OPEN cur_originalproductvariant
+FETCH NEXT FROM cur_originalproductvariant INTO @OriginalProductVariantId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving product variant. ID ' + cast(@OriginalProductVariantId as nvarchar(10))
+	INSERT INTO [ProductVariant] ([ProductId], [Name], [Sku], [Description], [AdminComment], [ManufacturerPartNumber], [IsGiftCard], [GiftCardTypeId], [IsDownload], [DownloadId], [UnlimitedDownloads], [MaxNumberOfDownloads], [DownloadExpirationDays], [DownloadActivationTypeId], [HasSampleDownload], [SampleDownloadId], [HasUserAgreement], [UserAgreementText], [IsRecurring], [RecurringCycleLength], [RecurringCyclePeriodId], [RecurringTotalCycles], [IsShipEnabled], [IsFreeShipping], [AdditionalShippingCharge], [IsTaxExempt], [TaxCategoryId], [ManageInventoryMethodId], [StockQuantity], [DisplayStockAvailability], [DisplayStockQuantity], [MinStockQuantity], [LowStockActivityId], [NotifyAdminForQuantityBelow], [BackorderModeId], [OrderMinimumQuantity], [OrderMaximumQuantity], [DisableBuyButton], [CallForPrice], [Price], [OldPrice], [ProductCost], [CustomerEntersPrice], [MinimumCustomerEnteredPrice], [MaximumCustomerEnteredPrice], [Weight], [Length], [Width], [Height], [PictureId], [AvailableStartDateTimeUtc], [AvailableEndDateTimeUtc], [Published], [Deleted], [DisplayOrder], [CreatedOnUtc], [UpdatedOnUtc])
+	SELECT (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Product' and [OriginalId]=[ProductId]), [Name], [Sku], [Description], [AdminComment], [ManufacturerPartNumber], [IsGiftCard], [GiftCardType], [IsDownload], COALESCE((SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Download' and [OriginalId]=[DownloadId]), 0), [UnlimitedDownloads], [MaxNumberOfDownloads], [DownloadExpirationDays], [DownloadActivationType], [HasSampleDownload], COALESCE((SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Download' and [OriginalId]=[SampleDownloadId]), 0), [HasUserAgreement], [UserAgreementText], [IsRecurring], [CycleLength], [CyclePeriod], [TotalCycles], [IsShipEnabled], [IsFreeShipping], [AdditionalShippingCharge], [IsTaxExempt], COALESCE((SELECT [NewId] FROM #IDs WHERE [EntityName]=N'TaxCategory' and [OriginalId]=[TaxCategoryID]), 0), [ManageInventory], [StockQuantity], [DisplayStockAvailability], [DisplayStockQuantity], [MinStockQuantity], [LowStockActivityId], [NotifyAdminForQuantityBelow], [Backorders], [OrderMinimumQuantity], [OrderMaximumQuantity], [DisableBuyButton], [CallForPrice], [Price], [OldPrice], [ProductCost], [CustomerEntersPrice], [MinimumCustomerEnteredPrice], [MaximumCustomerEnteredPrice], [Weight], [Length], [Width], [Height], COALESCE((SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Picture' and [OriginalId]=[PictureId]), 0), [AvailableStartDateTime], [AvailableEndDateTime], [Published], [Deleted], [DisplayOrder], [CreatedOn], [UpdatedOn]
+	FROM [Nop_ProductVariant]
+	WHERE ProductVariantId = @OriginalProductVariantId
+
+	--new ID
+	DECLARE @NewProductVariantId int
+	SET @NewProductVariantId = @@IDENTITY
+
+	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
+	VALUES (@OriginalProductVariantId, @NewProductVariantId, N'ProductVariant')
+
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalproductvariant INTO @OriginalProductVariantId
+END
+CLOSE cur_originalproductvariant
+DEALLOCATE cur_originalproductvariant
+GO
+
+
+
+
+
+
+
+
 --drop temporary table
 DROP TABLE #IDs
 GO
