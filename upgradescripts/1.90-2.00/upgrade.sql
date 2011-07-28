@@ -836,6 +836,336 @@ GO
 
 
 
+--FORUM GROUPS
+PRINT 'moving forum groups'
+DECLARE @OriginalForumGroupId int
+DECLARE cur_originalforumgroup CURSOR FOR
+SELECT ForumGroupId
+FROM [Nop_Forums_Group]
+ORDER BY [DisplayOrder]
+OPEN cur_originalforumgroup
+FETCH NEXT FROM cur_originalforumgroup INTO @OriginalForumGroupId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving forum group. ID ' + cast(@OriginalForumGroupId as nvarchar(10))
+	INSERT INTO [Forums_Group] ([Name], [Description], [DisplayOrder], [CreatedOnUtc], [UpdatedOnUtc])
+	SELECT [Name], [Description], [DisplayOrder], [CreatedOn], [UpdatedOn]
+	FROM [Nop_Forums_Group]
+	WHERE ForumGroupId = @OriginalForumGroupId
+
+	--new ID
+	DECLARE @NewForumGroupId int
+	SET @NewForumGroupId = @@IDENTITY
+
+	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
+	VALUES (@OriginalForumGroupId, @NewForumGroupId, N'ForumGroup')
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalforumgroup INTO @OriginalForumGroupId
+END
+CLOSE cur_originalforumgroup
+DEALLOCATE cur_originalforumgroup
+GO
+
+
+
+
+
+
+
+--FORUMS
+PRINT 'moving forums'
+DECLARE @OriginalForumId int
+DECLARE cur_originalforum CURSOR FOR
+SELECT ForumId
+FROM [Nop_Forums_Forum]
+ORDER BY [CreatedOn]
+OPEN cur_originalforum
+FETCH NEXT FROM cur_originalforum INTO @OriginalForumId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving forum. ID ' + cast(@OriginalForumId as nvarchar(10))
+
+	INSERT INTO [Forums_Forum] ([ForumGroupId], [Name], [Description], [NumTopics], [NumPosts], [LastTopicId], [LastPostId], [LastPostCustomerId], [LastPostTime], [DisplayOrder], [CreatedOnUtc], [UpdatedOnUtc])
+	SELECT (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'ForumGroup' and [OriginalId]=[ForumGroupId]), [Name], [Description], [NumTopics], [NumPosts], 0 /*temporary 0*/,  0 /*temporary 0*/, COALESCE((SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Customer' and [OriginalId]=[LastPostUserID]), 0), [LastPostTime], [DisplayOrder], [CreatedOn], [UpdatedOn]
+	FROM [Nop_Forums_Forum]
+	WHERE ForumId = @OriginalForumId
+
+	--new ID
+	DECLARE @NewForumId int
+	SET @NewForumId = @@IDENTITY
+
+	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
+	VALUES (@OriginalForumId, @NewForumId, N'Forum')
+
+
+
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalforum INTO @OriginalForumId
+END
+CLOSE cur_originalforum
+DEALLOCATE cur_originalforum
+GO
+
+
+
+
+
+
+
+--FORUM TOPICS
+PRINT 'moving forum topics'
+DECLARE @OriginalForumTopicId int
+DECLARE cur_originalforumtopic CURSOR FOR
+SELECT TopicId
+FROM [Nop_Forums_Topic]
+ORDER BY [CreatedOn]
+OPEN cur_originalforumtopic
+FETCH NEXT FROM cur_originalforumtopic INTO @OriginalForumTopicId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving forum topic. ID ' + cast(@OriginalForumTopicId as nvarchar(10))
+
+	INSERT INTO [Forums_Topic] ([ForumId], [CustomerId], [TopicTypeId], [Subject], [NumPosts], [Views], [LastPostId], [LastPostCustomerId], [LastPostTime], [CreatedOnUtc], [UpdatedOnUtc])
+	SELECT (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Forum' and [OriginalId]=[ForumId]), (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Customer' and [OriginalId]=[UserID]), [TopicTypeId], [Subject], [NumPosts], [Views], 0 /*temporary set lastpostid to 0*/, COALESCE((SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Customer' and [OriginalId]=[LastPostUserID]), 0), [LastPostTime], [CreatedOn], [UpdatedOn]
+	FROM [Nop_Forums_Topic]
+	WHERE TopicId = @OriginalForumTopicId
+
+	--new ID
+	DECLARE @NewForumTopicId int
+	SET @NewForumTopicId = @@IDENTITY
+
+	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
+	VALUES (@OriginalForumTopicId, @NewForumTopicId, N'ForumTopic')
+
+
+
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalforumtopic INTO @OriginalForumTopicId
+END
+CLOSE cur_originalforumtopic
+DEALLOCATE cur_originalforumtopic
+GO
+
+
+
+
+
+
+
+--FORUM POSTS
+PRINT 'moving forum posts'
+DECLARE @OriginalForumPostId int
+DECLARE cur_originalforumpost CURSOR FOR
+SELECT PostId
+FROM [Nop_Forums_Post]
+ORDER BY [CreatedOn]
+OPEN cur_originalforumpost
+FETCH NEXT FROM cur_originalforumpost INTO @OriginalForumPostId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving forum post. ID ' + cast(@OriginalForumPostId as nvarchar(10))
+
+	INSERT INTO [Forums_Post] ([TopicId], [CustomerId], [Text], [IPAddress], [CreatedOnUtc], [UpdatedOnUtc])
+	SELECT (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'ForumTopic' and [OriginalId]=[TopicId]), (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Customer' and [OriginalId]=[UserID]), [Text], [IPAddress], [CreatedOn], [UpdatedOn]
+	FROM [Nop_Forums_Post]
+	WHERE PostId = @OriginalForumPostId
+
+	--new ID
+	DECLARE @NewForumPostId int
+	SET @NewForumPostId = @@IDENTITY
+
+	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
+	VALUES (@OriginalForumPostId, @NewForumPostId, N'ForumPost')
+
+
+
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalforumpost INTO @OriginalForumPostId
+END
+CLOSE cur_originalforumpost
+DEALLOCATE cur_originalforumpost
+GO
+
+
+
+
+
+
+
+--FORUMS. Update LastTopicId and LastPostId (forum topics and posts are migrated now)
+PRINT 'updating forums (LastTopicId and LastPostId properties)'
+DECLARE @OriginalForumId int
+DECLARE cur_originalforum CURSOR FOR
+SELECT ForumId
+FROM [Nop_Forums_Forum]
+ORDER BY [CreatedOn]
+OPEN cur_originalforum
+FETCH NEXT FROM cur_originalforum INTO @OriginalForumId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'updating forum (LastTopicId and LastPostId properties). ID ' + cast(@OriginalForumId as nvarchar(10))
+
+	DECLARE @NewForumId int
+	SELECT @NewForumId = [NewId] 
+	FROM #IDs 
+	WHERE [EntityName]=N'Forum' and [OriginalId]=@OriginalForumId
+
+
+	DECLARE @OldLastTopicId int
+	SET @OldLastTopicId = null -- clear cache (variable scope)
+	SELECT @OldLastTopicId = [LastTopicID] 
+	FROM [Nop_Forums_Forum] 
+	WHERE [ForumId]= @OriginalForumId
+
+
+	DECLARE @OldLastPostId int
+	SET @OldLastPostId = null -- clear cache (variable scope)
+	SELECT @OldLastPostId = [LastPostID] 
+	FROM [Nop_Forums_Forum] 
+	WHERE [ForumId]= @OriginalForumId
+
+
+	UPDATE [Forums_Forum]
+	SET [LastTopicID] = COALESCE((SELECT [NewId] FROM #IDs WHERE [EntityName]=N'ForumTopic' and [OriginalId]=@OldLastTopicId), 0),
+		[LastPostId] = COALESCE((SELECT [NewId] FROM #IDs WHERE [EntityName]=N'ForumPost' and [OriginalId]=@OldLastPostId), 0)
+	WHERE [Id] = @NewForumId
+
+
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalforum INTO @OriginalForumId
+END
+CLOSE cur_originalforum
+DEALLOCATE cur_originalforum
+GO
+
+
+
+
+
+
+
+--FORUM TOPICS. Update LastPostId (forum posts are migrated now)
+PRINT 'updating forum topics (LastPostId property)'
+DECLARE @OriginalForumTopicId int
+DECLARE cur_originalforumtopic CURSOR FOR
+SELECT TopicId
+FROM [Nop_Forums_Topic]
+ORDER BY [CreatedOn]
+OPEN cur_originalforumtopic
+FETCH NEXT FROM cur_originalforumtopic INTO @OriginalForumTopicId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'updating forum topic (LastPostId property). ID ' + cast(@OriginalForumTopicId as nvarchar(10))
+
+	DECLARE @NewForumTopicId int
+	SELECT @NewForumTopicId = [NewId] 
+	FROM #IDs 
+	WHERE [EntityName]=N'ForumTopic' and [OriginalId]=@OriginalForumTopicId
+
+
+	DECLARE @OldLastPostId int
+	SET @OldLastPostId = null -- clear cache (variable scope)
+	SELECT @OldLastPostId = [LastPostID] 
+	FROM [Nop_Forums_Topic] 
+	WHERE [TopicId]= @OriginalForumTopicId
+	
+
+	UPDATE [Forums_Topic]
+	SET [LastPostId] = COALESCE((SELECT [NewId] FROM #IDs WHERE [EntityName]=N'ForumPost' and [OriginalId]=@OldLastPostId), 0)
+	WHERE [Id] = @NewForumTopicId
+
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalforumtopic INTO @OriginalForumTopicId
+END
+CLOSE cur_originalforumtopic
+DEALLOCATE cur_originalforumtopic
+GO
+
+
+
+
+
+
+
+
+
+
+
+--FORUM SUBSCRIPTIONS
+PRINT 'moving forum subscriptions'
+DECLARE @OriginalForumSubscriptionId int
+DECLARE cur_originalforumsubscription CURSOR FOR
+SELECT SubscriptionID
+FROM [Nop_Forums_Subscription]
+ORDER BY [SubscriptionID]
+OPEN cur_originalforumsubscription
+FETCH NEXT FROM cur_originalforumsubscription INTO @OriginalForumSubscriptionId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving forum subscription. ID ' + cast(@OriginalForumSubscriptionId as nvarchar(10))
+	INSERT INTO [Forums_Subscription] ([SubscriptionGuid], [CustomerId], [ForumId], [TopicId], [CreatedOnUtc])
+	SELECT [SubscriptionGuid], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Customer' and [OriginalId]=[UserId]), COALESCE((SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Forum' and [OriginalId]=[ForumId]), 0), COALESCE((SELECT [NewId] FROM #IDs WHERE [EntityName]=N'ForumTopic' and [OriginalId]=[TopicId]), 0), [CreatedOn]
+	FROM [Nop_Forums_Subscription]
+	WHERE SubscriptionID = @OriginalForumSubscriptionId
+
+	--new ID
+	DECLARE @NewForumSubscriptionId int
+	SET @NewForumSubscriptionId = @@IDENTITY
+
+	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
+	VALUES (@OriginalForumSubscriptionId, @NewForumSubscriptionId, N'ForumSubscription')
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalforumsubscription INTO @OriginalForumSubscriptionId
+END
+CLOSE cur_originalforumsubscription
+DEALLOCATE cur_originalforumsubscription
+GO
+
+
+
+
+
+
+
+
+
+
+
+--PRIVATE MESSAGES
+PRINT 'moving private messages'
+DECLARE @OriginalPrivateMessageId int
+DECLARE cur_originalprivatemessage CURSOR FOR
+SELECT PrivateMessageID
+FROM [Nop_Forums_PrivateMessage]
+ORDER BY [PrivateMessageID]
+OPEN cur_originalprivatemessage
+FETCH NEXT FROM cur_originalprivatemessage INTO @OriginalPrivateMessageId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving private message. ID ' + cast(@OriginalPrivateMessageId as nvarchar(10))
+	INSERT INTO [Forums_PrivateMessage] ([FromCustomerId], [ToCustomerId], [Subject], [Text], [IsRead], [IsDeletedByAuthor], [IsDeletedByRecipient], [CreatedOnUtc])
+	SELECT (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Customer' and [OriginalId]=[FromUserID]), (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Customer' and [OriginalId]=[ToUserID]), [Subject], [Text], [IsRead], [IsDeletedByAuthor], [IsDeletedByRecipient], [CreatedOn]
+	FROM [Nop_Forums_PrivateMessage]
+	WHERE PrivateMessageID = @OriginalPrivateMessageId
+
+	--new ID
+	DECLARE @NewPrivateMessageId int
+	SET @NewPrivateMessageId = @@IDENTITY
+
+	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
+	VALUES (@OriginalPrivateMessageId, @NewPrivateMessageId, N'PrivateMessage')
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalprivatemessage INTO @OriginalPrivateMessageId
+END
+CLOSE cur_originalprivatemessage
+DEALLOCATE cur_originalprivatemessage
+GO
+
+
+
+
+
+
 
 
 
