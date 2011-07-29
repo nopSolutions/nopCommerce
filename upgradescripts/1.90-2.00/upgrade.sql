@@ -2857,4 +2857,223 @@ DROP TABLE [Nop_CustomerRole_Discount_Mapping]
 GO
 DROP TABLE [Nop_CustomerRole_ProductPrice]
 GO
---TODO drop other tables
+DROP TABLE [Nop_DiscountRestriction]
+GO
+DROP TABLE [Nop_DiscountUsageHistory]
+GO
+DROP TABLE [Nop_Download]
+GO
+DROP TABLE [Nop_EmailAccount]
+GO
+DROP TABLE [Nop_Forums_Subscription]
+GO
+DROP TABLE [Nop_Forums_PrivateMessage]
+GO
+DROP TABLE [Nop_GiftCardUsageHistory]
+GO
+DROP TABLE [Nop_LocaleStringResource]
+GO
+DROP TABLE [Nop_Log]
+GO
+DROP TABLE [Nop_ManufacturerLocalized]
+GO
+DROP TABLE [Nop_MeasureDimension]
+GO
+DROP TABLE [Nop_MeasureWeight]
+GO
+DROP TABLE [Nop_MessageTemplateLocalized]
+GO
+DROP TABLE [Nop_MessageTemplate]
+GO
+DROP TABLE [Nop_NewsComment]
+GO
+DROP TABLE [Nop_News]
+GO
+DROP TABLE [Nop_NewsLetterSubscription]
+GO
+DROP TABLE [Nop_OrderNote]
+GO
+DROP TABLE [Nop_PaymentMethod_RestrictedCountries]
+GO
+DROP TABLE [Nop_PaymentMethod]
+GO
+DROP TABLE [Nop_PollVotingRecord]
+GO
+DROP TABLE [Nop_PollAnswer]
+GO
+DROP TABLE [Nop_Poll]
+GO
+DROP TABLE [Nop_Product_Category_Mapping]
+GO
+DROP TABLE [Nop_Product_Manufacturer_Mapping]
+GO
+DROP TABLE [Nop_Product_SpecificationAttribute_Mapping]
+GO
+DROP TABLE [Nop_ProductAttributeLocalized]
+GO
+DROP TABLE [Nop_ProductLocalized]
+GO
+DROP TABLE [Nop_ProductPicture]
+GO
+DROP TABLE [Nop_ProductReviewHelpfulness]
+GO
+DROP TABLE [Nop_ProductReview]
+GO
+DROP TABLE [Nop_ProductRating]
+GO
+DROP TABLE [Nop_ProductTag_Product_Mapping]
+GO
+DROP TABLE [Nop_ProductTag]
+GO
+DROP TABLE [Nop_ProductVariant_Discount_Mapping]
+GO
+DROP TABLE [Nop_ProductVariant_Pricelist_Mapping]
+GO
+DROP TABLE [Nop_ProductVariantAttributeValueLocalized]
+GO
+DROP TABLE [Nop_ProductVariantAttributeValue]
+GO
+DROP TABLE [Nop_ProductVariantAttributeCombination]
+GO
+DROP TABLE [Nop_ProductVariant_ProductAttribute_Mapping]
+GO
+DROP TABLE [Nop_ProductVariantLocalized]
+GO
+DROP TABLE [Nop_QBEntity]
+GO
+DROP TABLE [Nop_QueuedEmail]
+GO
+DROP TABLE [Nop_RecurringPaymentHistory]
+GO
+DROP TABLE [Nop_RecurringPayment]
+GO
+DROP TABLE [Nop_RelatedProduct]
+GO
+DROP TABLE [Nop_ReturnRequest]
+GO
+DROP TABLE [Nop_RewardPointsHistory]
+GO
+DROP TABLE [Nop_SearchLog]
+GO
+DROP TABLE [Nop_Setting]
+GO
+DROP TABLE [Nop_ShippingByTotal]
+GO
+DROP TABLE [Nop_ShippingByWeight]
+GO
+DROP TABLE [Nop_ShippingByWeightAndCountry]
+GO
+DROP TABLE [Nop_ShippingMethod_RestrictedCountries]
+GO
+DROP TABLE [Nop_ShippingMethod]
+GO
+DROP TABLE [Nop_ShippingRateComputationMethod]
+GO
+DROP TABLE [Nop_SMSProvider]
+GO
+DROP TABLE [Nop_SpecificationAttributeOptionLocalized]
+GO
+DROP TABLE [Nop_SpecificationAttributeOption]
+GO
+DROP TABLE [Nop_SpecificationAttributeLocalized]
+GO
+DROP TABLE [Nop_SpecificationAttribute]
+GO
+DROP TABLE [Nop_StateProvince]
+GO
+DROP TABLE [Nop_TaxProvider]
+GO
+DROP TABLE [Nop_TaxRate]
+GO
+DROP TABLE [Nop_TierPrice]
+GO
+DROP TABLE [Nop_TopicLocalized]
+GO
+DROP TABLE [Nop_Topic]
+GO
+DROP TABLE [Nop_Warehouse]
+GO
+DROP TABLE [Nop_Manufacturer]
+GO
+DROP TABLE [Nop_ManufacturerTemplate]
+GO
+DROP TABLE [Nop_Category]
+GO
+DROP TABLE [Nop_CategoryTemplate]
+GO
+DROP TABLE [Nop_ACLPerObject]
+GO
+DROP TABLE [Nop_Discount]
+GO
+DROP TABLE [Nop_Affiliate]
+GO
+DROP TABLE [Nop_Address]
+GO
+DROP TABLE [Nop_Country]
+GO
+DROP TABLE [Nop_GiftCard]
+GO
+DROP TABLE [Nop_Language]
+GO
+DROP TABLE [Nop_Picture]
+GO
+DROP TABLE [Nop_ShoppingCartItem]
+GO
+DROP TABLE [Nop_CustomerSession]
+GO
+DROP TABLE [Nop_Customer]
+GO
+DROP TABLE [Nop_CustomerRole]
+GO
+DROP TABLE [Nop_ProductAttribute]
+GO
+DROP TABLE [Nop_OrderProductVariant]
+GO
+DROP TABLE [Nop_Order]
+GO
+DROP TABLE [Nop_ProductVariant]
+GO
+DROP TABLE [Nop_Product]
+GO
+DROP TABLE [Nop_ProductTemplate]
+GO
+DROP TABLE [Nop_TaxCategory]
+GO
+DROP TABLE [Nop_Forums_Post]
+GO
+DROP TABLE [Nop_Forums_Topic]
+GO
+DROP TABLE [Nop_Forums_Forum]
+GO
+DROP TABLE [Nop_Forums_Group]
+GO
+DROP TABLE [Nop_Pricelist]
+GO
+DROP PROCEDURE [Nop_CustomerBestReport]
+GO
+DROP PROCEDURE [Nop_CustomerReportByAttributeKey]
+GO
+DROP PROCEDURE [Nop_LanguagePackExport]
+GO
+DROP PROCEDURE [Nop_LanguagePackImport]
+GO
+DROP PROCEDURE [Nop_Maintenance_ReindexTables]
+GO
+DROP PROCEDURE [Nop_OrderProductVariantReport]
+GO
+DROP PROCEDURE [Nop_ProductAlsoPurchasedLoadByProductID]
+GO
+DROP PROCEDURE [Nop_ProductLoadAllPaged]
+GO
+DROP PROCEDURE [Nop_ProductVariantLoadAll]
+GO
+DROP PROCEDURE [Nop_SalesBestSellersReport]
+GO
+DROP PROCEDURE [Nop_SpecificationAttributeOptionFilter_LoadByFilter]
+GO
+DROP FUNCTION [NOP_splitstring_to_table]
+GO
+DROP FUNCTION [NOP_getcustomerattributevalue]
+GO
+DROP FUNCTION [NOP_getnotnullnotempty]
+GO
