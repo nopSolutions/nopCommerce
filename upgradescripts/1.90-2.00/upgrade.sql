@@ -32,7 +32,11 @@ GO
 
 
 
-
+--Update encryption key
+UPDATE [Setting]
+SET [Value] = (SELECT [Value] FROM [Nop_Setting] WHERE [name] = N'Security.EncryptionPrivateKey')
+WHERE [Name] = N'SecuritySettings.EncryptionKey'
+GO
 
 
 
@@ -2236,9 +2240,26 @@ BEGIN
 		SET @ShippingAddressId = @@IDENTITY
 	END
 
+	--customer tax display type
+	DECLARE @CustomerTaxDisplayTypeId int
+	SET @CustomerTaxDisplayTypeId = null -- clear cache (variable scope)
+	SELECT @CustomerTaxDisplayTypeId=[CustomerTaxDisplayTypeId]
+	FROM [Nop_Order]
+	WHERE OrderId = @OriginalOrderId
+	IF (@CustomerTaxDisplayTypeId = 1)
+	BEGIN
+		-- Including tax
+		SET @CustomerTaxDisplayTypeId = 0 --now 0
+	END
+	ELSE 
+	BEGIN
+		-- Excluding tax
+		SET @CustomerTaxDisplayTypeId = 10 --now 10
+	END
+
 
 	INSERT INTO [Order] ([OrderGuid], [CustomerId], [OrderStatusId], [ShippingStatusId], [PaymentStatusId], [PaymentMethodSystemName], [CustomerCurrencyCode], [CurrencyRate], [CustomerTaxDisplayTypeId], [VatNumber], [OrderSubtotalInclTax], [OrderSubtotalExclTax], [OrderSubTotalDiscountInclTax], [OrderSubTotalDiscountExclTax], [OrderShippingInclTax], [OrderShippingExclTax], [PaymentMethodAdditionalFeeInclTax], [PaymentMethodAdditionalFeeExclTax], [TaxRates], [OrderTax], [OrderDiscount], [OrderTotal], [RefundedAmount], [CheckoutAttributeDescription], [CheckoutAttributesXml], [CustomerLanguageId], [AffiliateId], [CustomerIp], [AllowStoringCreditCardNumber], [CardType], [CardName], [CardNumber], [MaskedCreditCardNumber], [CardCvv2], [CardExpirationMonth], [CardExpirationYear], [AuthorizationTransactionId], [AuthorizationTransactionCode], [AuthorizationTransactionResult], [CaptureTransactionId], [CaptureTransactionResult], [SubscriptionTransactionId], [PurchaseOrderNumber], [PaidDateUtc], [ShippingMethod], [ShippingRateComputationMethodSystemName], [ShippedDateUtc], [DeliveryDateUtc], [OrderWeight], [TrackingNumber], [Deleted], [CreatedOnUtc], [BillingAddressId], [ShippingAddressId])
-	SELECT [OrderGuid], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Customer' and [OriginalId]=[CustomerId]), [OrderStatusId], [ShippingStatusId], [PaymentStatusId], @PaymentMethodSystemName, [CustomerCurrencyCode], @CurrencyRate, [CustomerTaxDisplayTypeId], [VatNumber], [OrderSubtotalInclTax], [OrderSubtotalExclTax], [OrderSubTotalDiscountInclTax], [OrderSubTotalDiscountExclTax], [OrderShippingInclTax], [OrderShippingExclTax], [PaymentMethodAdditionalFeeInclTax], [PaymentMethodAdditionalFeeExclTax], [TaxRates], [OrderTax], [OrderDiscount], [OrderTotal], [RefundedAmount], [CheckoutAttributeDescription], cast([CheckoutAttributesXml] as nvarchar(MAX)), COALESCE((SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Language' and [OriginalId]=[CustomerLanguageId]), 0), (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Affiliate' and [OriginalId]=[AffiliateId]), [CustomerIp], [AllowStoringCreditCardNumber], [CardType], [CardName], [CardNumber], [MaskedCreditCardNumber], [CardCvv2], [CardExpirationMonth], [CardExpirationYear], [AuthorizationTransactionId], [AuthorizationTransactionCode], [AuthorizationTransactionResult], [CaptureTransactionId], [CaptureTransactionResult], [SubscriptionTransactionId], [PurchaseOrderNumber], [PaidDate], [ShippingMethod], @ShippingRateComputationMethodSystemName, [ShippedDate], [DeliveryDate], [OrderWeight], [TrackingNumber], [Deleted], [CreatedOn], @BillingAddressId, @ShippingAddressId
+	SELECT [OrderGuid], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Customer' and [OriginalId]=[CustomerId]), [OrderStatusId], [ShippingStatusId], [PaymentStatusId], @PaymentMethodSystemName, [CustomerCurrencyCode], @CurrencyRate, @CustomerTaxDisplayTypeId, [VatNumber], [OrderSubtotalInclTax], [OrderSubtotalExclTax], [OrderSubTotalDiscountInclTax], [OrderSubTotalDiscountExclTax], [OrderShippingInclTax], [OrderShippingExclTax], [PaymentMethodAdditionalFeeInclTax], [PaymentMethodAdditionalFeeExclTax], [TaxRates], [OrderTax], [OrderDiscount], [OrderTotal], [RefundedAmount], [CheckoutAttributeDescription], cast([CheckoutAttributesXml] as nvarchar(MAX)), COALESCE((SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Language' and [OriginalId]=[CustomerLanguageId]), 0), (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Affiliate' and [OriginalId]=[AffiliateId]), [CustomerIp], [AllowStoringCreditCardNumber], [CardType], [CardName], [CardNumber], [MaskedCreditCardNumber], [CardCvv2], [CardExpirationMonth], [CardExpirationYear], [AuthorizationTransactionId], [AuthorizationTransactionCode], [AuthorizationTransactionResult], [CaptureTransactionId], [CaptureTransactionResult], [SubscriptionTransactionId], [PurchaseOrderNumber], [PaidDate], [ShippingMethod], @ShippingRateComputationMethodSystemName, [ShippedDate], [DeliveryDate], [OrderWeight], [TrackingNumber], [Deleted], [CreatedOn], @BillingAddressId, @ShippingAddressId
 	FROM [Nop_Order]
 	WHERE OrderId = @OriginalOrderId
 
@@ -2791,4 +2812,49 @@ GO
 DROP TABLE #IDs
 GO
 
---TODO drop old tables, store procedures, functions
+--drop old tables, store procedures, functions
+DROP TABLE [Nop_ACL]
+GO
+DROP TABLE [Nop_ActivityLog]
+GO
+DROP TABLE [Nop_ActivityLogType]
+GO
+DROP TABLE [Nop_BannedIpAddress]
+GO
+DROP TABLE [Nop_BannedIpNetwork]
+GO
+DROP TABLE [Nop_BlogComment]
+GO
+DROP TABLE [Nop_BlogPost]
+GO
+DROP TABLE [Nop_Campaign]
+GO
+DROP TABLE [Nop_Category_Discount_Mapping]
+GO
+DROP TABLE [Nop_CategoryLocalized]
+GO
+DROP TABLE [Nop_CheckoutAttributeValueLocalized]
+GO
+DROP TABLE [Nop_CheckoutAttributeValue]
+GO
+DROP TABLE [Nop_CheckoutAttributeLocalized]
+GO
+DROP TABLE [Nop_CheckoutAttribute]
+GO
+DROP TABLE [Nop_CreditCardType]
+GO
+DROP TABLE [Nop_CrossSellProduct]
+GO
+DROP TABLE [Nop_Currency]
+GO
+DROP TABLE [Nop_Customer_CustomerRole_Mapping]
+GO
+DROP TABLE [Nop_CustomerAction]
+GO
+DROP TABLE [Nop_CustomerAttribute]
+GO
+DROP TABLE [Nop_CustomerRole_Discount_Mapping]
+GO
+DROP TABLE [Nop_CustomerRole_ProductPrice]
+GO
+--TODO drop other tables

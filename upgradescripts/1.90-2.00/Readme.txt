@@ -1,7 +1,7 @@
 ﻿Steps:
 1. Backup your existing database
 2. Install nopCommerce 2.00 to your existing database (1.90).
-	NOTE: Install it without sample data!!!
+	IMPORTANT NOTE: Install it without sample data!!!
 3. Backup your existing database (again)
 4. Execute upgrade.sql script over your database
 5. Restart your application (for example, modify Web.config file)
@@ -17,7 +17,8 @@
 	6h. Recreate product variant attribute combination (if you had ones)
 	6i. Reconfigure prices by customer roles (Now we have new implementation of tier prices based on customer roles)
 	6j. Reconfigure discount requirements for each discount (new implementation)
-8. Ensure that everything is OK
+8. Delete all pictures from \Content\Images\Thumbs directory
+9. Ensure that everything is OK
 
 
 
