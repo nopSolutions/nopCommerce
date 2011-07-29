@@ -174,7 +174,7 @@ namespace Nop.Admin.Controllers
 
             try
             {
-                if (!string.IsNullOrWhiteSpace(model.SendTestEmailTo))
+                if (String.IsNullOrWhiteSpace(model.SendTestEmailTo))
                     throw new NopException("Enter test email address");
 
 
