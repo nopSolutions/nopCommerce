@@ -4567,7 +4567,7 @@ namespace Nop.Services.Installation
                 {
                     PrimaryStoreCurrencyId = _currencyRepository.Table.Where(c => c.CurrencyCode == "USD").Single().Id,
                     PrimaryExchangeRateCurrencyId = _currencyRepository.Table.Where(c => c.CurrencyCode == "USD").Single().Id,
-                    ActiveExchangeRateProviderSystemName = "CurrencyExchange.McExchange",
+                    ActiveExchangeRateProviderSystemName = "CurrencyExchange.MoneyConverter",
                     AutoUpdateEnabled = false,
                     LastUpdateTime = 0
                 });

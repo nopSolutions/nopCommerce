@@ -11,7 +11,7 @@
         @T("Admin.Configuration.Currencies")
     </div>
     <div class="options">
-        <a href="JAVASCRIPT:CurrencySettings.submit()" class="t-button">@T("Admin.Common.Save")</a>
+        <a href="javascript:document.CurrencySettings.submit()" class="t-button">@T("Admin.Common.Save")</a>
         <a href="@Url.Action("List","Currency", new { liveRates=true })" class="t-button">@T("Admin.Configuration.Currencies.GetLiveRates")</a>
         <a href="@Url.Action("Create")" class="t-button">@T("Admin.Common.AddNew")</a>
     </div>
