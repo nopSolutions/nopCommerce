@@ -1562,7 +1562,6 @@ END
 CLOSE cur_originalproduct
 DEALLOCATE cur_originalproduct
 GO
---TODO Update [ApprovedRatingSum], [NotApprovedRatingSum], [ApprovedTotalReviews], [NotApprovedTotalReviews] columns
 
 
 
@@ -2556,6 +2555,158 @@ END
 CLOSE cur_originalrewardpointshistory
 DEALLOCATE cur_originalrewardpointshistory
 GO
+
+
+
+
+
+
+
+
+
+
+
+
+--PRODUCT REVIEWS
+PRINT 'moving product reviews'
+DECLARE @OriginalProductReviewId int
+DECLARE cur_originalproductreview CURSOR FOR
+SELECT ProductReviewId
+FROM [Nop_ProductReview]
+ORDER BY [ProductReviewId]
+OPEN cur_originalproductreview
+FETCH NEXT FROM cur_originalproductreview INTO @OriginalProductReviewId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving product review. ID ' + cast(@OriginalProductReviewId as nvarchar(10))
+
+	INSERT INTO [CustomerContent] ([CustomerId], [IpAddress], [IsApproved], [CreatedOnUtc], [UpdatedOnUtc])
+	SELECT (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Customer' and [OriginalId]=[CustomerId]), [IpAddress], [IsApproved], [CreatedOn], [CreatedOn]
+	FROM [Nop_ProductReview]
+	WHERE ProductReviewId = @OriginalProductReviewId
+
+	--new ID
+	DECLARE @NewProductReviewId int
+	SET @NewProductReviewId = @@IDENTITY
+
+	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
+	VALUES (@OriginalProductReviewId, @NewProductReviewId, N'ProductReview')
+
+
+	INSERT INTO [ProductReview] ([Id], [ProductId], [Title], [ReviewText], [Rating], [HelpfulYesTotal], [HelpfulNoTotal])
+	SELECT @NewProductReviewId, (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Product' and [OriginalId]=[ProductId]), [Title], [ReviewText], [Rating], [HelpfulYesTotal], [HelpfulNoTotal]
+	FROM [Nop_ProductReview]
+	WHERE ProductReviewId = @OriginalProductReviewId	
+
+
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalproductreview INTO @OriginalProductReviewId
+END
+CLOSE cur_originalproductreview
+DEALLOCATE cur_originalproductreview
+GO
+
+--PRODUCT REVIEW HELPFULNESS
+PRINT 'moving product review helpfulness'
+DECLARE @OriginalProductReviewHelpfulnessId int
+DECLARE cur_originalproductreviewhelpfulness CURSOR FOR
+SELECT ProductReviewHelpfulnessId
+FROM [Nop_ProductReviewHelpfulness]
+ORDER BY [ProductReviewHelpfulnessId]
+OPEN cur_originalproductreviewhelpfulness
+FETCH NEXT FROM cur_originalproductreviewhelpfulness INTO @OriginalProductReviewHelpfulnessId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving product review helpfulness. ID ' + cast(@OriginalProductReviewHelpfulnessId as nvarchar(10))
+		
+	INSERT INTO [CustomerContent] ([CustomerId], [IpAddress], [IsApproved], [CreatedOnUtc], [UpdatedOnUtc])
+	SELECT (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Customer' and [OriginalId]=[CustomerId]), null, 1 /*approved*/, getutcdate(), getutcdate()
+	FROM [Nop_ProductReviewHelpfulness]
+	WHERE ProductReviewHelpfulnessId = @OriginalProductReviewHelpfulnessId
+
+	--new ID
+	DECLARE @NewProductReviewHelpfulnessId int
+	SET @NewProductReviewHelpfulnessId = @@IDENTITY
+
+	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
+	VALUES (@OriginalProductReviewHelpfulnessId, @NewProductReviewHelpfulnessId, N'ProductReviewHelpfulness')
+
+
+	INSERT INTO [ProductReviewHelpfulness] ([Id], [ProductReviewId], [WasHelpful])
+	SELECT @NewProductReviewHelpfulnessId, (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'ProductReview' and [OriginalId]=[ProductReviewID]), [WasHelpful]
+	FROM [Nop_ProductReviewHelpfulness]
+	WHERE ProductReviewHelpfulnessId = @OriginalProductReviewHelpfulnessId	
+
+
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalproductreviewhelpfulness INTO @OriginalProductReviewHelpfulnessId
+END
+CLOSE cur_originalproductreviewhelpfulness
+DEALLOCATE cur_originalproductreviewhelpfulness
+GO
+
+--UPDATE PRODUCT REVIEW TOTALS
+PRINT 'updating product review totals'
+DECLARE @OriginalProductId int
+DECLARE cur_originalproduct CURSOR FOR
+SELECT ProductId
+FROM [Nop_Product]
+ORDER BY [ProductId]
+OPEN cur_originalproduct
+FETCH NEXT FROM cur_originalproduct INTO @OriginalProductId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'product review total. ID ' + cast(@OriginalProductId as nvarchar(10))
+
+	DECLARE @ApprovedTotalReviews int
+	SELECT @ApprovedTotalReviews = COUNT(1)
+	FROM [Nop_ProductReview]
+	WHERE [ProductId] = @OriginalProductId and [IsApproved]=1
+
+	DECLARE @NotApprovedTotalReviews int
+	SELECT @NotApprovedTotalReviews = COUNT(1)
+	FROM [Nop_ProductReview]
+	WHERE [ProductId] = @OriginalProductId and [IsApproved]=0
+
+	DECLARE @ApprovedRatingSum int
+	SELECT @ApprovedRatingSum = SUM(Rating)
+	FROM [Nop_ProductReview]
+	WHERE [ProductId] = @OriginalProductId and [IsApproved]=1
+	IF (@ApprovedRatingSum is null) --ensure it's not null
+	BEGIN
+		SET @ApprovedRatingSum = 0
+	END
+
+	DECLARE @NotApprovedRatingSum int
+	SELECT @NotApprovedRatingSum = SUM(Rating)
+	FROM [Nop_ProductReview]
+	WHERE [ProductId] = @OriginalProductId and [IsApproved]=0
+	IF (@NotApprovedRatingSum is null) --ensure it's not null
+	BEGIN
+		SET @NotApprovedRatingSum = 0
+	END
+
+	DECLARE @NewProductId int
+	SELECT @NewProductId=[NewId] 
+	FROM #IDs 
+	WHERE [EntityName]=N'Product' and [OriginalId]=@OriginalProductId
+	
+	UPDATE [Product]
+	SET [ApprovedTotalReviews] = @ApprovedTotalReviews,
+	[NotApprovedTotalReviews] = @NotApprovedTotalReviews,
+	[ApprovedRatingSum] = @ApprovedRatingSum,
+	[NotApprovedRatingSum] = @NotApprovedRatingSum
+	WHERE [Id]=@NewProductId
+
+
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalproduct INTO @OriginalProductId
+END
+CLOSE cur_originalproduct
+DEALLOCATE cur_originalproduct
+GO
+
+
 
 
 

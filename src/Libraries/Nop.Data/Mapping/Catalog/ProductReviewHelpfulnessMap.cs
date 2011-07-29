@@ -13,7 +13,7 @@ namespace Nop.Data.Mapping.Catalog
 
             this.HasRequired(prh => prh.ProductReview)
                 .WithMany(pr => pr.ProductReviewHelpfulnessEntries)
-                .HasForeignKey(prh => prh.ProductReviewId);
+                .HasForeignKey(prh => prh.ProductReviewId).WillCascadeOnDelete(true);
         }
     }
 }
