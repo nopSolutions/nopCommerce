@@ -417,7 +417,41 @@ BEGIN
 		INSERT INTO [CustomerAttribute] ([CustomerId], [Key], [Value])
 		VALUES (@NewCustomerId, 'Signature', @Signature)
 	END
-	--TODO move other customer attributes (AvatarPictureId, LocationCountryId)
+	--move 'Avatar' customer attribute
+	DECLARE @AvatarPictureId int
+	SET @AvatarPictureId = null -- clear cache (variable scope)
+	SELECT @AvatarPictureId = [NewId]
+	FROM #IDs
+	WHERE [EntityName]=N'Picture' and [OriginalId]=(SELECT [AvatarID] FROM [Nop_Customer] WHERE CustomerId = @OriginalCustomerId)
+	IF (@AvatarPictureId > 0)
+	BEGIN
+		INSERT INTO [CustomerAttribute] ([CustomerId], [Key], [Value])
+		VALUES (@NewCustomerId, 'AvatarPictureId', cast(@AvatarPictureId as nvarchar(100)))
+	END
+	--move 'Location' customer attribute
+	DECLARE @LocationCountryId int
+	SET @LocationCountryId = null -- clear cache (variable scope)	
+	DECLARE @OldLocationCountryId nvarchar(100)
+	SET @OldLocationCountryId = null -- clear cache (variable scope)
+	SELECT @OldLocationCountryId=[Value]
+	FROM [Nop_CustomerAttribute]
+	WHERE CustomerId = @OriginalCustomerId and [key]=N'CountryID'
+	IF (@OldLocationCountryId is not null and len(@OldLocationCountryId) > 0)
+	BEGIN
+		SELECT @LocationCountryId = [NewId]
+		FROM #IDs
+		WHERE [EntityName]=N'Country' and [OriginalId]=(cast(@OldLocationCountryId as int))
+		IF (@LocationCountryId > 0)
+		BEGIN
+			INSERT INTO [CustomerAttribute] ([CustomerId], [Key], [Value])
+			VALUES (@NewCustomerId, 'Location', cast(@LocationCountryId as nvarchar(100)))
+		END
+	END
+
+	
+
+
+
 
 	--map customer to customer roles (new system roles)
 	DECLARE @IsAdmin bit
