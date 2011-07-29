@@ -2403,6 +2403,86 @@ GO
 
 
 
+
+
+
+--RECURRING PAYMENTS
+PRINT 'moving recurring payments'
+DECLARE @OriginalRecurringPaymentId int
+DECLARE cur_originalrecurringpayment CURSOR FOR
+SELECT RecurringPaymentId
+FROM [Nop_RecurringPayment]
+ORDER BY [RecurringPaymentId]
+OPEN cur_originalrecurringpayment
+FETCH NEXT FROM cur_originalrecurringpayment INTO @OriginalRecurringPaymentId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving recurring payment. ID ' + cast(@OriginalRecurringPaymentId as nvarchar(10))
+	INSERT INTO [RecurringPayment] ([CycleLength], [CyclePeriodId], [TotalCycles], [StartDateUtc], [IsActive], [Deleted], [CreatedOnUtc], [InitialOrderId])
+	SELECT [CycleLength], [CyclePeriod], [TotalCycles], [StartDate], [IsActive], [Deleted], [CreatedOn], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Order' and [OriginalId]=[InitialOrderId])
+	FROM [Nop_RecurringPayment]
+	WHERE RecurringPaymentId = @OriginalRecurringPaymentId
+
+	--new ID
+	DECLARE @NewRecurringPaymentId int
+	SET @NewRecurringPaymentId = @@IDENTITY
+
+	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
+	VALUES (@OriginalRecurringPaymentId, @NewRecurringPaymentId, N'RecurringPayment')
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalrecurringpayment INTO @OriginalRecurringPaymentId
+END
+CLOSE cur_originalrecurringpayment
+DEALLOCATE cur_originalrecurringpayment
+GO
+
+
+
+
+
+
+
+
+
+
+
+--RECURRING PAYMENT USAGE HISTORY
+PRINT 'moving recurring payment history'
+DECLARE @OriginalRecurringPaymentHistoryId int
+DECLARE cur_originalrecurringpaymenthistory CURSOR FOR
+SELECT RecurringPaymentHistoryId
+FROM [Nop_RecurringPaymentHistory]
+ORDER BY [RecurringPaymentHistoryId]
+OPEN cur_originalrecurringpaymenthistory
+FETCH NEXT FROM cur_originalrecurringpaymenthistory INTO @OriginalRecurringPaymentHistoryId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving recurring payment history. ID ' + cast(@OriginalRecurringPaymentHistoryId as nvarchar(10))
+
+	INSERT INTO [RecurringPaymentHistory] ([RecurringPaymentId], [OrderId], [CreatedOnUtc])
+	SELECT (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'RecurringPayment' and [OriginalId]=[RecurringPaymentId]), (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Order' and [OriginalId]=[OrderId]), [CreatedOn]
+	FROM [Nop_RecurringPaymentHistory]
+	WHERE RecurringPaymentHistoryId = @OriginalRecurringPaymentHistoryId
+
+	--new ID
+	DECLARE @NewRecurringPaymentHistoryId int
+	SET @NewRecurringPaymentHistoryId = @@IDENTITY
+
+	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
+	VALUES (@OriginalRecurringPaymentHistoryId, @NewRecurringPaymentHistoryId, N'RecurringPaymentHistory')
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalrecurringpaymenthistory INTO @OriginalRecurringPaymentHistoryId
+END
+CLOSE cur_originalrecurringpaymenthistory
+DEALLOCATE cur_originalrecurringpaymenthistory
+
+
+
+
+
+
+
+
 --drop temporary table
 DROP TABLE #IDs
 GO
