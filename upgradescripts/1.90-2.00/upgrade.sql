@@ -1238,7 +1238,7 @@ BEGIN
 	SET @NewQueuedEmailId = @@IDENTITY
 
 	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
-	VALUES (@OriginalQueuedEmailId, @NewQueuedEmailId, N'@QueuedEmail')
+	VALUES (@OriginalQueuedEmailId, @NewQueuedEmailId, N'QueuedEmail')
 	--fetch next identifier
 	FETCH NEXT FROM cur_originalqueuedemail INTO @OriginalQueuedEmailId
 END
@@ -2120,7 +2120,7 @@ BEGIN
 	DECLARE @PaymentMethodSystemName nvarchar(100)
 	SET @PaymentMethodSystemName = null -- clear cache (variable scope)
 
-	
+	--TODO that' wrong because exchange rate could be changed
 	DECLARE @CurrencyRate decimal(18, 4)
 	SET @CurrencyRate = null -- clear cache (variable scope)
 	SELECT @CurrencyRate = c.Rate
@@ -2173,9 +2173,11 @@ BEGIN
 	--new ID
 	DECLARE @NewOrderId int
 	SET @NewOrderId = @@IDENTITY
-
+	
 	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
 	VALUES (@OriginalOrderId, @NewOrderId, N'Order')
+
+	
 	--fetch next identifier
 	FETCH NEXT FROM cur_originalorder INTO @OriginalOrderId
 END
@@ -2261,6 +2263,137 @@ BEGIN
 END
 CLOSE cur_originalordernote
 DEALLOCATE cur_originalordernote
+GO
+
+
+
+
+
+
+
+
+
+
+
+--DISCOUNT USAGE HISTORY
+PRINT 'moving discount usage history'
+DECLARE @OriginalDiscountUsageHistoryId int
+DECLARE cur_originaldiscountusagehistory CURSOR FOR
+SELECT DiscountUsageHistoryId
+FROM [Nop_DiscountUsageHistory]
+ORDER BY [DiscountUsageHistoryId]
+OPEN cur_originaldiscountusagehistory
+FETCH NEXT FROM cur_originaldiscountusagehistory INTO @OriginalDiscountUsageHistoryId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving discount usage history. ID ' + cast(@OriginalDiscountUsageHistoryId as nvarchar(10))
+	INSERT INTO [DiscountUsageHistory] ([DiscountId], [OrderId], [CreatedOnUtc])
+	SELECT (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Discount' and [OriginalId]=[DiscountId]), (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Order' and [OriginalId]=[OrderId]), [CreatedOn]
+	FROM [Nop_DiscountUsageHistory]
+	WHERE DiscountUsageHistoryId = @OriginalDiscountUsageHistoryId
+
+	--new ID
+	DECLARE @NewDiscountUsageHistoryId int
+	SET @NewDiscountUsageHistoryId = @@IDENTITY
+
+	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
+	VALUES (@OriginalDiscountUsageHistoryId, @NewDiscountUsageHistoryId, N'DiscountUsageHistory')
+	--fetch next identifier
+	FETCH NEXT FROM cur_originaldiscountusagehistory INTO @OriginalDiscountUsageHistoryId
+END
+CLOSE cur_originaldiscountusagehistory
+DEALLOCATE cur_originaldiscountusagehistory
+GO
+
+
+
+
+
+
+
+
+
+
+
+--GIFT CARDS
+PRINT 'moving gift cards'
+DECLARE @OriginalGiftCardId int
+DECLARE cur_originalgiftcard CURSOR FOR
+SELECT GiftCardId
+FROM [Nop_GiftCard]
+ORDER BY [GiftCardId]
+OPEN cur_originalgiftcard
+FETCH NEXT FROM cur_originalgiftcard INTO @OriginalGiftCardId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving gift card. ID ' + cast(@OriginalGiftCardId as nvarchar(10))
+
+	DECLARE @GiftCardTypeId int
+	SET @GiftCardTypeId = null -- clear cache (variable scope)
+	
+	SELECT @GiftCardTypeId = pv.[GiftCardType]
+	FROM [Nop_OrderProductVariant] opv
+	INNER JOIN [Nop_ProductVariant] pv ON opv.ProductVariantId=pv.ProductVariantId
+	INNER JOIN [Nop_GiftCard] gc ON gc.PurchasedOrderProductVariantID = opv.OrderProductVariantID
+	WHERE gc.GiftCardId = @OriginalGiftCardId
+
+	INSERT INTO [GiftCard] ([PurchasedWithOrderProductVariantId], [GiftCardTypeId], [Amount], [IsGiftCardActivated], [GiftCardCouponCode], [RecipientName], [RecipientEmail], [SenderName], [SenderEmail], [Message], [IsRecipientNotified], [CreatedOnUtc])
+	SELECT (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'OrderProductVariant' and [OriginalId]=gc.[PurchasedOrderProductVariantID]), @GiftCardTypeId, gc.[Amount], gc.[IsGiftCardActivated], gc.[GiftCardCouponCode], gc.[RecipientName], gc.[RecipientEmail], gc.[SenderName], gc.[SenderEmail], gc.[Message], gc.[IsRecipientNotified], gc.[CreatedOn]
+	FROM [Nop_GiftCard] gc
+	WHERE GiftCardId = @OriginalGiftCardId
+
+	--new ID
+	DECLARE @NewGiftCardId int
+	SET @NewGiftCardId = @@IDENTITY
+
+	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
+	VALUES (@OriginalGiftCardId, @NewGiftCardId, N'GiftCard')
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalgiftcard INTO @OriginalGiftCardId
+END
+CLOSE cur_originalgiftcard
+DEALLOCATE cur_originalgiftcard
+GO
+
+
+
+
+
+
+
+
+
+
+
+--GIFT CARD USAGE HISTORY
+PRINT 'moving gift card usage history'
+DECLARE @OriginalGiftCardUsageHistoryId int
+DECLARE cur_originalgiftcardusagehistory CURSOR FOR
+SELECT GiftCardUsageHistoryId
+FROM [Nop_GiftCardUsageHistory]
+ORDER BY [GiftCardUsageHistoryId]
+OPEN cur_originalgiftcardusagehistory
+FETCH NEXT FROM cur_originalgiftcardusagehistory INTO @OriginalGiftCardUsageHistoryId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving gift card usage history. ID ' + cast(@OriginalGiftCardUsageHistoryId as nvarchar(10))
+
+	INSERT INTO [GiftCardUsageHistory] ([GiftCardId], [UsedWithOrderId], [UsedValue], [CreatedOnUtc])
+	SELECT (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'GiftCard' and [OriginalId]=[GiftCardID]), (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Order' and [OriginalId]=[OrderId]), [UsedValue], [CreatedOn]
+	FROM [Nop_GiftCardUsageHistory]
+	WHERE GiftCardUsageHistoryId = @OriginalGiftCardUsageHistoryId
+
+	--new ID
+	DECLARE @NewGiftCardUsageHistoryId int
+	SET @NewGiftCardUsageHistoryId = @@IDENTITY
+
+	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
+	VALUES (@OriginalGiftCardUsageHistoryId, @NewGiftCardUsageHistoryId, N'GiftCardUsageHistory')
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalgiftcardusagehistory INTO @OriginalGiftCardUsageHistoryId
+END
+CLOSE cur_originalgiftcardusagehistory
+DEALLOCATE cur_originalgiftcardusagehistory
 GO
 
 
