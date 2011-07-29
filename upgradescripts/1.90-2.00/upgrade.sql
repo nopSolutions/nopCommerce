@@ -2475,7 +2475,87 @@ BEGIN
 END
 CLOSE cur_originalrecurringpaymenthistory
 DEALLOCATE cur_originalrecurringpaymenthistory
+GO
 
+
+
+
+
+
+
+
+
+
+
+--RETURN REQUESTS
+PRINT 'moving return requests'
+DECLARE @OriginalReturnRequestId int
+DECLARE cur_originalreturnrequest CURSOR FOR
+SELECT ReturnRequestId
+FROM [Nop_ReturnRequest]
+ORDER BY [ReturnRequestId]
+OPEN cur_originalreturnrequest
+FETCH NEXT FROM cur_originalreturnrequest INTO @OriginalReturnRequestId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving return request. ID ' + cast(@OriginalReturnRequestId as nvarchar(10))
+	INSERT INTO [ReturnRequest] ([OrderProductVariantId], [CustomerId], [Quantity], [ReasonForReturn], [RequestedAction], [CustomerComments], [StaffNotes], [ReturnRequestStatusId], [CreatedOnUtc], [UpdatedOnUtc])
+	SELECT (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'OrderProductVariant' and [OriginalId]=[OrderProductVariantId]), (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Customer' and [OriginalId]=[CustomerId]), [Quantity], [ReasonForReturn], [RequestedAction], [CustomerComments], [StaffNotes], [ReturnStatusId], [CreatedOn], [UpdatedOn]
+	FROM [Nop_ReturnRequest]
+	WHERE ReturnRequestId = @OriginalReturnRequestId
+
+	--new ID
+	DECLARE @NewReturnRequestId int
+	SET @NewReturnRequestId = @@IDENTITY
+
+	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
+	VALUES (@OriginalReturnRequestId, @NewReturnRequestId, N'ReturnRequest')
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalreturnrequest INTO @OriginalReturnRequestId
+END
+CLOSE cur_originalreturnrequest
+DEALLOCATE cur_originalreturnrequest
+GO
+
+
+
+
+
+
+
+
+
+
+
+--REWARD POINTS HISTORY
+PRINT 'moving reward points history'
+DECLARE @OriginalRewardPointsHistoryId int
+DECLARE cur_originalrewardpointshistory CURSOR FOR
+SELECT RewardPointsHistoryId
+FROM [Nop_RewardPointsHistory]
+ORDER BY [RewardPointsHistoryId]
+OPEN cur_originalrewardpointshistory
+FETCH NEXT FROM cur_originalrewardpointshistory INTO @OriginalRewardPointsHistoryId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving reward points history. ID ' + cast(@OriginalRewardPointsHistoryId as nvarchar(10))
+	INSERT INTO [RewardPointsHistory] ([CustomerId], [Points], [PointsBalance], [UsedAmount], [Message], [CreatedOnUtc], [UsedWithOrder_Id])
+	SELECT (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Customer' and [OriginalId]=[CustomerId]), [Points], [PointsBalance], [UsedAmount], [Message], [CreatedOn], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Order' and [OriginalId]=[OrderId])
+	FROM [Nop_RewardPointsHistory]
+	WHERE RewardPointsHistoryId = @OriginalRewardPointsHistoryId
+
+	--new ID
+	DECLARE @NewRewardPointsHistoryId int
+	SET @NewRewardPointsHistoryId = @@IDENTITY
+
+	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
+	VALUES (@OriginalRewardPointsHistoryId, @NewRewardPointsHistoryId, N'RewardPointsHistory')
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalrewardpointshistory INTO @OriginalRewardPointsHistoryId
+END
+CLOSE cur_originalrewardpointshistory
+DEALLOCATE cur_originalrewardpointshistory
+GO
 
 
 
