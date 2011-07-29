@@ -956,6 +956,19 @@
   <LocaleResource Name="ConditionsOfUse">
     <Value>Conditions of Use</Value>
   </LocaleResource>
+  <LocaleResource Name="Topic">
+    <Children>
+      <LocaleResource Name="Button">
+        <Value>Enter</Value>
+      </LocaleResource>
+      <LocaleResource Name="EnterPassword">
+        <Value>Please enter password to access this content:</Value>
+      </LocaleResource>
+      <LocaleResource Name="WrongPassword">
+        <Value>Wrong password</Value>
+      </LocaleResource>
+    </Children>
+  </LocaleResource>  
   <LocaleResource Name="ContactUs">
     <Value>Contact us</Value>
     <Children>

@@ -19,6 +19,16 @@ namespace Nop.Core.Domain.Topics
         public virtual bool IncludeInSitemap { get; set; }
 
         /// <summary>
+        /// Gets or sets the value indicating whether this topic is password protected
+        /// </summary>
+        public virtual bool IsPasswordProtected { get; set; }
+
+        /// <summary>
+        /// Gets or sets the password
+        /// </summary>
+        public virtual string Password { get; set; }
+
+        /// <summary>
         /// Gets or sets the title
         /// </summary>
         public virtual string Title { get; set; }

@@ -20,6 +20,10 @@
                     {
                         columns.Bound(x => x.SystemName)
                             .Width(200);
+                        columns.Bound(x => x.IsPasswordProtected)
+                            .Width(100)
+                            .Template(x => x.IsPasswordProtected.ToString().ToLower())
+                            .Centered();
                         columns.Bound(x => x.IncludeInSitemap)
                             .Width(100)
                             .Template(x => x.IncludeInSitemap.ToString().ToLower())

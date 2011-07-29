@@ -5188,6 +5188,22 @@
                           </LocaleResource>
                         </Children>
                       </LocaleResource>
+                      <LocaleResource Name="IsPasswordProtected">
+                        <Value>Password protected</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Check if this topic is password protected</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="Password">
+                        <Value>Password</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>The password to access the content of this topic</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
                       <LocaleResource Name="Body">
                         <Value>Body</Value>
                         <Children>

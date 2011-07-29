@@ -8,6 +8,8 @@ namespace Nop.Web.Models.Topics
 
         public bool IncludeInSitemap { get; set; }
 
+        public bool IsPasswordProtected { get; set; }
+
         public string Title { get; set; }
 
         public string Body { get; set; }

@@ -4338,63 +4338,72 @@ namespace Nop.Services.Installation
                                    new Topic
                                        {
                                            SystemName = "AboutUs",
-                                           IncludeInSitemap  =false, 
+                                           IncludeInSitemap = false,
+                                           IsPasswordProtected = false,
                                            Title = "About Us",
                                            Body = "<p>Put your &quot;About Us&quot; information here. You can edit this in the admin site.</p>"
                                        },
                                    new Topic
                                        {
                                            SystemName = "CheckoutAsGuestOrRegister",
-                                           IncludeInSitemap  =false, 
+                                           IncludeInSitemap = false,
+                                           IsPasswordProtected = false,
                                            Title = "",
                                            Body = "<p><strong>Register and save time!</strong><br />Register with us for future convenience:</p><ul><li>Fast and easy check out</li><li>Easy access to your order history and status</li></ul>"
                                        },
                                    new Topic
                                        {
                                            SystemName = "ConditionsOfUse",
-                                           IncludeInSitemap  =false, 
+                                           IncludeInSitemap = false,
+                                           IsPasswordProtected = false,
                                            Title = "Conditions of use",
                                            Body = "<p>Put your conditions of use information here. You can edit this in the admin site.</p>"
                                        },
                                    new Topic
                                        {
                                            SystemName = "ContactUs",
-                                           IncludeInSitemap  =false, 
+                                           IncludeInSitemap = false,
+                                           IsPasswordProtected = false,
                                            Title = "",
                                            Body = "<p>Put your contact information here. You can edit this in the admin site.</p>"
                                        },
                                    new Topic
                                        {
                                            SystemName = "ForumWelcomeMessage",
-                                           IncludeInSitemap  =false, 
+                                           IncludeInSitemap = false,
+                                           IsPasswordProtected = false,
                                            Title = "Forums",
                                            Body = "<p>Put your welcome message here. You can edit this in the admin site.</p>"
                                        },
                                    new Topic
                                        {
                                            SystemName = "HomePageText",
-                                           IncludeInSitemap  =false, 
+                                           IncludeInSitemap = false,
+                                           IsPasswordProtected = false,
                                            Title = "Welcome to our store",
                                            Body = "<p>Online shopping is the process consumers go through to purchase products or services over the Internet. You can edit this in the admin site.</p><p>You can sign in using admin@admin.com and the password admin. If you have questions, see the <a href=\"http://www.nopcommerce.com/documentation.aspx\">Documentation</a>, or post in the <a href=\"http://www.nopcommerce.com/boards/\">Forums</a> at <a href=\"http://www.nopcommerce.com\">nopCommerce.com</a></p>"
                                        },
                                    new Topic
                                        {
                                            SystemName = "LoginRegistrationInfo",
-                                           IncludeInSitemap  =false, 
+                                           IncludeInSitemap = false,
+                                           IsPasswordProtected = false,
                                            Title = "About login / registration",
                                            Body = "<p>Put your login / registration information here. You can edit this in the admin site.</p>"
                                        },
                                    new Topic
                                        {
                                            SystemName = "PrivacyInfo",
-                                           IncludeInSitemap  =false, 
+                                           IncludeInSitemap = false,
+                                           IsPasswordProtected = false,
                                            Title = "Privacy policy",
                                            Body = "<p>Put your privacy policy information here. You can edit this in the admin site.</p>"
                                        },
                                    new Topic
                                        {
                                            SystemName = "ShippingInfo",
-                                           IncludeInSitemap  =false, 
+                                           IncludeInSitemap = false,
+                                           IsPasswordProtected = false,
                                            Title = "Shipping & Returns",
                                            Body = "<p>Put your shipping &amp; returns information here. You can edit this in the admin site.</p>"
                                        },

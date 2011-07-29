@@ -2767,12 +2767,13 @@ ul.languagelist li:hover
 
 .search-panel table.basic-search, .search-panel table.adv-search
 {
-	border: collapse;
+	border-collapse: collapse;
 	color: #333;
 	margin: 0px;
 	width: 100%;
 	vertical-align: middle;
 	text-align: left;
+	table-layout: fixed;
 }
 
 .search-panel table.adv-search

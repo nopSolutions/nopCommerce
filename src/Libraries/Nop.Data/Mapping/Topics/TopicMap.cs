@@ -8,13 +8,14 @@ namespace Nop.Data.Mapping.Topics
         public TopicMap()
         {
             this.ToTable("Topic");
-            this.HasKey(sm => sm.Id);
-            this.Property(sm => sm.SystemName);
-            this.Property(sm => sm.Title).IsMaxLength();
-            this.Property(sm => sm.Body).IsMaxLength();
-            this.Property(sm => sm.MetaKeywords).IsMaxLength();
-            this.Property(sm => sm.MetaDescription).IsMaxLength();
-            this.Property(sm => sm.MetaTitle).IsMaxLength();
+            this.HasKey(t => t.Id);
+            this.Property(t => t.SystemName);
+            this.Property(t => t.Password);
+            this.Property(t => t.Title).IsMaxLength();
+            this.Property(t => t.Body).IsMaxLength();
+            this.Property(t => t.MetaKeywords).IsMaxLength();
+            this.Property(t => t.MetaDescription).IsMaxLength();
+            this.Property(t => t.MetaTitle).IsMaxLength();
         }
     }
 }

@@ -144,6 +144,11 @@ namespace Nop.Admin.Controllers
 
             if (ModelState.IsValid)
             {
+                if (!model.IsPasswordProtected)
+                {
+                    model.Password = null;
+                }
+
                 var topic = model.ToEntity();
                 _topicService.InsertTopic(topic);
                 //locales
@@ -196,6 +201,11 @@ namespace Nop.Admin.Controllers
                 localized.Body = HttpUtility.HtmlDecode(localized.Body);
 
             model.Url = Url.RouteUrl("Topic", new { SystemName = topic.SystemName }, "http");
+
+            if (!model.IsPasswordProtected)
+            {
+                model.Password = null;
+            }
 
             if (ModelState.IsValid)
             {

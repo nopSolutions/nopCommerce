@@ -3,6 +3,21 @@
 @using Telerik.Web.Mvc.UI;
 
 @Html.ValidationSummary(false)
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#@Html.FieldIdFor(model => model.IsPasswordProtected)").click(togglePassword);
+        togglePassword();
+    });
+    function togglePassword() {
+        if (getE('@Html.FieldIdFor(model => model.IsPasswordProtected)').checked) {
+            $('#pnlPasswordEnabled').show();
+        }
+        else {
+            $('#pnlPasswordEnabled').hide();
+        }
+    }       
+</script>
 @Html.HiddenFor(model => model.Id)
 @Html.Telerik().TabStrip().Name("topic-edit").Items(x =>
 {
@@ -19,6 +34,24 @@
             <td class="adminData">
                 @Html.EditorFor(model => model.SystemName)
                 @Html.ValidationMessageFor(model => model.SystemName)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.IsPasswordProtected)
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.IsPasswordProtected)
+                @Html.ValidationMessageFor(model => model.IsPasswordProtected)
+            </td>
+        </tr>
+        <tr id="pnlPasswordEnabled">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Password)
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.Password)
+                @Html.ValidationMessageFor(model => model.Password)
             </td>
         </tr>
         <tr>

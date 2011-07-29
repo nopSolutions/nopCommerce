@@ -168,6 +168,7 @@ namespace Nop.Web.Extensions
                 Id = entity.Id,
                 SystemName = entity.SystemName,
                 IncludeInSitemap = entity.IncludeInSitemap,
+                IsPasswordProtected = entity.IsPasswordProtected,
                 Title = entity.GetLocalized(x => x.Title),
                 Body = entity.GetLocalized(x => x.Body),
                 MetaKeywords = entity.GetLocalized(x => x.MetaKeywords),

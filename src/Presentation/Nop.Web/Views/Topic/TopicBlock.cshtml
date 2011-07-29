@@ -1,16 +1,79 @@
 ﻿@model TopicModel
 @using Nop.Web.Models.Topics
-<div class="htmlcontent">
-    @if (!String.IsNullOrEmpty(Model.Title))
-    {
-        <div class="htmlcontent-title">
-            <h2 class="htmlcontent-header">
-                @Model.Title</h2>
-        </div>
-        <div class="clear">
-        </div>
-    }
-    <div class="htmlcontent-body">
-        @Html.Raw(Model.Body)
+@if (Model.IsPasswordProtected)
+{
+    <script type="text/javascript">    
+        $(document).ready(function () {
+            $('#phTopic-@Model.Id').hide();            
+            $('#phPassword-@Model.Id #password-@Model.Id').select().focus();
+        });    
+        function OnAuthenticateSuccess@(Model.Id)(context) {
+            if (context.Authenticated)
+            {
+                $('#phTitle-@Model.Id .htmlcontent-title h2.htmlcontent-header').html(context.Title);
+                if ($('#phTitle-@Model.Id .htmlcontent-title h2.htmlcontent-header').text().length == 0)
+                {
+                    $('#phTitle-@Model.Id').hide();
+                }
+                $('#phTopic-@Model.Id .htmlcontent-body').html(context.Body);
+                $('#phPassword-@Model.Id').hide();
+                $('#phTopic-@Model.Id').show();
+            }
+            else
+            {
+                $('#passworderror-@Model.Id').text(context.Error);
+                $('#phPassword-@Model.Id #password-@Model.Id').select().focus();
+            }
+        }
+    </script>
+    <div id="phPassword-@Model.Id">
+        @using (Ajax.BeginForm("Authenticate", new AjaxOptions
+        {
+            HttpMethod = "Post",
+            OnSuccess = "OnAuthenticateSuccess" + @Model.Id,
+            LoadingElementId = "authenticate-progress-" + @Model.Id
+        }))
+        {
+            @Html.HiddenFor(model => model.Id)           
+            @T("Topic.EnterPassword")
+            <br />
+            @Html.Password("password", null, new { @class = "textBox", id = "password-" + @Model.Id })
+            <input type="submit" id="btnPassword-@Model.Id" value = @T("Topic.Button") class="useragreementbutton"/>            
+            <span id="authenticate-progress-@Model.Id" style="display: none;">@T("Common.Wait...")
+                <img src='@Href("~/Content/Images/ajax_loader_small.gif")' alt="@T("Common.Wait...")" />
+            </span>
+            <br />
+            <span id="passworderror-@Model.Id"></span>
+        }
     </div>
-</div>
+    <div class="htmlcontent" id="phTopic-@Model.Id">
+        <div id="phTitle-@Model.Id">
+            <div class="htmlcontent-title">
+                <h2 class="htmlcontent-header">
+                    @Html.Raw(@Model.Title)</h2>
+            </div>
+            <div class="clear">
+            </div>
+        </div>
+        <div class="htmlcontent-body">
+            @Html.Raw(Model.Body)
+        </div>
+    </div>
+}
+else
+{
+    <div class="htmlcontent">
+        @if (!String.IsNullOrEmpty(Model.Title))
+        {
+            <div class="htmlcontent-title">
+                <h2 class="htmlcontent-header">
+                    @Model.Title</h2>
+            </div>
+            <div class="clear">
+            </div>
+        }
+        <div class="htmlcontent-body">
+            @Html.Raw(Model.Body)
+        </div>
+    </div>
+}
