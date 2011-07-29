@@ -1,6 +1,8 @@
 ﻿--upgrade scripts from nopCommerce 1.90 to nopCommerce 2.00
 
 
+--TODO move localized values of the entities (e.g. Product, Category, etc)
+
 DELETE FROM [Customer]
 WHERE IsSystemAccount=0
 GO
@@ -2153,15 +2155,52 @@ BEGIN
 	DECLARE @PaymentMethodSystemName nvarchar(100)
 	SET @PaymentMethodSystemName = null -- clear cache (variable scope)
 
-	--TODO that' wrong because exchange rate could be changed
+	--calculate exchange rate
 	DECLARE @CurrencyRate decimal(18, 4)
 	SET @CurrencyRate = null -- clear cache (variable scope)
-	SELECT @CurrencyRate = c.Rate
-	FROM Nop_Currency c
-	WHERE c.CurrencyCode = (SELECT o.[CustomerCurrencyCode] FROM [Nop_Order] o WHERE o.OrderId = @OriginalOrderId)
-	IF (@CurrencyRate is null)
+	DECLARE @OldOrderTotalInCustomerCurrency decimal(18, 4)
+	DECLARE @OldOrderTotal decimal(18, 4)
+	SELECT @OldOrderTotalInCustomerCurrency=[OrderTotalInCustomerCurrency],
+		@OldOrderTotal=[OrderTotal]
+	FROM [Nop_Order]
+	WHERE OrderId = @OriginalOrderId
+	IF (@OldOrderTotalInCustomerCurrency > 0 and @OldOrderTotal > 0)
 	BEGIN
-		--no currency found
+		--use order total
+		SET @CurrencyRate = @OldOrderTotalInCustomerCurrency / @OldOrderTotal
+	END
+	ELSE 
+	BEGIN
+		--order total can be 0. in this case let's use subtotal
+		DECLARE @OldOrderSubTotalInCustomerCurrency decimal(18, 4)
+		DECLARE @OldOrderSubTotal decimal(18, 4)
+		SELECT @OldOrderSubTotalInCustomerCurrency=[OrderSubTotalInclTaxInCustomerCurrency],
+			@OldOrderSubTotal=[OrderSubTotalInclTax]
+		FROM [Nop_Order]
+		WHERE OrderId = @OriginalOrderId
+		IF (@OldOrderSubTotalInCustomerCurrency > 0 and @OldOrderSubTotal > 0)
+		BEGIN
+			--use order subtotal
+			SET @CurrencyRate = @OldOrderSubTotalInCustomerCurrency / @OldOrderSubTotal
+		END
+		ELSE 
+		BEGIN
+			--order total can be 0. in this case let's use subtotal
+			DECLARE @OldOrderShippingInCustomerCurrency decimal(18, 4)
+			DECLARE @OldOrderShipping decimal(18, 4)
+			SELECT @OldOrderShippingInCustomerCurrency=[OrderShippingInclTaxInCustomerCurrency],
+				@OldOrderShipping=[OrderShippingInclTax]
+			FROM [Nop_Order]
+			WHERE OrderId = @OriginalOrderId			
+			IF (@OldOrderShippingInCustomerCurrency > 0 and @OldOrderShipping > 0)
+			BEGIN
+				SET @CurrencyRate = @OldOrderShippingInCustomerCurrency / @OldOrderShipping
+			END
+		END
+	END
+	--some exchange rate validation
+	IF (@CurrencyRate is null or @CurrencyRate = 0)
+	BEGIN
 		SET @CurrencyRate = 1
 	END
 
