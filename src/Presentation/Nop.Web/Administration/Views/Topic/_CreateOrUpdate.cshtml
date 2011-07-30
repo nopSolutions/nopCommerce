@@ -29,7 +29,7 @@
     <table class="adminContent">
         <tr>
             <td class="adminTitle">
-                @Html.NopLabelFor(model => model.SystemName)
+                @Html.NopLabelFor(model => model.SystemName):
             </td>
             <td class="adminData">
                 @Html.EditorFor(model => model.SystemName)
@@ -38,7 +38,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
-                @Html.NopLabelFor(model => model.IsPasswordProtected)
+                @Html.NopLabelFor(model => model.IsPasswordProtected):
             </td>
             <td class="adminData">
                 @Html.EditorFor(model => model.IsPasswordProtected)
@@ -47,7 +47,7 @@
         </tr>
         <tr id="pnlPasswordEnabled">
             <td class="adminTitle">
-                @Html.NopLabelFor(model => model.Password)
+                @Html.NopLabelFor(model => model.Password):
             </td>
             <td class="adminData">
                 @Html.EditorFor(model => model.Password)
