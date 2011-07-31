@@ -68,7 +68,8 @@
                             .Insert("ResourceAdd", "Language", new { id = ViewBag.LanguageId });
                     })
                     .EnableCustomBinding(true)
-                    .ClientEvents(x => x.OnEdit("onResourceEdit")))
+                    .ClientEvents(x => x.OnEdit("onResourceEdit"))
+                    .ClientEvents(x => x.OnError("Grid_onError")))
         </td>
     </tr>
 </table>
@@ -77,5 +78,9 @@
         if (e.mode == "insert") {
             $(e.form).find("td:first").html("@ViewBag.LanguageName");
         }
+    }
+    function Grid_onError(e) {
+        alert(e.XMLHttpRequest.responseText);
+        e.preventDefault();
     }
 </script>

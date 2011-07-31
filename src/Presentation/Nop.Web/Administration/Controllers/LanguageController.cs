@@ -213,8 +213,8 @@ namespace Nop.Admin.Controllers
 				Data = model
 			};
 		}
-        
-        [GridAction(EnableCustomBinding=true)]
+
+        [GridAction(EnableCustomBinding = true)]
         public ActionResult ResourceUpdate(LanguageResourceModel model, GridCommand command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
@@ -226,12 +226,23 @@ namespace Nop.Admin.Controllers
             }
 
             var resource = _localizationService.GetLocaleStringResourceById(model.Id);
+            model.Name = model.Name.Trim();
+            // if the resourceName changed, ensure it isn't being used by another resource
+            if (!resource.ResourceName.Equals(model.Name, StringComparison.InvariantCultureIgnoreCase))
+            {
+                var res = _localizationService.GetLocaleStringResourceByName(model.Name, model.LanguageId, false);
+                if (res != null && res.Id != resource.Id)
+                {
+                    return Content(string.Format(_localizationService.GetResource("Admin.Configuration.Languages.Resources.NameAlreadyExists"), res.ResourceName));
+                }
+            }
+
             resource = model.ToEntity(resource);
             _localizationService.UpdateLocaleStringResource(resource);
 
             return Resources(model.LanguageId, command);
         }
-        
+
         [GridAction(EnableCustomBinding = true)]
         public ActionResult ResourceAdd(int id, LanguageResourceModel resourceModel, GridCommand command)
         {
@@ -240,14 +251,21 @@ namespace Nop.Admin.Controllers
 
             if (!ModelState.IsValid)
             {
-                return new JsonResult {Data = "error"};
+                return new JsonResult { Data = "error" };
             }
 
-            var resource = new LocaleStringResource {LanguageId = id};
-            resource = resourceModel.ToEntity(resource);
-            _localizationService.InsertLocaleStringResource(resource);
-
-
+            var res = _localizationService.GetLocaleStringResourceByName(resourceModel.Name, resourceModel.LanguageId, false);
+            if (res == null)
+            {
+                resourceModel.Name = resourceModel.Name.Trim();
+                var resource = new LocaleStringResource { LanguageId = id };
+                resource = resourceModel.ToEntity(resource);
+                _localizationService.InsertLocaleStringResource(resource);
+            }
+            else
+            {
+                return Content(string.Format(_localizationService.GetResource("Admin.Configuration.Languages.Resources.NameAlreadyExists"), res.ResourceName));
+            }
             return Resources(id, command);
         }
         

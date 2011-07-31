@@ -83,6 +83,56 @@ namespace Nop.Services.Localization
         }
 
         /// <summary>
+        /// Gets a locale string resource
+        /// </summary>
+        /// <param name="name">A string representing a resource name</param>
+        /// <returns>Locale string resource</returns>
+        public virtual LocaleStringResource GetLocaleStringResourceByName(string name)
+        {
+            if (_workContext.WorkingLanguage != null)
+                return GetLocaleStringResourceByName(name, _workContext.WorkingLanguage.Id);
+
+            return null;
+        }
+
+        /// <summary>
+        /// Gets a locale string resource
+        /// </summary>
+        /// <param name="name">A string representing a resource name</param>
+        /// <param name="languageId">Language identifier</param>
+        /// <param name="logIfNotFound">A value indicating whether to log error if locale string resource is not found</param>
+        /// <returns>Locale string resource</returns>
+        public virtual LocaleStringResource GetLocaleStringResourceByName(string name, int languageId,
+            bool logIfNotFound = true)
+        {
+            LocaleStringResource localeStringResource = null;
+
+            var resourceName = name;
+            if (string.IsNullOrEmpty(resourceName))
+            {
+                // using an empty string so the request can still be logged
+                resourceName = string.Empty;
+            }
+            resourceName = resourceName.Trim().ToLowerInvariant();
+            var resources = GetAllResourcesByLanguageId(languageId);
+            if (resources.ContainsKey(resourceName))
+            {
+                var localeStringResourceId = resources[resourceName].Id;
+
+                localeStringResource = _lsrRepository.GetById(localeStringResourceId);
+            }
+            else
+            {
+                if (logIfNotFound)
+                {
+                    _logger.Warning(string.Format("Resource string ({0}) not found. Language ID = {1}", name, languageId));
+                }
+            }
+
+            return localeStringResource;
+        }
+
+        /// <summary>
         /// Gets all locale string resources by language identifier
         /// </summary>
         /// <param name="languageId">Language identifier</param>

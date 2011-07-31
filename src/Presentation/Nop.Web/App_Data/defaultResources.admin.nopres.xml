@@ -2708,6 +2708,9 @@
                         <LocaleResource Name="View">
                           <Value>View string resources</Value>
                         </LocaleResource>
+                        <LocaleResource Name="NameAlreadyExists">
+                          <Value>A resource already exists with the name: {0}</Value>
+                        </LocaleResource>
                         <LocaleResource Name="Fields">
                           <Children>
                             <LocaleResource Name="Name">
@@ -2720,6 +2723,11 @@
                             </LocaleResource>
                             <LocaleResource Name="Value">
                               <Value>Value</Value>
+                              <Children>
+                                <LocaleResource Name="Required">
+                                  <Value>Please provide a resource value.</Value>
+                                </LocaleResource>
+                              </Children>
                             </LocaleResource>
                             <LocaleResource Name="LanguageName">
                               <Value>Language</Value>
