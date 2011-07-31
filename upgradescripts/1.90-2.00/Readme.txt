@@ -14,11 +14,9 @@
 	6e. Update your message templates (some tokens were changed)
 	6f. Configure your payment, shipping, tax providers
 	6g. Update topics (can't be automated)
-	6h. Recreate product variant attribute combination (if you had ones)
-	6i. Reconfigure prices by customer roles (Now we have new implementation of tier prices based on customer roles)
-	6j. Reconfigure discount requirements for each discount (new implementation)
-8. Delete all pictures from \Content\Images\Thumbs directory
-9. Ensure that everything is OK
+	6h. Reconfigure prices by customer roles (Now we have new implementation of tier prices based on customer roles)
+	6i. Reconfigure discount requirements for each discount (new implementation)
+8. Ensure that everything is OK
 
 
 

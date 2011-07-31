@@ -9,8 +9,6 @@ namespace Nop.Data.Mapping.Forums
         {
             this.ToTable("Forums_Subscription");
             this.HasKey(fs => fs.Id);
-            this.Property(fs => fs.ForumId).IsOptional();
-            this.Property(fs => fs.TopicId).IsOptional();
 
             this.HasRequired(fs => fs.Customer)
                 .WithMany()

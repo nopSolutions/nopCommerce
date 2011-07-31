@@ -27,7 +27,8 @@ CREATE TABLE #IDs
 		[EntityName] nvarchar(100) NOT NULL
 	)
 GO
-
+--But we persist IDs for some of the entities (in order to save URLs):
+--product, category, manufacturer, producttag, news, blog, profile, forums
 
 
 
@@ -54,17 +55,13 @@ FETCH NEXT FROM cur_originaldownload INTO @OriginalDownloadId
 WHILE @@FETCH_STATUS = 0
 BEGIN	
 	PRINT 'moving download. ID ' + cast(@OriginalDownloadId as nvarchar(10))
-	INSERT INTO [Download] ([UseDownloadUrl], [DownloadUrl], [DownloadBinary], [ContentType], [Filename], [Extension], [IsNew])
-	SELECT [UseDownloadUrl], [DownloadUrl], [DownloadBinary], [ContentType], [Filename], [Extension], [IsNew]
+	SET IDENTITY_INSERT [Download] ON
+	INSERT INTO [Download] ([Id], [UseDownloadUrl], [DownloadUrl], [DownloadBinary], [ContentType], [Filename], [Extension], [IsNew])
+	SELECT [DownloadId], [UseDownloadUrl], [DownloadUrl], [DownloadBinary], [ContentType], [Filename], [Extension], [IsNew]
 	FROM [Nop_Download]
 	WHERE DownloadId = @OriginalDownloadId
+	SET IDENTITY_INSERT [Download] OFF
 
-	--new ID
-	DECLARE @NewDownloadId int
-	SET @NewDownloadId = @@IDENTITY
-
-	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
-	VALUES (@OriginalDownloadId, @NewDownloadId, N'Download')
 	--fetch next identifier
 	FETCH NEXT FROM cur_originaldownload INTO @OriginalDownloadId
 END
@@ -94,17 +91,13 @@ FETCH NEXT FROM cur_originalpicture INTO @OriginalPictureId
 WHILE @@FETCH_STATUS = 0
 BEGIN	
 	PRINT 'moving picture. ID ' + cast(@OriginalPictureId as nvarchar(10))
-	INSERT INTO [Picture] ([PictureBinary], [IsNew], [MimeType])
-	SELECT [PictureBinary], [IsNew], [MimeType]
+	SET IDENTITY_INSERT [Picture] ON
+	INSERT INTO [Picture] ([Id], [PictureBinary], [IsNew], [MimeType])
+	SELECT [PictureId], [PictureBinary], [IsNew], [MimeType]
 	FROM [Nop_Picture]
 	WHERE PictureId = @OriginalPictureId
+	SET IDENTITY_INSERT [Picture] OFF
 
-	--new ID
-	DECLARE @NewPictureId int
-	SET @NewPictureId = @@IDENTITY
-
-	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
-	VALUES (@OriginalPictureId, @NewPictureId, N'Picture')
 	--fetch next identifier
 	FETCH NEXT FROM cur_originalpicture INTO @OriginalPictureId
 END
@@ -183,17 +176,13 @@ FETCH NEXT FROM cur_originalcampaign INTO @OriginalCampaignId
 WHILE @@FETCH_STATUS = 0
 BEGIN	
 	PRINT 'moving campaign. ID ' + cast(@OriginalCampaignId as nvarchar(10))
-	INSERT INTO [Campaign] ([Name], [Subject], [Body], [CreatedOnUtc])
-	SELECT [Name], [Subject], [Body], [CreatedOn]
+	SET IDENTITY_INSERT [Campaign] ON
+	INSERT INTO [Campaign] ([Id], [Name], [Subject], [Body], [CreatedOnUtc])
+	SELECT [CampaignId], [Name], [Subject], [Body], [CreatedOn]
 	FROM [Nop_Campaign]
 	WHERE CampaignId = @OriginalCampaignId
+	SET IDENTITY_INSERT [Campaign] OFF
 
-	--new ID
-	DECLARE @NewCampaignId int
-	SET @NewCampaignId = @@IDENTITY
-
-	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
-	VALUES (@OriginalCampaignId, @NewCampaignId, N'Campaign')
 	--fetch next identifier
 	FETCH NEXT FROM cur_originalcampaign INTO @OriginalCampaignId
 END
@@ -304,17 +293,13 @@ BEGIN
 	DECLARE @NewAffiliateAddressId int
 	SET @NewAffiliateAddressId = @@IDENTITY
 
-	INSERT INTO [Affiliate] ([AddressId], [Active], [Deleted])
-	SELECT @NewAffiliateAddressId, [Active], [Deleted]
+	SET IDENTITY_INSERT [Affiliate] ON
+	INSERT INTO [Affiliate] ([Id], [AddressId], [Active], [Deleted])
+	SELECT [AffiliateId], @NewAffiliateAddressId, [Active], [Deleted]
 	FROM [Nop_Affiliate]
 	WHERE AffiliateId = @OriginalAffiliateId
+	SET IDENTITY_INSERT [Affiliate] OFF
 
-	--new ID
-	DECLARE @NewAffiliateId int
-	SET @NewAffiliateId = @@IDENTITY
-
-	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
-	VALUES (@OriginalAffiliateId, @NewAffiliateId, N'Affiliate')
 	--fetch next identifier
 	FETCH NEXT FROM cur_originalaffiliate INTO @OriginalAffiliateId
 END
@@ -381,22 +366,16 @@ FETCH NEXT FROM cur_originalcustomer INTO @OriginalCustomerId
 WHILE @@FETCH_STATUS = 0
 BEGIN	
 	PRINT 'moving customer. ID ' + cast(@OriginalCustomerId as nvarchar(10))
-
-	INSERT INTO [Customer] ([CustomerGuid], [Username], [Email], [Password], [PasswordFormatId], [PasswordSalt], [AffiliateId], [AdminComment], [TaxDisplayTypeId], [IsTaxExempt], [VatNumberStatusId], [UseRewardPointsDuringCheckout], [TimeZoneId], [Active], [Deleted], [IsSystemAccount], [CreatedOnUtc], [LastActivityDateUtc])
-	SELECT [CustomerGuid], [Username], [Email], [PasswordHash], 1 /*hashed*/, [SaltKey], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Affiliate' and [OriginalId]=[AffiliateId]) ,[AdminComment], 0 /*IncludingTax now*/, [IsTaxExempt], 10 /*Empty now*/, 0, [TimeZoneId], [Active], [Deleted], 0, [RegistrationDate], [RegistrationDate]
+	SET IDENTITY_INSERT [Customer] ON
+	INSERT INTO [Customer] ([Id], [CustomerGuid], [Username], [Email], [Password], [PasswordFormatId], [PasswordSalt], [AffiliateId], [AdminComment], [TaxDisplayTypeId], [IsTaxExempt], [VatNumberStatusId], [UseRewardPointsDuringCheckout], [TimeZoneId], [Active], [Deleted], [IsSystemAccount], [CreatedOnUtc], [LastActivityDateUtc])
+	SELECT [CustomerId], [CustomerGuid], [Username], [Email], [PasswordHash], 1 /*hashed*/, [SaltKey], (SELECT CASE WHEN [AffiliateId]=0 THEN NULL ELSE [AffiliateId] END), [AdminComment], 0 /*IncludingTax now*/, [IsTaxExempt], 10 /*Empty now*/, 0, [TimeZoneId], [Active], [Deleted], 0, [RegistrationDate], [RegistrationDate]
 	FROM [Nop_Customer]
 	WHERE CustomerId = @OriginalCustomerId
-
-	--new ID
-	DECLARE @NewCustomerId int
-	SET @NewCustomerId = @@IDENTITY
-
-	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
-	VALUES (@OriginalCustomerId, @NewCustomerId, N'Customer')
+	SET IDENTITY_INSERT [Customer] OFF
 
 	--move customer attributes (Gender, Firstname, Lastname, Company, PasswordRecoveryToken, AccountActivationToken)
 	INSERT INTO [CustomerAttribute] ([CustomerId], [Key], [Value])
-	SELECT @NewCustomerId, [key], [value]
+	SELECT @OriginalCustomerId, [key], [value]
 	FROM [Nop_CustomerAttribute]
 	WHERE (CustomerID = @OriginalCustomerId) and 
 	([key] = N'Gender' or [key] = N'FirstName' or [key] = N'LastName' or [key] = N'Company' or [key] = N'PasswordRecoveryToken' or [key] = N'AccountActivationToken') and
@@ -410,7 +389,7 @@ BEGIN
 	IF (@ForumPostCount > 0)
 	BEGIN
 		INSERT INTO [CustomerAttribute] ([CustomerId], [Key], [Value])
-		VALUES (@NewCustomerId, 'ForumPostCount', cast(@ForumPostCount as nvarchar(100)))
+		VALUES (@OriginalCustomerId, 'ForumPostCount', cast(@ForumPostCount as nvarchar(100)))
 	END
 	--move 'Signature' customer attribute
 	DECLARE @Signature nvarchar(1000)
@@ -421,18 +400,16 @@ BEGIN
 	IF (len(@Signature) > 0)
 	BEGIN
 		INSERT INTO [CustomerAttribute] ([CustomerId], [Key], [Value])
-		VALUES (@NewCustomerId, 'Signature', @Signature)
+		VALUES (@OriginalCustomerId, 'Signature', @Signature)
 	END
 	--move 'Avatar' customer attribute
 	DECLARE @AvatarPictureId int
 	SET @AvatarPictureId = null -- clear cache (variable scope)
-	SELECT @AvatarPictureId = [NewId]
-	FROM #IDs
-	WHERE [EntityName]=N'Picture' and [OriginalId]=(SELECT [AvatarID] FROM [Nop_Customer] WHERE CustomerId = @OriginalCustomerId)
+	SELECT @AvatarPictureId = [AvatarID] FROM [Nop_Customer] WHERE CustomerId = @OriginalCustomerId
 	IF (@AvatarPictureId > 0)
 	BEGIN
 		INSERT INTO [CustomerAttribute] ([CustomerId], [Key], [Value])
-		VALUES (@NewCustomerId, 'AvatarPictureId', cast(@AvatarPictureId as nvarchar(100)))
+		VALUES (@OriginalCustomerId, 'AvatarPictureId', cast(@AvatarPictureId as nvarchar(100)))
 	END
 	--move 'Location' customer attribute
 	DECLARE @LocationCountryId int
@@ -450,7 +427,7 @@ BEGIN
 		IF (@LocationCountryId > 0)
 		BEGIN
 			INSERT INTO [CustomerAttribute] ([CustomerId], [Key], [Value])
-			VALUES (@NewCustomerId, 'Location', cast(@LocationCountryId as nvarchar(100)))
+			VALUES (@OriginalCustomerId, 'Location', cast(@LocationCountryId as nvarchar(100)))
 		END
 	END
 
@@ -486,26 +463,26 @@ BEGIN
 	IF (@IsAdmin = 1)
 	BEGIN
 		INSERT INTO [Customer_CustomerRole_Mapping] ([CustomerRole_Id], [Customer_Id])
-		VALUES (@AdminCustomerRoleId, @NewCustomerId)
+		VALUES (@AdminCustomerRoleId, @OriginalCustomerId)
 	END	
 	IF (@IsGuest = 1)
 	BEGIN
 		INSERT INTO Customer_CustomerRole_Mapping ([CustomerRole_Id], [Customer_Id])
-		VALUES (@GuestCustomerRoleId, @NewCustomerId)
+		VALUES (@GuestCustomerRoleId, @OriginalCustomerId)
 	END	
 	IF (@IsRegistered = 1)
 	BEGIN
 		INSERT INTO Customer_CustomerRole_Mapping ([CustomerRole_Id], [Customer_Id])
-		VALUES (@RegisteredCustomerRoleId, @NewCustomerId)
+		VALUES (@RegisteredCustomerRoleId, @OriginalCustomerId)
 	END	
 	IF (@IsForumModerator = 1)
 	BEGIN
 		INSERT INTO Customer_CustomerRole_Mapping ([CustomerRole_Id], [Customer_Id])
-		VALUES (@ForumModeratorCustomerRoleId, @NewCustomerId)
+		VALUES (@ForumModeratorCustomerRoleId, @OriginalCustomerId)
 	END
 	--map customer to customer roles(old roles)
 	INSERT INTO [Customer_CustomerRole_Mapping] ([CustomerRole_Id],[Customer_Id])
-	SELECT (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'CustomerRole' and [OriginalId]=original_ccrm.CustomerRoleId), @NewCustomerId
+	SELECT (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'CustomerRole' and [OriginalId]=original_ccrm.CustomerRoleId), @OriginalCustomerId
 	FROM [Nop_Customer_CustomerRole_Mapping] original_ccrm
 	WHERE original_ccrm.CustomerID = @OriginalCustomerId
 
@@ -551,9 +528,9 @@ BEGIN
 	
 	--map customers to addresses (now we have a new CustomerAddresses table)
 	INSERT INTO [CustomerAddresses] ([Customer_Id],[Address_Id])
-	SELECT (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Customer' and [OriginalId]=original_a.CustomerID), @NewAddressId
-	FROM [Nop_Address] original_a
-	WHERE original_a.AddressId = @OriginalAddressId
+	SELECT [CustomerID], @NewAddressId
+	FROM [Nop_Address]
+	WHERE [AddressId] = @OriginalAddressId
 
 
 	--fetch next identifier
@@ -581,19 +558,12 @@ FETCH NEXT FROM cur_originalblogpost INTO @OriginalBlogPostId
 WHILE @@FETCH_STATUS = 0
 BEGIN	
 	PRINT 'moving blog post. ID ' + cast(@OriginalBlogPostId as nvarchar(10))
-	INSERT INTO [BlogPost] ([LanguageId], [Title], [Body], [AllowComments], [Tags], [CreatedOnUtc])
-	SELECT (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Language' and [OriginalId]=[LanguageId]), [BlogPostTitle], [BlogPostBody], [BlogPostAllowComments], [Tags], [CreatedOn]
+	SET IDENTITY_INSERT [BlogPost] ON
+	INSERT INTO [BlogPost] ([Id], [LanguageId], [Title], [Body], [AllowComments], [Tags], [CreatedOnUtc])
+	SELECT [BlogPostId], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Language' and [OriginalId]=[LanguageId]), [BlogPostTitle], [BlogPostBody], [BlogPostAllowComments], [Tags], [CreatedOn]
 	FROM [Nop_BlogPost]
 	WHERE BlogPostId = @OriginalBlogPostId
-
-	--new ID
-	DECLARE @NewBlogPostId int
-	SET @NewBlogPostId = @@IDENTITY
-
-	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
-	VALUES (@OriginalBlogPostId, @NewBlogPostId, N'BlogPost')
-
-
+	SET IDENTITY_INSERT [BlogPost] OFF
 
 	--fetch next identifier
 	FETCH NEXT FROM cur_originalblogpost INTO @OriginalBlogPostId
@@ -617,9 +587,7 @@ BEGIN
 
 	DECLARE @BlogCommentCustomerId int
 	SET @BlogCommentCustomerId = null -- clear cache (variable scope)
-	SELECT @BlogCommentCustomerId = [NewId] 
-	FROM #IDs 
-	WHERE [EntityName]=N'Customer' and [OriginalId]=(SELECT CustomerID FROM [Nop_BlogComment] WHERE BlogCommentId = @OriginalBlogCommentId)
+	SELECT @BlogCommentCustomerId = CustomerID FROM [Nop_BlogComment] WHERE BlogCommentId = @OriginalBlogCommentId
 	--ensure that @BlogCommentCustomerId is not null
 	IF ((@BlogCommentCustomerId is null) or (@BlogCommentCustomerId = 0))
 	BEGIN
@@ -647,12 +615,9 @@ BEGIN
 	DECLARE @NewBlogCommentId int
 	SET @NewBlogCommentId = @@IDENTITY
 
-	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
-	VALUES (@OriginalBlogCommentId, @NewBlogCommentId, N'BlogComment')
-
 
 	INSERT INTO [BlogComment] ([Id], [CommentText], [BlogPostId])
-	SELECT @NewBlogCommentId, [CommentText], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'BlogPost' and [OriginalId]=[BlogPostID])
+	SELECT @NewBlogCommentId, [CommentText], [BlogPostID]
 	FROM [Nop_BlogComment]
 	WHERE BlogCommentId = @OriginalBlogCommentId	
 
@@ -682,17 +647,12 @@ FETCH NEXT FROM cur_originalnewsitem INTO @OriginalNewsItemId
 WHILE @@FETCH_STATUS = 0
 BEGIN	
 	PRINT 'moving news item. ID ' + cast(@OriginalNewsItemId as nvarchar(10))
-	INSERT INTO [News] ([LanguageId], [Title], [Short], [Full], [Published], [AllowComments], [CreatedOnUtc])
-	SELECT (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Language' and [OriginalId]=[LanguageId]), [Title], [Short], [Full], [Published], [AllowComments], [CreatedOn]
+	SET IDENTITY_INSERT [News] ON
+	INSERT INTO [News] ([Id], [LanguageId], [Title], [Short], [Full], [Published], [AllowComments], [CreatedOnUtc])
+	SELECT [NewsId], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Language' and [OriginalId]=[LanguageId]), [Title], [Short], [Full], [Published], [AllowComments], [CreatedOn]
 	FROM [Nop_News]
 	WHERE NewsId = @OriginalNewsItemId
-
-	--new ID
-	DECLARE @NewNewsItemId int
-	SET @NewNewsItemId = @@IDENTITY
-
-	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
-	VALUES (@OriginalNewsItemId, @NewNewsItemId, N'NewsItem')
+	SET IDENTITY_INSERT [News] OFF
 
 
 
@@ -718,9 +678,7 @@ BEGIN
 
 	DECLARE @NewsCommentCustomerId int
 	SET @NewsCommentCustomerId = null -- clear cache (variable scope)
-	SELECT @NewsCommentCustomerId = [NewId] 
-	FROM #IDs 
-	WHERE [EntityName]=N'Customer' and [OriginalId]=(SELECT CustomerID FROM [Nop_NewsComment] WHERE NewsCommentId = @OriginalNewsCommentId)
+	SELECT @NewsCommentCustomerId = CustomerID FROM [Nop_NewsComment] WHERE NewsCommentId = @OriginalNewsCommentId
 	--ensure that @NewsCommentCustomerId is not null
 	IF ((@NewsCommentCustomerId is null) or (@NewsCommentCustomerId = 0))
 	BEGIN
@@ -748,12 +706,8 @@ BEGIN
 	DECLARE @NewNewsCommentId int
 	SET @NewNewsCommentId = @@IDENTITY
 
-	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
-	VALUES (@OriginalNewsCommentId, @NewNewsCommentId, N'NewsComment')
-
-
 	INSERT INTO [NewsComment] ([Id], [CommentTitle], [CommentText], [NewsItemId])
-	SELECT @NewNewsCommentId, [Title], [Comment], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'NewsItem' and [OriginalId]=[NewsID])
+	SELECT @NewNewsCommentId, [Title], [Comment], [NewsID]
 	FROM [Nop_NewsComment]
 	WHERE NewsCommentId = @OriginalNewsCommentId	
 
@@ -783,19 +737,12 @@ FETCH NEXT FROM cur_originalpoll INTO @OriginalPollId
 WHILE @@FETCH_STATUS = 0
 BEGIN	
 	PRINT 'moving poll. ID ' + cast(@OriginalPollId as nvarchar(10))
-	INSERT INTO [Poll] ([LanguageId], [Name], [SystemKeyword], [Published], [ShowOnHomePage], [DisplayOrder], [StartDateUtc], [EndDateUtc])
-	SELECT (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Language' and [OriginalId]=[LanguageId]), [Name], [SystemKeyword], [Published], [ShowOnHomePage], [DisplayOrder], [StartDate], [EndDate]
+	SET IDENTITY_INSERT [Poll] ON
+	INSERT INTO [Poll] ([Id], [LanguageId], [Name], [SystemKeyword], [Published], [ShowOnHomePage], [DisplayOrder], [StartDateUtc], [EndDateUtc])
+	SELECT [PollId], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Language' and [OriginalId]=[LanguageId]), [Name], [SystemKeyword], [Published], [ShowOnHomePage], [DisplayOrder], [StartDate], [EndDate]
 	FROM [Nop_Poll]
 	WHERE PollId = @OriginalPollId
-
-	--new ID
-	DECLARE @NewPollId int
-	SET @NewPollId = @@IDENTITY
-
-	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
-	VALUES (@OriginalPollId, @NewPollId, N'Poll')
-
-
+	SET IDENTITY_INSERT [Poll] OFF
 
 	--fetch next identifier
 	FETCH NEXT FROM cur_originalpoll INTO @OriginalPollId
@@ -817,7 +764,7 @@ WHILE @@FETCH_STATUS = 0
 BEGIN	
 	PRINT 'moving poll answer. ID ' + cast(@OriginalPollAnswerId as nvarchar(10))
 	INSERT INTO [PollAnswer] ([PollId], [Name], [NumberOfVotes], [DisplayOrder])
-	SELECT (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Poll' and [OriginalId]=[PollId]), [Name], [Count], [DisplayOrder]
+	SELECT [PollId], [Name], [Count], [DisplayOrder]
 	FROM [Nop_PollAnswer]
 	WHERE PollAnswerId = @OriginalPollAnswerId
 
@@ -851,16 +798,13 @@ BEGIN
 	PRINT 'moving poll voting record. ID ' + cast(@OriginalPollVotingRecordId as nvarchar(10))
 
 	INSERT INTO [CustomerContent] ([CustomerId], [IpAddress], [IsApproved], [CreatedOnUtc], [UpdatedOnUtc])
-	SELECT (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Customer' and [OriginalId]=[CustomerId]), null, 1 /*approved*/, getutcdate(), getutcdate()
+	SELECT [CustomerId], null, 1 /*approved*/, getutcdate(), getutcdate()
 	FROM [Nop_PollVotingRecord]
 	WHERE PollVotingRecordId = @OriginalPollVotingRecordId
 
 	--new ID
 	DECLARE @NewPollVotingRecordId int
 	SET @NewPollVotingRecordId = @@IDENTITY
-
-	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
-	VALUES (@OriginalPollVotingRecordId, @NewPollVotingRecordId, N'PollVotingRecord')
 
 
 	INSERT INTO [PollVotingRecord] ([Id], [PollAnswerId])
@@ -891,17 +835,13 @@ FETCH NEXT FROM cur_originalforumgroup INTO @OriginalForumGroupId
 WHILE @@FETCH_STATUS = 0
 BEGIN	
 	PRINT 'moving forum group. ID ' + cast(@OriginalForumGroupId as nvarchar(10))
-	INSERT INTO [Forums_Group] ([Name], [Description], [DisplayOrder], [CreatedOnUtc], [UpdatedOnUtc])
-	SELECT [Name], [Description], [DisplayOrder], [CreatedOn], [UpdatedOn]
+	SET IDENTITY_INSERT [Forums_Group] ON
+	INSERT INTO [Forums_Group] ([Id], [Name], [Description], [DisplayOrder], [CreatedOnUtc], [UpdatedOnUtc])
+	SELECT [ForumGroupId], [Name], [Description], [DisplayOrder], [CreatedOn], [UpdatedOn]
 	FROM [Nop_Forums_Group]
 	WHERE ForumGroupId = @OriginalForumGroupId
+	SET IDENTITY_INSERT [Forums_Group] OFF
 
-	--new ID
-	DECLARE @NewForumGroupId int
-	SET @NewForumGroupId = @@IDENTITY
-
-	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
-	VALUES (@OriginalForumGroupId, @NewForumGroupId, N'ForumGroup')
 	--fetch next identifier
 	FETCH NEXT FROM cur_originalforumgroup INTO @OriginalForumGroupId
 END
@@ -928,19 +868,12 @@ WHILE @@FETCH_STATUS = 0
 BEGIN	
 	PRINT 'moving forum. ID ' + cast(@OriginalForumId as nvarchar(10))
 
-	INSERT INTO [Forums_Forum] ([ForumGroupId], [Name], [Description], [NumTopics], [NumPosts], [LastTopicId], [LastPostId], [LastPostCustomerId], [LastPostTime], [DisplayOrder], [CreatedOnUtc], [UpdatedOnUtc])
-	SELECT (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'ForumGroup' and [OriginalId]=[ForumGroupId]), [Name], [Description], [NumTopics], [NumPosts], 0 /*temporary 0*/,  0 /*temporary 0*/, COALESCE((SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Customer' and [OriginalId]=[LastPostUserID]), 0), [LastPostTime], [DisplayOrder], [CreatedOn], [UpdatedOn]
+	SET IDENTITY_INSERT [Forums_Forum] ON
+	INSERT INTO [Forums_Forum] ([Id], [ForumGroupId], [Name], [Description], [NumTopics], [NumPosts], [LastTopicId], [LastPostId], [LastPostCustomerId], [LastPostTime], [DisplayOrder], [CreatedOnUtc], [UpdatedOnUtc])
+	SELECT [ForumId], [ForumGroupId], [Name], [Description], [NumTopics], [NumPosts], [LastTopicId],  [LastPostId], [LastPostUserID], [LastPostTime], [DisplayOrder], [CreatedOn], [UpdatedOn]
 	FROM [Nop_Forums_Forum]
 	WHERE ForumId = @OriginalForumId
-
-	--new ID
-	DECLARE @NewForumId int
-	SET @NewForumId = @@IDENTITY
-
-	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
-	VALUES (@OriginalForumId, @NewForumId, N'Forum')
-
-
+	SET IDENTITY_INSERT [Forums_Forum] OFF
 
 	--fetch next identifier
 	FETCH NEXT FROM cur_originalforum INTO @OriginalForumId
@@ -968,19 +901,12 @@ WHILE @@FETCH_STATUS = 0
 BEGIN	
 	PRINT 'moving forum topic. ID ' + cast(@OriginalForumTopicId as nvarchar(10))
 
-	INSERT INTO [Forums_Topic] ([ForumId], [CustomerId], [TopicTypeId], [Subject], [NumPosts], [Views], [LastPostId], [LastPostCustomerId], [LastPostTime], [CreatedOnUtc], [UpdatedOnUtc])
-	SELECT (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Forum' and [OriginalId]=[ForumId]), (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Customer' and [OriginalId]=[UserID]), [TopicTypeId], [Subject], [NumPosts], [Views], 0 /*temporary set lastpostid to 0*/, COALESCE((SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Customer' and [OriginalId]=[LastPostUserID]), 0), [LastPostTime], [CreatedOn], [UpdatedOn]
+	SET IDENTITY_INSERT [Forums_Topic] ON
+	INSERT INTO [Forums_Topic] ([Id], [ForumId], [CustomerId], [TopicTypeId], [Subject], [NumPosts], [Views], [LastPostId], [LastPostCustomerId], [LastPostTime], [CreatedOnUtc], [UpdatedOnUtc])
+	SELECT [TopicId], [ForumId], [UserID], [TopicTypeId], [Subject], [NumPosts], [Views], [LastPostId], [LastPostUserID], [LastPostTime], [CreatedOn], [UpdatedOn]
 	FROM [Nop_Forums_Topic]
 	WHERE TopicId = @OriginalForumTopicId
-
-	--new ID
-	DECLARE @NewForumTopicId int
-	SET @NewForumTopicId = @@IDENTITY
-
-	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
-	VALUES (@OriginalForumTopicId, @NewForumTopicId, N'ForumTopic')
-
-
+	SET IDENTITY_INSERT [Forums_Topic] OFF
 
 	--fetch next identifier
 	FETCH NEXT FROM cur_originalforumtopic INTO @OriginalForumTopicId
@@ -1008,18 +934,12 @@ WHILE @@FETCH_STATUS = 0
 BEGIN	
 	PRINT 'moving forum post. ID ' + cast(@OriginalForumPostId as nvarchar(10))
 
-	INSERT INTO [Forums_Post] ([TopicId], [CustomerId], [Text], [IPAddress], [CreatedOnUtc], [UpdatedOnUtc])
-	SELECT (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'ForumTopic' and [OriginalId]=[TopicId]), (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Customer' and [OriginalId]=[UserID]), [Text], [IPAddress], [CreatedOn], [UpdatedOn]
+	SET IDENTITY_INSERT [Forums_Post] ON
+	INSERT INTO [Forums_Post] ([Id], [TopicId], [CustomerId], [Text], [IPAddress], [CreatedOnUtc], [UpdatedOnUtc])
+	SELECT [PostID], [TopicId], [UserID], [Text], [IPAddress], [CreatedOn], [UpdatedOn]
 	FROM [Nop_Forums_Post]
 	WHERE PostId = @OriginalForumPostId
-
-	--new ID
-	DECLARE @NewForumPostId int
-	SET @NewForumPostId = @@IDENTITY
-
-	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
-	VALUES (@OriginalForumPostId, @NewForumPostId, N'ForumPost')
-
+	SET IDENTITY_INSERT [Forums_Post] OFF
 
 
 	--fetch next identifier
@@ -1035,94 +955,7 @@ GO
 
 
 
---FORUMS. Update LastTopicId and LastPostId (forum topics and posts are migrated now)
-PRINT 'updating forums (LastTopicId and LastPostId properties)'
-DECLARE @OriginalForumId int
-DECLARE cur_originalforum CURSOR FOR
-SELECT ForumId
-FROM [Nop_Forums_Forum]
-ORDER BY [CreatedOn]
-OPEN cur_originalforum
-FETCH NEXT FROM cur_originalforum INTO @OriginalForumId
-WHILE @@FETCH_STATUS = 0
-BEGIN	
-	PRINT 'updating forum (LastTopicId and LastPostId properties). ID ' + cast(@OriginalForumId as nvarchar(10))
 
-	DECLARE @NewForumId int
-	SELECT @NewForumId = [NewId] 
-	FROM #IDs 
-	WHERE [EntityName]=N'Forum' and [OriginalId]=@OriginalForumId
-
-
-	DECLARE @OldLastTopicId int
-	SET @OldLastTopicId = null -- clear cache (variable scope)
-	SELECT @OldLastTopicId = [LastTopicID] 
-	FROM [Nop_Forums_Forum] 
-	WHERE [ForumId]= @OriginalForumId
-
-
-	DECLARE @OldLastPostId int
-	SET @OldLastPostId = null -- clear cache (variable scope)
-	SELECT @OldLastPostId = [LastPostID] 
-	FROM [Nop_Forums_Forum] 
-	WHERE [ForumId]= @OriginalForumId
-
-
-	UPDATE [Forums_Forum]
-	SET [LastTopicID] = COALESCE((SELECT [NewId] FROM #IDs WHERE [EntityName]=N'ForumTopic' and [OriginalId]=@OldLastTopicId), 0),
-		[LastPostId] = COALESCE((SELECT [NewId] FROM #IDs WHERE [EntityName]=N'ForumPost' and [OriginalId]=@OldLastPostId), 0)
-	WHERE [Id] = @NewForumId
-
-
-	--fetch next identifier
-	FETCH NEXT FROM cur_originalforum INTO @OriginalForumId
-END
-CLOSE cur_originalforum
-DEALLOCATE cur_originalforum
-GO
-
-
-
-
-
-
-
---FORUM TOPICS. Update LastPostId (forum posts are migrated now)
-PRINT 'updating forum topics (LastPostId property)'
-DECLARE @OriginalForumTopicId int
-DECLARE cur_originalforumtopic CURSOR FOR
-SELECT TopicId
-FROM [Nop_Forums_Topic]
-ORDER BY [CreatedOn]
-OPEN cur_originalforumtopic
-FETCH NEXT FROM cur_originalforumtopic INTO @OriginalForumTopicId
-WHILE @@FETCH_STATUS = 0
-BEGIN	
-	PRINT 'updating forum topic (LastPostId property). ID ' + cast(@OriginalForumTopicId as nvarchar(10))
-
-	DECLARE @NewForumTopicId int
-	SELECT @NewForumTopicId = [NewId] 
-	FROM #IDs 
-	WHERE [EntityName]=N'ForumTopic' and [OriginalId]=@OriginalForumTopicId
-
-
-	DECLARE @OldLastPostId int
-	SET @OldLastPostId = null -- clear cache (variable scope)
-	SELECT @OldLastPostId = [LastPostID] 
-	FROM [Nop_Forums_Topic] 
-	WHERE [TopicId]= @OriginalForumTopicId
-	
-
-	UPDATE [Forums_Topic]
-	SET [LastPostId] = COALESCE((SELECT [NewId] FROM #IDs WHERE [EntityName]=N'ForumPost' and [OriginalId]=@OldLastPostId), 0)
-	WHERE [Id] = @NewForumTopicId
-
-	--fetch next identifier
-	FETCH NEXT FROM cur_originalforumtopic INTO @OriginalForumTopicId
-END
-CLOSE cur_originalforumtopic
-DEALLOCATE cur_originalforumtopic
-GO
 
 
 
@@ -1147,16 +980,10 @@ WHILE @@FETCH_STATUS = 0
 BEGIN	
 	PRINT 'moving forum subscription. ID ' + cast(@OriginalForumSubscriptionId as nvarchar(10))
 	INSERT INTO [Forums_Subscription] ([SubscriptionGuid], [CustomerId], [ForumId], [TopicId], [CreatedOnUtc])
-	SELECT [SubscriptionGuid], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Customer' and [OriginalId]=[UserId]), COALESCE((SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Forum' and [OriginalId]=[ForumId]), 0), COALESCE((SELECT [NewId] FROM #IDs WHERE [EntityName]=N'ForumTopic' and [OriginalId]=[TopicId]), 0), [CreatedOn]
+	SELECT [SubscriptionGuid], [UserId], [ForumId], [TopicId], [CreatedOn]
 	FROM [Nop_Forums_Subscription]
 	WHERE SubscriptionID = @OriginalForumSubscriptionId
 
-	--new ID
-	DECLARE @NewForumSubscriptionId int
-	SET @NewForumSubscriptionId = @@IDENTITY
-
-	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
-	VALUES (@OriginalForumSubscriptionId, @NewForumSubscriptionId, N'ForumSubscription')
 	--fetch next identifier
 	FETCH NEXT FROM cur_originalforumsubscription INTO @OriginalForumSubscriptionId
 END
@@ -1187,16 +1014,10 @@ WHILE @@FETCH_STATUS = 0
 BEGIN	
 	PRINT 'moving private message. ID ' + cast(@OriginalPrivateMessageId as nvarchar(10))
 	INSERT INTO [Forums_PrivateMessage] ([FromCustomerId], [ToCustomerId], [Subject], [Text], [IsRead], [IsDeletedByAuthor], [IsDeletedByRecipient], [CreatedOnUtc])
-	SELECT (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Customer' and [OriginalId]=[FromUserID]), (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Customer' and [OriginalId]=[ToUserID]), [Subject], [Text], [IsRead], [IsDeletedByAuthor], [IsDeletedByRecipient], [CreatedOn]
+	SELECT [FromUserID], [ToUserID], [Subject], [Text], [IsRead], [IsDeletedByAuthor], [IsDeletedByRecipient], [CreatedOn]
 	FROM [Nop_Forums_PrivateMessage]
 	WHERE PrivateMessageID = @OriginalPrivateMessageId
 
-	--new ID
-	DECLARE @NewPrivateMessageId int
-	SET @NewPrivateMessageId = @@IDENTITY
-
-	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
-	VALUES (@OriginalPrivateMessageId, @NewPrivateMessageId, N'PrivateMessage')
 	--fetch next identifier
 	FETCH NEXT FROM cur_originalprivatemessage INTO @OriginalPrivateMessageId
 END
@@ -1231,12 +1052,6 @@ BEGIN
 	FROM [Nop_NewsLetterSubscription]
 	WHERE NewsLetterSubscriptionId = @OriginalNewsLetterSubscriptionId
 
-	--new ID
-	DECLARE @NewNewsLetterSubscriptionId int
-	SET @NewNewsLetterSubscriptionId = @@IDENTITY
-
-	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
-	VALUES (@OriginalNewsLetterSubscriptionId, @NewNewsLetterSubscriptionId, N'NewsLetterSubscription')
 	--fetch next identifier
 	FETCH NEXT FROM cur_originalnewslettersubscription INTO @OriginalNewsLetterSubscriptionId
 END
@@ -1273,12 +1088,6 @@ BEGIN
 	FROM [Nop_QueuedEmail]
 	WHERE QueuedEmailId = @OriginalQueuedEmailId
 
-	--new ID
-	DECLARE @NewQueuedEmailId int
-	SET @NewQueuedEmailId = @@IDENTITY
-
-	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
-	VALUES (@OriginalQueuedEmailId, @NewQueuedEmailId, N'QueuedEmail')
 	--fetch next identifier
 	FETCH NEXT FROM cur_originalqueuedemail INTO @OriginalQueuedEmailId
 END
@@ -1317,10 +1126,6 @@ BEGIN
 	DECLARE @NewShippingMethodId int
 	SET @NewShippingMethodId = @@IDENTITY
 
-	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
-	VALUES (@OriginalShippingMethodId, @NewShippingMethodId, N'ShippingMethod')
-
-
 	--shipping method restrictions
 	INSERT INTO [ShippingMethodRestrictions] ([ShippingMethod_Id], [Country_Id])
 	SELECT @NewShippingMethodId, (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Country' and [OriginalId]=[CountryID])
@@ -1356,17 +1161,12 @@ FETCH NEXT FROM cur_originaltaxcategory INTO @OriginalTaxCategoryId
 WHILE @@FETCH_STATUS = 0
 BEGIN	
 	PRINT 'moving tax category. ID ' + cast(@OriginalTaxCategoryId as nvarchar(10))
-	INSERT INTO [TaxCategory] ([Name], [DisplayOrder])
-	SELECT [Name], [DisplayOrder]
+	SET IDENTITY_INSERT [TaxCategory] ON
+	INSERT INTO [TaxCategory] ([Id], [Name], [DisplayOrder])
+	SELECT [TaxCategoryId], [Name], [DisplayOrder]
 	FROM [Nop_TaxCategory]
 	WHERE TaxCategoryId = @OriginalTaxCategoryId
-
-	--new ID
-	DECLARE @NewTaxCategoryId int
-	SET @NewTaxCategoryId = @@IDENTITY
-
-	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
-	VALUES (@OriginalTaxCategoryId, @NewTaxCategoryId, N'TaxCategory')
+	SET IDENTITY_INSERT [TaxCategory] OFF
 
 	--fetch next identifier
 	FETCH NEXT FROM cur_originaltaxcategory INTO @OriginalTaxCategoryId
@@ -1397,17 +1197,12 @@ FETCH NEXT FROM cur_originalcategory INTO @OriginalCategoryId
 WHILE @@FETCH_STATUS = 0
 BEGIN	
 	PRINT 'moving category. ID ' + cast(@OriginalCategoryId as nvarchar(10))
-	INSERT INTO [Category] ([Name], [Description], [MetaKeywords], [MetaDescription], [MetaTitle], [SeName], [ParentCategoryId], [PictureId], [PageSize], [PriceRanges], [ShowOnHomePage], [Published], [Deleted], [DisplayOrder], [CreatedOnUtc], [UpdatedOnUtc])
-	SELECT [Name], [Description], [MetaKeywords], [MetaDescription], [MetaTitle], [SeName], 0 /*0 for now*/, COALESCE((SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Picture' and [OriginalId]=[PictureId]), 0), [PageSize], [PriceRanges], [ShowOnHomePage], [Published], [Deleted], [DisplayOrder], [CreatedOn], [UpdatedOn]
+	SET IDENTITY_INSERT [Category] ON
+	INSERT INTO [Category] ([Id], [Name], [Description], [MetaKeywords], [MetaDescription], [MetaTitle], [SeName], [ParentCategoryId], [PictureId], [PageSize], [PriceRanges], [ShowOnHomePage], [Published], [Deleted], [DisplayOrder], [CreatedOnUtc], [UpdatedOnUtc])
+	SELECT [CategoryId], [Name], [Description], [MetaKeywords], [MetaDescription], [MetaTitle], [SeName], [ParentCategoryId], [PictureId], [PageSize], [PriceRanges], [ShowOnHomePage], [Published], [Deleted], [DisplayOrder], [CreatedOn], [UpdatedOn]
 	FROM [Nop_Category]
 	WHERE CategoryId = @OriginalCategoryId
-
-	--new ID
-	DECLARE @NewCategoryId int
-	SET @NewCategoryId = @@IDENTITY
-
-	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
-	VALUES (@OriginalCategoryId, @NewCategoryId, N'Category')
+	SET IDENTITY_INSERT [Category] OFF
 
 	--fetch next identifier
 	FETCH NEXT FROM cur_originalcategory INTO @OriginalCategoryId
@@ -1415,44 +1210,6 @@ END
 CLOSE cur_originalcategory
 DEALLOCATE cur_originalcategory
 GO
---UPDATE PARENT CATEGORIES
-PRINT 'update parent categories'
-DECLARE @OriginalCategoryId int
-DECLARE cur_originalcategory CURSOR FOR
-SELECT CategoryId
-FROM [Nop_Category]
-ORDER BY [CategoryId]
-OPEN cur_originalcategory
-FETCH NEXT FROM cur_originalcategory INTO @OriginalCategoryId
-WHILE @@FETCH_STATUS = 0
-BEGIN	
-	PRINT 'updating parent category. ID ' + cast(@OriginalCategoryId as nvarchar(10))
-	
-	DECLARE @NewCategoryId int
-	SELECT @NewCategoryId = [NewId] 
-	FROM #IDs 
-	WHERE [EntityName]=N'Category' and [OriginalId]=@OriginalCategoryId
-
-
-	DECLARE @OldParentCategoryId int
-	SET @OldParentCategoryId = null -- clear cache (variable scope)
-	SELECT @OldParentCategoryId = [ParentCategoryId] 
-	FROM [Nop_Category] 
-	WHERE [CategoryId]= @OriginalCategoryId
-	
-
-	UPDATE [Category]
-	SET [ParentCategoryId] = COALESCE((SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Category' and [OriginalId]=@OldParentCategoryId), 0)
-	WHERE [Id] = @NewCategoryId
-
-
-	--fetch next identifier
-	FETCH NEXT FROM cur_originalcategory INTO @OriginalCategoryId
-END
-CLOSE cur_originalcategory
-DEALLOCATE cur_originalcategory
-GO
-
 
 
 
@@ -1475,17 +1232,12 @@ FETCH NEXT FROM cur_originalmanufacturer INTO @OriginalManufacturerId
 WHILE @@FETCH_STATUS = 0
 BEGIN	
 	PRINT 'moving manufacturer. ID ' + cast(@OriginalManufacturerId as nvarchar(10))
-	INSERT INTO [Manufacturer] ([Name], [Description], [MetaKeywords], [MetaDescription], [MetaTitle], [SeName], [PictureId], [PageSize], [PriceRanges], [Published], [Deleted], [DisplayOrder], [CreatedOnUtc], [UpdatedOnUtc])
-	SELECT [Name], [Description], [MetaKeywords], [MetaDescription], [MetaTitle], [SeName], COALESCE((SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Picture' and [OriginalId]=[PictureId]), 0), [PageSize], [PriceRanges], [Published], [Deleted], [DisplayOrder], [CreatedOn], [UpdatedOn]
+	SET IDENTITY_INSERT [Manufacturer] ON
+	INSERT INTO [Manufacturer] ([Id], [Name], [Description], [MetaKeywords], [MetaDescription], [MetaTitle], [SeName], [PictureId], [PageSize], [PriceRanges], [Published], [Deleted], [DisplayOrder], [CreatedOnUtc], [UpdatedOnUtc])
+	SELECT [ManufacturerId], [Name], [Description], [MetaKeywords], [MetaDescription], [MetaTitle], [SeName], [PictureId], [PageSize], [PriceRanges], [Published], [Deleted], [DisplayOrder], [CreatedOn], [UpdatedOn]
 	FROM [Nop_Manufacturer]
 	WHERE ManufacturerId = @OriginalManufacturerId
-
-	--new ID
-	DECLARE @NewManufacturerId int
-	SET @NewManufacturerId = @@IDENTITY
-
-	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
-	VALUES (@OriginalManufacturerId, @NewManufacturerId, N'Manufacturer')
+	SET IDENTITY_INSERT [Manufacturer] OFF
 
 	--fetch next identifier
 	FETCH NEXT FROM cur_originalmanufacturer INTO @OriginalManufacturerId
@@ -1516,17 +1268,12 @@ FETCH NEXT FROM cur_originalproducttag INTO @OriginalProductTagId
 WHILE @@FETCH_STATUS = 0
 BEGIN	
 	PRINT 'moving product tag. ID ' + cast(@OriginalProductTagId as nvarchar(10))
-	INSERT INTO [ProductTag] ([Name], [ProductCount])
-	SELECT [Name], [ProductCount]
+	SET IDENTITY_INSERT [ProductTag] ON
+	INSERT INTO [ProductTag] ([Id], [Name], [ProductCount])
+	SELECT [ProductTagId], [Name], [ProductCount]
 	FROM [Nop_ProductTag]
 	WHERE ProductTagId = @OriginalProductTagId
-
-	--new ID
-	DECLARE @NewProductTagId int
-	SET @NewProductTagId = @@IDENTITY
-
-	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
-	VALUES (@OriginalProductTagId, @NewProductTagId, N'ProductTag')
+	SET IDENTITY_INSERT [ProductTag] OFF
 
 	--fetch next identifier
 	FETCH NEXT FROM cur_originalproducttag INTO @OriginalProductTagId
@@ -1557,39 +1304,34 @@ FETCH NEXT FROM cur_originalproduct INTO @OriginalProductId
 WHILE @@FETCH_STATUS = 0
 BEGIN	
 	PRINT 'moving product. ID ' + cast(@OriginalProductId as nvarchar(10))
-	INSERT INTO [Product] ([Name], [ShortDescription], [FullDescription], [AdminComment], [ShowOnHomePage], [MetaKeywords], [MetaDescription], [MetaTitle], [SeName], [AllowCustomerReviews], [ApprovedRatingSum], [NotApprovedRatingSum], [ApprovedTotalReviews], [NotApprovedTotalReviews], [Published], [Deleted], [CreatedOnUtc], [UpdatedOnUtc])
-	SELECT [Name], [ShortDescription], [FullDescription], [AdminComment], [ShowOnHomePage], [MetaKeywords], [MetaDescription], [MetaTitle], [SeName], [AllowCustomerReviews], 0, 0, 0, 0, [Published], [Deleted], [CreatedOn], [UpdatedOn]
+	SET IDENTITY_INSERT [Product] ON
+	INSERT INTO [Product] ([Id], [Name], [ShortDescription], [FullDescription], [AdminComment], [ShowOnHomePage], [MetaKeywords], [MetaDescription], [MetaTitle], [SeName], [AllowCustomerReviews], [ApprovedRatingSum], [NotApprovedRatingSum], [ApprovedTotalReviews], [NotApprovedTotalReviews], [Published], [Deleted], [CreatedOnUtc], [UpdatedOnUtc])
+	SELECT [ProductId], [Name], [ShortDescription], [FullDescription], [AdminComment], [ShowOnHomePage], [MetaKeywords], [MetaDescription], [MetaTitle], [SeName], [AllowCustomerReviews], 0, 0, 0, 0, [Published], [Deleted], [CreatedOn], [UpdatedOn]
 	FROM [Nop_Product]
 	WHERE ProductId = @OriginalProductId
-
-	--new ID
-	DECLARE @NewProductId int
-	SET @NewProductId = @@IDENTITY
-
-	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
-	VALUES (@OriginalProductId, @NewProductId, N'Product')
+	SET IDENTITY_INSERT [Product] OFF
 
 	--category mappings
 	INSERT INTO [Product_Category_Mapping] ([ProductId], [CategoryId], [IsFeaturedProduct], [DisplayOrder])
-	SELECT @NewProductId, (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Category' and [OriginalId]=[CategoryId]), [IsFeaturedProduct], [DisplayOrder]
+	SELECT [ProductId], [CategoryId], [IsFeaturedProduct], [DisplayOrder]
 	FROM [Nop_Product_Category_Mapping]
 	WHERE ProductId = @OriginalProductId
 
 	--manufacturer mappings
 	INSERT INTO [Product_Manufacturer_Mapping] ([ProductId], [ManufacturerId], [IsFeaturedProduct], [DisplayOrder])
-	SELECT @NewProductId, (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Manufacturer' and [OriginalId]=[ManufacturerId]), [IsFeaturedProduct], [DisplayOrder]
+	SELECT [ProductId], [ManufacturerId], [IsFeaturedProduct], [DisplayOrder]
 	FROM [Nop_Product_Manufacturer_Mapping]
 	WHERE ProductId = @OriginalProductId
 
 	--picture mappings
 	INSERT INTO [Product_Picture_Mapping] ([ProductId], [PictureId], [DisplayOrder])
-	SELECT @NewProductId, (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Picture' and [OriginalId]=[PictureId]), [DisplayOrder]
+	SELECT [ProductId], [PictureId], [DisplayOrder]
 	FROM [Nop_ProductPicture]
 	WHERE ProductId = @OriginalProductId
 
 	--product tag mappings
 	INSERT INTO [Product_ProductTag_Mapping] ([Product_Id], [ProductTag_Id])
-	SELECT @NewProductId, (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'ProductTag' and [OriginalId]=[ProductTagId])
+	SELECT [ProductId], [ProductTagId]
 	FROM [Nop_ProductTag_Product_Mapping]
 	WHERE ProductId = @OriginalProductId
 
@@ -1628,7 +1370,7 @@ BEGIN
 	PRINT 'moving related product. ID ' + cast(@OriginalRelatedProductId as nvarchar(10))
 
 	INSERT INTO [RelatedProduct] ([ProductId1], [ProductId2], [DisplayOrder])
-	SELECT COALESCE((SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Product' and [OriginalId]=[ProductID1]), 0), COALESCE((SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Product' and [OriginalId]=[ProductID2]), 0), [DisplayOrder]
+	SELECT [ProductID1], [ProductID2], [DisplayOrder]
 	FROM [Nop_RelatedProduct]
 	WHERE RelatedProductId = @OriginalRelatedProductId
 	
@@ -1663,7 +1405,7 @@ BEGIN
 	PRINT 'moving crosssell product. ID ' + cast(@OriginalCrossSellProductId as nvarchar(10))
 
 	INSERT INTO [CrossSellProduct] ([ProductId1], [ProductId2])
-	SELECT COALESCE((SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Product' and [OriginalId]=[ProductID1]), 0), COALESCE((SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Product' and [OriginalId]=[ProductID2]), 0)
+	SELECT [ProductID1], [ProductID2]
 	FROM [Nop_CrossSellProduct]
 	WHERE CrossSellProductId = @OriginalCrossSellProductId
 	
@@ -1696,17 +1438,12 @@ FETCH NEXT FROM cur_originalspecificationattribute INTO @OriginalSpecificationAt
 WHILE @@FETCH_STATUS = 0
 BEGIN	
 	PRINT 'moving specification attribute. ID ' + cast(@OriginalSpecificationAttributeId as nvarchar(10))
-	INSERT INTO [SpecificationAttribute] ([Name], [DisplayOrder])
-	SELECT [Name], [DisplayOrder]
+	SET IDENTITY_INSERT [SpecificationAttribute] ON
+	INSERT INTO [SpecificationAttribute] ([Id], [Name], [DisplayOrder])
+	SELECT [SpecificationAttributeId], [Name], [DisplayOrder]
 	FROM [Nop_SpecificationAttribute]
 	WHERE SpecificationAttributeId = @OriginalSpecificationAttributeId
-
-	--new ID
-	DECLARE @NewSpecificationAttributeId int
-	SET @NewSpecificationAttributeId = @@IDENTITY
-
-	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
-	VALUES (@OriginalSpecificationAttributeId, @NewSpecificationAttributeId, N'SpecificationAttribute')
+	SET IDENTITY_INSERT [SpecificationAttribute] OFF
 
 	--fetch next identifier
 	FETCH NEXT FROM cur_originalspecificationattribute INTO @OriginalSpecificationAttributeId
@@ -1737,23 +1474,16 @@ FETCH NEXT FROM cur_originalspecificationattributeoption INTO @OriginalSpecifica
 WHILE @@FETCH_STATUS = 0
 BEGIN	
 	PRINT 'moving specification attribute option. ID ' + cast(@OriginalSpecificationAttributeOptionId as nvarchar(10))
-	INSERT INTO [SpecificationAttributeOption] ([SpecificationAttributeId], [Name], [DisplayOrder])
-	SELECT COALESCE((SELECT [NewId] FROM #IDs WHERE [EntityName]=N'SpecificationAttribute' and [OriginalId]=[SpecificationAttributeId]), 0), [Name], [DisplayOrder]
+	SET IDENTITY_INSERT [SpecificationAttributeOption] ON
+	INSERT INTO [SpecificationAttributeOption] ([Id], [SpecificationAttributeId], [Name], [DisplayOrder])
+	SELECT [SpecificationAttributeOptionId], [SpecificationAttributeId], [Name], [DisplayOrder]
 	FROM [Nop_SpecificationAttributeOption]
 	WHERE SpecificationAttributeOptionId = @OriginalSpecificationAttributeOptionId
-
-	--new ID
-	DECLARE @NewSpecificationAttributeOptionId int
-	SET @NewSpecificationAttributeOptionId = @@IDENTITY
-
-	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
-	VALUES (@OriginalSpecificationAttributeOptionId, @NewSpecificationAttributeOptionId, N'SpecificationAttributeOption')
-
-
+	SET IDENTITY_INSERT [SpecificationAttributeOption] OFF
 
 	--product mapping
 	INSERT INTO [Product_SpecificationAttribute_Mapping] ([ProductId], [SpecificationAttributeOptionId], [AllowFiltering], [ShowOnProductPage], [DisplayOrder])
-	SELECT (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Product' and [OriginalId]=[ProductId]), @NewSpecificationAttributeOptionId, [AllowFiltering], [ShowOnProductPage], [DisplayOrder]
+	SELECT [ProductId], [SpecificationAttributeOptionId], [AllowFiltering], [ShowOnProductPage], [DisplayOrder]
 	FROM [Nop_Product_SpecificationAttribute_Mapping]
 	WHERE SpecificationAttributeOptionId = @OriginalSpecificationAttributeOptionId
 
@@ -1787,17 +1517,12 @@ FETCH NEXT FROM cur_originalcheckoutattribute INTO @OriginalCheckoutAttributeId
 WHILE @@FETCH_STATUS = 0
 BEGIN	
 	PRINT 'moving checkout attribute. ID ' + cast(@OriginalCheckoutAttributeId as nvarchar(10))
-	INSERT INTO [CheckoutAttribute] ([Name], [TextPrompt], [IsRequired], [ShippableProductRequired], [IsTaxExempt], [TaxCategoryID], [AttributeControlTypeID], [DisplayOrder])
-	SELECT [Name], [TextPrompt], [IsRequired], [ShippableProductRequired], [IsTaxExempt], COALESCE((SELECT [NewId] FROM #IDs WHERE [EntityName]=N'TaxCategory' and [OriginalId]=[TaxCategoryID]), 0), [AttributeControlTypeID], [DisplayOrder]
+	SET IDENTITY_INSERT [CheckoutAttribute] ON
+	INSERT INTO [CheckoutAttribute] ([Id], [Name], [TextPrompt], [IsRequired], [ShippableProductRequired], [IsTaxExempt], [TaxCategoryID], [AttributeControlTypeID], [DisplayOrder])
+	SELECT [CheckoutAttributeId], [Name], [TextPrompt], [IsRequired], [ShippableProductRequired], [IsTaxExempt], [TaxCategoryID], [AttributeControlTypeID], [DisplayOrder]
 	FROM [Nop_CheckoutAttribute]
 	WHERE CheckoutAttributeId = @OriginalCheckoutAttributeId
-
-	--new ID
-	DECLARE @NewCheckoutAttributeId int
-	SET @NewCheckoutAttributeId = @@IDENTITY
-
-	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
-	VALUES (@OriginalCheckoutAttributeId, @NewCheckoutAttributeId, N'CheckoutAttribute')
+	SET IDENTITY_INSERT [CheckoutAttribute] OFF
 
 	--fetch next identifier
 	FETCH NEXT FROM cur_originalcheckoutattribute INTO @OriginalCheckoutAttributeId
@@ -1828,18 +1553,12 @@ FETCH NEXT FROM cur_originalcheckoutattributevalue INTO @OriginalCheckoutAttribu
 WHILE @@FETCH_STATUS = 0
 BEGIN	
 	PRINT 'moving checkout attribute value. ID ' + cast(@OriginalCheckoutAttributeValueId as nvarchar(10))
-	INSERT INTO [CheckoutAttributeValue] ([CheckoutAttributeId], [Name], [PriceAdjustment], [WeightAdjustment], [IsPreSelected], [DisplayOrder])
-	SELECT COALESCE((SELECT [NewId] FROM #IDs WHERE [EntityName]=N'CheckoutAttribute' and [OriginalId]=[CheckoutAttributeId]), 0), [Name], [PriceAdjustment], [WeightAdjustment], [IsPreSelected], [DisplayOrder]
+	SET IDENTITY_INSERT [CheckoutAttributeValue] ON
+	INSERT INTO [CheckoutAttributeValue] ([Id], [CheckoutAttributeId], [Name], [PriceAdjustment], [WeightAdjustment], [IsPreSelected], [DisplayOrder])
+	SELECT [CheckoutAttributeValueId], [CheckoutAttributeId], [Name], [PriceAdjustment], [WeightAdjustment], [IsPreSelected], [DisplayOrder]
 	FROM [Nop_CheckoutAttributeValue]
 	WHERE CheckoutAttributeValueId = @OriginalCheckoutAttributeValueId
-
-	--new ID
-	DECLARE @NewCheckoutAttributeValueId int
-	SET @NewCheckoutAttributeValueId = @@IDENTITY
-
-	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
-	VALUES (@OriginalCheckoutAttributeValueId, @NewCheckoutAttributeValueId, N'CheckoutAttributeValue')
-
+	SET IDENTITY_INSERT [CheckoutAttributeValue] OFF
 
 	--fetch next identifier
 	FETCH NEXT FROM cur_originalcheckoutattributevalue INTO @OriginalCheckoutAttributeValueId
@@ -1870,17 +1589,12 @@ FETCH NEXT FROM cur_originalproductvariant INTO @OriginalProductVariantId
 WHILE @@FETCH_STATUS = 0
 BEGIN	
 	PRINT 'moving product variant. ID ' + cast(@OriginalProductVariantId as nvarchar(10))
-	INSERT INTO [ProductVariant] ([ProductId], [Name], [Sku], [Description], [AdminComment], [ManufacturerPartNumber], [IsGiftCard], [GiftCardTypeId], [IsDownload], [DownloadId], [UnlimitedDownloads], [MaxNumberOfDownloads], [DownloadExpirationDays], [DownloadActivationTypeId], [HasSampleDownload], [SampleDownloadId], [HasUserAgreement], [UserAgreementText], [IsRecurring], [RecurringCycleLength], [RecurringCyclePeriodId], [RecurringTotalCycles], [IsShipEnabled], [IsFreeShipping], [AdditionalShippingCharge], [IsTaxExempt], [TaxCategoryId], [ManageInventoryMethodId], [StockQuantity], [DisplayStockAvailability], [DisplayStockQuantity], [MinStockQuantity], [LowStockActivityId], [NotifyAdminForQuantityBelow], [BackorderModeId], [OrderMinimumQuantity], [OrderMaximumQuantity], [DisableBuyButton], [CallForPrice], [Price], [OldPrice], [ProductCost], [CustomerEntersPrice], [MinimumCustomerEnteredPrice], [MaximumCustomerEnteredPrice], [Weight], [Length], [Width], [Height], [PictureId], [AvailableStartDateTimeUtc], [AvailableEndDateTimeUtc], [Published], [Deleted], [DisplayOrder], [CreatedOnUtc], [UpdatedOnUtc])
-	SELECT (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Product' and [OriginalId]=[ProductId]), [Name], [Sku], [Description], [AdminComment], [ManufacturerPartNumber], [IsGiftCard], [GiftCardType], [IsDownload], COALESCE((SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Download' and [OriginalId]=[DownloadId]), 0), [UnlimitedDownloads], [MaxNumberOfDownloads], [DownloadExpirationDays], [DownloadActivationType], [HasSampleDownload], COALESCE((SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Download' and [OriginalId]=[SampleDownloadId]), 0), [HasUserAgreement], [UserAgreementText], [IsRecurring], [CycleLength], [CyclePeriod], [TotalCycles], [IsShipEnabled], [IsFreeShipping], [AdditionalShippingCharge], [IsTaxExempt], COALESCE((SELECT [NewId] FROM #IDs WHERE [EntityName]=N'TaxCategory' and [OriginalId]=[TaxCategoryID]), 0), [ManageInventory], [StockQuantity], [DisplayStockAvailability], [DisplayStockQuantity], [MinStockQuantity], [LowStockActivityId], [NotifyAdminForQuantityBelow], [Backorders], [OrderMinimumQuantity], [OrderMaximumQuantity], [DisableBuyButton], [CallForPrice], [Price], [OldPrice], [ProductCost], [CustomerEntersPrice], [MinimumCustomerEnteredPrice], [MaximumCustomerEnteredPrice], [Weight], [Length], [Width], [Height], COALESCE((SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Picture' and [OriginalId]=[PictureId]), 0), [AvailableStartDateTime], [AvailableEndDateTime], [Published], [Deleted], [DisplayOrder], [CreatedOn], [UpdatedOn]
+	SET IDENTITY_INSERT [ProductVariant] ON
+	INSERT INTO [ProductVariant] ([Id], [ProductId], [Name], [Sku], [Description], [AdminComment], [ManufacturerPartNumber], [IsGiftCard], [GiftCardTypeId], [IsDownload], [DownloadId], [UnlimitedDownloads], [MaxNumberOfDownloads], [DownloadExpirationDays], [DownloadActivationTypeId], [HasSampleDownload], [SampleDownloadId], [HasUserAgreement], [UserAgreementText], [IsRecurring], [RecurringCycleLength], [RecurringCyclePeriodId], [RecurringTotalCycles], [IsShipEnabled], [IsFreeShipping], [AdditionalShippingCharge], [IsTaxExempt], [TaxCategoryId], [ManageInventoryMethodId], [StockQuantity], [DisplayStockAvailability], [DisplayStockQuantity], [MinStockQuantity], [LowStockActivityId], [NotifyAdminForQuantityBelow], [BackorderModeId], [OrderMinimumQuantity], [OrderMaximumQuantity], [DisableBuyButton], [CallForPrice], [Price], [OldPrice], [ProductCost], [CustomerEntersPrice], [MinimumCustomerEnteredPrice], [MaximumCustomerEnteredPrice], [Weight], [Length], [Width], [Height], [PictureId], [AvailableStartDateTimeUtc], [AvailableEndDateTimeUtc], [Published], [Deleted], [DisplayOrder], [CreatedOnUtc], [UpdatedOnUtc])
+	SELECT [ProductVariantId], [ProductId], [Name], [Sku], [Description], [AdminComment], [ManufacturerPartNumber], [IsGiftCard], [GiftCardType], [IsDownload], [DownloadId], [UnlimitedDownloads], [MaxNumberOfDownloads], [DownloadExpirationDays], [DownloadActivationType], [HasSampleDownload], [SampleDownloadId], [HasUserAgreement], [UserAgreementText], [IsRecurring], [CycleLength], [CyclePeriod], [TotalCycles], [IsShipEnabled], [IsFreeShipping], [AdditionalShippingCharge], [IsTaxExempt], [TaxCategoryID], [ManageInventory], [StockQuantity], [DisplayStockAvailability], [DisplayStockQuantity], [MinStockQuantity], [LowStockActivityId], [NotifyAdminForQuantityBelow], [Backorders], [OrderMinimumQuantity], [OrderMaximumQuantity], [DisableBuyButton], [CallForPrice], [Price], [OldPrice], [ProductCost], [CustomerEntersPrice], [MinimumCustomerEnteredPrice], [MaximumCustomerEnteredPrice], [Weight], [Length], [Width], [Height], [PictureId], [AvailableStartDateTime], [AvailableEndDateTime], [Published], [Deleted], [DisplayOrder], [CreatedOn], [UpdatedOn]
 	FROM [Nop_ProductVariant]
 	WHERE ProductVariantId = @OriginalProductVariantId
-
-	--new ID
-	DECLARE @NewProductVariantId int
-	SET @NewProductVariantId = @@IDENTITY
-
-	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
-	VALUES (@OriginalProductVariantId, @NewProductVariantId, N'ProductVariant')
+	SET IDENTITY_INSERT [ProductVariant] OFF
 
 	--fetch next identifier
 	FETCH NEXT FROM cur_originalproductvariant INTO @OriginalProductVariantId
@@ -1911,17 +1625,12 @@ FETCH NEXT FROM cur_originalproductattribute INTO @OriginalProductAttributeId
 WHILE @@FETCH_STATUS = 0
 BEGIN	
 	PRINT 'moving product attribute. ID ' + cast(@OriginalProductAttributeId as nvarchar(10))
-	INSERT INTO [ProductAttribute] ([Name], [Description])
-	SELECT [Name], [Description]
+	SET IDENTITY_INSERT [ProductAttribute] ON
+	INSERT INTO [ProductAttribute] ([Id], [Name], [Description])
+	SELECT [ProductAttributeId], [Name], [Description]
 	FROM [Nop_ProductAttribute]
 	WHERE ProductAttributeId = @OriginalProductAttributeId
-
-	--new ID
-	DECLARE @NewProductAttributeId int
-	SET @NewProductAttributeId = @@IDENTITY
-
-	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
-	VALUES (@OriginalProductAttributeId, @NewProductAttributeId, N'ProductAttribute')
+	SET IDENTITY_INSERT [ProductAttribute] OFF
 
 	--fetch next identifier
 	FETCH NEXT FROM cur_originalproductattribute INTO @OriginalProductAttributeId
@@ -1952,18 +1661,12 @@ FETCH NEXT FROM cur_originalproductvariantattribute INTO @OriginalProductVariant
 WHILE @@FETCH_STATUS = 0
 BEGIN	
 	PRINT 'moving product variant attribute. ID ' + cast(@OriginalProductVariantAttributeId as nvarchar(10))
-	INSERT INTO [ProductVariant_ProductAttribute_Mapping] ([ProductVariantId], [ProductAttributeId], [TextPrompt], [IsRequired], [AttributeControlTypeId], [DisplayOrder])
-	SELECT (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'ProductVariant' and [OriginalId]=[ProductVariantId]), (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'ProductAttribute' and [OriginalId]=[ProductAttributeId]), [TextPrompt], [IsRequired], [AttributeControlTypeId], [DisplayOrder]
+	SET IDENTITY_INSERT [ProductVariant_ProductAttribute_Mapping] ON
+	INSERT INTO [ProductVariant_ProductAttribute_Mapping] ([Id], [ProductVariantId], [ProductAttributeId], [TextPrompt], [IsRequired], [AttributeControlTypeId], [DisplayOrder])
+	SELECT [ProductVariantAttributeID], [ProductVariantId], [ProductAttributeId], [TextPrompt], [IsRequired], [AttributeControlTypeId], [DisplayOrder]
 	FROM [Nop_ProductVariant_ProductAttribute_Mapping]
 	WHERE ProductVariantAttributeID = @OriginalProductVariantAttributeId
-
-	--new ID
-	DECLARE @NewProductVariantAttributeId int
-	SET @NewProductVariantAttributeId = @@IDENTITY
-
-	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
-	VALUES (@OriginalProductVariantAttributeId, @NewProductVariantAttributeId, N'ProductVariantAttribute')
-
+	SET IDENTITY_INSERT [ProductVariant_ProductAttribute_Mapping] OFF
 
 	--fetch next identifier
 	FETCH NEXT FROM cur_originalproductvariantattribute INTO @OriginalProductVariantAttributeId
@@ -1994,24 +1697,54 @@ FETCH NEXT FROM cur_originalproductvariantattributevalue INTO @OriginalProductVa
 WHILE @@FETCH_STATUS = 0
 BEGIN	
 	PRINT 'moving product variant attribute value. ID ' + cast(@OriginalProductVariantAttributeValueId as nvarchar(10))
-	INSERT INTO [ProductVariantAttributeValue] ([ProductVariantAttributeId], [Name], [PriceAdjustment], [WeightAdjustment], [IsPreSelected], [DisplayOrder])
-	SELECT COALESCE((SELECT [NewId] FROM #IDs WHERE [EntityName]=N'ProductVariantAttribute' and [OriginalId]=[ProductVariantAttributeId]), 0), [Name], [PriceAdjustment], [WeightAdjustment], [IsPreSelected], [DisplayOrder]
+	SET IDENTITY_INSERT [ProductVariantAttributeValue] ON
+	INSERT INTO [ProductVariantAttributeValue] ([Id], [ProductVariantAttributeId], [Name], [PriceAdjustment], [WeightAdjustment], [IsPreSelected], [DisplayOrder])
+	SELECT [ProductVariantAttributeValueId], [ProductVariantAttributeId], [Name], [PriceAdjustment], [WeightAdjustment], [IsPreSelected], [DisplayOrder]
 	FROM [Nop_ProductVariantAttributeValue]
 	WHERE ProductVariantAttributeValueId = @OriginalProductVariantAttributeValueId
-
-	--new ID
-	DECLARE @NewProductVariantAttributeValueId int
-	SET @NewProductVariantAttributeValueId = @@IDENTITY
-
-	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
-	VALUES (@OriginalProductVariantAttributeValueId, @NewProductVariantAttributeValueId, N'ProductVariantAttributeValue')
-
+	SET IDENTITY_INSERT [ProductVariantAttributeValue] OFF
 
 	--fetch next identifier
 	FETCH NEXT FROM cur_originalproductvariantattributevalue INTO @OriginalProductVariantAttributeValueId
 END
 CLOSE cur_originalproductvariantattributevalue
 DEALLOCATE cur_originalproductvariantattributevalue
+GO
+
+
+
+
+
+
+
+
+
+
+
+--PRODUCT VARIANT ATTRIBUTE COMBINATIONS
+PRINT 'moving product variant attribute combinations'
+DECLARE @OriginalProductVariantAttributeCombinationId int
+DECLARE cur_originalproductvariantattributecombination CURSOR FOR
+SELECT ProductVariantAttributeCombinationId
+FROM [Nop_ProductVariantAttributeCombination]
+ORDER BY [ProductVariantAttributeCombinationId]
+OPEN cur_originalproductvariantattributecombination
+FETCH NEXT FROM cur_originalproductvariantattributecombination INTO @OriginalProductVariantAttributeCombinationId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving product variant attribute combination. ID ' + cast(@OriginalProductVariantAttributeCombinationId as nvarchar(10))
+	SET IDENTITY_INSERT [ProductVariantAttributeCombination] ON
+	INSERT INTO [ProductVariantAttributeCombination] ([Id], [ProductVariantID], [AttributesXML], [StockQuantity], [AllowOutOfStockOrders])
+	SELECT [ProductVariantAttributeCombinationId], [ProductVariantID], cast([AttributesXML] as nvarchar(MAX)), [StockQuantity], [AllowOutOfStockOrders]
+	FROM [Nop_ProductVariantAttributeCombination]
+	WHERE ProductVariantAttributeCombinationId = @OriginalProductVariantAttributeCombinationId
+	SET IDENTITY_INSERT [ProductVariantAttributeCombination] OFF
+
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalproductvariantattributecombination INTO @OriginalProductVariantAttributeCombinationId
+END
+CLOSE cur_originalproductvariantattributecombination
+DEALLOCATE cur_originalproductvariantattributecombination
 GO
 
 
@@ -2036,17 +1769,12 @@ FETCH NEXT FROM cur_originaltierprice INTO @OriginalTierPriceId
 WHILE @@FETCH_STATUS = 0
 BEGIN	
 	PRINT 'moving tier price. ID ' + cast(@OriginalTierPriceId as nvarchar(10))
-	INSERT INTO [TierPrice] ([ProductVariantId], [Quantity], [Price])
-	SELECT (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'ProductVariant' and [OriginalId]=[ProductVariantID]), [Quantity], [Price]
+	SET IDENTITY_INSERT [TierPrice] ON
+	INSERT INTO [TierPrice] ([Id], [ProductVariantId], [Quantity], [Price])
+	SELECT [TierPriceId], [ProductVariantID], [Quantity], [Price]
 	FROM [Nop_TierPrice]
 	WHERE TierPriceId = @OriginalTierPriceId
-
-	--new ID
-	DECLARE @NewTierPriceId int
-	SET @NewTierPriceId = @@IDENTITY
-
-	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
-	VALUES (@OriginalTierPriceId, @NewTierPriceId, N'TierPrice')
+	SET IDENTITY_INSERT [TierPrice] OFF
 
 	--fetch next identifier
 	FETCH NEXT FROM cur_originaltierprice INTO @OriginalTierPriceId
@@ -2065,7 +1793,7 @@ GO
 
 
 
---DOWNLOADS
+--DISCOUNTS
 PRINT 'moving discounts'
 DECLARE @OriginalDiscountId int
 DECLARE cur_originaldiscount CURSOR FOR
@@ -2098,30 +1826,24 @@ BEGIN
 		SET @NewLimitationTimes  = 1
 	END
 
-	INSERT INTO [Discount] ([Name], [DiscountTypeId], [UsePercentage], [DiscountPercentage], [DiscountAmount], [StartDateUtc], [EndDateUtc], [RequiresCouponCode], [CouponCode], [DiscountLimitationId], [LimitationTimes])
-	SELECT [Name], [DiscountTypeId], [UsePercentage], [DiscountPercentage], [DiscountAmount], [StartDate], [EndDate], [RequiresCouponCode], [CouponCode], @NewDiscountLimitationId, @NewLimitationTimes
+	SET IDENTITY_INSERT [Discount] ON
+	INSERT INTO [Discount] ([Id], [Name], [DiscountTypeId], [UsePercentage], [DiscountPercentage], [DiscountAmount], [StartDateUtc], [EndDateUtc], [RequiresCouponCode], [CouponCode], [DiscountLimitationId], [LimitationTimes])
+	SELECT [DiscountId], [Name], [DiscountTypeId], [UsePercentage], [DiscountPercentage], [DiscountAmount], [StartDate], [EndDate], [RequiresCouponCode], [CouponCode], @NewDiscountLimitationId, @NewLimitationTimes
 	FROM [Nop_Discount]
 	WHERE DiscountId = @OriginalDiscountId
-
-	--new ID
-	DECLARE @NewDiscountId int
-	SET @NewDiscountId = @@IDENTITY
-
-	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
-	VALUES (@OriginalDiscountId, @NewDiscountId, N'Discount')
+	SET IDENTITY_INSERT [Discount] OFF
 
 	--category mappings
 	INSERT INTO [Discount_AppliedToCategories] ([Discount_Id], [Category_Id])
-	SELECT @NewDiscountId, (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Category' and [OriginalId]=[CategoryID])
+	SELECT [DiscountId], [CategoryID]
 	FROM [Nop_Category_Discount_Mapping]
 	WHERE DiscountID = @OriginalDiscountId
 
 	--product variant mappings
 	INSERT INTO [Discount_AppliedToProductVariants] ([Discount_Id], [ProductVariant_Id])
-	SELECT @NewDiscountId, (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'ProductVariant' and [OriginalId]=[ProductVariantID])
+	SELECT [DiscountId], [ProductVariantID]
 	FROM [Nop_ProductVariant_Discount_Mapping]
 	WHERE DiscountID = @OriginalDiscountId
-
 
 
 
@@ -2258,18 +1980,12 @@ BEGIN
 	END
 
 
-	INSERT INTO [Order] ([OrderGuid], [CustomerId], [OrderStatusId], [ShippingStatusId], [PaymentStatusId], [PaymentMethodSystemName], [CustomerCurrencyCode], [CurrencyRate], [CustomerTaxDisplayTypeId], [VatNumber], [OrderSubtotalInclTax], [OrderSubtotalExclTax], [OrderSubTotalDiscountInclTax], [OrderSubTotalDiscountExclTax], [OrderShippingInclTax], [OrderShippingExclTax], [PaymentMethodAdditionalFeeInclTax], [PaymentMethodAdditionalFeeExclTax], [TaxRates], [OrderTax], [OrderDiscount], [OrderTotal], [RefundedAmount], [CheckoutAttributeDescription], [CheckoutAttributesXml], [CustomerLanguageId], [AffiliateId], [CustomerIp], [AllowStoringCreditCardNumber], [CardType], [CardName], [CardNumber], [MaskedCreditCardNumber], [CardCvv2], [CardExpirationMonth], [CardExpirationYear], [AuthorizationTransactionId], [AuthorizationTransactionCode], [AuthorizationTransactionResult], [CaptureTransactionId], [CaptureTransactionResult], [SubscriptionTransactionId], [PurchaseOrderNumber], [PaidDateUtc], [ShippingMethod], [ShippingRateComputationMethodSystemName], [ShippedDateUtc], [DeliveryDateUtc], [OrderWeight], [TrackingNumber], [Deleted], [CreatedOnUtc], [BillingAddressId], [ShippingAddressId])
-	SELECT [OrderGuid], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Customer' and [OriginalId]=[CustomerId]), [OrderStatusId], [ShippingStatusId], [PaymentStatusId], @PaymentMethodSystemName, [CustomerCurrencyCode], @CurrencyRate, @CustomerTaxDisplayTypeId, [VatNumber], [OrderSubtotalInclTax], [OrderSubtotalExclTax], [OrderSubTotalDiscountInclTax], [OrderSubTotalDiscountExclTax], [OrderShippingInclTax], [OrderShippingExclTax], [PaymentMethodAdditionalFeeInclTax], [PaymentMethodAdditionalFeeExclTax], [TaxRates], [OrderTax], [OrderDiscount], [OrderTotal], [RefundedAmount], [CheckoutAttributeDescription], cast([CheckoutAttributesXml] as nvarchar(MAX)), COALESCE((SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Language' and [OriginalId]=[CustomerLanguageId]), 0), (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Affiliate' and [OriginalId]=[AffiliateId]), [CustomerIp], [AllowStoringCreditCardNumber], [CardType], [CardName], [CardNumber], [MaskedCreditCardNumber], [CardCvv2], [CardExpirationMonth], [CardExpirationYear], [AuthorizationTransactionId], [AuthorizationTransactionCode], [AuthorizationTransactionResult], [CaptureTransactionId], [CaptureTransactionResult], [SubscriptionTransactionId], [PurchaseOrderNumber], [PaidDate], [ShippingMethod], @ShippingRateComputationMethodSystemName, [ShippedDate], [DeliveryDate], [OrderWeight], [TrackingNumber], [Deleted], [CreatedOn], @BillingAddressId, @ShippingAddressId
+	SET IDENTITY_INSERT [Order] ON	
+	INSERT INTO [Order] ([Id], [OrderGuid], [CustomerId], [OrderStatusId], [ShippingStatusId], [PaymentStatusId], [PaymentMethodSystemName], [CustomerCurrencyCode], [CurrencyRate], [CustomerTaxDisplayTypeId], [VatNumber], [OrderSubtotalInclTax], [OrderSubtotalExclTax], [OrderSubTotalDiscountInclTax], [OrderSubTotalDiscountExclTax], [OrderShippingInclTax], [OrderShippingExclTax], [PaymentMethodAdditionalFeeInclTax], [PaymentMethodAdditionalFeeExclTax], [TaxRates], [OrderTax], [OrderDiscount], [OrderTotal], [RefundedAmount], [CheckoutAttributeDescription], [CheckoutAttributesXml], [CustomerLanguageId], [AffiliateId], [CustomerIp], [AllowStoringCreditCardNumber], [CardType], [CardName], [CardNumber], [MaskedCreditCardNumber], [CardCvv2], [CardExpirationMonth], [CardExpirationYear], [AuthorizationTransactionId], [AuthorizationTransactionCode], [AuthorizationTransactionResult], [CaptureTransactionId], [CaptureTransactionResult], [SubscriptionTransactionId], [PurchaseOrderNumber], [PaidDateUtc], [ShippingMethod], [ShippingRateComputationMethodSystemName], [ShippedDateUtc], [DeliveryDateUtc], [OrderWeight], [TrackingNumber], [Deleted], [CreatedOnUtc], [BillingAddressId], [ShippingAddressId])
+	SELECT [OrderId], [OrderGuid], [CustomerId], [OrderStatusId], [ShippingStatusId], [PaymentStatusId], @PaymentMethodSystemName, [CustomerCurrencyCode], @CurrencyRate, @CustomerTaxDisplayTypeId, [VatNumber], [OrderSubtotalInclTax], [OrderSubtotalExclTax], [OrderSubTotalDiscountInclTax], [OrderSubTotalDiscountExclTax], [OrderShippingInclTax], [OrderShippingExclTax], [PaymentMethodAdditionalFeeInclTax], [PaymentMethodAdditionalFeeExclTax], [TaxRates], [OrderTax], [OrderDiscount], [OrderTotal], [RefundedAmount], [CheckoutAttributeDescription], cast([CheckoutAttributesXml] as nvarchar(MAX)), COALESCE((SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Language' and [OriginalId]=[CustomerLanguageId]), 0), (SELECT CASE WHEN [AffiliateId]=0 THEN NULL ELSE [AffiliateId] END), [CustomerIp], [AllowStoringCreditCardNumber], [CardType], [CardName], [CardNumber], [MaskedCreditCardNumber], [CardCvv2], [CardExpirationMonth], [CardExpirationYear], [AuthorizationTransactionId], [AuthorizationTransactionCode], [AuthorizationTransactionResult], [CaptureTransactionId], [CaptureTransactionResult], [SubscriptionTransactionId], [PurchaseOrderNumber], [PaidDate], [ShippingMethod], @ShippingRateComputationMethodSystemName, [ShippedDate], [DeliveryDate], [OrderWeight], [TrackingNumber], [Deleted], [CreatedOn], @BillingAddressId, @ShippingAddressId
 	FROM [Nop_Order]
 	WHERE OrderId = @OriginalOrderId
-
-	--new ID
-	DECLARE @NewOrderId int
-	SET @NewOrderId = @@IDENTITY
-	
-	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
-	VALUES (@OriginalOrderId, @NewOrderId, N'Order')
-
+	SET IDENTITY_INSERT [Order] OFF
 	
 	--fetch next identifier
 	FETCH NEXT FROM cur_originalorder INTO @OriginalOrderId
@@ -2300,8 +2016,9 @@ FETCH NEXT FROM cur_originalorderproductvariant INTO @OriginalOrderProductVarian
 WHILE @@FETCH_STATUS = 0
 BEGIN	
 	PRINT 'moving order product variant. ID ' + cast(@OriginalOrderProductVariantId as nvarchar(10))
+	
 	INSERT INTO [OrderProductVariant] ([OrderProductVariantGuid], [OrderId], [ProductVariantId], [Quantity], [UnitPriceInclTax], [UnitPriceExclTax], [PriceInclTax], [PriceExclTax], [DiscountAmountInclTax], [DiscountAmountExclTax], [AttributeDescription], [AttributesXml], [DownloadCount], [IsDownloadActivated], [LicenseDownloadId])
-	SELECT [OrderProductVariantGuid], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Order' and [OriginalId]=[OrderId]), (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'ProductVariant' and [OriginalId]=[ProductVariantId]), [Quantity], [UnitPriceInclTax], [UnitPriceExclTax], [PriceInclTax], [PriceExclTax], [DiscountAmountInclTax], [DiscountAmountExclTax], [AttributeDescription], cast([AttributesXml] as nvarchar(MAX)), [DownloadCount], [IsDownloadActivated], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Download' and [OriginalId]=[LicenseDownloadId])
+	SELECT [OrderProductVariantGuid], [OrderId], [ProductVariantId], [Quantity], [UnitPriceInclTax], [UnitPriceExclTax], [PriceInclTax], [PriceExclTax], [DiscountAmountInclTax], [DiscountAmountExclTax], [AttributeDescription], cast([AttributesXml] as nvarchar(MAX)), [DownloadCount], [IsDownloadActivated], (SELECT CASE WHEN [LicenseDownloadId]=0 THEN NULL ELSE [LicenseDownloadId] END)
 	FROM [Nop_OrderProductVariant]
 	WHERE OrderProductVariantId = @OriginalOrderProductVariantId
 
@@ -2341,16 +2058,10 @@ WHILE @@FETCH_STATUS = 0
 BEGIN	
 	PRINT 'moving order note. ID ' + cast(@OriginalOrderNoteId as nvarchar(10))
 	INSERT INTO [OrderNote] ([OrderId], [Note], [DisplayToCustomer], [CreatedOnUtc])
-	SELECT (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Order' and [OriginalId]=[OrderId]), [Note], [DisplayToCustomer], [CreatedOn]
+	SELECT [OrderId], [Note], [DisplayToCustomer], [CreatedOn]
 	FROM [Nop_OrderNote]
 	WHERE OrderNoteId = @OriginalOrderNoteId
 
-	--new ID
-	DECLARE @NewOrderNoteId int
-	SET @NewOrderNoteId = @@IDENTITY
-
-	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
-	VALUES (@OriginalOrderNoteId, @NewOrderNoteId, N'OrderNote')
 	--fetch next identifier
 	FETCH NEXT FROM cur_originalordernote INTO @OriginalOrderNoteId
 END
@@ -2381,16 +2092,10 @@ WHILE @@FETCH_STATUS = 0
 BEGIN	
 	PRINT 'moving discount usage history. ID ' + cast(@OriginalDiscountUsageHistoryId as nvarchar(10))
 	INSERT INTO [DiscountUsageHistory] ([DiscountId], [OrderId], [CreatedOnUtc])
-	SELECT (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Discount' and [OriginalId]=[DiscountId]), (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Order' and [OriginalId]=[OrderId]), [CreatedOn]
+	SELECT [DiscountId], [OrderId], [CreatedOn]
 	FROM [Nop_DiscountUsageHistory]
 	WHERE DiscountUsageHistoryId = @OriginalDiscountUsageHistoryId
 
-	--new ID
-	DECLARE @NewDiscountUsageHistoryId int
-	SET @NewDiscountUsageHistoryId = @@IDENTITY
-
-	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
-	VALUES (@OriginalDiscountUsageHistoryId, @NewDiscountUsageHistoryId, N'DiscountUsageHistory')
 	--fetch next identifier
 	FETCH NEXT FROM cur_originaldiscountusagehistory INTO @OriginalDiscountUsageHistoryId
 END
@@ -2472,16 +2177,10 @@ BEGIN
 	PRINT 'moving gift card usage history. ID ' + cast(@OriginalGiftCardUsageHistoryId as nvarchar(10))
 
 	INSERT INTO [GiftCardUsageHistory] ([GiftCardId], [UsedWithOrderId], [UsedValue], [CreatedOnUtc])
-	SELECT (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'GiftCard' and [OriginalId]=[GiftCardID]), (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Order' and [OriginalId]=[OrderId]), [UsedValue], [CreatedOn]
+	SELECT (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'GiftCard' and [OriginalId]=[GiftCardID]), [OrderId], [UsedValue], [CreatedOn]
 	FROM [Nop_GiftCardUsageHistory]
 	WHERE GiftCardUsageHistoryId = @OriginalGiftCardUsageHistoryId
 
-	--new ID
-	DECLARE @NewGiftCardUsageHistoryId int
-	SET @NewGiftCardUsageHistoryId = @@IDENTITY
-
-	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
-	VALUES (@OriginalGiftCardUsageHistoryId, @NewGiftCardUsageHistoryId, N'GiftCardUsageHistory')
 	--fetch next identifier
 	FETCH NEXT FROM cur_originalgiftcardusagehistory INTO @OriginalGiftCardUsageHistoryId
 END
@@ -2512,7 +2211,7 @@ WHILE @@FETCH_STATUS = 0
 BEGIN	
 	PRINT 'moving recurring payment. ID ' + cast(@OriginalRecurringPaymentId as nvarchar(10))
 	INSERT INTO [RecurringPayment] ([CycleLength], [CyclePeriodId], [TotalCycles], [StartDateUtc], [IsActive], [Deleted], [CreatedOnUtc], [InitialOrderId])
-	SELECT [CycleLength], [CyclePeriod], [TotalCycles], [StartDate], [IsActive], [Deleted], [CreatedOn], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Order' and [OriginalId]=[InitialOrderId])
+	SELECT [CycleLength], [CyclePeriod], [TotalCycles], [StartDate], [IsActive], [Deleted], [CreatedOn], [InitialOrderId]
 	FROM [Nop_RecurringPayment]
 	WHERE RecurringPaymentId = @OriginalRecurringPaymentId
 
@@ -2553,16 +2252,10 @@ BEGIN
 	PRINT 'moving recurring payment history. ID ' + cast(@OriginalRecurringPaymentHistoryId as nvarchar(10))
 
 	INSERT INTO [RecurringPaymentHistory] ([RecurringPaymentId], [OrderId], [CreatedOnUtc])
-	SELECT (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'RecurringPayment' and [OriginalId]=[RecurringPaymentId]), (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Order' and [OriginalId]=[OrderId]), [CreatedOn]
+	SELECT (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'RecurringPayment' and [OriginalId]=[RecurringPaymentId]), [OrderId], [CreatedOn]
 	FROM [Nop_RecurringPaymentHistory]
 	WHERE RecurringPaymentHistoryId = @OriginalRecurringPaymentHistoryId
 
-	--new ID
-	DECLARE @NewRecurringPaymentHistoryId int
-	SET @NewRecurringPaymentHistoryId = @@IDENTITY
-
-	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
-	VALUES (@OriginalRecurringPaymentHistoryId, @NewRecurringPaymentHistoryId, N'RecurringPaymentHistory')
 	--fetch next identifier
 	FETCH NEXT FROM cur_originalrecurringpaymenthistory INTO @OriginalRecurringPaymentHistoryId
 END
@@ -2593,16 +2286,10 @@ WHILE @@FETCH_STATUS = 0
 BEGIN	
 	PRINT 'moving return request. ID ' + cast(@OriginalReturnRequestId as nvarchar(10))
 	INSERT INTO [ReturnRequest] ([OrderProductVariantId], [CustomerId], [Quantity], [ReasonForReturn], [RequestedAction], [CustomerComments], [StaffNotes], [ReturnRequestStatusId], [CreatedOnUtc], [UpdatedOnUtc])
-	SELECT (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'OrderProductVariant' and [OriginalId]=[OrderProductVariantId]), (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Customer' and [OriginalId]=[CustomerId]), [Quantity], [ReasonForReturn], [RequestedAction], [CustomerComments], [StaffNotes], [ReturnStatusId], [CreatedOn], [UpdatedOn]
+	SELECT (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'OrderProductVariant' and [OriginalId]=[OrderProductVariantId]), [CustomerId], [Quantity], [ReasonForReturn], [RequestedAction], [CustomerComments], [StaffNotes], [ReturnStatusId], [CreatedOn], [UpdatedOn]
 	FROM [Nop_ReturnRequest]
 	WHERE ReturnRequestId = @OriginalReturnRequestId
 
-	--new ID
-	DECLARE @NewReturnRequestId int
-	SET @NewReturnRequestId = @@IDENTITY
-
-	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
-	VALUES (@OriginalReturnRequestId, @NewReturnRequestId, N'ReturnRequest')
 	--fetch next identifier
 	FETCH NEXT FROM cur_originalreturnrequest INTO @OriginalReturnRequestId
 END
@@ -2633,16 +2320,10 @@ WHILE @@FETCH_STATUS = 0
 BEGIN	
 	PRINT 'moving reward points history. ID ' + cast(@OriginalRewardPointsHistoryId as nvarchar(10))
 	INSERT INTO [RewardPointsHistory] ([CustomerId], [Points], [PointsBalance], [UsedAmount], [Message], [CreatedOnUtc], [UsedWithOrder_Id])
-	SELECT (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Customer' and [OriginalId]=[CustomerId]), [Points], [PointsBalance], [UsedAmount], [Message], [CreatedOn], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Order' and [OriginalId]=[OrderId])
+	SELECT [CustomerId], [Points], [PointsBalance], [UsedAmount], [Message], [CreatedOn], (SELECT CASE WHEN [OrderId]=0 THEN NULL ELSE [OrderId] END)
 	FROM [Nop_RewardPointsHistory]
 	WHERE RewardPointsHistoryId = @OriginalRewardPointsHistoryId
 
-	--new ID
-	DECLARE @NewRewardPointsHistoryId int
-	SET @NewRewardPointsHistoryId = @@IDENTITY
-
-	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
-	VALUES (@OriginalRewardPointsHistoryId, @NewRewardPointsHistoryId, N'RewardPointsHistory')
 	--fetch next identifier
 	FETCH NEXT FROM cur_originalrewardpointshistory INTO @OriginalRewardPointsHistoryId
 END
@@ -2675,7 +2356,7 @@ BEGIN
 	PRINT 'moving product review. ID ' + cast(@OriginalProductReviewId as nvarchar(10))
 
 	INSERT INTO [CustomerContent] ([CustomerId], [IpAddress], [IsApproved], [CreatedOnUtc], [UpdatedOnUtc])
-	SELECT (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Customer' and [OriginalId]=[CustomerId]), [IpAddress], [IsApproved], [CreatedOn], [CreatedOn]
+	SELECT [CustomerId], [IpAddress], [IsApproved], [CreatedOn], [CreatedOn]
 	FROM [Nop_ProductReview]
 	WHERE ProductReviewId = @OriginalProductReviewId
 
@@ -2688,7 +2369,7 @@ BEGIN
 
 
 	INSERT INTO [ProductReview] ([Id], [ProductId], [Title], [ReviewText], [Rating], [HelpfulYesTotal], [HelpfulNoTotal])
-	SELECT @NewProductReviewId, (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Product' and [OriginalId]=[ProductId]), [Title], [ReviewText], [Rating], [HelpfulYesTotal], [HelpfulNoTotal]
+	SELECT @NewProductReviewId, [ProductId], [Title], [ReviewText], [Rating], [HelpfulYesTotal], [HelpfulNoTotal]
 	FROM [Nop_ProductReview]
 	WHERE ProductReviewId = @OriginalProductReviewId	
 
@@ -2714,17 +2395,13 @@ BEGIN
 	PRINT 'moving product review helpfulness. ID ' + cast(@OriginalProductReviewHelpfulnessId as nvarchar(10))
 		
 	INSERT INTO [CustomerContent] ([CustomerId], [IpAddress], [IsApproved], [CreatedOnUtc], [UpdatedOnUtc])
-	SELECT (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Customer' and [OriginalId]=[CustomerId]), null, 1 /*approved*/, getutcdate(), getutcdate()
+	SELECT [CustomerId], null, 1 /*approved*/, getutcdate(), getutcdate()
 	FROM [Nop_ProductReviewHelpfulness]
 	WHERE ProductReviewHelpfulnessId = @OriginalProductReviewHelpfulnessId
 
 	--new ID
 	DECLARE @NewProductReviewHelpfulnessId int
 	SET @NewProductReviewHelpfulnessId = @@IDENTITY
-
-	INSERT INTO #IDs  ([OriginalId], [NewId], [EntityName])
-	VALUES (@OriginalProductReviewHelpfulnessId, @NewProductReviewHelpfulnessId, N'ProductReviewHelpfulness')
-
 
 	INSERT INTO [ProductReviewHelpfulness] ([Id], [ProductReviewId], [WasHelpful])
 	SELECT @NewProductReviewHelpfulnessId, (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'ProductReview' and [OriginalId]=[ProductReviewID]), [WasHelpful]
@@ -2780,17 +2457,12 @@ BEGIN
 		SET @NotApprovedRatingSum = 0
 	END
 
-	DECLARE @NewProductId int
-	SELECT @NewProductId=[NewId] 
-	FROM #IDs 
-	WHERE [EntityName]=N'Product' and [OriginalId]=@OriginalProductId
-	
 	UPDATE [Product]
 	SET [ApprovedTotalReviews] = @ApprovedTotalReviews,
 	[NotApprovedTotalReviews] = @NotApprovedTotalReviews,
 	[ApprovedRatingSum] = @ApprovedRatingSum,
 	[NotApprovedRatingSum] = @NotApprovedRatingSum
-	WHERE [Id]=@NewProductId
+	WHERE [Id]=@OriginalProductId
 
 
 	--fetch next identifier
