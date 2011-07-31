@@ -2442,9 +2442,27 @@ WHILE @@FETCH_STATUS = 0
 BEGIN	
 	PRINT 'moving order. ID ' + cast(@OriginalOrderId as nvarchar(10))
 
-	--TODO set @PaymentMethodSystemName
+	--set @PaymentMethodSystemName
+	--it's set according to IDs in old [Nop_PaymentMethod] table
 	DECLARE @PaymentMethodSystemName nvarchar(100)
 	SET @PaymentMethodSystemName = null -- clear cache (variable scope)
+	DECLARE @OldPaymentMethodId nvarchar(100)
+	SET @OldPaymentMethodId = null -- clear cache (variable scope)
+	SELECT @OldPaymentMethodId = [PaymentMethodId]
+	FROM [Nop_Order]
+	WHERE OrderId = @OriginalOrderId
+	SELECT @PaymentMethodSystemName = CASE @OldPaymentMethodId
+	WHEN 9 THEN N'Payments.AuthorizeNet' 
+	WHEN 15 THEN N'Payments.CashOnDelivery' 
+	WHEN 17 THEN N'Payments.CheckMoneyOrder' 
+	WHEN 14 THEN N'Payments.GoogleCheckout' 
+	WHEN 1 THEN N'Payments.Manual' 
+	WHEN 25 THEN N'Payments.PayInStore'
+	WHEN 7 THEN N'Payments.PayPalDirect'
+	WHEN 2 THEN N'Payments.PayPalStandard'
+	WHEN 18 THEN N'Payments.PurchaseOrder'
+	END
+	
 
 	--calculate exchange rate
 	DECLARE @CurrencyRate decimal(18, 4)
