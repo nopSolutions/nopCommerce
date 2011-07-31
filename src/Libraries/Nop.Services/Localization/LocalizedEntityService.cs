@@ -178,11 +178,10 @@ namespace Nop.Services.Localization
 
             var props = GetLocalizedProperties(entity.Id, localeKeyGroup);
             var prop = props.FirstOrDefault(lp => lp.LanguageId == languageId &&
-                lp.LocaleKey == localeKey);
+                lp.LocaleKey.Equals(localeKey, StringComparison.InvariantCultureIgnoreCase)); //should be culture invariant
 
             string localeValueStr = CommonHelper.To<string>(localeValue);
-            if (localeValueStr == null) localeValueStr = string.Empty;
-
+            
             if (prop != null)
             {
                 if (string.IsNullOrWhiteSpace(localeValueStr))
@@ -199,16 +198,19 @@ namespace Nop.Services.Localization
             }
             else
             {
-                //insert
-                prop = new LocalizedProperty()
+                if (!string.IsNullOrWhiteSpace(localeValueStr))
                 {
-                    EntityId = entity.Id,
-                    LanguageId = languageId,
-                    LocaleKey = localeKey,
-                    LocaleKeyGroup = localeKeyGroup,
-                    LocaleValue = localeValueStr
-                };
-                InsertLocalizedProperty(prop);
+                    //insert
+                    prop = new LocalizedProperty()
+                    {
+                        EntityId = entity.Id,
+                        LanguageId = languageId,
+                        LocaleKey = localeKey,
+                        LocaleKeyGroup = localeKeyGroup,
+                        LocaleValue = localeValueStr
+                    };
+                    InsertLocalizedProperty(prop);
+                }
             }
         }
 

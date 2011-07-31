@@ -1,8 +1,5 @@
 ﻿--upgrade scripts from nopCommerce 1.90 to nopCommerce 2.00
 
-
---TODO move localized values of the entities (e.g. Product, Category, etc)
-
 DELETE FROM [Customer]
 WHERE IsSystemAccount=0
 GO
@@ -1213,6 +1210,96 @@ GO
 
 
 
+--LOCALIZED CATEGORIES
+PRINT 'moving localized categories'
+DECLARE @OriginalCategoryLocalizedId int
+DECLARE cur_originalcategorylocalized CURSOR FOR
+SELECT CategoryLocalizedID
+FROM [Nop_CategoryLocalized]
+ORDER BY [CategoryLocalizedID]
+OPEN cur_originalcategorylocalized
+FETCH NEXT FROM cur_originalcategorylocalized INTO @OriginalCategoryLocalizedId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving localized category. ID ' + cast(@OriginalCategoryLocalizedId as nvarchar(10))
+
+	DECLARE @Name nvarchar(MAX)
+	SET @Name = null -- clear cache (variable scope)
+	DECLARE @Description nvarchar(MAX)
+	SET @Description = null -- clear cache (variable scope)
+	DECLARE @MetaKeywords nvarchar(MAX)
+	SET @MetaKeywords = null -- clear cache (variable scope)
+	DECLARE @MetaDescription nvarchar(MAX)
+	SET @MetaDescription = null -- clear cache (variable scope)
+	DECLARE @MetaTitle nvarchar(MAX)
+	SET @MetaTitle = null -- clear cache (variable scope)
+	DECLARE @SEName nvarchar(MAX)
+	SET @SEName = null -- clear cache (variable scope)
+	SELECT  @Name = [Name],
+			@Description=[Description],
+			@MetaKeywords = [MetaKeywords], 
+			@MetaDescription = [MetaDescription], 
+			@MetaTitle = [MetaTitle], 
+			@SEName = [SEName]
+	FROM [Nop_CategoryLocalized]
+	WHERE [CategoryLocalizedID] = @OriginalCategoryLocalizedId
+
+	IF (len(@Name) > 0)
+	BEGIN
+		INSERT INTO [LocalizedProperty] ([EntityId], [LanguageId], [LocaleKeyGroup], [LocaleKey], [LocaleValue])
+		SELECT [CategoryID], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Language' and [OriginalId]=[LanguageId]), 'Category', 'Name', @Name
+		FROM [Nop_CategoryLocalized]
+		WHERE [CategoryLocalizedID] = @OriginalCategoryLocalizedId
+	END
+
+	IF (len(@Description) > 0)
+	BEGIN
+		INSERT INTO [LocalizedProperty] ([EntityId], [LanguageId], [LocaleKeyGroup], [LocaleKey], [LocaleValue])
+		SELECT [CategoryID], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Language' and [OriginalId]=[LanguageId]), 'Category', 'Description', @Description
+		FROM [Nop_CategoryLocalized]
+		WHERE [CategoryLocalizedID] = @OriginalCategoryLocalizedId
+	END
+
+	IF (len(@MetaKeywords) > 0)
+	BEGIN
+		INSERT INTO [LocalizedProperty] ([EntityId], [LanguageId], [LocaleKeyGroup], [LocaleKey], [LocaleValue])
+		SELECT [CategoryID], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Language' and [OriginalId]=[LanguageId]), 'Category', 'MetaKeywords', @MetaKeywords
+		FROM [Nop_CategoryLocalized]
+		WHERE [CategoryLocalizedID] = @OriginalCategoryLocalizedId
+	END
+
+	IF (len(@MetaDescription) > 0)
+	BEGIN
+		INSERT INTO [LocalizedProperty] ([EntityId], [LanguageId], [LocaleKeyGroup], [LocaleKey], [LocaleValue])
+		SELECT [CategoryID], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Language' and [OriginalId]=[LanguageId]), 'Category', 'MetaDescription', @MetaDescription
+		FROM [Nop_CategoryLocalized]
+		WHERE [CategoryLocalizedID] = @OriginalCategoryLocalizedId
+	END
+
+	IF (len(@MetaTitle) > 0)
+	BEGIN
+		INSERT INTO [LocalizedProperty] ([EntityId], [LanguageId], [LocaleKeyGroup], [LocaleKey], [LocaleValue])
+		SELECT [CategoryID], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Language' and [OriginalId]=[LanguageId]), 'Category', 'MetaTitle', @MetaTitle
+		FROM [Nop_CategoryLocalized]
+		WHERE [CategoryLocalizedID] = @OriginalCategoryLocalizedId
+	END
+
+	IF (len(@SEName) > 0)
+	BEGIN
+		INSERT INTO [LocalizedProperty] ([EntityId], [LanguageId], [LocaleKeyGroup], [LocaleKey], [LocaleValue])
+		SELECT [CategoryID], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Language' and [OriginalId]=[LanguageId]), 'Category', 'SEName', @SEName
+		FROM [Nop_CategoryLocalized]
+		WHERE [CategoryLocalizedID] = @OriginalCategoryLocalizedId
+	END
+
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalcategorylocalized INTO @OriginalCategoryLocalizedId
+END
+CLOSE cur_originalcategorylocalized
+DEALLOCATE cur_originalcategorylocalized
+GO
+
+
 
 
 
@@ -1244,6 +1331,97 @@ BEGIN
 END
 CLOSE cur_originalmanufacturer
 DEALLOCATE cur_originalmanufacturer
+GO
+
+
+
+--LOCALIZED MANUFACTURERS
+PRINT 'moving localized manufacturers'
+DECLARE @OriginalManufacturerLocalizedId int
+DECLARE cur_originalmanufacturerlocalized CURSOR FOR
+SELECT ManufacturerLocalizedID
+FROM [Nop_ManufacturerLocalized]
+ORDER BY [ManufacturerLocalizedID]
+OPEN cur_originalmanufacturerlocalized
+FETCH NEXT FROM cur_originalmanufacturerlocalized INTO @OriginalManufacturerLocalizedId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving localized manufacturer. ID ' + cast(@OriginalManufacturerLocalizedId as nvarchar(10))
+
+	DECLARE @Name nvarchar(MAX)
+	SET @Name = null -- clear cache (variable scope)
+	DECLARE @Description nvarchar(MAX)
+	SET @Description = null -- clear cache (variable scope)
+	DECLARE @MetaKeywords nvarchar(MAX)
+	SET @MetaKeywords = null -- clear cache (variable scope)
+	DECLARE @MetaDescription nvarchar(MAX)
+	SET @MetaDescription = null -- clear cache (variable scope)
+	DECLARE @MetaTitle nvarchar(MAX)
+	SET @MetaTitle = null -- clear cache (variable scope)
+	DECLARE @SEName nvarchar(MAX)
+	SET @SEName = null -- clear cache (variable scope)
+	SELECT  @Name = [Name],
+			@Description=[Description],
+			@MetaKeywords = [MetaKeywords], 
+			@MetaDescription = [MetaDescription], 
+			@MetaTitle = [MetaTitle], 
+			@SEName = [SEName]
+	FROM [Nop_ManufacturerLocalized]
+	WHERE [ManufacturerLocalizedID] = @OriginalManufacturerLocalizedId
+
+	IF (len(@Name) > 0)
+	BEGIN
+		INSERT INTO [LocalizedProperty] ([EntityId], [LanguageId], [LocaleKeyGroup], [LocaleKey], [LocaleValue])
+		SELECT [ManufacturerID], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Language' and [OriginalId]=[LanguageId]), 'Manufacturer', 'Name', @Name
+		FROM [Nop_ManufacturerLocalized]
+		WHERE [ManufacturerLocalizedID] = @OriginalManufacturerLocalizedId
+	END
+
+	IF (len(@Description) > 0)
+	BEGIN
+		INSERT INTO [LocalizedProperty] ([EntityId], [LanguageId], [LocaleKeyGroup], [LocaleKey], [LocaleValue])
+		SELECT [ManufacturerID], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Language' and [OriginalId]=[LanguageId]), 'Manufacturer', 'Description', @Description
+		FROM [Nop_ManufacturerLocalized]
+		WHERE [ManufacturerLocalizedID] = @OriginalManufacturerLocalizedId
+	END
+
+	IF (len(@MetaKeywords) > 0)
+	BEGIN
+		INSERT INTO [LocalizedProperty] ([EntityId], [LanguageId], [LocaleKeyGroup], [LocaleKey], [LocaleValue])
+		SELECT [ManufacturerID], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Language' and [OriginalId]=[LanguageId]), 'Manufacturer', 'MetaKeywords', @MetaKeywords
+		FROM [Nop_ManufacturerLocalized]
+		WHERE [ManufacturerLocalizedID] = @OriginalManufacturerLocalizedId
+	END
+
+	IF (len(@MetaDescription) > 0)
+	BEGIN
+		INSERT INTO [LocalizedProperty] ([EntityId], [LanguageId], [LocaleKeyGroup], [LocaleKey], [LocaleValue])
+		SELECT [ManufacturerID], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Language' and [OriginalId]=[LanguageId]), 'Manufacturer', 'MetaDescription', @MetaDescription
+		FROM [Nop_ManufacturerLocalized]
+		WHERE [ManufacturerLocalizedID] = @OriginalManufacturerLocalizedId
+	END
+
+	IF (len(@MetaTitle) > 0)
+	BEGIN
+		INSERT INTO [LocalizedProperty] ([EntityId], [LanguageId], [LocaleKeyGroup], [LocaleKey], [LocaleValue])
+		SELECT [ManufacturerID], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Language' and [OriginalId]=[LanguageId]), 'Manufacturer', 'MetaTitle', @MetaTitle
+		FROM [Nop_ManufacturerLocalized]
+		WHERE [ManufacturerLocalizedID] = @OriginalManufacturerLocalizedId
+	END
+
+	IF (len(@SEName) > 0)
+	BEGIN
+		INSERT INTO [LocalizedProperty] ([EntityId], [LanguageId], [LocaleKeyGroup], [LocaleKey], [LocaleValue])
+		SELECT [ManufacturerID], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Language' and [OriginalId]=[LanguageId]), 'Manufacturer', 'SEName', @SEName
+		FROM [Nop_ManufacturerLocalized]
+		WHERE [ManufacturerLocalizedID] = @OriginalManufacturerLocalizedId
+	END
+
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalmanufacturerlocalized INTO @OriginalManufacturerLocalizedId
+END
+CLOSE cur_originalmanufacturerlocalized
+DEALLOCATE cur_originalmanufacturerlocalized
 GO
 
 
@@ -1345,6 +1523,106 @@ CLOSE cur_originalproduct
 DEALLOCATE cur_originalproduct
 GO
 
+
+--LOCALIZED PRODUCTS
+PRINT 'moving localized products'
+DECLARE @OriginalProductLocalizedId int
+DECLARE cur_originalproductlocalized CURSOR FOR
+SELECT ProductLocalizedID
+FROM [Nop_ProductLocalized]
+ORDER BY [ProductLocalizedID]
+OPEN cur_originalproductlocalized
+FETCH NEXT FROM cur_originalproductlocalized INTO @OriginalProductLocalizedId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving localized product. ID ' + cast(@OriginalProductLocalizedId as nvarchar(10))
+
+	DECLARE @Name nvarchar(MAX)
+	SET @Name = null -- clear cache (variable scope)
+	DECLARE @ShortDescription nvarchar(MAX)
+	SET @ShortDescription = null -- clear cache (variable scope)
+	DECLARE @FullDescription nvarchar(MAX)
+	SET @FullDescription = null -- clear cache (variable scope)
+	DECLARE @MetaKeywords nvarchar(MAX)
+	SET @MetaKeywords = null -- clear cache (variable scope)
+	DECLARE @MetaDescription nvarchar(MAX)
+	SET @MetaDescription = null -- clear cache (variable scope)
+	DECLARE @MetaTitle nvarchar(MAX)
+	SET @MetaTitle = null -- clear cache (variable scope)
+	DECLARE @SEName nvarchar(MAX)
+	SET @SEName = null -- clear cache (variable scope)
+	SELECT  @Name = [Name],
+			@ShortDescription=[ShortDescription],
+			@FullDescription = [FullDescription], 
+			@MetaKeywords = [MetaKeywords], 
+			@MetaDescription = [MetaDescription], 
+			@MetaTitle = [MetaTitle], 
+			@SEName = [SEName]
+	FROM [Nop_ProductLocalized]
+	WHERE [ProductLocalizedID] = @OriginalProductLocalizedId
+
+	IF (len(@Name) > 0)
+	BEGIN
+		INSERT INTO [LocalizedProperty] ([EntityId], [LanguageId], [LocaleKeyGroup], [LocaleKey], [LocaleValue])
+		SELECT [ProductID], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Language' and [OriginalId]=[LanguageId]), 'Product', 'Name', @Name
+		FROM [Nop_ProductLocalized]
+		WHERE [ProductLocalizedID] = @OriginalProductLocalizedId
+	END
+
+	IF (len(@ShortDescription) > 0)
+	BEGIN
+		INSERT INTO [LocalizedProperty] ([EntityId], [LanguageId], [LocaleKeyGroup], [LocaleKey], [LocaleValue])
+		SELECT [ProductID], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Language' and [OriginalId]=[LanguageId]), 'Product', 'ShortDescription', @ShortDescription
+		FROM [Nop_ProductLocalized]
+		WHERE [ProductLocalizedID] = @OriginalProductLocalizedId
+	END
+
+	IF (len(@FullDescription) > 0)
+	BEGIN
+		INSERT INTO [LocalizedProperty] ([EntityId], [LanguageId], [LocaleKeyGroup], [LocaleKey], [LocaleValue])
+		SELECT [ProductID], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Language' and [OriginalId]=[LanguageId]), 'Product', 'FullDescription', @FullDescription
+		FROM [Nop_ProductLocalized]
+		WHERE [ProductLocalizedID] = @OriginalProductLocalizedId
+	END
+
+	IF (len(@MetaKeywords) > 0)
+	BEGIN
+		INSERT INTO [LocalizedProperty] ([EntityId], [LanguageId], [LocaleKeyGroup], [LocaleKey], [LocaleValue])
+		SELECT [ProductID], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Language' and [OriginalId]=[LanguageId]), 'Product', 'MetaKeywords', @MetaKeywords
+		FROM [Nop_ProductLocalized]
+		WHERE [ProductLocalizedID] = @OriginalProductLocalizedId
+	END
+
+	IF (len(@MetaDescription) > 0)
+	BEGIN
+		INSERT INTO [LocalizedProperty] ([EntityId], [LanguageId], [LocaleKeyGroup], [LocaleKey], [LocaleValue])
+		SELECT [ProductID], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Language' and [OriginalId]=[LanguageId]), 'Product', 'MetaDescription', @MetaDescription
+		FROM [Nop_ProductLocalized]
+		WHERE [ProductLocalizedID] = @OriginalProductLocalizedId
+	END
+
+	IF (len(@MetaTitle) > 0)
+	BEGIN
+		INSERT INTO [LocalizedProperty] ([EntityId], [LanguageId], [LocaleKeyGroup], [LocaleKey], [LocaleValue])
+		SELECT [ProductID], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Language' and [OriginalId]=[LanguageId]), 'Product', 'MetaTitle', @MetaTitle
+		FROM [Nop_ProductLocalized]
+		WHERE [ProductLocalizedID] = @OriginalProductLocalizedId
+	END
+
+	IF (len(@SEName) > 0)
+	BEGIN
+		INSERT INTO [LocalizedProperty] ([EntityId], [LanguageId], [LocaleKeyGroup], [LocaleKey], [LocaleValue])
+		SELECT [ProductID], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Language' and [OriginalId]=[LanguageId]), 'Product', 'SEName', @SEName
+		FROM [Nop_ProductLocalized]
+		WHERE [ProductLocalizedID] = @OriginalProductLocalizedId
+	END
+
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalproductlocalized INTO @OriginalProductLocalizedId
+END
+CLOSE cur_originalproductlocalized
+DEALLOCATE cur_originalproductlocalized
+GO
 
 
 
@@ -1454,6 +1732,42 @@ GO
 
 
 
+--LOCALIZED SPECIFICATION ATTRIBUTE
+PRINT 'moving localized specification attributes'
+DECLARE @OriginalSpecificationAttributeLocalizedId int
+DECLARE cur_originalspecificationattributelocalized CURSOR FOR
+SELECT SpecificationAttributeLocalizedID
+FROM [Nop_SpecificationAttributeLocalized]
+ORDER BY [SpecificationAttributeLocalizedID]
+OPEN cur_originalspecificationattributelocalized
+FETCH NEXT FROM cur_originalspecificationattributelocalized INTO @OriginalSpecificationAttributeLocalizedId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving localized specification attribute. ID ' + cast(@OriginalSpecificationAttributeLocalizedId as nvarchar(10))
+
+	DECLARE @Name nvarchar(MAX)
+	SET @Name = null -- clear cache (variable scope)
+	SELECT  @Name = [Name]
+	FROM [Nop_SpecificationAttributeLocalized]
+	WHERE [SpecificationAttributeLocalizedID] = @OriginalSpecificationAttributeLocalizedId
+
+	IF (len(@Name) > 0)
+	BEGIN
+		INSERT INTO [LocalizedProperty] ([EntityId], [LanguageId], [LocaleKeyGroup], [LocaleKey], [LocaleValue])
+		SELECT [SpecificationAttributeID], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Language' and [OriginalId]=[LanguageId]), 'SpecificationAttribute', 'Name', @Name
+		FROM [Nop_SpecificationAttributeLocalized]
+		WHERE [SpecificationAttributeLocalizedID] = @OriginalSpecificationAttributeLocalizedId
+	END
+
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalspecificationattributelocalized INTO @OriginalSpecificationAttributeLocalizedId
+END
+CLOSE cur_originalspecificationattributelocalized
+DEALLOCATE cur_originalspecificationattributelocalized
+GO
+
+
+
 
 
 
@@ -1496,6 +1810,41 @@ DEALLOCATE cur_originalspecificationattributeoption
 GO
 
 
+--LOCALIZED SPECIFICATION ATTRIBUTE OPTION
+PRINT 'moving localized specification attribute option'
+DECLARE @OriginalSpecificationAttributeOptionLocalizedId int
+DECLARE cur_originalspecificationattributeoptionlocalized CURSOR FOR
+SELECT SpecificationAttributeOptionLocalizedID
+FROM [Nop_SpecificationAttributeOptionLocalized]
+ORDER BY [SpecificationAttributeOptionLocalizedID]
+OPEN cur_originalspecificationattributeoptionlocalized
+FETCH NEXT FROM cur_originalspecificationattributeoptionlocalized INTO @OriginalSpecificationAttributeOptionLocalizedId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving localized product variant attribute option. ID ' + cast(@OriginalSpecificationAttributeOptionLocalizedId as nvarchar(10))
+
+	DECLARE @Name nvarchar(MAX)
+	SET @Name = null -- clear cache (variable scope)
+	SELECT  @Name = [Name]
+	FROM [Nop_SpecificationAttributeOptionLocalized]
+	WHERE [SpecificationAttributeOptionLocalizedID] = @OriginalSpecificationAttributeOptionLocalizedId
+
+	IF (len(@Name) > 0)
+	BEGIN
+		INSERT INTO [LocalizedProperty] ([EntityId], [LanguageId], [LocaleKeyGroup], [LocaleKey], [LocaleValue])
+		SELECT [SpecificationAttributeOptionID], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Language' and [OriginalId]=[LanguageId]), 'SpecificationAttributeOption', 'Name', @Name
+		FROM [Nop_SpecificationAttributeOptionLocalized]
+		WHERE [SpecificationAttributeOptionLocalizedID] = @OriginalSpecificationAttributeOptionLocalizedId
+	END
+
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalspecificationattributeoptionlocalized INTO @OriginalSpecificationAttributeOptionLocalizedId
+END
+CLOSE cur_originalspecificationattributeoptionlocalized
+DEALLOCATE cur_originalspecificationattributeoptionlocalized
+GO
+
+
 
 
 
@@ -1529,6 +1878,54 @@ BEGIN
 END
 CLOSE cur_originalcheckoutattribute
 DEALLOCATE cur_originalcheckoutattribute
+GO
+
+
+
+--LOCALIZED CHECKOUT ATTRIBUTES
+PRINT 'moving localized checkout attributes'
+DECLARE @OriginalCheckoutAttributeLocalizedId int
+DECLARE cur_originalcheckoutattributelocalized CURSOR FOR
+SELECT CheckoutAttributeLocalizedID
+FROM [Nop_CheckoutAttributeLocalized]
+ORDER BY [CheckoutAttributeLocalizedID]
+OPEN cur_originalcheckoutattributelocalized
+FETCH NEXT FROM cur_originalcheckoutattributelocalized INTO @OriginalCheckoutAttributeLocalizedId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving localized checkout attribute. ID ' + cast(@OriginalCheckoutAttributeLocalizedId as nvarchar(10))
+
+	DECLARE @Name nvarchar(MAX)
+	SET @Name = null -- clear cache (variable scope)
+	DECLARE @TextPrompt nvarchar(MAX)
+	SET @TextPrompt = null -- clear cache (variable scope)
+	SELECT  @Name = [Name],
+			@TextPrompt=[TextPrompt]
+	FROM [Nop_CheckoutAttributeLocalized]
+	WHERE [CheckoutAttributeLocalizedID] = @OriginalCheckoutAttributeLocalizedId
+
+	IF (len(@Name) > 0)
+	BEGIN
+		INSERT INTO [LocalizedProperty] ([EntityId], [LanguageId], [LocaleKeyGroup], [LocaleKey], [LocaleValue])
+		SELECT [CheckoutAttributeID], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Language' and [OriginalId]=[LanguageId]), 'CheckoutAttribute', 'Name', @Name
+		FROM [Nop_CheckoutAttributeLocalized]
+		WHERE [CheckoutAttributeLocalizedID] = @OriginalCheckoutAttributeLocalizedId
+	END
+
+	IF (len(@TextPrompt) > 0)
+	BEGIN
+		INSERT INTO [LocalizedProperty] ([EntityId], [LanguageId], [LocaleKeyGroup], [LocaleKey], [LocaleValue])
+		SELECT [CheckoutAttributeID], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Language' and [OriginalId]=[LanguageId]), 'CheckoutAttribute', 'TextPrompt', @TextPrompt
+		FROM [Nop_CheckoutAttributeLocalized]
+		WHERE [CheckoutAttributeLocalizedID] = @OriginalCheckoutAttributeLocalizedId
+	END
+
+
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalcheckoutattributelocalized INTO @OriginalCheckoutAttributeLocalizedId
+END
+CLOSE cur_originalcheckoutattributelocalized
+DEALLOCATE cur_originalcheckoutattributelocalized
 GO
 
 
@@ -1569,6 +1966,42 @@ GO
 
 
 
+--LOCALIZED CHECKOUT ATTRIBUTE VALUE
+PRINT 'moving localized checkout attribute value'
+DECLARE @OriginalCheckoutAttributeValueLocalizedId int
+DECLARE cur_originalcheckoutattributevaluelocalized CURSOR FOR
+SELECT CheckoutAttributeValueLocalizedID
+FROM [Nop_CheckoutAttributeValueLocalized]
+ORDER BY [CheckoutAttributeValueLocalizedID]
+OPEN cur_originalcheckoutattributevaluelocalized
+FETCH NEXT FROM cur_originalcheckoutattributevaluelocalized INTO @OriginalCheckoutAttributeValueLocalizedId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving localized checkout attribute value. ID ' + cast(@OriginalCheckoutAttributeValueLocalizedId as nvarchar(10))
+
+	DECLARE @Name nvarchar(MAX)
+	SET @Name = null -- clear cache (variable scope)
+	SELECT  @Name = [Name]
+	FROM [Nop_CheckoutAttributeValueLocalized]
+	WHERE [CheckoutAttributeValueLocalizedID] = @OriginalCheckoutAttributeValueLocalizedId
+
+	IF (len(@Name) > 0)
+	BEGIN
+		INSERT INTO [LocalizedProperty] ([EntityId], [LanguageId], [LocaleKeyGroup], [LocaleKey], [LocaleValue])
+		SELECT [CheckoutAttributeValueID], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Language' and [OriginalId]=[LanguageId]), 'CheckoutAttributeValue', 'Name', @Name
+		FROM [Nop_CheckoutAttributeValueLocalized]
+		WHERE [CheckoutAttributeValueLocalizedID] = @OriginalCheckoutAttributeValueLocalizedId
+	END
+
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalcheckoutattributevaluelocalized INTO @OriginalCheckoutAttributeValueLocalizedId
+END
+CLOSE cur_originalcheckoutattributevaluelocalized
+DEALLOCATE cur_originalcheckoutattributevaluelocalized
+GO
+
+
+
 
 
 
@@ -1605,6 +2038,53 @@ GO
 
 
 
+--LOCALIZED PRODUCTS
+PRINT 'moving localized product variants'
+DECLARE @OriginalProductVariantLocalizedId int
+DECLARE cur_originalproductvarriantlocalized CURSOR FOR
+SELECT ProductVariantLocalizedID
+FROM [Nop_ProductVariantLocalized]
+ORDER BY [ProductVariantLocalizedID]
+OPEN cur_originalproductvarriantlocalized
+FETCH NEXT FROM cur_originalproductvarriantlocalized INTO @OriginalProductVariantLocalizedId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving localized product variant. ID ' + cast(@OriginalProductVariantLocalizedId as nvarchar(10))
+
+	DECLARE @Name nvarchar(MAX)
+	SET @Name = null -- clear cache (variable scope)
+	DECLARE @Description nvarchar(MAX)
+	SET @Description = null -- clear cache (variable scope)
+	SELECT  @Name = [Name],
+			@Description=[Description]
+	FROM [Nop_ProductVariantLocalized]
+	WHERE [ProductVariantLocalizedID] = @OriginalProductVariantLocalizedId
+
+	IF (len(@Name) > 0)
+	BEGIN
+		INSERT INTO [LocalizedProperty] ([EntityId], [LanguageId], [LocaleKeyGroup], [LocaleKey], [LocaleValue])
+		SELECT [ProductVariantID], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Language' and [OriginalId]=[LanguageId]), 'ProductVariant', 'Name', @Name
+		FROM [Nop_ProductVariantLocalized]
+		WHERE [ProductVariantLocalizedID] = @OriginalProductVariantLocalizedId
+	END
+
+	IF (len(@Description) > 0)
+	BEGIN
+		INSERT INTO [LocalizedProperty] ([EntityId], [LanguageId], [LocaleKeyGroup], [LocaleKey], [LocaleValue])
+		SELECT [ProductVariantID], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Language' and [OriginalId]=[LanguageId]), 'ProductVariant', 'Description', @Description
+		FROM [Nop_ProductVariantLocalized]
+		WHERE [ProductVariantLocalizedID] = @OriginalProductVariantLocalizedId
+	END
+
+
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalproductvarriantlocalized INTO @OriginalProductVariantLocalizedId
+END
+CLOSE cur_originalproductvarriantlocalized
+DEALLOCATE cur_originalproductvarriantlocalized
+GO
+
+
 
 
 
@@ -1638,6 +2118,55 @@ END
 CLOSE cur_originalproductattribute
 DEALLOCATE cur_originalproductattribute
 GO
+
+
+
+--LOCALIZED PRODUCT ATTRIBUTES
+PRINT 'moving localized product attribute'
+DECLARE @OriginalProductAttributeLocalizedId int
+DECLARE cur_originalproductattributelocalized CURSOR FOR
+SELECT ProductAttributeLocalizedID
+FROM [Nop_ProductAttributeLocalized]
+ORDER BY [ProductAttributeLocalizedID]
+OPEN cur_originalproductattributelocalized
+FETCH NEXT FROM cur_originalproductattributelocalized INTO @OriginalProductAttributeLocalizedId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving localized product attribute. ID ' + cast(@OriginalProductAttributeLocalizedId as nvarchar(10))
+
+	DECLARE @Name nvarchar(MAX)
+	SET @Name = null -- clear cache (variable scope)
+	DECLARE @Description nvarchar(MAX)
+	SET @Description = null -- clear cache (variable scope)
+	SELECT  @Name = [Name],
+			@Description=[Description]
+	FROM [Nop_ProductAttributeLocalized]
+	WHERE [ProductAttributeLocalizedID] = @OriginalProductAttributeLocalizedId
+
+	IF (len(@Name) > 0)
+	BEGIN
+		INSERT INTO [LocalizedProperty] ([EntityId], [LanguageId], [LocaleKeyGroup], [LocaleKey], [LocaleValue])
+		SELECT [ProductAttributeID], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Language' and [OriginalId]=[LanguageId]), 'ProductAttribute', 'Name', @Name
+		FROM [Nop_ProductAttributeLocalized]
+		WHERE [ProductAttributeLocalizedID] = @OriginalProductAttributeLocalizedId
+	END
+
+	IF (len(@Description) > 0)
+	BEGIN
+		INSERT INTO [LocalizedProperty] ([EntityId], [LanguageId], [LocaleKeyGroup], [LocaleKey], [LocaleValue])
+		SELECT [ProductAttributeID], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Language' and [OriginalId]=[LanguageId]), 'ProductAttribute', 'Description', @Description
+		FROM [Nop_ProductAttributeLocalized]
+		WHERE [ProductAttributeLocalizedID] = @OriginalProductAttributeLocalizedId
+	END
+
+
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalproductattributelocalized INTO @OriginalProductAttributeLocalizedId
+END
+CLOSE cur_originalproductattributelocalized
+DEALLOCATE cur_originalproductattributelocalized
+GO
+
 
 
 
@@ -1709,6 +2238,42 @@ BEGIN
 END
 CLOSE cur_originalproductvariantattributevalue
 DEALLOCATE cur_originalproductvariantattributevalue
+GO
+
+
+
+--LOCALIZED PRODUCT VARIANT ATTRIBUTE VALUE
+PRINT 'moving localized product variant attribute value'
+DECLARE @OriginalProductVariantAttributeValueLocalizedId int
+DECLARE cur_originalproductvariantattributevaluelocalized CURSOR FOR
+SELECT ProductVariantAttributeValueLocalizedID
+FROM [Nop_ProductVariantAttributeValueLocalized]
+ORDER BY [ProductVariantAttributeValueLocalizedID]
+OPEN cur_originalproductvariantattributevaluelocalized
+FETCH NEXT FROM cur_originalproductvariantattributevaluelocalized INTO @OriginalProductVariantAttributeValueLocalizedId
+WHILE @@FETCH_STATUS = 0
+BEGIN	
+	PRINT 'moving localized product variant attribute value. ID ' + cast(@OriginalProductVariantAttributeValueLocalizedId as nvarchar(10))
+
+	DECLARE @Name nvarchar(MAX)
+	SET @Name = null -- clear cache (variable scope)
+	SELECT  @Name = [Name]
+	FROM [Nop_ProductVariantAttributeValueLocalized]
+	WHERE [ProductVariantAttributeValueLocalizedID] = @OriginalProductVariantAttributeValueLocalizedId
+
+	IF (len(@Name) > 0)
+	BEGIN
+		INSERT INTO [LocalizedProperty] ([EntityId], [LanguageId], [LocaleKeyGroup], [LocaleKey], [LocaleValue])
+		SELECT [ProductVariantAttributeValueID], (SELECT [NewId] FROM #IDs WHERE [EntityName]=N'Language' and [OriginalId]=[LanguageId]), 'ProductVariantAttributeValue', 'Name', @Name
+		FROM [Nop_ProductVariantAttributeValueLocalized]
+		WHERE [ProductVariantAttributeValueLocalizedID] = @OriginalProductVariantAttributeValueLocalizedId
+	END
+
+	--fetch next identifier
+	FETCH NEXT FROM cur_originalproductvariantattributevaluelocalized INTO @OriginalProductVariantAttributeValueLocalizedId
+END
+CLOSE cur_originalproductvariantattributevaluelocalized
+DEALLOCATE cur_originalproductvariantattributevaluelocalized
 GO
 
 

@@ -94,8 +94,8 @@ namespace Nop.Services.Localization
                     var leService = EngineContext.Current.Resolve<ILocalizedEntityService>();
                     var props = leService.GetLocalizedProperties(entity.Id, localeKeyGroup);
                     var prop = props.FirstOrDefault(lp => lp.LanguageId == languageId &&
-                        lp.LocaleKeyGroup == localeKeyGroup &&
-                        lp.LocaleKey == localeKey);
+                        lp.LocaleKeyGroup.Equals(localeKeyGroup, StringComparison.InvariantCultureIgnoreCase) && //should be culture invariant
+                        lp.LocaleKey.Equals(localeKey, StringComparison.InvariantCultureIgnoreCase));//should be culture invariant
 
                     if (prop != null)
                     {
