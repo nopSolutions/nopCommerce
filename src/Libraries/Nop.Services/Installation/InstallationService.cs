@@ -514,7 +514,7 @@ namespace Nop.Services.Installation
                     CurrencyCode = "EUR",
                     Rate = 0.68M,
                     DisplayLocale = "",
-                    CustomFormatting = "€0.00",
+                    CustomFormatting = "ˆ0.00",
                     Published = false,
                     DisplayOrder = 6,
                     CreatedOnUtc = DateTime.UtcNow,
