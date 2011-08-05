@@ -838,14 +838,6 @@
                             </LocaleResource>
                           </Children>
                         </LocaleResource>
-                        <LocaleResource Name="ShowOnHomePage">
-                          <Value>Show on home page</Value>
-                          <Children>
-                            <LocaleResource Name="Hint">
-                              <Value>Check if you want to show a manufacturer on home page.</Value>
-                            </LocaleResource>
-                          </Children>
-                        </LocaleResource>
                         <LocaleResource Name="Published">
                           <Value>Published</Value>
                           <Children>
