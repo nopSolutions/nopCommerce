@@ -229,6 +229,7 @@ namespace Nop.Plugin.Tax.StrikeIron
                     string debug = sb.ToString();
                     Debug.WriteLine(debug);
                     result = Convert.ToDecimal(wsOutput.ServiceResult.Total);
+                    CacheManager.Set(key, result, 60);
                 }
                 else
                 {
@@ -241,7 +242,6 @@ namespace Nop.Plugin.Tax.StrikeIron
                 error = ex.Message;
             }
 
-            CacheManager.Set(key, result, 60);
             return result;
         }
         
