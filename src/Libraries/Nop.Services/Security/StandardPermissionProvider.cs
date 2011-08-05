@@ -24,6 +24,7 @@ namespace Nop.Services.Security
         public static readonly PermissionRecord ManageTopics = new PermissionRecord { Name = "Manage Topics", SystemName = "ManageTopics", Category = "Content Management" };
         public static readonly PermissionRecord ManageForums = new PermissionRecord { Name = "Manage Forums", SystemName = "ManageForums", Category = "Content Management" };
         public static readonly PermissionRecord ManageMessageTemplates = new PermissionRecord { Name = "Manage Message Templates", SystemName = "ManageMessageTemplates", Category = "Content Management" };
+        public static readonly PermissionRecord ManageCountries = new PermissionRecord { Name = "Manage Countries", SystemName = "ManageCountries", Category = "Configuration" };
         public static readonly PermissionRecord ManageLanguages = new PermissionRecord { Name = "Manage Languages", SystemName = "ManageLanguages", Category = "Configuration" };
         public static readonly PermissionRecord ManageSettings = new PermissionRecord { Name = "Manage Settings", SystemName = "ManageSettings", Category = "Configuration" };
         public static readonly PermissionRecord ManagePaymentMethods = new PermissionRecord { Name = "Manage Payment Methods", SystemName = "ManagePaymentMethods", Category = "Configuration" };
@@ -62,6 +63,7 @@ namespace Nop.Services.Security
                 ManageTopics,
                 ManageForums,
                 ManageMessageTemplates,
+                ManageCountries,
                 ManageLanguages,
                 ManageSettings,
                 ManagePaymentMethods,
@@ -106,6 +108,7 @@ namespace Nop.Services.Security
                         ManageTopics,
                         ManageForums,
                         ManageMessageTemplates,
+                        ManageCountries,
                         ManageLanguages,
                         ManageSettings,
                         ManagePaymentMethods,

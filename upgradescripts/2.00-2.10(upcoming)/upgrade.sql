@@ -8,6 +8,9 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.ShowOnHomePage">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.ShowOnHomePage.Hint">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -24,8 +27,8 @@ FROM	@resources.nodes('//Language/LocaleResource') AS R(nref)
 --do it for each existing language
 DECLARE @ExistingLanguageID int
 DECLARE cur_existinglanguage CURSOR FOR
-SELECT LanguageID
-FROM [Nop_Language]
+SELECT [ID]
+FROM [Language]
 OPEN cur_existinglanguage
 FETCH NEXT FROM cur_existinglanguage INTO @ExistingLanguageID
 WHILE @@FETCH_STATUS = 0
@@ -39,15 +42,15 @@ BEGIN
 	FETCH NEXT FROM cur_localeresource INTO @ResourceName, @ResourceValue
 	WHILE @@FETCH_STATUS = 0
 	BEGIN
-		IF (EXISTS (SELECT 1 FROM Nop_LocaleStringResource WHERE LanguageID=@ExistingLanguageID AND ResourceName=@ResourceName))
+		IF (EXISTS (SELECT 1 FROM [LocaleStringResource] WHERE LanguageID=@ExistingLanguageID AND ResourceName=@ResourceName))
 		BEGIN
-			UPDATE [Nop_LocaleStringResource]
+			UPDATE [LocaleStringResource]
 			SET [ResourceValue]=@ResourceValue
 			WHERE LanguageID=@ExistingLanguageID AND ResourceName=@ResourceName
 		END
 		ELSE 
 		BEGIN
-			INSERT INTO [Nop_LocaleStringResource]
+			INSERT INTO [LocaleStringResource]
 			(
 				[LanguageID],
 				[ResourceName],
@@ -63,7 +66,7 @@ BEGIN
 		
 		IF (@ResourceValue is null or @ResourceValue = '')
 		BEGIN
-			DELETE [Nop_LocaleStringResource]
+			DELETE [LocaleStringResource]
 			WHERE LanguageID=@ExistingLanguageID AND ResourceName=@ResourceName
 		END
 		
@@ -83,4 +86,32 @@ DROP TABLE #LocaleStringResourceTmp
 GO
 
 
---TODO insert your update SQL scripts here
+--insert your update SQL scripts here
+
+
+
+
+
+--missed 'Manage Countries' permission record
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[PermissionRecord]
+		WHERE [SystemName] = N'ManageCountries')
+BEGIN
+	INSERT [dbo].[PermissionRecord] ([Name], [SystemName], [Category])
+	VALUES (N'Manage Countries', N'ManageCountries', N'Configuration')
+
+	DECLARE @PermissionRecordId INT 
+	SET @PermissionRecordId = @@IDENTITY
+
+
+	--add it to admni role be default
+	DECLARE @AdminCustomerRoleId int
+	SELECT @AdminCustomerRoleId = Id
+	FROM [CustomerRole]
+	WHERE IsSystemRole=1 and [SystemName] = N'Administrators'
+
+	INSERT [dbo].[PermissionRecord_Role_Mapping] ([PermissionRecord_Id], [CustomerRole_Id])
+	VALUES (@PermissionRecordId, @AdminCustomerRoleId)
+END
+GO

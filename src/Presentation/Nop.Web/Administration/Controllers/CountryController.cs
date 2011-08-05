@@ -7,6 +7,7 @@ using Nop.Core;
 using Nop.Core.Domain.Directory;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
+using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
 
@@ -20,17 +21,20 @@ namespace Nop.Admin.Controllers
         private readonly ICountryService _countryService;
         private readonly IStateProvinceService _stateProvinceService;
         private readonly ILocalizationService _localizationService;
+        private readonly IPermissionService _permissionService;
 
 	    #endregion
 
 		#region Constructors
 
         public CountryController(ICountryService countryService,
-            IStateProvinceService stateProvinceService, ILocalizationService localizationService)
+            IStateProvinceService stateProvinceService, ILocalizationService localizationService,
+            IPermissionService permissionService)
 		{
             this._countryService = countryService;
             this._stateProvinceService = stateProvinceService;
             this._localizationService = localizationService;
+            this._permissionService = permissionService;
 		}
 
 		#endregion 
@@ -44,6 +48,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult List()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
+                return AccessDeniedView();
+
             var countries = _countryService.GetAllCountries(true);
             var model = new GridModel<CountryModel>
             {
@@ -56,6 +63,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult CountryList(GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
+                return AccessDeniedView();
+
             var countries = _countryService.GetAllCountries(true);
             var model = new GridModel<CountryModel>
             {
@@ -71,6 +81,9 @@ namespace Nop.Admin.Controllers
         
         public ActionResult Create()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
+                return AccessDeniedView();
+
             var model = new CountryModel();
             //default values
             model.Published = true;
@@ -82,6 +95,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
         public ActionResult Create(CountryModel model, bool continueEditing)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
+                return AccessDeniedView();
+
             if (ModelState.IsValid)
             {
                 var country = model.ToEntity();
@@ -97,6 +113,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult Edit(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
+                return AccessDeniedView();
+
             var country = _countryService.GetCountryById(id);
             if (country == null)
                 throw new ArgumentException("No country found with the specified id", "id");
@@ -106,6 +125,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
         public ActionResult Edit(CountryModel model, bool continueEditing)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
+                return AccessDeniedView();
+
             var country = _countryService.GetCountryById(model.Id);
             if (country == null)
                 throw new ArgumentException("No country found with the specified id");
@@ -126,6 +148,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
+                return AccessDeniedView();
+
             var country = _countryService.GetCountryById(id);
             if (country == null)
                 throw new ArgumentException("No country found with the specified id", "id");
@@ -155,6 +180,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult States(int countryId, GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
+                return AccessDeniedView();
+
             var states = _stateProvinceService.GetStateProvincesByCountryId(countryId, true)
                 .Select(x => x.ToModel());
 
@@ -173,6 +201,9 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult StateUpdate(StateProvinceModel model, GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
+                return AccessDeniedView();
+
             if (!ModelState.IsValid)
             {
                 //TODO:Find out how telerik handles errors
@@ -195,6 +226,9 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult StateAdd(StateProvinceModel model, GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
+                return AccessDeniedView();
+
             if (!ModelState.IsValid)
             {
                 return new JsonResult { Data = "error" };
@@ -211,6 +245,9 @@ namespace Nop.Admin.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult StateDelete(int id, GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
+                return AccessDeniedView();
+
             var state = _stateProvinceService.GetStateProvinceById(id);
 
             if (state.Addresses.Count > 0)
@@ -227,6 +264,9 @@ namespace Nop.Admin.Controllers
         public ActionResult GetStatesByCountryId(string countryId,
             bool? addEmptyStateIfRequired, bool? addAsterisk)
         {
+            //permission validation is not required here
+
+
             // This action method gets called via an ajax request
             if (String.IsNullOrEmpty(countryId))
                 throw new ArgumentNullException("countryId");
