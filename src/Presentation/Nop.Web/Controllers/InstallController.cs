@@ -297,8 +297,6 @@ namespace Nop.Web.Controllers
             var dirsToCheck = new List<string>();
             dirsToCheck.Add(rootDir);
             dirsToCheck.Add(rootDir + "App_Data");
-            dirsToCheck.Add(rootDir + "App_Data\\InstalledPlugins.txt");
-            dirsToCheck.Add(rootDir + "App_Data\\Settings.txt");
             dirsToCheck.Add(rootDir + "bin");
             dirsToCheck.Add(rootDir + "content");
             dirsToCheck.Add(rootDir + "content\\images");
@@ -312,7 +310,8 @@ namespace Nop.Web.Controllers
 
             var filesToCheck = new List<string>();
             filesToCheck.Add(rootDir + "web.config");
-            filesToCheck.Add(rootDir + "bin\\" + "Settings.txt");
+            dirsToCheck.Add(rootDir + "App_Data\\InstalledPlugins.txt");
+            dirsToCheck.Add(rootDir + "App_Data\\Settings.txt");
             foreach (string file in filesToCheck)
                 if (!CheckPermissions(file, false, true, true, true))
                     ModelState.AddModelError("", string.Format("The '{0}' account is not granted with Modify permission on file '{1}'. Please configure these permissions.", WindowsIdentity.GetCurrent().Name, file));
