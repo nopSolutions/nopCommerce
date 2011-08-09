@@ -51,7 +51,7 @@
             <siteMapNode title="Blog posts" nopResource="Admin.ContentManagement.Blog.BlogPosts" controller="Blog" action="List" />
             <siteMapNode title="Blog comments" nopResource="Admin.ContentManagement.Blog.Comments" controller="Blog" action="Comments"/>
           </siteMapNode>
-          
+          <siteMapNode title="Widgets" nopResource="Admin.ContentManagement.Widgets" controller="Widget" action="List" />
           <siteMapNode title="Topics" nopResource="Admin.ContentManagement.Topics" controller="Topic" action="List" />
           <siteMapNode title="Manage forums" nopResource="Admin.ContentManagement.Forums" controller="Forum" action="List" />
           <siteMapNode title="Message templates" nopResource="Admin.ContentManagement.MessageTemplates" controller="MessageTemplate" action="List" />
@@ -96,7 +96,6 @@
           </siteMapNode>
           <siteMapNode title="Access control list" nopResource="Admin.Configuration.ACL" controller="Security" action="Permissions" />
           <siteMapNode title="SMS providers" nopResource="Admin.Configuration.SMSProviders" controller="SMS" action="Providers" />
-          <siteMapNode title="Live chat providers" nopResource="Admin.Configuration.LiveChats" controller="LiveChat" action="Providers" />
           <siteMapNode title="Plugins" nopResource="Admin.Configuration.Plugins" controller="Plugin" action="List"/>
         </siteMapNode>
         <siteMapNode title="System" nopResource="Admin.System" ImageUrl="~/Administration/Content/images/ico-system.png">

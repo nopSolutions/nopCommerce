@@ -21,6 +21,7 @@ namespace Nop.Services.Security
         public static readonly PermissionRecord ManagePolls = new PermissionRecord { Name = "Manage Polls", SystemName = "ManagePolls", Category = "Content Management" };
         public static readonly PermissionRecord ManageNews = new PermissionRecord { Name = "Manage News", SystemName = "ManageNews", Category = "Content Management" };
         public static readonly PermissionRecord ManageBlog = new PermissionRecord { Name = "Manage Blog", SystemName = "ManageBlog", Category = "Content Management" };
+        public static readonly PermissionRecord ManageWidgets = new PermissionRecord { Name = "Manage Widgets", SystemName = "ManageWidgets", Category = "Content Management" };
         public static readonly PermissionRecord ManageTopics = new PermissionRecord { Name = "Manage Topics", SystemName = "ManageTopics", Category = "Content Management" };
         public static readonly PermissionRecord ManageForums = new PermissionRecord { Name = "Manage Forums", SystemName = "ManageForums", Category = "Content Management" };
         public static readonly PermissionRecord ManageMessageTemplates = new PermissionRecord { Name = "Manage Message Templates", SystemName = "ManageMessageTemplates", Category = "Content Management" };
@@ -60,6 +61,7 @@ namespace Nop.Services.Security
                 ManagePolls,
                 ManageNews,
                 ManageBlog,
+                ManageWidgets,
                 ManageTopics,
                 ManageForums,
                 ManageMessageTemplates,
@@ -105,6 +107,7 @@ namespace Nop.Services.Security
                         ManagePolls,
                         ManageNews,
                         ManageBlog,
+                        ManageWidgets,
                         ManageTopics,
                         ManageForums,
                         ManageMessageTemplates,

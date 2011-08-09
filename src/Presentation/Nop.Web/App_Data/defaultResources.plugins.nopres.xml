@@ -284,30 +284,6 @@
           </LocaleResource>
         </Children>
       </LocaleResource>
-      <LocaleResource Name="LiveChat">
-        <Children>
-          <LocaleResource Name="LivePerson">
-            <Children>
-              <LocaleResource Name="ButtonCode">
-                <Value>Button code(max 2000)</Value>
-                <Children>
-                  <LocaleResource Name="Hint">
-                    <Value>Enter your button code here.</Value>
-                  </LocaleResource>
-                </Children>
-              </LocaleResource>
-              <LocaleResource Name="MonitoringCode">
-                <Value>Monitoring code(max 2000)</Value>
-                <Children>
-                  <LocaleResource Name="Hint">
-                    <Value>Enter your monitoring code here.</Value>
-                  </LocaleResource>
-                </Children>
-              </LocaleResource>
-            </Children>
-          </LocaleResource>
-        </Children>
-      </LocaleResource>
       <LocaleResource Name="Payment">
         <Children>
           <LocaleResource Name="CashOnDelivery">
@@ -605,6 +581,33 @@
       </LocaleResource>
       <LocaleResource Name="Title">
         <Value>Plugins</Value>
+      </LocaleResource>
+      <LocaleResource Name="Widgets">
+        <Children>
+          <LocaleResource Name="LivePersonChat">
+            <Children>
+              <LocaleResource Name="ButtonCode">
+                <Value>Button code(max 2000)</Value>
+                <Children>
+                  <LocaleResource Name="Hint">
+                    <Value>Enter your button code here.</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+              <LocaleResource Name="LiveChat">
+                <Value>Live chat</Value>
+              </LocaleResource>
+              <LocaleResource Name="MonitoringCode">
+                <Value>Monitoring code(max 2000)</Value>
+                <Children>
+                  <LocaleResource Name="Hint">
+                    <Value>Enter your monitoring code here.</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+            </Children>
+          </LocaleResource>
+        </Children>
       </LocaleResource>
     </Children>
   </LocaleResource>

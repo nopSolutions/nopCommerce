@@ -20,4 +20,5 @@
         <li><a href="@Url.RouteUrl("Boards")">@T("Forum.Forums")</a></li>
     }
     <li><a href="@Url.RouteUrl("ContactUs")">@T("ContactUs")</a></li>
+    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.HeaderMenu })
 </ul>

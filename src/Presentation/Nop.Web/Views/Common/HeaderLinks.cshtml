@@ -18,16 +18,16 @@
             {
             <li><a href="@Url.RouteUrl("PrivateMessages", new { tab = "" })" class="ico-inbox">@T("PrivateMessages.Inbox")</a>
                 @Model.UnreadPrivateMessages</li>
-               if (!string.IsNullOrEmpty(Model.AlertMessage))
-               {
+                if (!string.IsNullOrEmpty(Model.AlertMessage))
+                {
                     //using $(document).bind instead of $(document).ready to execute the alert after tabs load (on privatemessages page)
-                    <script type="text/javascript">
-                        $(document).bind("ready", function () {
-                            alert('@Model.AlertMessage');
-                        });
-                    </script>
-               }
-           }
+            <script type="text/javascript">
+                $(document).bind("ready", function () {
+                    alert('@Model.AlertMessage');
+                });
+            </script>
+                }
+            }
         }
         else
         {
@@ -43,7 +43,9 @@
         }
         @if (Model.DisplayAdminLink)
         {
-            <li><a href="@Url.Content("~/admin")" class="ico-admin">@T("Account.Administration")</a> </li>
+            <li><a href="@Url.Content("~/admin")" class="ico-admin">@T("Account.Administration")</a>
+            </li>
         }
+        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.HeaderLinks })
     </ul>
 </div>

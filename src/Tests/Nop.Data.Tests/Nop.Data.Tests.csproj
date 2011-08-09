@@ -68,6 +68,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cms\WidgetPersistenceTests.cs" />
     <Compile Include="Common\AddressPeristenceTests.cs" />
     <Compile Include="Catalog\CategoryPersistenceTests.cs" />
     <Compile Include="Orders\CheckoutAttributePersistenceTests.cs" />

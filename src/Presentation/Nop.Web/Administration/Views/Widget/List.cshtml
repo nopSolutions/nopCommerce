@@ -1,0 +1,56 @@
+﻿@model WidgetListModel
+@using Telerik.Web.Mvc.UI
+@using (Html.BeginForm())
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-content.png")" alt="" />
+            @T("Admin.ContentManagement.Widgets")
+        </div>
+    </div>        
+    <table class="adminContent">
+        <tr>
+            <td style="width: 50%">
+                <b>@T("Admin.ContentManagement.Widgets.Widgets")</b>
+            </td>
+            <td style="width: 50%">
+                <b>@T("Admin.ContentManagement.Widgets.AvailableWidgetPlugins")</b>
+            </td>
+        </tr>
+        <tr>
+            <td style="vertical-align: top">
+                @(Html.Telerik().Grid<WidgetModel>(Model.AvailableWidgets)
+                    .Name("widgets-grid")
+                    .Columns(columns =>
+                    {
+                        columns.Bound(w => w.WidgetZoneName).Width(200);
+                        columns.Bound(w => w.PluginFriendlyName).Width(200);
+                        columns.Bound(w => w.DisplayOrder).Width(100);
+                        columns.Bound(w => w.Id)
+                            .Template(w => Html.ActionLink(T("Admin.Common.Edit").Text, "Edit", new { id = w.Id }))
+                            .Title(T("Admin.Common.Edit").Text);
+                    })
+                    .EnableCustomBinding(true))
+            </td>
+            <td style="vertical-align: top">
+                @(Html.Telerik().Grid<WidgetPluginModel>()
+                    .Name("widgetplugins-grid")
+                    .BindTo(Model.AvailableWidgetPlugins)
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.FriendlyName)
+                             .Width(150)
+                             .Centered();
+                        columns.Bound(x => x.SystemName)
+                            .Template(x =>
+                                Html.ActionLink(T("Admin.ContentManagement.Widgets.AvailableWidgetPlugins.AddToZone").Text, "Create", new { systemName = x.SystemName }))
+                            .Width(50)
+                            .Centered()
+                            .HeaderTemplate(T("Admin.ContentManagement.Widgets.AvailableWidgetPlugins.AddToZone").Text);
+                    })
+                    .Footer(false))
+            </td>
+        </tr>
+    </table>
+   
+}

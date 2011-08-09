@@ -14,10 +14,13 @@
     @*Favicon - upload upload favicon.ico file to the root direcotry*@
     @Html.Action("Favicon", "Common")
     @Html.Action("GoogleAnalytics", "Common", new { placement = "head" })
+    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.HeadHtmlTag })
     <!--Powered by nopCommerce - http://www.nopCommerce.com-->
     <!--Copyright (c) 2008-2011-->
 </head>
 <body>
+    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.AfterBodyStartHtmlTag })
     @RenderBody()
+    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.BeforeBodyEndHtmlTag })
 </body>
 </html>

@@ -27,6 +27,9 @@
     }
     else
     {
+        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.BeforeLeftSideColumn })
+        <div class="clear">
+        </div>
         @Html.Action("CategoryNavigation", "Catalog", new { currentCategoryId = currentCategoryId })
         <div class="clear">
         </div>
@@ -40,11 +43,16 @@
         <div class="clear">
         </div>
         @Html.Action("PollBlock", "Poll", new { systemKeyword = "LeftColumnPoll" })
+        <div class="clear">
+        </div>
+        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.AfterLeftSideColumn })
     }
 </div>
 <div class="master-wrapper-center-3">
-    <div class="master-wrapper-cph-3">
+    <div class="master-wrapper-cph-3">        
+        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.BeforeMainColumn })
         @RenderBody()
+        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.AfterMainColumn })
     </div>
 </div>
 <div class="master-wrapper-rightside-3">
@@ -54,10 +62,10 @@
     }
     else
     {
-        @Html.Action("MiniShoppingCart", "ShoppingCart")
+        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.BeforeRightSideColumn })
         <div class="clear">
         </div>
-        @Html.Action("List", "LiveChat")
+        @Html.Action("MiniShoppingCart", "ShoppingCart")
         <div class="clear">
         </div>
         @Html.Action("NewsletterBox", "Newsletter")
@@ -67,5 +75,8 @@
         <div class="clear">
         </div>        
         @Html.Action("PollBlock", "Poll", new { systemKeyword = "RightColumnPoll" })
+        <div class="clear">
+        </div>
+        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.AfterRightSideColumn })
     }
 </div>

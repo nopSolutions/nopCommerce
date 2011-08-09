@@ -20,6 +20,7 @@ using Nop.Services;
 using Nop.Services.Affiliates;
 using Nop.Services.Blogs;
 using Nop.Services.Catalog;
+using Nop.Services.Cms;
 using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
@@ -208,9 +209,10 @@ namespace Nop.Web.Framework
 
             builder.RegisterType<PollService>().As<IPollService>().InstancePerHttpRequest();
             builder.RegisterType<BlogService>().As<IBlogService>().InstancePerHttpRequest();
+            builder.RegisterType<WidgetService>().As<IWidgetService>().InstancePerHttpRequest();
+            builder.RegisterType<TopicService>().As<ITopicService>().InstancePerHttpRequest();
             builder.RegisterType<TopicService>().As<ITopicService>().InstancePerHttpRequest();
             builder.RegisterType<NewsService>().As<INewsService>().InstancePerHttpRequest();
-            builder.RegisterType<LiveChatService>().As<ILiveChatService>().InstancePerHttpRequest();
 
             builder.RegisterType<DateTimeHelper>().As<IDateTimeHelper>().InstancePerHttpRequest();
             builder.RegisterType<SitemapGenerator>().As<ISitemapGenerator>().InstancePerHttpRequest();

@@ -81,21 +81,20 @@
         </td>
     </tr>
     <tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.StaffNotes):
-            </td>
-            <td class="adminData">
-                @Html.TextAreaFor(model => model.StaffNotes, new { style = "Width: 500px; Height: 150px;" })
-                @Html.ValidationMessageFor(model => model.StaffNotes)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.CreatedOn):
-            </td>
-            <td class="adminData">
-                @Html.DisplayFor(model => model.CreatedOn)
-            </td>
-        </tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.StaffNotes):
+        </td>
+        <td class="adminData">
+            @Html.TextAreaFor(model => model.StaffNotes, new { style = "Width: 500px; Height: 150px;" })
+            @Html.ValidationMessageFor(model => model.StaffNotes)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.CreatedOn):
+        </td>
+        <td class="adminData">
+            @Html.DisplayFor(model => model.CreatedOn)
+        </td>
+    </tr>
 </table>

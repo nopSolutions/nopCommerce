@@ -1,0 +1,56 @@
+﻿@{
+    Layout = "";
+}
+@model Nop.Plugin.Widgets.LivePersonChat.Models.ConfigurationModel
+@using Nop.Web.Framework;
+@using (Html.BeginForm())
+{
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle" colspan="2">
+                Please find our step by step set up guide detailed below:
+                <ul>
+                    <li><b>Download</b>. Download the software here: <a href="http://solutions.liveperson.com/help/download.asp"
+                        target='_blank'>http://solutions.liveperson.com/help/download.asp</a> </li>
+                    <li><b>Learn how to setup</b>. Getting started for Pro Administrators: <a href="http://solutions.liveperson.com/training/gettingstarted_pro_admin.asp"
+                        target='_blank'>http://solutions.liveperson.com/training/gettingstarted_pro_admin.asp</a>
+                    </li>
+                    <li><b>Apply Knowledge</b>. Login in your Admin Console, configure your account and
+                        embed your pages: <a href="https://server.iad.liveperson.net/hc/web/public/pub/ma/lp/login.jsp"
+                            target='_blank'>https://server.iad.liveperson.net/hc/web/public/pub/ma/lp/login.jsp</a>
+                        <ul>
+                            <li>Click on the 'Admin Console' button on the toolbar. </li>
+                            <li>Click on 'Account Setup' and then 'Page Code Builder'. </li>
+                            <li>Follow the wizard to generate the monitor code and button tag code you wish to use
+                                on your store. </li>
+                            <li>Paste the provided values from the 'Button Tag' and 'Monitor Tag' text boxes in
+                                to the appropriate boxes below. </li>
+                        </ul>
+                    </li>
+                    <li><b>Learn how to use the Operator Console (Agent)</b>. Getting started for Pro Operators:
+                        <a href="http://solutions.liveperson.com/training/gettingstarted_pro_op.asp" target='_blank'>
+                            http://solutions.liveperson.com/training/gettingstarted_pro_op.asp</a> </li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ButtonCode):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ButtonCode)
+                @Html.ValidationMessageFor(model => model.ButtonCode)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.MonitoringCode):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.MonitoringCode)
+                @Html.ValidationMessageFor(model => model.MonitoringCode)
+            </td>
+        </tr>
+    </table>
+    
+}

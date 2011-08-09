@@ -533,14 +533,6 @@ namespace Nop.Admin
 
         #endregion
 
-        #region Live chat providers
-
-        public static LiveChatProviderModel ToModel(this ILiveChatProvider entity)
-        {
-            return Mapper.Map<ILiveChatProvider, LiveChatProviderModel>(entity);
-        }
-
-        #endregion
 
         #region NewsLetter subscriptions
 

@@ -1,0 +1,56 @@
+﻿@model EditWidgetModel
+@using Nop.Core.Domain.Cms;
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(false)
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
+            @T("Admin.ContentManagement.Widgets.EditWidgetDetails") - @Model.PluginFriendlyName
+            @Html.ActionLink("(" + T("Admin.ContentManagement.Widgets.BackToList") + ")", "List")
+        </div>
+        <div class="options">
+            <button type="submit" name="save" value="save" class="t-button">@T("Admin.Common.Save")</button>
+            <span id="widget-delete" class="t-button">@T("Admin.Common.Delete")</span>
+        </div>
+    </div>
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.PluginFriendlyName):
+            </td>
+            <td class="adminData">
+                @Html.DisplayFor(model => model.PluginFriendlyName)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.WidgetZoneId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.WidgetZoneId, Model.SupportedWidgetZones)
+                @Html.ValidationMessageFor(model => model.WidgetZoneId)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.DisplayOrder):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.DisplayOrder)
+                @Html.ValidationMessageFor(model => model.DisplayOrder)
+            </td>
+        </tr>
+        <tr class="adminSeparator">
+            <td colspan="2">
+                <hr />
+            </td>
+        </tr>
+    </table>
+    
+    if (!String.IsNullOrEmpty(Model.ConfigurationActionName))
+    {
+        @Html.Action(Model.ConfigurationActionName, Model.ConfigurationControllerName, Model.ConfigurationRouteValues);
+    }
+}
+@Html.DeleteConfirmation("widget-delete")

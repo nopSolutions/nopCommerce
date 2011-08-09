@@ -217,12 +217,6 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.IsRecipientNotified, dt => dt.Ignore())
                 .ForMember(dest => dest.CreatedOnUtc, dt => dt.Ignore());
 
-            //live chat providers
-            Mapper.CreateMap<ILiveChatProvider, LiveChatProviderModel>()
-                .ForMember(dest => dest.FriendlyName, opt => opt.MapFrom(src => src.PluginDescriptor.FriendlyName))
-                .ForMember(dest => dest.SystemName, opt => opt.MapFrom(src => src.PluginDescriptor.SystemName))
-                .ForMember(dest => dest.DisplayOrder, opt => opt.MapFrom(src => src.PluginDescriptor.DisplayOrder));
-
             //Settings
             ViceVersa<TaxSettings, TaxSettingsModel>();
             ViceVersa<NewsSettings, NewsSettingsModel>();

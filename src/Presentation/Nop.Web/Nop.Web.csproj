@@ -92,7 +92,7 @@
     <Compile Include="Controllers\BackwardCompatibility1XController.cs" />
     <Compile Include="Controllers\InstallController.cs" />
     <Compile Include="Controllers\PollController.cs" />
-    <Compile Include="Controllers\LiveChatController.cs" />
+    <Compile Include="Controllers\WidgetController.cs" />
     <Compile Include="Controllers\PrivateMessagesController.cs" />
     <Compile Include="Controllers\TopicController.cs" />
     <Compile Include="Controllers\NewsController.cs" />
@@ -162,7 +162,7 @@
     <Compile Include="Models\Customer\CustomerForumSubscriptionsModel.cs" />
     <Compile Include="Models\Customer\ForumSubscriptionsModel.cs" />
     <Compile Include="Models\Install\InstallModel.cs" />
-    <Compile Include="Models\LiveChat\LiveChatModel.cs" />
+    <Compile Include="Models\Cms\WidgetModel.cs" />
     <Compile Include="Models\News\AddNewsCommentModel.cs" />
     <Compile Include="Models\News\NewsCommentModel.cs" />
     <Compile Include="Models\News\NewsPagingFilteringModel.cs" />
@@ -1212,7 +1212,7 @@
     <Content Include="Views\ShoppingCart\MiniShoppingCart.cshtml" />
     <Content Include="Views\Order\Details.cshtml" />
     <Content Include="Views\Common\StoreThemeSelector.cshtml" />
-    <Content Include="Views\LiveChat\List.cshtml" />
+    <Content Include="Views\Widget\WidgetsByZone.cshtml" />
     <Content Include="Views\Catalog\ProductsAlsoPurchased.cshtml" />
     <Content Include="Views\Poll\_Poll.cshtml" />
     <Content Include="Views\Poll\PollBlock.cshtml" />
@@ -1267,7 +1267,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>1473</DevelopmentServerPort>
+          <DevelopmentServerPort>18947</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost:2451/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>

@@ -70,10 +70,11 @@
     <Compile Include="Data\DataSettings.cs" />
     <Compile Include="Data\DataSettingsHelper.cs" />
     <Compile Include="Data\DataSettingsManager.cs" />
+    <Compile Include="Domain\Cms\Widget.cs" />
+    <Compile Include="Domain\Cms\WidgetZone.cs" />
     <Compile Include="Domain\Common\AdminAreaSettings.cs" />
     <Compile Include="Domain\Common\GoogleAnalyticsSettings.cs" />
     <Compile Include="Domain\Common\SeoSettings.cs" />
-    <Compile Include="Domain\Common\LiveChatSettings.cs" />
     <Compile Include="Domain\Customers\SystemCustomerNames.cs" />
     <Compile Include="Domain\Polls\PollVotingRecord.cs" />
     <Compile Include="Domain\Polls\PollAnswer.cs" />

@@ -26,7 +26,7 @@
     }
     else
     {
-        @Html.Action("List", "LiveChat")
+        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.BeforeLeftSideColumn })
         <div class="clear">
         </div>
         @Html.Action("MiniShoppingCart", "ShoppingCart")
@@ -39,10 +39,15 @@
         <div class="clear">
         </div>
         @Html.Action("NewsletterBox", "Newsletter")
+        <div class="clear">
+        </div>
+        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.AfterLeftSideColumn })
     }
 </div>
 <div class="master-wrapper-center-2">
     <div class="master-wrapper-cph-2">
+        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.BeforeMainColumn })
         @RenderBody()
+        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.AfterMainColumn })
     </div>
 </div>

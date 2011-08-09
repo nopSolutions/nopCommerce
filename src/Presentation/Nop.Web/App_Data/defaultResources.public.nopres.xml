@@ -489,6 +489,9 @@
       <LocaleResource Name="AddNewSpecAttribute">
         <Value>Added a new specification attribute ('{0}')</Value>
       </LocaleResource>
+      <LocaleResource Name="AddNewWidget">
+        <Value>Added a new widget (ID = {0})</Value>
+      </LocaleResource>
       <LocaleResource Name="DeleteCategory">
         <Value>Deleted a category ('{0}')</Value>
       </LocaleResource>
@@ -528,6 +531,9 @@
       <LocaleResource Name="DeleteSpecAttribute">
         <Value>Deleted a specification attribute ('{0}')</Value>
       </LocaleResource>
+      <LocaleResource Name="DeleteWidget">
+        <Value>Deleted a widget (ID = {0})</Value>
+      </LocaleResource>
       <LocaleResource Name="EditCategory">
         <Value>Edited a category ('{0}')</Value>
       </LocaleResource>
@@ -566,6 +572,9 @@
       </LocaleResource>
       <LocaleResource Name="EditSpecAttribute">
         <Value>Edited a specification attribute ('{0}')</Value>
+      </LocaleResource>
+      <LocaleResource Name="EditWidget">
+        <Value>Edited a widget (ID = {0})</Value>
       </LocaleResource>
       <LocaleResource Name="PlaceOrder">
         <Value>Placed a new order</Value>
@@ -956,19 +965,6 @@
   <LocaleResource Name="ConditionsOfUse">
     <Value>Conditions of Use</Value>
   </LocaleResource>
-  <LocaleResource Name="Topic">
-    <Children>
-      <LocaleResource Name="Button">
-        <Value>Enter</Value>
-      </LocaleResource>
-      <LocaleResource Name="EnterPassword">
-        <Value>Please enter password to access this content:</Value>
-      </LocaleResource>
-      <LocaleResource Name="WrongPassword">
-        <Value>Wrong password</Value>
-      </LocaleResource>
-    </Children>
-  </LocaleResource>  
   <LocaleResource Name="ContactUs">
     <Value>Contact us</Value>
     <Children>
@@ -1167,6 +1163,55 @@
           </LocaleResource>
           <LocaleResource Name="Years">
             <Value>Years</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
+      <LocaleResource Name="Nop.Core.Domain.Cms.WidgetZone">
+        <Children>
+          <LocaleResource Name="HeadHtmlTag">
+            <Value>Head HTML tag</Value>
+          </LocaleResource>
+          <LocaleResource Name="AfterBodyStartHtmlTag">
+            <Value><![CDATA[After <body> start HTML tag]]></Value>
+          </LocaleResource>
+          <LocaleResource Name="HeaderLinks">
+            <Value>Header links</Value>
+          </LocaleResource>
+          <LocaleResource Name="HeaderSelectors">
+            <Value>Header selectors</Value>
+          </LocaleResource>
+          <LocaleResource Name="HeaderMenu">
+            <Value>Header menu</Value>
+          </LocaleResource>
+          <LocaleResource Name="BeforeContent">
+            <Value>Before content</Value>
+          </LocaleResource>
+          <LocaleResource Name="BeforeLeftSideColumn">
+            <Value>Before left side column</Value>
+          </LocaleResource>
+          <LocaleResource Name="AfterLeftSideColumn">
+            <Value>After left side column</Value>
+          </LocaleResource>
+          <LocaleResource Name="BeforeMainColumn">
+            <Value>Before main column</Value>
+          </LocaleResource>
+          <LocaleResource Name="AfterMainColumn">
+            <Value>After main column</Value>
+          </LocaleResource>
+          <LocaleResource Name="BeforeRightSideColumn">
+            <Value>Before right side column</Value>
+          </LocaleResource>
+          <LocaleResource Name="AfterRightSideColumn">
+            <Value>After right side column</Value>
+          </LocaleResource>
+          <LocaleResource Name="AfterContent">
+            <Value>After content</Value>
+          </LocaleResource>
+          <LocaleResource Name="Footer">
+            <Value>Footer</Value>
+          </LocaleResource>
+          <LocaleResource Name="BeforeBodyEndHtmlTag">
+            <Value><![CDATA[After <body> end HTML tag]]></Value>
           </LocaleResource>
         </Children>
       </LocaleResource>
@@ -1801,9 +1846,6 @@
   </LocaleResource>
   <LocaleResource Name="Information">
     <Value>Information</Value>
-  </LocaleResource>
-  <LocaleResource Name="LiveChat">
-    <Value>Live chat</Value>
   </LocaleResource>
   <LocaleResource Name="Manufacturers">
     <Value>Manufacturers</Value>
@@ -3311,6 +3353,19 @@
       </LocaleResource>
       <LocaleResource Name="Inclusive">
         <Value>Show prices tax inclusive</Value>
+      </LocaleResource>
+    </Children>
+  </LocaleResource>
+  <LocaleResource Name="Topic">
+    <Children>
+      <LocaleResource Name="Button">
+        <Value>Enter</Value>
+      </LocaleResource>
+      <LocaleResource Name="EnterPassword">
+        <Value>Please enter password to access this content:</Value>
+      </LocaleResource>
+      <LocaleResource Name="WrongPassword">
+        <Value>Wrong password</Value>
       </LocaleResource>
     </Children>
   </LocaleResource>

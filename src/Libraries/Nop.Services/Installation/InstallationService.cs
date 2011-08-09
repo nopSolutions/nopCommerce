@@ -4421,11 +4421,6 @@ namespace Nop.Services.Installation
                     RenderOrderNotes = true,
                 });
 
-            EngineContext.Current.Resolve<IConfigurationProvider<LiveChatSettings>>()
-                .SaveSettings(new LiveChatSettings()
-                {
-                    ActiveLiveChatProviderSystemName = new List<string>(),
-                });
             EngineContext.Current.Resolve<IConfigurationProvider<CommonSettings>>()
                 .SaveSettings(new CommonSettings()
                 {
@@ -8852,6 +8847,12 @@ namespace Nop.Services.Installation
                                               },
                                           new ActivityLogType
                                               {
+                                                  SystemKeyword = "AddNewWidget",
+                                                  Enabled = true,
+                                                  Name = "Add a new widget"
+                                              },
+                                          new ActivityLogType
+                                              {
                                                   SystemKeyword = "DeleteCategory",
                                                   Enabled = true,
                                                   Name = "Delete category"
@@ -8927,6 +8928,12 @@ namespace Nop.Services.Installation
                                                   SystemKeyword = "DeleteSpecAttribute",
                                                   Enabled = true,
                                                   Name = "Delete a specification attribute"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "DeleteWidget",
+                                                  Enabled = true,
+                                                  Name = "Delete a widget"
                                               },
                                           new ActivityLogType
                                               {
@@ -9011,6 +9018,12 @@ namespace Nop.Services.Installation
                                                   SystemKeyword = "EditSpecAttribute",
                                                   Enabled = true,
                                                   Name = "Edit a specification attribute"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "EditWidget",
+                                                  Enabled = true,
+                                                  Name = "Edit a widget"
                                               },
                                       };
             activityLogTypes.ForEach(alt => _activityLogTypeRepository.Insert(alt));

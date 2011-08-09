@@ -49,7 +49,7 @@ namespace Nop.Core.Plugins
                 _shadowCopyFolder = new DirectoryInfo(HostingEnvironment.MapPath(_shadowCopyPath));
 
                 var referencedPlugins = new List<PluginDescriptor>();
-                
+
                 try
                 {
                     var installedPluginSystemNames = ParseInstalledPluginsFile();
@@ -82,19 +82,19 @@ namespace Nop.Core.Plugins
                         {
                             //parse file
                             var description = ParsePluginDescriptionFile(descriptionFile.FullName);
-                            
+
                             //some validation
                             if (String.IsNullOrWhiteSpace(description.SystemName))
                                 throw new Exception(string.Format("A plugin has no system name. Try assigning the plugin a unique name and recompiling.", description.SystemName));
                             if (referencedPlugins.Contains(description))
                                 throw new Exception(string.Format("A plugin with '{0}' system name is already defined", description.SystemName));
-                            
+
                             //set 'Installed' property
                             description.Installed = installedPluginSystemNames
                                 .ToList()
                                 .Where(x => x.Equals(description.SystemName, StringComparison.InvariantCultureIgnoreCase))
                                 .FirstOrDefault() != null;
-                            
+
                             //get list of all DLLs in plugins (not in bin!)
                             //var pluginFiles = Enumerable.Empty<FileInfo>();
                             var pluginFiles = descriptionFile.Directory.GetFiles("*.dll", SearchOption.AllDirectories)
@@ -106,7 +106,7 @@ namespace Nop.Core.Plugins
                             //other plugin description info
                             var mainPluginFile = pluginFiles.Where(x => x.Name.Equals(description.PluginFileName, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
                             description.OriginalAssemblyFile = mainPluginFile;
-                            
+
                             //shadow copy files
                             description.ReferencedAssembly = PerformFileDeploy(mainPluginFile);
 
@@ -116,16 +116,15 @@ namespace Nop.Core.Plugins
                                 PerformFileDeploy(plugin);
 
 
-                            //init plugin type (only one plguin per assembly is allowed)
+                            //init plugin type (only one plugin per assembly is allowed)
                             foreach (var t in description.ReferencedAssembly.GetTypes())
-                                    if (typeof(IPlugin).IsAssignableFrom(t))
-                                        if (!t.IsInterface)
-                                            if (t.IsClass && !t.IsAbstract)
-                                            {
-                                                description.PluginType = t;
-                                                break;
-                                            }
-
+                                if (typeof(IPlugin).IsAssignableFrom(t))
+                                    if (!t.IsInterface)
+                                        if (t.IsClass && !t.IsAbstract)
+                                        {
+                                            description.PluginType = t;
+                                            break;
+                                        }
 
                             referencedPlugins.Add(description);
                         }

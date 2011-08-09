@@ -1,0 +1,16 @@
+﻿@model Nop.Plugin.Widgets.LivePersonChat.Models.PublicInfoModel
+@{
+    Layout = "";
+}
+@using Nop.Web.Framework;
+<div class="block block-livechat">
+    <div class="title">
+        @T("Plugins.Widgets.LivePersonChat.LiveChat")
+    </div>
+    <div class="clear">
+    </div>
+    <div class="listbox">
+        @Html.Raw(Model.MonitoringCode)
+        @Html.Raw(Model.ButtonCode)
+    </div>
+</div>
