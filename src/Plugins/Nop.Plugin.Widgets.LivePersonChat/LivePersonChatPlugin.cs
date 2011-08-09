@@ -9,7 +9,7 @@ namespace Nop.Plugin.Widgets.LivePersonChat
     /// <summary>
     /// Live person provider
     /// </summary>
-    public class LivePersonChatProvider : BasePlugin, IWidgetPlugin
+    public class LivePersonChatPlugin : BasePlugin, IWidgetPlugin
     {
         /// <summary>
         /// Get a list of supported widget zones; if empty list is returned, then all zones are supported

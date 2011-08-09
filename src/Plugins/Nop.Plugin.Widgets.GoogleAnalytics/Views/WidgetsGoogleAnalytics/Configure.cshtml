@@ -1,0 +1,46 @@
+﻿@{
+    Layout = "";
+}
+@model Nop.Plugin.Widgets.GoogleAnalytics.Models.ConfigurationModel
+@using Nop.Web.Framework;
+@using (Html.BeginForm())
+{
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle" colspan="2">
+                Google Analytics is a free website stats tool from Google. It keeps track of statistics
+                about the visitors and ecommerce conversion on your website.
+                <br />
+                <br />
+                Follow the next steps to enable Google Analytics integration:
+                <ul>
+                    <li><a href="http://www.google.com/analytics/" target="_blank">Create a Google Analytics
+                        account</a> and follow the wizard to add your website</li>
+                    <li>Copy the Google Analytics ID into the 'ID' box below</li>
+                    <li>Copy the tracking code from Google Analytics into the 'Tracking Code' box below</li>
+                    <li>Click the 'Save' button below and Google Analytics will be integrated into your
+                        store</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.GoogleId):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.GoogleId)
+                @Html.ValidationMessageFor(model => model.GoogleId)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.JavaScript):
+            </td>
+            <td class="adminData">
+                @Html.TextAreaFor(model => model.JavaScript, new { style = "Width: 300px; Height: 100px;" })
+                @Html.ValidationMessageFor(model => model.JavaScript)
+            </td>
+        </tr>
+    </table>
+    
+}

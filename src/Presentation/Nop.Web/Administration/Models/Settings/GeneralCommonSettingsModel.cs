@@ -15,14 +15,12 @@ namespace Nop.Admin.Models.Settings
             SecuritySettings = new SecuritySettingsModel();
             PdfSettings = new PdfSettingsModel();
             LocalizationSettings = new LocalizationSettingsModel();
-            GoogleAnalyticsSettings = new GoogleAnalyticsSettingsModel();
         }
         public StoreInformationSettingsModel StoreInformationSettings { get; set; }
         public SeoSettingsModel SeoSettings { get; set; }
         public SecuritySettingsModel SecuritySettings { get; set; }
         public PdfSettingsModel PdfSettings { get; set; }
         public LocalizationSettingsModel LocalizationSettings { get; set; }
-        public GoogleAnalyticsSettingsModel GoogleAnalyticsSettings { get; set; }
 
         #region Nested classes
 
@@ -109,20 +107,6 @@ namespace Nop.Admin.Models.Settings
             public bool UseImagesForLanguageSelection { get; set; }
         }
 
-        public class GoogleAnalyticsSettingsModel
-        {
-            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.GoogleAnalyticsEnabled")]
-            public bool Enabled { get; set; }
-            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.GoogleAnalyticsId")]
-            [AllowHtml]
-            public string GoogleId { get; set; }
-            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.GoogleAnalyticsJavaScript")]
-            [AllowHtml]
-            public string JavaScript { get; set; }
-            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.GoogleAnalyticsPlacement")]
-            [AllowHtml]
-            public string Placement { get; set; }
-        }
         #endregion
     }
 }

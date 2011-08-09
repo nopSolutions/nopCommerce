@@ -78,7 +78,6 @@ namespace Nop.Admin.Controllers
         private readonly SecuritySettings _securitySettings;
         private readonly PdfSettings _pdfSettings;
         private readonly LocalizationSettings _localizationSettings;
-        private readonly GoogleAnalyticsSettings _googleAnalyticsSettings;
         private readonly AdminAreaSettings _adminAreaSettings;
         private readonly CaptchaSettings _captchaSettings;
 
@@ -103,8 +102,7 @@ namespace Nop.Admin.Controllers
             CustomerSettings customerSettings,
             DateTimeSettings dateTimeSettings, StoreInformationSettings storeInformationSettings,
             SeoSettings seoSettings,SecuritySettings securitySettings, PdfSettings pdfSettings,
-            LocalizationSettings localizationSettings, GoogleAnalyticsSettings googleAnalyticsSettings,
-            AdminAreaSettings adminAreaSettings, CaptchaSettings captchaSettings)
+            LocalizationSettings localizationSettings, AdminAreaSettings adminAreaSettings, CaptchaSettings captchaSettings)
         {
             this._settingService = settingService;
             this._countryService = countryService;
@@ -140,7 +138,6 @@ namespace Nop.Admin.Controllers
             this._securitySettings = securitySettings;
             this._pdfSettings = pdfSettings;
             this._localizationSettings = localizationSettings;
-            this._googleAnalyticsSettings = googleAnalyticsSettings;
             this._adminAreaSettings = adminAreaSettings;
             this._captchaSettings = captchaSettings;
         }
@@ -670,13 +667,7 @@ namespace Nop.Admin.Controllers
             model.SeoSettings.DefaultMetaKeywords = _seoSettings.DefaultMetaKeywords;
             model.SeoSettings.DefaultMetaDescription = _seoSettings.DefaultMetaDescription;
             model.SeoSettings.ConvertNonWesternChars = _seoSettings.ConvertNonWesternChars;
-
-            //Google Analytics
-            model.GoogleAnalyticsSettings.Enabled = _googleAnalyticsSettings.Enabled;
-            model.GoogleAnalyticsSettings.GoogleId = _googleAnalyticsSettings.GoogleId;
-            model.GoogleAnalyticsSettings.JavaScript = _googleAnalyticsSettings.JavaScript;
-            model.GoogleAnalyticsSettings.Placement = _googleAnalyticsSettings.Placement;
-
+            
             //security settings
             model.SecuritySettings.EncryptionKey = _securitySettings.EncryptionKey;
             if (_securitySettings.AdminAreaAllowedIpAddresses!=null)
@@ -729,12 +720,6 @@ namespace Nop.Admin.Controllers
             _seoSettings.ConvertNonWesternChars = model.SeoSettings.ConvertNonWesternChars;
             _settingService.SaveSetting(_seoSettings);
 
-            //Google Analytics
-            _googleAnalyticsSettings.Enabled = model.GoogleAnalyticsSettings.Enabled;
-            _googleAnalyticsSettings.GoogleId = model.GoogleAnalyticsSettings.GoogleId;
-            _googleAnalyticsSettings.JavaScript = model.GoogleAnalyticsSettings.JavaScript;
-            _googleAnalyticsSettings.Placement = model.GoogleAnalyticsSettings.Placement;
-            _settingService.SaveSetting(_googleAnalyticsSettings);
 
 
             //security settings

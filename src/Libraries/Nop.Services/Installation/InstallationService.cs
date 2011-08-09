@@ -4448,15 +4448,6 @@ namespace Nop.Services.Installation
                     GridPageSize = 15,
                 });
             
-            EngineContext.Current.Resolve<IConfigurationProvider<GoogleAnalyticsSettings>>()
-                .SaveSettings(new GoogleAnalyticsSettings()
-                {
-                    Enabled = false,
-                    GoogleId = "UA-0000000-0",
-                    JavaScript = "<script type=\"text/javascript\"> var gaJsHost = ((\"https:\" == document.location.protocol) ? \"https://ssl.\" : \"http://www.\"); document.write(unescape(\"%3Cscript src='\" + gaJsHost + \"google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E\")); </script> <script type=\"text/javascript\"> try { var pageTracker = _gat._getTracker(\"UA-0000000-0\"); pageTracker._trackPageview(); } catch(err) {}</script>",
-                    Placement = "body",
-                });
-
             EngineContext.Current.Resolve<IConfigurationProvider<CatalogSettings>>()
                 .SaveSettings(new CatalogSettings()
                 {
