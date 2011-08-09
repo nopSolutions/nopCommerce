@@ -55,7 +55,7 @@
     {
         //we do not do it in Controller because we have to render plugin first (process postback)
     <script type="text/javascript">
-        window.location = '@(Url.Action("List", "Widget", null, "http" ))'
+        window.location = '@(Url.Action("Edit", "Widget", new { id = Model.Id }, "http"))'
     </script>
     }
 }

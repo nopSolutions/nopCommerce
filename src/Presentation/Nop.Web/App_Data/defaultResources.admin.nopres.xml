@@ -5253,8 +5253,6 @@
                     <LocaleResource Name="EditWidgetDetails">
                       <Value>Edit widget details</Value>
                     </LocaleResource>
-                  </Children>
-                  <Children>
                     <LocaleResource Name="AvailableWidgetPlugins">
                       <Value>
                         Available Widget Plugins
@@ -5312,16 +5310,16 @@
                         </LocaleResource>
                       </Children>
                     </LocaleResource>
+                    <LocaleResource Name="Added">
+                      <Value>The new widget has been added successfully.</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Deleted">
+                      <Value>The widget has been deleted successfully.</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Updated">
+                      <Value>The widget has been updated successfully.</Value>
+                    </LocaleResource>
                   </Children>
-                  <LocaleResource Name="Added">
-                    <Value>The new widget has been added successfully.</Value>
-                  </LocaleResource>
-                  <LocaleResource Name="Deleted">
-                    <Value>The widget has been deleted successfully.</Value>
-                  </LocaleResource>
-                  <LocaleResource Name="Updated">
-                    <Value>The widget has been updated successfully.</Value>
-                  </LocaleResource>
                 </LocaleResource>
             </Children>
             </LocaleResource>
