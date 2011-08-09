@@ -47,7 +47,7 @@ namespace Nop.Admin.Controllers
         protected WidgetModel PrepareWidgetModel(Widget widget)
         {
             var widgetPlugin = _widgetService.LoadWidgetPluginBySystemName(widget.PluginSystemName);
-            if (widgetPlugin == null)
+            if (widgetPlugin == null || !widgetPlugin.PluginDescriptor.Installed)
                 return null;    //don't throw an exception. Maybe, plugin widget was deleted.
             var model = new WidgetModel()
             {

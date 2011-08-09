@@ -36,7 +36,7 @@ namespace Nop.Web.Controllers
             foreach (var widget in widgets)
             {
                 var widgetPlugin = _widgetService.LoadWidgetPluginBySystemName(widget.PluginSystemName);
-                if (widgetPlugin == null)
+                if (widgetPlugin == null || !widgetPlugin.PluginDescriptor.Installed)
                     continue;   //don't throw an exception. just process next widget.
 
                 var widgetModel = new WidgetModel();
