@@ -5,6 +5,7 @@ using Nop.Admin.Models.Common;
 using Nop.Admin.Models.Customers;
 using Nop.Admin.Models.Directory;
 using Nop.Admin.Models.Discounts;
+using Nop.Admin.Models.ExternalAuthentication;
 using Nop.Admin.Models.Forums;
 using Nop.Admin.Models.Localization;
 using Nop.Admin.Models.Logging;
@@ -39,6 +40,7 @@ using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Topics;
 using Nop.Core.Plugins;
 using Nop.Core.Tasks;
+using Nop.Services.Authentication.External;
 using Nop.Services.Common;
 using Nop.Services.Messages;
 using Nop.Services.Payments;
@@ -159,6 +161,11 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.DisplayOrder, opt => opt.MapFrom(src => src.PluginDescriptor.DisplayOrder));
             //payment methods
             Mapper.CreateMap<IPaymentMethod, PaymentMethodModel>()
+                .ForMember(dest => dest.FriendlyName, opt => opt.MapFrom(src => src.PluginDescriptor.FriendlyName))
+                .ForMember(dest => dest.SystemName, opt => opt.MapFrom(src => src.PluginDescriptor.SystemName))
+                .ForMember(dest => dest.DisplayOrder, opt => opt.MapFrom(src => src.PluginDescriptor.DisplayOrder));
+            //external authentication methods
+            Mapper.CreateMap<IExternalAuthenticationMethod, AuthenticationMethodModel>()
                 .ForMember(dest => dest.FriendlyName, opt => opt.MapFrom(src => src.PluginDescriptor.FriendlyName))
                 .ForMember(dest => dest.SystemName, opt => opt.MapFrom(src => src.PluginDescriptor.SystemName))
                 .ForMember(dest => dest.DisplayOrder, opt => opt.MapFrom(src => src.PluginDescriptor.DisplayOrder));

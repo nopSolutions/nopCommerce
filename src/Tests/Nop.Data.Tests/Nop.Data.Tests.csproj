@@ -71,6 +71,7 @@
     <Compile Include="Cms\WidgetPersistenceTests.cs" />
     <Compile Include="Common\AddressPeristenceTests.cs" />
     <Compile Include="Catalog\CategoryPersistenceTests.cs" />
+    <Compile Include="Customers\ExternalAuthenticationRecordPersistenceTests.cs" />
     <Compile Include="Orders\CheckoutAttributePersistenceTests.cs" />
     <Compile Include="Orders\CheckoutAttributeValuePersistenceTests.cs" />
     <Compile Include="Affiliates\AffiliatePersistenceTests.cs" />

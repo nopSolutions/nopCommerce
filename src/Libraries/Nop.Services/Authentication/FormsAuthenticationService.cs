@@ -4,7 +4,7 @@ using System.Web.Security;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Customers;
 
-namespace Nop.Services
+namespace Nop.Services.Authentication
 {
     /// <summary>
     /// Authentication service

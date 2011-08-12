@@ -1,6 +1,6 @@
 using Nop.Core.Domain.Customers;
 
-namespace Nop.Services
+namespace Nop.Services.Authentication
 {
     /// <summary>
     /// Authentication service interface

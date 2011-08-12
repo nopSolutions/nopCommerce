@@ -11,7 +11,7 @@ namespace Nop.Data.Mapping.Customers
 
             this.HasKey(ca => ca.Id);
             this.Property(ca => ca.Key).IsRequired().HasMaxLength(200);
-            this.Property(ca => ca.Value).IsRequired().HasMaxLength(1000);
+            this.Property(ca => ca.Value).IsRequired().HasMaxLength(4000);
 
             this.HasRequired(ca => ca.Customer)
                 .WithMany(c => c.CustomerAttributes)

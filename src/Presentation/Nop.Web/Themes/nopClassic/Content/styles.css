@@ -2618,6 +2618,31 @@ ul.languagelist li:hover
 	clear: both;
 }
 
+
+.external-auth-errors
+{
+	text-align: center;
+	border: solid 1px #E8E6D2;
+	vertical-align: top;
+    width: 100%;
+    color: Red;
+}
+.external-auth-association
+{
+	text-align: center;
+	border: solid 1px #E8E6D2;
+	vertical-align: top;
+    width: 100%;
+}
+.external-auth-association .identifier
+{
+	
+}
+.external-auth-association .remove
+{
+	color: #3664A5;
+}
+
 .registration-page
 {
 	margin-bottom: 15px;

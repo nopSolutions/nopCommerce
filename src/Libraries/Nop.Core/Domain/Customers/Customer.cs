@@ -19,6 +19,7 @@ namespace Nop.Core.Domain.Customers
     /// </summary>
     public partial class Customer : BaseEntity
     {
+        private ICollection<ExternalAuthenticationRecord> _externalAuthenticationRecords;
         private ICollection<CustomerContent> _customerContent;
         private ICollection<CustomerRole> _customerRoles;
         private ICollection<CustomerAttribute> _customerAttributes;
@@ -214,6 +215,15 @@ namespace Nop.Core.Domain.Customers
         /// Gets or sets the currency
         /// </summary>
         public virtual Currency Currency { get; set; }
+
+        /// <summary>
+        /// Gets or sets customer generated content
+        /// </summary>
+        public virtual ICollection<ExternalAuthenticationRecord> ExternalAuthenticationRecords
+        {
+            get { return _externalAuthenticationRecords ?? (_externalAuthenticationRecords = new List<ExternalAuthenticationRecord>()); }
+            protected set { _externalAuthenticationRecords = value; }
+        }
 
         /// <summary>
         /// Gets or sets customer generated content

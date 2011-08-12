@@ -11,6 +11,10 @@
     @*ajax scripts used by asp.net mvc*@
     <script src="@Url.Content("~/Scripts/MicrosoftAjax.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Scripts/MicrosoftMvcAjax.js")" type="text/javascript"></script>
+    @*custom css*@
+    @Html.NopCssFiles()
+    @*custom scripts*@
+    @Html.NopScripts()
     @*Favicon - upload upload favicon.ico file to the root direcotry*@
     @Html.Action("Favicon", "Common")
     @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.HeadHtmlTag })

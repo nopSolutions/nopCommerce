@@ -1,0 +1,35 @@
+﻿@{
+    Layout = "";
+}
+@model Nop.Plugin.ExternalAuth.Twitter.Models.ConfigurationModel
+@using Nop.Web.Framework;
+@using (Html.BeginForm())
+{
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ConsumerKey):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ConsumerKey)
+                @Html.ValidationMessageFor(model => model.ConsumerKey)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ConsumerSecret):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ConsumerSecret)
+                @Html.ValidationMessageFor(model => model.ConsumerSecret)
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" width="100%">
+                <button type="submit" name="save" value="save" class="t-button">
+                    Save</button>
+            </td>
+        </tr>
+    </table>
+    
+}

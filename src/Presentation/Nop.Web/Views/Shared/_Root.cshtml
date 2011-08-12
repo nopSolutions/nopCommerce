@@ -20,6 +20,10 @@
     @*jquery validation*@
     <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+    @*custom css*@
+    @Html.NopCssFiles()
+    @*custom scripts*@
+    @Html.NopScripts()
     @*News and blog RSS links*@
     @Html.Action("RssHeaderLink", "News")
     @Html.Action("RssHeaderLink", "Blog")

@@ -80,6 +80,7 @@ namespace Nop.Admin.Controllers
         private readonly LocalizationSettings _localizationSettings;
         private readonly AdminAreaSettings _adminAreaSettings;
         private readonly CaptchaSettings _captchaSettings;
+        private readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
 
 		#endregion
 
@@ -102,7 +103,8 @@ namespace Nop.Admin.Controllers
             CustomerSettings customerSettings,
             DateTimeSettings dateTimeSettings, StoreInformationSettings storeInformationSettings,
             SeoSettings seoSettings,SecuritySettings securitySettings, PdfSettings pdfSettings,
-            LocalizationSettings localizationSettings, AdminAreaSettings adminAreaSettings, CaptchaSettings captchaSettings)
+            LocalizationSettings localizationSettings, AdminAreaSettings adminAreaSettings,
+            CaptchaSettings captchaSettings, ExternalAuthenticationSettings externalAuthenticationSettings)
         {
             this._settingService = settingService;
             this._countryService = countryService;
@@ -140,6 +142,7 @@ namespace Nop.Admin.Controllers
             this._localizationSettings = localizationSettings;
             this._adminAreaSettings = adminAreaSettings;
             this._captchaSettings = captchaSettings;
+            this._externalAuthenticationSettings = externalAuthenticationSettings;
         }
 
 		#endregion 
@@ -609,6 +612,9 @@ namespace Nop.Admin.Controllers
                         Selected = timeZone.Id.Equals(_dateTimeHelper.DefaultStoreTimeZone.Id, StringComparison.InvariantCultureIgnoreCase)
                     });
             }
+
+            model.ExternalAuthenticationSettings.AutoRegisterEnabled = _externalAuthenticationSettings.AutoRegisterEnabled;
+
             return View(model);
         }
         [HttpPost]
@@ -623,6 +629,9 @@ namespace Nop.Admin.Controllers
             _dateTimeSettings.DefaultStoreTimeZoneId = model.DateTimeSettings.DefaultStoreTimeZoneId;
             _dateTimeSettings.AllowCustomersToSetTimeZone = model.DateTimeSettings.AllowCustomersToSetTimeZone;
             _settingService.SaveSetting(_dateTimeSettings);
+
+            _externalAuthenticationSettings.AutoRegisterEnabled = model.ExternalAuthenticationSettings.AutoRegisterEnabled;
+            _settingService.SaveSetting(_externalAuthenticationSettings);
 
             //activity log
             _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));

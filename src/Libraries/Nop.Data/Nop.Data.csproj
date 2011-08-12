@@ -51,6 +51,7 @@
     <Compile Include="EfDataProviderManager.cs" />
     <Compile Include="IEfDataProvider.cs" />
     <Compile Include="Mapping\Cms\WidgetMap.cs" />
+    <Compile Include="Mapping\Customers\ExternalAuthenticationRecordMap.cs" />
     <Compile Include="SqlServerDataProvider.cs" />
     <Compile Include="SqlCeDataProvider.cs" />
     <Compile Include="IDbContext.cs" />

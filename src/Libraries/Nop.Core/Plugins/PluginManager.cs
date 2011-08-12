@@ -49,6 +49,7 @@ namespace Nop.Core.Plugins
                 _shadowCopyFolder = new DirectoryInfo(HostingEnvironment.MapPath(_shadowCopyPath));
 
                 var referencedPlugins = new List<PluginDescriptor>();
+                var referencedDependenciesFileNames = new List<string>();
 
                 try
                 {
@@ -111,9 +112,15 @@ namespace Nop.Core.Plugins
                             description.ReferencedAssembly = PerformFileDeploy(mainPluginFile);
 
                             //load all other assemblies now
-                            //TODO ensure that the same assembly will not be loaded twice
                             foreach (var plugin in pluginFiles.Where(x => !x.Name.Equals(mainPluginFile.Name, StringComparison.InvariantCultureIgnoreCase)))
-                                PerformFileDeploy(plugin);
+                            {
+                                //ensure that the same assembly will not be loaded twice
+                                if (!referencedDependenciesFileNames.Contains(plugin.Name, StringComparer.InvariantCultureIgnoreCase))
+                                {
+                                    PerformFileDeploy(plugin);
+                                    referencedDependenciesFileNames.Add(plugin.Name);
+                                }
+                            }
 
 
                             //init plugin type (only one plugin per assembly is allowed)

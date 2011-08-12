@@ -1,0 +1,35 @@
+﻿@{
+    Layout = "";
+}
+@model Nop.Plugin.ExternalAuth.Facebook.Models.ConfigurationModel
+@using Nop.Web.Framework;
+@using (Html.BeginForm())
+{
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ClientKeyIdentifier):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ClientKeyIdentifier)
+                @Html.ValidationMessageFor(model => model.ClientKeyIdentifier)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ClientSecret):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ClientSecret)
+                @Html.ValidationMessageFor(model => model.ClientSecret)
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" width="100%">
+                <button type="submit" name="save" value="save" class="t-button">
+                    Save</button>
+            </td>
+        </tr>
+    </table>
+    
+}

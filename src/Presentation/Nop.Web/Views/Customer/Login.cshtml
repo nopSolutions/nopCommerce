@@ -12,6 +12,12 @@
     </div>
     <div class="clear">
     </div>
+    @Html.Partial("_ExternalAuthentification.AssociateMessage")
+    <div class="clear">
+    </div>
+    @Html.Partial("_ExternalAuthentification.Errors")
+    <div class="clear">
+    </div>
     <div class="wrapper">
         @if (Model.CheckoutAsGuest)
         {
@@ -121,6 +127,11 @@
                     </table>
                 }
             </div>
+        </div>
+        <div class="clear">
+        </div>
+        <div class="externalauthentification">
+            @Html.Action("ExternalMethods", "ExternalAuthentication")
         </div>
     </div>
     <div class="clear">

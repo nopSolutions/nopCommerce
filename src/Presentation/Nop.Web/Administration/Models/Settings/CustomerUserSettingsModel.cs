@@ -10,9 +10,11 @@ namespace Nop.Admin.Models.Settings
         {
             CustomerSettings = new CustomerSettingsModel();
             DateTimeSettings = new DateTimeSettingsModel();
+            ExternalAuthenticationSettings = new ExternalAuthenticationSettingsModel();
         }
         public CustomerSettingsModel CustomerSettings { get; set; }
         public DateTimeSettingsModel DateTimeSettings { get; set; }
+        public ExternalAuthenticationSettingsModel ExternalAuthenticationSettings { get; set; }
 
         #region Nested classes
         
@@ -86,6 +88,11 @@ namespace Nop.Admin.Models.Settings
             public IList<SelectListItem> AvailableTimeZones { get; set; }
         }
 
+        public class ExternalAuthenticationSettingsModel
+        {
+            [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.ExternalAuthenticationAutoRegisterEnabled")]
+            public bool AutoRegisterEnabled { get; set; }
+        }
         #endregion
     }
 }

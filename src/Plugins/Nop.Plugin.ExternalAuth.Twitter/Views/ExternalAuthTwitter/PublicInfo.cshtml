@@ -1,0 +1,11 @@
+﻿@{
+    Layout = "";
+
+    Html.AddCssFileParts(@Url.Content("~/Plugins/ExternalAuth.Twitter/Content/twitterstyles.css"));   
+}
+<fieldset class="oauth-login-twitter">
+    <legend>Login using Twitter account</legend>
+    <a href="@Url.RouteUrl("Plugin.ExternalAuth.Twitter.Login", new { ReturnUrl = Request.QueryString["ReturnUrl"] })">
+        <img src="@Url.Content("~/Plugins/ExternalAuth.Twitter/Content/images/oauth/twitter-logo.jpg")" alt="Twitter" class="oauth_btn twitter_large_btn" />
+    </a>
+</fieldset>

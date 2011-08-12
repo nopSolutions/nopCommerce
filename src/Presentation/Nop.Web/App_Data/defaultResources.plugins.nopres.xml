@@ -284,6 +284,50 @@
           </LocaleResource>
         </Children>
       </LocaleResource>
+      <LocaleResource Name="ExternalAuth">
+        <Children>
+          <LocaleResource Name="Twitter">
+            <Children>
+              <LocaleResource Name="ConsumerKey">
+                <Value>Consumer key</Value>
+                <Children>
+                  <LocaleResource Name="Hint">
+                    <Value>Enter your consumer key here.</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+              <LocaleResource Name="ConsumerSecret">
+                <Value>Consumer secret</Value>
+                <Children>
+                  <LocaleResource Name="Hint">
+                    <Value>Enter your consumer key here.</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+            </Children>
+          </LocaleResource>
+          <LocaleResource Name="Facebook">
+            <Children>
+              <LocaleResource Name="ClientKeyIdentifier">
+                <Value>Client key identifier</Value>
+                <Children>
+                  <LocaleResource Name="Hint">
+                    <Value>Enter your client key identifier here.</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+              <LocaleResource Name="ClientSecret">
+                <Value>Client secret</Value>
+                <Children>
+                  <LocaleResource Name="Hint">
+                    <Value>Enter your client key here.</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+            </Children>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
       <LocaleResource Name="Payment">
         <Children>
           <LocaleResource Name="CashOnDelivery">

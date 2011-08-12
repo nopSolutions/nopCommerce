@@ -51,6 +51,10 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\Microsoft ASP.NET\ASP.NET MVC 3\Assemblies\System.Web.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -61,6 +65,23 @@
   <ItemGroup>
     <Compile Include="Affiliates\AffiliateService.cs" />
     <Compile Include="Affiliates\IAffiliateService.cs" />
+    <Compile Include="Authentication\External\AuthorizeState.cs" />
+    <Compile Include="Authentication\External\AuthorizationResult.cs" />
+    <Compile Include="Authentication\External\ExternalAuthorizerHelper.cs" />
+    <Compile Include="Authentication\External\IOpenAuthenticationService.cs" />
+    <Compile Include="Authentication\External\IExternalAuthenticationMethod.cs" />
+    <Compile Include="Authentication\External\OpenAuthenticationService.cs" />
+    <Compile Include="Authentication\External\IExternalAuthorizer.cs" />
+    <Compile Include="Authentication\External\ExternalAuthorizer.cs" />
+    <Compile Include="Authentication\External\IOpenAuthenticationProviderPermissionService.cs" />
+    <Compile Include="Authentication\External\OpenAuthenticationProviderPermissionService.cs" />
+    <Compile Include="Authentication\External\IExternalProviderAuthorizer.cs" />
+    <Compile Include="Authentication\External\OpenAuthentificationExtentions.cs" />
+    <Compile Include="Authentication\External\RegistrationDetails.cs" />
+    <Compile Include="Authentication\External\OpenAuthenticationStatus.cs" />
+    <Compile Include="Authentication\External\UserClaims.cs" />
+    <Compile Include="Authentication\External\IClaimsTranslator.cs" />
+    <Compile Include="Authentication\External\OpenAuthenticationParameters.cs" />
     <Compile Include="Blogs\BlogService.cs" />
     <Compile Include="Blogs\BlogExtensions.cs" />
     <Compile Include="Blogs\IBlogService.cs" />
@@ -113,13 +134,13 @@
     <Compile Include="ExportImport\ExcelHelperReadTableMode.cs" />
     <Compile Include="ExportImport\ExportManager.cs" />
     <Compile Include="ExportImport\ImportManager.cs" />
-    <Compile Include="FormsAuthenticationService.cs" />
+    <Compile Include="Authentication\FormsAuthenticationService.cs" />
     <Compile Include="Forums\ForumService.cs" />
     <Compile Include="Forums\IForumService.cs" />
     <Compile Include="Helpers\IDateTimeHelper.cs" />
     <Compile Include="Helpers\DateTimeSettings.cs" />
     <Compile Include="Helpers\DateTimeHelper.cs" />
-    <Compile Include="IAuthenticationService.cs" />
+    <Compile Include="Authentication\IAuthenticationService.cs" />
     <Compile Include="Directory\CountryService.cs" />
     <Compile Include="Directory\CurrencyService.cs" />
     <Compile Include="Customers\CustomerContentService.cs" />

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Nop.Core.Domain.Common;
 
 namespace Nop.Web.Framework.UI
@@ -11,6 +12,8 @@ namespace Nop.Web.Framework.UI
         private readonly List<string> _titleParts;
         private readonly List<string> _metaDescriptionParts;
         private readonly List<string> _metaKeywordParts;
+        private readonly List<string> _scriptParts;
+        private readonly List<string> _cssParts;
 
         public PageTitleBuilder(SeoSettings seoSettings)
         {
@@ -18,6 +21,8 @@ namespace Nop.Web.Framework.UI
             this._titleParts = new List<string>();
             this._metaDescriptionParts = new List<string>();
             this._metaKeywordParts = new List<string>();
+            this._scriptParts = new List<string>();
+            this._cssParts = new List<string>();
         }
 
         public void AddTitleParts(params string[] parts)
@@ -87,6 +92,58 @@ namespace Nop.Web.Framework.UI
             var metaKeyword = string.Join(", ", _metaKeywordParts.AsEnumerable().Reverse().ToArray());
             var result = !String.IsNullOrEmpty(metaKeyword) ? metaKeyword : _seoSettings.DefaultMetaKeywords;
             return result;
+        }
+
+
+        public void AddScriptParts(params string[] parts)
+        {
+            if (parts != null)
+                foreach (string part in parts)
+                    if (!string.IsNullOrEmpty(part))
+                        _scriptParts.Add(part);
+        }
+        public void AppendScriptParts(params string[] parts)
+        {
+            if (parts != null)
+                foreach (string part in parts)
+                    if (!string.IsNullOrEmpty(part))
+                        _scriptParts.Insert(0, part);
+        }
+        public string GenerateScripts()
+        {
+            var result = new StringBuilder();
+            foreach (var scriptPath in _scriptParts)
+            {
+                result.AppendFormat("<script src=\"{0}\" type=\"text/javascript\"></script>", scriptPath);
+                result.Append(Environment.NewLine);
+            }
+            return result.ToString();
+        }
+
+
+        public void AddCssFileParts(params string[] parts)
+        {
+            if (parts != null)
+                foreach (string part in parts)
+                    if (!string.IsNullOrEmpty(part))
+                        _cssParts.Add(part);
+        }
+        public void AppendCssFileParts(params string[] parts)
+        {
+            if (parts != null)
+                foreach (string part in parts)
+                    if (!string.IsNullOrEmpty(part))
+                        _cssParts.Insert(0, part);
+        }
+        public string GenerateCssFiles()
+        {
+            var result = new StringBuilder();
+            foreach (var cssPath in _cssParts)
+            {
+                result.AppendFormat("<link href=\"{0}\" rel=\"stylesheet\" type=\"text/css\">", cssPath);
+                result.Append(Environment.NewLine);
+            }
+            return result.ToString();
         }
     }
 }

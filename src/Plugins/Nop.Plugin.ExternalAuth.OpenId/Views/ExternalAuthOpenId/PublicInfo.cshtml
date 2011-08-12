@@ -1,0 +1,42 @@
+﻿@{
+    Layout = "";
+
+
+    Html.AddCssFileParts(@Url.Content("~/Plugins/ExternalAuth.OpenId/Content/openidstyles.css"));
+    
+    Html.AddScriptParts(@Url.Content("~/Plugins/ExternalAuth.OpenId/Scripts/openid-jquery-1.3b1.js"));
+    Html.AddScriptParts(@Url.Content("~/Plugins/ExternalAuth.OpenId/Scripts/openid-en.js"));
+}
+
+@using (Html.BeginRouteForm("Plugin.ExternalAuth.OpenId.Login", new { ReturnUrl = Request.QueryString["ReturnUrl"] }, FormMethod.Post, new { id = "openid_form" }))
+{
+    <input type="hidden" name="action" value="verify" />
+    <fieldset class="oauth-login-openid">
+        <legend>Login using OpenID account</legend>
+        <ol>
+            <li>
+                <div id="openid_choice">
+                    <p>
+                        Please click your account provider:</p>
+                    <div id="openid_btns">
+                    </div>
+                </div>
+            </li>
+            <li>
+                <div id="openid_input_area">
+                    <label for="ExternalIdentifier">Enter manually your OpenID</label>
+                    @Html.TextBox("ExternalIdentifier", "http://", new { id = "ExternalIdentifier", @class = "textMedium", autofocus = "autofocus" })
+                    @Html.ValidationMessage("ExternalIdentifier")
+                    <button class="primaryAction" type="submit">Sign In</button>
+                </div>
+            </li>
+        </ol>
+    </fieldset>
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        openid.setSignInText('Sign In');
+        openid.init('ExternalIdentifier');
+        //openid.setDemoMode(true); //Stops form submission for client javascript-only test purposes
+    });
+</script>

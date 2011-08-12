@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 using Nop.Services;
+using Nop.Services.Authentication;
 using Nop.Services.Customers;
 using Nop.Services.Media;
 using Nop.Web.Framework.Controllers;

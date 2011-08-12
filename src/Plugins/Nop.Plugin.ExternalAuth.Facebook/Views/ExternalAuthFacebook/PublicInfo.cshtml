@@ -1,0 +1,11 @@
+﻿@{
+    Layout = "";
+
+    Html.AddCssFileParts(@Url.Content("~/Plugins/ExternalAuth.Facebook/Content/facebookstyles.css"));    
+}
+<fieldset class="oauth-login-facebook">
+    <legend>Login using Facebook account</legend>
+    <a href="@Url.RouteUrl("Plugin.ExternalAuth.Facebook.Login", new { ReturnUrl = Request.QueryString["ReturnUrl"] })">
+        <img src="@Url.Content("~/Plugins/ExternalAuth.Facebook/Content/images/oauth/facebook-logo.jpg")" alt="Facebook" class="oauth_btn facebook_large_btn" />
+    </a>
+</fieldset>

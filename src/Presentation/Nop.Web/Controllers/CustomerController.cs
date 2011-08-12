@@ -12,7 +12,8 @@ using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Tax;
-using Nop.Services;
+using Nop.Services.Authentication;
+using Nop.Services.Authentication.External;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
@@ -28,10 +29,10 @@ using Nop.Services.Tax;
 using Nop.Web.Extensions;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Security;
+using Nop.Web.Framework.UI.Captcha;
 using Nop.Web.Models;
 using Nop.Web.Models.Common;
 using Nop.Web.Models.Customer;
-using Nop.Web.Framework.UI.Captcha;
 
 namespace Nop.Web.Controllers
 {
@@ -62,6 +63,7 @@ namespace Nop.Web.Controllers
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly IForumService _forumService;
         private readonly IShoppingCartService _shoppingCartService;
+        private readonly IOpenAuthenticationService _openAuthenticationService;
 
         private readonly MediaSettings _mediaSettings;
         private readonly IWorkflowMessageService _workflowMessageService;
@@ -86,7 +88,7 @@ namespace Nop.Web.Controllers
             ICurrencyService currencyService, IPriceFormatter priceFormatter,
             IPictureService pictureService, INewsLetterSubscriptionService newsLetterSubscriptionService,
             IForumService forumService, IShoppingCartService shoppingCartService,
-            MediaSettings mediaSettings,
+            IOpenAuthenticationService openAuthenticationService, MediaSettings mediaSettings,
             IWorkflowMessageService workflowMessageService, LocalizationSettings localizationSettings,
             CaptchaSettings captchaSettings)
         {
@@ -114,6 +116,7 @@ namespace Nop.Web.Controllers
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
             this._forumService = forumService;
             this._shoppingCartService = shoppingCartService;
+            this._openAuthenticationService = openAuthenticationService;
 
             this._mediaSettings = mediaSettings;
             this._workflowMessageService = workflowMessageService;
@@ -141,6 +144,19 @@ namespace Nop.Web.Controllers
             model.HideReturnRequests = !_orderSettings.ReturnRequestsEnabled || _orderService.SearchReturnRequests(customer.Id, 0, null).Count == 0;
             model.HideDownloadableProducts = _customerSettings.HideDownloadableProductsTab;
             return model;
+        }
+
+        [NonAction]
+        private void TryAssociateAccountWithExternalAccount(Customer customer)
+        {
+            var parameters = ExternalAuthorizerHelper.RetrieveParametersFromRoundTrip(true);
+            if (parameters == null)
+                return;
+
+            if (_openAuthenticationService.AccountExists(parameters))
+                return;
+
+            _openAuthenticationService.AssociateExternalAccountWithUser(customer, parameters);
         }
 
         #endregion
@@ -321,6 +337,10 @@ namespace Nop.Web.Controllers
                     //login customer now
                     if (isApproved)
                         _authenticationService.SignIn(customer, true);
+
+                    //associated with external account (if possible)
+                    TryAssociateAccountWithExternalAccount(customer);
+                    
 
                     //notifications
                     if (_customerSettings.NotifyNewCustomerRegistration)

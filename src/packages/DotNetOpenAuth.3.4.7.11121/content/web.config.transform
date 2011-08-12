@@ -1,0 +1,69 @@
+<configuration>
+	<configSections>
+		<section name="uri" type="System.Configuration.UriSection, System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+		<section name="dotNetOpenAuth" type="DotNetOpenAuth.Configuration.DotNetOpenAuthSection" requirePermission="false" allowLocation="true"/>
+	</configSections>
+
+	<uri>
+		<!-- The uri section is necessary to turn on .NET 3.5 support for IDN (international domain names),
+	     which is necessary for OpenID urls with unicode characters in the domain/host name. 
+	     It is also required to put the Uri class into RFC 3986 escaping mode, which OpenID and OAuth require. -->
+		<idn enabled="All"/>
+		<iriParsing enabled="true"/>
+	</uri>
+
+	<system.net>
+		<defaultProxy enabled="true" />
+		<settings>
+			<!-- This setting causes .NET to check certificate revocation lists (CRL) 
+			     before trusting HTTPS certificates.  But this setting tends to not 
+			     be allowed in shared hosting environments. -->
+			<!--<servicePointManager checkCertificateRevocationList="true"/>-->
+		</settings>
+	</system.net>
+
+	<runtime>
+		<!-- This prevents the Windows Event Log from frequently logging that HMAC1 is being used (when the other party needs it). -->
+		<legacyHMACWarning enabled="0" />
+
+		<!-- When targeting ASP.NET MVC 2, this assemblyBinding makes MVC 1 references relink
+		     to MVC 2 so libraries such as DotNetOpenAuth that compile against MVC 1 will work with it. -->
+		<assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
+			<dependentAssembly>
+				<assemblyIdentity name="System.Web.Mvc" publicKeyToken="31bf3856ad364e35" />
+				<bindingRedirect oldVersion="1.0.0.0" newVersion="2.0.0.0" />
+			</dependentAssembly>
+		</assemblyBinding>
+	</runtime>
+
+	<dotNetOpenAuth>
+		<!-- This is an optional configuration section where aspects of dotnetopenauth can be customized. -->
+		<!-- For a complete set of configuration options see http://www.dotnetopenauth.net/developers/code-snippets/configuration-options/ -->
+		<!-- You may also refer to README.Bin.html for instructions on enabling Intellisense for this section. -->
+		<openid>
+			<relyingParty>
+				<security requireSsl="false">
+					<!-- Uncomment the trustedProviders tag if your relying party should only accept positive assertions from a closed set of OpenID Providers. -->
+					<!--<trustedProviders rejectAssertionsFromUntrustedProviders="true">
+						<add endpoint="https://www.google.com/accounts/o8/ud" />
+					</trustedProviders>-->
+				</security>
+				<behaviors>
+					<!-- The following OPTIONAL behavior allows RPs to use SREG only, but be compatible
+					     with OPs that use Attribute Exchange (in various formats). -->
+					<add type="DotNetOpenAuth.OpenId.Behaviors.AXFetchAsSregTransform, DotNetOpenAuth" />
+				</behaviors>
+			</relyingParty>
+		</openid>
+		<messaging>
+			<untrustedWebRequest>
+				<whitelistHosts>
+					<!-- Uncomment to enable communication with localhost (should generally not activate in production!) -->
+					<!--<add name="localhost" />-->
+				</whitelistHosts>
+			</untrustedWebRequest>
+		</messaging>
+		<!-- Allow DotNetOpenAuth to publish usage statistics to library authors to improve the library. -->
+		<reporting enabled="true" />
+	</dotNetOpenAuth>
+</configuration>

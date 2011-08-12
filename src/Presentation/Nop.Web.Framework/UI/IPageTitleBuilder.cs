@@ -13,5 +13,13 @@
         void AddMetaKeywordParts(params string[] parts);
         void AppendMetaKeywordParts(params string[] parts);
         string GenerateMetaKeywords();
+
+        void AddScriptParts(params string[] parts);
+        void AppendScriptParts(params string[] parts);
+        string GenerateScripts();
+
+        void AddCssFileParts(params string[] parts);
+        void AppendCssFileParts(params string[] parts);
+        string GenerateCssFiles();
     }
 }

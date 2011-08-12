@@ -96,6 +96,7 @@
           </siteMapNode>
           <siteMapNode title="Access control list" nopResource="Admin.Configuration.ACL" controller="Security" action="Permissions" />
           <siteMapNode title="SMS providers" nopResource="Admin.Configuration.SMSProviders" controller="SMS" action="Providers" />
+          <siteMapNode title="External authentication methods" nopResource="Admin.Configuration.ExternalAuthenticationMethods" controller="ExternalAuthentication" action="Methods"/>
           <siteMapNode title="Plugins" nopResource="Admin.Configuration.Plugins" controller="Plugin" action="List"/>
         </siteMapNode>
         <siteMapNode title="System" nopResource="Admin.System" ImageUrl="~/Administration/Content/images/ico-system.png">

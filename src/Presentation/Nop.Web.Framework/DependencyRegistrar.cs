@@ -18,6 +18,8 @@ using Nop.Core.Plugins;
 using Nop.Data;
 using Nop.Services;
 using Nop.Services.Affiliates;
+using Nop.Services.Authentication;
+using Nop.Services.Authentication.External;
 using Nop.Services.Blogs;
 using Nop.Services.Catalog;
 using Nop.Services.Cms;
@@ -228,6 +230,11 @@ namespace Nop.Web.Framework
             builder.RegisterType<ThemeContext>().As<IThemeContext>().InstancePerHttpRequest();
 
 
+            builder.RegisterType<ExternalAuthorizer>().As<IExternalAuthorizer>().InstancePerHttpRequest();
+            builder.RegisterType<OpenAuthenticationProviderPermissionService>().As<IOpenAuthenticationProviderPermissionService>().InstancePerHttpRequest();
+            builder.RegisterType<OpenAuthenticationService>().As<IOpenAuthenticationService>().InstancePerHttpRequest();
+           
+                
             builder.RegisterType<EmbeddedViewResolver>().As<IEmbeddedViewResolver>().SingleInstance();
             builder.RegisterType<RoutePublisher>().As<IRoutePublisher>().SingleInstance();
         }

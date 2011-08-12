@@ -50,6 +50,7 @@
 {
     x.Add().Text(T("Admin.Configuration.Settings.CustomerUser.CustomerSettings").Text).Content(TabCustomerSettings().ToHtmlString()).Selected(true);
     x.Add().Text(T("Admin.Configuration.Settings.CustomerUser.DateTimeSettings").Text).Content(TabDateTimeSettings().ToHtmlString());
+    x.Add().Text(T("Admin.Configuration.Settings.CustomerUser.ExternalAuthenticationSettings").Text).Content(TabExternalAuthenticationSettings().ToHtmlString());
 })
 }
 @helper TabCustomerSettings()
@@ -227,6 +228,20 @@
             <td class="adminData">
                 @Html.DropDownListFor(model => model.DateTimeSettings.DefaultStoreTimeZoneId, Model.DateTimeSettings.AvailableTimeZones)
                 @Html.ValidationMessageFor(model => model.DateTimeSettings.DefaultStoreTimeZoneId)
+            </td>
+        </tr>
+    </table>
+}
+@helper TabExternalAuthenticationSettings()
+    {
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ExternalAuthenticationSettings.AutoRegisterEnabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ExternalAuthenticationSettings.AutoRegisterEnabled)
+                @Html.ValidationMessageFor(model => model.ExternalAuthenticationSettings.AutoRegisterEnabled)
             </td>
         </tr>
     </table>

@@ -29,6 +29,7 @@ namespace Nop.Services.Security
         public static readonly PermissionRecord ManageLanguages = new PermissionRecord { Name = "Manage Languages", SystemName = "ManageLanguages", Category = "Configuration" };
         public static readonly PermissionRecord ManageSettings = new PermissionRecord { Name = "Manage Settings", SystemName = "ManageSettings", Category = "Configuration" };
         public static readonly PermissionRecord ManagePaymentMethods = new PermissionRecord { Name = "Manage Payment Methods", SystemName = "ManagePaymentMethods", Category = "Configuration" };
+        public static readonly PermissionRecord ManageExternalAuthenticationMethods = new PermissionRecord { Name = "Manage External Authentication Methods", SystemName = "ManageExternalAuthenticationMethods", Category = "Configuration" };
         public static readonly PermissionRecord ManageTaxSettings = new PermissionRecord { Name = "Manage Tax Settings", SystemName = "ManageTaxSettings", Category = "Configuration" };
         public static readonly PermissionRecord ManageShippingSettings = new PermissionRecord { Name = "Manage Shipping Settings", SystemName = "ManageShippingSettings", Category = "Configuration" };
         public static readonly PermissionRecord ManageCurrencies = new PermissionRecord { Name = "Manage Currencies", SystemName = "ManageCurrencies", Category = "Configuration" };
@@ -69,6 +70,7 @@ namespace Nop.Services.Security
                 ManageLanguages,
                 ManageSettings,
                 ManagePaymentMethods,
+                ManageExternalAuthenticationMethods,
                 ManageTaxSettings,
                 ManageShippingSettings,
                 ManageCurrencies,
@@ -115,6 +117,7 @@ namespace Nop.Services.Security
                         ManageLanguages,
                         ManageSettings,
                         ManagePaymentMethods,
+                        ManageExternalAuthenticationMethods,
                         ManageTaxSettings,
                         ManageShippingSettings,
                         ManageCurrencies,

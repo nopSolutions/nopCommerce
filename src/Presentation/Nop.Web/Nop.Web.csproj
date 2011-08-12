@@ -90,6 +90,7 @@
     <Compile Include="Controllers\CommonController.cs" />
     <Compile Include="Controllers\BlogController.cs" />
     <Compile Include="Controllers\BackwardCompatibility1XController.cs" />
+    <Compile Include="Controllers\ExternalAuthenticationController.cs" />
     <Compile Include="Controllers\InstallController.cs" />
     <Compile Include="Controllers\PollController.cs" />
     <Compile Include="Controllers\WidgetController.cs" />
@@ -161,6 +162,7 @@
     <Compile Include="Models\Common\SitemapModel.cs" />
     <Compile Include="Models\Customer\CustomerForumSubscriptionsModel.cs" />
     <Compile Include="Models\Customer\ForumSubscriptionsModel.cs" />
+    <Compile Include="Models\Customer\ExternalAuthentificationMethodModel.cs" />
     <Compile Include="Models\Install\InstallModel.cs" />
     <Compile Include="Models\Cms\WidgetModel.cs" />
     <Compile Include="Models\News\AddNewsCommentModel.cs" />
@@ -955,7 +957,9 @@
     <Content Include="Themes\DarkOrange\Content\images\star_x_inactive.gif" />
     <Content Include="Themes\DarkOrange\Content\images\tab-line.png" />
     <Content Include="Themes\DarkOrange\Content\images\tab.png" />
-    <Content Include="Themes\DarkOrange\Content\styles.css" />
+    <Content Include="Themes\DarkOrange\Content\styles.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Themes\nopClassic\Content\images\bbeditor-button-bg.gif" />
     <Content Include="Themes\nopClassic\Content\images\bgTextBox.gif" />
     <Content Include="Themes\nopClassic\Content\images\btn_download_bg.gif" />
@@ -1025,6 +1029,9 @@
     <Content Include="Views\Shared\HeaderMenu.cshtml" />
     <Content Include="Views\Shared\Footer.cshtml" />
     <Content Include="Views\Shared\_RootPopup.cshtml" />
+    <Content Include="Views\Customer\_ExternalAuthentification.AssociateMessage.cshtml" />
+    <Content Include="Views\ExternalAuthentication\ExternalMethods.cshtml" />
+    <Content Include="Views\Customer\_ExternalAuthentification.Errors.cshtml" />
     <None Include="_bin_deployableAssemblies\amd64\Microsoft.VC90.CRT\README_ENU.txt" />
     <None Include="_bin_deployableAssemblies\amd64\Microsoft.VC90.CRT\msvcr90.dll" />
     <None Include="_bin_deployableAssemblies\amd64\Microsoft.VC90.CRT\Microsoft.VC90.CRT.manifest" />

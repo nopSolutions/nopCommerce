@@ -5,6 +5,7 @@ using Nop.Admin.Models.Common;
 using Nop.Admin.Models.Customers;
 using Nop.Admin.Models.Directory;
 using Nop.Admin.Models.Discounts;
+using Nop.Admin.Models.ExternalAuthentication;
 using Nop.Admin.Models.Forums;
 using Nop.Admin.Models.Localization;
 using Nop.Admin.Models.Logging;
@@ -37,6 +38,7 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Topics;
 using Nop.Core.Plugins;
+using Nop.Services.Authentication.External;
 using Nop.Services.Common;
 using Nop.Services.Messages;
 using Nop.Services.Payments;
@@ -492,6 +494,15 @@ namespace Nop.Admin
         public static PaymentMethodModel ToModel(this IPaymentMethod entity)
         {
             return Mapper.Map<IPaymentMethod, PaymentMethodModel>(entity);
+        }
+
+        #endregion
+
+        #region External authentication methods
+
+        public static AuthenticationMethodModel ToModel(this IExternalAuthenticationMethod entity)
+        {
+            return Mapper.Map<IExternalAuthenticationMethod, AuthenticationMethodModel>(entity);
         }
 
         #endregion

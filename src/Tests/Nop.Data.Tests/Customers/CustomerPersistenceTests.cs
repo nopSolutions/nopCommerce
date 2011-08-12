@@ -75,6 +75,31 @@ namespace Nop.Data.Tests.Customers
         }
 
         [Test]
+        public void Can_save_and_load_customer_with_externalAuthenticationRecord()
+        {
+            var customer = GetTestCustomer();
+            customer.ExternalAuthenticationRecords.Add
+            (
+                new ExternalAuthenticationRecord()
+                {
+                    ExternalIdentifier = "ExternalIdentifier 1",
+                    ExternalDisplayIdentifier = "ExternalDisplayIdentifier 1",
+                    OAuthToken = "OAuthToken 1",
+                    OAuthAccessToken = "OAuthAccessToken 1",
+                    ProviderSystemName = "ProviderSystemName 1",
+                }
+            );
+
+
+            var fromDb = SaveAndLoadEntity(customer);
+            fromDb.ShouldNotBeNull();
+
+            fromDb.ExternalAuthenticationRecords.ShouldNotBeNull();
+            (fromDb.ExternalAuthenticationRecords.Count == 1).ShouldBeTrue();
+            fromDb.ExternalAuthenticationRecords.First().ExternalIdentifier.ShouldEqual("ExternalIdentifier 1");
+        }
+
+        [Test]
         public void Can_save_and_load_customer_with_language()
         {
             var customer = GetTestCustomer();

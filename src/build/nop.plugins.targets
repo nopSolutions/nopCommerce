@@ -10,12 +10,14 @@
             DependsOnTargets="
             Plugins-CopyDiscounts;
             Plugins-CopyExchangeRates;
+            Plugins-CopyExternalAuth;
             Plugins-CopyFeeds;
             Plugins-CopyLiveChats;
             Plugins-CopyPayments;
             Plugins-CopyShippings;
             Plugins-CopySms;
-            Plugins-CopyTaxes">
+            Plugins-CopyTaxes;
+            Plugins-CopyWidgets">
         <Message Text="Copied plugins to $(WebPluginsFolder)" />
     </Target>
 
@@ -88,6 +90,14 @@
                         Targets="Plugin-CopyToWeb"
                         Properties="
                         PluginProjectName=Nop.Plugin.ExchangeRate.McExchange"/>
+    </Target>
+
+    <!--External authentication plugins-->
+    <Target Name="Plugins-CopyExternalAuth">
+        <MSBuild Projects ="$(MSBuildProjectFullPath)"
+                        Targets="Plugin-CopyToWeb"
+                        Properties="
+                        PluginProjectName=Nop.Plugin.ExternalAuth.OpenId"/>
     </Target>
     
     <!--Feed plugins-->
@@ -216,6 +226,18 @@
                         Targets="Plugin-CopyToWeb"
                         Properties="
                         PluginProjectName=Nop.Plugin.Tax.StrikeIron"/>
+    </Target>
+
+    <!--Widget plugins-->
+    <Target Name="Plugins-CopyWidgets">
+        <MSBuild Projects ="$(MSBuildProjectFullPath)"
+                        Targets="Plugin-CopyToWeb"
+                        Properties="
+                        PluginProjectName=Nop.Plugin.Widgets.GoogleAnalytics"/>
+        <MSBuild Projects ="$(MSBuildProjectFullPath)"
+                        Targets="Plugin-CopyToWeb"
+                        Properties="
+                        PluginProjectName=Nop.Plugin.Widgets.LivePersonChat"/>
     </Target>
     
     

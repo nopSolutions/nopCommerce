@@ -2670,6 +2670,33 @@
                     </LocaleResource>
                   </Children>
                 </LocaleResource>
+                <LocaleResource Name="ExternalAuthenticationMethods">
+                  <Value>External authentication methods</Value>
+                  <Children>
+                      <LocaleResource Name="BackToList">
+                        <Value>back to authentication method list</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="Configure">
+                        <Value>Configure</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="Fields">
+                        <Children>
+                          <LocaleResource Name="FriendlyName">
+                            <Value>Friendly name</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="SystemName">
+                            <Value>System name</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="DisplayOrder">
+                            <Value>Display order</Value>
+                          </LocaleResource>
+                          <LocaleResource Name="IsActive">
+                            <Value>Is active</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                    </Children>
+                </LocaleResource>
                 <LocaleResource Name="Languages">
                   <Value>Languages</Value>
                   <Children>
@@ -3249,6 +3276,9 @@
                       <LocaleResource Name="DateTimeSettings">
                         <Value>DateTime settings</Value>
                       </LocaleResource>
+                      <LocaleResource Name="ExternalAuthenticationSettings">
+                        <Value>External authentication settings</Value>
+                      </LocaleResource>
                       <LocaleResource Name="AllowCustomersToUploadAvatars">
                         <Value>Allow customers to upload avatars</Value>
                         <Children>
@@ -3389,7 +3419,15 @@
                         <Value>Default store time zone</Value>
                         <Children>
                           <LocaleResource Name="Hint">
-                            <Value>The default store time zone used to display dates</Value>
+                            <Value>The default store time zone used to display dates.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="ExternalAuthenticationAutoRegisterEnabled">
+                        <Value>Auto register enabled</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Check to enable auto registeration when using external authentication.</Value>
                           </LocaleResource>
                         </Children>
                       </LocaleResource>

@@ -1,0 +1,7 @@
+﻿Group: ExternalAuth methods
+FriendlyName: OpenID authentication method
+SystemName: ExternalAuth.OpenId
+Version: 1.00
+Author: nopCommerce team
+DisplayOrder: 1
+FileName: Nop.Plugin.ExternalAuth.OpenId.dll
