@@ -553,6 +553,6 @@ GO
 IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[ExternalAuthenticationRecord]') and NAME='Email')
 BEGIN
 	ALTER TABLE [dbo].[ExternalAuthenticationRecord] 
-	ADD [Email] nvarchar(MAX) NOT NULL
+	ADD [Email] nvarchar(MAX) NULL
 END
 GO
