@@ -5,7 +5,10 @@ using System.Collections.Generic;
 using System.Web;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Localization;
 using Nop.Services.Customers;
+using Nop.Services.Messages;
+using Nop.Services.Orders;
 
 namespace Nop.Services.Authentication.External
 {
@@ -19,6 +22,9 @@ namespace Nop.Services.Authentication.External
         private readonly IWorkContext _workContext;
         private readonly CustomerSettings _customerSettings;
         private readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
+        private readonly IShoppingCartService _shoppingCartService;
+        private readonly IWorkflowMessageService _workflowMessageService;
+        private readonly LocalizationSettings _localizationSettings;
         
         #endregion
 
@@ -26,10 +32,11 @@ namespace Nop.Services.Authentication.External
 
         public ExternalAuthorizer(IAuthenticationService authenticationService,
             IOpenAuthenticationService openAuthenticationService,
-            ICustomerService customerService,
-            IWorkContext workContext,
+            ICustomerService customerService, IWorkContext workContext,
             CustomerSettings customerSettings,
-            ExternalAuthenticationSettings externalAuthenticationSettings)
+            ExternalAuthenticationSettings externalAuthenticationSettings,
+            IShoppingCartService shoppingCartService,
+            IWorkflowMessageService workflowMessageService, LocalizationSettings localizationSettings)
         {
             this._authenticationService = authenticationService;
             this._openAuthenticationService = openAuthenticationService;
@@ -37,6 +44,9 @@ namespace Nop.Services.Authentication.External
             this._workContext = workContext;
             this._customerSettings = customerSettings;
             this._externalAuthenticationSettings = externalAuthenticationSettings;
+            this._shoppingCartService = shoppingCartService;
+            this._workflowMessageService = workflowMessageService;
+            this._localizationSettings = localizationSettings;
         }
         
         #endregion
@@ -101,11 +111,12 @@ namespace Nop.Services.Authentication.External
 
                 if (AutoRegistrationIsEnabled())
                 {
-                    //register user
+                    #region Register user
+
+                    var currentCustomer = _workContext.CurrentCustomer;
                     var details = new RegistrationDetails(parameters);
                     var randomPassword = CommonHelper.GenerateRandomDigitCode(20);
 
-                    var currentCustomer = _workContext.CurrentCustomer;
 
                     bool isApproved = _customerSettings.UserRegistrationType == UserRegistrationType.Standard;
                     var registrationRequest = new CustomerRegistrationRequest(currentCustomer, details.EmailAddress,
@@ -116,6 +127,47 @@ namespace Nop.Services.Authentication.External
                         userFound = currentCustomer;
                         _openAuthenticationService.AssociateExternalAccountWithUser(currentCustomer, parameters);
                         ExternalAuthorizerHelper.RemoveParameters();
+
+                        //code below is copied from CustomerController.Register method
+
+                        //authenticate
+                        if (isApproved)
+                            _authenticationService.SignIn(userFound ?? userLoggedIn, false);
+
+                        //notifications
+                        if (_customerSettings.NotifyNewCustomerRegistration)
+                            _workflowMessageService.SendCustomerRegisteredNotificationMessage(currentCustomer, _localizationSettings.DefaultAdminLanguageId);
+
+                        switch (_customerSettings.UserRegistrationType)
+                        {
+                            case UserRegistrationType.EmailValidation:
+                                {
+                                    //email validation message
+                                    _customerService.SaveCustomerAttribute(currentCustomer, SystemCustomerAttributeNames.AccountActivationToken, Guid.NewGuid().ToString());
+                                    _workflowMessageService.SendCustomerEmailValidationMessage(currentCustomer, _workContext.WorkingLanguage.Id);
+
+                                    //result
+                                    return new AuthorizationResult(OpenAuthenticationStatus.AutoRegisteredEmailValidation);
+                                }
+                                break;
+                            case UserRegistrationType.AdminApproval:
+                                {
+                                    //result
+                                    return new AuthorizationResult(OpenAuthenticationStatus.AutoRegisteredAdminApproval);
+                                }
+                                break;
+                            case UserRegistrationType.Standard:
+                                {
+                                    //send customer welcome message
+                                    _workflowMessageService.SendCustomerWelcomeMessage(currentCustomer, _workContext.WorkingLanguage.Id);
+
+                                    //result
+                                    return new AuthorizationResult(OpenAuthenticationStatus.AutoRegisteredStandard);
+                                }
+                                break;
+                            default:
+                                break;
+                        }
                     }
                     else
                     {
@@ -126,6 +178,8 @@ namespace Nop.Services.Authentication.External
                             result.AddError(string.Format(error));
                         return result;
                     }
+
+                    #endregion
                 }
                 else if (RegistrationIsEnabled())
                 {
@@ -136,7 +190,7 @@ namespace Nop.Services.Authentication.External
                     ExternalAuthorizerHelper.RemoveParameters();
 
                     var result = new AuthorizationResult(OpenAuthenticationStatus.Error);
-                    result.AddError("User does not exist on system");
+                    result.AddError("Registration is disabled");
                     return result;
                 }
             }
@@ -145,6 +199,9 @@ namespace Nop.Services.Authentication.External
                 _openAuthenticationService.AssociateExternalAccountWithUser(userLoggedIn, parameters);
             }
 
+            //migrate shopping cart
+            _shoppingCartService.MigrateShoppingCart(_workContext.CurrentCustomer, userFound ?? userLoggedIn);
+            //authenticate
             _authenticationService.SignIn(userFound ?? userLoggedIn, false);
 
             return new AuthorizationResult(OpenAuthenticationStatus.Authenticated);

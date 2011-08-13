@@ -25,15 +25,15 @@ namespace Nop.Services.Customers
             this.IsApproved = isApproved;
         }
 
-        public bool IsValid  
-        {
-            get 
-            {
-                return (!CommonHelper.AreNullOrEmpty(
-                            this.Email,
-                            this.Password
-                            ));
-            }
-        }
+        //public bool IsValid  
+        //{
+        //    get 
+        //    {
+        //        return (!CommonHelper.AreNullOrEmpty(
+        //                    this.Email,
+        //                    this.Password
+        //                    ));
+        //    }
+        //}
     }
 }

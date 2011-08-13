@@ -10,5 +10,8 @@ namespace Nop.Services.Authentication.External
         Authenticated,
         RequresRedirect,
         AssociateOnLogon,
+        AutoRegisteredEmailValidation,
+        AutoRegisteredAdminApproval,
+        AutoRegisteredStandard,
     }
 }

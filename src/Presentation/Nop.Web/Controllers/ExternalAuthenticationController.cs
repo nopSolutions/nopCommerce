@@ -36,12 +36,12 @@ namespace Nop.Web.Controllers
         public ActionResult ExternalMethods()
         {
             //model
-            var model = new List<ExternalAuthentificationMethodModel>();
+            var model = new List<ExternalAuthenticationMethodModel>();
 
             var externalAuthenticationMethods = _openAuthenticationService.LoadActiveExternalAuthenticationMethods();
             foreach (var eam in externalAuthenticationMethods)
             {
-                var eamModel = new ExternalAuthentificationMethodModel();
+                var eamModel = new ExternalAuthenticationMethodModel();
 
                 string actionName;
                 string controllerName;

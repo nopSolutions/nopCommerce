@@ -346,7 +346,7 @@ namespace Nop.Services.Customers
         {
             var result = new CustomerRegistrationResult();
             //validation
-            if (request == null || !request.IsValid)
+            if (request == null)
             {
                 result.AddError("The registration request was not valid.");
                 return result;
@@ -374,6 +374,11 @@ namespace Nop.Services.Customers
             if (!CommonHelper.IsValidEmail(request.Email))
             {
                 result.AddError("Invalid email");
+                return result;
+            }
+            if (String.IsNullOrWhiteSpace(request.Password))
+            {
+                result.AddError("Password is not provided");
                 return result;
             }
             if (_customerSettings.UsernamesEnabled)

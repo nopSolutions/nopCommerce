@@ -22,7 +22,7 @@ namespace Nop.Plugin.ExternalAuth.OpenId.Controllers
             this._openAuthenticationService = openAuthenticationService;
             this._externalAuthenticationSettings = externalAuthenticationSettings;
         }
-        
+
         [ChildActionOnly]
         public ActionResult PublicInfo()
         {
@@ -44,22 +44,42 @@ namespace Nop.Plugin.ExternalAuth.OpenId.Controllers
             }
 
             var result = _openIdProviderAuthorizer.Authorize(returnUrl);
-            if (result.AuthenticationStatus == OpenAuthenticationStatus.Error)
+            switch (result.AuthenticationStatus)
             {
-                if (!result.Success)
-                    foreach (var error in result.Errors)
-                        ExternalAuthorizerHelper.AddErrorsToDisplay(error);
+                case OpenAuthenticationStatus.Error:
+                    {
+                        if (!result.Success)
+                            foreach (var error in result.Errors)
+                                ExternalAuthorizerHelper.AddErrorsToDisplay(error);
 
-                return new RedirectResult(Url.LogOn(returnUrl));
+                        return new RedirectResult(Url.LogOn(returnUrl));
+                    }
+                    break;
+                case OpenAuthenticationStatus.AssociateOnLogon:
+                    {
+                        return new RedirectResult(Url.LogOn(returnUrl));
+                    }
+                    break;
+                case OpenAuthenticationStatus.AutoRegisteredEmailValidation:
+                    {
+                        //result
+                        return RedirectToAction("RegisterResult", "Customer", new { resultId = (int)UserRegistrationType.EmailValidation });
+                    }
+                    break;
+                case OpenAuthenticationStatus.AutoRegisteredAdminApproval:
+                    {
+                        return RedirectToAction("RegisterResult", "Customer", new { resultId = (int)UserRegistrationType.AdminApproval });
+                    }
+                    break;
+                case OpenAuthenticationStatus.AutoRegisteredStandard:
+                    {
+                        return RedirectToAction("RegisterResult", "Customer", new { resultId = (int)UserRegistrationType.Standard });
+                    }
+                    break;
+                default:
+                    break;
             }
-            else if (result.AuthenticationStatus == OpenAuthenticationStatus.AssociateOnLogon)
-            {
-                return new RedirectResult(Url.LogOn(returnUrl));
-            }
-            else if (result.AuthenticationStatus == OpenAuthenticationStatus.Authenticated)
-            {
-                //Account authenticated
-            }
+
             if (result.Result != null) return result.Result;
             return HttpContext.Request.IsAuthenticated ? new RedirectResult(!string.IsNullOrEmpty(returnUrl) ? returnUrl : "~/") : new RedirectResult(Url.LogOn(returnUrl));
         }

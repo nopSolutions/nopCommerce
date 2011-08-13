@@ -440,6 +440,9 @@ namespace Nop.Web.Controllers
         
         public ActionResult Logout()
         {
+            //external authentication
+            ExternalAuthorizerHelper.RemoveParameters();
+
             if (_workContext.OriginalCustomerIfImpersonated != null)
             {
                 //logout impersonated customer
