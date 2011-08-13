@@ -556,3 +556,7 @@ BEGIN
 	ADD [Email] nvarchar(MAX) NULL
 END
 GO
+
+DELETE FROM [Setting]
+WHERE [NAME]=N'storeinformationsettings.currentversion'
+GO

@@ -2,6 +2,7 @@
 FriendlyName: Google Checkout
 SystemName: Payments.GoogleCheckout
 Version: 1.00
+SupportedVersions: 2.00, 2.10
 Author: nopCommerce team
 DisplayOrder: 1
 FileName: Nop.Plugin.Payments.GoogleCheckout.dll

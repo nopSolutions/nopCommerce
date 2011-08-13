@@ -2,6 +2,7 @@
 using System.ServiceModel.Syndication;
 using System.Web.Mvc;
 using System.Xml;
+using Nop.Core;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Common;
 using Nop.Services.Configuration;
@@ -43,8 +44,8 @@ namespace Nop.Admin.Controllers
         {
             try
             {
-                string feedUrl = string.Format("http://www.nopCommerce.com/NewsRSS.aspx?Version={0}&Localhost={1}&HideAdvertisements={2}&StoreURL={3}", 
-                    _storeInformationSettings.CurrentVersion, 
+                string feedUrl = string.Format("http://www.nopCommerce.com/NewsRSS.aspx?Version={0}&Localhost={1}&HideAdvertisements={2}&StoreURL={3}",
+                    NopVersion.CurrentVersion, 
                     Request.Url.IsLoopback, 
                     _commonSettings.HideAdvertisementsOnAdminArea, 
                     _storeInformationSettings.StoreUrl);

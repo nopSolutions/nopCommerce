@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using Autofac;
@@ -10,11 +11,13 @@ namespace Nop.Core.Plugins
     {
         public PluginDescriptor()
         {
+            this.SupportedVersions = new List<string>();
         }
 
 
         public PluginDescriptor(Assembly referencedAssembly, FileInfo originalAssemblyFile,
             Type pluginType)
+            : this()
         {
             this.ReferencedAssembly = referencedAssembly;
             this.OriginalAssemblyFile = originalAssemblyFile;
@@ -59,6 +62,11 @@ namespace Nop.Core.Plugins
         /// Gets or sets the version
         /// </summary>
         public virtual string Version { get; set; }
+
+        /// <summary>
+        /// Gets or sets the supported versions of nopCommerce
+        /// </summary>
+        public virtual IList<string> SupportedVersions { get; set; }
 
         /// <summary>
         /// Gets or sets the author

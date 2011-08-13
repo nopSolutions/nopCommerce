@@ -36,7 +36,6 @@ namespace Nop.Services.Tests.ExportImport
 
             _storeInformationSettings = new StoreInformationSettings()
             {
-                 CurrentVersion = "2.00",
                  StoreName = "Your store name",
                  StoreUrl = "http://www.yourStore.com"
             };

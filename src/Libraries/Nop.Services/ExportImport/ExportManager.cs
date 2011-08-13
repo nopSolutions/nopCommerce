@@ -12,6 +12,7 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
+using Nop.Core;
 
 namespace Nop.Services.ExportImport
 {
@@ -106,7 +107,7 @@ namespace Nop.Services.ExportImport
             var xmlWriter = new XmlTextWriter(stringWriter);
             xmlWriter.WriteStartDocument();
             xmlWriter.WriteStartElement("Manufacturers");
-            xmlWriter.WriteAttributeString("Version", _storeInformationSettings.CurrentVersion);
+            xmlWriter.WriteAttributeString("Version", NopVersion.CurrentVersion);
 
             foreach (var manufacturer in manufacturers)
             {
@@ -169,7 +170,7 @@ namespace Nop.Services.ExportImport
             var xmlWriter = new XmlTextWriter(stringWriter);
             xmlWriter.WriteStartDocument();
             xmlWriter.WriteStartElement("Categories");
-            xmlWriter.WriteAttributeString("Version", _storeInformationSettings.CurrentVersion);
+            xmlWriter.WriteAttributeString("Version", NopVersion.CurrentVersion);
             WriteCategories(xmlWriter, 0);
             xmlWriter.WriteEndElement();
             xmlWriter.WriteEndDocument();
@@ -189,7 +190,7 @@ namespace Nop.Services.ExportImport
             var xmlWriter = new XmlTextWriter(stringWriter);
             xmlWriter.WriteStartDocument();
             xmlWriter.WriteStartElement("Products");
-            xmlWriter.WriteAttributeString("Version", _storeInformationSettings.CurrentVersion);
+            xmlWriter.WriteAttributeString("Version", NopVersion.CurrentVersion);
 
             foreach (var product in products)
             {
@@ -554,7 +555,7 @@ namespace Nop.Services.ExportImport
             var xmlWriter = new XmlTextWriter(stringWriter);
             xmlWriter.WriteStartDocument();
             xmlWriter.WriteStartElement("Orders");
-            xmlWriter.WriteAttributeString("Version", _storeInformationSettings.CurrentVersion);
+            xmlWriter.WriteAttributeString("Version", NopVersion.CurrentVersion);
 
 
             foreach (var order in orders)
@@ -855,7 +856,7 @@ namespace Nop.Services.ExportImport
             var xmlWriter = new XmlTextWriter(stringWriter);
             xmlWriter.WriteStartDocument();
             xmlWriter.WriteStartElement("Customers");
-            xmlWriter.WriteAttributeString("Version", _storeInformationSettings.CurrentVersion);
+            xmlWriter.WriteAttributeString("Version", NopVersion.CurrentVersion);
 
             foreach (var customer in customers)
             {

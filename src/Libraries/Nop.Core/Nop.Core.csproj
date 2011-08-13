@@ -278,6 +278,7 @@
     <Compile Include="IO\IStorageProvider.cs" />
     <Compile Include="Domain\Customers\PasswordFormat.cs" />
     <Compile Include="Plugins\IAutoStart.cs" />
+    <Compile Include="NopVersion.cs" />
     <Compile Include="Tasks\IStartupTask.cs" />
     <Compile Include="Tasks\ITask.cs" />
     <Compile Include="Tasks\Task.cs" />

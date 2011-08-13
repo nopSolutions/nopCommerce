@@ -2,11 +2,12 @@
 @using Telerik.Web.Mvc;
 @using Nop.Services.Customers;
 @using Nop.Web.Framework.UI;
+@using Nop.Core;
 @{
     var currentCustomer = this.WorkContext.CurrentCustomer;
     var usernamesEnabled = EngineContext.Current.Resolve<Nop.Core.Domain.Customers.CustomerSettings>().UsernamesEnabled;
 
-    var currentVersion = EngineContext.Current.Resolve<Nop.Core.Domain.StoreInformationSettings>().CurrentVersion;
+    var currentVersion = NopVersion.CurrentVersion;
 }
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -52,14 +53,14 @@
                     </div>
                     <div class="login-info">
                         @if (currentCustomer != null && currentCustomer.IsRegistered())
-                    {
+                        {
                             <text>Logged in as:</text> 
-                        if (usernamesEnabled)
-                        { @currentCustomer.Username }
-                        else
-                        { @currentCustomer.Email }
+                            if (usernamesEnabled)
+                            { @currentCustomer.Username }
+                            else
+                            { @currentCustomer.Email }
                             <text>, @Html.ActionLink("Logout?", "Logout", "Customer", new { area = "" }, null)</text> 
-                    }
+                        }
                     </div>
                     <div class="version">
                         <span>nopCommerce @currentVersion</span>

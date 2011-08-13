@@ -73,7 +73,7 @@ namespace Nop.Admin.Controllers
         public ActionResult SystemInfo()
         {
             var model = new SystemInfoModel();
-            model.NopVersion = _storeInformationSettings.CurrentVersion;
+            model.NopVersion = NopVersion.CurrentVersion;
             try
             {
                 model.OperatingSystem = Environment.OSVersion.VersionString;

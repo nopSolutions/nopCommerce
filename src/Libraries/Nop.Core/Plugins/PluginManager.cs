@@ -84,6 +84,10 @@ namespace Nop.Core.Plugins
                             //parse file
                             var description = ParsePluginDescriptionFile(descriptionFile.FullName);
 
+                            //ensure that version of plugin is valid
+                            if (!description.SupportedVersions.Contains(NopVersion.CurrentVersion, StringComparer.InvariantCultureIgnoreCase))
+                                continue;
+
                             //some validation
                             if (String.IsNullOrWhiteSpace(description.SystemName))
                                 throw new Exception(string.Format("A plugin has no system name. Try assigning the plugin a unique name and recompiling.", description.SystemName));
@@ -428,6 +432,14 @@ namespace Nop.Core.Plugins
                     case "Version":
                         descriptor.Version = value;
                         break;
+                    case "SupportedVersions":
+                        {
+                            //parse supported versions
+                            descriptor.SupportedVersions = value.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                                .Select(x => x.Trim())
+                                .ToList();
+                        }
+                        break;
                     case "Author":
                         descriptor.Author = value;
                         break;
@@ -443,6 +455,11 @@ namespace Nop.Core.Plugins
                         break;
                 }
             }
+
+            //nopCommerce 2.00 didn't have 'SupportedVersions' parameter
+            //so let's set it to "2.00"
+            if (descriptor.SupportedVersions.Count == 0)
+                descriptor.SupportedVersions.Add("2.00");
 
             return descriptor;
         }
