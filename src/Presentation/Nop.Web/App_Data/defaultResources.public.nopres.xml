@@ -185,6 +185,20 @@
       <LocaleResource Name="DownloadableProducts">
         <Value>Downloadable products</Value>
       </LocaleResource>
+      <LocaleResource Name="AssociatedExternalAuth">
+        <Value>External authentication</Value>
+        <Children>
+          <LocaleResource Name="Email">
+            <Value>Email</Value>
+          </LocaleResource>
+          <LocaleResource Name="ExternalIdentifier">
+            <Value>External identifier</Value>
+          </LocaleResource>
+          <LocaleResource Name="AuthMethodName">
+            <Value>Authentication method</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
       <LocaleResource Name="Fields">
         <Children>
           <LocaleResource Name="Company">

@@ -1,5 +1,5 @@
 ﻿Group: ExternalAuth methods
-FriendlyName: Twitter authentication method
+FriendlyName: Twitter
 SystemName: ExternalAuth.Twitter
 Version: 1.00
 Author: nopCommerce team

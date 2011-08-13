@@ -69,6 +69,7 @@ namespace Nop.Web.Controllers
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly LocalizationSettings _localizationSettings;
         private readonly CaptchaSettings _captchaSettings;
+        private readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
 
         #endregion
 
@@ -90,7 +91,7 @@ namespace Nop.Web.Controllers
             IForumService forumService, IShoppingCartService shoppingCartService,
             IOpenAuthenticationService openAuthenticationService, MediaSettings mediaSettings,
             IWorkflowMessageService workflowMessageService, LocalizationSettings localizationSettings,
-            CaptchaSettings captchaSettings)
+            CaptchaSettings captchaSettings, ExternalAuthenticationSettings externalAuthenticationSettings)
         {
             this._authenticationService = authenticationService;
             this._dateTimeHelper = dateTimeHelper;
@@ -122,6 +123,7 @@ namespace Nop.Web.Controllers
             this._workflowMessageService = workflowMessageService;
             this._localizationSettings = localizationSettings;
             this._captchaSettings = captchaSettings;
+            this._externalAuthenticationSettings = externalAuthenticationSettings;
         }
 
         #endregion
@@ -692,6 +694,23 @@ namespace Nop.Web.Controllers
             model.AllowUsersToChangeUsernames = _customerSettings.AllowUsersToChangeUsernames;
             model.SignatureEnabled = _forumSettings.SignaturesEnabled;
             model.LocationEnabled = _customerSettings.ShowCustomersLocation;
+
+            //external authentication
+            foreach (var ear in _openAuthenticationService.GetExternalIdentifiersFor(customer))
+            {
+                var authMethod = _openAuthenticationService.LoadExternalAuthenticationMethodBySystemName(ear.ProviderSystemName);
+                if (authMethod == null || !authMethod.IsMethodActive(_externalAuthenticationSettings))
+                    continue;
+
+                model.AssociatedExternalAuthRecords.Add(new CustomerInfoModel.AssociatedExternalAuthModel()
+                {
+                    Id = ear.Id,
+                    Email = ear.Email,
+                    ExternalIdentifier = ear.ExternalIdentifier,
+                    AuthMethodName = authMethod.PluginDescriptor.FriendlyName
+                });
+            }
+
 
             model.NavigationModel = GetCustomerNavigationModel(customer);
             model.NavigationModel.SelectedTab = CustomerNavigationEnum.Info;

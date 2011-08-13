@@ -281,6 +281,30 @@ set @resources='
   <LocaleResource Name="Plugins.ExternalAuth.Facebook.ClientSecret.Hint">
     <Value>Enter your client key here.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.AssociatedExternalAuth">
+    <Value>External authentication</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.AssociatedExternalAuth.Fields.Email">
+    <Value>Email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.AssociatedExternalAuth.Fields.ExternalIdentifier">
+    <Value>External identifier</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.AssociatedExternalAuth.Fields.AuthMethodName">
+    <Value>Authentication method</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.AssociatedExternalAuth">
+    <Value>External authentication</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.AssociatedExternalAuth.Email">
+    <Value>Email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.AssociatedExternalAuth.ExternalIdentifier">
+    <Value>External identifier</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.AssociatedExternalAuth.AuthMethodName">
+    <Value>Authentication method</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -523,4 +547,12 @@ GO
 
 --[Value] column of [CustomerAttribute] can have up to 4000 chars
 ALTER TABLE [dbo].[CustomerAttribute] ALTER COLUMN [Value] nvarchar(4000) NOT NULL
+GO
+
+--Add one more column to [ExternalAuthenticationRecord] table
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[ExternalAuthenticationRecord]') and NAME='Email')
+BEGIN
+	ALTER TABLE [dbo].[ExternalAuthenticationRecord] 
+	ADD [Email] nvarchar(MAX) NOT NULL
+END
 GO

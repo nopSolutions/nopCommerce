@@ -1,5 +1,5 @@
 ﻿Group: ExternalAuth methods
-FriendlyName: Facebook authentication method
+FriendlyName: Facebook
 SystemName: ExternalAuth.Facebook
 Version: 1.00
 Author: nopCommerce team

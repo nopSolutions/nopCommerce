@@ -11,6 +11,11 @@ namespace Nop.Core.Domain.Customers
         public virtual int CustomerId { get; set; }
 
         /// <summary>
+        /// Gets or sets the external email
+        /// </summary>
+        public virtual string Email { get; set; }
+
+        /// <summary>
         /// Gets or sets the external identifier
         /// </summary>
         public virtual string ExternalIdentifier { get; set; }

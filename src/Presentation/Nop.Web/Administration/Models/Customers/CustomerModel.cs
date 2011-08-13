@@ -18,6 +18,7 @@ namespace Nop.Admin.Models.Customers
             AvailableTimeZones = new List<SelectListItem>();
             SendEmail = new SendEmailModel();
             SendPm = new SendPmModel();
+            AssociatedExternalAuthRecords = new List<AssociatedExternalAuthModel>();
         }
 
         public bool AllowUsersToChangeUsernames { get; set; }
@@ -158,8 +159,23 @@ namespace Nop.Admin.Models.Customers
         //send PM model
         public SendPmModel SendPm { get; set; }
 
+        [NopResourceDisplayName("Admin.Customers.Customers.AssociatedExternalAuth")]
+        public IList<AssociatedExternalAuthModel> AssociatedExternalAuthRecords { get; set; }
+
         
         #region Nested classes
+
+        public class AssociatedExternalAuthModel : BaseNopEntityModel
+        {
+            [NopResourceDisplayName("Admin.Customers.Customers.AssociatedExternalAuth.Fields.Email")]
+            public string Email { get; set; }
+
+            [NopResourceDisplayName("Admin.Customers.Customers.AssociatedExternalAuth.Fields.ExternalIdentifier")]
+            public string ExternalIdentifier { get; set; }
+
+            [NopResourceDisplayName("Admin.Customers.Customers.AssociatedExternalAuth.Fields.AuthMethodName")]
+            public string AuthMethodName { get; set; }
+        }
 
         public class RewardPointsHistoryModel : BaseNopEntityModel
         {

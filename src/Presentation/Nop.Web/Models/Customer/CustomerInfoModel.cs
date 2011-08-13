@@ -14,6 +14,7 @@ namespace Nop.Web.Models.Customer
         {
             this.AvailableTimeZones = new List<SelectListItem>();
             this.AvailableLocations = new List<SelectListItem>();
+            this.AssociatedExternalAuthRecords = new List<AssociatedExternalAuthModel>();
         }
 
         [NopResourceDisplayName("Account.Fields.Email")]
@@ -80,6 +81,24 @@ namespace Nop.Web.Models.Customer
         public string VatNumberStatusNote { get; set; }
         public bool DisplayVatNumber { get; set; }
 
+        //external authentication
+        [NopResourceDisplayName("Account.AssociatedExternalAuth")]
+        public IList<AssociatedExternalAuthModel> AssociatedExternalAuthRecords { get; set; }
+
         public CustomerNavigationModel NavigationModel { get; set; }
+
+
+        #region Nested classes
+
+        public class AssociatedExternalAuthModel : BaseNopEntityModel
+        {
+            public string Email { get; set; }
+
+            public string ExternalIdentifier { get; set; }
+
+            public string AuthMethodName { get; set; }
+        }
+        
+        #endregion
     }
 }

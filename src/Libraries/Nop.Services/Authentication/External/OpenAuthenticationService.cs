@@ -71,9 +71,21 @@ namespace Nop.Services.Authentication.External
             if (customer == null)
                 throw new ArgumentNullException("customer");
 
+            //find email
+            string email = null;
+            if (parameters.UserClaims != null)
+                foreach (var userClaim in parameters.UserClaims
+                    .Where(x => x.Contact != null && !String.IsNullOrEmpty(x.Contact.Email)))
+                    {
+                        //found
+                        email = userClaim.Contact.Email;
+                        break;
+                    }
+
             var externalAuthenticationRecord = new ExternalAuthenticationRecord()
             {
                 CustomerId = customer.Id,
+                Email = email,
                 ExternalIdentifier = parameters.ExternalIdentifier,
                 ExternalDisplayIdentifier = parameters.ExternalDisplayIdentifier,
                 OAuthToken = parameters.OAuthToken,

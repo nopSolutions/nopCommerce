@@ -1,5 +1,5 @@
 ﻿Group: ExternalAuth methods
-FriendlyName: OpenID authentication method
+FriendlyName: OpenID
 SystemName: ExternalAuth.OpenId
 Version: 1.00
 Author: nopCommerce team

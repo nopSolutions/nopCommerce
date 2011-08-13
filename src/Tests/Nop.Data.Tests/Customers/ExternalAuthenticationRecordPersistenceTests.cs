@@ -12,17 +12,19 @@ namespace Nop.Data.Tests.Customers
         public void Can_save_and_load_externalAuthenticationRecord()
         {
             var externalAuthenticationRecord = new ExternalAuthenticationRecord
-                               {
-                                   ExternalIdentifier = "ExternalIdentifier 1",
-                                   ExternalDisplayIdentifier = "ExternalDisplayIdentifier 1",
-                                   OAuthToken = "OAuthToken 1",
-                                   OAuthAccessToken = "OAuthAccessToken 1",
-                                   ProviderSystemName = "ProviderSystemName 1",
-                                   Customer = GetTestCustomer()
-                               };
+            {
+                Email = "Email 1",
+                ExternalIdentifier = "ExternalIdentifier 1",
+                ExternalDisplayIdentifier = "ExternalDisplayIdentifier 1",
+                OAuthToken = "OAuthToken 1",
+                OAuthAccessToken = "OAuthAccessToken 1",
+                ProviderSystemName = "ProviderSystemName 1",
+                Customer = GetTestCustomer()
+            };
 
             var fromDb = SaveAndLoadEntity(externalAuthenticationRecord);
             fromDb.ShouldNotBeNull();
+            fromDb.Email.ShouldEqual("Email 1");
             fromDb.ExternalIdentifier.ShouldEqual("ExternalIdentifier 1");
             fromDb.ExternalDisplayIdentifier.ShouldEqual("ExternalDisplayIdentifier 1");
             fromDb.OAuthToken.ShouldEqual("OAuthToken 1");

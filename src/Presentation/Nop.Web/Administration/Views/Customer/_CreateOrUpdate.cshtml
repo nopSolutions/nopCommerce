@@ -118,6 +118,28 @@
                 }
             </td>
         </tr>
+        @if (Model.Id > 0 && Model.AssociatedExternalAuthRecords.Count > 0)
+        {
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.AssociatedExternalAuthRecords):
+                </td>
+                <td class="adminData">
+                    @(Html.Telerik().Grid<CustomerModel.AssociatedExternalAuthModel>(Model.AssociatedExternalAuthRecords)
+                    .Name("externalauthrecords-grid")
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.AuthMethodName)
+                            .Width(100);
+                        columns.Bound(x => x.Email)
+                             .Width(100);
+                        columns.Bound(x => x.ExternalIdentifier)
+                            .Width(300);
+                    })
+                    .Footer(false))
+                </td>
+            </tr>
+        }
         @if (Model.GenderEnabled)
         {
             <tr>

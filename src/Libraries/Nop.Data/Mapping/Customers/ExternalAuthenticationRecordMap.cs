@@ -10,6 +10,7 @@ namespace Nop.Data.Mapping.Customers
             this.ToTable("ExternalAuthenticationRecord");
 
             this.HasKey(ear => ear.Id);
+            this.Property(ear => ear.Email).IsMaxLength();
             this.Property(ear => ear.ExternalIdentifier).IsMaxLength();
             this.Property(ear => ear.ExternalDisplayIdentifier).IsMaxLength();
             this.Property(ear => ear.OAuthToken).IsMaxLength();

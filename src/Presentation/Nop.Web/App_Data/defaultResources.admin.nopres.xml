@@ -5472,6 +5472,24 @@
                     <LocaleResource Name="EditCustomerDetails">
                       <Value>Edit customer details</Value>
                     </LocaleResource>
+                    <LocaleResource Name="AssociatedExternalAuth">
+                      <Value>External authentication</Value>
+                      <Children>
+                        <LocaleResource Name="Fields">
+                          <Children>
+                            <LocaleResource Name="Email">
+                              <Value>Email</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="ExternalIdentifier">
+                              <Value>External identifier</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="AuthMethodName">
+                              <Value>Authentication method</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
+                      </Children>
+                    </LocaleResource>
                     <LocaleResource Name="Fields">
                       <Children>
                         <LocaleResource Name="Username">

@@ -122,6 +122,54 @@
                                     </tr>
                                     }
                                 }
+                                @*Associated external authentication records*@
+                                @if (Model.AssociatedExternalAuthRecords.Count > 0)
+                                {
+                                    <tr class="row">
+                                        <td class="item-name">
+                                            @Html.LabelFor(model => model.AssociatedExternalAuthRecords):
+                                        </td>
+                                        <td class="item-value">
+                                            <table border="1" cellspacing="0" style="width: 100%; border-collapse: collapse;">
+                                                <col />
+                                                <col />
+                                                <thead>
+                                                    <tr>
+                                                        <th align="center">
+                                                            @T("Account.AssociatedExternalAuth.AuthMethodName")
+                                                        </th>
+                                                        <th align="center">
+                                                            @T("Account.AssociatedExternalAuth.Email")
+                                                        </th>
+                                                        <th align="center">
+                                                            @T("Account.AssociatedExternalAuth.ExternalIdentifier")
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var item in Model.AssociatedExternalAuthRecords)
+                                                    {
+                                                        <tr>
+                                                            <td style="width: 20%;">
+                                                                @item.AuthMethodName
+                                                            </td>
+                                                            <td style="width: 20%;">
+                                                                <div style="padding-left: 10px; padding-right: 10px; text-align: left;">
+                                                                    @item.Email
+                                                                </div>
+                                                            </td>
+                                                            <td style="width: 60%;">
+                                                                <div style="padding-left: 10px; padding-right: 10px; text-align: left;">
+                                                                    @item.ExternalIdentifier
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                }
                             </tbody>
                         </table>
                     </div>

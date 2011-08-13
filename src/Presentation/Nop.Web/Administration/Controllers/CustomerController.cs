@@ -33,6 +33,7 @@ using Nop.Services.Messages;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Forums;
 using Nop.Services.Forums;
+using Nop.Services.Authentication.External;
 
 namespace Nop.Admin.Controllers
 {
@@ -66,6 +67,7 @@ namespace Nop.Admin.Controllers
         private readonly IEmailAccountService _emailAccountService;
         private readonly ForumSettings _forumSettings;
         private readonly IForumService _forumService;
+        private readonly IOpenAuthenticationService _openAuthenticationService;
 
         #endregion
 
@@ -85,7 +87,7 @@ namespace Nop.Admin.Controllers
             IPermissionService permissionService, AdminAreaSettings adminAreaSettings,
             IQueuedEmailService queuedEmailService, EmailAccountSettings emailAccountSettings,
             IEmailAccountService emailAccountService, ForumSettings forumSettings,
-            IForumService forumService)
+            IForumService forumService, IOpenAuthenticationService openAuthenticationService)
         {
             this._customerService = customerService;
             this._customerReportService = customerReportService;
@@ -112,6 +114,7 @@ namespace Nop.Admin.Controllers
             this._emailAccountService = emailAccountService;
             this._forumSettings = forumSettings;
             this._forumService = forumService;
+            this._openAuthenticationService = openAuthenticationService;
         }
 
         #endregion
@@ -162,6 +165,31 @@ namespace Nop.Admin.Controllers
 
             return report;
         }
+
+        private IList<CustomerModel.AssociatedExternalAuthModel> GetAssociatedExternalAuthRecords(Customer customer)
+        {
+            if (customer == null)
+                throw new ArgumentNullException("customer");
+
+            var result = new List<CustomerModel.AssociatedExternalAuthModel>();
+            foreach (var record in _openAuthenticationService.GetExternalIdentifiersFor(customer))
+            {
+                var method = _openAuthenticationService.LoadExternalAuthenticationMethodBySystemName(record.ProviderSystemName);
+                if (method == null)
+                    continue;
+
+                result.Add(new CustomerModel.AssociatedExternalAuthModel()
+                {
+                    Id = record.Id,
+                    Email = record.Email,
+                    ExternalIdentifier = record.ExternalIdentifier,
+                    AuthMethodName = method.PluginDescriptor.FriendlyName
+                });
+            }
+
+            return result;
+        }
+
         #endregion
 
         #region Customers
@@ -474,6 +502,8 @@ namespace Nop.Admin.Controllers
             model.DisplayRewardPointsHistory = _rewardPointsSettings.Enabled;
             model.AddRewardPointsValue = 0;
             model.AddRewardPointsMessage = "Some comment here...";
+            //external authentication records
+            model.AssociatedExternalAuthRecords = GetAssociatedExternalAuthRecords(customer);
 
             return View(model);
         }
@@ -602,6 +632,8 @@ namespace Nop.Admin.Controllers
             model.DisplayRewardPointsHistory = _rewardPointsSettings.Enabled;
             model.AddRewardPointsValue = 0;
             model.AddRewardPointsMessage = "Some comment here...";
+            //external authentication records
+            model.AssociatedExternalAuthRecords = GetAssociatedExternalAuthRecords(customer);
             return View(model);
         }
         
