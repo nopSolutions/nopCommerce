@@ -413,7 +413,7 @@ namespace Nop.Admin.Controllers
                 {
                     var variantModel = x.ToModel();
                     //Full product variant name
-                    variantModel.Name = x.Product.Name + x.Name;
+                    variantModel.Name = !String.IsNullOrEmpty(x.Name) ? string.Format("{0} ({1})", x.Product.Name, x.Name) : x.Product.Name;
                     return variantModel;
                 }),
                 Total = variants.Count
@@ -435,7 +435,7 @@ namespace Nop.Admin.Controllers
                 {
                     var variantModel = x.ToModel();
                     //Full product variant name
-                    variantModel.Name = x.Product.Name + " " + x.Name;
+                    variantModel.Name = !String.IsNullOrEmpty(x.Name) ? string.Format("{0} ({1})", x.Product.Name, x.Name) : x.Product.Name;
                     return variantModel;
                 }),
                 Total = variants.Count
