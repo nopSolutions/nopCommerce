@@ -35,6 +35,7 @@ using Nop.Core.IO;
 using Nop.Services.Helpers;
 using Nop.Services.Media;
 using Nop.Services.Customers;
+using Nop.Services.Security;
 
 namespace Nop.Services.Installation
 {
@@ -4075,6 +4076,13 @@ namespace Nop.Services.Installation
                                     crGuests
                                 };
             customerRoles.ForEach(cr => _customerRoleRepository.Insert(cr));
+        }
+
+        protected virtual void HashDefaultCustomerPassword(string defaultUserEmail, string defaultUserPassword)
+        {
+            var customerService = EngineContext.Current.Resolve<ICustomerService>();
+            customerService.ChangePassword(new ChangePasswordRequest(defaultUserEmail, false,
+                 PasswordFormat.Hashed, defaultUserPassword));
         }
 
         protected virtual void InstallEmailAccounts()
@@ -9059,6 +9067,7 @@ namespace Nop.Services.Installation
             InstallTopics();
             InstallSettings();
             InstallActivityLogTypes();
+            HashDefaultCustomerPassword(defaultUserEmail, defaultUserPassword);
 
             if (installSampleData)
             {
