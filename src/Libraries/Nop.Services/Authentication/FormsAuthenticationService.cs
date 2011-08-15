@@ -30,7 +30,7 @@ namespace Nop.Services.Authentication
             this._httpContext = httpContext;
             this._customerService = customerService;
             this._customerSettings = customerSettings;
-            this._expirationTimeSpan = TimeSpan.FromHours(6);
+            this._expirationTimeSpan = FormsAuthentication.Timeout;
         }
 
 
@@ -51,6 +51,7 @@ namespace Nop.Services.Authentication
 
             var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket);
             cookie.HttpOnly = true;
+            cookie.Expires = now.Add(_expirationTimeSpan);
             cookie.Secure = FormsAuthentication.RequireSSL;
             cookie.Path = FormsAuthentication.FormsCookiePath;
             if (FormsAuthentication.CookieDomain != null)
