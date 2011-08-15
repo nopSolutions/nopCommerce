@@ -4605,8 +4605,8 @@ namespace Nop.Services.Installation
                     ReturnRequestsEnabled = true,
                     TermsOfServiceEnabled = false,
                     OnePageCheckoutEnabled = false,
-                    ReturnRequestActions = new List<string>() { "Received Wrong Product", "Wrong Product Ordered", "There Was A Problem With The Product" },
-                    ReturnRequestReasons = new List<string>() { "Repair", "Replacement", "Store Credit" },
+                    ReturnRequestActions = new List<string>() { "Repair", "Replacement", "Store Credit" },
+                    ReturnRequestReasons = new List<string>() { "Received Wrong Product", "Wrong Product Ordered", "There Was A Problem With The Product" },
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<SecuritySettings>>()

@@ -1,4 +1,6 @@
-﻿<div class="footer">
+﻿@model FooterModel
+@using Nop.Web.Models.Common;
+<div class="footer">
     <div class="footer-poweredby">
         Powered by <a href="http://www.nopcommerce.com/">nopCommerce</a>
         <!--Would you like
@@ -6,7 +8,7 @@
                 info here http://www.nopcommerce.com/copyrightremoval.aspx -->
     </div>
     <div class="footer-disclaimer">
-        @T("Content.CopyrightNotice", DateTime.Now.Year.ToString(), "Store name here")
+        @T("Content.CopyrightNotice", DateTime.Now.Year.ToString(), @Model.StoreName)
     </div>
     <div class="footer-storetheme">
         @Html.Action("StoreThemeSelector", "Common")

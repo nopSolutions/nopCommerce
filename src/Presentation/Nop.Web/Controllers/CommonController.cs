@@ -236,6 +236,18 @@ namespace Nop.Web.Controllers
             return result;
         }
 
+        //footer
+        [ChildActionOnly]
+        public ActionResult Footer()
+        {
+            var model = new FooterModel()
+            {
+                StoreName = _storeInformationSettings.StoreName
+            };
+
+            return PartialView(model);
+        }
+
         //menu
         [ChildActionOnly]
         public ActionResult Menu()

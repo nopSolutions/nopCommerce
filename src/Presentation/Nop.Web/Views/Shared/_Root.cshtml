@@ -12,7 +12,8 @@
     <meta name="keywords" content="@(Html.NopMetaKeywords())" />
     @*store URL js variable used by some JS files*@
     <script type="text/javascript">
-        var nop_store_directory_root = "@(storeLocation)";    </script>
+        var nop_store_directory_root = "@(storeLocation)";
+    </script>
     @*jquery and other base scripts*@
     <script src="@Url.Content("~/Scripts/jquery-1.4.4.min.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Scripts/jquery-ui.min.js")" type="text/javascript"></script>
@@ -53,7 +54,7 @@
             <div class="clear">
             </div>
         </div>
-        @Html.Partial("Footer")
+        @Html.Action("Footer", "Common")
     </div>
     @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.BeforeBodyEndHtmlTag })
 </body>
