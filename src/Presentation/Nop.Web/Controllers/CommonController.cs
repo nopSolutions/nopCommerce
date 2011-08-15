@@ -119,7 +119,7 @@ namespace Nop.Web.Controllers
             return PartialView(model);
         }
 
-        public ActionResult LanguageSelected(int customerlanguage)
+        public ActionResult LanguageSelected(int customerlanguage, string returnUrl)
         {
             var language = _languageService.GetLanguageById(customerlanguage);
             if (language != null)
@@ -132,7 +132,10 @@ namespace Nop.Web.Controllers
             //    AvailableLanguages = _languageService.GetAllLanguages().Select(x => x.ToModel()).ToList(),
             //    UseImages = _localizationSettings.UseImagesForLanguageSelection
             //};
-            return RedirectToAction("Index", "Home");
+            if (!String.IsNullOrEmpty(returnUrl))
+                return Redirect(returnUrl);
+            else
+                return RedirectToAction("Index", "Home");
         }
 
         //currency

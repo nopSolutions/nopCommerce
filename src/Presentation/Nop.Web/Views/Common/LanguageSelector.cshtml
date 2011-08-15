@@ -8,7 +8,7 @@
         {
             <li>
                 <img title='@lang.Name' alt='@lang.Name' @(lang.Id == Model.CurrentLanguage.Id ? " class=selected" : null)
-                 src="@Url.Content("~/Content/Images/flags/" + @lang.FlagImageFileName) " onclick="setLocation('@(@Url.Action("LanguageSelected", "Common", new { customerlanguage = lang.Id }))')" />
+                 src="@Url.Content("~/Content/Images/flags/" + @lang.FlagImageFileName) " onclick="setLocation('@(@Url.Action("LanguageSelected", "Common", new { customerlanguage = lang.Id, returnUrl = @HttpContext.Current.Request.Url.PathAndQuery }))')" />
             </li>
         }
     </ul>
