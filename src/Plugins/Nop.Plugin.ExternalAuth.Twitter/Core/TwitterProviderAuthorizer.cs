@@ -51,8 +51,10 @@ namespace Nop.Plugin.ExternalAuth.Twitter.Core
         public AuthorizeState Authorize(string returnUrl)
         {
             //Sleep for 15 seconds as a workaround for a twitter bug. :(
-            //TODO resolve this issue because it's blocking the entire site
-            Thread.Sleep(new TimeSpan(0, 0, 0, 15));
+            //resolve this issue because it's blocking the entire site
+            //Thread.Sleep(new TimeSpan(0, 0, 0, 15));
+
+
             MvcAuthorizer.CompleteAuthorization(GenerateCallbackUri());
 
             if (_httpContextBase.Session == null)
