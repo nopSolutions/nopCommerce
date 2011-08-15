@@ -396,14 +396,34 @@ namespace Nop.Services.Catalog
         /// <returns>Result</returns>
         public virtual IList<ProductVariant> GetLowStockProductVariants()
         {
-            //perhapd, ensure that pv.ManageInventoryMethod != ManageInventoryMethod.DontManageStock
-            var query = from pv in _productVariantRepository.Table
-                        orderby pv.MinStockQuantity
-                        where !pv.Deleted &&
-                        pv.MinStockQuantity >= pv.StockQuantity
-                        select pv;
-            var productVariants = query.ToList();
-            return productVariants;
+            //Track inventory for product variant
+            var query1 = from pv in _productVariantRepository.Table
+                         orderby pv.MinStockQuantity
+                         where !pv.Deleted &&
+                         pv.ManageInventoryMethodId == (int)ManageInventoryMethod.ManageStock &&
+                         pv.MinStockQuantity >= pv.StockQuantity
+                         select pv;
+            var productVariants1 = query1.ToList();
+            //Track inventory for product variant by product attributes
+            var query2 = from pv in _productVariantRepository.Table
+                         from pvac in pv.ProductVariantAttributeCombinations
+                         where !pv.Deleted &&
+                         pv.ManageInventoryMethodId == (int)ManageInventoryMethod.ManageStockByAttributes &&
+                         pvac.StockQuantity <= 0
+                         select pv;
+            //only distinct products (group by ID)
+            //if we use standard Distinct() method, then all fields will be compared (low performance)
+            //it'll don't work in SQl Server Compact when searching products by a keyword)
+            query2 = from pv in query2
+                    group pv by pv.Id into pGroup
+                    orderby pGroup.Key
+                    select pGroup.FirstOrDefault();
+            var productVariants2 = query2.ToList();
+
+            var result = new List<ProductVariant>();
+            result.AddRange(productVariants1);
+            result.AddRange(productVariants2);
+            return result;
         }
         
         /// <summary>
