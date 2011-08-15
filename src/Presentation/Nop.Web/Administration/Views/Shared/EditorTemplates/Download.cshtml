@@ -1,6 +1,7 @@
 ﻿@model int
+@using Nop.Core;
 @{
-    var randomNumber = new Random().Next();
+    var randomNumber = CommonHelper.GenerateRandomInteger();
     var clientId = "download" + randomNumber;
     var downloadService = EngineContext.Current.Resolve<Nop.Services.Media.IDownloadService>();
     var download = downloadService.GetDownloadById(Model);

@@ -1,6 +1,8 @@
 ﻿@model int
+@using Nop.Core;
 @{
-    var clientId = "picture" + new Random().Next();
+    var random = CommonHelper.GenerateRandomInteger();
+    var clientId = "picture" + random;
     var pictureService = EngineContext.Current.Resolve<Nop.Services.Media.IPictureService>();
     var picture = pictureService.GetPictureById(Model);
 }
