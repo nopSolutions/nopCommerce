@@ -37,10 +37,10 @@ namespace Nop.Web.Models.ShoppingCart
         public bool TermsOfServiceEnabled { get; set; }
 
         public bool ShowDiscountBox { get; set; }
-        public string DiscountWarning { get; set; }
+        public string DiscountMessage { get; set; }
 
         public bool ShowGiftCardBox { get; set; }
-        public string GiftCardWarning { get; set; }
+        public string GiftCardMessage { get; set; }
 
         public EstimateShippingModel EstimateShipping { get; set; }
 

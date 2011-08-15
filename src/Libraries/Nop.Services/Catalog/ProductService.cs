@@ -413,7 +413,6 @@ namespace Nop.Services.Catalog
                          select pv;
             //only distinct products (group by ID)
             //if we use standard Distinct() method, then all fields will be compared (low performance)
-            //it'll don't work in SQl Server Compact when searching products by a keyword)
             query2 = from pv in query2
                     group pv by pv.Id into pGroup
                     orderby pGroup.Key

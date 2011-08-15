@@ -3174,6 +3174,9 @@
           <LocaleResource Name="Tooltip">
             <Value>Enter your coupon here</Value>
           </LocaleResource>
+          <LocaleResource Name="Applied">
+            <Value>The coupon code was applied</Value>
+          </LocaleResource>
           <LocaleResource Name="WrongDiscount">
             <Value>The coupon code you entered couldn't be applied to your order</Value>
           </LocaleResource>
@@ -3210,6 +3213,9 @@
           </LocaleResource>
           <LocaleResource Name="Tooltip">
             <Value>Enter gift card code</Value>
+          </LocaleResource>
+          <LocaleResource Name="Applied">
+            <Value>The gift card code was applied</Value>
           </LocaleResource>
           <LocaleResource Name="WrongGiftCard">
             <Value>The coupon code you entered couldn't be applied to your order</Value>

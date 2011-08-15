@@ -305,6 +305,12 @@ set @resources='
   <LocaleResource Name="Account.AssociatedExternalAuth.AuthMethodName">
     <Value>Authentication method</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.GiftCardCouponCode.Applied">
+    <Value>The gift card code was applied</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.DiscountCouponCode.Applied">
+    <Value>The coupon code was applied</Value>
+  </LocaleResource>
 </Language>
 '
 

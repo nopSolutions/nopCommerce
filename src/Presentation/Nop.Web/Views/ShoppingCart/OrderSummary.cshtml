@@ -264,12 +264,12 @@
                                 <br />@T("ShoppingCart.DiscountCouponCode.Tooltip")<br />
                                 <input name="discountcouponcode" type="text" id="discountcouponcode" style="width: 125px;" />&nbsp;
                                 <input type="submit" name="applydiscountcouponcode" value="@T("ShoppingCart.DiscountCouponCode.Button")" id="applydiscountcouponcode" class="applycouponcodebutton" />
-                                @if (!String.IsNullOrEmpty(Model.DiscountWarning))
+                                @if (!String.IsNullOrEmpty(Model.DiscountMessage))
                                 {
                                     <div class="warning-box">
                                         <div class="warning-text">
                                             <br />
-                                            @Model.DiscountWarning
+                                            @Model.DiscountMessage
                                         </div>
                                     </div>
                                 }
@@ -285,12 +285,12 @@
                                 <br />@T("ShoppingCart.GiftCardCouponCode.Tooltip")<br />
                                 <input name="giftcardcouponcode" type="text" id="giftcardcouponcode" style="width: 125px;" />&nbsp;
                                 <input type="submit" name="applygiftcardcouponcode" value="@T("ShoppingCart.GiftCardCouponCode.Button")" id="applygiftcardcouponcode" class="applycouponcodebutton" />
-                                @if (!String.IsNullOrEmpty(Model.GiftCardWarning))
+                                @if (!String.IsNullOrEmpty(Model.GiftCardMessage))
                                 {
                                     <div class="warning-box">
                                         <div class="warning-text">
                                             <br />
-                                            @Model.GiftCardWarning
+                                            @Model.GiftCardMessage
                                         </div>
                                     </div>
                                 }
