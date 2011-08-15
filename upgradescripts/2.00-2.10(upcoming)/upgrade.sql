@@ -566,3 +566,15 @@ GO
 DELETE FROM [Setting]
 WHERE [NAME]=N'storeinformationsettings.currentversion'
 GO
+
+
+--'returnrequestreasons' and 'returnrequestactions' should be reverted
+UPDATE [Setting]
+SET [Value] = N'Received Wrong Product,Wrong Product Ordered,There Was A Problem With The Product'
+WHERE [name] = N'ordersettings.returnrequestreasons'
+GO
+
+UPDATE [Setting]
+SET [Value] = N'Repair,Replacement,Store Credit'
+WHERE [name] = N'ordersettings.returnrequestactions'
+GO
