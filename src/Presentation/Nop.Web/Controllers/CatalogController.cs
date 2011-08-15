@@ -454,6 +454,8 @@ namespace Nop.Web.Controllers
                     WrittenOnStr = _dateTimeHelper.ConvertToUserTime(pr.CreatedOnUtc, DateTimeKind.Utc).ToString("g"),
                 });
             }
+
+            model.AddProductReview.CanCurrentCustomerLeaveReview = _catalogSettings.AllowAnonymousUsersToReviewProduct || !_workContext.CurrentCustomer.IsGuest();
         }
         
         [NonAction]
@@ -1643,6 +1645,9 @@ namespace Nop.Web.Controllers
 
             var model = new ProductReviewsModel();
             PrepareProductReviewsModel(model, product);
+            //only registered users can leave reviews
+            if (_workContext.CurrentCustomer.IsGuest() && !_catalogSettings.AllowAnonymousUsersToReviewProduct)
+                ModelState.AddModelError("", _localizationService.GetResource("Reviews.OnlyRegisteredUsersCanWriteReviews"));
             //default value
             model.AddProductReview.Rating = 4;
             return View(model);
