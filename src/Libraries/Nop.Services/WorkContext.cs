@@ -90,12 +90,14 @@ namespace Nop.Services
                         }
                     }
                 }
+
+                //load guest customer
                 if (customer == null || customer.Deleted || !customer.Active)
                 {
                     var customerCookie = GetCustomerCookie();
                     if (customerCookie != null && !String.IsNullOrEmpty(customerCookie.Value))
                     {
-                        var customerGuid = Guid.Empty;
+                        Guid customerGuid;
                         if (Guid.TryParse(customerCookie.Value, out customerGuid))
                         {
                             var customerByCookie = _customerService.GetCustomerByGuid(customerGuid);
@@ -104,23 +106,6 @@ namespace Nop.Services
                                 !customerByCookie.IsRegistered() &&
                                 //it should not be a built-in 'search engine' customer account
                                 !customerByCookie.IsSearchEngineAccount())
-                                customer = customerByCookie;
-                        }
-                    }
-                }
-
-                //load guest customer
-                if (customer == null || customer.Deleted || !customer.Active)
-                {
-                    var customerCookie = GetCustomerCookie();
-                    if (customerCookie != null && !String.IsNullOrEmpty(customerCookie.Value))
-                    {
-                        var customerGuid = Guid.Empty;
-                        if (Guid.TryParse(customerCookie.Value, out customerGuid))
-                        {
-                            var customerByCookie = _customerService.GetCustomerByGuid(customerGuid);
-                            //this customer (from cookie) should not be registered
-                            if (customerByCookie != null && !customerByCookie.IsRegistered())
                                 customer = customerByCookie;
                         }
                     }
