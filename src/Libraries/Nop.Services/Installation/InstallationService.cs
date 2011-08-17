@@ -436,6 +436,7 @@ namespace Nop.Services.Installation
             {
                 Name = "English",
                 LanguageCulture = "en-US",
+                UniqueSeoCode = "en",
                 FlagImageFileName = "us.png",
                 Published = true,
                 DisplayOrder = 1
