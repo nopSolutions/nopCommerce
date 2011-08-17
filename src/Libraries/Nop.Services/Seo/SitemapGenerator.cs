@@ -63,7 +63,7 @@ namespace Nop.Services.Seo
             var categories = _categoryService.GetAllCategoriesByParentCategoryId(parentCategoryId, false);
             foreach (var category in categories)
             {
-                //TODO add a method for getting URL
+                //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
                 var url = string.Format("{0}c/{1}/{2}", _webHelper.GetStoreLocation(false), category.Id, category.GetSeName());
                 var updateFrequency = UpdateFrequency.Weekly;
                 var updateTime = category.UpdatedOnUtc;
@@ -78,7 +78,7 @@ namespace Nop.Services.Seo
             var manufacturers = _manufacturerService.GetAllManufacturers(false);
             foreach (var manufacturer in manufacturers)
             {
-                //TODO add a method for getting URL
+                //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
                 var url = string.Format("{0}m/{1}/{2}", _webHelper.GetStoreLocation(false), manufacturer.Id, manufacturer.GetSeName());
                 var updateFrequency = UpdateFrequency.Weekly;
                 var updateTime = manufacturer.UpdatedOnUtc;
@@ -91,7 +91,7 @@ namespace Nop.Services.Seo
             var products = _productService.GetAllProducts(false);
             foreach (var product in products)
             {
-                //TODO add a method for getting URL
+                //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
                 var url = string.Format("{0}p/{1}/{2}", _webHelper.GetStoreLocation(false), product.Id, product.GetSeName());
                 var updateFrequency = UpdateFrequency.Weekly;
                 var updateTime = product.UpdatedOnUtc;
@@ -104,7 +104,7 @@ namespace Nop.Services.Seo
             var topics = _topicService.GetAllTopics().ToList().FindAll(t => t.IncludeInSitemap);
             foreach (var topic in topics)
             {
-                //TODO add a method for getting URL
+                //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
                 var url = string.Format("{0}t/{1}", _webHelper.GetStoreLocation(false), topic.SystemName.ToLowerInvariant());
                 var updateFrequency = UpdateFrequency.Weekly;
                 var updateTime = DateTime.UtcNow;

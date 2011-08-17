@@ -24,6 +24,7 @@ using Nop.Services.Seo;
 using Nop.Services.Topics;
 using Nop.Web.Extensions;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Themes;
 using Nop.Web.Models.Common;
 
@@ -119,23 +120,46 @@ namespace Nop.Web.Controllers
             return PartialView(model);
         }
 
-        public ActionResult LanguageSelected(int customerlanguage, string returnUrl)
+        public ActionResult SetLanguage(int langid)
         {
-            var language = _languageService.GetLanguageById(customerlanguage);
-            if (language != null)
+            var language = _languageService.GetLanguageById(langid);
+            if (language != null && language.Published)
             {
                 _workContext.WorkingLanguage = language;
             }
-            //var model = new LanguageSelectorModel()
-            //{
-            //    CurrentLanguage = _workContext.WorkingLanguage.ToModel(),
-            //    AvailableLanguages = _languageService.GetAllLanguages().Select(x => x.ToModel()).ToList(),
-            //    UseImages = _localizationSettings.UseImagesForLanguageSelection
-            //};
-            if (!String.IsNullOrEmpty(returnUrl))
-                return Redirect(returnUrl);
+
+
+            if (_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
+            {
+                if (HttpContext.Request.UrlReferrer != null)
+                {
+                    string redirectUrl = HttpContext.Request.UrlReferrer.PathAndQuery;
+                    if (redirectUrl.IsLocalizedUrl(true))
+                    {
+                        //already localized URL
+                        redirectUrl = redirectUrl.RemoveLocalizedPathFromUrl(true);
+                    }
+                    redirectUrl = redirectUrl.AddLocalizedPathToUrl(_workContext.WorkingLanguage, true);
+                    return Redirect(redirectUrl);
+                }
+                else
+                {
+                    string redirectUrl = Url.Action("Index", "Home");
+                    redirectUrl = redirectUrl.AddLocalizedPathToUrl(_workContext.WorkingLanguage, true);
+                    return Redirect(redirectUrl);
+                }
+            }
             else
-                return RedirectToAction("Index", "Home");
+            {
+                if (HttpContext.Request.UrlReferrer != null)
+                {
+                    return Redirect(HttpContext.Request.UrlReferrer.PathAndQuery);
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+            }
         }
 
         //currency

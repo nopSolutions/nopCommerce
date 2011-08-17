@@ -211,7 +211,7 @@ namespace Nop.Web.Controllers
         {
             //check whether registration is allowed
             if (_customerSettings.UserRegistrationType == UserRegistrationType.Disabled)
-                return RedirectToAction("RegisterResult", new { resultId = (int)UserRegistrationType.Disabled });
+                return RedirectToRoute("RegisterResult", new { resultId = (int)UserRegistrationType.Disabled });
 
             var model = new RegisterModel();
             model.AllowCustomersToSetTimeZone = _dateTimeSettings.AllowCustomersToSetTimeZone;
@@ -243,7 +243,7 @@ namespace Nop.Web.Controllers
         {
             //check whether registration is allowed
             if (_customerSettings.UserRegistrationType == UserRegistrationType.Disabled)
-                return RedirectToAction("RegisterResult", new { resultId = (int)UserRegistrationType.Disabled });
+                return RedirectToRoute("RegisterResult", new { resultId = (int)UserRegistrationType.Disabled });
             
             if (_workContext.CurrentCustomer.IsRegistered())
             {
@@ -357,12 +357,12 @@ namespace Nop.Web.Controllers
                                 _workflowMessageService.SendCustomerEmailValidationMessage(customer, _workContext.WorkingLanguage.Id);
 
                                 //result
-                                return RedirectToAction("RegisterResult", new { resultId = (int)UserRegistrationType.EmailValidation });
+                                return RedirectToRoute("RegisterResult", new { resultId = (int)UserRegistrationType.EmailValidation });
                             }
                             break;
                         case UserRegistrationType.AdminApproval:
                             {
-                                return RedirectToAction("RegisterResult", new { resultId = (int)UserRegistrationType.AdminApproval });
+                                return RedirectToRoute("RegisterResult", new { resultId = (int)UserRegistrationType.AdminApproval });
                             }
                             break;
                         case UserRegistrationType.Standard:
@@ -370,7 +370,7 @@ namespace Nop.Web.Controllers
                                 //send customer welcome message
                                 _workflowMessageService.SendCustomerWelcomeMessage(customer, _workContext.WorkingLanguage.Id);
 
-                                return RedirectToAction("RegisterResult", new { resultId = (int)UserRegistrationType.Standard });
+                                return RedirectToRoute("RegisterResult", new { resultId = (int)UserRegistrationType.Standard });
                             }
                             break;
                         default:

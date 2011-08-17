@@ -13,5 +13,10 @@ namespace Nop.Core.Domain.Localization
         /// Use images for language selection
         /// </summary>
         public bool UseImagesForLanguageSelection { get; set; }
+
+        /// <summary>
+        /// A value indicating whether SEO friendly URLs with multiple languages are enabled
+        /// </summary>
+        public bool SeoFriendlyUrlsForLanguagesEnabled { get; set; }
     }
 }

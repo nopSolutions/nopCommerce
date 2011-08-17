@@ -24,6 +24,14 @@ namespace Nop.Admin.Validators.Localization
                               }
                           })
                 .WithMessage(localizationService.GetResource("Admin.Configuration.Languages.Fields.LanguageCulture.Validation"));
+
+            RuleFor(x => x.UniqueSeoCode)
+                .NotNull()
+                .WithMessage(localizationService.GetResource("Admin.Configuration.Languages.Fields.UniqueSeoCode.Required"));
+            RuleFor(x => x.UniqueSeoCode)
+                .Length(2)
+                .WithMessage(localizationService.GetResource("Admin.Configuration.Languages.Fields.UniqueSeoCode.Length"));
+
         }
     }
 }

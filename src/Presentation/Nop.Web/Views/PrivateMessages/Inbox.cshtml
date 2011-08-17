@@ -16,7 +16,7 @@
     </script>
     @if (Model.Messages.Count > 0)
     {
-        using (Html.BeginForm("Index", "InboxUpdate", FormMethod.Post))
+        using (Html.BeginRouteForm("PrivateMessagesInbox", FormMethod.Post))
         {
             @Html.Grid(Model.Messages).Columns(column =>
             {

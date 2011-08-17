@@ -98,17 +98,17 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Controllers
                 case OpenAuthenticationStatus.AutoRegisteredEmailValidation:
                     {
                         //result
-                        return RedirectToAction("RegisterResult", "Customer", new { resultId = (int)UserRegistrationType.EmailValidation });
+                        return RedirectToRoute("RegisterResult", new { resultId = (int)UserRegistrationType.EmailValidation });
                     }
                     break;
                 case OpenAuthenticationStatus.AutoRegisteredAdminApproval:
                     {
-                        return RedirectToAction("RegisterResult", "Customer", new { resultId = (int)UserRegistrationType.AdminApproval });
+                        return RedirectToRoute("RegisterResult", new { resultId = (int)UserRegistrationType.AdminApproval });
                     }
                     break;
                 case OpenAuthenticationStatus.AutoRegisteredStandard:
                     {
-                        return RedirectToAction("RegisterResult", "Customer", new { resultId = (int)UserRegistrationType.Standard });
+                        return RedirectToRoute("RegisterResult", new { resultId = (int)UserRegistrationType.Standard });
                     }
                     break;
                 default:

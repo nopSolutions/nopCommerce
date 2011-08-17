@@ -10,13 +10,14 @@ using Nop.Services.Authentication;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
+using Nop.Web.Framework.Localization;
 
-namespace Nop.Services
+namespace Nop.Web.Framework
 {
     /// <summary>
-    /// Working context
+    /// Working context for web application
     /// </summary>
-    public partial class WorkContext : IWorkContext
+    public partial class WebWorkContext : IWorkContext
     {
         private const string CustomerCookieName = "Nop.customer";
 
@@ -27,18 +28,20 @@ namespace Nop.Services
         private readonly ICurrencyService _currencyService;
         private readonly TaxSettings _taxSettings;
         private readonly CurrencySettings _currencySettings;
+        private readonly LocalizationSettings _localizationSettings;
         private readonly IWebHelper _webHelper;
 
         private Customer _cachedCustomer;
         private Customer _originalCustomerIfImpersonated;
         private bool _cachedIsAdmin;
 
-        public WorkContext(HttpContextBase httpContext,
+        public WebWorkContext(HttpContextBase httpContext,
             ICustomerService customerService,
             IAuthenticationService authenticationService,
             ILanguageService languageService,
             ICurrencyService currencyService,
             TaxSettings taxSettings, CurrencySettings currencySettings,
+            LocalizationSettings localizationSettings,
             IWebHelper webHelper)
         {
             this._httpContext = httpContext;
@@ -48,6 +51,7 @@ namespace Nop.Services
             this._currencyService = currencyService;
             this._taxSettings = taxSettings;
             this._currencySettings = currencySettings;
+            this._localizationSettings = localizationSettings;
             this._webHelper = webHelper;
         }
 
@@ -209,11 +213,35 @@ namespace Nop.Services
         {
             get
             {
+                //get language from URL (if possible)
+                if (_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
+                {
+                    if (_httpContext != null)
+                    {
+                        var seoCode = _httpContext.GetLanguageSeoCodeFromUrl();
+                        if (!String.IsNullOrEmpty(seoCode))
+                        {
+                            var langByCulture = _languageService.GetAllLanguages()
+                                .Where(l => seoCode.Equals(l.UniqueSeoCode, StringComparison.InvariantCultureIgnoreCase))
+                                .FirstOrDefault();
+                            if (langByCulture != null && langByCulture.Published)
+                            {
+                                //the language is found. now we need to save it
+                                if (this.CurrentCustomer != null &&
+                                    !langByCulture.Equals(this.CurrentCustomer.Language))
+                                {
+                                    this.CurrentCustomer.Language = langByCulture;
+                                    _customerService.UpdateCustomer(this.CurrentCustomer);
+                                }
+                            }
+                        }
+                    }
+                }
                 if (this.CurrentCustomer != null &&
                     this.CurrentCustomer.Language != null &&
                     this.CurrentCustomer.Language.Published)
                     return this.CurrentCustomer.Language;
-                
+
                 var lang = _languageService.GetAllLanguages().FirstOrDefault();
                 return lang;
             }

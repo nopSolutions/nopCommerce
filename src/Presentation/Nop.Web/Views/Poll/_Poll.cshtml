@@ -30,7 +30,7 @@
             }
             <input type="submit" name="vote-poll-@(Model.Id)" value="@T("Polls.Vote")" id="vote-poll-@(Model.Id)" class="submitpollvotebutton" />
             <span id="poll-voting-progress-@(Model.Id)" style="display: none;">@T("Common.Wait...")
-                <img src='@Href("~/Content/Images/ajax_loader_small.gif")' alt="@T("Common.Wait...")" />
+                <img src='@Url.Content("~/Content/Images/ajax_loader_small.gif")' alt="@T("Common.Wait...")" />
             </span>@*TODO add a new 'ajax_loader_small.gif' with transparent background*@
         </div>
         <div class="clear">

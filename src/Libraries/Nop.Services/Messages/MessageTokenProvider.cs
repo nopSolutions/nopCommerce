@@ -443,7 +443,7 @@ namespace Nop.Services.Messages
                 tokens.Add(new Token("Order.CreatedOn", order.CreatedOnUtc.ToString("D")));
             }
 
-            //TODO add a method for getting URL
+            //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
             tokens.Add(new Token("Order.OrderURLForCustomer", string.Format("{0}orderdetails/{1}", _webHelper.GetStoreLocation(false), order.Id)));
         }
 
@@ -482,7 +482,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Customer.VatNumberStatus", HttpUtility.HtmlEncode(customer.VatNumberStatus.ToString())));
 
 
-            //TODO add a method for getting URL
+            //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
             tokens.Add(new Token("Customer.PasswordRecoveryURL", string.Format("{0}passwordrecovery/confirm/{1}/{2}", _webHelper.GetStoreLocation(false), customer.GetAttribute<string>(SystemCustomerAttributeNames.PasswordRecoveryToken), customer.Email)));
             tokens.Add(new Token("Customer.AccountActivationURL", string.Format("{0}customer/activation/{1}/{2}", _webHelper.GetStoreLocation(false), customer.GetAttribute<string>(SystemCustomerAttributeNames.AccountActivationToken), customer.Username)));
             tokens.Add(new Token("Wishlist.URLForCustomer", string.Format("{0}wishlist/{1}", _webHelper.GetStoreLocation(false), customer.CustomerGuid)));
@@ -522,7 +522,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Product.Name", HttpUtility.HtmlEncode(product.Name)));
             tokens.Add(new Token("Product.ShortDescription", product.ShortDescription));
 
-            //TODO add a method for getting URL
+            //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
             var productUrl = string.Format("{0}p/{1}/{2}", _webHelper.GetStoreLocation(false), product.Id, product.GetSeName());
             tokens.Add(new Token("Product.ProductURLForCustomer", productUrl));
         }
@@ -536,7 +536,7 @@ namespace Nop.Services.Messages
 
         public virtual void AddForumTopicTokens(IList<Token> tokens, ForumTopic forumTopic)
         {
-            //TODO add a method for getting URL
+            //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
             var topicUrl = string.Format("{0}boards/topic/{1}/{2}", _webHelper.GetStoreLocation(false), forumTopic.Id, forumTopic.GetSeName());
             tokens.Add(new Token("Forums.TopicURL", topicUrl));
             tokens.Add(new Token("Forums.TopicName", HttpUtility.HtmlEncode(forumTopic.Subject)));
@@ -550,7 +550,7 @@ namespace Nop.Services.Messages
 
         public virtual void AddForumTokens(IList<Token> tokens, Forum forum)
         {
-            //TODO add a method for getting URL
+            //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
             var forumUrl = string.Format("{0}boards/forum/{1}/{2}", _webHelper.GetStoreLocation(false), forum.Id, forum.GetSeName());
             tokens.Add(new Token("Forums.ForumURL", forumUrl));
             tokens.Add(new Token("Forums.ForumName", HttpUtility.HtmlEncode(forum.Name)));

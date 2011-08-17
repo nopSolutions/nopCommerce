@@ -212,5 +212,14 @@
                 @Html.ValidationMessageFor(model => model.LocalizationSettings.UseImagesForLanguageSelection)
             </td>
         </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
+                @Html.ValidationMessageFor(model => model.LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
+            </td>
+        </tr>
     </table>
 }

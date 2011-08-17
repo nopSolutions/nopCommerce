@@ -11,7 +11,7 @@
         }
         @if (Model.IsAuthenticated)
         {
-            <li><a href="@Url.Action("myaccount", "customer")" class="account">@Model.CustomerEmailUsername</a></li>
+            <li><a href="@Url.RouteUrl("CustomerMyAccount")" class="account">@Model.CustomerEmailUsername</a></li>
             <li><a href="@Url.RouteUrl("Logout")" class="ico-logout">@T("Account.Logout")</a></li>
             
             if (Model.AllowPrivateMessages)

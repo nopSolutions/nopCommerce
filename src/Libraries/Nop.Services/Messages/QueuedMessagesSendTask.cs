@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Xml;
+using Nop.Core;
 using Nop.Core.Infrastructure;
 using Nop.Core.Tasks;
 using Nop.Services.Logging;

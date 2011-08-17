@@ -22,6 +22,11 @@ namespace Nop.Core.Domain.Localization
         public virtual string LanguageCulture { get; set; }
 
         /// <summary>
+        /// Gets or sets the unique SEO code
+        /// </summary>
+        public virtual string UniqueSeoCode { get; set; }
+        
+        /// <summary>
         /// Gets or sets the flag image file name
         /// </summary>
         public virtual string FlagImageFileName { get; set; }

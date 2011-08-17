@@ -49,7 +49,7 @@
                     <input type="button" class="deletepmbutton" value="@T("PrivateMessages.View.DeleteButton")" 
                         onclick="setLocation('@Url.RouteUrl("DeletePM", new { privateMessageId = @Model.Id })')" />
                     <input type="button" class="backpmbutton" value="@T("PrivateMessages.View.BackButton")" 
-                        onclick="setLocation('@Url.Action("Index", "PrivateMessages")')" />
+                        onclick="setLocation('@Url.RouteUrl("PrivateMessages")')" />
                 </td>
             </tr>
         </table>

@@ -32,6 +32,15 @@
     </tr>
     <tr>
         <td class="adminTitle">
+            @Html.NopLabelFor(model => model.UniqueSeoCode):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.UniqueSeoCode)
+            @Html.ValidationMessageFor(model => model.UniqueSeoCode)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
             @Html.NopLabelFor(model => model.FlagImageFileName):
         </td>
         <td class="adminData">

@@ -17,6 +17,10 @@ namespace Nop.Admin.Models.Localization
         [AllowHtml]
         public string LanguageCulture { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Languages.Fields.UniqueSeoCode")]
+        [AllowHtml]
+        public string UniqueSeoCode { get; set; }
+        
         [NopResourceDisplayName("Admin.Configuration.Languages.Fields.FlagImageFileName")]
         [AllowHtml]
         public string FlagImageFileName { get; set; }

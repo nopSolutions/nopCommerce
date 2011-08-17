@@ -32,8 +32,8 @@
                                         <b>@address.FirstName @address.LastName</b>
                                     </td>
                                     <td align="right" style="padding: 5px 5px 5px 0px;">
-                                        <input type="button" class="editaddressbutton" onclick="location.href='@Url.Action("addressedit", new { addressId = address.Id })'" value='@T("Common.Edit")' />
-                                        <input type="submit"  class="deleteaddressbutton" onclick="location.href='@Url.Action("addressdelete", new { addressId = address.Id })'" value="@T("Common.Delete")" />
+                                        <input type="button" class="editaddressbutton" onclick="location.href='@Url.RouteUrl("CustomerAddressEdit", new { addressId = address.Id })'" value='@T("Common.Edit")' />
+                                        <input type="submit"  class="deleteaddressbutton" onclick="location.href='@Url.RouteUrl("CustomerAddressDelete", new { addressId = address.Id })'" value="@T("Common.Delete")" />
                                     </td>
                                 </tr>
                                 <tr>
@@ -108,7 +108,7 @@
     </div>
 
     <div class="add-button">
-    <input type="submit" class="addaddressbutton" onclick="location.href='@Url.Action("addressadd")'" value="@T("Common.AddNew")" />
+    <input type="submit" class="addaddressbutton" onclick="location.href='@Url.RouteUrl("CustomerAddressAdd")'" value="@T("Common.AddNew")" />
     </div>
         </div>
     </div>

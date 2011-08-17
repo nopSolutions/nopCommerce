@@ -17,6 +17,8 @@ namespace Nop.Services.Authentication.External
             _returnUrl = returnUrl;
             AuthenticationStatus = openAuthenticationStatus;
 
+            //TODO Use "Home"/"Index" (controller and action) instead of "~/"
+            //in way SEO friendly language URLs will be persisted
             if (AuthenticationStatus == OpenAuthenticationStatus.Authenticated)
                 Result = new RedirectResult(!string.IsNullOrEmpty(_returnUrl) ? _returnUrl : "~/");
         }

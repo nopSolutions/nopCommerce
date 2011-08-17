@@ -276,7 +276,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.map</DependentUpon>
     </Compile>
-    <Compile Include="WorkContext.cs" />
     <Compile Include="Localization\LocalizedEntityService.cs" />
     <Compile Include="Localization\ILocalizedEntityService.cs" />
     <Compile Include="Catalog\IProductAttributeService.cs" />

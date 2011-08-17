@@ -697,6 +697,7 @@ namespace Nop.Admin.Controllers
 
             //lcoalization
             model.LocalizationSettings.UseImagesForLanguageSelection = _localizationSettings.UseImagesForLanguageSelection;
+            model.LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled = _localizationSettings.SeoFriendlyUrlsForLanguagesEnabled;
 
             return View(model);
         }
@@ -754,6 +755,7 @@ namespace Nop.Admin.Controllers
 
             //localization settings
             _localizationSettings.UseImagesForLanguageSelection = model.LocalizationSettings.UseImagesForLanguageSelection;
+            _localizationSettings.SeoFriendlyUrlsForLanguagesEnabled = model.LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled;
             _settingService.SaveSetting(_localizationSettings);
 
             //activity log

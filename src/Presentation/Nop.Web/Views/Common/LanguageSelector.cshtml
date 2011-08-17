@@ -6,24 +6,22 @@
     <ul class="languagelist">
         @foreach (var lang in Model.AvailableLanguages)
         {
-            <li>
+            <li><a href="@(@Url.Action("setlanguage", "common", new { langid = lang.Id }))" title="@lang.Name">
                 <img title='@lang.Name' alt='@lang.Name' @(lang.Id == Model.CurrentLanguage.Id ? " class=selected" : null)
-                 src="@Url.Content("~/Content/Images/flags/" + @lang.FlagImageFileName) " onclick="setLocation('@(@Url.Action("LanguageSelected", "Common", new { customerlanguage = lang.Id, returnUrl = @HttpContext.Current.Request.Url.PathAndQuery }))')" />
-            </li>
+                 src="@Url.Content("~/Content/Images/flags/" + @lang.FlagImageFileName) " />
+            </a></li>
         }
     </ul>
     }
     else
     {
 
-        using (Ajax.BeginForm("LanguageSelected", "Common", new AjaxOptions { OnComplete = "onLanguageChangedRequestCompleted();" }, new { id = "form-languageselector" }))
+        var languages = Model.AvailableLanguages.Select(x => new SelectListItem
         {
-            var languages = Model.AvailableLanguages.Select(x => new SelectListItem
-            {
-                Text = x.Name,
-                Value = x.Id.ToString(),
-                Selected = x.Id.Equals(Model.CurrentLanguage.Id)
-            });
+            Text = x.Name,
+            Value = x.Id.ToString(),
+            Selected = x.Id.Equals(Model.CurrentLanguage.Id)
+        });
     
     @Html.DropDownList("customerlanguage",
             languages,
@@ -31,12 +29,13 @@
             
     <script type="text/javascript">
         function onLanguageChanged() {
-            $("#form-languageselector").submit();
-        }
-        function onLanguageChangedRequestCompleted() {
-            location.reload();
+            var selectedCustomerLanguage = document.getElementById('customerlanguage');
+            var selectedLanguageId = selectedCustomerLanguage.options[selectedCustomerLanguage.selectedIndex].value;
+            var changeLanguageActionUrl = '@Url.Action("SetLanguage", "Common", new { langid = "languageplaceholder" })';
+            changeLanguageActionUrl = changeLanguageActionUrl.replace("languageplaceholder", selectedLanguageId);
+            setLocation(changeLanguageActionUrl);
         }
     </script>
-        }
+        
     }
 }

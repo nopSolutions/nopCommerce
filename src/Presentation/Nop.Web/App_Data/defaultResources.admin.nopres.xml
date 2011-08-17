@@ -2779,6 +2779,20 @@
                             </LocaleResource>
                           </Children>
                         </LocaleResource>
+                        <LocaleResource Name="UniqueSeoCode">
+                          <Value>Unique SEO code</Value>
+                          <Children>
+                            <LocaleResource Name="Hint">
+                              <Value>The unique two letter SEO code. It's used to generate URLs like 'http://www.yourStore.com/en/' when you have more than one published language. 'SEO friendly URLs with multiple languages' option should also be enabled.</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="Length">
+                              <Value>Two letter SEO code should be 2 characters long.</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="Required">
+                              <Value>Please provide an unique SEO code.</Value>
+                            </LocaleResource>
+                          </Children>
+                        </LocaleResource>
                         <LocaleResource Name="FlagImageFileName">
                           <Value>Flag image file name</Value>
                           <Children>
@@ -3725,6 +3739,14 @@
                         <Children>
                           <LocaleResource Name="Hint">
                             <Value>Check if you want to use images for language selection.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="SeoFriendlyUrlsForLanguagesEnabled">
+                        <Value>SEO friendly URLs with multiple languages enabled</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>When enabled, your URLs will be http://www.yourStore.com/en/ or http://www.yourStore.com/ru/ (SEO friendly)</Value>
                           </LocaleResource>
                         </Children>
                       </LocaleResource>

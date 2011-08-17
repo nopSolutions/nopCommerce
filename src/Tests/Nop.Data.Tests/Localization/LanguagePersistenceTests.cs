@@ -15,6 +15,7 @@ namespace Nop.Data.Tests.Localization
             {
                 Name = "English",
                 LanguageCulture = "en-Us",
+                UniqueSeoCode = "en",
                 FlagImageFileName = "us.png",
                 Published = true,
                 DisplayOrder = 1
@@ -24,6 +25,7 @@ namespace Nop.Data.Tests.Localization
             fromDb.ShouldNotBeNull();
             fromDb.Name.ShouldEqual("English");
             fromDb.LanguageCulture.ShouldEqual("en-Us");
+            fromDb.UniqueSeoCode.ShouldEqual("en");
             fromDb.FlagImageFileName.ShouldEqual("us.png");
             fromDb.Published.ShouldEqual(true);
             fromDb.DisplayOrder.ShouldEqual(1);

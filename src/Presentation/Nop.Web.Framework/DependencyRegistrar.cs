@@ -112,7 +112,7 @@ namespace Nop.Web.Framework
 
 
             //work context
-            builder.RegisterType<WorkContext>().As<IWorkContext>().InstancePerHttpRequest();
+            builder.RegisterType<WebWorkContext>().As<IWorkContext>().InstancePerHttpRequest();
 
             //services
             builder.RegisterType<CategoryService>().As<ICategoryService>().InstancePerHttpRequest();

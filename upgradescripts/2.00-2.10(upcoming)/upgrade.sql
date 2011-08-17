@@ -311,6 +311,24 @@ set @resources='
   <LocaleResource Name="ShoppingCart.DiscountCouponCode.Applied">
     <Value>The coupon code was applied</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SeoFriendlyUrlsForLanguagesEnabled">
+    <Value>SEO friendly URLs with multiple languages enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SeoFriendlyUrlsForLanguagesEnabled.Hint">
+    <Value>When enabled, your URLs will be http://www.yourStore.com/en/ or http://www.yourStore.com/ru/ (SEO friendly)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.Fields.UniqueSeoCode">
+    <Value>Unique SEO code</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.Fields.UniqueSeoCode.Hint">
+    <Value>The unique two letter SEO code. It''s used to generate URLs like ''http://www.yourStore.com/en/'' when you have more than one published language. ''SEO friendly URLs with multiple languages'' option should also be enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.Fields.UniqueSeoCode.Length">
+    <Value>Two letter SEO code should be 2 characters long.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.Fields.UniqueSeoCode.Required">
+    <Value>Please provide an unique SEO code.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -578,3 +596,14 @@ UPDATE [Setting]
 SET [Value] = N'Repair,Replacement,Store Credit'
 WHERE [name] = N'ordersettings.returnrequestactions'
 GO
+
+--SEO friendly language URLs
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Language]') and NAME='UniqueSeoCode')
+BEGIN
+	ALTER TABLE [dbo].[Language] 
+	ADD [UniqueSeoCode] [nvarchar](2) NULL
+END
+GO
+--set defaults
+UPDATE [dbo].[Language]
+SET [UniqueSeoCode] = SUBSTRING ([LanguageCulture], 1, 2)
