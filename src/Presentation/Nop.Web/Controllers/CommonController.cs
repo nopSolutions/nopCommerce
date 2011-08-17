@@ -131,21 +131,22 @@ namespace Nop.Web.Controllers
 
             if (_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
             {
+                string applicationPath = HttpContext.Request.ApplicationPath;
                 if (HttpContext.Request.UrlReferrer != null)
                 {
                     string redirectUrl = HttpContext.Request.UrlReferrer.PathAndQuery;
-                    if (redirectUrl.IsLocalizedUrl(true))
+                    if (redirectUrl.IsLocalizedUrl(applicationPath, true))
                     {
                         //already localized URL
-                        redirectUrl = redirectUrl.RemoveLocalizedPathFromUrl(true);
+                        redirectUrl = redirectUrl.RemoveLocalizedPathFromRawUrl(applicationPath);
                     }
-                    redirectUrl = redirectUrl.AddLocalizedPathToUrl(_workContext.WorkingLanguage, true);
+                    redirectUrl = redirectUrl.AddLocalizedPathToRawUrl(applicationPath, _workContext.WorkingLanguage);
                     return Redirect(redirectUrl);
                 }
                 else
                 {
                     string redirectUrl = Url.Action("Index", "Home");
-                    redirectUrl = redirectUrl.AddLocalizedPathToUrl(_workContext.WorkingLanguage, true);
+                    redirectUrl = redirectUrl.AddLocalizedPathToRawUrl(applicationPath, _workContext.WorkingLanguage);
                     return Redirect(redirectUrl);
                 }
             }

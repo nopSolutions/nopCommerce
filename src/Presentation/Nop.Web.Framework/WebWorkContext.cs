@@ -218,20 +218,25 @@ namespace Nop.Web.Framework
                 {
                     if (_httpContext != null)
                     {
-                        var seoCode = _httpContext.GetLanguageSeoCodeFromUrl();
-                        if (!String.IsNullOrEmpty(seoCode))
+                        string virtualPath = _httpContext.Request.AppRelativeCurrentExecutionFilePath;
+                        string applicationPath = _httpContext.Request.ApplicationPath;
+                        if (virtualPath.IsLocalizedUrl(applicationPath, false))
                         {
-                            var langByCulture = _languageService.GetAllLanguages()
-                                .Where(l => seoCode.Equals(l.UniqueSeoCode, StringComparison.InvariantCultureIgnoreCase))
-                                .FirstOrDefault();
-                            if (langByCulture != null && langByCulture.Published)
+                            var seoCode = virtualPath.GetLanguageSeoCodeFromUrl(applicationPath, false);
+                            if (!String.IsNullOrEmpty(seoCode))
                             {
-                                //the language is found. now we need to save it
-                                if (this.CurrentCustomer != null &&
-                                    !langByCulture.Equals(this.CurrentCustomer.Language))
+                                var langByCulture = _languageService.GetAllLanguages()
+                                    .Where(l => seoCode.Equals(l.UniqueSeoCode, StringComparison.InvariantCultureIgnoreCase))
+                                    .FirstOrDefault();
+                                if (langByCulture != null && langByCulture.Published)
                                 {
-                                    this.CurrentCustomer.Language = langByCulture;
-                                    _customerService.UpdateCustomer(this.CurrentCustomer);
+                                    //the language is found. now we need to save it
+                                    if (this.CurrentCustomer != null &&
+                                        !langByCulture.Equals(this.CurrentCustomer.Language))
+                                    {
+                                        this.CurrentCustomer.Language = langByCulture;
+                                        _customerService.UpdateCustomer(this.CurrentCustomer);
+                                    }
                                 }
                             }
                         }

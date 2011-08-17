@@ -69,22 +69,23 @@ namespace Nop.Web.Framework.Localization
         public override RouteData GetRouteData(HttpContextBase httpContext)
         {
             string virtualPath = httpContext.Request.AppRelativeCurrentExecutionFilePath;
-            //string old = virtualPath;
-            if (virtualPath.IsLocalizedUrl())
+            string applicationPath = httpContext.Request.ApplicationPath;
+            if (virtualPath.IsLocalizedUrl(applicationPath, false))
             {
                 //In ASP.NET Development Server, an URL like "http://localhost/Blog.aspx/Categories/BabyFrog" will return 
                 //"~/Blog.aspx/Categories/BabyFrog" as AppRelativeCurrentExecutionFilePath.
                 //However, in II6, the AppRelativeCurrentExecutionFilePath is "~/Blog.aspx"
                 //It seems that IIS6 think we're process Blog.aspx page.
                 //So, I'll use RawUrl to re-create an AppRelativeCurrentExecutionFilePath like ASP.NET Development Server.
-                virtualPath = "~" + httpContext.Request.RawUrl;
 
-        
-
-                //UNDONE should we do it here?
-                int seoCodeLength = 2;
-                virtualPath = string.Concat("~/", (virtualPath.Length <= seoCodeLength + 3 ? string.Empty : virtualPath.Substring(seoCodeLength + 3)));
-                httpContext.RewritePath(virtualPath, true);
+                //UNDONE should we do path rewrting here?
+                string rawUrl = httpContext.Request.RawUrl;
+                var newVirtualPath = rawUrl.RemoveLocalizedPathFromRawUrl(applicationPath);
+                if (string.IsNullOrEmpty(newVirtualPath))
+                    newVirtualPath = "/";
+                newVirtualPath = newVirtualPath.RemoveApplicationPathFromRawUrl(applicationPath);
+                newVirtualPath = "~" + newVirtualPath;
+                httpContext.RewritePath(newVirtualPath, true);
             }
             RouteData data = base.GetRouteData(httpContext);
             return data;
@@ -105,9 +106,10 @@ namespace Nop.Web.Framework.Localization
             if (data != null)
             {
                 string rawUrl = requestContext.HttpContext.Request.RawUrl;
-                if (rawUrl.IsLocalizedUrl(true))
+                string applicationPath = requestContext.HttpContext.Request.ApplicationPath;
+                if (rawUrl.IsLocalizedUrl(applicationPath, true))
                 {
-                    data.VirtualPath = string.Concat(rawUrl.GetLanguageSeoCodeFromUrl(), "/", data.VirtualPath);
+                    data.VirtualPath = string.Concat(rawUrl.GetLanguageSeoCodeFromUrl(applicationPath, true), "/", data.VirtualPath);
                 }
             }
             return data;
