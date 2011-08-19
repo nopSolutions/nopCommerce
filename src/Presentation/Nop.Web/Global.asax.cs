@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Threading;
+using System.Web;
 using System.Web.Hosting;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -90,10 +91,22 @@ namespace Nop.Web
         {
             EnsureDatabaseIsInstalled();
         }
+
         protected void Application_AuthenticateRequest(object sender, EventArgs e)
         { 
             //we don't do it in Application_BeginRequest because a user is not authenticated yet
             SetWorkingCulture();
+        }
+
+        public override string GetVaryByCustomString(HttpContext context, string custom)
+        {
+            switch (custom)
+            {
+                case "WorkingLanguage":
+                    return EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Id.ToString();
+                default:
+                    return base.GetVaryByCustomString(context, custom);
+            }
         }
 
         protected void EnsureDatabaseIsInstalled()

@@ -940,6 +940,7 @@ namespace Nop.Web.Controllers
         }
 
         [ChildActionOnly]
+        [OutputCache(Duration = 120, VaryByCustom = "WorkingLanguage")]
         public ActionResult ManufacturerNavigation(int currentManufacturerId)
         {
             var currentManufacturer = _manufacturerService.GetManufacturerById(currentManufacturerId);
@@ -1540,6 +1541,7 @@ namespace Nop.Web.Controllers
         }
 
         [ChildActionOnly]
+        [OutputCache(Duration = 120, VaryByCustom = "WorkingLanguage")]
         public ActionResult PopularProductTags()
         {
             var model = new PopularProductTagsModel();
