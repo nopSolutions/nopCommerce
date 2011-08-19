@@ -6,8 +6,11 @@ using System.Web.Hosting;
 using System.Web.Mvc;
 using System.Web.Routing;
 using FluentValidation.Mvc;
+using MvcMiniProfiler;
+using MvcMiniProfiler.MVCHelpers;
 using Nop.Core;
 using Nop.Core.Data;
+using Nop.Core.Domain;
 using Nop.Core.Infrastructure;
 using Nop.Web.Framework;
 using Nop.Web.Framework.EmbeddedViews;
@@ -69,6 +72,7 @@ namespace Nop.Web
             //Registering some regular mvc stuf
             //ViewEngines.Engines.Add(new ThemableRazorViewEngine());
             AreaRegistration.RegisterAllAreas();
+            GlobalFilters.Filters.Add(new ProfilingActionFilter());
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
 
@@ -90,6 +94,20 @@ namespace Nop.Web
         protected void Application_BeginRequest(object sender, EventArgs e)
         {
             EnsureDatabaseIsInstalled();
+
+            if (DataSettingsHelper.DatabaseIsInstalled())
+            {
+                if (EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerInPublicStore)
+                {
+                    MiniProfiler.Start();
+                }
+            }
+        }
+
+        protected void Application_EndRequest(object sender, EventArgs e)
+        {
+            //stop as early as you can, even earlier with MvcMiniProfiler.MiniProfiler.Stop(discardResults: true);
+            MiniProfiler.Stop();
         }
 
         protected void Application_AuthenticateRequest(object sender, EventArgs e)

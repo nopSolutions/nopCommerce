@@ -19,5 +19,7 @@ namespace Nop.Core.Domain
         public string DefaultStoreTheme { get; set; }
 
         public bool AllowCustomerToSelectTheme { get; set; }
+
+        public bool DisplayMiniProfilerInPublicStore { get; set; }
     }
 }

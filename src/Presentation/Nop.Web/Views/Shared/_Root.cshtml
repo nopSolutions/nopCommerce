@@ -2,7 +2,8 @@
 @using Nop.Core.Infrastructure
 @using Nop.Core
 @{
-    var storeLocation = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Core.IWebHelper>().GetStoreLocation();
+    var storeLocation = EngineContext.Current.Resolve<Nop.Core.IWebHelper>().GetStoreLocation();
+    var displayMiniProfiler = EngineContext.Current.Resolve<Nop.Core.Domain.StoreInformationSettings>().DisplayMiniProfilerInPublicStore;
 }
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -39,6 +40,10 @@
     @*Favicon - upload upload favicon.ico file to the root direcotry*@
     @Html.Action("Favicon", "Common")
     @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.HeadHtmlTag })
+    @if (displayMiniProfiler)
+    {
+        @MvcMiniProfiler.MiniProfiler.RenderIncludes();
+    }
     <!--Powered by nopCommerce - http://www.nopCommerce.com-->
     <!--Copyright (c) 2008-2011-->
 </head>
