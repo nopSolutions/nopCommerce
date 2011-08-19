@@ -64,6 +64,7 @@ namespace Nop.Web.Controllers
         }
 
         [ChildActionOnly]
+        [OutputCache(Duration = 120, VaryByCustom = "WorkingLanguage")]
         public ActionResult TopicBlock(string systemName)
         {
             var topic = _topicService.GetTopicBySystemName(systemName);
