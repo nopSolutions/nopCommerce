@@ -795,7 +795,7 @@ namespace Nop.Web.Controllers
         }
 
         [ChildActionOnly]
-        [OutputCache(Duration = 120, VaryByCustom = "WorkingLanguage")]
+        //[OutputCache(Duration = 120, VaryByCustom = "WorkingLanguage")]
         public ActionResult CategoryNavigation(int currentCategoryId)
         {
             var currentCategory = _categoryService.GetCategoryById(currentCategoryId);
@@ -806,7 +806,7 @@ namespace Nop.Web.Controllers
         }
 
         [ChildActionOnly]
-        [OutputCache(Duration = 120, VaryByCustom = "WorkingLanguage")]
+        //[OutputCache(Duration = 120, VaryByCustom = "WorkingLanguage")]
         public ActionResult HomepageCategories()
         {
             var listModel = _categoryService.GetAllCategoriesDisplayedOnHomePage()
@@ -942,7 +942,7 @@ namespace Nop.Web.Controllers
         }
 
         [ChildActionOnly]
-        [OutputCache(Duration = 120, VaryByCustom = "WorkingLanguage")]
+        //[OutputCache(Duration = 120, VaryByCustom = "WorkingLanguage")]
         public ActionResult ManufacturerNavigation(int currentManufacturerId)
         {
             var currentManufacturer = _manufacturerService.GetManufacturerById(currentManufacturerId);
@@ -1209,7 +1209,7 @@ namespace Nop.Web.Controllers
         }
 
         [ChildActionOnly]
-        [OutputCache(Duration = 120, VaryByCustom = "WorkingLanguage")]
+        //[OutputCache(Duration = 120, VaryByCustom = "WorkingLanguage")]
         public ActionResult ProductBreadcrumb(int productId)
         {
             var product = _productService.GetProductById(productId);
@@ -1247,7 +1247,7 @@ namespace Nop.Web.Controllers
         }
 
         [ChildActionOnly]
-        [OutputCache(Duration = 120, VaryByCustom = "WorkingLanguage")]
+        //[OutputCache(Duration = 120, VaryByCustom = "WorkingLanguage")]
         public ActionResult ProductManufacturers(int productId)
         {
             var model = _manufacturerService.GetProductManufacturersByProductId(productId)
@@ -1282,7 +1282,7 @@ namespace Nop.Web.Controllers
         }
 
         [ChildActionOnly]
-        [OutputCache(Duration = 120, VaryByCustom = "WorkingLanguage")]
+        //[OutputCache(Duration = 120, VaryByCustom = "WorkingLanguage")]
         public ActionResult ProductSpecifications(int productId)
         {
             var product = _productService.GetProductById(productId);
@@ -1546,7 +1546,7 @@ namespace Nop.Web.Controllers
         }
 
         [ChildActionOnly]
-        [OutputCache(Duration = 120, VaryByCustom = "WorkingLanguage")]
+        //[OutputCache(Duration = 120, VaryByCustom = "WorkingLanguage")]
         public ActionResult PopularProductTags()
         {
             var model = new PopularProductTagsModel();
