@@ -53,12 +53,20 @@ namespace Nop.Data
 
                     //Seed(context);
                     context.SaveChanges();
+
+                    AddIndexes(context);
                 }
             }
             else
             {
                 throw new ApplicationException("No database instance");
             }
+        }
+        protected virtual void AddIndexes(TContext context)
+        {
+            //Add SQL Server indexes for performance optimization
+            context.Database.ExecuteSqlCommand("CREATE NONCLUSTERED INDEX [IDX_LocaleStringResource] ON [dbo].[LocaleStringResource] ([ResourceName] ASC,  [LanguageId] ASC)");
+            context.Database.ExecuteSqlCommand("CREATE NONCLUSTERED INDEX [IDX_ProductVariant_ProductId] ON [dbo].[ProductVariant] ([ProductId])	INCLUDE ([Price],[AvailableStartDateTimeUtc],[AvailableEndDateTimeUtc],[Published],[Deleted])");
         }
     }
 }

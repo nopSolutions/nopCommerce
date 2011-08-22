@@ -607,3 +607,24 @@ GO
 --set defaults
 UPDATE [dbo].[Language]
 SET [UniqueSeoCode] = SUBSTRING ([LanguageCulture], 1, 2)
+GO
+
+
+--performance optimization (indexes)
+IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IDX_LocaleStringResource' and id=object_id(N'[dbo].[LocaleStringResource]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IDX_LocaleStringResource] ON [dbo].[LocaleStringResource] 
+	(
+	  [ResourceName] ASC,
+	  [LanguageId] ASC
+	)
+	END
+GO
+
+IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IDX_ProductVariant_ProductId' and id=object_id(N'[dbo].[ProductVariant]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IDX_ProductVariant_ProductId]
+	ON [dbo].[ProductVariant] ([ProductId])
+	INCLUDE ([Price],[AvailableStartDateTimeUtc],[AvailableEndDateTimeUtc],[Published],[Deleted])
+END
+GO
