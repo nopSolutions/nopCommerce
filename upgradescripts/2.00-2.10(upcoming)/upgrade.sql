@@ -706,3 +706,248 @@ BEGIN
 END
 GO
 
+
+IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_Order_CustomerId' and id=object_id(N'[dbo].[Order]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_Order_CustomerId] ON [dbo].[Order] 
+	(
+		[CustomerId] ASC
+	)
+END
+GO
+
+IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_Language_DisplayOrder' and id=object_id(N'[dbo].[Language]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_Language_DisplayOrder] ON [dbo].[Language] 
+	(
+		[DisplayOrder] ASC
+	)
+END
+GO
+
+IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_CustomerAttribute_CustomerId' and id=object_id(N'[dbo].[CustomerAttribute]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_CustomerAttribute_CustomerId] ON [dbo].[CustomerAttribute] 
+	(
+		[CustomerId] ASC
+	)
+END
+GO
+
+IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_BlogPost_LanguageId' and id=object_id(N'[dbo].[BlogPost]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_BlogPost_LanguageId] ON [dbo].[BlogPost] 
+	(
+		[LanguageId] ASC
+	)
+END
+GO
+
+IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_BlogComment_BlogPostId' and id=object_id(N'[dbo].[BlogComment]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_BlogComment_BlogPostId] ON [dbo].[BlogComment] 
+	(
+		[BlogPostId] ASC
+	)
+END
+GO
+
+IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_News_LanguageId' and id=object_id(N'[dbo].[News]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_News_LanguageId] ON [dbo].[News] 
+	(
+		[LanguageId] ASC
+	)
+END
+GO
+IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_NewsComment_NewsItemId' and id=object_id(N'[dbo].[NewsComment]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_NewsComment_NewsItemId] ON [dbo].[NewsComment] 
+	(
+		[NewsItemId] ASC
+	)
+END
+GO
+
+IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_PollAnswer_PollId' and id=object_id(N'[dbo].[PollAnswer]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_PollAnswer_PollId] ON [dbo].[PollAnswer] 
+	(
+		[PollId] ASC
+	)
+END
+GO
+
+IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_ProductReview_ProductId' and id=object_id(N'[dbo].[ProductReview]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_ProductReview_ProductId] ON [dbo].[ProductReview] 
+	(
+		[ProductId] ASC
+	)
+END
+GO
+
+IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_OrderProductVariant_OrderId' and id=object_id(N'[dbo].[OrderProductVariant]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_OrderProductVariant_OrderId] ON [dbo].[OrderProductVariant] 
+	(
+		[OrderId] ASC
+	)
+END
+GO
+
+IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_OrderNote_OrderId' and id=object_id(N'[dbo].[OrderNote]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_OrderNote_OrderId] ON [dbo].[OrderNote] 
+	(
+		[OrderId] ASC
+	)
+END
+GO
+
+IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_TierPrice_ProductVariantId' and id=object_id(N'[dbo].[TierPrice]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_TierPrice_ProductVariantId] ON [dbo].[TierPrice] 
+	(
+		[ProductVariantId] ASC
+	)
+END
+GO
+
+IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_ShoppingCartItem_ShoppingCartTypeId_CustomerId' and id=object_id(N'[dbo].[ShoppingCartItem]'))
+BEGIN
+CREATE NONCLUSTERED INDEX [IX_ShoppingCartItem_ShoppingCartTypeId_CustomerId] ON [dbo].[ShoppingCartItem] 
+(
+	[ShoppingCartTypeId] ASC,
+	[CustomerId] ASC
+)
+END
+GO
+
+IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_RelatedProduct_ProductId1' and id=object_id(N'[dbo].[RelatedProduct]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_RelatedProduct_ProductId1] ON [dbo].[RelatedProduct] 
+	(
+		[ProductId1] ASC
+	)
+END
+GO
+
+
+IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_ProductVariant_DisplayOrder' and id=object_id(N'[dbo].[ProductVariant]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_ProductVariant_DisplayOrder] ON [dbo].[ProductVariant] 
+	(
+		[DisplayOrder] ASC
+	)
+END
+GO
+
+IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_ProductVariantAttributeValue_ProductVariantAttributeId' and id=object_id(N'[dbo].[ProductVariantAttributeValue]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_ProductVariantAttributeValue_ProductVariantAttributeId] ON [dbo].[ProductVariantAttributeValue] 
+	(
+		[ProductVariantAttributeId] ASC
+	)
+END
+GO
+
+IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_ProductVariant_ProductAttribute_Mapping_ProductVariantId' and id=object_id(N'[dbo].[ProductVariant_ProductAttribute_Mapping]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_ProductVariant_ProductAttribute_Mapping_ProductVariantId] ON [dbo].[ProductVariant_ProductAttribute_Mapping] 
+	(
+		[ProductVariantId] ASC
+	)
+END
+GO
+
+IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_Manufacturer_DisplayOrder' and id=object_id(N'[dbo].[Manufacturer]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_Manufacturer_DisplayOrder] ON [dbo].[Manufacturer] 
+	(
+		[DisplayOrder] ASC
+	)
+END
+GO
+
+IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_Category_DisplayOrder' and id=object_id(N'[dbo].[Category]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_Category_DisplayOrder] ON [dbo].[Category] 
+	(
+		[DisplayOrder] ASC
+	)
+END
+GO
+
+IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_Category_ParentCategoryId' and id=object_id(N'[dbo].[Category]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_Category_ParentCategoryId] ON [dbo].[Category] 
+	(
+		[ParentCategoryId] ASC
+	)
+END
+GO
+IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_Forums_Group_DisplayOrder' and id=object_id(N'[dbo].[Forums_Group]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_Forums_Group_DisplayOrder] ON [dbo].[Forums_Group] 
+	(
+		[DisplayOrder] ASC
+	)
+END
+GO
+IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_Forums_Forum_DisplayOrder' and id=object_id(N'[dbo].[Forums_Forum]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_Forums_Forum_DisplayOrder] ON [dbo].[Forums_Forum] 
+	(
+		[DisplayOrder] ASC
+	)
+END
+GO
+IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_Forums_Forum_ForumGroupId' and id=object_id(N'[dbo].[Forums_Forum]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_Forums_Forum_ForumGroupId] ON [dbo].[Forums_Forum] 
+	(
+		[ForumGroupId] ASC
+	)
+END
+GO
+IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_Forums_Topic_ForumId' and id=object_id(N'[dbo].[Forums_Topic]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_Forums_Topic_ForumId] ON [dbo].[Forums_Topic] 
+	(
+		[ForumId] ASC
+	)
+END
+GO
+IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_Forums_Post_TopicId' and id=object_id(N'[dbo].[Forums_Post]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_Forums_Post_TopicId] ON [dbo].[Forums_Post] 
+	(
+		[TopicId] ASC
+	)
+END
+GO
+IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_Forums_Post_CustomerId' and id=object_id(N'[dbo].[Forums_Post]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_Forums_Post_CustomerId] ON [dbo].[Forums_Post] 
+	(
+		[CustomerId] ASC
+	)
+END
+GO
+IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_Forums_Subscription_ForumId' and id=object_id(N'[dbo].[Forums_Subscription]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_Forums_Subscription_ForumId] ON [dbo].[Forums_Subscription] 
+	(
+		[ForumId] ASC
+	)
+END
+GO
+IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_Forums_Subscription_TopicId' and id=object_id(N'[dbo].[Forums_Subscription]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_Forums_Subscription_TopicId] ON [dbo].[Forums_Subscription] 
+	(
+		[TopicId] ASC
+	)
+END
+GO
