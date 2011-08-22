@@ -67,6 +67,15 @@ namespace Nop.Data
             //Add SQL Server indexes for performance optimization
             context.Database.ExecuteSqlCommand("CREATE NONCLUSTERED INDEX [IX_LocaleStringResource] ON [dbo].[LocaleStringResource] ([ResourceName] ASC,  [LanguageId] ASC)");
             context.Database.ExecuteSqlCommand("CREATE NONCLUSTERED INDEX [IX_ProductVariant_ProductId] ON [dbo].[ProductVariant] ([ProductId])	INCLUDE ([Price],[AvailableStartDateTimeUtc],[AvailableEndDateTimeUtc],[Published],[Deleted])");
+            context.Database.ExecuteSqlCommand("CREATE NONCLUSTERED INDEX [IX_Country_DisplayOrder] ON [dbo].[Country] ([DisplayOrder] ASC)");
+            context.Database.ExecuteSqlCommand("CREATE NONCLUSTERED INDEX [IX_StateProvince_CountryId] ON [dbo].[StateProvince] ([CountryId]) INCLUDE ([DisplayOrder])");
+            context.Database.ExecuteSqlCommand("CREATE NONCLUSTERED INDEX [IX_Currency_DisplayOrder] ON [dbo].[Currency] ( [DisplayOrder] ASC)");
+            context.Database.ExecuteSqlCommand("CREATE NONCLUSTERED INDEX [IX_Log_CreatedOnUtc] ON [dbo].[Log] ([CreatedOnUtc] ASC)");
+            context.Database.ExecuteSqlCommand("CREATE NONCLUSTERED INDEX [IX_Customer_Email] ON [dbo].[Customer] ([Email] ASC)");
+            context.Database.ExecuteSqlCommand("CREATE NONCLUSTERED INDEX [IX_Customer_Username] ON [dbo].[Customer] ([Username] ASC)");
+            context.Database.ExecuteSqlCommand("CREATE NONCLUSTERED INDEX [IX_Customer_CustomerGuid] ON [dbo].[Customer] ([CustomerGuid] ASC)");
+            context.Database.ExecuteSqlCommand("CREATE NONCLUSTERED INDEX [IX_QueuedEmail_CreatedOnUtc] ON [dbo].[QueuedEmail] ([CreatedOnUtc] ASC)");
+            
         }
     }
 }

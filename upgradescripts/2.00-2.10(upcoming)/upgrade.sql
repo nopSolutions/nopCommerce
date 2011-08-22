@@ -618,7 +618,7 @@ BEGIN
 	  [ResourceName] ASC,
 	  [LanguageId] ASC
 	)
-	END
+END
 GO
 
 IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_ProductVariant_ProductId' and id=object_id(N'[dbo].[ProductVariant]'))
@@ -626,6 +626,83 @@ BEGIN
 	CREATE NONCLUSTERED INDEX [IX_ProductVariant_ProductId]
 	ON [dbo].[ProductVariant] ([ProductId])
 	INCLUDE ([Price],[AvailableStartDateTimeUtc],[AvailableEndDateTimeUtc],[Published],[Deleted])
+END
+GO
+
+IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_Country_DisplayOrder' and id=object_id(N'[dbo].[Country]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_Country_DisplayOrder] 
+	ON [dbo].[Country] 
+	(
+		[DisplayOrder] ASC
+	)
+END
+GO
+
+IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_StateProvince_CountryId' and id=object_id(N'[dbo].[StateProvince]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_StateProvince_CountryId] ON [dbo].[StateProvince] ([CountryId])
+	INCLUDE ([DisplayOrder])
+END
+GO
+
+IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_Currency_DisplayOrder' and id=object_id(N'[dbo].[Currency]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_Currency_DisplayOrder] ON [dbo].[Currency] 
+	(
+		[DisplayOrder] ASC
+	)
+END
+GO
+
+IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_Log_CreatedOnUtc' and id=object_id(N'[dbo].[Log]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_Log_CreatedOnUtc] ON [dbo].[Log] 
+	(
+		[CreatedOnUtc] ASC
+	)
+END
+GO
+
+--[Email] column of [Customer] can have up to 1000 chars
+ALTER TABLE [dbo].[Customer] ALTER COLUMN [Email] nvarchar(1000) NULL
+GO
+IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_Customer_Email' and id=object_id(N'[dbo].[Customer]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_Customer_Email] ON [dbo].[Customer] 
+	(
+		[Email] ASC
+	)
+END
+GO
+
+--[Username] column of [Customer] can have up to 1000 chars
+ALTER TABLE [dbo].[Customer] ALTER COLUMN [Username] nvarchar(1000) NULL
+GO
+IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_Customer_Username' and id=object_id(N'[dbo].[Customer]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_Customer_Username] ON [dbo].[Customer] 
+	(
+		[Username] ASC
+	)
+END
+GO
+
+IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_Customer_CustomerGuid' and id=object_id(N'[dbo].[Customer]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_Customer_CustomerGuid] ON [dbo].[Customer] 
+	(
+		[CustomerGuid] ASC
+	)
+END
+GO
+
+IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_QueuedEmail_CreatedOnUtc' and id=object_id(N'[dbo].[QueuedEmail]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_QueuedEmail_CreatedOnUtc] ON [dbo].[QueuedEmail] 
+	(
+		[CreatedOnUtc] ASC
+	)
 END
 GO
 
