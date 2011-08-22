@@ -65,8 +65,8 @@ namespace Nop.Data
         protected virtual void AddIndexes(TContext context)
         {
             //Add SQL Server indexes for performance optimization
-            context.Database.ExecuteSqlCommand("CREATE NONCLUSTERED INDEX [IDX_LocaleStringResource] ON [dbo].[LocaleStringResource] ([ResourceName] ASC,  [LanguageId] ASC)");
-            context.Database.ExecuteSqlCommand("CREATE NONCLUSTERED INDEX [IDX_ProductVariant_ProductId] ON [dbo].[ProductVariant] ([ProductId])	INCLUDE ([Price],[AvailableStartDateTimeUtc],[AvailableEndDateTimeUtc],[Published],[Deleted])");
+            context.Database.ExecuteSqlCommand("CREATE NONCLUSTERED INDEX [IX_LocaleStringResource] ON [dbo].[LocaleStringResource] ([ResourceName] ASC,  [LanguageId] ASC)");
+            context.Database.ExecuteSqlCommand("CREATE NONCLUSTERED INDEX [IX_ProductVariant_ProductId] ON [dbo].[ProductVariant] ([ProductId])	INCLUDE ([Price],[AvailableStartDateTimeUtc],[AvailableEndDateTimeUtc],[Published],[Deleted])");
         }
     }
 }

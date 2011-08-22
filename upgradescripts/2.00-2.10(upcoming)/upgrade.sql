@@ -611,9 +611,9 @@ GO
 
 
 --performance optimization (indexes)
-IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IDX_LocaleStringResource' and id=object_id(N'[dbo].[LocaleStringResource]'))
+IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_LocaleStringResource' and id=object_id(N'[dbo].[LocaleStringResource]'))
 BEGIN
-	CREATE NONCLUSTERED INDEX [IDX_LocaleStringResource] ON [dbo].[LocaleStringResource] 
+	CREATE NONCLUSTERED INDEX [IX_LocaleStringResource] ON [dbo].[LocaleStringResource] 
 	(
 	  [ResourceName] ASC,
 	  [LanguageId] ASC
@@ -621,10 +621,11 @@ BEGIN
 	END
 GO
 
-IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IDX_ProductVariant_ProductId' and id=object_id(N'[dbo].[ProductVariant]'))
+IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_ProductVariant_ProductId' and id=object_id(N'[dbo].[ProductVariant]'))
 BEGIN
-	CREATE NONCLUSTERED INDEX [IDX_ProductVariant_ProductId]
+	CREATE NONCLUSTERED INDEX [IX_ProductVariant_ProductId]
 	ON [dbo].[ProductVariant] ([ProductId])
 	INCLUDE ([Price],[AvailableStartDateTimeUtc],[AvailableEndDateTimeUtc],[Published],[Deleted])
 END
 GO
+
