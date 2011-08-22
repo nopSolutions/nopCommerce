@@ -15,8 +15,9 @@ namespace Nop.Services.Localization
     public partial class LocalizationService : ILocalizationService
     {
         #region Constants
-        private const string LOCALSTRINGRESOURCES_ALL_KEY = "Nop.localestringresource.all-{0}";
-        private const string LOCALSTRINGRESOURCES_PATTERN_KEY = "Nop.localestringresource.";
+        private const string LOCALSTRINGRESOURCES_ALL_KEY = "Nop.lsr.all-{0}";
+        private const string LOCALSTRINGRESOURCES_BY_RESOURCENAME_KEY = "Nop.lsr.{0}-{1}";
+        private const string LOCALSTRINGRESOURCES_PATTERN_KEY = "Nop.lsr.";
         #endregion
 
         #region Fields
@@ -25,6 +26,7 @@ namespace Nop.Services.Localization
         private readonly IWorkContext _workContext;
         private readonly ILogger _logger;
         private readonly ICacheManager _cacheManager;
+        private readonly LocalizationSettings _localizationSettings;
 
         #endregion
 
@@ -37,15 +39,16 @@ namespace Nop.Services.Localization
         /// <param name="logger">Logger</param>
         /// <param name="workContext">Work context</param>
         /// <param name="lsrRepository">Locale string resource repository</param>
+        /// <param name="localizationSettings">Localization settings</param>
         public LocalizationService(ICacheManager cacheManager,
-            ILogger logger,
-            IWorkContext workContext,
-            IRepository<LocaleStringResource> lsrRepository)
+            ILogger logger, IWorkContext workContext,
+            IRepository<LocaleStringResource> lsrRepository, LocalizationSettings localizationSettings)
         {
             this._cacheManager = cacheManager;
             this._logger = logger;
             this._workContext = workContext;
             this._lsrRepository = lsrRepository;
+            this._localizationSettings = localizationSettings;
         }
 
         #endregion
@@ -212,13 +215,33 @@ namespace Nop.Services.Localization
             if (resourceKeyValue == null)
                 resourceKeyValue = string.Empty;
             resourceKeyValue = resourceKeyValue.Trim().ToLowerInvariant();
-            var resources = GetAllResourcesByLanguageId(languageId);
-
-            if (resources.ContainsKey(resourceKeyValue))
+            if (_localizationSettings.LoadAllLocaleRecordsOnStartup)
             {
-                var lsr = resources[resourceKeyValue];
-                if (lsr != null)
-                    result = lsr.ResourceValue;
+                //load all records
+                var resources = GetAllResourcesByLanguageId(languageId);
+
+                if (resources.ContainsKey(resourceKeyValue))
+                {
+                    var lsr = resources[resourceKeyValue];
+                    if (lsr != null)
+                        result = lsr.ResourceValue;
+                }
+            }
+            else
+            {
+                //gradual loading
+                string key = string.Format(LOCALSTRINGRESOURCES_BY_RESOURCENAME_KEY, languageId, resourceKeyValue);
+                string lsr = _cacheManager.Get(key, () =>
+                {
+                    var query = from l in _lsrRepository.Table
+                                where l.ResourceName == resourceKeyValue
+                                && l.LanguageId == languageId
+                                select l.ResourceValue;
+                    return query.FirstOrDefault();
+                });
+
+                if (lsr != null) 
+                    result = lsr;
             }
             if (String.IsNullOrEmpty(result))
             {
