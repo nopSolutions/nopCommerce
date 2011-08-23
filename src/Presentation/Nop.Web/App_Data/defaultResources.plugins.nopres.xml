@@ -199,7 +199,7 @@
                   </LocaleResource>
                 </Children>
               </LocaleResource>
-				<LocaleResource Name="DefaultGoogleCategory">
+			  <LocaleResource Name="DefaultGoogleCategory">
 					<Value>Default Google category</Value>
 					<Children>
 						<LocaleResource Name="Hint">
@@ -242,9 +242,15 @@
               <LocaleResource Name="FtpUploadStatus">
                 <Value>Froogle feed upload status: {0}</Value>
               </LocaleResource>
+			  <LocaleResource Name="General">
+					<Value>General</Value>
+				</LocaleResource>
               <LocaleResource Name="Generate">
                 <Value>Generate feed</Value>
-              </LocaleResource>				
+              </LocaleResource>
+			  <LocaleResource Name="Override">
+					<Value>Override product settings</Value>
+				</LocaleResource>
               <LocaleResource Name="ProductPictureSize">
                 <Value>Product thumbnail image size</Value>
                 <Children>
@@ -253,6 +259,16 @@
                   </LocaleResource>
                 </Children>
               </LocaleResource>
+			  <LocaleResource Name="Products">
+				  <Children>
+					  <LocaleResource Name="ProductName">
+						  <Value>Product</Value>
+					  </LocaleResource>
+					  <LocaleResource Name="GoogleCategory">
+						  <Value>Google Category</Value>
+					  </LocaleResource>
+				  </Children>  
+			  </LocaleResource>
               <LocaleResource Name="SuccessResult">
                 <Value>Froogle feed has been successfully generated. {0} to see generated feed</Value>
               </LocaleResource>

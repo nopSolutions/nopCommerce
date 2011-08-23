@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Plugin.Feed.Froogle.Domain;
 
@@ -66,13 +65,13 @@ namespace Nop.Plugin.Feed.Froogle.Services
             return record;
         }
 
-        public virtual GoogleProductRecord GetByProductVariantId(int productRecordId)
+        public virtual GoogleProductRecord GetByProductVariantId(int productVariantId)
         {
-            if (productRecordId == 0)
+            if (productVariantId == 0)
                 return null;
 
             var query = from gp in _gpRepository.Table
-                        where gp.ProductVariantId == productRecordId
+                        where gp.ProductVariantId == productVariantId
                         orderby gp.Id
                         select gp;
             var record = query.FirstOrDefault();

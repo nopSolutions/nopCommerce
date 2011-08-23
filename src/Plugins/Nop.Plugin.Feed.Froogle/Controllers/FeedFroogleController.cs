@@ -1,15 +1,22 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 using Nop.Core;
+using Nop.Core.Domain.Catalog;
+using Nop.Plugin.Feed.Froogle.Domain;
 using Nop.Plugin.Feed.Froogle.Models;
 using Nop.Plugin.Feed.Froogle.Services;
+using Nop.Services.Catalog;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.PromotionFeed;
+using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
+using Telerik.Web.Mvc;
+using System.Collections.Generic;
 
 namespace Nop.Plugin.Feed.Froogle.Controllers
 {
@@ -17,26 +24,32 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
     public class FeedFroogleController : Controller
     {
         private readonly IGoogleService _googleService;
+        private readonly IProductService _productService;
         private readonly ICurrencyService _currencyService;
         private readonly ILocalizationService _localizationService;
         private readonly IPromotionFeedService _promotionFeedService;
         private readonly IWebHelper _webHelper;
         private readonly FroogleSettings _froogleSettings;
         private readonly ISettingService _settingService;
+        private readonly IPermissionService _permissionService;
 
         public FeedFroogleController(IGoogleService googleService, 
+            IProductService productService,
             ICurrencyService currencyService,
             ILocalizationService localizationService, 
             IPromotionFeedService promotionFeedService, IWebHelper webHelper,
-            FroogleSettings froogleSettings, ISettingService settingService)
+            FroogleSettings froogleSettings, ISettingService settingService,
+            IPermissionService permissionService)
         {
             this._googleService = googleService;
+            this._productService = productService;
             this._currencyService = currencyService;
             this._localizationService = localizationService;
             this._promotionFeedService = promotionFeedService;
             this._webHelper = webHelper;
             this._froogleSettings = froogleSettings;
             this._settingService = settingService;
+            this._permissionService = permissionService;
         }
 
         public ActionResult Configure()
@@ -231,6 +244,75 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
                 });
             }
             return View("Nop.Plugin.Feed.Froogle.Views.FeedFroogle.Configure", model);
+        }
+
+
+
+
+
+
+
+        [HttpPost, GridAction(EnableCustomBinding = true)]
+        public ActionResult GoogleProductList(GridCommand command)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePromotionFeeds))
+                throw new NopException("Not authorized");
+
+            var productVariants = _productService.SearchProductVariants(command.Page - 1, command.PageSize, true);
+            var productVariantsModel = productVariants
+                .Select(x =>
+                            {
+                                var gModel = new FeedFroogleModel.GoogleProductModel()
+                                {
+                                    ProductVariantId = x.Id,
+                                    FullProductVariantName = x.FullProductName
+                                };
+                                var googleProduct = _googleService.GetByProductVariantId(x.Id);
+                                if (googleProduct != null)
+                                    gModel.GoogleCategory = googleProduct.Taxonomy;
+
+                                return gModel;
+                            })
+                .ToList();
+
+            var model = new GridModel<FeedFroogleModel.GoogleProductModel>
+            {
+                Data = productVariantsModel,
+                Total = productVariants.TotalCount
+            };
+
+            return new JsonResult
+            {
+                Data = model
+            };
+        }
+
+        [GridAction(EnableCustomBinding = true)]
+        public ActionResult GoogleProductUpdate(GridCommand command, FeedFroogleModel.GoogleProductModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePromotionFeeds))
+                throw new NopException("Not authorized");
+
+
+            var googleProduct = _googleService.GetByProductVariantId(model.ProductVariantId);
+            if (googleProduct != null)
+            {
+                //update
+                googleProduct.Taxonomy = model.GoogleCategory;
+                _googleService.UpdateGoogleProductRecord(googleProduct);
+            }
+            else
+            {
+                //insert
+                googleProduct = new GoogleProductRecord()
+                {
+                    ProductVariantId = model.ProductVariantId,
+                    Taxonomy = model.GoogleCategory
+                };
+                _googleService.InsertGoogleProductRecord(googleProduct);
+            }
+            
+            return GoogleProductList(command);
         }
     }
 }

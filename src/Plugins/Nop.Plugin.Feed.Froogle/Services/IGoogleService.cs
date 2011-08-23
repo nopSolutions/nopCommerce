@@ -11,6 +11,8 @@ namespace Nop.Plugin.Feed.Froogle.Services
 
         GoogleProductRecord GetById(int googleProductRecordId);
 
+        GoogleProductRecord GetByProductVariantId(int productVariantId);
+
         void InsertGoogleProductRecord(GoogleProductRecord googleProductRecord);
 
         void UpdateGoogleProductRecord(GoogleProductRecord googleProductRecord);

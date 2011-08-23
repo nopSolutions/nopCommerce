@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using Nop.Web.Framework;
+using Nop.Web.Framework.Mvc;
 
 namespace Nop.Plugin.Feed.Froogle.Models
 {
@@ -33,5 +35,17 @@ namespace Nop.Plugin.Feed.Froogle.Models
         public string FtpPassword { get; set; }
 
         public string GenerateFeedResult { get; set; }
+
+
+        public class GoogleProductModel : BaseNopModel
+        {
+            public int ProductVariantId { get; set; }
+
+            [NopResourceDisplayName("Plugins.Feed.Froogle.Products.ProductName")]
+            public string FullProductVariantName { get; set; }
+
+            [NopResourceDisplayName("Plugins.Feed.Froogle.Products.GoogleCategory")]
+            public string GoogleCategory { get; set; }
+        }
     }
 }

@@ -335,6 +335,18 @@ set @resources='
   <LocaleResource Name="Plugins.Feed.Froogle.DefaultGoogleCategory.Hint">
     <Value>The default Google category will be useds if other one is not specified.</Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Feed.Froogle.General">
+    <Value>General</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Feed.Froogle.Override">
+    <Value>Override product settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Feed.Froogle.Products.ProductName">
+    <Value>Product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Feed.Froogle.Products.GoogleCategory">
+    <Value>Google Category</Value>
+  </LocaleResource>
 </Language>
 '
 

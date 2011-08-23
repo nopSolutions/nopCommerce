@@ -303,7 +303,7 @@ namespace Nop.Services.Catalog
 
             //only distinct products (group by ID)
             //if we use standard Distinct() method, then all fields will be compared (low performance)
-            //it'll don't work in SQl Server Compact when searching products by a keyword)
+            //it'll not work in SQl Server Compact when searching products by a keyword)
             query = from p in query
                          group p by p.Id into pGroup
                          orderby pGroup.Key
@@ -389,7 +389,43 @@ namespace Nop.Services.Catalog
         #endregion
 
         #region Product variants
-        
+
+        /// <summary>
+        /// Search product variants
+        /// </summary>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <returns>Product variants</returns>
+        public virtual IPagedList<ProductVariant> SearchProductVariants(int pageIndex, int pageSize, bool showHidden = false)
+        {
+            //product variants
+            var query = _productVariantRepository.Table;
+            query = query.Where(pv => !pv.Deleted);
+            if (!showHidden)
+            {
+                query = query.Where(pv => pv.Published);
+            }
+
+            //products
+            query = from pv in query
+                    where (showHidden || !pv.Product.Deleted) &&
+                          (showHidden || pv.Product.Published)
+                    select pv;
+
+            //only distinct products (group by ID)
+            //if we use standard Distinct() method, then all fields will be compared (low performance)
+            //query = from pv in query
+            //        group pv by pv.Id
+            //        into pGroup
+            //        orderby pGroup.Key
+            //        select pGroup.FirstOrDefault();
+
+            query = query.OrderBy(pv => pv.Product.Name);
+            var productVariants = new PagedList<ProductVariant>(query, pageIndex, pageSize);
+            return productVariants;
+        }
+
         /// <summary>
         /// Get low stock product variants
         /// </summary>

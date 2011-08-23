@@ -1,10 +1,22 @@
 ﻿@{
     Layout = "";
 }
-@model Nop.Plugin.Feed.Froogle.Models.FeedFroogleModel
+@model FeedFroogleModel
+@using Nop.Plugin.Feed.Froogle.Models;
 @using Nop.Web.Framework;
+@using Nop.Core.Infrastructure;
+@using Telerik.Web.Mvc;
+@using Telerik.Web.Mvc.UI;
 @using (Html.BeginForm())
 {
+    @Html.Telerik().TabStrip().Name("googlebase-configure").Items(x =>
+{
+    x.Add().Text(T("Plugins.Feed.Froogle.General").Text).Content(TabGeneral().ToHtmlString()).Selected(true);
+    x.Add().Text(T("Plugins.Feed.Froogle.Override").Text).Content(TabOverride().ToHtmlString());
+})
+}
+@helper TabGeneral()
+    { 
     <table class="adminContent">
         <tr>
             <td colspan="2">
@@ -14,9 +26,8 @@
                     <li>Specify default tax values in your Google Merchant Center account settings</li>
                     <li>Specify default shipping values in your Google Merchant Center account settings</li>
                     <li>In order to get more info about required fields look at the following article <a
-                    href="http://www.google.com/support/merchants/bin/answer.py?answer=188494" target="_blank">
-                    http://www.google.com/support/merchants/bin/answer.py?answer=188494</a>
-                    </li>
+                        href="http://www.google.com/support/merchants/bin/answer.py?answer=188494" target="_blank">
+                        http://www.google.com/support/merchants/bin/answer.py?answer=188494</a> </li>
                 </ul>
             </td>
         </tr>
@@ -116,5 +127,52 @@
                 </td>
             </tr>
         }
-    </table>    
+    </table>        
+}
+@helper TabOverride()
+    { 
+    <table class="adminContent">
+        <tr>
+            <td colspan="2">
+                You can download the list of allowed Google product category attributes <a href="http://www.google.com/support/merchants/bin/answer.py?answer=160081"
+                    target="_blank">here</a>
+            </td>
+        </tr>
+        <tr class="adminSeparator">
+            <td colspan="2">
+                <hr />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @(Html.Telerik().Grid<FeedFroogleModel.GoogleProductModel>()
+                    .Name("froogleproducts-grid")
+                    .DataKeys(keys =>
+                    {
+                        keys.Add(x => x.ProductVariantId).RouteKey("ProductVariantId");
+                    })
+                    .DataBinding(dataBinding =>
+                    {
+                        dataBinding.Ajax()
+                            .Select("GoogleProductList", "FeedFroogle", new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Feed.Froogle.Controllers" }, { "area", "" } })
+                            .Update("GoogleProductUpdate", "FeedFroogle", new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Feed.Froogle.Controllers" }, { "area", "" } });
+                    })
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.FullProductVariantName)
+                            .Width(200)
+                            .ReadOnly();
+                        columns.Bound(x => x.GoogleCategory)
+                            .Width(600);
+                        columns.Command(commands =>
+                        {
+                            commands.Edit();
+                        })
+                        .Width(100);
+                    })
+                    .Pageable(settings => settings.PageSize(15).Position(GridPagerPosition.Both))
+                    .EnableCustomBinding(true))
+            </td>
+        </tr>
+    </table>
 }

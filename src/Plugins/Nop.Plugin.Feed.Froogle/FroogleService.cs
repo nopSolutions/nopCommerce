@@ -184,7 +184,12 @@ namespace Nop.Plugin.Feed.Froogle
 
                         //google product category [google_product_category] - Google's category of the item
                         //the category of the product according to Google’s product taxonomy. http://www.google.com/support/merchants/bin/answer.py?answer=160081
-                        var googleProductCategory = _froogleSettings.DefaultGoogleCategory;
+                        string googleProductCategory = "";
+                        var googleProduct = _googleService.GetByProductVariantId(productVariant.Id);
+                        if (googleProduct != null)
+                            googleProductCategory = googleProduct.Taxonomy;
+                        if (String.IsNullOrEmpty(googleProductCategory))
+                            googleProductCategory = _froogleSettings.DefaultGoogleCategory;
                         if (String.IsNullOrEmpty(googleProductCategory))
                             throw new NopException("Default Google category is not set");
                         writer.WriteElementString("g", "google_product_category", googleBaseNamespace,
@@ -210,7 +215,7 @@ namespace Nop.Plugin.Feed.Froogle
                         }
 
                         //link [link] - URL directly linking to your item's page on your website
-                        var productUrl = string.Format("{0}p/{1}/{2}", _storeInformationSettings.StoreUrl, product.Id,
+                        var productUrl = string.Format("{0}p/{1}/{2}", _webHelper.GetStoreLocation(false), product.Id,
                                                        product.GetSeName());
                         writer.WriteElementString("link", productUrl);
 
@@ -283,13 +288,15 @@ namespace Nop.Plugin.Feed.Froogle
                             writer.WriteCData(defaultManufacturer.Manufacturer.Name);
                             writer.WriteFullEndElement(); // g:brand
                         }
+
+
                         //mpn [mpn] - Manufacturer Part Number (MPN) of the item
                         writer.WriteStartElement("g", "mpn", googleBaseNamespace);
-                        
                         var mpn = productVariant.ManufacturerPartNumber;
-                        if (String.IsNullOrEmpty((mpn)))
-                            mpn = productVariant.FullProductName; //at least two are required for Unique product identifiers. So let's set it to product variant name
-                            writer.WriteCData(mpn);
+                        //at least two are required for Unique product identifiers. So let's set it to a product variant name
+                        //if (String.IsNullOrEmpty((mpn)))
+                        //    mpn = productVariant.FullProductName;
+                        writer.WriteCData(mpn);
                         writer.WriteFullEndElement(); // g:brand
 
                         #endregion
