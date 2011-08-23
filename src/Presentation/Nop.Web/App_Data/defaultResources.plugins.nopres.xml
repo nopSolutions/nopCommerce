@@ -199,6 +199,14 @@
                   </LocaleResource>
                 </Children>
               </LocaleResource>
+				<LocaleResource Name="DefaultGoogleCategory">
+					<Value>Default Google category</Value>
+					<Children>
+						<LocaleResource Name="Hint">
+							<Value>The default Google category will be useds if other one is not specified.</Value>
+						</LocaleResource>
+					</Children>
+				</LocaleResource>
               <LocaleResource Name="FtpHostname">
                 <Value>FTP Hostname</Value>
                 <Children>
@@ -236,7 +244,7 @@
               </LocaleResource>
               <LocaleResource Name="Generate">
                 <Value>Generate feed</Value>
-              </LocaleResource>
+              </LocaleResource>				
               <LocaleResource Name="ProductPictureSize">
                 <Value>Product thumbnail image size</Value>
                 <Children>

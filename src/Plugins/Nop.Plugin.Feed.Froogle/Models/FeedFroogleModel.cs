@@ -9,6 +9,7 @@ namespace Nop.Plugin.Feed.Froogle.Models
         public FeedFroogleModel()
         {
             AvailableCurrencies = new List<SelectListItem>();
+            AvailableGoogleCategories = new List<SelectListItem>();
         }
 
         [NopResourceDisplayName("Plugins.Feed.Froogle.ProductPictureSize")]
@@ -16,8 +17,11 @@ namespace Nop.Plugin.Feed.Froogle.Models
 
         [NopResourceDisplayName("Plugins.Feed.Froogle.Currency")]
         public int CurrencyId { get; set; }
-
         public IList<SelectListItem> AvailableCurrencies { get; set; }
+
+        [NopResourceDisplayName("Plugins.Feed.Froogle.DefaultGoogleCategory")]
+        public string DefaultGoogleCategory { get; set; }
+        public IList<SelectListItem> AvailableGoogleCategories { get; set; }
 
         [NopResourceDisplayName("Plugins.Feed.Froogle.FtpHostname")]
         public string FtpHostname { get; set; }

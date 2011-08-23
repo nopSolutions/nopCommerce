@@ -175,14 +175,14 @@
                                             <td colspan="2" align="left">
                                                 @Html.RadioButton("DataProvider", "sqlce", (Model.DataProvider == "sqlce"), new { id = "provider_sqlce" })
                                                 <label for="provider_sqlce">
-                                                    Use built-in data storage (SQL Server Compact)</label>
+                                                    Use built-in data storage (SQL Server Compact).</label>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td colspan="2" align="left">
                                                 @Html.RadioButton("DataProvider", "sqlserver", (Model.DataProvider == "sqlserver"), new { id = "provider_sqlserver" })
                                                 <label for="provider_sqlserver">
-                                                    Use an existing SQL Server (or SQL Express) database</label>
+                                                    Use an existing SQL Server (or SQL Express) database. <b>[Recommended]</b></label>
                                                 <div id="sqlConnectionInfo">
                                                     <br />
                                                     <hr />

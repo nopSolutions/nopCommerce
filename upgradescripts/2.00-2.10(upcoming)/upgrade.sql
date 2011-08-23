@@ -329,6 +329,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Languages.Fields.UniqueSeoCode.Required">
     <Value>Please provide an unique SEO code.</Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Feed.Froogle.DefaultGoogleCategory">
+    <Value>Default Google category</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Feed.Froogle.DefaultGoogleCategory.Hint">
+    <Value>The default Google category will be useds if other one is not specified.</Value>
+  </LocaleResource>
 </Language>
 '
 

@@ -4,6 +4,7 @@ using System.Net;
 using System.Web.Mvc;
 using Nop.Core;
 using Nop.Plugin.Feed.Froogle.Models;
+using Nop.Plugin.Feed.Froogle.Services;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
@@ -15,6 +16,7 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
     [AdminAuthorize]
     public class FeedFroogleController : Controller
     {
+        private readonly IGoogleService _googleService;
         private readonly ICurrencyService _currencyService;
         private readonly ILocalizationService _localizationService;
         private readonly IPromotionFeedService _promotionFeedService;
@@ -22,11 +24,13 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
         private readonly FroogleSettings _froogleSettings;
         private readonly ISettingService _settingService;
 
-        public FeedFroogleController(ICurrencyService currencyService,
+        public FeedFroogleController(IGoogleService googleService, 
+            ICurrencyService currencyService,
             ILocalizationService localizationService, 
             IPromotionFeedService promotionFeedService, IWebHelper webHelper,
             FroogleSettings froogleSettings, ISettingService settingService)
         {
+            this._googleService = googleService;
             this._currencyService = currencyService;
             this._localizationService = localizationService;
             this._promotionFeedService = promotionFeedService;
@@ -38,7 +42,9 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
         public ActionResult Configure()
         {
             var model = new FeedFroogleModel();
+            //Picture
             model.ProductPictureSize = _froogleSettings.ProductPictureSize;
+            //Currency
             model.CurrencyId = _froogleSettings.CurrencyId;
             foreach (var c in _currencyService.GetAllCurrencies(false))
             {
@@ -48,6 +54,22 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
                          Value = c.Id.ToString()
                     });
             }
+            //Google category
+            model.DefaultGoogleCategory = _froogleSettings.DefaultGoogleCategory;
+            model.AvailableGoogleCategories.Add(new SelectListItem()
+            {
+                Text = "Select a category",
+                Value = ""
+            });
+            foreach (var gc in _googleService.GetTaxonomyList())
+            {
+                model.AvailableGoogleCategories.Add(new SelectListItem()
+                {
+                    Text = gc,
+                    Value = gc
+                });
+            }
+            //FTP settings
             model.FtpHostname = _froogleSettings.FtpHostname;
             model.FtpFilename = _froogleSettings.FtpFilename;
             model.FtpUsername = _froogleSettings.FtpUsername;
@@ -68,6 +90,7 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
             //save settings
             _froogleSettings.ProductPictureSize = model.ProductPictureSize;
             _froogleSettings.CurrencyId = model.CurrencyId;
+            _froogleSettings.DefaultGoogleCategory = model.DefaultGoogleCategory;
             _froogleSettings.FtpHostname = model.FtpHostname;
             _froogleSettings.FtpFilename = model.FtpFilename;
             _froogleSettings.FtpUsername = model.FtpUsername;
@@ -81,6 +104,19 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
                 {
                     Text = c.Name,
                     Value = c.Id.ToString()
+                });
+            }
+            model.AvailableGoogleCategories.Add(new SelectListItem()
+            {
+                Text = "Select a category",
+                Value = ""
+            });
+            foreach (var gc in _googleService.GetTaxonomyList())
+            {
+                model.AvailableGoogleCategories.Add(new SelectListItem()
+                {
+                    Text = gc,
+                    Value = gc
                 });
             }
             return View("Nop.Plugin.Feed.Froogle.Views.FeedFroogle.Configure", model);
@@ -122,6 +158,19 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
                 {
                     Text = c.Name,
                     Value = c.Id.ToString()
+                });
+            }
+            model.AvailableGoogleCategories.Add(new SelectListItem()
+            {
+                Text = "Select a category",
+                Value = ""
+            });
+            foreach (var gc in _googleService.GetTaxonomyList())
+            {
+                model.AvailableGoogleCategories.Add(new SelectListItem()
+                {
+                    Text = gc,
+                    Value = gc
                 });
             }
             return View("Nop.Plugin.Feed.Froogle.Views.FeedFroogle.Configure", model);
@@ -166,6 +215,19 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
                 {
                     Text = c.Name,
                     Value = c.Id.ToString()
+                });
+            }
+            model.AvailableGoogleCategories.Add(new SelectListItem()
+            {
+                Text = "Select a category",
+                Value = ""
+            });
+            foreach (var gc in _googleService.GetTaxonomyList())
+            {
+                model.AvailableGoogleCategories.Add(new SelectListItem()
+                {
+                    Text = gc,
+                    Value = gc
                 });
             }
             return View("Nop.Plugin.Feed.Froogle.Views.FeedFroogle.Configure", model);

@@ -7,6 +7,25 @@
 {
     <table class="adminContent">
         <tr>
+            <td colspan="2">
+                <ul>
+                    <li>At least two unique product identifiers are required. So each of your product should
+                        have manufacturer (brand) and MPN (manufacturer part number) specified</li>
+                    <li>Specify default tax values in your Google Merchant Center account settings</li>
+                    <li>Specify default shipping values in your Google Merchant Center account settings</li>
+                    <li>In order to get more info about required fields look at the following article <a
+                    href="http://www.google.com/support/merchants/bin/answer.py?answer=188494" target="_blank">
+                    http://www.google.com/support/merchants/bin/answer.py?answer=188494</a>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+        <tr class="adminSeparator">
+            <td colspan="2">
+                <hr />
+            </td>
+        </tr>
+        <tr>
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.ProductPictureSize):
             </td>
@@ -22,6 +41,15 @@
             <td class="adminData">
                 @Html.DropDownListFor(model => model.CurrencyId, Model.AvailableCurrencies)
                 @Html.ValidationMessageFor(model => model.CurrencyId)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.DefaultGoogleCategory):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.DefaultGoogleCategory, Model.AvailableGoogleCategories)
+                @Html.ValidationMessageFor(model => model.DefaultGoogleCategory)
             </td>
         </tr>
         <tr class="adminSeparator">
