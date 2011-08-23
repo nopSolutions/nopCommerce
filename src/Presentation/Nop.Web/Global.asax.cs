@@ -72,7 +72,11 @@ namespace Nop.Web
             //Registering some regular mvc stuf
             //ViewEngines.Engines.Add(new ThemableRazorViewEngine());
             AreaRegistration.RegisterAllAreas();
-            GlobalFilters.Filters.Add(new ProfilingActionFilter());
+            if (DataSettingsHelper.DatabaseIsInstalled() &&
+                EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerInPublicStore)
+            {
+                GlobalFilters.Filters.Add(new ProfilingActionFilter());
+            }
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
 
@@ -90,24 +94,26 @@ namespace Nop.Web
             var embeddedProvider = new EmbeddedViewVirtualPathProvider(embeddedViewResolver.GetEmbeddedViews());
             HostingEnvironment.RegisterVirtualPathProvider(embeddedProvider);
         }
-        
+
         protected void Application_BeginRequest(object sender, EventArgs e)
         {
             EnsureDatabaseIsInstalled();
 
-            if (DataSettingsHelper.DatabaseIsInstalled())
+            if (DataSettingsHelper.DatabaseIsInstalled() && 
+                EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerInPublicStore)
             {
-                if (EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerInPublicStore)
-                {
-                    MiniProfiler.Start();
-                }
+                MiniProfiler.Start();
             }
         }
 
         protected void Application_EndRequest(object sender, EventArgs e)
         {
-            //stop as early as you can, even earlier with MvcMiniProfiler.MiniProfiler.Stop(discardResults: true);
-            MiniProfiler.Stop();
+            if (DataSettingsHelper.DatabaseIsInstalled() &&
+                EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerInPublicStore)
+            {
+                //stop as early as you can, even earlier with MvcMiniProfiler.MiniProfiler.Stop(discardResults: true);
+                MiniProfiler.Stop();
+            }
         }
 
         protected void Application_AuthenticateRequest(object sender, EventArgs e)
