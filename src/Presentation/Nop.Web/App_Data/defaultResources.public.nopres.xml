@@ -929,6 +929,9 @@
       <LocaleResource Name="Continue">
         <Value>Continue</Value>
       </LocaleResource>
+	  <LocaleResource Name="Day">
+		<Value>Day</Value>
+	  </LocaleResource>
       <LocaleResource Name="DeleteConfirmationParam">
         <Value>Are you sure you want to delete "{0}"?</Value>
       </LocaleResource>
@@ -941,6 +944,9 @@
       <LocaleResource Name="Edit">
         <Value>Edit</Value>
       </LocaleResource>
+	  <LocaleResource Name="Month">
+		<Value>Month</Value>
+	  </LocaleResource>
       <LocaleResource Name="No">
         <Value>No</Value>
       </LocaleResource>
@@ -971,6 +977,9 @@
       <LocaleResource Name="WrongEmail">
         <Value>Wrong email</Value>
       </LocaleResource>
+	  <LocaleResource Name="Year">
+		<Value>Year</Value>
+	  </LocaleResource>
       <LocaleResource Name="Yes">
         <Value>Yes</Value>
       </LocaleResource>

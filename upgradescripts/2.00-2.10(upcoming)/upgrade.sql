@@ -347,6 +347,15 @@ set @resources='
   <LocaleResource Name="Plugins.Feed.Froogle.Products.GoogleCategory">
     <Value>Google Category</Value>
   </LocaleResource>
+  <LocaleResource Name="Common.Day">
+    <Value>Day</Value>
+  </LocaleResource>
+  <LocaleResource Name="Common.Month">
+    <Value>Month</Value>
+  </LocaleResource>
+  <LocaleResource Name="Common.Year">
+    <Value>Year</Value>
+  </LocaleResource>
 </Language>
 '
 

@@ -194,11 +194,12 @@ namespace Nop.Web.Framework
         /// <param name="selectedDay">Selected day</param>
         /// <param name="selectedMonth">Selected month</param>
         /// <param name="selectedYear">Selected year</param>
+        /// <param name="localizeLabels">Localize labels</param>
         /// <returns></returns>
-        public static MvcHtmlString DatePickerDropDowns(this HtmlHelper html, 
+        public static MvcHtmlString DatePickerDropDowns(this HtmlHelper html,
             string dayName, string monthName, string yearName,
             int? beginYear = null, int? endYear = null,
-            int? selectedDay = null, int? selectedMonth = null, int? selectedYear = null)
+            int? selectedDay = null, int? selectedMonth = null, int? selectedYear = null, bool localizeLabels = true)
         {
             var daysList = new TagBuilder("select");
             var monthsList = new TagBuilder("select");
@@ -212,19 +213,34 @@ namespace Nop.Web.Framework
             var months = new StringBuilder();
             var years = new StringBuilder();
 
-            days.AppendFormat("<option value='{0}'>{1}</option>", "0", "Day");
+            string dayLocale, monthLocale, yearLocale;
+            if (localizeLabels)
+            {
+                var locService = EngineContext.Current.Resolve<ILocalizationService>();
+                dayLocale = locService.GetResource("Common.Day");
+                monthLocale = locService.GetResource("Common.Month");
+                yearLocale = locService.GetResource("Common.Year");
+            }
+            else
+            {
+                dayLocale = "Day";
+                monthLocale = "Month";
+                yearLocale = "Year";
+            }
+
+            days.AppendFormat("<option value='{0}'>{1}</option>", "0", dayLocale);
             for (int i = 1; i <= 31; i++)
                 days.AppendFormat("<option value='{0}'{1}>{0}</option>", i,
                     (selectedDay.HasValue && selectedDay.Value == i) ? " selected=\"selected\"" : null);
 
 
-            months.AppendFormat("<option value='{0}'>{1}</option>", "0", "Month");
+            months.AppendFormat("<option value='{0}'>{1}</option>", "0", monthLocale);
             for (int i = 1; i <= 12; i++)
                 months.AppendFormat("<option value='{0}'{1}>{0}</option>", i,
                     (selectedMonth.HasValue && selectedMonth.Value == i) ? " selected=\"selected\"" : null);
 
 
-            years.AppendFormat("<option value='{0}'>{1}</option>", "0", "Year");
+            years.AppendFormat("<option value='{0}'>{1}</option>", "0", yearLocale);
 
             if (beginYear == null)
                 beginYear = DateTime.UtcNow.Year - 100;
