@@ -204,9 +204,14 @@ namespace Nop.Core.Domain.Catalog
         public virtual int OrderMaximumQuantity { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether to disable buy button
+        /// Gets or sets a value indicating whether to disable buy (Add to cart) button
         /// </summary>
         public virtual bool DisableBuyButton { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to disable "Add to wishlist" button
+        /// </summary>
+        public virtual bool DisableWishlistButton { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to show "Call for Pricing" or "Call for quote" instead of price

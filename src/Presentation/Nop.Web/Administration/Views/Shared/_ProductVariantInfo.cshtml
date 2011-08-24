@@ -316,6 +316,15 @@
     </tr>
     <tr>
         <td class="adminTitle">
+            @Html.NopLabelFor(model => model.DisableWishlistButton):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.DisableWishlistButton)
+            @Html.ValidationMessageFor(model => model.DisableWishlistButton)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
             @Html.NopLabelFor(model => model.CallForPrice):
         </td>
         <td class="adminData">

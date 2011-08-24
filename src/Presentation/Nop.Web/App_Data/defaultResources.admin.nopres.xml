@@ -1609,6 +1609,14 @@
                               </LocaleResource>
                             </Children>
                           </LocaleResource>
+							<LocaleResource Name="DisableWishlistButton">
+								<Value>Disable wishlist button</Value>
+								<Children>
+									<LocaleResource Name="Hint">
+										<Value>Check to disable the wishlist button for this product.</Value>
+									</LocaleResource>
+								</Children>
+							</LocaleResource>
                           <LocaleResource Name="DisplayOrder">
                             <Value>Display order</Value>
                             <Children>

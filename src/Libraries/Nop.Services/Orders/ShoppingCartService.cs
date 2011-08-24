@@ -274,9 +274,14 @@ namespace Nop.Services.Orders
                 warnings.Add("Product is not published");
             }
 
-            if (productVariant.DisableBuyButton)
+            if (shoppingCartType == ShoppingCartType.ShoppingCart && productVariant.DisableBuyButton)
             {
-                warnings.Add("Buying is disabled");
+                warnings.Add("Buying is disabled for this product");
+            }
+
+            if (shoppingCartType == ShoppingCartType.Wishlist && productVariant.DisableWishlistButton)
+            {
+                warnings.Add("Wishlist is disabled for this product");
             }
             
             if (shoppingCartType == ShoppingCartType.ShoppingCart &&
@@ -571,8 +576,10 @@ namespace Nop.Services.Orders
 
             var warnings = new List<string>();
             if (shoppingCartType == ShoppingCartType.Wishlist && !_shoppingCartSettings.WishlistEnabled)
+            {
+                warnings.Add("Wishlits is disabled");
                 return warnings;
-
+            }
 
 
             //reset checkout info

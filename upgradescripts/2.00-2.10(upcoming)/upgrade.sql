@@ -356,6 +356,12 @@ set @resources='
   <LocaleResource Name="Common.Year">
     <Value>Year</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Variants.Fields.DisableWishlistButton">
+    <Value>Disable wishlist button</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Variants.Fields.DisableWishlistButton.Hint">
+    <Value>Check to disable the wishlist button for this product.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -976,5 +982,17 @@ BEGIN
 	(
 		[TopicId] ASC
 	)
+END
+GO
+
+--Allow store owner to disable "Add to wishlist" button for a certain product variant
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[ProductVariant]') and NAME='DisableWishlistButton')
+BEGIN
+	ALTER TABLE [dbo].[ProductVariant] 
+	ADD [DisableWishlistButton] [bit] NULL
+
+	EXEC ('UPDATE [dbo].[ProductVariant] SET [DisableWishlistButton] = [DisableBuyButton]')
+
+	ALTER TABLE [dbo].[ProductVariant] ALTER COLUMN [DisableWishlistButton] [bit] NOT NULL
 END
 GO

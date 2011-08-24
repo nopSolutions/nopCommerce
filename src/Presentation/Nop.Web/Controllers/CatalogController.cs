@@ -543,15 +543,8 @@ namespace Nop.Web.Controllers
             model.AddToCart.EnteredQuantity = productVariant.OrderMinimumQuantity;
 
             //'add to cart', 'add to wishlist' buttons
-            if (productVariant.DisableBuyButton)
-            {
-                model.AddToCart.DisableBuyButton = true;
-                model.AddToCart.DisableWishlistButton = true;
-            }
-            if (!_shoppingCartSettings.WishlistEnabled)
-            {
-                model.AddToCart.DisableWishlistButton = true;
-            }
+            model.AddToCart.DisableBuyButton = productVariant.DisableBuyButton;
+            model.AddToCart.DisableWishlistButton = productVariant.DisableWishlistButton || !_shoppingCartSettings.WishlistEnabled;
             if (!_catalogSettings.HidePricesForNonRegistered ||
                 !_workContext.CurrentCustomer.IsGuest())
             {
