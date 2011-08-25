@@ -37,6 +37,7 @@ namespace Nop.Web.Controllers
         private readonly ICategoryService _categoryService;
         private readonly IManufacturerService _manufacturerService;
         private readonly IProductService _productService;
+        private readonly IProductTemplateService _productTemplateService;
         private readonly IProductAttributeService _productAttributeService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IWorkContext _workContext;
@@ -71,6 +72,7 @@ namespace Nop.Web.Controllers
 
         public CatalogController(ICategoryService categoryService, 
             IManufacturerService manufacturerService, IProductService productService, 
+            IProductTemplateService productTemplateService,
             IProductAttributeService productAttributeService, IProductAttributeParser productAttributeParser, 
             IWorkContext workContext, ITaxService taxService, ICurrencyService currencyService,
             IPictureService pictureService, ILocalizationService localizationService,
@@ -88,6 +90,7 @@ namespace Nop.Web.Controllers
             this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
             this._productService = productService;
+            this._productTemplateService = productTemplateService;
             this._productAttributeService = productAttributeService;
             this._productAttributeParser = productAttributeParser;
             this._workContext = workContext;
@@ -373,6 +376,11 @@ namespace Nop.Web.Controllers
 
             var model = product.ToModel();
 
+            //template
+            var template = _productTemplateService.GetProductTemplateById(product.ProductTemplateId);
+            if (template == null)
+                template = _productTemplateService.GetAllProductTemplates().FirstOrDefault();
+            model.ProductTemplateViewPath = template.ViewPath;
 
             //pictures
             model.DefaultPictureZoomEnabled = _mediaSetting.DefaultPictureZoomEnabled;
@@ -967,8 +975,13 @@ namespace Nop.Web.Controllers
             if (product == null || product.Deleted || !product.Published)
                 return RedirectToAction("Index", "Home");
 
+            //prepare the model
             var model = PrepareProductDetailsPageModel(product);
 
+            //check whether we have at leat one variant
+            if (model.ProductVariantModels.Count == 0)
+                return RedirectToAction("Index", "Home");
+            
             //save as recently viewed
             _recentlyViewedProductsService.AddProductToRecentlyViewedList(product.Id);
 

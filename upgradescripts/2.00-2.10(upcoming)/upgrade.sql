@@ -362,6 +362,12 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.Variants.Fields.DisableWishlistButton.Hint">
     <Value>Check to disable the wishlist button for this product.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ProductTemplate">
+    <Value>Product template</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ProductTemplate.Hint">
+    <Value>Choose a product template. This template defines how this product (and it''s variants) will be displayed.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -995,4 +1001,54 @@ BEGIN
 
 	ALTER TABLE [dbo].[ProductVariant] ALTER COLUMN [DisableWishlistButton] [bit] NOT NULL
 END
+GO
+
+
+
+--Product templates
+IF NOT EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[dbo].[ProductTemplate]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+BEGIN
+CREATE TABLE [dbo].[ProductTemplate](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [nvarchar](400) NOT NULL,
+	[ViewPath] [nvarchar](400) NOT NULL,
+	[DisplayOrder] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+END
+GO
+
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[ProductTemplate]
+		WHERE [Name] = N'Variants in Grid')
+BEGIN
+	INSERT [dbo].[ProductTemplate] ([Name], [ViewPath], [DisplayOrder])
+	VALUES (N'Variants in Grid', N'ProductTemplate.VariantsInGrid', 1)
+END
+GO
+
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[ProductTemplate]
+		WHERE [Name] = N'Single Product Variant')
+BEGIN
+	INSERT [dbo].[ProductTemplate] ([Name], [ViewPath], [DisplayOrder])
+	VALUES (N'Single Product Variant', N'ProductTemplate.SingleVariant', 10)
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Product]') and NAME='ProductTemplateId')
+BEGIN
+	ALTER TABLE [dbo].[Product] 
+	ADD [ProductTemplateId] int NOT NULL
+END
+GO
+
+UPDATE [dbo].[Product]
+SET [ProductTemplateId]=1
+WHERE [ProductTemplateId]=0
 GO

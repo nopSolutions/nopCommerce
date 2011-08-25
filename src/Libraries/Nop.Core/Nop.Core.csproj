@@ -70,6 +70,7 @@
     <Compile Include="Data\DataSettings.cs" />
     <Compile Include="Data\DataSettingsHelper.cs" />
     <Compile Include="Data\DataSettingsManager.cs" />
+    <Compile Include="Domain\Catalog\ProductTemplate.cs" />
     <Compile Include="Domain\Cms\Widget.cs" />
     <Compile Include="Domain\Cms\WidgetZone.cs" />
     <Compile Include="Domain\Common\AdminAreaSettings.cs" />

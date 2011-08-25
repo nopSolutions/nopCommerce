@@ -19,6 +19,7 @@ namespace Nop.Data.Tests.Catalog
                 ShortDescription = "ShortDescription 1",
                 FullDescription = "FullDescription 1",
                 AdminComment = "AdminComment 1",
+                ProductTemplateId = 1,
                 ShowOnHomePage = false,
                 MetaKeywords = "Meta keywords",
                 MetaDescription = "Meta description",
@@ -41,6 +42,7 @@ namespace Nop.Data.Tests.Catalog
             fromDb.ShortDescription.ShouldEqual("ShortDescription 1");
             fromDb.FullDescription.ShouldEqual("FullDescription 1");
             fromDb.AdminComment.ShouldEqual("AdminComment 1");
+            fromDb.ProductTemplateId.ShouldEqual(1);
             fromDb.ShowOnHomePage.ShouldEqual(false);
             fromDb.MetaKeywords.ShouldEqual("Meta keywords");
             fromDb.MetaDescription.ShouldEqual("Meta description");

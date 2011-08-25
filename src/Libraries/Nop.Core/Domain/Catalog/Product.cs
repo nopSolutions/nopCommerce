@@ -38,6 +38,11 @@ namespace Nop.Core.Domain.Catalog
         public virtual string AdminComment { get; set; }
 
         /// <summary>
+        /// Gets or sets a value of used product template identifier
+        /// </summary>
+        public virtual int ProductTemplateId { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether to show the product on home page
         /// </summary>
         public virtual bool ShowOnHomePage { get; set; }

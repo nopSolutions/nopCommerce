@@ -19,6 +19,7 @@ namespace Nop.Admin.Models.Catalog
             ProductVariantModels = new List<ProductVariantModel>();
             ProductPictureModels = new List<ProductPictureModel>();
             CopyProductModel = new CopyProductModel();
+            AvailableProductTemplates = new List<SelectListItem>();
         }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.Name")]
@@ -36,6 +37,11 @@ namespace Nop.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.AdminComment")]
         [AllowHtml]
         public string AdminComment { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.ProductTemplate")]
+        [AllowHtml]
+        public int ProductTemplateId { get; set; }
+        public IList<SelectListItem> AvailableProductTemplates { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.ShowOnHomePage")]
         public bool ShowOnHomePage { get; set; }

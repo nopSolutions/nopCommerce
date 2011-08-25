@@ -1,0 +1,27 @@
+﻿using Nop.Core.Domain.Catalog;
+using Nop.Tests;
+using NUnit.Framework;
+
+namespace Nop.Data.Tests.Catalog
+{
+    [TestFixture]
+    public class ProductTemplatePersistenceTests : PersistenceTest
+    {
+        [Test]
+        public void Can_save_and_load_productTemplate()
+        {
+            var product = new ProductTemplate()
+            {
+                Name = "Name 1",
+                ViewPath = "ViewPath 1",
+                DispalyOrder = 1,
+            };
+
+            var fromDb = SaveAndLoadEntity(product);
+            fromDb.ShouldNotBeNull();
+            fromDb.Name.ShouldEqual("Name 1");
+            fromDb.ViewPath.ShouldEqual("ViewPath 1");
+            fromDb.DispalyOrder.ShouldEqual(1);
+        }
+    }
+}

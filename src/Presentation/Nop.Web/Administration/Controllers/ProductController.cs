@@ -29,6 +29,7 @@ namespace Nop.Admin.Controllers
 		#region Fields
 
         private readonly IProductService _productService;
+        private readonly IProductTemplateService _productTemplateService;
         private readonly ICategoryService _categoryService;
         private readonly IManufacturerService _manufacturerService;
         private readonly IWorkContext _workContext;
@@ -52,6 +53,7 @@ namespace Nop.Admin.Controllers
 		#region Constructors
 
         public ProductController(IProductService productService, 
+            IProductTemplateService productTemplateService,
             ICategoryService categoryService, IManufacturerService manufacturerService,
             IWorkContext workContext, ILanguageService languageService, 
             ILocalizationService localizationService, ILocalizedEntityService localizedEntityService,
@@ -63,6 +65,7 @@ namespace Nop.Admin.Controllers
             IPermissionService permissionService, AdminAreaSettings adminAreaSettings)
         {
             this._productService = productService;
+            this._productTemplateService = productTemplateService;
             this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
             this._workContext = workContext;
@@ -119,6 +122,23 @@ namespace Nop.Admin.Controllers
                                                                x => x.SeName,
                                                                localized.SeName,
                                                                localized.LanguageId);
+            }
+        }
+
+        [NonAction]
+        private void PrepareTemplatesModel(ProductModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            var templates = _productTemplateService.GetAllProductTemplates();
+            foreach (var template in templates)
+            {
+                model.AvailableProductTemplates.Add(new SelectListItem()
+                {
+                    Text =  template.Name,
+                    Value = template.Id.ToString()
+                });
             }
         }
 
@@ -441,6 +461,7 @@ namespace Nop.Admin.Controllers
 
             //product
             AddLocales(_languageService, model.Locales);
+            PrepareTemplatesModel(model);
             PrepareAddSpecificationAttributeModel(model);
             PrepareAddProductPictureModel(model);
             PrepareCategoryMapping(model);
@@ -498,6 +519,7 @@ namespace Nop.Admin.Controllers
             //If we got this far, something failed, redisplay form
 
             //product
+            PrepareTemplatesModel(model);
             PrepareAddSpecificationAttributeModel(model);
             PrepareAddProductPictureModel(model);
             PrepareCategoryMapping(model);
@@ -532,6 +554,7 @@ namespace Nop.Admin.Controllers
             PrepareTags(model, product);
             PrepareCopyProductModel(model, product);
             PrepareVariantsModel(model, product);
+            PrepareTemplatesModel(model);
             PrepareAddSpecificationAttributeModel(model);
             PrepareAddProductPictureModel(model);
             PrepareCategoryMapping(model);
@@ -573,6 +596,7 @@ namespace Nop.Admin.Controllers
             PrepareTags(model, product);
             PrepareCopyProductModel(model, product);
             PrepareVariantsModel(model, product);
+            PrepareTemplatesModel(model);
             PrepareAddSpecificationAttributeModel(model);
             PrepareAddProductPictureModel(model);
             PrepareCategoryMapping(model);

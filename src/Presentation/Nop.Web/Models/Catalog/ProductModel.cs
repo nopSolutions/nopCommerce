@@ -25,6 +25,8 @@ namespace Nop.Web.Models.Catalog
 
         public string FullDescription { get; set; }
 
+        public string ProductTemplateViewPath { get; set; }
+
         public string MetaKeywords { get; set; }
 
         public string MetaDescription { get; set; }

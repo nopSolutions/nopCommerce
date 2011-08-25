@@ -1119,6 +1119,14 @@
                           </LocaleResource>
                         </Children>
                       </LocaleResource>
+					  <LocaleResource Name="ProductTemplate">
+						<Value>Product template</Value>
+						<Children>
+							<LocaleResource Name="Hint">
+								<Value>Choose a product template. This template defines how this product (and it''s variants) will be displayed.</Value>
+							</LocaleResource>
+						</Children>
+					  </LocaleResource>
                       <LocaleResource Name="ShowOnHomePage">
                         <Value>Show on home page</Value>
                         <Children>
