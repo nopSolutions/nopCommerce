@@ -3457,7 +3457,7 @@
                         <Value>Auto register enabled</Value>
                         <Children>
                           <LocaleResource Name="Hint">
-                            <Value>Check to enable auto registeration when using external authentication.</Value>
+                            <Value>Check to enable auto registration when using external authentication.</Value>
                           </LocaleResource>
                         </Children>
                       </LocaleResource>

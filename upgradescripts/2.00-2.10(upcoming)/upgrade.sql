@@ -234,7 +234,7 @@ set @resources='
     <Value>Auto register enabled</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.ExternalAuthenticationAutoRegisterEnabled.Hint">
-    <Value>Check to enable auto registeration when using external authentication.</Value>
+    <Value>Check to enable auto registration when using external authentication.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.ExternalAuthenticationMethods">
     <Value>External authentication methods</Value>
