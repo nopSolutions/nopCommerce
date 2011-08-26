@@ -69,7 +69,7 @@ namespace Nop.Services.Catalog
             return _cacheManager.Get(key, () =>
             {
                 var query = from pt in _productTemplateRepository.Table
-                            orderby pt.DispalyOrder
+                            orderby pt.DisplayOrder
                             select pt;
 
                 var templates = query.ToList();

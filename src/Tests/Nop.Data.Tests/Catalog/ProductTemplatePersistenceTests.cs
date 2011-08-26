@@ -14,14 +14,14 @@ namespace Nop.Data.Tests.Catalog
             {
                 Name = "Name 1",
                 ViewPath = "ViewPath 1",
-                DispalyOrder = 1,
+                DisplayOrder = 1,
             };
 
             var fromDb = SaveAndLoadEntity(product);
             fromDb.ShouldNotBeNull();
             fromDb.Name.ShouldEqual("Name 1");
             fromDb.ViewPath.ShouldEqual("ViewPath 1");
-            fromDb.DispalyOrder.ShouldEqual(1);
+            fromDb.DisplayOrder.ShouldEqual(1);
         }
     }
 }

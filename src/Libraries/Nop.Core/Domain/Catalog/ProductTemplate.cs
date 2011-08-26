@@ -17,8 +17,8 @@ namespace Nop.Core.Domain.Catalog
         public virtual string ViewPath { get; set; }
 
         /// <summary>
-        /// Gets or sets the dispaly order
+        /// Gets or sets the display order
         /// </summary>
-        public virtual int DispalyOrder { get; set; }
+        public virtual int DisplayOrder { get; set; }
     }
 }

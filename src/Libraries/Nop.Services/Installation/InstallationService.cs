@@ -9095,13 +9095,13 @@ namespace Nop.Services.Installation
                                        {
                                            Name = "Variants in Grid",
                                            ViewPath = "ProductTemplate.VariantsInGrid",
-                                           DispalyOrder = 1
+                                           DisplayOrder = 1
                                        },
                                    new ProductTemplate
                                        {
                                            Name = "Single Product Variant",
                                            ViewPath = "ProductTemplate.SingleVariant",
-                                           DispalyOrder = 10
+                                           DisplayOrder = 10
                                        },
                                };
             productTemplates.ForEach(pt => _productTemplateRepository.Insert(pt));
