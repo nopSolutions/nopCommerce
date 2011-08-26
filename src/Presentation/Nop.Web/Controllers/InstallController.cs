@@ -301,17 +301,17 @@ namespace Nop.Web.Controllers
             dirsToCheck.Add(rootDir + "content");
             dirsToCheck.Add(rootDir + "content\\images");
             dirsToCheck.Add(rootDir + "content\\images\\thumbs");
-            dirsToCheck.Add(rootDir + "content\files\\exportimport");
+            dirsToCheck.Add(rootDir + "content\\files\\exportimport");
             dirsToCheck.Add(rootDir + "plugins");
-            dirsToCheck.Add(rootDir + "plugins\bin");
+            dirsToCheck.Add(rootDir + "plugins\\bin");
             foreach (string dir in dirsToCheck)
                 if (!CheckPermissions(dir, false, true, true, true))
                     ModelState.AddModelError("", string.Format("The '{0}' account is not granted with Modify permission on folder '{1}'. Please configure these permissions.", WindowsIdentity.GetCurrent().Name, dir));
 
             var filesToCheck = new List<string>();
             filesToCheck.Add(rootDir + "web.config");
-            dirsToCheck.Add(rootDir + "App_Data\\InstalledPlugins.txt");
-            dirsToCheck.Add(rootDir + "App_Data\\Settings.txt");
+            filesToCheck.Add(rootDir + "App_Data\\InstalledPlugins.txt");
+            filesToCheck.Add(rootDir + "App_Data\\Settings.txt");
             foreach (string file in filesToCheck)
                 if (!CheckPermissions(file, false, true, true, true))
                     ModelState.AddModelError("", string.Format("The '{0}' account is not granted with Modify permission on file '{1}'. Please configure these permissions.", WindowsIdentity.GetCurrent().Name, file));
