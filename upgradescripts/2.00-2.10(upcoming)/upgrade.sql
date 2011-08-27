@@ -1044,11 +1044,14 @@ GO
 IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Product]') and NAME='ProductTemplateId')
 BEGIN
 	ALTER TABLE [dbo].[Product] 
-	ADD [ProductTemplateId] int NOT NULL
+	ADD [ProductTemplateId] int NULL
 END
 GO
 
 UPDATE [dbo].[Product]
 SET [ProductTemplateId]=1
-WHERE [ProductTemplateId]=0
+WHERE [ProductTemplateId] is null
+GO
+
+ALTER TABLE [dbo].[Product] ALTER COLUMN [ProductTemplateId] int NOT NULL
 GO
