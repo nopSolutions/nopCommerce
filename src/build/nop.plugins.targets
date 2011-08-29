@@ -34,11 +34,21 @@
         <RemoveDir Directories="$(To)" />
         <MakeDir Directories="$(To)" />
 
-        <CreateItem Include="$(From)\*.*">
+        <!--Copy the dll's to the plugins bin-->
+        <CreateItem Include="$(From)\*.dll;$(From)\*.txt;$(From)\*.pdb;$(From)\*.xml;$(From)\*.config">
             <Output TaskParameter="Include" ItemName="CompileOutput" />
         </CreateItem>
         <Copy SourceFiles="@(CompileOutput)"
                 DestinationFolder="$(To)" />
+
+        <Delete Files="@(CompileOutput)" />
+
+        <!--Copy the rest to the web folder-->
+        <CreateItem Include="$(From)\**\*.*" Exclude="$(CompileOutput)">
+            <Output TaskParameter="Include" ItemName="ContentOutput" />
+        </CreateItem>
+        <Copy SourceFiles="@(ContentOutput)"
+                        DestinationFiles="@(ContentOutput->'$(WebFolder)\%(RecursiveDir)%(Filename)%(Extension)')" />
         
         <!--<RoboCopy SourceFolder="$(From)" DestinationFolder="$(To)"/>-->
         <Error Condition="!Exists('$(To)')" Text="There was a problem coping plugin '$(PluginProjectName)'." />
