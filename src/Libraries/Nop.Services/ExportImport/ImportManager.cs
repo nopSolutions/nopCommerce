@@ -46,6 +46,7 @@ namespace Nop.Services.ExportImport
                     string name = dr["Name"].ToString();
                     string shortDescription = dr["ShortDescription"].ToString();
                     string fullDescription = dr["FullDescription"].ToString();
+                    int productTemplateId = Convert.ToInt32(dr["ProductTemplateId"]);
                     bool showOnHomePage = Convert.ToBoolean(dr["ShowOnHomePage"]);
                     string metaKeywords = dr["MetaKeywords"].ToString();
                     string metaDescription = dr["MetaDescription"].ToString();
@@ -85,6 +86,7 @@ namespace Nop.Services.ExportImport
                     int orderMinimumQuantity = Convert.ToInt32(dr["OrderMinimumQuantity"]);
                     int orderMaximumQuantity = Convert.ToInt32(dr["OrderMaximumQuantity"]);
                     bool disableBuyButton = Convert.ToBoolean(dr["DisableBuyButton"]);
+                    bool disableWishlistButton = Convert.ToBoolean(dr["DisableWishlistButton"]);
                     bool callForPrice = Convert.ToBoolean(dr["CallForPrice"]);
                     decimal price = Convert.ToDecimal(dr["Price"]);
                     decimal oldPrice = Convert.ToDecimal(dr["OldPrice"]);
@@ -105,6 +107,7 @@ namespace Nop.Services.ExportImport
                         product.Name = name;
                         product.ShortDescription = shortDescription;
                         product.FullDescription = fullDescription;
+                        product.ProductTemplateId = productTemplateId;
                         product.ShowOnHomePage = showOnHomePage;
                         product.MetaKeywords = metaKeywords;
                         product.MetaDescription = metaDescription;
@@ -149,6 +152,7 @@ namespace Nop.Services.ExportImport
                         productVariant.OrderMinimumQuantity = orderMinimumQuantity;
                         productVariant.OrderMaximumQuantity = orderMaximumQuantity;
                         productVariant.DisableBuyButton = disableBuyButton;
+                        productVariant.DisableWishlistButton = disableWishlistButton;
                         productVariant.CallForPrice = callForPrice;
                         productVariant.Price = price;
                         productVariant.OldPrice = oldPrice;

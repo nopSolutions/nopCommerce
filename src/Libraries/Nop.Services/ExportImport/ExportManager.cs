@@ -201,6 +201,7 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteElementString("ShortDescription", null, product.ShortDescription);
                 xmlWriter.WriteElementString("FullDescription", null, product.FullDescription);
                 xmlWriter.WriteElementString("AdminComment", null, product.AdminComment);
+                xmlWriter.WriteElementString("ProductTemplateId", null, product.ProductTemplateId.ToString());
                 xmlWriter.WriteElementString("ShowOnHomePage", null, product.ShowOnHomePage.ToString());
                 xmlWriter.WriteElementString("MetaKeywords", null, product.MetaKeywords);
                 xmlWriter.WriteElementString("MetaDescription", null, product.MetaDescription);
@@ -261,6 +262,7 @@ namespace Nop.Services.ExportImport
                         xmlWriter.WriteElementString("OrderMinimumQuantity", null, productVariant.OrderMinimumQuantity.ToString());
                         xmlWriter.WriteElementString("OrderMaximumQuantity", null, productVariant.OrderMaximumQuantity.ToString());
                         xmlWriter.WriteElementString("DisableBuyButton", null, productVariant.DisableBuyButton.ToString());
+                        xmlWriter.WriteElementString("DisableWishlistButton", null, productVariant.DisableWishlistButton.ToString());
                         xmlWriter.WriteElementString("CallForPrice", null, productVariant.CallForPrice.ToString());
                         xmlWriter.WriteElementString("Price", null, productVariant.Price.ToString());
                         xmlWriter.WriteElementString("OldPrice", null, productVariant.OldPrice.ToString());
@@ -418,6 +420,7 @@ namespace Nop.Services.ExportImport
                 tableDefinition.Add("Name", "ntext");
                 tableDefinition.Add("ShortDescription", "ntext");
                 tableDefinition.Add("FullDescription", "ntext");
+                tableDefinition.Add("ProductTemplateId", "int");
                 tableDefinition.Add("ShowOnHomePage", "nvarchar(5)");
                 tableDefinition.Add("MetaKeywords", "ntext");
                 tableDefinition.Add("MetaDescription", "ntext");
@@ -457,6 +460,7 @@ namespace Nop.Services.ExportImport
                 tableDefinition.Add("OrderMinimumQuantity", "int");
                 tableDefinition.Add("OrderMaximumQuantity", "int");
                 tableDefinition.Add("DisableBuyButton", "nvarchar(5)");
+                tableDefinition.Add("DisableWishlistButton", "nvarchar(5)");
                 tableDefinition.Add("CallForPrice", "nvarchar(5)");
                 tableDefinition.Add("Price", "decimal");
                 tableDefinition.Add("OldPrice", "decimal");
@@ -480,10 +484,11 @@ namespace Nop.Services.ExportImport
                     foreach (var pv in productVariants)
                     {
                         var sb = new StringBuilder();
-                        sb.Append("INSERT INTO [Products] (Name, ShortDescription,FullDescription,ShowOnHomePage,MetaKeywords,MetaDescription,MetaTitle,AllowCustomerReviews,Published,SKU,ManufacturerPartNumber,IsGiftCard,GiftCardTypeId,IsDownload,DownloadId,UnlimitedDownloads,MaxNumberOfDownloads,DownloadActivationTypeId,HasSampleDownload,SampleDownloadId,HasUserAgreement,UserAgreementText,IsRecurring,RecurringCycleLength,RecurringCyclePeriodId,RecurringTotalCycles,IsShipEnabled,IsFreeShipping,AdditionalShippingCharge,IsTaxExempt,TaxCategoryId,ManageInventoryMethodId,StockQuantity,DisplayStockAvailability,DisplayStockQuantity,MinStockQuantity,LowStockActivityId,NotifyAdminForQuantityBelow,BackorderModeId,OrderMinimumQuantity,OrderMaximumQuantity,DisableBuyButton,CallForPrice,Price,OldPrice,ProductCost,CustomerEntersPrice,MinimumCustomerEnteredPrice,MaximumCustomerEnteredPrice,Weight, Length, Width, Height, CreatedOnUtc) VALUES (");
+                        sb.Append("INSERT INTO [Products] (Name, ShortDescription,FullDescription,ProductTemplateId,ShowOnHomePage,MetaKeywords,MetaDescription,MetaTitle,AllowCustomerReviews,Published,SKU,ManufacturerPartNumber,IsGiftCard,GiftCardTypeId,IsDownload,DownloadId,UnlimitedDownloads,MaxNumberOfDownloads,DownloadActivationTypeId,HasSampleDownload,SampleDownloadId,HasUserAgreement,UserAgreementText,IsRecurring,RecurringCycleLength,RecurringCyclePeriodId,RecurringTotalCycles,IsShipEnabled,IsFreeShipping,AdditionalShippingCharge,IsTaxExempt,TaxCategoryId,ManageInventoryMethodId,StockQuantity,DisplayStockAvailability,DisplayStockQuantity,MinStockQuantity,LowStockActivityId,NotifyAdminForQuantityBelow,BackorderModeId,OrderMinimumQuantity,OrderMaximumQuantity,DisableBuyButton,DisableWishlistButton,CallForPrice,Price,OldPrice,ProductCost,CustomerEntersPrice,MinimumCustomerEnteredPrice,MaximumCustomerEnteredPrice,Weight, Length, Width, Height, CreatedOnUtc) VALUES (");
                         sb.Append('"'); sb.Append(p.Name != null ? p.Name.Replace('"', '\'') : ""); sb.Append("\",");
                         sb.Append('"'); sb.Append(p.ShortDescription != null ? p.ShortDescription.Replace('"', '\''): ""); sb.Append("\",");
                         sb.Append('"'); sb.Append(p.FullDescription != null ? p.FullDescription.Replace('"', '\'') : ""); sb.Append("\",");
+                        sb.Append('"'); sb.Append(p.ProductTemplateId); sb.Append("\",");
                         sb.Append('"'); sb.Append(p.ShowOnHomePage); sb.Append("\",");
                         sb.Append('"'); sb.Append(p.MetaKeywords != null ? p.MetaKeywords.Replace('"', '\'') : ""); sb.Append("\",");
                         sb.Append('"'); sb.Append(p.MetaDescription != null ? p.MetaDescription.Replace('"', '\'') : ""); sb.Append("\",");
@@ -523,6 +528,7 @@ namespace Nop.Services.ExportImport
                         sb.Append(pv.OrderMinimumQuantity); sb.Append(",");
                         sb.Append(pv.OrderMaximumQuantity); sb.Append(",");
                         sb.Append('"'); sb.Append(pv.DisableBuyButton); sb.Append("\",");
+                        sb.Append('"'); sb.Append(pv.DisableWishlistButton); sb.Append("\",");
                         sb.Append('"'); sb.Append(pv.CallForPrice); sb.Append("\",");
                         sb.Append(decimalQuoter); sb.Append(pv.Price); sb.Append(decimalQuoter); sb.Append(',');//decimal
                         sb.Append(decimalQuoter); sb.Append(pv.OldPrice); sb.Append(decimalQuoter); sb.Append(',');//decimal
