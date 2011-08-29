@@ -19,16 +19,19 @@ namespace Nop.Services.Catalog
         private readonly IDiscountService _discountService;
         private readonly ICategoryService _categoryService;
         private readonly IProductAttributeParser _productAttributeParser;
+        private readonly ShoppingCartSettings _shoppingCartSettings;
 
         public PriceCalculationService(IWorkContext workContext,
             IDiscountService discountService,
             ICategoryService categoryService,
-            IProductAttributeParser productAttributeParser)
+            IProductAttributeParser productAttributeParser,
+            ShoppingCartSettings shoppingCartSettings)
         {
             this._workContext = workContext;
             this._discountService = discountService;
             this._categoryService = categoryService;
             this._productAttributeParser = productAttributeParser;
+            this._shoppingCartSettings = shoppingCartSettings;
         }
         
         #region Utilities
@@ -349,7 +352,8 @@ namespace Nop.Services.Catalog
                 }
             }
 
-            //finalPrice = Math.Round(finalPrice, 2);
+            if (_shoppingCartSettings.RoundPricesDuringCalculation)
+                finalPrice = Math.Round(finalPrice, 2);
 
             return finalPrice;
         }
@@ -392,8 +396,9 @@ namespace Nop.Services.Catalog
                 decimal productVariantDiscountAmount = GetDiscountAmount(productVariant, customer, attributesTotalPrice, shoppingCartItem.Quantity, out appliedDiscount);
                 discountAmount = productVariantDiscountAmount * shoppingCartItem.Quantity;
             }
-
-            //discountAmount = Math.Round(discountAmount, 2);
+            
+            if (_shoppingCartSettings.RoundPricesDuringCalculation)
+                discountAmount = Math.Round(discountAmount, 2);
             return discountAmount;
         }
         

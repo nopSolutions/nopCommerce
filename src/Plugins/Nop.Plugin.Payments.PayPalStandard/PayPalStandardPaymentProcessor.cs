@@ -193,11 +193,12 @@ namespace Nop.Plugin.Payments.PayPalStandard
                 int x = 1;
                 foreach (var item in cartItems)
                 {
+                    var unitPriceExclTax = item.UnitPriceExclTax;
                     //round
-                    var unitPriceExclTax = Math.Round(item.UnitPriceExclTax, 2);
+                    var unitPriceExclTaxRounded = Math.Round(unitPriceExclTax, 2);
                     //get the product variant so we can get the name
                     builder.AppendFormat("&item_name_" + x + "={0}", HttpUtility.UrlEncode(item.ProductVariant.FullProductName));
-                    builder.AppendFormat("&amount_" + x + "={0}", unitPriceExclTax.ToString("0.00", CultureInfo.InvariantCulture));
+                    builder.AppendFormat("&amount_" + x + "={0}", unitPriceExclTaxRounded.ToString("0.00", CultureInfo.InvariantCulture));
                     builder.AppendFormat("&quantity_" + x + "={0}", item.Quantity);
                     x++;
                     cartTotal += unitPriceExclTax;
@@ -209,7 +210,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
                 {
                     var attPrice = _taxService.GetCheckoutAttributePrice(val, false, postProcessPaymentRequest.Order.Customer);
                     //round
-                    attPrice = Math.Round(attPrice, 2);
+                    var attPriceRounded = Math.Round(attPrice, 2);
                     if (attPrice > decimal.Zero) //if it has a price
                     {
                         var ca = val.CheckoutAttribute;
@@ -217,7 +218,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
                         {
                             var attName = ca.Name; //set the name
                             builder.AppendFormat("&item_name_" + x + "={0}", HttpUtility.UrlEncode(attName)); //name
-                            builder.AppendFormat("&amount_" + x + "={0}", attPrice.ToString("0.00", CultureInfo.InvariantCulture)); //amount
+                            builder.AppendFormat("&amount_" + x + "={0}", attPriceRounded.ToString("0.00", CultureInfo.InvariantCulture)); //amount
                             builder.AppendFormat("&quantity_" + x + "={0}", 1); //quantity
                             x++;
                             cartTotal += attPrice;
@@ -228,36 +229,39 @@ namespace Nop.Plugin.Payments.PayPalStandard
                 //order totals
 
                 //shipping
-                var orderShippingExclTax = Math.Round(postProcessPaymentRequest.Order.OrderShippingExclTax, 2);
+                var orderShippingExclTax = postProcessPaymentRequest.Order.OrderShippingExclTax;
+                var orderShippingExclTaxRounded = Math.Round(orderShippingExclTax, 2);
                 if (orderShippingExclTax > decimal.Zero)
                 {
                     builder.AppendFormat("&item_name_" + x + "={0}", "Shipping fee");
-                    builder.AppendFormat("&amount_" + x + "={0}", orderShippingExclTax.ToString("0.00", CultureInfo.InvariantCulture));
+                    builder.AppendFormat("&amount_" + x + "={0}", orderShippingExclTaxRounded.ToString("0.00", CultureInfo.InvariantCulture));
                     builder.AppendFormat("&quantity_" + x + "={0}", 1);
                     x++;
                     cartTotal += orderShippingExclTax;
                 }
 
                 //payment method additional fee
-                var paymentMethodAdditionalFeeExclTax = Math.Round(postProcessPaymentRequest.Order.PaymentMethodAdditionalFeeExclTax, 2);
+                var paymentMethodAdditionalFeeExclTax = postProcessPaymentRequest.Order.PaymentMethodAdditionalFeeExclTax;
+                var paymentMethodAdditionalFeeExclTaxRounded = Math.Round(paymentMethodAdditionalFeeExclTax, 2);
                 if (paymentMethodAdditionalFeeExclTax > decimal.Zero)
                 {
                     builder.AppendFormat("&item_name_" + x + "={0}", "Payment method fee");
-                    builder.AppendFormat("&amount_" + x + "={0}", paymentMethodAdditionalFeeExclTax.ToString("0.00", CultureInfo.InvariantCulture));
+                    builder.AppendFormat("&amount_" + x + "={0}", paymentMethodAdditionalFeeExclTaxRounded.ToString("0.00", CultureInfo.InvariantCulture));
                     builder.AppendFormat("&quantity_" + x + "={0}", 1);
                     x++;
                     cartTotal += paymentMethodAdditionalFeeExclTax;
                 }
 
                 //tax
-                var orderTax = Math.Round(postProcessPaymentRequest.Order.OrderTax, 2);
+                var orderTax = postProcessPaymentRequest.Order.OrderTax;
+                var orderTaxRounded = Math.Round(orderTax, 2);
                 if (orderTax > decimal.Zero)
                 {
                     //builder.AppendFormat("&tax_1={0}", orderTax.ToString("0.00", CultureInfo.InvariantCulture));
 
                     //add tax as item
                     builder.AppendFormat("&item_name_" + x + "={0}", HttpUtility.UrlEncode("Sales Tax")); //name
-                    builder.AppendFormat("&amount_" + x + "={0}", orderTax.ToString("0.00", CultureInfo.InvariantCulture)); //amount
+                    builder.AppendFormat("&amount_" + x + "={0}", orderTaxRounded.ToString("0.00", CultureInfo.InvariantCulture)); //amount
                     builder.AppendFormat("&quantity_" + x + "={0}", 1); //quantity
 
                     cartTotal += orderTax;

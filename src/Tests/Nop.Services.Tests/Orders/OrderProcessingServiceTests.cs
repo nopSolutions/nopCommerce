@@ -67,7 +67,7 @@ namespace Nop.Services.Tests.Orders
         PaymentSettings _paymentSettings;
         OrderSettings _orderSettings;
         LocalizationSettings _localizationSettings;
-
+        ShoppingCartSettings _shoppingCartSettings;
         IOrderProcessingService _orderProcessingService;
 
         [SetUp]
@@ -78,12 +78,14 @@ namespace Nop.Services.Tests.Orders
             var pluginFinder = new PluginFinder(new AppDomainTypeFinder());
             var cacheManager = new NopNullCache();
 
+            _shoppingCartSettings = new ShoppingCartSettings();
+
             //price calculation service
             _discountService = MockRepository.GenerateMock<IDiscountService>();
             _categoryService = MockRepository.GenerateMock<ICategoryService>();
             _productAttributeParser = MockRepository.GenerateMock<IProductAttributeParser>();
             _priceCalcService = new PriceCalculationService(_workContext, _discountService,
-                _categoryService, _productAttributeParser);
+                _categoryService, _productAttributeParser,_shoppingCartSettings);
 
 
             //shipping
@@ -119,7 +121,7 @@ namespace Nop.Services.Tests.Orders
             _orderTotalCalcService = new OrderTotalCalculationService(_workContext,
                 _priceCalcService, _taxService, _shippingService, _paymentService,
                 _checkoutAttributeParser, _discountService, _giftCardService,
-                _taxSettings, _rewardPointsSettings, _shippingSettings);
+                _taxSettings, _rewardPointsSettings, _shippingSettings, _shoppingCartSettings);
 
             _orderService = MockRepository.GenerateMock<IOrderService>();
             _webHelper = MockRepository.GenerateMock<IWebHelper>();

@@ -57,8 +57,18 @@ namespace Nop.Core.Domain.Orders
         public bool MiniShoppingCartEnabled { get; set; }
 
 
-        /// <summary>Gets or sets a value indicating whether to display products in mini shopping cart
+        /// <summary>
+        /// Gets or sets a value indicating whether to display products in mini shopping cart
         /// </summary>
         public bool MiniShoppingCartDisplayProducts { get; set; }
+
+
+        //Round is already an issue. 
+        //When enabled it can one issue: http://www.nopcommerce.com/boards/t/7679/vattax-rounding-error-important-fix.aspx
+        //When displable another one: http://www.nopcommerce.com/boards/t/11419/nop-20-order-of-steps-in-checkout.aspx?p=3#46924
+        /// <summary>
+        /// Gets or sets a value indicating whether to round calculated prices and total during calculation
+        /// </summary>
+        public bool RoundPricesDuringCalculation { get; set; }
     }
 }

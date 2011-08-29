@@ -49,6 +49,7 @@ namespace Nop.Services.Orders
         /// <param name="priceFormatter">Price formatter</param>
         /// <param name="customerService">Customer service</param>
         /// <param name="shoppingCartSettings">Shopping cart settings</param>
+        /// <param name="shoppingCartSettings">Shopping cart settings</param>
         public ShoppingCartService(IRepository<ShoppingCartItem> sciRepository,
             IWorkContext workContext, ICurrencyService currencyService,
             IProductService productService, ILocalizationService localizationService,

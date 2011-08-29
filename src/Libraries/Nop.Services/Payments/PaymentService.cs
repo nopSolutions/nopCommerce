@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
+using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Plugins;
 
@@ -16,6 +17,7 @@ namespace Nop.Services.Payments
 
         private readonly PaymentSettings _paymentSettings;
         private readonly IPluginFinder _pluginFinder;
+        private readonly ShoppingCartSettings _shoppingCartSettings;
         #endregion
 
         #region Ctor
@@ -25,10 +27,13 @@ namespace Nop.Services.Payments
         /// </summary>
         /// <param name="paymentSettings">Payment settings</param>
         /// <param name="pluginFinder">Plugin finder</param>
-        public PaymentService(PaymentSettings paymentSettings, IPluginFinder pluginFinder)
+        /// <param name="shoppingCartSettings">Shopping cart settings</param>
+        public PaymentService(PaymentSettings paymentSettings, IPluginFinder pluginFinder,
+            ShoppingCartSettings shoppingCartSettings)
         {
             this._paymentSettings = paymentSettings;
             this._pluginFinder = pluginFinder;
+            this._shoppingCartSettings = shoppingCartSettings;
         }
 
         #endregion
@@ -127,7 +132,8 @@ namespace Nop.Services.Payments
             decimal result = paymentMethod.GetAdditionalHandlingFee();
             if (result < decimal.Zero)
                 result = decimal.Zero;
-            result = Math.Round(result, 2);
+            if (_shoppingCartSettings.RoundPricesDuringCalculation)
+                result = Math.Round(result, 2);
             return result;
         }
 

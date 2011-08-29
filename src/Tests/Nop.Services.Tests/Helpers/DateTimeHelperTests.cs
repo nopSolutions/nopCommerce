@@ -94,12 +94,12 @@ namespace Nop.Services.Tests.Helpers
             //summer time
             var dateTime1 = new DateTime(2010, 06, 01, 0, 0, 0);
             var convertedDateTime1 = _dateTimeHelper.ConvertToUserTime(dateTime1, sourceDateTime, destinationDateTime);
-            convertedDateTime1.ShouldEqual(new DateTime(2010, 06, 01, 5, 0, 0));
+            convertedDateTime1.ShouldEqual(new DateTime(2010, 06, 01, 6, 0, 0));
 
             //winter time
             var dateTime2 = new DateTime(2010, 01, 01, 0, 0, 0);
             var convertedDateTime2 = _dateTimeHelper.ConvertToUserTime(dateTime2, sourceDateTime, destinationDateTime);
-            convertedDateTime2.ShouldEqual(new DateTime(2010, 01, 01, 5, 0, 0));
+            convertedDateTime2.ShouldEqual(new DateTime(2010, 01, 01, 6, 0, 0));
         }
 
         [Test]

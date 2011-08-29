@@ -5,6 +5,7 @@ using Nop.Core.Plugins;
 using Nop.Services.Payments;
 using Nop.Tests;
 using NUnit.Framework;
+using Nop.Core.Domain.Orders;
 
 namespace Nop.Services.Tests.Payments
 {
@@ -12,6 +13,7 @@ namespace Nop.Services.Tests.Payments
     public class PaymentServiceTests : ServiceTest
     {
         PaymentSettings _paymentSettings;
+        ShoppingCartSettings _shoppingCartSettings;
         IPaymentService _paymentService;
         
         [SetUp]
@@ -22,7 +24,10 @@ namespace Nop.Services.Tests.Payments
             _paymentSettings.ActivePaymentMethodSystemNames.Add("Payments.TestMethod");
 
             var pluginFinder = new PluginFinder(new AppDomainTypeFinder());
-            _paymentService = new PaymentService(_paymentSettings, pluginFinder);
+
+            _shoppingCartSettings = new ShoppingCartSettings();
+
+            _paymentService = new PaymentService(_paymentSettings, pluginFinder, _shoppingCartSettings);
         }
 
         [Test]
