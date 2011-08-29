@@ -12,7 +12,6 @@
             Plugins-CopyExchangeRates;
             Plugins-CopyExternalAuth;
             Plugins-CopyFeeds;
-            Plugins-CopyLiveChats;
             Plugins-CopyPayments;
             Plugins-CopyShippings;
             Plugins-CopySms;
@@ -41,14 +40,12 @@
         <Copy SourceFiles="@(CompileOutput)"
                 DestinationFolder="$(To)" />
 
-        <Delete Files="@(CompileOutput)" />
-
         <!--Copy the rest to the web folder-->
         <CreateItem Include="$(From)\**\*.*" Exclude="$(CompileOutput)">
             <Output TaskParameter="Include" ItemName="ContentOutput" />
         </CreateItem>
         <Copy SourceFiles="@(ContentOutput)"
-                        DestinationFiles="@(ContentOutput->'$(WebFolder)\%(RecursiveDir)%(Filename)%(Extension)')" />
+                        DestinationFiles="@(ContentOutput->'$(To)\%(RecursiveDir)%(Filename)%(Extension)')" />
         
         <!--<RoboCopy SourceFolder="$(From)" DestinationFolder="$(To)"/>-->
         <Error Condition="!Exists('$(To)')" Text="There was a problem coping plugin '$(PluginProjectName)'." />
@@ -107,7 +104,15 @@
         <MSBuild Projects ="$(MSBuildProjectFullPath)"
                         Targets="Plugin-CopyToWeb"
                         Properties="
+                        PluginProjectName=Nop.Plugin.ExternalAuth.Facebook"/>
+        <MSBuild Projects ="$(MSBuildProjectFullPath)"
+                        Targets="Plugin-CopyToWeb"
+                        Properties="
                         PluginProjectName=Nop.Plugin.ExternalAuth.OpenId"/>
+        <MSBuild Projects ="$(MSBuildProjectFullPath)"
+                        Targets="Plugin-CopyToWeb"
+                        Properties="
+                        PluginProjectName=Nop.Plugin.ExternalAuth.Twitter"/>
     </Target>
     
     <!--Feed plugins-->
@@ -124,14 +129,6 @@
                         Targets="Plugin-CopyToWeb"
                         Properties="
                         PluginProjectName=Nop.Plugin.Feed.PriceGrabber"/>
-    </Target>
-    
-    <!--Live chat plugins-->
-    <Target Name="Plugins-CopyLiveChats">
-        <MSBuild Projects ="$(MSBuildProjectFullPath)"
-                        Targets="Plugin-CopyToWeb"
-                        Properties="
-                        PluginProjectName=Nop.Plugin.LiveChat.LivePerson"/>
     </Target>
     
     <!--Payment plugins-->
