@@ -4605,7 +4605,7 @@ namespace Nop.Services.Installation
                     EmailWishlistEnabled = true,
                     MiniShoppingCartEnabled = true,
                     MiniShoppingCartDisplayProducts = false,
-                    RoundPricesDuringCalculation = false,
+                    RoundPricesDuringCalculation = true,
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<OrderSettings>>()

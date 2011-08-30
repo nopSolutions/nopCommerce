@@ -1055,3 +1055,9 @@ GO
 
 ALTER TABLE [dbo].[Product] ALTER COLUMN [ProductTemplateId] int NOT NULL
 GO
+
+--rounding issue
+UPDATE [Setting]
+SET [Value] = N'true'
+WHERE [name] = N'shoppingcartsettings.roundpricesduringcalculation'
+GO
