@@ -484,7 +484,7 @@ namespace Nop.Services.Messages
 
             //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
             tokens.Add(new Token("Customer.PasswordRecoveryURL", string.Format("{0}passwordrecovery/confirm/{1}/{2}", _webHelper.GetStoreLocation(false), customer.GetAttribute<string>(SystemCustomerAttributeNames.PasswordRecoveryToken), customer.Email)));
-            tokens.Add(new Token("Customer.AccountActivationURL", string.Format("{0}customer/activation/{1}/{2}", _webHelper.GetStoreLocation(false), customer.GetAttribute<string>(SystemCustomerAttributeNames.AccountActivationToken), customer.Username)));
+            tokens.Add(new Token("Customer.AccountActivationURL", string.Format("{0}customer/activation/{1}/{2}", _webHelper.GetStoreLocation(false), customer.GetAttribute<string>(SystemCustomerAttributeNames.AccountActivationToken), customer.Email)));
             tokens.Add(new Token("Wishlist.URLForCustomer", string.Format("{0}wishlist/{1}", _webHelper.GetStoreLocation(false), customer.CustomerGuid)));
         }
 
