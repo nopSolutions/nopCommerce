@@ -135,10 +135,10 @@ namespace Nop.Admin.Controllers
                 if (ModelState.IsValid)
                 {
                     if (customerRole.IsSystemRole && !model.Active)
-                        throw new NopException(_localizationService.GetResource("Admin.Customers.Customers.Fields.Active.CantEditSystem"));
+                        throw new NopException(_localizationService.GetResource("Admin.Customers.CustomerRoles.Fields.Active.CantEditSystem"));
 
                     if (customerRole.IsSystemRole && !customerRole.SystemName.Equals(model.SystemName, StringComparison.InvariantCultureIgnoreCase))
-                        throw new NopException(_localizationService.GetResource("Admin.Customers.Customers.Fields.SystemName.CantEditSystem"));
+                        throw new NopException(_localizationService.GetResource("Admin.Customers.CustomerRoles.Fields.SystemName.CantEditSystem"));
 
 
                     customerRole = model.ToEntity(customerRole);
