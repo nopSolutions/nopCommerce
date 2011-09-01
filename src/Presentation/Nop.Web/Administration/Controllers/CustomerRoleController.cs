@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web.Mvc;
 using Nop.Admin.Models.Customers;
+using Nop.Core;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -129,21 +130,36 @@ namespace Nop.Admin.Controllers
             if (customerRole == null) 
                 throw new ArgumentException("No customer role found with the specified id");
 
-            if (ModelState.IsValid)
+            try
             {
-                customerRole = model.ToEntity(customerRole);
-                _customerService.UpdateCustomerRole(customerRole);
+                if (ModelState.IsValid)
+                {
+                    if (customerRole.IsSystemRole && !model.Active)
+                        throw new NopException(_localizationService.GetResource("Admin.Customers.Customers.Fields.Active.CantEditSystem"));
 
-                //activity log
-                _customerActivityService.InsertActivity("EditCustomerRole", _localizationService.GetResource("ActivityLog.EditCustomerRole"), customerRole.Name);
+                    if (customerRole.IsSystemRole && !customerRole.SystemName.Equals(model.SystemName, StringComparison.InvariantCultureIgnoreCase))
+                        throw new NopException(_localizationService.GetResource("Admin.Customers.Customers.Fields.SystemName.CantEditSystem"));
 
-                SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerRoles.Updated"));
-                return continueEditing ? RedirectToAction("Edit", customerRole.Id) : RedirectToAction("List");
+
+                    customerRole = model.ToEntity(customerRole);
+                    _customerService.UpdateCustomerRole(customerRole);
+
+                    //activity log
+                    _customerActivityService.InsertActivity("EditCustomerRole", _localizationService.GetResource("ActivityLog.EditCustomerRole"), customerRole.Name);
+
+                    SuccessNotification(_localizationService.GetResource("Admin.Customers.CustomerRoles.Updated"));
+                    return continueEditing ? RedirectToAction("Edit", customerRole.Id) : RedirectToAction("List");
+                }
+
+                //If we got this far, something failed, redisplay form
+                return View(model);
             }
-
-            //If we got this far, something failed, redisplay form
-            return View(model);
-		}
+            catch (Exception exc)
+            {
+                ErrorNotification(exc);
+                return RedirectToAction("Edit", new { id = customerRole.Id });
+            }
+        }
 
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)

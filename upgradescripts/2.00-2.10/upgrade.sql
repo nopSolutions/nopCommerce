@@ -371,6 +371,12 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.Variants.Fields.Download.Hint">
     <Value>The download file.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.Active.CantEditSystem">
+    <Value>System customer roles can''t be disabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.SystemName.CantDisableSystem">
+    <Value>The system name of system customer roles can''t be edited.</Value>
+  </LocaleResource>
 </Language>
 '
 

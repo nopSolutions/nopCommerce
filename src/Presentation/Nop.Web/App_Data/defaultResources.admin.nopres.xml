@@ -5430,6 +5430,9 @@
                           <LocaleResource Name="Hint">
                             <Value>Check to make this role active.</Value>
                           </LocaleResource>
+							<LocaleResource Name="CantEditSystem">
+								<Value>System customer roles can't be disabled.</Value>
+							</LocaleResource>
                         </Children>
                       </LocaleResource>
                       <LocaleResource Name="IsSystemRole">
@@ -5446,6 +5449,9 @@
                           <LocaleResource Name="Hint">
                             <Value>The system name of the customer role.</Value>
                           </LocaleResource>
+							<LocaleResource Name="CantEditSystem">
+								<Value>The system name of system customer roles can't be edited.</Value>
+							</LocaleResource>
                         </Children>
                       </LocaleResource>
                     </Children>
