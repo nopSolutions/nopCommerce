@@ -34,171 +34,174 @@
       <LocaleResource Name="Administration">
         <Value>Administration</Value>
       </LocaleResource>
-      <LocaleResource Name="Avatar">
-        <Value>Avatar</Value>
-        <Children>
-          <LocaleResource Name="RemoveAvatar">
-            <Value>Remove avatar</Value>
-          </LocaleResource>
-          <LocaleResource Name="UploadRules">
-            <Value>Avatar must be in GIF or JPEG format with the maximum size of 20 KB</Value>
-          </LocaleResource>
-        </Children>
-      </LocaleResource>
-      <LocaleResource Name="ChangePassword">
-        <Value>Change password</Value>
-        <Children>
-          <LocaleResource Name="Button">
-            <Value>Change password</Value>
-          </LocaleResource>
-          <LocaleResource Name="Fields">
-            <Children>
-              <LocaleResource Name="OldPassword">
-                <Value>Old password</Value>
-                <Children>
-                  <LocaleResource Name="Required">
-                    <Value>Old password is required.</Value>
-                  </LocaleResource>
-                </Children>
-              </LocaleResource>
-              <LocaleResource Name="NewPassword">
-                <Value>New password</Value>
-                <Children>
-                  <LocaleResource Name="EnteredPasswordsDoNotMatch">
-                    <Value>The new password and confirmation password do not match.</Value>
-                  </LocaleResource>
-                  <LocaleResource Name="Required">
-                    <Value>New password is required.</Value>
-                  </LocaleResource>
-                </Children>
-              </LocaleResource>
-              <LocaleResource Name="ConfirmNewPassword">
-                <Value>Confirm password</Value>
-                <Children>
-                  <LocaleResource Name="Required">
-                    <Value>Password is required.</Value>
-                  </LocaleResource>
-                </Children>
-              </LocaleResource>
-            </Children>
-          </LocaleResource>
-          <LocaleResource Name="Success">
-            <Value>Password was changed</Value>
-          </LocaleResource>
-        </Children>
-      </LocaleResource>
-      <LocaleResource Name="CompanyDetails">
-        <Value>Company Details</Value>
-      </LocaleResource>
-      <LocaleResource Name="CustomerAddresses">
-        <Value>Addresses</Value>
-        <Children>
-          <LocaleResource Name="AddNew">
-            <Value>Add new address</Value>
-          </LocaleResource>
-          <LocaleResource Name="Edit">
-            <Value>Edit address</Value>
-          </LocaleResource>
-        </Children>
-      </LocaleResource>
-      <LocaleResource Name="CustomerInfo">
-        <Value>Customer info</Value>
-      </LocaleResource>
-      <LocaleResource Name="CustomerOrders">
-        <Value>Orders</Value>
-        <Children>
-          <LocaleResource Name="OrderDetails">
-            <Value>Details</Value>
-          </LocaleResource>
-          <LocaleResource Name="NoOrders">
-            <Value>No orders</Value>
-          </LocaleResource>
-          <LocaleResource Name="OrderDate">
-            <Value>Order Date</Value>
-          </LocaleResource>
-          <LocaleResource Name="OrderNumber">
-            <Value>Order Number</Value>
-          </LocaleResource>
-          <LocaleResource Name="OrderStatus">
-            <Value>Order status</Value>
-          </LocaleResource>
-          <LocaleResource Name="OrderTotal">
-            <Value>Order Total</Value>
-          </LocaleResource>
-          <LocaleResource Name="ReturnItems">
-            <Value>Return Item(s)</Value>
-          </LocaleResource>
-          <LocaleResource Name="RecurringOrders">
-            <Value>Recurring payments</Value>
-            <Children>
-              <LocaleResource Name="StartDate">
-                <Value>Start date</Value>
-              </LocaleResource>
-              <LocaleResource Name="CycleInfo">
-                <Value>Cycle info</Value>
-              </LocaleResource>
-              <LocaleResource Name="NextPayment">
-                <Value>Next payment</Value>
-              </LocaleResource>
-              <LocaleResource Name="TotalCycles">
-                <Value>Total cycles</Value>
-              </LocaleResource>
-              <LocaleResource Name="CyclesRemaining">
-                <Value>Cycles remaining</Value>
-              </LocaleResource>
-              <LocaleResource Name="InitialOrder">
-                <Value>Initial order</Value>
-              </LocaleResource>
-              <LocaleResource Name="ViewInitialOrder">
-                <Value>View order (ID - {0})</Value>
-              </LocaleResource>
-              <LocaleResource Name="Cancel">
-                <Value>Cancel payment</Value>
-              </LocaleResource>
-            </Children>
-          </LocaleResource>
-        </Children>
-      </LocaleResource>
-      <LocaleResource Name="CustomerReturnRequests">
-        <Value>Return requests</Value>
-        <Children>
-          <LocaleResource Name="Title">
-            <Value>Return #{0} - {1}</Value>
-          </LocaleResource>
-          <LocaleResource Name="Item">
-            <Value>Returned Item:</Value>
-          </LocaleResource>
-          <LocaleResource Name="Reason">
-            <Value>Return Reason: {0}</Value>
-          </LocaleResource>
-          <LocaleResource Name="Action">
-            <Value>Return Action: {0}</Value>
-          </LocaleResource>
-          <LocaleResource Name="Date">
-            <Value>Date Requested: {0}</Value>
-          </LocaleResource>
-          <LocaleResource Name="Comments">
-            <Value>Your Comments:</Value>
-          </LocaleResource>
-        </Children>
-      </LocaleResource>
-      <LocaleResource Name="DownloadableProducts">
-        <Value>Downloadable products</Value>
-      </LocaleResource>
-      <LocaleResource Name="AssociatedExternalAuth">
-        <Value>External authentication</Value>
-        <Children>
-          <LocaleResource Name="Email">
-            <Value>Email</Value>
-          </LocaleResource>
-          <LocaleResource Name="ExternalIdentifier">
-            <Value>External identifier</Value>
-          </LocaleResource>
-          <LocaleResource Name="AuthMethodName">
-            <Value>Authentication method</Value>
-          </LocaleResource>
-        </Children>
-      </LocaleResource>
+		<LocaleResource Name="AssociatedExternalAuth">
+			<Value>External authentication</Value>
+			<Children>
+				<LocaleResource Name="Email">
+					<Value>Email</Value>
+				</LocaleResource>
+				<LocaleResource Name="ExternalIdentifier">
+					<Value>External identifier</Value>
+				</LocaleResource>
+				<LocaleResource Name="AuthMethodName">
+					<Value>Authentication method</Value>
+				</LocaleResource>
+			</Children>
+		</LocaleResource>
+		<LocaleResource Name="Avatar">
+			<Value>Avatar</Value>
+			<Children>
+				<LocaleResource Name="RemoveAvatar">
+					<Value>Remove avatar</Value>
+				</LocaleResource>
+				<LocaleResource Name="UploadRules">
+					<Value>Avatar must be in GIF or JPEG format with the maximum size of 20 KB</Value>
+				</LocaleResource>
+			</Children>
+		</LocaleResource>
+		<LocaleResource Name="ChangePassword">
+			<Value>Change password</Value>
+			<Children>
+				<LocaleResource Name="Button">
+					<Value>Change password</Value>
+				</LocaleResource>
+				<LocaleResource Name="Fields">
+					<Children>
+						<LocaleResource Name="OldPassword">
+							<Value>Old password</Value>
+							<Children>
+								<LocaleResource Name="Required">
+									<Value>Old password is required.</Value>
+								</LocaleResource>
+							</Children>
+						</LocaleResource>
+						<LocaleResource Name="NewPassword">
+							<Value>New password</Value>
+							<Children>
+								<LocaleResource Name="EnteredPasswordsDoNotMatch">
+									<Value>The new password and confirmation password do not match.</Value>
+								</LocaleResource>
+								<LocaleResource Name="Required">
+									<Value>New password is required.</Value>
+								</LocaleResource>
+							</Children>
+						</LocaleResource>
+						<LocaleResource Name="ConfirmNewPassword">
+							<Value>Confirm password</Value>
+							<Children>
+								<LocaleResource Name="Required">
+									<Value>Password is required.</Value>
+								</LocaleResource>
+							</Children>
+						</LocaleResource>
+					</Children>
+				</LocaleResource>
+				<LocaleResource Name="Success">
+					<Value>Password was changed</Value>
+				</LocaleResource>
+			</Children>
+		</LocaleResource>
+		<LocaleResource Name="CompanyDetails">
+			<Value>Company Details</Value>
+		</LocaleResource>
+		<LocaleResource Name="CustomerAddresses">
+			<Value>Addresses</Value>
+			<Children>
+				<LocaleResource Name="AddNew">
+					<Value>Add new address</Value>
+				</LocaleResource>
+				<LocaleResource Name="Edit">
+					<Value>Edit address</Value>
+				</LocaleResource>
+				<LocaleResource Name="NoAddresses">
+					<Value>No addresses</Value>
+				</LocaleResource>
+			</Children>
+		</LocaleResource>
+		<LocaleResource Name="CustomerInfo">
+			<Value>Customer info</Value>
+		</LocaleResource>
+		<LocaleResource Name="CustomerOrders">
+			<Value>Orders</Value>
+			<Children>
+				<LocaleResource Name="OrderDetails">
+					<Value>Details</Value>
+				</LocaleResource>
+				<LocaleResource Name="NoOrders">
+					<Value>No orders</Value>
+				</LocaleResource>
+				<LocaleResource Name="OrderDate">
+					<Value>Order Date</Value>
+				</LocaleResource>
+				<LocaleResource Name="OrderNumber">
+					<Value>Order Number</Value>
+				</LocaleResource>
+				<LocaleResource Name="OrderStatus">
+					<Value>Order status</Value>
+				</LocaleResource>
+				<LocaleResource Name="OrderTotal">
+					<Value>Order Total</Value>
+				</LocaleResource>
+				<LocaleResource Name="ReturnItems">
+					<Value>Return Item(s)</Value>
+				</LocaleResource>
+				<LocaleResource Name="RecurringOrders">
+					<Value>Recurring payments</Value>
+					<Children>
+						<LocaleResource Name="StartDate">
+							<Value>Start date</Value>
+						</LocaleResource>
+						<LocaleResource Name="CycleInfo">
+							<Value>Cycle info</Value>
+						</LocaleResource>
+						<LocaleResource Name="NextPayment">
+							<Value>Next payment</Value>
+						</LocaleResource>
+						<LocaleResource Name="TotalCycles">
+							<Value>Total cycles</Value>
+						</LocaleResource>
+						<LocaleResource Name="CyclesRemaining">
+							<Value>Cycles remaining</Value>
+						</LocaleResource>
+						<LocaleResource Name="InitialOrder">
+							<Value>Initial order</Value>
+						</LocaleResource>
+						<LocaleResource Name="ViewInitialOrder">
+							<Value>View order (ID - {0})</Value>
+						</LocaleResource>
+						<LocaleResource Name="Cancel">
+							<Value>Cancel payment</Value>
+						</LocaleResource>
+					</Children>
+				</LocaleResource>
+			</Children>
+		</LocaleResource>
+		<LocaleResource Name="CustomerReturnRequests">
+			<Value>Return requests</Value>
+			<Children>
+				<LocaleResource Name="Title">
+					<Value>Return #{0} - {1}</Value>
+				</LocaleResource>
+				<LocaleResource Name="Item">
+					<Value>Returned Item:</Value>
+				</LocaleResource>
+				<LocaleResource Name="Reason">
+					<Value>Return Reason: {0}</Value>
+				</LocaleResource>
+				<LocaleResource Name="Action">
+					<Value>Return Action: {0}</Value>
+				</LocaleResource>
+				<LocaleResource Name="Date">
+					<Value>Date Requested: {0}</Value>
+				</LocaleResource>
+				<LocaleResource Name="Comments">
+					<Value>Your Comments:</Value>
+				</LocaleResource>
+			</Children>
+		</LocaleResource>
+		<LocaleResource Name="DownloadableProducts">
+			<Value>Downloadable products</Value>
+		</LocaleResource>
       <LocaleResource Name="Fields">
         <Children>
           <LocaleResource Name="Company">

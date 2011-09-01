@@ -377,6 +377,9 @@ set @resources='
   <LocaleResource Name="Admin.Customers.Customers.Fields.SystemName.CantEditSystem">
     <Value>The system name of system customer roles can''t be edited.</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.CustomerAddresses.NoAddresses">
+    <Value>No addresses</Value>
+  </LocaleResource>
 </Language>
 '
 
