@@ -368,6 +368,9 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.Fields.ProductTemplate.Hint">
     <Value>Choose a product template. This template defines how this product (and it''s variants) will be displayed.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Variants.Fields.Download.Hint">
+    <Value>The download file.</Value>
+  </LocaleResource>
 </Language>
 '
 

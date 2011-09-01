@@ -1669,7 +1669,7 @@
                             <Value>Download file</Value>
                             <Children>
                               <LocaleResource Name="Hint">
-                                <Value>The additional shipping charge.</Value>
+                                <Value>The download file.</Value>
                               </LocaleResource>
                             </Children>
                           </LocaleResource>
