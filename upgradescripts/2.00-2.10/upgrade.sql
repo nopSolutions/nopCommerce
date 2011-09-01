@@ -374,7 +374,7 @@ set @resources='
   <LocaleResource Name="Admin.Customers.Customers.Fields.Active.CantEditSystem">
     <Value>System customer roles can''t be disabled.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Customers.Customers.Fields.SystemName.CantDisableSystem">
+  <LocaleResource Name="Admin.Customers.Customers.Fields.SystemName.CantEditSystem">
     <Value>The system name of system customer roles can''t be edited.</Value>
   </LocaleResource>
 </Language>
