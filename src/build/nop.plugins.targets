@@ -27,11 +27,9 @@
             <Output PropertyName="PluginDestination" TaskParameter="NewString"/>
         </MSBuild.ExtensionPack.Framework.TextString>
         <PropertyGroup>
-            <From>$(PluginsFolder)\$(PluginProjectName)\bin\$(Configuration)\</From>
+            <From>$(WebPluginsFolder)\$(PluginDestination)</From>
             <To>$(PluginOutput)\$(PluginDestination)</To>
         </PropertyGroup>
-        <RemoveDir Directories="$(To)" />
-        <MakeDir Directories="$(To)" />
 
         <!--Copy the dll's to the plugins bin-->
         <CreateItem Include="$(From)\*.dll;$(From)\*.txt;$(From)\*.pdb;$(From)\*.xml;$(From)\*.config">

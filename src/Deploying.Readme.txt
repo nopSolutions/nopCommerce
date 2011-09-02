@@ -1,6 +1,6 @@
 Manually:
 1. Nop.Web and Nop.Admin are two web applications. They both need to be published to the same directory. “Nop.Web” to “Published\Web\”. “Nop.Admin” to “Published\Web\Administration\”. Make sure the .dlls from Nop.Admin (Published\Web\Administration\bin\) are moved and exist in (Published\Web\bin\).
-2. Ensure that plugins are copied into \Published\Web\Plugins\ directory
+2. Ensure that plugins (\Presentation\Nop.Web\Plugins) are copied into \Published\Web\Plugins\ directory
 3. Select all the files in Published\Web\ directory and upload them to your web server.
 
 
