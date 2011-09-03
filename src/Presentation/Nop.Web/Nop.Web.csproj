@@ -1125,7 +1125,7 @@
     <Content Include="Content\samples\product_BattleOfLa_1.zip" />
     <Content Include="Content\samples\product_PokerFace_1.zip" />
     <Content Include="Content\samples\product_SingleLadies_1.zip" />
-    <None Include="App_Data\GeoIP.dat" />
+    <Content Include="App_Data\GeoIP.dat" />
     <None Include="App_Data\Resources.xsd">
       <SubType>Designer</SubType>
     </None>
