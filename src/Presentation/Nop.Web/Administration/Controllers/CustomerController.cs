@@ -931,7 +931,8 @@ namespace Nop.Admin.Controllers
             var address = customer.Addresses.Where(a => a.Id == addressId).FirstOrDefault();
             customer.RemoveAddress(address);
             _customerService.UpdateCustomer(customer);
-            //TODO should we delete the address record?
+            //now delete the address record
+            _addressService.DeleteAddress(address);
 
             return AddressesSelect(customerId, command);
         }

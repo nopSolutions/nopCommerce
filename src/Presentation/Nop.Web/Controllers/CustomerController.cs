@@ -749,6 +749,7 @@ namespace Nop.Web.Controllers
             {
                 customer.RemoveAddress(address);
                 _customerService.UpdateCustomer(customer);
+                //now delete the address record
                 _addressService.DeleteAddress(address);
             }
 
