@@ -1,6 +1,6 @@
 ﻿@model Nop.Web.Models.Catalog.ProductModel
 @{
-    var defaultProductVariant = Model.ProductVariantModels.Count == 1 ? Model.ProductVariantModels[0] : null;
+    var defaultProductVariant = Model.ProductVariantModels.Count > 1 ? Model.ProductVariantModels[0] : null;
 
     //errors
     var errors = new List<string>();
