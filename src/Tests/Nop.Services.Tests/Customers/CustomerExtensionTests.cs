@@ -9,7 +9,7 @@ namespace Nop.Services.Tests.Customers
     public class CustomerExtensionTests : ServiceTest
     {
         [SetUp]
-        public void SetUp()
+        public new void SetUp()
         {
         }
 

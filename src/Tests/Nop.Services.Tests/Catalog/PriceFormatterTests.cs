@@ -30,10 +30,12 @@ namespace Nop.Services.Tests.Catalog
         IPriceFormatter _priceFormatter;
         
         [SetUp]
-        public void SetUp()
+        public new void SetUp()
         {
             var cacheManager = new NopNullCache();
-            
+
+            _workContext = null;
+
             _currencySettings = new CurrencySettings();
             var currency1 = new Currency
             {

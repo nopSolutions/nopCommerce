@@ -71,7 +71,7 @@ namespace Nop.Services.Tests.Orders
         IOrderProcessingService _orderProcessingService;
 
         [SetUp]
-        public void SetUp()
+        public new void SetUp()
         {
             _workContext = null;
 

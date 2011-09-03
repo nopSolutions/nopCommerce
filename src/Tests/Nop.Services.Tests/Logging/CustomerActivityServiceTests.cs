@@ -24,7 +24,7 @@ namespace Nop.Services.Tests.Logging
         ActivityLog _activity1, _activity2;
         Customer _customer1, _customer2;
         [SetUp]
-        public void SetUp()
+        public new void SetUp()
         {
             _activityType1 = new ActivityLogType
             {

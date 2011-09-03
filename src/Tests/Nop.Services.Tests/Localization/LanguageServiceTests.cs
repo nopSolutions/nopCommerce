@@ -20,7 +20,7 @@ namespace Nop.Services.Tests.Localization
         LocalizationSettings _localizationSettings;
 
         [SetUp]
-        public void SetUp()
+        public new void SetUp()
         {
             _languageRepo = MockRepository.GenerateMock<IRepository<Language>>();
             var lang1 = new Language

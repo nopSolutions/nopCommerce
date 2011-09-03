@@ -23,7 +23,7 @@ namespace Nop.Services.Tests.Discounts
         IDiscountService _discountService;
 
         [SetUp]
-        public void SetUp()
+        public new void SetUp()
         {
             _discountRepo = MockRepository.GenerateMock<IRepository<Discount>>();
             var discount1 = new Discount

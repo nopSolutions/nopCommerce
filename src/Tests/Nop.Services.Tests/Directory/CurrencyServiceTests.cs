@@ -23,7 +23,7 @@ namespace Nop.Services.Tests.Directory
         Currency currencyUSD, currencyRUR, currencyEUR;
         
         [SetUp]
-        public void SetUp()
+        public new void SetUp()
         {
             currencyUSD = new Currency()
             {

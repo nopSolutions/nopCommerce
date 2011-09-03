@@ -23,11 +23,12 @@ namespace Nop.Services.Tests.Tax
         ITaxService _taxService;
 
         [SetUp]
-        public void SetUp()
+        public new void SetUp()
         {
             _taxSettings = new TaxSettings();
             _taxSettings.DefaultTaxAddressId = 10;
 
+            _workContext = null;
 
             _addressService = MockRepository.GenerateMock<IAddressService>();
             //default tax address

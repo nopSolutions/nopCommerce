@@ -89,28 +89,23 @@ namespace Nop.Plugin.ExternalAuth.Twitter.Controllers
 
                         return new RedirectResult(Url.LogOn(returnUrl));
                     }
-                    break;
                 case OpenAuthenticationStatus.AssociateOnLogon:
                     {
                         return new RedirectResult(Url.LogOn(returnUrl));
                     }
-                    break;
                 case OpenAuthenticationStatus.AutoRegisteredEmailValidation:
                     {
                         //result
                         return RedirectToRoute("RegisterResult", new { resultId = (int)UserRegistrationType.EmailValidation });
                     }
-                    break;
                 case OpenAuthenticationStatus.AutoRegisteredAdminApproval:
                     {
                         return RedirectToRoute("RegisterResult", new { resultId = (int)UserRegistrationType.AdminApproval });
                     }
-                    break;
                 case OpenAuthenticationStatus.AutoRegisteredStandard:
                     {
                         return RedirectToRoute("RegisterResult", new { resultId = (int)UserRegistrationType.Standard });
                     }
-                    break;
                 default:
                     break;
             }

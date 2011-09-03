@@ -1198,7 +1198,6 @@ namespace Nop.Web.Controllers
                         return RedirectToRoute("Wishlist");
                     default:
                         return RedirectToRoute("ShoppingCart");
-                        break;
                 }
             }
             else

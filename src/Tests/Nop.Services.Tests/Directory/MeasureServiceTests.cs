@@ -22,7 +22,7 @@ namespace Nop.Services.Tests.Directory
         MeasureWeight measureWeight1, measureWeight2, measureWeight3, measureWeight4;
         
         [SetUp]
-        public void SetUp()
+        public new void SetUp()
         {
             measureDimension1 = new MeasureDimension()
             {

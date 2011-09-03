@@ -27,7 +27,7 @@ namespace Nop.Services.Tests.Customers
         SecuritySettings _securitySettings;
 
         [SetUp]
-        public void SetUp() 
+        public new void SetUp() 
         {
             _customerSettings = new CustomerSettings();
             _securitySettings = new SecuritySettings()

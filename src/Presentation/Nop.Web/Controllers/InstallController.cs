@@ -259,7 +259,7 @@ namespace Nop.Web.Controllers
                         //try to create connection string
                         new SqlConnectionStringBuilder(model.DatabaseConnectionString);
                     }
-                    catch (Exception exc)
+                    catch
                     {
                         ModelState.AddModelError("", "Wrong SQL connection string format");
                     }

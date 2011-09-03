@@ -20,7 +20,7 @@ namespace Nop.Services.Tests.Helpers
         IDateTimeHelper _dateTimeHelper;
 
         [SetUp]
-        public void SetUp()
+        public new void SetUp()
         {
             _customerService = MockRepository.GenerateMock<ICustomerService>();
             _settingService = MockRepository.GenerateMock<ISettingService>();

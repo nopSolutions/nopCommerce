@@ -12,7 +12,7 @@ namespace Nop.Services.Tests.Security
         SecuritySettings _securitySettings;
 
         [SetUp]
-        public void SetUp() 
+        public new void SetUp() 
         {
             _securitySettings = new SecuritySettings()
             {

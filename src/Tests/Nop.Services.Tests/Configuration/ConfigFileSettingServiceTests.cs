@@ -16,7 +16,7 @@ namespace Nop.Services.Tests.Configuration
         ISettingService config;
 
         [SetUp]
-        public void SetUp()
+        public new void SetUp()
         {
             config = new ConfigFileSettingService();
         }

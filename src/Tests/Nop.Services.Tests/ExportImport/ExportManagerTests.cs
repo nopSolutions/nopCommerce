@@ -28,7 +28,7 @@ namespace Nop.Services.Tests.ExportImport
         IExportManager _exportManager;
 
         [SetUp]
-        public void SetUp()
+        public new void SetUp()
         {
             _categoryService = MockRepository.GenerateMock<ICategoryService>();
             _manufacturerService = MockRepository.GenerateMock<IManufacturerService>();

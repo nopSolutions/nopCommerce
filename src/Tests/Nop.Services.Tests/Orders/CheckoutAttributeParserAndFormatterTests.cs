@@ -35,7 +35,7 @@ namespace Nop.Services.Tests.Orders
         CheckoutAttributeValue cav1_1, cav1_2, cav2_1, cav2_2;
         
         [SetUp]
-        public void SetUp()
+        public new void SetUp()
         {
             #region Test data
 

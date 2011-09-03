@@ -22,7 +22,7 @@ namespace Nop.Services.Tests.Catalog
         ShoppingCartSettings _shoppingCartSettings;
 
         [SetUp]
-        public void SetUp()
+        public new void SetUp()
         {
             _workContext = null;
 

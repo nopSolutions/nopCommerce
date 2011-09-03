@@ -17,7 +17,7 @@ namespace Nop.Services.Tests.Payments
         IPaymentService _paymentService;
         
         [SetUp]
-        public void SetUp()
+        public new void SetUp()
         {
             _paymentSettings = new PaymentSettings();
             _paymentSettings.ActivePaymentMethodSystemNames = new List<string>();

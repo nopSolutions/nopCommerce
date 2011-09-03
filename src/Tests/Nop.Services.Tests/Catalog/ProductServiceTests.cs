@@ -26,7 +26,7 @@ namespace Nop.Services.Tests.Catalog
         IProductService _productService;
 
         [SetUp]
-        public void SetUp()
+        public new void SetUp()
         {
             _productRepository = MockRepository.GenerateMock<IRepository<Product>>();
             _productVariantRepository = MockRepository.GenerateMock<IRepository<ProductVariant>>();

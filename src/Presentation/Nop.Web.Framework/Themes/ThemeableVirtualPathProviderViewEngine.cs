@@ -18,7 +18,7 @@ namespace Nop.Web.Framework.Themes
             GetExtensionThunk = new Func<string, string>(VirtualPathUtility.GetExtension);
         }
 
-        private static readonly string[] _emptyLocations;
+        private static readonly string[] _emptyLocations = null;
 
         private string GetPath(ControllerContext controllerContext, string[] locations, string[] areaLocations, string locationsPropertyName, string name, string controllerName, string theme, string cacheKeyPrefix, bool useCache, out string[] searchedLocations)
         {

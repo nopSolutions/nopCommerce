@@ -149,13 +149,11 @@ namespace Nop.Services.Authentication.External
                                     //result
                                     return new AuthorizationResult(OpenAuthenticationStatus.AutoRegisteredEmailValidation);
                                 }
-                                break;
                             case UserRegistrationType.AdminApproval:
                                 {
                                     //result
                                     return new AuthorizationResult(OpenAuthenticationStatus.AutoRegisteredAdminApproval);
                                 }
-                                break;
                             case UserRegistrationType.Standard:
                                 {
                                     //send customer welcome message
@@ -164,7 +162,6 @@ namespace Nop.Services.Authentication.External
                                     //result
                                     return new AuthorizationResult(OpenAuthenticationStatus.AutoRegisteredStandard);
                                 }
-                                break;
                             default:
                                 break;
                         }

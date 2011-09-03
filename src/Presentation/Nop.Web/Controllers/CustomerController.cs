@@ -359,12 +359,10 @@ namespace Nop.Web.Controllers
                                 //result
                                 return RedirectToRoute("RegisterResult", new { resultId = (int)UserRegistrationType.EmailValidation });
                             }
-                            break;
                         case UserRegistrationType.AdminApproval:
                             {
                                 return RedirectToRoute("RegisterResult", new { resultId = (int)UserRegistrationType.AdminApproval });
                             }
-                            break;
                         case UserRegistrationType.Standard:
                             {
                                 //send customer welcome message
@@ -372,12 +370,10 @@ namespace Nop.Web.Controllers
 
                                 return RedirectToRoute("RegisterResult", new { resultId = (int)UserRegistrationType.Standard });
                             }
-                            break;
                         default:
                             {
                                 return RedirectToAction("Index", "Home");
                             }
-                            break;
                     }
                 }
                 else

@@ -38,7 +38,7 @@ namespace Nop.Services.Tests.Catalog
         ProductVariantAttributeValue pvav1_1, pvav1_2, pvav2_1, pvav2_2;
         
         [SetUp]
-        public void SetUp()
+        public new void SetUp()
         {
             #region Test data
 

@@ -28,7 +28,7 @@ namespace Nop.Services.Tests.Shipping
         IShippingService _shippingService;
 
         [SetUp]
-        public void SetUp()
+        public new void SetUp()
         {
             _shippingSettings = new ShippingSettings();
             _shippingSettings.ActiveShippingRateComputationMethodSystemNames = new List<string>();
