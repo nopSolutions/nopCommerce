@@ -4452,6 +4452,7 @@ namespace Nop.Services.Installation
                     DefaultMetaKeywords = "",
                     DefaultMetaDescription = "",
                     ConvertNonWesternChars = false,
+                    AllowUnicodeCharsInUrls = true,
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<AdminAreaSettings>>()

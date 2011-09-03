@@ -165,16 +165,17 @@ namespace Nop.Services.Seo
         /// Get SE name
         /// </summary>
         /// <param name="name">Name</param>
+        /// <param name="urlEncode">A value indicating whether encode URL</param>
         /// <returns>Result</returns>
-        private static string GetSeName(string name)
+        private static string GetSeName(string name, bool urlEncode = false)
         {
             if (String.IsNullOrEmpty(name))
                 return string.Empty;
-            string OkChars = "abcdefghijklmnopqrstuvwxyz1234567890 _-";
+            string okChars = "abcdefghijklmnopqrstuvwxyz1234567890 _-";
             name = name.Trim().ToLowerInvariant();
 
-            bool convertNonWesternChars = EngineContext.Current.Resolve<SeoSettings>().ConvertNonWesternChars;
-            if (convertNonWesternChars)
+            var seoSettings = EngineContext.Current.Resolve<SeoSettings>();
+            if (seoSettings.ConvertNonWesternChars)
             {
                 if (_seoCharacterTable == null)
                     InitializeSeoCharacterTable();
@@ -184,14 +185,21 @@ namespace Nop.Services.Seo
             foreach (char c in name.ToCharArray())
             {
                 string c2 = c.ToString();
-                if (convertNonWesternChars)
+                if (seoSettings.ConvertNonWesternChars)
                 {
                     if (_seoCharacterTable.ContainsKey(c2))
                         c2 = _seoCharacterTable[c2];
                 }
 
-                if (OkChars.Contains(c2))
+                if (seoSettings.AllowUnicodeCharsInUrls)
+                {
+                    if (char.IsLetterOrDigit(c) || okChars.Contains(c2))
+                        sb.Append(c2);
+                }
+                else if (okChars.Contains(c2))
+                {
                     sb.Append(c2);
+                }
             }
             string name2 = sb.ToString();
             name2 = name2.Replace(" ", "-");
@@ -199,7 +207,9 @@ namespace Nop.Services.Seo
                 name2 = name2.Replace("--", "-");
             while (name2.Contains("__"))
                 name2 = name2.Replace("__", "_");
-            return HttpContext.Current.Server.UrlEncode(name2);
+            if (urlEncode)
+                name2 = HttpContext.Current.Server.UrlEncode(name2);
+            return name2;
         }
 
         /// <summary>
