@@ -5,6 +5,7 @@ using Nop.Admin.Models.Plugins;
 using Nop.Core;
 using Nop.Core.Plugins;
 using Nop.Services.Localization;
+using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
 
@@ -18,17 +19,20 @@ namespace Nop.Admin.Controllers
         private readonly IPluginFinder _pluginFinder;
         private readonly ILocalizationService _localizationService;
         private readonly IWebHelper _webHelper;
+        private readonly IPermissionService _permissionService;
 
 	    #endregion
 
 		#region Constructors
 
         public PluginController(IPluginFinder pluginFinder,
-            ILocalizationService localizationService, IWebHelper webHelper)
+            ILocalizationService localizationService, IWebHelper webHelper,
+            IPermissionService permissionService)
 		{
             this._pluginFinder = pluginFinder;
             this._localizationService = localizationService;
             this._webHelper = webHelper;
+            this._permissionService = permissionService;
 		}
 
 		#endregion 
@@ -42,6 +46,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult List()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
+                return AccessDeniedView();
+
             //TODO allow store owner to edit display order of plugins
             var pluginDescriptors = _pluginFinder.GetPluginDescriptors(false);
             var model = new GridModel<PluginModel>
@@ -56,6 +63,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult Install(string systemName)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
+                return AccessDeniedView();
+
             try
             {
                 var pluginDescriptor = _pluginFinder.GetPluginDescriptors(false)
@@ -85,6 +95,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult Uninstall(string systemName)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
+                return AccessDeniedView();
+
             try
             {
                 var pluginDescriptor = _pluginFinder.GetPluginDescriptors(false)
@@ -114,6 +127,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult ReloadList()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
+                return AccessDeniedView();
+
             //restart application
             _webHelper.RestartAppDomain("~/Admin/Plugin/List");
             return RedirectToAction("List");

@@ -90,3 +90,37 @@ BEGIN
 	VALUES (N'seosettings.allowunicodecharsinurls', N'true')
 END
 GO
+
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'securitysettings.hideadminmenuitemsbasedonpermissions')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'securitysettings.hideadminmenuitemsbasedonpermissions', N'false')
+END
+GO
+
+
+
+--missed 'Manage Plugins' permission record
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[PermissionRecord]
+		WHERE [SystemName] = N'ManagePlugins')
+BEGIN
+	INSERT [dbo].[PermissionRecord] ([Name], [SystemName], [Category])
+	VALUES (N'Manage Plugins', N'ManagePlugins', N'Configuration')
+
+	DECLARE @PermissionRecordId INT 
+	SET @PermissionRecordId = @@IDENTITY
+
+
+	--add it to admin role be default
+	DECLARE @AdminCustomerRoleId int
+	SELECT @AdminCustomerRoleId = Id
+	FROM [CustomerRole]
+	WHERE IsSystemRole=1 and [SystemName] = N'Administrators'
+
+	INSERT [dbo].[PermissionRecord_Role_Mapping] ([PermissionRecord_Id], [CustomerRole_Id])
+	VALUES (@PermissionRecordId, @AdminCustomerRoleId)
+END
+GO

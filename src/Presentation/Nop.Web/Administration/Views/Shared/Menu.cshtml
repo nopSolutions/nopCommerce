@@ -1,5 +1,7 @@
 ﻿@using Telerik.Web.Mvc.UI;
 @using Nop.Web.Framework.Web;
+@using Nop.Services.Security;
+@using Nop.Core.Domain.Security;
 @{
     if (!Telerik.Web.Mvc.SiteMapManager.SiteMaps.ContainsKey("admin"))
     {
@@ -7,6 +9,9 @@
             sitemap.LoadFrom("~/Administration/sitemap.xml"));
     }
     var adminMenuPlugins = EngineContext.Current.Resolve<Nop.Core.Plugins.IPluginFinder>().GetPlugins<IAdminMenuPlugin>();
+
+    var permissionService = EngineContext.Current.Resolve<IPermissionService>();
+    var hideAdminMenuItemsBasedOnPermissions = EngineContext.Current.Resolve<SecuritySettings>().HideAdminMenuItemsBasedOnPermissions;
 }
 @{
     Html.Telerik().Menu().Name("Admin")
@@ -28,7 +33,16 @@
         {
             item.Selected = true;
         }
-        
+
+        if (hideAdminMenuItemsBasedOnPermissions)
+        {
+            var permissionNames = ((Telerik.Web.Mvc.SiteMapNode)siteMapNode).Attributes["PermissionNames"];
+            if (permissionNames != null && !string.IsNullOrEmpty(permissionNames.ToString()))
+            {
+                item.Visible = permissionNames.ToString().Split(new char[] {','}, StringSplitOptions.RemoveEmptyEntries)
+                    .Any(permissionName => permissionService.Authorize(permissionName.Trim()));
+            }
+        }        
     })
     .Items(x =>
     {

@@ -7,6 +7,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Helpers;
+using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
 
@@ -22,6 +23,7 @@ namespace Nop.Admin.Controllers
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly CustomerSettings _customerSettings;
         private readonly AdminAreaSettings _adminAreaSettings;
+        private readonly IPermissionService _permissionService;
 
         #endregion
 
@@ -29,13 +31,15 @@ namespace Nop.Admin.Controllers
 
         public OnlineCustomerController(ICustomerService customerService,
             IGeoCountryLookup geoCountryLookup, IDateTimeHelper dateTimeHelper,
-            CustomerSettings customerSettings, AdminAreaSettings adminAreaSettings)
+            CustomerSettings customerSettings, AdminAreaSettings adminAreaSettings,
+            IPermissionService permissionService)
         {
             this._customerService = customerService;
             this._geoCountryLookup = geoCountryLookup;
             this._dateTimeHelper = dateTimeHelper;
             this._customerSettings = customerSettings;
             this._adminAreaSettings = adminAreaSettings;
+            this._permissionService = permissionService;
         }
 
         #endregion
@@ -44,6 +48,9 @@ namespace Nop.Admin.Controllers
 
         public ActionResult List()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
             var customers = _customerService.GetOnlineCustomers(DateTime.UtcNow.AddMinutes(-_customerSettings.OnlineCustomerMinutes),
                 null, 0, _adminAreaSettings.GridPageSize);
 
@@ -69,6 +76,9 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult List(GridCommand command)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
             var customers = _customerService.GetOnlineCustomers(DateTime.UtcNow.AddMinutes(-_customerSettings.OnlineCustomerMinutes),
                 null, command.Page - 1, command.PageSize);
             var model = new GridModel<OnlineCustomerModel>

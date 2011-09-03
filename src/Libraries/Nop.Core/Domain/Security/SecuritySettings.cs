@@ -14,5 +14,10 @@ namespace Nop.Core.Domain.Security
         /// Gets or sets a list of adminn area allowed IP addresses
         /// </summary>
         public List<string> AdminAreaAllowedIpAddresses { get; set; }
+
+        /// <summary>
+        /// Gets or sets a vaule indicating whether to hide admin menu items based on ACL
+        /// </summary>
+        public bool HideAdminMenuItemsBasedOnPermissions { get; set; }
     }
 }
