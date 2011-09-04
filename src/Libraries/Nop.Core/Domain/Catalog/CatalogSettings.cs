@@ -140,5 +140,10 @@ namespace Nop.Core.Domain.Catalog
         /// </summary>
         public int NumberOfProductTags { get; set; }
 
+        /// <summary>
+        /// Gets or sets a number of products per page on 'products by tag' page
+        /// </summary>
+        public int ProductsByTagPageSize { get; set; }
+
     }
 }

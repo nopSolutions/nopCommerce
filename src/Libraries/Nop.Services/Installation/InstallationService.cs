@@ -4491,6 +4491,7 @@ namespace Nop.Services.Installation
                     ProductsAlsoPurchasedNumber = 3,
                     EnableDynamicPriceUpdate = false,
                     NumberOfProductTags = 15,
+                    ProductsByTagPageSize = 4,
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<LocalizationSettings>>()

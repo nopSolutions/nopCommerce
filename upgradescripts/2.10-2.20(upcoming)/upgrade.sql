@@ -5,8 +5,11 @@ declare @resources xml
 --a resource will be delete if its value is empty
 set @resources='
 <Language>
-  <LocaleResource Name="">
-    <Value></Value>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductsByTagPageSize">
+    <Value>''Products by tag'' page. Products per page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductsByTagPageSize.Hint">
+    <Value>Set the page size for products on ''Products by tag'' page.</Value>
   </LocaleResource>
 </Language>
 '
@@ -122,5 +125,14 @@ BEGIN
 
 	INSERT [dbo].[PermissionRecord_Role_Mapping] ([PermissionRecord_Id], [CustomerRole_Id])
 	VALUES (@PermissionRecordId, @AdminCustomerRoleId)
+END
+GO
+
+
+--ProductsByTags page size
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.productsbytagpagesize')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'catalogsettings.productsbytagpagesize', N'4')
 END
 GO

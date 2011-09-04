@@ -3295,6 +3295,14 @@
                           </LocaleResource>
                         </Children>
                       </LocaleResource>
+						<LocaleResource Name="ProductsByTagPageSize">
+							<Value>'Products by tag' page. Products per page</Value>
+							<Children>
+								<LocaleResource Name="Hint">
+									<Value>Set the page size for products on 'Products by tag' page.</Value>
+								</LocaleResource>
+							</Children>
+						</LocaleResource>
                     </Children>
                   </LocaleResource>                  
                   <LocaleResource Name="CustomerUser">

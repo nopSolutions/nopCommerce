@@ -1581,7 +1581,7 @@ namespace Nop.Web.Controllers
             if (productTag == null)
                 return RedirectToAction("Index", "Home");
 
-            if (command.PageSize <= 0) command.PageSize = 4;
+            if (command.PageSize <= 0) command.PageSize = _catalogSettings.ProductsByTagPageSize;
             if (command.PageNumber <= 0) command.PageNumber = 1;
 
             var model = new ProductsByTagModel()
