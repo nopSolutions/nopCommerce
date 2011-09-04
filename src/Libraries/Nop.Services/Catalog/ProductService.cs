@@ -313,12 +313,18 @@ namespace Nop.Services.Catalog
             if (orderBy == ProductSortingEnum.Position && categoryId > 0)
             {
                 //category position
-                query = query.OrderBy(p => p.ProductCategories.FirstOrDefault().DisplayOrder);
+                //query = query.OrderBy(p => p.ProductCategories.FirstOrDefault().DisplayOrder);
+
+                //category position
+                query = query.OrderBy(p => p.ProductCategories.Where(pc => pc.CategoryId == categoryId).FirstOrDefault().DisplayOrder);
             }
             else if (orderBy == ProductSortingEnum.Position && manufacturerId > 0)
             {
                 //manufacturer position
-                query = query.OrderBy(p => p.ProductManufacturers.FirstOrDefault().DisplayOrder);
+                //query = query.OrderBy(p => p.ProductManufacturers.FirstOrDefault().DisplayOrder);
+
+                //manufacturer position
+                query = query.OrderBy(p => p.ProductManufacturers.Where(pm => pm.ManufacturerId == manufacturerId).FirstOrDefault().DisplayOrder);
             }
             else if (orderBy == ProductSortingEnum.Position && relatedToProductId > 0)
             {
