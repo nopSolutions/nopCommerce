@@ -22,6 +22,10 @@ namespace Nop.Admin.Models.Catalog
             AvailableProductTemplates = new List<SelectListItem>();
         }
 
+        //picture thumbnail
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.PictureThumbnailUrl")]
+        public string PictureThumbnailUrl { get; set; }
+
         [NopResourceDisplayName("Admin.Catalog.Products.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }
@@ -109,8 +113,7 @@ namespace Nop.Admin.Models.Catalog
 
         //copy product
         public CopyProductModel CopyProductModel { get; set; }
-
-
+        
         #region Nested classes
         
         public class AddProductSpecificationAttributeModel : BaseNopEntityModel

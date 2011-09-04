@@ -11,6 +11,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductsByTagPageSize.Hint">
     <Value>Set the page size for products on ''Products by tag'' page.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.PictureThumbnailUrl">
+    <Value>Picture</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -134,5 +137,13 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.products
 BEGIN
 	INSERT [Setting] ([Name], [Value])
 	VALUES (N'catalogsettings.productsbytagpagesize', N'4')
+END
+GO
+
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'adminareasettings.displayproductpictures')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'adminareasettings.displayproductpictures', N'true')
 END
 GO

@@ -60,7 +60,6 @@
     </table>
     <p>
     </p>
-                                                                                               //TODO Bulk product variant editing
     <table class="adminContent">
         <tr>
             <td>
@@ -68,6 +67,16 @@
                     .Name("products-grid")
                     .Columns(columns =>
                     {
+                        if (Model.DisplayProductPictures)
+                        {
+                            columns.Bound(x => x.PictureThumbnailUrl)
+                                .Template(
+                                    @<text>
+                                        <img alt="@item.Id" src="@item.PictureThumbnailUrl" />
+                                    </text>
+                                )
+                                .ClientTemplate("<img alt='<#= Id #>' src='<#= PictureThumbnailUrl #>' />");
+                        }
                         columns.Bound(x => x.Name);
                         columns.Bound(x => x.Published)
                             .Width(100)

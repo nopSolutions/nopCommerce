@@ -1084,6 +1084,9 @@
                   </LocaleResource>
                   <LocaleResource Name="Fields">
                     <Children>
+						<LocaleResource Name="PictureThumbnailUrl">
+							<Value>Picture</Value>
+						</LocaleResource>
                       <LocaleResource Name="Name">
                         <Value>Product name</Value>
                         <Children>

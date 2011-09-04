@@ -4459,6 +4459,7 @@ namespace Nop.Services.Installation
                 .SaveSettings(new AdminAreaSettings()
                 {
                     GridPageSize = 15,
+                    DisplayProductPictures = true,
                 });
             
             EngineContext.Current.Resolve<IConfigurationProvider<CatalogSettings>>()

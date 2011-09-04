@@ -214,6 +214,22 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
+        private void PrepareProductPictureThumbnailModel(ProductModel model, Product product)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            if (product != null)
+            {
+                if (_adminAreaSettings.DisplayProductPictures)
+                {
+                    var defaultProductPicture = _pictureService.GetPicturesByProductId(product.Id, 1).FirstOrDefault();
+                    model.PictureThumbnailUrl = _pictureService.GetPictureUrl(defaultProductPicture, 75, true);
+                }
+            }
+        }
+
+        [NonAction]
         private void PrepareCopyProductModel(ProductModel model, Product product)
         {
             if (model == null)
@@ -396,11 +412,13 @@ namespace Nop.Admin.Controllers
                 ProductSortingEnum.Position, 0, _adminAreaSettings.GridPageSize, true);
 
             var model = new ProductListModel();
+            model.DisplayProductPictures = _adminAreaSettings.DisplayProductPictures;
             model.Products = new GridModel<ProductModel>
             {
                 Data = products.Select(x =>
                 {
                     var productModel = x.ToModel();
+                    PrepareProductPictureThumbnailModel(productModel, x);
                     PrepareVariantsModel(productModel, x);
                     return productModel;
                 }),
@@ -430,7 +448,12 @@ namespace Nop.Admin.Controllers
                 model.SearchManufacturerId, null, null, null, 0, 0, model.SearchProductName, false,
                 _workContext.WorkingLanguage.Id, new List<int>(),
                 ProductSortingEnum.Position, command.Page - 1, command.PageSize, true);
-            gridModel.Data = products.Select(x => x.ToModel());
+            gridModel.Data = products.Select(x =>
+                                                 {
+                                                     var productModel = x.ToModel();
+                                                     PrepareProductPictureThumbnailModel(productModel, x);
+                                                     return productModel;
+                                                 });
             gridModel.Total = products.TotalCount;
             return new JsonResult
             {
