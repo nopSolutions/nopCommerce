@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Media;
 using Nop.Services.Localization;
@@ -22,6 +23,7 @@ namespace Nop.Services.Catalog
         private readonly IManufacturerService _manufacturerService;
         private readonly ISpecificationAttributeService _specificationAttributeService;
         private readonly IDownloadService _downloadService;
+        private readonly IProductAttributeParser _productAttributeParser;
 
         #endregion
 
@@ -31,7 +33,8 @@ namespace Nop.Services.Catalog
             IProductAttributeService productAttributeService, ILanguageService languageService,
             ILocalizedEntityService localizedEntityService, IPictureService pictureService,
             ICategoryService categoryService, IManufacturerService manufacturerService,
-            ISpecificationAttributeService specificationAttributeService, IDownloadService downloadService)
+            ISpecificationAttributeService specificationAttributeService, IDownloadService downloadService,
+            IProductAttributeParser productAttributeParser)
         {
             this._productService = productService;
             this._productAttributeService = productAttributeService;
@@ -42,6 +45,7 @@ namespace Nop.Services.Catalog
             this._manufacturerService = manufacturerService;
             this._specificationAttributeService = specificationAttributeService;
             this._downloadService = downloadService;
+            this._productAttributeParser = productAttributeParser;
         }
 
         #endregion
@@ -340,6 +344,8 @@ namespace Nop.Services.Catalog
                     }
 
                     // product variant <-> attributes mappings
+                    var associatedAttributes = new Dictionary<int, int>();
+                    var associatedAttributeValues = new Dictionary<int, int>();
                     foreach (var productVariantAttribute in _productAttributeService.GetProductVariantAttributesByProductVariantId(productVariant.Id))
                     {
                         var productVariantAttributeCopy = new ProductVariantAttribute()
@@ -352,6 +358,8 @@ namespace Nop.Services.Catalog
                             DisplayOrder = productVariantAttribute.DisplayOrder
                         };
                         _productAttributeService.InsertProductVariantAttribute(productVariantAttributeCopy);
+                        //save associated value (used for combinations copying)
+                        associatedAttributes.Add(productVariantAttribute.Id, productVariantAttributeCopy.Id);
 
                         // product variant attribute values
                         var productVariantAttributeValues = _productAttributeService.GetProductVariantAttributeValues(productVariantAttribute.Id);
@@ -368,6 +376,9 @@ namespace Nop.Services.Catalog
                             };
                             _productAttributeService.InsertProductVariantAttributeValue(pvavCopy);
 
+                            //save associated value (used for combinations copying)
+                            associatedAttributeValues.Add(productVariantAttributeValue.Id, pvavCopy.Id);
+
                             //localization
                             foreach (var lang in languages)
                             {
@@ -379,10 +390,49 @@ namespace Nop.Services.Catalog
                     }
                     foreach (var combination in _productAttributeService.GetAllProductVariantAttributeCombinations(productVariant.Id))
                     {
+                        //generate new AttributesXml according to new value IDs
+                        string newAttributesXml = "";
+                        var parsedProductVariantAttributes = _productAttributeParser.ParseProductVariantAttributes(combination.AttributesXml);  
+                        foreach (var oldPva in parsedProductVariantAttributes)
+                        {
+                            if (associatedAttributes.ContainsKey(oldPva.Id))
+                            {
+                                int newPvaId = associatedAttributes[oldPva.Id];
+                                var newPva = _productAttributeService.GetProductVariantAttributeById(newPvaId);
+                                if (newPva != null)
+                                {
+                                    var oldPvaValuesStr = _productAttributeParser.ParseValues(combination.AttributesXml, oldPva.Id);
+                                    foreach (var oldPvaValueStr in oldPvaValuesStr)
+                                    {
+                                        if (newPva.ShouldHaveValues())
+                                        {
+                                            //attribute values
+                                            int oldPvaValue = int.Parse(oldPvaValueStr);
+                                            if (associatedAttributeValues.ContainsKey(oldPvaValue))
+                                            {
+                                                int newPvavId = associatedAttributeValues[oldPvaValue];
+                                                var newPvav = _productAttributeService.GetProductVariantAttributeValueById(newPvavId);
+                                                if (newPvav != null)
+                                                {
+                                                    newAttributesXml = _productAttributeParser.AddProductAttribute(newAttributesXml,
+                                                        newPva, newPvav.Id.ToString());
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            //just a text
+                                            newAttributesXml = _productAttributeParser.AddProductAttribute(newAttributesXml, 
+                                                newPva, oldPvaValueStr);
+                                        }
+                                    }
+                                }
+                            }
+                        }
                         var combinationCopy = new ProductVariantAttributeCombination()
                         {
                             ProductVariantId = productVariantCopy.Id,
-                            AttributesXml = combination.AttributesXml,
+                            AttributesXml = newAttributesXml,
                             StockQuantity = combination.StockQuantity,
                             AllowOutOfStockOrders = combination.AllowOutOfStockOrders
                         };

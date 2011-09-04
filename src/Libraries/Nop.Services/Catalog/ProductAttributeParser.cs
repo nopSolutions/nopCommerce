@@ -25,7 +25,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="attributes">Attributes</param>
         /// <returns>Selected product variant attribute identifiers</returns>
-        public IList<int> ParseProductVariantAttributeIds(string attributes)
+        public virtual IList<int> ParseProductVariantAttributeIds(string attributes)
         {
             var ids = new List<int>();
             if (String.IsNullOrEmpty(attributes))
@@ -62,7 +62,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="attributes">Attributes</param>
         /// <returns>Selected product variant attributes</returns>
-        public IList<ProductVariantAttribute> ParseProductVariantAttributes(string attributes)
+        public virtual IList<ProductVariantAttribute> ParseProductVariantAttributes(string attributes)
         {
             var pvaCollection = new List<ProductVariantAttribute>();
             var ids = ParseProductVariantAttributeIds(attributes);
@@ -82,7 +82,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="attributes">Attributes</param>
         /// <returns>Product variant attribute values</returns>
-        public IList<ProductVariantAttributeValue> ParseProductVariantAttributeValues(string attributes)
+        public virtual IList<ProductVariantAttributeValue> ParseProductVariantAttributeValues(string attributes)
         {
             var pvaValues = new List<ProductVariantAttributeValue>();
             var pvaCollection = ParseProductVariantAttributes(attributes);
@@ -115,7 +115,7 @@ namespace Nop.Services.Catalog
         /// <param name="attributes">Attributes</param>
         /// <param name="productVariantAttributeId">Product variant attribute identifier</param>
         /// <returns>Product variant attribute value</returns>
-        public IList<string> ParseValues(string attributes, int productVariantAttributeId)
+        public virtual IList<string> ParseValues(string attributes, int productVariantAttributeId)
         {
             var selectedProductVariantAttributeValues = new List<string>();
             try
@@ -159,7 +159,7 @@ namespace Nop.Services.Catalog
         /// <param name="pva">Product variant attribute</param>
         /// <param name="value">Value</param>
         /// <returns>Attributes</returns>
-        public string AddProductAttribute(string attributes, ProductVariantAttribute pva, string value)
+        public virtual string AddProductAttribute(string attributes, ProductVariantAttribute pva, string value)
         {
             string result = string.Empty;
             try
@@ -226,7 +226,7 @@ namespace Nop.Services.Catalog
         /// <param name="attributes1">The attributes of the first product variant</param>
         /// <param name="attributes2">The attributes of the second product variant</param>
         /// <returns>Result</returns>
-        public bool AreProductAttributesEqual(string attributes1, string attributes2)
+        public virtual bool AreProductAttributesEqual(string attributes1, string attributes2)
         {
             bool attributesEqual = true;
             if (ParseProductVariantAttributeIds(attributes1).Count == ParseProductVariantAttributeIds(attributes2).Count)
@@ -285,7 +285,7 @@ namespace Nop.Services.Catalog
         /// <param name="productVariant">Product variant</param>
         /// <param name="attributesXml">Attributes in XML format</param>
         /// <returns>Found product variant attribute combination</returns>
-        public ProductVariantAttributeCombination FindProductVariantAttributeCombination(ProductVariant productVariant, 
+        public virtual ProductVariantAttributeCombination FindProductVariantAttributeCombination(ProductVariant productVariant, 
             string attributesXml)
         {
             if (productVariant == null)
