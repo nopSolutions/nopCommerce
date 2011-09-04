@@ -32,14 +32,14 @@ namespace Nop.Data
                 if (_tablesToValidate != null && _tablesToValidate.Length > 0)
                 {
                     //we have some table names to validate
-                    var existingTableNames = new List<string>(context.Database.SqlQuery<string>("SELECT table_name from INFORMATION_SCHEMA.TABLES WHERE table_type = 'base table'"));
+                    var existingTableNames = new List<string>(context.Database.SqlQuery<string>("SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE table_type = 'BASE TABLE'"));
                     createTables = existingTableNames.Intersect(_tablesToValidate, StringComparer.InvariantCultureIgnoreCase).Count() == 0;
                 }
                 else
                 {
                     //check whether tables are already created
                     int numberOfTables = 0;
-                    foreach (var t1 in context.Database.SqlQuery<int>("SELECT COUNT(*) from INFORMATION_SCHEMA.TABLES WHERE table_type = 'base table' "))
+                    foreach (var t1 in context.Database.SqlQuery<int>("SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE table_type = 'BASE TABLE' "))
                         numberOfTables = t1;
 
                     createTables = numberOfTables == 0;
