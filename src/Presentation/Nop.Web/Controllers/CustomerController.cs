@@ -537,11 +537,24 @@ namespace Nop.Web.Controllers
                         this._customerSettings.AllowUsersToChangeUsernames)
                     {
                         if (!customer.Username.Equals(model.Username.Trim(), StringComparison.InvariantCultureIgnoreCase))
-                            _customerService.SetUsername(customer, model.Username);
+                        {
+                            //change username
+                            _customerService.SetUsername(customer, model.Username.Trim());
+                            //re-authenticate
+                            _authenticationService.SignIn(customer, true);
+                        }
                     }
                     //email
                     if (!customer.Email.Equals(model.Email.Trim(), StringComparison.InvariantCultureIgnoreCase))
-                        _customerService.SetEmail(customer, model.Email);
+                    {
+                        //change email
+                        _customerService.SetEmail(customer, model.Email.Trim());
+                        //re-authenticate (if usernames are disabled)
+                        if (!_customerSettings.UsernamesEnabled)
+                        {
+                            _authenticationService.SignIn(customer, true);
+                        }
+                    }
 
                     //properties
                     if (_dateTimeSettings.AllowCustomersToSetTimeZone)
