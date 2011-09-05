@@ -1991,8 +1991,8 @@ namespace Nop.Web.Controllers
             }
 
             IPagedList<Product> products = new PagedList<Product>(new List<Product>(), 0, 1);
-            if (!String.IsNullOrWhiteSpace(model.Q))
-            {
+            //if (!String.IsNullOrWhiteSpace(model.Q))
+            //{
                 if (model.Q.Length < _catalogSettings.ProductSearchTermMinimumLength)
                 {
                     model.Warning = string.Format(_localizationService.GetResource("Search.SearchTermMinimumLengthIsNCharacters"), _catalogSettings.ProductSearchTermMinimumLength);
@@ -2035,7 +2035,7 @@ namespace Nop.Web.Controllers
                     ProductSortingEnum.Position, command.PageNumber - 1, command.PageSize);
                     model.Products = products.Select(x => PrepareProductOverviewModel(x)).ToList();
                 }
-            }
+            //}
 
             model.PagingFilteringContext.LoadPagedList(products);
             return View(model);
