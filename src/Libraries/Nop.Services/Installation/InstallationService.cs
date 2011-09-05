@@ -4493,6 +4493,7 @@ namespace Nop.Services.Installation
                     EnableDynamicPriceUpdate = false,
                     NumberOfProductTags = 15,
                     ProductsByTagPageSize = 4,
+                    UseSmallProductBoxOnHomePage =  true
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<LocalizationSettings>>()

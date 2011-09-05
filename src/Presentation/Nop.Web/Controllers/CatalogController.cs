@@ -1502,18 +1502,26 @@ namespace Nop.Web.Controllers
                 }
             }
 
-            var model = products
-                .Select(x => PrepareProductOverviewModel(x))
-                .ToList();
 
+            var model = new HomePageBestsellersModel()
+            {
+                UseSmallProductBox = _catalogSettings.UseSmallProductBoxOnHomePage,
+            };
+            model.Products = products
+                .Select(x => PrepareProductOverviewModel(x, !_catalogSettings.UseSmallProductBoxOnHomePage, true))
+                .ToList();
             return PartialView(model);
         }
 
         [ChildActionOnly]
         public ActionResult HomepageProducts()
         {
-            var model = _productService.GetAllProductsDisplayedOnHomePage()
-                .Select(x => PrepareProductOverviewModel(x, false, true))
+            var model = new HomePageProductsModel()
+            {
+                UseSmallProductBox = _catalogSettings.UseSmallProductBoxOnHomePage
+            };
+            model.Products = _productService.GetAllProductsDisplayedOnHomePage()
+                .Select(x => PrepareProductOverviewModel(x, !_catalogSettings.UseSmallProductBoxOnHomePage, true))
                 .ToList();
 
             return PartialView(model);

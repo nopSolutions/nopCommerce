@@ -147,3 +147,12 @@ BEGIN
 	VALUES (N'adminareasettings.displayproductpictures', N'true')
 END
 GO
+
+--home page product box size
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.usesmallproductboxonhomepage')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'catalogsettings.usesmallproductboxonhomepage', N'true')
+END
+GO
+

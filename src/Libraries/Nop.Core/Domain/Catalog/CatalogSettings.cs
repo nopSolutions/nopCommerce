@@ -145,5 +145,10 @@ namespace Nop.Core.Domain.Catalog
         /// </summary>
         public int ProductsByTagPageSize { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to use small product boxes on home page
+        /// </summary>
+        public bool UseSmallProductBoxOnHomePage { get; set; }
+
     }
 }

@@ -1969,35 +1969,6 @@ ul.languagelist li:hover
 	text-align: center;
 }
 
-.home-page-product-grid .item-box
-{
-	padding-bottom: 10px;
-	text-align: center;
-	vertical-align: text-top;
-}
-
-.home-page-product-grid .item
-{
-	text-align: center;
-	margin: 10px 10px 10px 10px;
-	width: 150px;
-	height: 150px;
-}
-
-.home-page-product-grid .item .product-title
-{
-	margin-bottom: 5px;
-	margin-top: 5px;
-	text-align: center;
-	font-weight: bold;
-	font-size:12px;
-}
-
-.home-page-product-grid .item .picture
-{
-	text-align: center;
-}
-
 .home-page-category-grid
 {
 	margin-left: auto;
@@ -2061,34 +2032,6 @@ ul.languagelist li:hover
 	text-align: center;
 }
 
-.bestsellers .item-box
-{
-	padding-bottom: 10px;
-	text-align: center;
-	vertical-align: text-top;
-}
-
-.bestsellers .item
-{
-	text-align: center;
-	margin: 10px 10px 10px 10px;
-	width: 150px;
-	height: 150px;
-}
-
-.bestsellers .item .product-title
-{
-	margin-bottom: 5px;
-	margin-top: 5px;
-	text-align: center;
-	font-weight: bold;
-	font-size:12px;
-}
-
-.bestsellers .item .picture
-{
-	text-align: center;
-}
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
 
@@ -2190,6 +2133,44 @@ ul.languagelist li:hover
 {
 	color: Red;
 	text-decoration: line-through;
+}
+
+
+
+
+
+
+
+
+
+
+.product-grid .item-box
+{
+	padding-bottom: 10px;
+	text-align: center;
+	vertical-align: text-top;
+}
+
+.product-grid .small-product-item
+{
+	text-align: center;
+	margin: 10px 10px 10px 10px;
+	width: 150px;
+	height: 150px;
+}
+
+.product-grid .small-product-item .product-title
+{
+	margin-bottom: 5px;
+	margin-top: 5px;
+	text-align: center;
+	font-weight: bold;
+	font-size:12px;
+}
+
+.product-grid .small-product-item .picture
+{
+	text-align: center;
 }
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
