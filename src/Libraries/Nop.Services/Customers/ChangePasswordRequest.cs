@@ -20,16 +20,5 @@ namespace Nop.Services.Customers
             this.NewPassword = newPassword;
             this.OldPassword = oldPassword;
         }
-
-        public bool IsValid
-        {
-            get
-            {
-                return (!CommonHelper.AreNullOrEmpty(
-                            this.Email,
-                            this.NewPassword
-                            ));
-            }
-        }
     }
 }

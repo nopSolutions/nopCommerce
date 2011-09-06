@@ -391,6 +391,10 @@ namespace Nop.Admin.Controllers
                 if (cust2 != null)
                     ModelState.AddModelError("", "Username is already registered");
             }
+            if (String.IsNullOrWhiteSpace(model.Password))
+            {
+                ModelState.AddModelError("", "Please specify password");
+            }
             if (ModelState.IsValid)
             {
                 var customer = new Customer()
@@ -420,6 +424,11 @@ namespace Nop.Admin.Controllers
                 var changePassRequest = new ChangePasswordRequest(model.Email,
                     false, PasswordFormat.Hashed, model.Password);
                 var changePassResult = _customerService.ChangePassword(changePassRequest);
+                if (!changePassResult.Success)
+                {
+                    foreach (var changePassError in changePassResult.Errors)
+                        ErrorNotification(changePassError);
+                }
 
                 //customer roles
                 var allCustomerRoles = _customerService.GetAllCustomerRoles(true);

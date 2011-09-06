@@ -462,9 +462,19 @@ namespace Nop.Services.Customers
         public virtual PasswordChangeResult ChangePassword(ChangePasswordRequest request)
         {
             var result = new PasswordChangeResult();
-            if (request == null || !request.IsValid)
+            if (request == null)
             {
                 result.AddError("The change password request was not valid.");
+                return result;
+            }
+            if (String.IsNullOrWhiteSpace(request.Email))
+            {
+                result.AddError("The email is not entered");
+                return result;
+            }
+            if (String.IsNullOrWhiteSpace(request.NewPassword))
+            {
+                result.AddError("The password is not entered");
                 return result;
             }
 
