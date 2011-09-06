@@ -909,6 +909,11 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
+            if (model.Name != null)
+                model.Name = model.Name.Trim();
+            if (model.Value != null)
+                model.Value = model.Value.Trim();
+
             if (!ModelState.IsValid)
             {
                 return RedirectToAction("AllSettings");
@@ -930,6 +935,11 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
+
+            if (model.Name != null)
+                model.Name = model.Name.Trim();
+            if (model.Value != null)
+                model.Value = model.Value.Trim();
 
             if (!ModelState.IsValid)
             {

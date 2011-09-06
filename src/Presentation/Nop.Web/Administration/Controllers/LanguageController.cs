@@ -220,13 +220,17 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
 
+            if (model.Name != null)
+                model.Name = model.Name.Trim();
+            if (model.Value != null)
+                model.Value = model.Value.Trim();
+
             if (!ModelState.IsValid)
             {
                 return new JsonResult { Data = "error" };
             }
 
             var resource = _localizationService.GetLocaleStringResourceById(model.Id);
-            model.Name = model.Name.Trim();
             // if the resourceName changed, ensure it isn't being used by another resource
             if (!resource.ResourceName.Equals(model.Name, StringComparison.InvariantCultureIgnoreCase))
             {
@@ -244,22 +248,26 @@ namespace Nop.Admin.Controllers
         }
 
         [GridAction(EnableCustomBinding = true)]
-        public ActionResult ResourceAdd(int id, LanguageResourceModel resourceModel, GridCommand command)
+        public ActionResult ResourceAdd(int id, LanguageResourceModel model, GridCommand command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
+
+            if (model.Name != null)
+                model.Name = model.Name.Trim();
+            if (model.Value != null)
+                model.Value = model.Value.Trim();
 
             if (!ModelState.IsValid)
             {
                 return new JsonResult { Data = "error" };
             }
 
-            var res = _localizationService.GetLocaleStringResourceByName(resourceModel.Name, resourceModel.LanguageId, false);
+            var res = _localizationService.GetLocaleStringResourceByName(model.Name, model.LanguageId, false);
             if (res == null)
             {
-                resourceModel.Name = resourceModel.Name.Trim();
                 var resource = new LocaleStringResource { LanguageId = id };
-                resource = resourceModel.ToEntity(resource);
+                resource = model.ToEntity(resource);
                 _localizationService.InsertLocaleStringResource(resource);
             }
             else

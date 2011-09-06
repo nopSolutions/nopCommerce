@@ -128,10 +128,12 @@ namespace Nop.Services.Configuration
         /// <param name="clearCache">A value indicating whether to clear cache after setting update</param>
         public virtual void SetSetting<T>(string key, T value, bool clearCache = true)
         {
-            var settings = GetAllSettings();
-
+            if (key == null)
+                throw new ArgumentNullException("key");
             key = key.Trim().ToLowerInvariant();
-
+            
+            var settings = GetAllSettings();
+            
             Setting setting = null;
             string valueStr = CommonHelper.GetNopCustomTypeConverter(typeof(T)).ConvertToInvariantString(value);
             if (settings.ContainsKey(key))
