@@ -985,7 +985,7 @@ namespace Nop.Web.Controllers
             //save as recently viewed
             _recentlyViewedProductsService.AddProductToRecentlyViewedList(product.Id);
 
-            return View(model);
+            return View(model.ProductTemplateViewPath, model);
         }
 
         [HttpPost, ActionName("Product")]
@@ -1209,7 +1209,8 @@ namespace Nop.Web.Controllers
                 //If we got this far, something failed, redisplay form
                 //TODO set already entered values (quantity, customer entered price, gift card attributes, product attributes
                 var model = PrepareProductDetailsPageModel(product);
-                return View(model);
+
+                return View(model.ProductTemplateViewPath, model);
             }
         }
 

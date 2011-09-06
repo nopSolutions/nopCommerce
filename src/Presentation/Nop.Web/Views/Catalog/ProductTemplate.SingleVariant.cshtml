@@ -1,5 +1,13 @@
 ﻿@model Nop.Web.Models.Catalog.ProductModel
 @{
+    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+    
+    //title, meta
+    Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Name);
+    Html.AddMetaDescriptionParts(Model.MetaDescription);
+    Html.AddMetaKeywordParts(Model.MetaKeywords);
+}
+@{
     var defaultProductVariant = Model.ProductVariantModels.Count > 0 ? Model.ProductVariantModels[0] : null;
 
     //errors

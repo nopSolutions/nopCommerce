@@ -867,6 +867,8 @@
     <Content Include="Content\Images\ui-icons_888888_256x240.png" />
     <Content Include="Content\Images\ui-icons_cd0a0a_256x240.png" />
     <Content Include="license.txt" />
+    <Content Include="Plugins\bin\Index.htm" />
+    <Content Include="Plugins\Index.htm" />
     <Content Include="robots.txt" />
     <Content Include="Scripts\2011.2.712\jquery-1.5.1.min.js" />
     <Content Include="Scripts\2011.2.712\jquery.validate.min.js" />
@@ -1073,9 +1075,7 @@
     <None Include="_bin_deployableAssemblies\System.Web.Helpers.dll" />
     <None Include="_bin_deployableAssemblies\System.Web.Mvc.dll" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Plugins\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\..\Libraries\Nop.Core\Nop.Core.csproj">
       <Project>{6BDA8332-939F-45B7-A25E-7A797260AE59}</Project>
@@ -1123,9 +1123,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Catalog\_ProductPrice.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Catalog\Product.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\samples\product_BattleOfLa_1.zip" />
