@@ -123,6 +123,15 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.NopLabelFor(model => model.NumberOfDaysReturnRequestAvailable):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.NumberOfDaysReturnRequestAvailable)
+                @Html.ValidationMessageFor(model => model.NumberOfDaysReturnRequestAvailable)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.NopLabelFor(model => model.ReturnRequestReasonsParsed):
             </td>
             <td class="adminData">

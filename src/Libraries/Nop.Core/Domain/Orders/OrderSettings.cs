@@ -26,11 +26,6 @@ namespace Nop.Core.Domain.Orders
         public bool AnonymousCheckoutAllowed { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether "Return requests" are allowed
-        /// </summary>
-        public bool ReturnRequestsEnabled { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether 'Terms of service' enabled
         /// </summary>
         public bool TermsOfServiceEnabled { get; set; }
@@ -39,6 +34,11 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets a value indicating whether 'One-page checkout' is enabled
         /// </summary>
         public bool OnePageCheckoutEnabled { get; set; }
+        
+        /// <summary>
+        /// Gets or sets a value indicating whether "Return requests" are allowed
+        /// </summary>
+        public bool ReturnRequestsEnabled { get; set; }
 
         /// <summary>
         /// Gets or sets a list of return request reasons
@@ -49,7 +49,12 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets a list of return request actions
         /// </summary>
         public List<string> ReturnRequestActions { get; set; }
-        
+
+        /// <summary>
+        /// Gets or sets a number of days that the Return Request Link will be available for customers after order placing.
+        /// </summary>
+        public int NumberOfDaysReturnRequestAvailable { get; set; }
+
         /// <summary>
         ///  Gift cards are activated when the order status is
         /// </summary>

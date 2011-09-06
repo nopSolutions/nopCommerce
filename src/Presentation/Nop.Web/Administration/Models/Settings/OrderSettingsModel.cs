@@ -40,6 +40,10 @@ namespace Nop.Admin.Models.Settings
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Order.ReturnRequestActions")]
         public string ReturnRequestActionsParsed { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Order.NumberOfDaysReturnRequestAvailable")]
+        public int NumberOfDaysReturnRequestAvailable { get; set; }
+        
         
         [NopResourceDisplayName("Admin.Configuration.Settings.Order.GiftCards_Activated")]
         public int GiftCards_Activated_OrderStatusId { get; set; }

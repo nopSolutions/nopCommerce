@@ -2435,7 +2435,20 @@ namespace Nop.Services.Orders
             if (order == null || order.Deleted)
                 return false;
 
-            return order.OrderStatus == OrderStatus.Complete;
+            if (order.OrderStatus != OrderStatus.Complete)
+                return false;
+
+            bool numberOfDaysReturnRequestAvailableValid = false;
+            if (_orderSettings.NumberOfDaysReturnRequestAvailable == 0)
+            {
+                numberOfDaysReturnRequestAvailableValid = true;
+            }
+            else
+            {
+                var daysPassed = (DateTime.UtcNow - order.CreatedOnUtc).TotalDays;
+                numberOfDaysReturnRequestAvailableValid = (daysPassed - _orderSettings.NumberOfDaysReturnRequestAvailable) < 0;
+            }
+            return numberOfDaysReturnRequestAvailableValid;
         }
         
 

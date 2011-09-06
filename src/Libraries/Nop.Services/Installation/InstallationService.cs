@@ -4619,11 +4619,12 @@ namespace Nop.Services.Installation
                     MinOrderSubtotalAmount = 0,
                     MinOrderTotalAmount = 0,
                     AnonymousCheckoutAllowed = false,
-                    ReturnRequestsEnabled = true,
                     TermsOfServiceEnabled = false,
                     OnePageCheckoutEnabled = false,
+                    ReturnRequestsEnabled = true,
                     ReturnRequestActions = new List<string>() { "Repair", "Replacement", "Store Credit" },
                     ReturnRequestReasons = new List<string>() { "Received Wrong Product", "Wrong Product Ordered", "There Was A Problem With The Product" },
+                    NumberOfDaysReturnRequestAvailable = 365,
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<SecuritySettings>>()
