@@ -32,9 +32,10 @@ using Nop.Services.Security;
 using Nop.Services.Tax;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Themes;
-using Telerik.Web.Mvc;
 using Nop.Web.Framework.UI.Captcha;
+using Telerik.Web.Mvc;
 
 namespace Nop.Admin.Controllers
 {
@@ -755,7 +756,12 @@ namespace Nop.Admin.Controllers
 
             //localization settings
             _localizationSettings.UseImagesForLanguageSelection = model.LocalizationSettings.UseImagesForLanguageSelection;
-            _localizationSettings.SeoFriendlyUrlsForLanguagesEnabled = model.LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled;
+            if (_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled != model.LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
+            {
+                _localizationSettings.SeoFriendlyUrlsForLanguagesEnabled = model.LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled;
+                //clear cached values of routes
+                System.Web.Routing.RouteTable.Routes.ClearSeoFriendlyUrlsCachedValueForRoutes();
+            }
             _settingService.SaveSetting(_localizationSettings);
 
             //activity log

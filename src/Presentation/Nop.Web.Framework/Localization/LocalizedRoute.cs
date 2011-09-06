@@ -1,6 +1,7 @@
-﻿using System.Globalization;
-using System.Web;
+﻿using System.Web;
 using System.Web.Routing;
+using Nop.Core.Domain.Localization;
+using Nop.Core.Infrastructure;
 
 namespace Nop.Web.Framework.Localization
 {
@@ -9,6 +10,12 @@ namespace Nop.Web.Framework.Localization
     /// </summary>
     public class LocalizedRoute : Route
     {
+        #region Fields
+
+        private bool? _seoFriendlyUrlsForLanguagesEnabled;
+
+        #endregion
+
         #region Constructors
 
         /// <summary>
@@ -57,7 +64,10 @@ namespace Nop.Web.Framework.Localization
             : base(url, defaults, constraints, dataTokens, routeHandler)
         {
         }
+
         #endregion
+
+        #region Methods
 
         /// <summary>
         /// Returns information about the requested route.
@@ -68,24 +78,27 @@ namespace Nop.Web.Framework.Localization
         /// </returns>
         public override RouteData GetRouteData(HttpContextBase httpContext)
         {
-            string virtualPath = httpContext.Request.AppRelativeCurrentExecutionFilePath;
-            string applicationPath = httpContext.Request.ApplicationPath;
-            if (virtualPath.IsLocalizedUrl(applicationPath, false))
+            if (this.SeoFriendlyUrlsForLanguagesEnabled)
             {
-                //In ASP.NET Development Server, an URL like "http://localhost/Blog.aspx/Categories/BabyFrog" will return 
-                //"~/Blog.aspx/Categories/BabyFrog" as AppRelativeCurrentExecutionFilePath.
-                //However, in II6, the AppRelativeCurrentExecutionFilePath is "~/Blog.aspx"
-                //It seems that IIS6 think we're process Blog.aspx page.
-                //So, I'll use RawUrl to re-create an AppRelativeCurrentExecutionFilePath like ASP.NET Development Server.
+                string virtualPath = httpContext.Request.AppRelativeCurrentExecutionFilePath;
+                string applicationPath = httpContext.Request.ApplicationPath;
+                if (virtualPath.IsLocalizedUrl(applicationPath, false))
+                {
+                    //In ASP.NET Development Server, an URL like "http://localhost/Blog.aspx/Categories/BabyFrog" will return 
+                    //"~/Blog.aspx/Categories/BabyFrog" as AppRelativeCurrentExecutionFilePath.
+                    //However, in II6, the AppRelativeCurrentExecutionFilePath is "~/Blog.aspx"
+                    //It seems that IIS6 think we're process Blog.aspx page.
+                    //So, I'll use RawUrl to re-create an AppRelativeCurrentExecutionFilePath like ASP.NET Development Server.
 
-                //UNDONE should we do path rewrting here?
-                string rawUrl = httpContext.Request.RawUrl;
-                var newVirtualPath = rawUrl.RemoveLocalizedPathFromRawUrl(applicationPath);
-                if (string.IsNullOrEmpty(newVirtualPath))
-                    newVirtualPath = "/";
-                newVirtualPath = newVirtualPath.RemoveApplicationPathFromRawUrl(applicationPath);
-                newVirtualPath = "~" + newVirtualPath;
-                httpContext.RewritePath(newVirtualPath, true);
+                    //UNDONE should we do path rewrting here?
+                    string rawUrl = httpContext.Request.RawUrl;
+                    var newVirtualPath = rawUrl.RemoveLocalizedPathFromRawUrl(applicationPath);
+                    if (string.IsNullOrEmpty(newVirtualPath))
+                        newVirtualPath = "/";
+                    newVirtualPath = newVirtualPath.RemoveApplicationPathFromRawUrl(applicationPath);
+                    newVirtualPath = "~" + newVirtualPath;
+                    httpContext.RewritePath(newVirtualPath, true);
+                }
             }
             RouteData data = base.GetRouteData(httpContext);
             return data;
@@ -102,17 +115,43 @@ namespace Nop.Web.Framework.Localization
         public override VirtualPathData GetVirtualPath(RequestContext requestContext, RouteValueDictionary values)
         {
             VirtualPathData data = base.GetVirtualPath(requestContext, values);
-
-            if (data != null)
+            
+            if (this.SeoFriendlyUrlsForLanguagesEnabled)
             {
-                string rawUrl = requestContext.HttpContext.Request.RawUrl;
-                string applicationPath = requestContext.HttpContext.Request.ApplicationPath;
-                if (rawUrl.IsLocalizedUrl(applicationPath, true))
+                if (data != null)
                 {
-                    data.VirtualPath = string.Concat(rawUrl.GetLanguageSeoCodeFromUrl(applicationPath, true), "/", data.VirtualPath);
+                    string rawUrl = requestContext.HttpContext.Request.RawUrl;
+                    string applicationPath = requestContext.HttpContext.Request.ApplicationPath;
+                    if (rawUrl.IsLocalizedUrl(applicationPath, true))
+                    {
+                        data.VirtualPath = string.Concat(rawUrl.GetLanguageSeoCodeFromUrl(applicationPath, true), "/",
+                                                         data.VirtualPath);
+                    }
                 }
             }
             return data;
         }
+
+        public virtual void ClearSeoFriendlyUrlsCachedValue()
+        {
+            _seoFriendlyUrlsForLanguagesEnabled = null;
+        }
+
+        #endregion
+
+        #region Properties
+
+        protected bool SeoFriendlyUrlsForLanguagesEnabled
+        {
+            get
+            {
+                if (!_seoFriendlyUrlsForLanguagesEnabled.HasValue)
+                    _seoFriendlyUrlsForLanguagesEnabled = EngineContext.Current.Resolve<LocalizationSettings>().SeoFriendlyUrlsForLanguagesEnabled;
+
+                return _seoFriendlyUrlsForLanguagesEnabled.Value;
+            }
+        }
+
+        #endregion
     }
 }
