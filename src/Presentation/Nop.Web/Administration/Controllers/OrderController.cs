@@ -325,6 +325,7 @@ namespace Nop.Admin.Controllers
                     ProductVariantId = opv.ProductVariantId,
                     Quantity = opv.Quantity,
                     IsDownload = opv.ProductVariant.IsDownload,
+                    DownloadCount = opv.DownloadCount,
                     DownloadActivationType = opv.ProductVariant.DownloadActivationType,
                     IsDownloadActivated = opv.IsDownloadActivated,
                     LicenseDownloadId = opv.LicenseDownloadId
@@ -1063,7 +1064,39 @@ namespace Nop.Admin.Controllers
             PrepareOrderDetailsModel(model, order);
             return View(model);
         }
-        
+
+        [HttpPost, ActionName("Edit")]
+        [FormValueRequired(FormValueRequirement.StartsWith, "btnResetDownloadCount")]
+        [ValidateInput(false)]
+        public ActionResult ResetDownloadCount(int id, FormCollection form)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
+            var order = _orderService.GetOrderById(id);
+            if (order == null)
+                throw new ArgumentException("No order found with the specified id");
+
+            ViewData["selectedTab"] = "products";
+
+            //get order product variant identifier
+            int opvId = 0;
+            foreach (var formValue in form.AllKeys)
+                if (formValue.StartsWith("btnResetDownloadCount", StringComparison.InvariantCultureIgnoreCase))
+                    opvId = Convert.ToInt32(formValue.Substring("btnResetDownloadCount".Length));
+
+            var orderProductVariant = order.OrderProductVariants.Where(x => x.Id == opvId).FirstOrDefault();
+            if (orderProductVariant == null)
+                throw new ArgumentException("No order product variant found with the specified id");
+
+            orderProductVariant.DownloadCount = 0;
+            _orderService.UpdateOrder(order);
+
+            var model = new OrderModel();
+            PrepareOrderDetailsModel(model, order);
+            return View(model);
+        }
+
         [HttpPost, ActionName("Edit")]
         [FormValueRequired(FormValueRequirement.StartsWith, "btnPvActivateDownload")]
         [ValidateInput(false)]

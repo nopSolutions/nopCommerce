@@ -1071,14 +1071,19 @@
                                     <td align="center" style="width: 10%;">
                                         @if (item.IsDownload)
                                         {
+                                            <div>
+                                                @string.Format(T("Admin.Orders.Products.Download.DownloadCount").Text, item.DownloadCount) 
+                                                <input type="submit" name="btnResetDownloadCount@(item.Id)" value="@T("Admin.Orders.Products.Download.ResetDownloadCount")" title="@T("Admin.Orders.Products.Download.ResetDownloadCount.Title")" id="btnResetDownloadCount@(item.Id)" class="adminButton" />
+                                                <hr />  
+                                            </div>
                                             if (item.DownloadActivationType == DownloadActivationType.Manually)
                                             {
                                             <div>
-                                                <input type="submit" name="btnPvActivateDownload@(item.Id)" @(item.IsDownloadActivated ? " value=" + T("Admin.Orders.Products.Download.Deactivate") : " value=" + T("Admin.Orders.Products.Download.Activate")) id="btnPvActivateDownload@(item.Id)" class="adminButton" />
+                                                <input type="submit" name="btnPvActivateDownload@(item.Id)" @(item.IsDownloadActivated ? " value=" + T("Admin.Orders.Products.Download.Deactivate") : " value=" + T("Admin.Orders.Products.Download.Activate")) id="btnPvActivateDownload@(item.Id)" class="adminButton" />                                                
+                                                <hr />
                                             </div>
                                             }
                                             <div>
-                                                <hr />
                                                 <b>
                                                     @T("Admin.Orders.Products.License")</b>
                                                 <br />

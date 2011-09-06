@@ -6976,6 +6976,17 @@
                       <LocaleResource Name="Deactivate">
                         <Value>Deactivate</Value>
                       </LocaleResource>
+						<LocaleResource Name="DownloadCount">
+							<Value>Number of downloads: {0}</Value>
+						</LocaleResource>
+						<LocaleResource Name="ResetDownloadCount">
+							<Value>Reset</Value>
+							<Children>
+								<LocaleResource Name="Title">
+									<Value>Click to reset download count</Value>
+								</LocaleResource>
+							</Children>
+						</LocaleResource>
                     </Children>
                   </LocaleResource>
                   <LocaleResource Name="License">

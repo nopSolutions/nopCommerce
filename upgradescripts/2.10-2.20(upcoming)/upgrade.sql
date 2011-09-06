@@ -20,6 +20,15 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Order.NumberOfDaysReturnRequestAvailable.Hint">
     <Value>Set a certain number of days that the Return Request Link will be available in the customer area. For example if the store owner allows returns within 30 days after purchase, then they would set this to 30. When the customer logs into the website and looks at "My Account" any orders completed more than 30 days ago would not show a Return Request button.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Products.Download.DownloadCount">
+    <Value>Number of downloads: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Products.Download.ResetDownloadCount">
+    <Value>Reset</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Products.Download.ResetDownloadCount.Title">
+    <Value>Click to reset download count</Value>
+  </LocaleResource>
 </Language>
 '
 

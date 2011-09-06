@@ -245,6 +245,7 @@ namespace Nop.Admin.Models.Orders
             public IList<int> ReturnRequestIds { get; set; }
 
             public bool IsDownload { get; set; }
+            public int DownloadCount { get; set; }
             public DownloadActivationType DownloadActivationType { get; set; }
             public bool IsDownloadActivated { get; set; }
             public int? LicenseDownloadId { get; set; }
