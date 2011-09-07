@@ -23,5 +23,8 @@ namespace Nop.Plugin.Payments.PayPalStandard.Models
 
         [DisplayName("Pass product names and order totals to PayPal")]
         public bool PassProductNamesAndTotals { get; set; }
+
+        [DisplayName("Override the URL of IPN handler (optional)")]
+        public string IpnUrl { get; set; }
     }
 }

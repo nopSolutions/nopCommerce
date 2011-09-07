@@ -57,6 +57,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             model.PdtValidateOrderTotal = _paypalStandardPaymentSettings.PdtValidateOrderTotal;
             model.AdditionalFee = _paypalStandardPaymentSettings.AdditionalFee;
             model.PassProductNamesAndTotals = _paypalStandardPaymentSettings.PassProductNamesAndTotals;
+            model.IpnUrl = _paypalStandardPaymentSettings.IpnUrl;
             
             return View("Nop.Plugin.Payments.PayPalStandard.Views.PaymentPayPalStandard.Configure", model);
         }
@@ -76,6 +77,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             _paypalStandardPaymentSettings.PdtValidateOrderTotal = model.PdtValidateOrderTotal;
             _paypalStandardPaymentSettings.AdditionalFee = model.AdditionalFee;
             _paypalStandardPaymentSettings.PassProductNamesAndTotals = model.PassProductNamesAndTotals;
+            _paypalStandardPaymentSettings.IpnUrl = model.IpnUrl;
             _settingService.SaveSetting(_paypalStandardPaymentSettings);
             
             return View("Nop.Plugin.Payments.PayPalStandard.Views.PaymentPayPalStandard.Configure", model);

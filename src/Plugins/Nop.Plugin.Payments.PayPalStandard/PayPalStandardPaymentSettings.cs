@@ -10,5 +10,6 @@ namespace Nop.Plugin.Payments.PayPalStandard
         public decimal AdditionalFee { get; set; }
         public bool PassProductNamesAndTotals { get; set; }
         public bool PdtValidateOrderTotal { get; set; }
+        public string IpnUrl { get; set; }
     }
 }

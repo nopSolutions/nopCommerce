@@ -52,9 +52,11 @@
             <br />
             4. Click the 'Edit IPN Settings' button to update your settings.
             <br />
-            5. Select 'Receive IPN messages' (Enabled) and enter the URL of your IPN handler  (http://www.yourStore.com/Plugins/PaymentPayPalStandard/IPNHandler).
+            5. Select 'Receive IPN messages' (Enabled) and enter the URL of your IPN handler (http://www.yourStore.com/Plugins/PaymentPayPalStandard/IPNHandler).
             <br />
             6. Click Save, and you should get a message that you have successfully activated IPN.
+            <br />
+            Note. Or you can simply enter the URL of your IPN handler below
         </td>
     </tr>
     <tr>
@@ -114,6 +116,15 @@
             <td class="adminData">
                 @Html.EditorFor(model => model.PassProductNamesAndTotals)
                 @Html.ValidationMessageFor(model => model.PassProductNamesAndTotals)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.IpnUrl):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.IpnUrl)
+                @Html.ValidationMessageFor(model => model.IpnUrl)
             </td>
         </tr>
         <tr>
