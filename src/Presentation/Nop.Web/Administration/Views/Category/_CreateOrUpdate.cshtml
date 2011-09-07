@@ -65,6 +65,15 @@
     <table class="adminContent">
         <tr>
             <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CategoryTemplateId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.CategoryTemplateId, Model.AvailableCategoryTemplates)
+                @Html.ValidationMessageFor(model => model.CategoryTemplateId)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.NopLabelFor(model => model.PictureId)
             </td>
             <td class="adminData">

@@ -27,6 +27,7 @@ namespace Nop.Admin.Controllers
         #region Fields
 
         private readonly ICategoryService _categoryService;
+        private readonly ICategoryTemplateService _categoryTemplateService;
         private readonly IManufacturerService _manufacturerService;
         private readonly IProductService _productService;
         private readonly ILanguageService _languageService;
@@ -43,7 +44,8 @@ namespace Nop.Admin.Controllers
         
         #region Constructors
 
-        public CategoryController(ICategoryService categoryService, IManufacturerService manufacturerService,
+        public CategoryController(ICategoryService categoryService, ICategoryTemplateService categoryTemplateService,
+            IManufacturerService manufacturerService,
             IProductService productService,  ILanguageService languageService,
             ILocalizationService localizationService, ILocalizedEntityService localizedEntityService,
             IDiscountService discountService, IPermissionService permissionService,
@@ -51,6 +53,7 @@ namespace Nop.Admin.Controllers
             ICustomerActivityService customerActivityService, AdminAreaSettings adminAreaSettings)
         {
             this._categoryService = categoryService;
+            this._categoryTemplateService = categoryTemplateService;
             this._manufacturerService = manufacturerService;
             this._productService = productService;
             this._languageService = languageService;
@@ -104,7 +107,23 @@ namespace Nop.Admin.Controllers
                                                            localized.LanguageId);
             }
         }
-        
+
+        [NonAction]
+        private void PrepareTemplatesModel(CategoryModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            var templates = _categoryTemplateService.GetAllCategoryTemplates();
+            foreach (var template in templates)
+            {
+                model.AvailableCategoryTemplates.Add(new SelectListItem()
+                {
+                    Text = template.Name,
+                    Value = template.Id.ToString()
+                });
+            }
+        }
         #endregion
         
         #region List / tree
@@ -242,6 +261,8 @@ namespace Nop.Admin.Controllers
             model.ParentCategories = new List<DropDownItem> { new DropDownItem { Text = "[None]", Value = "0" } };
             //locales
             AddLocales(_languageService, model.Locales);
+            //templates
+            PrepareTemplatesModel(model);
             //discounts
             PrepareDiscountModel(model, null, true);
             //default values
@@ -286,6 +307,8 @@ namespace Nop.Admin.Controllers
             }
 
             //If we got this far, something failed, redisplay form
+            //templates
+            PrepareTemplatesModel(model);
             //parent categories
             model.ParentCategories = new List<DropDownItem> { new DropDownItem { Text = "[None]", Value = "0" } };
             if (model.ParentCategoryId > 0)
@@ -330,6 +353,8 @@ namespace Nop.Admin.Controllers
                 locale.MetaTitle = category.GetLocalized(x => x.MetaTitle, languageId, false, false);
                 locale.SeName = category.GetLocalized(x => x.SeName, languageId, false, false);
             });
+            //templates
+            PrepareTemplatesModel(model);
             //discounts
             PrepareDiscountModel(model, category, false);
 
@@ -397,6 +422,8 @@ namespace Nop.Admin.Controllers
                 else
                     model.ParentCategoryId = 0;
             }
+            //templates
+            PrepareTemplatesModel(model);
             //discounts
             PrepareDiscountModel(model, category, true);
             return View(model);

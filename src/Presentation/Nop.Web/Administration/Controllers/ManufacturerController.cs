@@ -25,6 +25,7 @@ namespace Nop.Admin.Controllers
 
         private readonly ICategoryService _categoryService;
         private readonly IManufacturerService _manufacturerService;
+        private readonly IManufacturerTemplateService _manufacturerTemplateService;
         private readonly IProductService _productService;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
@@ -40,6 +41,7 @@ namespace Nop.Admin.Controllers
         #region Constructors
 
         public ManufacturerController(ICategoryService categoryService, IManufacturerService manufacturerService,
+            IManufacturerTemplateService manufacturerTemplateService,
             IProductService productService,  ILanguageService languageService,
             ILocalizationService localizationService, ILocalizedEntityService localizedEntityService,
             IExportManager exportManager, IWorkContext workContext,
@@ -47,6 +49,7 @@ namespace Nop.Admin.Controllers
             AdminAreaSettings adminAreaSettings)
         {
             this._categoryService = categoryService;
+            this._manufacturerTemplateService = manufacturerTemplateService;
             this._manufacturerService = manufacturerService;
             this._productService = productService;
             this._languageService = languageService;
@@ -99,7 +102,23 @@ namespace Nop.Admin.Controllers
                                                            localized.LanguageId);
             }
         }
-        
+
+        [NonAction]
+        private void PrepareTemplatesModel(ManufacturerModel model)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            var templates = _manufacturerTemplateService.GetAllManufacturerTemplates();
+            foreach (var template in templates)
+            {
+                model.AvailableManufacturerTemplates.Add(new SelectListItem()
+                {
+                    Text = template.Name,
+                    Value = template.Id.ToString()
+                });
+            }
+        }
         #endregion
         
         #region List
@@ -153,6 +172,8 @@ namespace Nop.Admin.Controllers
             var model = new ManufacturerModel();
             //locales
             AddLocales(_languageService, model.Locales);
+            //templates
+            PrepareTemplatesModel(model);
             //default values
             model.PageSize = 4;
             model.Published = true;
@@ -186,6 +207,9 @@ namespace Nop.Admin.Controllers
                 return continueEditing ? RedirectToAction("Edit", new { id = manufacturer.Id }) : RedirectToAction("List");
             }
 
+            //If we got this far, something failed, redisplay form
+            //templates
+            PrepareTemplatesModel(model);
             return View(model);
         }
 
@@ -208,6 +232,8 @@ namespace Nop.Admin.Controllers
                 locale.MetaTitle = manufacturer.GetLocalized(x => x.MetaTitle, languageId, false, false);
                 locale.SeName = manufacturer.GetLocalized(x => x.SeName, languageId, false, false);
             });
+            //templates
+            PrepareTemplatesModel(model);
 
             return View(model);
         }
@@ -242,6 +268,11 @@ namespace Nop.Admin.Controllers
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Manufacturers.Updated"));
                 return continueEditing ? RedirectToAction("Edit", manufacturer.Id) : RedirectToAction("List");
             }
+
+
+            //If we got this far, something failed, redisplay form
+            //templates
+            PrepareTemplatesModel(model);
 
             return View(model);
         }

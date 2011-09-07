@@ -24,6 +24,11 @@ namespace Nop.Core.Domain.Catalog
         public virtual string Description { get; set; }
 
         /// <summary>
+        /// Gets or sets a value of used category template identifier
+        /// </summary>
+        public virtual int CategoryTemplateId { get; set; }
+
+        /// <summary>
         /// Gets or sets the meta keywords
         /// </summary>
         public virtual string MetaKeywords { get; set; }

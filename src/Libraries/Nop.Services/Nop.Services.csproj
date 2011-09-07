@@ -88,6 +88,10 @@
     <Compile Include="Catalog\CategoryService.cs" />
     <Compile Include="Catalog\CategoryExtensions.cs" />
     <Compile Include="Catalog\CompareProductsService.cs" />
+    <Compile Include="Catalog\CategoryTemplateService.cs" />
+    <Compile Include="Catalog\IManufacturerTemplateService.cs" />
+    <Compile Include="Catalog\ManufacturerTemplateService.cs" />
+    <Compile Include="Catalog\ICategoryTemplateService.cs" />
     <Compile Include="Catalog\IProductTemplateService.cs" />
     <Compile Include="Catalog\ProductTemplateService.cs" />
     <Compile Include="Catalog\ManufacturerExtensions.cs" />

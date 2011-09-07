@@ -1,5 +1,6 @@
 ﻿using System.Web;
 using System.Web.Routing;
+using Nop.Core.Data;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Infrastructure;
 
@@ -78,7 +79,7 @@ namespace Nop.Web.Framework.Localization
         /// </returns>
         public override RouteData GetRouteData(HttpContextBase httpContext)
         {
-            if (this.SeoFriendlyUrlsForLanguagesEnabled)
+            if (DataSettingsHelper.DatabaseIsInstalled() && this.SeoFriendlyUrlsForLanguagesEnabled)
             {
                 string virtualPath = httpContext.Request.AppRelativeCurrentExecutionFilePath;
                 string applicationPath = httpContext.Request.ApplicationPath;
@@ -116,7 +117,7 @@ namespace Nop.Web.Framework.Localization
         {
             VirtualPathData data = base.GetVirtualPath(requestContext, values);
             
-            if (this.SeoFriendlyUrlsForLanguagesEnabled)
+            if (DataSettingsHelper.DatabaseIsInstalled() && this.SeoFriendlyUrlsForLanguagesEnabled)
             {
                 if (data != null)
                 {

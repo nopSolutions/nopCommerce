@@ -29,6 +29,18 @@ set @resources='
   <LocaleResource Name="Admin.Orders.Products.Download.ResetDownloadCount.Title">
     <Value>Click to reset download count</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.CategoryTemplate">
+    <Value>Category template</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.CategoryTemplate.Hint">
+    <Value>Choose a category template. This template defines how this category (and it''s products) will be displayed.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.ManufacturerTemplate">
+    <Value>Manufacturer template</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.ManufacturerTemplate.Hint">
+    <Value>Choose a manufacturer template. This template defines how this manufacturer (and it''s products) will be displayed.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -181,3 +193,91 @@ END
 GO
 
 
+
+
+--Category templates
+IF NOT EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[dbo].[CategoryTemplate]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+BEGIN
+CREATE TABLE [dbo].[CategoryTemplate](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [nvarchar](400) NOT NULL,
+	[ViewPath] [nvarchar](400) NOT NULL,
+	[DisplayOrder] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+END
+GO
+
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[CategoryTemplate]
+		WHERE [Name] = N'Products in Grid or Lines')
+BEGIN
+	INSERT [dbo].[CategoryTemplate] ([Name], [ViewPath], [DisplayOrder])
+	VALUES (N'Products in Grid or Lines', N'CategoryTemplate.ProductsInGridOrLines', 1)
+END
+GO
+
+
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Category]') and NAME='CategoryTemplateId')
+BEGIN
+	ALTER TABLE [dbo].[Category] 
+	ADD [CategoryTemplateId] int NULL
+END
+GO
+
+UPDATE [dbo].[Category]
+SET [CategoryTemplateId]=1
+WHERE [CategoryTemplateId] is null
+GO
+
+ALTER TABLE [dbo].[Category] ALTER COLUMN [CategoryTemplateId] int NOT NULL
+GO
+
+
+
+
+--Manufacturer templates
+IF NOT EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[dbo].[ManufacturerTemplate]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+BEGIN
+CREATE TABLE [dbo].[ManufacturerTemplate](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [nvarchar](400) NOT NULL,
+	[ViewPath] [nvarchar](400) NOT NULL,
+	[DisplayOrder] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+END
+GO
+
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[ManufacturerTemplate]
+		WHERE [Name] = N'Products in Grid or Lines')
+BEGIN
+	INSERT [dbo].[ManufacturerTemplate] ([Name], [ViewPath], [DisplayOrder])
+	VALUES (N'Products in Grid or Lines', N'ManufacturerTemplate.ProductsInGridOrLines', 1)
+END
+GO
+
+
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Manufacturer]') and NAME='ManufacturerTemplateId')
+BEGIN
+	ALTER TABLE [dbo].[Manufacturer] 
+	ADD [ManufacturerTemplateId] int NULL
+END
+GO
+
+UPDATE [dbo].[Manufacturer]
+SET [ManufacturerTemplateId]=1
+WHERE [ManufacturerTemplateId] is null
+GO
+
+ALTER TABLE [dbo].[Manufacturer] ALTER COLUMN [ManufacturerTemplateId] int NOT NULL
+GO

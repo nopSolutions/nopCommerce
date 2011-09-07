@@ -71,6 +71,8 @@ namespace Nop.Services.Installation
         private readonly IRepository<ActivityLogType> _activityLogTypeRepository;
         private readonly IRepository<ProductTag> _productTagRepository;
         private readonly IRepository<ProductTemplate> _productTemplateRepository;
+        private readonly IRepository<CategoryTemplate> _categoryTemplateRepository;
+        private readonly IRepository<ManufacturerTemplate> _manufacturerTemplateRepository;
         private readonly ICustomerService _customerService;
 
         #endregion
@@ -105,6 +107,8 @@ namespace Nop.Services.Installation
             IRepository<ActivityLogType> activityLogTypeRepository,
             IRepository<ProductTag> productTagRepository,
             IRepository<ProductTemplate> productTemplateRepository,
+            IRepository<CategoryTemplate> categoryTemplateRepository,
+            IRepository<ManufacturerTemplate> manufacturerTemplateRepository,
             ICustomerService customerService)
         {
             this._measureDimensionRepository = measureDimensionRepository;
@@ -135,6 +139,8 @@ namespace Nop.Services.Installation
             this._activityLogTypeRepository = activityLogTypeRepository;
             this._productTagRepository = productTagRepository;
             this._productTemplateRepository = productTemplateRepository;
+            this._categoryTemplateRepository = categoryTemplateRepository;
+            this._manufacturerTemplateRepository = manufacturerTemplateRepository;
             this._customerService = customerService;
         }
 
@@ -4893,6 +4899,8 @@ namespace Nop.Services.Installation
 
 
 
+            var categoryTemplateInGridAndLines =
+                _categoryTemplateRepository.Table.Where(pt => pt.Name == "Products in Grid or Lines").FirstOrDefault();
 
 
 
@@ -4900,6 +4908,7 @@ namespace Nop.Services.Installation
             var categoryBooks = new Category
             {
                 Name = "Books",
+                CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 MetaKeywords = "Books, Dictionary, Textbooks",
                 MetaDescription = "Books category description",
                 PageSize = 4,
@@ -4916,6 +4925,7 @@ namespace Nop.Services.Installation
             var categoryComputers = new Category
             {
                 Name = "Computers",
+                CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 4,
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_computers.jpeg"), "image/jpeg", true).Id,
                 Published = true,
@@ -4929,6 +4939,7 @@ namespace Nop.Services.Installation
             var categoryDesktops = new Category
             {
                 Name = "Desktops",
+                CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 4,
                 ParentCategoryId = categoryComputers.Id,
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_desktops.jpg"), "image/pjpeg", true).Id,
@@ -4944,6 +4955,7 @@ namespace Nop.Services.Installation
             var categoryNotebooks = new Category
             {
                 Name = "Notebooks",
+                CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 4,
                 ParentCategoryId = categoryComputers.Id,
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_notebooks.jpg"), "image/pjpeg", true).Id,
@@ -4958,6 +4970,7 @@ namespace Nop.Services.Installation
             var categoryAccessories = new Category
             {
                 Name = "Accessories",
+                CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 4,
                 ParentCategoryId = categoryComputers.Id,
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_accessories.jpg"), "image/pjpeg", true).Id,
@@ -4973,6 +4986,7 @@ namespace Nop.Services.Installation
             var categorySoftware = new Category
             {
                 Name = "Software",
+                CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 4,
                 ParentCategoryId = categoryComputers.Id,
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_software.jpg"), "image/pjpeg", true).Id,
@@ -4987,6 +5001,7 @@ namespace Nop.Services.Installation
             var categoryGames = new Category
             {
                 Name = "Games",
+                CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 4,
                 ParentCategoryId = categoryComputers.Id,
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_games.jpg"), "image/pjpeg", true).Id,
@@ -5002,6 +5017,7 @@ namespace Nop.Services.Installation
             var categoryElectronics = new Category
             {
                 Name = "Electronics",
+                CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 4,
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_electronics.jpeg"), "image/jpeg", true).Id,
                 Published = true,
@@ -5015,6 +5031,7 @@ namespace Nop.Services.Installation
             var categoryCameraPhoto = new Category
             {
                 Name = "Camera, photo",
+                CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 4,
                 ParentCategoryId = categoryElectronics.Id,
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_camera_photo.jpeg"), "image/jpeg", true).Id,
@@ -5030,6 +5047,7 @@ namespace Nop.Services.Installation
             var categoryCellPhones = new Category
             {
                 Name = "Cell phones",
+                CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 4,
                 ParentCategoryId = categoryElectronics.Id,
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_cell_phones.jpeg"), "image/jpeg", true).Id,
@@ -5044,6 +5062,7 @@ namespace Nop.Services.Installation
             var categoryApparelShoes = new Category
             {
                 Name = "Apparel & Shoes",
+                CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 4,
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_apparel_shoes.jpeg"), "image/jpeg", true).Id,
                 Published = true,
@@ -5057,6 +5076,7 @@ namespace Nop.Services.Installation
             var categoryShirts = new Category
             {
                 Name = "Shirts",
+                CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 4,
                 ParentCategoryId = categoryApparelShoes.Id,
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_shirts.jpg"), "image/pjpeg", true).Id,
@@ -5072,6 +5092,7 @@ namespace Nop.Services.Installation
             var categoryJeans = new Category
             {
                 Name = "Jeans",
+                CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 4,
                 ParentCategoryId = categoryApparelShoes.Id,
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_jeans.jpg"), "image/pjpeg", true).Id,
@@ -5087,6 +5108,7 @@ namespace Nop.Services.Installation
             var categoryShoes = new Category
             {
                 Name = "Shoes",
+                CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 4,
                 ParentCategoryId = categoryApparelShoes.Id,
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_shoes.jpg"), "image/pjpeg", true).Id,
@@ -5102,6 +5124,7 @@ namespace Nop.Services.Installation
             var categoryAccessoriesShoes = new Category
             {
                 Name = "Apparel accessories",
+                CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 4,
                 ParentCategoryId = categoryApparelShoes.Id,
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_accessories_apparel.jpg"), "image/pjpeg", true).Id,
@@ -5117,6 +5140,7 @@ namespace Nop.Services.Installation
             var categoryDigitalDownloads = new Category
             {
                 Name = "Digital downloads",
+                CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 4,
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_digital_downloads.jpeg"), "image/jpeg", true).Id,
                 Published = true,
@@ -5130,6 +5154,7 @@ namespace Nop.Services.Installation
             var categoryJewelry = new Category
             {
                 Name = "Jewelry",
+                CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 4,
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_jewelry.jpeg"), "image/jpeg", true).Id,
                 PriceRanges = "0-500;500-700;700-3000;",
@@ -5143,6 +5168,7 @@ namespace Nop.Services.Installation
             var categoryGiftCards = new Category
             {
                 Name = "Gift Cards",
+                CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 4,
                 PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_gift_cards.jpeg"), "image/jpeg", true).Id,
                 Published = true,
@@ -5155,9 +5181,14 @@ namespace Nop.Services.Installation
 
         protected virtual void InstallManufacturers()
         {
+            var manufacturerTemplateInGridAndLines =
+                _manufacturerTemplateRepository.Table.Where(pt => pt.Name == "Products in Grid or Lines").FirstOrDefault();
+
+
             var manufacturerAsus = new Manufacturer
             {
                 Name = "ASUS",
+                ManufacturerTemplateId = manufacturerTemplateInGridAndLines.Id,
                 PageSize = 4,
                 Published = true,
                 DisplayOrder = 2,
@@ -5169,6 +5200,7 @@ namespace Nop.Services.Installation
             var manufacturerHp = new Manufacturer
             {
                 Name = "HP",
+                ManufacturerTemplateId = manufacturerTemplateInGridAndLines.Id,
                 PageSize = 4,
                 Published = true,
                 DisplayOrder = 5,
@@ -9114,6 +9146,36 @@ namespace Nop.Services.Installation
 
         }
 
+        protected virtual void InstallCategoryTemplates()
+        {
+            var categoryTemplates = new List<CategoryTemplate>
+                               {
+                                   new CategoryTemplate
+                                       {
+                                           Name = "Products in Grid or Lines",
+                                           ViewPath = "CategoryTemplate.ProductsInGridOrLines",
+                                           DisplayOrder = 1
+                                       },
+                               };
+            categoryTemplates.ForEach(ct => _categoryTemplateRepository.Insert(ct));
+
+        }
+
+        protected virtual void InstallManufacturerTemplates()
+        {
+            var manufacturerTemplates = new List<ManufacturerTemplate>
+                               {
+                                   new ManufacturerTemplate
+                                       {
+                                           Name = "Products in Grid or Lines",
+                                           ViewPath = "ManufacturerTemplate.ProductsInGridOrLines",
+                                           DisplayOrder = 1
+                                       },
+                               };
+            manufacturerTemplates.ForEach(mt => _manufacturerTemplateRepository.Insert(mt));
+
+        }
+
         private void AddProductTag(Product product, string tag)
         {
             var productTag = _productTagRepository.Table.Where(pt => pt.Name == tag).FirstOrDefault();
@@ -9156,6 +9218,8 @@ namespace Nop.Services.Installation
             InstallActivityLogTypes();
             HashDefaultCustomerPassword(defaultUserEmail, defaultUserPassword);
             InstallProductTemplates();
+            InstallCategoryTemplates();
+            InstallManufacturerTemplates();
 
             if (installSampleData)
             {

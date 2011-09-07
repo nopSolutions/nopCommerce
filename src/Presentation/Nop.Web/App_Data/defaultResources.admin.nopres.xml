@@ -615,6 +615,14 @@
                           </LocaleResource>
                         </Children>
                       </LocaleResource>
+						<LocaleResource Name="CategoryTemplate">
+							<Value>Category template</Value>
+							<Children>
+								<LocaleResource Name="Hint">
+									<Value>Choose a category template. This template defines how this category (and it's products) will be displayed.</Value>
+								</LocaleResource>
+							</Children>
+						</LocaleResource>
                       <LocaleResource Name="MetaKeywords">
                         <Value>Meta keywords</Value>
                         <Children>
@@ -790,6 +798,14 @@
                             </LocaleResource>
                           </Children>
                         </LocaleResource>
+						  <LocaleResource Name="ManufacturerTemplate">
+							  <Value>Manufacturer template</Value>
+							  <Children>
+								  <LocaleResource Name="Hint">
+									  <Value>Choose a manufacturer template. This template defines how this manufacturer (and it's products) will be displayed.</Value>
+								  </LocaleResource>
+							  </Children>
+						  </LocaleResource>
                         <LocaleResource Name="MetaKeywords">
                           <Value>Meta keywords</Value>
                           <Children>
@@ -1126,7 +1142,7 @@
 						<Value>Product template</Value>
 						<Children>
 							<LocaleResource Name="Hint">
-								<Value>Choose a product template. This template defines how this product (and it''s variants) will be displayed.</Value>
+								<Value>Choose a product template. This template defines how this product (and it's variants) will be displayed.</Value>
 							</LocaleResource>
 						</Children>
 					  </LocaleResource>

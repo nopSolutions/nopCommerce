@@ -38,6 +38,8 @@ namespace Nop.Web.Controllers
         private readonly IManufacturerService _manufacturerService;
         private readonly IProductService _productService;
         private readonly IProductTemplateService _productTemplateService;
+        private readonly ICategoryTemplateService _categoryTemplateService;
+        private readonly IManufacturerTemplateService _manufacturerTemplateService;
         private readonly IProductAttributeService _productAttributeService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IWorkContext _workContext;
@@ -73,6 +75,8 @@ namespace Nop.Web.Controllers
         public CatalogController(ICategoryService categoryService, 
             IManufacturerService manufacturerService, IProductService productService, 
             IProductTemplateService productTemplateService,
+            ICategoryTemplateService categoryTemplateService,
+            IManufacturerTemplateService manufacturerTemplateService,
             IProductAttributeService productAttributeService, IProductAttributeParser productAttributeParser, 
             IWorkContext workContext, ITaxService taxService, ICurrencyService currencyService,
             IPictureService pictureService, ILocalizationService localizationService,
@@ -91,6 +95,8 @@ namespace Nop.Web.Controllers
             this._manufacturerService = manufacturerService;
             this._productService = productService;
             this._productTemplateService = productTemplateService;
+            this._categoryTemplateService = categoryTemplateService;
+            this._manufacturerTemplateService = manufacturerTemplateService;
             this._productAttributeService = productAttributeService;
             this._productAttributeParser = productAttributeParser;
             this._workContext = workContext;
@@ -792,7 +798,14 @@ namespace Nop.Web.Controllers
 
             model.PagingFilteringContext.LoadPagedList(products);
             model.PagingFilteringContext.ViewMode = command.ViewMode;
-            return View(model);
+
+
+            //template
+            var template = _categoryTemplateService.GetCategoryTemplateById(category.CategoryTemplateId);
+            if (template == null)
+                template = _categoryTemplateService.GetAllCategoryTemplates().FirstOrDefault();
+
+            return View(template.ViewPath, model);
         }
 
         [ChildActionOnly]
@@ -923,7 +936,14 @@ namespace Nop.Web.Controllers
 
             model.PagingFilteringContext.LoadPagedList(products);
             model.PagingFilteringContext.ViewMode = command.ViewMode;
-            return View(model);
+
+
+            //template
+            var template = _manufacturerTemplateService.GetManufacturerTemplateById(manufacturer.ManufacturerTemplateId);
+            if (template == null)
+                template = _manufacturerTemplateService.GetAllManufacturerTemplates().FirstOrDefault();
+
+            return View(template.ViewPath, model);
         }
 
         public ActionResult ManufacturerAll()

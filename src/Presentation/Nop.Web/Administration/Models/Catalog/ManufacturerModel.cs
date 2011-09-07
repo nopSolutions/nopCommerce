@@ -20,6 +20,7 @@ namespace Nop.Admin.Models.Catalog
                 PageSize = 5;
             }
             Locales = new List<ManufacturerLocalizedModel>();
+            AvailableManufacturerTemplates = new List<SelectListItem>();
         }
 
         [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.Name")]
@@ -29,6 +30,11 @@ namespace Nop.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.Description")]
         [AllowHtml]
         public string Description { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.ManufacturerTemplate")]
+        [AllowHtml]
+        public int ManufacturerTemplateId { get; set; }
+        public IList<SelectListItem> AvailableManufacturerTemplates { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.MetaKeywords")]
         [AllowHtml]

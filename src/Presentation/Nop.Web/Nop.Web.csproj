@@ -1103,7 +1103,7 @@
     <Content Include="Themes\nopClassic\Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Catalog\Category.cshtml" />
+    <Content Include="Views\Catalog\CategoryTemplate.ProductsInGridOrLines.cshtml" />
     <Content Include="Views\Catalog\_ProductBox.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
@@ -1149,7 +1149,7 @@
     <Content Include="Views\Catalog\_FilterPriceBox.cshtml" />
     <Content Include="Views\Catalog\_FilterSpecsBox.cshtml" />
     <Content Include="Views\Catalog\ManufacturerNavigation.cshtml" />
-    <Content Include="Views\Catalog\Manufacturer.cshtml" />
+    <Content Include="Views\Catalog\ManufacturerTemplate.ProductsInGridOrLines.cshtml" />
     <Content Include="Views\Catalog\ManufacturerAll.cshtml" />
     <Content Include="Views\Catalog\RelatedProducts.cshtml" />
     <Content Include="Views\Catalog\ShareButton.cshtml" />

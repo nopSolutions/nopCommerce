@@ -372,7 +372,7 @@ namespace Nop.Web.Controllers
                     dataProviderInstance.InitDatabase();
                     
                     
-                    //only now resolve installation service
+                    //now resolve installation service
                     var installationService = EngineContext.Current.Resolve<IInstallationService>();
                     installationService.InstallData(model.AdminEmail, model.AdminPassword, model.InstallSampleData);
 
@@ -409,6 +409,9 @@ namespace Nop.Web.Controllers
                 }
                 catch (Exception exception)
                 {
+                    //reset cache
+                    DataSettingsHelper.ResetCache();
+
                     //clear provider settings if something got wrong
                     settingsManager.SaveSettings(new DataSettings
                     {
