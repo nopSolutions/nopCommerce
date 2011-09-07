@@ -41,6 +41,9 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.ManufacturerTemplate.Hint">
     <Value>Choose a manufacturer template. This template defines how this manufacturer (and it''s products) will be displayed.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.CurrentWishlists">
+    <Value>Current wishlists</Value>
+  </LocaleResource>
 </Language>
 '
 

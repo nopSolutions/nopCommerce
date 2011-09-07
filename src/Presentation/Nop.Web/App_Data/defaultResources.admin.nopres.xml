@@ -5415,6 +5415,9 @@
                 </LocaleResource>
               </Children>
             </LocaleResource>
+			<LocaleResource Name="CurrentWishlists">
+				<Value>Current wishlists</Value>
+			</LocaleResource>
             <LocaleResource Name="Customers">
             <Value>Customers</Value>
               <Children>

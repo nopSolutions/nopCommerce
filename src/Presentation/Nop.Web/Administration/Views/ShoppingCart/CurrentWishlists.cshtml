@@ -1,0 +1,56 @@
+﻿@using Telerik.Web.Mvc.UI
+
+@{
+    var gridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSize;
+}
+@using (Html.BeginForm())
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-sales.png")" alt="" />
+            @T("Admin.CurrentWishlists")
+        </div>
+        <div class="options">
+        </div>
+    </div>
+    <table class="adminContent">
+        <tr>
+            <td>
+                @(Html.Telerik().Grid<ShoppingCartModel>()
+                    .Name("carts-grid")
+                    .Columns(columns =>
+                    {
+                        columns.Bound(x => x.CustomerId)
+                            .Template(x => Html.ActionLink(x.CustomerName + " (" + T("Admin.Common.View").Text + ")", "Edit", "Customer", new { id = x.CustomerId }, new { }))
+                            .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/Customer/Edit/") + "<#= CustomerId #>\"><#= CustomerName #> (" + T("Admin.Common.View").Text + ")</a>");
+                        columns.Bound(x => x.TotalItems).Width(100);
+                    })
+                    .DetailView(details => details.ClientTemplate(
+                            Html.Telerik().Grid<ShoppingCartItemModel>()
+                            .Name("cartitems-grid-<#= CustomerId #>")
+                            .Columns(columns =>
+                            {
+                                columns.Bound(sci => sci.FullProductName)
+                                .Template(sci => Html.ActionLink(sci.FullProductName, "Edit", "ProductVariant", new { id = sci.ProductVariantId }, new { }))
+                                .ClientTemplate("<a href=\""+ @Url.Content("~/Admin/ProductVariant/Edit/") + "<#= ProductVariantId #>\"><#= FullProductName #></a>");
+                                columns.Bound(sci => sci.Quantity).Width(100);
+                                columns.Bound(sci => sci.UnitPrice).Width(100);
+                                columns.Bound(sci => sci.Total).Width(100);
+                                columns.Bound(sci => sci.UpdatedOn).Width(100);
+                            })
+                            .DataBinding(dataBinding => dataBinding.Ajax()
+                            .Select("GetWishlistDetails", "ShoppingCart", new
+                                {
+                                    customerId =
+                                        "<#= CustomerId #>"
+                                }))
+                            .ToHtmlString()
+                        )
+                        )
+                        .Pageable(settings => settings.PageSize(gridPageSize).Position(GridPagerPosition.Both))
+                        .DataBinding(dataBinding => dataBinding.Ajax().Select("CurrentWishlists", "ShoppingCart"))
+                        .EnableCustomBinding(true))
+            </td>
+        </tr>
+    </table>
+}
