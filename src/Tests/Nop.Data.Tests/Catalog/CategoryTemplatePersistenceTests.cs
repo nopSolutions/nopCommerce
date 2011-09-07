@@ -5,19 +5,19 @@ using NUnit.Framework;
 namespace Nop.Data.Tests.Catalog
 {
     [TestFixture]
-    public class ProductTemplatePersistenceTests : PersistenceTest
+    public class CategoryTemplatePersistenceTests : PersistenceTest
     {
         [Test]
-        public void Can_save_and_load_productTemplate()
+        public void Can_save_and_load_categoryTemplate()
         {
-            var productTemplate = new ProductTemplate()
+            var categoryTemplate = new CategoryTemplate()
             {
                 Name = "Name 1",
                 ViewPath = "ViewPath 1",
                 DisplayOrder = 1,
             };
 
-            var fromDb = SaveAndLoadEntity(productTemplate);
+            var fromDb = SaveAndLoadEntity(categoryTemplate);
             fromDb.ShouldNotBeNull();
             fromDb.Name.ShouldEqual("Name 1");
             fromDb.ViewPath.ShouldEqual("ViewPath 1");

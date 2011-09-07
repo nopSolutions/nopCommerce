@@ -178,6 +178,11 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets the refunded amount
         /// </summary>
         public virtual decimal RefundedAmount { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value indicating whether reward points were earned for this order
+        /// </summary>
+        public virtual bool RewardPointsWereAdded { get; set; }
         
         /// <summary>
         /// Gets or sets the checkout attribute description

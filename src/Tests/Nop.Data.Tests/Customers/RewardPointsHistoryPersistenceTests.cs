@@ -6,7 +6,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Tests;
 using NUnit.Framework;
 
-namespace Nop.Data.Tests.Orders
+namespace Nop.Data.Tests.Customers
 {
     [TestFixture]
     public class RewardPointsHistoryPersistenceTests : PersistenceTest

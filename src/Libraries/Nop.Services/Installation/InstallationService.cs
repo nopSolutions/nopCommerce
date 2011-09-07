@@ -4560,7 +4560,7 @@ namespace Nop.Services.Installation
             EngineContext.Current.Resolve<IConfigurationProvider<RewardPointsSettings>>()
                 .SaveSettings(new RewardPointsSettings()
                 {
-                    Enabled = true,
+                    Enabled = false,
                     ExchangeRate = 1,
                     PointsForRegistration = 0,
                     PointsForPurchases_Amount = 10,

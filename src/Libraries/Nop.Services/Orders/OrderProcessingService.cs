@@ -245,17 +245,30 @@ namespace Nop.Services.Orders
                         {
                             if (_rewardPointsSettings.PointsForPurchases_Awarded == order.OrderStatus)
                             {
-                                order.Customer.AddRewardPointsHistoryEntry(points,
-                                    string.Format(_localizationService.GetResource("RewardPoints.Message.EarnedForOrder"), order.Id));
-                                _orderService.UpdateOrder(order);
+                                //Ensure that reward points were not added before. We should not add reward points if they were already earned for this order
+                                if (!order.RewardPointsWereAdded)
+                                {
+                                    //add reward points
+                                    order.Customer.AddRewardPointsHistoryEntry(points,
+                                        string.Format(_localizationService.GetResource("RewardPoints.Message.EarnedForOrder"),
+                                        order.Id));
+                                    order.RewardPointsWereAdded = true;
+                                    _orderService.UpdateOrder(order);
+                                }
                             }
 
 
                             if (_rewardPointsSettings.PointsForPurchases_Canceled == order.OrderStatus)
                             {
-                                order.Customer.AddRewardPointsHistoryEntry(-points,
-                                       string.Format(_localizationService.GetResource("RewardPoints.Message.ReducedForOrder"), order.Id));
-                                _orderService.UpdateOrder(order);
+                                //ensure that reward points were added before. We should not reduce reward points if they were already earned for this order
+                                if (order.RewardPointsWereAdded)
+                                {
+                                    //reduce reward points
+                                    order.Customer.AddRewardPointsHistoryEntry(-points,
+                                        string.Format(_localizationService.GetResource("RewardPoints.Message.ReducedForOrder"),
+                                        order.Id));
+                                    _orderService.UpdateOrder(order);
+                                }
                             }
                         }
                     }

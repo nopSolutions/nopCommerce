@@ -284,3 +284,20 @@ GO
 
 ALTER TABLE [dbo].[Manufacturer] ALTER COLUMN [ManufacturerTemplateId] int NOT NULL
 GO
+
+
+--new 'RewardPointsWereAdded' or 'Order' entity
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Order]') and NAME='RewardPointsWereAdded')
+BEGIN
+	ALTER TABLE [dbo].[Order] 
+	ADD [RewardPointsWereAdded] bit NULL
+END
+GO
+
+UPDATE [dbo].[Order]
+SET [RewardPointsWereAdded]=0
+WHERE [RewardPointsWereAdded] is null
+GO
+
+ALTER TABLE [dbo].[Order] ALTER COLUMN [RewardPointsWereAdded] bit NOT NULL
+GO

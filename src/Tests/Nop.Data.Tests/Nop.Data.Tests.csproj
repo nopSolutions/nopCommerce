@@ -68,6 +68,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Catalog\CategoryTemplatePersistenceTests.cs" />
+    <Compile Include="Catalog\ManufacturerTemplatePersistenceTests.cs" />
     <Compile Include="Catalog\ProductTemplatePersistenceTests.cs" />
     <Compile Include="Cms\WidgetPersistenceTests.cs" />
     <Compile Include="Common\AddressPeristenceTests.cs" />
@@ -105,7 +107,7 @@
     <Compile Include="Discounts\DiscountUsageHistoryPersistenceTests.cs" />
     <Compile Include="Orders\OrderPersistenceTests.cs" />
     <Compile Include="Messages\QueuedEmailPersistenceTests.cs" />
-    <Compile Include="Orders\RewardPointsHistoryPersistenceTests.cs" />
+    <Compile Include="Customers\RewardPointsHistoryPersistenceTests.cs" />
     <Compile Include="Shipping\ShippingMethodPersistenceTests.cs" />
     <Compile Include="Orders\ShoppingCartItemPeristenceTests.cs" />
     <Compile Include="Tax\TaxCategoryPersistenceTests.cs" />
