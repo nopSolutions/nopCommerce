@@ -107,7 +107,8 @@ namespace Nop.Plugin.Shipping.AustraliaPost
             var shippingOption = new ShippingOption();
             var sb = new StringBuilder();
 
-            sb.AppendFormat("Pickup_Postcode={0}&", zipPostalCodeFrom);
+            sb.AppendFormat(GetGatewayUrl());
+            sb.AppendFormat("?Pickup_Postcode={0}&", zipPostalCodeFrom);
             sb.AppendFormat("Destination_Postcode={0}&", zipPostalCodeTo);
             sb.AppendFormat("Country={0}&", countryCode);
             sb.AppendFormat("Service_Type={0}&", serviceType);
@@ -115,18 +116,17 @@ namespace Nop.Plugin.Shipping.AustraliaPost
             sb.AppendFormat("Length={0}&", length);
             sb.AppendFormat("Width={0}&", width);
             sb.AppendFormat("Height={0}&", height);
-            sb.AppendFormat("Quantity={0}&", quantity);
+            sb.AppendFormat("Quantity={0}", quantity);
 
-            string gatewayUrl = GetGatewayUrl();
-            HttpWebRequest request = WebRequest.Create(gatewayUrl) as HttpWebRequest;
-            request.Method = "POST";
-            request.ContentType = "application/x-www-form-urlencoded";
-            byte[] reqContent = Encoding.ASCII.GetBytes(sb.ToString());
-            request.ContentLength = reqContent.Length;
-            using (Stream newStream = request.GetRequestStream())
-            {
-                newStream.Write(reqContent, 0, reqContent.Length);
-            }
+            HttpWebRequest request = WebRequest.Create(sb.ToString()) as HttpWebRequest;
+            request.Method = "GET";
+            //request.ContentType = "application/x-www-form-urlencoded";
+            //byte[] reqContent = Encoding.ASCII.GetBytes(sb.ToString());
+            //request.ContentLength = reqContent.Length;
+            //using (Stream newStream = request.GetRequestStream())
+            //{
+            //    newStream.Write(reqContent, 0, reqContent.Length);
+            //}
 
             WebResponse response = request.GetResponse();
             string rspContent;
