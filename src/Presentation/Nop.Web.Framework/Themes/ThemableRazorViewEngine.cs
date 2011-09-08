@@ -14,13 +14,7 @@ namespace Nop.Web.Framework.Themes
                                               "~/Areas/{2}/Themes/{3}/Views/{1}/{0}.vbhtml", 
                                               "~/Areas/{2}/Themes/{3}/Views/Shared/{0}.cshtml", 
                                               "~/Areas/{2}/Themes/{3}/Views/Shared/{0}.vbhtml",
-
-                                              //nop
-                                              //"~/Nop/{2}/Views/{1}/{0}.cshtml", 
-                                              //"~/Nop/{2}/Views/{1}/{0}.vbhtml", 
-                                              //"~/Nop/{2}/Views/Shared/{0}.cshtml", 
-                                              //"~/Nop/{2}/Views/Shared/{0}.vbhtml",
-
+                                              
                                               //default
                                               "~/Areas/{2}/Views/{1}/{0}.cshtml", 
                                               "~/Areas/{2}/Views/{1}/{0}.vbhtml", 
@@ -36,11 +30,6 @@ namespace Nop.Web.Framework.Themes
                                                 "~/Areas/{2}/Themes/{3}/Views/Shared/{0}.cshtml", 
                                                 "~/Areas/{2}/Themes/{3}/Views/Shared/{0}.vbhtml",
 
-                                                //nop
-                                                //"~/Nop/{2}/Views/{1}/{0}.cshtml", 
-                                                //"~/Nop/{2}/Views/{1}/{0}.vbhtml", 
-                                                //"~/Nop/{2}/Views/Shared/{0}.cshtml", 
-                                                //"~/Nop/{2}/Views/Shared/{0}.vbhtml",
 
                                                 //default
                                                 "~/Areas/{2}/Views/{1}/{0}.cshtml", 
@@ -56,13 +45,7 @@ namespace Nop.Web.Framework.Themes
                                                     "~/Areas/{2}/Themes/{3}/Views/{1}/{0}.vbhtml", 
                                                     "~/Areas/{2}/Themes/{3}/Views/Shared/{0}.cshtml", 
                                                     "~/Areas/{2}/Themes/{3}/Views/Shared/{0}.vbhtml",
-
-                                                    //nop
-                                                    //"~/Nop/{2}/Views/{1}/{0}.cshtml", 
-                                                    //"~/Nop/{2}/Views/{1}/{0}.vbhtml", 
-                                                    //"~/Nop/{2}/Views/Shared/{0}.cshtml", 
-                                                    //"~/Nop/{2}/Views/Shared/{0}.vbhtml",
-
+                                                    
                                                     //default
                                                     "~/Areas/{2}/Views/{1}/{0}.cshtml", 
                                                     "~/Areas/{2}/Views/{1}/{0}.vbhtml", 
@@ -82,7 +65,14 @@ namespace Nop.Web.Framework.Themes
                                             "~/Views/{1}/{0}.cshtml", 
                                             "~/Views/{1}/{0}.vbhtml", 
                                             "~/Views/Shared/{0}.cshtml",
-                                            "~/Views/Shared/{0}.vbhtml"
+                                            "~/Views/Shared/{0}.vbhtml",
+
+
+                                            //Admin
+                                            "~/Administration/Views/{1}/{0}.cshtml",
+                                            "~/Administration/Views/{1}/{0}.vbhtml",
+                                            "~/Administration/Views/Shared/{0}.cshtml",
+                                            "~/Administration/Views/Shared/{0}.vbhtml",
                                       };
 
             MasterLocationFormats = new[]
@@ -112,7 +102,13 @@ namespace Nop.Web.Framework.Themes
                                                 "~/Views/{1}/{0}.cshtml", 
                                                 "~/Views/{1}/{0}.vbhtml", 
                                                 "~/Views/Shared/{0}.cshtml", 
-                                                "~/Views/Shared/{0}.vbhtml"
+                                                "~/Views/Shared/{0}.vbhtml",
+
+                                                //Admin
+                                                "~/Administration/Views/{1}/{0}.cshtml",
+                                                "~/Administration/Views/{1}/{0}.vbhtml",
+                                                "~/Administration/Views/Shared/{0}.cshtml",
+                                                "~/Administration/Views/Shared/{0}.vbhtml",
                                              };
 
             FileExtensions = new[] { "cshtml", "vbhtml" };
