@@ -129,12 +129,13 @@ namespace Nop.Web.Controllers
             {
                 foreach (ShoppingCartItem sci in cart)
                 {
-                    var sciWarnings = _shoppingCartService.GetShoppingCartItemWarnings(
+                    var sciWarnings = _shoppingCartService.GetShoppingCartItemWarnings(_workContext.CurrentCustomer,
                         sci.ShoppingCartType,
-                            sci.ProductVariant,
-                            sci.AttributesXml,
-                            sci.CustomerEnteredPrice,
-                            sci.Quantity);
+                        sci.ProductVariant,
+                        sci.AttributesXml,
+                        sci.CustomerEnteredPrice,
+                        sci.Quantity, 
+                        false);
                     if (sciWarnings.Count > 0)
                         return RedirectToRoute("ShoppingCart");
                 }

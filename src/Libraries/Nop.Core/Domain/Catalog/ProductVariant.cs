@@ -289,6 +289,21 @@ namespace Nop.Core.Domain.Catalog
         public virtual bool Published { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the product variant requires that other product variants are added to the cart (Product X requires Product Y)
+        /// </summary>
+        public virtual bool RequireOtherProducts { get; set; }
+
+        /// <summary>
+        /// Gets or sets a required product variant identifiers (comma separated)
+        /// </summary>
+        public virtual string RequiredProductVariantIds { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether required product variants are automatically added to the cart
+        /// </summary>
+        public virtual bool AutomaticallyAddRequiredProductVariants { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether the entity has been deleted
         /// </summary>
         public virtual bool Deleted { get; set; }

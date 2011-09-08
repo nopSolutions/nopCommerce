@@ -1207,7 +1207,7 @@ namespace Nop.Web.Controllers
 
             //save item
             var addToCartWarnings = _shoppingCartService.AddToCart(_workContext.CurrentCustomer,
-                productVariant, cartType, attributes, customerEnteredPriceConverted, quantity);
+                productVariant, cartType, attributes, customerEnteredPriceConverted, quantity, true);
             if (addToCartWarnings.Count == 0)
             {
                 switch (cartType)

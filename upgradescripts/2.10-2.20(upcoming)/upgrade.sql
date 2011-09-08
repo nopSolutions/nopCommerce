@@ -44,6 +44,27 @@ set @resources='
   <LocaleResource Name="Admin.CurrentWishlists">
     <Value>Current wishlists</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Variants.Fields.RequireOtherProducts">
+    <Value>Require other product variants are added to the cart</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Variants.Fields.RequireOtherProducts.Hint">
+    <Value>Check if this product variant requires that other product variants are added to the cart.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Variants.Fields.RequiredProductVariantIds">
+    <Value>Required product variant IDs</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Variants.Fields.RequiredProductVariantIds.Hint">
+    <Value>Specify comma separated list of required product variant IDs. NOTE: Ensure that there are no circular references (for example, A requires B, and B requires A).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Variants.Fields.AutomaticallyAddRequiredProductVariants">
+    <Value>Automatically add these product variants to the cart</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Variants.Fields.AutomaticallyAddRequiredProductVariants.Hint">
+    <Value>Check to automatically add this product variants to the cart.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.RequiredProductWarning">
+    <Value>This product requires the following product is added to the cart: {0}</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -300,4 +321,45 @@ WHERE [RewardPointsWereAdded] is null
 GO
 
 ALTER TABLE [dbo].[Order] ALTER COLUMN [RewardPointsWereAdded] bit NOT NULL
+GO
+
+
+
+--Products can require that other products are added to the cart
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[ProductVariant]') and NAME='RequireOtherProducts')
+BEGIN
+	ALTER TABLE [dbo].[ProductVariant] 
+	ADD [RequireOtherProducts] bit NULL
+END
+GO
+
+UPDATE [dbo].[ProductVariant]
+SET [RequireOtherProducts]=0
+WHERE [RequireOtherProducts] is null
+GO
+
+ALTER TABLE [dbo].[ProductVariant] ALTER COLUMN [RequireOtherProducts] bit NOT NULL
+GO
+
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[ProductVariant]') and NAME='RequiredProductVariantIds')
+BEGIN
+	ALTER TABLE [dbo].[ProductVariant] 
+	ADD [RequiredProductVariantIds] nvarchar(1000) NULL
+END
+GO
+
+
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[ProductVariant]') and NAME='AutomaticallyAddRequiredProductVariants')
+BEGIN
+	ALTER TABLE [dbo].[ProductVariant] 
+	ADD [AutomaticallyAddRequiredProductVariants] bit NULL
+END
+GO
+
+UPDATE [dbo].[ProductVariant]
+SET [AutomaticallyAddRequiredProductVariants]=0
+WHERE [AutomaticallyAddRequiredProductVariants] is null
+GO
+
+ALTER TABLE [dbo].[ProductVariant] ALTER COLUMN [AutomaticallyAddRequiredProductVariants] bit NOT NULL
 GO

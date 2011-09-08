@@ -7,6 +7,7 @@
 <script type="text/javascript">
     $(document).ready(function () {
 
+        $("#@Html.FieldIdFor(model => model.RequireOtherProducts)").click(toggleRequireOtherProducts);
         $("#@Html.FieldIdFor(model => model.IsGiftCard)").click(toggleGiftCard);
         $("#@Html.FieldIdFor(model => model.CustomerEntersPrice)").click(toggleCustomerEntersPrice);
         $("#@Html.FieldIdFor(model => model.IsDownload)").click(toggleDownloadableProduct);
@@ -19,6 +20,7 @@
         $("#@Html.FieldIdFor(model => model.ManageInventoryMethodId)").change(toggleManageStock);
         $("#@Html.FieldIdFor(model => model.DisplayStockAvailability)").click(toggleManageStock);
 
+        toggleRequireOtherProducts();
         toggleGiftCard();
         toggleCustomerEntersPrice();
         toggleDownloadableProduct();
@@ -27,6 +29,17 @@
         toggleTax();
         toggleManageStock();
     });
+
+    function toggleRequireOtherProducts() {
+        if (getE('@Html.FieldIdFor(model => model.RequireOtherProducts)').checked) {
+            $('#pnlRequiredProductVariantIds').show();
+            $('#pnlAutomaticallyAddRequiredProductVariants').show();
+        }
+        else {
+            $('#pnlRequiredProductVariantIds').hide();
+            $('#pnlAutomaticallyAddRequiredProductVariants').hide();
+        }
+    }
 
     function toggleGiftCard() {
         if (getE('@Html.FieldIdFor(model => model.IsGiftCard)').checked) {
@@ -375,6 +388,38 @@
         <td class="adminData">
             @Html.EditorFor(model => model.AvailableEndDateTimeUtc)
             @Html.ValidationMessageFor(model => model.AvailableEndDateTimeUtc)
+        </td>
+    </tr>
+    <tr class="adminSeparator">
+        <td colspan="2">
+            <hr />
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.RequireOtherProducts):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.RequireOtherProducts)
+            @Html.ValidationMessageFor(model => model.RequireOtherProducts)
+        </td>
+    </tr>
+    <tr id="pnlRequiredProductVariantIds">
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.RequiredProductVariantIds):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.RequiredProductVariantIds)
+            @Html.ValidationMessageFor(model => model.RequiredProductVariantIds)
+        </td>
+    </tr>
+    <tr id="pnlAutomaticallyAddRequiredProductVariants">
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.AutomaticallyAddRequiredProductVariants):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.AutomaticallyAddRequiredProductVariants)
+            @Html.ValidationMessageFor(model => model.AutomaticallyAddRequiredProductVariants)
         </td>
     </tr>
     <tr class="adminSeparator">

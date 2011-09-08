@@ -360,11 +360,13 @@ namespace Nop.Web.Controllers
 
                 //item warnings
                 var itemWarnings = _shoppingCartService.GetShoppingCartItemWarnings(
-                            sci.ShoppingCartType,
-                            sci.ProductVariant,
-                            sci.AttributesXml,
-                            sci.CustomerEnteredPrice,
-                            sci.Quantity);
+                    _workContext.CurrentCustomer,
+                    sci.ShoppingCartType,
+                    sci.ProductVariant,
+                    sci.AttributesXml,
+                    sci.CustomerEnteredPrice,
+                    sci.Quantity,
+                    false);
                 foreach (var warning in itemWarnings)
                     cartItemModel.Warnings.Add(warning);
 
@@ -506,12 +508,12 @@ namespace Nop.Web.Controllers
                 }
 
                 //item warnings
-                var itemWarnings = _shoppingCartService.GetShoppingCartItemWarnings(
+                var itemWarnings = _shoppingCartService.GetShoppingCartItemWarnings(_workContext.CurrentCustomer,
                             sci.ShoppingCartType,
                             sci.ProductVariant,
                             sci.AttributesXml,
                             sci.CustomerEnteredPrice,
-                            sci.Quantity);
+                            sci.Quantity, false);
                 foreach (var warning in itemWarnings)
                     cartItemModel.Warnings.Add(warning);
 
@@ -539,7 +541,7 @@ namespace Nop.Web.Controllers
                 var productVariant = _productService.GetProductVariantById(productVariantId);
                 var addToCartWarnings = _shoppingCartService.AddToCart(_workContext.CurrentCustomer,
                     productVariant, ShoppingCartType.ShoppingCart,
-                    string.Empty, decimal.Zero, 1);
+                    string.Empty, decimal.Zero, 1, true);
                 if (addToCartWarnings.Count == 0)
                     return RedirectToRoute("ShoppingCart");
                 else
@@ -1173,7 +1175,7 @@ namespace Nop.Web.Controllers
                 {
                     _shoppingCartService.AddToCart(_workContext.CurrentCustomer,
                         sci.ProductVariant, ShoppingCartType.ShoppingCart,
-                        sci.AttributesXml, sci.CustomerEnteredPrice, sci.Quantity);
+                        sci.AttributesXml, sci.CustomerEnteredPrice, sci.Quantity, true);
                 }
             }
 

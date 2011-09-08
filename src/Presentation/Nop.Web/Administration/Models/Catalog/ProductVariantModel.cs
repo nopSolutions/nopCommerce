@@ -195,6 +195,15 @@ namespace Nop.Admin.Models.Catalog
         [UIHint("DateNullable")]
         public DateTime? AvailableEndDateTimeUtc { get; set; }
 
+        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.RequireOtherProducts")]
+        public virtual bool RequireOtherProducts { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.RequiredProductVariantIds")]
+        public virtual string RequiredProductVariantIds { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.AutomaticallyAddRequiredProductVariants")]
+        public virtual bool AutomaticallyAddRequiredProductVariants { get; set; }
+
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.Published")]
         public bool Published { get; set; }
 

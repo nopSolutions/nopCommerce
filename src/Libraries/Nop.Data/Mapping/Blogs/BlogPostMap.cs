@@ -13,8 +13,6 @@ namespace Nop.Data.Mapping.Blogs
             this.Property(bp => bp.Body).IsRequired().IsMaxLength();
             this.Property(bp => bp.Tags).IsMaxLength();
 
-            this.Ignore(bp => bp.ParsedTags);
-
             this.HasRequired(bp => bp.Language)
                 .WithMany()
                 .HasForeignKey(bp => bp.LanguageId).WillCascadeOnDelete(true);

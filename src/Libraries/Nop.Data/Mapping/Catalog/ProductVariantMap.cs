@@ -27,6 +27,8 @@ namespace Nop.Data.Mapping.Catalog
             this.Property(pv => pv.Width).HasPrecision(18, 4);
             this.Property(pv => pv.Height).HasPrecision(18, 4);
 
+            this.Property(pv => pv.RequiredProductVariantIds).HasMaxLength(1000);
+
             this.Ignore(pv => pv.BackorderMode);
             this.Ignore(pv => pv.DownloadActivationType);
             this.Ignore(pv => pv.GiftCardType);

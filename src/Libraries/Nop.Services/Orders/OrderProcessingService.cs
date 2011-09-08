@@ -484,9 +484,9 @@ namespace Nop.Services.Orders
                     //validate individual cart items
                     foreach (var sci in cart)
                     {
-                        var sciWarnings = _shoppingCartService.GetShoppingCartItemWarnings(sci.ShoppingCartType,
+                        var sciWarnings = _shoppingCartService.GetShoppingCartItemWarnings(customer, sci.ShoppingCartType,
                             sci.ProductVariant, sci.AttributesXml,
-                            sci.CustomerEnteredPrice, sci.Quantity);
+                            sci.CustomerEnteredPrice, sci.Quantity, false);
                         if (sciWarnings.Count > 0)
                         {
                             var warningsSb = new StringBuilder();
@@ -2344,7 +2344,7 @@ namespace Nop.Services.Orders
             {
                 _shoppingCartService.AddToCart(opv.Order.Customer, opv.ProductVariant,
                      ShoppingCartType.ShoppingCart, opv.AttributesXml,
-                    opv.UnitPriceExclTax, opv.Quantity);
+                    opv.UnitPriceExclTax, opv.Quantity, false);
             }
         }
 

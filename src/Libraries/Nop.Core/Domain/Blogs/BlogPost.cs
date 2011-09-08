@@ -54,25 +54,5 @@ namespace Nop.Core.Domain.Blogs
         /// Gets or sets the language
         /// </summary>
         public virtual Language Language { get; set; }
-
-        /// <summary>
-        /// Gets the parsed blog post tags
-        /// </summary>
-        public string[] ParsedTags
-        {
-            get
-            {
-               var parsedTags = new List<string>();
-                if (!String.IsNullOrEmpty(this.Tags))
-                {
-                    string[] tags2 = this.Tags.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                    foreach (string tag2 in tags2)
-                    {
-                        parsedTags.Add(tag2.Trim());
-                    }
-                }
-                return parsedTags.ToArray();
-            }
-        }
     }
 }

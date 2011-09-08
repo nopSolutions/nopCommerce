@@ -90,7 +90,7 @@ namespace Nop.Web.Controllers
             model.Body = blogPost.Body;
             model.AllowComments = blogPost.AllowComments;
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(blogPost.CreatedOnUtc, DateTimeKind.Utc);
-            model.Tags = blogPost.ParsedTags.ToList();
+            model.Tags = blogPost.ParseTags().ToList();
             model.NumberOfComments = blogPost.BlogComments.Count;
             if (prepareComments)
             {

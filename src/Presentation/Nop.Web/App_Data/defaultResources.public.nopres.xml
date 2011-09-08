@@ -3277,6 +3277,9 @@
       <LocaleResource Name="RecurringPeriod">
         <Value>[Auto-ship, Every {0} {1}]</Value>
       </LocaleResource>
+		<LocaleResource Name="RequiredProductWarning">
+			<Value>This product requires the following product is added to the cart: {0}</Value>
+		</LocaleResource>
       <LocaleResource Name="Remove">
         <Value>Remove</Value>
       </LocaleResource>

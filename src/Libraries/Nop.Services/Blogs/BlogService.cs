@@ -108,7 +108,7 @@ namespace Nop.Services.Blogs
             var blogPosts = new List<BlogPost>();
             foreach (var blogPost in blogPostsAll)
             {
-                var tags = blogPost.ParsedTags;
+                var tags = blogPost.ParseTags();
                 if (!String.IsNullOrEmpty(tags.FirstOrDefault(t => t.Equals(tag, StringComparison.InvariantCultureIgnoreCase))))
                     blogPosts.Add(blogPost);
             }
@@ -128,7 +128,7 @@ namespace Nop.Services.Blogs
             var blogPosts = GetAllBlogPosts(languageId, null, null, 0, int.MaxValue);
             foreach (var blogPost in blogPosts)
             {
-                var tags = blogPost.ParsedTags;
+                var tags = blogPost.ParseTags();
                 foreach (string tag in tags)
                 {
                     var foundBlogPostTag = blogPostTags.Find(bpt => bpt.Name.Equals(tag, StringComparison.InvariantCultureIgnoreCase));

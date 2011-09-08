@@ -66,6 +66,9 @@ namespace Nop.Data.Tests.Catalog
                                          PictureId = 0,
                                          AvailableStartDateTimeUtc = new DateTime(2010, 01, 01),
                                          AvailableEndDateTimeUtc = new DateTime(2010, 01, 02),
+                                         RequireOtherProducts = true,
+                                         RequiredProductVariantIds = "1,2,3",
+                                         AutomaticallyAddRequiredProductVariants = true,
                                          Published = true,
                                          Deleted = false,
                                          DisplayOrder = 31,
@@ -135,6 +138,9 @@ namespace Nop.Data.Tests.Catalog
             fromDb.PictureId.ShouldEqual(0);
             fromDb.AvailableStartDateTimeUtc.ShouldEqual(new DateTime(2010, 01, 01));
             fromDb.AvailableEndDateTimeUtc.ShouldEqual(new DateTime(2010, 01, 02));
+            fromDb.RequireOtherProducts.ShouldEqual(true);
+            fromDb.RequiredProductVariantIds.ShouldEqual("1,2,3");
+            fromDb.AutomaticallyAddRequiredProductVariants.ShouldEqual(true);
             fromDb.Published.ShouldEqual(true);
             fromDb.Deleted.ShouldEqual(false);
             fromDb.DisplayOrder.ShouldEqual(31);

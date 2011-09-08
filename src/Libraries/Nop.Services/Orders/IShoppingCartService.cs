@@ -23,7 +23,19 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="olderThanUtc">Older than date and time</param>
         void DeleteExpiredShoppingCartItems(DateTime olderThanUtc);
-        
+
+        /// <summary>
+        /// Validates required product variants
+        /// </summary>
+        /// <param name="customer">Customer</param>
+        /// <param name="shoppingCartType">Shopping cart type</param>
+        /// <param name="productVariant">Product variant</param>
+        /// <param name="automaticallyAddRequiredProductVariantsIfEnabled">Automatically add required product variants if enabled</param>
+        /// <returns>Warnings</returns>
+        IList<string> GetRequiredProductVariantWarnings(Customer customer,
+            ShoppingCartType shoppingCartType, ProductVariant productVariant,
+            bool automaticallyAddRequiredProductVariantsIfEnabled);
+
         /// <summary>
         /// Validates shopping cart item attributes
         /// </summary>
@@ -47,15 +59,17 @@ namespace Nop.Services.Orders
         /// <summary>
         /// Validates shopping cart item
         /// </summary>
+        /// <param name="customer">Customer</param>
         /// <param name="shoppingCartType">Shopping cart type</param>
         /// <param name="productVariant">Product variant</param>
         /// <param name="selectedAttributes">Selected attributes</param>
         /// <param name="customerEnteredPrice">Customer entered price</param>
         /// <param name="quantity">Quantity</param>
+        /// <param name="automaticallyAddRequiredProductVariantsIfEnabled">Automatically add required product variants if enabled</param>
         /// <returns>Warnings</returns>
-        IList<string> GetShoppingCartItemWarnings(ShoppingCartType shoppingCartType,
-            ProductVariant productVariant, string selectedAttributes, decimal customerEnteredPrice, 
-            int quantity);
+        IList<string> GetShoppingCartItemWarnings(Customer customer, ShoppingCartType shoppingCartType,
+            ProductVariant productVariant, string selectedAttributes, decimal customerEnteredPrice,
+            int quantity, bool automaticallyAddRequiredProductVariantsIfEnabled);
 
         /// <summary>
         /// Validates whether this shopping cart is valid
@@ -64,8 +78,8 @@ namespace Nop.Services.Orders
         /// <param name="checkoutAttributes">Checkout attributes</param>
         /// <param name="validateCheckoutAttributes">A value indicating whether to validate checkout attributes</param>
         /// <returns>Warnings</returns>
-        IList<string> GetShoppingCartWarnings(IList<ShoppingCartItem> shoppingCart, 
-            string checkoutAttributes = "", bool validateCheckoutAttributes = false);
+        IList<string> GetShoppingCartWarnings(IList<ShoppingCartItem> shoppingCart,
+            string checkoutAttributes, bool validateCheckoutAttributes);
 
         /// <summary>
         /// Finds a shopping cart item in the cart
@@ -92,10 +106,11 @@ namespace Nop.Services.Orders
         /// <param name="selectedAttributes">Selected attributes</param>
         /// <param name="customerEnteredPrice">The price enter by a customer</param>
         /// <param name="quantity">Quantity</param>
+        /// <param name="automaticallyAddRequiredProductVariantsIfEnabled">Automatically add required product variants if enabled</param>
         /// <returns>Warnings</returns>
         IList<string> AddToCart(Customer customer, ProductVariant productVariant,
             ShoppingCartType shoppingCartType, string selectedAttributes,
-            decimal customerEnteredPrice, int quantity);
+            decimal customerEnteredPrice, int quantity, bool automaticallyAddRequiredProductVariantsIfEnabled);
 
         /// <summary>
         /// Updates the shopping cart item

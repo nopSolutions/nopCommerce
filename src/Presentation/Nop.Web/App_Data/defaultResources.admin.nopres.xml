@@ -1580,6 +1580,14 @@
                               </LocaleResource>
                             </Children>
                           </LocaleResource>
+							<LocaleResource Name="AutomaticallyAddRequiredProductVariants">
+								<Value>Automatically add these product variants to the cart</Value>
+								<Children>
+									<LocaleResource Name="Hint">
+										<Value>Check to automatically add this product variants to the cart.</Value>
+									</LocaleResource>
+								</Children>
+							</LocaleResource>
                           <LocaleResource Name="AvailableEndDateTime">
                             <Value>Available end date</Value>
                             <Children>
@@ -1927,6 +1935,22 @@
                               </LocaleResource>
                             </Children>
                           </LocaleResource>
+							<LocaleResource Name="RequiredProductVariantIds">
+								<Value>Required product variant IDs</Value>
+								<Children>
+									<LocaleResource Name="Hint">
+										<Value>Specify comma separated list of required product variant IDs. NOTE: Ensure that there are no circular references (for example, A requires B, and B requires A).</Value>
+									</LocaleResource>
+								</Children>
+							</LocaleResource>
+							<LocaleResource Name="RequireOtherProducts">
+								<Value>Require other product variants are added to the cart</Value>
+								<Children>
+									<LocaleResource Name="Hint">
+										<Value>Check if this product variant requires that other product variants are added to the cart.</Value>
+									</LocaleResource>
+								</Children>
+							</LocaleResource>
                           <LocaleResource Name="SampleDownload">
                             <Value>Sample download file</Value>
                             <Children>

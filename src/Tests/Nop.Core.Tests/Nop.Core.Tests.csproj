@@ -58,6 +58,7 @@
   <ItemGroup>
     <Compile Include="ComponentModel\GenericListTypeConverterTests.cs" />
     <Compile Include="Domain\Blogs\BlogPostTests.cs" />
+    <Compile Include="Domain\Catalog\ProductVariantTests.cs" />
     <Compile Include="Domain\Common\AddressTests.cs" />
     <Compile Include="Domain\Customers\CustomerTests.cs" />
     <Compile Include="Domain\Discounts\DiscountTests.cs" />
