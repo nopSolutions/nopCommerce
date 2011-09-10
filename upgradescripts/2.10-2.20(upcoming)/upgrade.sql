@@ -363,3 +363,17 @@ GO
 
 ALTER TABLE [dbo].[ProductVariant] ALTER COLUMN [AutomaticallyAddRequiredProductVariants] bit NOT NULL
 GO
+
+--email accounts and queued emails issue fix
+IF EXISTS (SELECT 1
+           FROM   sysobjects
+           WHERE  name = 'QueuedEmail_EmailAccount'
+           AND parent_obj = Object_id('QueuedEmail')
+           AND Objectproperty(id,N'IsForeignKey') = 1)
+ALTER TABLE dbo.QueuedEmail
+DROP CONSTRAINT QueuedEmail_EmailAccount
+GO
+ALTER TABLE [dbo].[QueuedEmail]  WITH CHECK ADD  CONSTRAINT [QueuedEmail_EmailAccount] FOREIGN KEY([EmailAccountId])
+REFERENCES [dbo].[EmailAccount] ([Id])
+ON DELETE CASCADE
+GO
