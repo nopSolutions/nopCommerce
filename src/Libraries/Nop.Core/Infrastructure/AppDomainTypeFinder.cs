@@ -108,7 +108,7 @@ namespace Nop.Core.Infrastructure
             {
                 foreach (var t in a.GetTypes())
                 {
-                    if (assignTypeFrom.IsAssignableFrom(t))
+                    if (assignTypeFrom.IsAssignableFrom(t) || (assignTypeFrom.IsGenericTypeDefinition && DoesTypeImplementOpenGeneric(t, assignTypeFrom)))
                     {
                         if (!t.IsInterface)
                         {
@@ -294,7 +294,25 @@ namespace Nop.Core.Infrastructure
             }
         }
 
+        protected virtual bool DoesTypeImplementOpenGeneric(Type type, Type openGeneric)
+        {
+            try
+            {
+                var genericTypeDefinition = openGeneric.GetGenericTypeDefinition();
+                foreach (var implementedInterface in type.FindInterfaces((objType, objCriteria) => true, null))
+                {
+                    if (!implementedInterface.IsGenericType)
+                        continue;
 
+                    var isMatch = genericTypeDefinition.IsAssignableFrom(implementedInterface.GetGenericTypeDefinition());
+                    return isMatch;
+                }
+                return false;
+            }catch
+            {
+                return false;
+            }
+        }
         
     }
 }

@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Nop.Core.Configuration;
+using Nop.Core.Events;
+using Autofac;
+using Autofac.Builder;
 
 namespace Nop.Core.Infrastructure.DependencyManagement
 {
@@ -39,6 +43,25 @@ namespace Nop.Core.Infrastructure.DependencyManagement
                 foreach (var dependencyRegistrar in drInstances)
                     dependencyRegistrar.Register(x, typeFinder);
             });
+
+            //Register event consumers
+            var consumers = typeFinder.FindClassesOfType(typeof (IConsumer<>)).ToList();
+            containerManager.UpdateContainer(x =>
+            {
+                foreach(var consumer in consumers)
+                {
+                    x.RegisterType(consumer)
+                        .As(consumer
+                                .FindInterfaces((type, criteria) =>
+                                                    {
+                                                        var isMatch = type.IsGenericType && ((Type)criteria).IsAssignableFrom(type.GetGenericTypeDefinition());
+                                                        return isMatch;
+                                                    }, typeof (IConsumer<>)));
+                }
+            });
+
+            containerManager.AddComponent<IEventPublisher, EventPublisher>("nop.eventPublisher");
+            containerManager.AddComponent<ISubscriptionService, SubscriptionService>("nop.subscriptionService");
 
             //other dependencies
             containerManager.AddComponentInstance<NopConfig>(configuration, "nop.configuration");

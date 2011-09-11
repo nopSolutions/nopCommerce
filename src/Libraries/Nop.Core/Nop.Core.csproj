@@ -86,6 +86,11 @@
     <Compile Include="Domain\Polls\PollAnswer.cs" />
     <Compile Include="Domain\Polls\Poll.cs" />
     <Compile Include="Domain\Orders\BestsellersReportLine.cs" />
+    <Compile Include="Events\EventPublisher.cs" />
+    <Compile Include="Events\IConsumer.cs" />
+    <Compile Include="Events\IEventPublisher.cs" />
+    <Compile Include="Events\ISubscriptionService.cs" />
+    <Compile Include="Events\SubscriptionService.cs" />
     <Compile Include="Fakes\FakeHttpContext.cs" />
     <Compile Include="Fakes\FakeHttpRequest.cs" />
     <Compile Include="Fakes\FakeHttpResponse.cs" />
