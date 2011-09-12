@@ -3,6 +3,8 @@
     Layout = "~/Views/Shared/_ColumnsOne.cshtml";
 
     Html.AddTitleParts(T("PageTitle.PrivateMessages").Text);
+    
+    Html.AddCssFileParts(@Url.Content("~/Content/smoothness/jquery-ui-1.8.13.custom.css"));
 }
 <div class="private-messages-page">
     <div class="page-title">
@@ -17,7 +19,6 @@
         }
         <script type="text/javascript">
             $(document).ready(function () {
-                $('head').append('<link href="/Content/smoothness/jquery-ui-1.8.13.custom.css" rel="stylesheet" type="text/css" />');
                 $("#tabs").tabs()@Html.Raw(selectSentTab);
             });
         </script>
