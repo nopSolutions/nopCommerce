@@ -5,6 +5,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Blogs;
+using Nop.Core.Events;
 
 namespace Nop.Services.Blogs
 {
@@ -22,15 +23,17 @@ namespace Nop.Services.Blogs
 
         private readonly IRepository<BlogPost> _blogPostRepository;
         private readonly ICacheManager _cacheManager;
+        private readonly IEventPublisher _eventPublisher;
 
         #endregion
 
         #region Ctor
 
-        public BlogService(IRepository<BlogPost> blogPostRepository, ICacheManager cacheManager)
+        public BlogService(IRepository<BlogPost> blogPostRepository, ICacheManager cacheManager, IEventPublisher eventPublisher)
         {
-            this._blogPostRepository = blogPostRepository;
-            this._cacheManager = cacheManager;
+            _blogPostRepository = blogPostRepository;
+            _cacheManager = cacheManager;
+            _eventPublisher = eventPublisher;
         }
 
         #endregion
@@ -47,6 +50,8 @@ namespace Nop.Services.Blogs
                 throw new ArgumentNullException("blogPost");
 
             _blogPostRepository.Delete(blogPost);
+
+            _eventPublisher.Publish(new EntityDeleted<BlogPost>(blogPost));
 
             _cacheManager.RemoveByPattern(BLOGPOST_PATTERN_KEY);
         }
@@ -160,6 +165,8 @@ namespace Nop.Services.Blogs
 
             _blogPostRepository.Insert(blogPost);
 
+            _eventPublisher.Publish(new EntityInserted<BlogPost>(blogPost));
+
             _cacheManager.RemoveByPattern(BLOGPOST_PATTERN_KEY);
         }
 
@@ -173,6 +180,8 @@ namespace Nop.Services.Blogs
                 throw new ArgumentNullException("blogPost");
 
             _blogPostRepository.Update(blogPost);
+
+            _eventPublisher.Publish(new EntityUpdated<BlogPost>(blogPost));
 
             _cacheManager.RemoveByPattern(BLOGPOST_PATTERN_KEY);
         }
