@@ -4,6 +4,7 @@ using System.Linq;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Events;
 
 namespace Nop.Services.Catalog
 {
@@ -22,22 +23,26 @@ namespace Nop.Services.Catalog
         #region Fields
 
         private readonly IRepository<ManufacturerTemplate> _manufacturerTemplateRepository;
+        private readonly IEventPublisher _eventPublisher;
         private readonly ICacheManager _cacheManager;
 
         #endregion
         
         #region Ctor
-        
+
         /// <summary>
         /// Ctor
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="manufacturerTemplateRepository">Manufacturer template repository</param>
+        /// <param name="eventPublisher"></param>
         public ManufacturerTemplateService(ICacheManager cacheManager,
-            IRepository<ManufacturerTemplate> manufacturerTemplateRepository)
+            IRepository<ManufacturerTemplate> manufacturerTemplateRepository,
+            IEventPublisher eventPublisher)
         {
-            this._cacheManager = cacheManager;
-            this._manufacturerTemplateRepository = manufacturerTemplateRepository;
+            _cacheManager = cacheManager;
+            _manufacturerTemplateRepository = manufacturerTemplateRepository;
+            _eventPublisher = eventPublisher;
         }
 
         #endregion
@@ -54,6 +59,8 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException("manufacturerTemplate");
 
             _manufacturerTemplateRepository.Delete(manufacturerTemplate);
+
+            _eventPublisher.Publish(new EntityDeleted<ManufacturerTemplate>(manufacturerTemplate));
 
             _cacheManager.RemoveByPattern(MANUFACTURERTEMPLATES_PATTERN_KEY);
         }
@@ -105,6 +112,8 @@ namespace Nop.Services.Catalog
 
             _manufacturerTemplateRepository.Insert(manufacturerTemplate);
 
+            _eventPublisher.Publish(new EntityInserted<ManufacturerTemplate>(manufacturerTemplate));
+
             //cache
             _cacheManager.RemoveByPattern(MANUFACTURERTEMPLATES_PATTERN_KEY);
         }
@@ -119,6 +128,8 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException("manufacturerTemplate");
 
             _manufacturerTemplateRepository.Update(manufacturerTemplate);
+
+            _eventPublisher.Publish(new EntityUpdated<ManufacturerTemplate>(manufacturerTemplate));
 
             //cache
             _cacheManager.RemoveByPattern(MANUFACTURERTEMPLATES_PATTERN_KEY);
