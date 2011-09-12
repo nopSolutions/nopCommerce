@@ -4,7 +4,9 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
+using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Events;
 
 namespace Nop.Services.Catalog
 {
@@ -23,22 +25,25 @@ namespace Nop.Services.Catalog
         #region Fields
 
         private readonly IRepository<CategoryTemplate> _categoryTemplateRepository;
+        private readonly IEventPublisher _eventPublisher;
         private readonly ICacheManager _cacheManager;
 
         #endregion
         
         #region Ctor
-        
+
         /// <summary>
         /// Ctor
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="categoryTemplateRepository">Category template repository</param>
+        /// <param name="eventPublisher"></param>
         public CategoryTemplateService(ICacheManager cacheManager,
-            IRepository<CategoryTemplate> categoryTemplateRepository)
+            IRepository<CategoryTemplate> categoryTemplateRepository, IEventPublisher eventPublisher)
         {
-            this._cacheManager = cacheManager;
-            this._categoryTemplateRepository = categoryTemplateRepository;
+            _cacheManager = cacheManager;
+            _categoryTemplateRepository = categoryTemplateRepository;
+            _eventPublisher = eventPublisher;
         }
 
         #endregion
@@ -55,6 +60,8 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException("categoryTemplate");
 
             _categoryTemplateRepository.Delete(categoryTemplate);
+
+            _eventPublisher.Publish(new EntityDeleted<CategoryTemplate>(categoryTemplate));
 
             _cacheManager.RemoveByPattern(CATEGORYTEMPLATES_PATTERN_KEY);
         }
@@ -106,6 +113,8 @@ namespace Nop.Services.Catalog
 
             _categoryTemplateRepository.Insert(categoryTemplate);
 
+            _eventPublisher.Publish(new EntityInserted<CategoryTemplate>(categoryTemplate));
+
             //cache
             _cacheManager.RemoveByPattern(CATEGORYTEMPLATES_PATTERN_KEY);
         }
@@ -120,6 +129,8 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException("categoryTemplate");
 
             _categoryTemplateRepository.Update(categoryTemplate);
+
+            _eventPublisher.Publish(new EntityUpdated<CategoryTemplate>(categoryTemplate));
 
             //cache
             _cacheManager.RemoveByPattern(CATEGORYTEMPLATES_PATTERN_KEY);
