@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Nop.Admin.Models.Catalog;
@@ -446,6 +447,83 @@ namespace Nop.Admin.Controllers
             };
         }
 
+        #endregion
+
+        #region Bulk editing
+
+        public ActionResult BulkEdit()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
+            return View();
+        }
+        [HttpPost, GridAction(EnableCustomBinding = true)]
+        public ActionResult BulkEditSelect(GridCommand command)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
+            var gridModel = new GridModel();
+            var productVariants = _productService.SearchProductVariants(0, 0, null, false,
+                command.Page - 1, command.PageSize, true);
+            gridModel.Data = productVariants.Select(x =>
+            {
+                var productVariantModel = new BulkEditProductVariantModel()
+                {
+                    Id = x.Id,
+                    Name =  x.FullProductName,
+                    Sku = x.Sku,
+                    OldPrice = x.OldPrice,
+                    Price = x.Price,
+                    Published = x.Published
+                };
+
+                return productVariantModel;
+            });
+            gridModel.Total = productVariants.TotalCount;
+            return new JsonResult
+            {
+                Data = gridModel
+            };
+        }
+        [AcceptVerbs(HttpVerbs.Post)]
+        [HttpPost, GridAction(EnableCustomBinding = true)]
+        public ActionResult BulkEditSave(GridCommand command, 
+            [Bind(Prefix = "updated")]IEnumerable<BulkEditProductVariantModel> updatedProductVariants,
+            [Bind(Prefix = "deleted")]IEnumerable<BulkEditProductVariantModel> deletedProductVariants)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
+            if (updatedProductVariants != null)
+            {
+                foreach (var pvModel in updatedProductVariants)
+                {
+                    //update
+                    var pv = _productService.GetProductVariantById(pvModel.Id);
+                    if (pv != null)
+                    {
+                        pv.Sku = pvModel.Sku;
+                        pv.Price = pvModel.Price;
+                        pv.OldPrice = pvModel.OldPrice;
+                        pv.Published = pvModel.Published;
+                        _productService.UpdateProductVariant(pv);
+                    }
+                }
+            }
+            if (deletedProductVariants != null)
+            {
+                foreach (var pvModel in deletedProductVariants)
+                {
+                    //delete
+                    var pv = _productService.GetProductVariantById(pvModel.Id);
+                    if (pv != null)
+                        _productService.DeleteProductVariant(pv);
+                }
+            }
+            return BulkEditSelect(command);
+        }
         #endregion
 
         #region Tier prices

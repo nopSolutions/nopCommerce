@@ -559,6 +559,30 @@
                   </LocaleResource>
                 </Children>
               </LocaleResource>
+				  <LocaleResource Name="BulkEdit">
+					  <Value>Bulk edit product variants</Value>
+					  <Children>
+						  <LocaleResource Name="Fields">
+							  <Children>
+								  <LocaleResource Name="Name">
+									  <Value>Name</Value>
+								  </LocaleResource>
+								  <LocaleResource Name="SKU">
+									  <Value>SKU</Value>
+								  </LocaleResource>
+								  <LocaleResource Name="Price">
+									  <Value>Price</Value>
+								  </LocaleResource>
+								  <LocaleResource Name="OldPrice">
+									  <Value>Old price</Value>
+								  </LocaleResource>
+								  <LocaleResource Name="Published">
+									  <Value>Published</Value>
+								  </LocaleResource>
+							  </Children>
+						  </LocaleResource>
+					  </Children>
+				  </LocaleResource>
               <LocaleResource Name="Categories">
                 <Value>Categories</Value>
                 <Children>

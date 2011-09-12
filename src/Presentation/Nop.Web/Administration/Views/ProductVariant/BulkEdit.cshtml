@@ -1,0 +1,73 @@
+﻿@using Telerik.Web.Mvc.UI
+@{
+    var gridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSize;
+}
+@using (Html.BeginForm())
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-catalog.png")" alt="" />
+            @T("Admin.Catalog.BulkEdit")
+        </div>
+        <div class="options">
+        </div>
+    </div>
+
+    <table class="adminContent">
+        <tr>
+            <td>
+                @(Html.Telerik().Grid<BulkEditProductVariantModel>()
+        .Name("productvariants-grid")
+        .DataKeys(keys => 
+        {
+            keys.Add(pv => pv.Id);
+        })
+        .ToolBar(commands => {
+            commands.SubmitChanges();
+        })
+        .DataBinding(dataBinding =>
+            dataBinding.Ajax()
+                .Select("BulkEditSelect", "ProductVariant")
+                .Update("BulkEditSave", "ProductVariant")
+        )
+        .Columns(columns =>
+        {
+            columns.Bound(pv => pv.Name).ReadOnly().Width(400);
+            columns.Bound(pv => pv.Sku).Width(100);
+            columns.Bound(pv => pv.Price).Width(150);
+            columns.Bound(pv => pv.OldPrice).Width(150);
+            columns.Bound(pv => pv.Published).Width(150);
+            columns.Command(commands => commands.Delete()).Width(180);
+        })
+        .ClientEvents(events => events.OnDataBinding("Grid_onDataBinding").OnError("Grid_onError"))
+        .Editable(editing => editing.Mode(GridEditMode.InCell))
+        .Pageable(settings => settings.PageSize(gridPageSize).Position(GridPagerPosition.Both))
+)
+<script type="text/javascript">
+    function Grid_onError(args) {
+        if (args.textStatus == "modelstateerror" && args.modelState) {
+            var message = "Errors:\n";
+            $.each(args.modelState, function (key, value) {
+                if ('errors' in value) {
+                    $.each(value.errors, function () {
+                        message += this + "\n";
+                    });
+                }
+            });
+            args.preventDefault();
+            alert(message);
+        }
+    }
+    function Grid_onDataBinding(e) {
+        var grid = $(this).data('tGrid');
+        if (grid.hasChanges()) {
+            if (!confirm('You are going to lose any unsaved changes. Are you sure?')) {
+                e.preventDefault();
+            }
+        }
+    }
+</script>
+            </td>
+        </tr>
+    </table>
+}

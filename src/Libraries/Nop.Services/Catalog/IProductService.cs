@@ -151,6 +151,20 @@ namespace Nop.Services.Catalog
         void AdjustInventory(ProductVariant productVariant, bool decrease,
             int quantity, string attributesXml);
 
+        /// <summary>
+        /// Search product variants
+        /// </summary>
+        /// <param name="categoryId">Category identifier; 0 to load all recordss</param>
+        /// <param name="manufacturerId">Manufacturer identifier; 0 to load all records</param>
+        /// <param name="keywords">Keywords</param>
+        /// <param name="searchDescriptions">A value indicating whether to search in descriptions</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <returns>Product variants</returns>
+        IPagedList<ProductVariant> SearchProductVariants(int categoryId, int manufacturerId, 
+            string keywords, bool searchDescriptions, int pageIndex, int pageSize, bool showHidden = false);
+        
         #endregion
 
         #region Related products

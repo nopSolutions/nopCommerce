@@ -132,6 +132,7 @@
     <Compile Include="Infrastructure\AdminStartupTask.cs" />
     <Compile Include="Infrastructure\AutoMapperStartupTask.cs" />
     <Compile Include="Models\Catalog\AddProductVariantAttributeCombinationModel.cs" />
+    <Compile Include="Models\Catalog\BulkEditProductVariantModel.cs" />
     <Compile Include="Models\Catalog\ManufacturerModel.cs" />
     <Compile Include="Models\Catalog\CopyProductModel.cs" />
     <Compile Include="Models\Cms\WidgetPluginModel.cs" />
@@ -953,6 +954,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\ShoppingCart\CurrentWishlists.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ProductVariant\BulkEdit.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

@@ -690,6 +690,74 @@ namespace Nop.Services.Catalog
             }
         }
 
+        /// <summary>
+        /// Search product variants
+        /// </summary>
+        /// <param name="categoryId">Category identifier; 0 to load all recordss</param>
+        /// <param name="manufacturerId">Manufacturer identifier; 0 to load all records</param>
+        /// <param name="keywords">Keywords</param>
+        /// <param name="searchDescriptions">A value indicating whether to search in descriptions</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <returns>Product variants</returns>
+        public virtual IPagedList<ProductVariant> SearchProductVariants(int categoryId, int manufacturerId,
+             string keywords, bool searchDescriptions, int pageIndex, int pageSize, bool showHidden = false)
+        {
+            //products
+            var query = _productVariantRepository.Table;
+            query = query.Where(pv => !pv.Deleted);
+            if (!showHidden)
+            {
+                query = query.Where(pv => pv.Published);
+            }
+            query = query.Where(pv => !pv.Product.Deleted);
+            if (!showHidden)
+            {
+                query = query.Where(pv => pv.Product.Published);
+            }
+
+            //searching by keyword
+            if (!String.IsNullOrWhiteSpace(keywords))
+            {
+                query = from pv in query
+                        where (pv.Product.Name.Contains(keywords)) ||
+                        (searchDescriptions && pv.Product.ShortDescription.Contains(keywords)) ||
+                        (searchDescriptions && pv.Product.FullDescription.Contains(keywords)) ||
+                        (pv.Name.Contains(keywords)) ||
+                        (searchDescriptions && pv.Description.Contains(keywords))
+                        select pv;
+            }
+
+            //category filtering
+            if (categoryId > 0)
+            {
+                query = from pv in query
+                        from pc in pv.Product.ProductCategories.Where(pc => pc.CategoryId == categoryId)
+                        select pv;
+            }
+
+            //manufacturer filtering
+            if (manufacturerId > 0)
+            {
+                query = from pv in query
+                        from pm in pv.Product.ProductManufacturers.Where(pm => pm.ManufacturerId == manufacturerId)
+                        select pv;
+            }
+
+            //only distinct products (group by ID)
+            //if we use standard Distinct() method, then all fields will be compared (low performance)
+            //it'll not work in SQl Server Compact when searching products by a keyword)
+            query = from pv in query
+                    group pv by pv.Id into pvGroup
+                    orderby pvGroup.Key
+                    select pvGroup.FirstOrDefault();
+
+            query = query.OrderBy(pv => pv.Product.Name);
+            var productVariants = new PagedList<ProductVariant>(query, pageIndex, pageSize);
+            return productVariants;
+        }
+
         #endregion
 
         #region Related products

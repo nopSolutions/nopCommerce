@@ -65,6 +65,24 @@ set @resources='
   <LocaleResource Name="ShoppingCart.RequiredProductWarning">
     <Value>This product requires the following product is added to the cart: {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.BulkEdit">
+    <Value>Bulk edit product variants</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.BulkEdit.Fields.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.BulkEdit.Fields.SKU">
+    <Value>SKU</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.BulkEdit.Fields.Price">
+    <Value>Price</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.BulkEdit.Fields.OldPrice">
+    <Value>Old price</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.BulkEdit.Fields.Published">
+    <Value>Published</Value>
+  </LocaleResource>
 </Language>
 '
 
