@@ -5,6 +5,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Events;
 
 namespace Nop.Services.Catalog
 {
@@ -28,11 +29,12 @@ namespace Nop.Services.Catalog
         private readonly IRepository<Manufacturer> _manufacturerRepository;
         private readonly IRepository<ProductManufacturer> _productManufacturerRepository;
         private readonly IRepository<Product> _productRepository;
+        private readonly IEventPublisher _eventPublisher;
         private readonly ICacheManager _cacheManager;
         #endregion
 
         #region Ctor
-        
+
         /// <summary>
         /// Ctor
         /// </summary>
@@ -40,15 +42,18 @@ namespace Nop.Services.Catalog
         /// <param name="manufacturerRepository">Category repository</param>
         /// <param name="productManufacturerRepository">ProductCategory repository</param>
         /// <param name="productRepository">Product repository</param>
+        /// <param name="eventPublisher"></param>
         public ManufacturerService(ICacheManager cacheManager,
             IRepository<Manufacturer> manufacturerRepository,
             IRepository<ProductManufacturer> productManufacturerRepository,
-            IRepository<Product> productRepository)
+            IRepository<Product> productRepository,
+            IEventPublisher eventPublisher)
         {
-            this._cacheManager = cacheManager;
-            this._manufacturerRepository = manufacturerRepository;
-            this._productManufacturerRepository = productManufacturerRepository;
-            this._productRepository = productRepository;
+            _cacheManager = cacheManager;
+            _manufacturerRepository = manufacturerRepository;
+            _productManufacturerRepository = productManufacturerRepository;
+            _productRepository = productRepository;
+            _eventPublisher = eventPublisher;
         }
         #endregion
 
@@ -129,6 +134,8 @@ namespace Nop.Services.Catalog
 
             _manufacturerRepository.Insert(manufacturer);
 
+            _eventPublisher.Publish(new EntityInserted<Manufacturer>(manufacturer));
+
             //cache
             _cacheManager.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTMANUFACTURERS_PATTERN_KEY);
@@ -145,6 +152,8 @@ namespace Nop.Services.Catalog
 
             _manufacturerRepository.Update(manufacturer);
 
+            _eventPublisher.Publish(new EntityUpdated<Manufacturer>(manufacturer));
+
             //cache
             _cacheManager.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTMANUFACTURERS_PATTERN_KEY);
@@ -160,6 +169,8 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException("productManufacturer");
 
             _productManufacturerRepository.Delete(productManufacturer);
+
+            _eventPublisher.Publish(new EntityDeleted<ProductManufacturer>(productManufacturer));
 
             //cache
             _cacheManager.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
@@ -247,6 +258,8 @@ namespace Nop.Services.Catalog
 
             _productManufacturerRepository.Insert(productManufacturer);
 
+            _eventPublisher.Publish(new EntityInserted<ProductManufacturer>(productManufacturer));
+
             //cache
             _cacheManager.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTMANUFACTURERS_PATTERN_KEY);
@@ -262,6 +275,8 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException("productManufacturer");
 
             _productManufacturerRepository.Update(productManufacturer);
+
+            _eventPublisher.Publish(new EntityUpdated<ProductManufacturer>(productManufacturer));
 
             //cache
             _cacheManager.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
