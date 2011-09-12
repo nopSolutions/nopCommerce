@@ -5,6 +5,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Events;
 
 namespace Nop.Services.Catalog
 {
@@ -28,12 +29,13 @@ namespace Nop.Services.Catalog
         private readonly IRepository<Category> _categoryRepository;
         private readonly IRepository<ProductCategory> _productCategoryRepository;
         private readonly IRepository<Product> _productRepository;
+        private readonly IEventPublisher _eventPublisher;
         private readonly ICacheManager _cacheManager;
 
         #endregion
         
         #region Ctor
-        
+
         /// <summary>
         /// Ctor
         /// </summary>
@@ -41,15 +43,18 @@ namespace Nop.Services.Catalog
         /// <param name="categoryRepository">Category repository</param>
         /// <param name="productCategoryRepository">ProductCategory repository</param>
         /// <param name="productRepository">Product repository</param>
+        /// <param name="eventPublisher">Event publisher</param>
         public CategoryService(ICacheManager cacheManager,
             IRepository<Category> categoryRepository,
             IRepository<ProductCategory> productCategoryRepository,
-            IRepository<Product> productRepository)
+            IRepository<Product> productRepository,
+            IEventPublisher eventPublisher)
         {
             this._cacheManager = cacheManager;
             this._categoryRepository = categoryRepository;
             this._productCategoryRepository = productCategoryRepository;
             this._productRepository = productRepository;
+            _eventPublisher = eventPublisher;
         }
 
         #endregion
@@ -191,6 +196,8 @@ namespace Nop.Services.Catalog
 
             _categoryRepository.Insert(category);
 
+            _eventPublisher.Publish(new EntityInserted<Category>(category));
+
             //cache
             _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTCATEGORIES_PATTERN_KEY);
@@ -219,6 +226,8 @@ namespace Nop.Services.Catalog
 
             _categoryRepository.Update(category);
 
+            _eventPublisher.Publish(new EntityUpdated<Category>(category));
+
             //cache
             _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTCATEGORIES_PATTERN_KEY);
@@ -234,6 +243,8 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException("productCategory");
 
             _productCategoryRepository.Delete(productCategory);
+
+            _eventPublisher.Publish(new EntityDeleted<ProductCategory>(productCategory));
 
             //cache
             _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
@@ -320,6 +331,8 @@ namespace Nop.Services.Catalog
             
             _productCategoryRepository.Insert(productCategory);
 
+            _eventPublisher.Publish(new EntityInserted<ProductCategory>(productCategory));
+
             //cache
             _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTCATEGORIES_PATTERN_KEY);
@@ -335,6 +348,8 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException("productCategory");
 
             _productCategoryRepository.Update(productCategory);
+
+            _eventPublisher.Publish(new EntityUpdated<ProductCategory>(productCategory));
 
             //cache
             _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
