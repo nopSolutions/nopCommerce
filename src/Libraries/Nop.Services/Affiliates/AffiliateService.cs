@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Data;
 using Nop.Core.Domain.Affiliates;
+using Nop.Core.Events;
 
 namespace Nop.Services.Affiliates
 {
@@ -14,18 +15,22 @@ namespace Nop.Services.Affiliates
         #region Fields
 
         private readonly IRepository<Affiliate> _affiliateRepository;
-        
+        private readonly IEventPublisher _eventPublisher;
+
         #endregion
 
         #region Ctor
-        
+
         /// <summary>
         /// Ctor
         /// </summary>
         /// <param name="affiliateRepository">Affiliate repository</param>
-        public AffiliateService(IRepository<Affiliate> affiliateRepository)
+        /// <param name="eventPublisher"></param>
+        public AffiliateService(IRepository<Affiliate> affiliateRepository,
+            IEventPublisher eventPublisher)
         {
-            this._affiliateRepository = affiliateRepository;
+            _affiliateRepository = affiliateRepository;
+            _eventPublisher = eventPublisher;
         }
 
         #endregion
@@ -84,6 +89,8 @@ namespace Nop.Services.Affiliates
                 throw new ArgumentNullException("affiliate");
 
             _affiliateRepository.Insert(affiliate);
+
+            _eventPublisher.Publish(new EntityInserted<Affiliate>(affiliate));
         }
 
         /// <summary>
@@ -96,6 +103,8 @@ namespace Nop.Services.Affiliates
                 throw new ArgumentNullException("affiliate");
 
             _affiliateRepository.Update(affiliate);
+
+            _eventPublisher.Publish(new EntityUpdated<Affiliate>(affiliate));
         }
 
         #endregion
