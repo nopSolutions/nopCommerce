@@ -4,6 +4,7 @@ using System.Linq;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Events;
 
 namespace Nop.Services.Catalog
 {
@@ -30,13 +31,14 @@ namespace Nop.Services.Catalog
         private readonly IRepository<ProductVariantAttribute> _productVariantAttributeRepository;
         private readonly IRepository<ProductVariantAttributeCombination> _productVariantAttributeCombinationRepository;
         private readonly IRepository<ProductVariantAttributeValue> _productVariantAttributeValueRepository;
+        private readonly IEventPublisher _eventPublisher;
         private readonly ICacheManager _cacheManager;
 
 
         #endregion
 
         #region Ctor
-        
+
         /// <summary>
         /// Ctor
         /// </summary>
@@ -45,18 +47,21 @@ namespace Nop.Services.Catalog
         /// <param name="productVariantAttributeRepository">Product variant attribute mapping repository</param>
         /// <param name="productVariantAttributeCombinationRepository">Product variant attribute combination repository</param>
         /// <param name="productVariantAttributeValueRepository">Product variant attribute value repository</param>
+        /// <param name="eventPublisher"></param>
         public ProductAttributeService(ICacheManager cacheManager,
             IRepository<ProductAttribute> productAttributeRepository,
             IRepository<ProductVariantAttribute> productVariantAttributeRepository,
             IRepository<ProductVariantAttributeCombination> productVariantAttributeCombinationRepository,
-            IRepository<ProductVariantAttributeValue> productVariantAttributeValueRepository
+            IRepository<ProductVariantAttributeValue> productVariantAttributeValueRepository,
+            IEventPublisher eventPublisher
             )
         {
-            this._cacheManager = cacheManager;
-            this._productAttributeRepository = productAttributeRepository;
-            this._productVariantAttributeRepository = productVariantAttributeRepository;
-            this._productVariantAttributeCombinationRepository = productVariantAttributeCombinationRepository;
-            this._productVariantAttributeValueRepository = productVariantAttributeValueRepository;
+            _cacheManager = cacheManager;
+            _productAttributeRepository = productAttributeRepository;
+            _productVariantAttributeRepository = productVariantAttributeRepository;
+            _productVariantAttributeCombinationRepository = productVariantAttributeCombinationRepository;
+            _productVariantAttributeValueRepository = productVariantAttributeValueRepository;
+            _eventPublisher = eventPublisher;
         }
 
         #endregion
@@ -75,6 +80,8 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException("productAttribute");
 
             _productAttributeRepository.Delete(productAttribute);
+
+            _eventPublisher.EntityDeleted(productAttribute);
 
             //cache
             _cacheManager.RemoveByPattern(PRODUCTATTRIBUTES_PATTERN_KEY);
@@ -128,6 +135,8 @@ namespace Nop.Services.Catalog
 
             _productAttributeRepository.Insert(productAttribute);
 
+            _eventPublisher.EntityInserted(productAttribute);
+
             _cacheManager.RemoveByPattern(PRODUCTATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTATTRIBUTEVALUES_PATTERN_KEY);
@@ -143,7 +152,9 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException("productAttribute");
 
             _productAttributeRepository.Update(productAttribute);
-            
+
+            _eventPublisher.EntityUpdated(productAttribute);
+
             _cacheManager.RemoveByPattern(PRODUCTATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTATTRIBUTEVALUES_PATTERN_KEY);
@@ -163,6 +174,8 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException("productVariantAttribute");
 
             _productVariantAttributeRepository.Delete(productVariantAttribute);
+
+            _eventPublisher.EntityDeleted(productVariantAttribute);
 
             _cacheManager.RemoveByPattern(PRODUCTATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTATTRIBUTES_PATTERN_KEY);
@@ -217,6 +230,8 @@ namespace Nop.Services.Catalog
 
             _productVariantAttributeRepository.Insert(productVariantAttribute);
 
+            _eventPublisher.EntityInserted(productVariantAttribute);
+
             _cacheManager.RemoveByPattern(PRODUCTATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTATTRIBUTEVALUES_PATTERN_KEY);
@@ -232,6 +247,8 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException("productVariantAttribute");
 
             _productVariantAttributeRepository.Update(productVariantAttribute);
+
+            _eventPublisher.EntityUpdated(productVariantAttribute);
 
             _cacheManager.RemoveByPattern(PRODUCTATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTATTRIBUTES_PATTERN_KEY);
@@ -252,6 +269,8 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException("productVariantAttributeValue");
 
             _productVariantAttributeValueRepository.Delete(productVariantAttributeValue);
+
+            _eventPublisher.EntityDeleted(productVariantAttributeValue);
 
             _cacheManager.RemoveByPattern(PRODUCTATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTATTRIBUTES_PATTERN_KEY);
@@ -306,6 +325,8 @@ namespace Nop.Services.Catalog
 
             _productVariantAttributeValueRepository.Insert(productVariantAttributeValue);
 
+            _eventPublisher.EntityInserted(productVariantAttributeValue);
+
             _cacheManager.RemoveByPattern(PRODUCTATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTATTRIBUTEVALUES_PATTERN_KEY);
@@ -321,6 +342,8 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException("productVariantAttributeValue");
 
             _productVariantAttributeValueRepository.Update(productVariantAttributeValue);
+
+            _eventPublisher.EntityUpdated(productVariantAttributeValue);
 
             _cacheManager.RemoveByPattern(PRODUCTATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTATTRIBUTES_PATTERN_KEY);
@@ -341,6 +364,8 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException("combination");
 
             _productVariantAttributeCombinationRepository.Delete(combination);
+
+            _eventPublisher.EntityDeleted(combination);
         }
 
         /// <summary>
@@ -385,6 +410,8 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException("combination");
 
             _productVariantAttributeCombinationRepository.Insert(combination);
+
+            _eventPublisher.EntityInserted(combination);
         }
 
         /// <summary>
@@ -397,6 +424,8 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException("combination");
 
             _productVariantAttributeCombinationRepository.Update(combination);
+
+            _eventPublisher.EntityUpdated(combination);
         }
 
         #endregion
