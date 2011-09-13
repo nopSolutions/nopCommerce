@@ -109,7 +109,7 @@ namespace Nop.Web.Framework
             builder.RegisterType<PluginFinder>().As<IPluginFinder>().InstancePerHttpRequest();
 
             //cache manager
-            builder.RegisterType<MemoryCacheManager>().As<ICacheManager>().Named<ICacheManager>("nop_cache_static").InstancePerHttpRequest();
+            builder.RegisterType<MemoryCacheManager>().As<ICacheManager>().Named<ICacheManager>("nop_cache_static").SingleInstance();
             builder.RegisterType<PerRequestCacheManager>().As<ICacheManager>().Named<ICacheManager>("nop_cache_per_request").InstancePerHttpRequest();
 
 
