@@ -5,6 +5,7 @@ using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
+using Nop.Core.Events;
 using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
 using Nop.Services.Discounts;
@@ -20,8 +21,9 @@ namespace Nop.Services.Tests.Discounts
         IRepository<Discount> _discountRepo;
         IRepository<DiscountRequirement> _discountRequirementRepo;
         IRepository<DiscountUsageHistory> _discountUsageHistoryRepo;
+        IEventPublisher _eventPublisher;
         IDiscountService _discountService;
-
+        
         [SetUp]
         public new void SetUp()
         {
@@ -53,12 +55,15 @@ namespace Nop.Services.Tests.Discounts
 
             _discountRepo.Expect(x => x.Table).Return(new List<Discount>() { discount1, discount2 }.AsQueryable());
 
+            _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
+            _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
+
             var cacheManager = new NopNullCache();
             _discountRequirementRepo = MockRepository.GenerateMock<IRepository<DiscountRequirement>>();
             _discountUsageHistoryRepo = MockRepository.GenerateMock<IRepository<DiscountUsageHistory>>();
             var pluginFinder = new PluginFinder(new AppDomainTypeFinder());
             _discountService = new DiscountService(cacheManager, _discountRepo, _discountRequirementRepo,
-                _discountUsageHistoryRepo, pluginFinder);
+                _discountUsageHistoryRepo, pluginFinder, _eventPublisher);
         }
 
         [Test]

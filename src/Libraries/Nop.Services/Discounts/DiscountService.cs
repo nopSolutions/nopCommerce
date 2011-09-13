@@ -5,6 +5,7 @@ using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
+using Nop.Core.Events;
 using Nop.Core.Plugins;
 using Nop.Services.Customers;
 
@@ -28,10 +29,12 @@ namespace Nop.Services.Discounts
         private readonly IRepository<DiscountUsageHistory> _discountUsageHistoryRepository;
         private readonly ICacheManager _cacheManager;
         private readonly IPluginFinder _pluginFinder;
+        private readonly IEventPublisher _eventPublisher;
+
         #endregion
 
         #region Ctor
-        
+
         /// <summary>
         /// Ctor
         /// </summary>
@@ -39,17 +42,20 @@ namespace Nop.Services.Discounts
         /// <param name="discountRepository">Discount repository</param>
         /// <param name="discountRequirementRepository">Discount requirement repository</param>
         /// <param name="pluginFinder">Plugin finder</param>
+        /// <param name="eventPublisher"></param>
         public DiscountService(ICacheManager cacheManager,
             IRepository<Discount> discountRepository,
             IRepository<DiscountRequirement> discountRequirementRepository,
             IRepository<DiscountUsageHistory> discountUsageHistoryRepository,
-            IPluginFinder pluginFinder)
+            IPluginFinder pluginFinder,
+            IEventPublisher eventPublisher)
         {
-            this._cacheManager = cacheManager;
-            this._discountRepository = discountRepository;
-            this._discountRequirementRepository = discountRequirementRepository;
-            this._discountUsageHistoryRepository = discountUsageHistoryRepository;
-            this._pluginFinder = pluginFinder;
+            _cacheManager = cacheManager;
+            _discountRepository = discountRepository;
+            _discountRequirementRepository = discountRequirementRepository;
+            _discountUsageHistoryRepository = discountUsageHistoryRepository;
+            _pluginFinder = pluginFinder;
+            _eventPublisher = eventPublisher;
         }
 
         #endregion
@@ -120,6 +126,8 @@ namespace Nop.Services.Discounts
 
             _discountRepository.Delete(discount);
 
+            _eventPublisher.EntityDeleted(discount);
+
             _cacheManager.RemoveByPattern(DISCOUNTS_PATTERN_KEY);
         }
 
@@ -189,6 +197,8 @@ namespace Nop.Services.Discounts
 
             _discountRepository.Insert(discount);
 
+            _eventPublisher.EntityInserted(discount);
+
             _cacheManager.RemoveByPattern(DISCOUNTS_PATTERN_KEY);
         }
 
@@ -203,6 +213,8 @@ namespace Nop.Services.Discounts
 
             _discountRepository.Update(discount);
 
+            _eventPublisher.EntityUpdated(discount);
+
             _cacheManager.RemoveByPattern(DISCOUNTS_PATTERN_KEY);
         }
 
@@ -216,6 +228,8 @@ namespace Nop.Services.Discounts
                 throw new ArgumentNullException("discountRequirement");
 
             _discountRequirementRepository.Delete(discountRequirement);
+
+            _eventPublisher.EntityDeleted(discountRequirement);
 
             _cacheManager.RemoveByPattern(DISCOUNTS_PATTERN_KEY);
         }
@@ -314,6 +328,8 @@ namespace Nop.Services.Discounts
                 throw new ArgumentNullException("discountUsageHistory");
 
             _discountUsageHistoryRepository.Delete(discountUsageHistory);
+
+            _eventPublisher.EntityDeleted(discountUsageHistory);
 
             _cacheManager.RemoveByPattern(DISCOUNTS_PATTERN_KEY);
         }

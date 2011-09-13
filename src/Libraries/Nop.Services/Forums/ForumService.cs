@@ -6,6 +6,7 @@ using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
+using Nop.Core.Events;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
 using Nop.Services.Messages;
@@ -40,10 +41,12 @@ namespace Nop.Services.Forums
         private readonly ICustomerService _customerService;
         private readonly IWorkContext _workContext;
         private readonly IWorkflowMessageService _workflowMessageService;
+        private readonly IEventPublisher _eventPublisher;
 
         #endregion
 
         #region Ctor
+
         /// <summary>
         /// Ctor
         /// </summary>
@@ -55,6 +58,7 @@ namespace Nop.Services.Forums
         /// <param name="forumPrivateMessageRepository">PrivateMessage repository</param>
         /// <param name="forumSubscriptionRepository">ForumSubscription repository</param>
         /// <param name="customerRepository">Customer repository</param>
+        /// <param name="eventPublisher"></param>
         public ForumService(ICacheManager cacheManager,
             IRepository<ForumGroup> forumGroupRepository,
             IRepository<Forum> forumRepository,
@@ -67,7 +71,8 @@ namespace Nop.Services.Forums
             ISettingService settingService,
             ICustomerService customerService,
             IWorkContext workcContext,
-            IWorkflowMessageService workflowMessageService
+            IWorkflowMessageService workflowMessageService,
+            IEventPublisher eventPublisher
             )
         {
             this._cacheManager = cacheManager;
@@ -83,6 +88,7 @@ namespace Nop.Services.Forums
             this._customerService = customerService;
             this._workContext = workcContext;
             this._workflowMessageService = workflowMessageService;
+            _eventPublisher = eventPublisher;
         }
         #endregion
 
@@ -255,6 +261,8 @@ namespace Nop.Services.Forums
 
             _forumGroupRepository.Delete(forumGroup);
 
+            _eventPublisher.EntityDeleted(forumGroup);
+
             _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
             _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
         }
@@ -304,6 +312,8 @@ namespace Nop.Services.Forums
 
             _forumGroupRepository.Insert(forumGroup);
 
+            _eventPublisher.EntityInserted(forumGroup);
+
             //cache
             _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
             _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
@@ -321,6 +331,8 @@ namespace Nop.Services.Forums
             }
 
             _forumGroupRepository.Update(forumGroup);
+
+            _eventPublisher.EntityUpdated(forumGroup);
 
             //cache
             _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
@@ -347,6 +359,7 @@ namespace Nop.Services.Forums
                 foreach (var fs in queryFs.ToList())
                 {
                     _forumSubscriptionRepository.Delete(fs);
+                    _eventPublisher.EntityDeleted(fs);
                 }
             }
 
@@ -357,10 +370,13 @@ namespace Nop.Services.Forums
             foreach (var fs2 in queryFs2.ToList())
             {
                 _forumSubscriptionRepository.Delete(fs2);
+                _eventPublisher.EntityDeleted(fs2);
             }
 
             //delete forum
             _forumRepository.Delete(forum);
+
+            _eventPublisher.EntityDeleted(forum);
 
             _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
             _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
@@ -414,6 +430,8 @@ namespace Nop.Services.Forums
 
             _forumRepository.Insert(forum);
 
+            _eventPublisher.EntityInserted(forum);
+
             _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
             _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
         }
@@ -430,6 +448,8 @@ namespace Nop.Services.Forums
             }
 
             _forumRepository.Update(forum);
+
+            _eventPublisher.EntityUpdated(forum);
 
             _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
             _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
@@ -452,6 +472,8 @@ namespace Nop.Services.Forums
             //delete topic
             _forumTopicRepository.Delete(forumTopic);
 
+            _eventPublisher.EntityDeleted(forumTopic);
+
             //delete forum subscriptions
             var queryFs = from ft in _forumSubscriptionRepository.Table
                           where ft.TopicId == forumTopic.Id
@@ -460,6 +482,7 @@ namespace Nop.Services.Forums
             foreach (var fs in forumSubscriptions)
             {
                 _forumSubscriptionRepository.Delete(fs);
+                _eventPublisher.EntityDeleted(fs);
             }
 
             //update stats
@@ -589,6 +612,8 @@ namespace Nop.Services.Forums
 
             _forumTopicRepository.Insert(forumTopic);
 
+            _eventPublisher.EntityInserted(forumTopic);
+
             //update stats
             UpdateForumStats(forumTopic.ForumId);
 
@@ -632,6 +657,8 @@ namespace Nop.Services.Forums
             }
 
             _forumTopicRepository.Update(forumTopic);
+
+            _eventPublisher.EntityUpdated(forumTopic);
 
             _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
             _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
@@ -700,6 +727,8 @@ namespace Nop.Services.Forums
 
             //delete forum post
             _forumPostRepository.Delete(forumPost);
+
+            _eventPublisher.EntityDeleted(forumPost);
 
             //delete topic
             if (deleteTopic)
@@ -811,6 +840,8 @@ namespace Nop.Services.Forums
 
             _forumPostRepository.Insert(forumPost);
 
+            _eventPublisher.EntityInserted(forumPost);
+
             //update stats
             int customerId = forumPost.CustomerId;
             var forumTopic = this.GetTopicById(forumPost.TopicId);
@@ -862,6 +893,8 @@ namespace Nop.Services.Forums
 
             _forumPostRepository.Update(forumPost);
 
+            _eventPublisher.EntityUpdated(forumPost);
+
             _cacheManager.RemoveByPattern(FORUMGROUP_PATTERN_KEY);
             _cacheManager.RemoveByPattern(FORUM_PATTERN_KEY);
         }
@@ -878,6 +911,8 @@ namespace Nop.Services.Forums
             }
 
             _forumPrivateMessageRepository.Delete(privateMessage);
+
+            _eventPublisher.EntityDeleted(privateMessage);
         }
 
         /// <summary>
@@ -952,6 +987,8 @@ namespace Nop.Services.Forums
 
             _forumPrivateMessageRepository.Insert(privateMessage);
 
+            _eventPublisher.EntityInserted(privateMessage);
+
             var customerTo = _customerService.GetCustomerById(privateMessage.ToCustomerId);
             if (customerTo == null)
             {
@@ -980,10 +1017,12 @@ namespace Nop.Services.Forums
             if (privateMessage.IsDeletedByAuthor && privateMessage.IsDeletedByRecipient)
             {
                 _forumPrivateMessageRepository.Delete(privateMessage);
+                _eventPublisher.EntityDeleted(privateMessage);
             }
             else
             {
                 _forumPrivateMessageRepository.Update(privateMessage);
+                _eventPublisher.EntityUpdated(privateMessage);
             }
         }
 
@@ -999,6 +1038,8 @@ namespace Nop.Services.Forums
             }
 
             _forumSubscriptionRepository.Delete(forumSubscription);
+
+            _eventPublisher.EntityDeleted(forumSubscription);
         }
 
         /// <summary>
@@ -1063,6 +1104,8 @@ namespace Nop.Services.Forums
             }
 
             _forumSubscriptionRepository.Insert(forumSubscription);
+
+            _eventPublisher.EntityInserted(forumSubscription);
         }
 
         /// <summary>
@@ -1077,6 +1120,8 @@ namespace Nop.Services.Forums
             }
             
             _forumSubscriptionRepository.Update(forumSubscription);
+
+            _eventPublisher.EntityUpdated(forumSubscription);
         }
 
         /// <summary>
