@@ -4,6 +4,7 @@ using System.Linq;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Events;
 
 namespace Nop.Services.Customers
 {
@@ -15,6 +16,7 @@ namespace Nop.Services.Customers
         #region Fields
 
         private readonly IRepository<CustomerContent> _contentRepository;
+        private readonly IEventPublisher _eventPublisher;
         private readonly ICacheManager _cacheManager;
 
         #endregion
@@ -26,11 +28,14 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="contentRepository">Customer content repository</param>
+        /// <param name="eventPublisher"></param>
         public CustomerContentService(ICacheManager cacheManager,
-            IRepository<CustomerContent> contentRepository)
+            IRepository<CustomerContent> contentRepository,
+            IEventPublisher eventPublisher)
         {
-            this._cacheManager = cacheManager;
-            this._contentRepository = contentRepository;
+            _cacheManager = cacheManager;
+            _contentRepository = contentRepository;
+            _eventPublisher = eventPublisher;
         }
 
         #endregion
@@ -47,6 +52,8 @@ namespace Nop.Services.Customers
                 throw new ArgumentNullException("content");
 
             _contentRepository.Delete(content);
+
+            _eventPublisher.EntityDeleted(content);
         }
 
         /// <summary>
@@ -108,6 +115,8 @@ namespace Nop.Services.Customers
                 throw new ArgumentNullException("content");
 
             _contentRepository.Insert(content);
+
+            _eventPublisher.EntityInserted(content);
         }
 
         /// <summary>
@@ -120,6 +129,8 @@ namespace Nop.Services.Customers
                 throw new ArgumentNullException("content");
 
             _contentRepository.Update(content);
+
+            _eventPublisher.EntityUpdated(content);
         }
 
         #endregion
