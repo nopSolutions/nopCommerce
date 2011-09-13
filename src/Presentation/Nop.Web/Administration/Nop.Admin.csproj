@@ -286,9 +286,7 @@
     <Content Include="Content\images\background.gif" />
     <Content Include="Content\images\blue_button_bg.gif" />
     <Content Include="Content\images\cancel-uploading.png" />
-    <Content Include="Content\images\EmptyStar.png" />
     <Content Include="Content\images\ErrorMessage.gif" />
-    <Content Include="Content\images\FilledStar.png" />
     <Content Include="Content\images\GoogleMaps.gif" />
     <Content Include="Content\images\grey_button_bg.gif" />
     <Content Include="Content\images\grid_header_back.png" />
@@ -311,7 +309,6 @@
     <Content Include="Content\images\menu-item-left.png" />
     <Content Include="Content\images\menu-item-right.png" />
     <Content Include="Content\images\menu_bg.jpg" />
-    <Content Include="Content\images\SavedStar.png" />
     <Content Include="Content\images\spinner.gif" />
     <Content Include="Content\images\SuccessMessage.gif" />
     <Content Include="Content\images\tab-line.png" />
