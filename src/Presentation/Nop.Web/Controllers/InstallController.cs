@@ -26,7 +26,7 @@ namespace Nop.Web.Controllers
         /// </summary>
         /// <param name="connectionString">Connection string</param>
         /// <returns>Returns true if the database exists.</returns>
-        private bool SqlServerDatabaseExists(string connectionString)
+        private bool sqlServerDatabaseExists(string connectionString)
         {
             try
             {
@@ -44,6 +44,38 @@ namespace Nop.Web.Controllers
         }
 
         /// <summary>
+        /// Creates a database on the server.
+        /// </summary>
+        /// <param name="connectionString">Connection string</param>
+        /// <returns>Error</returns>
+        private string createDatabase(string connectionString)
+        {
+            try
+            {
+                //parse database name
+                var builder = new SqlConnectionStringBuilder(connectionString);
+                var databaseName = builder.InitialCatalog;
+                //now create connection string to 'master' dabatase. It always exists.
+                builder.InitialCatalog = "master";
+                var masterCatalogConnectionString = builder.ToString();
+                string query = string.Format("CREATE DATABASE [{0}] COLLATE SQL_Latin1_General_CP1_CI_AS", databaseName);
+
+                using (var conn = new SqlConnection(masterCatalogConnectionString))
+                {
+                    conn.Open();
+                    var command = new SqlCommand(query, conn);
+                    command.ExecuteNonQuery();
+                }
+
+                return string.Empty;
+            }
+            catch (Exception ex)
+            {
+                return string.Format("An error occured when creating database: {0}", ex.Message);
+            }
+        }
+
+        /// <summary>
         /// Check permissions
         /// </summary>
         /// <param name="path">Path</param>
@@ -52,7 +84,7 @@ namespace Nop.Web.Controllers
         /// <param name="checkModify">Check modify</param>
         /// <param name="checkDelete">Check delete</param>
         /// <returns>Resulr</returns>
-        private bool CheckPermissions(string path, bool checkRead, bool checkWrite, bool checkModify, bool checkDelete)
+        private bool checkPermissions(string path, bool checkRead, bool checkWrite, bool checkModify, bool checkDelete)
         {
             bool flag = false;
             bool flag2 = false;
@@ -187,7 +219,7 @@ namespace Nop.Web.Controllers
         /// <param name="password">The password for the SQL Server account</param>
         /// <param name="timeout">The connection timeout</param>
         /// <returns>Connection string</returns>
-        private string CreateConnectionString(bool trustedConnection,
+        private string createConnectionString(bool trustedConnection,
             string serverName, string databaseName, string userName, string password, int timeout = 0)
         {
             var builder = new SqlConnectionStringBuilder();
@@ -228,7 +260,8 @@ namespace Nop.Web.Controllers
                 DatabaseConnectionString = "",
                 DataProvider = "sqlserver",
                 SqlAuthenticationType = "sqlauthentication",
-                SqlConnectionInfo = "sqlconnectioninfo_values"
+                SqlConnectionInfo = "sqlconnectioninfo_values",
+                SqlServerCreateDatabase = false,
             };
             return View(model);
         }
@@ -305,7 +338,7 @@ namespace Nop.Web.Controllers
             dirsToCheck.Add(rootDir + "plugins");
             dirsToCheck.Add(rootDir + "plugins\\bin");
             foreach (string dir in dirsToCheck)
-                if (!CheckPermissions(dir, false, true, true, true))
+                if (!checkPermissions(dir, false, true, true, true))
                     ModelState.AddModelError("", string.Format("The '{0}' account is not granted with Modify permission on folder '{1}'. Please configure these permissions.", WindowsIdentity.GetCurrent().Name, dir));
 
             var filesToCheck = new List<string>();
@@ -313,7 +346,7 @@ namespace Nop.Web.Controllers
             filesToCheck.Add(rootDir + "App_Data\\InstalledPlugins.txt");
             filesToCheck.Add(rootDir + "App_Data\\Settings.txt");
             foreach (string file in filesToCheck)
-                if (!CheckPermissions(file, false, true, true, true))
+                if (!checkPermissions(file, false, true, true, true))
                     ModelState.AddModelError("", string.Format("The '{0}' account is not granted with Modify permission on file '{1}'. Please configure these permissions.", WindowsIdentity.GetCurrent().Name, file));
             
             if (ModelState.IsValid)
@@ -334,14 +367,27 @@ namespace Nop.Web.Controllers
                         else
                         {
                             //values
-                            connectionString = CreateConnectionString(model.SqlAuthenticationType == "windowsauthentication",
+                            connectionString = createConnectionString(model.SqlAuthenticationType == "windowsauthentication",
                                 model.SqlServerName, model.SqlDatabaseName,
                                 model.SqlServerUsername, model.SqlServerPassword);
                         }
                         
-                        //check whether database exists
-                        if (!SqlServerDatabaseExists(connectionString))
-                            throw new Exception("Database does not exist or you don't have permissions to connect to it");
+                        if (model.SqlServerCreateDatabase)
+                        {
+                            if (!sqlServerDatabaseExists(connectionString))
+                            {
+                                //create database
+                                var errorCreatingDatabase = createDatabase(connectionString);
+                                if (!String.IsNullOrEmpty(errorCreatingDatabase))
+                                    throw new Exception(errorCreatingDatabase);
+                            }
+                        }
+                        else
+                        {
+                            //check whether database exists
+                            if (!sqlServerDatabaseExists(connectionString))
+                                throw new Exception("Database does not exist or you don't have permissions to connect to it");
+                        }
                     }
                     else
                     {

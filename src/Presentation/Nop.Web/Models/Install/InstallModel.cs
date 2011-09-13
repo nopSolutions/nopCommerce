@@ -33,6 +33,7 @@ namespace Nop.Web.Models.Install
         [AllowHtml]
         public string SqlServerPassword { get; set; }
         public string SqlAuthenticationType { get; set; }
+        public bool SqlServerCreateDatabase { get; set; }
 
 
 

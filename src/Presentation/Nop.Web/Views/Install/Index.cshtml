@@ -182,10 +182,24 @@
                                             <td colspan="2" align="left">
                                                 @Html.RadioButton("DataProvider", "sqlserver", (Model.DataProvider == "sqlserver"), new { id = "provider_sqlserver" })
                                                 <label for="provider_sqlserver">
-                                                    Use an existing SQL Server (or SQL Express) database. <b>[Recommended]</b></label>
+                                                    Use SQL Server (or SQL Express) database. <b>[Recommended]</b></label>
                                                 <div id="sqlConnectionInfo">
                                                     <br />
                                                     <hr />
+                                                    <br />
+                                                    <div>
+                                                        <table>
+                                                            <tr>
+                                                                <td nowrap="nowrap" align="left">
+                                                                    <label for="SqlServerCreateDatabase">
+                                                                        Create database if it doesn't exist:</label>
+                                                                </td>
+                                                                <td width="100%">
+                                                                    @Html.CheckBoxFor(x => x.SqlServerCreateDatabase)
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
                                                     <br />
                                                     @Html.RadioButton("SqlConnectionInfo", "sqlconnectioninfo_values", (Model.SqlConnectionInfo == "sqlconnectioninfo_values"), new { id = "sqlconnectioninfo_values" })
                                                     <label for="sqlconnectioninfo_values">
