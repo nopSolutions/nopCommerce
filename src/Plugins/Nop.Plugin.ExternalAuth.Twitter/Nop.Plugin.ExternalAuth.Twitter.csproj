@@ -100,6 +100,9 @@
     <None Include="web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Images\oauth\twitter-logo-large.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Images\oauth\twitter-logo.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

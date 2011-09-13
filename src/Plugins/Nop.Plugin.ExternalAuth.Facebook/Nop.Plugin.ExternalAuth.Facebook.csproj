@@ -99,6 +99,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Images\oauth\facebook-logo-large.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Images\oauth\facebook-logo.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

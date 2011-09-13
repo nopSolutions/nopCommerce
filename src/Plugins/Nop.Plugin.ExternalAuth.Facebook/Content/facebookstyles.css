@@ -13,10 +13,10 @@
 
 .facebook_large_btn {
 	width: 100px;
-	height: 60px;
+	height: 40px;
 /* fix for IE 6 only: http://en.wikipedia.org/wiki/CSS_filter#Underscore_hack */
 	_width: 102px;
-	_height: 62px;
+	_height: 42px;
 
 	border: 1px solid #DDD;
 	margin: 3px;
