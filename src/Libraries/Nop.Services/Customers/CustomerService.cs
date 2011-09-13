@@ -9,6 +9,7 @@ using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
+using Nop.Core.Events;
 using Nop.Services.Messages;
 using Nop.Services.Security;
 
@@ -37,11 +38,12 @@ namespace Nop.Services.Customers
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly CustomerSettings _customerSettings;
-        
+        private readonly IEventPublisher _eventPublisher;
+
         #endregion
 
         #region Ctor
-        
+
         /// <summary>
         /// Ctor
         /// </summary>
@@ -53,21 +55,24 @@ namespace Nop.Services.Customers
         /// <param name="newsLetterSubscriptionService">Newsletter subscription service</param>
         /// <param name="rewardPointsSettings">Reward points settings</param>
         /// <param name="customerSettings">Customer settings</param>
+        /// <param name="eventPublisher"></param>
         public CustomerService(ICacheManager cacheManager,
             IRepository<Customer> customerRepository,
             IRepository<CustomerRole> customerRoleRepository,
             IRepository<CustomerAttribute> customerAttributeRepository,
             IEncryptionService encryptionService, INewsLetterSubscriptionService newsLetterSubscriptionService,
-            RewardPointsSettings rewardPointsSettings, CustomerSettings customerSettings)
+            RewardPointsSettings rewardPointsSettings, CustomerSettings customerSettings,
+            IEventPublisher eventPublisher)
         {
-            this._cacheManager = cacheManager;
-            this._customerRepository = customerRepository;
-            this._customerRoleRepository = customerRoleRepository;
-            this._customerAttributeRepository = customerAttributeRepository;
-            this._encryptionService = encryptionService;
-            this._newsLetterSubscriptionService = newsLetterSubscriptionService;
-            this._rewardPointsSettings = rewardPointsSettings;
-            this._customerSettings = customerSettings;
+            _cacheManager = cacheManager;
+            _customerRepository = customerRepository;
+            _customerRoleRepository = customerRoleRepository;
+            _customerAttributeRepository = customerAttributeRepository;
+            _encryptionService = encryptionService;
+            _newsLetterSubscriptionService = newsLetterSubscriptionService;
+            _rewardPointsSettings = rewardPointsSettings;
+            _customerSettings = customerSettings;
+            _eventPublisher = eventPublisher;
         }
 
         #endregion
@@ -649,6 +654,8 @@ namespace Nop.Services.Customers
                 throw new ArgumentNullException("customer");
 
             _customerRepository.Insert(customer);
+
+            _eventPublisher.EntityInserted(customer);
         }
         
         /// <summary>
@@ -661,6 +668,8 @@ namespace Nop.Services.Customers
                 throw new ArgumentNullException("customer");
 
             _customerRepository.Update(customer);
+
+            _eventPublisher.EntityUpdated(customer);
         }
 
         /// <summary>
@@ -762,6 +771,8 @@ namespace Nop.Services.Customers
             customerRole.PermissionRecords.Clear();
 
             _customerRoleRepository.Delete(customerRole);
+
+            _eventPublisher.EntityDeleted(customerRole);
             
             _cacheManager.RemoveByPattern(CUSTOMERROLES_PATTERN_KEY);
         }
@@ -858,6 +869,8 @@ namespace Nop.Services.Customers
 
             _customerRoleRepository.Insert(customerRole);
 
+            _eventPublisher.EntityInserted(customerRole);
+
             _cacheManager.RemoveByPattern(CUSTOMERROLES_PATTERN_KEY);
         }
 
@@ -871,6 +884,8 @@ namespace Nop.Services.Customers
                 throw new ArgumentNullException("customerRole");
 
             _customerRoleRepository.Update(customerRole);
+
+            _eventPublisher.EntityUpdated(customerRole);
 
             _cacheManager.RemoveByPattern(CUSTOMERROLES_PATTERN_KEY);
         }
@@ -889,6 +904,8 @@ namespace Nop.Services.Customers
                 throw new ArgumentNullException("customerAttribute");
 
             _customerAttributeRepository.Delete(customerAttribute);
+
+            _eventPublisher.EntityDeleted(customerAttribute);
         }
 
         /// <summary>
@@ -915,6 +932,8 @@ namespace Nop.Services.Customers
                 throw new ArgumentNullException("customerAttribute");
 
             _customerAttributeRepository.Insert(customerAttribute);
+
+            _eventPublisher.EntityInserted(customerAttribute);
         }
 
         /// <summary>
@@ -927,6 +946,8 @@ namespace Nop.Services.Customers
                 throw new ArgumentNullException("customerAttribute");
 
             _customerAttributeRepository.Update(customerAttribute);
+
+            _eventPublisher.EntityUpdated(customerAttribute);
         }
 
         /// <summary>
