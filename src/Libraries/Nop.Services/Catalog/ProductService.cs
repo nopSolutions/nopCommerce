@@ -7,6 +7,7 @@ using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Events;
 using Nop.Services.Messages;
 
 namespace Nop.Services.Catalog
@@ -39,11 +40,12 @@ namespace Nop.Services.Catalog
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly ICacheManager _cacheManager;
         private readonly LocalizationSettings _localizationSettings;
+        private readonly IEventPublisher _eventPublisher;
 
         #endregion
 
         #region Ctor
-        
+
         /// <summary>
         /// Ctor
         /// </summary>
@@ -58,6 +60,7 @@ namespace Nop.Services.Catalog
         /// <param name="productAttributeParser">Product attribute parser service</param>
         /// <param name="workflowMessageService">Workflow message service</param>
         /// <param name="localizationSettings">Localization settings</param>
+        /// <param name="eventPublisher"></param>
         public ProductService(ICacheManager cacheManager,
             IRepository<Product> productRepository,
             IRepository<ProductVariant> productVariantRepository,
@@ -68,19 +71,21 @@ namespace Nop.Services.Catalog
             IProductAttributeService productAttributeService,
             IProductAttributeParser productAttributeParser,
             IWorkflowMessageService workflowMessageService,
-            LocalizationSettings localizationSettings)
+            LocalizationSettings localizationSettings,
+            IEventPublisher eventPublisher)
         {
-            this._cacheManager = cacheManager;
-            this._productRepository = productRepository;
-            this._productVariantRepository = productVariantRepository;
-            this._relatedProductRepository = relatedProductRepository;
-            this._crossSellProductRepository = crossSellProductRepository;
-            this._tierPriceRepository = tierPriceRepository;
-            this._productPictureRepository = productPictureRepository;
-            this._productAttributeService = productAttributeService;
-            this._productAttributeParser = productAttributeParser;
-            this._workflowMessageService = workflowMessageService;
-            this._localizationSettings = localizationSettings;
+            _cacheManager = cacheManager;
+            _productRepository = productRepository;
+            _productVariantRepository = productVariantRepository;
+            _relatedProductRepository = relatedProductRepository;
+            _crossSellProductRepository = crossSellProductRepository;
+            _tierPriceRepository = tierPriceRepository;
+            _productPictureRepository = productPictureRepository;
+            _productAttributeService = productAttributeService;
+            _productAttributeParser = productAttributeParser;
+            _workflowMessageService = workflowMessageService;
+            _localizationSettings = localizationSettings;
+            _eventPublisher = eventPublisher;
         }
 
         #endregion
@@ -168,6 +173,8 @@ namespace Nop.Services.Catalog
 
             _productRepository.Insert(product);
 
+            _eventPublisher.EntityInserted(product);
+
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(TIERPRICES_PATTERN_KEY);
@@ -183,6 +190,8 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException("product");
 
             _productRepository.Update(product);
+
+            _eventPublisher.EntityUpdated(product);
 
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
@@ -516,7 +525,9 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException("productVariant");
 
             _productVariantRepository.Insert(productVariant);
-            
+
+            _eventPublisher.EntityInserted(productVariant);
+
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(TIERPRICES_PATTERN_KEY);
@@ -532,6 +543,8 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException("productVariant");
 
             _productVariantRepository.Update(productVariant);
+
+            _eventPublisher.EntityUpdated(productVariant);
 
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
@@ -772,6 +785,8 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException("relatedProduct");
 
             _relatedProductRepository.Delete(relatedProduct);
+
+            _eventPublisher.EntityDeleted(relatedProduct);
         }
 
         /// <summary>
@@ -818,6 +833,8 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException("relatedProduct");
 
             _relatedProductRepository.Insert(relatedProduct);
+
+            _eventPublisher.EntityInserted(relatedProduct);
         }
 
         /// <summary>
@@ -830,6 +847,8 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException("relatedProduct");
 
             _relatedProductRepository.Update(relatedProduct);
+
+            _eventPublisher.EntityUpdated(relatedProduct);
         }
 
         #endregion
@@ -846,6 +865,8 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException("crossSellProduct");
 
             _crossSellProductRepository.Delete(crossSellProduct);
+
+            _eventPublisher.EntityDeleted(crossSellProduct);
         }
 
         /// <summary>
@@ -891,6 +912,8 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException("crossSellProduct");
 
             _crossSellProductRepository.Insert(crossSellProduct);
+
+            _eventPublisher.EntityInserted(crossSellProduct);
         }
 
         /// <summary>
@@ -903,6 +926,8 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException("crossSellProduct");
 
             _crossSellProductRepository.Update(crossSellProduct);
+
+            _eventPublisher.EntityUpdated(crossSellProduct);
         }
 
         /// <summary>
@@ -967,6 +992,8 @@ namespace Nop.Services.Catalog
 
             _tierPriceRepository.Delete(tierPrice);
 
+            _eventPublisher.EntityDeleted(tierPrice);
+
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(TIERPRICES_PATTERN_KEY);
@@ -1019,6 +1046,8 @@ namespace Nop.Services.Catalog
 
             _tierPriceRepository.Insert(tierPrice);
 
+            _eventPublisher.EntityInserted(tierPrice);
+
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(TIERPRICES_PATTERN_KEY);
@@ -1034,6 +1063,8 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException("tierPrice");
 
             _tierPriceRepository.Update(tierPrice);
+
+            _eventPublisher.EntityUpdated(tierPrice);
 
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
@@ -1054,6 +1085,8 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException("productPicture");
 
             _productPictureRepository.Delete(productPicture);
+
+            _eventPublisher.EntityDeleted(productPicture);
         }
 
         /// <summary>
@@ -1095,6 +1128,8 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException("productPicture");
 
             _productPictureRepository.Insert(productPicture);
+
+            _eventPublisher.EntityInserted(productPicture);
         }
 
         /// <summary>
@@ -1107,6 +1142,8 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException("productPicture");
 
             _productPictureRepository.Update(productPicture);
+
+            _eventPublisher.EntityUpdated(productPicture);
         }
 
         #endregion
