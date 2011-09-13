@@ -6,6 +6,7 @@ using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Events;
 using Nop.Services.Catalog;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
@@ -25,6 +26,7 @@ namespace Nop.Services.Tests.Catalog
         IRepository<ProductVariantAttributeValue> _productVariantAttributeValueRepo;
         IProductAttributeService _productAttributeService;
         IProductAttributeParser _productAttributeParser;
+        IEventPublisher _eventPublisher;
 
         IWorkContext _workContext;
         ICurrencyService _currencyService;
@@ -160,13 +162,17 @@ namespace Nop.Services.Tests.Catalog
             _productVariantAttributeValueRepo.Expect(x => x.GetById(pvav2_1.Id)).Return(pvav2_1);
             _productVariantAttributeValueRepo.Expect(x => x.GetById(pvav2_2.Id)).Return(pvav2_2);
 
+            _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
+            _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
+
             var cacheManager = new NopNullCache();
 
             _productAttributeService = new ProductAttributeService(cacheManager, 
                 _productAttributeRepo,
                 _productVariantAttributeRepo,
                 _productVariantAttributeCombinationRepo,
-                _productVariantAttributeValueRepo);
+                _productVariantAttributeValueRepo,
+                _eventPublisher);
 
             _productAttributeParser = new ProductAttributeParser(_productAttributeService);
 

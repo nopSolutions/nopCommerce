@@ -2,6 +2,7 @@
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Events;
 using Nop.Services.Catalog;
 using Nop.Services.Messages;
 using NUnit.Framework;
@@ -22,6 +23,7 @@ namespace Nop.Services.Tests.Catalog
         IProductAttributeParser _productAttributeParser;
         IWorkflowMessageService _workflowMessageService;
         LocalizationSettings _localizationSettings;
+        IEventPublisher _eventPublisher;
 
         IProductService _productService;
 
@@ -34,6 +36,8 @@ namespace Nop.Services.Tests.Catalog
             _crossSellProductRepository = MockRepository.GenerateMock<IRepository<CrossSellProduct>>();
             _tierPriceRepository = MockRepository.GenerateMock<IRepository<TierPrice>>();
             _productPictureRepository = MockRepository.GenerateMock<IRepository<ProductPicture>>();
+            _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
+            _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
 
             var cacheManager = new NopNullCache();
 
@@ -43,10 +47,14 @@ namespace Nop.Services.Tests.Catalog
             _localizationSettings = new LocalizationSettings();
 
             _productService = new ProductService(cacheManager,
-            _productRepository, _productVariantRepository,
-            _relatedProductRepository, _crossSellProductRepository,
-            _tierPriceRepository,_productPictureRepository,
-            _productAttributeService, _productAttributeParser, _workflowMessageService, _localizationSettings);
+                _productRepository, _productVariantRepository,
+                _relatedProductRepository, _crossSellProductRepository,
+                _tierPriceRepository,_productPictureRepository,
+                _productAttributeService, 
+                _productAttributeParser, 
+                _workflowMessageService, 
+                _localizationSettings, 
+                _eventPublisher);
         }
 
         //TODO write unit tests for SearchProducts method
