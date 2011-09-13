@@ -3,6 +3,7 @@ using System.Linq;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Events;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Tests;
@@ -17,6 +18,7 @@ namespace Nop.Services.Tests.Localization
         IRepository<Language> _languageRepo;
         ILanguageService _languageService;
         ISettingService _settingService;
+        IEventPublisher _eventPublisher;
         LocalizationSettings _localizationSettings;
 
         [SetUp]
@@ -46,8 +48,11 @@ namespace Nop.Services.Tests.Localization
 
             _settingService = MockRepository.GenerateMock<ISettingService>();
 
+            _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
+            _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
+
             _localizationSettings = new LocalizationSettings();
-            _languageService = new LanguageService(cacheManager, _languageRepo, _settingService, _localizationSettings);
+            _languageService = new LanguageService(cacheManager, _languageRepo, _settingService, _localizationSettings, _eventPublisher);
         }
 
         [Test]

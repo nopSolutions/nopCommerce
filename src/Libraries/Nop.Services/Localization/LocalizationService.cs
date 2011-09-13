@@ -5,6 +5,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Events;
 using Nop.Services.Logging;
 
 namespace Nop.Services.Localization
@@ -27,6 +28,7 @@ namespace Nop.Services.Localization
         private readonly ILogger _logger;
         private readonly ICacheManager _cacheManager;
         private readonly LocalizationSettings _localizationSettings;
+        private readonly IEventPublisher _eventPublisher;
 
         #endregion
 
@@ -40,15 +42,17 @@ namespace Nop.Services.Localization
         /// <param name="workContext">Work context</param>
         /// <param name="lsrRepository">Locale string resource repository</param>
         /// <param name="localizationSettings">Localization settings</param>
+        /// <param name="eventPublisher"></param>
         public LocalizationService(ICacheManager cacheManager,
             ILogger logger, IWorkContext workContext,
-            IRepository<LocaleStringResource> lsrRepository, LocalizationSettings localizationSettings)
+            IRepository<LocaleStringResource> lsrRepository, LocalizationSettings localizationSettings, IEventPublisher eventPublisher)
         {
-            this._cacheManager = cacheManager;
-            this._logger = logger;
-            this._workContext = workContext;
-            this._lsrRepository = lsrRepository;
-            this._localizationSettings = localizationSettings;
+            _cacheManager = cacheManager;
+            _logger = logger;
+            _workContext = workContext;
+            _lsrRepository = lsrRepository;
+            _localizationSettings = localizationSettings;
+            _eventPublisher = eventPublisher;
         }
 
         #endregion
@@ -65,6 +69,8 @@ namespace Nop.Services.Localization
                 throw new ArgumentNullException("localeStringResource");
 
             _lsrRepository.Delete(localeStringResource);
+
+            _eventPublisher.EntityDeleted(localeStringResource);
 
             //cache
             _cacheManager.RemoveByPattern(LOCALSTRINGRESOURCES_PATTERN_KEY);
@@ -166,6 +172,8 @@ namespace Nop.Services.Localization
             
             _lsrRepository.Insert(localeStringResource);
 
+            _eventPublisher.EntityInserted(localeStringResource);
+
             //cache
             _cacheManager.RemoveByPattern(LOCALSTRINGRESOURCES_PATTERN_KEY);
         }
@@ -180,6 +188,8 @@ namespace Nop.Services.Localization
                 throw new ArgumentNullException("localeStringResource");
 
             _lsrRepository.Update(localeStringResource);
+
+            _eventPublisher.EntityUpdated(localeStringResource);
 
             //cache
             _cacheManager.RemoveByPattern(LOCALSTRINGRESOURCES_PATTERN_KEY);

@@ -4,6 +4,7 @@ using System.Linq;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Events;
 using Nop.Services.Configuration;
 
 namespace Nop.Services.Localization
@@ -25,6 +26,7 @@ namespace Nop.Services.Localization
         private readonly ICacheManager _cacheManager;
         private readonly ISettingService _settingService;
         private readonly LocalizationSettings _localizationSettings;
+        private readonly IEventPublisher _eventPublisher;
 
         #endregion
 
@@ -37,15 +39,18 @@ namespace Nop.Services.Localization
         /// <param name="languageRepository">Language repository</param>
         /// <param name="settingService">Setting service</param>
         /// <param name="localizationSettings">Localization settings</param>
+        /// <param name="eventPublisher"></param>
         public LanguageService(ICacheManager cacheManager,
             IRepository<Language> languageRepository,
             ISettingService settingService,
-            LocalizationSettings localizationSettings)
+            LocalizationSettings localizationSettings,
+            IEventPublisher eventPublisher)
         {
-            this._cacheManager = cacheManager;
-            this._languageRepository = languageRepository;
-            this._settingService = settingService;
-            this._localizationSettings = localizationSettings;
+            _cacheManager = cacheManager;
+            _languageRepository = languageRepository;
+            _settingService = settingService;
+            _localizationSettings = localizationSettings;
+            _eventPublisher = eventPublisher;
         }
 
         #endregion
@@ -79,6 +84,8 @@ namespace Nop.Services.Localization
             }
 
             _languageRepository.Delete(language);
+
+            _eventPublisher.EntityDeleted(language);
 
             //cache
             _cacheManager.RemoveByPattern(LANGUAGES_PATTERN_KEY);
@@ -131,6 +138,8 @@ namespace Nop.Services.Localization
 
             _languageRepository.Insert(language);
 
+            _eventPublisher.EntityInserted(language);
+
             //cache
             _cacheManager.RemoveByPattern(LANGUAGES_PATTERN_KEY);
         }
@@ -146,6 +155,8 @@ namespace Nop.Services.Localization
             
             //update language
             _languageRepository.Update(language);
+
+            _eventPublisher.EntityUpdated(language);
 
             //cache
             _cacheManager.RemoveByPattern(LANGUAGES_PATTERN_KEY);
