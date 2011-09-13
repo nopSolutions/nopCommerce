@@ -4,6 +4,7 @@ using System.Linq;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Events;
 
 namespace Nop.Services.Orders
 {
@@ -25,25 +26,29 @@ namespace Nop.Services.Orders
 
         private readonly IRepository<CheckoutAttribute> _checkoutAttributeRepository;
         private readonly IRepository<CheckoutAttributeValue> _checkoutAttributeValueRepository;
+        private readonly IEventPublisher _eventPublisher;
         private readonly ICacheManager _cacheManager;
         
         #endregion
 
         #region Ctor
-        
+
         /// <summary>
         /// Ctor
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="checkoutAttributeRepository">Checkout attribute repository</param>
         /// <param name="checkoutAttributeValueRepository">Checkout attribute value repository</param>
+        /// <param name="eventPublisher"></param>
         public CheckoutAttributeService(ICacheManager cacheManager,
             IRepository<CheckoutAttribute> checkoutAttributeRepository,
-            IRepository<CheckoutAttributeValue> checkoutAttributeValueRepository)
+            IRepository<CheckoutAttributeValue> checkoutAttributeValueRepository,
+            IEventPublisher eventPublisher)
         {
-            this._cacheManager = cacheManager;
-            this._checkoutAttributeRepository = checkoutAttributeRepository;
-            this._checkoutAttributeValueRepository = checkoutAttributeValueRepository;
+            _cacheManager = cacheManager;
+            _checkoutAttributeRepository = checkoutAttributeRepository;
+            _checkoutAttributeValueRepository = checkoutAttributeValueRepository;
+            _eventPublisher = eventPublisher;
         }
 
         #endregion
@@ -62,6 +67,8 @@ namespace Nop.Services.Orders
                 throw new ArgumentNullException("checkoutAttribute");
 
             _checkoutAttributeRepository.Delete(checkoutAttribute);
+
+            _eventPublisher.EntityDeleted(checkoutAttribute);
 
             _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
@@ -115,6 +122,8 @@ namespace Nop.Services.Orders
 
             _checkoutAttributeRepository.Insert(checkoutAttribute);
 
+            _eventPublisher.EntityInserted(checkoutAttribute);
+
             _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
         }
@@ -129,6 +138,8 @@ namespace Nop.Services.Orders
                 throw new ArgumentNullException("checkoutAttribute");
 
             _checkoutAttributeRepository.Update(checkoutAttribute);
+
+            _eventPublisher.EntityUpdated(checkoutAttribute);
 
             _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
@@ -148,6 +159,8 @@ namespace Nop.Services.Orders
                 throw new ArgumentNullException("checkoutAttributeValue");
 
             _checkoutAttributeValueRepository.Delete(checkoutAttributeValue);
+
+            _eventPublisher.EntityDeleted(checkoutAttributeValue);
 
             _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
@@ -201,6 +214,8 @@ namespace Nop.Services.Orders
 
             _checkoutAttributeValueRepository.Insert(checkoutAttributeValue);
 
+            _eventPublisher.EntityInserted(checkoutAttributeValue);
+
             _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
         }
@@ -215,6 +230,8 @@ namespace Nop.Services.Orders
                 throw new ArgumentNullException("checkoutAttributeValue");
 
             _checkoutAttributeValueRepository.Update(checkoutAttributeValue);
+
+            _eventPublisher.EntityUpdated(checkoutAttributeValue);
 
             _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);

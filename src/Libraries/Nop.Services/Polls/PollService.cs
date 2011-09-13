@@ -4,6 +4,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Polls;
+using Nop.Core.Events;
 
 namespace Nop.Services.Polls
 {
@@ -22,6 +23,7 @@ namespace Nop.Services.Polls
         private readonly IRepository<Poll> _pollRepository;
         private readonly IRepository<PollAnswer> _pollAnswerRepository;
         private readonly ICacheManager _cacheManager;
+        private readonly IEventPublisher _eventPublisher;
 
         #endregion
 
@@ -29,11 +31,12 @@ namespace Nop.Services.Polls
 
         public PollService(IRepository<Poll> pollRepository, 
             IRepository<PollAnswer> pollAnswerRepository,
-            ICacheManager cacheManager)
+            ICacheManager cacheManager, IEventPublisher eventPublisher)
         {
-            this._pollRepository = pollRepository;
-            this._pollAnswerRepository = pollAnswerRepository;
-            this._cacheManager = cacheManager;
+            _pollRepository = pollRepository;
+            _pollAnswerRepository = pollAnswerRepository;
+            _cacheManager = cacheManager;
+            _eventPublisher = eventPublisher;
         }
 
         #endregion
@@ -120,6 +123,8 @@ namespace Nop.Services.Polls
 
             _pollRepository.Delete(poll);
 
+            _eventPublisher.EntityDeleted(poll);
+
             _cacheManager.RemoveByPattern(POLLS_PATTERN_KEY);
         }
 
@@ -134,6 +139,8 @@ namespace Nop.Services.Polls
 
             _pollRepository.Insert(poll);
 
+            _eventPublisher.EntityInserted(poll);
+
             _cacheManager.RemoveByPattern(POLLS_PATTERN_KEY);
         }
 
@@ -147,6 +154,8 @@ namespace Nop.Services.Polls
                 throw new ArgumentNullException("poll");
 
             _pollRepository.Update(poll);
+
+            _eventPublisher.EntityUpdated(poll);
 
             _cacheManager.RemoveByPattern(POLLS_PATTERN_KEY);
         }
@@ -178,6 +187,8 @@ namespace Nop.Services.Polls
                 throw new ArgumentNullException("pollAnswer");
 
             _pollAnswerRepository.Delete(pollAnswer);
+
+            _eventPublisher.EntityDeleted(pollAnswer);
 
             _cacheManager.RemoveByPattern(POLLS_PATTERN_KEY);
         }

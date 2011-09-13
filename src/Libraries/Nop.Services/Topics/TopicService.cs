@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Data;
 using Nop.Core.Domain.Topics;
+using Nop.Core.Events;
 
 namespace Nop.Services.Topics
 {
@@ -14,14 +15,16 @@ namespace Nop.Services.Topics
         #region Fields
 
         private readonly IRepository<Topic> _topicRepository;
+        private readonly IEventPublisher _eventPublisher;
 
         #endregion
 
         #region Ctor
 
-        public TopicService(IRepository<Topic> topicRepository)
+        public TopicService(IRepository<Topic> topicRepository, IEventPublisher eventPublisher)
         {
-            this._topicRepository = topicRepository;
+            _topicRepository = topicRepository;
+            _eventPublisher = eventPublisher;
         }
 
         #endregion
@@ -38,6 +41,8 @@ namespace Nop.Services.Topics
                 throw new ArgumentNullException("topic");
 
             _topicRepository.Delete(topic);
+
+            _eventPublisher.EntityDeleted(topic);
         }
 
         /// <summary>
@@ -94,6 +99,8 @@ namespace Nop.Services.Topics
                 throw new ArgumentNullException("topic");
 
             _topicRepository.Insert(topic);
+
+            _eventPublisher.EntityInserted(topic);
         }
 
         /// <summary>
@@ -106,6 +113,8 @@ namespace Nop.Services.Topics
                 throw new ArgumentNullException("topic");
 
             _topicRepository.Update(topic);
+
+            _eventPublisher.EntityUpdated(topic);
         }
 
         #endregion

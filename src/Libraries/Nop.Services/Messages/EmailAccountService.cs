@@ -4,6 +4,7 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Messages;
+using Nop.Core.Events;
 
 namespace Nop.Services.Messages
 {
@@ -11,16 +12,20 @@ namespace Nop.Services.Messages
     {
         private readonly IRepository<EmailAccount> _emailAccountRepository;
         private readonly EmailAccountSettings _emailAccountSettings;
+        private readonly IEventPublisher _eventPublisher;
 
         /// <summary>
         /// Ctor
         /// </summary>
         /// <param name="emailAccountRepository">Email account repository</param>
+        /// <param name="emailAccountSettings"></param>
+        /// <param name="eventPublisher"></param>
         public EmailAccountService(IRepository<EmailAccount> emailAccountRepository,
-            EmailAccountSettings emailAccountSettings)
+            EmailAccountSettings emailAccountSettings, IEventPublisher eventPublisher)
         {
-            this._emailAccountRepository = emailAccountRepository;
-            this._emailAccountSettings = emailAccountSettings;
+            _emailAccountRepository = emailAccountRepository;
+            _emailAccountSettings = emailAccountSettings;
+            _eventPublisher = eventPublisher;
         }
 
         /// <summary>
@@ -51,6 +56,8 @@ namespace Nop.Services.Messages
             emailAccount.Password = CommonHelper.EnsureMaximumLength(emailAccount.Password, 255);
 
             _emailAccountRepository.Insert(emailAccount);
+
+            _eventPublisher.EntityInserted(emailAccount);
         }
 
         /// <summary>
@@ -81,6 +88,8 @@ namespace Nop.Services.Messages
             emailAccount.Password = CommonHelper.EnsureMaximumLength(emailAccount.Password, 255);
 
             _emailAccountRepository.Update(emailAccount);
+
+            _eventPublisher.EntityUpdated(emailAccount);
         }
 
         /// <summary>
@@ -96,6 +105,8 @@ namespace Nop.Services.Messages
                 throw new NopException("You cannot delete this email account. At least one account is required.");
 
             _emailAccountRepository.Delete(emailAccount);
+
+            _eventPublisher.EntityDeleted(emailAccount);
         }
 
         /// <summary>

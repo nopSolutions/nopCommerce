@@ -4,6 +4,7 @@ using System.Linq;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Messages;
+using Nop.Core.Events;
 
 namespace Nop.Services.Messages
 {
@@ -21,22 +22,26 @@ namespace Nop.Services.Messages
         #region Fields
 
         private readonly IRepository<MessageTemplate> _messageTemplateRepository;
+        private readonly IEventPublisher _eventPublisher;
         private readonly ICacheManager _cacheManager;
 
         #endregion
 
         #region Ctor
-        
+
         /// <summary>
         /// Ctor
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="messageTemplateRepository">Message template repository</param>
+        /// <param name="eventPublisher"></param>
         public MessageTemplateService(ICacheManager cacheManager,
-            IRepository<MessageTemplate> messageTemplateRepository)
+            IRepository<MessageTemplate> messageTemplateRepository,
+            IEventPublisher eventPublisher)
         {
-            this._cacheManager = cacheManager;
-            this._messageTemplateRepository = messageTemplateRepository;
+            _cacheManager = cacheManager;
+            _messageTemplateRepository = messageTemplateRepository;
+            _eventPublisher = eventPublisher;
         }
 
         #endregion
@@ -54,6 +59,8 @@ namespace Nop.Services.Messages
 
             _messageTemplateRepository.Insert(messageTemplate);
 
+            _eventPublisher.EntityInserted(messageTemplate);
+
             _cacheManager.RemoveByPattern(MESSAGETEMPLATES_PATTERN_KEY);
         }
 
@@ -67,6 +74,8 @@ namespace Nop.Services.Messages
                 throw new ArgumentNullException("messageTemplate");
 
             _messageTemplateRepository.Update(messageTemplate);
+
+            _eventPublisher.EntityUpdated(messageTemplate);
 
             _cacheManager.RemoveByPattern(MESSAGETEMPLATES_PATTERN_KEY);
         }

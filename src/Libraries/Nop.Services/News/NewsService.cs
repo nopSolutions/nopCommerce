@@ -4,6 +4,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.News;
+using Nop.Core.Events;
 
 namespace Nop.Services.News
 {
@@ -21,15 +22,17 @@ namespace Nop.Services.News
 
         private readonly IRepository<NewsItem> _newsItemRepository;
         private readonly ICacheManager _cacheManager;
+        private readonly IEventPublisher _eventPublisher;
 
         #endregion
 
         #region Ctor
 
-        public NewsService(IRepository<NewsItem> newsItemRepository, ICacheManager cacheManager)
+        public NewsService(IRepository<NewsItem> newsItemRepository, ICacheManager cacheManager, IEventPublisher eventPublisher)
         {
-            this._newsItemRepository = newsItemRepository;
-            this._cacheManager = cacheManager;
+            _newsItemRepository = newsItemRepository;
+            _cacheManager = cacheManager;
+            _eventPublisher = eventPublisher;
         }
 
         #endregion
@@ -46,6 +49,8 @@ namespace Nop.Services.News
                 throw new ArgumentNullException("newsItem");
 
             _newsItemRepository.Delete(newsItem);
+
+            _eventPublisher.EntityDeleted(newsItem);
 
             _cacheManager.RemoveByPattern(NEWS_PATTERN_KEY);
         }
@@ -106,6 +111,8 @@ namespace Nop.Services.News
 
             _newsItemRepository.Insert(news);
 
+            _eventPublisher.EntityInserted(news);
+
             _cacheManager.RemoveByPattern(NEWS_PATTERN_KEY);
         }
 
@@ -119,6 +126,8 @@ namespace Nop.Services.News
                 throw new ArgumentNullException("news");
 
             _newsItemRepository.Update(news);
+
+            _eventPublisher.EntityUpdated(news);
 
             _cacheManager.RemoveByPattern(NEWS_PATTERN_KEY);
         }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Mail;
 using Nop.Core.Data;
 using Nop.Core.Domain.Messages;
+using Nop.Core.Events;
 
 namespace Nop.Services.Messages
 {
@@ -14,7 +15,8 @@ namespace Nop.Services.Messages
         private readonly IMessageTokenProvider _messageTokenProvider;
         private readonly ITokenizer _tokenizer;
         private readonly IQueuedEmailService _queuedEmailService;
-      
+        private readonly IEventPublisher _eventPublisher;
+
         /// <summary>
         /// Ctor
         /// </summary>
@@ -23,15 +25,17 @@ namespace Nop.Services.Messages
         /// <param name="messageTokenProvider">Message token provider</param>
         /// <param name="tokenizer">Tokenizer</param>
         /// <param name="queuedEmailService">Queued email service</param>
+        /// <param name="eventPublisher"></param>
         public CampaignService(IRepository<Campaign> campaignRepository,
             IEmailSender emailSender, IMessageTokenProvider messageTokenProvider,
-            ITokenizer tokenizer, IQueuedEmailService queuedEmailService)
+            ITokenizer tokenizer, IQueuedEmailService queuedEmailService, IEventPublisher eventPublisher)
         {
-            this._campaignRepository = campaignRepository;
-            this._emailSender = emailSender;
-            this._messageTokenProvider = messageTokenProvider;
-            this._tokenizer = tokenizer;
-            this._queuedEmailService = queuedEmailService;
+            _campaignRepository = campaignRepository;
+            _emailSender = emailSender;
+            _messageTokenProvider = messageTokenProvider;
+            _tokenizer = tokenizer;
+            _queuedEmailService = queuedEmailService;
+            _eventPublisher = eventPublisher;
         }
 
         /// <summary>
@@ -44,6 +48,8 @@ namespace Nop.Services.Messages
                 throw new ArgumentNullException("campaign");
 
             _campaignRepository.Insert(campaign);
+
+            _eventPublisher.EntityInserted(campaign);
         }
 
         /// <summary>
@@ -56,6 +62,8 @@ namespace Nop.Services.Messages
                 throw new ArgumentNullException("campaign");
 
             _campaignRepository.Update(campaign);
+
+            _eventPublisher.EntityUpdated(campaign);
         }
 
         /// <summary>
@@ -68,6 +76,8 @@ namespace Nop.Services.Messages
                 throw new ArgumentNullException("campaign");
 
             _campaignRepository.Delete(campaign);
+
+            _eventPublisher.EntityDeleted(campaign);
         }
 
         /// <summary>

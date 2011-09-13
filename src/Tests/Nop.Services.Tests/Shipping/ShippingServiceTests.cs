@@ -5,6 +5,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
+using Nop.Core.Events;
 using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
 using Nop.Services.Catalog;
@@ -25,6 +26,7 @@ namespace Nop.Services.Tests.Shipping
         IProductAttributeParser _productAttributeParser;
         ICheckoutAttributeParser _checkoutAttributeParser;
         ShippingSettings _shippingSettings;
+        IEventPublisher _eventPublisher;
         IShippingService _shippingService;
 
         [SetUp]
@@ -42,12 +44,16 @@ namespace Nop.Services.Tests.Shipping
             var cacheManager = new NopNullCache();
 
             var pluginFinder = new PluginFinder(new AppDomainTypeFinder());
+
+            _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
+            _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
+
             _shippingService = new ShippingService(cacheManager, 
                 _shippingMethodRepository, 
                 _logger,
                 _productAttributeParser,
                 _checkoutAttributeParser,
-                _shippingSettings, pluginFinder);
+                _shippingSettings, pluginFinder, _eventPublisher);
         }
 
         [Test]
