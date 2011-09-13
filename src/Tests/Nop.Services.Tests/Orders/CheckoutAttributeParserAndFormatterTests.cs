@@ -7,6 +7,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Events;
 using Nop.Services.Catalog;
 using Nop.Services.Directory;
 using Nop.Services.Orders;
@@ -22,6 +23,7 @@ namespace Nop.Services.Tests.Orders
     {
         IRepository<CheckoutAttribute> _checkoutAttributeRepo;
         IRepository<CheckoutAttributeValue> _checkoutAttributeValueRepo;
+        IEventPublisher _eventPublisher;
         ICheckoutAttributeService _checkoutAttributeService;
         ICheckoutAttributeParser _checkoutAttributeParser;
 
@@ -126,9 +128,13 @@ namespace Nop.Services.Tests.Orders
 
             var cacheManager = new NopNullCache();
 
+            _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
+            _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
+
             _checkoutAttributeService = new CheckoutAttributeService(cacheManager,
                 _checkoutAttributeRepo,
-                _checkoutAttributeValueRepo);
+                _checkoutAttributeValueRepo,
+                _eventPublisher);
 
             _checkoutAttributeParser = new CheckoutAttributeParser(_checkoutAttributeService);
 

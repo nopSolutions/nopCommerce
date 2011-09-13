@@ -8,6 +8,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
+using Nop.Core.Events;
 
 namespace Nop.Services.Orders
 {
@@ -26,6 +27,7 @@ namespace Nop.Services.Orders
         private readonly IRepository<RecurringPaymentHistory> _recurringPaymentHistoryRepository;
         private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<ReturnRequest> _returnRequestRepository;
+        private readonly IEventPublisher _eventPublisher;
 
         #endregion
 
@@ -42,6 +44,7 @@ namespace Nop.Services.Orders
         /// <param name="recurringPaymentHistoryRepository">Recurring payment history repository</param>
         /// <param name="customerRepository">Customer repository</param>
         /// <param name="returnRequestRepository">Return request repository</param>
+        /// <param name="eventPublisher"></param>
         public OrderService(IRepository<Order> orderRepository,
             IRepository<OrderProductVariant> opvRepository,
             IRepository<OrderNote> orderNoteRepository,
@@ -49,16 +52,18 @@ namespace Nop.Services.Orders
             IRepository<RecurringPayment> recurringPaymentRepository,
             IRepository<RecurringPaymentHistory> recurringPaymentHistoryRepository,
             IRepository<Customer> customerRepository, 
-            IRepository<ReturnRequest> returnRequestRepository)
+            IRepository<ReturnRequest> returnRequestRepository,
+            IEventPublisher eventPublisher)
         {
-            this._orderRepository = orderRepository;
-            this._opvRepository = opvRepository;
-            this._orderNoteRepository = orderNoteRepository;
-            this._pvRepository = pvRepository;
-            this._recurringPaymentRepository = recurringPaymentRepository;
-            this._recurringPaymentHistoryRepository = recurringPaymentHistoryRepository;
-            this._customerRepository = customerRepository;
-            this._returnRequestRepository = returnRequestRepository;
+            _orderRepository = orderRepository;
+            _opvRepository = opvRepository;
+            _orderNoteRepository = orderNoteRepository;
+            _pvRepository = pvRepository;
+            _recurringPaymentRepository = recurringPaymentRepository;
+            _recurringPaymentHistoryRepository = recurringPaymentHistoryRepository;
+            _customerRepository = customerRepository;
+            _returnRequestRepository = returnRequestRepository;
+            _eventPublisher = eventPublisher;
         }
 
         #endregion
@@ -214,6 +219,8 @@ namespace Nop.Services.Orders
                 throw new ArgumentNullException("order");
 
             _orderRepository.Insert(order);
+
+            _eventPublisher.EntityInserted(order);
         }
 
         /// <summary>
@@ -226,6 +233,8 @@ namespace Nop.Services.Orders
                 throw new ArgumentNullException("order");
 
             _orderRepository.Update(order);
+
+            _eventPublisher.EntityUpdated(order);
         }
 
         /// <summary>
@@ -238,6 +247,8 @@ namespace Nop.Services.Orders
                 throw new ArgumentNullException("orderNote");
 
             _orderNoteRepository.Delete(orderNote);
+
+            _eventPublisher.EntityDeleted(orderNote);
         }
 
         public virtual Order GetOrderByAuthorizationTransactionIdAndPaymentMethod(string authorizationTransactionId, 
@@ -345,6 +356,8 @@ namespace Nop.Services.Orders
                 throw new ArgumentNullException("orderProductVariant");
 
             _opvRepository.Delete(orderProductVariant);
+
+            _eventPublisher.EntityDeleted(orderProductVariant);
         }
 
         #endregion
@@ -387,6 +400,8 @@ namespace Nop.Services.Orders
                 throw new ArgumentNullException("recurringPayment");
 
             _recurringPaymentRepository.Insert(recurringPayment);
+
+            _eventPublisher.EntityInserted(recurringPayment);
         }
 
         /// <summary>
@@ -399,6 +414,8 @@ namespace Nop.Services.Orders
                 throw new ArgumentNullException("recurringPayment");
 
             _recurringPaymentRepository.Update(recurringPayment);
+
+            _eventPublisher.EntityUpdated(recurringPayment);
         }
 
         /// <summary>
@@ -449,6 +466,8 @@ namespace Nop.Services.Orders
                 throw new ArgumentNullException("returnRequest");
 
             _returnRequestRepository.Delete(returnRequest);
+
+            _eventPublisher.EntityDeleted(returnRequest);
         }
 
         /// <summary>

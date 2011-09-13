@@ -4,6 +4,7 @@ using System.Linq;
 using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Events;
 
 namespace Nop.Services.Orders
 {
@@ -15,7 +16,8 @@ namespace Nop.Services.Orders
         #region Fields
         
         private readonly IRepository<GiftCard> _giftCardRepository;
-        
+        private readonly IEventPublisher _eventPublisher;
+
         #endregion
 
         #region Ctor
@@ -24,9 +26,11 @@ namespace Nop.Services.Orders
         /// Ctor
         /// </summary>
         /// <param name="giftCardRepository">Gift card context</param>
-        public GiftCardService(IRepository<GiftCard> giftCardRepository)
+        /// <param name="eventPublisher"></param>
+        public GiftCardService(IRepository<GiftCard> giftCardRepository, IEventPublisher eventPublisher)
         {
-            this._giftCardRepository = giftCardRepository;
+            _giftCardRepository = giftCardRepository;
+            _eventPublisher = eventPublisher;
         }
 
         #endregion
@@ -43,6 +47,8 @@ namespace Nop.Services.Orders
                 throw new ArgumentNullException("giftCard");
 
             _giftCardRepository.Delete(giftCard);
+
+            _eventPublisher.EntityDeleted(giftCard);
         }
 
         /// <summary>
@@ -99,6 +105,8 @@ namespace Nop.Services.Orders
                 throw new ArgumentNullException("giftCard");
 
             _giftCardRepository.Insert(giftCard);
+
+            _eventPublisher.EntityInserted(giftCard);
         }
 
         /// <summary>
@@ -111,6 +119,8 @@ namespace Nop.Services.Orders
                 throw new ArgumentNullException("giftCard");
 
             _giftCardRepository.Update(giftCard);
+
+            _eventPublisher.EntityUpdated(giftCard);
         }
 
 

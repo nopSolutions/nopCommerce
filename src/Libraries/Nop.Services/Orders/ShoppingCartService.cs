@@ -6,6 +6,7 @@ using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Events;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
@@ -31,6 +32,8 @@ namespace Nop.Services.Orders
         private readonly IPriceFormatter _priceFormatter;
         private readonly ICustomerService _customerService;
         private readonly ShoppingCartSettings _shoppingCartSettings;
+        private readonly IEventPublisher _eventPublisher;
+
         #endregion
 
         #region Ctor
@@ -48,8 +51,8 @@ namespace Nop.Services.Orders
         /// <param name="checkoutAttributeParser">Checkout attribute parser</param>
         /// <param name="priceFormatter">Price formatter</param>
         /// <param name="customerService">Customer service</param>
-        /// <param name="shoppingCartSettings">Shopping cart settings</param>
-        /// <param name="shoppingCartSettings">Shopping cart settings</param>
+        /// <param name="shoppingCartSettings"></param>
+        /// <param name="eventPublisher"></param>
         public ShoppingCartService(IRepository<ShoppingCartItem> sciRepository,
             IWorkContext workContext, ICurrencyService currencyService,
             IProductService productService, ILocalizationService localizationService,
@@ -58,19 +61,21 @@ namespace Nop.Services.Orders
             ICheckoutAttributeParser checkoutAttributeParser,
             IPriceFormatter priceFormatter,
             ICustomerService customerService,
-            ShoppingCartSettings shoppingCartSettings)
+            ShoppingCartSettings shoppingCartSettings,
+            IEventPublisher eventPublisher)
         {
-            this._sciRepository = sciRepository;
-            this._workContext = workContext;
-            this._currencyService = currencyService;
-            this._productService = productService;
-            this._localizationService = localizationService;
-            this._productAttributeParser = productAttributeParser;
-            this._checkoutAttributeService = checkoutAttributeService;
-            this._checkoutAttributeParser = checkoutAttributeParser;
-            this._priceFormatter = priceFormatter;
-            this._customerService = customerService;
-            this._shoppingCartSettings = shoppingCartSettings;
+            _sciRepository = sciRepository;
+            _workContext = workContext;
+            _currencyService = currencyService;
+            _productService = productService;
+            _localizationService = localizationService;
+            _productAttributeParser = productAttributeParser;
+            _checkoutAttributeService = checkoutAttributeService;
+            _checkoutAttributeParser = checkoutAttributeParser;
+            _priceFormatter = priceFormatter;
+            _customerService = customerService;
+            _shoppingCartSettings = shoppingCartSettings;
+            _eventPublisher = eventPublisher;
         }
 
         #endregion
@@ -132,6 +137,8 @@ namespace Nop.Services.Orders
             }
 
             _sciRepository.Delete(shoppingCartItem);
+
+            _eventPublisher.EntityDeleted(shoppingCartItem);
         }
 
         /// <summary>
