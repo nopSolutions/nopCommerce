@@ -3,20 +3,24 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Messages;
+using Nop.Core.Events;
 
 namespace Nop.Services.Messages
 {
     public partial class QueuedEmailService:IQueuedEmailService
     {
         private readonly IRepository<QueuedEmail> _queuedEmailRepository;
-      
+        private readonly IEventPublisher _eventPublisher;
+
         /// <summary>
         /// Ctor
         /// </summary>
         /// <param name="queuedEmailRepository">Queued email repository</param>
-        public QueuedEmailService(IRepository<QueuedEmail> queuedEmailRepository)
+        /// <param name="eventPublisher"></param>
+        public QueuedEmailService(IRepository<QueuedEmail> queuedEmailRepository, IEventPublisher eventPublisher)
         {
-            this._queuedEmailRepository = queuedEmailRepository;
+            _queuedEmailRepository = queuedEmailRepository;
+            _eventPublisher = eventPublisher;
         }
 
         /// <summary>
@@ -29,6 +33,8 @@ namespace Nop.Services.Messages
                 throw new ArgumentNullException("queuedEmail");
 
             _queuedEmailRepository.Insert(queuedEmail);
+
+            _eventPublisher.EntityInserted(queuedEmail);
         }
 
         /// <summary>
@@ -41,6 +47,8 @@ namespace Nop.Services.Messages
                 throw new ArgumentNullException("queuedEmail");
 
             _queuedEmailRepository.Update(queuedEmail);
+
+            _eventPublisher.EntityUpdated(queuedEmail);
         }
 
         /// <summary>
@@ -53,6 +61,8 @@ namespace Nop.Services.Messages
                 throw new ArgumentNullException("queuedEmail");
 
             _queuedEmailRepository.Delete(queuedEmail);
+
+            _eventPublisher.EntityDeleted(queuedEmail);
         }
 
         /// <summary>

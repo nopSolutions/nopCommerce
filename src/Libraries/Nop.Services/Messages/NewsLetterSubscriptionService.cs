@@ -5,6 +5,7 @@ using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Messages;
+using Nop.Core.Events;
 
 namespace Nop.Services.Messages
 {
@@ -12,17 +13,21 @@ namespace Nop.Services.Messages
     {
         private readonly IRepository<NewsLetterSubscription> _newsLetterSubscriptionRepository;
         private readonly IRepository<Customer> _customersRepository;
-   
+        private readonly IEventPublisher _eventPublisher;
+
         /// <summary>
         /// Ctor
         /// </summary>
         /// <param name="newsLetterSubscriptionRepository">NewsLetter subscription repository</param>
         /// <param name="customersRepository">Customer repository</param>
+        /// <param name="eventPublisher"></param>
         public NewsLetterSubscriptionService(IRepository<NewsLetterSubscription> newsLetterSubscriptionRepository,
-            IRepository<Customer> customersRepository)
+            IRepository<Customer> customersRepository,
+            IEventPublisher eventPublisher)
         {
-            this._newsLetterSubscriptionRepository = newsLetterSubscriptionRepository;
-            this._customersRepository = customersRepository;
+            _newsLetterSubscriptionRepository = newsLetterSubscriptionRepository;
+            _customersRepository = customersRepository;
+            _eventPublisher = eventPublisher;
         }
 
         /// <summary>
@@ -44,6 +49,8 @@ namespace Nop.Services.Messages
             newsLetterSubscription.Email = CommonHelper.EnsureMaximumLength(newsLetterSubscription.Email, 255);
 
             _newsLetterSubscriptionRepository.Insert(newsLetterSubscription);
+
+            _eventPublisher.EntityInserted(newsLetterSubscription);
         }
 
         /// <summary>
@@ -66,6 +73,7 @@ namespace Nop.Services.Messages
 
             _newsLetterSubscriptionRepository.Update(newsLetterSubscription);
 
+            _eventPublisher.EntityUpdated(newsLetterSubscription);
         }
 
         /// <summary>
@@ -78,6 +86,8 @@ namespace Nop.Services.Messages
                 throw new ArgumentNullException("newsLetterSubscription");
 
             _newsLetterSubscriptionRepository.Delete(newsLetterSubscription);
+
+            _eventPublisher.EntityDeleted(newsLetterSubscription);
         }
 
         /// <summary>
