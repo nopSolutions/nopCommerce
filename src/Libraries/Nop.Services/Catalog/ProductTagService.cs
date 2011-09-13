@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Events;
 
 namespace Nop.Services.Catalog
 {
@@ -14,18 +15,22 @@ namespace Nop.Services.Catalog
         #region Fields
 
         private readonly IRepository<ProductTag> _productTagRepository;
+        private readonly IEventPublisher _eventPublisher;
 
         #endregion
 
         #region Ctor
-        
+
         /// <summary>
         /// Ctor
         /// </summary>
         /// <param name="productTagRepository">Product tag repository</param>
-        public ProductTagService(IRepository<ProductTag> productTagRepository)
+        /// <param name="eventPublisher"></param>
+        public ProductTagService(IRepository<ProductTag> productTagRepository,
+            IEventPublisher eventPublisher)
         {
-            this._productTagRepository = productTagRepository;
+            _productTagRepository = productTagRepository;
+            _eventPublisher = eventPublisher;
         }
 
         #endregion
@@ -42,6 +47,8 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException("productTag");
 
             _productTagRepository.Delete(productTag);
+
+            _eventPublisher.EntityDeleted(productTag);
         }
 
         /// <summary>
@@ -96,6 +103,8 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException("productTag");
 
             _productTagRepository.Insert(productTag);
+
+            _eventPublisher.EntityInserted(productTag);
         }
 
         /// <summary>
@@ -108,6 +117,8 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException("productTag");
 
             _productTagRepository.Update(productTag);
+
+            _eventPublisher.EntityUpdated(productTag);
         }
 
         /// <summary>
