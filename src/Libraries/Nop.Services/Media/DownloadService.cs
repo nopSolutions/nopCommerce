@@ -1,6 +1,7 @@
 using System;
 using Nop.Core.Data;
 using Nop.Core.Domain.Media;
+using Nop.Core.Events;
 
 namespace Nop.Services.Media
 {
@@ -12,6 +13,8 @@ namespace Nop.Services.Media
         #region Fields
 
         private readonly IRepository<Download> _downloadRepository;
+        private readonly IEventPublisher _eventPubisher;
+
         #endregion
 
         #region Ctor
@@ -20,10 +23,12 @@ namespace Nop.Services.Media
         /// Ctor
         /// </summary>
         /// <param name="downloadRepository">Download repository</param>
-        /// <param name="webHelper">Web helper</param>
-        public DownloadService(IRepository<Download> downloadRepository)
+        /// <param name="eventPubisher"></param>
+        public DownloadService(IRepository<Download> downloadRepository,
+            IEventPublisher eventPubisher)
         {
-            this._downloadRepository = downloadRepository;
+            _downloadRepository = downloadRepository;
+            _eventPubisher = eventPubisher;
         }
 
         #endregion
@@ -54,6 +59,8 @@ namespace Nop.Services.Media
                 throw new ArgumentNullException("download");
 
             _downloadRepository.Delete(download);
+
+            _eventPubisher.EntityDeleted(download);
         }
 
         /// <summary>
@@ -66,6 +73,8 @@ namespace Nop.Services.Media
                 throw new ArgumentNullException("download");
 
             _downloadRepository.Insert(download);
+
+            _eventPubisher.EntityInserted(download);
         }
 
         /// <summary>
@@ -78,6 +87,8 @@ namespace Nop.Services.Media
                 throw new ArgumentNullException("download");
 
             _downloadRepository.Update(download);
+
+            _eventPubisher.EntityUpdated(download);
         }
         #endregion
     }
