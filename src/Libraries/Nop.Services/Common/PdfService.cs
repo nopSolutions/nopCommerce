@@ -14,6 +14,7 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
+using Nop.Core.Events;
 using Nop.Core.Html;
 using Nop.Services.Catalog;
 using Nop.Services.Directory;
@@ -44,6 +45,8 @@ namespace Nop.Services.Common
         private readonly PdfSettings _pdfSettings;
         private readonly TaxSettings _taxSettings;
         private readonly StoreInformationSettings _storeInformationSettings;
+        private readonly IEventPublisher _eventPublisher;
+
         #endregion
 
         #region Ctor
@@ -53,20 +56,21 @@ namespace Nop.Services.Common
             ICurrencyService currencyService, IMeasureService measureService, 
             IPictureService pictureService, CurrencySettings currencySettings, 
             MeasureSettings measureSettings, PdfSettings pdfSettings, TaxSettings taxSettings, 
-            StoreInformationSettings storeInformationSettings)
+            StoreInformationSettings storeInformationSettings, IEventPublisher eventPublisher)
         {
-            this._localizationService = localizationService;
-            this._orderService = orderService;
-            this._dateTimeHelper = dateTimeHelper;
-            this._priceFormatter = priceFormatter;
-            this._currencyService = currencyService;
-            this._measureService = measureService;
-            this._pictureService = pictureService;
-            this._currencySettings = currencySettings;
-            this._measureSettings = measureSettings;
-            this._pdfSettings = pdfSettings;
-            this._taxSettings = taxSettings;
-            this._storeInformationSettings = storeInformationSettings;
+            _localizationService = localizationService;
+            _orderService = orderService;
+            _dateTimeHelper = dateTimeHelper;
+            _priceFormatter = priceFormatter;
+            _currencyService = currencyService;
+            _measureService = measureService;
+            _pictureService = pictureService;
+            _currencySettings = currencySettings;
+            _measureSettings = measureSettings;
+            _pdfSettings = pdfSettings;
+            _taxSettings = taxSettings;
+            _storeInformationSettings = storeInformationSettings;
+            _eventPublisher = eventPublisher;
         }
 
         #endregion

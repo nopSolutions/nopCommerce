@@ -1,6 +1,7 @@
 using System;
 using Nop.Core.Data;
 using Nop.Core.Domain.Common;
+using Nop.Core.Events;
 
 namespace Nop.Services.Common
 {
@@ -12,6 +13,7 @@ namespace Nop.Services.Common
         #region Fields
 
         private readonly IRepository<Address> _addressRepository;
+        private readonly IEventPublisher _eventPublisher;
 
         #endregion
 
@@ -21,9 +23,12 @@ namespace Nop.Services.Common
         /// Ctor
         /// </summary>
         /// <param name="addressRepository">Address repository</param>
-        public AddressService(IRepository<Address> addressRepository)
+        /// <param name="eventPublisher"></param>
+        public AddressService(IRepository<Address> addressRepository,
+            IEventPublisher eventPublisher)
         {
-            this._addressRepository = addressRepository;
+            _addressRepository = addressRepository;
+            _eventPublisher = eventPublisher;
         }
 
         #endregion
@@ -40,6 +45,8 @@ namespace Nop.Services.Common
                 throw new ArgumentNullException("address");
 
             _addressRepository.Delete(address);
+
+            _eventPublisher.EntityDeleted(address);
         }
 
         /// <summary>
@@ -74,6 +81,8 @@ namespace Nop.Services.Common
                 address.StateProvinceId = null;
 
             _addressRepository.Insert(address);
+
+            _eventPublisher.EntityInserted(address);
         }
 
         /// <summary>
@@ -92,6 +101,8 @@ namespace Nop.Services.Common
                 address.StateProvinceId = null;
 
             _addressRepository.Update(address);
+
+            _eventPublisher.EntityUpdated(address);
         }
 
         #endregion
