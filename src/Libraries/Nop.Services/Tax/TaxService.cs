@@ -7,6 +7,7 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Tax;
+using Nop.Core.Events;
 using Nop.Core.Plugins;
 using Nop.Services.Common;
 
@@ -23,6 +24,7 @@ namespace Nop.Services.Tax
         private readonly IWorkContext _workContext;
         private readonly TaxSettings _taxSettings;
         private readonly IPluginFinder _pluginFinder;
+        private readonly IEventPublisher _eventPublisher;
 
         #endregion
 
@@ -35,15 +37,18 @@ namespace Nop.Services.Tax
         /// <param name="workContext">Work context</param>
         /// <param name="taxSettings">Tax settings</param>
         /// <param name="pluginFinder">Plugin finder</param>
+        /// <param name="eventPublisher"></param>
         public TaxService(IAddressService addressService,
             IWorkContext workContext,
             TaxSettings taxSettings,
-            IPluginFinder pluginFinder)
+            IPluginFinder pluginFinder,
+            IEventPublisher eventPublisher)
         {
-            this._addressService = addressService;
-            this._workContext = workContext;
-            this._taxSettings = taxSettings;
-            this._pluginFinder = pluginFinder;
+            _addressService = addressService;
+            _workContext = workContext;
+            _taxSettings = taxSettings;
+            _pluginFinder = pluginFinder;
+            _eventPublisher = eventPublisher;
         }
 
         #endregion

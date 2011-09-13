@@ -8,6 +8,7 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
+using Nop.Core.Events;
 using Nop.Core.Plugins;
 using Nop.Services.Catalog;
 using Nop.Services.Logging;
@@ -36,7 +37,8 @@ namespace Nop.Services.Shipping
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
         private readonly ShippingSettings _shippingSettings;
         private readonly IPluginFinder _pluginFinder;
-        
+        private readonly IEventPublisher _eventPublisher;
+
         #endregion
 
         #region Ctor
@@ -51,21 +53,24 @@ namespace Nop.Services.Shipping
         /// <param name="checkoutAttributeParser">Checkout attribute parser</param>
         /// <param name="shippingSettings">Shipping settings</param>
         /// <param name="pluginFinder">Plugin finder</param>
+        /// <param name="eventPublisher"></param>
         public ShippingService(ICacheManager cacheManager, 
             IRepository<ShippingMethod> shippingMethodRepository,
             ILogger logger,
             IProductAttributeParser productAttributeParser,
             ICheckoutAttributeParser checkoutAttributeParser,
             ShippingSettings shippingSettings,
-            IPluginFinder pluginFinder)
+            IPluginFinder pluginFinder,
+            IEventPublisher eventPublisher)
         {
-            this._cacheManager = cacheManager;
-            this._shippingMethodRepository = shippingMethodRepository;
-            this._logger = logger;
-            this._productAttributeParser = productAttributeParser;
-            this._checkoutAttributeParser = checkoutAttributeParser;
-            this._shippingSettings = shippingSettings;
-            this._pluginFinder = pluginFinder;
+            _cacheManager = cacheManager;
+            _shippingMethodRepository = shippingMethodRepository;
+            _logger = logger;
+            _productAttributeParser = productAttributeParser;
+            _checkoutAttributeParser = checkoutAttributeParser;
+            _shippingSettings = shippingSettings;
+            _pluginFinder = pluginFinder;
+            _eventPublisher = eventPublisher;
         }
 
         #endregion
@@ -123,6 +128,9 @@ namespace Nop.Services.Shipping
                 throw new ArgumentNullException("shippingMethod");
 
             _shippingMethodRepository.Delete(shippingMethod);
+
+            _eventPublisher.EntityDeleted(shippingMethod);
+
             _cacheManager.RemoveByPattern(SHIPPINGMETHODS_PATTERN_KEY);
         }
 
@@ -186,6 +194,8 @@ namespace Nop.Services.Shipping
                 throw new ArgumentNullException("shippingMethod");
 
             _shippingMethodRepository.Insert(shippingMethod);
+
+            _eventPublisher.EntityInserted(shippingMethod);
             
             _cacheManager.RemoveByPattern(SHIPPINGMETHODS_PATTERN_KEY);
         }
@@ -200,6 +210,8 @@ namespace Nop.Services.Shipping
                 throw new ArgumentNullException("shippingMethod");
 
             _shippingMethodRepository.Update(shippingMethod);
+
+            _eventPublisher.EntityUpdated(shippingMethod);
 
             _cacheManager.RemoveByPattern(SHIPPINGMETHODS_PATTERN_KEY);
         }

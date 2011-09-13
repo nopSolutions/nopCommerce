@@ -4,6 +4,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Tax;
+using Nop.Core.Events;
 using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
 using Nop.Services.Common;
@@ -20,6 +21,7 @@ namespace Nop.Services.Tests.Tax
         IAddressService _addressService;
         IWorkContext _workContext;
         TaxSettings _taxSettings;
+        IEventPublisher _eventPublisher;
         ITaxService _taxService;
 
         [SetUp]
@@ -35,7 +37,11 @@ namespace Nop.Services.Tests.Tax
             _addressService.Expect(x => x.GetAddressById(_taxSettings.DefaultTaxAddressId)).Return(new Address() { Id = _taxSettings.DefaultTaxAddressId });
 
             var pluginFinder = new PluginFinder(new AppDomainTypeFinder());
-            _taxService = new TaxService(_addressService, _workContext, _taxSettings, pluginFinder);
+
+            _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
+            _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
+
+            _taxService = new TaxService(_addressService, _workContext, _taxSettings, pluginFinder, _eventPublisher);
         }
 
         [Test]

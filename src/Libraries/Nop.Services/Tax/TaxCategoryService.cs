@@ -4,6 +4,7 @@ using System.Linq;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Tax;
+using Nop.Core.Events;
 
 namespace Nop.Services.Tax
 {
@@ -21,6 +22,7 @@ namespace Nop.Services.Tax
         #region Fields
 
         private readonly IRepository<TaxCategory> _taxCategoryRepository;
+        private readonly IEventPublisher _eventPublisher;
         private readonly ICacheManager _cacheManager;
 
         #endregion
@@ -32,11 +34,14 @@ namespace Nop.Services.Tax
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="taxCategoryRepository">Tax category repository</param>
+        /// <param name="eventPublisher"></param>
         public TaxCategoryService(ICacheManager cacheManager,
-            IRepository<TaxCategory> taxCategoryRepository)
+            IRepository<TaxCategory> taxCategoryRepository,
+            IEventPublisher eventPublisher)
         {
-            this._cacheManager = cacheManager;
-            this._taxCategoryRepository = taxCategoryRepository;
+            _cacheManager = cacheManager;
+            _taxCategoryRepository = taxCategoryRepository;
+            _eventPublisher = eventPublisher;
         }
 
         #endregion
@@ -53,6 +58,8 @@ namespace Nop.Services.Tax
                 throw new ArgumentNullException("taxCategory");
 
             _taxCategoryRepository.Delete(taxCategory);
+
+            _eventPublisher.EntityDeleted(taxCategory);
 
             _cacheManager.RemoveByPattern(TAXCATEGORIES_PATTERN_KEY);
         }
@@ -103,6 +110,8 @@ namespace Nop.Services.Tax
 
             _taxCategoryRepository.Insert(taxCategory);
 
+            _eventPublisher.EntityInserted(taxCategory);
+
             _cacheManager.RemoveByPattern(TAXCATEGORIES_PATTERN_KEY);
         }
 
@@ -116,6 +125,8 @@ namespace Nop.Services.Tax
                 throw new ArgumentNullException("taxCategory");
 
             _taxCategoryRepository.Update(taxCategory);
+
+            _eventPublisher.EntityUpdated(taxCategory);
 
             _cacheManager.RemoveByPattern(TAXCATEGORIES_PATTERN_KEY);
         }
