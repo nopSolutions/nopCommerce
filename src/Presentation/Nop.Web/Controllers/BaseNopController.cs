@@ -6,9 +6,11 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Infrastructure;
 using Nop.Services.Affiliates;
 using Nop.Services.Customers;
+using Nop.Web.Framework;
 
 namespace Nop.Web.Controllers
 {
+    [CompressFilter] //comment to disable compression
     public class BaseNopController : Controller
     {
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
