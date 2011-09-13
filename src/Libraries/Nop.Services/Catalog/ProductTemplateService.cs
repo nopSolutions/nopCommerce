@@ -5,6 +5,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Events;
 
 namespace Nop.Services.Catalog
 {
@@ -23,22 +24,26 @@ namespace Nop.Services.Catalog
         #region Fields
 
         private readonly IRepository<ProductTemplate> _productTemplateRepository;
+        private readonly IEventPublisher _eventPublisher;
         private readonly ICacheManager _cacheManager;
 
         #endregion
         
         #region Ctor
-        
+
         /// <summary>
         /// Ctor
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="productTemplateRepository">Product template repository</param>
+        /// <param name="eventPublisher"></param>
         public ProductTemplateService(ICacheManager cacheManager,
-            IRepository<ProductTemplate> productTemplateRepository)
+            IRepository<ProductTemplate> productTemplateRepository,
+            IEventPublisher eventPublisher)
         {
-            this._cacheManager = cacheManager;
-            this._productTemplateRepository = productTemplateRepository;
+            _cacheManager = cacheManager;
+            _productTemplateRepository = productTemplateRepository;
+            _eventPublisher = eventPublisher;
         }
 
         #endregion
@@ -55,6 +60,8 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException("productTemplate");
 
             _productTemplateRepository.Delete(productTemplate);
+
+            _eventPublisher.EntityDeleted(productTemplate);
 
             _cacheManager.RemoveByPattern(PRODUCTTEMPLATES_PATTERN_KEY);
         }
@@ -106,6 +113,8 @@ namespace Nop.Services.Catalog
 
             _productTemplateRepository.Insert(productTemplate);
 
+            _eventPublisher.EntityInserted(productTemplate);
+
             //cache
             _cacheManager.RemoveByPattern(PRODUCTTEMPLATES_PATTERN_KEY);
         }
@@ -120,6 +129,8 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException("productTemplate");
 
             _productTemplateRepository.Update(productTemplate);
+
+            _eventPublisher.EntityUpdated(productTemplate);
 
             //cache
             _cacheManager.RemoveByPattern(PRODUCTTEMPLATES_PATTERN_KEY);
