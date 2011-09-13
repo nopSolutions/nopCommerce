@@ -3,6 +3,7 @@ using System.Linq;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Directory;
+using Nop.Core.Events;
 using Nop.Services.Directory;
 using Nop.Tests;
 using NUnit.Framework;
@@ -16,6 +17,7 @@ namespace Nop.Services.Tests.Directory
         IRepository<MeasureDimension> _measureDimensionRepository;
         IRepository<MeasureWeight> _measureWeightRepository;
         MeasureSettings _measureSettings;
+        IEventPublisher _eventPublisher;
         IMeasureService _measureService;
 
         MeasureDimension measureDimension1, measureDimension2, measureDimension3, measureDimension4;
@@ -113,10 +115,13 @@ namespace Nop.Services.Tests.Directory
             _measureSettings.BaseDimensionId = measureDimension1.Id; //inch(es)
             _measureSettings.BaseWeightId = measureWeight2.Id; //lb(s)
 
+            _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
+            _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
+
             _measureService = new MeasureService(cacheManager,
                 _measureDimensionRepository,
                 _measureWeightRepository,
-                _measureSettings);
+                _measureSettings, _eventPublisher);
         }
 
         [Test]

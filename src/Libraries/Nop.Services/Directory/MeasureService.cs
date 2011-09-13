@@ -5,6 +5,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Directory;
+using Nop.Core.Events;
 
 namespace Nop.Services.Directory
 {
@@ -28,27 +29,31 @@ namespace Nop.Services.Directory
         private readonly IRepository<MeasureWeight> _measureWeightRepository;
         private readonly ICacheManager _cacheManager;
         private readonly MeasureSettings _measureSettings;
+        private readonly IEventPublisher _eventPublisher;
 
         #endregion
 
         #region Ctor
 
-       /// <summary>
+        /// <summary>
         /// Ctor
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="measureDimensionRepository">Dimension repository</param>
         /// <param name="measureWeightRepository">Weight repository</param>
         /// <param name="measureSettings">Measure settings</param>
+        /// <param name="eventPublisher"></param>
         public MeasureService(ICacheManager cacheManager,
             IRepository<MeasureDimension> measureDimensionRepository,
             IRepository<MeasureWeight> measureWeightRepository,
-            MeasureSettings measureSettings)
+            MeasureSettings measureSettings,
+            IEventPublisher eventPublisher)
         {
-            this._cacheManager = cacheManager;
-            this._measureDimensionRepository = measureDimensionRepository;
-            this._measureWeightRepository = measureWeightRepository;
-            this._measureSettings = measureSettings;
+            _cacheManager = cacheManager;
+            _measureDimensionRepository = measureDimensionRepository;
+            _measureWeightRepository = measureWeightRepository;
+            _measureSettings = measureSettings;
+           _eventPublisher = eventPublisher;
         }
 
         #endregion
@@ -67,6 +72,8 @@ namespace Nop.Services.Directory
                 throw new ArgumentNullException("measureDimension");
 
             _measureDimensionRepository.Delete(measureDimension);
+
+            _eventPublisher.EntityDeleted(measureDimension);
 
             _cacheManager.RemoveByPattern(MEASUREDIMENSIONS_PATTERN_KEY);
         }
@@ -135,6 +142,8 @@ namespace Nop.Services.Directory
 
             _measureDimensionRepository.Insert(measure);
 
+            _eventPublisher.EntityInserted(measure);
+
             _cacheManager.RemoveByPattern(MEASUREDIMENSIONS_PATTERN_KEY);
         }
 
@@ -148,6 +157,8 @@ namespace Nop.Services.Directory
                 throw new ArgumentNullException("measure");
 
             _measureDimensionRepository.Update(measure);
+
+            _eventPublisher.EntityUpdated(measure);
 
             _cacheManager.RemoveByPattern(MEASUREDIMENSIONS_PATTERN_KEY);
         }
@@ -231,6 +242,8 @@ namespace Nop.Services.Directory
 
             _measureWeightRepository.Delete(measureWeight);
 
+            _eventPublisher.EntityDeleted(measureWeight);
+
             _cacheManager.RemoveByPattern(MEASUREWEIGHTS_PATTERN_KEY);
         }
 
@@ -296,6 +309,8 @@ namespace Nop.Services.Directory
 
             _measureWeightRepository.Insert(measure);
 
+            _eventPublisher.EntityInserted(measure);
+
             _cacheManager.RemoveByPattern(MEASUREWEIGHTS_PATTERN_KEY);
         }
 
@@ -309,6 +324,8 @@ namespace Nop.Services.Directory
                 throw new ArgumentNullException("measure");
 
             _measureWeightRepository.Update(measure);
+
+            _eventPublisher.EntityUpdated(measure);
 
             _cacheManager.RemoveByPattern(MEASUREWEIGHTS_PATTERN_KEY);
         }

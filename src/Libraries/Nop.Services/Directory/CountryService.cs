@@ -4,6 +4,7 @@ using System.Linq;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Directory;
+using Nop.Core.Events;
 
 namespace Nop.Services.Directory
 {
@@ -23,6 +24,7 @@ namespace Nop.Services.Directory
         #region Fields
         
         private readonly IRepository<Country> _countryRepository;
+        private readonly IEventPublisher _eventPublisher;
         private readonly ICacheManager _cacheManager;
 
         #endregion
@@ -34,11 +36,14 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="countryRepository">Country repository</param>
+        /// <param name="eventPublisher"></param>
         public CountryService(ICacheManager cacheManager,
-            IRepository<Country> countryRepository)
+            IRepository<Country> countryRepository,
+            IEventPublisher eventPublisher)
         {
-            this._cacheManager = cacheManager;
-            this._countryRepository = countryRepository;
+            _cacheManager = cacheManager;
+            _countryRepository = countryRepository;
+            _eventPublisher = eventPublisher;
         }
 
         #endregion
@@ -55,6 +60,8 @@ namespace Nop.Services.Directory
                 throw new ArgumentNullException("country");
 
             _countryRepository.Delete(country);
+
+            _eventPublisher.EntityDeleted(country);
 
             _cacheManager.RemoveByPattern(COUNTRIES_PATTERN_KEY);
         }
@@ -174,6 +181,8 @@ namespace Nop.Services.Directory
 
             _countryRepository.Insert(country);
 
+            _eventPublisher.EntityInserted(country);
+
             _cacheManager.RemoveByPattern(COUNTRIES_PATTERN_KEY);
         }
 
@@ -187,6 +196,8 @@ namespace Nop.Services.Directory
                 throw new ArgumentNullException("country");
 
             _countryRepository.Update(country);
+
+            _eventPublisher.EntityUpdated(country);
 
             _cacheManager.RemoveByPattern(COUNTRIES_PATTERN_KEY);
         }

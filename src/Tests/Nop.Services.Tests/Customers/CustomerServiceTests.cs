@@ -10,6 +10,7 @@ using Nop.Services.Security;
 using Nop.Tests;
 using NUnit.Framework;
 using Rhino.Mocks;
+using Nop.Core.Events;
 
 namespace Nop.Services.Tests.Customers
 {
@@ -23,6 +24,7 @@ namespace Nop.Services.Tests.Customers
         ICustomerService _customerService;
         CustomerSettings _customerSettings;
         INewsLetterSubscriptionService newsLetterSubscriptionService;
+        IEventPublisher _eventPublisher;
         RewardPointsSettings _rewardPointsSettings;
         SecuritySettings _securitySettings;
 
@@ -72,6 +74,9 @@ namespace Nop.Services.Tests.Customers
                 Active = true
             };
 
+            _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
+            _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
+
             _customerRepo.Expect(x => x.Table).Return(new List<Customer>() { customer, customer2, customer3 }.AsQueryable());
 
             _customerRoleRepo = MockRepository.GenerateMock<IRepository<CustomerRole>>();
@@ -80,7 +85,7 @@ namespace Nop.Services.Tests.Customers
             newsLetterSubscriptionService = MockRepository.GenerateMock<INewsLetterSubscriptionService>();
             _customerService = new CustomerService(new NopNullCache(), _customerRepo, _customerRoleRepo,
                 _customerAttributeRepo, _encryptionService, newsLetterSubscriptionService,
-                _rewardPointsSettings, _customerSettings);
+                _rewardPointsSettings, _customerSettings, _eventPublisher);
         }
 
         //[Test]

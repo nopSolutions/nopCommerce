@@ -5,6 +5,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Directory;
+using Nop.Core.Events;
 using Nop.Core.Plugins;
 
 namespace Nop.Services.Directory
@@ -26,6 +27,7 @@ namespace Nop.Services.Directory
         private readonly ICacheManager _cacheManager;
         private readonly CurrencySettings _currencySettings;
         private readonly IPluginFinder _pluginFinder;
+        private readonly IEventPublisher _eventPublisher;
 
         #endregion
 
@@ -38,16 +40,18 @@ namespace Nop.Services.Directory
         /// <param name="currencyRepository">Currency repository</param>
         /// <param name="currencySettings">Currency settings</param>
         /// <param name="pluginFinder">Plugin finder</param>
+        /// <param name="eventPublisher"></param>
         public CurrencyService(ICacheManager cacheManager,
             IRepository<Currency> currencyRepository,
             CurrencySettings currencySettings,
-            IPluginFinder pluginFinder)
+            IPluginFinder pluginFinder,
+            IEventPublisher eventPublisher)
         {
-            this._cacheManager = cacheManager;
-            this._currencyRepository = currencyRepository;
-            this._currencySettings = currencySettings;
-            this._pluginFinder = pluginFinder;
-
+            _cacheManager = cacheManager;
+            _currencyRepository = currencyRepository;
+            _currencySettings = currencySettings;
+            _pluginFinder = pluginFinder;
+            _eventPublisher = eventPublisher;
         }
 
         #endregion
@@ -79,6 +83,8 @@ namespace Nop.Services.Directory
 
             _currencyRepository.Delete(currency);
 
+            _eventPublisher.EntityDeleted(currency);
+
             _cacheManager.RemoveByPattern(CURRENCIES_PATTERN_KEY);
         }
 
@@ -93,10 +99,7 @@ namespace Nop.Services.Directory
                 return null;
 
             string key = string.Format(CURRENCIES_BY_ID_KEY, currencyId);
-            return _cacheManager.Get(key, () =>
-            {
-                return _currencyRepository.GetById(currencyId);
-            });
+            return _cacheManager.Get(key, () => _currencyRepository.GetById(currencyId));
         }
 
         /// <summary>
@@ -141,6 +144,8 @@ namespace Nop.Services.Directory
 
             _currencyRepository.Insert(currency);
 
+            _eventPublisher.EntityInserted(currency);
+
             _cacheManager.RemoveByPattern(CURRENCIES_PATTERN_KEY);
         }
 
@@ -154,6 +159,8 @@ namespace Nop.Services.Directory
                 throw new ArgumentNullException("currency");
 
             _currencyRepository.Update(currency);
+
+            _eventPublisher.EntityUpdated(currency);
 
             _cacheManager.RemoveByPattern(CURRENCIES_PATTERN_KEY);
         }

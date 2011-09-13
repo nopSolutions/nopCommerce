@@ -4,6 +4,7 @@ using System.Linq;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Directory;
+using Nop.Core.Events;
 
 namespace Nop.Services.Directory
 {
@@ -21,22 +22,26 @@ namespace Nop.Services.Directory
         #region Fields
 
         private readonly IRepository<StateProvince> _stateProvinceRepository;
+        private readonly IEventPublisher _eventPublisher;
         private readonly ICacheManager _cacheManager;
 
         #endregion
 
         #region Ctor
-        
+
         /// <summary>
         /// Ctor
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="stateProvinceRepository">State/province repository</param>
+        /// <param name="eventPublisher"></param>
         public StateProvinceService(ICacheManager cacheManager,
-            IRepository<StateProvince> stateProvinceRepository)
+            IRepository<StateProvince> stateProvinceRepository,
+            IEventPublisher eventPublisher)
         {
-            this._cacheManager = cacheManager;
-            this._stateProvinceRepository = stateProvinceRepository;
+            _cacheManager = cacheManager;
+            _stateProvinceRepository = stateProvinceRepository;
+            _eventPublisher = eventPublisher;
         }
 
         #endregion
@@ -52,6 +57,8 @@ namespace Nop.Services.Directory
                 throw new ArgumentNullException("stateProvince");
             
             _stateProvinceRepository.Delete(stateProvince);
+
+            _eventPublisher.EntityDeleted(stateProvince);
 
             _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
         }
@@ -120,6 +127,8 @@ namespace Nop.Services.Directory
 
             _stateProvinceRepository.Insert(stateProvince);
 
+            _eventPublisher.EntityInserted(stateProvince);
+
             _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
         }
 
@@ -133,6 +142,8 @@ namespace Nop.Services.Directory
                 throw new ArgumentNullException("stateProvince");
 
             _stateProvinceRepository.Update(stateProvince);
+
+            _eventPublisher.EntityUpdated(stateProvince);
             
             _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
         }

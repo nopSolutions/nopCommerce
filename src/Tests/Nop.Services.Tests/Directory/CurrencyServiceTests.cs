@@ -4,6 +4,7 @@ using System.Linq;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Directory;
+using Nop.Core.Events;
 using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
 using Nop.Services.Directory;
@@ -18,6 +19,7 @@ namespace Nop.Services.Tests.Directory
     {
         IRepository<Currency> _currencyRepository;
         CurrencySettings _currencySettings;
+        IEventPublisher _eventPublisher;
         ICurrencyService _currencyService;
 
         Currency currencyUSD, currencyRUR, currencyEUR;
@@ -75,11 +77,14 @@ namespace Nop.Services.Tests.Directory
             _currencySettings = new CurrencySettings();
             _currencySettings.PrimaryStoreCurrencyId = currencyUSD.Id;
             _currencySettings.PrimaryExchangeRateCurrencyId = currencyEUR.Id;
+
+            _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
+            _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
             
             var pluginFinder = new PluginFinder(new AppDomainTypeFinder());
             _currencyService = new CurrencyService(cacheManager,
                 _currencyRepository,
-                _currencySettings, pluginFinder);
+                _currencySettings, pluginFinder, _eventPublisher);
         }
         
         [Test]

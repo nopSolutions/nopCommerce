@@ -7,6 +7,7 @@ using Nop.Core.Data;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Tax;
+using Nop.Core.Events;
 using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
 using Nop.Services.Catalog;
@@ -65,9 +66,7 @@ namespace Nop.Services.Tests.Catalog
             _currencyRepo.Expect(x => x.Table).Return(new List<Currency>() { currency1, currency2 }.AsQueryable());
 
             var pluginFinder = new PluginFinder(new AppDomainTypeFinder());
-            _currencyService = new CurrencyService(cacheManager, _currencyRepo, _currencySettings, pluginFinder);
-            
-
+            _currencyService = new CurrencyService(cacheManager, _currencyRepo, _currencySettings, pluginFinder,null);
             
             _taxSettings = new TaxSettings();
 
