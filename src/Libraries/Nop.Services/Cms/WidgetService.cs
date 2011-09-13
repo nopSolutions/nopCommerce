@@ -6,6 +6,7 @@ using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Cms;
+using Nop.Core.Events;
 using Nop.Core.Plugins;
 
 namespace Nop.Services.Cms
@@ -27,23 +28,28 @@ namespace Nop.Services.Cms
         private readonly IRepository<Widget> _widgetRepository;
         private readonly ICacheManager _cacheManager;
         private readonly IPluginFinder _pluginFinder;
+        private readonly IEventPublisher _eventPublisher;
 
         #endregion
         
         #region Ctor
-        
+
         /// <summary>
         /// Ctor
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="widgetRepository">Widget repository</param>
         /// <param name="pluginFinder">Plugin finder</param>
+        /// <param name="eventPublisher"></param>
         public WidgetService(ICacheManager cacheManager,
-            IRepository<Widget> widgetRepository, IPluginFinder pluginFinder)
+            IRepository<Widget> widgetRepository, 
+            IPluginFinder pluginFinder,
+            IEventPublisher eventPublisher)
         {
-            this._cacheManager = cacheManager;
-            this._widgetRepository = widgetRepository;
-            this._pluginFinder = pluginFinder;
+            _cacheManager = cacheManager;
+            _widgetRepository = widgetRepository;
+            _pluginFinder = pluginFinder;
+            _eventPublisher = eventPublisher;
         }
 
         #endregion
@@ -93,6 +99,8 @@ namespace Nop.Services.Cms
                 throw new ArgumentNullException("widget");
 
             _widgetRepository.Delete(widget);
+
+            _eventPublisher.EntityDeleted(widget);
 
             _cacheManager.RemoveByPattern(WIDGETS_PATTERN_KEY);
         }
@@ -157,6 +165,8 @@ namespace Nop.Services.Cms
 
             _widgetRepository.Insert(widget);
 
+            _eventPublisher.EntityInserted(widget);
+
             //cache
             _cacheManager.RemoveByPattern(WIDGETS_PATTERN_KEY);
         }
@@ -171,6 +181,8 @@ namespace Nop.Services.Cms
                 throw new ArgumentNullException("widget");
 
             _widgetRepository.Update(widget);
+
+            _eventPublisher.EntityUpdated(widget);
 
             //cache
             _cacheManager.RemoveByPattern(WIDGETS_PATTERN_KEY);
