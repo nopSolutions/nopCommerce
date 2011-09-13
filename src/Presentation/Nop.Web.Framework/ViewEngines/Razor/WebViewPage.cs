@@ -91,6 +91,31 @@ namespace Nop.Web.Framework.ViewEngines.Razor
         {
             return IsSectionDefined(sectionName) ? RenderSection(sectionName) : defaultContent(new object());
         }
+
+        public override string Layout
+        {
+            get
+            {
+                var layout = base.Layout;
+
+                if (!string.IsNullOrEmpty(layout))
+                {
+                    var filename = System.IO.Path.GetFileNameWithoutExtension(layout);
+                    ViewEngineResult viewResult = System.Web.Mvc.ViewEngines.Engines.FindView(ViewContext.Controller.ControllerContext, filename, "");
+
+                    if (viewResult.View != null)
+                    {
+                        layout = (viewResult.View as RazorView).ViewPath;
+                    }
+                }
+
+                return layout;
+            }
+            set
+            {
+                base.Layout = value;
+            }
+        }
     }
 
     public abstract class WebViewPage : WebViewPage<dynamic>
