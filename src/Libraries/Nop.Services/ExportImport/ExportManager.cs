@@ -5,14 +5,14 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml;
-using Nop.Core.Domain;
+using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
-using Nop.Core;
+using Nop.Services.Media;
 
 namespace Nop.Services.ExportImport
 {
@@ -24,17 +24,17 @@ namespace Nop.Services.ExportImport
         private readonly ICategoryService _categoryService;
         private readonly IManufacturerService _manufacturerService;
         private readonly IProductService _productService;
-        private readonly StoreInformationSettings _storeInformationSettings;
+        private readonly IPictureService _pictureService;
 
         public ExportManager(ICategoryService categoryService,
             IManufacturerService manufacturerService,
             IProductService productService,
-            StoreInformationSettings storeInformationSettings)
+            IPictureService pictureService)
         {
             this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
             this._productService = productService;
-            this._storeInformationSettings = storeInformationSettings;
+            this._pictureService = pictureService;
         }
 
         #region Utilities
@@ -209,7 +209,6 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteElementString("SEName", null, product.SeName);
                 xmlWriter.WriteElementString("AllowCustomerReviews", null, product.AllowCustomerReviews.ToString());
                 xmlWriter.WriteElementString("Published", null, product.Published.ToString());
-                xmlWriter.WriteElementString("Deleted", null, product.Deleted.ToString());
                 xmlWriter.WriteElementString("CreatedOnUtc", null, product.CreatedOnUtc.ToString());
                 xmlWriter.WriteElementString("UpdatedOnUtc", null, product.UpdatedOnUtc.ToString());
 
@@ -473,6 +472,11 @@ namespace Nop.Services.ExportImport
                 tableDefinition.Add("Width", "decimal");
                 tableDefinition.Add("Height", "decimal");
                 tableDefinition.Add("CreatedOnUtc", "decimal");
+                tableDefinition.Add("CategoryIds", "nvarchar(255)");
+                tableDefinition.Add("ManufacturerIds", "nvarchar(255)");
+                tableDefinition.Add("Picture1", "nvarchar(255)");
+                tableDefinition.Add("Picture2", "nvarchar(255)");
+                tableDefinition.Add("Picture3", "nvarchar(255)");
                 excelHelper.WriteTable("Products", tableDefinition);
 
                 string decimalQuoter = (CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator.Equals(",") ? "\"" : String.Empty);
@@ -484,7 +488,7 @@ namespace Nop.Services.ExportImport
                     foreach (var pv in productVariants)
                     {
                         var sb = new StringBuilder();
-                        sb.Append("INSERT INTO [Products] (Name, ShortDescription,FullDescription,ProductTemplateId,ShowOnHomePage,MetaKeywords,MetaDescription,MetaTitle,AllowCustomerReviews,Published,SKU,ManufacturerPartNumber,IsGiftCard,GiftCardTypeId,IsDownload,DownloadId,UnlimitedDownloads,MaxNumberOfDownloads,DownloadActivationTypeId,HasSampleDownload,SampleDownloadId,HasUserAgreement,UserAgreementText,IsRecurring,RecurringCycleLength,RecurringCyclePeriodId,RecurringTotalCycles,IsShipEnabled,IsFreeShipping,AdditionalShippingCharge,IsTaxExempt,TaxCategoryId,ManageInventoryMethodId,StockQuantity,DisplayStockAvailability,DisplayStockQuantity,MinStockQuantity,LowStockActivityId,NotifyAdminForQuantityBelow,BackorderModeId,OrderMinimumQuantity,OrderMaximumQuantity,DisableBuyButton,DisableWishlistButton,CallForPrice,Price,OldPrice,ProductCost,CustomerEntersPrice,MinimumCustomerEnteredPrice,MaximumCustomerEnteredPrice,Weight, Length, Width, Height, CreatedOnUtc) VALUES (");
+                        sb.Append("INSERT INTO [Products] (Name, ShortDescription,FullDescription,ProductTemplateId,ShowOnHomePage,MetaKeywords,MetaDescription,MetaTitle,AllowCustomerReviews,Published,SKU,ManufacturerPartNumber,IsGiftCard,GiftCardTypeId,IsDownload,DownloadId,UnlimitedDownloads,MaxNumberOfDownloads,DownloadActivationTypeId,HasSampleDownload,SampleDownloadId,HasUserAgreement,UserAgreementText,IsRecurring,RecurringCycleLength,RecurringCyclePeriodId,RecurringTotalCycles,IsShipEnabled,IsFreeShipping,AdditionalShippingCharge,IsTaxExempt,TaxCategoryId,ManageInventoryMethodId,StockQuantity,DisplayStockAvailability,DisplayStockQuantity,MinStockQuantity,LowStockActivityId,NotifyAdminForQuantityBelow,BackorderModeId,OrderMinimumQuantity,OrderMaximumQuantity,DisableBuyButton,DisableWishlistButton,CallForPrice,Price,OldPrice,ProductCost,CustomerEntersPrice,MinimumCustomerEnteredPrice,MaximumCustomerEnteredPrice,Weight, Length, Width, Height, CreatedOnUtc,CategoryIds,ManufacturerIds,Picture1,Picture2,Picture3) VALUES (");
                         sb.Append('"'); sb.Append(p.Name != null ? p.Name.Replace('"', '\'') : ""); sb.Append("\",");
                         sb.Append('"'); sb.Append(p.ShortDescription != null ? p.ShortDescription.Replace('"', '\''): ""); sb.Append("\",");
                         sb.Append('"'); sb.Append(p.FullDescription != null ? p.FullDescription.Replace('"', '\'') : ""); sb.Append("\",");
@@ -540,7 +544,48 @@ namespace Nop.Services.ExportImport
                         sb.Append(decimalQuoter); sb.Append(pv.Length); sb.Append(decimalQuoter); sb.Append(',');//decimal
                         sb.Append(decimalQuoter); sb.Append(pv.Width); sb.Append(decimalQuoter); sb.Append(',');//decimal
                         sb.Append(decimalQuoter); sb.Append(pv.Height); sb.Append(decimalQuoter); sb.Append(',');//decimal
-                        sb.Append(decimalQuoter); sb.Append(pv.CreatedOnUtc.ToOADate()); sb.Append(decimalQuoter);
+                        sb.Append(decimalQuoter); sb.Append(pv.CreatedOnUtc.ToOADate()); sb.Append(decimalQuoter); sb.Append(',');
+                        //category identifiers
+                        string categoryIds = null;
+                        foreach (var pc in _categoryService.GetProductCategoriesByProductId(p.Id))
+                        {
+                            categoryIds += pc.CategoryId;
+                            categoryIds += ";";
+                        }
+                        sb.Append('"'); sb.Append(categoryIds != null ? categoryIds.Replace('"', '\'') : ""); sb.Append("\",");
+                        //manufacturer identifiers
+                        string manufacturerIds = null;
+                        foreach (var pm in _manufacturerService.GetProductManufacturersByProductId(p.Id))
+                        {
+                            manufacturerIds += pm.ManufacturerId;
+                            manufacturerIds += ";";
+                        }
+                        sb.Append('"'); sb.Append(manufacturerIds != null ? manufacturerIds.Replace('"', '\'') : ""); sb.Append("\",");
+                        //pictures (up to 3 pictures)
+                        string picture1 = null;
+                        string picture2 = null;
+                        string picture3 = null;
+                        var pictures = _pictureService.GetPicturesByProductId(p.Id, 3);
+                        for (int i = 0; i < pictures.Count; i++)
+                        {
+                            string pictureLocalPath = _pictureService.GetPictureLocalPath(pictures[i]);
+                            switch (i)
+                            {
+                                case 0:
+                                    picture1 = pictureLocalPath;
+                                    break;
+                                case 1:
+                                    picture2 = pictureLocalPath;
+                                    break;
+                                case 2:
+                                    picture3 = pictureLocalPath;
+                                    break;
+                            }
+                        }
+                        sb.Append('"'); sb.Append(picture1 != null ? picture1.Replace('"', '\'') : ""); sb.Append("\",");
+                        sb.Append('"'); sb.Append(picture2 != null ? picture2.Replace('"', '\'') : ""); sb.Append("\",");
+                        sb.Append('"'); sb.Append(picture3 != null ? picture3.Replace('"', '\'') : ""); sb.Append("\"");
+                        
                         sb.Append(")");
 
                         excelHelper.ExecuteCommand(sb.ToString());

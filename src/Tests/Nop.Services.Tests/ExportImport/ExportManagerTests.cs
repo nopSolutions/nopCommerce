@@ -12,6 +12,7 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Catalog;
 using Nop.Services.ExportImport;
+using Nop.Services.Media;
 using Nop.Tests;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -24,7 +25,7 @@ namespace Nop.Services.Tests.ExportImport
         ICategoryService _categoryService;
         IManufacturerService _manufacturerService;
         IProductService _productService;
-        StoreInformationSettings _storeInformationSettings;
+        IPictureService _pictureService;
         IExportManager _exportManager;
 
         [SetUp]
@@ -33,15 +34,10 @@ namespace Nop.Services.Tests.ExportImport
             _categoryService = MockRepository.GenerateMock<ICategoryService>();
             _manufacturerService = MockRepository.GenerateMock<IManufacturerService>();
             _productService = MockRepository.GenerateMock<IProductService>();
+            _pictureService = MockRepository.GenerateMock<IPictureService>();
 
-            _storeInformationSettings = new StoreInformationSettings()
-            {
-                 StoreName = "Your store name",
-                 StoreUrl = "http://www.yourStore.com"
-            };
-
-            _exportManager = new ExportManager(_categoryService, 
-                _manufacturerService, _productService, _storeInformationSettings);
+            _exportManager = new ExportManager(_categoryService,
+                _manufacturerService, _productService, _pictureService);
         }
 
         [Test]

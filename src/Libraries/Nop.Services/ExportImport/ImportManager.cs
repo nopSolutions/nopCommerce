@@ -1,11 +1,13 @@
 using System;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Xml;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Localization;
 using Nop.Services.Catalog;
 using Nop.Services.Localization;
+using Nop.Services.Media;
 
 namespace Nop.Services.ExportImport
 {
@@ -17,13 +19,20 @@ namespace Nop.Services.ExportImport
         private readonly IProductService _productService;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
+        private readonly ICategoryService _categoryService;
+        private readonly IManufacturerService _manufacturerService;
+        private readonly IPictureService _pictureService;
 
         public ImportManager(IProductService productService, ILanguageService languageService,
-            ILocalizationService localizationService)
+            ILocalizationService localizationService, ICategoryService categoryService,
+            IManufacturerService manufacturerService, IPictureService pictureService)
         {
             this._productService = productService;
             this._languageService = languageService;
             this._localizationService = localizationService;
+            this._categoryService = categoryService;
+            this._manufacturerService = manufacturerService;
+            this._pictureService = pictureService;
         }
         
         /// <summary>
@@ -99,6 +108,11 @@ namespace Nop.Services.ExportImport
                     decimal width = Convert.ToDecimal(dr["Width"]);
                     decimal height = Convert.ToDecimal(dr["Height"]);
                     DateTime createdOnUtc = DateTime.FromOADate(Convert.ToDouble(dr["CreatedOnUtc"]));
+                    string categoryIds = dr["CategoryIds"].ToString();
+                    string manufacturerIds = dr["ManufacturerIds"].ToString();
+                    string picture1 = dr["Picture1"].ToString();
+                    string picture2 = dr["Picture2"].ToString();
+                    string picture3 = dr["Picture3"].ToString();
 
                     var productVariant = _productService.GetProductVariantBySku(sku);
                     if (productVariant != null)
@@ -241,6 +255,68 @@ namespace Nop.Services.ExportImport
                         };
 
                         _productService.InsertProductVariant(productVariant);
+                    }
+
+                    //category mappings
+                    if (!String.IsNullOrEmpty(categoryIds))
+                    {
+                        foreach (var id in categoryIds.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x=>Convert.ToInt32(x.Trim())))
+                        {
+                            if (productVariant.Product.ProductCategories.Where(x => x.CategoryId == id).FirstOrDefault() == null)
+                            {
+                                //ensure that category exists
+                                var category = _categoryService.GetCategoryById(id);
+                                if (category != null)
+                                {
+                                    var productCategory = new ProductCategory()
+                                    {
+                                        ProductId = productVariant.Product.Id,
+                                        CategoryId = category.Id,
+                                        IsFeaturedProduct = false,
+                                        DisplayOrder = 1
+                                    };
+                                    _categoryService.InsertProductCategory(productCategory);
+                                }
+                            }
+                        }
+                    }
+
+                    //manufacturer mappings
+                    if (!String.IsNullOrEmpty(manufacturerIds))
+                    {
+                        foreach (var id in manufacturerIds.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => Convert.ToInt32(x.Trim())))
+                        {
+                            if (productVariant.Product.ProductManufacturers.Where(x => x.ManufacturerId == id).FirstOrDefault() == null)
+                            {
+                                //ensure that manufacturer exists
+                                var manufacturer = _manufacturerService.GetManufacturerById(id);
+                                if (manufacturer != null)
+                                {
+                                    var productManufacturer = new ProductManufacturer()
+                                    {
+                                        ProductId = productVariant.Product.Id,
+                                        ManufacturerId = manufacturer.Id,
+                                        IsFeaturedProduct = false,
+                                        DisplayOrder = 1
+                                    };
+                                    _manufacturerService.InsertProductManufacturer(productManufacturer);
+                                }
+                            }
+                        }
+                    }
+
+                    //pictures
+                    foreach (var picture in new string[] {picture1, picture2, picture3})
+                    {
+                        if (String.IsNullOrEmpty(picture))
+                            continue;
+
+                        productVariant.Product.ProductPictures.Add(new ProductPicture()
+                        {
+                            Picture = _pictureService.InsertPicture(File.ReadAllBytes(picture), "image/jpeg", true),
+                            DisplayOrder = 1,
+                        });
+                        _productService.UpdateProduct(productVariant.Product);
                     }
                 }
             }
