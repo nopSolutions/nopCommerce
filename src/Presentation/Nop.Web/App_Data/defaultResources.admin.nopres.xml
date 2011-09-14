@@ -3737,6 +3737,14 @@
                           </LocaleResource>
                         </Children>
                       </LocaleResource>
+						<LocaleResource Name="StoreClosed">
+							<Value>Store closed</Value>
+							<Children>
+								<LocaleResource Name="Hint">
+									<Value>Check to close the store. Uncheck to re-open.</Value>
+								</LocaleResource>
+							</Children>
+						</LocaleResource>
                       <LocaleResource Name="DefaultStoreTheme">
                         <Value>Store theme</Value>
                         <Children>

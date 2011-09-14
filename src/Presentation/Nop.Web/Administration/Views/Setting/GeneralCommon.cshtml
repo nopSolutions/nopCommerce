@@ -50,6 +50,15 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.NopLabelFor(model => model.StoreInformationSettings.StoreClosed):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.StoreInformationSettings.StoreClosed)
+                @Html.ValidationMessageFor(model => model.StoreInformationSettings.StoreClosed)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.NopLabelFor(model => model.StoreInformationSettings.DefaultStoreTheme):
             </td>
             <td class="adminData">

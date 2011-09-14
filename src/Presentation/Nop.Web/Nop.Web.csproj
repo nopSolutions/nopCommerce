@@ -906,6 +906,7 @@
     <Content Include="Scripts\public.js" />
     <Content Include="Scripts\slimbox2.js" />
     <Content Include="Scripts\swfobject.js" />
+    <Content Include="StoreClosed.htm" />
     <Content Include="Themes\DarkOrange\Content\images\bbeditor-button-bg.gif" />
     <Content Include="Themes\DarkOrange\Content\images\bgTextBox.gif" />
     <Content Include="Themes\DarkOrange\Content\images\bg_body.gif" />

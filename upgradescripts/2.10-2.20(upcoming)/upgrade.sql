@@ -83,6 +83,12 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.BulkEdit.Fields.Published">
     <Value>Published</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.StoreClosed">
+    <Value>Store closed</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.StoreClosed.Hint">
+    <Value>Check to close the store. Uncheck to re-open.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -394,4 +400,12 @@ GO
 ALTER TABLE [dbo].[QueuedEmail]  WITH CHECK ADD  CONSTRAINT [QueuedEmail_EmailAccount] FOREIGN KEY([EmailAccountId])
 REFERENCES [dbo].[EmailAccount] ([Id])
 ON DELETE CASCADE
+GO
+
+--store closed option
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'storeinformationsettings.storeclosed')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'storeinformationsettings.storeclosed', N'false')
+END
 GO

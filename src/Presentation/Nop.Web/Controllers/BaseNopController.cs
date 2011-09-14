@@ -2,6 +2,7 @@
 using System.Web.Mvc;
 using Nop.Core;
 using Nop.Core.Data;
+using Nop.Core.Domain;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Infrastructure;
 using Nop.Services.Affiliates;
@@ -20,9 +21,10 @@ namespace Nop.Web.Controllers
             StoreLastVisitedPage(filterContext);
 
             CheckAffiliate();
+
+            CheckStoreClosed(filterContext);
         }
         
-
         protected virtual void StoreLastVisitedPage(ActionExecutingContext filterContext)
         {
             if (!DataSettingsHelper.DatabaseIsInstalled())
@@ -78,5 +80,31 @@ namespace Nop.Web.Controllers
                 }
             }
         }
+
+        protected virtual void CheckStoreClosed(ActionExecutingContext filterContext)
+        {
+            //don't allow visiting public store except some pages if store is closed
+            string actionName = filterContext.ActionDescriptor.ActionName;
+            if (String.IsNullOrEmpty(actionName))
+                return;
+
+            string controllerName = filterContext.Controller.ToString();
+            if (String.IsNullOrEmpty(controllerName))
+                return;
+
+            //don't apply filter to child methods
+            if (filterContext.IsChildAction)
+                return;
+            
+            var storeInformationSettings = EngineContext.Current.Resolve<StoreInformationSettings>();
+            if (storeInformationSettings.StoreClosed &&
+                !(controllerName.Equals("Nop.Web.Controllers.CustomerController", StringComparison.InvariantCultureIgnoreCase) && actionName.Equals("Login", StringComparison.InvariantCultureIgnoreCase)) &&
+                !(controllerName.Equals("Nop.Web.Controllers.CustomerController", StringComparison.InvariantCultureIgnoreCase) && actionName.Equals("Logout", StringComparison.InvariantCultureIgnoreCase)))
+            {
+                var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+                filterContext.Result = new RedirectResult(webHelper.GetStoreLocation() + "StoreClosed.htm");
+            }
+        }
+        
     }
 }
