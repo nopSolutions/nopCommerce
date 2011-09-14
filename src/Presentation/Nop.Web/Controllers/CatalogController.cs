@@ -1588,6 +1588,7 @@ namespace Nop.Web.Controllers
             //get all tags
             var tags = _productTagService.GetAllProductTags()
                 .OrderByDescending(x => x.ProductCount)
+                .Where(x => x.ProductCount > 0)
                 .Take(_catalogSettings.NumberOfProductTags)
                 .ToList();
             //sorting

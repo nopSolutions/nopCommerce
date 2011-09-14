@@ -386,8 +386,9 @@ namespace Nop.Admin.Controllers
                     product.ProductTags.Add(productTag);
                     //ensure product is saved before updating totals
                     _productService.UpdateProduct(product);
-                    _productTagService.UpdateProductTagTotals(productTag);
                 }
+                //update product tag totals 
+                _productTagService.UpdateProductTagTotals(productTag);
             }
         }
         #endregion
