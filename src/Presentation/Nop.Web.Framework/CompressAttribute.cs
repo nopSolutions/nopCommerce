@@ -5,7 +5,7 @@ using System.Web.Mvc;
 
 namespace Nop.Web.Framework
 {
-    public partial class CompressFilter : ActionFilterAttribute
+    public partial class CompressAttribute : ActionFilterAttribute
     {
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {

@@ -85,7 +85,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CompressFilter.cs" />
+    <Compile Include="CompressAttribute.cs" />
+    <Compile Include="CheckAffiliateAttribute.cs" />
+    <Compile Include="StoreClosedAttribute.cs" />
+    <Compile Include="StoreLastVisitedPageAttribute.cs" />
     <Compile Include="StaticFileHandler.cs" />
     <Compile Include="RemotePost.cs" />
     <Compile Include="Controllers\BaseNopPaymentController.cs" />
