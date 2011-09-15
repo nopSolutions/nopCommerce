@@ -896,9 +896,9 @@
     <Content Include="Scripts\2011.2.712\telerik.treeview.min.js" />
     <Content Include="Scripts\2011.2.712\telerik.upload.min.js" />
     <Content Include="Scripts\2011.2.712\telerik.window.min.js" />
-    <Content Include="Scripts\jquery-1.4.4-vsdoc.js" />
-    <Content Include="Scripts\jquery-1.4.4.js" />
-    <Content Include="Scripts\jquery-1.4.4.min.js" />
+    <Content Include="Scripts\jquery-1.5.1-vsdoc.js" />
+    <Content Include="Scripts\jquery-1.5.1.js" />
+    <Content Include="Scripts\jquery-1.5.1.min.js" />
     <Content Include="Scripts\jquery.blockUI.js" />
     <Content Include="Scripts\jquery.superfishmenu.js" />
     <Content Include="Scripts\jquery.tmpl.min.js" />

@@ -4,7 +4,7 @@
 * intended to be used only for design-time IntelliSense.  Please use the
 * standard jQuery library for all production use.
 *
-* Comment version: 1.7
+* Comment version: 1.8
 */
 
 /*
@@ -15,14 +15,12 @@
 * for informational purposes only and are not the license terms under
 * which Microsoft distributed this file.
 *
-* jQuery validation plug-in 1.7
+* jQuery validation plugin 1.8.0
 *
 * http://bassistance.de/jquery-plugins/jquery-plugin-validation/
 * http://docs.jquery.com/Plugins/Validation
 *
-* Copyright (c) 2006 - 2008 Jörn Zaefferer
-*
-* $Id: jquery.validate.js 6403 2009-06-17 14:27:16Z joern.zaefferer $
+* Copyright (c) 2006 - 2011 Jörn Zaefferer
 *
 */
 
@@ -280,7 +278,7 @@ $.extend($.validator, {
 			// hide error label and remove error class on focus if enabled
 			if ( this.settings.focusCleanup && !this.blockFocusCleanup ) {
 				this.settings.unhighlight && this.settings.unhighlight.call( this, element, this.settings.errorClass, this.settings.validClass );
-				this.errorsFor(element).hide();
+				this.addWrapper(this.errorsFor(element)).hide();
 			}
 		},
 		onfocusout: function(element) {
@@ -591,12 +589,12 @@ $.extend($.validator, {
 			
 			// if radio/checkbox, validate first element in group instead
 			if (this.checkable(element)) {
-				element = this.findByName( element.name )[0];
+			    element = this.findByName(element.name).not(this.settings.ignore)[0];
 			}
 			
 			var rules = $(element).rules();
 			var dependencyMismatch = false;
-			for( method in rules ) {
+			for (var method in rules) {
 				var rule = { method: method, parameters: rules[method] };
 				try {
 					var result = $.validator.methods[method].call( this, element.value.replace(/\r/g, ""), element, rule.parameters );
@@ -895,8 +893,8 @@ $.extend($.validator, {
 	attributeRules: function(element) {
 		var rules = {};
 		var $element = $(element);
-		
-		for (method in $.validator.methods) {
+
+		for (var method in $.validator.methods) {
 			var value = $element.attr(method);
 			if (value) {
 				rules[method] = value;
@@ -1066,42 +1064,44 @@ $.extend($.validator, {
 			
 			param = typeof param == "string" && {url:param} || param; 
 			
-			if ( previous.old !== value ) {
-				previous.old = value;
-				var validator = this;
-				this.startRequest(element);
-				var data = {};
-				data[element.name] = value;
-				$.ajax($.extend(true, {
-					url: param,
-					mode: "abort",
-					port: "validate" + element.name,
-					dataType: "json",
-					data: data,
-					success: function(response) {
-						validator.settings.messages[element.name].remote = previous.originalMessage;
-						var valid = response === true;
-						if ( valid ) {
-							var submitted = validator.formSubmitted;
-							validator.prepareElement(element);
-							validator.formSubmitted = submitted;
-							validator.successList.push(element);
-							validator.showErrors();
-						} else {
-							var errors = {};
-							var message = (previous.message = response || validator.defaultMessage( element, "remote" ));
-							errors[element.name] = $.isFunction(message) ? message(value) : message;
-							validator.showErrors(errors);
-						}
-						previous.valid = valid;
-						validator.stopRequest(element, valid);
-					}
-				}, param));
-				return "pending";
-			} else if( this.pending[element.name] ) {
+			if ( this.pending[element.name] ) {
 				return "pending";
 			}
-			return previous.valid;
+			if ( previous.old === value ) {
+				return previous.valid;
+			}
+
+			previous.old = value;
+			var validator = this;
+			this.startRequest(element);
+			var data = {};
+			data[element.name] = value;
+			$.ajax($.extend(true, {
+				url: param,
+				mode: "abort",
+				port: "validate" + element.name,
+				dataType: "json",
+				data: data,
+				success: function(response) {
+					validator.settings.messages[element.name].remote = previous.originalMessage;
+					var valid = response === true;
+					if ( valid ) {
+						var submitted = validator.formSubmitted;
+						validator.prepareElement(element);
+						validator.formSubmitted = submitted;
+						validator.successList.push(element);
+						validator.showErrors();
+					} else {
+						var errors = {};
+						var message = response || validator.defaultMessage(element, "remote");
+						errors[element.name] = previous.message = $.isFunction(message) ? message(value) : message;
+						validator.showErrors(errors);
+					}
+					previous.valid = valid;
+					validator.stopRequest(element, valid);
+				}
+			}, param));
+			return "pending";
 		},
 
 		// http://docs.jquery.com/Plugins/Validation/Methods/minlength
@@ -1224,20 +1224,33 @@ $.format = $.validator.format;
 // usage: $.ajax({ mode: "abort"[, port: "uniqueport"]});
 // if mode:"abort" is used, the previous request on that port (port can be undefined) is aborted via XMLHttpRequest.abort() 
 ;(function($) {
-	var ajax = $.ajax;
 	var pendingRequests = {};
-	$.ajax = function(settings) {
-		// create settings for compatibility with ajaxSetup
-		settings = $.extend(settings, $.extend({}, $.ajaxSettings, settings));
-		var port = settings.port;
-		if (settings.mode == "abort") {
-			if ( pendingRequests[port] ) {
-				pendingRequests[port].abort();
-			}
-			return (pendingRequests[port] = ajax.apply(this, arguments));
-		}
-		return ajax.apply(this, arguments);
-	};
+		// Use a prefilter if available (1.5+)
+	if ( $.ajaxPrefilter ) {
+		$.ajaxPrefilter(function(settings, _, xhr) {
+		    var port = settings.port;
+		    if (settings.mode == "abort") {
+			    if ( pendingRequests[port] ) {
+				    pendingRequests[port].abort();
+			    }				pendingRequests[port] = xhr;
+		    }
+	    });
+	} else {
+		// Proxy ajax
+		var ajax = $.ajax;
+		$.ajax = function(settings) {
+			var mode = ( "mode" in settings ? settings : $.ajaxSettings ).mode,
+				port = ( "port" in settings ? settings : $.ajaxSettings ).port;
+			if (mode == "abort") {
+				if ( pendingRequests[port] ) {
+					pendingRequests[port].abort();
+				}
+
+			    return (pendingRequests[port] = ajax.apply(this, arguments));
+		    }
+		    return ajax.apply(this, arguments);
+	    };
+    }
 })(jQuery);
 
 // provides cross-browser focusin and focusout events
