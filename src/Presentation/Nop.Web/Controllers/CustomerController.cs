@@ -197,7 +197,7 @@ namespace Nop.Web.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("", "The credentials provided is incorrect.");
+                    ModelState.AddModelError("", _localizationService.GetResource("Account.Login.WrongCredentials"));
                 }
             }
 

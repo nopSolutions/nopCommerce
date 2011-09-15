@@ -89,6 +89,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.StoreClosed.Hint">
     <Value>Check to close the store. Uncheck to re-open.</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.Login.WrongCredentials">
+    <Value>The credentials provided is incorrect.</Value>
+  </LocaleResource>
 </Language>
 '
 

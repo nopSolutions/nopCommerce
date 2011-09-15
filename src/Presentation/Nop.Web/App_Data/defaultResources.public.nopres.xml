@@ -338,6 +338,9 @@
           <LocaleResource Name="Welcome">
             <Value>Welcome, Please Sign In!</Value>
           </LocaleResource>
+		  <LocaleResource Name="WrongCredentials">
+		  	<Value>The credentials provided is incorrect</Value>
+		  </LocaleResource>
           <LocaleResource Name="Fields">
             <Children>
               <LocaleResource Name="Email">
