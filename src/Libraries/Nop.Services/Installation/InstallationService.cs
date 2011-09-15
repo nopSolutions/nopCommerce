@@ -558,7 +558,7 @@ namespace Nop.Services.Installation
                 new Currency
                 {
                     Name = "Russian Rouble",
-                    CurrencyCode = "RUR",
+                    CurrencyCode = "RUB",
                     Rate = 27.7M,
                     DisplayLocale = "ru-RU",
                     CustomFormatting = "",

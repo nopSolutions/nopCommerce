@@ -412,3 +412,9 @@ BEGIN
 	VALUES (N'storeinformationsettings.storeclosed', N'false')
 END
 GO
+
+
+UPDATE [dbo].[Currency]
+SET [CurrencyCode]=N'RUB'
+WHERE [CurrencyCode]=N'RUR'
+GO
