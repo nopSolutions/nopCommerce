@@ -47,19 +47,17 @@
                         @Html.Action("LanguageSelector", "Common")
                     </div>
                     <div class="links">
-                        @Html.ActionLink("Public store", "Index", "Home", new { area = "" }, null)
+                        @Html.ActionLink(T("Admin.Header.PublicStore").Text, "Index", "Home", new { area = "" }, null)
                         <span class="separator">|</span>                        
-                        @Html.ActionLink("Clear Cache", "ClearCache", "Common")
+                        @Html.ActionLink(T("Admin.Header.ClearCache").Text, "ClearCache", "Common")
+                        <span class="separator">|</span>                        
+                        @Html.ActionLink(T("Admin.Header.RestartApplication").Text, "RestartApplication", "Common")
                     </div>
                     <div class="login-info">
                         @if (currentCustomer != null && currentCustomer.IsRegistered())
                         {
-                            <text>Logged in as:</text> 
-                            if (usernamesEnabled)
-                            { @currentCustomer.Username }
-                            else
-                            { @currentCustomer.Email }
-                            <text>, @Html.ActionLink("Logout?", "Logout", "Customer", new { area = "" }, null)</text> 
+                            @string.Format(T("Admin.Header.LoggedInAs").Text, usernamesEnabled ? currentCustomer.Username : currentCustomer.Email)
+                            <text>, @Html.ActionLink(T("Admin.Header.Logout").Text, "Logout", "Customer", new { area = "" }, null)</text> 
                         }
                     </div>
                     <div class="version">

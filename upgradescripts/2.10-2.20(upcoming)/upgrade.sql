@@ -95,6 +95,21 @@ set @resources='
   <LocaleResource Name="Admin.System.Log.DeleteSelected">
     <Value>Delete selected</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Header.PublicStore">
+    <Value>Public store</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Header.ClearCache">
+    <Value>Clear cache</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Header.RestartApplication">
+    <Value>Restart application</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Header.LoggedInAs">
+    <Value>Logged in as: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Header.Logout">
+    <Value>Logout?</Value>
+  </LocaleResource>
 </Language>
 '
 

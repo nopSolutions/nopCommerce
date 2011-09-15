@@ -6343,6 +6343,25 @@
               </LocaleResource>
             </Children>
           </LocaleResource>
+			<LocaleResource Name="Header">
+				<Children>
+					<LocaleResource Name="ClearCache">
+						<Value>Clear cache</Value>
+					</LocaleResource>
+					<LocaleResource Name="LoggedInAs">
+						<Value>Logged in as: {0}</Value>
+					</LocaleResource>
+					<LocaleResource Name="Logout">
+						<Value>Logout?</Value>
+					</LocaleResource>
+					<LocaleResource Name="PublicStore">
+						<Value>Public store</Value>
+					</LocaleResource>
+					<LocaleResource Name="RestartApplication">
+						<Value>Restart application</Value>
+					</LocaleResource>
+				</Children>
+			</LocaleResource>
             <LocaleResource Name="Help">
               <Value>Help</Value>
               <Children>

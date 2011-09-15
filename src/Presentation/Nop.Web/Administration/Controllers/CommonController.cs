@@ -311,6 +311,17 @@ namespace Nop.Admin.Controllers
 
             return RedirectToAction("Index", "Home");
         }
+
+        public ActionResult RestartApplication()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
+                return AccessDeniedView();
+
+            //restart application
+            _webHelper.RestartAppDomain("~/Admin/");
+
+            return RedirectToAction("Index", "Home");
+        }
         #endregion
     }
 }
