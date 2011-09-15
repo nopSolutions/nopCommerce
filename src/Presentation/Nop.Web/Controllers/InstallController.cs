@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Security.AccessControl;
 using System.Security.Principal;
+using System.Threading;
 using System.Web.Hosting;
 using System.Web.Mvc;
 using Nop.Core;
@@ -63,8 +64,10 @@ namespace Nop.Web.Controllers
                 using (var conn = new SqlConnection(masterCatalogConnectionString))
                 {
                     conn.Open();
-                    var command = new SqlCommand(query, conn);
-                    command.ExecuteNonQuery();
+                    using (var command = new SqlCommand(query, conn))
+                    {
+                        command.ExecuteNonQuery();  
+                    } 
                 }
 
                 return string.Empty;
@@ -380,6 +383,12 @@ namespace Nop.Web.Controllers
                                 var errorCreatingDatabase = createDatabase(connectionString);
                                 if (!String.IsNullOrEmpty(errorCreatingDatabase))
                                     throw new Exception(errorCreatingDatabase);
+                                else
+                                {
+                                    //Database cannot be created sometimes. Weird! Seems to be Entity Framework issue
+                                    //that's just wait 3 seconds
+                                    Thread.Sleep(3000);
+                                }
                             }
                         }
                         else
