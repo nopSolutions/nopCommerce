@@ -393,7 +393,8 @@ namespace Nop.Web.Controllers
                     {
                         //SQL CE
                         //little hack here (SQL CE 4 bug - http://www.hanselman.com/blog/PDC10BuildingABlogWithMicrosoftUnnamedPackageOfWebLove.aspx)
-                        string databasePath = HostingEnvironment.MapPath("~/App_Data/") + @"Nop.Db.sdf";
+                        //string databasePath = HostingEnvironment.MapPath("~/App_Data/") + @"Nop.Db.sdf";
+                        string databasePath = @"|DataDirectory|\Nop.Db.sdf";
                         connectionString = "Data Source=" + databasePath + ";Persist Security Info=False";
 
                         //drop database if exists

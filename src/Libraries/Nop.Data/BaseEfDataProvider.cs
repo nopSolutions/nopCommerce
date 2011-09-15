@@ -12,12 +12,7 @@ namespace Nop.Data
             Database.DefaultConnectionFactory = GetConnectionFactory();
         }
 
-        public virtual void SetDatabaseInitializer()
-        {
-            //pass some table names to ensure that we have nopCommerce 2.X installed
-            var initializer = new CreateTablesIfNotExist<NopObjectContext>(new[] { "Customer", "Discount", "Order", "Product", "ShoppingCartItem" });
-            Database.SetInitializer<NopObjectContext>(initializer);
-        }
+        public abstract void SetDatabaseInitializer();
 
         public virtual void InitDatabase()
         {

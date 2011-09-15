@@ -5,7 +5,7 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Transactions;
 
-namespace Nop.Data
+namespace Nop.Data.Initializers
 {
     public class CreateTablesIfNotExist<TContext> : IDatabaseInitializer<TContext> where TContext : DbContext
     {
