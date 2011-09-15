@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Nop.Admin.Models.Logging;
@@ -151,5 +152,27 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("List");
         }
 
+        //TODO: currently, only records within current page are passed, 
+        //need to somehow pass all of the records
+        [HttpPost, ActionName("List")]
+        [FormValueRequired("delete-selected")]
+        public ActionResult DeleteSelected(LogListModel model, ICollection<int> checkedRecords)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSystemLog))
+                return AccessDeniedView();
+
+            if (checkedRecords != null)
+            {
+                foreach (var logId in checkedRecords)
+                {
+                    var logRecord = _logger.GetLogById(logId);
+                    _logger.DeleteLog(logRecord);
+                }
+            }
+
+            //return View(model);
+            //refresh page 
+            return List();
+        }
     }
 }

@@ -7783,6 +7783,9 @@
                           <LocaleResource Name="ViewLogDetails">
                                 <Value>View log entry details</Value>
                             </LocaleResource>
+							<LocaleResource Name="DeleteSelected">
+								<Value>Delete selected</Value>
+							</LocaleResource>
                           <LocaleResource Name="ClearLog">
                               <Value>Clear log</Value>
                           </LocaleResource>                         

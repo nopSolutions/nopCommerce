@@ -92,6 +92,9 @@ set @resources='
   <LocaleResource Name="Account.Login.WrongCredentials">
     <Value>The credentials provided is incorrect</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.Log.DeleteSelected">
+    <Value>Delete selected</Value>
+  </LocaleResource>
 </Language>
 '
 

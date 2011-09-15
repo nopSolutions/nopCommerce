@@ -198,8 +198,10 @@ namespace Nop.Admin.Controllers
                     _queuedEmailService.DeleteQueuedEmail(queuedEmail);
                 }
             }
-            //TODO refresh page
-            return View(model);
+
+            //return View(model);
+            //refresh page 
+            return List();
         }
 	}
 }
