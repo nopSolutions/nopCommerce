@@ -13,6 +13,7 @@ using Nop.Core.Domain.Tax;
 using Nop.Services.Catalog;
 using Nop.Services.ExportImport;
 using Nop.Services.Media;
+using Nop.Services.Messages;
 using Nop.Tests;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -26,6 +27,7 @@ namespace Nop.Services.Tests.ExportImport
         IManufacturerService _manufacturerService;
         IProductService _productService;
         IPictureService _pictureService;
+        INewsLetterSubscriptionService _newsLetterSubscriptionService;
         IExportManager _exportManager;
 
         [SetUp]
@@ -35,9 +37,10 @@ namespace Nop.Services.Tests.ExportImport
             _manufacturerService = MockRepository.GenerateMock<IManufacturerService>();
             _productService = MockRepository.GenerateMock<IProductService>();
             _pictureService = MockRepository.GenerateMock<IPictureService>();
+            _newsLetterSubscriptionService = MockRepository.GenerateMock<INewsLetterSubscriptionService>();
 
             _exportManager = new ExportManager(_categoryService,
-                _manufacturerService, _productService, _pictureService);
+                _manufacturerService, _productService, _pictureService, _newsLetterSubscriptionService);
         }
 
         [Test]

@@ -13,6 +13,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Media;
+using Nop.Services.Messages;
 
 namespace Nop.Services.ExportImport
 {
@@ -25,16 +26,19 @@ namespace Nop.Services.ExportImport
         private readonly IManufacturerService _manufacturerService;
         private readonly IProductService _productService;
         private readonly IPictureService _pictureService;
+        private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
 
         public ExportManager(ICategoryService categoryService,
             IManufacturerService manufacturerService,
             IProductService productService,
-            IPictureService pictureService)
+            IPictureService pictureService,
+            INewsLetterSubscriptionService newsLetterSubscriptionService)
         {
             this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
             this._productService = productService;
             this._pictureService = pictureService;
+            this._newsLetterSubscriptionService = newsLetterSubscriptionService;
         }
 
         #region Utilities
@@ -830,14 +834,22 @@ namespace Nop.Services.ExportImport
                 tableDefinition.Add("IsForumModerator", "nvarchar(5)");
 
                 //attributes
-                tableDefinition.Add("FirstName", "nvarchar(100)");
-                tableDefinition.Add("LastName", "nvarchar(100)");
-                tableDefinition.Add("Gender", "nvarchar(100)");
-                tableDefinition.Add("Company", "nvarchar(100)");
+                tableDefinition.Add("FirstName", "nvarchar(255)");
+                tableDefinition.Add("LastName", "nvarchar(255)");
+                tableDefinition.Add("Gender", "nvarchar(255)");
+                tableDefinition.Add("Company", "nvarchar(255)");
+                tableDefinition.Add("StreetAddress", "nvarchar(255)");
+                tableDefinition.Add("StreetAddress2", "nvarchar(255)");
+                tableDefinition.Add("ZipPostalCode", "nvarchar(255)");
+                tableDefinition.Add("City", "nvarchar(255)");
+                tableDefinition.Add("CountryId", "int");
+                tableDefinition.Add("StateProvinceId", "int");
+                tableDefinition.Add("Phone", "nvarchar(255)");
+                tableDefinition.Add("Fax", "nvarchar(255)");
+
                 tableDefinition.Add("AvatarPictureId", "int");
                 tableDefinition.Add("ForumPostCount", "int");
                 tableDefinition.Add("Signature", "nvarchar(255)");
-                tableDefinition.Add("CountryId", "int");
                 excelHelper.WriteTable("Customers", tableDefinition);
 
                 //string decimalQuoter = (CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator.Equals(",") ? "\"" : String.Empty);
@@ -845,11 +857,11 @@ namespace Nop.Services.ExportImport
                 foreach (var customer in customers)
                 {
                     var sb = new StringBuilder();
-                    sb.Append("INSERT INTO [Customers] (CustomerId,CustomerGuid,Email,Username,PasswordStr,PasswordFormatId,PasswordSalt,LanguageId,CurrencyId,TaxDisplayTypeId,IsTaxExempt,VatNumber,VatNumberStatusId,TimeZoneId,AffiliateId,Active,Deleted,IsGuest,IsRegistered,IsAdministrator,IsForumModerator,FirstName,LastName,Gender,Company,AvatarPictureId,ForumPostCount,Signature,CountryId) VALUES (");
+                    sb.Append("INSERT INTO [Customers] (CustomerId,CustomerGuid,Email,Username,PasswordStr,PasswordFormatId,PasswordSalt,LanguageId,CurrencyId,TaxDisplayTypeId,IsTaxExempt,VatNumber,VatNumberStatusId,TimeZoneId,AffiliateId,Active,Deleted,IsGuest,IsRegistered,IsAdministrator,IsForumModerator,FirstName,LastName,Gender,Company,StreetAddress,StreetAddress2,ZipPostalCode,City,CountryId,StateProvinceId,Phone,Fax,AvatarPictureId,ForumPostCount,Signature) VALUES (");
 
                     sb.Append(customer.Id); sb.Append(",");
                     sb.Append('"'); sb.Append(customer.CustomerGuid); sb.Append("\",");
-                    sb.Append('"'); sb.Append(customer.Email!=null?customer.Email.Replace('"', '\''):""); sb.Append("\",");
+                    sb.Append('"'); sb.Append(customer.Email != null ? customer.Email.Replace('"', '\'') : ""); sb.Append("\",");
                     sb.Append('"'); sb.Append(customer.Username != null ? customer.Username.Replace('"', '\'') : ""); sb.Append("\",");
                     sb.Append('"'); sb.Append(customer.Password != null ? customer.Password.Replace('"', '\'') : ""); sb.Append("\",");
                     sb.Append(customer.PasswordFormatId); sb.Append(",");
@@ -871,23 +883,38 @@ namespace Nop.Services.ExportImport
                     sb.Append('"'); sb.Append(customer.IsAdmin()); sb.Append("\",");
                     sb.Append('"'); sb.Append(customer.IsForumModerator()); sb.Append("\",");
 
-                    
-                    var firstName  =customer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName);
-                    var lastName  =customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName);
-                    var gender  =customer.GetAttribute<string>(SystemCustomerAttributeNames.Gender);
-                    var company  =customer.GetAttribute<string>(SystemCustomerAttributeNames.Company);
-                    var avatarPictureId  =customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId);
-                    var forumPostCount  =customer.GetAttribute<int>(SystemCustomerAttributeNames.ForumPostCount);
-                    var signature  =customer.GetAttribute<string>(SystemCustomerAttributeNames.Signature);
-                    var countryId  =customer.GetAttribute<int>(SystemCustomerAttributeNames.CountryId);
-                    sb.Append('"'); sb.Append(firstName != null ? firstName.Replace('"', '\''):""); sb.Append("\",");
-                    sb.Append('"'); sb.Append(lastName != null ? lastName.Replace('"', '\''):""); sb.Append("\",");
-                    sb.Append('"'); sb.Append(gender != null ? gender.Replace('"', '\''):""); sb.Append("\",");
-                    sb.Append('"'); sb.Append(company != null ? company.Replace('"', '\''):""); sb.Append("\",");
+
+                    var firstName = customer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName);
+                    var lastName = customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName);
+                    var gender = customer.GetAttribute<string>(SystemCustomerAttributeNames.Gender);
+                    var company = customer.GetAttribute<string>(SystemCustomerAttributeNames.Company);
+                    var streetAddress = customer.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress);
+                    var streetAddress2 = customer.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress2);
+                    var zipPostalCode = customer.GetAttribute<string>(SystemCustomerAttributeNames.ZipPostalCode);
+                    var city = customer.GetAttribute<string>(SystemCustomerAttributeNames.City);
+                    var countryId = customer.GetAttribute<int>(SystemCustomerAttributeNames.CountryId);
+                    var stateProvinceId = customer.GetAttribute<int>(SystemCustomerAttributeNames.StateProvinceId);
+                    var phone = customer.GetAttribute<string>(SystemCustomerAttributeNames.Phone);
+                    var fax = customer.GetAttribute<string>(SystemCustomerAttributeNames.Fax);
+
+                    var avatarPictureId = customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId);
+                    var forumPostCount = customer.GetAttribute<int>(SystemCustomerAttributeNames.ForumPostCount);
+                    var signature = customer.GetAttribute<string>(SystemCustomerAttributeNames.Signature);
+                    sb.Append('"'); sb.Append(firstName != null ? firstName.Replace('"', '\'') : ""); sb.Append("\",");
+                    sb.Append('"'); sb.Append(lastName != null ? lastName.Replace('"', '\'') : ""); sb.Append("\",");
+                    sb.Append('"'); sb.Append(gender != null ? gender.Replace('"', '\'') : ""); sb.Append("\",");
+                    sb.Append('"'); sb.Append(company != null ? company.Replace('"', '\'') : ""); sb.Append("\",");
+                    sb.Append('"'); sb.Append(streetAddress != null ? streetAddress.Replace('"', '\'') : ""); sb.Append("\",");
+                    sb.Append('"'); sb.Append(streetAddress2 != null ? streetAddress2.Replace('"', '\'') : ""); sb.Append("\",");
+                    sb.Append('"'); sb.Append(zipPostalCode != null ? zipPostalCode.Replace('"', '\'') : ""); sb.Append("\",");
+                    sb.Append('"'); sb.Append(city != null ? city.Replace('"', '\'') : ""); sb.Append("\",");
+                    sb.Append(countryId); sb.Append(',');
+                    sb.Append(stateProvinceId); sb.Append(',');
+                    sb.Append('"'); sb.Append(phone != null ? phone.Replace('"', '\'') : ""); sb.Append("\",");
+                    sb.Append('"'); sb.Append(fax != null ? fax.Replace('"', '\'') : ""); sb.Append("\",");
                     sb.Append('"'); sb.Append(avatarPictureId); sb.Append("\",");
                     sb.Append(forumPostCount); sb.Append(",");
-                    sb.Append('"'); sb.Append(signature != null ? signature.Replace('"', '\''):""); sb.Append("\",");
-                    sb.Append(countryId);
+                    sb.Append('"'); sb.Append(signature != null ? signature.Replace('"', '\'') : ""); sb.Append("\"");
                     sb.Append(")");
 
                     excelHelper.ExecuteCommand(sb.ToString());
@@ -928,7 +955,6 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteElementString("TimeZoneId", null, customer.TimeZoneId);
                 xmlWriter.WriteElementString("AffiliateId", null, customer.AffiliateId.HasValue ? customer.AffiliateId.ToString() : "0");
                 xmlWriter.WriteElementString("Active", null, customer.Active.ToString());
-                xmlWriter.WriteElementString("Deleted", null, customer.Deleted.ToString());
 
 
                 xmlWriter.WriteElementString("IsGuest", null, customer.IsGuest().ToString());
@@ -940,10 +966,24 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteElementString("LastName", null, customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName));
                 xmlWriter.WriteElementString("Gender", null, customer.GetAttribute<string>(SystemCustomerAttributeNames.Gender));
                 xmlWriter.WriteElementString("Company", null, customer.GetAttribute<string>(SystemCustomerAttributeNames.Company));
+
+                xmlWriter.WriteElementString("CountryId", null, customer.GetAttribute<int>(SystemCustomerAttributeNames.CountryId).ToString());
+                xmlWriter.WriteElementString("StreetAddress", null, customer.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress));
+                xmlWriter.WriteElementString("StreetAddress2", null, customer.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress2));
+                xmlWriter.WriteElementString("ZipPostalCode", null, customer.GetAttribute<string>(SystemCustomerAttributeNames.ZipPostalCode));
+                xmlWriter.WriteElementString("City", null, customer.GetAttribute<string>(SystemCustomerAttributeNames.City));
+                xmlWriter.WriteElementString("CountryId", null, customer.GetAttribute<int>(SystemCustomerAttributeNames.CountryId).ToString());
+                xmlWriter.WriteElementString("StateProvinceId", null, customer.GetAttribute<int>(SystemCustomerAttributeNames.StateProvinceId).ToString());
+                xmlWriter.WriteElementString("Phone", null, customer.GetAttribute<string>(SystemCustomerAttributeNames.Phone));
+                xmlWriter.WriteElementString("Fax", null, customer.GetAttribute<string>(SystemCustomerAttributeNames.Fax));
+
+                var newsletter = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmail(customer.Email);
+                bool subscribedToNewsletters = newsletter != null && newsletter.Active;
+                xmlWriter.WriteElementString("Newsletter", null, subscribedToNewsletters.ToString());
+
                 xmlWriter.WriteElementString("AvatarPictureId", null, customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId).ToString());
                 xmlWriter.WriteElementString("ForumPostCount", null, customer.GetAttribute<int>(SystemCustomerAttributeNames.ForumPostCount).ToString());
                 xmlWriter.WriteElementString("Signature", null, customer.GetAttribute<string>(SystemCustomerAttributeNames.Signature));
-                xmlWriter.WriteElementString("CountryId", null, customer.GetAttribute<int>(SystemCustomerAttributeNames.CountryId).ToString());
                 
                 xmlWriter.WriteEndElement();
             }
