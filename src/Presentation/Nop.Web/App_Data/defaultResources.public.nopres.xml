@@ -2177,6 +2177,14 @@
       <LocaleResource Name="Reorder">
         <Value>Re-order</Value>
       </LocaleResource>
+		<LocaleResource Name="CompletePayment">
+			<Value>Complete payment</Value>
+			<Children>
+				<LocaleResource Name="Hint">
+					<Value>This order is not yet paid for. To pay now click the "Complete payment" button.</Value>
+				</LocaleResource>
+			</Children>
+		</LocaleResource>
       <LocaleResource Name="ReturnItems">
         <Value>Return Item(s)</Value>
       </LocaleResource>

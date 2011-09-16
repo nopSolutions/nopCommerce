@@ -110,6 +110,12 @@ set @resources='
   <LocaleResource Name="Admin.Header.Logout">
     <Value>Logout?</Value>
   </LocaleResource>
+  <LocaleResource Name="Order.CompletePayment">
+    <Value>Complete payment</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.CompletePayment.Hint">
+    <Value>This order is not yet paid for. To pay now click the "Complete payment" button.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -435,4 +441,13 @@ GO
 UPDATE [dbo].[Currency]
 SET [CurrencyCode]=N'RUB'
 WHERE [CurrencyCode]=N'RUR'
+GO
+
+
+--a value indicating whether customers are allowed to repost (complete) payments for redirection payment methods
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'paymentsettings.allowrepostingpayments')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'paymentsettings.allowrepostingpayments', N'true')
+END
 GO

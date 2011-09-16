@@ -505,6 +505,20 @@ namespace Nop.Plugin.Payments.GoogleCheckout
         }
 
         /// <summary>
+        /// Gets a value indicating whether customers can complete a payment after order is placed but not completed (for redirection payment methods)
+        /// </summary>
+        /// <param name="order">Order</param>
+        /// <returns>Result</returns>
+        public bool CanRePostProcessPayment(Order order)
+        {
+            if (order == null)
+                throw new ArgumentNullException("order");
+
+            //We always return false
+            return false;
+        }
+
+        /// <summary>
         /// Gets a route for provider configuration
         /// </summary>
         /// <param name="actionName">Action name</param>

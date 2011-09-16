@@ -116,6 +116,25 @@ namespace Nop.Services.Payments
             paymentMethod.PostProcessPayment(postProcessPaymentRequest);
         }
 
+        /// <summary>
+        /// Gets a value indicating whether customers can complete a payment after order is placed but not completed (for redirection payment methods)
+        /// </summary>
+        /// <param name="order">Order</param>
+        /// <returns>Result</returns>
+        public virtual bool CanRePostProcessPayment(Order order)
+        {
+            if (order == null)
+                throw new ArgumentNullException("order");
+
+            if (!_paymentSettings.AllowRePostingPayments)
+                return false;
+
+            var paymentMethod = LoadPaymentMethodBySystemName(order.PaymentMethodSystemName);
+            if (paymentMethod == null)
+                return false; //Payment method couldn't be loaded (for example, was uninstalled)
+            return paymentMethod.CanRePostProcessPayment(order);
+        }
+
 
 
         /// <summary>

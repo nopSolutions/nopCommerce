@@ -9,6 +9,7 @@ using System.Web.Routing;
 using Nop.Core;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Plugins;
@@ -401,6 +402,30 @@ namespace Nop.Plugin.Payments.PayPalStandard
             var result = new CancelRecurringPaymentResult();
             result.AddError("Recurring payment not supported");
             return result;
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether customers can complete a payment after order is placed but not completed (for redirection payment methods)
+        /// </summary>
+        /// <param name="order">Order</param>
+        /// <returns>Result</returns>
+        public bool CanRePostProcessPayment(Order order)
+        {
+            if (order == null)
+                throw new ArgumentNullException("order");
+
+            //PayPal Standard is the redirection payment method
+            //It also validates whether order is also paid (after redirection) so customers will not be able to pay twice
+            
+            //payment status should be Pending
+            if (order.PaymentStatus != PaymentStatus.Pending)
+                return false;
+
+            //let's ensure that at least 10 minutes passed after order is placed
+            if ((DateTime.UtcNow - order.CreatedOnUtc).TotalMinutes < 10)
+                return false;
+
+            return true;
         }
 
         /// <summary>

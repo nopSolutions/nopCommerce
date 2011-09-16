@@ -4660,6 +4660,7 @@ namespace Nop.Services.Installation
                         "Payments.PayInStore",
                         "Payments.PurchaseOrder",
                     },
+                    AllowRePostingPayments = true,
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<TaxSettings>>()

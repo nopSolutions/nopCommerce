@@ -1,5 +1,6 @@
 using System;
 using System.Web.Routing;
+using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Plugins;
 using Nop.Plugin.Payments.CheckMoneyOrder.Controllers;
@@ -119,6 +120,20 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder
             var result = new CancelRecurringPaymentResult();
             result.AddError("Recurring payment not supported");
             return result;
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether customers can complete a payment after order is placed but not completed (for redirection payment methods)
+        /// </summary>
+        /// <param name="order">Order</param>
+        /// <returns>Result</returns>
+        public bool CanRePostProcessPayment(Order order)
+        {
+            if (order == null)
+                throw new ArgumentNullException("order");
+
+            //it's not a redirection payment method. So we always return false
+            return false;
         }
 
         /// <summary>

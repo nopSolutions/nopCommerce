@@ -11,6 +11,7 @@ using Nop.Core.Domain;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Plugins;
@@ -596,6 +597,20 @@ namespace Nop.Plugin.Payments.PayPalDirect
         {
             //always success (cancel only on PayPal site)
             return new CancelRecurringPaymentResult();
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether customers can complete a payment after order is placed but not completed (for redirection payment methods)
+        /// </summary>
+        /// <param name="order">Order</param>
+        /// <returns>Result</returns>
+        public bool CanRePostProcessPayment(Order order)
+        {
+            if (order == null)
+                throw new ArgumentNullException("order");
+
+            //it's not a redirection payment method. So we always return false
+            return false;
         }
 
         /// <summary>

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Nop.Core.Domain.Orders;
 
 namespace Nop.Services.Payments
 {
@@ -41,6 +42,12 @@ namespace Nop.Services.Payments
         /// <param name="postProcessPaymentRequest">Payment info required for an order processing</param>
         void PostProcessPayment(PostProcessPaymentRequest postProcessPaymentRequest);
 
+        /// <summary>
+        /// Gets a value indicating whether customers can complete a payment after order is placed but not completed (for redirection payment methods)
+        /// </summary>
+        /// <param name="order">Order</param>
+        /// <returns>Result</returns>
+        bool CanRePostProcessPayment(Order order);
 
 
         /// <summary>

@@ -41,6 +41,7 @@ namespace Nop.Web.Models.Order
         public string VatNumber { get; set; }
 
         public string PaymentMethod { get; set; }
+        public bool CanRePostProcessPayment { get; set; }
 
         public string OrderSubtotal { get; set; }
         public string OrderSubTotalDiscount { get; set; }

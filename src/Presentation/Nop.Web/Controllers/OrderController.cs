@@ -135,9 +135,9 @@ namespace Nop.Web.Controllers
             //payment method
             var paymentMethod = _paymentService.LoadPaymentMethodBySystemName(order.PaymentMethodSystemName);
             model.PaymentMethod = paymentMethod != null ? paymentMethod.PluginDescriptor.FriendlyName : order.PaymentMethodSystemName;
+            model.CanRePostProcessPayment = _paymentService.CanRePostProcessPayment(order);
 
-
-            //totals
+            //totals)
             switch (order.CustomerTaxDisplayType)
             {
                 case TaxDisplayType.ExcludingTax:
@@ -434,6 +434,25 @@ namespace Nop.Web.Controllers
 
             _orderProcessingService.ReOrder(order);
             return RedirectToRoute("ShoppingCart");
+        }
+
+        [HttpPost, ActionName("Details")]
+        [FormValueRequired("repost-payment")]
+        public ActionResult RePostPayment(int orderId)
+        {
+            var order = _orderService.GetOrderById(orderId);
+            if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
+                return new HttpUnauthorizedResult();
+
+            if (!_paymentService.CanRePostProcessPayment(order))
+                return RedirectToRoute("OrderDetails", new { orderId = orderId });
+
+            var postProcessPaymentRequest = new PostProcessPaymentRequest()
+            {
+                Order = order
+            };
+            _paymentService.PostProcessPayment(postProcessPaymentRequest);
+            return RedirectToRoute("OrderDetails", new {orderId = orderId});
         }
 
         #endregion

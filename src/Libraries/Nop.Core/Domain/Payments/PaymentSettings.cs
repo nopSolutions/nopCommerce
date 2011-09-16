@@ -11,8 +11,13 @@ namespace Nop.Core.Domain.Payments
         }
 
         /// <summary>
-        /// Gets or sets an system names of active payment methods
+        /// Gets or sets a system names of active payment methods
         /// </summary>
         public List<string> ActivePaymentMethodSystemNames { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether customers are allowed to repost (complete) payments for redirection payment methods
+        /// </summary>
+        public bool AllowRePostingPayments { get; set; }
     }
 }
