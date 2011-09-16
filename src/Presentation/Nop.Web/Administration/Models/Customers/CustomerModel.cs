@@ -19,6 +19,8 @@ namespace Nop.Admin.Models.Customers
             SendEmail = new SendEmailModel();
             SendPm = new SendPmModel();
             AssociatedExternalAuthRecords = new List<AssociatedExternalAuthModel>();
+            AvailableCountries = new List<SelectListItem>();
+            AvailableStates = new List<SelectListItem>();
         }
 
         public bool AllowUsersToChangeUsernames { get; set; }
@@ -44,25 +46,67 @@ namespace Nop.Admin.Models.Customers
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.FirstName")]
         [AllowHtml]
         public string FirstName { get; set; }
-
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.LastName")]
         [AllowHtml]
         public string LastName { get; set; }
-
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.FullName")]
         public string FullName { get; set; }
         
         public bool DateOfBirthEnabled { get; set; }
-
         [UIHint("DateNullable")]
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.DateOfBirth")]
         public DateTime? DateOfBirth { get; set; }
 
         public bool CompanyEnabled { get; set; }
-
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.Company")]
         [AllowHtml]
         public string Company { get; set; }
+
+        public bool StreetAddressEnabled { get; set; }
+        [NopResourceDisplayName("Admin.Customers.Customers.Fields.StreetAddress")]
+        [AllowHtml]
+        public string StreetAddress { get; set; }
+
+        public bool StreetAddress2Enabled { get; set; }
+        [NopResourceDisplayName("Admin.Customers.Customers.Fields.StreetAddress2")]
+        [AllowHtml]
+        public string StreetAddress2 { get; set; }
+
+        public bool ZipPostalCodeEnabled { get; set; }
+        [NopResourceDisplayName("Admin.Customers.Customers.Fields.ZipPostalCode")]
+        [AllowHtml]
+        public string ZipPostalCode { get; set; }
+
+        public bool CityEnabled { get; set; }
+        [NopResourceDisplayName("Admin.Customers.Customers.Fields.City")]
+        [AllowHtml]
+        public string City { get; set; }
+
+        public bool CountryEnabled { get; set; }
+        [NopResourceDisplayName("Admin.Customers.Customers.Fields.Country")]
+        public int CountryId { get; set; }
+        public IList<SelectListItem> AvailableCountries { get; set; }
+
+        public bool StateProvinceEnabled { get; set; }
+        [NopResourceDisplayName("Admin.Customers.Customers.Fields.StateProvince")]
+        public int StateProvinceId { get; set; }
+        public IList<SelectListItem> AvailableStates { get; set; }
+
+        public bool PhoneEnabled { get; set; }
+        [NopResourceDisplayName("Admin.Customers.Customers.Fields.Phone")]
+        [AllowHtml]
+        public string Phone { get; set; }
+
+        public bool FaxEnabled { get; set; }
+        [NopResourceDisplayName("Admin.Customers.Customers.Fields.Fax")]
+        [AllowHtml]
+        public string Fax { get; set; }
+        
+
+
+
+
+
 
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.AdminComment")]
         [AllowHtml]

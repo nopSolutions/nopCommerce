@@ -116,6 +116,141 @@ set @resources='
   <LocaleResource Name="Order.CompletePayment.Hint">
     <Value>This order is not yet paid for. To pay now click the "Complete payment" button.</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.Fields.Location">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Fields.Country">
+    <Value>Country</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.StreetAddressEnabled">
+    <Value>''Street address'' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.StreetAddressEnabled.Hint">
+    <Value>Set if ''Street address'' is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.StreetAddress2Enabled">
+    <Value>''Street address 2'' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.StreetAddress2Enabled.Hint">
+    <Value>Set if ''Street address 2'' is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.ZipPostalCodeEnabled">
+    <Value>''Zip / postal code'' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.ZipPostalCodeEnabled.Hint">
+    <Value>Set if ''Zip / postal code'' is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.CityEnabled">
+    <Value>''City'' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.CityEnabled.Hint">
+    <Value>Set if ''City'' is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.CountryEnabled">
+    <Value>''Country'' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.CountryEnabled.Hint">
+    <Value>Set if ''Country'' is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.StateProvinceEnabled">
+    <Value>''State/province'' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.StateProvinceEnabled.Hint">
+    <Value>Set if ''State/province'' is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.CompanyEnabled">
+    <Value>''Company'' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.CompanyEnabled.Hint">
+    <Value>Set if ''Company'' is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PhoneEnabled">
+    <Value>''Phone number'' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PhoneEnabled.Hint">
+    <Value>Set if ''Phone number'' is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.FaxEnabled">
+    <Value>''Fax number'' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.FaxEnabled.Hint">
+    <Value>Set if ''Fax number'' is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Fields.StreetAddress">
+    <Value>Address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Fields.StreetAddress2">
+    <Value>Address 2</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Fields.ZipPostalCode">
+    <Value>Zip / postal code</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Fields.City">
+    <Value>City</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Fields.StateProvince">
+    <Value>State / province</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Fields.Phone">
+    <Value>Phone</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Fields.Fax">
+    <Value>Fax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.YourAddress">
+    <Value>Your Address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.YourContactInformation">
+    <Value>Your Contact Information</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.StreetAddress">
+    <Value>Address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.StreetAddress.Hint">
+    <Value>The address.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.StreetAddress2">
+    <Value>Address 2</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.StreetAddress2.Hint">
+    <Value>The address 2.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.ZipPostalCode">
+    <Value>Zip / postal code</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.ZipPostalCode.Hint">
+    <Value>The zip / postal code.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.City">
+    <Value>City</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.City.Hint">
+    <Value>The city.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.Country">
+    <Value>Country</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.Country.Hint">
+    <Value>The country.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.StateProvince">
+    <Value>State / province</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.StateProvince.Hint">
+    <Value>The state / province.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.Phone">
+    <Value>Phone</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.Phone.Hint">
+    <Value>The phone.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.Fax">
+    <Value>Fax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.Fax.Hint">
+    <Value>The fax.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -450,4 +585,10 @@ BEGIN
 	INSERT [Setting] ([Name], [Value])
 	VALUES (N'paymentsettings.allowrepostingpayments', N'true')
 END
+GO
+
+
+UPDATE [dbo].[CustomerAttribute]
+SET [Key]=N'CountryId'
+WHERE [Key]=N'Location'
 GO

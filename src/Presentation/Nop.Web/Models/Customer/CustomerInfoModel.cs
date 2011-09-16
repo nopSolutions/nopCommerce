@@ -13,7 +13,8 @@ namespace Nop.Web.Models.Customer
         public CustomerInfoModel()
         {
             this.AvailableTimeZones = new List<SelectListItem>();
-            this.AvailableLocations = new List<SelectListItem>();
+            this.AvailableCountries = new List<SelectListItem>();
+            this.AvailableStates = new List<SelectListItem>();
             this.AssociatedExternalAuthRecords = new List<AssociatedExternalAuthModel>();
         }
 
@@ -52,6 +53,46 @@ namespace Nop.Web.Models.Customer
         [NopResourceDisplayName("Account.Fields.Company")]
         [AllowHtml]
         public string Company { get; set; }
+        
+        public bool StreetAddressEnabled { get; set; }
+        [NopResourceDisplayName("Account.Fields.StreetAddress")]
+        [AllowHtml]
+        public string StreetAddress { get; set; }
+
+        public bool StreetAddress2Enabled { get; set; }
+        [NopResourceDisplayName("Account.Fields.StreetAddress2")]
+        [AllowHtml]
+        public string StreetAddress2 { get; set; }
+
+        public bool ZipPostalCodeEnabled { get; set; }
+        [NopResourceDisplayName("Account.Fields.ZipPostalCode")]
+        [AllowHtml]
+        public string ZipPostalCode { get; set; }
+
+        public bool CityEnabled { get; set; }
+        [NopResourceDisplayName("Account.Fields.City")]
+        [AllowHtml]
+        public string City { get; set; }
+
+        public bool CountryEnabled { get; set; }
+        [NopResourceDisplayName("Account.Fields.Country")]
+        public int CountryId { get; set; }
+        public IList<SelectListItem> AvailableCountries { get; set; }
+
+        public bool StateProvinceEnabled { get; set; }
+        [NopResourceDisplayName("Account.Fields.StateProvince")]
+        public int StateProvinceId { get; set; }
+        public IList<SelectListItem> AvailableStates { get; set; }
+
+        public bool PhoneEnabled { get; set; }
+        [NopResourceDisplayName("Account.Fields.Phone")]
+        [AllowHtml]
+        public string Phone { get; set; }
+
+        public bool FaxEnabled { get; set; }
+        [NopResourceDisplayName("Account.Fields.Fax")]
+        [AllowHtml]
+        public string Fax { get; set; }
 
         public bool NewsletterEnabled { get; set; }
         [NopResourceDisplayName("Account.Fields.Newsletter")]
@@ -62,11 +103,6 @@ namespace Nop.Web.Models.Customer
         [NopResourceDisplayName("Account.Fields.Signature")]
         [AllowHtml]
         public string Signature { get; set; }
-
-        public bool LocationEnabled { get; set; }
-        [NopResourceDisplayName("Account.Fields.Location")]
-        public int LocationCountryId { get; set; }
-        public IList<SelectListItem> AvailableLocations { get; set; }
 
         //time zone
         [NopResourceDisplayName("Account.Fields.TimeZone")]

@@ -129,8 +129,8 @@ namespace Nop.Web.Controllers
             {
                 locationEnabled = true;
 
-                var locationCountryId = customer.GetAttribute<int>(SystemCustomerAttributeNames.LocationCountryId);
-                var country = _countryService.GetCountryById(locationCountryId);
+                var countryId = customer.GetAttribute<int>(SystemCustomerAttributeNames.CountryId);
+                var country = _countryService.GetCountryById(countryId);
                 if (country != null)
                 {
                     location = country.Name;
@@ -145,7 +145,7 @@ namespace Nop.Web.Controllers
             bool pmEnabled = false;
             if (_forumSettings.AllowPrivateMessages)
             {
-                if (customer != null && !customer.IsGuest())
+                if (!customer.IsGuest())
                 {
                     pmEnabled = true;
                 }

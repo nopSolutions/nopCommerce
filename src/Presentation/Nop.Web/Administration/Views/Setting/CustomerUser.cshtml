@@ -169,6 +169,7 @@
                 <hr />
                 <b>Form fields:</b>
                 <br />
+                <i>You can create and manage the form fields available during registration (public store) below.</i>
             </td>
         </tr>
         <tr>
@@ -196,6 +197,78 @@
             <td class="adminData">
                 @Html.EditorFor(model => model.CustomerSettings.CompanyEnabled)
                 @Html.ValidationMessageFor(model => model.CustomerSettings.CompanyEnabled)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CustomerSettings.StreetAddressEnabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.CustomerSettings.StreetAddressEnabled)
+                @Html.ValidationMessageFor(model => model.CustomerSettings.StreetAddressEnabled)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CustomerSettings.StreetAddress2Enabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.CustomerSettings.StreetAddress2Enabled)
+                @Html.ValidationMessageFor(model => model.CustomerSettings.StreetAddress2Enabled)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CustomerSettings.ZipPostalCodeEnabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.CustomerSettings.ZipPostalCodeEnabled)
+                @Html.ValidationMessageFor(model => model.CustomerSettings.ZipPostalCodeEnabled)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CustomerSettings.CityEnabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.CustomerSettings.CityEnabled)
+                @Html.ValidationMessageFor(model => model.CustomerSettings.CityEnabled)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CustomerSettings.CountryEnabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.CustomerSettings.CountryEnabled)
+                @Html.ValidationMessageFor(model => model.CustomerSettings.CountryEnabled)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CustomerSettings.StateProvinceEnabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.CustomerSettings.StateProvinceEnabled)
+                @Html.ValidationMessageFor(model => model.CustomerSettings.StateProvinceEnabled)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CustomerSettings.PhoneEnabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.CustomerSettings.PhoneEnabled)
+                @Html.ValidationMessageFor(model => model.CustomerSettings.PhoneEnabled)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CustomerSettings.FaxEnabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.CustomerSettings.FaxEnabled)
+                @Html.ValidationMessageFor(model => model.CustomerSettings.FaxEnabled)
             </td>
         </tr>
         <tr>

@@ -426,8 +426,8 @@ namespace Nop.Web.Controllers
                     var avatarUrl = _pictureService.GetPictureUrl(post.Customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId),
                          _mediaSettings.AvatarPictureSize, false);
                     var signature = post.Customer.GetAttribute<string>(SystemCustomerAttributeNames.Signature);
-                    var locationCountryId = post.Customer.GetAttribute<int>(SystemCustomerAttributeNames.LocationCountryId);
-                    var country = _countryService.GetCountryById(locationCountryId);
+                    var countryId = post.Customer.GetAttribute<int>(SystemCustomerAttributeNames.CountryId);
+                    var country = _countryService.GetCountryById(countryId);
                     var location = country != null ? country.Name : string.Empty;
 
                     model.ForumPostModels.Add(new ForumPostModel()

@@ -220,17 +220,39 @@ namespace Nop.Web.Controllers
             model.DisplayVatNumber = _taxSettings.EuVatEnabled;
             //form fields
             model.GenderEnabled = _customerSettings.GenderEnabled;
-            model.CompanyEnabled = _customerSettings.CompanyEnabled;
-            model.NewsletterEnabled = _customerSettings.NewsletterEnabled;
             model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
+            model.CompanyEnabled = _customerSettings.CompanyEnabled;
+            model.StreetAddressEnabled = _customerSettings.StreetAddressEnabled;
+            model.StreetAddress2Enabled = _customerSettings.StreetAddress2Enabled;
+            model.ZipPostalCodeEnabled = _customerSettings.ZipPostalCodeEnabled;
+            model.CityEnabled = _customerSettings.CityEnabled;
+            model.CountryEnabled = _customerSettings.CountryEnabled;
+            model.StateProvinceEnabled = _customerSettings.StateProvinceEnabled;
+            model.PhoneEnabled = _customerSettings.PhoneEnabled;
+            model.FaxEnabled = _customerSettings.FaxEnabled;
+            model.NewsletterEnabled = _customerSettings.NewsletterEnabled;
             model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
-            model.LocationEnabled = _customerSettings.ShowCustomersLocation;
             model.DisplayCaptcha = _captchaSettings.Enabled;
-            if (_customerSettings.ShowCustomersLocation)
+            if (_customerSettings.CountryEnabled)
             {
+                model.AvailableCountries.Add(new SelectListItem() { Text = _localizationService.GetResource("Address.SelectCountry"), Value = "0" });
                 foreach (var c in _countryService.GetAllCountries())
                 {
-                    model.AvailableLocations.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString()});
+                    model.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString() });
+                }
+                
+                if (_customerSettings.StateProvinceEnabled)
+                {
+                    //states
+                    var states = _stateProvinceService.GetStateProvincesByCountryId(model.CountryId).ToList();
+                    if (states.Count > 0)
+                    {
+                        foreach (var s in states)
+                            model.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == model.StateProvinceId) });
+                    }
+                    else
+                        model.AvailableStates.Add(new SelectListItem() { Text = _localizationService.GetResource("Address.OtherNonUS"), Value = "0" });
+
                 }
             }
 
@@ -303,6 +325,24 @@ namespace Nop.Web.Controllers
                     }
                     if (_customerSettings.CompanyEnabled)
                         _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.Company, model.Company);
+                    if (_customerSettings.StreetAddressEnabled)
+                        _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.StreetAddress, model.StreetAddress);
+                    if (_customerSettings.StreetAddress2Enabled)
+                        _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.StreetAddress2, model.StreetAddress2);
+                    if (_customerSettings.ZipPostalCodeEnabled)
+                        _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.ZipPostalCode, model.ZipPostalCode);
+                    if (_customerSettings.CityEnabled)
+                        _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.City, model.City);
+                    if (_customerSettings.CountryEnabled)
+                        _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.CountryId, model.CountryId);
+                    if (_customerSettings.CountryEnabled && _customerSettings.StateProvinceEnabled)
+                        _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.StateProvinceId, model.StateProvinceId);
+                    if (_customerSettings.PhoneEnabled)
+                        _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.Phone, model.Phone);
+                    if (_customerSettings.FaxEnabled)
+                        _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.Fax, model.Fax);
+
+                    //newsletter
                     if (_customerSettings.NewsletterEnabled)
                     {
                         //save newsletter value
@@ -330,10 +370,6 @@ namespace Nop.Web.Controllers
                                 });
                             }
                         }
-                    }
-                    if (_customerSettings.ShowCustomersLocation)
-                    {
-                        _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.LocationCountryId, model.LocationCountryId);
                     }
 
                     //login customer now
@@ -390,17 +426,40 @@ namespace Nop.Web.Controllers
             model.DisplayVatNumber = _taxSettings.EuVatEnabled;
             //form fields
             model.GenderEnabled = _customerSettings.GenderEnabled;
-            model.CompanyEnabled = _customerSettings.CompanyEnabled;
-            model.NewsletterEnabled = _customerSettings.NewsletterEnabled;
             model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
+            model.CompanyEnabled = _customerSettings.CompanyEnabled;
+            model.StreetAddressEnabled = _customerSettings.StreetAddressEnabled;
+            model.StreetAddress2Enabled = _customerSettings.StreetAddress2Enabled;
+            model.ZipPostalCodeEnabled = _customerSettings.ZipPostalCodeEnabled;
+            model.CityEnabled = _customerSettings.CityEnabled;
+            model.CountryEnabled = _customerSettings.CountryEnabled;
+            model.StateProvinceEnabled = _customerSettings.StateProvinceEnabled;
+            model.PhoneEnabled = _customerSettings.PhoneEnabled;
+            model.FaxEnabled = _customerSettings.FaxEnabled;
+            model.NewsletterEnabled = _customerSettings.NewsletterEnabled;
             model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
-            model.LocationEnabled = _customerSettings.ShowCustomersLocation;
             model.DisplayCaptcha = _captchaSettings.Enabled;
-            if (_customerSettings.ShowCustomersLocation)
+            if (_customerSettings.CountryEnabled)
             {
+                model.AvailableCountries.Add(new SelectListItem() { Text = _localizationService.GetResource("Address.SelectCountry"), Value = "0" });
                 foreach (var c in _countryService.GetAllCountries())
                 {
-                    model.AvailableLocations.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == model.LocationCountryId) });
+                    model.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = (c.Id == model.CountryId) });
+                }
+
+
+                if (_customerSettings.StateProvinceEnabled)
+                {
+                    //states
+                    var states = _stateProvinceService.GetStateProvincesByCountryId(model.CountryId).ToList();
+                    if (states.Count > 0)
+                    {
+                        foreach (var s in states)
+                            model.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == model.StateProvinceId) });
+                    }
+                    else
+                        model.AvailableStates.Add(new SelectListItem() { Text = _localizationService.GetResource("Address.OtherNonUS"), Value = "0" });
+
                 }
             }
 
@@ -594,6 +653,23 @@ namespace Nop.Web.Controllers
                     }
                     if (_customerSettings.CompanyEnabled)
                         _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.Company, model.Company);
+                    if (_customerSettings.StreetAddressEnabled)
+                        _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.StreetAddress, model.StreetAddress);
+                    if (_customerSettings.StreetAddress2Enabled)
+                        _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.StreetAddress2, model.StreetAddress2);
+                    if (_customerSettings.ZipPostalCodeEnabled)
+                        _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.ZipPostalCode, model.ZipPostalCode);
+                    if (_customerSettings.CityEnabled)
+                        _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.City, model.City);
+                    if (_customerSettings.CountryEnabled)
+                        _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.CountryId, model.CountryId);
+                    if (_customerSettings.CountryEnabled && _customerSettings.StateProvinceEnabled)
+                        _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.StateProvinceId, model.StateProvinceId);
+                    if (_customerSettings.PhoneEnabled)
+                        _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.Phone, model.Phone);
+                    if (_customerSettings.FaxEnabled)
+                        _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.Fax, model.Fax);
+
                     //newsletter
                     if (_customerSettings.NewsletterEnabled)
                     {
@@ -625,14 +701,7 @@ namespace Nop.Web.Controllers
                     }
 
                     if (_forumSettings.SignaturesEnabled)
-                    {
                         _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.Signature, model.Signature);
-                    }
-
-                    if (_customerSettings.ShowCustomersLocation)
-                    {
-                        _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.LocationCountryId, model.LocationCountryId);
-                    }
 
                     return RedirectToAction("info");
                 }
@@ -660,12 +729,7 @@ namespace Nop.Web.Controllers
             model.AllowCustomersToSetTimeZone = _dateTimeSettings.AllowCustomersToSetTimeZone;
             foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
                 model.AvailableTimeZones.Add(new SelectListItem() { Text = tzi.DisplayName, Value = tzi.Id, Selected = (excludeProperties ? tzi.Id == model.TimeZoneId : tzi.Id == _dateTimeHelper.CurrentTimeZone.Id) });
-
-            foreach (var c in _countryService.GetAllCountries())
-            {
-                model.AvailableLocations.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = (excludeProperties ? c.Id == model.LocationCountryId : false) });
-            }
-
+            
             if (!excludeProperties)
             {
                 model.VatNumber = customer.VatNumber;
@@ -680,13 +744,20 @@ namespace Nop.Web.Controllers
                     model.DateOfBirthYear = dateOfBirth.Value.Year;
                 }
                 model.Company = customer.GetAttribute<string>(SystemCustomerAttributeNames.Company);
+                model.StreetAddress = customer.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress);
+                model.StreetAddress2 = customer.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress2);
+                model.ZipPostalCode = customer.GetAttribute<string>(SystemCustomerAttributeNames.ZipPostalCode);
+                model.City = customer.GetAttribute<string>(SystemCustomerAttributeNames.City);
+                model.CountryId = customer.GetAttribute<int>(SystemCustomerAttributeNames.CountryId);
+                model.StateProvinceId = customer.GetAttribute<int>(SystemCustomerAttributeNames.StateProvinceId);
+                model.Phone = customer.GetAttribute<string>(SystemCustomerAttributeNames.Phone);
+                model.Fax = customer.GetAttribute<string>(SystemCustomerAttributeNames.Fax);
 
                 //newsletter
                 var newsletter = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmail(customer.Email);
                 model.Newsletter = newsletter != null && newsletter.Active;
 
-                model.Signature = customer.GetAttribute<string>(SystemCustomerAttributeNames.Signature);                
-                model.LocationCountryId = customer.GetAttribute<int>(SystemCustomerAttributeNames.LocationCountryId);
+                model.Signature = customer.GetAttribute<string>(SystemCustomerAttributeNames.Signature);
 
                 model.Email = customer.Email;
                 model.Username = customer.Username;
@@ -696,16 +767,52 @@ namespace Nop.Web.Controllers
                 if (_customerSettings.UsernamesEnabled && !_customerSettings.AllowUsersToChangeUsernames)
                     model.Username = customer.Username;
             }
+
+            //countries and states
+            if (_customerSettings.CountryEnabled)
+            {
+                model.AvailableCountries.Add(new SelectListItem() { Text = _localizationService.GetResource("Address.SelectCountry"), Value = "0" });
+                foreach (var c in _countryService.GetAllCountries())
+                {
+                    model.AvailableCountries.Add(new SelectListItem()
+                    {
+                        Text = c.Name,
+                        Value = c.Id.ToString(),
+                        Selected = c.Id == model.CountryId
+                    });
+                }
+
+                if (_customerSettings.StateProvinceEnabled)
+                {
+                    //states
+                    var states = _stateProvinceService.GetStateProvincesByCountryId(model.CountryId).ToList();
+                    if (states.Count > 0)
+                    {
+                        foreach (var s in states)
+                            model.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString(), Selected = (s.Id == model.StateProvinceId) });
+                    }
+                    else
+                        model.AvailableStates.Add(new SelectListItem() { Text = _localizationService.GetResource("Address.OtherNonUS"), Value = "0" });
+
+                }
+            }
             model.DisplayVatNumber = _taxSettings.EuVatEnabled;
             model.VatNumberStatusNote = customer.VatNumberStatus.GetLocalizedEnum(_localizationService, _workContext);
             model.GenderEnabled = _customerSettings.GenderEnabled;
             model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
             model.CompanyEnabled = _customerSettings.CompanyEnabled;
+            model.StreetAddressEnabled = _customerSettings.StreetAddressEnabled;
+            model.StreetAddress2Enabled = _customerSettings.StreetAddress2Enabled;
+            model.ZipPostalCodeEnabled = _customerSettings.ZipPostalCodeEnabled;
+            model.CityEnabled = _customerSettings.CityEnabled;
+            model.CountryEnabled = _customerSettings.CountryEnabled;
+            model.StateProvinceEnabled = _customerSettings.StateProvinceEnabled;
+            model.PhoneEnabled = _customerSettings.PhoneEnabled;
+            model.FaxEnabled = _customerSettings.FaxEnabled;
             model.NewsletterEnabled = _customerSettings.NewsletterEnabled;
             model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
             model.AllowUsersToChangeUsernames = _customerSettings.AllowUsersToChangeUsernames;
-            model.SignatureEnabled = _forumSettings.SignaturesEnabled;
-            model.LocationEnabled = _customerSettings.ShowCustomersLocation;
+            model.SignatureEnabled = _forumSettings.ForumsEnabled && _forumSettings.SignaturesEnabled;
 
             //external authentication
             foreach (var ear in _openAuthenticationService.GetExternalIdentifiersFor(customer))

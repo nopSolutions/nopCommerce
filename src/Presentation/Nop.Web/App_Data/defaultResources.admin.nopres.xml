@@ -3472,6 +3472,78 @@
                           </LocaleResource>
                         </Children>
                       </LocaleResource>
+						<LocaleResource Name="StreetAddressEnabled">
+							<Value>'Street address' enabled</Value>
+							<Children>
+								<LocaleResource Name="Hint">
+									<Value>Set if 'Street address' is enabled.</Value>
+								</LocaleResource>
+							</Children>
+						</LocaleResource>
+						<LocaleResource Name="StreetAddress2Enabled">
+							<Value>'Street address 2' enabled</Value>
+							<Children>
+								<LocaleResource Name="Hint">
+									<Value>Set if 'Street address 2' is enabled.</Value>
+								</LocaleResource>
+							</Children>
+						</LocaleResource>
+						<LocaleResource Name="ZipPostalCodeEnabled">
+							<Value>'Zip / postal code' enabled</Value>
+							<Children>
+								<LocaleResource Name="Hint">
+									<Value>Set if 'Zip / postal code' is enabled.</Value>
+								</LocaleResource>
+							</Children>
+						</LocaleResource>
+						<LocaleResource Name="CityEnabled">
+							<Value>'City' enabled</Value>
+							<Children>
+								<LocaleResource Name="Hint">
+									<Value>Set if 'City' is enabled.</Value>
+								</LocaleResource>
+							</Children>
+						</LocaleResource>
+						<LocaleResource Name="CountryEnabled">
+							<Value>'Country' enabled</Value>
+							<Children>
+								<LocaleResource Name="Hint">
+									<Value>Set if 'Country' is enabled.</Value>
+								</LocaleResource>
+							</Children>
+						</LocaleResource>
+						<LocaleResource Name="StateProvinceEnabled">
+							<Value>'State/province' enabled</Value>
+							<Children>
+								<LocaleResource Name="Hint">
+									<Value>Set if 'State/province' is enabled.</Value>
+								</LocaleResource>
+							</Children>
+						</LocaleResource>
+						<LocaleResource Name="CompanyEnabled">
+							<Value>'Company' enabled</Value>
+							<Children>
+								<LocaleResource Name="Hint">
+									<Value>Set if 'Company' is enabled.</Value>
+								</LocaleResource>
+							</Children>
+						</LocaleResource>
+						<LocaleResource Name="PhoneEnabled">
+							<Value>'Phone number' enabled</Value>
+							<Children>
+								<LocaleResource Name="Hint">
+									<Value>Set if 'Phone number' is enabled.</Value>
+								</LocaleResource>
+							</Children>
+						</LocaleResource>
+						<LocaleResource Name="FaxEnabled">
+							<Value>'Fax number' enabled</Value>
+							<Children>
+								<LocaleResource Name="Hint">
+									<Value>Set if 'Fax number' is enabled.</Value>
+								</LocaleResource>
+							</Children>
+						</LocaleResource>
                       <LocaleResource Name="NewsletterEnabled">
                         <Value>'Newsletter' enabled</Value>
                         <Children>
@@ -5590,6 +5662,24 @@
                     <LocaleResource Name="AddNew">
                       <Value>Add a new customer</Value>
                     </LocaleResource>
+					<LocaleResource Name="AssociatedExternalAuth">
+						  <Value>External authentication</Value>
+						  <Children>
+							  <LocaleResource Name="Fields">
+								  <Children>
+									  <LocaleResource Name="Email">
+										  <Value>Email</Value>
+									  </LocaleResource>
+									  <LocaleResource Name="ExternalIdentifier">
+										  <Value>External identifier</Value>
+									  </LocaleResource>
+									  <LocaleResource Name="AuthMethodName">
+										  <Value>Authentication method</Value>
+									  </LocaleResource>
+								  </Children>
+							  </LocaleResource>
+						  </Children>
+					  </LocaleResource>
                     <LocaleResource Name="BackToList">
                       <Value>back to customer list</Value>
                     </LocaleResource>
@@ -5609,24 +5699,6 @@
                     </LocaleResource>
                     <LocaleResource Name="EditCustomerDetails">
                       <Value>Edit customer details</Value>
-                    </LocaleResource>
-                    <LocaleResource Name="AssociatedExternalAuth">
-                      <Value>External authentication</Value>
-                      <Children>
-                        <LocaleResource Name="Fields">
-                          <Children>
-                            <LocaleResource Name="Email">
-                              <Value>Email</Value>
-                            </LocaleResource>
-                            <LocaleResource Name="ExternalIdentifier">
-                              <Value>External identifier</Value>
-                            </LocaleResource>
-                            <LocaleResource Name="AuthMethodName">
-                              <Value>Authentication method</Value>
-                            </LocaleResource>
-                          </Children>
-                        </LocaleResource>
-                      </Children>
                     </LocaleResource>
                     <LocaleResource Name="Fields">
                       <Children>
@@ -5723,6 +5795,70 @@
                             </LocaleResource>
                           </Children>
                         </LocaleResource>
+						  <LocaleResource Name="StreetAddress">
+							  <Value>Address</Value>
+							  <Children>
+								  <LocaleResource Name="Hint">
+									  <Value>The address.</Value>
+								  </LocaleResource>
+							  </Children>
+						  </LocaleResource>
+						  <LocaleResource Name="StreetAddress2">
+							  <Value>Address 2</Value>
+							  <Children>
+								  <LocaleResource Name="Hint">
+									  <Value>The address 2.</Value>
+								  </LocaleResource>
+							  </Children>
+						  </LocaleResource>
+						  <LocaleResource Name="ZipPostalCode">
+							  <Value>Zip / postal code</Value>
+							  <Children>
+								  <LocaleResource Name="Hint">
+									  <Value>The zip / postal code.</Value>
+								  </LocaleResource>
+							  </Children>
+						  </LocaleResource>
+						  <LocaleResource Name="City">
+							  <Value>City</Value>
+							  <Children>
+								  <LocaleResource Name="Hint">
+									  <Value>The city.</Value>
+								  </LocaleResource>
+							  </Children>
+						  </LocaleResource>
+						  <LocaleResource Name="Country">
+							  <Value>Country</Value>
+							  <Children>
+								  <LocaleResource Name="Hint">
+									  <Value>The country.</Value>
+								  </LocaleResource>
+							  </Children>
+						  </LocaleResource>
+						  <LocaleResource Name="StateProvince">
+							  <Value>State / province</Value>
+							  <Children>
+								  <LocaleResource Name="Hint">
+									  <Value>The state / province.</Value>
+								  </LocaleResource>
+							  </Children>
+						  </LocaleResource>
+						  <LocaleResource Name="Phone">
+							  <Value>Phone</Value>
+							  <Children>
+								  <LocaleResource Name="Hint">
+									  <Value>The phone.</Value>
+								  </LocaleResource>
+							  </Children>
+						  </LocaleResource>
+						  <LocaleResource Name="Fax">
+							  <Value>Fax</Value>
+							  <Children>
+								  <LocaleResource Name="Hint">
+									  <Value>The fax.</Value>
+								  </LocaleResource>
+							  </Children>
+						  </LocaleResource>						  
                         <LocaleResource Name="AdminComment">
                           <Value>Admin comment</Value>
                           <Children>

@@ -837,7 +837,7 @@ namespace Nop.Services.ExportImport
                 tableDefinition.Add("AvatarPictureId", "int");
                 tableDefinition.Add("ForumPostCount", "int");
                 tableDefinition.Add("Signature", "nvarchar(255)");
-                tableDefinition.Add("LocationCountryId", "int");
+                tableDefinition.Add("CountryId", "int");
                 excelHelper.WriteTable("Customers", tableDefinition);
 
                 //string decimalQuoter = (CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator.Equals(",") ? "\"" : String.Empty);
@@ -845,7 +845,7 @@ namespace Nop.Services.ExportImport
                 foreach (var customer in customers)
                 {
                     var sb = new StringBuilder();
-                    sb.Append("INSERT INTO [Customers] (CustomerId,CustomerGuid,Email,Username,PasswordStr,PasswordFormatId,PasswordSalt,LanguageId,CurrencyId,TaxDisplayTypeId,IsTaxExempt,VatNumber,VatNumberStatusId,TimeZoneId,AffiliateId,Active,Deleted,IsGuest,IsRegistered,IsAdministrator,IsForumModerator,FirstName,LastName,Gender,Company,AvatarPictureId,ForumPostCount,Signature,LocationCountryId) VALUES (");
+                    sb.Append("INSERT INTO [Customers] (CustomerId,CustomerGuid,Email,Username,PasswordStr,PasswordFormatId,PasswordSalt,LanguageId,CurrencyId,TaxDisplayTypeId,IsTaxExempt,VatNumber,VatNumberStatusId,TimeZoneId,AffiliateId,Active,Deleted,IsGuest,IsRegistered,IsAdministrator,IsForumModerator,FirstName,LastName,Gender,Company,AvatarPictureId,ForumPostCount,Signature,CountryId) VALUES (");
 
                     sb.Append(customer.Id); sb.Append(",");
                     sb.Append('"'); sb.Append(customer.CustomerGuid); sb.Append("\",");
@@ -879,7 +879,7 @@ namespace Nop.Services.ExportImport
                     var avatarPictureId  =customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId);
                     var forumPostCount  =customer.GetAttribute<int>(SystemCustomerAttributeNames.ForumPostCount);
                     var signature  =customer.GetAttribute<string>(SystemCustomerAttributeNames.Signature);
-                    var locationCountryId  =customer.GetAttribute<int>(SystemCustomerAttributeNames.LocationCountryId);
+                    var countryId  =customer.GetAttribute<int>(SystemCustomerAttributeNames.CountryId);
                     sb.Append('"'); sb.Append(firstName != null ? firstName.Replace('"', '\''):""); sb.Append("\",");
                     sb.Append('"'); sb.Append(lastName != null ? lastName.Replace('"', '\''):""); sb.Append("\",");
                     sb.Append('"'); sb.Append(gender != null ? gender.Replace('"', '\''):""); sb.Append("\",");
@@ -887,7 +887,7 @@ namespace Nop.Services.ExportImport
                     sb.Append('"'); sb.Append(avatarPictureId); sb.Append("\",");
                     sb.Append(forumPostCount); sb.Append(",");
                     sb.Append('"'); sb.Append(signature != null ? signature.Replace('"', '\''):""); sb.Append("\",");
-                    sb.Append(locationCountryId);
+                    sb.Append(countryId);
                     sb.Append(")");
 
                     excelHelper.ExecuteCommand(sb.ToString());
@@ -943,7 +943,7 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteElementString("AvatarPictureId", null, customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId).ToString());
                 xmlWriter.WriteElementString("ForumPostCount", null, customer.GetAttribute<int>(SystemCustomerAttributeNames.ForumPostCount).ToString());
                 xmlWriter.WriteElementString("Signature", null, customer.GetAttribute<string>(SystemCustomerAttributeNames.Signature));
-                xmlWriter.WriteElementString("LocationCountryId", null, customer.GetAttribute<int>(SystemCustomerAttributeNames.LocationCountryId).ToString());
+                xmlWriter.WriteElementString("CountryId", null, customer.GetAttribute<int>(SystemCustomerAttributeNames.CountryId).ToString());
                 
                 xmlWriter.WriteEndElement();
             }

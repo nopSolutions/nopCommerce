@@ -204,9 +204,23 @@
 		</LocaleResource>
       <LocaleResource Name="Fields">
         <Children>
+			<LocaleResource Name="City">
+				<Value>City</Value>
+			</LocaleResource>
           <LocaleResource Name="Company">
             <Value>Company name</Value>
           </LocaleResource>
+			<LocaleResource Name="ConfirmPassword">
+				<Value>Confirm password</Value>
+				<Children>
+					<LocaleResource Name="Required">
+						<Value>Password is required.</Value>
+					</LocaleResource>
+				</Children>
+			</LocaleResource>
+			<LocaleResource Name="Country">
+				<Value>Country</Value>
+			</LocaleResource>
           <LocaleResource Name="DateOfBirth">
             <Value>Date of birth</Value>
           </LocaleResource>
@@ -218,6 +232,9 @@
               </LocaleResource>
             </Children>
           </LocaleResource>
+			<LocaleResource Name="Fax">
+				<Value>Fax</Value>
+			</LocaleResource>
           <LocaleResource Name="FirstName">
             <Value>First name</Value>
             <Children>
@@ -245,9 +262,6 @@
               </LocaleResource>
             </Children>
           </LocaleResource>
-            <LocaleResource Name="Location">
-                <Value>Location</Value>
-            </LocaleResource>
           <LocaleResource Name="Newsletter">
             <Value>Newsletter</Value>
           </LocaleResource>
@@ -262,17 +276,21 @@
               </LocaleResource>
             </Children>
           </LocaleResource>
-          <LocaleResource Name="ConfirmPassword">
-            <Value>Confirm password</Value>
-            <Children>
-              <LocaleResource Name="Required">
-                <Value>Password is required.</Value>
-              </LocaleResource>
-            </Children>
-          </LocaleResource>
+			<LocaleResource Name="Phone">
+				<Value>Phone</Value>
+			</LocaleResource>
             <LocaleResource Name="Signature">
                 <Value>Signature</Value>
             </LocaleResource>
+			<LocaleResource Name="StateProvince">
+				<Value>State / province</Value>
+			</LocaleResource>
+			<LocaleResource Name="StreetAddress">
+				<Value>Street address</Value>
+			</LocaleResource>
+			<LocaleResource Name="StreetAddress2">
+				<Value>Street address 2</Value>
+			</LocaleResource>
           <LocaleResource Name="Timezone">
             <Value>Time zone</Value>
           </LocaleResource>
@@ -290,6 +308,9 @@
           <LocaleResource Name="VatNumberStatus">
             <Value>status: {0}</Value>
           </LocaleResource>
+			<LocaleResource Name="ZipPostalCode">
+				<Value>Zip / postal code</Value>
+			</LocaleResource>
         </Children>
       </LocaleResource>
       <LocaleResource Name="ForumSubscriptions">
@@ -463,6 +484,12 @@
       <LocaleResource Name="ShoppingCart">
         <Value>Shopping Cart</Value>
       </LocaleResource>
+		<LocaleResource Name="YourAddress">
+			<Value>Your Address</Value>
+		</LocaleResource>
+		<LocaleResource Name="YourContactInformation">
+			<Value>Your Contact Information</Value>
+		</LocaleResource>
       <LocaleResource Name="YourPassword">
         <Value>Your Password</Value>
       </LocaleResource>
