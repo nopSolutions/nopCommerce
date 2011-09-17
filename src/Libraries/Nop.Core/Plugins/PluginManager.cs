@@ -139,18 +139,34 @@ namespace Nop.Core.Plugins
 
                             referencedPlugins.Add(description);
                         }
-                        catch (Exception ex)
+                        catch (ReflectionTypeLoadException ex)
                         {
-                            var fail = new Exception("Could not initialise plugin folder", ex);
-                            Debug.WriteLine(fail.Message);
+                            var msg = string.Empty;
+                            foreach (var e in ex.LoaderExceptions)
+                                msg += e.Message + Environment.NewLine;
+
+                            var fail = new Exception(msg, ex);
+                            Debug.WriteLine(fail.Message, fail);
+
                             throw fail;
                         }
+                        //catch (Exception ex)
+                        //{
+                        //    var fail = new Exception("Could not initialise plugin folder", ex);
+                        //    Debug.WriteLine(fail.Message);
+                        //    throw fail;
+                        //}
                     }
                 }
                 catch (Exception ex)
                 {
-                    var fail = new Exception("Could not initialise plugin folder", ex);
+                    var msg = string.Empty;
+                    for (var e = ex; e != null; e = e.InnerException)
+                        msg += e.Message + Environment.NewLine;
+
+                    var fail = new Exception(msg, ex);
                     Debug.WriteLine(fail.Message, fail);
+
                     throw fail;
                 }
 
