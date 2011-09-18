@@ -75,6 +75,16 @@ namespace Nop.Core.Domain.Orders
         public virtual int CustomerId { get; set; }
 
         /// <summary>
+        /// Gets or sets the billing address identifier
+        /// </summary>
+        public virtual int BillingAddressId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the shipping address identifier
+        /// </summary>
+        public virtual int? ShippingAddressId { get; set; }
+
+        /// <summary>
         /// Gets or sets an order status identifer
         /// </summary>
         public virtual int OrderStatusId { get; set; }

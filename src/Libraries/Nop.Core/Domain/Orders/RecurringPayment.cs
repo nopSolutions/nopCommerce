@@ -42,6 +42,11 @@ namespace Nop.Core.Domain.Orders
         public virtual bool Deleted { get; set; }
 
         /// <summary>
+        /// Gets or sets the initial order identifier
+        /// </summary>
+        public virtual int InitialOrderId { get; set; }
+
+        /// <summary>
         /// Gets or sets the date and time of payment creation
         /// </summary>
         public virtual DateTime CreatedOnUtc { get; set; }
@@ -178,6 +183,8 @@ namespace Nop.Core.Domain.Orders
                 this.CyclePeriodId = (int)value;
             }
         }
+        
+
 
 
         /// <summary>
@@ -188,6 +195,7 @@ namespace Nop.Core.Domain.Orders
             get { return _recurringPaymentHistory ?? (_recurringPaymentHistory = new List<RecurringPaymentHistory>()); }
             protected set { _recurringPaymentHistory = value; }
         }        
+
         /// <summary>
         /// Gets the initial order
         /// </summary>
