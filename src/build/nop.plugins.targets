@@ -12,6 +12,7 @@
             Plugins-CopyExchangeRates;
             Plugins-CopyExternalAuth;
             Plugins-CopyFeeds;
+            Plugins-CopyMisc;
             Plugins-CopyPayments;
             Plugins-CopyShippings;
             Plugins-CopySms;
@@ -127,6 +128,14 @@
                         Targets="Plugin-CopyToWeb"
                         Properties="
                         PluginProjectName=Nop.Plugin.Feed.PriceGrabber"/>
+    </Target>
+    
+    <!--Misc plugins-->
+    <Target Name="Plugins-CopyMisc">
+        <MSBuild Projects ="$(MSBuildProjectFullPath)"
+                        Targets="Plugin-CopyToWeb"
+                        Properties="
+                        PluginProjectName=Nop.Plugin.Misc.WebServices"/>
     </Target>
     
     <!--Payment plugins-->

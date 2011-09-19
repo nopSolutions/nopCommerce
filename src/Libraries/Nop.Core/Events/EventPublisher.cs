@@ -26,7 +26,7 @@ namespace Nop.Core.Events
             {
                 x.Handle(eventMessage);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //TODO:Log this some how. We can't reference the ILogger because the interface exists in another assembly. Maybe we can move all interfaces to Nop.Core and all the implemntes to Nop.Services?
             }

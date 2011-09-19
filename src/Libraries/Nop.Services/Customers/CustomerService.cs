@@ -308,7 +308,7 @@ namespace Nop.Services.Customers
             else
                 customer = GetCustomerByEmail(usernameOrEmail);
 
-            if (customer == null || !customer.Active)
+            if (customer == null || customer.Deleted || !customer.Active)
                 return false;
 
             string pwd = string.Empty;

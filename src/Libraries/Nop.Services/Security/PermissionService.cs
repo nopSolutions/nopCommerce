@@ -185,6 +185,23 @@ namespace Nop.Services.Security
         }
 
         /// <summary>
+        /// Uninstall permissions
+        /// </summary>
+        /// <param name="permissionProvider">Permission provider</param>
+        public virtual void UninstallPermissions(IPermissionProvider permissionProvider)
+        {
+            var permissions = permissionProvider.GetPermissions();
+            foreach (var permission in permissions)
+            {
+                var permission1 = GetPermissionRecordBySystemName(permission.SystemName);
+                if (permission1 != null)
+                {   
+                    DeletePermissionRecord(permission1);
+                }
+            }
+        }
+
+        /// <summary>
         /// Authorize permission
         /// </summary>
         /// <param name="permissionRecordSystemName">Permission record system name</param>

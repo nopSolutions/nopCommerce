@@ -53,6 +53,12 @@ namespace Nop.Services.Security
         void InstallPermissions(IPermissionProvider permissionProvider);
 
         /// <summary>
+        /// Uninstall permissions
+        /// </summary>
+        /// <param name="permissionProvider">Permission provider</param>
+        void UninstallPermissions(IPermissionProvider permissionProvider);
+
+        /// <summary>
         /// Authorize permission
         /// </summary>
         /// <param name="permissionRecordSystemName">Permission record system name</param>

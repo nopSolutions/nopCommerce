@@ -403,13 +403,15 @@ namespace Nop.Web.Controllers
                         //SQL CE
                         //little hack here (SQL CE 4 bug - http://www.hanselman.com/blog/PDC10BuildingABlogWithMicrosoftUnnamedPackageOfWebLove.aspx)
                         //string databasePath = HostingEnvironment.MapPath("~/App_Data/") + @"Nop.Db.sdf";
-                        string databasePath = @"|DataDirectory|\Nop.Db.sdf";
+                        string databaseFileName = "Nop.Db.sdf";
+                        string databasePath = @"|DataDirectory|\" + databaseFileName;
                         connectionString = "Data Source=" + databasePath + ";Persist Security Info=False";
 
                         //drop database if exists
-                        if (System.IO.File.Exists(databasePath))
+                        string databaseFullPath = HostingEnvironment.MapPath("~/App_Data/") + databaseFileName;
+                        if (System.IO.File.Exists(databaseFullPath))
                         {
-                            System.IO.File.Delete(databasePath);
+                            System.IO.File.Delete(databaseFullPath);
                         }
                     }
 
@@ -447,9 +449,11 @@ namespace Nop.Web.Controllers
                     {
                         plugin.Install();
                     }
-
+                    
                     //register default permissions
-                    var permissionProviders = EngineContext.Current.Resolve<ITypeFinder>().FindClassesOfType<IPermissionProvider>();
+                    //var permissionProviders = EngineContext.Current.Resolve<ITypeFinder>().FindClassesOfType<IPermissionProvider>();
+                    var permissionProviders = new List<Type>();
+                    permissionProviders.Add(typeof(StandardPermissionProvider));
                     foreach (var providerType in permissionProviders)
                     {
                         dynamic provider = Activator.CreateInstance(providerType);
