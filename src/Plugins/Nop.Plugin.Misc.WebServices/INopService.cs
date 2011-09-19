@@ -39,10 +39,6 @@ namespace Nop.Plugin.Misc.WebServices
         void SetOrderPaymentPending(int orderId, string usernameOrEmail, string userPassword);
         [OperationContract]
         void SetOrderPaymentRefund(int orderId, bool offline, string usernameOrEmail, string userPassword);
-        [OperationContract]
-        void SetOrderShippingTracking(int orderId, string trackingNumber, bool sendShippedMail, string usernameOrEmail, string userPassword);
-        [OperationContract]
-        int SetOrderStatusActive(int orderId, string usernameOrEmail, string userPassword);
 
         [OperationContract]
         List<OrderError> SetOrdersStatusCanceled(int[] ordersId, string usernameOrEmail, string userPassword);
