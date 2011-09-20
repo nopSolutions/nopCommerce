@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Threading;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
@@ -80,6 +82,8 @@ namespace Nop.Services.Tests.Catalog
         [Test]
         public void Can_formatPrice_with_custom_currencyFormatting()
         {
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
+
             var currency = new Currency()
             {
                 Id = 1,
@@ -94,7 +98,7 @@ namespace Nop.Services.Tests.Catalog
                 Name = "English",
                 LanguageCulture = "en-US"
             };
-            _priceFormatter.FormatPrice(1234.5M, false, currency, language, false, false).ShouldEqual("€1234,50");
+            _priceFormatter.FormatPrice(1234.5M, false, currency, language, false, false).ShouldEqual("€1234.50");
         }
 
         [Test]

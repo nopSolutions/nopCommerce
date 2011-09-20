@@ -311,6 +311,10 @@ namespace Nop.Services.Customers
             if (customer == null || customer.Deleted || !customer.Active)
                 return false;
 
+            //only registered can login
+            if (!customer.IsRegistered())
+                return false;
+
             string pwd = string.Empty;
             switch (customer.PasswordFormat)
             {

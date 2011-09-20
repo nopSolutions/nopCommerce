@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Globalization;
+using System.Threading;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Configuration;
@@ -88,18 +90,17 @@ namespace Nop.Services.Tests.Helpers
         {
             var sourceDateTime = TimeZoneInfo.FindSystemTimeZoneById("E. Europe Standard Time"); //(GMT+02:00) Minsk;
             sourceDateTime.ShouldNotBeNull();
-            var destinationDateTime = TimeZoneInfo.FindSystemTimeZoneById("North Asia Standard Time"); //(GMT+07:00) Krasnoyarsk;
+
+            var destinationDateTime = TimeZoneInfo.FindSystemTimeZoneById("North Asia Standard Time"); //(GMT+08:00) Krasnoyarsk;
             destinationDateTime.ShouldNotBeNull();
 
             //summer time
-            var dateTime1 = new DateTime(2010, 06, 01, 0, 0, 0);
-            var convertedDateTime1 = _dateTimeHelper.ConvertToUserTime(dateTime1, sourceDateTime, destinationDateTime);
-            convertedDateTime1.ShouldEqual(new DateTime(2010, 06, 01, 6, 0, 0));
+            _dateTimeHelper.ConvertToUserTime(new DateTime(2010, 06, 01, 0, 0, 0), sourceDateTime, destinationDateTime)
+                .ShouldEqual(new DateTime(2010, 06, 01, 6, 0, 0));
 
             //winter time
-            var dateTime2 = new DateTime(2010, 01, 01, 0, 0, 0);
-            var convertedDateTime2 = _dateTimeHelper.ConvertToUserTime(dateTime2, sourceDateTime, destinationDateTime);
-            convertedDateTime2.ShouldEqual(new DateTime(2010, 01, 01, 6, 0, 0));
+            _dateTimeHelper.ConvertToUserTime(new DateTime(2010, 01, 01, 0, 0, 0), sourceDateTime, destinationDateTime)
+                .ShouldEqual(new DateTime(2010, 01, 01, 6, 0, 0));
         }
 
         [Test]
