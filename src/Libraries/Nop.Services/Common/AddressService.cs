@@ -46,6 +46,7 @@ namespace Nop.Services.Common
 
             _addressRepository.Delete(address);
 
+            //event notification
             _eventPublisher.EntityDeleted(address);
         }
 
@@ -82,6 +83,7 @@ namespace Nop.Services.Common
 
             _addressRepository.Insert(address);
 
+            //event notification
             _eventPublisher.EntityInserted(address);
         }
 
@@ -102,6 +104,7 @@ namespace Nop.Services.Common
 
             _addressRepository.Update(address);
 
+            //event notification
             _eventPublisher.EntityUpdated(address);
         }
 

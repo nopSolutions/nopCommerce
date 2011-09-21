@@ -73,9 +73,10 @@ namespace Nop.Services.Directory
 
             _measureDimensionRepository.Delete(measureDimension);
 
-            _eventPublisher.EntityDeleted(measureDimension);
-
             _cacheManager.RemoveByPattern(MEASUREDIMENSIONS_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityDeleted(measureDimension);
         }
         
 
@@ -142,9 +143,10 @@ namespace Nop.Services.Directory
 
             _measureDimensionRepository.Insert(measure);
 
-            _eventPublisher.EntityInserted(measure);
-
             _cacheManager.RemoveByPattern(MEASUREDIMENSIONS_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityInserted(measure);
         }
 
         /// <summary>
@@ -158,9 +160,10 @@ namespace Nop.Services.Directory
 
             _measureDimensionRepository.Update(measure);
 
-            _eventPublisher.EntityUpdated(measure);
-
             _cacheManager.RemoveByPattern(MEASUREDIMENSIONS_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityUpdated(measure);
         }
 
         /// <summary>
@@ -242,9 +245,10 @@ namespace Nop.Services.Directory
 
             _measureWeightRepository.Delete(measureWeight);
 
-            _eventPublisher.EntityDeleted(measureWeight);
-
             _cacheManager.RemoveByPattern(MEASUREWEIGHTS_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityDeleted(measureWeight);
         }
 
         /// <summary>
@@ -309,9 +313,10 @@ namespace Nop.Services.Directory
 
             _measureWeightRepository.Insert(measure);
 
-            _eventPublisher.EntityInserted(measure);
-
             _cacheManager.RemoveByPattern(MEASUREWEIGHTS_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityInserted(measure);
         }
 
         /// <summary>
@@ -324,10 +329,11 @@ namespace Nop.Services.Directory
                 throw new ArgumentNullException("measure");
 
             _measureWeightRepository.Update(measure);
-
-            _eventPublisher.EntityUpdated(measure);
-
+            
             _cacheManager.RemoveByPattern(MEASUREWEIGHTS_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityUpdated(measure);
         }
 
         /// <summary>

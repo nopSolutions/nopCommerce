@@ -49,6 +49,7 @@ namespace Nop.Services.Messages
 
             _campaignRepository.Insert(campaign);
 
+            //event notification
             _eventPublisher.EntityInserted(campaign);
         }
 
@@ -63,6 +64,7 @@ namespace Nop.Services.Messages
 
             _campaignRepository.Update(campaign);
 
+            //event notification
             _eventPublisher.EntityUpdated(campaign);
         }
 
@@ -77,6 +79,7 @@ namespace Nop.Services.Messages
 
             _campaignRepository.Delete(campaign);
 
+            //event notification
             _eventPublisher.EntityDeleted(campaign);
         }
 

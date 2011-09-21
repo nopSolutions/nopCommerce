@@ -100,9 +100,10 @@ namespace Nop.Services.Cms
 
             _widgetRepository.Delete(widget);
 
-            _eventPublisher.EntityDeleted(widget);
-
             _cacheManager.RemoveByPattern(WIDGETS_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityDeleted(widget);
         }
 
         /// <summary>
@@ -165,10 +166,11 @@ namespace Nop.Services.Cms
 
             _widgetRepository.Insert(widget);
 
-            _eventPublisher.EntityInserted(widget);
-
             //cache
             _cacheManager.RemoveByPattern(WIDGETS_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityInserted(widget);
         }
 
         /// <summary>
@@ -182,10 +184,11 @@ namespace Nop.Services.Cms
 
             _widgetRepository.Update(widget);
 
-            _eventPublisher.EntityUpdated(widget);
-
             //cache
             _cacheManager.RemoveByPattern(WIDGETS_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityUpdated(widget);
         }
         
         #endregion

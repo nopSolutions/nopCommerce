@@ -196,11 +196,12 @@ namespace Nop.Services.Catalog
 
             _categoryRepository.Insert(category);
 
-            _eventPublisher.Publish(new EntityInserted<Category>(category));
-
             //cache
             _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTCATEGORIES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityInserted(category);
         }
 
         /// <summary>
@@ -226,11 +227,12 @@ namespace Nop.Services.Catalog
 
             _categoryRepository.Update(category);
 
-            _eventPublisher.Publish(new EntityUpdated<Category>(category));
-
             //cache
             _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTCATEGORIES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityUpdated(category);
         }
         
         /// <summary>
@@ -244,11 +246,12 @@ namespace Nop.Services.Catalog
 
             _productCategoryRepository.Delete(productCategory);
 
-            _eventPublisher.Publish(new EntityDeleted<ProductCategory>(productCategory));
-
             //cache
             _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTCATEGORIES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityDeleted(productCategory);
         }
 
         /// <summary>
@@ -331,11 +334,12 @@ namespace Nop.Services.Catalog
             
             _productCategoryRepository.Insert(productCategory);
 
-            _eventPublisher.Publish(new EntityInserted<ProductCategory>(productCategory));
-
             //cache
             _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTCATEGORIES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityInserted(productCategory);
         }
 
         /// <summary>
@@ -349,11 +353,12 @@ namespace Nop.Services.Catalog
 
             _productCategoryRepository.Update(productCategory);
 
-            _eventPublisher.Publish(new EntityUpdated<ProductCategory>(productCategory));
-
             //cache
             _cacheManager.RemoveByPattern(CATEGORIES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTCATEGORIES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityUpdated(productCategory);
         }
 
         #endregion

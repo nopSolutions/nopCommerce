@@ -50,6 +50,7 @@ namespace Nop.Services.Messages
 
             _newsLetterSubscriptionRepository.Insert(newsLetterSubscription);
 
+            //event notification
             _eventPublisher.EntityInserted(newsLetterSubscription);
         }
 
@@ -73,6 +74,7 @@ namespace Nop.Services.Messages
 
             _newsLetterSubscriptionRepository.Update(newsLetterSubscription);
 
+            //event notification
             _eventPublisher.EntityUpdated(newsLetterSubscription);
         }
 
@@ -87,6 +89,7 @@ namespace Nop.Services.Messages
 
             _newsLetterSubscriptionRepository.Delete(newsLetterSubscription);
 
+            //event notification
             _eventPublisher.EntityDeleted(newsLetterSubscription);
         }
 

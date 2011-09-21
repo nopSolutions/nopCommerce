@@ -90,7 +90,8 @@ namespace Nop.Services.Affiliates
 
             _affiliateRepository.Insert(affiliate);
 
-            _eventPublisher.Publish(new EntityInserted<Affiliate>(affiliate));
+            //event notification
+            _eventPublisher.EntityInserted(affiliate);
         }
 
         /// <summary>
@@ -104,7 +105,8 @@ namespace Nop.Services.Affiliates
 
             _affiliateRepository.Update(affiliate);
 
-            _eventPublisher.Publish(new EntityUpdated<Affiliate>(affiliate));
+            //event notification
+            _eventPublisher.EntityUpdated(affiliate);
         }
 
         #endregion

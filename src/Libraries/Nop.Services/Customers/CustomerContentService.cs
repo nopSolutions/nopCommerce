@@ -53,6 +53,7 @@ namespace Nop.Services.Customers
 
             _contentRepository.Delete(content);
 
+            //event notification
             _eventPublisher.EntityDeleted(content);
         }
 
@@ -116,6 +117,7 @@ namespace Nop.Services.Customers
 
             _contentRepository.Insert(content);
 
+            //event notification
             _eventPublisher.EntityInserted(content);
         }
 
@@ -130,6 +132,7 @@ namespace Nop.Services.Customers
 
             _contentRepository.Update(content);
 
+            //event notification
             _eventPublisher.EntityUpdated(content);
         }
 

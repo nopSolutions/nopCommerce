@@ -134,11 +134,12 @@ namespace Nop.Services.Catalog
 
             _manufacturerRepository.Insert(manufacturer);
 
-            _eventPublisher.Publish(new EntityInserted<Manufacturer>(manufacturer));
-
             //cache
             _cacheManager.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTMANUFACTURERS_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityInserted(manufacturer);
         }
 
         /// <summary>
@@ -152,11 +153,12 @@ namespace Nop.Services.Catalog
 
             _manufacturerRepository.Update(manufacturer);
 
-            _eventPublisher.Publish(new EntityUpdated<Manufacturer>(manufacturer));
-
             //cache
             _cacheManager.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTMANUFACTURERS_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityUpdated(manufacturer);
         }
 
         /// <summary>
@@ -170,11 +172,12 @@ namespace Nop.Services.Catalog
 
             _productManufacturerRepository.Delete(productManufacturer);
 
-            _eventPublisher.Publish(new EntityDeleted<ProductManufacturer>(productManufacturer));
-
             //cache
             _cacheManager.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTMANUFACTURERS_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityDeleted(productManufacturer);
         }
 
         /// <summary>
@@ -258,11 +261,12 @@ namespace Nop.Services.Catalog
 
             _productManufacturerRepository.Insert(productManufacturer);
 
-            _eventPublisher.Publish(new EntityInserted<ProductManufacturer>(productManufacturer));
-
             //cache
             _cacheManager.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTMANUFACTURERS_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityInserted(productManufacturer);
         }
 
         /// <summary>
@@ -276,11 +280,12 @@ namespace Nop.Services.Catalog
 
             _productManufacturerRepository.Update(productManufacturer);
 
-            _eventPublisher.Publish(new EntityUpdated<ProductManufacturer>(productManufacturer));
-
             //cache
             _cacheManager.RemoveByPattern(MANUFACTURERS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTMANUFACTURERS_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityUpdated(productManufacturer);
         }
 
         #endregion

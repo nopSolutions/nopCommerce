@@ -50,9 +50,10 @@ namespace Nop.Services.News
 
             _newsItemRepository.Delete(newsItem);
 
-            _eventPublisher.EntityDeleted(newsItem);
-
             _cacheManager.RemoveByPattern(NEWS_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityDeleted(newsItem);
         }
 
         /// <summary>
@@ -111,9 +112,10 @@ namespace Nop.Services.News
 
             _newsItemRepository.Insert(news);
 
-            _eventPublisher.EntityInserted(news);
-
             _cacheManager.RemoveByPattern(NEWS_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityInserted(news);
         }
 
         /// <summary>
@@ -127,9 +129,10 @@ namespace Nop.Services.News
 
             _newsItemRepository.Update(news);
 
-            _eventPublisher.EntityUpdated(news);
-
             _cacheManager.RemoveByPattern(NEWS_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityUpdated(news);
         }
 
         #endregion

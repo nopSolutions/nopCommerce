@@ -42,6 +42,7 @@ namespace Nop.Services.Topics
 
             _topicRepository.Delete(topic);
 
+            //event notification
             _eventPublisher.EntityDeleted(topic);
         }
 
@@ -100,6 +101,7 @@ namespace Nop.Services.Topics
 
             _topicRepository.Insert(topic);
 
+            //event notification
             _eventPublisher.EntityInserted(topic);
         }
 
@@ -114,6 +116,7 @@ namespace Nop.Services.Topics
 
             _topicRepository.Update(topic);
 
+            //event notification
             _eventPublisher.EntityUpdated(topic);
         }
 

@@ -48,6 +48,7 @@ namespace Nop.Services.Orders
 
             _giftCardRepository.Delete(giftCard);
 
+            //event notification
             _eventPublisher.EntityDeleted(giftCard);
         }
 
@@ -106,6 +107,7 @@ namespace Nop.Services.Orders
 
             _giftCardRepository.Insert(giftCard);
 
+            //event notification
             _eventPublisher.EntityInserted(giftCard);
         }
 
@@ -120,6 +122,7 @@ namespace Nop.Services.Orders
 
             _giftCardRepository.Update(giftCard);
 
+            //event notification
             _eventPublisher.EntityUpdated(giftCard);
         }
 

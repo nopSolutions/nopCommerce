@@ -117,11 +117,12 @@ namespace Nop.Services.Catalog
 
             _specificationAttributeRepository.Delete(specificationAttribute);
 
-            _eventPublisher.EntityDeleted(specificationAttribute);
-
             _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTSPECIFICATIONATTRIBUTE_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityDeleted(specificationAttribute);
         }
 
         /// <summary>
@@ -135,11 +136,12 @@ namespace Nop.Services.Catalog
 
             _specificationAttributeRepository.Insert(specificationAttribute);
 
-            _eventPublisher.EntityInserted(specificationAttribute);
-
             _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTSPECIFICATIONATTRIBUTE_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityInserted(specificationAttribute);
         }
 
         /// <summary>
@@ -153,11 +155,12 @@ namespace Nop.Services.Catalog
 
             _specificationAttributeRepository.Update(specificationAttribute);
 
-            _eventPublisher.EntityUpdated(specificationAttribute);
-
             _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTSPECIFICATIONATTRIBUTE_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityUpdated(specificationAttribute);
         }
 
         #endregion
@@ -208,11 +211,12 @@ namespace Nop.Services.Catalog
 
             _specificationAttributeOptionRepository.Delete(specificationAttributeOption);
 
-            _eventPublisher.EntityDeleted(specificationAttributeOption);
-
             _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTSPECIFICATIONATTRIBUTE_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityDeleted(specificationAttributeOption);
         }
 
         /// <summary>
@@ -226,11 +230,12 @@ namespace Nop.Services.Catalog
 
             _specificationAttributeOptionRepository.Insert(specificationAttributeOption);
 
-            _eventPublisher.EntityInserted(specificationAttributeOption);
-
             _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTSPECIFICATIONATTRIBUTE_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityInserted(specificationAttributeOption);
         }
 
         /// <summary>
@@ -244,11 +249,12 @@ namespace Nop.Services.Catalog
 
             _specificationAttributeOptionRepository.Update(specificationAttributeOption);
 
-            _eventPublisher.EntityUpdated(specificationAttributeOption);
-
             _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTSPECIFICATIONATTRIBUTE_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityUpdated(specificationAttributeOption);
         }
 
         #endregion
@@ -266,11 +272,12 @@ namespace Nop.Services.Catalog
 
             _productSpecificationAttributeRepository.Delete(productSpecificationAttribute);
 
-            _eventPublisher.EntityDeleted(productSpecificationAttribute);
-
             _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTSPECIFICATIONATTRIBUTE_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityDeleted(productSpecificationAttribute);
         }
 
         /// <summary>
@@ -341,11 +348,12 @@ namespace Nop.Services.Catalog
 
             _productSpecificationAttributeRepository.Insert(productSpecificationAttribute);
 
-            _eventPublisher.EntityInserted(productSpecificationAttribute);
-
             _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTSPECIFICATIONATTRIBUTE_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityInserted(productSpecificationAttribute);
         }
 
         /// <summary>
@@ -359,11 +367,12 @@ namespace Nop.Services.Catalog
 
             _productSpecificationAttributeRepository.Update(productSpecificationAttribute);
 
-            _eventPublisher.EntityUpdated(productSpecificationAttribute);
-
             _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SPECIFICATIONATTRIBUTEOPTION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTSPECIFICATIONATTRIBUTE_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityUpdated(productSpecificationAttribute);
         }
 
         #endregion

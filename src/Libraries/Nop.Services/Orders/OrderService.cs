@@ -220,6 +220,7 @@ namespace Nop.Services.Orders
 
             _orderRepository.Insert(order);
 
+            //event notification
             _eventPublisher.EntityInserted(order);
         }
 
@@ -234,6 +235,7 @@ namespace Nop.Services.Orders
 
             _orderRepository.Update(order);
 
+            //event notification
             _eventPublisher.EntityUpdated(order);
         }
 
@@ -248,6 +250,7 @@ namespace Nop.Services.Orders
 
             _orderNoteRepository.Delete(orderNote);
 
+            //event notification
             _eventPublisher.EntityDeleted(orderNote);
         }
 
@@ -357,6 +360,7 @@ namespace Nop.Services.Orders
 
             _opvRepository.Delete(orderProductVariant);
 
+            //event notification
             _eventPublisher.EntityDeleted(orderProductVariant);
         }
 
@@ -401,6 +405,7 @@ namespace Nop.Services.Orders
 
             _recurringPaymentRepository.Insert(recurringPayment);
 
+            //event notification
             _eventPublisher.EntityInserted(recurringPayment);
         }
 
@@ -415,6 +420,7 @@ namespace Nop.Services.Orders
 
             _recurringPaymentRepository.Update(recurringPayment);
 
+            //event notification
             _eventPublisher.EntityUpdated(recurringPayment);
         }
 
@@ -467,6 +473,7 @@ namespace Nop.Services.Orders
 
             _returnRequestRepository.Delete(returnRequest);
 
+            //event notification
             _eventPublisher.EntityDeleted(returnRequest);
         }
 

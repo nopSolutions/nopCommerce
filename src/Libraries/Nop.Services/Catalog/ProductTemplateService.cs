@@ -61,9 +61,10 @@ namespace Nop.Services.Catalog
 
             _productTemplateRepository.Delete(productTemplate);
 
-            _eventPublisher.EntityDeleted(productTemplate);
-
             _cacheManager.RemoveByPattern(PRODUCTTEMPLATES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityDeleted(productTemplate);
         }
 
         /// <summary>
@@ -113,10 +114,11 @@ namespace Nop.Services.Catalog
 
             _productTemplateRepository.Insert(productTemplate);
 
-            _eventPublisher.EntityInserted(productTemplate);
-
             //cache
             _cacheManager.RemoveByPattern(PRODUCTTEMPLATES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityInserted(productTemplate);
         }
 
         /// <summary>
@@ -130,10 +132,11 @@ namespace Nop.Services.Catalog
 
             _productTemplateRepository.Update(productTemplate);
 
-            _eventPublisher.EntityUpdated(productTemplate);
-
             //cache
             _cacheManager.RemoveByPattern(PRODUCTTEMPLATES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityUpdated(productTemplate);
         }
         
         #endregion

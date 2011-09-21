@@ -61,9 +61,10 @@ namespace Nop.Services.Directory
 
             _countryRepository.Delete(country);
 
-            _eventPublisher.EntityDeleted(country);
-
             _cacheManager.RemoveByPattern(COUNTRIES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityDeleted(country);
         }
 
         /// <summary>
@@ -181,9 +182,10 @@ namespace Nop.Services.Directory
 
             _countryRepository.Insert(country);
 
-            _eventPublisher.EntityInserted(country);
-
             _cacheManager.RemoveByPattern(COUNTRIES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityInserted(country);
         }
 
         /// <summary>
@@ -197,9 +199,10 @@ namespace Nop.Services.Directory
 
             _countryRepository.Update(country);
 
-            _eventPublisher.EntityUpdated(country);
-
             _cacheManager.RemoveByPattern(COUNTRIES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityUpdated(country);
         }
 
         #endregion

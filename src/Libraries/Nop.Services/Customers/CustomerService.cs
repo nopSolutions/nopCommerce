@@ -659,6 +659,7 @@ namespace Nop.Services.Customers
 
             _customerRepository.Insert(customer);
 
+            //event notification
             _eventPublisher.EntityInserted(customer);
         }
         
@@ -673,6 +674,7 @@ namespace Nop.Services.Customers
 
             _customerRepository.Update(customer);
 
+            //event notification
             _eventPublisher.EntityUpdated(customer);
         }
 
@@ -776,9 +778,10 @@ namespace Nop.Services.Customers
 
             _customerRoleRepository.Delete(customerRole);
 
-            _eventPublisher.EntityDeleted(customerRole);
-            
             _cacheManager.RemoveByPattern(CUSTOMERROLES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityDeleted(customerRole);
         }
 
         /// <summary>
@@ -873,9 +876,10 @@ namespace Nop.Services.Customers
 
             _customerRoleRepository.Insert(customerRole);
 
-            _eventPublisher.EntityInserted(customerRole);
-
             _cacheManager.RemoveByPattern(CUSTOMERROLES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityInserted(customerRole);
         }
 
         /// <summary>
@@ -889,9 +893,10 @@ namespace Nop.Services.Customers
 
             _customerRoleRepository.Update(customerRole);
 
-            _eventPublisher.EntityUpdated(customerRole);
-
             _cacheManager.RemoveByPattern(CUSTOMERROLES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityUpdated(customerRole);
         }
 
         #endregion
@@ -909,6 +914,7 @@ namespace Nop.Services.Customers
 
             _customerAttributeRepository.Delete(customerAttribute);
 
+            //event notification
             _eventPublisher.EntityDeleted(customerAttribute);
         }
 
@@ -937,6 +943,7 @@ namespace Nop.Services.Customers
 
             _customerAttributeRepository.Insert(customerAttribute);
 
+            //event notification
             _eventPublisher.EntityInserted(customerAttribute);
         }
 
@@ -951,6 +958,7 @@ namespace Nop.Services.Customers
 
             _customerAttributeRepository.Update(customerAttribute);
 
+            //event notification
             _eventPublisher.EntityUpdated(customerAttribute);
         }
 

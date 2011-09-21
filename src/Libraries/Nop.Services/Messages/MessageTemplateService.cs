@@ -59,9 +59,10 @@ namespace Nop.Services.Messages
 
             _messageTemplateRepository.Insert(messageTemplate);
 
-            _eventPublisher.EntityInserted(messageTemplate);
-
             _cacheManager.RemoveByPattern(MESSAGETEMPLATES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityInserted(messageTemplate);
         }
 
         /// <summary>
@@ -75,9 +76,10 @@ namespace Nop.Services.Messages
 
             _messageTemplateRepository.Update(messageTemplate);
 
-            _eventPublisher.EntityUpdated(messageTemplate);
-
             _cacheManager.RemoveByPattern(MESSAGETEMPLATES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityUpdated(messageTemplate);
         }
 
         /// <summary>

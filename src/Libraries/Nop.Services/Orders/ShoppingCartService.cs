@@ -138,6 +138,7 @@ namespace Nop.Services.Orders
 
             _sciRepository.Delete(shoppingCartItem);
 
+            //event notification
             _eventPublisher.EntityDeleted(shoppingCartItem);
         }
 
@@ -732,6 +733,9 @@ namespace Nop.Services.Orders
                     shoppingCartItem.Quantity = newQuantity;
                     shoppingCartItem.UpdatedOnUtc = DateTime.UtcNow;
                     _customerService.UpdateCustomer(customer);
+
+                    //event notification
+                    _eventPublisher.EntityUpdated(shoppingCartItem);
                 }
             }
             else
@@ -772,6 +776,9 @@ namespace Nop.Services.Orders
                         UpdatedOnUtc = now
                     });
                     _customerService.UpdateCustomer(customer);
+
+                    //event notification
+                    _eventPublisher.EntityInserted(shoppingCartItem);
                 }
             }
 
@@ -814,6 +821,9 @@ namespace Nop.Services.Orders
                         shoppingCartItem.Quantity = newQuantity;
                         shoppingCartItem.UpdatedOnUtc = DateTime.UtcNow;
                         _customerService.UpdateCustomer(customer);
+
+                        //event notification
+                        _eventPublisher.EntityUpdated(shoppingCartItem);
                     }
                 }
                 else

@@ -83,9 +83,10 @@ namespace Nop.Services.Directory
 
             _currencyRepository.Delete(currency);
 
-            _eventPublisher.EntityDeleted(currency);
-
             _cacheManager.RemoveByPattern(CURRENCIES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityDeleted(currency);
         }
 
         /// <summary>
@@ -144,9 +145,10 @@ namespace Nop.Services.Directory
 
             _currencyRepository.Insert(currency);
 
-            _eventPublisher.EntityInserted(currency);
-
             _cacheManager.RemoveByPattern(CURRENCIES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityInserted(currency);
         }
 
         /// <summary>
@@ -160,9 +162,10 @@ namespace Nop.Services.Directory
 
             _currencyRepository.Update(currency);
 
-            _eventPublisher.EntityUpdated(currency);
-
             _cacheManager.RemoveByPattern(CURRENCIES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityUpdated(currency);
         }
 
 

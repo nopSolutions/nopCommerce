@@ -70,10 +70,11 @@ namespace Nop.Services.Localization
 
             _lsrRepository.Delete(localeStringResource);
 
-            _eventPublisher.EntityDeleted(localeStringResource);
-
             //cache
             _cacheManager.RemoveByPattern(LOCALSTRINGRESOURCES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityDeleted(localeStringResource);
         }
 
         /// <summary>
@@ -172,10 +173,11 @@ namespace Nop.Services.Localization
             
             _lsrRepository.Insert(localeStringResource);
 
-            _eventPublisher.EntityInserted(localeStringResource);
-
             //cache
             _cacheManager.RemoveByPattern(LOCALSTRINGRESOURCES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityInserted(localeStringResource);
         }
 
         /// <summary>
@@ -189,10 +191,11 @@ namespace Nop.Services.Localization
 
             _lsrRepository.Update(localeStringResource);
 
-            _eventPublisher.EntityUpdated(localeStringResource);
-
             //cache
             _cacheManager.RemoveByPattern(LOCALSTRINGRESOURCES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityUpdated(localeStringResource);
         }
         
         /// <summary>

@@ -48,6 +48,7 @@ namespace Nop.Services.Catalog
 
             _productTagRepository.Delete(productTag);
 
+            //event notification
             _eventPublisher.EntityDeleted(productTag);
         }
 
@@ -104,6 +105,7 @@ namespace Nop.Services.Catalog
 
             _productTagRepository.Insert(productTag);
 
+            //event notification
             _eventPublisher.EntityInserted(productTag);
         }
 
@@ -118,6 +120,7 @@ namespace Nop.Services.Catalog
 
             _productTagRepository.Update(productTag);
 
+            //event notification
             _eventPublisher.EntityUpdated(productTag);
         }
 

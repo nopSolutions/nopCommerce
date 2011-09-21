@@ -129,9 +129,10 @@ namespace Nop.Services.Shipping
 
             _shippingMethodRepository.Delete(shippingMethod);
 
-            _eventPublisher.EntityDeleted(shippingMethod);
-
             _cacheManager.RemoveByPattern(SHIPPINGMETHODS_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityDeleted(shippingMethod);
         }
 
         /// <summary>
@@ -195,9 +196,10 @@ namespace Nop.Services.Shipping
 
             _shippingMethodRepository.Insert(shippingMethod);
 
-            _eventPublisher.EntityInserted(shippingMethod);
-            
             _cacheManager.RemoveByPattern(SHIPPINGMETHODS_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityInserted(shippingMethod);
         }
 
         /// <summary>
@@ -211,9 +213,10 @@ namespace Nop.Services.Shipping
 
             _shippingMethodRepository.Update(shippingMethod);
 
-            _eventPublisher.EntityUpdated(shippingMethod);
-
             _cacheManager.RemoveByPattern(SHIPPINGMETHODS_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityUpdated(shippingMethod);
         }
 
         #endregion

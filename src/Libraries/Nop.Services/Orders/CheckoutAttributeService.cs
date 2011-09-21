@@ -68,10 +68,11 @@ namespace Nop.Services.Orders
 
             _checkoutAttributeRepository.Delete(checkoutAttribute);
 
-            _eventPublisher.EntityDeleted(checkoutAttribute);
-
             _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityDeleted(checkoutAttribute);
         }
 
         /// <summary>
@@ -122,10 +123,11 @@ namespace Nop.Services.Orders
 
             _checkoutAttributeRepository.Insert(checkoutAttribute);
 
-            _eventPublisher.EntityInserted(checkoutAttribute);
-
             _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityInserted(checkoutAttribute);
         }
 
         /// <summary>
@@ -139,10 +141,11 @@ namespace Nop.Services.Orders
 
             _checkoutAttributeRepository.Update(checkoutAttribute);
 
-            _eventPublisher.EntityUpdated(checkoutAttribute);
-
             _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityUpdated(checkoutAttribute);
         }
 
         #endregion
@@ -160,10 +163,11 @@ namespace Nop.Services.Orders
 
             _checkoutAttributeValueRepository.Delete(checkoutAttributeValue);
 
-            _eventPublisher.EntityDeleted(checkoutAttributeValue);
-
             _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityDeleted(checkoutAttributeValue);
         }
 
         /// <summary>
@@ -214,10 +218,11 @@ namespace Nop.Services.Orders
 
             _checkoutAttributeValueRepository.Insert(checkoutAttributeValue);
 
-            _eventPublisher.EntityInserted(checkoutAttributeValue);
-
             _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityInserted(checkoutAttributeValue);
         }
 
         /// <summary>
@@ -231,10 +236,11 @@ namespace Nop.Services.Orders
 
             _checkoutAttributeValueRepository.Update(checkoutAttributeValue);
 
-            _eventPublisher.EntityUpdated(checkoutAttributeValue);
-
             _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityUpdated(checkoutAttributeValue);
         }
         
         #endregion

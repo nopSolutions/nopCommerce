@@ -59,9 +59,10 @@ namespace Nop.Services.Tax
 
             _taxCategoryRepository.Delete(taxCategory);
 
-            _eventPublisher.EntityDeleted(taxCategory);
-
             _cacheManager.RemoveByPattern(TAXCATEGORIES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityDeleted(taxCategory);
         }
 
         /// <summary>
@@ -110,9 +111,10 @@ namespace Nop.Services.Tax
 
             _taxCategoryRepository.Insert(taxCategory);
 
-            _eventPublisher.EntityInserted(taxCategory);
-
             _cacheManager.RemoveByPattern(TAXCATEGORIES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityInserted(taxCategory);
         }
 
         /// <summary>
@@ -126,9 +128,10 @@ namespace Nop.Services.Tax
 
             _taxCategoryRepository.Update(taxCategory);
 
-            _eventPublisher.EntityUpdated(taxCategory);
-
             _cacheManager.RemoveByPattern(TAXCATEGORIES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityUpdated(taxCategory);
         }
         #endregion
     }

@@ -34,6 +34,7 @@ namespace Nop.Services.Messages
 
             _queuedEmailRepository.Insert(queuedEmail);
 
+            //event notification
             _eventPublisher.EntityInserted(queuedEmail);
         }
 
@@ -48,6 +49,7 @@ namespace Nop.Services.Messages
 
             _queuedEmailRepository.Update(queuedEmail);
 
+            //event notification
             _eventPublisher.EntityUpdated(queuedEmail);
         }
 
@@ -62,6 +64,7 @@ namespace Nop.Services.Messages
 
             _queuedEmailRepository.Delete(queuedEmail);
 
+            //event notification
             _eventPublisher.EntityDeleted(queuedEmail);
         }
 

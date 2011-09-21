@@ -81,12 +81,13 @@ namespace Nop.Services.Catalog
 
             _productAttributeRepository.Delete(productAttribute);
 
-            _eventPublisher.EntityDeleted(productAttribute);
-
             //cache
             _cacheManager.RemoveByPattern(PRODUCTATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTATTRIBUTEVALUES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityDeleted(productAttribute);
         }
 
         /// <summary>
@@ -134,12 +135,13 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException("productAttribute");
 
             _productAttributeRepository.Insert(productAttribute);
-
-            _eventPublisher.EntityInserted(productAttribute);
-
+            
             _cacheManager.RemoveByPattern(PRODUCTATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTATTRIBUTEVALUES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityInserted(productAttribute);
         }
 
         /// <summary>
@@ -153,11 +155,12 @@ namespace Nop.Services.Catalog
 
             _productAttributeRepository.Update(productAttribute);
 
-            _eventPublisher.EntityUpdated(productAttribute);
-
             _cacheManager.RemoveByPattern(PRODUCTATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTATTRIBUTEVALUES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityUpdated(productAttribute);
         }
 
         #endregion
@@ -175,11 +178,12 @@ namespace Nop.Services.Catalog
 
             _productVariantAttributeRepository.Delete(productVariantAttribute);
 
-            _eventPublisher.EntityDeleted(productVariantAttribute);
-
             _cacheManager.RemoveByPattern(PRODUCTATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTATTRIBUTEVALUES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityDeleted(productVariantAttribute);
         }
 
         /// <summary>
@@ -229,12 +233,13 @@ namespace Nop.Services.Catalog
                 throw new ArgumentNullException("productVariantAttribute");
 
             _productVariantAttributeRepository.Insert(productVariantAttribute);
-
-            _eventPublisher.EntityInserted(productVariantAttribute);
-
+            
             _cacheManager.RemoveByPattern(PRODUCTATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTATTRIBUTEVALUES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityInserted(productVariantAttribute);
         }
 
         /// <summary>
@@ -248,11 +253,12 @@ namespace Nop.Services.Catalog
 
             _productVariantAttributeRepository.Update(productVariantAttribute);
 
-            _eventPublisher.EntityUpdated(productVariantAttribute);
-
             _cacheManager.RemoveByPattern(PRODUCTATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTATTRIBUTEVALUES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityUpdated(productVariantAttribute);
         }
 
         #endregion
@@ -270,11 +276,12 @@ namespace Nop.Services.Catalog
 
             _productVariantAttributeValueRepository.Delete(productVariantAttributeValue);
 
-            _eventPublisher.EntityDeleted(productVariantAttributeValue);
-
             _cacheManager.RemoveByPattern(PRODUCTATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTATTRIBUTEVALUES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityDeleted(productVariantAttributeValue);
         }
 
         /// <summary>
@@ -325,11 +332,12 @@ namespace Nop.Services.Catalog
 
             _productVariantAttributeValueRepository.Insert(productVariantAttributeValue);
 
-            _eventPublisher.EntityInserted(productVariantAttributeValue);
-
             _cacheManager.RemoveByPattern(PRODUCTATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTATTRIBUTEVALUES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityInserted(productVariantAttributeValue);
         }
 
         /// <summary>
@@ -343,11 +351,12 @@ namespace Nop.Services.Catalog
 
             _productVariantAttributeValueRepository.Update(productVariantAttributeValue);
 
-            _eventPublisher.EntityUpdated(productVariantAttributeValue);
-
             _cacheManager.RemoveByPattern(PRODUCTATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTATTRIBUTES_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTATTRIBUTEVALUES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityUpdated(productVariantAttributeValue);
         }
 
         #endregion
@@ -365,6 +374,7 @@ namespace Nop.Services.Catalog
 
             _productVariantAttributeCombinationRepository.Delete(combination);
 
+            //event notification
             _eventPublisher.EntityDeleted(combination);
         }
 
@@ -411,6 +421,7 @@ namespace Nop.Services.Catalog
 
             _productVariantAttributeCombinationRepository.Insert(combination);
 
+            //event notification
             _eventPublisher.EntityInserted(combination);
         }
 
@@ -425,6 +436,7 @@ namespace Nop.Services.Catalog
 
             _productVariantAttributeCombinationRepository.Update(combination);
 
+            //event notification
             _eventPublisher.EntityUpdated(combination);
         }
 

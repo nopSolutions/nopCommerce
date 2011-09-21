@@ -173,11 +173,12 @@ namespace Nop.Services.Catalog
 
             _productRepository.Insert(product);
 
-            _eventPublisher.EntityInserted(product);
-
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(TIERPRICES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityInserted(product);
         }
 
         /// <summary>
@@ -191,11 +192,12 @@ namespace Nop.Services.Catalog
 
             _productRepository.Update(product);
 
-            _eventPublisher.EntityUpdated(product);
-
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(TIERPRICES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityUpdated(product);
         }
          
         /// <summary>
@@ -526,11 +528,12 @@ namespace Nop.Services.Catalog
 
             _productVariantRepository.Insert(productVariant);
 
-            _eventPublisher.EntityInserted(productVariant);
-
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(TIERPRICES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityInserted(productVariant);
         }
 
         /// <summary>
@@ -544,11 +547,12 @@ namespace Nop.Services.Catalog
 
             _productVariantRepository.Update(productVariant);
 
-            _eventPublisher.EntityUpdated(productVariant);
-
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(TIERPRICES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityUpdated(productVariant);
         }
         
         /// <summary>
@@ -786,6 +790,7 @@ namespace Nop.Services.Catalog
 
             _relatedProductRepository.Delete(relatedProduct);
 
+            //event notification
             _eventPublisher.EntityDeleted(relatedProduct);
         }
 
@@ -834,6 +839,7 @@ namespace Nop.Services.Catalog
 
             _relatedProductRepository.Insert(relatedProduct);
 
+            //event notification
             _eventPublisher.EntityInserted(relatedProduct);
         }
 
@@ -848,6 +854,7 @@ namespace Nop.Services.Catalog
 
             _relatedProductRepository.Update(relatedProduct);
 
+            //event notification
             _eventPublisher.EntityUpdated(relatedProduct);
         }
 
@@ -866,6 +873,7 @@ namespace Nop.Services.Catalog
 
             _crossSellProductRepository.Delete(crossSellProduct);
 
+            //event notification
             _eventPublisher.EntityDeleted(crossSellProduct);
         }
 
@@ -913,6 +921,7 @@ namespace Nop.Services.Catalog
 
             _crossSellProductRepository.Insert(crossSellProduct);
 
+            //event notification
             _eventPublisher.EntityInserted(crossSellProduct);
         }
 
@@ -927,6 +936,7 @@ namespace Nop.Services.Catalog
 
             _crossSellProductRepository.Update(crossSellProduct);
 
+            //event notification
             _eventPublisher.EntityUpdated(crossSellProduct);
         }
 
@@ -992,11 +1002,12 @@ namespace Nop.Services.Catalog
 
             _tierPriceRepository.Delete(tierPrice);
 
-            _eventPublisher.EntityDeleted(tierPrice);
-
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(TIERPRICES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityDeleted(tierPrice);
         }
 
         /// <summary>
@@ -1046,11 +1057,12 @@ namespace Nop.Services.Catalog
 
             _tierPriceRepository.Insert(tierPrice);
 
-            _eventPublisher.EntityInserted(tierPrice);
-
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(TIERPRICES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityInserted(tierPrice);
         }
 
         /// <summary>
@@ -1064,11 +1076,12 @@ namespace Nop.Services.Catalog
 
             _tierPriceRepository.Update(tierPrice);
 
-            _eventPublisher.EntityUpdated(tierPrice);
-
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(TIERPRICES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityUpdated(tierPrice);
         }
 
         #endregion
@@ -1086,6 +1099,7 @@ namespace Nop.Services.Catalog
 
             _productPictureRepository.Delete(productPicture);
 
+            //event notification
             _eventPublisher.EntityDeleted(productPicture);
         }
 
@@ -1129,6 +1143,7 @@ namespace Nop.Services.Catalog
 
             _productPictureRepository.Insert(productPicture);
 
+            //event notification
             _eventPublisher.EntityInserted(productPicture);
         }
 
@@ -1143,6 +1158,7 @@ namespace Nop.Services.Catalog
 
             _productPictureRepository.Update(productPicture);
 
+            //event notification
             _eventPublisher.EntityUpdated(productPicture);
         }
 

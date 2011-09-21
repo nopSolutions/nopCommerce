@@ -123,9 +123,10 @@ namespace Nop.Services.Polls
 
             _pollRepository.Delete(poll);
 
-            _eventPublisher.EntityDeleted(poll);
-
             _cacheManager.RemoveByPattern(POLLS_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityDeleted(poll);
         }
 
         /// <summary>
@@ -139,9 +140,10 @@ namespace Nop.Services.Polls
 
             _pollRepository.Insert(poll);
 
-            _eventPublisher.EntityInserted(poll);
-
             _cacheManager.RemoveByPattern(POLLS_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityInserted(poll);
         }
 
         /// <summary>
@@ -155,9 +157,10 @@ namespace Nop.Services.Polls
 
             _pollRepository.Update(poll);
 
-            _eventPublisher.EntityUpdated(poll);
-
             _cacheManager.RemoveByPattern(POLLS_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityUpdated(poll);
         }
         
         /// <summary>
@@ -188,9 +191,10 @@ namespace Nop.Services.Polls
 
             _pollAnswerRepository.Delete(pollAnswer);
 
-            _eventPublisher.EntityDeleted(pollAnswer);
-
             _cacheManager.RemoveByPattern(POLLS_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityDeleted(pollAnswer);
         }
 
         #endregion

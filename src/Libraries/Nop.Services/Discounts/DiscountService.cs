@@ -126,9 +126,10 @@ namespace Nop.Services.Discounts
 
             _discountRepository.Delete(discount);
 
-            _eventPublisher.EntityDeleted(discount);
-
             _cacheManager.RemoveByPattern(DISCOUNTS_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityDeleted(discount);
         }
 
         /// <summary>
@@ -197,9 +198,10 @@ namespace Nop.Services.Discounts
 
             _discountRepository.Insert(discount);
 
-            _eventPublisher.EntityInserted(discount);
-
             _cacheManager.RemoveByPattern(DISCOUNTS_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityInserted(discount);
         }
 
         /// <summary>
@@ -213,9 +215,10 @@ namespace Nop.Services.Discounts
 
             _discountRepository.Update(discount);
 
-            _eventPublisher.EntityUpdated(discount);
-
             _cacheManager.RemoveByPattern(DISCOUNTS_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityUpdated(discount);
         }
 
         /// <summary>
@@ -229,9 +232,10 @@ namespace Nop.Services.Discounts
 
             _discountRequirementRepository.Delete(discountRequirement);
 
-            _eventPublisher.EntityDeleted(discountRequirement);
-
             _cacheManager.RemoveByPattern(DISCOUNTS_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityDeleted(discountRequirement);
         }
 
         /// <summary>
@@ -329,9 +333,10 @@ namespace Nop.Services.Discounts
 
             _discountUsageHistoryRepository.Delete(discountUsageHistory);
 
-            _eventPublisher.EntityDeleted(discountUsageHistory);
-
             _cacheManager.RemoveByPattern(DISCOUNTS_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityDeleted(discountUsageHistory);
         }
         #endregion
     }

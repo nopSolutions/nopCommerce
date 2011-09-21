@@ -7,6 +7,7 @@ using Nop.Core.Caching;
 using Nop.Core.Configuration;
 using Nop.Core.Data;
 using Nop.Core.Domain.Configuration;
+using Nop.Core.Events;
 using Nop.Core.Infrastructure;
 
 namespace Nop.Services.Configuration
@@ -23,6 +24,7 @@ namespace Nop.Services.Configuration
         #region Fields
 
         private readonly IRepository<Setting> _settingRepository;
+        private readonly IEventPublisher _eventPublisher;
         private readonly ICacheManager _cacheManager;
 
         #endregion
@@ -34,10 +36,11 @@ namespace Nop.Services.Configuration
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="settingRepository">Setting repository</param>
-        public SettingService(ICacheManager cacheManager,
+        public SettingService(ICacheManager cacheManager, IEventPublisher eventPublisher,
             IRepository<Setting> settingRepository)
         {
             this._cacheManager = cacheManager;
+            this._eventPublisher = eventPublisher;
             this._settingRepository = settingRepository;
         }
 
@@ -60,6 +63,9 @@ namespace Nop.Services.Configuration
             //cache
             if (clearCache)
                 _cacheManager.RemoveByPattern(SETTINGS_ALL_KEY);
+
+            //event notification
+            _eventPublisher.EntityInserted(setting);
         }
 
         /// <summary>
@@ -77,6 +83,9 @@ namespace Nop.Services.Configuration
             //cache
             if (clearCache)
                 _cacheManager.RemoveByPattern(SETTINGS_ALL_KEY);
+
+            //event notification
+            _eventPublisher.EntityUpdated(setting);
         }
 
         #endregion
@@ -170,6 +179,9 @@ namespace Nop.Services.Configuration
 
             //cache
             _cacheManager.RemoveByPattern(SETTINGS_ALL_KEY);
+
+            //event notification
+            _eventPublisher.EntityDeleted(setting);
         }
 
         /// <summary>

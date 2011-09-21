@@ -58,9 +58,10 @@ namespace Nop.Services.Directory
             
             _stateProvinceRepository.Delete(stateProvince);
 
-            _eventPublisher.EntityDeleted(stateProvince);
-
             _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityDeleted(stateProvince);
         }
 
         /// <summary>
@@ -127,9 +128,10 @@ namespace Nop.Services.Directory
 
             _stateProvinceRepository.Insert(stateProvince);
 
-            _eventPublisher.EntityInserted(stateProvince);
-
             _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityInserted(stateProvince);
         }
 
         /// <summary>
@@ -143,9 +145,10 @@ namespace Nop.Services.Directory
 
             _stateProvinceRepository.Update(stateProvince);
 
-            _eventPublisher.EntityUpdated(stateProvince);
-            
             _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityUpdated(stateProvince);
         }
 
         #endregion

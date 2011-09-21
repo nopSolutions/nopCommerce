@@ -85,10 +85,11 @@ namespace Nop.Services.Localization
 
             _languageRepository.Delete(language);
 
-            _eventPublisher.EntityDeleted(language);
-
             //cache
             _cacheManager.RemoveByPattern(LANGUAGES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityDeleted(language);
         }
 
         /// <summary>
@@ -138,10 +139,11 @@ namespace Nop.Services.Localization
 
             _languageRepository.Insert(language);
 
-            _eventPublisher.EntityInserted(language);
-
             //cache
             _cacheManager.RemoveByPattern(LANGUAGES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityInserted(language);
         }
 
         /// <summary>
@@ -156,10 +158,11 @@ namespace Nop.Services.Localization
             //update language
             _languageRepository.Update(language);
 
-            _eventPublisher.EntityUpdated(language);
-
             //cache
             _cacheManager.RemoveByPattern(LANGUAGES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityUpdated(language);
         }
 
         #endregion

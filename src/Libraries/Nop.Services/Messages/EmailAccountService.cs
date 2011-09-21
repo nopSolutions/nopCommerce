@@ -57,6 +57,7 @@ namespace Nop.Services.Messages
 
             _emailAccountRepository.Insert(emailAccount);
 
+            //event notification
             _eventPublisher.EntityInserted(emailAccount);
         }
 
@@ -89,6 +90,7 @@ namespace Nop.Services.Messages
 
             _emailAccountRepository.Update(emailAccount);
 
+            //event notification
             _eventPublisher.EntityUpdated(emailAccount);
         }
 
@@ -106,6 +108,7 @@ namespace Nop.Services.Messages
 
             _emailAccountRepository.Delete(emailAccount);
 
+            //event notification
             _eventPublisher.EntityDeleted(emailAccount);
         }
 

@@ -60,9 +60,10 @@ namespace Nop.Services.Catalog
 
             _manufacturerTemplateRepository.Delete(manufacturerTemplate);
 
-            _eventPublisher.Publish(new EntityDeleted<ManufacturerTemplate>(manufacturerTemplate));
-
             _cacheManager.RemoveByPattern(MANUFACTURERTEMPLATES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityDeleted(manufacturerTemplate);
         }
 
         /// <summary>
@@ -112,10 +113,11 @@ namespace Nop.Services.Catalog
 
             _manufacturerTemplateRepository.Insert(manufacturerTemplate);
 
-            _eventPublisher.Publish(new EntityInserted<ManufacturerTemplate>(manufacturerTemplate));
-
             //cache
             _cacheManager.RemoveByPattern(MANUFACTURERTEMPLATES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityInserted(manufacturerTemplate);
         }
 
         /// <summary>
@@ -129,10 +131,11 @@ namespace Nop.Services.Catalog
 
             _manufacturerTemplateRepository.Update(manufacturerTemplate);
 
-            _eventPublisher.Publish(new EntityUpdated<ManufacturerTemplate>(manufacturerTemplate));
-
             //cache
             _cacheManager.RemoveByPattern(MANUFACTURERTEMPLATES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityUpdated(manufacturerTemplate);
         }
         
         #endregion

@@ -51,9 +51,10 @@ namespace Nop.Services.Blogs
 
             _blogPostRepository.Delete(blogPost);
 
-            _eventPublisher.Publish(new EntityDeleted<BlogPost>(blogPost));
-
             _cacheManager.RemoveByPattern(BLOGPOST_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityDeleted(blogPost);
         }
 
         /// <summary>
@@ -165,9 +166,10 @@ namespace Nop.Services.Blogs
 
             _blogPostRepository.Insert(blogPost);
 
-            _eventPublisher.Publish(new EntityInserted<BlogPost>(blogPost));
-
             _cacheManager.RemoveByPattern(BLOGPOST_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityInserted(blogPost);
         }
 
         /// <summary>
@@ -181,9 +183,10 @@ namespace Nop.Services.Blogs
 
             _blogPostRepository.Update(blogPost);
 
-            _eventPublisher.Publish(new EntityUpdated<BlogPost>(blogPost));
-
             _cacheManager.RemoveByPattern(BLOGPOST_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityUpdated(blogPost);
         }
 
         #endregion

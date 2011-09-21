@@ -86,6 +86,7 @@
     <Compile Include="Domain\Polls\PollAnswer.cs" />
     <Compile Include="Domain\Polls\Poll.cs" />
     <Compile Include="Domain\Orders\BestsellersReportLine.cs" />
+    <Compile Include="Events\EventPublisherExtensions.cs" />
     <Compile Include="Events\EntityDeleted.cs" />
     <Compile Include="Events\EntityInserted.cs" />
     <Compile Include="Events\EntityUpdated.cs" />
