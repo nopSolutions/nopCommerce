@@ -6,6 +6,7 @@ using Nop.Plugin.Feed.PriceGrabber.Models;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
+using Nop.Services.Logging;
 using Nop.Services.PromotionFeed;
 using Nop.Web.Framework.Controllers;
 
@@ -17,18 +18,20 @@ namespace Nop.Plugin.Feed.PriceGrabber.Controllers
         private readonly ICurrencyService _currencyService;
         private readonly ILocalizationService _localizationService;
         private readonly IPromotionFeedService _promotionFeedService;
+        private readonly ILogger _logger;
         private readonly IWebHelper _webHelper;
         private readonly PriceGrabberSettings _priceGrabberSettings;
         private readonly ISettingService _settingService;
 
         public FeedPriceGrabberController(ICurrencyService currencyService,
-            ILocalizationService localizationService, 
-            IPromotionFeedService promotionFeedService, IWebHelper webHelper,
+            ILocalizationService localizationService, IPromotionFeedService promotionFeedService, 
+            ILogger logger, IWebHelper webHelper,
             PriceGrabberSettings priceGrabberSettings, ISettingService settingService)
         {
             this._currencyService = currencyService;
             this._localizationService = localizationService;
             this._promotionFeedService = promotionFeedService;
+            this._logger = logger;
             this._webHelper = webHelper;
             this._priceGrabberSettings = priceGrabberSettings;
             this._settingService = settingService;
@@ -104,6 +107,7 @@ namespace Nop.Plugin.Feed.PriceGrabber.Controllers
             catch (Exception exc)
             {
                 model.GenerateFeedResult = exc.Message;
+                _logger.Error(exc.Message, exc);
             }
 
 

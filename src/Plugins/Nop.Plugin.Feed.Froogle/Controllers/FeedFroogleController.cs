@@ -4,7 +4,6 @@ using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 using Nop.Core;
-using Nop.Core.Domain.Catalog;
 using Nop.Plugin.Feed.Froogle.Domain;
 using Nop.Plugin.Feed.Froogle.Models;
 using Nop.Plugin.Feed.Froogle.Services;
@@ -12,11 +11,11 @@ using Nop.Services.Catalog;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
+using Nop.Services.Logging;
 using Nop.Services.PromotionFeed;
 using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
-using System.Collections.Generic;
 
 namespace Nop.Plugin.Feed.Froogle.Controllers
 {
@@ -28,16 +27,16 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
         private readonly ICurrencyService _currencyService;
         private readonly ILocalizationService _localizationService;
         private readonly IPromotionFeedService _promotionFeedService;
+        private readonly ILogger _logger;
         private readonly IWebHelper _webHelper;
         private readonly FroogleSettings _froogleSettings;
         private readonly ISettingService _settingService;
         private readonly IPermissionService _permissionService;
 
         public FeedFroogleController(IGoogleService googleService, 
-            IProductService productService,
-            ICurrencyService currencyService,
-            ILocalizationService localizationService, 
-            IPromotionFeedService promotionFeedService, IWebHelper webHelper,
+            IProductService productService, ICurrencyService currencyService,
+            ILocalizationService localizationService, IPromotionFeedService promotionFeedService, 
+            ILogger logger, IWebHelper webHelper,
             FroogleSettings froogleSettings, ISettingService settingService,
             IPermissionService permissionService)
         {
@@ -46,6 +45,7 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
             this._currencyService = currencyService;
             this._localizationService = localizationService;
             this._promotionFeedService = promotionFeedService;
+            this._logger = logger;
             this._webHelper = webHelper;
             this._froogleSettings = froogleSettings;
             this._settingService = settingService;
@@ -162,6 +162,7 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
             catch (Exception exc)
             {
                 model.GenerateFeedResult = exc.Message;
+                _logger.Error(exc.Message, exc);
             }
 
 
@@ -220,6 +221,7 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
             catch (Exception exc)
             {
                 model.GenerateFeedResult = exc.Message;
+                _logger.Error(exc.Message, exc);
             }
 
             foreach (var c in _currencyService.GetAllCurrencies(false))

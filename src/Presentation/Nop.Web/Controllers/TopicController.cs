@@ -81,14 +81,14 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ValidateInput(false)]
-        public ActionResult Authenticate(int Id, string password)
+        public ActionResult Authenticate(int id, string password)
         {
             var authResult = false;
             var title = string.Empty;
             var body = string.Empty;
             var error = string.Empty;
 
-            var topic = _topicService.GetTopicById(Id);
+            var topic = _topicService.GetTopicById(id);
 
             if (topic != null)
             {

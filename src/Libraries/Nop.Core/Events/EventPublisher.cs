@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Nop.Core.Events
 {
@@ -24,7 +22,7 @@ namespace Nop.Core.Events
         {
             try
             {
-                x.Handle(eventMessage);
+                x.HandleEvent(eventMessage);
             }
             catch (Exception)
             {
