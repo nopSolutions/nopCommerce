@@ -37,35 +37,5 @@ namespace Nop.Services.Media
             fs.Read(img, 0, size);
             return img;
         }
-
-        /// <summary>
-        /// Gets the loaded picture binary depending on picture storage settings
-        /// </summary>
-        /// <param name="picture">Picture</param>
-        /// <param name="fromDb">Load from database; otherwise, from file system</param>
-        /// <returns>Picture binary</returns>
-        public static byte[] LoadPictureBinary(this Picture picture, bool fromDb)
-        {
-            byte[] result = null;
-            if (fromDb)
-            {
-                result = picture.PictureBinary;
-            }
-            else
-            {
-                result = EngineContext.Current.Resolve<IPictureService>().LoadPictureFromFile(picture.Id, picture.MimeType);
-            }
-            return result;
-        }
-
-        /// <summary>
-        /// Gets the loaded picture binary depending on picture storage settings
-        /// </summary>
-        /// <param name="picture">Picture</param>
-        /// <returns>Picture binary</returns>
-        public static byte[] LoadPictureBinary(this Picture picture)
-        {
-            return LoadPictureBinary(picture, EngineContext.Current.Resolve<IPictureService>().StoreInDb);
-        }
     }
 }

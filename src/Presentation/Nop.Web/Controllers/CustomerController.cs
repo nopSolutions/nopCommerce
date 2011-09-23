@@ -1365,9 +1365,9 @@ namespace Nop.Web.Controllers
 
                         byte[] customerPictureBinary = uploadedFile.GetPictureBits();
                         if (customerAvatar != null)
-                            customerAvatar = _pictureService.UpdatePicture(customerAvatar.Id, customerPictureBinary, uploadedFile.ContentType, true);
+                            customerAvatar = _pictureService.UpdatePicture(customerAvatar.Id, customerPictureBinary, uploadedFile.ContentType, null, true);
                         else
-                            customerAvatar = _pictureService.InsertPicture(customerPictureBinary, uploadedFile.ContentType, true);
+                            customerAvatar = _pictureService.InsertPicture(customerPictureBinary, uploadedFile.ContentType, null, true);
                     }
 
                     int customerAvatarId = 0;

@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Web;
 using MigraDoc.DocumentObjectModel;
 using MigraDoc.DocumentObjectModel.Tables;
 using MigraDoc.Rendering;
@@ -14,7 +12,6 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
-using Nop.Core.Events;
 using Nop.Core.Html;
 using Nop.Services.Catalog;
 using Nop.Services.Directory;
@@ -45,7 +42,6 @@ namespace Nop.Services.Common
         private readonly PdfSettings _pdfSettings;
         private readonly TaxSettings _taxSettings;
         private readonly StoreInformationSettings _storeInformationSettings;
-        private readonly IEventPublisher _eventPublisher;
 
         #endregion
 
@@ -56,7 +52,7 @@ namespace Nop.Services.Common
             ICurrencyService currencyService, IMeasureService measureService, 
             IPictureService pictureService, CurrencySettings currencySettings, 
             MeasureSettings measureSettings, PdfSettings pdfSettings, TaxSettings taxSettings, 
-            StoreInformationSettings storeInformationSettings, IEventPublisher eventPublisher)
+            StoreInformationSettings storeInformationSettings)
         {
             _localizationService = localizationService;
             _orderService = orderService;
@@ -70,7 +66,6 @@ namespace Nop.Services.Common
             _pdfSettings = pdfSettings;
             _taxSettings = taxSettings;
             _storeInformationSettings = storeInformationSettings;
-            _eventPublisher = eventPublisher;
         }
 
         #endregion
@@ -678,9 +673,13 @@ namespace Nop.Services.Common
                         int cellNum = i % 2;
                         var pic = pictures[i];
 
-                        if (pic != null && pic.LoadPictureBinary() != null && pic.LoadPictureBinary().Length > 0)
+                        if (pic != null)
                         {
-                            row.Cells[cellNum].AddImage(_pictureService.GetPictureLocalPath(pic, 200, true));
+                            var picBinary = _pictureService.LoadPictureBinary(pic);
+                            if (picBinary != null && picBinary.Length > 0)
+                            {
+                                row.Cells[cellNum].AddImage(_pictureService.GetPictureLocalPath(pic, 200, true));
+                            }
                         }
 
                         if (i != 0 && i % 2 == 0)
@@ -709,9 +708,13 @@ namespace Nop.Services.Common
                     }
 
                     var pic = _pictureService.GetPictureById(productVariant.PictureId);
-                    if (pic != null && pic.LoadPictureBinary() != null && pic.LoadPictureBinary().Length > 0)
+                    if (pic != null)
                     {
-                        section.AddImage(_pictureService.GetPictureLocalPath(pic, 200, true));
+                        var picBinary = _pictureService.LoadPictureBinary(pic);
+                        if (picBinary != null && picBinary.Length > 0)
+                        {
+                            section.AddImage(_pictureService.GetPictureLocalPath(pic, 200, true));
+                        }
                     }
 
                     section.AddParagraph(String.Format("{0}: {1} {2}", _localizationService.GetResource("PDFProductCatalog.Price"), productVariant.Price.ToString("0.00"), _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode));

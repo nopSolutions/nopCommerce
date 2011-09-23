@@ -10,6 +10,7 @@ using Nop.Services.Catalog;
 using Nop.Services.ExportImport;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
+using Nop.Services.Media;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
 using Telerik.Web.Mvc;
@@ -27,6 +28,7 @@ namespace Nop.Admin.Controllers
         private readonly IManufacturerService _manufacturerService;
         private readonly IManufacturerTemplateService _manufacturerTemplateService;
         private readonly IProductService _productService;
+        private readonly IPictureService _pictureService;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
         private readonly ILocalizedEntityService _localizedEntityService;
@@ -41,8 +43,8 @@ namespace Nop.Admin.Controllers
         #region Constructors
 
         public ManufacturerController(ICategoryService categoryService, IManufacturerService manufacturerService,
-            IManufacturerTemplateService manufacturerTemplateService,
-            IProductService productService,  ILanguageService languageService,
+            IManufacturerTemplateService manufacturerTemplateService, IProductService productService,
+            IPictureService pictureService, ILanguageService languageService,
             ILocalizationService localizationService, ILocalizedEntityService localizedEntityService,
             IExportManager exportManager, IWorkContext workContext,
             ICustomerActivityService customerActivityService, IPermissionService permissionService,
@@ -52,6 +54,7 @@ namespace Nop.Admin.Controllers
             this._manufacturerTemplateService = manufacturerTemplateService;
             this._manufacturerService = manufacturerService;
             this._productService = productService;
+            this._pictureService = pictureService;
             this._languageService = languageService;
             this._localizationService = localizationService;
             this._localizedEntityService = localizedEntityService;
@@ -104,6 +107,14 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
+        private void UpdatePictureSeoNames(Manufacturer manufacturer)
+        {
+            var picture = _pictureService.GetPictureById(manufacturer.PictureId);
+            if (picture != null)
+                _pictureService.SetSeoFilename(picture.Id, _pictureService.GetPictureSeName(manufacturer.Name));
+        }
+
+        [NonAction]
         private void PrepareTemplatesModel(ManufacturerModel model)
         {
             if (model == null)
@@ -119,6 +130,7 @@ namespace Nop.Admin.Controllers
                 });
             }
         }
+
         #endregion
         
         #region List
@@ -199,6 +211,8 @@ namespace Nop.Admin.Controllers
                 _manufacturerService.InsertManufacturer(manufacturer);
                 //locales
                 UpdateLocales(manufacturer, model);
+                //update picture seo file name
+                UpdatePictureSeoNames(manufacturer);
 
                 //activity log
                 _customerActivityService.InsertActivity("AddNewManufacturer", _localizationService.GetResource("ActivityLog.AddNewManufacturer"), manufacturer.Name);
@@ -261,6 +275,8 @@ namespace Nop.Admin.Controllers
                 _manufacturerService.UpdateManufacturer(manufacturer);
                 //locales
                 UpdateLocales(manufacturer, model);
+                //update picture seo file name
+                UpdatePictureSeoNames(manufacturer);
 
                 //activity log
                 _customerActivityService.InsertActivity("EditManufacturer", _localizationService.GetResource("ActivityLog.EditManufacturer"), manufacturer.Name);

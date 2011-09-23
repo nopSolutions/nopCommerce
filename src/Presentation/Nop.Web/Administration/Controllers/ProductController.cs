@@ -126,6 +126,13 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
+        private void UpdatePictureSeoNames(Product product)
+        {
+            foreach (var pp in product.ProductPictures)
+                _pictureService.SetSeoFilename(pp.PictureId, _pictureService.GetPictureSeName(product.Name));
+        }
+
+        [NonAction]
         private void PrepareTemplatesModel(ProductModel model)
         {
             if (model == null)
@@ -608,6 +615,7 @@ namespace Nop.Admin.Controllers
                 _productService.UpdateProduct(product);
                 UpdateLocales(product, model);
                 SaveProductTags(product, ParseProductTags(model.ProductTags));
+                UpdatePictureSeoNames(product);
 
                 //activity log
                 _customerActivityService.InsertActivity("EditProduct", _localizationService.GetResource("ActivityLog.EditProduct"), product.Name);
@@ -1174,12 +1182,18 @@ namespace Nop.Admin.Controllers
             if (pictureId == 0)
                 throw new ArgumentException();
 
+            var product = _productService.GetProductById(productId);
+            if (product == null)
+                throw new ArgumentException("No product found with the specified id");
+
             _productService.InsertProductPicture(new ProductPicture()
             {
                 PictureId = pictureId,
                 ProductId = productId,
                 DisplayOrder = displayOrder,
             });
+
+            _pictureService.SetSeoFilename(pictureId, _pictureService.GetPictureSeName(product.Name));
 
             return Json(new { Result = true }, JsonRequestBehavior.AllowGet);
         }
@@ -1250,6 +1264,9 @@ namespace Nop.Admin.Controllers
 
             var productId = productPicture.ProductId;
             _productService.DeleteProductPicture(productPicture);
+
+            var picture = _pictureService.GetPictureById(productPicture.PictureId);
+            _pictureService.DeletePicture(picture);
             
             return ProductPictureList(command, productId);
         }

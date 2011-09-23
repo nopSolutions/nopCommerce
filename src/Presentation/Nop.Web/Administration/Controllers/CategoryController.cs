@@ -18,6 +18,7 @@ using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
 using Telerik.Web.Mvc;
 using Telerik.Web.Mvc.UI;
+using Nop.Services.Media;
 
 namespace Nop.Admin.Controllers
 {
@@ -30,6 +31,7 @@ namespace Nop.Admin.Controllers
         private readonly ICategoryTemplateService _categoryTemplateService;
         private readonly IManufacturerService _manufacturerService;
         private readonly IProductService _productService;
+        private readonly IPictureService _pictureService;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
         private readonly ILocalizedEntityService _localizedEntityService;
@@ -45,8 +47,8 @@ namespace Nop.Admin.Controllers
         #region Constructors
 
         public CategoryController(ICategoryService categoryService, ICategoryTemplateService categoryTemplateService,
-            IManufacturerService manufacturerService,
-            IProductService productService,  ILanguageService languageService,
+            IManufacturerService manufacturerService, IProductService productService, 
+            IPictureService pictureService, ILanguageService languageService,
             ILocalizationService localizationService, ILocalizedEntityService localizedEntityService,
             IDiscountService discountService, IPermissionService permissionService,
             IExportManager exportManager, IWorkContext workContext,
@@ -56,6 +58,7 @@ namespace Nop.Admin.Controllers
             this._categoryTemplateService = categoryTemplateService;
             this._manufacturerService = manufacturerService;
             this._productService = productService;
+            this._pictureService = pictureService;
             this._languageService = languageService;
             this._localizationService = localizationService;
             this._localizedEntityService = localizedEntityService;
@@ -109,6 +112,14 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
+        private void UpdatePictureSeoNames(Category category)
+        {
+            var picture = _pictureService.GetPictureById(category.PictureId);
+            if (picture != null)
+                _pictureService.SetSeoFilename(picture.Id, _pictureService.GetPictureSeName(category.Name));
+        }
+
+        [NonAction]
         private void PrepareTemplatesModel(CategoryModel model)
         {
             if (model == null)
@@ -124,6 +135,7 @@ namespace Nop.Admin.Controllers
                 });
             }
         }
+
         #endregion
         
         #region List / tree
@@ -298,6 +310,8 @@ namespace Nop.Admin.Controllers
                         category.AppliedDiscounts.Add(discount);
                 }
                 _categoryService.UpdateCategory(category);
+                //update picture seo file name
+                UpdatePictureSeoNames(category);
 
                 //activity log
                 _customerActivityService.InsertActivity("AddNewCategory", _localizationService.GetResource("ActivityLog.AddNewCategory"), category.Name);
@@ -402,6 +416,8 @@ namespace Nop.Admin.Controllers
                     }
                 }
                 _categoryService.UpdateCategory(category);
+                //update picture seo file name
+                UpdatePictureSeoNames(category);
 
                 //activity log
                 _customerActivityService.InsertActivity("EditCategory", _localizationService.GetResource("ActivityLog.EditCategory"), category.Name);

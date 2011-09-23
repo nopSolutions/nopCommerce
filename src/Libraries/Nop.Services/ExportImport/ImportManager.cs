@@ -313,7 +313,7 @@ namespace Nop.Services.ExportImport
 
                         productVariant.Product.ProductPictures.Add(new ProductPicture()
                         {
-                            Picture = _pictureService.InsertPicture(File.ReadAllBytes(picture), "image/jpeg", true),
+                            Picture = _pictureService.InsertPicture(File.ReadAllBytes(picture), "image/jpeg", _pictureService.GetPictureSeName(name), true),
                             DisplayOrder = 1,
                         });
                         _productService.UpdateProduct(productVariant.Product);

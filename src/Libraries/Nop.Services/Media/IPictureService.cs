@@ -12,6 +12,13 @@ namespace Nop.Services.Media
         #region Methods
 
         /// <summary>
+        /// Get picture SEO friendly name
+        /// </summary>
+        /// <param name="name">Name</param>
+        /// <returns>Result</returns>
+        string GetPictureSeName(string name);
+
+        /// <summary>
         /// Gets the default picture URL
         /// </summary>
         /// <param name="targetSize">The target picture size (longest side)</param>
@@ -96,14 +103,14 @@ namespace Nop.Services.Media
         /// <param name="pageIndex">Current page</param>
         /// <param name="pageSize">Items on each page</param>
         /// <returns>Paged list of pictures</returns>
-        PagedList<Picture> GetPictures(int pageIndex, int pageSize);
+        IPagedList<Picture> GetPictures(int pageIndex, int pageSize);
 
         /// <summary>
         /// Gets pictures by product identifier
         /// </summary>
         /// <param name="productId">Product identifier</param>
         /// <returns>Pictures</returns>
-        List<Picture> GetPicturesByProductId(int productId);
+        IList<Picture> GetPicturesByProductId(int productId);
 
         /// <summary>
         /// Gets pictures by product identifier
@@ -111,16 +118,17 @@ namespace Nop.Services.Media
         /// <param name="productId">Product identifier</param>
         /// <param name="recordsToReturn">Number of records to return. 0 if you want to get all items</param>
         /// <returns>Pictures</returns>
-        List<Picture> GetPicturesByProductId(int productId, int recordsToReturn);
+        IList<Picture> GetPicturesByProductId(int productId, int recordsToReturn);
 
         /// <summary>
         /// Inserts a picture
         /// </summary>
         /// <param name="pictureBinary">The picture binary</param>
         /// <param name="mimeType">The picture MIME type</param>
+        /// <param name="seoFilename">The SEO filename</param>
         /// <param name="isNew">A value indicating whether the picture is new</param>
         /// <returns>Picture</returns>
-        Picture InsertPicture(byte[] pictureBinary, string mimeType, bool isNew);
+        Picture InsertPicture(byte[] pictureBinary, string mimeType, string seoFilename, bool isNew);
 
         /// <summary>
         /// Updates the picture
@@ -128,9 +136,18 @@ namespace Nop.Services.Media
         /// <param name="pictureId">The picture identifier</param>
         /// <param name="pictureBinary">The picture binary</param>
         /// <param name="mimeType">The picture MIME type</param>
+        /// <param name="seoFilename">The SEO filename</param>
         /// <param name="isNew">A value indicating whether the picture is new</param>
         /// <returns>Picture</returns>
-        Picture UpdatePicture(int pictureId, byte[] pictureBinary, string mimeType, bool isNew);
+        Picture UpdatePicture(int pictureId, byte[] pictureBinary, string mimeType, string seoFilename, bool isNew);
+
+        /// <summary>
+        /// Updates a SEO filename of a picture
+        /// </summary>
+        /// <param name="pictureId">The picture identifier</param>
+        /// <param name="seoFilename">The SEO filename</param>
+        /// <returns>Picture</returns>
+        Picture SetSeoFilename(int pictureId, string seoFilename);
 
         #endregion
 

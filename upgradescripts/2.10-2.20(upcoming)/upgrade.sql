@@ -592,3 +592,12 @@ UPDATE [dbo].[CustomerAttribute]
 SET [Key]=N'CountryId'
 WHERE [Key]=N'Location'
 GO
+
+
+--SEO friendly name
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Picture]') and NAME='SeoFilename')
+BEGIN
+	ALTER TABLE [dbo].[Picture] 
+	ADD [SeoFilename] nvarchar(300) NULL
+END
+GO

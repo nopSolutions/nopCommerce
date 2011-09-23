@@ -1,14 +1,11 @@
 ﻿using System;
 using System.IO;
-using System.Net.Mime;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
-using Nop.Services;
 using Nop.Services.Authentication;
 using Nop.Services.Customers;
 using Nop.Services.Media;
-using Nop.Web.Framework.Controllers;
 
 namespace Nop.Admin.Controllers
 {
@@ -82,7 +79,7 @@ namespace Nop.Admin.Controllers
                     break;
             }
 
-            var picture = _pictureService.InsertPicture(pictureBinary, contentType, true);
+            var picture = _pictureService.InsertPicture(pictureBinary, contentType, null, true);
             return Json(new { pictureId = picture.Id, imageUrl = _pictureService.GetPictureUrl(picture, 100) });
         }
 

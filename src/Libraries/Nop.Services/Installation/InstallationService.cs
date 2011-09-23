@@ -4923,7 +4923,7 @@ namespace Nop.Services.Installation
                 MetaKeywords = "Books, Dictionary, Textbooks",
                 MetaDescription = "Books category description",
                 PageSize = 4,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_book.jpeg"), "image/jpeg", true).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_book.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Book"), true).Id,
                 PriceRanges = "-25;25-50;50-;",
                 Published = true,
                 DisplayOrder = 1,
@@ -4938,7 +4938,7 @@ namespace Nop.Services.Installation
                 Name = "Computers",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 4,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_computers.jpeg"), "image/jpeg", true).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_computers.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Computers"), true).Id,
                 Published = true,
                 DisplayOrder = 2,
                 CreatedOnUtc = DateTime.UtcNow,
@@ -4953,7 +4953,7 @@ namespace Nop.Services.Installation
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 4,
                 ParentCategoryId = categoryComputers.Id,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_desktops.jpg"), "image/pjpeg", true).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_desktops.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Desktops"), true).Id,
                 PriceRanges = "-1000;1000-1200;1200-;",
                 Published = true,
                 DisplayOrder = 1,
@@ -4969,7 +4969,7 @@ namespace Nop.Services.Installation
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 4,
                 ParentCategoryId = categoryComputers.Id,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_notebooks.jpg"), "image/pjpeg", true).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_notebooks.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Notebooks"), true).Id,
                 Published = true,
                 DisplayOrder = 2,
                 CreatedOnUtc = DateTime.UtcNow,
@@ -4984,7 +4984,7 @@ namespace Nop.Services.Installation
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 4,
                 ParentCategoryId = categoryComputers.Id,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_accessories.jpg"), "image/pjpeg", true).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_accessories.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Accessories"), true).Id,
                 PriceRanges = "-100;100-;",
                 Published = true,
                 DisplayOrder = 3,
@@ -5000,7 +5000,7 @@ namespace Nop.Services.Installation
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 4,
                 ParentCategoryId = categoryComputers.Id,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_software.jpg"), "image/pjpeg", true).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_software.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Software"), true).Id,
                 Published = true,
                 DisplayOrder = 5,
                 CreatedOnUtc = DateTime.UtcNow,
@@ -5015,7 +5015,7 @@ namespace Nop.Services.Installation
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 4,
                 ParentCategoryId = categoryComputers.Id,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_games.jpg"), "image/pjpeg", true).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_games.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Games"), true).Id,
                 Published = true,
                 DisplayOrder = 4,
                 CreatedOnUtc = DateTime.UtcNow,
@@ -5030,7 +5030,7 @@ namespace Nop.Services.Installation
                 Name = "Electronics",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 4,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_electronics.jpeg"), "image/jpeg", true).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_electronics.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Electronics"), true).Id,
                 Published = true,
                 DisplayOrder = 3,
                 CreatedOnUtc = DateTime.UtcNow,
@@ -5045,7 +5045,7 @@ namespace Nop.Services.Installation
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 4,
                 ParentCategoryId = categoryElectronics.Id,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_camera_photo.jpeg"), "image/jpeg", true).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_camera_photo.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Camera, photo"), true).Id,
                 PriceRanges = "-500;500-;",
                 Published = true,
                 DisplayOrder = 2,
@@ -5061,7 +5061,7 @@ namespace Nop.Services.Installation
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 4,
                 ParentCategoryId = categoryElectronics.Id,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_cell_phones.jpeg"), "image/jpeg", true).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_cell_phones.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Cell phones"), true).Id,
                 Published = true,
                 DisplayOrder = 4,
                 CreatedOnUtc = DateTime.UtcNow,
@@ -5075,7 +5075,7 @@ namespace Nop.Services.Installation
                 Name = "Apparel & Shoes",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 4,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_apparel_shoes.jpeg"), "image/jpeg", true).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_apparel_shoes.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Apparel & Shoes"), true).Id,
                 Published = true,
                 DisplayOrder = 5,
                 CreatedOnUtc = DateTime.UtcNow,
@@ -5090,7 +5090,7 @@ namespace Nop.Services.Installation
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 4,
                 ParentCategoryId = categoryApparelShoes.Id,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_shirts.jpg"), "image/pjpeg", true).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_shirts.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Shirts"), true).Id,
                 PriceRanges = "-20;20-;",
                 Published = true,
                 DisplayOrder = 1,
@@ -5106,7 +5106,7 @@ namespace Nop.Services.Installation
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 4,
                 ParentCategoryId = categoryApparelShoes.Id,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_jeans.jpg"), "image/pjpeg", true).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_jeans.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Jeans"), true).Id,
                 PriceRanges = "-20;20-;",
                 Published = true,
                 DisplayOrder = 2,
@@ -5122,7 +5122,7 @@ namespace Nop.Services.Installation
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 4,
                 ParentCategoryId = categoryApparelShoes.Id,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_shoes.jpg"), "image/pjpeg", true).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_shoes.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Shoes"), true).Id,
                 PriceRanges = "-20;20-;",
                 Published = true,
                 DisplayOrder = 3,
@@ -5138,7 +5138,7 @@ namespace Nop.Services.Installation
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 4,
                 ParentCategoryId = categoryApparelShoes.Id,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_accessories_apparel.jpg"), "image/pjpeg", true).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_accessories_apparel.jpg"), "image/pjpeg", pictureService.GetPictureSeName("Apparel accessories"), true).Id,
                 PriceRanges = "-30;30-;",
                 Published = true,
                 DisplayOrder = 4,
@@ -5153,7 +5153,7 @@ namespace Nop.Services.Installation
                 Name = "Digital downloads",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 4,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_digital_downloads.jpeg"), "image/jpeg", true).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_digital_downloads.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Digital downloads"), true).Id,
                 Published = true,
                 DisplayOrder = 6,
                 CreatedOnUtc = DateTime.UtcNow,
@@ -5167,7 +5167,7 @@ namespace Nop.Services.Installation
                 Name = "Jewelry",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 4,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_jewelry.jpeg"), "image/jpeg", true).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_jewelry.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Jewelry"), true).Id,
                 PriceRanges = "0-500;500-700;700-3000;",
                 Published = true,
                 DisplayOrder = 7,
@@ -5181,7 +5181,7 @@ namespace Nop.Services.Installation
                 Name = "Gift Cards",
                 CategoryTemplateId = categoryTemplateInGridAndLines.Id,
                 PageSize = 4,
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_gift_cards.jpeg"), "image/jpeg", true).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "category_gift_cards.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Gift Cards"), true).Id,
                 Published = true,
                 DisplayOrder = 10,
                 CreatedOnUtc = DateTime.UtcNow,
@@ -5271,7 +5271,7 @@ namespace Nop.Services.Installation
             });
             product5GiftCard.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_5giftcart.jpeg"), "image/jpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_5giftcart.jpeg"), "image/jpeg", pictureService.GetPictureSeName(product5GiftCard.Name), true),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(product5GiftCard);
@@ -5313,7 +5313,7 @@ namespace Nop.Services.Installation
             });
             product25GiftCard.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_25giftcart.jpeg"), "image/jpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_25giftcart.jpeg"), "image/jpeg", pictureService.GetPictureSeName(product25GiftCard.Name), true),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(product25GiftCard);
@@ -5360,7 +5360,7 @@ namespace Nop.Services.Installation
             });
             product50GiftCard.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_50giftcart.jpeg"), "image/jpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_50giftcart.jpeg"), "image/jpeg", pictureService.GetPictureSeName(product50GiftCard.Name), true),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(product50GiftCard);
@@ -5407,7 +5407,7 @@ namespace Nop.Services.Installation
             });
             product100GiftCard.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_100giftcart.jpeg"), "image/jpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_100giftcart.jpeg"), "image/jpeg", pictureService.GetPictureSeName(product100GiftCard.Name), true),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(product100GiftCard);
@@ -5493,7 +5493,7 @@ namespace Nop.Services.Installation
             });
             productRockabillyPolka.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_RockabillyPolka.jpg"), "image/pjpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_RockabillyPolka.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productRockabillyPolka.Name), true),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productRockabillyPolka);
@@ -5557,12 +5557,12 @@ namespace Nop.Services.Installation
             });
             productAcerAspireOne.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_AcerAspireOne_1.jpeg"), "image/jpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_AcerAspireOne_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAcerAspireOne.Name), true),
                 DisplayOrder = 1,
             });
             productAcerAspireOne.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_AcerAspireOne_2.jpeg"), "image/jpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_AcerAspireOne_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAcerAspireOne.Name), true),
                 DisplayOrder = 2,
             });
             _productRepository.Insert(productAcerAspireOne);
@@ -5655,12 +5655,12 @@ namespace Nop.Services.Installation
             });
             productAdidasShoe.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_AdidasShoe_1.jpg"), "image/pjpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_AdidasShoe_1.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productAdidasShoe.Name), true),
                 DisplayOrder = 1,
             });
             productAdidasShoe.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_AdidasShoe_2.jpg"), "image/pjpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_AdidasShoe_2.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productAdidasShoe.Name), true),
                 DisplayOrder = 2,
             });
             _productRepository.Insert(productAdidasShoe);
@@ -5709,7 +5709,7 @@ namespace Nop.Services.Installation
             });
             productAdobePhotoshop.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_AdobePhotoshop.jpeg"), "image/jpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_AdobePhotoshop.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAdobePhotoshop.Name), true),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productAdobePhotoshop);
@@ -5758,7 +5758,7 @@ namespace Nop.Services.Installation
             });
             productApcUps.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_ApcUps.jpeg"), "image/jpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_ApcUps.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productApcUps.Name), true),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productApcUps);
@@ -5822,7 +5822,7 @@ namespace Nop.Services.Installation
             });
             productArrow.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_arrow.jpg"), "image/pjpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_arrow.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productArrow.Name), true),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productArrow);
@@ -5876,7 +5876,7 @@ namespace Nop.Services.Installation
             });
             productAsusPc1000.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_asuspc1000.jpeg"), "image/jpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_asuspc1000.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAsusPc1000.Name), true),
                 DisplayOrder = 1,
             });
             productAsusPc1000.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute()
@@ -5958,7 +5958,7 @@ namespace Nop.Services.Installation
             });
             productAsusPc900.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_asuspc900.jpeg"), "image/jpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_asuspc900.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productAsusPc900.Name), true),
                 DisplayOrder = 1,
             });
             productAsusPc900.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute()
@@ -6029,7 +6029,7 @@ namespace Nop.Services.Installation
             });
             productBestGrillingRecipes.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_BestGrillingRecipes.jpeg"), "image/jpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_BestGrillingRecipes.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBestGrillingRecipes.Name), true),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productBestGrillingRecipes);
@@ -6078,7 +6078,7 @@ namespace Nop.Services.Installation
             });
             productDiamondHeart.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_DiamondHeart.jpg"), "image/pjpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_DiamondHeart.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productDiamondHeart.Name), true),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productDiamondHeart);
@@ -6127,7 +6127,7 @@ namespace Nop.Services.Installation
             });
             productBlackBerry.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_BlackBerry.jpeg"), "image/jpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_BlackBerry.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBlackBerry.Name), true),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productBlackBerry);
@@ -6282,17 +6282,17 @@ namespace Nop.Services.Installation
             });
             productBuildComputer.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Desktops_1.jpeg"), "image/jpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Desktops_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBuildComputer.Name), true),
                 DisplayOrder = 1,
             });
             productBuildComputer.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Desktops_2.jpeg"), "image/jpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Desktops_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBuildComputer.Name), true),
                 DisplayOrder = 2,
             });
             productBuildComputer.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Desktops_3.jpeg"), "image/jpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Desktops_3.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBuildComputer.Name), true),
                 DisplayOrder = 3,
             });
             _productRepository.Insert(productBuildComputer);
@@ -6315,7 +6315,7 @@ namespace Nop.Services.Installation
             productCanonCamera.ProductVariants.Add(new ProductVariant()
             {
                 Name = "Black",
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_CanonCamera_black.jpeg"), "image/jpeg", true).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_CanonCamera_black.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Canon Digital Rebel XSi 12.2 MP Digital SLR Camera (Black)"), true).Id,
                 Price = 670M,
                 IsShipEnabled = true,
                 Weight = 2,
@@ -6339,7 +6339,7 @@ namespace Nop.Services.Installation
             productCanonCamera.ProductVariants.Add(new ProductVariant()
             {
                 Name = "Silver",
-                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_CanonCamera_silver.jpeg"), "image/jpeg", true).Id,
+                PictureId = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_CanonCamera_silver.jpeg"), "image/jpeg", pictureService.GetPictureSeName("Canon Digital Rebel XSi 12.2 MP Digital SLR Camera (Silver)"), true).Id,
                 Price = 630M,
                 IsShipEnabled = true,
                 Weight = 2,
@@ -6367,12 +6367,12 @@ namespace Nop.Services.Installation
             });
             productCanonCamera.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_CanonCamera_1.jpeg"), "image/jpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_CanonCamera_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productCanonCamera.Name), true),
                 DisplayOrder = 1,
             });
             productCanonCamera.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_CanonCamera_2.jpeg"), "image/jpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_CanonCamera_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productCanonCamera.Name), true),
                 DisplayOrder = 2,
             });
             _productRepository.Insert(productCanonCamera);
@@ -6421,7 +6421,7 @@ namespace Nop.Services.Installation
             });
             productCanonCamcoder.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_CanonCamcoder.jpeg"), "image/jpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_CanonCamcoder.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productCanonCamcoder.Name), true),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productCanonCamcoder);
@@ -6470,7 +6470,7 @@ namespace Nop.Services.Installation
             });
             productCompaq.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Compaq.jpeg"), "image/jpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Compaq.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productCompaq.Name), true),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productCompaq);
@@ -6520,7 +6520,7 @@ namespace Nop.Services.Installation
             });
             productCookingForTwo.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_CookingForTwo.jpeg"), "image/jpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_CookingForTwo.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productCookingForTwo.Name), true),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productCookingForTwo);
@@ -6569,7 +6569,7 @@ namespace Nop.Services.Installation
             });
             productCorel.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Corel.jpeg"), "image/jpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Corel.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productCorel.Name), true),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productCorel);
@@ -6626,7 +6626,7 @@ namespace Nop.Services.Installation
             });
             productCustomTShirt.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_CustomTShirt.jpeg"), "image/jpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_CustomTShirt.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productCustomTShirt.Name), true),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productCustomTShirt);
@@ -6675,7 +6675,7 @@ namespace Nop.Services.Installation
             });
             productDiamondEarrings.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_DiamondEarrings.jpg"), "image/pjpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_DiamondEarrings.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productDiamondEarrings.Name), true),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productDiamondEarrings);
@@ -6724,12 +6724,12 @@ namespace Nop.Services.Installation
             });
             productDiamondBracelet.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_DiamondBracelet_1.jpg"), "image/pjpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_DiamondBracelet_1.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productDiamondBracelet.Name), true),
                 DisplayOrder = 1,
             });
             productDiamondBracelet.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_DiamondBracelet_2.jpg"), "image/pjpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_DiamondBracelet_2.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productDiamondBracelet.Name), true),
                 DisplayOrder = 2,
             });
             _productRepository.Insert(productDiamondBracelet);
@@ -6779,7 +6779,7 @@ namespace Nop.Services.Installation
             });
             productEatingWell.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_EatingWell.jpeg"), "image/jpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_EatingWell.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productEatingWell.Name), true),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productEatingWell);
@@ -6873,7 +6873,7 @@ namespace Nop.Services.Installation
             });
             productEtnies.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Etnies.jpg"), "image/pjpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Etnies.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productEtnies.Name), true),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productEtnies);
@@ -6922,12 +6922,12 @@ namespace Nop.Services.Installation
             });
             productLeatherHandbag.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeatherHandbag_1.jpg"), "image/pjpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeatherHandbag_1.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productLeatherHandbag.Name), true),
                 DisplayOrder = 1,
             });
             productLeatherHandbag.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeatherHandbag_2.jpg"), "image/pjpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeatherHandbag_2.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productLeatherHandbag.Name), true),
                 DisplayOrder = 2,
             });
             _productRepository.Insert(productLeatherHandbag);
@@ -6981,7 +6981,7 @@ namespace Nop.Services.Installation
             });
             productHp506.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Hp506.jpeg"), "image/jpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Hp506.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHp506.Name), true),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productHp506);
@@ -7035,7 +7035,7 @@ namespace Nop.Services.Installation
             });
             productHpPavilion1.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HpPavilion1.jpeg"), "image/jpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HpPavilion1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHpPavilion1.Name), true),
                 DisplayOrder = 1,
             });
             productHpPavilion1.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute()
@@ -7117,12 +7117,12 @@ namespace Nop.Services.Installation
             });
             productHpPavilion2.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HpPavilion2_1.jpeg"), "image/jpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HpPavilion2_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHpPavilion2.Name), true),
                 DisplayOrder = 1,
             });
             productHpPavilion2.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HpPavilion2_2.jpeg"), "image/jpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HpPavilion2_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHpPavilion2.Name), true),
                 DisplayOrder = 2,
             });
             _productRepository.Insert(productHpPavilion2);
@@ -7176,7 +7176,7 @@ namespace Nop.Services.Installation
             });
             productHpPavilion3.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HpPavilion3.jpeg"), "image/jpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_HpPavilion3.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productHpPavilion3.Name), true),
                 DisplayOrder = 1,
             });
             productHpPavilion3.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute()
@@ -7280,7 +7280,7 @@ namespace Nop.Services.Installation
             });
             productHat.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_hat.jpg"), "image/pjpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_hat.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productHat.Name), true),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productHat);
@@ -7329,7 +7329,7 @@ namespace Nop.Services.Installation
             });
             productKensington.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Kensington.jpeg"), "image/jpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Kensington.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productKensington.Name), true),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productKensington);
@@ -7394,12 +7394,12 @@ namespace Nop.Services.Installation
             });
             productLeviJeans.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeviJeans_1.jpg"), "image/pjpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeviJeans_1.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productLeviJeans.Name), true),
                 DisplayOrder = 1,
             });
             productLeviJeans.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeviJeans_2.jpg"), "image/pjpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_LeviJeans_2.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productLeviJeans.Name), true),
                 DisplayOrder = 2,
             });
             _productRepository.Insert(productLeviJeans);
@@ -7448,7 +7448,7 @@ namespace Nop.Services.Installation
             });
             productBaseball.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Baseball.jpeg"), "image/jpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Baseball.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBaseball.Name), true),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productBaseball);
@@ -7497,7 +7497,7 @@ namespace Nop.Services.Installation
             });
             productMedalOfHonor.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_MedalOfHonor.jpeg"), "image/jpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_MedalOfHonor.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productMedalOfHonor.Name), true),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productMedalOfHonor);
@@ -7546,7 +7546,7 @@ namespace Nop.Services.Installation
             });
             productMouse.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Mouse.jpeg"), "image/jpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Mouse.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productMouse.Name), true),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productMouse);
@@ -7595,7 +7595,7 @@ namespace Nop.Services.Installation
             });
             productGolfBelt.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_GolfBelt.jpeg"), "image/jpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_GolfBelt.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productGolfBelt.Name), true),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productGolfBelt);
@@ -7644,7 +7644,7 @@ namespace Nop.Services.Installation
             });
             productPanasonic.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_productPanasonic.jpeg"), "image/jpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_productPanasonic.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productPanasonic.Name), true),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productPanasonic);
@@ -7693,7 +7693,7 @@ namespace Nop.Services.Installation
             });
             productSunglasses.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Sunglasses.jpg"), "image/pjpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Sunglasses.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productSunglasses.Name), true),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productSunglasses);
@@ -7742,12 +7742,12 @@ namespace Nop.Services.Installation
             });
             productSamsungPhone.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_SamsungPhone_1.jpeg"), "image/jpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_SamsungPhone_1.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productSamsungPhone.Name), true),
                 DisplayOrder = 1,
             });
             productSamsungPhone.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_SamsungPhone_2.jpeg"), "image/jpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_SamsungPhone_2.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productSamsungPhone.Name), true),
                 DisplayOrder = 2,
             });
             _productRepository.Insert(productSamsungPhone);
@@ -7796,7 +7796,7 @@ namespace Nop.Services.Installation
             });
             productSonyCamcoder.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_SonyCamcoder.jpeg"), "image/jpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_SonyCamcoder.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productSonyCamcoder.Name), true),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productSonyCamcoder);
@@ -7846,7 +7846,7 @@ namespace Nop.Services.Installation
             });
             productBestSkilletRecipes.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_BestSkilletRecipes.jpeg"), "image/jpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_BestSkilletRecipes.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBestSkilletRecipes.Name), true),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productBestSkilletRecipes);
@@ -7895,7 +7895,7 @@ namespace Nop.Services.Installation
             });
             productSatellite.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Notebooks.jpeg"), "image/jpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Notebooks.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productSatellite.Name), true),
                 DisplayOrder = 1,
             });
             productSatellite.ProductSpecificationAttributes.Add(new ProductSpecificationAttribute()
@@ -7972,7 +7972,7 @@ namespace Nop.Services.Installation
             });
             productDenimShort.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_DenimShort.jpg"), "image/pjpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_DenimShort.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productDenimShort.Name), true),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productDenimShort);
@@ -8021,12 +8021,12 @@ namespace Nop.Services.Installation
             });
             productEngagementRing.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_EngagementRing_1.jpg"), "image/pjpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_EngagementRing_1.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productEngagementRing.Name), true),
                 DisplayOrder = 1,
             });
             productEngagementRing.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_EngagementRing_2.jpg"), "image/pjpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_EngagementRing_2.jpg"), "image/pjpeg", pictureService.GetPictureSeName(productEngagementRing.Name), true),
                 DisplayOrder = 2,
             });
             _productRepository.Insert(productEngagementRing);
@@ -8075,7 +8075,7 @@ namespace Nop.Services.Installation
             });
             productWoW.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_wow.jpeg"), "image/jpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_wow.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productWoW.Name), true),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productWoW);
@@ -8124,7 +8124,7 @@ namespace Nop.Services.Installation
             });
             productSoccer.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Soccer.jpeg"), "image/jpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_Soccer.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productSoccer.Name), true),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productSoccer);
@@ -8194,7 +8194,7 @@ namespace Nop.Services.Installation
             });
             productPokerFace.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_PokerFace.jpeg"), "image/jpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_PokerFace.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productPokerFace.Name), true),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productPokerFace);
@@ -8264,7 +8264,7 @@ namespace Nop.Services.Installation
             });
             productSingleLadies.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_SingleLadies.jpeg"), "image/jpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_SingleLadies.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productSingleLadies.Name), true),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productSingleLadies);
@@ -8323,7 +8323,7 @@ namespace Nop.Services.Installation
             });
             productBattleOfLa.ProductPictures.Add(new ProductPicture()
             {
-                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_BattleOfLA.jpeg"), "image/jpeg", true),
+                Picture = pictureService.InsertPicture(File.ReadAllBytes(sampleImagesPath + "product_BattleOfLA.jpeg"), "image/jpeg", pictureService.GetPictureSeName(productBattleOfLa.Name), true),
                 DisplayOrder = 1,
             });
             _productRepository.Insert(productBattleOfLa);

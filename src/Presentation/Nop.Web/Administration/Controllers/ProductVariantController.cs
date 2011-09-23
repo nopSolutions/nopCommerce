@@ -21,6 +21,7 @@ using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
 using Nop.Services.Security;
 using Nop.Core.Domain.Common;
+using Nop.Services.Media;
 
 namespace Nop.Admin.Controllers
 {
@@ -30,6 +31,7 @@ namespace Nop.Admin.Controllers
         #region Fields
 
         private readonly IProductService _productService;
+        private readonly IPictureService _pictureService;
         private readonly ILanguageService _languageService;
         private readonly ILocalizedEntityService _localizedEntityService;
         private readonly IDiscountService _discountService;
@@ -53,7 +55,7 @@ namespace Nop.Admin.Controllers
 
         #region Constructors
 
-        public ProductVariantController(IProductService productService,
+        public ProductVariantController(IProductService productService, IPictureService pictureService,
             ILanguageService languageService, ILocalizedEntityService localizedEntityService,
             IDiscountService discountService, ICustomerService customerService,
             ILocalizationService localizationService, IProductAttributeService productAttributeService,
@@ -66,6 +68,7 @@ namespace Nop.Admin.Controllers
             AdminAreaSettings adminAreaSettings)
         {
             this._localizedEntityService = localizedEntityService;
+            this._pictureService = pictureService;
             this._languageService = languageService;
             this._productService = productService;
             this._discountService = discountService;
@@ -105,6 +108,14 @@ namespace Nop.Admin.Controllers
                                                                localized.Description,
                                                                localized.LanguageId);
             }
+        }
+
+        [NonAction]
+        private void UpdatePictureSeoNames(ProductVariant variant)
+        {
+            var picture = _pictureService.GetPictureById(variant.PictureId);
+            if (picture != null)
+                _pictureService.SetSeoFilename(picture.Id, _pictureService.GetPictureSeName(variant.FullProductName));
         }
 
         [NonAction]
@@ -281,6 +292,8 @@ namespace Nop.Admin.Controllers
                         variant.AppliedDiscounts.Add(discount);
                 }
                 _productService.UpdateProductVariant(variant);
+                //update picture seo file name
+                UpdatePictureSeoNames(variant);
 
                 //activity log
                 _customerActivityService.InsertActivity("AddNewProductVariant", _localizationService.GetResource("ActivityLog.AddNewProductVariant"), variant.Name);
@@ -364,6 +377,8 @@ namespace Nop.Admin.Controllers
                     }
                 }
                 _productService.UpdateProductVariant(variant);
+                //update picture seo file name
+                UpdatePictureSeoNames(variant);
 
                 //activity log
                 _customerActivityService.InsertActivity("EditProductVariant", _localizationService.GetResource("ActivityLog.EditProductVariant"), variant.Name);

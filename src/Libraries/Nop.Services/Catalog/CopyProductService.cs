@@ -132,7 +132,7 @@ namespace Nop.Services.Catalog
                     {
                         var picture = productPicture.Picture;
 
-                        var pictureCopy = _pictureService.InsertPicture(picture.PictureBinary, picture.MimeType, true);
+                        var pictureCopy = _pictureService.InsertPicture(picture.PictureBinary, picture.MimeType, _pictureService.GetPictureSeName(newName), true);
                         _productService.InsertProductPicture(new ProductPicture()
                         {
                             ProductId = productCopy.Id,
@@ -218,7 +218,7 @@ namespace Nop.Services.Catalog
                         var picture = _pictureService.GetPictureById(productVariant.PictureId);
                         if (picture != null)
                         {
-                            var pictureCopy = _pictureService.InsertPicture(picture.PictureBinary, picture.MimeType, true);
+                            var pictureCopy = _pictureService.InsertPicture(picture.PictureBinary, picture.MimeType, _pictureService.GetPictureSeName(productVariant.Name), true);
                             pictureId = pictureCopy.Id;
                         }
                     }
