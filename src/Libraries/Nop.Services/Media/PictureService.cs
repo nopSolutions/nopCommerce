@@ -401,7 +401,7 @@ namespace Nop.Services.Media
             }
             lock (s_lock)
             {
-                string seoFileName = GetPictureSeName(picture.SeoFilename);
+                string seoFileName = picture.SeoFilename; // = GetPictureSeName(picture.SeoFilename); //just for sure
                 if (targetSize == 0)
                 {
                     localFilename = !String.IsNullOrEmpty(seoFileName) ?
@@ -428,7 +428,7 @@ namespace Nop.Services.Media
                         {
                             System.IO.Directory.CreateDirectory(this.LocalThumbImagePath);
                         }
-                        using (MemoryStream stream = new MemoryStream(LoadPictureBinary(picture)))
+                        using (var stream = new MemoryStream(LoadPictureBinary(picture)))
                         {
                             var b = new Bitmap(stream);
 
