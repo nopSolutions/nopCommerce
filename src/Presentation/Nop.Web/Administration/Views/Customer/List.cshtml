@@ -87,6 +87,8 @@
                         columns.Bound(x => x.Id)
                             .Width(50)
                             .Filterable(false);
+                        //I don't know why but the customer list does not have an 'Edit' column in the grid on some machines.
+                        //That's why the 'Email' column is clickable.
                         columns.Bound(x => x.Email)
                             .Template(x => Html.ActionLink(x.Email, "Edit", "Customer", new { id = x.Id }, new { }))
                             .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/Customer/Edit/") + "<#= Id #>\"><#= Email #></a>")
