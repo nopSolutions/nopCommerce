@@ -88,6 +88,8 @@
                             .Width(50)
                             .Filterable(false);
                         columns.Bound(x => x.Email)
+                            .Template(x => Html.ActionLink(x.Email, "Edit", "Customer", new { id = x.Id }, new { }))
+                            .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/Customer/Edit/") + "<#= Id #>\"><#= Email #></a>")
                             .Width(150)
                             .Filterable(false);
                         //Weird!!! We can't pass Model.UsernamesEnabled to Hidden method
