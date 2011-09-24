@@ -41,7 +41,7 @@
         <MSBuild Projects="$(RootFolder)\Presentation\Nop.Web\Nop.Web.csproj"
            Targets="ResolveReferences;_CopyWebApplication"
            Properties="WebProjectOutputDir=$(DeployFolder)\$(DeployPrefix)\;
-           OutDir=$(DeployFolder)\$(DeployPrefix)\bin\" />
+           OutDir=$(DeployFolder)\$(DeployPrefix)\bin\;Configuration=$(Configuration)" />
         
         <!--Lets copy the plugins to the deployed directory-->
         <MSBuild Projects ="$(MSBuildProjectFullPath)"
@@ -53,7 +53,7 @@
         <MSBuild Projects="$(RootFolder)\Presentation\Nop.Web\Administration\Nop.Admin.csproj"
            Targets="ResolveReferences;_CopyWebApplication"
            Properties="WebProjectOutputDir=$(DeployFolder)\$(DeployPrefix)\Administration\;
-           OutDir=$(DeployFolder)\$(DeployPrefix)\Administration\bin\" />
+           OutDir=$(DeployFolder)\$(DeployPrefix)\Administration\bin\;Configuration=$(Configuration)" />
 
         <!--Now lets move the Nop.Admin/bin/ to the root bin/-->
         <CreateItem Include="$(DeployFolder)\$(DeployPrefix)\Administration\bin\*.dll">
