@@ -724,6 +724,7 @@
     <Content Include="Content\Images\noDefaultImage8.gif" />
     <Content Include="Content\Images\noDefaultImage9.gif" />
     <Content Include="Content\Images\install-synchronizing.gif" />
+    <Content Include="Content\Images\uploaded\placeholder.txt" />
     <Content Include="Content\install\images\bg.gif" />
     <Content Include="Content\install\images\bodybg.gif" />
     <Content Include="Content\install\images\bottom.gif" />

@@ -86,6 +86,7 @@
     <Compile Include="Controllers\CampaignController.cs" />
     <Compile Include="Controllers\BlogController.cs" />
     <Compile Include="Controllers\CommonController.cs" />
+    <Compile Include="Controllers\ImageBrowserController.cs" />
     <Compile Include="Controllers\ExternalAuthenticationController.cs" />
     <Compile Include="Controllers\WidgetController.cs" />
     <Compile Include="Controllers\OnlineCustomerController.cs" />

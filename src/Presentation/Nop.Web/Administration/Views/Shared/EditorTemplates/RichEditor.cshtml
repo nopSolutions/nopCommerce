@@ -10,7 +10,13 @@
 Now we have to manually decode values*/
 .Value(Model)
 .Tools(tools => tools
-.Custom(settings => settings.HtmlAttributes(new { @class = "t-html", onclick = "viewRichHtmlEditorSource" + random + "(event)", title="Edit HTML" }))))
+.Custom(settings => settings.HtmlAttributes(new { @class = "t-html", onclick = "viewRichHtmlEditorSource" + random + "(event)", title="Edit HTML" })))
+.FileBrowser(browser => browser.Browse("Browse", "ImageBrowser")
+    .Thumbnail("Thumbnail", "ImageBrowser")
+    .Upload("Upload", "ImageBrowser")
+    .DeleteFile("DeleteFile", "ImageBrowser")
+    .DeleteDirectory("DeleteDirectory", "ImageBrowser")
+    .CreateDirectory("CreateDirectory", "ImageBrowser")))
 <script type="text/javascript">
     var htmlSourcePopup;
     
