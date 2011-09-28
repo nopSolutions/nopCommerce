@@ -251,6 +251,36 @@ set @resources='
   <LocaleResource Name="Admin.Customers.Customers.Fields.Fax.Hint">
     <Value>The fax.</Value>
   </LocaleResource>
+  <LocaleResource Name="Checkout.SelectBillingAddressOrEnterNewOne">
+    <Value>Select a billing address from your address book or enter a new address.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.SelectShippingAddressOrEnterNewOne">
+    <Value>Select a shipping address from your address book or enter a new address.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.ShippingMethod">
+    <Value>Shipping method</Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.PaymentMethod">
+    <Value>Payment method</Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.PaymentInfo">
+    <Value>Payment information</Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.ConfirmOrder">
+    <Value>Confirm order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.SubmittingOrder">
+    <Value>Submitting order information...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Common.Confirm">
+    <Value>Confirm</Value>
+  </LocaleResource>
+  <LocaleResource Name="Common.LoadingNextStep">
+    <Value>Loading next step...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Common.Back">
+    <Value>Back</Value>
+  </LocaleResource>
 </Language>
 '
 

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Nop.Core;
 using Nop.Core.Domain.Common;
 
 namespace Nop.Services.Common
@@ -38,9 +39,9 @@ namespace Nop.Services.Common
                 ((String.IsNullOrEmpty(a.Address1) && String.IsNullOrEmpty(address1)) || a.Address1 == address1) &&
                 ((String.IsNullOrEmpty(a.Address2) && String.IsNullOrEmpty(address2)) || a.Address2 == address2) &&
                 ((String.IsNullOrEmpty(a.City) && String.IsNullOrEmpty(city)) || a.City == city) &&
-                a.StateProvinceId == stateProvinceId &&
+                ((a.StateProvinceId.IsNullOrDefault() && stateProvinceId.IsNullOrDefault()) || a.StateProvinceId == stateProvinceId) &&
                 ((String.IsNullOrEmpty(a.ZipPostalCode) && String.IsNullOrEmpty(zipPostalCode)) || a.ZipPostalCode == zipPostalCode) &&
-                a.CountryId == countryId);
+                ((a.CountryId.IsNullOrDefault() && countryId.IsNullOrDefault()) || a.CountryId == countryId));
         }
 
     }

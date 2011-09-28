@@ -6,7 +6,7 @@
     <ul>
         <li><a @(Model.CheckoutProgressStep == CheckoutProgressStep.Cart ? " class=active-step" : " class=inactive-step") @(Model.CheckoutProgressStep != CheckoutProgressStep.Complete ? " href=" + Url.RouteUrl("ShoppingCart") : null)>@T("Checkout.Progress.Cart")</a>
         </li>
-        <li><a @(Model.CheckoutProgressStep == CheckoutProgressStep.Address ? " class=active-step" : " class=inactive-step") @(Model.CheckoutProgressStep != CheckoutProgressStep.Cart && Model.CheckoutProgressStep != CheckoutProgressStep.Complete ? " href=" + Url.RouteUrl("CheckoutShippingAddress") : null)>@T("Checkout.Progress.Address")</a>
+        <li><a @(Model.CheckoutProgressStep == CheckoutProgressStep.Address ? " class=active-step" : " class=inactive-step") @(Model.CheckoutProgressStep != CheckoutProgressStep.Cart && Model.CheckoutProgressStep != CheckoutProgressStep.Complete ? " href=" + Url.RouteUrl("CheckoutBillingAddress") : null)>@T("Checkout.Progress.Address")</a>
         </li>
         <li><a @(Model.CheckoutProgressStep == CheckoutProgressStep.Shipping ? " class=active-step" : " class=inactive-step") @(Model.CheckoutProgressStep != CheckoutProgressStep.Cart && Model.CheckoutProgressStep != CheckoutProgressStep.Address && Model.CheckoutProgressStep != CheckoutProgressStep.Complete ? " href=" + Url.RouteUrl("CheckoutShippingMethod") : null)>@T("Checkout.Progress.Shipping")</a>
         </li>

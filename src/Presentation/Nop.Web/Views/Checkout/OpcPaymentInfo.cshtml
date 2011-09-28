@@ -1,0 +1,19 @@
+﻿@model CheckoutPaymentInfoModel
+@using Nop.Core.Domain.Orders
+@using Nop.Web.Models.Checkout
+@using Nop.Web.Models.Common
+@using Nop.Web.Framework.UI
+<div class="checkout-data">
+    <div class="payment-info">
+        <div class="body">
+            @Html.Action(Model.PaymentInfoActionName, Model.PaymentInfoControllerName, Model.PaymentInfoRouteValues)
+        </div>
+    </div>
+    <div class="clear">
+    </div>
+    <div class="error-block">
+        <div class="message-error">
+            @Html.ValidationSummary(false)
+        </div>
+    </div>
+</div>

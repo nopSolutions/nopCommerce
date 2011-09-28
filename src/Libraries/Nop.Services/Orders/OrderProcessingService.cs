@@ -24,6 +24,7 @@ using Nop.Services.Payments;
 using Nop.Services.Security;
 using Nop.Services.Shipping;
 using Nop.Services.Tax;
+using Nop.Services.Directory;
 
 namespace Nop.Services.Orders
 {
@@ -58,6 +59,7 @@ namespace Nop.Services.Orders
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly ISmsService _smsService;
         private readonly ICustomerActivityService _customerActivityService;
+        private readonly ICurrencyService _currencyService;
 
         private readonly PaymentSettings _paymentSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
@@ -125,6 +127,7 @@ namespace Nop.Services.Orders
             IWorkflowMessageService workflowMessageService,
             ISmsService smsService,
             ICustomerActivityService customerActivityService,
+            ICurrencyService currencyService,
             PaymentSettings paymentSettings,
             RewardPointsSettings rewardPointsSettings,
             OrderSettings orderSettings,
@@ -155,6 +158,7 @@ namespace Nop.Services.Orders
             this._encryptionService = encryptionService;
             this._smsService = smsService;
             this._customerActivityService = customerActivityService;
+            this._currencyService = currencyService;
             this._paymentSettings = paymentSettings;
             this._rewardPointsSettings = rewardPointsSettings;
             this._orderSettings = orderSettings;
@@ -499,7 +503,21 @@ namespace Nop.Services.Orders
                         }
                     }
                 }
-                
+
+                //min totals validation
+                bool minOrderSubtotalAmountOk = ValidateMinOrderSubtotalAmount(cart);
+                if (!minOrderSubtotalAmountOk)
+                {
+                    decimal minOrderSubtotalAmount = _currencyService.ConvertFromPrimaryStoreCurrency(_orderSettings.MinOrderSubtotalAmount, _workContext.WorkingCurrency);
+                    throw new NopException(string.Format(_localizationService.GetResource("Checkout.MinOrderSubtotalAmount"), _priceFormatter.FormatPrice(minOrderSubtotalAmount, true, false)));
+                }
+                bool minOrderTotalAmountOk = ValidateMinOrderTotalAmount(cart);
+                if (!minOrderTotalAmountOk)
+                {
+                    decimal minOrderTotalAmount = _currencyService.ConvertFromPrimaryStoreCurrency(_orderSettings.MinOrderTotalAmount, _workContext.WorkingCurrency);
+                    throw new NopException(string.Format(_localizationService.GetResource("Checkout.MinOrderTotalAmount"), _priceFormatter.FormatPrice(minOrderTotalAmount, true, false)));
+                }
+
                 //tax display type
                 var customerTaxDisplayType = TaxDisplayType.IncludingTax;
                 if (!processPaymentRequest.IsRecurringPayment)

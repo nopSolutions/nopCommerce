@@ -1,0 +1,50 @@
+﻿@model CheckoutShippingAddressModel
+@using Nop.Core.Domain.Orders
+@using Nop.Web.Models.Checkout
+@using Nop.Web.Models.Common
+@using Nop.Web.Framework.UI
+<div class="checkout-data">
+    <div class="enter-address">
+        <div class="enter-address-body">
+            @if (Model.ExistingAddresses.Count > 0)
+            {
+                <div>
+                    <label for="shipping-address-select">@T("Checkout.SelectShippingAddressOrEnterNewOne")</label>
+                    <div>
+                        <select name="shipping_address_id" id="shipping-address-select" class="address-select"
+                            title="" onchange="Shipping.newAddress(!this.value)">
+                            @foreach (var address in Model.ExistingAddresses)
+                            {
+                                var addressLine = "";
+                                addressLine += address.FirstName;
+                                addressLine += " " + address.LastName;
+                                addressLine += ", " + address.Address1;
+                                addressLine += ", " + address.City;
+                                addressLine += ", " + address.StateProvinceName;
+                                addressLine += " " + address.ZipPostalCode;
+                                if (!String.IsNullOrWhiteSpace(address.CountryName))
+                                {
+                                    addressLine += ", " + address.CountryName;
+                                }
+                                <option value="@(address.Id)">@(addressLine)</option>
+                            }
+                            <option value="" @(Model.NewAddressPreselected ? " selected=\"selected\"" : null)>New
+                                Address</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="clear">
+                </div>
+            }
+            <div id="shipping-new-address-form">
+                @{
+                    var dataDictAddress = new ViewDataDictionary();
+                    //Merge ModelState (required for validation)
+                    dataDictAddress.ModelState.Merge(ViewData.ModelState);
+                    dataDictAddress.TemplateInfo.HtmlFieldPrefix = "ShippingNewAddress";
+                    @Html.Partial("_CreateOrUpdateAddress", Model.NewAddress, dataDictAddress)              
+                }
+            </div>
+        </div>
+    </div>
+</div>

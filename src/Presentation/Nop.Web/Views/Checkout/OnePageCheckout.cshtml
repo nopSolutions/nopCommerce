@@ -1,0 +1,213 @@
+﻿@model OnePageCheckoutModel
+@using Nop.Web.Framework.UI;
+@using Nop.Web.Framework;
+@using Nop.Web.Models.Checkout;
+@using Nop.Core.Infrastructure.DependencyManagement;
+@using Nop.Core.Infrastructure;
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    Html.AddScriptParts(@Url.Content("~/Scripts/accordion.js"));
+    Html.AddScriptParts(@Url.Content("~/Scripts/onepagecheckout.js"));
+
+    var storeLocation = EngineContext.Current.Resolve<Nop.Core.IWebHelper>().GetStoreLocation();
+}
+<div class="checkout-page">
+    <div class="page-title">
+        <h1>@T("Checkout")</h1>
+    </div>
+    <div class="clear">
+    </div>
+    <div class="checkout-data">
+        <ol class="opc" id="checkoutSteps">
+            <li id="opc-billing" class="section allow">
+                <div class="step-title">
+                    <span class="number">1</span>
+                    <h2>@T("Checkout.BillingAddress")</h2>
+                    <a href="#">@T("Common.Edit")</a>
+                </div>
+                <div id="checkout-step-billing" class="step a-item" style="display: none;">
+                    <form id="co-billing-form" action="">
+                    <div id="checkout-billing-load">
+                        @Html.Action("OpcBillingForm", "Checkout")
+                        @*billing address content will be loaded here*@
+                    </div>
+                    </form>
+                    <script type="text/javascript">
+//<![CDATA[
+                        Billing.init('#co-billing-form', '@(storeLocation)checkout/OpcSaveBilling/');
+                        if ($("#billing-address-select").length > 0) {
+                            Billing.newAddress(!$('#billing-address-select').val());
+                        }
+//]]>
+                    </script>
+                    <div class="buttons-set" id="billing-buttons-container">
+                        <button type="button" title="@T("Common.Continue")" class="newaddressnextstepbutton" onclick="Billing.save()">
+                            <span>@T("Common.Continue")</span></button>
+                        <span class="please-wait" id="billing-please-wait" style="display: none;">
+                            <img src="@Url.Content("~/Content/Images/ajax_loader_small.gif")"
+                                alt="@T("Common.LoadingNextStep")" title="@T("Common.LoadingNextStep")" />
+                            @T("Common.LoadingNextStep")</span>
+                    </div>
+                </div>
+            </li>
+            @if (Model.ShippingRequired)
+            {
+                <li id="opc-shipping" class="section">
+                    <div class="step-title">
+                        <span class="number">2</span>
+                        <h2>@T("Checkout.ShippingAddress")</h2>
+                        <a href="#">@T("Common.Edit")</a>
+                    </div>
+                    <div id="checkout-step-shipping" class="step a-item" style="display: none;">
+                        <form action="" id="co-shipping-form">
+                        <div id="checkout-shipping-load">
+                            @*shipping address content will be loaded here*@
+                        </div>
+                        </form>
+                        <script type="text/javascript">
+//<![CDATA[
+                            Shipping.init('#co-shipping-form', '@(storeLocation)checkout/OpcSaveShipping/');
+                            if ($("#shipping-address-select").length > 0) {
+                                Shipping.newAddress(!$('#shipping-address-select').val());
+                            }
+
+//]]>
+                        </script>
+                        <div class="buttons-set" id="shipping-buttons-container">
+                            <p class="back-link">
+                                <a href="#" onclick="Checkout.back(); return false;"><small>&laquo; </small>@T("Common.Back")</a></p>
+                            <button type="button" class="newaddressnextstepbutton" title="@T("Common.Continue")" onclick="Shipping.save()">
+                                <span>@T("Common.Continue")</span></button>
+                            <span id="shipping-please-wait" class="please-wait" style="display: none;">
+                                <img src="@Url.Content("~/Content/Images/ajax_loader_small.gif")"
+                                alt="@T("Common.LoadingNextStep")" title="@T("Common.LoadingNextStep")" />
+                                @T("Common.LoadingNextStep")</span>
+                        </div>
+                    </div>
+                </li>
+                <li id="opc-shipping_method" class="section">
+                    <div class="step-title">
+                        <span class="number">3</span>
+                        <h2>@T("Checkout.ShippingMethod")</h2>
+                        <a href="#">@T("Common.Edit")</a>
+                    </div>
+                    <div id="checkout-step-shipping-method" class="step a-item" style="display: none;">
+                        <form id="co-shipping-method-form" action="">
+                        <div id="checkout-shipping-method-load">
+                            @*shipping methods content will be loaded here*@
+                        </div>
+                        <script type="text/javascript">
+    //<![CDATA[
+                            ShippingMethod.init('#co-shipping-method-form', '@(storeLocation)checkout/OpcSaveShippingMethod/');
+    //]]>
+                        </script>
+                        <div class="buttons-set" id="shipping-method-buttons-container">
+                            <p class="back-link">
+                                <a href="#" onclick="Checkout.back(); return false;"><small>&laquo; </small>@T("Common.Back")</a></p>
+                            <button type="button" class="shippingmethodnextstepbutton" onclick="ShippingMethod.save()">
+                                <span>@T("Common.Continue")</span></button>
+                            <span id="shipping-method-please-wait" class="please-wait" style="display: none;">
+                                <img src="@Url.Content("~/Content/Images/ajax_loader_small.gif")"
+                                alt="@T("Common.LoadingNextStep")" title="@T("Common.LoadingNextStep")" />
+                                @T("Common.LoadingNextStep")</span>
+                        </div>
+                        </form>
+                    </div>
+                </li>
+            }
+            <li id="opc-payment_method" class="section">
+                <div class="step-title">
+                    <span class="number">@(Model.ShippingRequired ? "4" : "2")</span>
+                    <h2>@T("Checkout.PaymentMethod")</h2>
+                    <a href="#">@T("Common.Edit")</a>
+                </div>
+                <div id="checkout-step-payment-method" class="step a-item" style="display: none;">
+                    <form action="" id="co-payment-method-form">
+                    <div id="checkout-payment-method-load">
+                        @*payment methods content will be loaded here*@ Payment is not required
+                    </div>
+                    </form>
+                    <script type="text/javascript">
+//<![CDATA[
+
+                        PaymentMethod.init('#co-payment-method-form', '@(storeLocation)checkout/OpcSavePaymentMethod/');
+//]]>
+                    </script>
+                    <div class="buttons-set" id="payment-method-buttons-container">
+                        <p class="back-link">
+                            <a href="#" onclick="Checkout.back(); return false;"><small>&laquo; </small>@T("Common.Back")</a></p>
+                        <button type="button" class="paymentmethodnextstepbutton" onclick="PaymentMethod.save()">
+                            <span>@T("Common.Continue")</span></button>
+                        <span class="please-wait" id="payment-method-please-wait" style="display: none;">
+                            <img src="@Url.Content("~/Content/Images/ajax_loader_small.gif")"
+                                alt="@T("Common.LoadingNextStep")" title="@T("Common.LoadingNextStep")" />
+                            @T("Common.LoadingNextStep")</span>
+                    </div>
+                </div>
+            </li>
+            <li id="opc-payment_info" class="section">
+                <div class="step-title">
+                    <span class="number">@(Model.ShippingRequired ? "5" : "3")</span>
+                    <h2>@T("Checkout.PaymentInfo")</h2>
+                    <a href="#">@T("Common.Edit")</a>
+                </div>
+                <div id="checkout-step-payment-info" class="step a-item" style="display: none;">
+                    <form action="" id="co-payment-info-form">
+                    <div id="checkout-payment-info-load">
+                        @*payment info content will be loaded here*@ Payment is not required
+                    </div>
+                    </form>
+                    <script type="text/javascript">
+//<![CDATA[
+                        PaymentInfo.init('#co-payment-info-form', '@(storeLocation)checkout/OpcSavePaymentInfo/');
+//]]>
+                    </script>
+                    <div class="buttons-set" id="payment-info-buttons-container">
+                        <p class="back-link">
+                            <a href="#" onclick="Checkout.back(); return false;"><small>&laquo; </small>@T("Common.Back")</a></p>
+                        <button type="button" class="paymentinfonextstepbutton" onclick="PaymentInfo.save()">
+                            <span>@T("Common.Continue")</span></button>
+                        <span class="please-wait" id="payment-info-please-wait" style="display: none;">
+                            <img src="@Url.Content("~/Content/Images/ajax_loader_small.gif")"
+                                alt="@T("Common.LoadingNextStep")" title="@T("Common.LoadingNextStep")" />
+                            @T("Common.LoadingNextStep")</span>
+                    </div>
+                </div>
+            </li>
+            <li id="opc-confirm_order" class="section">
+                <div class="step-title">
+                    <span class="number">@(Model.ShippingRequired ? "6" : "4")</span>
+                    <h2>@T("Checkout.ConfirmOrder")</h2>
+                    <a href="#">@T("Common.Edit")</a>
+                </div>
+                <div id="checkout-step-confirm-order" class="step a-item" style="display: none;">
+                    <div id="checkout-confirm-order-load">
+                        @*confirm order content will be loaded here*@
+                    </div>
+                    <script type="text/javascript">
+//<![CDATA[
+                        ConfirmOrder.init('@(storeLocation)checkout/OpcConfirmOrder/', '@(storeLocation)checkout/completed/');
+//]]>
+                    </script>
+                    <div class="buttons-set" id="confirm-order-buttons-container">
+                        <p class="back-link">
+                            <a href="#" onclick="Checkout.back(); return false;"><small>&laquo; </small>@T("Common.Back")</a></p>
+                        <button type="submit" class="confirmordernextstepbutton" onclick="ConfirmOrder.save()">
+                            <span>@T("Common.Confirm")</span></button>
+                        <span class="please-wait" id="confirm-order-please-wait" style="display: none;">
+                            <img src="@Url.Content("~/Content/Images/ajax_loader_small.gif")"
+                                alt="@T("Checkout.SubmittingOrder")" title="@T("Checkout.SubmittingOrder")" />
+                            @T("Checkout.SubmittingOrder")</span>
+                    </div>
+                </div>
+            </li>
+        </ol>
+    </div>
+    <script type="text/javascript">
+        Accordion.init('checkoutSteps', '.step-title', true);
+        Accordion.openSection('#opc-billing');
+
+        Checkout.init('@(storeLocation)cart/');
+    </script>
+</div>

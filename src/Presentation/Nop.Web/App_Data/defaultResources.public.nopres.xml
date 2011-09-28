@@ -839,6 +839,9 @@
       <LocaleResource Name="ConfirmButton">
         <Value>Confirm</Value>
       </LocaleResource>
+		<LocaleResource Name="ConfirmOrder">
+			<Value>Confirm order</Value>
+		</LocaleResource>
       <LocaleResource Name="ConfirmYourOrder">
         <Value>Confirm your order</Value>
       </LocaleResource>
@@ -876,8 +879,11 @@
         <Value>Or enter new address</Value>
       </LocaleResource>
       <LocaleResource Name="PaymentInfo">
-        <Value>Payment Info</Value>
+        <Value>Payment information</Value>
       </LocaleResource>
+		<LocaleResource Name="PaymentMethod">
+			<Value>Payment method</Value>
+		</LocaleResource>
       <LocaleResource Name="Progress">
         <Children>
           <LocaleResource Name="Address">
@@ -903,12 +909,18 @@
       <LocaleResource Name="SelectBillingAddress">
         <Value>Select billing address</Value>
       </LocaleResource>
+		<LocaleResource Name="SelectBillingAddressOrEnterNewOne">
+			<Value>Select a billing address from your address book or enter a new address.</Value>
+		</LocaleResource>
       <LocaleResource Name="SelectPaymentMethod">
         <Value>Select payment method</Value>
       </LocaleResource>
       <LocaleResource Name="SelectShippingAddress">
         <Value>Select shipping address</Value>
       </LocaleResource>
+		<LocaleResource Name="SelectShippingAddressOrEnterNewOne">
+			<Value>Select a shipping address from your address book or enter a new address.</Value>
+		</LocaleResource>
       <LocaleResource Name="SelectShippingMethod">
         <Value>Select shipping method</Value>
       </LocaleResource>
@@ -918,9 +930,15 @@
       <LocaleResource Name="ShippingIsNotAllowed">
         <Value>Shipping is not allowed</Value>
       </LocaleResource>
+		<LocaleResource Name="ShippingMethod">
+			<Value>Shipping method</Value>
+		</LocaleResource>
       <LocaleResource Name="ShipToThisAddress">
         <Value>Ship to this address</Value>
       </LocaleResource>
+		<LocaleResource Name="SubmittingOrder">
+			<Value>Submitting order information...</Value>
+		</LocaleResource>
       <LocaleResource Name="TermsOfService">
         <Children>
           <LocaleResource Name="IAccept">
@@ -956,9 +974,15 @@
       <LocaleResource Name="AreYouSure">
         <Value>Are you sure?</Value>
       </LocaleResource>
+		<LocaleResource Name="Back">
+			<Value>Back</Value>
+		</LocaleResource>
       <LocaleResource Name="Cancel">
         <Value>Cancel</Value>
       </LocaleResource>
+		<LocaleResource Name="Confirm">
+			<Value>Confirm</Value>
+		</LocaleResource>
       <LocaleResource Name="Continue">
         <Value>Continue</Value>
       </LocaleResource>
@@ -977,6 +1001,9 @@
       <LocaleResource Name="Edit">
         <Value>Edit</Value>
       </LocaleResource>
+		<LocaleResource Name="LoadingNextStep">
+			<Value>Loading next step...</Value>
+		</LocaleResource>
 	  <LocaleResource Name="Month">
 		<Value>Month</Value>
 	  </LocaleResource>

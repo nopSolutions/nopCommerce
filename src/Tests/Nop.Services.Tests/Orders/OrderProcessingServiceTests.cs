@@ -16,6 +16,7 @@ using Nop.Core.Plugins;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Customers;
+using Nop.Services.Directory;
 using Nop.Services.Discounts;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -65,6 +66,7 @@ namespace Nop.Services.Tests.Orders
         IWorkflowMessageService _workflowMessageService;
         ISmsService _smsService;
         ICustomerActivityService _customerActivityService;
+        ICurrencyService _currencyService;
         PaymentSettings _paymentSettings;
         OrderSettings _orderSettings;
         LocalizationSettings _localizationSettings;
@@ -143,6 +145,7 @@ namespace Nop.Services.Tests.Orders
             _workflowMessageService = MockRepository.GenerateMock<IWorkflowMessageService>();
             _smsService = MockRepository.GenerateMock<ISmsService>();
             _customerActivityService = MockRepository.GenerateMock<ICustomerActivityService>();
+            _currencyService = MockRepository.GenerateMock<ICurrencyService>();
 
             _paymentSettings = new PaymentSettings()
             {
@@ -164,7 +167,8 @@ namespace Nop.Services.Tests.Orders
                 _shippingService, _taxService,
                 _customerService, _discountService,
                 _encryptionService, _workContext, _workflowMessageService,
-                _smsService, _customerActivityService, _paymentSettings, _rewardPointsSettings,
+                _smsService, _customerActivityService, _currencyService,
+                _paymentSettings, _rewardPointsSettings,
                 _orderSettings, _taxSettings, _localizationSettings);
         }
 

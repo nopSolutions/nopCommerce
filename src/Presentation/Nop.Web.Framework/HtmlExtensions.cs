@@ -162,7 +162,7 @@ namespace Nop.Web.Framework
                 return MvcHtmlString.Empty;
             }
 
-            TagBuilder tag = new TagBuilder("label");
+            var tag = new TagBuilder("label");
             tag.MergeAttributes(htmlAttributes);
             tag.Attributes.Add("for", html.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldId(htmlFieldName));
             tag.SetInnerText(labelText);

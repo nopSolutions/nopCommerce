@@ -1,0 +1,47 @@
+﻿@model CheckoutPaymentMethodModel
+@using Nop.Web.Models.Checkout
+<div class="checkout-data">
+    @if (Model.DisplayRewardPoints && Model.PaymentMethods.Count > 0)
+    {
+        <div class="userewardpoints">
+            @Html.EditorFor(model => model.UseRewardPoints)
+            @string.Format(T("Checkout.UseRewardPoints").Text, Model.RewardPointsBalance, Model.RewardPointsAmount)
+        </div>
+        <div class="clear">
+        </div>
+        <br />
+    }
+    <div class="payment-methods">
+        @if (Model.PaymentMethods.Count > 0)
+        {
+            <div>
+                @for (int i = 0; i < Model.PaymentMethods.Count; i++)
+                {
+                    var paymentMethod = Model.PaymentMethods[i];
+                    <div class="payment-method-item">
+                        <div class="option-name">
+                            <input id="paymentmethod_@(i)" type="radio" name="paymentmethod" value="@(paymentMethod.PaymentMethodSystemName)"  @(i == 0 ? " checked=\"checked\"" : null) />
+                            <label for="paymentmethod_@(i)">@paymentMethod.Name</label>
+                            @if (!String.IsNullOrEmpty(paymentMethod.Fee))
+                            {
+                                <text>(</text>
+                                @paymentMethod.Fee
+                                <text>)</text>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="clear">
+            </div>
+            <div class="error-block">
+                <div class="message-error">
+                    @T("Checkout.NoPaymentMethods")
+                </div>
+            </div>
+        }
+    </div>
+</div>
