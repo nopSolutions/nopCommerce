@@ -1,0 +1,25 @@
+﻿.foo{}
+
+body,h1,h2,h3,h4,h5,h6,address,blockquote,dd,dl,hr,form,input{margin:0;padding:0;}
+body{font-family:arial, verdana, helvetica, sans-serif;font-size:12px;text-align:center;}
+
+.cart_total_left{width:100%;text-align:right;vertical-align:middle;height:21px;font-weight:700;color:#353434;}
+.cart_total_left_below{width:100%;text-align:right;vertical-align:top;height:30px;}
+.cart_total_right{text-align:right;vertical-align:middle;padding-left:5px;}
+
+.order-details{margin-bottom:15px;padding:0;}
+.order-details .page-title{border-bottom:0 none;text-align:left;}
+.order-details .print-buttons{text-align:right;}
+.order-details .info{border:1px solid #d7d7d7;padding:10px;}
+.order-details .section-title{padding:10px 10px 5px 0;font-weight:700;clear:both;}
+.order-details .order-overview{text-align:left;padding-bottom:10px;}
+.order-details .order-overview .order-total-top{text-align:right;}
+.order-details .order-details-box{text-align:left;padding:10px;border:1px solid #d7d7d7;height:auto;}
+.order-details .products-box,.order-details .ordernotes-box{text-align:left;padding:10px;border:1px solid #d7d7d7;height:auto;}
+.order-details .checkout-attributes{text-align:right;vertical-align:middle;padding:10px;height:auto;}
+.order-details .cart_total_left{color:#000;}
+.order-details .products-box .sku{}
+.order-details .products-box .product{}
+.order-details .products-box .unitprice{text-align:right;}
+.order-details .products-box .qty{text-align:center;}
+.order-details .products-box .subtotal{text-align:right;}

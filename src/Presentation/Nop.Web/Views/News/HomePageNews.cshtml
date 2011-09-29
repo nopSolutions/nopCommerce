@@ -6,13 +6,13 @@
 @if (Model.NewsItems.Count > 0)
 {
     <div class="newslist">
-        <div class="title">
+        <div class="page-title">
             <table style="width: 100%;">
                 <tr>
-                    <td style="text-align: left; vertical-align: middle;">
+                    <td class="title">
                         @T("News")
                     </td>
-                    <td style="text-align: right; vertical-align: middle;">
+                    <td class="rss">
                         <a href="@Url.RouteUrl("NewsRSS", new { languageId = Model.WorkingLanguageId })">
                             <img title="@T("News.RSS.Hint")" src="@Url.Content("~/content/images/icon_rss.gif")" alt="@T("News.RSS")" style="border-width:0px;" /></a>
                     </td>

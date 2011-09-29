@@ -5,7 +5,6 @@
     //title
     Html.AddTitleParts(T("PageTitle.Login").Text);
 }
-
 <div class="login-page">
     <div class="page-title">
         <h1>@T("Account.Login.Welcome")</h1>
@@ -26,18 +25,18 @@
                 <div class="checkout-as-guest-or-register-block">
                     <table>
                         <tbody>
-                        <tr>
-                            <td>
-                                @Html.Action("TopicBlock", "Topic", new { systemName = "CheckoutAsGuestOrRegister" })
-                            </td>
-                        </tr>
-                        <tr>
-                            <td align="right" style="padding-right: 20px; padding-top: 20px;">
-                                <input type="submit" class="checkoutasguestbutton" onclick="location.href='@Url.RouteUrl("Checkout")'" value="@T("Account.Login.CheckoutAsGuest")" />
-                                <input type="submit" class="registerbutton" onclick="location.href='@Url.RouteUrl("Register")'" value="@T("Account.Register")" />
-                            </td>
-                        </tr>
-                    </tbody>
+                            <tr>
+                                <td>
+                                    @Html.Action("TopicBlock", "Topic", new { systemName = "CheckoutAsGuestOrRegister" })
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="buttons">
+                                    <input type="submit" class="checkoutasguestbutton" onclick="location.href='@Url.RouteUrl("Checkout")'" value="@T("Account.Login.CheckoutAsGuest")" />
+                                    <input type="submit" class="registerbutton" onclick="location.href='@Url.RouteUrl("Register")'" value="@T("Account.Register")" />
+                                </td>
+                            </tr>
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -49,17 +48,17 @@
                 <div class="register-block">
                     <table>
                         <tbody>
-                        <tr>
-                            <td>
-                                @T("Account.Login.NewCustomerText")
-                            </td>
-                        </tr>
-                        <tr>
-                            <td align="right" style="padding-right: 20px; padding-top: 20px;">
-                             <input type="submit" class="registerbutton" onclick="location.href='@Url.RouteUrl("Register")'" value="@T("Account.Register")" />
-                            </td>
-                        </tr>
-                    </tbody>
+                            <tr>
+                                <td>
+                                    @T("Account.Login.NewCustomerText")
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="buttons">
+                                    <input type="submit" class="registerbutton" onclick="location.href='@Url.RouteUrl("Register")'" value="@T("Account.Register")" />
+                                </td>
+                            </tr>
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -79,7 +78,7 @@
                                         @Html.LabelFor(m => m.UserName):
                                     </td>
                                     <td class="item-value">
-                                        @Html.TextBoxFor(m => m.UserName) 
+                                        @Html.TextBoxFor(m => m.UserName)
                                         @Html.ValidationMessageFor(m => m.UserName)
                                     </td>
                                 </tr>
@@ -91,7 +90,7 @@
                                         @Html.LabelFor(m => m.Email):
                                     </td>
                                     <td class="item-value">
-                                        @Html.TextBoxFor(m => m.Email) 
+                                        @Html.TextBoxFor(m => m.Email)
                                         @Html.ValidationMessageFor(m => m.Email)
                                     </td>
                                 </tr>
@@ -137,6 +136,5 @@
     <div class="clear">
     </div>
     @*TODO add Captcha support*@
-    
     @Html.Action("TopicBlock", "Topic", new { systemName = "LoginRegistrationInfo" })
 </div>

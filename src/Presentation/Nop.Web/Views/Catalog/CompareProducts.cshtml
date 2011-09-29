@@ -73,7 +73,7 @@
                         }
                     </tr>
                     <tr class="productPrice">
-                        <td align="left">
+                        <td>
                             @T("Products.Compare.Price")
                         </td>
                         @foreach (var product in Model)
@@ -86,7 +86,7 @@
                     @foreach (var specificationAttribute in specificationAttributes)
                     {
                         <tr>
-                            <td align="left">@specificationAttribute.SpecificationAttributeName
+                            <td>@specificationAttribute.SpecificationAttributeName
                             </td>
                             @foreach (var product in Model)
                             {

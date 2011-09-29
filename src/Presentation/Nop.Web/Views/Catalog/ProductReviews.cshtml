@@ -22,12 +22,12 @@
             {
                 <table>
                     <tr>
-                        <td style="text-align: left; vertical-align: middle;" colspan="2">
+                        <td colspan="2">
                             <strong>@T("Reviews.Write")</strong>
                         </td>
                     </tr>
                     <tr>
-                        <td style="width: 100px; text-align: left; vertical-align: middle;">
+                        <td style="width: 100px;">
                             @Html.LabelFor(model => model.AddProductReview.Title):
                         </td>
                         <td>
@@ -36,7 +36,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td style="width: 100px; text-align: left; vertical-align: middle;">
+                        <td style="width: 100px;">
                             @Html.LabelFor(model => model.AddProductReview.ReviewText):
                         </td>
                         <td>
@@ -45,7 +45,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td style="width: 100px; text-align: left; vertical-align: middle;">
+                        <td style="width: 100px;">
                             @Html.LabelFor(model => model.AddProductReview.Rating):
                         </td>
                         <td>
@@ -75,8 +75,9 @@
                     </tr>
                     <tr>
                         <td>
+                            &nbsp;
                         </td>
-                        <td style="text-align: left; vertical-align: middle;">
+                        <td>
                             <input type="submit" id="add-review" name="add-review" class="productwritereviewbutton" value="@T("Reviews.SubmitButton")" />
                         </td>
                     </tr>

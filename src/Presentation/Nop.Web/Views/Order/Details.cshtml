@@ -9,7 +9,7 @@
     }
     else
     {
-        Layout = null;
+        Layout = "~/Views/Shared/_Print.cshtml";
     }
     //title
     Html.AddTitleParts(T("PageTitle.OrderDetails").Text);
@@ -19,18 +19,20 @@
     {
         <table width="100%">
             <tr>
-                <td style="text-align: left;">
+                <td>
                     <div class="page-title">
                         <h1>
                             @T("Order.OrderInformation")</h1>
                     </div>
                 </td>
-                <td style="text-align: right;">
-                    <a href="@Url.RouteUrl("PrintOrderDetails", new { orderId = Model.Id })" target="_blank" class="orderdetailsprintbutton">@T("Order.Print")</a>
-                    @if (Model.DisplayPdfInvoice)
-                    {
-                        <a href="@Url.RouteUrl("GetOrderPdfInvoice", new { orderId = Model.Id })" class="orderdetailsprintbutton">@T("Order.GetPDFInvoice")</a>
-                    }
+                <td>
+                    <div class="print-buttons">
+                        <a href="@Url.RouteUrl("PrintOrderDetails", new { orderId = Model.Id })" target="_blank" class="orderdetailsprintbutton">@T("Order.Print")</a>
+                        @if (Model.DisplayPdfInvoice)
+                        {
+                            <a href="@Url.RouteUrl("GetOrderPdfInvoice", new { orderId = Model.Id })" class="orderdetailsprintbutton">@T("Order.GetPDFInvoice")</a>
+                        }
+                    </div>
                 </td>
             </tr>
         </table>
@@ -49,18 +51,16 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="smallText">
+                        <td>
                             @T("Order.OrderDate"): @Model.CreatedOn.ToString("D")
                         </td>
-                        <td align="right" class="smallText">
+                        <td class="order-total-top">
                             @T("Order.OrderTotal"): @Model.OrderTotal
                         </td>
                     </tr>
                     <tr>
-                        <td class="smallText">
+                        <td colspan="2">
                             @T("Order.OrderStatus"): @Model.OrderStatus
-                        </td>
-                        <td>
                         </td>
                     </tr>
                 </tbody>
@@ -72,7 +72,7 @@
             <table width="100%" cellspacing="0" cellpadding="2" border="0">
                 <tbody>
                     <tr>
-                        <td width="50%" align="left" style="vertical-align: top;">
+                        <td width="50%" style="vertical-align: top;">
                             <b>
                                 @T("Order.BillingAddress")</b>
                             <br />
@@ -135,7 +135,7 @@
                         </td>
                         @if (Model.IsShippable)
                         {
-                            <td width="50%" align="left" style="vertical-align: top;">
+                            <td width="50%" style="vertical-align: top;">
                                 <b>
                                     @T("Order.ShippingAddress")</b>
                                 <br />
@@ -268,14 +268,14 @@
                             <tr>
                                 @if (Model.ShowSku)
                                 {
-                                    <td>
-                                        <div style="padding-left: 10px; padding-right: 10px;">
+                                    <td class="sku">
+                                        <div style="padding: 0px 10px;">
                                             @item.Sku
                                         </div>
                                     </td>
                                 }
-                                <td>
-                                    <div style="padding-left: 10px; padding-right: 10px;">
+                                <td class="product">
+                                    <div style="padding: 0px 10px;">
                                         @if (!Model.PrintMode)
                                         {
                                             <em><a href="@Url.RouteUrl("Product", new { productId = item.ProductId, SeName = item.ProductSeName })" title="View details">@item.ProductName</a></em>
@@ -291,16 +291,18 @@
                                         }
                                     </div>
                                 </td>
-                                <td align="right">
-                                    <div style="padding-left: 10px; padding-right: 10px;">
+                                <td class="unitprice">
+                                    <div style="padding: 0px 10px;">
                                         @item.UnitPrice
                                     </div>
                                 </td>
-                                <td align="center">
-                                    @item.Quantity
+                                <td class="qty">
+                                    <div style="padding: 0px 10px;">
+                                        @item.Quantity
+                                    </div>
                                 </td>
-                                <td align="right">
-                                    <div style="padding-left: 10px; padding-right: 10px;">
+                                <td class="subtotal">
+                                    <div style="padding: 0px 10px;">
                                         @item.SubTotal
                                     </div>
                                 </td>
@@ -339,195 +341,196 @@
             <div class="clear">
             </div>
         }
-        <table width="100%" cellspacing="0" cellpadding="2" border="0">
-            <tbody>
-                <tr>
-                    <td width="100%" align="right">
-                        <b>
-                            @T("Order.SubTotal"):</b>
-                    </td>
-                    <td align="right">
-                        <span style="white-space: nowrap;">
-                            @Model.OrderSubtotal
-                        </span>
-                    </td>
-                </tr>
-                @if (!string.IsNullOrEmpty(Model.OrderSubTotalDiscount))
-                {
+        <div class="total-info">
+            <table class="cart-total">
+                <tbody>
                     <tr>
-                        <td width="100%" align="right">
+                        <td class="cart_total_left">
                             <b>
-                                @T("Order.SubTotalDiscount"):</b>
+                                @T("Order.SubTotal"):</b>
                         </td>
-                        <td align="right">
+                        <td class="cart_total_right">
                             <span style="white-space: nowrap;">
-                                @Model.OrderSubTotalDiscount
+                                @Model.OrderSubtotal
                             </span>
                         </td>
                     </tr>
-                }
-                @if (Model.IsShippable)
-                {
-                    <tr>
-                        <td width="100%" align="right">
-                            <b>
-                                @T("Order.Shipping"):</b>
-                        </td>
-                        <td align="right">
-                            <span style="white-space: nowrap;">
-                                @Model.OrderShipping
-                            </span>
-                        </td>
-                    </tr>
-                }
-                @if (!string.IsNullOrEmpty(Model.PaymentMethodAdditionalFee))
-                {
-                    <tr>
-                        <td width="100%" align="right">
-                            <b>
-                                @T("Order.PaymentMethodAdditionalFee"):</b>
-                        </td>
-                        <td align="right">
-                            <span style="white-space: nowrap;">
-                                @Model.PaymentMethodAdditionalFee
-                            </span>
-                        </td>
-                    </tr>
-                }
-                @if (Model.DisplayTaxRates && Model.TaxRates.Count > 0)
-                {
-                    foreach (var taxRate in Model.TaxRates)
+                    @if (!string.IsNullOrEmpty(Model.OrderSubTotalDiscount))
                     {
-                    <tr>
-                        <td width="100%" align="right">
-                            <b>
-                                @string.Format(T("Order.TaxRateLine").Text, taxRate.Rate):</b>
-                        </td>
-                        <td align="right">
-                            <span style="white-space: nowrap;">
-                                @taxRate.Value
-                            </span>
-                        </td>
-                    </tr>
+                        <tr>
+                            <td class="cart_total_left">
+                                <b>
+                                    @T("Order.SubTotalDiscount"):</b>
+                            </td>
+                            <td class="cart_total_right">
+                                <span style="white-space: nowrap;">
+                                    @Model.OrderSubTotalDiscount
+                                </span>
+                            </td>
+                        </tr>
+                }
+                    @if (Model.IsShippable)
+                    {
+                        <tr>
+                            <td class="cart_total_left">
+                                <b>
+                                    @T("Order.Shipping"):</b>
+                            </td>
+                            <td class="cart_total_right">
+                                <span style="white-space: nowrap;">
+                                    @Model.OrderShipping
+                                </span>
+                            </td>
+                        </tr>
+                }
+                    @if (!string.IsNullOrEmpty(Model.PaymentMethodAdditionalFee))
+                    {
+                        <tr>
+                            <td class="cart_total_left">
+                                <b>
+                                    @T("Order.PaymentMethodAdditionalFee"):</b>
+                            </td>
+                            <td class="cart_total_right">
+                                <span style="white-space: nowrap;">
+                                    @Model.PaymentMethodAdditionalFee
+                                </span>
+                            </td>
+                        </tr>
+                }
+                    @if (Model.DisplayTaxRates && Model.TaxRates.Count > 0)
+                    {
+                        foreach (var taxRate in Model.TaxRates)
+                        {
+                        <tr>
+                            <td class="cart_total_left">
+                                <b>
+                                    @string.Format(T("Order.TaxRateLine").Text, taxRate.Rate):</b>
+                            </td>
+                            <td class="cart_total_right">
+                                <span style="white-space: nowrap;">
+                                    @taxRate.Value
+                                </span>
+                            </td>
+                        </tr>
                     }
                 }
-                @if (Model.DisplayTax)
-                {
-                    <tr>
-                        <td width="100%" align="right">
-                            <b>
-                                @T("Order.Tax"):</b>
-                        </td>
-                        <td align="right">
-                            <span style="white-space: nowrap;">
-                                @Model.Tax
-                            </span>
-                        </td>
-                    </tr>
-                }
-                @if (!string.IsNullOrEmpty(Model.OrderTotalDiscount))
-                {
-                    <tr>
-                        <td width="100%" align="right">
-                            <b>
-                                @T("Order.TotalDiscount"):</b>
-                        </td>
-                        <td align="right">
-                            <span style="white-space: nowrap;">
-                                @Model.OrderTotalDiscount
-                            </span>
-                        </td>
-                    </tr>
-                }
-                @if (Model.GiftCards.Count > 0)
-                {
-                    foreach (var gc in Model.GiftCards)
+                    @if (Model.DisplayTax)
                     {
-                    
-                    
-                    
-                    <tr>
-                        <td width="100%" align="right">
-                            <b>
-                                @string.Format(T("Order.GiftCardInfo").Text, gc.CouponCode):</b>
-                        </td>
-                        <td align="right">
-                            <span style="white-space: nowrap;">
-                                @gc.Amount
-                            </span>
-                        </td>
-                    </tr>
+                        <tr>
+                            <td class="cart_total_left">
+                                <b>
+                                    @T("Order.Tax"):</b>
+                            </td>
+                            <td class="cart_total_right">
+                                <span style="white-space: nowrap;">
+                                    @Model.Tax
+                                </span>
+                            </td>
+                        </tr>
+                }
+                    @if (!string.IsNullOrEmpty(Model.OrderTotalDiscount))
+                    {
+                        <tr>
+                            <td class="cart_total_left">
+                                <b>
+                                    @T("Order.TotalDiscount"):</b>
+                            </td>
+                            <td class="cart_total_right">
+                                <span style="white-space: nowrap;">
+                                    @Model.OrderTotalDiscount
+                                </span>
+                            </td>
+                        </tr>
+                }
+                    @if (Model.GiftCards.Count > 0)
+                    {
+                        foreach (var gc in Model.GiftCards)
+                        {
+                        <tr>
+                            <td class="cart_total_left">
+                                <b>
+                                    @string.Format(T("Order.GiftCardInfo").Text, gc.CouponCode):</b>
+                            </td>
+                            <td class="cart_total_right">
+                                <span style="white-space: nowrap;">
+                                    @gc.Amount
+                                </span>
+                            </td>
+                        </tr>
                     }
                 }
-                @if (Model.RedeemedRewardPoints > 0)
-                {
+                    @if (Model.RedeemedRewardPoints > 0)
+                    {
+                        <tr>
+                            <td class="cart_total_left">
+                                <b>@string.Format(T("Order.RewardPoints").Text, Model.RedeemedRewardPoints):</b>
+                            </td>
+                            <td class="cart_total_right">
+                                <span style="white-space: nowrap;">
+                                    @Model.RedeemedRewardPointsAmount
+                                </span>
+                            </td>
+                        </tr>
+                }
                     <tr>
-                        <td width="100%" align="right">
-                            <b>@string.Format(T("Order.RewardPoints").Text, Model.RedeemedRewardPoints):</b>
+                        <td class="cart_total_left">
+                            <b>
+                                @T("Order.OrderTotal"):</b>
                         </td>
-                        <td align="right">
-                            <span style="white-space: nowrap;">
-                                @Model.RedeemedRewardPointsAmount
-                            </span>
+                        <td class="cart_total_right">
+                            <b><span style="white-space: nowrap;">
+                                @Model.OrderTotal
+                            </span></b>
                         </td>
                     </tr>
-                }
-                <tr>
-                    <td width="100%" align="right">
-                        <b>
-                            @T("Order.OrderTotal"):</b>
-                    </td>
-                    <td align="right">
-                        <b><span style="white-space: nowrap;">
-                            @Model.OrderTotal
-                        </span></b>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <div class="clear">
-        </div>
-        @if (!Model.PrintMode)
-        {
-            if (Model.OrderNotes.Count > 0)
-            {
-            <div class="section-title">
-                @T("Order.Notes")
-            </div>
+                </tbody>
+            </table>
             <div class="clear">
             </div>
-            <div class="ordernotes-box">
-                <table border="1" cellspacing="0" style="width: 100%; border-collapse: collapse;">
-                    <col />
-                    <col />
-                    <thead>
-                        <tr>
-                            <th align="center">
-                                @T("Order.Notes.CreatedOn")
-                            </th>
-                            <th align="center">
-                                @T("Order.Notes.Note")
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model.OrderNotes)
-                        {
+            @if (!Model.PrintMode)
+            {
+                if (Model.OrderNotes.Count > 0)
+                {
+                <div class="section-title">
+                    @T("Order.Notes")
+                </div>
+                <div class="clear">
+                </div>
+                <div class="ordernotes-box">
+                    <table border="1" cellspacing="0" style="width: 100%; border-collapse: collapse;">
+                        <col />
+                        <col />
+                        <thead>
                             <tr>
-                                <td style="width: 20%;">
-                                    @item.CreatedOn.ToString()
-                                </td>
-                                <td style="width: 80%;">
-                                    <div style="padding-left: 10px; padding-right: 10px; text-align: left;">
-                                        @Html.Raw(item.Note)
-                                    </div>
-                                </td>
+                                <th align="center">
+                                    @T("Order.Notes.CreatedOn")
+                                </th>
+                                <th align="center">
+                                    @T("Order.Notes.Note")
+                                </th>
                             </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.OrderNotes)
+                            {
+                                <tr>
+                                    <td style="width: 20%;">
+                                        <div style="padding: 0px 10px;">
+                                            @item.CreatedOn.ToString()
+                                        </div>
+                                    </td>
+                                    <td style="width: 80%;">
+                                        <div style="padding: 0px 10px;">
+                                            @Html.Raw(item.Note)
+                                        </div>
+                                    </td>
+                                </tr>
                         }
-                    </tbody>
-                </table>
-            </div>
+                        </tbody>
+                    </table>
+                </div>
             }
         }
-    </div>
+        </div>
+</div>
 </div>

@@ -18,7 +18,7 @@
     <div class="page-title">
         <table width="100%">
             <tr>
-                <td style="text-align: left; vertical-align: middle;">
+                <td class="title">
                     <h1>
                         @if (String.IsNullOrEmpty(Model.PagingFilteringContext.Tag))
                         {
@@ -37,7 +37,7 @@
                         }
                     </h1>
                 </td>
-                <td style="text-align: right; vertical-align: middle;">
+                <td class="rss">
                     <a href="@Url.RouteUrl("BlogRSS", new { languageId = Model.WorkingLanguageId })">
                         <img title="@T("Blog.RSS.Hint")" src="@Url.Content("~/content/images/icon_rss.gif")" alt="@T("Blog.RSS")" style="border-width:0px;" /></a>
                 </td>

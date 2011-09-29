@@ -22,7 +22,7 @@
             {
                 <table>
                     <tr>
-                        <td style="width: 100px; text-align: left; vertical-align: middle;">
+                        <td style="width: 100px;">
                             @Html.LabelFor(model => model.FriendEmail):
                         </td>
                         <td>
@@ -31,7 +31,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td style="width: 100px; text-align: left; vertical-align: middle;">
+                        <td style="width: 100px;">
                             @Html.LabelFor(model => model.YourEmailAddress):
                         </td>
                         <td>
@@ -40,7 +40,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td style="width: 100px; text-align: left; vertical-align: middle;">
+                        <td style="width: 100px;">
                             @Html.LabelFor(model => model.PersonalMessage):
                         </td>
                         <td>@Html.TextAreaFor(model => model.PersonalMessage, new { style = "Width: 350px; Height: 150px;" })
@@ -54,8 +54,9 @@
                     </tr>
                     <tr>
                         <td>
+                            &nbsp;
                         </td>
-                        <td style="text-align: left; vertical-align: middle;">
+                        <td>
                             <input type="submit" id="send-email" name="send-email" class="sendemailafriendbutton" value="@T("Wishlist.EmailAFriend.Button")" />
                         </td>
                     </tr>

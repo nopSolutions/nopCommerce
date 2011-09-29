@@ -287,6 +287,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowShareButton.Hint">
     <Value>Check to show share button on product details page.</Value>
   </LocaleResource>
+  <LocaleResource Name="Reviews.Fields.Title.MaxLengthValidation">
+    <Value>Max length of product review title is {0} chars</Value>
+  </LocaleResource>
 </Language>
 '
 

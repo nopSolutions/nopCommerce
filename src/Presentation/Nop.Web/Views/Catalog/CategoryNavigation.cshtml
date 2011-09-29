@@ -19,6 +19,7 @@
                     <li class="@(category.IsActive ? "active" : "inactive")" 
                     @if (category.NumberOfParentCategories > 0)
                     {
+                        //TODO we hard-coded 'margin-left'. But we should set 'margin-right' for RTL languages
                         <text>style="margin-left: @(category.NumberOfParentCategories * 15)px"</text>
                     }
                     ><a href="@Url.RouteUrl("Category", new { categoryId = category.Id, SeName = category.SeName })">@category.Name

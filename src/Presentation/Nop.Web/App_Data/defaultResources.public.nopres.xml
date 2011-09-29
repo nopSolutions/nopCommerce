@@ -3074,7 +3074,7 @@
 								<Value>Review title is required.</Value>
 							</LocaleResource>
 							<LocaleResource Name="MaxLengthValidation">
-								<Value>Max length of product review is {0} chars</Value>
+								<Value>Max length of product review title is {0} chars</Value>
 							</LocaleResource>
 						</Children>
 					</LocaleResource>
