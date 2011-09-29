@@ -166,6 +166,7 @@ namespace Nop.Admin.Controllers
             return report;
         }
 
+        [NonAction]
         private IList<CustomerModel.AssociatedExternalAuthModel> GetAssociatedExternalAuthRecords(Customer customer)
         {
             if (customer == null)
@@ -190,6 +191,21 @@ namespace Nop.Admin.Controllers
             return result;
         }
 
+        [NonAction]
+        private CustomerModel PrepareCustomerModelForList(Customer customer)
+        {
+            return new CustomerModel()
+            {
+                Id = customer.Id,
+                Email = !String.IsNullOrEmpty(customer.Email) ? customer.Email : (customer.IsGuest() ? "Guest" : "Unknown"),
+                Username = customer.Username,
+                FullName = customer.GetFullName(),
+                CustomerRoleNames = GetCustomerRolesNames(customer.CustomerRoles.ToList()),
+                Active = customer.Active,
+                CreatedOn = _dateTimeHelper.ConvertToUserTime(customer.CreatedOnUtc, DateTimeKind.Utc),
+                LastActivityDate = _dateTimeHelper.ConvertToUserTime(customer.LastActivityDateUtc, DateTimeKind.Utc),
+            };
+        }
         #endregion
 
         #region Customers
@@ -224,20 +240,7 @@ namespace Nop.Admin.Controllers
             //customer list
             listModel.Customers = new GridModel<CustomerModel>
             {
-                Data = customers.Select(x =>
-                {
-                    return new CustomerModel()
-                    {
-                        Id = x.Id,
-                        Email = x.Email,
-                        Username = x.Username,
-                        FullName = x.GetFullName(),
-                        CustomerRoleNames = GetCustomerRolesNames(x.CustomerRoles.ToList()),
-                        Active = x.Active,
-                        CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc),
-                        LastActivityDate = _dateTimeHelper.ConvertToUserTime(x.LastActivityDateUtc, DateTimeKind.Utc),
-                    };
-                }),
+                Data = customers.Select(x => PrepareCustomerModelForList(x)),
                 Total = customers.TotalCount
             };
             return View(listModel);
@@ -269,20 +272,7 @@ namespace Nop.Admin.Controllers
                 false, null, command.Page - 1, command.PageSize);
             var gridModel = new GridModel<CustomerModel>
             {
-                Data = customers.Select(x =>
-                {
-                    return new CustomerModel()
-                    {
-                        Id = x.Id,
-                        Email = x.Email,
-                        Username = x.Username,
-                        FullName = x.GetFullName(),
-                        CustomerRoleNames = GetCustomerRolesNames(x.CustomerRoles.ToList()),
-                        Active = x.Active,
-                        CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc),
-                        LastActivityDate = _dateTimeHelper.ConvertToUserTime(x.LastActivityDateUtc, DateTimeKind.Utc),
-                    };
-                }),
+                Data = customers.Select(x => PrepareCustomerModelForList(x)),
                 Total = customers.TotalCount
             };
             return new JsonResult
@@ -326,20 +316,7 @@ namespace Nop.Admin.Controllers
             //customer list
             model.Customers = new GridModel<CustomerModel>
             {
-                Data = customers.Select(x =>
-                {
-                    return new CustomerModel()
-                    {
-                        Id = x.Id,
-                        Email = x.Email,
-                        Username = x.Username,
-                        FullName = x.GetFullName(),
-                        CustomerRoleNames = GetCustomerRolesNames(x.CustomerRoles.ToList()),
-                        Active = x.Active,
-                        CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc),
-                        LastActivityDate = _dateTimeHelper.ConvertToUserTime(x.LastActivityDateUtc, DateTimeKind.Utc),
-                    };
-                }),
+                Data = customers.Select(x => PrepareCustomerModelForList(x)),
                 Total = customers.TotalCount
             };
             return View(model);
