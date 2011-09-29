@@ -150,6 +150,7 @@
         $(document).ready(function () {
             $('#search-products').click(function () {
                 var grid = $('#products-grid').data('tGrid');
+                grid.currentPage = 1; //new search. Set page size to 1
                 grid.ajaxRequest();
                 return false;
             });
