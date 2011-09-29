@@ -83,7 +83,7 @@ namespace Nop.Services.Messages
         /// <returns>HTML table of products</returns>
         protected virtual string ProductListToHtmlTable(Order order, int languageId)
         {
-            string result = string.Empty;
+            var result = "";
 
             var language = _languageService.GetLanguageById(languageId);
 
@@ -110,10 +110,10 @@ namespace Nop.Services.Messages
                 //product name
                 string productName = "";
                 //product name
-                if (!String.IsNullOrEmpty(opv.ProductVariant.GetLocalized(x => x.Name)))
-                    productName = string.Format("{0} ({1})", opv.ProductVariant.Product.GetLocalized(x => x.Name), opv.ProductVariant.GetLocalized(x => x.Name));
+                if (!String.IsNullOrEmpty(opv.ProductVariant.GetLocalized(x => x.Name, languageId)))
+                    productName = string.Format("{0} ({1})", opv.ProductVariant.Product.GetLocalized(x => x.Name, languageId), opv.ProductVariant.GetLocalized(x => x.Name, languageId));
                 else
-                    productName = opv.ProductVariant.Product.GetLocalized(x => x.Name);
+                    productName = opv.ProductVariant.Product.GetLocalized(x => x.Name, languageId);
 
                 sb.AppendLine("<td style=\"padding: 0.6em 0.4em;text-align: left;\">" + HttpUtility.HtmlEncode(productName));
                 //TODO add download link
