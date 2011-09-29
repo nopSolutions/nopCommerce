@@ -49,6 +49,7 @@ namespace Nop.Web.Controllers
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly ILogger _logger;
         private readonly IOrderService _orderService;
+        private readonly IWebHelper _webHelper;
         
 
         private readonly OrderSettings _orderSettings;
@@ -66,7 +67,7 @@ namespace Nop.Web.Controllers
             ICustomerService customerService,  ICountryService countryService,
             IStateProvinceService stateProvinceService, IShippingService shippingService, 
             IPaymentService paymentService, IOrderTotalCalculationService orderTotalCalculationService,
-            ILogger logger, IOrderService orderService, 
+            ILogger logger, IOrderService orderService, IWebHelper webHelper,
             OrderSettings orderSettings, RewardPointsSettings rewardPointsSettings,
             PaymentSettings paymentSettings)
         {
@@ -85,6 +86,7 @@ namespace Nop.Web.Controllers
             this._orderTotalCalculationService = orderTotalCalculationService;
             this._logger = logger;
             this._orderService = orderService;
+            this._webHelper = webHelper;
 
             this._orderSettings = orderSettings;
             this._rewardPointsSettings = rewardPointsSettings;
@@ -1280,11 +1282,25 @@ namespace Nop.Web.Controllers
                     {
                         Order = placeOrderResult.PlacedOrder
                     };
-                    //TODO Redirection will not work because it's AJAX request.
-                    _paymentService.PostProcessPayment(postProcessPaymentRequest);
 
-                    //success
-                    return Json(new { success = 1 });
+
+                    var paymentMethod = _paymentService.LoadPaymentMethodBySystemName(placeOrderResult.PlacedOrder.PaymentMethodSystemName);
+                    if (paymentMethod == null)
+                        throw new Exception("Payment method is not available"); //actually it's impossible
+                    if (paymentMethod.PaymentMethodType == PaymentMethodType.Redirection)
+                    {
+                        //Redirection will not work because it's AJAX request.
+                        //That's why we don't process it here (we redirect a user to another page where he'll be redirected)
+
+                        //redirect
+                        return Json(new { redirect = string.Format("{0}checkout/OpcCompleteRedirectionPayment", _webHelper.GetStoreLocation()) });
+                    }
+                    else
+                    {
+                        _paymentService.PostProcessPayment(postProcessPaymentRequest);
+                        //success
+                        return Json(new { success = 1 });
+                    }
                 }
                 else
                 {
@@ -1311,6 +1327,51 @@ namespace Nop.Web.Controllers
             }
         }
 
+        public ActionResult OpcCompleteRedirectionPayment()
+        {
+            try
+            {
+                //validation
+                if (!_orderSettings.OnePageCheckoutEnabled)
+                    return RedirectToAction("Index", "Home");
+
+                if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
+                    return new HttpUnauthorizedResult();
+
+                //get the order
+                var orders = _orderService.GetOrdersByCustomerId(_workContext.CurrentCustomer.Id);
+                if (orders.Count == 0)
+                    return RedirectToAction("Index", "Home");
+
+                
+                var order = orders[0];
+                var paymentMethod = _paymentService.LoadPaymentMethodBySystemName(order.PaymentMethodSystemName);
+                if (paymentMethod == null)
+                    return RedirectToAction("Index", "Home");
+                if (paymentMethod.PaymentMethodType != PaymentMethodType.Redirection)
+                    return RedirectToAction("Index", "Home");
+
+                //ensure that order has been just placed
+                if ((DateTime.UtcNow - order.CreatedOnUtc).TotalMinutes > 3)
+                    return RedirectToAction("Index", "Home");
+
+
+                //Redirection will not work on one page checkout page because it's AJAX request.
+                //That's why we process it here
+                var postProcessPaymentRequest = new PostProcessPaymentRequest()
+                {
+                    Order = order
+                };
+                _paymentService.PostProcessPayment(postProcessPaymentRequest);
+
+                return RedirectToRoute("CheckoutCompleted");
+            }
+            catch (Exception exc)
+            {
+                _logger.Warning(exc.Message, exc, _workContext.CurrentCustomer);
+                return Content(exc.Message);
+            }
+        }
 
         #endregion
     }
