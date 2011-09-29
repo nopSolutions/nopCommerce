@@ -132,6 +132,10 @@ namespace Nop.Services.Payments
             var paymentMethod = LoadPaymentMethodBySystemName(order.PaymentMethodSystemName);
             if (paymentMethod == null)
                 return false; //Payment method couldn't be loaded (for example, was uninstalled)
+
+            if (paymentMethod.PaymentMethodType != PaymentMethodType.Redirection)
+                return false;   //this option is available only for redirection payment methods
+
             return paymentMethod.CanRePostProcessPayment(order);
         }
 

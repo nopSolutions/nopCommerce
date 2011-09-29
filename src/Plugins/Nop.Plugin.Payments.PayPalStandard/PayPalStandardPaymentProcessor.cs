@@ -539,7 +539,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
         {
             get
             {
-                return PaymentMethodType.Standard;
+                return PaymentMethodType.Redirection;
             }
         }
 
