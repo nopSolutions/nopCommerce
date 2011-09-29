@@ -36,6 +36,10 @@ namespace Nop.Admin.Validators.Common
                 .NotNull()
                 .WithMessage(localizationService.GetResource("Admin.Address.Fields.City.Required"))
                 .When(x => !x.CityDisabled);
+            RuleFor(x => x.Address1)
+                .NotNull()
+                .WithMessage(localizationService.GetResource("Admin.Address.Fields.Address1.Required"))
+                .When(x => !x.Address1Disabled);
             RuleFor(x => x.ZipPostalCode)
                 .NotNull()
                 .WithMessage(localizationService.GetResource("Admin.Address.Fields.ZipPostalCode.Required"))
