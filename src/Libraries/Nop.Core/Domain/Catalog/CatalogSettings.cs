@@ -44,6 +44,11 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether category breadcrumb is enabled
         /// </summary>
         public bool CategoryBreadcrumbEnabled { get; set; }
+        
+        /// <summary>
+        /// Gets or sets a value indicating whether a 'Share button' is enabled
+        /// </summary>
+        public bool ShowShareButton { get; set; }
 
         /// <summary>
         /// Gets or sets a share code (e.g. AddThis button code)

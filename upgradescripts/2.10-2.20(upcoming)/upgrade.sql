@@ -281,6 +281,12 @@ set @resources='
   <LocaleResource Name="Common.Back">
     <Value>Back</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowShareButton">
+    <Value>Show a share button</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowShareButton.Hint">
+    <Value>Check to show share button on product details page.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -704,4 +710,14 @@ DEALLOCATE cur
 GO
 
 DROP FUNCTION dbo.RemoveSpecialSeoChars
+GO
+
+
+
+--Show a share button
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.showsharebutton')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'catalogsettings.showsharebutton', N'true')
+END
 GO

@@ -28,6 +28,9 @@ namespace Nop.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.CategoryBreadcrumbEnabled")]
         public bool CategoryBreadcrumbEnabled { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ShowShareButton")]
+        public bool ShowShareButton { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ProductReviewsMustBeApproved")]
         public bool ProductReviewsMustBeApproved { get; set; }
 

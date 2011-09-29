@@ -163,6 +163,15 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ShowShareButton):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ShowShareButton)
+                @Html.ValidationMessageFor(model => model.ShowShareButton)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.NopLabelFor(model => model.ProductReviewsMustBeApproved):
             </td>
             <td class="adminData">

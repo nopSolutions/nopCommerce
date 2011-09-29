@@ -1403,14 +1403,19 @@ namespace Nop.Web.Controllers
         [ChildActionOnly]
         public ActionResult ShareButton()
         {
-            var shareCode = _catalogSettings.PageShareCode;
-            if (_webHelper.IsCurrentConnectionSecured())
+            if (_catalogSettings.ShowShareButton && !String.IsNullOrEmpty(_catalogSettings.PageShareCode))
             {
-                //need to change the addthis link to be https linked when the page is, so that the page doesnt ask about mixed mode when viewed in https...
-                shareCode = shareCode.Replace("http://", "https://");
+                var shareCode = _catalogSettings.PageShareCode;
+                if (_webHelper.IsCurrentConnectionSecured())
+                {
+                    //need to change the addthis link to be https linked when the page is, so that the page doesnt ask about mixed mode when viewed in https...
+                    shareCode = shareCode.Replace("http://", "https://");
+                }
+
+                return PartialView("ShareButton", shareCode);
             }
 
-            return PartialView("ShareButton", shareCode);
+            return Content("");
         }
 
         [ChildActionOnly]
