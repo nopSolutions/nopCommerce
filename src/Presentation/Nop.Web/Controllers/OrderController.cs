@@ -199,6 +199,7 @@ namespace Nop.Web.Controllers
                     displayTax = !displayTaxRates;
 
                     var orderTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderTax, order.CurrencyRate);
+                    //TODO pass languageId to _priceFormatter.FormatPrice
                     model.Tax = _priceFormatter.FormatPrice(orderTaxInCustomerCurrency, true, order.CustomerCurrencyCode, false);
 
                     foreach (var tr in order.TaxRatesDictionary)
@@ -206,6 +207,7 @@ namespace Nop.Web.Controllers
                         model.TaxRates.Add(new OrderDetailsModel.TaxRate()
                         {
                             Rate = _priceFormatter.FormatTaxRate(tr.Key),
+                            //TODO pass languageId to _priceFormatter.FormatPrice
                             Value = _priceFormatter.FormatPrice(_currencyService.ConvertCurrency(tr.Value, order.CurrencyRate), true, order.CustomerCurrencyCode, false),
                         });
                     }

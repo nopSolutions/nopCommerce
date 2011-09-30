@@ -286,6 +286,7 @@ namespace Nop.Services.Messages
                     displayTax = !displayTaxRates;
 
                     var orderTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderTax, order.CurrencyRate);
+                    //TODO pass languageId to _priceFormatter.FormatPrice
                     string taxStr = _priceFormatter.FormatPrice(orderTaxInCustomerCurrency, true, order.CustomerCurrencyCode, false);
                     cusTaxTotal = taxStr;
                 }
@@ -302,6 +303,7 @@ namespace Nop.Services.Messages
 
             //total
             var orderTotalInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderTotal, order.CurrencyRate);
+            //TODO pass languageId to _priceFormatter.FormatPrice
             cusTotal = _priceFormatter.FormatPrice(orderTotalInCustomerCurrency, true, order.CustomerCurrencyCode, false);
 
 
@@ -340,6 +342,7 @@ namespace Nop.Services.Messages
                 foreach (var item in taxRates)
                 {
                     string taxRate = String.Format(_localizationService.GetResource("Messages.Order.TaxRateLine"), _priceFormatter.FormatTaxRate(item.Key));
+                    //TODO pass languageId to _priceFormatter.FormatPrice
                     string taxValue = _priceFormatter.FormatPrice(item.Value, true, order.CustomerCurrencyCode, false);
                     sb.AppendLine(string.Format("<tr style=\"text-align:right;\"><td>&nbsp;</td><td colspan=\"2\" style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{1}</strong></td> <td style=\"background-color: {0};padding:0.6em 0.4 em;\"><strong>{2}</strong></td></tr>", _templatesSettings.Color3, taxRate, taxValue));
                 }
