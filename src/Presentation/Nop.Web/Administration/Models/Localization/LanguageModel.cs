@@ -25,6 +25,9 @@ namespace Nop.Admin.Models.Localization
         [AllowHtml]
         public string FlagImageFileName { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Languages.Fields.Rtl")]
+        public bool Rtl { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Languages.Fields.Published")]
         public bool Published { get; set; }
 

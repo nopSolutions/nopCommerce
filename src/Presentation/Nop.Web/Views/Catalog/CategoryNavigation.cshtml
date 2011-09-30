@@ -1,9 +1,11 @@
 ﻿@model IList<CategoryNavigationModel>
-
 @using Nop.Core.Domain.Catalog
 @using Nop.Core.Infrastructure
 @using Nop.Services.Catalog
 @using Nop.Web.Models.Catalog
+@{
+    var categoryPadding = 15;
+}
 @if (Model.Count > 0)
 {
     <div class="block block-category-navigation">
@@ -20,7 +22,14 @@
                     @if (category.NumberOfParentCategories > 0)
                     {
                         //TODO we hard-coded 'margin-left'. But we should set 'margin-right' for RTL languages
-                        <text>style="margin-left: @(category.NumberOfParentCategories * 15)px"</text>
+                        if (this.ShouldUseRtlTheme())
+                        {
+                        <text>style="margin-right: @(category.NumberOfParentCategories * categoryPadding)px"</text>
+                        }
+                        else
+                        {
+                        <text>style="margin-left: @(category.NumberOfParentCategories * categoryPadding)px"</text>
+                        }
                     }
                     ><a href="@Url.RouteUrl("Category", new { categoryId = category.Id, SeName = category.SeName })">@category.Name
                         @if (category.DisplayNumberOfProducts)

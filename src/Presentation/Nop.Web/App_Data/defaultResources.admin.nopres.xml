@@ -2884,6 +2884,14 @@
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
+									<LocaleResource Name="Rtl">
+										<Value>Right-to-left</Value>
+										<Children>
+											<LocaleResource Name="Hint">
+												<Value>Check to enable right-to-left support for this language. The active theme should support RTL (have appropriate CSS style file). And it affects only public store.</Value>
+											</LocaleResource>
+										</Children>
+									</LocaleResource>
 									<LocaleResource Name="Published">
 										<Value>Published</Value>
 										<Children>

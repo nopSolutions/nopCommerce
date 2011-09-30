@@ -50,6 +50,15 @@
     </tr>
     <tr>
         <td class="adminTitle">
+            @Html.NopLabelFor(model => model.Rtl):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.Rtl)
+            @Html.ValidationMessageFor(model => model.Rtl)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
             @Html.NopLabelFor(model => model.Published):
         </td>
         <td class="adminData">

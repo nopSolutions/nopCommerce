@@ -1,2 +1,15 @@
-﻿@using Nop.Web.Framework;
-<link href="@Html.ResolveUrl("~/Themes/DarkOrange/Content/styles.css")" rel="stylesheet" type="text/css" />
+﻿@using Nop.Core
+@using Nop.Core.Infrastructure
+@using Nop.Web.Framework;
+@{
+    var supportRtl = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Rtl;
+}
+@if (supportRtl)
+{
+    //this theme supports RTL
+    <link href="@Html.ResolveUrl("~/Themes/DarkOrange/Content/styles.rtl.css")" rel="stylesheet" type="text/css" />
+}
+else
+{
+    <link href="@Html.ResolveUrl("~/Themes/DarkOrange/Content/styles.css")" rel="stylesheet" type="text/css" />
+}

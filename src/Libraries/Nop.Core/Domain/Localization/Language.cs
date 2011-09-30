@@ -32,6 +32,11 @@ namespace Nop.Core.Domain.Localization
         public virtual string FlagImageFileName { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the language supports "Right-to-left"
+        /// </summary>
+        public virtual bool Rtl { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether the language is published
         /// </summary>
         public virtual bool Published { get; set; }

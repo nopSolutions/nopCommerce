@@ -17,6 +17,7 @@ namespace Nop.Data.Tests.Localization
                 LanguageCulture = "en-Us",
                 UniqueSeoCode = "en",
                 FlagImageFileName = "us.png",
+                Rtl = true,
                 Published = true,
                 DisplayOrder = 1
             };
@@ -27,6 +28,7 @@ namespace Nop.Data.Tests.Localization
             fromDb.LanguageCulture.ShouldEqual("en-Us");
             fromDb.UniqueSeoCode.ShouldEqual("en");
             fromDb.FlagImageFileName.ShouldEqual("us.png");
+            fromDb.Rtl.ShouldEqual(true);
             fromDb.Published.ShouldEqual(true);
             fromDb.DisplayOrder.ShouldEqual(1);
         }

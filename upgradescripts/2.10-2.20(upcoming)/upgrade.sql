@@ -290,6 +290,12 @@ set @resources='
   <LocaleResource Name="Reviews.Fields.Title.MaxLengthValidation">
     <Value>Max length of product review title is {0} chars</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.Fields.Rtl">
+    <Value>Right-to-left</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.Fields.Rtl.Hint">
+    <Value>Check to enable right-to-left support for this language. The active theme should support RTL (have appropriate CSS style file). And it affects only public store.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -723,4 +729,20 @@ BEGIN
 	INSERT [Setting] ([Name], [Value])
 	VALUES (N'catalogsettings.showsharebutton', N'true')
 END
+GO
+
+--RTL support
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Language]') and NAME='Rtl')
+BEGIN
+	ALTER TABLE [dbo].[Language] 
+	ADD [Rtl] bit NULL
+END
+GO
+
+UPDATE [dbo].[Language]
+SET [Rtl]=0
+WHERE [Rtl] is null
+GO
+
+ALTER TABLE [dbo].[Language] ALTER COLUMN [Rtl] bit NOT NULL
 GO
