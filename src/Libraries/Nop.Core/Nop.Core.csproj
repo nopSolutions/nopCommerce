@@ -123,7 +123,6 @@
     <Compile Include="Domain\Catalog\ProductTag.cs" />
     <Compile Include="Domain\Catalog\ProductReviewHelpfulness.cs" />
     <Compile Include="Domain\Catalog\PriceRange.cs" />
-    <Compile Include="Domain\Catalog\ProductExtensions.cs" />
     <Compile Include="Domain\Catalog\SpecificationAttributeOptionFilter.cs" />
     <Compile Include="Domain\Common\CommonSettings.cs" />
     <Compile Include="Domain\Common\PdfSettings.cs" />

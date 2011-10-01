@@ -139,10 +139,10 @@ namespace Nop.Web.Controllers
 
             if (variants.Count == 0)
                 return null;
-            
-            var tmp1= variants.ToList();
+
+            var tmp1 = variants.ToList();
             tmp1.Sort(new GenericComparer<ProductVariant>("Price", GenericComparer<ProductVariant>.SortOrder.Ascending));
-            return tmp1[0];
+            return tmp1.Count > 0 ? tmp1[0] : null;
         }
 
         [NonAction]

@@ -36,6 +36,7 @@ namespace Nop.Services.Common
         private readonly ICurrencyService _currencyService;
         private readonly IMeasureService _measureService;
         private readonly IPictureService _pictureService;
+        private readonly IProductService _productService;
 
         private readonly CurrencySettings _currencySettings;
         private readonly MeasureSettings _measureSettings;
@@ -50,7 +51,7 @@ namespace Nop.Services.Common
         public PdfService(ILocalizationService localizationService, IOrderService orderService,
             IDateTimeHelper dateTimeHelper, IPriceFormatter priceFormatter,
             ICurrencyService currencyService, IMeasureService measureService, 
-            IPictureService pictureService, CurrencySettings currencySettings, 
+            IPictureService pictureService, IProductService productService, CurrencySettings currencySettings, 
             MeasureSettings measureSettings, PdfSettings pdfSettings, TaxSettings taxSettings, 
             StoreInformationSettings storeInformationSettings)
         {
@@ -61,6 +62,7 @@ namespace Nop.Services.Common
             _currencyService = currencyService;
             _measureService = measureService;
             _pictureService = pictureService;
+            _productService = productService;
             _currencySettings = currencySettings;
             _measureSettings = measureSettings;
             _pdfSettings = pdfSettings;
@@ -696,7 +698,7 @@ namespace Nop.Services.Common
 
                 int pvNum = 1;
 
-                foreach (var productVariant in product.ProductVariants)
+                foreach (var productVariant in _productService.GetProductVariantsByProductId(product.Id, true))
                 {
                     string pvName = String.IsNullOrEmpty(productVariant.GetLocalized(x => x.Name, lang.Id)) ? _localizationService.GetResource("PDFProductCatalog.UnnamedProductVariant") : productVariant.GetLocalized(x => x.Name, lang.Id);
                     section.AddParagraph(String.Format("{0}.{1}. {2}", productNumber, pvNum, pvName));

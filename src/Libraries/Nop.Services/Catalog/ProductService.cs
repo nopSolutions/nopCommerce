@@ -669,7 +669,7 @@ namespace Nop.Services.Catalog
                         {
                             var product = productVariant.Product;
                             bool allProductVariantsUnpublished = true;
-                            foreach (var pv2 in product.ProductVariants)
+                            foreach (var pv2 in GetProductVariantsByProductId(product.Id))
                             {
                                 if (pv2.Published)
                                 {
