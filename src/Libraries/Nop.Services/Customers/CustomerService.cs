@@ -172,22 +172,7 @@ namespace Nop.Services.Customers
                             cr.Id == customerRoleId
                         orderby c.CreatedOnUtc descending
                         select c;
-
-            //var query = from c in _context.Customers
-            //            where (showHidden || c.Active) && !c.Deleted
-            //            && c.NpCustomerRoles.Any(cr => cr.CustomerRoleId == customerRoleId)
-            //            orderby c.RegistrationDate descending
-            //            select c;
-
-
-            //var query = _context.CustomerRoles.Where(cr => cr.CustomerRoleId == customerRoleId)
-            //    .SelectMany(cr => cr.NpCustomers);
-            //if (!showHidden)
-            //    query = query.Where(c => c.Active);
-            //query = query.Where(c => !c.Deleted);
-            //query = query.OrderByDescending(c => c.RegistrationDate);
-            //var customers = query.ToList();
-
+            
             var customers = query.ToList();
             return customers;
         }
@@ -843,28 +828,6 @@ namespace Nop.Services.Customers
             });
         }
         
-        /// <summary>
-        /// Gets customer roles by customer identifier
-        /// </summary>
-        /// <param name="customerId">Customer identifier</param>
-        /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Customer role collection</returns>
-        public virtual IList<CustomerRole> GetCustomerRolesByCustomerId(int customerId, bool showHidden = false)
-        {
-            if (customerId == 0)
-                return new List<CustomerRole>();
-
-            var query = from cr in _customerRoleRepository.Table
-                        from c in cr.Customers
-                        where (showHidden || cr.Active) &&
-                            c.Id == customerId
-                        orderby cr.Name descending
-                        select cr;
-
-            var customerRoles = query.ToList();
-            return customerRoles;
-        }
-
         /// <summary>
         /// Inserts a customer role
         /// </summary>

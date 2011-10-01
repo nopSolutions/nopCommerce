@@ -694,10 +694,8 @@ namespace Nop.Services.Tax
                 if (customer.IsTaxExempt)
                     return true;
 
-                var customerRoles = customer.CustomerRoles;
-                foreach (var customerRole in customerRoles)
-                    if (customerRole.TaxExempt)
-                        return true;
+                if (customer.CustomerRoles.Where(cr => cr.Active).Any(cr => cr.TaxExempt))
+                    return true;
             }
 
             if (productVariant == null)

@@ -196,14 +196,6 @@ namespace Nop.Services.Customers
         IList<CustomerRole> GetAllCustomerRoles(bool showHidden = false);
 
         /// <summary>
-        /// Gets customer roles by customer identifier
-        /// </summary>
-        /// <param name="customerId">Customer identifier</param>
-        /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Customer role collection</returns>
-        IList<CustomerRole> GetCustomerRolesByCustomerId(int customerId, bool showHidden = false);
-
-        /// <summary>
         /// Inserts a customer role
         /// </summary>
         /// <param name="customerRole">Customer role</param>
