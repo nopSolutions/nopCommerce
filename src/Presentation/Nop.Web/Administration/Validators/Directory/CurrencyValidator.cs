@@ -16,6 +16,8 @@ namespace Nop.Admin.Validators.Directory
             RuleFor(x => x.CurrencyCode)
                 .NotEmpty().WithMessage(localizationService.GetResource("Admin.Configuration.Currencies.Fields.CurrencyCode.Required"))
                 .Length(1, 5).WithMessage(localizationService.GetResource("Admin.Configuration.Currencies.Fields.CurrencyCode.Range"));
+            RuleFor(x => x.Rate)
+                .GreaterThan(0).WithMessage(localizationService.GetResource("Admin.Configuration.Currencies.Fields.Rate.Range"));
             RuleFor(x => x.CustomFormatting)
                 .Length(0, 50).WithMessage(localizationService.GetResource("Admin.Configuration.Currencies.Fields.CustomFormatting.Validation"));
             RuleFor(x => x.DisplayLocale)

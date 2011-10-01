@@ -296,6 +296,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Languages.Fields.Rtl.Hint">
     <Value>Check to enable right-to-left support for this language. The active theme should support RTL (have appropriate CSS style file). And it affects only public store.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Currencies.Fields.Rate.Range">
+    <Value>Exchange rate must be greater than 0.</Value>
+  </LocaleResource>
 </Language>
 '
 

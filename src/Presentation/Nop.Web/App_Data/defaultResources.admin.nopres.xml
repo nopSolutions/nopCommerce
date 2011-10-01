@@ -2552,6 +2552,9 @@
 											<LocaleResource Name="Hint">
 												<Value>The exchange rate against the primary exchange rate currency.</Value>
 											</LocaleResource>
+											<LocaleResource Name="Range">
+												<Value>Exchange rate must be greater than 0.</Value>
+											</LocaleResource>
 										</Children>
 									</LocaleResource>
 									<LocaleResource Name="CurrencyCode">
