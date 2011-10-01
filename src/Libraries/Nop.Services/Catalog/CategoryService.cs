@@ -307,6 +307,24 @@ namespace Nop.Services.Catalog
         }
 
         /// <summary>
+        /// Get a total number of featured products by category identifer
+        /// </summary>
+        /// <param name="categoryId">Category identifier</param>
+        /// <returns>Number of featured products</returns>
+        public virtual int GetTotalNumberOfFeaturedProducts(int categoryId)
+        {
+            if (categoryId == 0)
+                return 0;
+
+            var query = from pc in _productCategoryRepository.Table
+                        where pc.CategoryId == categoryId &&
+                              pc.IsFeaturedProduct
+                        select pc;
+            var result = query.Count();
+            return result;
+        }
+
+        /// <summary>
         /// Gets a product category mapping 
         /// </summary>
         /// <param name="productCategoryId">Product category mapping identifier</param>

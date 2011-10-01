@@ -232,7 +232,24 @@ namespace Nop.Services.Catalog
                                                   return productManufacturers;
                                               });
         }
+        
+        /// <summary>
+        /// Get a total number of featured products by manufacturer identifer
+        /// </summary>
+        /// <param name="manufacturerId">Manufacturer identifier</param>
+        /// <returns>Number of featured products</returns>
+        public virtual int GetTotalNumberOfFeaturedProducts(int manufacturerId)
+        {
+            if (manufacturerId == 0)
+                return 0;
 
+            var query = from pm in _productManufacturerRepository.Table
+                        where pm.ManufacturerId == manufacturerId &&
+                              pm.IsFeaturedProduct
+                        select pm;
+            var result = query.Count();
+            return result;
+        }
         /// <summary>
         /// Gets a product manufacturer mapping 
         /// </summary>

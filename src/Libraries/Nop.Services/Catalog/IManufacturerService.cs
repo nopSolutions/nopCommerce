@@ -71,6 +71,13 @@ namespace Nop.Services.Catalog
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product manufacturer mapping collection</returns>
         IList<ProductManufacturer> GetProductManufacturersByProductId(int productId, bool showHidden = false);
+        
+        /// <summary>
+        /// Get a total number of featured products by manufacturer identifer
+        /// </summary>
+        /// <param name="manufacturerId">Manufacturer identifier</param>
+        /// <returns>Number of featured products</returns>
+        int GetTotalNumberOfFeaturedProducts(int manufacturerId);
 
         /// <summary>
         /// Gets a product manufacturer mapping 

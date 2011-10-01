@@ -782,11 +782,16 @@ namespace Nop.Web.Controllers
 
 
             //featured products
-            var featuredProducts = _productService.SearchProducts(category.Id,
-                0, true, null, null, 0, 0, null, false, _workContext.WorkingLanguage.Id, null,
-                 ProductSortingEnum.Position, 0, int.MaxValue);
-            model.FeaturedProducts = featuredProducts.Select(x => PrepareProductOverviewModel(x)).ToList();
-
+            if (_categoryService.GetTotalNumberOfFeaturedProducts(categoryId) > 0)
+            {
+                //We use the fast GetTotalNumberOfFeaturedProducts before invoking of the slow SearchProducts
+                //to ensure that we have at least one featured product
+                var featuredProducts = _productService.SearchProducts(category.Id,
+                    0, true, null, null, 0, 0, null, false,
+                    _workContext.WorkingLanguage.Id, null,
+                    ProductSortingEnum.Position, 0, int.MaxValue);
+                model.FeaturedProducts = featuredProducts.Select(x => PrepareProductOverviewModel(x)).ToList();
+            }
 
 
 
@@ -836,6 +841,7 @@ namespace Nop.Web.Controllers
 
             return PartialView(listModel);
         }
+
         #endregion
 
         #region Manufacturers
@@ -920,11 +926,16 @@ namespace Nop.Web.Controllers
 
 
             //featured products
-            var featuredProducts = _productService.SearchProducts(0,
-                manufacturer.Id, true, null, null, 0, 0, null, false, _workContext.WorkingLanguage.Id, null,
-                ProductSortingEnum.Position, 0, int.MaxValue);
-            model.FeaturedProducts = featuredProducts.Select(x => PrepareProductOverviewModel(x)).ToList();
-
+            if (_manufacturerService.GetTotalNumberOfFeaturedProducts(manufacturerId) > 0)
+            {
+                //We use the fast GetTotalNumberOfFeaturedProducts before invoking of the slow SearchProducts
+                //to ensure that we have at least one featured product
+                var featuredProducts = _productService.SearchProducts(0,
+                    manufacturer.Id, true, null, null, 0, 0, null,
+                    false, _workContext.WorkingLanguage.Id, null,
+                    ProductSortingEnum.Position, 0, int.MaxValue);
+                model.FeaturedProducts = featuredProducts.Select(x => PrepareProductOverviewModel(x)).ToList();
+            }
 
 
 
