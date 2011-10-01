@@ -1380,15 +1380,16 @@ namespace Nop.Web.Controllers
         [ChildActionOnly]
         public ActionResult RelatedProducts(int productId)
         {
-            var product = _productService.GetProductById(productId);
-            if (product == null)
-                throw new ArgumentException("No product found with the specified id");
-            
-            var products = _productService.SearchProducts(0,
-                0, null, null, null, productId, 0, null, false,
-                0, null, ProductSortingEnum.Position, 0, int.MaxValue);
-
-            var model = products.Select(x => PrepareProductOverviewModel(x)).ToList();
+            var model = new List<ProductModel>();
+            if (_productService.GetTotalNumberOfRelatedProducts(productId) > 0)
+            {
+                //We use the fast GetTotalNumberOfRelatedProducts before invoking of the slow SearchProducts
+                //to ensure that we have at least one related product
+                var products = _productService.SearchProducts(0,
+                    0, null, null, null, productId, 0, null, false,
+                    0, null, ProductSortingEnum.Position, 0, int.MaxValue);
+                model = products.Select(x => PrepareProductOverviewModel(x, false, true)).ToList();
+            }
 
             return PartialView(model);
         }
@@ -1399,14 +1400,10 @@ namespace Nop.Web.Controllers
             if (!_catalogSettings.ProductsAlsoPurchasedEnabled)
                 return Content("");
 
-            var product = _productService.GetProductById(productId);
-            if (product == null)
-                throw new ArgumentException("No product found with the specified id");
-
             var products = _orderReportService.GetProductsAlsoPurchasedById(productId,
                 _catalogSettings.ProductsAlsoPurchasedNumber);
 
-            var model = products.Select(x => PrepareProductOverviewModel(x)).ToList();
+            var model = products.Select(x => PrepareProductOverviewModel(x, false, true)).ToList();
 
             return PartialView(model);
         }

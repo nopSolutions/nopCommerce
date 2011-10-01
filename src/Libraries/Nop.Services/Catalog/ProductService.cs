@@ -815,6 +815,23 @@ namespace Nop.Services.Catalog
         }
 
         /// <summary>
+        /// Get a total number of related products
+        /// </summary>
+        /// <param name="productId1">Product 1 identifier</param>
+        /// <returns>Number of related products</returns>
+        public virtual int GetTotalNumberOfRelatedProducts(int productId1)
+        {
+            if (productId1 == 0)
+                return 0;
+
+            var query = from pc in _relatedProductRepository.Table
+                        where pc.ProductId1 == productId1
+                        select pc;
+            var result = query.Count();
+            return result;
+        }
+
+        /// <summary>
         /// Gets a related product
         /// </summary>
         /// <param name="relatedProductId">Related product identifer</param>

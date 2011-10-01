@@ -184,6 +184,13 @@ namespace Nop.Services.Catalog
         IList<RelatedProduct> GetRelatedProductsByProductId1(int productId1, bool showHidden = false);
 
         /// <summary>
+        /// Get a total number of related products
+        /// </summary>
+        /// <param name="productId1">Product 1 identifier</param>
+        /// <returns>Number of related products</returns>
+        int GetTotalNumberOfRelatedProducts(int productId1);
+
+        /// <summary>
         /// Gets a related product
         /// </summary>
         /// <param name="relatedProductId">Related product identifer</param>
