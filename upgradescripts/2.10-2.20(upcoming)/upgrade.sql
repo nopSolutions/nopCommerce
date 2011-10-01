@@ -299,6 +299,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Currencies.Fields.Rate.Range">
     <Value>Exchange rate must be greater than 0.</Value>
   </LocaleResource>
+  <LocaleResource Name="Polls.VotesResultLine">
+    <Value>{0} ({1} vote(s) - {2}%)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Polls.Votes">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 

@@ -2583,8 +2583,8 @@
 			<LocaleResource Name="Voted">
 				<Value>Thank you for voting! Please refresh the page in order to see results.</Value>
 			</LocaleResource>
-			<LocaleResource Name="votes">
-				<Value>{0} vote(s)</Value>
+			<LocaleResource Name="VotesResultLine">
+				<Value>{0} ({1} vote(s) - {2}%)</Value>
 			</LocaleResource>
 		</Children>
 	</LocaleResource>

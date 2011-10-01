@@ -7,15 +7,10 @@
     {
         <div class="poll-results">
             @foreach (var item in Model.Answers)
-        {
-                @item.Name
-                <text> (</text>
-                @string.Format(T("Polls.Votes").Text, item.NumberOfVotes)
-                <text> - </text>
-                @item.PercentOfTotalVotes.ToString("0.0")
-                <text>%)</text>
+            {
+                @string.Format(T("Polls.VotesResultLine").Text, item.Name, item.NumberOfVotes, item.PercentOfTotalVotes.ToString("0.0"))
                 <br />
-        }
+            }
             <span class="poll-total-votes">@string.Format(T("Polls.TotalVotes").Text, Model.TotalVotes)</span>
         </div>
     }
