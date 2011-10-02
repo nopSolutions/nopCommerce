@@ -330,7 +330,7 @@ namespace Nop.Web.Controllers
         private int GetNumberOfProducts(Category category, bool includeSubCategories)
         {
             var products = _productService.SearchProducts(category.Id,
-                        0, null, null, null, 0, 0, string.Empty, false, 0, null,
+                        0, null, null, null, 0, string.Empty, false, 0, null,
                         ProductSortingEnum.Position, 0, 1);
 
             var numberOfProducts = products.TotalCount;
@@ -787,7 +787,7 @@ namespace Nop.Web.Controllers
                 //We use the fast GetTotalNumberOfFeaturedProducts before invoking of the slow SearchProducts
                 //to ensure that we have at least one featured product
                 var featuredProducts = _productService.SearchProducts(category.Id,
-                    0, true, null, null, 0, 0, null, false,
+                    0, true, null, null, 0, null, false,
                     _workContext.WorkingLanguage.Id, null,
                     ProductSortingEnum.Position, 0, int.MaxValue);
                 model.FeaturedProducts = featuredProducts.Select(x => PrepareProductOverviewModel(x)).ToList();
@@ -797,7 +797,7 @@ namespace Nop.Web.Controllers
 
             //products
             var products = _productService.SearchProducts(category.Id, 0, false, minPriceConverted, maxPriceConverted,
-                0, 0, string.Empty, false, _workContext.WorkingLanguage.Id, selectedSpecs,
+                0, string.Empty, false, _workContext.WorkingLanguage.Id, selectedSpecs,
                 (ProductSortingEnum)command.OrderBy, command.PageNumber - 1, command.PageSize);
             model.Products = products.Select(x => PrepareProductOverviewModel(x)).ToList();
 
@@ -931,7 +931,7 @@ namespace Nop.Web.Controllers
                 //We use the fast GetTotalNumberOfFeaturedProducts before invoking of the slow SearchProducts
                 //to ensure that we have at least one featured product
                 var featuredProducts = _productService.SearchProducts(0,
-                    manufacturer.Id, true, null, null, 0, 0, null,
+                    manufacturer.Id, true, null, null, 0, null,
                     false, _workContext.WorkingLanguage.Id, null,
                     ProductSortingEnum.Position, 0, int.MaxValue);
                 model.FeaturedProducts = featuredProducts.Select(x => PrepareProductOverviewModel(x)).ToList();
@@ -941,7 +941,7 @@ namespace Nop.Web.Controllers
 
             //products
             var products = _productService.SearchProducts(0, manufacturer.Id, false, minPriceConverted, maxPriceConverted,
-                0, 0, string.Empty, false, _workContext.WorkingLanguage.Id, null,
+                0, string.Empty, false, _workContext.WorkingLanguage.Id, null,
                 (ProductSortingEnum)command.OrderBy, command.PageNumber - 1, command.PageSize);
             model.Products = products.Select(x => PrepareProductOverviewModel(x)).ToList();
 
@@ -1378,17 +1378,21 @@ namespace Nop.Web.Controllers
         [ChildActionOnly]
         public ActionResult RelatedProducts(int productId)
         {
-            var model = new List<ProductModel>();
-            if (_productService.GetTotalNumberOfRelatedProducts(productId) > 0)
+            var products = new List<Product>();
+            foreach (var rp in _productService.GetRelatedProductsByProductId1(productId))
             {
-                //We use the fast GetTotalNumberOfRelatedProducts before invoking of the slow SearchProducts
-                //to ensure that we have at least one related product
-                var products = _productService.SearchProducts(0,
-                    0, null, null, null, productId, 0, null, false,
-                    0, null, ProductSortingEnum.Position, 0, int.MaxValue);
-                model = products.Select(x => PrepareProductOverviewModel(x, false, true)).ToList();
+                var product = _productService.GetProductById(rp.ProductId2);
+                if (product == null)
+                    continue;
+
+                //ensure that a related product has at least one available variant
+                var variants = _productService.GetProductVariantsByProductId(product.Id);
+                if (variants.Count > 0)
+                    products.Add(product);
             }
 
+
+            var model = products.Select(x => PrepareProductOverviewModel(x, false, true)).ToList();
             return PartialView(model);
         }
 
@@ -1469,7 +1473,7 @@ namespace Nop.Web.Controllers
             if (_catalogSettings.RecentlyAddedProductsEnabled)
             {
                 var products = _productService.SearchProducts(0, 0, null, null,
-                    null, 0, 0, null, false, _workContext.WorkingLanguage.Id,
+                    null, 0, null, false, _workContext.WorkingLanguage.Id,
                     null, ProductSortingEnum.CreatedOn, 0, _catalogSettings.RecentlyAddedProductsNumber);
                 foreach (var product in products)
                     model.Add(PrepareProductOverviewModel(product));
@@ -1491,7 +1495,7 @@ namespace Nop.Web.Controllers
             
             var items = new List<SyndicationItem>();
             var products = _productService.SearchProducts(0, 0, null, null,
-                null, 0, 0, null, false, _workContext.WorkingLanguage.Id,
+                null, 0, null, false, _workContext.WorkingLanguage.Id,
                 null, ProductSortingEnum.CreatedOn, 0, _catalogSettings.RecentlyAddedProductsNumber);
             foreach (var product in products)
             {
@@ -1675,7 +1679,7 @@ namespace Nop.Web.Controllers
 
             //products
             var products = _productService.SearchProducts(0, 0, false, null, null,
-                0, productTag.Id, string.Empty, false, _workContext.WorkingLanguage.Id, null,
+                productTag.Id, string.Empty, false, _workContext.WorkingLanguage.Id, null,
                 (ProductSortingEnum)command.OrderBy, command.PageNumber - 1, command.PageSize);
             model.Products = products.Select(x => PrepareProductOverviewModel(x)).ToList();
 
@@ -2071,7 +2075,7 @@ namespace Nop.Web.Controllers
 
                     //products
                     products = _productService.SearchProducts(categoryId, manufacturerId, null,
-                        minPriceConverted, maxPriceConverted, 0, 0,
+                        minPriceConverted, maxPriceConverted, 0,
                         model.Q, searchInDescriptions, _workContext.WorkingLanguage.Id, null,
                     ProductSortingEnum.Position, command.PageNumber - 1, command.PageSize);
                     model.Products = products.Select(x => PrepareProductOverviewModel(x)).ToList();

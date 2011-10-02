@@ -574,7 +574,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
 
-            var products = _productService.SearchProducts(0, 0, null, null, null, 0, 0, string.Empty, false,
+            var products = _productService.SearchProducts(0, 0, null, null, null, 0, string.Empty, false,
                 _workContext.WorkingLanguage.Id, new List<int>(),
                 ProductSortingEnum.Position, 0, _adminAreaSettings.GridPageSize, true);
 
@@ -605,7 +605,7 @@ namespace Nop.Admin.Controllers
 
             var gridModel = new GridModel();
             var products = _productService.SearchProducts(model.SearchCategoryId,
-                model.SearchManufacturerId, null, null, null, 0, 0, model.SearchProductName, false,
+                model.SearchManufacturerId, null, null, null, 0, model.SearchProductName, false,
                 _workContext.WorkingLanguage.Id, new List<int>(),
                 ProductSortingEnum.Position, command.Page - 1, command.PageSize, true);
             gridModel.Data = products.Select(x => x.ToModel());

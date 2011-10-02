@@ -208,7 +208,6 @@ namespace Nop.Services.Catalog
         /// <param name="featuredProducts">A value indicating whether loaded products are marked as featured (relates only to categories and manufacturers). 0 to load featured products only, 1 to load not featured products only, null to load all products</param>
         /// <param name="priceMin">Minimum price; null to load all records</param>
         /// <param name="priceMax">Maximum price; null to load all records</param>
-        /// <param name="relatedToProductId">Filter by related product; 0 to load all records</param>
         /// <param name="productTagId">Product tag identifier; 0 to load all records</param>
         /// <param name="keywords">Keywords</param>
         /// <param name="searchDescriptions">A value indicating whether to search in descriptions</param>
@@ -220,8 +219,7 @@ namespace Nop.Services.Catalog
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product collection</returns>
         public virtual IPagedList<Product> SearchProducts(int categoryId, int manufacturerId, bool? featuredProducts,
-            decimal? priceMin, decimal? priceMax,
-            int relatedToProductId, int productTagId,
+            decimal? priceMin, decimal? priceMax, int productTagId,
             string keywords, bool searchDescriptions, int languageId,
             IList<int> filteredSpecs, ProductSortingEnum orderBy,
             int pageIndex, int pageSize, bool showHidden = false)
@@ -296,13 +294,13 @@ namespace Nop.Services.Catalog
             }
 
             //related products filtering
-            if (relatedToProductId > 0)
-            {
-                query = from p in query
-                        join rp in _relatedProductRepository.Table on p.Id equals rp.ProductId2
-                        where (relatedToProductId == rp.ProductId1)
-                        select p;
-            }
+            //if (relatedToProductId > 0)
+            //{
+            //    query = from p in query
+            //            join rp in _relatedProductRepository.Table on p.Id equals rp.ProductId2
+            //            where (relatedToProductId == rp.ProductId1)
+            //            select p;
+            //}
 
             //tag filtering
             if (productTagId > 0)
@@ -337,16 +335,15 @@ namespace Nop.Services.Catalog
                 //manufacturer position
                 query = query.OrderBy(p => p.ProductManufacturers.Where(pm => pm.ManufacturerId == manufacturerId).FirstOrDefault().DisplayOrder);
             }
-            else if (orderBy == ProductSortingEnum.Position && relatedToProductId > 0)
-            {
-                //sort by related product display order
-                query = from p in query
-                        join rp in _relatedProductRepository.Table on p.Id equals rp.ProductId2
-                        where (relatedToProductId == rp.ProductId1)
-                        orderby rp.DisplayOrder
-                        select p;
-                //query = query.OrderBy(p => p.Name);
-            }
+            //else if (orderBy == ProductSortingEnum.Position && relatedToProductId > 0)
+            //{
+            //    //sort by related product display order
+            //    query = from p in query
+            //            join rp in _relatedProductRepository.Table on p.Id equals rp.ProductId2
+            //            where (relatedToProductId == rp.ProductId1)
+            //            orderby rp.DisplayOrder
+            //            select p;
+            //}
             else if (orderBy == ProductSortingEnum.Position)
             {
                 query = query.OrderBy(p => p.Name);
@@ -812,23 +809,6 @@ namespace Nop.Services.Catalog
             var relatedProducts = query.ToList();
 
             return relatedProducts;
-        }
-
-        /// <summary>
-        /// Get a total number of related products
-        /// </summary>
-        /// <param name="productId1">Product 1 identifier</param>
-        /// <returns>Number of related products</returns>
-        public virtual int GetTotalNumberOfRelatedProducts(int productId1)
-        {
-            if (productId1 == 0)
-                return 0;
-
-            var query = from pc in _relatedProductRepository.Table
-                        where pc.ProductId1 == productId1
-                        select pc;
-            var result = query.Count();
-            return result;
         }
 
         /// <summary>

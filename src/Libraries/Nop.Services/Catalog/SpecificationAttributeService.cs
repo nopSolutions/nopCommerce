@@ -435,32 +435,6 @@ namespace Nop.Services.Catalog
                 .ThenBy(saof => saof.SpecificationAttributeName)
                 .ThenBy(saof => saof.SpecificationAttributeOptionName).ToList();
 
-
-            //old method
-            //var products = _productService.SearchProducts(categoryId, 0, null, null, null, 0, 0,
-            //    null, false, workContext.WorkingLanguage.Id, null, ProductSortingEnum.Position,
-            //    0, int.MaxValue, false);
-            //foreach (var product in products)
-            //{
-            //    foreach (var psa in product.ProductSpecificationAttributes.Where(psa => psa.AllowFiltering))
-            //    {
-            //        var specificationAttributeOptionId = psa.SpecificationAttributeOption.Id;
-            //        if (result.Find(saof => saof.SpecificationAttributeOptionId == specificationAttributeOptionId) == null)
-            //        {
-            //            result.Add(new SpecificationAttributeOptionFilter()
-            //                {
-            //                    SpecificationAttributeId = psa.SpecificationAttributeOption.SpecificationAttribute.Id,
-            //                    SpecificationAttributeName = psa.SpecificationAttributeOption.SpecificationAttribute.GetLocalized(sa => sa.Name, workContext.WorkingLanguage.Id),
-            //                    DisplayOrder = psa.SpecificationAttributeOption.SpecificationAttribute.DisplayOrder,
-            //                    SpecificationAttributeOptionId = specificationAttributeOptionId,
-            //                    SpecificationAttributeOptionName = psa.SpecificationAttributeOption.GetLocalized(sao => sao.Name, workContext.WorkingLanguage.Id)
-            //                });
-            //        }
-            //    }
-            //}
-            //result = result.OrderBy(saof => saof.DisplayOrder)
-            //    .ThenBy(saof => saof.SpecificationAttributeName)
-            //    .ThenBy(saof => saof.SpecificationAttributeOptionName).ToList();
             return result;
         }
 
