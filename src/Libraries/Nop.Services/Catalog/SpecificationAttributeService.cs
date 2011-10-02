@@ -30,9 +30,8 @@ namespace Nop.Services.Catalog
         private readonly IRepository<SpecificationAttributeOption> _specificationAttributeOptionRepository;
         private readonly IRepository<ProductSpecificationAttribute> _productSpecificationAttributeRepository;
         private readonly IRepository<Product> _productRepository;
-        private readonly IRepository<ProductVariant> _productVariantRepository;
         private readonly ICacheManager _cacheManager;
-        private readonly IProductService _productService;
+        private readonly CatalogSettings _catalogSettings;
         private readonly IEventPublisher _eventPublisher;
 
         #endregion
@@ -47,16 +46,13 @@ namespace Nop.Services.Catalog
         /// <param name="specificationAttributeOptionRepository">Specification attribute option repository</param>
         /// <param name="productSpecificationAttributeRepository">Product specification attribute repository</param>
         /// <param name="productRepository">Product repository</param>
-        /// <param name="productVariantRepository">Product variant repository</param>
-        /// <param name="productService">Product service</param>
+        /// <param name="catalogSettings">Catalog settings</param>
         /// <param name="eventPublisher"></param>
         public SpecificationAttributeService(ICacheManager cacheManager,
             IRepository<SpecificationAttribute> specificationAttributeRepository,
             IRepository<SpecificationAttributeOption> specificationAttributeOptionRepository,
             IRepository<ProductSpecificationAttribute> productSpecificationAttributeRepository,
-            IRepository<Product> productRepository, 
-             IRepository<ProductVariant> productVariantRepository,
-            IProductService productService,
+            IRepository<Product> productRepository, CatalogSettings catalogSettings,
             IEventPublisher eventPublisher)
         {
             _cacheManager = cacheManager;
@@ -64,8 +60,7 @@ namespace Nop.Services.Catalog
             _specificationAttributeOptionRepository = specificationAttributeOptionRepository;
             _productSpecificationAttributeRepository = productSpecificationAttributeRepository;
             _productRepository = productRepository;
-            _productVariantRepository = productVariantRepository;
-            _productService = productService;
+            _catalogSettings = catalogSettings;
             _eventPublisher = eventPublisher;
         }
 
@@ -390,6 +385,19 @@ namespace Nop.Services.Catalog
             if (categoryId == 0)
                 throw new ArgumentException("Category identifier could not be null", "categoryId");
 
+            if (_catalogSettings.EnsureWeHaveFilterableSpecAttributes)
+            {
+                //The implementation below is quite slow. 
+                //So let's ensure that we have at least one filterable product specification attribute mapping before invoking it
+                //More info: http://www.nopcommerce.com/boards/t/10624/20-speedperformance-concerns.aspx?p=16#46160
+                if (_productSpecificationAttributeRepository.Table
+                        .Where(psa => psa.AllowFiltering)
+                        .Count() == 0)
+                {
+                    //no product specification attributes. we can exit
+                    return new List<SpecificationAttributeOptionFilter>();
+                }
+            }
 
             //The function 'CurrentUtcDateTime' is not supported by SQL Server Compact. 
             //That's why we pass the date value

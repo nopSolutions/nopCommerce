@@ -170,5 +170,10 @@ namespace Nop.Core.Domain.Catalog
         /// </summary>
         public bool IgnoreFeaturedProducts { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether we need to ensure that we have at least one filterable product specification attribute mapping before load 'filter by specs' box on category details page. Set it to 'True' if you don't use them. It can really improve your performance
+        /// </summary>
+        public bool EnsureWeHaveFilterableSpecAttributes { get; set; }
+
     }
 }
