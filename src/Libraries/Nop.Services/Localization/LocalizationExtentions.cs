@@ -23,7 +23,7 @@ namespace Nop.Services.Localization
         /// <typeparam name="T">Entity type</typeparam>
         /// <param name="entity">Entity</param>
         /// <param name="keySelector">Key selector</param>
-        /// <param name="languageId">Lanagueg identifier</param>
+        /// <param name="languageId">Language identifier</param>
         /// <param name="returnDefaultValue">A value indicating whether to return default value (if localized is not found)</param>
         /// <param name="ensureTwoPublishedLanguages">A value indicating whether to ensure that we have at least two published languages; otherwise, load only default value</param>
         /// <returns>Localized property</returns>
@@ -42,7 +42,7 @@ namespace Nop.Services.Localization
         /// <typeparam name="TPropType">Property type</typeparam>
         /// <param name="entity">Entity</param>
         /// <param name="keySelector">Key selector</param>
-        /// <param name="languageId">Lanagueg identifier</param>
+        /// <param name="languageId">Language identifier</param>
         /// <param name="returnDefaultValue">A value indicating whether to return default value (if localized is not found)</param>
         /// <param name="ensureTwoPublishedLanguages">A value indicating whether to ensure that we have at least two published languages; otherwise, load only default value</param>
         /// <returns>Localized property</returns>
