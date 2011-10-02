@@ -155,5 +155,20 @@ namespace Nop.Core.Domain.Catalog
         /// </summary>
         public bool UseSmallProductBoxOnHomePage { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to ignore tier prices (side-wide)
+        /// </summary>
+        public bool IgnoreTierPrices { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to ignore discounts (side-wide)
+        /// </summary>
+        public bool IgnoreDiscounts { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to ignore featured products (side-wide)
+        /// </summary>
+        public bool IgnoreFeaturedProducts { get; set; }
+
     }
 }

@@ -332,5 +332,32 @@
                 @Html.ValidationMessageFor(model => model.ProductsByTagPageSize)
             </td>
         </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.IgnoreTierPrices):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.IgnoreTierPrices)
+                @Html.ValidationMessageFor(model => model.IgnoreTierPrices)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.IgnoreDiscounts):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.IgnoreDiscounts)
+                @Html.ValidationMessageFor(model => model.IgnoreDiscounts)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.IgnoreFeaturedProducts):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.IgnoreFeaturedProducts)
+                @Html.ValidationMessageFor(model => model.IgnoreFeaturedProducts)
+            </td>
+        </tr>
     </table>
 }

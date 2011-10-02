@@ -95,11 +95,16 @@ namespace Nop.Services.Tests.Tax
 
             var customerRole = new CustomerRole()
             {
-                TaxExempt = true
+                TaxExempt = true,
+                Active = true
             };
             customer.CustomerRoles.Add(customerRole);
             _taxService.IsTaxExempt(null, customer).ShouldEqual(true);
             customerRole.TaxExempt = false;
+            _taxService.IsTaxExempt(null, customer).ShouldEqual(false);
+
+            //if role is not active, weshould ignore 'TaxExempt' property
+            customerRole.Active = false;
             _taxService.IsTaxExempt(null, customer).ShouldEqual(false);
         }
 

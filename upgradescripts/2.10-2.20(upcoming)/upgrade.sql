@@ -305,6 +305,24 @@ set @resources='
   <LocaleResource Name="Polls.Votes">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.IgnoreTierPrices">
+    <Value>Ignore tier prices (sitewide)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.IgnoreTierPrices.Hint">
+    <Value>Check to ignore tier prices (sitewide). It can significantly improve performance.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.IgnoreDiscounts">
+    <Value>Ignore discounts (sitewide)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.IgnoreDiscounts.Hint">
+    <Value>Check to ignore discounts (sitewide). It can significantly improve performance.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.IgnoreFeaturedProducts">
+    <Value>Ignore featured products (sitewide)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.IgnoreFeaturedProducts.Hint">
+    <Value>Check to ignore featured products (sitewide). It can significantly improve performance.</Value>
+  </LocaleResource>
 </Language>
 '
 

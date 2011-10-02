@@ -43,7 +43,7 @@ namespace Nop.Services.Tests.Customers
 
             _encryptionService = new EncryptionService(_securitySettings);
             _customerRepo = MockRepository.GenerateMock<IRepository<Customer>>();
-            var customer = new Customer() 
+            var customer1 = new Customer() 
             {
                 Username = "a@b.com",
                 Email = "a@b.com",
@@ -53,8 +53,9 @@ namespace Nop.Services.Tests.Customers
 
             string saltKey = _encryptionService.CreateSaltKey(5);
             string password = _encryptionService.CreatePasswordHash("password", saltKey);
-            customer.PasswordSalt = saltKey;
-            customer.Password = password;
+            customer1.PasswordSalt = saltKey;
+            customer1.Password = password;
+            AddCustomerToRegisteredRole(customer1);
 
             var customer2 = new Customer() 
             {
@@ -64,6 +65,7 @@ namespace Nop.Services.Tests.Customers
                 Password = "password",
                 Active = true
             };
+            AddCustomerToRegisteredRole(customer2);
 
             var customer3 = new Customer() 
             {
@@ -73,11 +75,31 @@ namespace Nop.Services.Tests.Customers
                 Password = _encryptionService.EncryptText("password"),
                 Active = true
             };
+            AddCustomerToRegisteredRole(customer3);
+
+            var customer4 = new Customer()
+            {
+                Username = "registered@test.com",
+                Email = "registered@test.com",
+                PasswordFormat = PasswordFormat.Clear,
+                Password = "password",
+                Active = true
+            };
+            AddCustomerToRegisteredRole(customer4);
+
+            var customer5 = new Customer()
+            {
+                Username = "notregistered@test.com",
+                Email = "notregistered@test.com",
+                PasswordFormat = PasswordFormat.Clear,
+                Password = "password",
+                Active = true
+            };
 
             _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
             _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
 
-            _customerRepo.Expect(x => x.Table).Return(new List<Customer>() { customer, customer2, customer3 }.AsQueryable());
+            _customerRepo.Expect(x => x.Table).Return(new List<Customer>() { customer1, customer2, customer3, customer4, customer5 }.AsQueryable());
 
             _customerRoleRepo = MockRepository.GenerateMock<IRepository<CustomerRole>>();
             _customerAttributeRepo = MockRepository.GenerateMock<IRepository<CustomerAttribute>>();
@@ -112,6 +134,16 @@ namespace Nop.Services.Tests.Customers
         //}
 
         [Test]
+        public void Ensure_only_registered_customers_can_login()
+        {
+            bool result = _customerService.ValidateCustomer("registered@test.com", "password");
+            result.ShouldBeTrue();
+
+            result = _customerService.ValidateCustomer("notregistered@test.com", "password");
+            result.ShouldBeFalse();
+        }
+
+        [Test]
         public void Can_validate_a_hashed_password() 
         {
             bool result = _customerService.ValidateCustomer("a@b.com", "password");
@@ -136,6 +168,16 @@ namespace Nop.Services.Tests.Customers
         {
             return new CustomerRegistrationRequest(customer, "test.user@domain.com", "test.user@domain.com", 
                 "password", PasswordFormat.Encrypted);
+        }
+
+        private void AddCustomerToRegisteredRole(Customer customer)
+        {
+            customer.CustomerRoles.Add(new CustomerRole()
+            {
+                Active =  true,
+                IsSystemRole = true,
+                SystemName = SystemCustomerRoleNames.Registered
+            });
         }
     }
 }

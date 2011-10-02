@@ -4500,7 +4500,10 @@ namespace Nop.Services.Installation
                     EnableDynamicPriceUpdate = false,
                     NumberOfProductTags = 15,
                     ProductsByTagPageSize = 4,
-                    UseSmallProductBoxOnHomePage =  true
+                    UseSmallProductBoxOnHomePage =  true,
+                    IgnoreTierPrices = false,
+                    IgnoreDiscounts = false,
+                    IgnoreFeaturedProducts = false,
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<LocalizationSettings>>()

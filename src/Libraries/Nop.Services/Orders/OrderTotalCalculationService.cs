@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Nop.Core;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
@@ -35,6 +36,7 @@ namespace Nop.Services.Orders
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly ShippingSettings _shippingSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
+        private readonly CatalogSettings _catalogSettings;
         #endregion
 
         #region Ctor
@@ -65,7 +67,8 @@ namespace Nop.Services.Orders
             TaxSettings taxSettings,
             RewardPointsSettings rewardPointsSettings,
             ShippingSettings shippingSettings,
-            ShoppingCartSettings shoppingCartSettings)
+            ShoppingCartSettings shoppingCartSettings,
+            CatalogSettings catalogSettings)
         {
             this._workContext = workContext;
             this._priceCalculationService = priceCalculationService;
@@ -79,6 +82,7 @@ namespace Nop.Services.Orders
             this._rewardPointsSettings = rewardPointsSettings;
             this._shippingSettings = shippingSettings;
             this._shoppingCartSettings = shoppingCartSettings;
+            this._catalogSettings = catalogSettings;
         }
 
         #endregion
@@ -298,7 +302,10 @@ namespace Nop.Services.Orders
         public virtual decimal GetOrderSubtotalDiscount(Customer customer,
             decimal orderSubTotal, out Discount appliedDiscount)
         {
+            appliedDiscount = null;
             decimal discountAmount = decimal.Zero;
+            if (_catalogSettings.IgnoreDiscounts)
+                return discountAmount;
 
             var allDiscounts = _discountService.GetAllDiscounts(DiscountType.AssignedToOrderSubTotal);
             var allowedDiscounts = new List<Discount>();
@@ -483,7 +490,10 @@ namespace Nop.Services.Orders
         /// <returns>Shipping discount</returns>
         public virtual decimal GetShippingDiscount(Customer customer, decimal shippingTotal, out Discount appliedDiscount)
         {
+            appliedDiscount = null;
             decimal shippingDiscountAmount = decimal.Zero;
+            if (_catalogSettings.IgnoreDiscounts)
+                return shippingDiscountAmount;
 
             var allDiscounts = _discountService.GetAllDiscounts(DiscountType.AssignedToShipping);
             var allowedDiscounts = new List<Discount>();
@@ -836,7 +846,10 @@ namespace Nop.Services.Orders
         /// <returns>Order discount</returns>
         public virtual decimal GetOrderTotalDiscount(Customer customer, decimal orderTotal, out Discount appliedDiscount)
         {
+            appliedDiscount = null;
             decimal discountAmount = decimal.Zero;
+            if (_catalogSettings.IgnoreDiscounts)
+                return discountAmount;
 
             var allDiscounts = _discountService.GetAllDiscounts(DiscountType.AssignedToOrderTotal);
             var allowedDiscounts = new List<Discount>();

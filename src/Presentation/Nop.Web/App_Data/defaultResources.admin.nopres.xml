@@ -3389,6 +3389,30 @@
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
+									<LocaleResource Name="IgnoreTierPrices">
+										<Value>Ignore tier prices (sitewide)</Value>
+										<Children>
+											<LocaleResource Name="Hint">
+												<Value>Check to ignore tier prices (sitewide). It can significantly improve performance.</Value>
+											</LocaleResource>
+										</Children>
+									</LocaleResource>
+									<LocaleResource Name="IgnoreDiscounts">
+										<Value>Ignore discounts (sitewide)</Value>
+										<Children>
+											<LocaleResource Name="Hint">
+												<Value>Check to ignore tier prices (sitewide). It can significantly improve performance.</Value>
+											</LocaleResource>
+										</Children>
+									</LocaleResource>
+									<LocaleResource Name="IgnoreFeaturedProducts">
+										<Value>Ignore featured products (sitewide)</Value>
+										<Children>
+											<LocaleResource Name="Hint">
+												<Value>Check to ignore tier prices (sitewide). It can significantly improve performance.</Value>
+											</LocaleResource>
+										</Children>
+									</LocaleResource>
 								</Children>
 							</LocaleResource>
 							<LocaleResource Name="CustomerUser">

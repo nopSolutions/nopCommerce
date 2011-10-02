@@ -20,18 +20,19 @@ namespace Nop.Services.Catalog
         private readonly ICategoryService _categoryService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly ShoppingCartSettings _shoppingCartSettings;
+        private readonly CatalogSettings _catalogSettings;
 
         public PriceCalculationService(IWorkContext workContext,
-            IDiscountService discountService,
-            ICategoryService categoryService,
-            IProductAttributeParser productAttributeParser,
-            ShoppingCartSettings shoppingCartSettings)
+            IDiscountService discountService, ICategoryService categoryService,
+            IProductAttributeParser productAttributeParser, ShoppingCartSettings shoppingCartSettings, 
+            CatalogSettings catalogSettings)
         {
             this._workContext = workContext;
             this._discountService = discountService;
             this._categoryService = categoryService;
             this._productAttributeParser = productAttributeParser;
             this._shoppingCartSettings = shoppingCartSettings;
+            this._catalogSettings = catalogSettings;
         }
         
         #region Utilities
@@ -46,6 +47,8 @@ namespace Nop.Services.Catalog
             Customer customer)
         {
             var allowedDiscounts = new List<Discount>();
+            if (_catalogSettings.IgnoreDiscounts)
+                return allowedDiscounts;
 
             foreach (var discount in productVariant.AppliedDiscounts)
             {
@@ -84,6 +87,9 @@ namespace Nop.Services.Catalog
         protected Discount GetPreferredDiscount(ProductVariant productVariant,
             Customer customer, decimal additionalCharge = decimal.Zero, int quantity = 1)
         {
+            if (_catalogSettings.IgnoreDiscounts)
+                return null;
+
             var allowedDiscounts = GetAllowedDiscounts(productVariant, customer);
             decimal finalPriceWithoutDiscount = GetFinalPrice(productVariant, customer, additionalCharge, false, quantity);
             var preferredDiscount = allowedDiscounts.GetPreferredDiscount(finalPriceWithoutDiscount);
@@ -99,6 +105,9 @@ namespace Nop.Services.Catalog
         /// <returns>Price</returns>
         protected decimal GetTierPrice(ProductVariant productVariant, Customer customer, int quantity)
         {
+            if (_catalogSettings.IgnoreTierPrices)
+                return decimal.Zero;
+
             var tierPrices = productVariant.TierPrices
                 .OrderBy(tp => tp.Quantity)
                 .ToList()
@@ -190,7 +199,7 @@ namespace Nop.Services.Catalog
             decimal initialPrice = productVariant.Price;
 
             //tier prices
-            if (productVariant.TierPrices.Count > 0)
+            if (!_catalogSettings.IgnoreTierPrices && productVariant.TierPrices.Count > 0)
             {
                 decimal tierPrice = GetTierPrice(productVariant, customer, quantity);
                 initialPrice = Math.Min(initialPrice, tierPrice);
@@ -277,20 +286,18 @@ namespace Nop.Services.Catalog
         /// <param name="quantity">Product quantity</param>
         /// <param name="appliedDiscount">Applied discount</param>
         /// <returns>Discount amount</returns>
-        public virtual decimal GetDiscountAmount(ProductVariant productVariant, 
+        public virtual decimal GetDiscountAmount(ProductVariant productVariant,
             Customer customer,
             decimal additionalCharge,
-            int quantity, 
+            int quantity,
             out Discount appliedDiscount)
         {
+            appliedDiscount = null;
             decimal appliedDiscountAmount = decimal.Zero;
 
             //we don't apply discounts to products with price entered by a customer
             if (productVariant.CustomerEntersPrice)
-            {
-                appliedDiscount = null;
                 return appliedDiscountAmount;
-            }
 
             appliedDiscount = GetPreferredDiscount(productVariant, customer, additionalCharge, quantity);
             if (appliedDiscount != null)
@@ -302,7 +309,7 @@ namespace Nop.Services.Catalog
             return appliedDiscountAmount;
         }
 
-        
+
         /// <summary>
         /// Gets the shopping cart item sub total
         /// </summary>

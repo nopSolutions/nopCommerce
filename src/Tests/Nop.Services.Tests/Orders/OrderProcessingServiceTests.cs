@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
@@ -71,6 +72,7 @@ namespace Nop.Services.Tests.Orders
         OrderSettings _orderSettings;
         LocalizationSettings _localizationSettings;
         ShoppingCartSettings _shoppingCartSettings;
+        CatalogSettings _catalogSettings;
         IOrderProcessingService _orderProcessingService;
         IEventPublisher _eventPublisher;
 
@@ -83,13 +85,14 @@ namespace Nop.Services.Tests.Orders
             var cacheManager = new NopNullCache();
 
             _shoppingCartSettings = new ShoppingCartSettings();
+            _catalogSettings = new CatalogSettings();
 
             //price calculation service
             _discountService = MockRepository.GenerateMock<IDiscountService>();
             _categoryService = MockRepository.GenerateMock<ICategoryService>();
             _productAttributeParser = MockRepository.GenerateMock<IProductAttributeParser>();
             _priceCalcService = new PriceCalculationService(_workContext, _discountService,
-                _categoryService, _productAttributeParser,_shoppingCartSettings);
+                _categoryService, _productAttributeParser, _shoppingCartSettings, _catalogSettings);
 
             _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
             _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
@@ -129,7 +132,7 @@ namespace Nop.Services.Tests.Orders
             _orderTotalCalcService = new OrderTotalCalculationService(_workContext,
                 _priceCalcService, _taxService, _shippingService, _paymentService,
                 _checkoutAttributeParser, _discountService, _giftCardService,
-                _taxSettings, _rewardPointsSettings, _shippingSettings, _shoppingCartSettings);
+                _taxSettings, _rewardPointsSettings, _shippingSettings, _shoppingCartSettings, _catalogSettings);
 
             _orderService = MockRepository.GenerateMock<IOrderService>();
             _webHelper = MockRepository.GenerateMock<IWebHelper>();

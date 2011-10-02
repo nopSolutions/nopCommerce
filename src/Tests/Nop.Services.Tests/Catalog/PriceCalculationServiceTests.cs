@@ -20,6 +20,7 @@ namespace Nop.Services.Tests.Catalog
         IProductAttributeParser _productAttributeParser;
         IPriceCalculationService _priceCalcService;
         ShoppingCartSettings _shoppingCartSettings;
+        CatalogSettings _catalogSettings;
 
         [SetUp]
         public new void SetUp()
@@ -33,9 +34,10 @@ namespace Nop.Services.Tests.Catalog
             _productAttributeParser = MockRepository.GenerateMock<IProductAttributeParser>();
 
             _shoppingCartSettings = new ShoppingCartSettings();
+            _catalogSettings = new CatalogSettings();
 
             _priceCalcService = new PriceCalculationService(_workContext, _discountService,
-                _categoryService, _productAttributeParser, _shoppingCartSettings);
+                _categoryService, _productAttributeParser, _shoppingCartSettings, _catalogSettings);
         }
 
         [Test]

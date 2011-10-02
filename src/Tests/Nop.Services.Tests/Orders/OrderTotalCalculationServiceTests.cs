@@ -47,6 +47,7 @@ namespace Nop.Services.Tests.Orders
         ILogger _logger;
         IRepository<ShippingMethod> _shippingMethodRepository;
         ShoppingCartSettings _shoppingCartSettings;
+        CatalogSettings _catalogSettings;
         IEventPublisher _eventPublisher;
 
         [SetUp]
@@ -63,9 +64,10 @@ namespace Nop.Services.Tests.Orders
             _productAttributeParser = MockRepository.GenerateMock<IProductAttributeParser>();
 
             _shoppingCartSettings = new ShoppingCartSettings();
+            _catalogSettings = new CatalogSettings();
 
             _priceCalcService = new PriceCalculationService(_workContext, _discountService,
-                _categoryService, _productAttributeParser, _shoppingCartSettings);
+                _categoryService, _productAttributeParser, _shoppingCartSettings, _catalogSettings);
 
             _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
             _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
@@ -105,7 +107,7 @@ namespace Nop.Services.Tests.Orders
             _orderTotalCalcService = new OrderTotalCalculationService(_workContext,
                 _priceCalcService, _taxService, _shippingService, _paymentService,
                 _checkoutAttributeParser, _discountService, _giftCardService,
-                _taxSettings, _rewardPointsSettings, _shippingSettings, _shoppingCartSettings);
+                _taxSettings, _rewardPointsSettings, _shippingSettings, _shoppingCartSettings, _catalogSettings);
         }
 
         [Test]

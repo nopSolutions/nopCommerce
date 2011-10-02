@@ -782,7 +782,7 @@ namespace Nop.Web.Controllers
 
 
             //featured products
-            if (_categoryService.GetTotalNumberOfFeaturedProducts(categoryId) > 0)
+            if (!_catalogSettings.IgnoreFeaturedProducts && _categoryService.GetTotalNumberOfFeaturedProducts(categoryId) > 0)
             {
                 //We use the fast GetTotalNumberOfFeaturedProducts before invoking of the slow SearchProducts
                 //to ensure that we have at least one featured product
@@ -926,7 +926,7 @@ namespace Nop.Web.Controllers
 
 
             //featured products
-            if (_manufacturerService.GetTotalNumberOfFeaturedProducts(manufacturerId) > 0)
+            if (!_catalogSettings.IgnoreFeaturedProducts && _manufacturerService.GetTotalNumberOfFeaturedProducts(manufacturerId) > 0)
             {
                 //We use the fast GetTotalNumberOfFeaturedProducts before invoking of the slow SearchProducts
                 //to ensure that we have at least one featured product
@@ -1344,37 +1344,35 @@ namespace Nop.Web.Controllers
         [ChildActionOnly]
         public ActionResult ProductTierPrices(int productVariantId)
         {
-            if (!_catalogSettings.HidePricesForNonRegistered ||
-                !_workContext.CurrentCustomer.IsGuest())
-            {
-                var variant = _productService.GetProductVariantById(productVariantId);
-                if (variant == null)
-                    throw new ArgumentException("No product variant found with the specified id");
-                
-                var model = _productService.GetTierPricesByProductVariantId(productVariantId)
-                    .FilterForCustomer(_workContext.CurrentCustomer)
-                    .Select(tierPrice =>
-                    {
-                        var m = new ProductModel.ProductVariantModel.TierPriceModel()
-                        {
-                            Quantity = tierPrice.Quantity,
-                        };
-                        decimal taxRate = decimal.Zero;
-                        decimal priceBase = _taxService.GetProductPrice(variant, tierPrice.Price, out taxRate);
-                        decimal price = _currencyService.ConvertFromPrimaryStoreCurrency(priceBase, _workContext.WorkingCurrency);
-                        m.Price = _priceFormatter.FormatPrice(price, false, false);
+            if (_catalogSettings.IgnoreTierPrices)
+                return Content(""); //ignore tier prices
+            
+            if (_catalogSettings.HidePricesForNonRegistered &&
+                _workContext.CurrentCustomer.IsGuest())
+                return Content(""); //hide prices
 
-                        return m;
-                    })
-                    .ToList();
+            var variant = _productService.GetProductVariantById(productVariantId);
+            if (variant == null)
+                throw new ArgumentException("No product variant found with the specified id");
 
-                return PartialView(model);
-            }
-            else
-            {
-                //hide prices
-                return Content("");
-            }
+            var model = _productService.GetTierPricesByProductVariantId(productVariantId)
+                .FilterForCustomer(_workContext.CurrentCustomer)
+                .Select(tierPrice =>
+                            {
+                                var m = new ProductModel.ProductVariantModel.TierPriceModel()
+                                {
+                                    Quantity = tierPrice.Quantity,
+                                };
+                                decimal taxRate = decimal.Zero;
+                                decimal priceBase = _taxService.GetProductPrice(variant, tierPrice.Price, out taxRate);
+                                decimal price = _currencyService.ConvertFromPrimaryStoreCurrency(priceBase,_workContext.WorkingCurrency);
+                                m.Price = _priceFormatter.FormatPrice(price, false, false);
+
+                                return m;
+                            })
+                .ToList();
+
+            return PartialView(model);
         }
 
         [ChildActionOnly]
