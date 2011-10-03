@@ -638,6 +638,7 @@ ul.languagelist li:hover{cursor:pointer;}
 .producttags-box .title{padding:10px 10px 10px 0;font-weight:700;text-transform:uppercase;clear:both;}
 .producttags-box .producttags-list{}
 .producttags-box .producttags-list a{text-decoration:underline;}
+.producttags-box .producttags-list .producttags-wrapper{float:left;}
 .tier-prices{text-align:center;margin-bottom:10px;}
 .tier-prices .prices-header{background:#7692B9;color:#FFF;padding:3px;font-weight:700;}
 .tier-prices .prices table{width:100%;border-collapse:collapse;text-align:center;vertical-align:middle;background:#f3f3f3;}
