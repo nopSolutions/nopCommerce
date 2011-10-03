@@ -7,6 +7,8 @@ namespace Nop.Core.Domain.Common
     {
         public bool UseSystemEmailForContactUsForm { get; set; }
 
+        public bool UseStoredProceduresIfSupported { get; set; }
+
         public bool HideAdvertisementsOnAdminArea { get; set; }
 
         public bool SitemapEnabled { get; set; }

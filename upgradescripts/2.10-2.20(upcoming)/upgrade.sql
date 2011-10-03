@@ -699,3 +699,13 @@ GO
 
 ALTER TABLE [dbo].[Language] ALTER COLUMN [Rtl] bit NOT NULL
 GO
+
+
+
+--stored procedures support
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'commonsettings.usestoredproceduresifsupported')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'commonsettings.usestoredproceduresifsupported', N'true')
+END
+GO

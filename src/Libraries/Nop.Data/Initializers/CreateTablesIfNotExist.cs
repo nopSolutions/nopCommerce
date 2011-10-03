@@ -9,15 +9,19 @@ namespace Nop.Data.Initializers
 {
     public class CreateTablesIfNotExist<TContext> : IDatabaseInitializer<TContext> where TContext : DbContext
     {
-        private string[] _tablesToValidate;
+        private readonly string[] _tablesToValidate;
+        private readonly string[] _customCommands;
+
         /// <summary>
         /// Ctor
         /// </summary>
         /// <param name="tablesToValidate">A list of existing table names to validate; null to don't validate table names</param>
-        public CreateTablesIfNotExist(string[] tablesToValidate)
+        /// <param name="customCommands">A list of custom commands to execute</param>
+        public CreateTablesIfNotExist(string[] tablesToValidate, string [] customCommands)
             : base()
         {
             this._tablesToValidate = tablesToValidate;
+            this._customCommands = customCommands;
         }
         public void InitializeDatabase(TContext context)
         {
@@ -54,7 +58,11 @@ namespace Nop.Data.Initializers
                     //Seed(context);
                     context.SaveChanges();
 
-                    context.InstallNopCommerceIndexes();
+                    if (_customCommands != null && _customCommands.Length > 0)
+                    {
+                        foreach (var command in _customCommands)
+                            context.Database.ExecuteSqlCommand(command);
+                    }
                 }
             }
             else

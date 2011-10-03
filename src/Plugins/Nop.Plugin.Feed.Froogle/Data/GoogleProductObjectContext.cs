@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using Nop.Core;
@@ -65,6 +67,12 @@ namespace Nop.Plugin.Feed.Froogle.Data
             catch
             {
             }
+        }
+
+
+        public IList<TEntity> ExecuteStoredProcedureList<TEntity>(string commandText, params object[] parameters) where TEntity : BaseEntity, new()
+        {
+            throw new NotImplementedException();
         }
     }
 }

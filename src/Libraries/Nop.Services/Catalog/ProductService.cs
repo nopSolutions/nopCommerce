@@ -1,13 +1,17 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Events;
+using Nop.Data;
 using Nop.Services.Messages;
 
 namespace Nop.Services.Catalog
@@ -38,8 +42,11 @@ namespace Nop.Services.Catalog
         private readonly IProductAttributeService _productAttributeService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IWorkflowMessageService _workflowMessageService;
+        private readonly IDataProvider _dataProvider;
+        private readonly IDbContext _dbContext;
         private readonly ICacheManager _cacheManager;
         private readonly LocalizationSettings _localizationSettings;
+        private readonly CommonSettings _commonSettings;
         private readonly IEventPublisher _eventPublisher;
 
         #endregion
@@ -59,7 +66,10 @@ namespace Nop.Services.Catalog
         /// <param name="productAttributeService">Product attribute service</param>
         /// <param name="productAttributeParser">Product attribute parser service</param>
         /// <param name="workflowMessageService">Workflow message service</param>
+        /// <param name="dataProvider">Data provider</param>
+        /// <param name="dbContext">Database Context</param>
         /// <param name="localizationSettings">Localization settings</param>
+        /// <param name="commonSettings">Common settings</param>
         /// <param name="eventPublisher"></param>
         public ProductService(ICacheManager cacheManager,
             IRepository<Product> productRepository,
@@ -71,7 +81,8 @@ namespace Nop.Services.Catalog
             IProductAttributeService productAttributeService,
             IProductAttributeParser productAttributeParser,
             IWorkflowMessageService workflowMessageService,
-            LocalizationSettings localizationSettings,
+            IDataProvider dataProvider, IDbContext dbContext,
+            LocalizationSettings localizationSettings, CommonSettings commonSettings,
             IEventPublisher eventPublisher)
         {
             _cacheManager = cacheManager;
@@ -84,7 +95,10 @@ namespace Nop.Services.Catalog
             _productAttributeService = productAttributeService;
             _productAttributeParser = productAttributeParser;
             _workflowMessageService = workflowMessageService;
+            _dataProvider = dataProvider;
+            _dbContext = dbContext;
             _localizationSettings = localizationSettings;
+            _commonSettings = commonSettings;
             _eventPublisher = eventPublisher;
         }
 
@@ -224,145 +238,213 @@ namespace Nop.Services.Catalog
             IList<int> filteredSpecs, ProductSortingEnum orderBy,
             int pageIndex, int pageSize, bool showHidden = false)
         {
-            //products
-            var query = _productRepository.Table;
-            query = query.Where(p => !p.Deleted);
-            if (!showHidden)
+            if (_commonSettings.UseStoredProceduresIfSupported && _dataProvider.StoredProceduredSupported)
             {
-                query = query.Where(p => p.Published);
-            }
+                //stored procedures are enabled and supported by the database. 
+                //It's much faster than the LINQ implementation below 
 
-            //searching by keyword
-            if (!String.IsNullOrWhiteSpace(keywords))
+                //TODO We should not reference SqlParameter here. DAL should do it.
+                var pTotalRecords = new SqlParameter { ParameterName = "TotalRecords", Direction = ParameterDirection.Output, SqlDbType = SqlDbType.Int };
+
+                string commaSeparatedSpecIds = "";
+                if (filteredSpecs != null)
+                {
+                    ((List<int>)filteredSpecs).Sort();
+                    for (int i = 0; i < filteredSpecs.Count; i++)
+                    {
+                        commaSeparatedSpecIds += filteredSpecs[i].ToString();
+                        if (i != filteredSpecs.Count - 1)
+                        {
+                            commaSeparatedSpecIds += ",";
+                        }
+                    }
+                }
+
+                //some databases don't support int.MaxValue
+                if (pageSize == int.MaxValue)
+                    pageSize = int.MaxValue - 1;
+
+                var products = _dbContext.ExecuteStoredProcedureList<Product>(
+                    //"EXEC [ProductLoadAllPaged] @CategoryId, @ManufacturerId, @ProductTagId, @FeaturedProducts, @PriceMin, @PriceMax, @Keywords, @SearchDescriptions, @FilteredSpecs, @LanguageId, @OrderBy, @PageIndex, @PageSize, @ShowHidden, @TotalRecords",
+                    "ProductLoadAllPaged",
+                    new SqlParameter { ParameterName = "CategoryId", Value = categoryId, SqlDbType = SqlDbType.Int },
+                    new SqlParameter { ParameterName = "ManufacturerId", Value = manufacturerId, SqlDbType = SqlDbType.Int },
+                    new SqlParameter { ParameterName = "ProductTagId", Value = productTagId, SqlDbType = SqlDbType.Int },
+                    new SqlParameter { ParameterName = "FeaturedProducts", Value = featuredProducts.HasValue ? (object)featuredProducts.Value : DBNull.Value, SqlDbType = SqlDbType.Bit },
+                    new SqlParameter { ParameterName = "PriceMin", Value = priceMin.HasValue ? (object)priceMin.Value : DBNull.Value, SqlDbType = SqlDbType.Decimal },
+                    new SqlParameter { ParameterName = "PriceMax", Value = priceMax.HasValue ? (object)priceMax.Value : DBNull.Value, SqlDbType = SqlDbType.Decimal },
+                    new SqlParameter { ParameterName = "Keywords", Value = keywords != null ? (object)keywords : DBNull.Value, SqlDbType = SqlDbType.NVarChar },
+                    new SqlParameter { ParameterName = "SearchDescriptions", Value = searchDescriptions, SqlDbType = SqlDbType.Bit },
+                    new SqlParameter { ParameterName = "FilteredSpecs", Value = commaSeparatedSpecIds != null ? (object)commaSeparatedSpecIds : DBNull.Value, SqlDbType = SqlDbType.NVarChar },
+                    new SqlParameter { ParameterName = "LanguageId", Value = languageId, SqlDbType = SqlDbType.Int },
+                    new SqlParameter { ParameterName = "OrderBy", Value = (int)orderBy, SqlDbType = SqlDbType.Int },
+                    new SqlParameter { ParameterName = "PageIndex", Value = pageIndex, SqlDbType = SqlDbType.Int },
+                    new SqlParameter { ParameterName = "PageSize", Value = pageSize, SqlDbType = SqlDbType.Int },
+                    new SqlParameter { ParameterName = "ShowHidden", Value = showHidden, SqlDbType = SqlDbType.Bit },
+                    pTotalRecords);
+                int totalRecords = (pTotalRecords.Value != DBNull.Value) ? Convert.ToInt32(pTotalRecords.Value) : 0;
+                return new PagedList<Product>(products, pageIndex, pageSize, totalRecords);
+            }
+            else
             {
+                //stored procedures aren't supported. Use LINQ
+
+                #region Search products
+
+                //products
+                var query = _productRepository.Table;
+                query = query.Where(p => !p.Deleted);
+                if (!showHidden)
+                {
+                    query = query.Where(p => p.Published);
+                }
+
+                //searching by keyword
+                if (!String.IsNullOrWhiteSpace(keywords))
+                {
+                    query = from p in query
+                            //join pv in _productVariantRepository.Table on p.Id equals pv.ProductId into p_pv
+                            //from pv in p_pv.DefaultIfEmpty()
+                            from pv in p.ProductVariants.DefaultIfEmpty()
+                            where (p.Name.Contains(keywords)) ||
+                                  (searchDescriptions && p.ShortDescription.Contains(keywords)) ||
+                                  (searchDescriptions && p.FullDescription.Contains(keywords)) ||
+                                  (pv.Name.Contains(keywords)) ||
+                                  (searchDescriptions && pv.Description.Contains(keywords))
+                            select p;
+                    //TODO search localized values
+                }
+
+                //product variants
+                //The function 'CurrentUtcDateTime' is not supported by SQL Server Compact. 
+                //That's why we pass the date value
+                var nowUtc = DateTime.UtcNow;
                 query = from p in query
                         //join pv in _productVariantRepository.Table on p.Id equals pv.ProductId into p_pv
                         //from pv in p_pv.DefaultIfEmpty()
                         from pv in p.ProductVariants.DefaultIfEmpty()
-                        where (p.Name.Contains(keywords)) ||
-                        (searchDescriptions && p.ShortDescription.Contains(keywords)) ||
-                        (searchDescriptions && p.FullDescription.Contains(keywords)) ||
-                        (pv.Name.Contains(keywords)) ||
-                        (searchDescriptions && pv.Description.Contains(keywords))
+                        where (showHidden || !pv.Deleted) &&
+                              (showHidden || pv.Published) &&
+                              (!priceMin.HasValue || pv.Price >= priceMin.Value) &&
+                              (!priceMax.HasValue || pv.Price <= priceMax.Value) &&
+                              (showHidden ||
+                               (!pv.AvailableStartDateTimeUtc.HasValue || pv.AvailableStartDateTimeUtc.Value < nowUtc)) &&
+                              (showHidden ||
+                               (!pv.AvailableEndDateTimeUtc.HasValue || pv.AvailableEndDateTimeUtc.Value > nowUtc))
                         select p;
-                //TODO search localized values
-            }
-
-            //product variants
-            //The function 'CurrentUtcDateTime' is not supported by SQL Server Compact. 
-            //That's why we pass the date value
-            var nowUtc = DateTime.UtcNow;
-            query = from p in query
-                    //join pv in _productVariantRepository.Table on p.Id equals pv.ProductId into p_pv
-                    //from pv in p_pv.DefaultIfEmpty()
-                    from pv in p.ProductVariants.DefaultIfEmpty()
-                    where (showHidden || !pv.Deleted) &&
-                    (showHidden || pv.Published) &&
-                    (!priceMin.HasValue || pv.Price >= priceMin.Value) &&
-                    (!priceMax.HasValue || pv.Price <= priceMax.Value) &&
-                    (showHidden || (!pv.AvailableStartDateTimeUtc.HasValue || pv.AvailableStartDateTimeUtc.Value < nowUtc)) &&
-                    (showHidden || (!pv.AvailableEndDateTimeUtc.HasValue || pv.AvailableEndDateTimeUtc.Value > nowUtc))
-                    select p;
 
 
-            //search by specs
-            if (filteredSpecs != null && filteredSpecs.Count > 0)
-            {
+                //search by specs
+                if (filteredSpecs != null && filteredSpecs.Count > 0)
+                {
+                    query = from p in query
+                            where !filteredSpecs
+                                       .Except(
+                                           p.ProductSpecificationAttributes.Where(psa => psa.AllowFiltering).Select(
+                                               psa => psa.SpecificationAttributeOptionId))
+                                       .Any()
+                            select p;
+                }
+
+                //category filtering
+                if (categoryId > 0)
+                {
+                    query = from p in query
+                            from pc in p.ProductCategories.Where(pc => pc.CategoryId == categoryId)
+                            where (!featuredProducts.HasValue || featuredProducts.Value == pc.IsFeaturedProduct)
+                            select p;
+                }
+
+                //manufacturer filtering
+                if (manufacturerId > 0)
+                {
+                    query = from p in query
+                            from pm in p.ProductManufacturers.Where(pm => pm.ManufacturerId == manufacturerId)
+                            where (!featuredProducts.HasValue || featuredProducts.Value == pm.IsFeaturedProduct)
+                            select p;
+                }
+
+                //related products filtering
+                //if (relatedToProductId > 0)
+                //{
+                //    query = from p in query
+                //            join rp in _relatedProductRepository.Table on p.Id equals rp.ProductId2
+                //            where (relatedToProductId == rp.ProductId1)
+                //            select p;
+                //}
+
+                //tag filtering
+                if (productTagId > 0)
+                {
+                    query = from p in query
+                            from pt in p.ProductTags.Where(pt => pt.Id == productTagId)
+                            select p;
+                }
+
+                //only distinct products (group by ID)
+                //if we use standard Distinct() method, then all fields will be compared (low performance)
+                //it'll not work in SQl Server Compact when searching products by a keyword)
                 query = from p in query
-                        where !filteredSpecs
-                        .Except(p.ProductSpecificationAttributes.Where(psa => psa.AllowFiltering).Select(psa => psa.SpecificationAttributeOptionId))
-                        .Any()
-                        select p;
-            }
+                        group p by p.Id
+                            into pGroup
+                            orderby pGroup.Key
+                            select pGroup.FirstOrDefault();
 
-            //category filtering
-            if (categoryId > 0)
-            {
-                query = from p in query
-                        from pc in p.ProductCategories.Where(pc => pc.CategoryId == categoryId)
-                        where (!featuredProducts.HasValue || featuredProducts.Value == pc.IsFeaturedProduct)
-                        select p;
-            }
+                //sort products
+                if (orderBy == ProductSortingEnum.Position && categoryId > 0)
+                {
+                    //category position
+                    //query = query.OrderBy(p => p.ProductCategories.FirstOrDefault().DisplayOrder);
 
-            //manufacturer filtering
-            if (manufacturerId > 0)
-            {
-                query = from p in query
-                        from pm in p.ProductManufacturers.Where(pm => pm.ManufacturerId == manufacturerId)
-                        where (!featuredProducts.HasValue || featuredProducts.Value == pm.IsFeaturedProduct)
-                        select p;
-            }
+                    //category position
+                    query =
+                        query.OrderBy(
+                            p =>
+                            p.ProductCategories.Where(pc => pc.CategoryId == categoryId).FirstOrDefault().DisplayOrder);
+                }
+                else if (orderBy == ProductSortingEnum.Position && manufacturerId > 0)
+                {
+                    //manufacturer position
+                    //query = query.OrderBy(p => p.ProductManufacturers.FirstOrDefault().DisplayOrder);
 
-            //related products filtering
-            //if (relatedToProductId > 0)
-            //{
-            //    query = from p in query
-            //            join rp in _relatedProductRepository.Table on p.Id equals rp.ProductId2
-            //            where (relatedToProductId == rp.ProductId1)
-            //            select p;
-            //}
+                    //manufacturer position
+                    query =
+                        query.OrderBy(
+                            p =>
+                            p.ProductManufacturers.Where(pm => pm.ManufacturerId == manufacturerId).FirstOrDefault().
+                                DisplayOrder);
+                }
+                //else if (orderBy == ProductSortingEnum.Position && relatedToProductId > 0)
+                //{
+                //    //sort by related product display order
+                //    query = from p in query
+                //            join rp in _relatedProductRepository.Table on p.Id equals rp.ProductId2
+                //            where (relatedToProductId == rp.ProductId1)
+                //            orderby rp.DisplayOrder
+                //            select p;
+                //}
+                else if (orderBy == ProductSortingEnum.Position)
+                {
+                    query = query.OrderBy(p => p.Name);
+                }
+                else if (orderBy == ProductSortingEnum.Name)
+                {
+                    query = query.OrderBy(p => p.Name);
+                }
+                else if (orderBy == ProductSortingEnum.Price)
+                {
+                    query = query.OrderBy(p => p.ProductVariants.FirstOrDefault().Price);
+                }
+                else if (orderBy == ProductSortingEnum.CreatedOn)
+                    query = query.OrderByDescending(p => p.CreatedOnUtc);
+                else
+                    query = query.OrderBy(p => p.Name);
 
-            //tag filtering
-            if (productTagId > 0)
-            {
-                query = from p in query
-                        from pt in p.ProductTags.Where(pt => pt.Id == productTagId)
-                        select p;
-            }
+                var products = new PagedList<Product>(query, pageIndex, pageSize);
+                return products;
 
-            //only distinct products (group by ID)
-            //if we use standard Distinct() method, then all fields will be compared (low performance)
-            //it'll not work in SQl Server Compact when searching products by a keyword)
-            query = from p in query
-                         group p by p.Id into pGroup
-                         orderby pGroup.Key
-                         select pGroup.FirstOrDefault();
-            
-            //sort products
-            if (orderBy == ProductSortingEnum.Position && categoryId > 0)
-            {
-                //category position
-                //query = query.OrderBy(p => p.ProductCategories.FirstOrDefault().DisplayOrder);
-
-                //category position
-                query = query.OrderBy(p => p.ProductCategories.Where(pc => pc.CategoryId == categoryId).FirstOrDefault().DisplayOrder);
+                #endregion
             }
-            else if (orderBy == ProductSortingEnum.Position && manufacturerId > 0)
-            {
-                //manufacturer position
-                //query = query.OrderBy(p => p.ProductManufacturers.FirstOrDefault().DisplayOrder);
-
-                //manufacturer position
-                query = query.OrderBy(p => p.ProductManufacturers.Where(pm => pm.ManufacturerId == manufacturerId).FirstOrDefault().DisplayOrder);
-            }
-            //else if (orderBy == ProductSortingEnum.Position && relatedToProductId > 0)
-            //{
-            //    //sort by related product display order
-            //    query = from p in query
-            //            join rp in _relatedProductRepository.Table on p.Id equals rp.ProductId2
-            //            where (relatedToProductId == rp.ProductId1)
-            //            orderby rp.DisplayOrder
-            //            select p;
-            //}
-            else if (orderBy == ProductSortingEnum.Position)
-            {
-                query = query.OrderBy(p => p.Name);
-            }
-            else if (orderBy == ProductSortingEnum.Name)
-            {
-                query = query.OrderBy(p => p.Name);
-            }
-            else if (orderBy == ProductSortingEnum.Price)
-            {
-                query = query.OrderBy(p => p.ProductVariants.FirstOrDefault().Price);
-            }
-            else if (orderBy == ProductSortingEnum.CreatedOn)
-                query = query.OrderByDescending(p => p.CreatedOnUtc);
-            else
-                query = query.OrderBy(p => p.Name);
-
-            var products = new PagedList<Product>(query, pageIndex, pageSize);
-            return products;
         }
 
         /// <summary>

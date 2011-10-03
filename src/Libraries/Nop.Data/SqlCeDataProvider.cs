@@ -1,6 +1,5 @@
 ﻿using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
-using System.Web.Hosting;
 using Nop.Data.Initializers;
 
 namespace Nop.Data
@@ -17,6 +16,11 @@ namespace Nop.Data
             //var initializer = new CreateDatabaseIfNotExists<NopObjectContext>();
             var initializer = new CreateCeDatabaseIfNotExists<NopObjectContext>();
             Database.SetInitializer<NopObjectContext>(initializer);
+        }
+
+        public override bool StoredProceduredSupported
+        {
+            get { return false; }
         }
     }
 }

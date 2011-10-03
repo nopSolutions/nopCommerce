@@ -4443,6 +4443,7 @@ namespace Nop.Services.Installation
                 .SaveSettings(new CommonSettings()
                 {
                     UseSystemEmailForContactUsForm = true,
+                    UseStoredProceduresIfSupported = true,
                     SitemapEnabled = true,
                     SitemapIncludeCategories = true,
                     SitemapIncludeManufacturers = true,

@@ -61,7 +61,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Catalog\ProductServiceTests.cs" />
     <Compile Include="Catalog\PriceCalculationServiceTests.cs" />
     <Compile Include="Catalog\ProductAttributeParserAndFormatterTests.cs" />
     <Compile Include="Catalog\PriceFormatterTests.cs" />

@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using Nop.Core;
@@ -57,6 +59,11 @@ namespace Nop.Plugin.Tax.CountryStateZip.Data
             var dbScript = "DROP TABLE TaxRate";
             Database.ExecuteSqlCommand(dbScript);
             SaveChanges();
+        }
+
+        public IList<TEntity> ExecuteStoredProcedureList<TEntity>(string commandText, params object[] parameters) where TEntity : BaseEntity, new()
+        {
+            throw new NotImplementedException();
         }
     }
 }

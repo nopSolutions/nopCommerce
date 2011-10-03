@@ -245,6 +245,7 @@
     <Compile Include="Validators\Common\ContactUsValidator.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\SqlServer.StoredProcedures.sql" />
     <Content Include="App_Data\defaultResources.plugins.nopres.xml">
       <SubType>Designer</SubType>
     </Content>
@@ -254,6 +255,7 @@
     <Content Include="App_Data\defaultResources.public.nopres.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="App_Data\SqlServer.Indexes.sql" />
     <Content Include="Content\2011.2.712\Black\editor.png" />
     <Content Include="Content\2011.2.712\Black\imagebrowser.png" />
     <Content Include="Content\2011.2.712\Black\loading.gif" />

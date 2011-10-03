@@ -48,6 +48,26 @@ namespace Nop.Core
             this.AddRange(source.Skip(pageIndex * pageSize).Take(pageSize).ToList());
         }
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="source">source</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <param name="totalCount">Total count</param>
+        public PagedList(IEnumerable<T> source, int pageIndex, int pageSize, int totalCount)
+        {
+            TotalCount = totalCount;
+            TotalPages = TotalCount / pageSize;
+
+            if (TotalCount % pageSize > 0)
+                TotalPages++;
+
+            this.PageSize = pageSize;
+            this.PageIndex = pageIndex;
+            this.AddRange(source);
+        }
+
         public int PageIndex { get; private set; }
         public int PageSize { get; private set; }
         public int TotalCount { get; private set; }
