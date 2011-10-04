@@ -10,6 +10,7 @@ using Nop.Core.Domain.Tax;
 using Nop.Core.Events;
 using Nop.Core.Plugins;
 using Nop.Services.Common;
+using System.Text.RegularExpressions;
 
 namespace Nop.Services.Tax
 {
@@ -552,8 +553,7 @@ namespace Nop.Services.Tax
         /// <returns>VAT Number status</returns>
         public virtual VatNumberStatus GetVatNumberStatus(string fullVatNumber)
         {
-            string name = string.Empty;
-            string address = string.Empty;
+            string name, address;
             return GetVatNumberStatus(fullVatNumber, out name, out address);
         }
 
@@ -575,14 +575,13 @@ namespace Nop.Services.Tax
             fullVatNumber = fullVatNumber.Trim();
             
             //GB 111 1111 111 or GB 1111111111
-            string twoLetterIsoCode = "", vatNumber = "";
-            //should be refactored
-            var fullVatNumberArray = fullVatNumber.Split(new char[] {' '},  StringSplitOptions.RemoveEmptyEntries);
-            if (fullVatNumberArray.Length < 2)
-                return VatNumberStatus.Empty;
-            twoLetterIsoCode = fullVatNumberArray[0];
-            for (var i = 1; i < fullVatNumberArray.Length; i++)
-                vatNumber+=fullVatNumberArray[i];
+            //more advanced regex - http://codeigniter.com/wiki/European_Vat_Checker
+            var r = new Regex(@"^(\w{2})(.*)");
+            var match = r.Match(fullVatNumber);
+            if (!match.Success)
+                return VatNumberStatus.Invalid;
+            var twoLetterIsoCode = match.Groups[1].Value;
+            var vatNumber = match.Groups[2].Value;
 
             return GetVatNumberStatus(twoLetterIsoCode, vatNumber, out name, out address);
         }
@@ -595,8 +594,7 @@ namespace Nop.Services.Tax
         /// <returns>VAT Number status</returns>
         public virtual VatNumberStatus GetVatNumberStatus(string twoLetterIsoCode, string vatNumber)
         {
-            string name = string.Empty;
-            string address = string.Empty;
+            string name, address;
             return GetVatNumberStatus(twoLetterIsoCode, vatNumber, out name, out address);
         }
         
