@@ -21,5 +21,10 @@
         void AddCssFileParts(params string[] parts);
         void AppendCssFileParts(params string[] parts);
         string GenerateCssFiles();
+
+
+        void AddCanonicalUrlParts(params string[] parts);
+        void AppendCanonicalUrlParts(params string[] parts);
+        string GenerateCanonicalUrls();
     }
 }

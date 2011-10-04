@@ -12,5 +12,7 @@ namespace Nop.Core.Domain.Common
 
         public bool ConvertNonWesternChars { get; set; }
         public bool AllowUnicodeCharsInUrls { get; set; }
+
+        public bool CanonicalUrlsEnabled { get; set; }
     }
 }

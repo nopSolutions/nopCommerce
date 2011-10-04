@@ -678,6 +678,7 @@ namespace Nop.Admin.Controllers
             model.SeoSettings.DefaultMetaKeywords = _seoSettings.DefaultMetaKeywords;
             model.SeoSettings.DefaultMetaDescription = _seoSettings.DefaultMetaDescription;
             model.SeoSettings.ConvertNonWesternChars = _seoSettings.ConvertNonWesternChars;
+            model.SeoSettings.CanonicalUrlsEnabled = _seoSettings.CanonicalUrlsEnabled;
             
             //security settings
             model.SecuritySettings.EncryptionKey = _securitySettings.EncryptionKey;
@@ -731,6 +732,7 @@ namespace Nop.Admin.Controllers
             _seoSettings.DefaultMetaKeywords = model.SeoSettings.DefaultMetaKeywords;
             _seoSettings.DefaultMetaDescription = model.SeoSettings.DefaultMetaDescription;
             _seoSettings.ConvertNonWesternChars = model.SeoSettings.ConvertNonWesternChars;
+            _seoSettings.CanonicalUrlsEnabled = model.SeoSettings.CanonicalUrlsEnabled;
             _settingService.SaveSetting(_seoSettings);
 
 

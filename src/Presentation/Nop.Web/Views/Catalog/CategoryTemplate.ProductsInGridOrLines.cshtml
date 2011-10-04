@@ -1,25 +1,30 @@
-﻿@model Nop.Web.Models.Catalog.CategoryModel
+﻿@model CategoryModel
 @{
     Layout = "~/Views/Shared/_ColumnsThree.cshtml";
     Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Name);
     Html.AddMetaDescriptionParts(Model.MetaDescription);
     Html.AddMetaKeywordParts(Model.MetaKeywords);
+
+    var canonicalUrlsEnabled = EngineContext.Current.Resolve<SeoSettings>().CanonicalUrlsEnabled;
+    if (canonicalUrlsEnabled)
+    {
+        var categoryUrl = Url.RouteUrl("Category", new { categoryId = Model.Id, SeName = Model.SeName }, this.Request.Url.Scheme);
+        Html.AddCanonicalUrlParts(categoryUrl);
+    }
 }
 @using Nop.Core;
+@using Nop.Core.Domain.Common;
 @using Nop.Core.Infrastructure;
 @using Nop.Web;
 @using Nop.Web.Framework.UI;
 @using Nop.Web.Models.Catalog;
-@{
-    var storeUrl = EngineContext.Current.Resolve<IWebHelper>().GetStoreLocation();
-}
 <div class="category-page">
 
     @*category breadcrumb*@
     @if (Model.DisplayCategoryBreadcrumb)
     {
         <div class="breadcrumb">
-            <a href='@storeUrl'>@T("Categories.Breadcrumb.Top")</a> /
+            <a href="@Url.RouteUrl("HomePage")">@T("Categories.Breadcrumb.Top")</a> /
             @for (int i = 0; i < Model.CategoryBreadcrumb.Count; i++)
             {
                 var catBr = Model.CategoryBreadcrumb[i];

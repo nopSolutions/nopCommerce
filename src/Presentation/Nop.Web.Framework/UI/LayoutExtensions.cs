@@ -95,5 +95,24 @@ namespace Nop.Web.Framework.UI
             html.AppendCssFileParts(parts);
             return MvcHtmlString.Create(pageTitleBuilder.GenerateCssFiles());
         }
+
+
+
+        public static void AddCanonicalUrlParts(this HtmlHelper html, params string[] parts)
+        {
+            var pageTitleBuilder = EngineContext.Current.Resolve<IPageTitleBuilder>();
+            pageTitleBuilder.AddCanonicalUrlParts(parts);
+        }
+        public static void AppendCanonicalUrlParts(this HtmlHelper html, params string[] parts)
+        {
+            var pageTitleBuilder = EngineContext.Current.Resolve<IPageTitleBuilder>();
+            pageTitleBuilder.AppendCanonicalUrlParts(parts);
+        }
+        public static MvcHtmlString NopCanonicalUrls(this HtmlHelper html, params string[] parts)
+        {
+            var pageTitleBuilder = EngineContext.Current.Resolve<IPageTitleBuilder>();
+            html.AppendCanonicalUrlParts(parts);
+            return MvcHtmlString.Create(pageTitleBuilder.GenerateCanonicalUrls());
+        }
     }
 }

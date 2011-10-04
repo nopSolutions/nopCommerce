@@ -3932,6 +3932,14 @@
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
+									<LocaleResource Name="CanonicalUrlsEnabled">
+										<Value>Enable canonical URLs</Value>
+										<Children>
+											<LocaleResource Name="Hint">
+												<Value>The goal of the canonicalization process is to transform a URL into a canonical URL so it is possible to determine if two syntactically different URLs may be equivalent.</Value>
+											</LocaleResource>
+										</Children>
+									</LocaleResource>
 									<LocaleResource Name="EncryptionKey">
 										<Value>Encryption private key</Value>
 										<Children>

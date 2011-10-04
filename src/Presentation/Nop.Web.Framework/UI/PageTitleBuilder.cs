@@ -14,6 +14,7 @@ namespace Nop.Web.Framework.UI
         private readonly List<string> _metaKeywordParts;
         private readonly List<string> _scriptParts;
         private readonly List<string> _cssParts;
+        private readonly List<string> _canonicalUrlParts;
 
         public PageTitleBuilder(SeoSettings seoSettings)
         {
@@ -23,6 +24,7 @@ namespace Nop.Web.Framework.UI
             this._metaKeywordParts = new List<string>();
             this._scriptParts = new List<string>();
             this._cssParts = new List<string>();
+            this._canonicalUrlParts = new List<string>();
         }
 
         public void AddTitleParts(params string[] parts)
@@ -140,7 +142,33 @@ namespace Nop.Web.Framework.UI
             var result = new StringBuilder();
             foreach (var cssPath in _cssParts)
             {
-                result.AppendFormat("<link href=\"{0}\" rel=\"stylesheet\" type=\"text/css\">", cssPath);
+                result.AppendFormat("<link href=\"{0}\" rel=\"stylesheet\" type=\"text/css\" />", cssPath);
+                result.Append(Environment.NewLine);
+            }
+            return result.ToString();
+        }
+
+
+        public void AddCanonicalUrlParts(params string[] parts)
+        {
+            if (parts != null)
+                foreach (string part in parts)
+                    if (!string.IsNullOrEmpty(part))
+                        _canonicalUrlParts.Add(part);
+        }
+        public void AppendCanonicalUrlParts(params string[] parts)
+        {
+            if (parts != null)
+                foreach (string part in parts)
+                    if (!string.IsNullOrEmpty(part))
+                        _canonicalUrlParts.Insert(0, part);
+        }
+        public string GenerateCanonicalUrls()
+        {
+            var result = new StringBuilder();
+            foreach (var canonicalUrl in _canonicalUrlParts)
+            {
+                result.AppendFormat("<link rel=\"canonical\" href=\"{0}\" />", canonicalUrl);
                 result.Append(Environment.NewLine);
             }
             return result.ToString();

@@ -1,11 +1,19 @@
-﻿@model Nop.Web.Models.Catalog.ManufacturerModel
+﻿@model ManufacturerModel
 @{
     Layout = "~/Views/Shared/_ColumnsThree.cshtml";
     Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Name);
     Html.AddMetaDescriptionParts(Model.MetaDescription);
     Html.AddMetaKeywordParts(Model.MetaKeywords);
+
+    var canonicalUrlsEnabled = EngineContext.Current.Resolve<SeoSettings>().CanonicalUrlsEnabled;
+    if (canonicalUrlsEnabled)
+    {
+        var manufacturerUrl = Url.RouteUrl("Manufacturer", new { manufacturerId = Model.Id, SeName = Model.SeName }, this.Request.Url.Scheme);
+        Html.AddCanonicalUrlParts(manufacturerUrl);
+    }
 }
 @using Nop.Core;
+@using Nop.Core.Domain.Common;
 @using Nop.Core.Infrastructure;
 @using Nop.Web;
 @using Nop.Web.Framework.UI;

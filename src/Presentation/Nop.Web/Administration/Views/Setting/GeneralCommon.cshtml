@@ -126,6 +126,15 @@
                 @Html.ValidationMessageFor(model => model.SeoSettings.ConvertNonWesternChars)
             </td>
         </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SeoSettings.CanonicalUrlsEnabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SeoSettings.CanonicalUrlsEnabled)
+                @Html.ValidationMessageFor(model => model.SeoSettings.CanonicalUrlsEnabled)
+            </td>
+        </tr>
     </table>
 }
 @helper TabSecuritySettings()
