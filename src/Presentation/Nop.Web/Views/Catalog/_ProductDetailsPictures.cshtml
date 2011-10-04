@@ -1,4 +1,7 @@
 ﻿@model Nop.Web.Models.Catalog.ProductModel
+@{
+    Html.AddScriptParts(@Url.Content("~/Scripts/slimbox2.js"));
+}
 <div class="picture">
     @if (Model.DefaultPictureZoomEnabled)
     {
