@@ -288,27 +288,26 @@ ul.languagelist li:hover{cursor:pointer;}
 .customer-return-request-list .request-list{}
 .customer-return-request-list .request-list .request-item{text-align:left;margin-bottom:10px;padding:10px;border:1px solid #E8E6D2;height:auto;}
 /* ONE PAGE CHECKOUT */
-.opc .buttons-set {margin-top:0;padding-top:2em;}
-.opc .buttons-set .back-link small {display:none;}
-.opc .buttons-set .back-link a {background:url(images/arrow-up.png) 0 50% no-repeat;padding-left:20px;}
-.opc .buttons-set.disabled button.button {display:none;}
-.opc .buttons-set .please-wait {height:21px;line-height:21px;}
-.opc .ul {list-style:disc outside; padding-left:18px;}
-.opc ul, .opc ol, ul.opc, ol.opc {list-style:none outside none;}
-.opc {position:relative;}
-.opc li.section {}
-.opc .step-title {border-width:0 1px;border-style:solid;border-color:#fff #d9dde3 #d9dde3;background:#eee 0 100% repeat-x;padding:4px 8px 6px;text-align:right;}
-.opc .step-title .number {float:left;background:#fff;border:1px solid #fff;padding:0 4px;margin:0 5px 0 0;font:bold 11px/14px arial, helvetica, sans-serif;color:#999;}
-.opc .step-title h2 {float:left;margin:0;font:bold 13px/16px Arial, Helvetica, sans-serif;color:#999;text-transform:capitalize;}
-.opc .step-title a {display:none;float:right;font-size:11px;line-height:16px;}
-.opc .allow .step-title {background:#d0dce1;border:1px solid #a3aeb3;border-bottom:0;color:#a4b3b9;cursor:pointer;}
-.opc .allow .step-title .number {background:#dbe6eb;border-color:#dbe6eb;color:#a4b3b9;}
-.opc .allow .step-title h2 {color:#a4b3b9;}
-.opc .active .step-title {background:#f9f3e3;border:1px solid #bbafa0;padding-bottom:5px;color:#f18200;cursor:default;}
-.opc .active .step-title .number {background:#3664A5;color:#fff;}
-.opc .active .step-title h2 {color:#3664A5;}
-.opc .step {border:1px solid #bbafa0;border-top:0;background:#fbfaf6 0 0 repeat-x;padding:15px 30px;position:relative;}
-.opc .step-title:after {display:block;content:".";clear:both;font-size:0;line-height:0;height:0;overflow:hidden;}
+.opc .buttons{margin-top:0;padding-top:2em;}
+.opc .buttons .back-link small{display:none;}
+.opc .buttons .back-link a background:url(images/arrow-up.png) 0 50% no-repeat;padding-left:20px;}
+.opc .buttons.disabled button{display:none;}
+.opc .buttons .please-wait{height:21px;line-height:21px;}
+.opc .ul{list-style:disc outside; padding-left:18px;}
+.opc ul, .opc ol, ul.opc, ol.opc{list-style:none outside none;}
+.opc{position:relative;}
+.opc li.section{}
+.opc .step-title{border-width:0 1px;border-style:solid;border-color:#fff #d9dde3 #d9dde3;background:#eee 0 100% repeat-x;padding:4px 8px 6px;text-align:right;}
+.opc .step-title .number{float:left;background:#fff;border:1px solid #fff;padding:0 4px;margin:0 5px 0 0;font:bold 11px/14px arial, helvetica, sans-serif;color:#999;}
+.opc .step-title h2{float:left;margin:0;font:bold 13px/16px Arial, Helvetica, sans-serif;color:#999;text-transform:capitalize;}
+.opc .allow .step-title{background:#d0dce1;border:1px solid #a3aeb3;border-bottom:0;color:#a4b3b9;cursor:pointer;}
+.opc .allow .step-title .number{background:#dbe6eb;border-color:#dbe6eb;color:#a4b3b9;}
+.opc .allow .step-title h2{color:#a4b3b9;}
+.opc .active .step-title{background:#f9f3e3;border:1px solid #bbafa0;padding-bottom:5px;color:#f18200;cursor:default;}
+.opc .active .step-title .number{background:#3664A5;color:#fff;}
+.opc .active .step-title h2{color:#3664A5;}
+.opc .step{border:1px solid #bbafa0;border-top:0;background:#fbfaf6 0 0 repeat-x;padding:15px 30px;position:relative;}
+.opc .step-title:after{display:block;content:".";clear:both;font-size:0;line-height:0;height:0;overflow:hidden;}
 /* HOME PAGE */
 .home-page-product-grid{margin-left:auto;margin-right:auto;width:520px;}
 .home-page-product-grid .title{padding:10px 0 1px;margin:0 5px 10px;font-weight:700;text-transform:uppercase;clear:both;font-size:1.1em;border-bottom:solid 1px #C4C6C8;text-align:center;}

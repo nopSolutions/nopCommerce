@@ -24,7 +24,6 @@
                 <div class="step-title">
                     <span class="number">1</span>
                     <h2>@T("Checkout.BillingAddress")</h2>
-                    <a href="#">@T("Common.Edit")</a>
                 </div>
                 <div id="checkout-step-billing" class="step a-item" style="display: none;">
                     <form id="co-billing-form" action="">
@@ -41,7 +40,7 @@
                         }
 //]]>
                     </script>
-                    <div class="buttons-set" id="billing-buttons-container">
+                    <div class="buttons" id="billing-buttons-container">
                         <button type="button" title="@T("Common.Continue")" class="newaddressnextstepbutton" onclick="Billing.save()">
                             <span>@T("Common.Continue")</span></button>
                         <span class="please-wait" id="billing-please-wait" style="display: none;">
@@ -57,7 +56,6 @@
                     <div class="step-title">
                         <span class="number">2</span>
                         <h2>@T("Checkout.ShippingAddress")</h2>
-                        <a href="#">@T("Common.Edit")</a>
                     </div>
                     <div id="checkout-step-shipping" class="step a-item" style="display: none;">
                         <form action="" id="co-shipping-form">
@@ -74,7 +72,7 @@
 
 //]]>
                         </script>
-                        <div class="buttons-set" id="shipping-buttons-container">
+                        <div class="buttons" id="shipping-buttons-container">
                             <p class="back-link">
                                 <a href="#" onclick="Checkout.back(); return false;"><small>&laquo; </small>@T("Common.Back")</a></p>
                             <button type="button" class="newaddressnextstepbutton" title="@T("Common.Continue")" onclick="Shipping.save()">
@@ -90,7 +88,6 @@
                     <div class="step-title">
                         <span class="number">3</span>
                         <h2>@T("Checkout.ShippingMethod")</h2>
-                        <a href="#">@T("Common.Edit")</a>
                     </div>
                     <div id="checkout-step-shipping-method" class="step a-item" style="display: none;">
                         <form id="co-shipping-method-form" action="">
@@ -102,7 +99,7 @@
                             ShippingMethod.init('#co-shipping-method-form', '@(storeLocation)checkout/OpcSaveShippingMethod/');
     //]]>
                         </script>
-                        <div class="buttons-set" id="shipping-method-buttons-container">
+                        <div class="buttons" id="shipping-method-buttons-container">
                             <p class="back-link">
                                 <a href="#" onclick="Checkout.back(); return false;"><small>&laquo; </small>@T("Common.Back")</a></p>
                             <button type="button" class="shippingmethodnextstepbutton" onclick="ShippingMethod.save()">
@@ -120,7 +117,6 @@
                 <div class="step-title">
                     <span class="number">@(Model.ShippingRequired ? "4" : "2")</span>
                     <h2>@T("Checkout.PaymentMethod")</h2>
-                    <a href="#">@T("Common.Edit")</a>
                 </div>
                 <div id="checkout-step-payment-method" class="step a-item" style="display: none;">
                     <form action="" id="co-payment-method-form">
@@ -134,7 +130,7 @@
                         PaymentMethod.init('#co-payment-method-form', '@(storeLocation)checkout/OpcSavePaymentMethod/');
 //]]>
                     </script>
-                    <div class="buttons-set" id="payment-method-buttons-container">
+                    <div class="buttons" id="payment-method-buttons-container">
                         <p class="back-link">
                             <a href="#" onclick="Checkout.back(); return false;"><small>&laquo; </small>@T("Common.Back")</a></p>
                         <button type="button" class="paymentmethodnextstepbutton" onclick="PaymentMethod.save()">
@@ -150,7 +146,6 @@
                 <div class="step-title">
                     <span class="number">@(Model.ShippingRequired ? "5" : "3")</span>
                     <h2>@T("Checkout.PaymentInfo")</h2>
-                    <a href="#">@T("Common.Edit")</a>
                 </div>
                 <div id="checkout-step-payment-info" class="step a-item" style="display: none;">
                     <form action="" id="co-payment-info-form">
@@ -163,7 +158,7 @@
                         PaymentInfo.init('#co-payment-info-form', '@(storeLocation)checkout/OpcSavePaymentInfo/');
 //]]>
                     </script>
-                    <div class="buttons-set" id="payment-info-buttons-container">
+                    <div class="buttons" id="payment-info-buttons-container">
                         <p class="back-link">
                             <a href="#" onclick="Checkout.back(); return false;"><small>&laquo; </small>@T("Common.Back")</a></p>
                         <button type="button" class="paymentinfonextstepbutton" onclick="PaymentInfo.save()">
@@ -179,7 +174,6 @@
                 <div class="step-title">
                     <span class="number">@(Model.ShippingRequired ? "6" : "4")</span>
                     <h2>@T("Checkout.ConfirmOrder")</h2>
-                    <a href="#">@T("Common.Edit")</a>
                 </div>
                 <div id="checkout-step-confirm-order" class="step a-item" style="display: none;">
                     <div id="checkout-confirm-order-load">
@@ -190,7 +184,7 @@
                         ConfirmOrder.init('@(storeLocation)checkout/OpcConfirmOrder/', '@(storeLocation)checkout/completed/');
 //]]>
                     </script>
-                    <div class="buttons-set" id="confirm-order-buttons-container">
+                    <div class="buttons" id="confirm-order-buttons-container">
                         <p class="back-link">
                             <a href="#" onclick="Checkout.back(); return false;"><small>&laquo; </small>@T("Common.Back")</a></p>
                         <button type="submit" class="confirmordernextstepbutton" onclick="ConfirmOrder.save()">
