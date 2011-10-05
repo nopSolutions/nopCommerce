@@ -309,10 +309,9 @@ namespace Nop.Core.Plugins
                     var oldFile = shadowCopiedPlug.FullName + Guid.NewGuid().ToString("N") + ".old";
                     File.Move(shadowCopiedPlug.FullName, oldFile);
                 }
-                catch (IOException)
+                catch (IOException exc)
                 {
-                    Debug.WriteLine(shadowCopiedPlug.FullName + " rename failed, cannot initialize plugin");
-                    throw;
+                    throw new IOException(shadowCopiedPlug.FullName + " rename failed, cannot initialize plugin", exc);
                 }
                 //ok, we've made it this far, now retry the shadow copy
                 File.Copy(plug.FullName, shadowCopiedPlug.FullName, true);
@@ -358,10 +357,9 @@ namespace Nop.Core.Plugins
                         var oldFile = shadowCopiedPlug.FullName + Guid.NewGuid().ToString("N") + ".old";
                         File.Move(shadowCopiedPlug.FullName, oldFile);
                     }
-                    catch (IOException)
+                    catch (IOException exc)
                     {
-                        Debug.WriteLine(shadowCopiedPlug.FullName + " rename failed, cannot initialize plugin");
-                        throw;
+                        throw new IOException(shadowCopiedPlug.FullName + " rename failed, cannot initialize plugin", exc);
                     }
                     //ok, we've made it this far, now retry the shadow copy
                     File.Copy(plug.FullName, shadowCopiedPlug.FullName, true);
