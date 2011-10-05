@@ -1,0 +1,1 @@
+﻿That is a custom version AutoMapper.dll which works in medium trust

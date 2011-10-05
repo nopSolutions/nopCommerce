@@ -1,0 +1,4 @@
+﻿That is a custom version itextsharp.dll (version 5.1.2) which works in medium trust.
+
+Changes:
+Added [assembly: AllowPartiallyTrustedCallers]
