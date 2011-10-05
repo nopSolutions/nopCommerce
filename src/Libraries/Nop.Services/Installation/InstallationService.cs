@@ -3995,7 +3995,6 @@ namespace Nop.Services.Installation
             //admin user
             var adminUser = new Customer()
             {
-                //TODO set default first and last name
                 CustomerGuid = Guid.NewGuid(),
                 Email = defaultUserEmail,
                 Username = defaultUserEmail,

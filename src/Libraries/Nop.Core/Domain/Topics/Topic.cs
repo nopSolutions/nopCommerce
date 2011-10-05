@@ -7,7 +7,6 @@ namespace Nop.Core.Domain.Topics
     /// </summary>
     public partial class Topic : BaseEntity, ILocalizedEntity
     {
-        //TODO add password protected topics support (like it was done in version 1.90)
         /// <summary>
         /// Gets or sets the name
         /// </summary>

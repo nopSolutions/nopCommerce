@@ -421,7 +421,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
             if (order.PaymentStatus != PaymentStatus.Pending)
                 return false;
 
-            //let's ensure that at least 1 minutes passed after order is placed
+            //let's ensure that at least 1 minute passed after order is placed
             if ((DateTime.UtcNow - order.CreatedOnUtc).TotalMinutes < 1)
                 return false;
 

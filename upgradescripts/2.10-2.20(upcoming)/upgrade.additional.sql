@@ -322,8 +322,7 @@ BEGIN
 	
 	DROP TABLE #DisplayOrderTmp
 
-	--return products
-	--TODO return properties should be synchronized with 'Product' entity
+	--return products (return properties should be synchronized with 'Product' entity)
 	SELECT  
 		p.Id,
 		p.Name,

@@ -203,10 +203,7 @@ namespace Nop.Admin.Controllers
                     Level = SystemWarningLevel.Fail,
                     Text = "You don't have active payment methods"
                 });
-
-            //TODO check customers which have at least one associated 'User' record and are not in 'Registered' customer role
-            //Also check users which don't have associated 'Customer' record
-
+            
             return View(model);
         }
 

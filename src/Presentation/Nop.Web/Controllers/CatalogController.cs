@@ -663,7 +663,6 @@ namespace Nop.Web.Controllers
                 return RedirectToAction("Index", "Home");
 
             //'Continue shopping' URL
-            //TODO perhaps, it's better to store URL in cookie or session
             _customerService.SaveCustomerAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.LastContinueShoppingPage, _webHelper.GetThisPageUrl(false));
 
             if (command.PageSize <= 0) command.PageSize = category.PageSize;
@@ -853,7 +852,6 @@ namespace Nop.Web.Controllers
                 return RedirectToAction("Index", "Home");
 
             //'Continue shopping' URL
-            //TODO perhaps, it's better to store URL in cookie or session
             _customerService.SaveCustomerAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.LastContinueShoppingPage, _webHelper.GetThisPageUrl(false));
 
             if (command.PageSize <= 0) command.PageSize = manufacturer.PageSize;

@@ -152,7 +152,7 @@ namespace Nop.Web.Controllers
             }
             else
             {
-                //TODO: URL referrer is nullin IE 8. Fix it
+                //TODO: URL referrer is null in IE 8. Fix it
                 if (HttpContext.Request.UrlReferrer != null)
                 {
                     return Redirect(HttpContext.Request.UrlReferrer.PathAndQuery);
