@@ -74,8 +74,20 @@
         <RemoveDir Directories="$(DeployFolder)\$(DeployPrefix)\Administration\bin\" />
         
         <!--Lets delete the packages.config files-->
-        <Delete  Files="$(DeployFolder)\$(DeployPrefix)\Administration\packages.config;
+        <Delete Files="$(DeployFolder)\$(DeployPrefix)\Administration\packages.config;
                  $(DeployFolder)\$(DeployPrefix)\packages.config"/>
+
+
+
+        <!--Lets copy \Contents\Images\uploaded\ directory-->
+        <RemoveDir Directories="$(DeployFolder)\$(DeployPrefix)\Content\Images\uploaded\" />
+        <CreateItem Include="$(RootFolder)\Presentation\Nop.Web\Content\Images\uploaded\**\*.*">
+            <Output TaskParameter="Include" ItemName="uploadedImages" />
+        </CreateItem>
+        <Copy SourceFiles="@(uploadedImages)"
+                DestinationFolder="$(DeployFolder)\$(DeployPrefix)\Content\Images\uploaded\%(RecursiveDir)"
+		SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
+
     </Target>
 
 </Project>
