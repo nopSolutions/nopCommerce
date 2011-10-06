@@ -10,7 +10,6 @@ namespace Nop.Core.Domain.Directory
     public partial class Country : BaseEntity
     {
         private ICollection<StateProvince> _stateProvinces;
-        private ICollection<Address> _addresses;
         private ICollection<ShippingMethod> _restrictedShippingMethods;
 
 
@@ -66,14 +65,6 @@ namespace Nop.Core.Domain.Directory
         {
             get { return _stateProvinces ?? (_stateProvinces = new List<StateProvince>()); }
             protected set { _stateProvinces = value; }
-        }
-        /// <summary>
-        /// Gets or sets the addresses
-        /// </summary>
-        public virtual ICollection<Address> Addresses
-        {
-            get { return _addresses ?? (_addresses = new List<Address>()); }
-            protected set { _addresses = value; }
         }
 
         /// <summary>

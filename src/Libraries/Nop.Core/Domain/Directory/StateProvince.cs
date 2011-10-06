@@ -8,7 +8,6 @@ namespace Nop.Core.Domain.Directory
     /// </summary>
     public partial class StateProvince : BaseEntity
     {
-        private ICollection<Address> _addresses;
         /// <summary>
         /// Gets or sets the country identifier
         /// </summary>
@@ -38,15 +37,6 @@ namespace Nop.Core.Domain.Directory
         /// Gets or sets the country
         /// </summary>
         public virtual Country Country { get; set; }
-
-        /// <summary>
-        /// Gets or sets the addresses
-        /// </summary>
-        public virtual ICollection<Address> Addresses
-        {
-            get { return _addresses ?? (_addresses = new List<Address>()); }
-            protected set { _addresses = value; }
-        }
     }
 
 }

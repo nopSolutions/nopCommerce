@@ -16,6 +16,20 @@ namespace Nop.Services.Common
         void DeleteAddress(Address address);
 
         /// <summary>
+        /// Gets total number of addresses by country identifier
+        /// </summary>
+        /// <param name="countryId">Country identifier</param>
+        /// <returns>Number of addresses</returns>
+        int GetAddressTotalByCountryId(int countryId);
+
+        /// <summary>
+        /// Gets total number of addresses by state/province identifier
+        /// </summary>
+        /// <param name="stateProvinceId">State/province identifier</param>
+        /// <returns>Number of addresses</returns>
+        int GetAddressTotalByStateProvinceId(int stateProvinceId);
+
+        /// <summary>
         /// Gets an address by address identifier
         /// </summary>
         /// <param name="addressId">Address identifier</param>

@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Nop.Core.Data;
 using Nop.Core.Domain.Common;
 using Nop.Core.Events;
@@ -48,6 +49,38 @@ namespace Nop.Services.Common
 
             //event notification
             _eventPublisher.EntityDeleted(address);
+        }
+
+        /// <summary>
+        /// Gets total number of addresses by country identifier
+        /// </summary>
+        /// <param name="countryId">Country identifier</param>
+        /// <returns>Number of addresses</returns>
+        public virtual int GetAddressTotalByCountryId(int countryId)
+        {
+            if (countryId == 0)
+                return 0;
+
+            var query = from a in _addressRepository.Table
+                        where a.CountryId == countryId
+                        select a;
+            return query.Count();
+        }
+
+        /// <summary>
+        /// Gets total number of addresses by state/province identifier
+        /// </summary>
+        /// <param name="stateProvinceId">State/province identifier</param>
+        /// <returns>Number of addresses</returns>
+        public virtual int GetAddressTotalByStateProvinceId(int stateProvinceId)
+        {
+            if (stateProvinceId == 0)
+                return 0;
+
+            var query = from a in _addressRepository.Table
+                        where a.StateProvinceId == stateProvinceId
+                        select a;
+            return query.Count();
         }
 
         /// <summary>

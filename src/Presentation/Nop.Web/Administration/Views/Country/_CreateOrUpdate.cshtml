@@ -137,10 +137,18 @@
                             .Delete("StateDelete", "Country")
                             .Insert("StateAdd", "Country", new { countryId = Model.Id });
                     })
+                    .ClientEvents(x => x.OnError("grid_onError"))
                     .EnableCustomBinding(true))
             </td>
         </tr>
     </table>
+<script type="text/javascript">
+    function grid_onError(e) {
+        alert(e.XMLHttpRequest.responseText);
+        e.preventDefault();
+    }
+</script>
+
 
         }
         else

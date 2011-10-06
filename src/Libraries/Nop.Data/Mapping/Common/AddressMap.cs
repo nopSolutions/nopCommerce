@@ -12,13 +12,13 @@ namespace Nop.Data.Mapping.Common
 
             //TODO decide whether we should delete address if country is deleted 
             this.HasOptional(a => a.Country)
-                .WithMany(c => c.Addresses)
+                .WithMany()
                 .HasForeignKey(a => a.CountryId).WillCascadeOnDelete(false);
 
 
             //TODO decide whether we should delete address if state is deleted
             this.HasOptional(a => a.StateProvince)
-                .WithMany(sp => sp.Addresses)
+                .WithMany()
                 .HasForeignKey(a => a.StateProvinceId).WillCascadeOnDelete(false);
         }
     }
