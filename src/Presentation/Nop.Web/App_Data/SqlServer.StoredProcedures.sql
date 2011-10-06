@@ -108,7 +108,9 @@ BEGIN
 	LEFT OUTER JOIN Product_Manufacturer_Mapping pmm with (NOLOCK) ON p.Id=pmm.ProductId
 	LEFT OUTER JOIN Product_ProductTag_Mapping pptm with (NOLOCK) ON p.Id=pptm.Product_Id
 	LEFT OUTER JOIN ProductVariant pv with (NOLOCK) ON p.Id = pv.ProductId
-	--TODO support searching of localized values
+	--searching of the localized values
+	--comment the line below if you don't use it. It'll improve the performance
+	LEFT OUTER JOIN LocalizedProperty lp with (NOLOCK) ON p.Id = lp.EntityId AND lp.LanguageId = @LanguageId AND lp.LocaleKeyGroup = N'Product'
 	WHERE 
 		(
 		   (
@@ -156,12 +158,11 @@ BEGIN
 					or (@SearchDescriptions = 1 and patindex(@Keywords, p.ShortDescription) > 0)
 					or (@SearchDescriptions = 1 and patindex(@Keywords, p.FullDescription) > 0)
 					or (@SearchDescriptions = 1 and patindex(@Keywords, pv.Description) > 0)					
-					-- TODO search language content
-					--or patindex(@Keywords, pl.name) > 0
-					--or patindex(@Keywords, pvl.name) > 0
-					--or (@SearchDescriptions = 1 and patindex(@Keywords, pl.ShortDescription) > 0)
-					--or (@SearchDescriptions = 1 and patindex(@Keywords, pl.FullDescription) > 0)
-					--or (@SearchDescriptions = 1 and patindex(@Keywords, pvl.Description) > 0)
+					--searching of the localized values
+					--comment the lines below if you don't use it. It'll improve the performance
+					or (lp.LocaleKey = N'Name' and patindex(@Keywords, lp.LocaleValue) > 0)
+					or (@SearchDescriptions = 1 and lp.LocaleKey = N'ShortDescription' and patindex(@Keywords, lp.LocaleValue) > 0)
+					or (@SearchDescriptions = 1 and lp.LocaleKey = N'FullDescription' and patindex(@Keywords, lp.LocaleValue) > 0)
 				)
 			)
 		AND
@@ -223,7 +224,7 @@ BEGIN
 	
 	DROP TABLE #DisplayOrderTmp
 
-	--return products (properties should be synchronized with 'Product' entity)
+	--return products (returned properties should be synchronized with 'Product' entity)
 	SELECT  
 		p.Id,
 		p.Name,

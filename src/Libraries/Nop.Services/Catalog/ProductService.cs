@@ -12,6 +12,7 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Events;
 using Nop.Data;
+using Nop.Services.Localization;
 using Nop.Services.Messages;
 
 namespace Nop.Services.Catalog
@@ -39,8 +40,10 @@ namespace Nop.Services.Catalog
         private readonly IRepository<CrossSellProduct> _crossSellProductRepository;
         private readonly IRepository<TierPrice> _tierPriceRepository;
         private readonly IRepository<ProductPicture> _productPictureRepository;
+        private readonly IRepository<LocalizedProperty> _localizedPropertyRepository;
         private readonly IProductAttributeService _productAttributeService;
         private readonly IProductAttributeParser _productAttributeParser;
+        private readonly ILanguageService _languageService;
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IDataProvider _dataProvider;
         private readonly IDbContext _dbContext;
@@ -62,9 +65,11 @@ namespace Nop.Services.Catalog
         /// <param name="relatedProductRepository">Related product repository</param>
         /// <param name="crossSellProductRepository">Cross-sell product repository</param>
         /// <param name="tierPriceRepository">Tier price repository</param>
+        /// <param name="localizedPropertyRepository">Localized property repository</param>
         /// <param name="productPictureRepository">Product picture repository</param>
         /// <param name="productAttributeService">Product attribute service</param>
         /// <param name="productAttributeParser">Product attribute parser service</param>
+        /// <param name="languageService">Language service</param>
         /// <param name="workflowMessageService">Workflow message service</param>
         /// <param name="dataProvider">Data provider</param>
         /// <param name="dbContext">Database Context</param>
@@ -78,8 +83,10 @@ namespace Nop.Services.Catalog
             IRepository<CrossSellProduct> crossSellProductRepository,
             IRepository<TierPrice> tierPriceRepository,
             IRepository<ProductPicture> productPictureRepository,
+            IRepository<LocalizedProperty> localizedPropertyRepository,
             IProductAttributeService productAttributeService,
             IProductAttributeParser productAttributeParser,
+            ILanguageService languageService,
             IWorkflowMessageService workflowMessageService,
             IDataProvider dataProvider, IDbContext dbContext,
             LocalizationSettings localizationSettings, CommonSettings commonSettings,
@@ -92,8 +99,10 @@ namespace Nop.Services.Catalog
             _crossSellProductRepository = crossSellProductRepository;
             _tierPriceRepository = tierPriceRepository;
             _productPictureRepository = productPictureRepository;
+            _localizedPropertyRepository = localizedPropertyRepository;
             _productAttributeService = productAttributeService;
             _productAttributeParser = productAttributeParser;
+            _languageService = languageService;
             _workflowMessageService = workflowMessageService;
             _dataProvider = dataProvider;
             _dbContext = dbContext;
@@ -238,6 +247,21 @@ namespace Nop.Services.Catalog
             IList<int> filteredSpecs, ProductSortingEnum orderBy,
             int pageIndex, int pageSize, bool showHidden = false)
         {
+            bool searchLocalizedValue = false;
+            if (languageId > 0)
+            {
+                if (showHidden)
+                {
+                    searchLocalizedValue = true;
+                }
+                else
+                {
+                    //ensure that we have at least two published languages
+                    var totalPublishedLanguages = _languageService.GetAllLanguages(false).Count;
+                    searchLocalizedValue = totalPublishedLanguages >= 2;
+                }
+            }
+
             if (_commonSettings.UseStoredProceduresIfSupported && _dataProvider.StoredProceduredSupported)
             {
                 //stored procedures are enabled and supported by the database. 
@@ -276,7 +300,7 @@ namespace Nop.Services.Catalog
                     new SqlParameter { ParameterName = "Keywords", Value = keywords != null ? (object)keywords : DBNull.Value, SqlDbType = SqlDbType.NVarChar },
                     new SqlParameter { ParameterName = "SearchDescriptions", Value = searchDescriptions, SqlDbType = SqlDbType.Bit },
                     new SqlParameter { ParameterName = "FilteredSpecs", Value = commaSeparatedSpecIds != null ? (object)commaSeparatedSpecIds : DBNull.Value, SqlDbType = SqlDbType.NVarChar },
-                    new SqlParameter { ParameterName = "LanguageId", Value = languageId, SqlDbType = SqlDbType.Int },
+                    new SqlParameter { ParameterName = "LanguageId", Value = searchLocalizedValue ? languageId : 0, SqlDbType = SqlDbType.Int },
                     new SqlParameter { ParameterName = "OrderBy", Value = (int)orderBy, SqlDbType = SqlDbType.Int },
                     new SqlParameter { ParameterName = "PageIndex", Value = pageIndex, SqlDbType = SqlDbType.Int },
                     new SqlParameter { ParameterName = "PageSize", Value = pageSize, SqlDbType = SqlDbType.Int },
@@ -303,16 +327,19 @@ namespace Nop.Services.Catalog
                 if (!String.IsNullOrWhiteSpace(keywords))
                 {
                     query = from p in query
-                            //join pv in _productVariantRepository.Table on p.Id equals pv.ProductId into p_pv
-                            //from pv in p_pv.DefaultIfEmpty()
+                            join lp in _localizedPropertyRepository.Table on p.Id equals lp.EntityId into p_lp
+                            from lp in p_lp.DefaultIfEmpty()
                             from pv in p.ProductVariants.DefaultIfEmpty()
                             where (p.Name.Contains(keywords)) ||
                                   (searchDescriptions && p.ShortDescription.Contains(keywords)) ||
                                   (searchDescriptions && p.FullDescription.Contains(keywords)) ||
                                   (pv.Name.Contains(keywords)) ||
-                                  (searchDescriptions && pv.Description.Contains(keywords))
+                                  (searchDescriptions && pv.Description.Contains(keywords)) ||
+                                  //localized values
+                                  (searchLocalizedValue && lp.LanguageId == languageId && lp.LocaleKeyGroup == "Product" && lp.LocaleKey == "Name" && lp.LocaleValue.Contains(keywords)) ||
+                                  (searchDescriptions && searchLocalizedValue && lp.LanguageId == languageId && lp.LocaleKeyGroup == "Product" && lp.LocaleKey == "ShortDescription" && lp.LocaleValue.Contains(keywords)) ||
+                                  (searchDescriptions && searchLocalizedValue && lp.LanguageId == languageId && lp.LocaleKeyGroup == "Product" && lp.LocaleKey == "FullDescription" && lp.LocaleValue.Contains(keywords))
                             select p;
-                    //TODO search localized values
                 }
 
                 //product variants
@@ -320,8 +347,6 @@ namespace Nop.Services.Catalog
                 //That's why we pass the date value
                 var nowUtc = DateTime.UtcNow;
                 query = from p in query
-                        //join pv in _productVariantRepository.Table on p.Id equals pv.ProductId into p_pv
-                        //from pv in p_pv.DefaultIfEmpty()
                         from pv in p.ProductVariants.DefaultIfEmpty()
                         where (showHidden || !pv.Deleted) &&
                               (showHidden || pv.Published) &&
@@ -383,7 +408,7 @@ namespace Nop.Services.Catalog
 
                 //only distinct products (group by ID)
                 //if we use standard Distinct() method, then all fields will be compared (low performance)
-                //it'll not work in SQl Server Compact when searching products by a keyword)
+                //it'll not work in SQL Server Compact when searching products by a keyword)
                 query = from p in query
                         group p by p.Id
                             into pGroup
