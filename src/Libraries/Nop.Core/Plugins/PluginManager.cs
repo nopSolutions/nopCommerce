@@ -49,7 +49,6 @@ namespace Nop.Core.Plugins
                 _shadowCopyFolder = new DirectoryInfo(HostingEnvironment.MapPath(_shadowCopyPath));
 
                 var referencedPlugins = new List<PluginDescriptor>();
-                var referencedDependenciesFileNames = new List<string>();
 
                 try
                 {
@@ -101,7 +100,6 @@ namespace Nop.Core.Plugins
                                 .FirstOrDefault() != null;
 
                             //get list of all DLLs in plugins (not in bin!)
-                            //var pluginFiles = Enumerable.Empty<FileInfo>();
                             var pluginFiles = descriptionFile.Directory.GetFiles("*.dll", SearchOption.AllDirectories)
                                 //just make sure we're not registering shadow copied plugins
                                 .Where(x => !binFiles.Select(q => q.FullName).Contains(x.FullName))
@@ -112,19 +110,14 @@ namespace Nop.Core.Plugins
                             var mainPluginFile = pluginFiles.Where(x => x.Name.Equals(description.PluginFileName, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
                             description.OriginalAssemblyFile = mainPluginFile;
 
-                            //shadow copy files
+                            //shadow copy main pugin file
                             description.ReferencedAssembly = PerformFileDeploy(mainPluginFile);
 
-                            //load all other assemblies now
-                            foreach (var plugin in pluginFiles.Where(x => !x.Name.Equals(mainPluginFile.Name, StringComparison.InvariantCultureIgnoreCase)))
-                            {
-                                //ensure that the same assembly will not be loaded twice
-                                if (!referencedDependenciesFileNames.Contains(plugin.Name, StringComparer.InvariantCultureIgnoreCase))
-                                {
+                            //load all other referenced assemblies now
+                            foreach (var plugin in pluginFiles
+                                .Where(x => !x.Name.Equals(mainPluginFile.Name, StringComparison.InvariantCultureIgnoreCase))
+                                .Where(x => !IsAlreadyLoaded(x)))
                                     PerformFileDeploy(plugin);
-                                    referencedDependenciesFileNames.Add(plugin.Name);
-                                }
-                            }
 
 
                             //init plugin type (only one plugin per assembly is allowed)
@@ -174,6 +167,15 @@ namespace Nop.Core.Plugins
                 ReferencedPlugins = referencedPlugins;
 
             }
+        }
+
+        protected static bool IsAlreadyLoaded(FileInfo fileInfo)
+        {
+            foreach (var a in AppDomain.CurrentDomain.GetAssemblies())
+                //do not comapre the full assembly name, just filename
+                if (fileInfo.Name.Equals(Path.GetFileName(a.Location), StringComparison.InvariantCultureIgnoreCase))
+                    return true;
+            return false;
         }
 
         /// <summary>
