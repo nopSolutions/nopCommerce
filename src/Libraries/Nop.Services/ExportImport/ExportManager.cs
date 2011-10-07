@@ -54,6 +54,7 @@ namespace Nop.Services.ExportImport
                     xmlWriter.WriteElementString("Id", null, category.Id.ToString());
                     xmlWriter.WriteElementString("Name", null, category.Name);
                     xmlWriter.WriteElementString("Description", null, category.Description);
+                    xmlWriter.WriteElementString("CategoryTemplateId", null, category.CategoryTemplateId.ToString());
                     xmlWriter.WriteElementString("MetaKeywords", null, category.MetaKeywords);
                     xmlWriter.WriteElementString("MetaDescription", null, category.MetaDescription);
                     xmlWriter.WriteElementString("MetaTitle", null, category.MetaTitle);
@@ -120,6 +121,7 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteElementString("ManufacturerId", null, manufacturer.Id.ToString());
                 xmlWriter.WriteElementString("Name", null, manufacturer.Name);
                 xmlWriter.WriteElementString("Description", null, manufacturer.Description);
+                xmlWriter.WriteElementString("ManufacturerTemplateId", null, manufacturer.ManufacturerTemplateId.ToString());
                 xmlWriter.WriteElementString("MetaKeywords", null, manufacturer.MetaKeywords);
                 xmlWriter.WriteElementString("MetaDescription", null, manufacturer.MetaDescription);
                 xmlWriter.WriteElementString("MetaTitle", null, manufacturer.MetaTitle);
