@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Nop.Core.Domain.Messages
 {
@@ -8,7 +7,6 @@ namespace Nop.Core.Domain.Messages
     /// </summary>
     public partial class EmailAccount : BaseEntity
     {
-        private ICollection<QueuedEmail> _queuedEmails;
         /// <summary>
         /// Gets or sets an email address
         /// </summary>
@@ -60,15 +58,6 @@ namespace Nop.Core.Domain.Messages
                     return this.Email + " (" + this.DisplayName + ")";
                 return this.Email;
             }
-        }
-
-        /// <summary>
-        /// Gets or sets the collection of queued emails
-        /// </summary>
-        public virtual ICollection<QueuedEmail> QueuedEmails
-        {
-            get { return _queuedEmails ?? (_queuedEmails = new List<QueuedEmail>()); }
-            protected set { _queuedEmails = value; }
         }
     }
 }

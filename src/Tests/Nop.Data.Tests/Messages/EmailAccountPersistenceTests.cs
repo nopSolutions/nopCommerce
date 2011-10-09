@@ -36,45 +36,5 @@ namespace Nop.Data.Tests.Messages
             fromDb.UseDefaultCredentials.ShouldBeTrue();
         }
 
-        [Test]
-        public void Can_save_and_load_emailAccount_with_queuedEmails()
-        {
-            var emailAccount = new EmailAccount
-            {
-                Email = "admin@yourstore.com",
-                DisplayName = "Administrator",
-                Host = "127.0.0.1",
-                Port = 125,
-                Username = "John",
-                Password = "111",
-                EnableSsl = true,
-                UseDefaultCredentials = true
-            };
-
-            emailAccount.QueuedEmails.Add
-                (
-                    new QueuedEmail()
-                    {
-                        Priority = 1,
-                        From = "From",
-                        FromName = "FromName",
-                        To = "To",
-                        ToName = "ToName",
-                        CC = "CC",
-                        Bcc = "Bcc",
-                        Subject = "Subject",
-                        Body = "Body",
-                        CreatedOnUtc = new DateTime(2010, 01, 01)
-                    }
-                );
-            var fromDb = SaveAndLoadEntity(emailAccount);
-            fromDb.ShouldNotBeNull();
-
-
-            fromDb.QueuedEmails.ShouldNotBeNull();
-            (fromDb.QueuedEmails.Count == 1).ShouldBeTrue();
-            fromDb.QueuedEmails.First().From.ShouldEqual("From");
-        }
-
     }
 }

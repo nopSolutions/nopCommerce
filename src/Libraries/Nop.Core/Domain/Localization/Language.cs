@@ -9,7 +9,6 @@ namespace Nop.Core.Domain.Localization
     public partial class Language : BaseEntity
     {
         private ICollection<LocaleStringResource> _localeStringResources;
-        private ICollection<LocalizedProperty> _localizedProperties;
 
         /// <summary>
         /// Gets or sets the name
@@ -45,12 +44,7 @@ namespace Nop.Core.Domain.Localization
         /// Gets or sets the display order
         /// </summary>
         public virtual int DisplayOrder { get; set; }
-
-        /// <summary>
-        /// Gets or sets customers
-        /// </summary>
-        public virtual ICollection<Customer> Customers { get; set; }
-
+        
         /// <summary>
         /// Gets or sets locale string resources
         /// </summary>
@@ -58,15 +52,6 @@ namespace Nop.Core.Domain.Localization
         {
             get { return _localeStringResources ?? (_localeStringResources = new List<LocaleStringResource>()); }
             protected set { _localeStringResources = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets localized properties
-        /// </summary>
-        public virtual ICollection<LocalizedProperty> LocalizedProperties
-        {
-            get { return _localizedProperties ?? (_localizedProperties = new List<LocalizedProperty>()); }
-            protected set { _localizedProperties = value; }
         }
     }
 }

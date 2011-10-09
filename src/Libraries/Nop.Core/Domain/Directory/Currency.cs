@@ -9,7 +9,6 @@ namespace Nop.Core.Domain.Directory
     /// </summary>
     public partial class Currency : BaseEntity
     {
-        private ICollection<Customer> _customers;
         /// <summary>
         /// Gets or sets the name
         /// </summary>
@@ -54,15 +53,6 @@ namespace Nop.Core.Domain.Directory
         /// Gets or sets the date and time of instance update
         /// </summary>
         public virtual DateTime UpdatedOnUtc { get; set; }
-
-        /// <summary>
-        /// Gets or sets the customers
-        /// </summary>
-        public virtual ICollection<Customer> Customers
-        {
-            get { return _customers ?? (_customers = new List<Customer>()); }
-            protected set { _customers = value; }
-        }
     }
 
 }

@@ -15,7 +15,7 @@ namespace Nop.Data.Mapping.Localization
             this.Property(lp => lp.LocaleValue).IsRequired().IsMaxLength();
             
             this.HasRequired(lp => lp.Language)
-                .WithMany(l => l.LocalizedProperties)
+                .WithMany()
                 .HasForeignKey(lp => lp.LanguageId);
         }
     }

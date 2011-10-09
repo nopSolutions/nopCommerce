@@ -65,10 +65,7 @@ namespace Nop.Services.Localization
         {
             if (language == null)
                 throw new ArgumentNullException("language");
-
-            //clear many-to-many navigation property because EF doesn't allow to configure cascade delete for this type of associations
-            language.Customers.Clear();
-
+            
             //update default admin area language (if required)
             if (_localizationSettings.DefaultAdminLanguageId == language.Id)
             {

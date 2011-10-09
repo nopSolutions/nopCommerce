@@ -21,7 +21,7 @@ namespace Nop.Data.Mapping.Messages
 
 
             this.HasRequired(qe => qe.EmailAccount)
-                .WithMany(ea => ea.QueuedEmails)
+                .WithMany()
                 .HasForeignKey(qe => qe.EmailAccountId).WillCascadeOnDelete(true);
         }
     }

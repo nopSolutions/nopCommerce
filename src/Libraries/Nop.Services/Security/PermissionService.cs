@@ -52,9 +52,6 @@ namespace Nop.Services.Security
             if (permission == null)
                 throw new ArgumentNullException("permission");
 
-            //clear many-to-many navigation property because EF doesn't allow to configure cascade delete for this type of associations
-            permission.CustomerRoles.Clear();
-
             _permissionPecordRepository.Delete(permission);
         }
 

@@ -77,10 +77,7 @@ namespace Nop.Services.Directory
         {
             if (currency == null)
                 throw new ArgumentNullException("currency");
-
-            //clear many-to-many navigation property because EF doesn't allow to configure cascade delete for this type of associations
-            currency.Customers.Clear();
-
+            
             _currencyRepository.Delete(currency);
 
             _cacheManager.RemoveByPattern(CURRENCIES_PATTERN_KEY);

@@ -76,6 +76,5 @@ namespace Nop.Core.Domain.Messages
         /// Gets the email account
         /// </summary>
         public virtual EmailAccount EmailAccount { get; set; }
-
     }
 }

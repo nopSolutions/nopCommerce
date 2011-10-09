@@ -22,11 +22,11 @@ namespace Nop.Data.Mapping.Customers
             this.Ignore(c => c.VatNumberStatus);
 
             this.HasOptional(c => c.Language)
-                .WithMany(l => l.Customers)
+                .WithMany()
                 .HasForeignKey(c => c.LanguageId).WillCascadeOnDelete(false);
 
             this.HasOptional(c => c.Currency)
-                .WithMany(cur => cur.Customers)
+                .WithMany()
                 .HasForeignKey(c => c.CurrencyId).WillCascadeOnDelete(false);
 
             this.HasMany(c => c.CustomerRoles)
