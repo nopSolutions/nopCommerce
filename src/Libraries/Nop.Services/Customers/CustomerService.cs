@@ -758,7 +758,6 @@ namespace Nop.Services.Customers
                 throw new NopException("System role could not be deleted");
 
             //clear many-to-many navigation property because EF doesn't allow to configure cascade delete for this type of associations
-            customerRole.Customers.Clear();
             customerRole.PermissionRecords.Clear();
 
             _customerRoleRepository.Delete(customerRole);

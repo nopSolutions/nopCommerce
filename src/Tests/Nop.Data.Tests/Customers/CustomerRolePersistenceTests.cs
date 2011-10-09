@@ -26,29 +26,6 @@ namespace Nop.Data.Tests.Customers
         }
 
         [Test]
-        public void Can_save_and_load_customerRole_with_customer()
-        {
-            var customerRole = GetTestCustomerRole();
-            customerRole.Customers.Add(
-                new Customer()
-                {
-                    CustomerGuid = Guid.NewGuid(),
-                    AdminComment = "some comment here",
-                    Active = true,
-                    CreatedOnUtc = new DateTime(2010, 01, 01),
-                    LastActivityDateUtc = new DateTime(2010, 01, 01),
-                }
-            );
-
-            var fromDb = SaveAndLoadEntity(customerRole);
-            fromDb.ShouldNotBeNull();
-            fromDb.Name.ShouldEqual("Administrators");
-
-            fromDb.Customers.ShouldNotBeNull();
-            (fromDb.Customers.Count == 1).ShouldBeTrue();
-        }
-
-        [Test]
         public void Can_save_and_load_customerRole_with_permissions()
         {
             var customerRole = GetTestCustomerRole();

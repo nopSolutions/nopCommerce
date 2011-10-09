@@ -4052,7 +4052,7 @@ namespace Nop.Services.Installation
                 IsSystemRole = true,
                 SystemName = SystemCustomerRoleNames.Administrators,
             };
-            crAdministrators.Customers.Add(adminUser);
+            adminUser.CustomerRoles.Add(crAdministrators);
             var crForumModerators = new CustomerRole
             {
                 Name = "Forum Moderators",
@@ -4060,7 +4060,7 @@ namespace Nop.Services.Installation
                 IsSystemRole = true,
                 SystemName = SystemCustomerRoleNames.ForumModerators,
             };
-            crForumModerators.Customers.Add(adminUser);
+            adminUser.CustomerRoles.Add(crForumModerators);
             var crRegistered = new CustomerRole
             {
                 Name = "Registered",
@@ -4068,7 +4068,7 @@ namespace Nop.Services.Installation
                 IsSystemRole = true,
                 SystemName = SystemCustomerRoleNames.Registered,
             };
-            crRegistered.Customers.Add(adminUser);
+            adminUser.CustomerRoles.Add(crRegistered);
             var crGuests = new CustomerRole
             {
                 Name = "Guests",
@@ -4076,7 +4076,7 @@ namespace Nop.Services.Installation
                 IsSystemRole = true,
                 SystemName = SystemCustomerRoleNames.Guests,
             };
-            crGuests.Customers.Add(searchEngineUser);
+            searchEngineUser.CustomerRoles.Add(crGuests);
             var customerRoles = new List<CustomerRole>
                                 {
                                     crAdministrators,

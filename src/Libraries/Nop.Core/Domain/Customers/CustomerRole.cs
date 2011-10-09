@@ -8,7 +8,6 @@ namespace Nop.Core.Domain.Customers
     /// </summary>
     public partial class CustomerRole : BaseEntity
     {
-        private ICollection<Customer> _customers;
         private ICollection<PermissionRecord> _permissionRecords;
 
         /// <summary>
@@ -41,14 +40,6 @@ namespace Nop.Core.Domain.Customers
         /// </summary>
         public virtual string SystemName { get; set; }
 
-        /// <summary>
-        /// Gets or sets the customers
-        /// </summary>
-        public virtual ICollection<Customer> Customers
-        {
-            get { return _customers ?? (_customers = new List<Customer>()); }
-            protected set { _customers = value; }
-        }
 
         /// <summary>
         /// Gets or sets the permission records
