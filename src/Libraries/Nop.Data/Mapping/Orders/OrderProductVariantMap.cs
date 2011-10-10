@@ -25,7 +25,7 @@ namespace Nop.Data.Mapping.Orders
                 .HasForeignKey(opv => opv.OrderId);
 
             this.HasRequired(opv => opv.ProductVariant)
-                .WithMany(pv => pv.OrderProductVariants)
+                .WithMany()
                 .HasForeignKey(opv => opv.ProductVariantId);
         }
     }

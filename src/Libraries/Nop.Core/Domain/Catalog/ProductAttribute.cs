@@ -8,8 +8,6 @@ namespace Nop.Core.Domain.Catalog
     /// </summary>
     public partial class ProductAttribute : BaseEntity, ILocalizedEntity
     {
-        private ICollection<ProductVariantAttribute> _productVariantAttributes;
-
         /// <summary>
         /// Gets or sets the name
         /// </summary>
@@ -19,15 +17,5 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the description
         /// </summary>
         public virtual string Description { get; set; }
-
-        /// <summary>
-        /// Gets the product variant attributes
-        /// </summary>
-        public virtual ICollection<ProductVariantAttribute> ProductVariantAttributes
-        {
-            get { return _productVariantAttributes ?? (_productVariantAttributes = new List<ProductVariantAttribute>()); }
-            protected set { _productVariantAttributes = value; }
-        }
-        
     }
 }

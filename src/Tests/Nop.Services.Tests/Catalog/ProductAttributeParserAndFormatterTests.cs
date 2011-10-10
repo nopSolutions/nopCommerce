@@ -61,7 +61,6 @@ namespace Nop.Services.Tests.Catalog
                 ProductAttribute = pa1,
                 ProductAttributeId = pa1.Id
             };
-            pa1.ProductVariantAttributes.Add(pva1_1);
             pvav1_1 = new ProductVariantAttributeValue
             {
                 Id = 11,
@@ -98,7 +97,6 @@ namespace Nop.Services.Tests.Catalog
                 ProductAttribute = pa2,
                 ProductAttributeId = pa2.Id
             };
-            pa2.ProductVariantAttributes.Add(pva2_1);
             pvav2_1 = new ProductVariantAttributeValue
             {
                 Id = 21,
@@ -135,7 +133,6 @@ namespace Nop.Services.Tests.Catalog
                 ProductAttribute = pa1,
                 ProductAttributeId = pa3.Id
             };
-            pa3.ProductVariantAttributes.Add(pva3_1);
 
 
             #endregion

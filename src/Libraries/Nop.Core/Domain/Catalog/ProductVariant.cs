@@ -455,15 +455,6 @@ namespace Nop.Core.Domain.Catalog
         }
 
         /// <summary>
-        /// Gets or sets the ordered product variants
-        /// </summary>
-        public virtual ICollection<OrderProductVariant> OrderProductVariants
-        {
-            get { return _orderProductVariants ?? (_orderProductVariants = new List<OrderProductVariant>()); }
-            protected set { _orderProductVariants = value; }
-        }
-
-        /// <summary>
         /// Gets or sets the tier prices
         /// </summary>
         public virtual ICollection<TierPrice> TierPrices
