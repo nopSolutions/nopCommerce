@@ -329,6 +329,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CanonicalUrlsEnabled.Hint">
     <Value>The goal of the canonicalization process is to transform a URL into a canonical URL so it is possible to determine if two syntactically different URLs may be equivalent.</Value>
   </LocaleResource>
+  <LocaleResource Name="Search.NoResultsText">
+    <Value>No products were found that matched your criteria.</Value>
+  </LocaleResource>
 </Language>
 '
 

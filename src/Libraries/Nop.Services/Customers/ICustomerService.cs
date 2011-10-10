@@ -80,7 +80,7 @@ namespace Nop.Services.Customers
         Customer GetCustomerByEmail(string email);
         
         /// <summary>
-        /// Get customer by email
+        /// Get customer by system role
         /// </summary>
         /// <param name="systemName">System name</param>
         /// <returns>Customer</returns>

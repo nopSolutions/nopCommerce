@@ -195,7 +195,7 @@ ul.languagelist li:hover{cursor:pointer;}
 .cart_total_left{width:100%;text-align:right;vertical-align:middle;height:21px;font-weight:700;color:#353434;}
 .cart_total_left_below{width:100%;text-align:right;vertical-align:top;height:30px;}
 .cart_total_right{text-align:right;vertical-align:middle;padding-left:5px;}
-.order-summary-content .removegiftcardbutton,.order-summary-content .removediscountbutton{padding-right:5px;padding-left:18px;background:url(images/ico-delete.gif) no-repeat;border:0;width:32px;height:15px}
+.order-summary-content .removegiftcardbutton,.order-summary-content .removediscountbutton{padding-right:5px;padding-left:18px;background:url(images/ico-delete.gif) no-repeat;border:0;width:32px;height:15px;}
 .order-summary-content .removegiftcardbutton:hover,.order-summary-content .removediscountbutton:hover{cursor:pointer;}
 .order-summary-content .selected-checkout-attributes{margin:0;padding:10px 0;width:100%;text-align:right;vertical-align:middle;color:#353434;}
 .order-summary-content .checkout-attributes{margin:10px 0;padding:10px 20px;background:none repeat scroll 0 0 #F7F5E8;border:1px dotted #D3D3D3;}
@@ -448,10 +448,10 @@ ul.languagelist li:hover{cursor:pointer;}
 .search-panel .search-results .result{font-weight:700;color:#555;}
 .search-panel table.basic-search,.search-panel table.adv-search{border-collapse:collapse;color:#333;margin:0;width:100%;vertical-align:middle;text-align:left;table-layout:fixed;}
 .search-panel table.adv-search{border-top:solid #D3D3D3 1px;margin-top:10px;}
-.search-panel table.adv-search #Cid{width: 374px}
+.search-panel table.adv-search #Cid{width:374px;}
 .search-panel table.basic-search td.title,.search-panel table.adv-search td.title{padding:4px;text-align:left;vertical-align:middle;width:130px;}
 .search-panel table.basic-search td.data,.search-panel table.adv-search td.data{padding:4px;text-align:left;vertical-align:middle;white-space:nowrap;}
-.search-input .warning{text-decoration:underline}
+.search-input .warning{text-decoration:underline;}
 .contact-form{}
 .contact-form .button{text-align:right;}
 .contact-form .send-email{}
