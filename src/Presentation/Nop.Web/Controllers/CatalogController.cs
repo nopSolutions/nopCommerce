@@ -2034,8 +2034,9 @@ namespace Nop.Web.Controllers
             }
 
             IPagedList<Product> products = new PagedList<Product>(new List<Product>(), 0, 1);
-            //if (!String.IsNullOrWhiteSpace(model.Q))
-            //{
+            // only search if query string search keyword is set (used to avoid searching or displaying search term min length error message on /search page load)
+            if (Request.Params["Q"] != null)
+            {
                 if (model.Q.Length < _catalogSettings.ProductSearchTermMinimumLength)
                 {
                     model.Warning = string.Format(_localizationService.GetResource("Search.SearchTermMinimumLengthIsNCharacters"), _catalogSettings.ProductSearchTermMinimumLength);
@@ -2077,8 +2078,10 @@ namespace Nop.Web.Controllers
                         model.Q, searchInDescriptions, _workContext.WorkingLanguage.Id, null,
                     ProductSortingEnum.Position, command.PageNumber - 1, command.PageSize);
                     model.Products = products.Select(x => PrepareProductOverviewModel(x)).ToList();
+
+                    model.NoResults = !model.Products.Any();                    
                 }
-            //}
+            }
 
             model.PagingFilteringContext.LoadPagedList(products);
             return View(model);

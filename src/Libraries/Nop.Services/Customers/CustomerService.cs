@@ -244,7 +244,7 @@ namespace Nop.Services.Customers
         }
 
         /// <summary>
-        /// Get customer by email
+        /// Get customer by system name
         /// </summary>
         /// <param name="systemName">System name</param>
         /// <returns>Customer</returns>

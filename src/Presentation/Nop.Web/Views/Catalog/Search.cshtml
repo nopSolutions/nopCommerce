@@ -111,9 +111,9 @@
                 {
                     <tr>
                         <td colspan="2">
-                            <u>
+                            <span class="warning">
                                 @Model.Warning
-                            </u>
+                            </span>
                         </td>
                     </tr>
                 }
@@ -123,6 +123,12 @@
     <div class="clear">
     </div>
     <div class="search-results">
+        @if (Model.NoResults)
+        {
+            <span class="result">
+                @T("Search.NoResultsText")
+            </span>
+        }
         <div class="product-list">
             @*list mode*@
             <div class="product-list">

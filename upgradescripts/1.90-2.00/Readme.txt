@@ -7,7 +7,7 @@
 5. Restart your application (for example, modify Web.config file)
 6. If your pictures were stored on the file system, then manually copy them into \Content\Images (previously they were stored into \images directory)
 7. Now manually complete the following steps: 
-	7a. Confifure Store settings (Admin area > Configuration > Settings)
+	7a. Configure Store settings (Admin area > Configuration > Settings)
 	7b. Configure your currencies (Admin area > Configuration > Currencies). Ensure primary store currency and primary exchange currencies are the same
 	7c. Configure your measure units (Admin area > Configuration > Measures)
 	7d. Configure your email accounts (Admin area > Configuration > Email accounts)

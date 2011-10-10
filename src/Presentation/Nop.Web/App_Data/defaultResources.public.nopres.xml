@@ -3187,6 +3187,9 @@
 			<LocaleResource Name="SearchTermMinimumLengthIsNCharacters">
 				<Value>Search term minimum length is {0} characters</Value>
 			</LocaleResource>
+			<LocaleResource Name="NoResultsText">
+				<Value>No products were found that matched your criteria.</Value>
+			</LocaleResource>
 			<LocaleResource Name="SearchTerm">
 				<Value>Search keyword</Value>
 			</LocaleResource>
