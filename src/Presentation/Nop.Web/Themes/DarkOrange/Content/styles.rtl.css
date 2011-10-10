@@ -222,7 +222,7 @@ ul.languagelist li:hover{cursor:pointer;}
 .order-summary-content .crosssells-title{color:#000;font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:700;padding:5px 5px 5px 0;border-bottom:0 none;margin:0 0 10px;width:100%;}
 .estimate-shipping{margin:0;padding:10px;font-size:11px;color:#555;background:#F7F5E8;border:dotted 1px #d3d3d3;}
 .estimate-shipping .shipping-options{text-align:left;margin:10px;border:1px solid #d7d7d7;height:auto;}
-.estimate-shipping .shipping-options .shipping-option-item{text-align:left;vertical-align:text-top;padding:5px 0 0 5px;}
+.estimate-shipping .shipping-options .shipping-option-item{text-align:right;vertical-align:text-top;padding:5px 0 0 5px;}
 .estimate-shipping .shipping-options .shipping-option-item .option-name{font-weight:700;}
 .estimate-shipping .shipping-options .shipping-option-item .option-description{padding:5px 0 5px 16px;}
 /* CHECKOUT, ORDER DETAILS */
