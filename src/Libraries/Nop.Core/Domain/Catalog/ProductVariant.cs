@@ -13,7 +13,6 @@ namespace Nop.Core.Domain.Catalog
     {
         private ICollection<ProductVariantAttribute> _productVariantAttributes;
         private ICollection<ProductVariantAttributeCombination> _productVariantAttributeCombinations;
-        private ICollection<OrderProductVariant> _orderProductVariants;
         private ICollection<TierPrice> _tierPrices;
         private ICollection<Discount> _appliedDiscounts;
 
