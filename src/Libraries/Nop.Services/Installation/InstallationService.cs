@@ -3993,6 +3993,43 @@ namespace Nop.Services.Installation
 
         protected virtual void InstallCustomersAndUsers(string defaultUserEmail, string defaultUserPassword)
         {
+            var crAdministrators = new CustomerRole
+            {
+                Name = "Administrators",
+                Active = true,
+                IsSystemRole = true,
+                SystemName = SystemCustomerRoleNames.Administrators,
+            };
+            var crForumModerators = new CustomerRole
+            {
+                Name = "Forum Moderators",
+                Active = true,
+                IsSystemRole = true,
+                SystemName = SystemCustomerRoleNames.ForumModerators,
+            };
+            var crRegistered = new CustomerRole
+            {
+                Name = "Registered",
+                Active = true,
+                IsSystemRole = true,
+                SystemName = SystemCustomerRoleNames.Registered,
+            };
+            var crGuests = new CustomerRole
+            {
+                Name = "Guests",
+                Active = true,
+                IsSystemRole = true,
+                SystemName = SystemCustomerRoleNames.Guests,
+            };
+            var customerRoles = new List<CustomerRole>
+                                {
+                                    crAdministrators,
+                                    crForumModerators,
+                                    crRegistered,
+                                    crGuests
+                                };
+            customerRoles.ForEach(cr => _customerRoleRepository.Insert(cr));
+
             //admin user
             var adminUser = new Customer()
             {
@@ -4025,6 +4062,9 @@ namespace Nop.Services.Installation
             adminUser.AddAddress(defaultAdminUserAddress);
             adminUser.SetBillingAddress(defaultAdminUserAddress);
             adminUser.SetShippingAddress(defaultAdminUserAddress);
+            adminUser.CustomerRoles.Add(crAdministrators);
+            adminUser.CustomerRoles.Add(crForumModerators);
+            adminUser.CustomerRoles.Add(crRegistered);
             _customerRepository.Insert(adminUser);
             //set default customer name
             _customerService.SaveCustomerAttribute<string>(adminUser, SystemCustomerAttributeNames.FirstName, "John");
@@ -4044,48 +4084,8 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 LastActivityDateUtc = DateTime.UtcNow,
             };
-            _customerRepository.Insert(searchEngineUser);
-
-            var crAdministrators = new CustomerRole
-            {
-                Name = "Administrators",
-                Active = true,
-                IsSystemRole = true,
-                SystemName = SystemCustomerRoleNames.Administrators,
-            };
-            adminUser.CustomerRoles.Add(crAdministrators);
-            var crForumModerators = new CustomerRole
-            {
-                Name = "Forum Moderators",
-                Active = true,
-                IsSystemRole = true,
-                SystemName = SystemCustomerRoleNames.ForumModerators,
-            };
-            adminUser.CustomerRoles.Add(crForumModerators);
-            var crRegistered = new CustomerRole
-            {
-                Name = "Registered",
-                Active = true,
-                IsSystemRole = true,
-                SystemName = SystemCustomerRoleNames.Registered,
-            };
-            adminUser.CustomerRoles.Add(crRegistered);
-            var crGuests = new CustomerRole
-            {
-                Name = "Guests",
-                Active = true,
-                IsSystemRole = true,
-                SystemName = SystemCustomerRoleNames.Guests,
-            };
             searchEngineUser.CustomerRoles.Add(crGuests);
-            var customerRoles = new List<CustomerRole>
-                                {
-                                    crAdministrators,
-                                    crForumModerators,
-                                    crRegistered,
-                                    crGuests
-                                };
-            customerRoles.ForEach(cr => _customerRoleRepository.Insert(cr));
+            _customerRepository.Insert(searchEngineUser);
         }
 
         protected virtual void HashDefaultCustomerPassword(string defaultUserEmail, string defaultUserPassword)
