@@ -517,7 +517,7 @@ namespace Nop.Web.Controllers
         }
 
         [NopHttpsRequirement(SslRequirement.Yes)]
-        public ActionResult AccountActivation(Guid token, string email)
+        public ActionResult AccountActivation(string token, string email)
         {
             var customer = _customerService.GetCustomerByEmail(email);
             if (customer == null)
@@ -527,7 +527,7 @@ namespace Nop.Web.Controllers
             if (String.IsNullOrEmpty(cToken))
                 return RedirectToAction("Index", "Home");
 
-            if (!cToken.Equals(token.ToString(), StringComparison.InvariantCultureIgnoreCase))
+            if (!cToken.Equals(token, StringComparison.InvariantCultureIgnoreCase))
                 return RedirectToAction("Index", "Home");
 
             //activate user account
@@ -1460,9 +1460,9 @@ namespace Nop.Web.Controllers
 
 
         [NopHttpsRequirement(SslRequirement.Yes)]
-        public ActionResult PasswordRecoveryConfirm(Guid token, string customerEmail)
+        public ActionResult PasswordRecoveryConfirm(string token, string email)
         {
-            var customer = _customerService.GetCustomerByEmail(customerEmail);
+            var customer = _customerService.GetCustomerByEmail(email);
             if (customer == null )
                 return RedirectToAction("Index", "Home");
 
@@ -1470,7 +1470,7 @@ namespace Nop.Web.Controllers
             if (String.IsNullOrEmpty(cPrt))
                 return RedirectToAction("Index", "Home");
 
-            if (!cPrt.Equals(token.ToString(), StringComparison.InvariantCultureIgnoreCase))
+            if (!cPrt.Equals(token, StringComparison.InvariantCultureIgnoreCase))
                 return RedirectToAction("Index", "Home");
             
             var model = new PasswordRecoveryConfirmModel();
@@ -1479,9 +1479,9 @@ namespace Nop.Web.Controllers
 
         [HttpPost, ActionName("PasswordRecoveryConfirm")]
         [FormValueRequired("set-password")]
-        public ActionResult PasswordRecoveryConfirmPOST(Guid token, string customerEmail, PasswordRecoveryConfirmModel model)
+        public ActionResult PasswordRecoveryConfirmPOST(string token, string email, PasswordRecoveryConfirmModel model)
         {
-            var customer = _customerService.GetCustomerByEmail(customerEmail);
+            var customer = _customerService.GetCustomerByEmail(email);
             if (customer == null)
                 return RedirectToAction("Index", "Home");
 
@@ -1489,12 +1489,12 @@ namespace Nop.Web.Controllers
             if (String.IsNullOrEmpty(cPrt))
                 return RedirectToAction("Index", "Home");
 
-            if (!cPrt.Equals(token.ToString(), StringComparison.InvariantCultureIgnoreCase))
+            if (!cPrt.Equals(token, StringComparison.InvariantCultureIgnoreCase))
                 return RedirectToAction("Index", "Home");
             
             if (ModelState.IsValid)
             {
-                var response = _customerService.ChangePassword(new ChangePasswordRequest(customerEmail, 
+                var response = _customerService.ChangePassword(new ChangePasswordRequest(email, 
                     false, PasswordFormat.Hashed, model.NewPassword));
                 if (response.Success)
                 {

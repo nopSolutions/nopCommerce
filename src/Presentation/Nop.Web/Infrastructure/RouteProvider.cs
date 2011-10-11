@@ -205,9 +205,8 @@ namespace Nop.Web.Infrastructure
                             new { controller = "Customer", action = "PasswordRecovery" },
                             new[] { "Nop.Web.Controllers" });
             routes.MapLocalizedRoute("PasswordRecoveryConfirm",
-                            "passwordrecovery/confirm/{token}/{customerEmail}",
-                            new { controller = "Customer", action = "PasswordRecoveryConfirm" },
-                            new { token = new GuidConstraint(false) },
+                            "passwordrecovery/confirm",
+                            new { controller = "Customer", action = "PasswordRecoveryConfirm" },                            
                             new[] { "Nop.Web.Controllers" });
 
             //newsletters
@@ -257,9 +256,8 @@ namespace Nop.Web.Infrastructure
                             new { controller = "Customer", action = "Avatar" },
                             new[] { "Nop.Web.Controllers" });
             routes.MapLocalizedRoute("AccountActivation",
-                            "customer/activation/{token}/{email}",
-                            new { controller = "Customer", action = "AccountActivation" },
-                            new { token = new GuidConstraint(false)},
+                            "customer/activation",
+                            new { controller = "Customer", action = "AccountActivation" },                            
                             new[] { "Nop.Web.Controllers" });
             routes.MapLocalizedRoute("CustomerProfile",
                             "profile/{id}",
