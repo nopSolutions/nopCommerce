@@ -234,6 +234,9 @@ namespace Nop.Services.ExportImport
                         xmlWriter.WriteElementString("ManufacturerPartNumber", null, productVariant.ManufacturerPartNumber);
                         xmlWriter.WriteElementString("IsGiftCard", null, productVariant.IsGiftCard.ToString());
                         xmlWriter.WriteElementString("GiftCardType", null, productVariant.GiftCardType.ToString());
+                        xmlWriter.WriteElementString("RequireOtherProducts", null, productVariant.RequireOtherProducts.ToString());
+                        xmlWriter.WriteElementString("RequiredProductVariantIds", null, productVariant.RequiredProductVariantIds);
+                        xmlWriter.WriteElementString("AutomaticallyAddRequiredProductVariants", null, productVariant.AutomaticallyAddRequiredProductVariants.ToString());
                         xmlWriter.WriteElementString("IsDownload", null, productVariant.IsDownload.ToString());
                         xmlWriter.WriteElementString("DownloadId", null, productVariant.DownloadId.ToString());
                         xmlWriter.WriteElementString("UnlimitedDownloads", null, productVariant.UnlimitedDownloads.ToString());
@@ -436,6 +439,9 @@ namespace Nop.Services.ExportImport
                 tableDefinition.Add("ManufacturerPartNumber", "ntext");
                 tableDefinition.Add("IsGiftCard", "nvarchar(5)");
                 tableDefinition.Add("GiftCardTypeId", "int");
+                tableDefinition.Add("RequireOtherProducts", "nvarchar(5)");
+                tableDefinition.Add("RequiredProductVariantIds", "ntext");
+                tableDefinition.Add("AutomaticallyAddRequiredProductVariants", "nvarchar(5)");
                 tableDefinition.Add("IsDownload", "nvarchar(5)");
                 tableDefinition.Add("DownloadId", "int");
                 tableDefinition.Add("UnlimitedDownloads", "nvarchar(5)");
@@ -494,7 +500,7 @@ namespace Nop.Services.ExportImport
                     foreach (var pv in productVariants)
                     {
                         var sb = new StringBuilder();
-                        sb.Append("INSERT INTO [Products] (Name, ShortDescription,FullDescription,ProductTemplateId,ShowOnHomePage,MetaKeywords,MetaDescription,MetaTitle,AllowCustomerReviews,Published,SKU,ManufacturerPartNumber,IsGiftCard,GiftCardTypeId,IsDownload,DownloadId,UnlimitedDownloads,MaxNumberOfDownloads,DownloadActivationTypeId,HasSampleDownload,SampleDownloadId,HasUserAgreement,UserAgreementText,IsRecurring,RecurringCycleLength,RecurringCyclePeriodId,RecurringTotalCycles,IsShipEnabled,IsFreeShipping,AdditionalShippingCharge,IsTaxExempt,TaxCategoryId,ManageInventoryMethodId,StockQuantity,DisplayStockAvailability,DisplayStockQuantity,MinStockQuantity,LowStockActivityId,NotifyAdminForQuantityBelow,BackorderModeId,OrderMinimumQuantity,OrderMaximumQuantity,DisableBuyButton,DisableWishlistButton,CallForPrice,Price,OldPrice,ProductCost,CustomerEntersPrice,MinimumCustomerEnteredPrice,MaximumCustomerEnteredPrice,Weight, Length, Width, Height, CreatedOnUtc,CategoryIds,ManufacturerIds,Picture1,Picture2,Picture3) VALUES (");
+                        sb.Append("INSERT INTO [Products] (Name, ShortDescription,FullDescription,ProductTemplateId,ShowOnHomePage,MetaKeywords,MetaDescription,MetaTitle,AllowCustomerReviews,Published,SKU,ManufacturerPartNumber,IsGiftCard,GiftCardTypeId,RequireOtherProducts,RequiredProductVariantIds,AutomaticallyAddRequiredProductVariants,IsDownload,DownloadId,UnlimitedDownloads,MaxNumberOfDownloads,DownloadActivationTypeId,HasSampleDownload,SampleDownloadId,HasUserAgreement,UserAgreementText,IsRecurring,RecurringCycleLength,RecurringCyclePeriodId,RecurringTotalCycles,IsShipEnabled,IsFreeShipping,AdditionalShippingCharge,IsTaxExempt,TaxCategoryId,ManageInventoryMethodId,StockQuantity,DisplayStockAvailability,DisplayStockQuantity,MinStockQuantity,LowStockActivityId,NotifyAdminForQuantityBelow,BackorderModeId,OrderMinimumQuantity,OrderMaximumQuantity,DisableBuyButton,DisableWishlistButton,CallForPrice,Price,OldPrice,ProductCost,CustomerEntersPrice,MinimumCustomerEnteredPrice,MaximumCustomerEnteredPrice,Weight, Length, Width, Height, CreatedOnUtc,CategoryIds,ManufacturerIds,Picture1,Picture2,Picture3) VALUES (");
                         sb.Append('"'); sb.Append(p.Name != null ? p.Name.Replace('"', '\'') : ""); sb.Append("\",");
                         sb.Append('"'); sb.Append(p.ShortDescription != null ? p.ShortDescription.Replace('"', '\''): ""); sb.Append("\",");
                         sb.Append('"'); sb.Append(p.FullDescription != null ? p.FullDescription.Replace('"', '\'') : ""); sb.Append("\",");
@@ -509,6 +515,9 @@ namespace Nop.Services.ExportImport
                         sb.Append('"'); sb.Append(pv.ManufacturerPartNumber != null ? pv.ManufacturerPartNumber.Replace('"', '\'') : ""); sb.Append("\",");
                         sb.Append('"'); sb.Append(pv.IsGiftCard); sb.Append("\",");
                         sb.Append('"'); sb.Append(pv.GiftCardTypeId); sb.Append("\",");
+                        sb.Append('"'); sb.Append(pv.RequireOtherProducts); sb.Append("\",");
+                        sb.Append('"'); sb.Append(pv.RequiredProductVariantIds != null ? pv.RequiredProductVariantIds.Replace('"', '\'') : ""); sb.Append("\",");
+                        sb.Append('"'); sb.Append(pv.AutomaticallyAddRequiredProductVariants); sb.Append("\",");
                         sb.Append('"'); sb.Append(pv.IsDownload); sb.Append("\",");
                         sb.Append(pv.DownloadId); sb.Append(",");
                         sb.Append('"'); sb.Append(pv.UnlimitedDownloads); sb.Append("\",");

@@ -56,6 +56,21 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the gift card type identifier
         /// </summary>
         public virtual int GiftCardTypeId { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the product variant requires that other product variants are added to the cart (Product X requires Product Y)
+        /// </summary>
+        public virtual bool RequireOtherProducts { get; set; }
+
+        /// <summary>
+        /// Gets or sets a required product variant identifiers (comma separated)
+        /// </summary>
+        public virtual string RequiredProductVariantIds { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether required product variants are automatically added to the cart
+        /// </summary>
+        public virtual bool AutomaticallyAddRequiredProductVariants { get; set; }
         
         /// <summary>
         /// Gets or sets a value indicating whether the product variant is download
@@ -286,21 +301,6 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether the entity is published
         /// </summary>
         public virtual bool Published { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the product variant requires that other product variants are added to the cart (Product X requires Product Y)
-        /// </summary>
-        public virtual bool RequireOtherProducts { get; set; }
-
-        /// <summary>
-        /// Gets or sets a required product variant identifiers (comma separated)
-        /// </summary>
-        public virtual string RequiredProductVariantIds { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether required product variants are automatically added to the cart
-        /// </summary>
-        public virtual bool AutomaticallyAddRequiredProductVariants { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the entity has been deleted

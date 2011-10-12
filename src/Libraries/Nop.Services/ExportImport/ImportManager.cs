@@ -66,6 +66,9 @@ namespace Nop.Services.ExportImport
                     string manufacturerPartNumber = dr["ManufacturerPartNumber"].ToString();
                     bool isGiftCard = Convert.ToBoolean(dr["IsGiftCard"]);
                     int giftCardTypeId = Convert.ToInt32(dr["GiftCardTypeId"]);
+                    bool requireOtherProducts = Convert.ToBoolean(dr["RequireOtherProducts"]);
+                    string requiredProductVariantIds = dr["RequiredProductVariantIds"].ToString();
+                    bool automaticallyAddRequiredProductVariants = Convert.ToBoolean(dr["AutomaticallyAddRequiredProductVariants"]);
                     bool isDownload = Convert.ToBoolean(dr["IsDownload"]);
                     int downloadId = Convert.ToInt32(dr["DownloadId"]);
                     bool unlimitedDownloads = Convert.ToBoolean(dr["UnlimitedDownloads"]);
@@ -137,6 +140,9 @@ namespace Nop.Services.ExportImport
                         productVariant.ManufacturerPartNumber = manufacturerPartNumber;
                         productVariant.IsGiftCard = isGiftCard;
                         productVariant.GiftCardTypeId = giftCardTypeId;
+                        productVariant.RequireOtherProducts = requireOtherProducts;
+                        productVariant.RequiredProductVariantIds = requiredProductVariantIds;
+                        productVariant.AutomaticallyAddRequiredProductVariants = automaticallyAddRequiredProductVariants;
                         productVariant.IsDownload = isDownload;
                         productVariant.DownloadId = downloadId;
                         productVariant.UnlimitedDownloads = unlimitedDownloads;
@@ -209,6 +215,9 @@ namespace Nop.Services.ExportImport
                             ManufacturerPartNumber = manufacturerPartNumber,
                             IsGiftCard = isGiftCard,
                             GiftCardTypeId = giftCardTypeId,
+                            RequireOtherProducts = requireOtherProducts,
+                            RequiredProductVariantIds = requiredProductVariantIds,
+                            AutomaticallyAddRequiredProductVariants = automaticallyAddRequiredProductVariants,
                             IsDownload = isDownload,
                             DownloadId = downloadId,
                             UnlimitedDownloads = unlimitedDownloads,

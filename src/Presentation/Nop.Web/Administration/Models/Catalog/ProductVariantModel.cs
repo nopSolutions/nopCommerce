@@ -53,6 +53,15 @@ namespace Nop.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.GiftCardType")]
         public int GiftCardTypeId { get; set; }
 
+        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.RequireOtherProducts")]
+        public bool RequireOtherProducts { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.RequiredProductVariantIds")]
+        public string RequiredProductVariantIds { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.AutomaticallyAddRequiredProductVariants")]
+        public bool AutomaticallyAddRequiredProductVariants { get; set; }
+
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.IsDownload")]
         public bool IsDownload { get; set; }
         
@@ -194,15 +203,6 @@ namespace Nop.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.AvailableEndDateTime")]
         [UIHint("DateNullable")]
         public DateTime? AvailableEndDateTimeUtc { get; set; }
-
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.RequireOtherProducts")]
-        public virtual bool RequireOtherProducts { get; set; }
-
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.RequiredProductVariantIds")]
-        public virtual string RequiredProductVariantIds { get; set; }
-
-        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.AutomaticallyAddRequiredProductVariants")]
-        public virtual bool AutomaticallyAddRequiredProductVariants { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.Published")]
         public bool Published { get; set; }
