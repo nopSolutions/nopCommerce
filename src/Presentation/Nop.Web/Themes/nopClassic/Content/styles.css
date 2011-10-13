@@ -290,7 +290,7 @@ ul.languagelist li:hover{cursor:pointer;}
 /* ONE PAGE CHECKOUT */
 .opc .buttons{margin-top:0;padding-top:2em;}
 .opc .buttons .back-link small{display:none;}
-.opc .buttons .back-link a background:url(images/arrow-up.png) 0 50% no-repeat;padding-left:20px;}
+.opc .buttons .back-link a {background:url(images/arrow-up.png) 0 50% no-repeat;padding-left:20px;}
 .opc .buttons.disabled button{display:none;}
 .opc .buttons .please-wait{height:21px;line-height:21px;}
 .opc .ul{list-style:disc outside; padding-left:18px;}
