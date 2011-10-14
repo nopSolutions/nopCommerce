@@ -5,9 +5,27 @@ declare @resources xml
 --a resource will be delete if its value is empty
 set @resources='
 <Language>
-  <LocaleResource Name="">
-    <Value></Value>
-  </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.ASPNETInfo.Hint">
+        <Value>ASP.NET info</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.System.SystemInfo.IsFullTrust.Hint">
+        <Value>Is full trust level</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.System.SystemInfo.NopVersion.Hint">
+        <Value>nopCommerce version</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.System.SystemInfo.OperatingSystem.Hint">
+        <Value>Operating system</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.System.SystemInfo.ServerLocalTime.Hint">
+        <Value>Server local time</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.System.SystemInfo.ServerTimeZone.Hint">
+        <Value>Server time zone</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.System.SystemInfo.UTCTime.Hint">
+        <Value>Greenwich mean time (GMT/UTC)</Value>
+    </LocaleResource>
 </Language>
 '
 

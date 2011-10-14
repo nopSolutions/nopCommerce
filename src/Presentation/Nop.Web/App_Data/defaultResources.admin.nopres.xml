@@ -8388,24 +8388,59 @@
 						<Children>
 							<LocaleResource Name="ASPNETInfo">
 								<Value>ASP.NET info</Value>
+								<Children>
+									<LocaleResource Name="Hint">
+										<Value>ASP.NET info</Value>
+									</LocaleResource>
+								</Children>
 							</LocaleResource>
 							<LocaleResource Name="IsFullTrust">
 								<Value>Is full trust level</Value>
+								<Children>
+									<LocaleResource Name="Hint">
+										<Value>Is full trust level</Value>
+									</LocaleResource>
+								</Children>
 							</LocaleResource>
 							<LocaleResource Name="NopVersion">
 								<Value>nopCommerce version</Value>
+								<Children>
+									<LocaleResource Name="Hint">
+										<Value>nopCommerce version</Value>
+									</LocaleResource>
+								</Children>
 							</LocaleResource>
 							<LocaleResource Name="OperatingSystem">
 								<Value>Operating system</Value>
+								<Children>
+									<LocaleResource Name="Hint">
+										<Value>Operating system</Value>
+									</LocaleResource>
+								</Children>
 							</LocaleResource>
 							<LocaleResource Name="ServerLocalTime">
 								<Value>Server local time</Value>
+								<Children>
+									<LocaleResource Name="Hint">
+										<Value>Server local time</Value>
+									</LocaleResource>
+								</Children>
 							</LocaleResource>
 							<LocaleResource Name="ServerTimeZone">
 								<Value>Server time zone</Value>
+								<Children>
+									<LocaleResource Name="Hint">
+										<Value>Server time zone</Value>
+									</LocaleResource>
+								</Children>
 							</LocaleResource>
 							<LocaleResource Name="UTCTime">
 								<Value>Greenwich mean time (GMT/UTC)</Value>
+								<Children>
+									<LocaleResource Name="Hint">
+										<Value>Greenwich mean time (GMT/UTC)</Value>
+									</LocaleResource>
+								</Children>
 							</LocaleResource>
 						</Children>
 					</LocaleResource>
