@@ -171,10 +171,30 @@ namespace Nop.Core.Plugins
 
         protected static bool IsAlreadyLoaded(FileInfo fileInfo)
         {
-            foreach (var a in AppDomain.CurrentDomain.GetAssemblies())
-                //do not comapre the full assembly name, just filename
-                if (fileInfo.Name.Equals(Path.GetFileName(a.Location), StringComparison.InvariantCultureIgnoreCase))
-                    return true;
+            //compare full assembly name
+            //var fileAssemblyName = AssemblyName.GetAssemblyName(fileInfo.FullName);
+            //foreach (var a in AppDomain.CurrentDomain.GetAssemblies())
+            //{
+            //    if (a.FullName.Equals(fileAssemblyName.FullName, StringComparison.InvariantCultureIgnoreCase))
+            //        return true;
+            //}
+            //return false;
+
+            //do not compare the full assembly name, just filename
+            try
+            {
+                string fileNameWithoutExt = Path.GetFileNameWithoutExtension(fileInfo.FullName);
+                foreach (var a in AppDomain.CurrentDomain.GetAssemblies())
+                {
+                    string assemblyName = a.FullName.Split(new[] {','}).FirstOrDefault();
+                    if (fileNameWithoutExt.Equals(assemblyName, StringComparison.InvariantCultureIgnoreCase))
+                        return true;
+                }
+            }
+            catch (Exception exc)
+            {
+                Debug.WriteLine("Cannot validate whether an assembly is already loaded. " + exc);
+            }
             return false;
         }
 
