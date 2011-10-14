@@ -700,7 +700,7 @@ namespace Nop.Web.Controllers
                         }
                     }
 
-                    if (_forumSettings.SignaturesEnabled)
+                    if (_forumSettings.ForumsEnabled && _forumSettings.SignaturesEnabled)
                         _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.Signature, model.Signature);
 
                     return RedirectToAction("info");
