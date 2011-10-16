@@ -12,6 +12,7 @@ using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain;
 using Nop.Core.Infrastructure;
+using Nop.Services.Logging;
 using Nop.Web.Framework;
 using Nop.Web.Framework.EmbeddedViews;
 using Nop.Web.Framework.Mvc;
@@ -27,7 +28,8 @@ namespace Nop.Web
     {
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
-            filters.Add(new HandleErrorAttribute());
+            //do not register HandleErrorAttribute. use classic error handling mode
+            //filters.Add(new HandleErrorAttribute());
         }
 
         public static void RegisterRoutes(RouteCollection routes)
@@ -126,6 +128,8 @@ namespace Nop.Web
         {
             //disable compression (if enabled). More info - http://stackoverflow.com/questions/3960707/asp-net-mvc-weird-characters-in-error-page
             CompressAttribute.DisableCompression(HttpContext.Current);
+            //log error
+            LogException(Server.GetLastError());
         }
         public override string GetVaryByCustomString(HttpContext context, string custom)
         {
@@ -182,6 +186,26 @@ namespace Nop.Web
                         }
                     }
                 }
+            }
+        }
+
+        protected void LogException(Exception exc)
+        {
+            if (exc == null)
+                return;
+            
+            if (!DataSettingsHelper.DatabaseIsInstalled())
+                return;
+            
+            try
+            {
+                var logger = EngineContext.Current.Resolve<ILogger>();
+                var workContext = EngineContext.Current.Resolve<IWorkContext>();
+                logger.Error(exc.Message, exc, workContext.CurrentCustomer);
+            }
+            catch (Exception)
+            {
+                //don't throw new exception if occurs
             }
         }
     }
