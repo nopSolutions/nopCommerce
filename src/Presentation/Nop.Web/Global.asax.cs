@@ -122,6 +122,11 @@ namespace Nop.Web
             SetWorkingCulture();
         }
 
+        protected void Application_Error(Object sender, EventArgs e)
+        {
+            //disable compression (if enabled). More info - http://stackoverflow.com/questions/3960707/asp-net-mvc-weird-characters-in-error-page
+            CompressAttribute.DisableCompression(HttpContext.Current);
+        }
         public override string GetVaryByCustomString(HttpContext context, string custom)
         {
             switch (custom)
@@ -132,7 +137,7 @@ namespace Nop.Web
                     return base.GetVaryByCustomString(context, custom);
             }
         }
-
+        
         protected void EnsureDatabaseIsInstalled()
         {
             var webHelper = EngineContext.Current.Resolve<IWebHelper>();

@@ -41,5 +41,16 @@ namespace Nop.Web.Framework
                 response.Filter = new DeflateStream(response.Filter, CompressionMode.Compress);
             }
         }
+
+        public static void DisableCompression(HttpContext context)
+        {
+            if (context != null &&
+                context.Response != null
+                && context.Response.Filter != null
+                && (context.Response.Filter is GZipStream || context.Response.Filter is DeflateStream))
+            {
+                context.Response.Filter = null;
+            }
+        }
     }
 }
