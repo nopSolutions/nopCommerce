@@ -2153,6 +2153,9 @@
 					<LocaleResource Name="Clear">
 						<Value>Clear</Value>
 					</LocaleResource>
+					<LocaleResource Name="ConfigurationNotRequired">
+						<Value>Configuration is not required</Value>
+					</LocaleResource>
 					<LocaleResource Name="DeleteConfirmationParam">
 						<Value>Are you sure you want to delete "{0}"?</Value>
 					</LocaleResource>

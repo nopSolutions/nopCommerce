@@ -64,11 +64,11 @@ namespace Nop.Plugin.Sms.Verizon.Controllers
 
                 if (!smsProvider.SendSms(model.TestMessage))
                 {
-                    model.TestSmsResult = _localizationService.GetResource("Plugins.Sms.Verizon.Test.Failed");
+                    model.TestSmsResult = _localizationService.GetResource("Plugins.Sms.Verizon.TestFailed");
                 }
                 else
                 {
-                    model.TestSmsResult = _localizationService.GetResource("Plugins.Sms.Verizon.Test.Success");
+                    model.TestSmsResult = _localizationService.GetResource("Plugins.Sms.Verizon.TestSuccess");
                 }
             }
             catch(Exception exc)

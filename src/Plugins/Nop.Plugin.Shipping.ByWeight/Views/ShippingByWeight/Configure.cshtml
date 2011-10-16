@@ -18,7 +18,8 @@
                         columns.Bound(x => x.ShippingMethodName).Width(200).ReadOnly();
                         columns.Bound(x => x.From).Width(100);
                         columns.Bound(x => x.To).Width(100);
-                        columns.Bound(x => x.UsePercentage).Width(50);
+                        columns.Bound(x => x.UsePercentage).Width(50)
+                            .ClientTemplate("<input type='checkbox' disabled='disabled' name='UsePercentage' <#=UsePercentage ? checked='checked' : ''#> />");
                         columns.Bound(x => x.ShippingChargePercentage).Width(100);
                         columns.Bound(x => x.ShippingChargeAmount).Width(100);
                         columns.Command(commands =>

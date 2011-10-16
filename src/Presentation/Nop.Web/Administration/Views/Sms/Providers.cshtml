@@ -30,7 +30,8 @@
                             .Centered()
                             .Title(T("Admin.Configuration.SMSProviders.Configure").Text);
                         columns.Bound(x => x.SystemName).Width(250).ReadOnly();
-                        columns.Bound(x => x.IsActive).Width(100);
+                        columns.Bound(x => x.IsActive).Width(100)
+                            .ClientTemplate("<input type='checkbox' disabled='disabled' name='IsActive' <#=IsActive ? checked='checked' : ''#> />");
                         columns.Command(commands =>
                         {
                             commands.Edit();

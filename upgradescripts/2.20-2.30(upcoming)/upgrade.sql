@@ -26,6 +26,9 @@ set @resources='
     <LocaleResource Name="Admin.System.SystemInfo.UTCTime.Hint">
         <Value>Greenwich mean time (GMT/UTC)</Value>
     </LocaleResource>
+    <LocaleResource Name="Admin.Common.ConfigurationNotRequired">
+        <Value>Configuration is not required</Value>
+    </LocaleResource>
 </Language>
 '
 
