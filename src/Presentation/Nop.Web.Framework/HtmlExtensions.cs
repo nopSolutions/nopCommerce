@@ -113,7 +113,7 @@ namespace Nop.Web.Framework
             };
 
             var window = helper.Telerik().Window().Name(modalId)
-                .Title(EngineContext.Current.LocalizationService().GetResource("Admin.Common.AreYouSure"))
+                .Title(EngineContext.Current.Resolve<ILocalizationService>().GetResource("Admin.Common.AreYouSure"))
                 .Modal(true)
                 .Effects(x => x.Toggle())
                 .Resizable(x => x.Enabled(false))
@@ -138,7 +138,7 @@ namespace Nop.Web.Framework
                     hintResource =
                         EngineContext.Current.Resolve<ILocalizationService>().GetResource(
                             resourceDisplayName.ResourceKey + ".Hint",
-                            EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Id, false, "");
+                            EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Id);
 
                     result.Append(helper.Hint(hintResource).ToHtmlString());
                 }

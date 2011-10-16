@@ -100,7 +100,6 @@
     <Compile Include="Controllers\FormValueExistsAttribute.cs" />
     <Compile Include="DependencyRegistrar.cs" />
     <Compile Include="Mvc\XmlDownloadResult.cs" />
-    <Compile Include="EngineExtensions.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="HtmlExtensions.cs" />
     <Compile Include="Mvc\ImageResult.cs" />

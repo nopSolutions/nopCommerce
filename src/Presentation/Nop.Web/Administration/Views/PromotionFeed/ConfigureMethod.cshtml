@@ -1,22 +1,15 @@
 ﻿@model PromotionFeedModel
-
-@using (Html.BeginForm())
-{
-    @Html.ValidationSummary(true)
-    @Html.HiddenFor(model => model.SystemName)
-    <div class="section-header">
-        <div class="title">
-            <img src="@Url.Content("~/Administration/Content/images/ico-promotions.png")" alt="" />
-            @T("Admin.Promotions.Feeds.Configure") - @Model.FriendlyName @Html.ActionLink("(" + T("Admin.Promotions.Feeds.BackToList") + ")", "List")
-        </div>
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Administration/Content/images/ico-promotions.png")" alt="" />
+        @T("Admin.Promotions.Feeds.Configure") - @Model.FriendlyName @Html.ActionLink("(" + T("Admin.Promotions.Feeds.BackToList") + ")", "List")
     </div>
-    
-    if (!String.IsNullOrEmpty(Model.ConfigurationActionName))
-    {
-        @Html.Action(Model.ConfigurationActionName, Model.ConfigurationControllerName, Model.ConfigurationRouteValues);
-    }
-    else
-    {
-        @T("Admin.Common.ConfigurationNotRequired")
-    }
+</div>
+@if (!String.IsNullOrEmpty(Model.ConfigurationActionName))
+{
+    @Html.Action(Model.ConfigurationActionName, Model.ConfigurationControllerName, Model.ConfigurationRouteValues);
+}
+else
+{
+    @T("Admin.Common.ConfigurationNotRequired")
 }
