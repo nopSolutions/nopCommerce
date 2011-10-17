@@ -764,15 +764,16 @@ namespace Nop.Web.Controllers
                 .GetAllCategoriesByParentCategoryId(categoryId)
                 .Select(x =>
                 {
+                    var subCatName = x.GetLocalized(y => y.Name);
                     var subCatModel = new CategoryModel.SubCategoryModel()
                     {
                         Id = x.Id,
-                        Name = x.GetLocalized(y => y.Name),
+                        Name = subCatName,
                         SeName = x.GetSeName(),
                     };
                     subCatModel.PictureModel.ImageUrl = _pictureService.GetPictureUrl(x.PictureId, _mediaSetting.CategoryThumbPictureSize, true);
-                    subCatModel.PictureModel.Title = string.Format(_localizationService.GetResource("Media.Category.ImageLinkTitleFormat"), model.Name);
-                    subCatModel.PictureModel.AlternateText = string.Format(_localizationService.GetResource("Media.Category.ImageAlternateTextFormat"), model.Name);
+                    subCatModel.PictureModel.Title = string.Format(_localizationService.GetResource("Media.Category.ImageLinkTitleFormat"), subCatName);
+                    subCatModel.PictureModel.AlternateText = string.Format(_localizationService.GetResource("Media.Category.ImageAlternateTextFormat"), subCatName);
                     return subCatModel;
                 })
                 .ToList();
