@@ -143,7 +143,7 @@ var Billing = {
             type: 'post',
             success: this.nextStep,
             complete: this.resetLoadWaiting,
-            error: Checkout.ajaxFailure,
+            error: Checkout.ajaxFailure
         });
     },
 
@@ -204,7 +204,7 @@ var Shipping = {
             type: 'post',
             success: this.nextStep,
             complete: this.resetLoadWaiting,
-            error: Checkout.ajaxFailure,
+            error: Checkout.ajaxFailure
         });
     },
 
@@ -266,7 +266,7 @@ var ShippingMethod = {
                 type: 'post',
                 success: this.nextStep,
                 complete: this.resetLoadWaiting,
-                error: Checkout.ajaxFailure,
+                error: Checkout.ajaxFailure
             });
         }
     },
@@ -328,7 +328,7 @@ var PaymentMethod = {
                 type: 'post',
                 success: this.nextStep,
                 complete: this.resetLoadWaiting,
-                error: Checkout.ajaxFailure,
+                error: Checkout.ajaxFailure
             });
         }
     },
@@ -373,7 +373,7 @@ var PaymentInfo = {
             type: 'post',
             success: this.nextStep,
             complete: this.resetLoadWaiting,
-            error: Checkout.ajaxFailure,
+            error: Checkout.ajaxFailure
         });
     },
 
@@ -417,7 +417,7 @@ var ConfirmOrder = {
             type: 'post',
             success: this.nextStep,
             complete: this.resetLoadWaiting,
-            error: Checkout.ajaxFailure,
+            error: Checkout.ajaxFailure
         });
     },
     
