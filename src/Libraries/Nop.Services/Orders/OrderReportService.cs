@@ -65,9 +65,11 @@ namespace Nop.Services.Orders
         /// <param name="ss">Shipping status</param>
         /// <param name="startTimeUtc">Start date</param>
         /// <param name="endTimeUtc">End date</param>
+        /// <param name="ignoreCancelledOrders">A value indicating whether to ignore cancelled orders</param>
         /// <returns>Result</returns>
         public virtual OrderAverageReportLine GetOrderAverageReportLine(OrderStatus? os,
-            PaymentStatus? ps, ShippingStatus? ss, DateTime? startTimeUtc, DateTime? endTimeUtc)
+            PaymentStatus? ps, ShippingStatus? ss, DateTime? startTimeUtc, DateTime? endTimeUtc,
+            bool ignoreCancelledOrders = false)
         {
             int? orderStatusId = null;
             if (os.HasValue)
@@ -83,6 +85,11 @@ namespace Nop.Services.Orders
 
             var query = _orderRepository.Table;
             query = query.Where(o => !o.Deleted);
+            if (ignoreCancelledOrders)
+            {
+                int cancelledOrderStatusId = (int)OrderStatus.Cancelled;
+                query = query.Where(o => o.OrderStatusId != cancelledOrderStatusId);
+            }
             if (orderStatusId.HasValue)
                 query = query.Where(o => o.OrderStatusId == orderStatusId.Value);
             if (paymentStatusId.HasValue)

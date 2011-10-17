@@ -1539,7 +1539,7 @@ namespace Nop.Admin.Controllers
         {
             var model = new List<OrderIncompleteReportLineModel>();
             //not paid
-            var psPending = _orderReportService.GetOrderAverageReportLine(null, PaymentStatus.Pending, null, null, null);
+            var psPending = _orderReportService.GetOrderAverageReportLine(null, PaymentStatus.Pending, null, null, null, true);
             model.Add(new OrderIncompleteReportLineModel()
             {
                 Item = _localizationService.GetResource("Admin.SalesReport.Incomplete.TotalUnpaidOrders"),
@@ -1547,7 +1547,7 @@ namespace Nop.Admin.Controllers
                 Total = _priceFormatter.FormatPrice(psPending.SumOrders, true, false)
             });
             //not shipped
-            var ssPending = _orderReportService.GetOrderAverageReportLine(null, null, ShippingStatus.NotYetShipped, null, null);
+            var ssPending = _orderReportService.GetOrderAverageReportLine(null, null, ShippingStatus.NotYetShipped, null, null, true);
             model.Add(new OrderIncompleteReportLineModel()
             {
                 Item = _localizationService.GetResource("Admin.SalesReport.Incomplete.TotalNotShippedOrders"),
@@ -1555,7 +1555,7 @@ namespace Nop.Admin.Controllers
                 Total = _priceFormatter.FormatPrice(ssPending.SumOrders, true, false)
             });
             //pending
-            var osPending = _orderReportService.GetOrderAverageReportLine(OrderStatus.Pending, null, null, null, null);
+            var osPending = _orderReportService.GetOrderAverageReportLine(OrderStatus.Pending, null, null, null, null, true);
             model.Add(new OrderIncompleteReportLineModel()
             {
                 Item = _localizationService.GetResource("Admin.SalesReport.Incomplete.TotalIncompleteOrders"),
