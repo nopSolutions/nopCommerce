@@ -4444,6 +4444,7 @@ namespace Nop.Services.Installation
                 {
                     UseSystemEmailForContactUsForm = true,
                     UseStoredProceduresIfSupported = true,
+                    EnableHttpCompression = true,
                     SitemapEnabled = true,
                     SitemapIncludeCategories = true,
                     SitemapIncludeManufacturers = true,

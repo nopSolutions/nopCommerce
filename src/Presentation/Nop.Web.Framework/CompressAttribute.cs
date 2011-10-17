@@ -2,6 +2,9 @@
 using System.IO.Compression;
 using System.Web;
 using System.Web.Mvc;
+using Nop.Core.Data;
+using Nop.Core.Domain.Common;
+using Nop.Core.Infrastructure;
 
 namespace Nop.Web.Framework
 {
@@ -21,15 +24,17 @@ namespace Nop.Web.Framework
             if (string.IsNullOrEmpty(acceptEncoding)) 
                 return;
 
-            acceptEncoding = acceptEncoding.ToUpperInvariant();
-
-            HttpResponseBase response = filterContext.HttpContext.Response;
-
             if (filterContext.IsChildAction)
                 return;
-          
 
+            if (!DataSettingsHelper.DatabaseIsInstalled())
+                return;
+            
+            if (!EngineContext.Current.Resolve<CommonSettings>().EnableHttpCompression)
+                return;
 
+            HttpResponseBase response = filterContext.HttpContext.Response;
+            acceptEncoding = acceptEncoding.ToUpperInvariant();
             if (acceptEncoding.Contains("GZIP"))
             {
                 response.AppendHeader("Content-encoding", "gzip");

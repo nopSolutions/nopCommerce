@@ -104,3 +104,13 @@ DROP TABLE #LocaleStringResourceTmp
 GO
 
 
+
+
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'commonsettings.enablehttpcompression')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'commonsettings.enablehttpcompression', N'true')
+END
+GO

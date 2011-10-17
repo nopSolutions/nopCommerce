@@ -11,6 +11,8 @@ namespace Nop.Core.Domain.Common
 
         public bool HideAdvertisementsOnAdminArea { get; set; }
 
+        public bool EnableHttpCompression { get; set; }
+
         public bool SitemapEnabled { get; set; }
         public bool SitemapIncludeCategories { get; set; }
         public bool SitemapIncludeManufacturers { get; set; }
