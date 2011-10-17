@@ -345,6 +345,7 @@ namespace Nop.Web.Controllers
                     ModelState.AddModelError("", string.Format("The '{0}' account is not granted with Modify permission on folder '{1}'. Please configure these permissions.", WindowsIdentity.GetCurrent().Name, dir));
 
             var filesToCheck = new List<string>();
+            filesToCheck.Add(rootDir + "Global.asax");
             filesToCheck.Add(rootDir + "web.config");
             filesToCheck.Add(rootDir + "App_Data\\InstalledPlugins.txt");
             filesToCheck.Add(rootDir + "App_Data\\Settings.txt");

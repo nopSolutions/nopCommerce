@@ -486,18 +486,28 @@ namespace Nop.Core
             {
                 //full trust
                 HttpRuntime.UnloadAppDomain();
+
+                TryWriteGlobalAsax();
             }
             else
             {
                 //medium trust
                 bool success = TryWriteWebConfig();
-
                 if (!success)
                 {
                     throw new NopException("nopCommerce needs to be restarted due to a configuration change, but was unable to do so.\r\n" +
                         "To prevent this issue in the future, a change to the web server configuration is required:\r\n" +
                         "- run the application in a full trust environment, or\r\n" +
                         "- give the application write access to the 'web.config' file.");
+                }
+
+                success = TryWriteGlobalAsax();
+                if (!success)
+                {
+                    throw new NopException("nopCommerce needs to be restarted due to a configuration change, but was unable to do so.\r\n" +
+                        "To prevent this issue in the future, a change to the web server configuration is required:\r\n" +
+                        "- run the application in a full trust environment, or\r\n" +
+                        "- give the application write access to the 'Global.asax' file.");
                 }
             }
 
@@ -520,6 +530,27 @@ namespace Nop.Core
                 // In medium trust, "UnloadAppDomain" is not supported. Touch web.config
                 // to force an AppDomain restart.
                 File.SetLastWriteTimeUtc(MapPath("~/web.config"), DateTime.UtcNow);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private bool TryWriteGlobalAsax()
+        {
+            try
+            {
+                //When a new plugin is dropped in the Plugins folder and is installed into nopCommerce, 
+                //even if the plugin has registered routes for its controllers, 
+                //these routes will not be working as the MVC framework couldn't 
+                //find the new controller types and couldn't instantiate the requested controller. 
+                //That's why you get these nasty errors 
+                //i.e "Controller does not implement IController".
+                //The issue is described here: http://www.nopcommerce.com/boards/t/10969/nop-20-plugin.aspx?p=4#51318
+                //The solutino is to touch global.asax file
+                File.SetLastWriteTimeUtc(MapPath("~/global.asax"), DateTime.UtcNow);
                 return true;
             }
             catch
