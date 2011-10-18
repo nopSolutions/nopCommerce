@@ -27,5 +27,7 @@ namespace Nop.Plugin.Shipping.UPS
         public string DefaultShippedFromZipPostalCode { get; set; }
 
         public string CarrierServicesOffered { get; set; }
+
+        public bool EnsurePackage { get; set; }
     }
 }

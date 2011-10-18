@@ -71,6 +71,15 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.NopLabelFor(model => model.EnsurePackage):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.EnsurePackage)
+                @Html.ValidationMessageFor(model => model.EnsurePackage)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.NopLabelFor(model => model.AdditionalHandlingCharge):
             </td>
             <td class="adminData">

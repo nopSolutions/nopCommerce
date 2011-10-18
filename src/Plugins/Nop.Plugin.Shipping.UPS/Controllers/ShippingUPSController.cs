@@ -34,6 +34,7 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
             model.Username = _upsSettings.Username;
             model.Password = _upsSettings.Password;
             model.AdditionalHandlingCharge = _upsSettings.AdditionalHandlingCharge;
+            model.EnsurePackage = _upsSettings.EnsurePackage;
 
             foreach (UPSCustomerClassification customerClassification in Enum.GetValues(typeof(UPSCustomerClassification)))
             {
@@ -109,6 +110,7 @@ namespace Nop.Plugin.Shipping.UPS.Controllers
             _upsSettings.Username = model.Username;
             _upsSettings.Password = model.Password;
             _upsSettings.AdditionalHandlingCharge = model.AdditionalHandlingCharge;
+            _upsSettings.EnsurePackage = model.EnsurePackage;
             _upsSettings.CustomerClassification = (UPSCustomerClassification)Enum.Parse(typeof(UPSCustomerClassification), model.CustomerClassification);
             _upsSettings.PickupType = (UPSPickupType)Enum.Parse(typeof(UPSPickupType), model.PickupType);
             _upsSettings.PackagingType = (UPSPackagingType)Enum.Parse(typeof(UPSPackagingType), model.PackagingType);

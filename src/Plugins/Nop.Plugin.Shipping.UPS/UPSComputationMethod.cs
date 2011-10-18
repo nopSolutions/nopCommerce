@@ -3,7 +3,7 @@
 //------------------------------------------------------------------------------
 
 using System;
-using System.Collections.Specialized;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -12,14 +12,15 @@ using System.Text;
 using System.Web.Routing;
 using System.Xml;
 using Nop.Core;
-using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Plugins;
 using Nop.Plugin.Shipping.UPS.Domain;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
+using Nop.Services.Orders;
 using Nop.Services.Shipping;
-using System.Collections.Generic;
+using Nop.Core.Domain.Directory;
 
 namespace Nop.Plugin.Shipping.UPS
 {
@@ -44,19 +45,27 @@ namespace Nop.Plugin.Shipping.UPS
         private readonly ISettingService _settingService;
         private readonly UPSSettings _upsSettings;
         private readonly ICountryService _countryService;
+        private readonly ICurrencyService _currencyService;
+        private readonly CurrencySettings _currencySettings;
+        private readonly IOrderTotalCalculationService _orderTotalCalculationService;
 
         #endregion
 
         #region Ctor
         public UPSComputationMethod(IMeasureService measureService,
             IShippingService shippingService, ISettingService settingService,
-            UPSSettings upsSettings, ICountryService countryService)
+            UPSSettings upsSettings, ICountryService countryService,
+            ICurrencyService currencyService, CurrencySettings currencySettings,
+            IOrderTotalCalculationService orderTotalCalculationService)
         {
             this._measureService = measureService;
             this._shippingService = shippingService;
             this._settingService = settingService;
             this._upsSettings = upsSettings;
             this._countryService = countryService;
+            this._currencyService = currencyService;
+            this._currencySettings = currencySettings;
+            this._orderTotalCalculationService = orderTotalCalculationService;
         }
         #endregion
 
@@ -91,6 +100,15 @@ namespace Nop.Plugin.Shipping.UPS
             string zipPostalCodeTo = getShippingOptionRequest.ShippingAddress.ZipPostalCode;
             string countryCodeFrom = getShippingOptionRequest.CountryFrom.TwoLetterIsoCode;
             string countryCodeTo = getShippingOptionRequest.ShippingAddress.Country.TwoLetterIsoCode;
+
+
+            decimal orderSubTotalDiscountAmount = decimal.Zero;
+            Discount orderSubTotalAppliedDiscount = null;
+            decimal subTotalWithoutDiscountBase = decimal.Zero;
+            decimal subTotalWithDiscountBase = decimal.Zero;
+            _orderTotalCalculationService.GetShoppingCartSubTotal(getShippingOptionRequest.Items,
+                out orderSubTotalDiscountAmount, out orderSubTotalAppliedDiscount,
+                out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
 
             var sb = new StringBuilder();
             sb.Append("<?xml version='1.0'?>");
@@ -157,6 +175,18 @@ namespace Nop.Plugin.Shipping.UPS
                 sb.Append("<PackageWeight>");
                 sb.AppendFormat("<Weight>{0}</Weight>", weight);
                 sb.Append("</PackageWeight>");
+
+                if (_upsSettings.EnsurePackage)
+                {
+                    //The maximum declared amount per package: 50000 USD.
+                    int packageEnsurancePrice = Convert.ToInt32(subTotalWithDiscountBase);
+                    sb.Append("<PackageServiceOptions>");
+                    sb.Append("<InsuredValue>");
+                    sb.AppendFormat("<CurrencyCode>{0}</CurrencyCode>", _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode);
+                    sb.AppendFormat("<MonetaryValue>{0}</MonetaryValue>", packageEnsurancePrice);
+                    sb.Append("</InsuredValue>");
+                    sb.Append("</PackageServiceOptions>");
+                }
                 sb.Append("</Package>");
             }
             else
@@ -189,6 +219,9 @@ namespace Nop.Plugin.Shipping.UPS
                 if (length2 < 1)
                     length2 = 1;
 
+                //The maximum declared amount per package: 50000 USD.
+                int packageEnsurancePrice = Convert.ToInt32(subTotalWithDiscountBase / totalPackages);
+
                 for (int i = 0; i < totalPackages; i++)
                 {
                     sb.Append("<Package>");
@@ -203,6 +236,17 @@ namespace Nop.Plugin.Shipping.UPS
                     sb.Append("<PackageWeight>");
                     sb.AppendFormat("<Weight>{0}</Weight>", weight2);
                     sb.Append("</PackageWeight>");
+
+                    if (_upsSettings.EnsurePackage)
+                    {
+                        sb.Append("<PackageServiceOptions>");
+                        sb.Append("<InsuredValue>");
+                        sb.AppendFormat("<CurrencyCode>{0}</CurrencyCode>", _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode);
+                        sb.AppendFormat("<MonetaryValue>{0}</MonetaryValue>", packageEnsurancePrice);
+                        sb.Append("</InsuredValue>");
+                        sb.Append("</PackageServiceOptions>");
+                    }
+
                     sb.Append("</Package>");
                 }
             }

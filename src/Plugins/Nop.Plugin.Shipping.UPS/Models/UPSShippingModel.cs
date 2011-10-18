@@ -31,6 +31,9 @@ namespace Nop.Plugin.Shipping.UPS.Models
         [DisplayNameAttribute("Additional handling charge")]
         public decimal AdditionalHandlingCharge { get; set; }
 
+        [DisplayNameAttribute("Ensure package")]
+        public bool EnsurePackage { get; set; }
+
         [DisplayNameAttribute("UPS Customer Classification")]
         public string CustomerClassification { get; set; }
         public IList<SelectListItem> AvailableCustomerClassifications { get; set; }
