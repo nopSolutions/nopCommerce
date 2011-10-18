@@ -1460,10 +1460,10 @@ namespace Nop.Admin.Controllers
             {
                 var customers = _customerService.GetAllCustomers(null, null, null, null, null,null, null, false, null, 0, int.MaxValue);
 
-                string fileName = string.Format("customers_{0}_{1}.xls", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
+                string fileName = string.Format("customers_{0}_{1}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
                 string filePath = string.Format("{0}content\\files\\ExportImport\\{1}", Request.PhysicalApplicationPath, fileName);
 
-                _exportManager.ExportCustomersToXls(filePath, customers);
+                _exportManager.ExportCustomersToXlsx(filePath, customers);
 
                 var bytes = System.IO.File.ReadAllBytes(filePath);
                 return File(bytes, "text/xls", fileName);

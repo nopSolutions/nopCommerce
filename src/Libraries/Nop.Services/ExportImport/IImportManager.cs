@@ -8,10 +8,10 @@ namespace Nop.Services.ExportImport
     public interface IImportManager
     {
         /// <summary>
-        /// Import products from XLS file
+        /// Import products from XLSX file
         /// </summary>
         /// <param name="filePath">Excel file path</param>
-        void ImportProductsFromXls(string filePath);
+        void ImportProductsFromXlsx(string filePath);
         
         /// <summary>
         /// Import language resources from XML file

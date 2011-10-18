@@ -32,11 +32,11 @@ namespace Nop.Services.ExportImport
         string ExportProductsToXml(IList<Product> products);
 
         /// <summary>
-        /// Export products to XLS
+        /// Export products to XLSX
         /// </summary>
         /// <param name="filePath">File path to use</param>
         /// <param name="products">Products</param>
-        void ExportProductsToXls(string filePath, IList<Product> products);
+        void ExportProductsToXlsx(string filePath, IList<Product> products);
 
         /// <summary>
         /// Export order list to xml
@@ -46,18 +46,18 @@ namespace Nop.Services.ExportImport
         string ExportOrdersToXml(IList<Order> orders);
 
         /// <summary>
-        /// Export orders to XLS
+        /// Export orders to XLSX
         /// </summary>
         /// <param name="filePath">File path to use</param>
         /// <param name="orders">Orders</param>
-        void ExportOrdersToXls(string filePath, IList<Order> orders);
+        void ExportOrdersToXlsx(string filePath, IList<Order> orders);
         
         /// <summary>
-        /// Export customer list to XLS
+        /// Export customer list to XLSX
         /// </summary>
         /// <param name="filePath">File path to use</param>
         /// <param name="customers">Customers</param>
-        void ExportCustomersToXls(string filePath, IList<Customer> customers);
+        void ExportCustomersToXlsx(string filePath, IList<Customer> customers);
         
         /// <summary>
         /// Export customer list to xml

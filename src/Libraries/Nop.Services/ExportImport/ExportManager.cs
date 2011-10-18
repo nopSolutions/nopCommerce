@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml;
 using Nop.Core;
+using Nop.Core.Domain;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
@@ -14,6 +15,8 @@ using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Media;
 using Nop.Services.Messages;
+using OfficeOpenXml;
+using OfficeOpenXml.Style;
 
 namespace Nop.Services.ExportImport
 {
@@ -27,18 +30,21 @@ namespace Nop.Services.ExportImport
         private readonly IProductService _productService;
         private readonly IPictureService _pictureService;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
+        private readonly StoreInformationSettings _storeInformationSettings;
 
         public ExportManager(ICategoryService categoryService,
             IManufacturerService manufacturerService,
             IProductService productService,
             IPictureService pictureService,
-            INewsLetterSubscriptionService newsLetterSubscriptionService)
+            INewsLetterSubscriptionService newsLetterSubscriptionService,
+            StoreInformationSettings storeInformationSettings)
         {
             this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
             this._productService = productService;
             this._pictureService = pictureService;
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
+            this._storeInformationSettings = storeInformationSettings;
         }
 
         #region Utilities
@@ -414,152 +420,283 @@ namespace Nop.Services.ExportImport
         }
 
         /// <summary>
-        /// Export products to XLS
+        /// Export products to XLSX
         /// </summary>
         /// <param name="filePath">File path to use</param>
         /// <param name="products">Products</param>
-        public virtual void ExportProductsToXls(string filePath, IList<Product> products)
+        public virtual void ExportProductsToXlsx(string filePath, IList<Product> products)
         {
-            using (var excelHelper = new ExcelHelper(filePath))
+            var newFile = new FileInfo(filePath);
+            // ok, we can run the real code of the sample now
+            using (var xlPackage = new ExcelPackage(newFile))
             {
-                excelHelper.Hdr = "YES";
-                excelHelper.Imex = "0";
-                var tableDefinition = new Dictionary<string, string>();
-                tableDefinition.Add("Name", "ntext");
-                tableDefinition.Add("ShortDescription", "ntext");
-                tableDefinition.Add("FullDescription", "ntext");
-                tableDefinition.Add("ProductTemplateId", "int");
-                tableDefinition.Add("ShowOnHomePage", "nvarchar(5)");
-                tableDefinition.Add("MetaKeywords", "ntext");
-                tableDefinition.Add("MetaDescription", "ntext");
-                tableDefinition.Add("MetaTitle", "ntext");
-                tableDefinition.Add("AllowCustomerReviews", "nvarchar(5)");
-                tableDefinition.Add("Published", "nvarchar(5)");
-                tableDefinition.Add("SKU", "ntext");
-                tableDefinition.Add("ManufacturerPartNumber", "ntext");
-                tableDefinition.Add("IsGiftCard", "nvarchar(5)");
-                tableDefinition.Add("GiftCardTypeId", "int");
-                tableDefinition.Add("RequireOtherProducts", "nvarchar(5)");
-                tableDefinition.Add("RequiredProductVariantIds", "ntext");
-                tableDefinition.Add("AutomaticallyAddRequiredProductVariants", "nvarchar(5)");
-                tableDefinition.Add("IsDownload", "nvarchar(5)");
-                tableDefinition.Add("DownloadId", "int");
-                tableDefinition.Add("UnlimitedDownloads", "nvarchar(5)");
-                tableDefinition.Add("MaxNumberOfDownloads", "int");
-                tableDefinition.Add("DownloadActivationTypeId", "int");
-                tableDefinition.Add("HasSampleDownload", "nvarchar(5)");
-                tableDefinition.Add("SampleDownloadId", "int");
-                tableDefinition.Add("HasUserAgreement", "nvarchar(5)");
-                tableDefinition.Add("UserAgreementText", "ntext");
-                tableDefinition.Add("IsRecurring", "nvarchar(5)");
-                tableDefinition.Add("RecurringCycleLength", "int");
-                tableDefinition.Add("RecurringCyclePeriodId", "int");
-                tableDefinition.Add("RecurringTotalCycles", "int");
-                tableDefinition.Add("IsShipEnabled", "nvarchar(5)");
-                tableDefinition.Add("IsFreeShipping", "nvarchar(5)");
-                tableDefinition.Add("AdditionalShippingCharge", "decimal");
-                tableDefinition.Add("IsTaxExempt", "nvarchar(5)");
-                tableDefinition.Add("TaxCategoryId", "int");
-                tableDefinition.Add("ManageInventoryMethodId", "int");
-                tableDefinition.Add("StockQuantity", "int");
-                tableDefinition.Add("DisplayStockAvailability", "nvarchar(5)");
-                tableDefinition.Add("DisplayStockQuantity", "nvarchar(5)");
-                tableDefinition.Add("MinStockQuantity", "int");
-                tableDefinition.Add("LowStockActivityId", "int");
-                tableDefinition.Add("NotifyAdminForQuantityBelow", "int");
-                tableDefinition.Add("BackorderModeId", "int");
-                tableDefinition.Add("OrderMinimumQuantity", "int");
-                tableDefinition.Add("OrderMaximumQuantity", "int");
-                tableDefinition.Add("DisableBuyButton", "nvarchar(5)");
-                tableDefinition.Add("DisableWishlistButton", "nvarchar(5)");
-                tableDefinition.Add("CallForPrice", "nvarchar(5)");
-                tableDefinition.Add("Price", "decimal");
-                tableDefinition.Add("OldPrice", "decimal");
-                tableDefinition.Add("ProductCost", "decimal");
-                tableDefinition.Add("CustomerEntersPrice", "nvarchar(5)");
-                tableDefinition.Add("MinimumCustomerEnteredPrice", "decimal");
-                tableDefinition.Add("MaximumCustomerEnteredPrice", "decimal");
-                tableDefinition.Add("Weight", "decimal");
-                tableDefinition.Add("Length", "decimal");
-                tableDefinition.Add("Width", "decimal");
-                tableDefinition.Add("Height", "decimal");
-                tableDefinition.Add("CreatedOnUtc", "decimal");
-                tableDefinition.Add("CategoryIds", "nvarchar(255)");
-                tableDefinition.Add("ManufacturerIds", "nvarchar(255)");
-                tableDefinition.Add("Picture1", "nvarchar(255)");
-                tableDefinition.Add("Picture2", "nvarchar(255)");
-                tableDefinition.Add("Picture3", "nvarchar(255)");
-                excelHelper.WriteTable("Products", tableDefinition);
+                // uncomment this line if you want the XML written out to the outputDir
+                //xlPackage.DebugMode = true; 
 
-                string decimalQuoter = (CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator.Equals(",") ? "\"" : String.Empty);
+                // get handle to the existing worksheet
+                var worksheet = xlPackage.Workbook.Worksheets.Add("Products");
+                //Create Headers and format them 
+                var properties = new string[]
+                {
+                    "Name",
+                    "ShortDescription",
+                    "FullDescription",
+                    "ProductTemplateId",
+                    "ShowOnHomePage",
+                    "MetaKeywords",
+                    "MetaDescription",
+                    "MetaTitle",
+                    "AllowCustomerReviews",
+                    "Published",
+                    "SKU",
+                    "ManufacturerPartNumber",
+                    "IsGiftCard",
+                    "GiftCardTypeId",
+                    "RequireOtherProducts",
+                    "RequiredProductVariantIds",
+                    "AutomaticallyAddRequiredProductVariants",
+                    "IsDownload",
+                    "DownloadId",
+                    "UnlimitedDownloads",
+                    "MaxNumberOfDownloads",
+                    "DownloadActivationTypeId",
+                    "HasSampleDownload",
+                    "SampleDownloadId",
+                    "HasUserAgreement",
+                    "UserAgreementText",
+                    "IsRecurring",
+                    "RecurringCycleLength",
+                    "RecurringCyclePeriodId",
+                    "RecurringTotalCycles",
+                    "IsShipEnabled",
+                    "IsFreeShipping",
+                    "AdditionalShippingCharge",
+                    "IsTaxExempt",
+                    "TaxCategoryId",
+                    "ManageInventoryMethodId",
+                    "StockQuantity",
+                    "DisplayStockAvailability",
+                    "DisplayStockQuantity",
+                    "MinStockQuantity",
+                    "LowStockActivityId",
+                    "NotifyAdminForQuantityBelow",
+                    "BackorderModeId",
+                    "OrderMinimumQuantity",
+                    "OrderMaximumQuantity",
+                    "DisableBuyButton",
+                    "DisableWishlistButton",
+                    "CallForPrice",
+                    "Price",
+                    "OldPrice",
+                    "ProductCost",
+                    "CustomerEntersPrice",
+                    "MinimumCustomerEnteredPrice",
+                    "MaximumCustomerEnteredPrice",
+                    "Weight",
+                    "Length",
+                    "Width",
+                    "Height",
+                    "CreatedOnUtc",
+                    "CategoryIds",
+                    "ManufacturerIds",
+                    "Picture1",
+                    "Picture2",
+                    "Picture3",
+                };
+                for (int i = 0; i < properties.Length; i++)
+                {
+                    worksheet.Cells[1, i + 1].Value = properties[i];
+                    worksheet.Cells[1, i + 1].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    worksheet.Cells[1, i + 1].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(184, 204, 228));
+                    worksheet.Cells[1, i + 1].Style.Font.Bold = true;
+                }
 
+
+                int row = 2;
                 foreach (var p in products)
                 {
                     var productVariants = _productService.GetProductVariantsByProductId(p.Id);
-
                     foreach (var pv in productVariants)
                     {
-                        var sb = new StringBuilder();
-                        sb.Append("INSERT INTO [Products] (Name, ShortDescription,FullDescription,ProductTemplateId,ShowOnHomePage,MetaKeywords,MetaDescription,MetaTitle,AllowCustomerReviews,Published,SKU,ManufacturerPartNumber,IsGiftCard,GiftCardTypeId,RequireOtherProducts,RequiredProductVariantIds,AutomaticallyAddRequiredProductVariants,IsDownload,DownloadId,UnlimitedDownloads,MaxNumberOfDownloads,DownloadActivationTypeId,HasSampleDownload,SampleDownloadId,HasUserAgreement,UserAgreementText,IsRecurring,RecurringCycleLength,RecurringCyclePeriodId,RecurringTotalCycles,IsShipEnabled,IsFreeShipping,AdditionalShippingCharge,IsTaxExempt,TaxCategoryId,ManageInventoryMethodId,StockQuantity,DisplayStockAvailability,DisplayStockQuantity,MinStockQuantity,LowStockActivityId,NotifyAdminForQuantityBelow,BackorderModeId,OrderMinimumQuantity,OrderMaximumQuantity,DisableBuyButton,DisableWishlistButton,CallForPrice,Price,OldPrice,ProductCost,CustomerEntersPrice,MinimumCustomerEnteredPrice,MaximumCustomerEnteredPrice,Weight, Length, Width, Height, CreatedOnUtc,CategoryIds,ManufacturerIds,Picture1,Picture2,Picture3) VALUES (");
-                        sb.Append('"'); sb.Append(p.Name != null ? p.Name.Replace('"', '\'') : ""); sb.Append("\",");
-                        sb.Append('"'); sb.Append(p.ShortDescription != null ? p.ShortDescription.Replace('"', '\''): ""); sb.Append("\",");
-                        sb.Append('"'); sb.Append(p.FullDescription != null ? p.FullDescription.Replace('"', '\'') : ""); sb.Append("\",");
-                        sb.Append('"'); sb.Append(p.ProductTemplateId); sb.Append("\",");
-                        sb.Append('"'); sb.Append(p.ShowOnHomePage); sb.Append("\",");
-                        sb.Append('"'); sb.Append(p.MetaKeywords != null ? p.MetaKeywords.Replace('"', '\'') : ""); sb.Append("\",");
-                        sb.Append('"'); sb.Append(p.MetaDescription != null ? p.MetaDescription.Replace('"', '\'') : ""); sb.Append("\",");
-                        sb.Append('"'); sb.Append(p.MetaTitle != null ? p.MetaTitle.Replace('"', '\'') : ""); sb.Append("\",");
-                        sb.Append('"'); sb.Append(p.AllowCustomerReviews); sb.Append("\",");
-                        sb.Append('"'); sb.Append(p.Published); sb.Append("\",");
-                        sb.Append('"'); sb.Append(pv.Sku != null ? pv.Sku.Replace('"', '\''): ""); sb.Append("\",");
-                        sb.Append('"'); sb.Append(pv.ManufacturerPartNumber != null ? pv.ManufacturerPartNumber.Replace('"', '\'') : ""); sb.Append("\",");
-                        sb.Append('"'); sb.Append(pv.IsGiftCard); sb.Append("\",");
-                        sb.Append('"'); sb.Append(pv.GiftCardTypeId); sb.Append("\",");
-                        sb.Append('"'); sb.Append(pv.RequireOtherProducts); sb.Append("\",");
-                        sb.Append('"'); sb.Append(pv.RequiredProductVariantIds != null ? pv.RequiredProductVariantIds.Replace('"', '\'') : ""); sb.Append("\",");
-                        sb.Append('"'); sb.Append(pv.AutomaticallyAddRequiredProductVariants); sb.Append("\",");
-                        sb.Append('"'); sb.Append(pv.IsDownload); sb.Append("\",");
-                        sb.Append(pv.DownloadId); sb.Append(",");
-                        sb.Append('"'); sb.Append(pv.UnlimitedDownloads); sb.Append("\",");
-                        sb.Append(pv.MaxNumberOfDownloads); sb.Append(",");
-                        sb.Append(pv.DownloadActivationTypeId); sb.Append(",");
-                        sb.Append('"'); sb.Append(pv.HasSampleDownload); sb.Append("\",");
-                        sb.Append(pv.SampleDownloadId); sb.Append(",");
-                        sb.Append('"'); sb.Append(pv.HasUserAgreement); sb.Append("\",");
-                        sb.Append('"'); sb.Append(pv.UserAgreementText != null ? pv.UserAgreementText.Replace('"', '\'') : ""); sb.Append("\",");
-                        sb.Append('"'); sb.Append(pv.IsRecurring); sb.Append("\",");
-                        sb.Append(pv.RecurringCycleLength); sb.Append(",");
-                        sb.Append(pv.RecurringCyclePeriodId); sb.Append(",");
-                        sb.Append(pv.RecurringTotalCycles); sb.Append(",");
-                        sb.Append('"'); sb.Append(pv.IsShipEnabled); sb.Append("\",");
-                        sb.Append('"'); sb.Append(pv.IsFreeShipping); sb.Append("\",");
-                        sb.Append(decimalQuoter); sb.Append(pv.AdditionalShippingCharge); sb.Append(decimalQuoter); sb.Append(',');//decimal
-                        sb.Append('"'); sb.Append(pv.IsTaxExempt); sb.Append("\",");
-                        sb.Append(pv.TaxCategoryId); sb.Append(",");
-                        sb.Append(pv.ManageInventoryMethodId); sb.Append(",");
-                        sb.Append(pv.StockQuantity); sb.Append(",");
-                        sb.Append('"'); sb.Append(pv.DisplayStockAvailability); sb.Append("\",");
-                        sb.Append('"'); sb.Append(pv.DisplayStockQuantity); sb.Append("\",");
-                        sb.Append(pv.MinStockQuantity); sb.Append(",");
-                        sb.Append(pv.LowStockActivityId); sb.Append(",");
-                        sb.Append(pv.NotifyAdminForQuantityBelow); sb.Append(",");
-                        sb.Append(pv.BackorderModeId); sb.Append(",");
-                        sb.Append(pv.OrderMinimumQuantity); sb.Append(",");
-                        sb.Append(pv.OrderMaximumQuantity); sb.Append(",");
-                        sb.Append('"'); sb.Append(pv.DisableBuyButton); sb.Append("\",");
-                        sb.Append('"'); sb.Append(pv.DisableWishlistButton); sb.Append("\",");
-                        sb.Append('"'); sb.Append(pv.CallForPrice); sb.Append("\",");
-                        sb.Append(decimalQuoter); sb.Append(pv.Price); sb.Append(decimalQuoter); sb.Append(',');//decimal
-                        sb.Append(decimalQuoter); sb.Append(pv.OldPrice); sb.Append(decimalQuoter); sb.Append(',');//decimal
-                        sb.Append(decimalQuoter); sb.Append(pv.ProductCost); sb.Append(decimalQuoter); sb.Append(',');//decimal
-                        sb.Append('"'); sb.Append(pv.CustomerEntersPrice); sb.Append("\",");
-                        sb.Append(decimalQuoter); sb.Append(pv.MinimumCustomerEnteredPrice); sb.Append(decimalQuoter); sb.Append(',');//decimal
-                        sb.Append(decimalQuoter); sb.Append(pv.MaximumCustomerEnteredPrice); sb.Append(decimalQuoter); sb.Append(',');//decimal                        
-                        sb.Append(decimalQuoter); sb.Append(pv.Weight); sb.Append(decimalQuoter); sb.Append(',');//decimal
-                        sb.Append(decimalQuoter); sb.Append(pv.Length); sb.Append(decimalQuoter); sb.Append(',');//decimal
-                        sb.Append(decimalQuoter); sb.Append(pv.Width); sb.Append(decimalQuoter); sb.Append(',');//decimal
-                        sb.Append(decimalQuoter); sb.Append(pv.Height); sb.Append(decimalQuoter); sb.Append(',');//decimal
-                        sb.Append(decimalQuoter); sb.Append(pv.CreatedOnUtc.ToOADate()); sb.Append(decimalQuoter); sb.Append(',');
+                        int col = 1;
+
+                        worksheet.Cells[row, col].Value = p.Name;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = p.ShortDescription;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = p.FullDescription;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = p.ProductTemplateId;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = p.ShowOnHomePage;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = p.MetaKeywords;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = p.MetaDescription;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = p.MetaTitle;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = p.AllowCustomerReviews;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = p.Published;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = pv.Sku;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = pv.ManufacturerPartNumber;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = pv.IsGiftCard;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = pv.GiftCardTypeId;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = pv.RequireOtherProducts;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = pv.RequiredProductVariantIds;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = pv.AutomaticallyAddRequiredProductVariants;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = pv.IsDownload;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = pv.DownloadId;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = pv.UnlimitedDownloads;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = pv.MaxNumberOfDownloads;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = pv.DownloadActivationTypeId;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = pv.HasSampleDownload;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = pv.SampleDownloadId;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = pv.HasUserAgreement;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = pv.UserAgreementText;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = pv.IsRecurring;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = pv.RecurringCycleLength;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = pv.RecurringCyclePeriodId;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = pv.RecurringTotalCycles;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = pv.IsShipEnabled;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = pv.IsFreeShipping;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = pv.AdditionalShippingCharge;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = pv.IsTaxExempt;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = pv.TaxCategoryId;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = pv.ManageInventoryMethodId;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = pv.StockQuantity;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = pv.DisplayStockAvailability;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = pv.DisplayStockQuantity;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = pv.MinStockQuantity;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = pv.LowStockActivityId;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = pv.NotifyAdminForQuantityBelow;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = pv.BackorderModeId;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = pv.OrderMinimumQuantity;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = pv.OrderMaximumQuantity;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = pv.DisableBuyButton;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = pv.DisableWishlistButton;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = pv.CallForPrice;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = pv.Price;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = pv.OldPrice;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = pv.ProductCost;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = pv.CustomerEntersPrice;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = pv.MinimumCustomerEnteredPrice;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = pv.MaximumCustomerEnteredPrice;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = pv.Weight;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = pv.Length;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = pv.Width;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = pv.Height;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = pv.CreatedOnUtc.ToOADate();
+                        col++;
+
                         //category identifiers
                         string categoryIds = null;
                         foreach (var pc in _categoryService.GetProductCategoriesByProductId(p.Id))
@@ -567,7 +704,9 @@ namespace Nop.Services.ExportImport
                             categoryIds += pc.CategoryId;
                             categoryIds += ";";
                         }
-                        sb.Append('"'); sb.Append(categoryIds != null ? categoryIds.Replace('"', '\'') : ""); sb.Append("\",");
+                        worksheet.Cells[row, col].Value = categoryIds;
+                        col++;
+
                         //manufacturer identifiers
                         string manufacturerIds = null;
                         foreach (var pm in _manufacturerService.GetProductManufacturersByProductId(p.Id))
@@ -575,7 +714,9 @@ namespace Nop.Services.ExportImport
                             manufacturerIds += pm.ManufacturerId;
                             manufacturerIds += ";";
                         }
-                        sb.Append('"'); sb.Append(manufacturerIds != null ? manufacturerIds.Replace('"', '\'') : ""); sb.Append("\",");
+                        worksheet.Cells[row, col].Value = manufacturerIds;
+                        col++;
+
                         //pictures (up to 3 pictures)
                         string picture1 = null;
                         string picture2 = null;
@@ -597,15 +738,40 @@ namespace Nop.Services.ExportImport
                                     break;
                             }
                         }
-                        sb.Append('"'); sb.Append(picture1 != null ? picture1.Replace('"', '\'') : ""); sb.Append("\",");
-                        sb.Append('"'); sb.Append(picture2 != null ? picture2.Replace('"', '\'') : ""); sb.Append("\",");
-                        sb.Append('"'); sb.Append(picture3 != null ? picture3.Replace('"', '\'') : ""); sb.Append("\"");
-                        
-                        sb.Append(")");
+                        worksheet.Cells[row, col].Value = picture1;
+                        col++;
+                        worksheet.Cells[row, col].Value = picture2;
+                        col++;
+                        worksheet.Cells[row, col].Value = picture3;
+                        col++;
 
-                        excelHelper.ExecuteCommand(sb.ToString());
+                        row++;
                     }
                 }
+
+
+
+
+
+
+
+
+                // we had better add some document properties to the spreadsheet 
+
+                // set some core property values
+                xlPackage.Workbook.Properties.Title = string.Format("{0} products", _storeInformationSettings.StoreName);
+                xlPackage.Workbook.Properties.Author = _storeInformationSettings.StoreName;
+                xlPackage.Workbook.Properties.Subject = string.Format("{0} products", _storeInformationSettings.StoreName);
+                xlPackage.Workbook.Properties.Keywords = string.Format("{0} products", _storeInformationSettings.StoreName);
+                xlPackage.Workbook.Properties.Category = "Products";
+                xlPackage.Workbook.Properties.Comments = string.Format("{0} products", _storeInformationSettings.StoreName);
+
+                // set some extended property values
+                xlPackage.Workbook.Properties.Company = _storeInformationSettings.StoreName;
+                xlPackage.Workbook.Properties.HyperlinkBase = new Uri(_storeInformationSettings.StoreUrl);
+
+                // save the new spreadsheet
+                xlPackage.Save();
             }
         }
 
@@ -721,180 +887,312 @@ namespace Nop.Services.ExportImport
         }
 
         /// <summary>
-        /// Export orders to XLS
+        /// Export orders to XLSX
         /// </summary>
         /// <param name="filePath">File path to use</param>
         /// <param name="orders">Orders</param>
-        public virtual void ExportOrdersToXls(string filePath, IList<Order> orders)
+        public virtual void ExportOrdersToXlsx(string filePath, IList<Order> orders)
         {
-            using (var excelHelper = new ExcelHelper(filePath))
+            var newFile = new FileInfo(filePath);
+            // ok, we can run the real code of the sample now
+            using (var xlPackage = new ExcelPackage(newFile))
             {
-                excelHelper.Hdr = "YES";
-                excelHelper.Imex = "0";
-                var tableDefinition = new Dictionary<string, string>();
-                tableDefinition.Add("OrderId", "int");
-                tableDefinition.Add("OrderGuid", "uniqueidentifier");
-                tableDefinition.Add("CustomerId", "int");
-                tableDefinition.Add("OrderSubtotalInclTax", "decimal");
-                tableDefinition.Add("OrderSubtotalExclTax", "decimal");
-                tableDefinition.Add("OrderSubTotalDiscountInclTax", "decimal");
-                tableDefinition.Add("OrderSubTotalDiscountExclTax", "decimal");
-                tableDefinition.Add("OrderShippingInclTax", "decimal");
-                tableDefinition.Add("OrderShippingExclTax", "decimal");
-                tableDefinition.Add("PaymentMethodAdditionalFeeInclTax", "decimal");
-                tableDefinition.Add("PaymentMethodAdditionalFeeExclTax", "decimal");
-                tableDefinition.Add("TaxRates", "nvarchar(255)");
-                tableDefinition.Add("OrderTax", "decimal");
-                tableDefinition.Add("OrderTotal", "decimal");
-                tableDefinition.Add("RefundedAmount", "decimal");
-                tableDefinition.Add("OrderDiscount", "decimal");
-                tableDefinition.Add("CurrencyRate", "decimal");
-                tableDefinition.Add("CustomerCurrencyCode", "nvarchar(5)");
-                tableDefinition.Add("OrderWeight", "decimal");
-                tableDefinition.Add("AffiliateId", "int");
-                tableDefinition.Add("OrderStatusId", "int");
-                tableDefinition.Add("PaymentMethodSystemName", "nvarchar(100)");
-                tableDefinition.Add("PurchaseOrderNumber", "nvarchar(100)");
-                tableDefinition.Add("PaymentStatusId", "int");
-                tableDefinition.Add("ShippingStatusId", "int");
-                tableDefinition.Add("ShippingMethod", "nvarchar(100)");
-                tableDefinition.Add("ShippingRateComputationMethodSystemName", "nvarchar(100)");
-                tableDefinition.Add("VatNumber", "nvarchar(100)");
-                tableDefinition.Add("CreatedOnUtc", "decimal");
-                excelHelper.WriteTable("Orders", tableDefinition);
+                // uncomment this line if you want the XML written out to the outputDir
+                //xlPackage.DebugMode = true; 
 
-                string decimalQuoter = (CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator.Equals(",") ? "\"" : String.Empty);
-
-                foreach (var order in orders)
+                // get handle to the existing worksheet
+                var worksheet = xlPackage.Workbook.Worksheets.Add("Orders");
+                //Create Headers and format them
+                var properties = new string[]
+                    {
+                        "OrderId",
+                        "OrderGuid",
+                        "CustomerId",
+                        "OrderSubtotalInclTax",
+                        "OrderSubtotalExclTax",
+                        "OrderSubTotalDiscountInclTax",
+                        "OrderSubTotalDiscountExclTax",
+                        "OrderShippingInclTax",
+                        "OrderShippingExclTax",
+                        "PaymentMethodAdditionalFeeInclTax",
+                        "PaymentMethodAdditionalFeeExclTax",
+                        "TaxRates",
+                        "OrderTax",
+                        "OrderTotal",
+                        "RefundedAmount",
+                        "OrderDiscount",
+                        "CurrencyRate",
+                        "CustomerCurrencyCode",
+                        "OrderWeight",
+                        "AffiliateId",
+                        "OrderStatusId",
+                        "PaymentMethodSystemName",
+                        "PurchaseOrderNumber",
+                        "PaymentStatusId",
+                        "ShippingStatusId",
+                        "ShippingMethod",
+                        "ShippingRateComputationMethodSystemName",
+                        "VatNumber",
+                        "CreatedOnUtc",
+                    };
+                for (int i = 0; i < properties.Length; i++)
                 {
-                    var sb = new StringBuilder();
-                    sb.Append("INSERT INTO [Orders] (OrderId, OrderGuid, CustomerId, OrderSubtotalInclTax, OrderSubtotalExclTax, OrderSubTotalDiscountInclTax, OrderSubTotalDiscountExclTax, OrderShippingInclTax, OrderShippingExclTax, PaymentMethodAdditionalFeeInclTax, PaymentMethodAdditionalFeeExclTax, TaxRates, OrderTax, OrderTotal, RefundedAmount, OrderDiscount, CurrencyRate, CustomerCurrencyCode, OrderWeight, AffiliateId, OrderStatusId, PaymentMethodSystemName, PurchaseOrderNumber, PaymentStatusId, ShippingStatusId,  ShippingMethod, ShippingRateComputationMethodSystemName, VatNumber, CreatedOnUtc) VALUES (");
-
-
-                    sb.Append(order.Id); sb.Append(",");
-                    sb.Append('"'); sb.Append(order.OrderGuid); sb.Append("\",");
-                    sb.Append(order.CustomerId); sb.Append(",");
-                    sb.Append(decimalQuoter); sb.Append(order.OrderSubtotalInclTax); sb.Append(decimalQuoter); sb.Append(",");
-                    sb.Append(decimalQuoter); sb.Append(order.OrderSubtotalExclTax); sb.Append(decimalQuoter); sb.Append(",");
-                    sb.Append(decimalQuoter); sb.Append(order.OrderSubTotalDiscountInclTax); sb.Append(decimalQuoter); sb.Append(",");
-                    sb.Append(decimalQuoter); sb.Append(order.OrderSubTotalDiscountExclTax); sb.Append(decimalQuoter); sb.Append(",");
-                    sb.Append(decimalQuoter); sb.Append(order.OrderShippingInclTax); sb.Append(decimalQuoter); sb.Append(",");
-                    sb.Append(decimalQuoter); sb.Append(order.OrderShippingExclTax); sb.Append(decimalQuoter); sb.Append(",");
-                    sb.Append(decimalQuoter); sb.Append(order.PaymentMethodAdditionalFeeInclTax); sb.Append(decimalQuoter); sb.Append(",");
-                    sb.Append(decimalQuoter); sb.Append(order.PaymentMethodAdditionalFeeExclTax); sb.Append(decimalQuoter); sb.Append(",");
-                    sb.Append('"'); sb.Append(order.TaxRates != null ? order.TaxRates.Replace('"', '\'') : ""); sb.Append("\",");
-                    sb.Append(decimalQuoter); sb.Append(order.OrderTax); sb.Append(decimalQuoter); sb.Append(",");
-                    sb.Append(decimalQuoter); sb.Append(order.OrderTotal); sb.Append(decimalQuoter); sb.Append(",");
-                    sb.Append(decimalQuoter); sb.Append(order.RefundedAmount); sb.Append(decimalQuoter); sb.Append(",");
-                    sb.Append(decimalQuoter); sb.Append(order.OrderDiscount); sb.Append(decimalQuoter); sb.Append(",");
-                    sb.Append(decimalQuoter); sb.Append(order.CurrencyRate); sb.Append(decimalQuoter); sb.Append(",");
-                    sb.Append('"'); sb.Append(order.CustomerCurrencyCode != null ? order.CustomerCurrencyCode.Replace('"', '\'') : ""); sb.Append("\",");
-                    sb.Append(decimalQuoter); sb.Append(order.OrderWeight); sb.Append(decimalQuoter); sb.Append(",");
-                    sb.Append(order.AffiliateId.HasValue ? order.AffiliateId.Value : 0); sb.Append(",");
-                    sb.Append(order.OrderStatusId); sb.Append(",");
-                    sb.Append('"'); sb.Append(order.PaymentMethodSystemName != null ? order.PaymentMethodSystemName.Replace('"', '\'') : ""); sb.Append("\",");
-                    sb.Append('"'); sb.Append(order.PurchaseOrderNumber != null ? order.PurchaseOrderNumber.Replace('"', '\'') : ""); sb.Append("\",");
-                    sb.Append(order.PaymentStatusId); sb.Append(",");
-                    sb.Append(order.ShippingStatusId); sb.Append(",");
-                    sb.Append('"'); sb.Append(order.ShippingMethod != null ? order.ShippingMethod.Replace('"', '\'') : ""); sb.Append("\",");
-                    sb.Append('"'); sb.Append(order.ShippingRateComputationMethodSystemName != null ? order.ShippingRateComputationMethodSystemName.Replace('"', '\'') : ""); sb.Append("\",");
-                    sb.Append('"'); sb.Append(order.VatNumber != null ? order.VatNumber.Replace('"', '\'') : ""); sb.Append("\",");
-                    sb.Append(decimalQuoter); sb.Append(order.CreatedOnUtc.ToOADate()); sb.Append(decimalQuoter);
-                    sb.Append(")");
-
-                    excelHelper.ExecuteCommand(sb.ToString());
+                    worksheet.Cells[1, i + 1].Value = properties[i];
+                    worksheet.Cells[1, i + 1].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    worksheet.Cells[1, i + 1].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(184, 204, 228));
+                    worksheet.Cells[1, i + 1].Style.Font.Bold = true;
                 }
+
+
+                int row = 2;
+                    foreach (var order in orders)
+                    {
+                        int col = 1;
+
+                        worksheet.Cells[row, col].Value = order.Id;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = order.OrderGuid;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = order.CustomerId;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = order.OrderSubtotalInclTax;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = order.OrderSubtotalExclTax;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = order.OrderSubTotalDiscountInclTax;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = order.OrderSubTotalDiscountExclTax;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = order.OrderShippingInclTax;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = order.OrderShippingExclTax;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = order.PaymentMethodAdditionalFeeInclTax;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = order.PaymentMethodAdditionalFeeExclTax;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = order.TaxRates;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = order.OrderTax;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = order.OrderTotal;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = order.RefundedAmount;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = order.OrderDiscount;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = order.CurrencyRate;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = order.CustomerCurrencyCode;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = order.OrderWeight;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = order.AffiliateId.HasValue ? order.AffiliateId.Value : 0;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = order.OrderStatusId;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = order.PaymentMethodSystemName;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = order.PurchaseOrderNumber;
+                        col++;
+
+                        worksheet.Cells[row, col].Value =order.PaymentStatusId;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = order.ShippingStatusId;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = order.ShippingMethod;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = order.ShippingRateComputationMethodSystemName;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = order.CreatedOnUtc.ToOADate();
+                        col++;
+
+                        row++;
+                    }
+
+
+
+
+
+
+
+
+                // we had better add some document properties to the spreadsheet 
+
+                // set some core property values
+                xlPackage.Workbook.Properties.Title = string.Format("{0} orders", _storeInformationSettings.StoreName);
+                xlPackage.Workbook.Properties.Author = _storeInformationSettings.StoreName;
+                xlPackage.Workbook.Properties.Subject = string.Format("{0} orders", _storeInformationSettings.StoreName);
+                xlPackage.Workbook.Properties.Keywords = string.Format("{0} orders", _storeInformationSettings.StoreName);
+                xlPackage.Workbook.Properties.Category = "Orders";
+                xlPackage.Workbook.Properties.Comments = string.Format("{0} orders", _storeInformationSettings.StoreName);
+
+                // set some extended property values
+                xlPackage.Workbook.Properties.Company = _storeInformationSettings.StoreName;
+                xlPackage.Workbook.Properties.HyperlinkBase = new Uri(_storeInformationSettings.StoreUrl);
+
+                // save the new spreadsheet
+                xlPackage.Save();
             }
         }
 
         /// <summary>
-        /// Export customer list to XLS
+        /// Export customer list to XLSX
         /// </summary>
         /// <param name="filePath">File path to use</param>
         /// <param name="customers">Customers</param>
-        public virtual void ExportCustomersToXls(string filePath, IList<Customer> customers)
+        public virtual void ExportCustomersToXlsx(string filePath, IList<Customer> customers)
         {
-            using (var excelHelper = new ExcelHelper(filePath))
+            var newFile = new FileInfo(filePath);
+            // ok, we can run the real code of the sample now
+            using (var xlPackage = new ExcelPackage(newFile))
             {
-                excelHelper.Hdr = "YES";
-                excelHelper.Imex = "0";
-                var tableDefinition = new Dictionary<string, string>();
-                //standard properties
-                tableDefinition.Add("CustomerId", "int");
-                tableDefinition.Add("CustomerGuid", "uniqueidentifier");
-                tableDefinition.Add("Email", "nvarchar(255)");
-                tableDefinition.Add("Username", "nvarchar(255)");
-                tableDefinition.Add("PasswordStr", "nvarchar(255)"); //why can't we use 'Password' name?
-                tableDefinition.Add("PasswordFormatId", "int");
-                tableDefinition.Add("PasswordSalt", "nvarchar(255)");
-                tableDefinition.Add("LanguageId", "int");
-                tableDefinition.Add("CurrencyId", "int");
-                tableDefinition.Add("TaxDisplayTypeId", "int");
-                tableDefinition.Add("IsTaxExempt", "nvarchar(5)");
-                tableDefinition.Add("VatNumber", "nvarchar(100)");
-                tableDefinition.Add("VatNumberStatusId", "int");
-                tableDefinition.Add("TimeZoneId", "nvarchar(200)");
-                tableDefinition.Add("AffiliateId", "int");
-                tableDefinition.Add("Active", "nvarchar(5)");
-                tableDefinition.Add("Deleted", "nvarchar(5)");
+                // uncomment this line if you want the XML written out to the outputDir
+                //xlPackage.DebugMode = true; 
 
-                //roles
-                tableDefinition.Add("IsGuest", "nvarchar(5)");
-                tableDefinition.Add("IsRegistered", "nvarchar(5)");
-                tableDefinition.Add("IsAdministrator", "nvarchar(5)");
-                tableDefinition.Add("IsForumModerator", "nvarchar(5)");
+                // get handle to the existing worksheet
+                var worksheet = xlPackage.Workbook.Worksheets.Add("Customers");
+                //Create Headers and format them
+                var properties = new string[]
+                    {
+                        "CustomerId",
+                        "CustomerGuid",
+                        "Email",
+                        "Username",
+                        "PasswordStr",//why can't we use 'Password' name?
+                        "PasswordFormatId",
+                        "PasswordSalt",
+                        "LanguageId",
+                        "CurrencyId",
+                        "TaxDisplayTypeId",
+                        "IsTaxExempt",
+                        "VatNumber",
+                        "VatNumberStatusId",
+                        "TimeZoneId",
+                        "AffiliateId",
+                        "Active",
+                        "IsGuest",
+                        "IsRegistered",
+                        "IsAdministrator",
+                        "IsForumModerator",
+                        "FirstName",
+                        "LastName",
+                        "Gender",
+                        "Company",
+                        "StreetAddress",
+                        "StreetAddress2",
+                        "ZipPostalCode",
+                        "City",
+                        "CountryId",
+                        "StateProvinceId",
+                        "Phone",
+                        "Fax",
+                        "AvatarPictureId",
+                        "ForumPostCount",
+                        "Signature",
+                    };
+                for (int i = 0; i < properties.Length; i++)
+                {
+                    worksheet.Cells[1, i + 1].Value = properties[i];
+                    worksheet.Cells[1, i + 1].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    worksheet.Cells[1, i + 1].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(184, 204, 228));
+                    worksheet.Cells[1, i + 1].Style.Font.Bold = true;
+                }
 
-                //attributes
-                tableDefinition.Add("FirstName", "nvarchar(255)");
-                tableDefinition.Add("LastName", "nvarchar(255)");
-                tableDefinition.Add("Gender", "nvarchar(255)");
-                tableDefinition.Add("Company", "nvarchar(255)");
-                tableDefinition.Add("StreetAddress", "nvarchar(255)");
-                tableDefinition.Add("StreetAddress2", "nvarchar(255)");
-                tableDefinition.Add("ZipPostalCode", "nvarchar(255)");
-                tableDefinition.Add("City", "nvarchar(255)");
-                tableDefinition.Add("CountryId", "int");
-                tableDefinition.Add("StateProvinceId", "int");
-                tableDefinition.Add("Phone", "nvarchar(255)");
-                tableDefinition.Add("Fax", "nvarchar(255)");
 
-                tableDefinition.Add("AvatarPictureId", "int");
-                tableDefinition.Add("ForumPostCount", "int");
-                tableDefinition.Add("Signature", "nvarchar(255)");
-                excelHelper.WriteTable("Customers", tableDefinition);
-
-                //string decimalQuoter = (CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator.Equals(",") ? "\"" : String.Empty);
-
+                int row = 2;
                 foreach (var customer in customers)
                 {
-                    var sb = new StringBuilder();
-                    sb.Append("INSERT INTO [Customers] (CustomerId,CustomerGuid,Email,Username,PasswordStr,PasswordFormatId,PasswordSalt,LanguageId,CurrencyId,TaxDisplayTypeId,IsTaxExempt,VatNumber,VatNumberStatusId,TimeZoneId,AffiliateId,Active,Deleted,IsGuest,IsRegistered,IsAdministrator,IsForumModerator,FirstName,LastName,Gender,Company,StreetAddress,StreetAddress2,ZipPostalCode,City,CountryId,StateProvinceId,Phone,Fax,AvatarPictureId,ForumPostCount,Signature) VALUES (");
+                    int col = 1;
 
-                    sb.Append(customer.Id); sb.Append(",");
-                    sb.Append('"'); sb.Append(customer.CustomerGuid); sb.Append("\",");
-                    sb.Append('"'); sb.Append(customer.Email != null ? customer.Email.Replace('"', '\'') : ""); sb.Append("\",");
-                    sb.Append('"'); sb.Append(customer.Username != null ? customer.Username.Replace('"', '\'') : ""); sb.Append("\",");
-                    sb.Append('"'); sb.Append(customer.Password != null ? customer.Password.Replace('"', '\'') : ""); sb.Append("\",");
-                    sb.Append(customer.PasswordFormatId); sb.Append(",");
-                    sb.Append('"'); sb.Append(customer.PasswordSalt != null ? customer.PasswordSalt.Replace('"', '\'') : ""); sb.Append("\",");
-                    sb.Append(customer.LanguageId.HasValue ? customer.LanguageId.Value : 0); sb.Append(",");
-                    sb.Append(customer.CurrencyId.HasValue ? customer.CurrencyId.Value : 0); sb.Append(",");
-                    sb.Append(customer.TaxDisplayTypeId); sb.Append(',');
-                    sb.Append('"'); sb.Append(customer.IsTaxExempt); sb.Append("\",");
-                    sb.Append('"'); sb.Append(customer.VatNumber != null ? customer.VatNumber.Replace('"', '\'') : ""); sb.Append("\",");
-                    sb.Append(customer.VatNumberStatusId); sb.Append(',');
-                    sb.Append('"'); sb.Append(customer.TimeZoneId != null ? customer.TimeZoneId.Replace('"', '\'') : ""); sb.Append("\",");
-                    sb.Append(customer.AffiliateId.HasValue ? customer.AffiliateId.Value : 0); sb.Append(",");
-                    sb.Append('"'); sb.Append(customer.Active); sb.Append("\",");
-                    sb.Append('"'); sb.Append(customer.Deleted); sb.Append("\",");
+                    worksheet.Cells[row, col].Value = customer.Id;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = customer.CustomerGuid;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = customer.Email;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = customer.Username;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = customer.Password;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = customer.PasswordFormatId;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = customer.PasswordSalt;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = customer.LanguageId.HasValue ? customer.LanguageId.Value : 0;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = customer.CurrencyId.HasValue ? customer.CurrencyId.Value : 0;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = customer.TaxDisplayTypeId;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = customer.IsTaxExempt;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = customer.VatNumber;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = customer.VatNumberStatusId;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = customer.TimeZoneId;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = customer.AffiliateId.HasValue ? customer.AffiliateId.Value : 0;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = customer.Active;
+                    col++;
 
                     //roles
-                    sb.Append('"'); sb.Append(customer.IsGuest()); sb.Append("\",");
-                    sb.Append('"'); sb.Append(customer.IsRegistered()); sb.Append("\",");
-                    sb.Append('"'); sb.Append(customer.IsAdmin()); sb.Append("\",");
-                    sb.Append('"'); sb.Append(customer.IsForumModerator()); sb.Append("\",");
+                    worksheet.Cells[row, col].Value = customer.IsGuest();
+                    col++;
 
+                    worksheet.Cells[row, col].Value = customer.IsRegistered();
+                    col++;
 
+                    worksheet.Cells[row, col].Value = customer.IsAdmin();
+                    col++;
+
+                    worksheet.Cells[row, col].Value = customer.IsForumModerator();
+                    col++;
+                    
+                    //attributes
                     var firstName = customer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName);
                     var lastName = customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName);
                     var gender = customer.GetAttribute<string>(SystemCustomerAttributeNames.Gender);
@@ -911,25 +1209,78 @@ namespace Nop.Services.ExportImport
                     var avatarPictureId = customer.GetAttribute<int>(SystemCustomerAttributeNames.AvatarPictureId);
                     var forumPostCount = customer.GetAttribute<int>(SystemCustomerAttributeNames.ForumPostCount);
                     var signature = customer.GetAttribute<string>(SystemCustomerAttributeNames.Signature);
-                    sb.Append('"'); sb.Append(firstName != null ? firstName.Replace('"', '\'') : ""); sb.Append("\",");
-                    sb.Append('"'); sb.Append(lastName != null ? lastName.Replace('"', '\'') : ""); sb.Append("\",");
-                    sb.Append('"'); sb.Append(gender != null ? gender.Replace('"', '\'') : ""); sb.Append("\",");
-                    sb.Append('"'); sb.Append(company != null ? company.Replace('"', '\'') : ""); sb.Append("\",");
-                    sb.Append('"'); sb.Append(streetAddress != null ? streetAddress.Replace('"', '\'') : ""); sb.Append("\",");
-                    sb.Append('"'); sb.Append(streetAddress2 != null ? streetAddress2.Replace('"', '\'') : ""); sb.Append("\",");
-                    sb.Append('"'); sb.Append(zipPostalCode != null ? zipPostalCode.Replace('"', '\'') : ""); sb.Append("\",");
-                    sb.Append('"'); sb.Append(city != null ? city.Replace('"', '\'') : ""); sb.Append("\",");
-                    sb.Append(countryId); sb.Append(',');
-                    sb.Append(stateProvinceId); sb.Append(',');
-                    sb.Append('"'); sb.Append(phone != null ? phone.Replace('"', '\'') : ""); sb.Append("\",");
-                    sb.Append('"'); sb.Append(fax != null ? fax.Replace('"', '\'') : ""); sb.Append("\",");
-                    sb.Append('"'); sb.Append(avatarPictureId); sb.Append("\",");
-                    sb.Append(forumPostCount); sb.Append(",");
-                    sb.Append('"'); sb.Append(signature != null ? signature.Replace('"', '\'') : ""); sb.Append("\"");
-                    sb.Append(")");
 
-                    excelHelper.ExecuteCommand(sb.ToString());
+                    worksheet.Cells[row, col].Value = firstName;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = lastName;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = gender;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = company;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = streetAddress;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = streetAddress2;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = zipPostalCode;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = city;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = countryId;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = stateProvinceId;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = phone;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = fax;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = avatarPictureId;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = forumPostCount;
+                    col++;
+
+                    worksheet.Cells[row, col].Value = signature;
+                    col++;
+
+                    row++;
                 }
+
+
+
+
+
+
+
+
+                // we had better add some document properties to the spreadsheet 
+
+                // set some core property values
+                xlPackage.Workbook.Properties.Title = string.Format("{0} customers", _storeInformationSettings.StoreName);
+                xlPackage.Workbook.Properties.Author = _storeInformationSettings.StoreName;
+                xlPackage.Workbook.Properties.Subject = string.Format("{0} customers", _storeInformationSettings.StoreName);
+                xlPackage.Workbook.Properties.Keywords = string.Format("{0} customers", _storeInformationSettings.StoreName);
+                xlPackage.Workbook.Properties.Category = "Customers";
+                xlPackage.Workbook.Properties.Comments = string.Format("{0} customers", _storeInformationSettings.StoreName);
+
+                // set some extended property values
+                xlPackage.Workbook.Properties.Company = _storeInformationSettings.StoreName;
+                xlPackage.Workbook.Properties.HyperlinkBase = new Uri(_storeInformationSettings.StoreUrl);
+
+                // save the new spreadsheet
+                xlPackage.Save();
             }
         }
 

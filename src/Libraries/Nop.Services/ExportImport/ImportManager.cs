@@ -8,6 +8,8 @@ using Nop.Core.Domain.Localization;
 using Nop.Services.Catalog;
 using Nop.Services.Localization;
 using Nop.Services.Media;
+using OfficeOpenXml;
+using Nop.Core;
 
 namespace Nop.Services.ExportImport
 {
@@ -34,88 +36,186 @@ namespace Nop.Services.ExportImport
             this._manufacturerService = manufacturerService;
             this._pictureService = pictureService;
         }
-        
+
+        protected virtual int GetColumnIndex(string[] properties, string columnName)
+        {
+            if (properties == null)
+                throw new ArgumentNullException("properties");
+
+            if (columnName == null)
+                throw new ArgumentNullException("columnName");
+
+            for (int i = 0; i < properties.Length; i++)
+                if (properties[i].Equals(columnName, StringComparison.InvariantCultureIgnoreCase))
+                    return i + 1; //excel indexes start from 1
+            return 0;
+        }
+
         /// <summary>
-        /// Import products from XLS file
+        /// Import products from XLSX file
         /// </summary>
         /// <param name="filePath">Excel file path</param>
-        public virtual void ImportProductsFromXls(string filePath)
+        public virtual void ImportProductsFromXlsx(string filePath)
         {
-            using (var excelHelper = new ExcelHelper(filePath))
+            
+            var newFile = new FileInfo(filePath);
+            // ok, we can run the real code of the sample now
+            using (var xlPackage = new ExcelPackage(newFile))
             {
-                excelHelper.Hdr = "YES";
-                excelHelper.Imex = "1";
-
-                DataTable dt = excelHelper.ReadTable("Products");
-                foreach (DataRow dr in dt.Rows)
+                // get the first worksheet in the workbook
+                var worksheet = xlPackage.Workbook.Worksheets.FirstOrDefault();
+                if (worksheet == null)
+                    throw new NopException("No worksheet found");
+                
+                //the columns
+                var properties = new string[]
                 {
-                    if (dr.ItemArray.All(i => string.IsNullOrEmpty(i.ToString())))
-                        continue;
+                    "Name",
+                    "ShortDescription",
+                    "FullDescription",
+                    "ProductTemplateId",
+                    "ShowOnHomePage",
+                    "MetaKeywords",
+                    "MetaDescription",
+                    "MetaTitle",
+                    "AllowCustomerReviews",
+                    "Published",
+                    "SKU",
+                    "ManufacturerPartNumber",
+                    "IsGiftCard",
+                    "GiftCardTypeId",
+                    "RequireOtherProducts",
+                    "RequiredProductVariantIds",
+                    "AutomaticallyAddRequiredProductVariants",
+                    "IsDownload",
+                    "DownloadId",
+                    "UnlimitedDownloads",
+                    "MaxNumberOfDownloads",
+                    "DownloadActivationTypeId",
+                    "HasSampleDownload",
+                    "SampleDownloadId",
+                    "HasUserAgreement",
+                    "UserAgreementText",
+                    "IsRecurring",
+                    "RecurringCycleLength",
+                    "RecurringCyclePeriodId",
+                    "RecurringTotalCycles",
+                    "IsShipEnabled",
+                    "IsFreeShipping",
+                    "AdditionalShippingCharge",
+                    "IsTaxExempt",
+                    "TaxCategoryId",
+                    "ManageInventoryMethodId",
+                    "StockQuantity",
+                    "DisplayStockAvailability",
+                    "DisplayStockQuantity",
+                    "MinStockQuantity",
+                    "LowStockActivityId",
+                    "NotifyAdminForQuantityBelow",
+                    "BackorderModeId",
+                    "OrderMinimumQuantity",
+                    "OrderMaximumQuantity",
+                    "DisableBuyButton",
+                    "DisableWishlistButton",
+                    "CallForPrice",
+                    "Price",
+                    "OldPrice",
+                    "ProductCost",
+                    "CustomerEntersPrice",
+                    "MinimumCustomerEnteredPrice",
+                    "MaximumCustomerEnteredPrice",
+                    "Weight",
+                    "Length",
+                    "Width",
+                    "Height",
+                    "CreatedOnUtc",
+                    "CategoryIds",
+                    "ManufacturerIds",
+                    "Picture1",
+                    "Picture2",
+                    "Picture3",
+                };
 
-                    string name = dr["Name"].ToString();
-                    string shortDescription = dr["ShortDescription"].ToString();
-                    string fullDescription = dr["FullDescription"].ToString();
-                    int productTemplateId = Convert.ToInt32(dr["ProductTemplateId"]);
-                    bool showOnHomePage = Convert.ToBoolean(dr["ShowOnHomePage"]);
-                    string metaKeywords = dr["MetaKeywords"].ToString();
-                    string metaDescription = dr["MetaDescription"].ToString();
-                    string metaTitle = dr["MetaTitle"].ToString();
-                    bool allowCustomerReviews = Convert.ToBoolean(dr["AllowCustomerReviews"]);
-                    bool published = Convert.ToBoolean(dr["Published"]);
-                    string sku = dr["SKU"].ToString();
-                    string manufacturerPartNumber = dr["ManufacturerPartNumber"].ToString();
-                    bool isGiftCard = Convert.ToBoolean(dr["IsGiftCard"]);
-                    int giftCardTypeId = Convert.ToInt32(dr["GiftCardTypeId"]);
-                    bool requireOtherProducts = Convert.ToBoolean(dr["RequireOtherProducts"]);
-                    string requiredProductVariantIds = dr["RequiredProductVariantIds"].ToString();
-                    bool automaticallyAddRequiredProductVariants = Convert.ToBoolean(dr["AutomaticallyAddRequiredProductVariants"]);
-                    bool isDownload = Convert.ToBoolean(dr["IsDownload"]);
-                    int downloadId = Convert.ToInt32(dr["DownloadId"]);
-                    bool unlimitedDownloads = Convert.ToBoolean(dr["UnlimitedDownloads"]);
-                    int maxNumberOfDownloads = Convert.ToInt32(dr["MaxNumberOfDownloads"]);
-                    int downloadActivationTypeId = Convert.ToInt32(dr["DownloadActivationTypeId"]);
-                    bool hasSampleDownload = Convert.ToBoolean(dr["HasSampleDownload"]);
-                    int sampleDownloadId = Convert.ToInt32(dr["SampleDownloadId"]);
-                    bool hasUserAgreement = Convert.ToBoolean(dr["HasUserAgreement"]);
-                    string userAgreementText = dr["UserAgreementText"].ToString();
-                    bool isRecurring = Convert.ToBoolean(dr["IsRecurring"]);
-                    int recurringCycleLength = Convert.ToInt32(dr["RecurringCycleLength"]);
-                    int recurringCyclePeriodId = Convert.ToInt32(dr["RecurringCyclePeriodId"]);
-                    int recurringTotalCycles = Convert.ToInt32(dr["RecurringTotalCycles"]);
-                    bool isShipEnabled = Convert.ToBoolean(dr["IsShipEnabled"]);
-                    bool isFreeShipping = Convert.ToBoolean(dr["IsFreeShipping"]);
-                    decimal additionalShippingCharge = Convert.ToDecimal(dr["AdditionalShippingCharge"]);
-                    bool isTaxExempt = Convert.ToBoolean(dr["IsTaxExempt"]);
-                    int taxCategoryId = Convert.ToInt32(dr["TaxCategoryId"]);
-                    int manageInventoryMethodId = Convert.ToInt32(dr["ManageInventoryMethodId"]);
-                    int stockQuantity = Convert.ToInt32(dr["StockQuantity"]);
-                    bool displayStockAvailability = Convert.ToBoolean(dr["DisplayStockAvailability"]);
-                    bool displayStockQuantity = Convert.ToBoolean(dr["DisplayStockQuantity"]);
-                    int minStockQuantity = Convert.ToInt32(dr["MinStockQuantity"]);
-                    int lowStockActivityId = Convert.ToInt32(dr["LowStockActivityId"]);
-                    int notifyAdminForQuantityBelow = Convert.ToInt32(dr["NotifyAdminForQuantityBelow"]);
-                    int backorderModeId = Convert.ToInt32(dr["BackorderModeId"]);
-                    int orderMinimumQuantity = Convert.ToInt32(dr["OrderMinimumQuantity"]);
-                    int orderMaximumQuantity = Convert.ToInt32(dr["OrderMaximumQuantity"]);
-                    bool disableBuyButton = Convert.ToBoolean(dr["DisableBuyButton"]);
-                    bool disableWishlistButton = Convert.ToBoolean(dr["DisableWishlistButton"]);
-                    bool callForPrice = Convert.ToBoolean(dr["CallForPrice"]);
-                    decimal price = Convert.ToDecimal(dr["Price"]);
-                    decimal oldPrice = Convert.ToDecimal(dr["OldPrice"]);
-                    decimal productCost = Convert.ToDecimal(dr["ProductCost"]);
-                    bool customerEntersPrice = Convert.ToBoolean(dr["CustomerEntersPrice"]);
-                    decimal minimumCustomerEnteredPrice = Convert.ToDecimal(dr["MinimumCustomerEnteredPrice"]);
-                    decimal maximumCustomerEnteredPrice = Convert.ToDecimal(dr["MaximumCustomerEnteredPrice"]);
-                    decimal weight = Convert.ToDecimal(dr["Weight"]);
-                    decimal length = Convert.ToDecimal(dr["Length"]);
-                    decimal width = Convert.ToDecimal(dr["Width"]);
-                    decimal height = Convert.ToDecimal(dr["Height"]);
-                    DateTime createdOnUtc = DateTime.FromOADate(Convert.ToDouble(dr["CreatedOnUtc"]));
-                    string categoryIds = dr["CategoryIds"].ToString();
-                    string manufacturerIds = dr["ManufacturerIds"].ToString();
-                    string picture1 = dr["Picture1"].ToString();
-                    string picture2 = dr["Picture2"].ToString();
-                    string picture3 = dr["Picture3"].ToString();
+
+                int iRow = 2;
+                while (true)
+                {
+                    bool allColumnsAreEmpty = true;
+                    for (var i = 1; i <= properties.Length; i++)
+                        if (worksheet.Cells[iRow, i].Value != null && !String.IsNullOrEmpty(worksheet.Cells[iRow, i].Value.ToString()))
+                        {
+                            allColumnsAreEmpty = false;
+                            break;
+                        }
+                    if (allColumnsAreEmpty)
+                        break;
+
+                    string name = worksheet.Cells[iRow, GetColumnIndex(properties, "Name")].Value as string;
+                    string shortDescription = worksheet.Cells[iRow, GetColumnIndex(properties, "ShortDescription")].Value as string;
+                    string fullDescription = worksheet.Cells[iRow, GetColumnIndex(properties, "FullDescription")].Value as string;
+                    int productTemplateId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "ProductTemplateId")].Value);
+                    bool showOnHomePage = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "ShowOnHomePage")].Value);
+                    string metaKeywords = worksheet.Cells[iRow, GetColumnIndex(properties, "MetaKeywords")].Value as string;
+                    string metaDescription = worksheet.Cells[iRow, GetColumnIndex(properties, "MetaDescription")].Value as string;
+                    string metaTitle = worksheet.Cells[iRow, GetColumnIndex(properties, "MetaTitle")].Value as string;
+                    bool allowCustomerReviews = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "AllowCustomerReviews")].Value);
+                    bool published = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "Published")].Value);
+                    string sku = worksheet.Cells[iRow, GetColumnIndex(properties, "SKU")].Value as string;
+                    string manufacturerPartNumber = worksheet.Cells[iRow, GetColumnIndex(properties, "ManufacturerPartNumber")].Value as string;
+                    bool isGiftCard = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "IsGiftCard")].Value);
+                    int giftCardTypeId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "GiftCardTypeId")].Value);
+                    bool requireOtherProducts = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "RequireOtherProducts")].Value);
+                    string requiredProductVariantIds = worksheet.Cells[iRow, GetColumnIndex(properties, "RequiredProductVariantIds")].Value as string;
+                    bool automaticallyAddRequiredProductVariants = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "AutomaticallyAddRequiredProductVariants")].Value);
+                    bool isDownload = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "IsDownload")].Value);
+                    int downloadId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "DownloadId")].Value);
+                    bool unlimitedDownloads = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "UnlimitedDownloads")].Value);
+                    int maxNumberOfDownloads = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "MaxNumberOfDownloads")].Value);
+                    int downloadActivationTypeId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "DownloadActivationTypeId")].Value);
+                    bool hasSampleDownload = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "HasSampleDownload")].Value);
+                    int sampleDownloadId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "SampleDownloadId")].Value);
+                    bool hasUserAgreement = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "HasUserAgreement")].Value);
+                    string userAgreementText = worksheet.Cells[iRow, GetColumnIndex(properties, "UserAgreementText")].Value as string;
+                    bool isRecurring = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "IsRecurring")].Value);
+                    int recurringCycleLength = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "RecurringCycleLength")].Value);
+                    int recurringCyclePeriodId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "RecurringCyclePeriodId")].Value);
+                    int recurringTotalCycles = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "RecurringTotalCycles")].Value);
+                    bool isShipEnabled = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "IsShipEnabled")].Value);
+                    bool isFreeShipping = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "IsFreeShipping")].Value);
+                    decimal additionalShippingCharge = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "AdditionalShippingCharge")].Value);
+                    bool isTaxExempt = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "IsTaxExempt")].Value);
+                    int taxCategoryId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "TaxCategoryId")].Value);
+                    int manageInventoryMethodId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "ManageInventoryMethodId")].Value);
+                    int stockQuantity = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "StockQuantity")].Value);
+                    bool displayStockAvailability = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "DisplayStockAvailability")].Value);
+                    bool displayStockQuantity = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "DisplayStockQuantity")].Value);
+                    int minStockQuantity = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "MinStockQuantity")].Value);
+                    int lowStockActivityId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "LowStockActivityId")].Value);
+                    int notifyAdminForQuantityBelow = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "NotifyAdminForQuantityBelow")].Value);
+                    int backorderModeId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "BackorderModeId")].Value);
+                    int orderMinimumQuantity = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "OrderMinimumQuantity")].Value);
+                    int orderMaximumQuantity = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "OrderMaximumQuantity")].Value);
+                    bool disableBuyButton = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "DisableBuyButton")].Value);
+                    bool disableWishlistButton = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "DisableWishlistButton")].Value);
+                    bool callForPrice = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "CallForPrice")].Value);
+                    decimal price = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "Price")].Value);
+                    decimal oldPrice = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "OldPrice")].Value);
+                    decimal productCost = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "ProductCost")].Value);
+                    bool customerEntersPrice = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "CustomerEntersPrice")].Value);
+                    decimal minimumCustomerEnteredPrice = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "MinimumCustomerEnteredPrice")].Value);
+                    decimal maximumCustomerEnteredPrice = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "MaximumCustomerEnteredPrice")].Value);
+                    decimal weight = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "Weight")].Value);
+                    decimal length = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "Length")].Value);
+                    decimal width = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "Width")].Value);
+                    decimal height = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "Height")].Value);
+                    DateTime createdOnUtc = DateTime.FromOADate(Convert.ToDouble(worksheet.Cells[iRow, GetColumnIndex(properties, "CreatedOnUtc")].Value));
+                    string categoryIds = worksheet.Cells[iRow, GetColumnIndex(properties, "CategoryIds")].Value as string;
+                    string manufacturerIds = worksheet.Cells[iRow, GetColumnIndex(properties, "ManufacturerIds")].Value as string;
+                    string picture1 = worksheet.Cells[iRow, GetColumnIndex(properties, "Picture1")].Value as string;
+                    string picture2 = worksheet.Cells[iRow, GetColumnIndex(properties, "Picture2")].Value as string;
+                    string picture3 = worksheet.Cells[iRow, GetColumnIndex(properties, "Picture3")].Value as string;
+
+
 
                     var productVariant = _productService.GetProductVariantBySku(sku);
                     if (productVariant != null)
@@ -135,7 +235,7 @@ namespace Nop.Services.ExportImport
                         product.UpdatedOnUtc = DateTime.UtcNow;
 
                         _productService.UpdateProduct(product);
-                        
+
                         productVariant.Sku = sku;
                         productVariant.ManufacturerPartNumber = manufacturerPartNumber;
                         productVariant.IsGiftCard = isGiftCard;
@@ -269,7 +369,7 @@ namespace Nop.Services.ExportImport
                     //category mappings
                     if (!String.IsNullOrEmpty(categoryIds))
                     {
-                        foreach (var id in categoryIds.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x=>Convert.ToInt32(x.Trim())))
+                        foreach (var id in categoryIds.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries).Select(x => Convert.ToInt32(x.Trim())))
                         {
                             if (productVariant.Product.ProductCategories.Where(x => x.CategoryId == id).FirstOrDefault() == null)
                             {
@@ -315,7 +415,7 @@ namespace Nop.Services.ExportImport
                     }
 
                     //pictures
-                    foreach (var picture in new string[] {picture1, picture2, picture3})
+                    foreach (var picture in new string[] { picture1, picture2, picture3 })
                     {
                         if (String.IsNullOrEmpty(picture))
                             continue;
@@ -327,6 +427,11 @@ namespace Nop.Services.ExportImport
                         });
                         _productService.UpdateProduct(productVariant.Product);
                     }
+
+
+
+                    //next product
+                    iRow++;
                 }
             }
         }

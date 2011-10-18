@@ -482,10 +482,10 @@ namespace Nop.Admin.Controllers
                 var orders = _orderService.SearchOrders(null, null, null,
                     null, null, null, null, 0, int.MaxValue);
 
-                string fileName = string.Format("orders_{0}_{1}.xls", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
+                string fileName = string.Format("orders_{0}_{1}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
                 string filePath = string.Format("{0}content\\files\\ExportImport\\{1}", Request.PhysicalApplicationPath, fileName);
 
-                _exportManager.ExportOrdersToXls(filePath, orders);
+                _exportManager.ExportOrdersToXlsx(filePath, orders);
 
                 var bytes = System.IO.File.ReadAllBytes(filePath);
                 return File(bytes, "text/xls", fileName);

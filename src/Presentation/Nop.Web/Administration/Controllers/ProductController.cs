@@ -1490,10 +1490,10 @@ namespace Nop.Admin.Controllers
                     _workContext.WorkingLanguage.Id, new List<int>(),
                     ProductSortingEnum.Position, 0, int.MaxValue, true);
 
-                string fileName = string.Format("products_{0}_{1}.xls", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
+                string fileName = string.Format("products_{0}_{1}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
                 string filePath = string.Format("{0}content\\files\\ExportImport\\{1}", Request.PhysicalApplicationPath, fileName);
 
-                _exportManager.ExportProductsToXls(filePath, products);
+                _exportManager.ExportProductsToXlsx(filePath, products);
 
                 var bytes = System.IO.File.ReadAllBytes(filePath);
                 return File(bytes, "text/xls", fileName);
@@ -1519,15 +1519,11 @@ namespace Nop.Admin.Controllers
                     var fileBytes = new byte[file.ContentLength];
                     file.InputStream.Read(fileBytes, 0, file.ContentLength);
                     //do stuff with the bytes
-                    string extension = "xls";
-                    if (file.FileName.EndsWith("xlsx"))
-                        extension = "xlsx";
-
-                    string fileName = string.Format("products_{0}_{1}.{2}", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4), extension);
+                    string fileName = string.Format("products_{0}_{1}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
                     string filePath = string.Format("{0}content\\files\\ExportImport\\{1}", Request.PhysicalApplicationPath, fileName);
 
                     System.IO.File.WriteAllBytes(filePath, fileBytes);
-                    _importManager.ImportProductsFromXls(filePath);
+                    _importManager.ImportProductsFromXlsx(filePath);
                 }
                 else
                 {
