@@ -176,14 +176,14 @@ namespace Nop.Plugin.Shipping.UPS
                 sb.AppendFormat("<Weight>{0}</Weight>", weight);
                 sb.Append("</PackageWeight>");
 
-                if (_upsSettings.EnsurePackage)
+                if (_upsSettings.InsurePackage)
                 {
                     //The maximum declared amount per package: 50000 USD.
-                    int packageEnsurancePrice = Convert.ToInt32(subTotalWithDiscountBase);
+                    int packageInsurancePrice = Convert.ToInt32(subTotalWithDiscountBase);
                     sb.Append("<PackageServiceOptions>");
                     sb.Append("<InsuredValue>");
                     sb.AppendFormat("<CurrencyCode>{0}</CurrencyCode>", _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode);
-                    sb.AppendFormat("<MonetaryValue>{0}</MonetaryValue>", packageEnsurancePrice);
+                    sb.AppendFormat("<MonetaryValue>{0}</MonetaryValue>", packageInsurancePrice);
                     sb.Append("</InsuredValue>");
                     sb.Append("</PackageServiceOptions>");
                 }
@@ -220,7 +220,7 @@ namespace Nop.Plugin.Shipping.UPS
                     length2 = 1;
 
                 //The maximum declared amount per package: 50000 USD.
-                int packageEnsurancePrice = Convert.ToInt32(subTotalWithDiscountBase / totalPackages);
+                int packageInsurancePrice = Convert.ToInt32(subTotalWithDiscountBase / totalPackages);
 
                 for (int i = 0; i < totalPackages; i++)
                 {
@@ -237,12 +237,12 @@ namespace Nop.Plugin.Shipping.UPS
                     sb.AppendFormat("<Weight>{0}</Weight>", weight2);
                     sb.Append("</PackageWeight>");
 
-                    if (_upsSettings.EnsurePackage)
+                    if (_upsSettings.InsurePackage)
                     {
                         sb.Append("<PackageServiceOptions>");
                         sb.Append("<InsuredValue>");
                         sb.AppendFormat("<CurrencyCode>{0}</CurrencyCode>", _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode);
-                        sb.AppendFormat("<MonetaryValue>{0}</MonetaryValue>", packageEnsurancePrice);
+                        sb.AppendFormat("<MonetaryValue>{0}</MonetaryValue>", packageInsurancePrice);
                         sb.Append("</InsuredValue>");
                         sb.Append("</PackageServiceOptions>");
                     }
