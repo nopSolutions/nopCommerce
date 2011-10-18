@@ -43,6 +43,30 @@ namespace Nop.Data
             base.OnModelCreating(modelBuilder);
         }
 
+        /// <summary>
+        /// Attach an entity to the context or return an already attached entity (if it was already attached)
+        /// </summary>
+        /// <typeparam name="TEntity">TEntity</typeparam>
+        /// <param name="entity">Entity</param>
+        /// <returns>Attached entity</returns>
+        protected virtual TEntity AttachEntityToContext<TEntity>(TEntity entity) where TEntity : BaseEntity, new()
+        {
+            //little hack here until Entity Framework really supports stored procedures
+            //otherwise, navigation properties of loaded entities are not loaded until an entity is attached to the context
+            var alreadyAttached = Set<TEntity>().Local.Where(x => x.Id == entity.Id).FirstOrDefault();
+            if (alreadyAttached == null)
+            {
+                //attach new entity
+                Set<TEntity>().Attach(entity);
+                return entity;
+            }
+            else
+            {
+                //entity is already loaded.
+                return alreadyAttached;
+            }
+        }
+
         public string CreateDatabaseScript()
         {
             return ((IObjectContextAdapter)this).ObjectContext.CreateDatabaseScript();
@@ -83,8 +107,9 @@ namespace Nop.Data
             {
                 //no output parameters
                 var result = this.Database.SqlQuery<TEntity>(commandText, parameters).ToList();
-                foreach (var entity in result)
-                    Set<TEntity>().Attach(entity);
+                for (int i = 0; i < result.Count; i++)
+                    result[i] = AttachEntityToContext(result[i]);
+                        
                 return result;
                 
                 //var result = context.ExecuteStoreQuery<TEntity>(commandText, parameters).ToList();
@@ -119,8 +144,8 @@ namespace Nop.Data
                     var reader = cmd.ExecuteReader();
                     //return reader.DataReaderToObjectList<TEntity>();
                     var result = context.Translate<TEntity>(reader).ToList();
-                    foreach (var entity in result)
-                        Set<TEntity>().Attach(entity);
+                    for (int i = 0; i < result.Count; i++)
+                        result[i] = AttachEntityToContext(result[i]);
                     //close up the reader, we're done saving results
                     reader.Close();
                     return result;
