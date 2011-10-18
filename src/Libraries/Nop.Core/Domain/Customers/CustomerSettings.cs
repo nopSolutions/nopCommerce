@@ -11,6 +11,11 @@ namespace Nop.Core.Domain.Customers
         public bool UsernamesEnabled { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether users can check the availability of usernames (when registering or changing in 'My Account')
+        /// </summary>
+        public bool CheckUsernameAvailabilityEnabled { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether users are allowed to change their usernames
         /// </summary>
         public bool AllowUsersToChangeUsernames { get; set; }

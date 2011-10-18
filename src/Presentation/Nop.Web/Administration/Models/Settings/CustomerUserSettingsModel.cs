@@ -26,6 +26,9 @@ namespace Nop.Admin.Models.Settings
             [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.AllowUsersToChangeUsernames")]
             public bool AllowUsersToChangeUsernames { get; set; }
 
+            [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.CheckUsernameAvailabilityEnabled")]
+            public bool CheckUsernameAvailabilityEnabled { get; set; }
+
             [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.UserRegistrationType")]
             public int UserRegistrationType { get; set; }
 

@@ -35,9 +35,11 @@
         function toggleUsername() {
             if (getE('@Html.FieldIdFor(model => model.CustomerSettings.UsernamesEnabled)').checked) {
                 $('#pnlAllowUsersToChangeUsernames').show();
+                $('#pnlCheckUsernameAvailability').show();
             }
             else {
                 $('#pnlAllowUsersToChangeUsernames').hide();
+                $('#pnlCheckUsernameAvailability').hide();
             }
         }
         
@@ -72,6 +74,15 @@
             <td class="adminData">
                 @Html.EditorFor(model => model.CustomerSettings.AllowUsersToChangeUsernames)
                 @Html.ValidationMessageFor(model => model.CustomerSettings.AllowUsersToChangeUsernames)
+            </td>
+        </tr>
+        <tr id="pnlCheckUsernameAvailability">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CustomerSettings.CheckUsernameAvailabilityEnabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.CustomerSettings.CheckUsernameAvailabilityEnabled)
+                @Html.ValidationMessageFor(model => model.CustomerSettings.CheckUsernameAvailabilityEnabled)
             </td>
         </tr>
         <tr>

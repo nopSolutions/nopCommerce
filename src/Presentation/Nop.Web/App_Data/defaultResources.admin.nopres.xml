@@ -3622,6 +3622,14 @@
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
+									<LocaleResource Name="CheckUsernameAvailabilityEnabled">
+										<Value>Allow customers to check the availability of usernames</Value>
+										<Children>
+											<LocaleResource Name="Hint">
+												<Value>A value indicating whether customers are allowed to check the availability of usernames (when registering or changing in 'My Account').</Value>
+											</LocaleResource>
+										</Children>
+									</LocaleResource>									
 									<LocaleResource Name="UserRegistrationType">
 										<Value>Registration method</Value>
 										<Children>

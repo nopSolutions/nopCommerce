@@ -101,6 +101,22 @@
 					</LocaleResource>
 				</Children>
 			</LocaleResource>
+			<LocaleResource Name="CheckUsernameAvailability">
+				<Children>
+					<LocaleResource Name="Available">
+						<Value>Username available</Value>
+					</LocaleResource>
+					<LocaleResource Name="CurrentUsername">
+						<Value>Current username</Value>
+					</LocaleResource>
+					<LocaleResource Name="NotAvailable">
+						<Value>Username not available</Value>
+					</LocaleResource>
+					<LocaleResource Name="Button">
+						<Value>Check Availability</Value>
+					</LocaleResource>
+				</Children>
+			</LocaleResource>
 			<LocaleResource Name="CompanyDetails">
 				<Value>Company Details</Value>
 			</LocaleResource>
@@ -360,7 +376,7 @@
 						<Value>Welcome, Please Sign In!</Value>
 					</LocaleResource>
 					<LocaleResource Name="WrongCredentials">
-						<Value>The credentials provided is incorrect</Value>
+						<Value>The credentials provided are incorrect</Value>
 					</LocaleResource>
 					<LocaleResource Name="Fields">
 						<Children>

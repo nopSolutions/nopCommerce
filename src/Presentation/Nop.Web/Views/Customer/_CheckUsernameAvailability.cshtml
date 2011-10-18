@@ -1,0 +1,41 @@
+﻿<script type="text/javascript">
+    $(function () {
+        $('#Username').after('<span id="username-availabilty"></span>');
+        $('#Username').bind({
+            change: function () {
+                $('#username-availabilty').text('');
+            }
+        });
+        $('#check-availability-button').click(function () {
+            $('#username-availabilty').text('');
+            if ($("#Username").val().length > 0) {
+                $('#availability-check-progress').show();
+                $('#check-availability-button').attr('disabled', 'disabled');
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("CheckUsernameAvailability", "Customer")',
+                    data: $('#Username').serialize(),
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#check-availability-button').removeAttr('disabled');
+                        $('#availability-check-progress').hide();
+                        $('#username-availabilty').removeAttr('class').attr('class', ((data.Available) ? 'availabilestatus' : 'notavailablestatus'));
+                        $('#username-availabilty').text(data.Text);
+                    },
+                    failure: function () {
+                        $('#check-availability-button').removeAttr('disabled');
+                        $('#availability-check-progress').hide();
+                    }
+                });
+            } else {
+                $('#username-availabilty').attr('class', 'notavailablestatus');
+                $('#username-availabilty').text('*');
+            }
+            return false;
+        });
+    });
+</script>
+<button id="check-availability-button" name="check-availability-button" class="checkavailabilitybutton">@T("Account.CheckUsernameAvailability.Button")</button>
+<span id="availability-check-progress" style="display: none;">
+    <img src='@Url.Content("~/Content/Images/ajax_loader_small.gif")' alt="@T("Common.Wait...")" />
+</span>

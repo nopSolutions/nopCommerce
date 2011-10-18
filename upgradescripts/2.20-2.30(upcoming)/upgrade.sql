@@ -29,6 +29,27 @@ set @resources='
     <LocaleResource Name="Admin.Common.ConfigurationNotRequired">
         <Value>Configuration is not required</Value>
     </LocaleResource>
+    <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.CheckUsernameAvailabilityEnabled">
+        <Value>Allow customers to check the availability of usernames</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.CheckUsernameAvailabilityEnabled.Hint">
+        <Value>A value indicating whether customers are allowed to check the availability of usernames (when registering or changing in ''My Account'').</Value>
+    </LocaleResource>
+    <LocaleResource Name="Account.CheckUsernameAvailability.Available">
+        <Value>Username available</Value>
+    </LocaleResource>
+    <LocaleResource Name="Account.CheckUsernameAvailability.CurrentUsername">
+        <Value>Current username</Value>
+    </LocaleResource>
+    <LocaleResource Name="Account.CheckUsernameAvailability.NotAvailable">
+        <Value>Username not available</Value>
+    </LocaleResource>
+    <LocaleResource Name="Account.CheckUsernameAvailability.Button">
+        <Value>Check Availability</Value>
+    </LocaleResource>
+    <LocaleResource Name="Account.Login.WrongCredentials">
+        <Value>The credentials provided are incorrect</Value>
+    </LocaleResource>
 </Language>
 '
 

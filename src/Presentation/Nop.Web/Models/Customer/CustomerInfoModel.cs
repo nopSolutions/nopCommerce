@@ -22,6 +22,7 @@ namespace Nop.Web.Models.Customer
         [AllowHtml]
         public string Email { get; set; }
 
+        public bool CheckUsernameAvailabilityEnabled { get; set; }
         public bool AllowUsersToChangeUsernames { get; set; }
         public bool UsernamesEnabled { get; set; }
         [NopResourceDisplayName("Account.Fields.Username")]

@@ -27,6 +27,8 @@ namespace Nop.Web.Models.Customer
         [AllowHtml]
         public string Username { get; set; }
 
+        public bool CheckUsernameAvailabilityEnabled { get; set; }
+
         [DataType(DataType.Password)]
         [NopResourceDisplayName("Account.Fields.Password")]
         [AllowHtml]

@@ -4520,6 +4520,7 @@ namespace Nop.Services.Installation
                 {
                     UsernamesEnabled = false,
                     AllowUsersToChangeUsernames = false,
+                    CheckUsernameAvailabilityEnabled = false,
                     HashedPasswordFormat = "SHA1",
                     UserRegistrationType = UserRegistrationType.Standard,
                     AllowCustomersToUploadAvatars = false,

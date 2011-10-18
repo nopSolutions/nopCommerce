@@ -179,9 +179,14 @@ namespace Nop.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (_customerService.ValidateCustomer(_customerSettings.UsernamesEnabled ? model.UserName : model.Email, model.Password))
+                if (_customerSettings.UsernamesEnabled && model.Username != null)
                 {
-                    var customer = _customerSettings.UsernamesEnabled ? _customerService.GetCustomerByUsername(model.UserName) : _customerService.GetCustomerByEmail(model.Email);
+                    model.Username = model.Username.Trim();
+                }
+
+                if (_customerService.ValidateCustomer(_customerSettings.UsernamesEnabled ? model.Username : model.Email, model.Password))
+                {
+                    var customer = _customerSettings.UsernamesEnabled ? _customerService.GetCustomerByUsername(model.Username) : _customerService.GetCustomerByEmail(model.Email);
 
                     //migrate shopping cart
                     _shoppingCartService.MigrateShoppingCart(_workContext.CurrentCustomer, customer);
@@ -232,6 +237,7 @@ namespace Nop.Web.Controllers
             model.FaxEnabled = _customerSettings.FaxEnabled;
             model.NewsletterEnabled = _customerSettings.NewsletterEnabled;
             model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
+            model.CheckUsernameAvailabilityEnabled = _customerSettings.CheckUsernameAvailabilityEnabled;
             model.DisplayCaptcha = _captchaSettings.Enabled;
             if (_customerSettings.CountryEnabled)
             {
@@ -283,6 +289,11 @@ namespace Nop.Web.Controllers
 
             if (ModelState.IsValid)
             {
+                if (_customerSettings.UsernamesEnabled && model.Username != null)
+                {
+                    model.Username = model.Username.Trim();
+                }
+
                 bool isApproved = _customerSettings.UserRegistrationType == UserRegistrationType.Standard;
                 var registrationRequest = new CustomerRegistrationRequest(customer, model.Email,
                     _customerSettings.UsernamesEnabled ? model.Username : model.Email, model.Password, PasswordFormat.Hashed, isApproved);
@@ -438,6 +449,7 @@ namespace Nop.Web.Controllers
             model.FaxEnabled = _customerSettings.FaxEnabled;
             model.NewsletterEnabled = _customerSettings.NewsletterEnabled;
             model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
+            model.CheckUsernameAvailabilityEnabled = _customerSettings.CheckUsernameAvailabilityEnabled;
             model.DisplayCaptcha = _captchaSettings.Enabled;
             if (_customerSettings.CountryEnabled)
             {
@@ -492,7 +504,56 @@ namespace Nop.Web.Controllers
             };
             return View(model);
         }
-        
+
+        [HttpPost]
+        public ActionResult CheckUsernameAvailability(string username)
+        {
+            var usernameAvailable = false;
+            var statusText = _localizationService.GetResource("Account.CheckUsernameAvailability.NotAvailable");
+
+            if (_customerSettings.UsernamesEnabled && username != null)
+            {
+                username = username.Trim();
+
+                if (UsernameIsValid(username))
+                {
+                    if (_workContext.CurrentCustomer != null && 
+                        _workContext.CurrentCustomer.Username != null && 
+                        _workContext.CurrentCustomer.Username.Equals(username, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        statusText = _localizationService.GetResource("Account.CheckUsernameAvailability.CurrentUsername");
+                    }
+                    else
+                    {
+                        var customer = _customerService.GetCustomerByUsername(username);
+                        if (customer == null)
+                        {
+                            statusText = _localizationService.GetResource("Account.CheckUsernameAvailability.Available");
+                            usernameAvailable = true;
+                        }
+                    }
+                }
+            }
+
+            return Json(new { Available = usernameAvailable, Text = statusText });
+        }
+
+        [NonAction]
+        public bool UsernameIsValid(string username)
+        {
+            var result = true;
+
+            if (String.IsNullOrEmpty(username))
+            {
+                return false;
+            }
+
+            // other validation 
+
+            return result;
+        }
+
+
         public ActionResult Logout()
         {
             //external authentication
@@ -812,6 +873,7 @@ namespace Nop.Web.Controllers
             model.NewsletterEnabled = _customerSettings.NewsletterEnabled;
             model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
             model.AllowUsersToChangeUsernames = _customerSettings.AllowUsersToChangeUsernames;
+            model.CheckUsernameAvailabilityEnabled = _customerSettings.CheckUsernameAvailabilityEnabled;
             model.SignatureEnabled = _forumSettings.ForumsEnabled && _forumSettings.SignaturesEnabled;
 
             //external authentication

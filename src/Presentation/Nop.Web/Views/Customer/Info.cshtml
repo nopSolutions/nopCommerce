@@ -130,15 +130,25 @@
                                 {
                                     if (Model.AllowUsersToChangeUsernames)
                                     {
-                                    <tr class="row">
-                                        <td class="item-name">
-                                            @Html.LabelFor(model => model.Username):
-                                        </td>
-                                        <td class="item-value">
-                                            @Html.EditorFor(model => model.Username)
-                                            @Html.ValidationMessageFor(model => model.Username)
-                                        </td>
-                                    </tr>
+                                        <tr class="row">
+                                            <td class="item-name">
+                                                @Html.LabelFor(model => model.Username):
+                                            </td>
+                                            <td class="item-value">
+                                                @Html.EditorFor(model => model.Username)
+                                                @Html.ValidationMessageFor(model => model.Username)
+                                            </td>
+                                        </tr>
+                                        if (Model.CheckUsernameAvailabilityEnabled)
+                                        {
+                                            <tr class="row">
+                                                <td class="item-name">
+                                                </td>
+                                                <td class="item-value">
+                                                    @Html.Partial("_CheckUsernameAvailability")
+                                                </td>
+                                            </tr>
+                                        }
                                     }
                                     else
                                     {

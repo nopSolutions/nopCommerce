@@ -13,7 +13,7 @@ namespace Nop.Web.Models.Customer
 
         public bool UsernamesEnabled { get; set; }
         [NopResourceDisplayName("Account.Login.Fields.UserName")]
-        public string UserName { get; set; }
+        public string Username { get; set; }
 
         [DataType(DataType.Password)]
         [NopResourceDisplayName("Account.Login.Fields.Password")]
