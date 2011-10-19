@@ -506,6 +506,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
+        [ValidateInput(false)]
         public ActionResult CheckUsernameAvailability(string username)
         {
             var usernameAvailable = false;
