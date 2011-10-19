@@ -6657,6 +6657,11 @@
 							</LocaleResource>
 							<LocaleResource Name="BillingAddress">
 								<Value>Billing address</Value>
+								<Children>
+									<LocaleResource Name="Hint">
+										<Value>Billing address info</Value>
+									</LocaleResource>
+								</Children>
 							</LocaleResource>
 							<LocaleResource Name="CancelCC">
 								<Value>Cancel editing</Value>
@@ -7069,6 +7074,9 @@
 							<LocaleResource Name="ShippingAddress">
 								<Value>Shipping address</Value>
 								<Children>
+									<LocaleResource Name="Hint">
+										<Value>Shipping address info</Value>
+									</LocaleResource>
 									<LocaleResource Name="ViewOnGoogleMaps">
 										<Value>View address on Google Maps</Value>
 									</LocaleResource>

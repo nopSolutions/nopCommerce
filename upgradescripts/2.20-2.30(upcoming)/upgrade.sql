@@ -50,6 +50,12 @@ set @resources='
     <LocaleResource Name="Account.Login.WrongCredentials">
         <Value>The credentials provided are incorrect</Value>
     </LocaleResource>
+    <LocaleResource Name="Admin.Orders.Fields.BillingAddress.Hint">
+        <Value>Billing address info</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Orders.Fields.ShippingAddress.Hint">
+        <Value>Shipping address info</Value>
+    </LocaleResource>
 </Language>
 '
 
