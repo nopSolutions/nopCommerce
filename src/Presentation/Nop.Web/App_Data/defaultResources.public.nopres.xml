@@ -849,8 +849,8 @@
 			<LocaleResource Name="BillingAddress">
 				<Value>Billing address</Value>
 			</LocaleResource>
-			<LocaleResource Name="BillingToThisAddress">
-				<Value>Billing to this address</Value>
+			<LocaleResource Name="BillToThisAddress">
+				<Value>Bill to this address</Value>
 			</LocaleResource>
 			<LocaleResource Name="ConfirmButton">
 				<Value>Confirm</Value>

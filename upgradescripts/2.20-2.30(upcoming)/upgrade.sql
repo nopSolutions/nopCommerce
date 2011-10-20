@@ -56,6 +56,12 @@ set @resources='
     <LocaleResource Name="Admin.Orders.Fields.ShippingAddress.Hint">
         <Value>Shipping address info</Value>
     </LocaleResource>
+    <LocaleResource Name="Checkout.BillingToThisAddress">
+        <Value></Value>
+    </LocaleResource>
+    <LocaleResource Name="Checkout.BillToThisAddress">
+        <Value>Bill to this address</Value>
+    </LocaleResource>
 </Language>
 '
 
