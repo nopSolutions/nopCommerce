@@ -205,7 +205,7 @@ ul.languagelist li:hover{cursor:pointer;}
 .order-summary-content .warning-box .warning-text,.wishlist-content .warning-box .warning-text{color:Red;}
 .order-summary-content .cart-footer{width:100%;background:url(images/cart-footer-bg.gif) repeat-x bottom;}
 .order-summary-content .total-info{margin:0;font-size:12px;}
-.cart_total_left{width:100%;text-align:left;vertical-align:middle;height:21px;font-weight:700;color:#353434;}
+.cart_total_left{width:100%;text-align:right;vertical-align:middle;height:21px;font-weight:700;color:#353434;}
 .cart_total_left_below{width:100%;text-align:left;vertical-align:top;height:30px;}
 .cart_total_right{text-align:right;vertical-align:middle;padding-left:5px;}
 .order-summary-content .removegiftcardbutton,.order-summary-content .removediscountbutton{padding-right:5px;padding-left:18px;background:url(images/ico-delete.gif) no-repeat;border:0;width:32px;height:15px;}
@@ -221,8 +221,8 @@ ul.languagelist li:hover{cursor:pointer;}
 .order-summary-content .addon-buttons{clear:both;float:right;margin:0;padding:10px 0 10px 10px;text-align:right;}
 .order-summary-content .crosssells-title{color:#000;font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:700;padding:5px 5px 5px 0;border-bottom:0 none;margin:0 0 10px;width:100%;}
 .estimate-shipping{margin:0;padding:10px;font-size:11px;color:#555;background:#F7F5E8;border:dotted 1px #d3d3d3;}
-.estimate-shipping .shipping-options{text-align:left;margin:10px;border:1px solid #d7d7d7;height:auto;}
-.estimate-shipping .shipping-options .shipping-option-item{text-align:right;vertical-align:text-top;padding:5px 0 0 5px;}
+.estimate-shipping .shipping-options{text-align:right;margin:10px;border:1px solid #d7d7d7;height:auto;}
+.estimate-shipping .shipping-options .shipping-option-item{text-align:right;vertical-align:text-top;padding:5px 5px 0 0px;}
 .estimate-shipping .shipping-options .shipping-option-item .option-name{font-weight:700;}
 .estimate-shipping .shipping-options .shipping-option-item .option-description{padding:5px 0 5px 16px;}
 /* CHECKOUT, ORDER DETAILS */
@@ -440,7 +440,7 @@ ul.languagelist li:hover{cursor:pointer;}
 .registration-page .page-title{border-bottom:0 none;}
 .registration-page .body{margin:0;padding:0;font-size:11px;color:#555;background-color:inherit;}
 .registration-page .section-title{padding:10px 10px 5px 0;font-weight:700;clear:both;font-size:12px;}
-.registration-page .section-body{text-align:left;padding:10px;border:1px solid #d7d7d7;height:auto;}
+.registration-page .section-body{text-align:right;padding:10px;border:1px solid #d7d7d7;height:auto;}
 .registration-page .button{float:left;margin-bottom:5px;margin-top:5px;text-align:center;clear:both;}
 .availablestatus{color:green;padding-left:5px;}
 .notavailablestatus{color:red;padding-left:5px;}
@@ -465,7 +465,7 @@ ul.languagelist li:hover{cursor:pointer;}
 .search-panel table.adv-search #Cid{width:374px;}
 .search-panel table.adv-search{border-top:solid #D3D3D3 1px;margin-top:10px;}
 .search-panel table.basic-search td.title,.search-panel table.adv-search td.title{padding:4px;text-align:right;vertical-align:middle;width:130px;}
-.search-panel table.basic-search td.data,.search-panel table.adv-search td.data{padding:4px;text-align:left;vertical-align:middle;white-space:nowrap;}
+.search-panel table.basic-search td.data,.search-panel table.adv-search td.data{padding:4px;text-align:right;vertical-align:middle;white-space:nowrap;}
 .search-input .warning{text-decoration:underline;}
 .contact-form{text-align:right;direction:rtl;}
 .contact-form .button{text-align:left;}
@@ -640,7 +640,7 @@ ul.languagelist li:hover{cursor:pointer;}
 .product-variant-line .attributes{}
 .product-variant-line .stock,.product-variant-line .sku,.product-variant-line .manufacturerpartnumber{}
 .product-variant-line .giftCard{}
-.product-variant-line .giftCard dt{clear:left;float:left;width:150px;}
+.product-variant-line .giftCard dt{clear:right;float:right;width:150px;}
 .product-details-page .error{font-weight:700;color:Red;}
 .product-essential .price{margin-top:15px;margin-bottom:15px;}
 .product-essential .price .productPrice{color:green;}
