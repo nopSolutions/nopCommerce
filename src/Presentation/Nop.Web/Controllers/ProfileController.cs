@@ -13,7 +13,7 @@ using Nop.Services.Media;
 using Nop.Services.Seo;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Security;
-using Nop.Web.Models;
+using Nop.Web.Models.Common;
 using Nop.Web.Models.Profile;
 
 namespace Nop.Web.Controllers

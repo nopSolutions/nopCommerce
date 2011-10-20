@@ -11,11 +11,7 @@ namespace Nop.Data.Mapping.Forums
             this.HasKey(f => f.Id);
             this.Property(f => f.Name).IsRequired().HasMaxLength(200);
             this.Property(f => f.Description).IsMaxLength();
-
-            this.Ignore(f => f.LastPost);
-            this.Ignore(f => f.LastTopic);
-            this.Ignore(f => f.LastPostCustomer);
-
+            
             this.HasRequired(f => f.ForumGroup)
                 .WithMany(fg => fg.Forums)
                 .HasForeignKey(f => f.ForumGroupId);

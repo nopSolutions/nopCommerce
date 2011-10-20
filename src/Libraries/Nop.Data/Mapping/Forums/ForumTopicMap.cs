@@ -13,7 +13,7 @@ namespace Nop.Data.Mapping.Forums
             this.Ignore(ft => ft.ForumTopicType);
 
             this.HasRequired(ft => ft.Forum)
-                .WithMany(f => f.ForumTopics)
+                .WithMany()
                 .HasForeignKey(ft => ft.ForumId);
 
             this.HasRequired(ft => ft.Customer)

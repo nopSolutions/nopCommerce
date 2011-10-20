@@ -4,7 +4,7 @@ using System.Web.Mvc;
 using Nop.Core;
 using Nop.Core.Infrastructure;
 
-namespace Nop.Web
+namespace Nop.Web.Extensions
 {
     public static class EditorExtensions
     {

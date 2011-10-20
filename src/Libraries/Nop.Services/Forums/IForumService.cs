@@ -105,7 +105,7 @@ namespace Nop.Services.Forums
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Forum Topics</returns>
-        IList<ForumTopic> GetAllTopics(int forumId,
+        IPagedList<ForumTopic> GetAllTopics(int forumId,
             int customerId, string keywords, ForumSearchType searchType,
             int limitDays, int pageIndex, int pageSize);
 

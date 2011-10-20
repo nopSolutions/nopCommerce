@@ -1,5 +1,6 @@
 ﻿@model Nop.Web.Models.Blogs.BlogPostListModel
 @using Nop.Web;
+@using Nop.Web.Extensions;
 @{
     Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
 
@@ -64,15 +65,15 @@
                     {
                         @T("Blog.Tags") 
                         <text>:&nbsp;</text>
-                   for (int i = 0; i < item.Tags.Count; i++)
-                   {
-                       var tag = item.Tags[i];
+                        for (int i = 0; i < item.Tags.Count; i++)
+                        {
+                            var tag = item.Tags[i];
                         <a href="@Url.RouteUrl("BlogByTag", new { tag = tag })">@tag</a>
-                                                                           if (i != item.Tags.Count - 1)
-                                                                           {
+                            if (i != item.Tags.Count - 1)
+                            {
                         <text>,&nbsp;</text>
-                                                                           }
-                   }
+                            }
+                        }
                     }
                 </div>
                 @if (item.AllowComments)

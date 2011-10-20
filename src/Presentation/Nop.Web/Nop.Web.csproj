@@ -127,12 +127,15 @@
     <Compile Include="Models\Blogs\BlogPostTagListModel.cs" />
     <Compile Include="Models\Boards\ActiveDiscussionsModel.cs" />
     <Compile Include="Models\Boards\BoardsIndexModel.cs" />
+    <Compile Include="Models\Boards\ForumRowModel.cs" />
+    <Compile Include="Models\Boards\ForumTopicRowModel.cs" />
+    <Compile Include="Models\Boards\EditForumPostModel.cs" />
     <Compile Include="Models\Boards\ForumBreadcrumbModel.cs" />
     <Compile Include="Models\Boards\ForumGroupModel.cs" />
-    <Compile Include="Models\Boards\ForumModel.cs" />
+    <Compile Include="Models\Boards\ForumPageModel.cs" />
     <Compile Include="Models\Boards\ForumPostModel.cs" />
-    <Compile Include="Models\Boards\ForumTopicModel.cs" />
-    <Compile Include="Models\Boards\ForumTopicPostsModel.cs" />
+    <Compile Include="Models\Boards\EditForumTopicModel.cs" />
+    <Compile Include="Models\Boards\ForumTopicPageModel.cs" />
     <Compile Include="Models\Boards\LastPostModel.cs" />
     <Compile Include="Models\Boards\SearchModel.cs" />
     <Compile Include="Models\Boards\TopicMoveModel.cs" />
@@ -227,8 +230,8 @@
     <Compile Include="Models\Topics\TopicModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Validators\Blogs\BlogPostValidator.cs" />
-    <Compile Include="Validators\Boards\ForumPostValidator.cs" />
-    <Compile Include="Validators\Boards\ForumTopicValidator.cs" />
+    <Compile Include="Validators\Boards\EditForumPostValidator.cs" />
+    <Compile Include="Validators\Boards\EditForumTopicValidator.cs" />
     <Compile Include="Validators\Catalog\ProductEmailAFriendValidator.cs" />
     <Compile Include="Validators\Catalog\ProductReviewsValidator.cs" />
     <Compile Include="Validators\Common\AddressValidator.cs" />
@@ -1071,6 +1074,7 @@
     <Content Include="Views\Shared\_Print.cshtml" />
     <Content Include="Views\Common\LanguageAttributes.cshtml" />
     <Content Include="Views\Customer\_CheckUsernameAvailability.cshtml" />
+    <Content Include="Views\Boards\ActiveDiscussionsSmall.cshtml" />
     <None Include="_bin_deployableAssemblies\amd64\Microsoft.VC90.CRT\README_ENU.txt" />
     <None Include="_bin_deployableAssemblies\amd64\Microsoft.VC90.CRT\msvcr90.dll" />
     <None Include="_bin_deployableAssemblies\amd64\Microsoft.VC90.CRT\Microsoft.VC90.CRT.manifest" />
@@ -1276,10 +1280,10 @@
     <Content Include="Views\Boards\_ActiveTopics.cshtml" />
     <Content Include="Views\Boards\_CreateUpdatePost.cshtml" />
     <Content Include="Views\Boards\_CreateUpdateTopic.cshtml" />
-    <Content Include="Views\Boards\_ForumBreadcrumb.cshtml" />
+    <Content Include="Views\Boards\ForumBreadcrumb.cshtml" />
     <Content Include="Views\Boards\_ForumGroup.cshtml" />
     <Content Include="Views\Boards\_ForumPost.cshtml" />
-    <Content Include="Views\Boards\_LastPost.cshtml" />
+    <Content Include="Views\Boards\LastPost.cshtml" />
     <Content Include="Views\Boards\_SearchBox.cshtml" />
     <Content Include="Views\Install\Index.cshtml" />
     <Content Include="Views\Shared\_Installation.cshtml" />
@@ -1311,7 +1315,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>3810</DevelopmentServerPort>
+          <DevelopmentServerPort>2669</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost:2451/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>

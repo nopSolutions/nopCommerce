@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Nop.Core.Domain.Customers;
 
 namespace Nop.Core.Domain.Forums
 {
@@ -10,8 +7,6 @@ namespace Nop.Core.Domain.Forums
     /// </summary>
     public partial class Forum : BaseEntity
     {
-        private ICollection<ForumTopic> _forumTopics;
-
         /// <summary>
         /// Gets or sets the forum group identifier
         /// </summary>
@@ -73,63 +68,8 @@ namespace Nop.Core.Domain.Forums
         public virtual DateTime UpdatedOnUtc { get; set; }
 
         /// <summary>
-        /// Gets or sets the collection of Forums
-        /// </summary>
-        public virtual ICollection<ForumTopic> ForumTopics
-        {
-            get { return _forumTopics ?? (_forumTopics = new List<ForumTopic>()); }
-            protected set { _forumTopics = value; }
-        }
-        /// <summary>
         /// Gets the ForumGroup
         /// </summary>
         public virtual ForumGroup ForumGroup { get; set; }
-
-        /// <summary>
-        /// Gets the last topic
-        /// </summary>
-        public virtual ForumTopic LastTopic
-        {
-            get
-            {
-                if (this.ForumTopics.Count > 0)
-                {
-                    return this.ForumTopics.OrderBy(ft => ft.CreatedOnUtc).ThenBy(ft => ft.Id).LastOrDefault();
-                }
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Gets the last post
-        /// </summary>
-        public virtual ForumPost LastPost
-        {
-            get
-            {
-                var lastTopic = this.LastTopic;
-                if (lastTopic != null)
-                {
-                    return lastTopic.ForumPosts.OrderBy(fp => fp.CreatedOnUtc).ThenBy(fp => fp.Id).LastOrDefault();
-                }
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Gets the last post customer
-        /// </summary>
-        public virtual Customer LastPostCustomer
-        {
-            get
-            {
-                var lastPost = this.LastPost;
-                if (lastPost != null)
-                {
-                    return lastPost.Customer;
-                }
-                return null;
-            }
-        }
     }
 }

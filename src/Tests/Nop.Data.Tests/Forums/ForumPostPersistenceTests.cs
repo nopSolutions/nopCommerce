@@ -65,7 +65,6 @@ namespace Nop.Data.Tests.Forums
                 NumPosts = 100,
                 CustomerId = customerFromDb.Id,
             };
-            forum.ForumTopics.Add(forumTopic);
 
             var forumTopicFromDb = SaveAndLoadEntity(forumTopic);
             forumTopicFromDb.ShouldNotBeNull();

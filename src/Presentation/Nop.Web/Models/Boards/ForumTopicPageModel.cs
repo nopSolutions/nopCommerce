@@ -1,33 +1,28 @@
 ﻿using System.Collections.Generic;
-using Nop.Core;
-using Nop.Core.Domain.Forums;
 
 namespace Nop.Web.Models.Boards
 {
-    public class ForumTopicPostsModel
+    public class ForumTopicPageModel
     {
-        public ForumTopicPostsModel(ForumTopic forumTopic)
+        public ForumTopicPageModel()
         {
-            this.ForumTopic = forumTopic;
             this.ForumPostModels = new List<ForumPostModel>();
         }
 
-        public ForumTopic ForumTopic { get; private set; }
+        public int Id { get; set; }
+        public string Subject { get; set; }
+        public string SeName { get; set; }
 
         public string WatchTopicText { get; set; }
 
-        public PagedList<ForumPost> PagedList { get; set; }
-
-        public ForumBreadcrumbModel ForumBreadcrumbModel { get; set; }
-
         public bool IsCustomerAllowedToEditTopic { get; set; }
-
         public bool IsCustomerAllowedToDeleteTopic { get; set; }
-
         public bool IsCustomerAllowedToMoveTopic { get; set; }
-
         public bool IsCustomerAllowedToSubscribe { get; set; }
 
-        public List<ForumPostModel> ForumPostModels { get; set; }
+        public IList<ForumPostModel> ForumPostModels { get; set; }
+        public int PostsPageIndex { get; set; }
+        public int PostsPageSize { get; set; }
+        public int PostsTotalRecords { get; set; }
     }
 }

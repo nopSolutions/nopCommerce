@@ -1,5 +1,6 @@
 ﻿@model Nop.Web.Models.Customer.CustomerForumSubscriptionsModel
 @using Nop.Web;
+@using Nop.Web.Extensions;
 @using Nop.Web.Framework;
 @using MvcContrib.UI.Grid;
 @{    
@@ -34,18 +35,18 @@
             {
                 <div class="forum-subscriptions-box">
                     @Html.Grid(Model.ForumSubscriptions).Columns(column =>
-                       {
-                           column.For(fs => "<span class=\"cbRowItem\"><input type=\"checkbox\" name=\"fs" + fs.Id + "\" /></span>")
-                               .Encode(false)
-                               .Attributes(style => "width:5%;", align => "center")
-                               .Header("<th align=\"center\"><span class=\"cbHeader\"><input type=\"checkbox\" id=\"selectall\" /></span></th>");
-                           column.For(fs => (fs.TopicSubscription) ?
-                                        @Html.RouteLink(fs.Title, "TopicSlug", new { Id = fs.ForumTopicId, slug = fs.Slug }) :
-                                        @Html.RouteLink(fs.Title, "ForumSlug", new { Id = fs.ForumId, slug = fs.Slug })
-                               )
-                               .Named(@T("ForumSubscriptions.InfoColumn").Text)
-                               .HeaderAttributes(align => "center");
-                       }).Attributes(style => "width:100%", @class => "forum-subscriptions-grid", cellspacing => "0", cellpadding => "4", border => "1").Empty("")
+               {
+                   column.For(fs => "<span class=\"cbRowItem\"><input type=\"checkbox\" name=\"fs" + fs.Id + "\" /></span>")
+                       .Encode(false)
+                       .Attributes(style => "width:5%;", align => "center")
+                       .Header("<th align=\"center\"><span class=\"cbHeader\"><input type=\"checkbox\" id=\"selectall\" /></span></th>");
+                   column.For(fs => (fs.TopicSubscription) ?
+                                @Html.RouteLink(fs.Title, "TopicSlug", new { Id = fs.ForumTopicId, slug = fs.Slug }) :
+                                @Html.RouteLink(fs.Title, "ForumSlug", new { Id = fs.ForumId, slug = fs.Slug })
+                       )
+                       .Named(@T("ForumSubscriptions.InfoColumn").Text)
+                       .HeaderAttributes(align => "center");
+               }).Attributes(style => "width:100%", @class => "forum-subscriptions-grid", cellspacing => "0", cellpadding => "4", border => "1").Empty("")
                     @if (Model.PagerModel.TotalPages > 1)
                     {
                         <div class="fsgridpagerstyle">

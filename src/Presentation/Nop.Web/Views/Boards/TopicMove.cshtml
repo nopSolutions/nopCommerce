@@ -1,4 +1,5 @@
-﻿@model Nop.Web.Models.Boards.TopicMoveModel
+﻿@model TopicMoveModel
+@using Nop.Web.Models.Boards;
 @using Nop.Services.Seo;
 @{    
     Layout = "~/Views/Shared/_ColumnsOne.cshtml";
@@ -9,7 +10,7 @@
 {
     @Html.HiddenFor(model => model.Id)
     <div class="moveforumtopic">
-        @Html.Partial("_ForumBreadcrumb", @Model.ForumBreadCrumbModel)
+        @Html.Action("ForumBreadcrumb", new { forumTopicId = Model.Id })
         <div class="title">
             @T("Forum.MoveTopic")
         </div>
@@ -29,7 +30,7 @@
                     <td colspan="2" class="options">
                         <input type="submit" value="@T("Forum.Submit")" class="submitforumtopicbutton" />
                         <input type="button" class="cancelforumtopicbutton" value="@T("Forum.Cancel")" 
-                        onclick="setLocation('@Url.RouteUrl("TopicSlug", new { id = @Model.Id, slug = @Model.ForumBreadCrumbModel.ForumTopicPostsModel.ForumTopic.GetSeName() })')" />
+                        onclick="setLocation('@Url.RouteUrl("TopicSlug", new { id = @Model.Id, slug = @Model.TopicSeName })')" />
                     </td>
                 </tr>
             </table>

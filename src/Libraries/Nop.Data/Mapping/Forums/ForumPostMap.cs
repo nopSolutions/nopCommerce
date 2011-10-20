@@ -13,7 +13,7 @@ namespace Nop.Data.Mapping.Forums
             this.Property(fp => fp.IPAddress).HasMaxLength(100);
 
             this.HasRequired(fp => fp.ForumTopic)
-                .WithMany(ft => ft.ForumPosts)
+                .WithMany()
                 .HasForeignKey(fp => fp.TopicId);
 
             this.HasRequired(fp => fp.Customer)

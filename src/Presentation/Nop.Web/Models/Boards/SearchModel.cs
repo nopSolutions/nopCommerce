@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
-using Nop.Core;
-using Nop.Core.Domain.Forums;
 
 namespace Nop.Web.Models.Boards
 {
@@ -12,6 +10,7 @@ namespace Nop.Web.Models.Boards
             LimitList = new List<SelectListItem>();
             ForumList = new List<SelectListItem>();
             WithinList = new List<SelectListItem>();
+            this.ForumTopics = new List<ForumTopicRowModel>();
         }
 
         public bool ShowAdvancedSearch { get; set; }
@@ -25,7 +24,10 @@ namespace Nop.Web.Models.Boards
 
         public int? LimitDays { get; set; }
 
-        public PagedList<ForumTopic> PagedList { get; set; }
+        public IList<ForumTopicRowModel> ForumTopics { get; set; }
+        public int TopicPageSize { get; set; }
+        public int TopicTotalRecords { get; set; }
+        public int TopicPageIndex { get; set; }
 
         public List<SelectListItem> LimitList { get; set; }
 
@@ -46,11 +48,5 @@ namespace Nop.Web.Models.Boards
         public string Error { get; set; }
 
         public int PostsPageSize { get; set; }
-
-        public bool AllowViewingProfiles { get; set; }
-
-        public bool RelativeDateTimeFormattingEnabled { get; set; }
-
-        public ForumBreadcrumbModel ForumBreadcrumbModel { get; set; }
     }
 }

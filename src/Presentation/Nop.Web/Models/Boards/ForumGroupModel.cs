@@ -1,18 +1,18 @@
-﻿using Nop.Core.Domain.Forums;
+﻿using System.Collections.Generic;
 
 namespace Nop.Web.Models.Boards
 {
     public class ForumGroupModel
     {
-        public ForumGroupModel(ForumGroup forumGroup)
+        public ForumGroupModel()
         {
-            this.ForumGroup = forumGroup;
+            this.Forums = new List<ForumRowModel>();
         }
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string SeName { get; set; }
+        public string Description { get; set; }
 
-        public ForumGroup ForumGroup { get; private set; }
-
-        public bool AllowViewingProfiles { get; set; }
-
-        public bool RelativeDateTimeFormattingEnabled { get; set; }
+        public IList<ForumRowModel> Forums { get; set; }
     }
 }

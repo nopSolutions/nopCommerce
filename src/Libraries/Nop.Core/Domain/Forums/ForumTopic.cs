@@ -10,8 +10,6 @@ namespace Nop.Core.Domain.Forums
     /// </summary>
     public partial class ForumTopic : BaseEntity
     {
-        private ICollection<ForumPost> _forumPosts;
-
         /// <summary>
         /// Gets or sets the forum identifier
         /// </summary>
@@ -93,14 +91,6 @@ namespace Nop.Core.Domain.Forums
         public virtual Customer Customer { get; set; }
 
         /// <summary>
-        /// The posts in the topic
-        /// </summary>
-        public virtual ICollection<ForumPost> ForumPosts
-        {
-            get { return _forumPosts ?? (_forumPosts = new List<ForumPost>()); }
-            protected set { _forumPosts = value; }
-        }
-        /// <summary>
         /// Gets the number of replies
         /// </summary>
         public virtual int NumReplies
@@ -113,53 +103,5 @@ namespace Nop.Core.Domain.Forums
                 return result;
             }
         }
-
-        /// <summary>
-        /// Gets the first ForumPost
-        /// </summary>
-        public virtual ForumPost FirstPost
-        {
-            get
-            {
-                if (this.ForumPosts.Count > 0)
-                {
-                    return this.ForumPosts.OrderBy(fp => fp.CreatedOnUtc).ThenBy(fp => fp.Id).FirstOrDefault();
-                }
-
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Gets the last post
-        /// </summary>
-        public virtual ForumPost LastPost
-        {
-            get
-            {
-                if (this.ForumPosts.Count > 0)
-                {
-                    return this.ForumPosts.OrderBy(fp => fp.CreatedOnUtc).ThenBy(fp => fp.Id).LastOrDefault();
-                }
-
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Gets the last post customer
-        /// </summary>
-        public virtual Customer LastPostCustomer
-        {
-            get
-            {
-                if (this.LastPost != null)
-                {
-                    return this.LastPost.Customer;
-                }
-                return null;
-            }
-        }
-
     }
 }

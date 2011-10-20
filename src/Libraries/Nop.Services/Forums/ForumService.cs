@@ -354,17 +354,16 @@ namespace Nop.Services.Forums
             }
 
             //delete forum subscriptions (topics)
-            foreach (var topic in forum.ForumTopics)
+            var queryFs1 = from fs in _forumSubscriptionRepository.Table
+                           where (from ft in _forumTopicRepository.Table
+                                  where ft.ForumId == forum.Id
+                                  select ft.Id).Contains(fs.TopicId)
+                           select fs;
+            foreach (var fs in queryFs1.ToList())
             {
-                var queryFs = from ft in _forumSubscriptionRepository.Table
-                              where ft.TopicId == topic.Id
-                              select ft;
-                foreach (var fs in queryFs.ToList())
-                {
-                    _forumSubscriptionRepository.Delete(fs);
-                    //event notification
-                    _eventPublisher.EntityDeleted(fs);
-                }
+                _forumSubscriptionRepository.Delete(fs);
+                //event notification
+                _eventPublisher.EntityDeleted(fs);
             }
 
             //delete forum subscriptions (forum)
@@ -555,7 +554,7 @@ namespace Nop.Services.Forums
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Forum Topics</returns>
-        public virtual IList<ForumTopic> GetAllTopics(int forumId,
+        public virtual IPagedList<ForumTopic> GetAllTopics(int forumId,
             int customerId, string keywords, ForumSearchType searchType,
             int limitDays, int pageIndex, int pageSize)
         {
@@ -582,7 +581,8 @@ namespace Nop.Services.Forums
                          orderby ft.TopicTypeId descending, ft.LastPostTime descending, ft.Id descending
                          select ft;
 
-            return query2.ToList();
+            var topics = new PagedList<ForumTopic>(query2, pageIndex, pageSize);
+            return topics;
         }
 
         /// <summary>
@@ -727,13 +727,10 @@ namespace Nop.Services.Forums
 
             //delete topic if it was the first post
             bool deleteTopic = false;
-            if (forumTopic != null)
+            ForumPost firstPost = forumTopic.GetFirstPost(this);
+            if (firstPost != null && firstPost.Id == forumPost.Id)
             {
-                ForumPost firstPost = forumTopic.FirstPost;
-                if (firstPost != null && firstPost.Id == forumPost.Id)
-                {
-                    deleteTopic = true;
-                }
+                deleteTopic = true;
             }
 
             //delete forum post

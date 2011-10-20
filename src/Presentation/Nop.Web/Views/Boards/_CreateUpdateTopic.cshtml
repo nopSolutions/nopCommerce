@@ -1,17 +1,26 @@
-﻿@model Nop.Web.Models.Boards.ForumTopicModel
+﻿@model EditForumTopicModel
 @using Nop.Core.Domain.Forums;
 @using Nop.Services.Forums;
 @using Nop.Services.Seo;
 @using Nop.Web;
+@using Nop.Web.Extensions;
+@using Nop.Web.Models.Boards;
 @using (Html.BeginForm())
 {
     <div class="postedit">
-        @{Html.RenderPartial("_ForumBreadcrumb", Model.ForumBreadcrumbModel);}
+        @Html.Action("ForumBreadcrumb", new { forumId = Model.ForumId, forumTopicId = Model.Id })
         <div class="title">
-            @ViewBag.Title
+            @if (Model.IsEdit)
+            {
+                @T("Forum.EditTopic")
+            }
+            else
+            {
+                @T("Forum.NewTopic")
+            }
         </div>
         <div class="wrapper">
-            @if (Model.PostError != null)
+            @if (!String.IsNullOrEmpty(Model.PostError))
             {                
                 <div class="error-block">
                     <div class="message-error">
@@ -30,7 +39,7 @@
                         @T("Forum.ForumName"):
                     </td>
                     <td>
-                        @Model.Forum.Name
+                        @Model.ForumName
                     </td>
                 </tr>
                 <tr>
@@ -81,7 +90,7 @@
                     <td colspan="2" class="options">
                         <input type="submit" value="@T("Forum.Submit")" class="submitforumtopicbutton" />
                         <input type="button" class="cancelforumtopicbutton" value="@T("Forum.Cancel")" 
-                        onclick="setLocation('@Url.RouteUrl("ForumSlug", new { id = @Model.ForumId, slug = @Model.Forum.GetSeName() })')" />
+                        onclick="setLocation('@Url.RouteUrl("ForumSlug", new { id = @Model.ForumId, slug = @Model.ForumSeName })')" />
                     </td>
                 </tr>
             </table>

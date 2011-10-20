@@ -1,72 +1,42 @@
-﻿using System.Web.Mvc;
-using FluentValidation.Attributes;
-using Nop.Core.Domain.Forums;
-using Nop.Web.Validators.Boards;
+﻿using System;
 
 namespace Nop.Web.Models.Boards
 {
-    [Validator(typeof(ForumPostValidator))]
     public class ForumPostModel
     {
         public int Id { get; set; }
-
         public int ForumTopicId { get; set; }
+        public string ForumTopicSeName { get; set; }
 
-        [AllowHtml]
-        public string Text { get; set; }
+        public string FormattedText { get; set; }
 
-        public string ForumName { get; set; }
+        public bool IsCurrentCustomerAllowedToEditPost { get; set; }
+        public bool IsCurrentCustomerAllowedToDeletePost { get; set; }
+        
+        public int CustomerId { get; set; }
+        public bool AllowViewingProfiles { get; set; }
+        public string CustomerAvatarUrl { get; set; }
+        public string CustomerName { get; set; }
+        public bool IsCustomerForumModerator { get; set; }
+        public bool IsCustomerGuest { get; set; }
 
-        public bool Subscribed { get; set; }
+        public string PostCreatedOnStr { get; set; }
 
-        public ForumBreadcrumbModel ForumBreadcrumbModel { get; set; }
-
-        public string PostError { get; set; }
-
-        public bool IsCustomerAllowedToSubscribe { get; set; }
-
-        public EditorType ForumEditor { get; set; }
-
-        public ForumPost ForumPost { get; set; }
-
-        public ForumTopic ForumTopic { get; set; }
-
-        public bool IsCustomerAllowedToEditPost { get; set; }
-
-        public bool IsCustomerAllowedToDeletePost { get; set; }
-
-        public CommonTopicSettingsModel CommonTopicSettingsModel { get; set; }
-
-        public string AvatarUrl { get; set; }
-
-        public string Signature { get; set; }
-
-        public string Location { get; set; }
-    }
-
-    public class CommonTopicSettingsModel
-    {
         public bool ShowCustomersPostCount { get; set; }
+        public int ForumPostCount { get; set; }
+
+        public bool ShowCustomersJoinDate { get; set; }
+        public DateTime CustomerJoinDate { get; set; }
+
+        public bool ShowCustomersLocation { get; set; }
+        public string CustomerLocation { get; set; }
 
         public bool AllowPrivateMessages { get; set; }
 
-        public bool RelativeDateTimeFormattingEnabled { get; set; }
-
         public bool SignaturesEnabled { get; set; }
+        public string FormattedSignature { get; set; }
 
-        public bool AllowViewingProfiles { get; set; }
+        public int CurrentTopicPage { get; set; }
 
-        public bool ShowCustomersJoinDate { get; set; }
-
-        public bool ShowCustomersLocation { get; set; }
-
-        public EditorType ForumEditor { get; set; }
-                
-        public bool AllowCustomersToUploadAvatars { get; set; }
-
-        public bool DefaultAvatarEnabled { get; set; }
-
-        public string DefaultAvatarUrl { get; set; }        
     }
-
 }

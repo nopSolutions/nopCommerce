@@ -12,9 +12,8 @@ namespace Nop.Web.Models.Boards
         }
 
         public int ForumSelected { get; set; }
+        public string TopicSeName { get; set; }
 
         public IEnumerable<SelectListItem> ForumList { get; set; }
-
-        public ForumBreadcrumbModel ForumBreadCrumbModel { get; set; }
     }
 }

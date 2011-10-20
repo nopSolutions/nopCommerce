@@ -4,9 +4,9 @@ using Nop.Web.Models.Boards;
 
 namespace Nop.Web.Validators.Boards
 {
-    public class ForumPostValidator : AbstractValidator<ForumPostModel>
+    public class EditForumPostValidator : AbstractValidator<EditForumPostModel>
     {
-        public ForumPostValidator(ILocalizationService localizationService)
+        public EditForumPostValidator(ILocalizationService localizationService)
         {            
             RuleFor(x => x.Text).NotEmpty().WithMessage(localizationService.GetResource("Forum.TextCannotBeEmpty"));
         }

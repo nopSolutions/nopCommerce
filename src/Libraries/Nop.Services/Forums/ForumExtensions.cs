@@ -1,7 +1,9 @@
 ﻿using System;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Html;
 using Nop.Core.Infrastructure;
+using Nop.Services.Customers;
 
 namespace Nop.Services.Forums
 {
@@ -97,6 +99,94 @@ namespace Nop.Services.Forums
             text = Nop.Core.Html.HtmlHelper.FormatText(text, false, true, false, true, false, false);
 
             return text;
+        }
+        
+        /// <summary>
+        /// Get forum last topic
+        /// </summary>
+        /// <param name="forum">Forum</param>
+        /// <param name="forumService">Forum service</param>
+        /// <returns>Forum topic</returns>
+        public static ForumTopic GetLastTopic(this Forum forum, IForumService forumService)
+        {
+            if (forum == null)
+                throw new ArgumentNullException("forum");
+
+            return forumService.GetTopicById(forum.LastTopicId);
+        }
+
+        /// <summary>
+        /// Get forum last post
+        /// </summary>
+        /// <param name="forum">Forum</param>
+        /// <param name="forumService">Forum service</param>
+        /// <returns>Forum topic</returns>
+        public static ForumPost GetLastPost(this Forum forum, IForumService forumService)
+        {
+            if (forum == null)
+                throw new ArgumentNullException("forum");
+
+            return forumService.GetPostById(forum.LastPostId);
+        }
+
+        /// <summary>
+        /// Get forum last post customer
+        /// </summary>
+        /// <param name="forum">Forum</param>
+        /// <param name="customerService">Customer service</param>
+        /// <returns>Customer</returns>
+        public static Customer GetLastPostCustomer(this Forum forum, ICustomerService customerService)
+        {
+            if (forum == null)
+                throw new ArgumentNullException("forum");
+
+            return customerService.GetCustomerById(forum.LastPostCustomerId);
+        }
+
+        /// <summary>
+        /// Get first post
+        /// </summary>
+        /// <param name="forumTopic">Forum topic</param>
+        /// <param name="forumService">Forum service</param>
+        /// <returns>Forum post</returns>
+        public static ForumPost GetFirstPost(this ForumTopic forumTopic, IForumService forumService)
+        {
+            if (forumTopic == null)
+                throw new ArgumentNullException("forumTopic");
+
+            var forumPosts = forumService.GetAllPosts(forumTopic.Id, 0, string.Empty, 0, 1);
+            if (forumPosts.Count > 0)
+                return forumPosts[0];
+
+            return null;
+        }
+
+        /// <summary>
+        /// Get last post
+        /// </summary>
+        /// <param name="forumTopic">Forum topic</param>
+        /// <param name="forumService">Forum service</param>
+        /// <returns>Forum post</returns>
+        public static ForumPost GetLastPost(this ForumTopic forumTopic, IForumService forumService)
+        {
+            if (forumTopic == null)
+                throw new ArgumentNullException("forumTopic");
+
+            return forumService.GetPostById(forumTopic.LastPostId);
+        }
+
+        /// <summary>
+        /// Get forum last post customer
+        /// </summary>
+        /// <param name="forumTopic">Forum topic</param>
+        /// <param name="customerService">Customer service</param>
+        /// <returns>Customer</returns>
+        public static Customer GetLastPostCustomer(this ForumTopic forumTopic, ICustomerService customerService)
+        {
+            if (forumTopic == null)
+                throw new ArgumentNullException("forumTopic");
+
+            return customerService.GetCustomerById(forumTopic.LastPostCustomerId);
         }
     }
 }

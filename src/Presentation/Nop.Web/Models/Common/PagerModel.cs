@@ -1,7 +1,7 @@
 ﻿using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
 
-namespace Nop.Web.Models
+namespace Nop.Web.Models.Common
 {
     public class PagerModel
     {
