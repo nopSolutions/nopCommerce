@@ -147,3 +147,17 @@ BEGIN
 	VALUES (N'commonsettings.enablehttpcompression', N'true')
 END
 GO
+
+--customer can't be deleted until it has associated log records
+IF EXISTS (SELECT 1
+           FROM   sysobjects
+           WHERE  name = 'Log_Customer'
+           AND parent_obj = Object_id('Log')
+           AND Objectproperty(id,N'IsForeignKey') = 1)
+ALTER TABLE dbo.[Log]
+DROP CONSTRAINT Log_Customer
+GO
+ALTER TABLE [dbo].[Log]  WITH CHECK ADD  CONSTRAINT [Log_Customer] FOREIGN KEY([CustomerId])
+REFERENCES [dbo].[Customer] ([Id])
+ON DELETE CASCADE
+GO

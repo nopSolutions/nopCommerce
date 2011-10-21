@@ -17,7 +17,8 @@ namespace Nop.Data.Mapping.Logging
 
             this.HasOptional(l => l.Customer)
                 .WithMany()
-                .HasForeignKey(l => l.CustomerId);
+                .HasForeignKey(l => l.CustomerId)
+            .WillCascadeOnDelete(true);
 
         }
     }
