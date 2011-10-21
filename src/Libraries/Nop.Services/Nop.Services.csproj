@@ -77,6 +77,7 @@
     <Compile Include="Blogs\BlogService.cs" />
     <Compile Include="Blogs\BlogExtensions.cs" />
     <Compile Include="Blogs\IBlogService.cs" />
+    <Compile Include="Caching\ClearCacheTask.cs" />
     <Compile Include="Catalog\CategoryService.cs" />
     <Compile Include="Catalog\CategoryExtensions.cs" />
     <Compile Include="Catalog\CompareProductsService.cs" />
