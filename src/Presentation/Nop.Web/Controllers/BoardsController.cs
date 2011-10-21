@@ -870,7 +870,7 @@ namespace Nop.Web.Controllers
             model.ForumName = forum.Name;
             model.ForumSeName = forum.GetSeName();
             var firstPost = forumTopic.GetFirstPost(_forumService);
-            model.Text = Server.HtmlDecode(firstPost.Text);
+            model.Text = firstPost.Text;
             model.Subject = forumTopic.Subject;
             model.TopicTypeId = forumTopic.TopicTypeId;
             model.Id = forumTopic.Id;
@@ -1136,7 +1136,7 @@ namespace Nop.Web.Controllers
                 var quotePost = _forumService.GetPostById(quote.Value);
                 if (quotePost != null && quotePost.TopicId == forumTopic.Id)
                 {
-                    var quotePostText = Server.HtmlDecode(quotePost.Text);
+                    var quotePostText = quotePost.Text;
 
                     switch (_forumSettings.ForumEditor)
                     {
@@ -1308,7 +1308,7 @@ namespace Nop.Web.Controllers
                 IsCustomerAllowedToSubscribe = _forumService.IsCustomerAllowedToSubscribe(_workContext.CurrentCustomer),
                 Subscribed = false,
                 PostError = null,
-                Text = Server.HtmlDecode(forumPost.Text),
+                Text = forumPost.Text,
             };
 
             //subscription
