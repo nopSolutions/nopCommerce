@@ -906,6 +906,11 @@ namespace Nop.Web.Controllers
                     {
                         decimal shoppingCartShipping = _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartShippingBase.Value, _workContext.WorkingCurrency);
                         model.Shipping = _priceFormatter.FormatShippingPrice(shoppingCartShipping, true);
+
+                        //selected shipping method
+                        var shippingOption = _workContext.CurrentCustomer.GetAttribute<ShippingOption>(SystemCustomerAttributeNames.LastShippingOption);
+                        if (shippingOption != null)
+                            model.SelectedShippingMethod = shippingOption.Name;
                     }
                 }
 

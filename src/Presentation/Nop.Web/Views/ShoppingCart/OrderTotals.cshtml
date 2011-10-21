@@ -40,7 +40,12 @@
             <tr>
                 <td class="cart_total_left">
                     <strong><span style="white-space: nowrap;">
-                        @T("ShoppingCart.Totals.Shipping"): </span></strong>
+                        @T("ShoppingCart.Totals.Shipping")
+                        @if (Model.RequiresShipping && !String.IsNullOrEmpty(Model.SelectedShippingMethod))
+                        {
+                            @String.Format("({0})", Model.SelectedShippingMethod)
+                        }
+                        : </span></strong>
                 </td>
                 <td class="cart_total_right">
                     <span style="white-space: nowrap;">
@@ -48,7 +53,8 @@
                         {
                             if (!String.IsNullOrEmpty(Model.Shipping))
                             {
-                            <span class="productPrice">@Model.Shipping</span>
+                            <span class="productPrice">@Model.Shipping
+                            </span>
                             }
                             else
                             {

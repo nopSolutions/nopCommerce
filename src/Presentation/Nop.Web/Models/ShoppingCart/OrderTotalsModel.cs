@@ -19,6 +19,7 @@ namespace Nop.Web.Models.ShoppingCart
 
         public string Shipping { get; set; }
         public bool RequiresShipping { get; set; }
+        public string SelectedShippingMethod { get; set; }
 
         public string PaymentMethodAdditionalFee { get; set; }
 
