@@ -3,7 +3,8 @@
     @if (Model.CustomerEntersPrice)
     {
         @Html.LabelFor(model => model.CustomerEnteredPrice)<text>:</text>
-        @Html.TextBoxFor(model => model.CustomerEnteredPrice, new { style = "Width: 60px;" })
+        //round price
+        @Html.TextBox("CustomerEnteredPrice", Convert.ToInt32(Math.Ceiling(Model.CustomerEnteredPrice)), new { style = "Width: 60px;" })
         <br />
         @Model.CustomerEnteredPriceRange
         <br />
