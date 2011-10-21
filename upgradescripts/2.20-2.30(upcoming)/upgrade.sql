@@ -61,6 +61,60 @@ set @resources='
     </LocaleResource>
     <LocaleResource Name="Checkout.BillToThisAddress">
         <Value>Bill to this address</Value>
+    </LocaleResource>    
+    <LocaleResource Name="Admin.Catalog.Categories.Fields.AllowCustomersToSelectPageSize">
+        <Value>Allow customers to select page size</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Catalog.Categories.Fields.AllowCustomersToSelectPageSize.Hint">
+        <Value>Whether customers are allowed to select the page size from a predefined list of options.</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Catalog.Categories.Fields.PageSizeOptions">
+        <Value>Page Size options (comma separated)</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Catalog.Categories.Fields.PageSizeOptions.Hint">
+        <Value>Comma separated list of page size options (e.g. 10, 5, 15, 20). First option is the default page size if none are selected.</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.AllowCustomersToSelectPageSize">
+        <Value>Allow customers to select page size</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.AllowCustomersToSelectPageSize.Hint">
+        <Value>Whether customers are allowed to select the page size from a predefined list of options.</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.PageSizeOptions">
+        <Value>Page Size options (comma separated)</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.PageSizeOptions.Hint">
+        <Value>Comma separated list of page size options (e.g. 10, 5, 15, 20). First option is the default page size if none are selected.</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductsByTagAllowCustomersToSelectPageSize">
+        <Value>Allow customers to select ''Products by tag'' page size</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductsByTagAllowCustomersToSelectPageSize.Hint">
+        <Value>Whether customers are allowed to select the ''Products by tag'' page size from a predefined list of options.</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductsByTagPageSizeOptions">
+        <Value>''Products by tag'' Page Size options (comma separated)</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductsByTagPageSizeOptions.Hint">
+        <Value>Comma separated list of page size options (e.g. 10, 5, 15, 20). First option is the default page size if none are selected.</Value>
+    </LocaleResource>
+    <LocaleResource Name="Products.Tags.PageSize">
+        <Value>Display</Value>
+    </LocaleResource>
+    <LocaleResource Name="Products.Tags.PageSize.PerPage">
+        <Value>Per Page</Value>
+    </LocaleResource>
+    <LocaleResource Name="Categories.PageSize">
+        <Value>Display</Value>
+    </LocaleResource>
+    <LocaleResource Name="Categories.PageSize.PerPage">
+        <Value>Per Page</Value>
+    </LocaleResource>
+    <LocaleResource Name="Manufacturers.PageSize">
+        <Value>Display</Value>
+    </LocaleResource>
+    <LocaleResource Name="Manufacturers.PageSize.PerPage">
+        <Value>Per Page</Value>
     </LocaleResource>
 </Language>
 '
@@ -160,4 +214,90 @@ GO
 ALTER TABLE [dbo].[Log]  WITH CHECK ADD  CONSTRAINT [Log_Customer] FOREIGN KEY([CustomerId])
 REFERENCES [dbo].[Customer] ([Id])
 ON DELETE CASCADE
+GO
+
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.defaultcategorypagesizeoptions')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'catalogsettings.defaultcategorypagesizeoptions', N'4, 2, 8, 12')
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.defaultmanufacturerpagesizeoptions')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'catalogsettings.defaultmanufacturerpagesizeoptions', N'4, 2, 8, 12')
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.productsbytagallowcustomerstoselectpagesize')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'catalogsettings.productsbytagallowcustomerstoselectpagesize', N'True')
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.productsbytagpagesizeoptions')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'catalogsettings.productsbytagpagesizeoptions', N'4, 2, 8, 12')
+END
+GO
+
+
+--Add fields to Category
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Category]') and NAME='AllowCustomersToSelectPageSize')
+BEGIN
+	ALTER TABLE [dbo].[Category]
+	ADD [AllowCustomersToSelectPageSize] bit NULL
+END
+GO
+
+UPDATE [dbo].[Category]
+SET [AllowCustomersToSelectPageSize] = 1
+WHERE [AllowCustomersToSelectPageSize] IS NULL
+GO
+
+ALTER TABLE [dbo].[Category] ALTER COLUMN [AllowCustomersToSelectPageSize] bit NOT NULL
+GO
+
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Category]') and NAME='PageSizeOptions')
+BEGIN
+	ALTER TABLE [dbo].[Category]
+	ADD [PageSizeOptions] nvarchar(200) NULL
+END
+GO
+
+UPDATE [dbo].[Category]
+SET [PageSizeOptions] = N'4, 2, 8, 12'
+WHERE [PageSizeOptions] IS NULL
+GO
+
+--Add fields to Manufacturer
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Manufacturer]') and NAME='AllowCustomersToSelectPageSize')
+BEGIN
+	ALTER TABLE [dbo].[Manufacturer]
+	ADD [AllowCustomersToSelectPageSize] bit NULL
+END
+GO
+
+UPDATE [dbo].[Manufacturer]
+SET [AllowCustomersToSelectPageSize] = 1
+WHERE [AllowCustomersToSelectPageSize] IS NULL
+GO
+
+ALTER TABLE [dbo].[Manufacturer] ALTER COLUMN [AllowCustomersToSelectPageSize] bit NOT NULL
+GO
+
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Manufacturer]') and NAME='PageSizeOptions')
+BEGIN
+	ALTER TABLE [dbo].[Manufacturer]
+	ADD [PageSizeOptions] nvarchar(200) NULL
+END
+GO
+
+UPDATE [dbo].[Manufacturer]
+SET [PageSizeOptions] = N'4, 2, 8, 12'
+WHERE [PageSizeOptions] IS NULL
 GO

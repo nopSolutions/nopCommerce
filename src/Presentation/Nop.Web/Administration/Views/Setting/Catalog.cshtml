@@ -331,6 +331,24 @@
                 @Html.EditorFor(model => model.ProductsByTagPageSize)
                 @Html.ValidationMessageFor(model => model.ProductsByTagPageSize)
             </td>
+        </tr>        
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ProductsByTagAllowCustomersToSelectPageSize):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(x => x.ProductsByTagAllowCustomersToSelectPageSize)
+                @Html.ValidationMessageFor(model => model.ProductsByTagAllowCustomersToSelectPageSize)
+            </td>
+        </tr>        
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ProductsByTagPageSizeOptions):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(x => x.ProductsByTagPageSizeOptions)
+                @Html.ValidationMessageFor(model => model.ProductsByTagPageSizeOptions)
+            </td>
         </tr>
         <tr>
             <td class="adminTitle">

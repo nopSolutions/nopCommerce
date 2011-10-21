@@ -41,6 +41,7 @@ namespace Nop.Admin.Controllers
         private readonly IWorkContext _workContext;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly AdminAreaSettings _adminAreaSettings;
+        private readonly CatalogSettings _catalogSettings;
 
         #endregion
         
@@ -52,7 +53,8 @@ namespace Nop.Admin.Controllers
             ILocalizationService localizationService, ILocalizedEntityService localizedEntityService,
             IDiscountService discountService, IPermissionService permissionService,
             IExportManager exportManager, IWorkContext workContext,
-            ICustomerActivityService customerActivityService, AdminAreaSettings adminAreaSettings)
+            ICustomerActivityService customerActivityService, AdminAreaSettings adminAreaSettings,
+            CatalogSettings catalogSettings)
         {
             this._categoryService = categoryService;
             this._categoryTemplateService = categoryTemplateService;
@@ -68,6 +70,7 @@ namespace Nop.Admin.Controllers
             this._workContext = workContext;
             this._customerActivityService = customerActivityService;
             this._adminAreaSettings = adminAreaSettings;
+            this._catalogSettings = catalogSettings;
         }
 
         #endregion
@@ -280,6 +283,10 @@ namespace Nop.Admin.Controllers
             //default values
             model.PageSize = 4;
             model.Published = true;
+
+            model.AllowCustomersToSelectPageSize = true;            
+            model.PageSizeOptions = _catalogSettings.DefaultCategoryPageSizeOptions;
+
             return View(model);
         }
 

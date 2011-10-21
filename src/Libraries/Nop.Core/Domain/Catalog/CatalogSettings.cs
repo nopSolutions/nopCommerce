@@ -150,6 +150,15 @@ namespace Nop.Core.Domain.Catalog
         /// </summary>
         public int ProductsByTagPageSize { get; set; }
 
+        /// Gets or sets a value indicating whether customers can select the page size for 'products by tag'
+        /// </summary>
+        public bool ProductsByTagAllowCustomersToSelectPageSize { get; set; }
+
+        /// <summary>
+        /// Gets or sets the available customer selectable page size options for 'products by tag'
+        /// </summary>
+        public string ProductsByTagPageSizeOptions { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether to use small product boxes on home page
         /// </summary>
@@ -175,5 +184,14 @@ namespace Nop.Core.Domain.Catalog
         /// </summary>
         public bool EnsureWeHaveFilterableSpecAttributes { get; set; }
 
+        /// <summary>
+        /// Gets or set the default value to use for Category page size options (for new Categories)
+        /// </summary>
+        public string DefaultCategoryPageSizeOptions { get; set; }
+
+        /// <summary>
+        /// Gets or set the default value to use for Manufacturer page size opitons (for new Manufacturers)
+        /// </summary>
+        public string DefaultManufacturerPageSizeOptions { get; set; }
     }
 }

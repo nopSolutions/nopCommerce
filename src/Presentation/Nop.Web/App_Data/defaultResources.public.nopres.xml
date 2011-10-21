@@ -841,6 +841,14 @@
 					</LocaleResource>
 				</Children>
 			</LocaleResource>
+			<LocaleResource Name="PageSize">
+				<Value>Display</Value>
+				<Children>
+					<LocaleResource Name="PerPage">
+						<Value>Per Page</Value>
+					</LocaleResource>
+				</Children>
+			</LocaleResource>
 		</Children>
 	</LocaleResource>
 	<LocaleResource Name="Checkout">
@@ -1969,6 +1977,14 @@
 					</LocaleResource>
 				</Children>
 			</LocaleResource>
+			<LocaleResource Name="PageSize">
+				<Value>Display</Value>
+				<Children>
+					<LocaleResource Name="PerPage">
+						<Value>Per Page</Value>
+					</LocaleResource>
+				</Children>
+			</LocaleResource>
 		</Children>
 	</LocaleResource>
 	<LocaleResource Name="Media">
@@ -2950,6 +2966,14 @@
 					<LocaleResource Name="Popular">
 						<Value>Popular tags</Value>
 					</LocaleResource>
+					<LocaleResource Name="PageSize">
+						<Value>Display</Value>
+						<Children>
+							<LocaleResource Name="PerPage">
+								<Value>Per Page</Value>
+							</LocaleResource>
+						</Children>
+					</LocaleResource>
 				</Children>
 			</LocaleResource>
 			<LocaleResource Name="TierPrices">
@@ -3028,7 +3052,7 @@
 					<LocaleResource Name="Quantity">
 						<Value>Qty. to return</Value>
 					</LocaleResource>
-				</Children>>
+				</Children>
 			</LocaleResource>
 			<LocaleResource Name="ReturnReason">
 				<Value>Return reason</Value>

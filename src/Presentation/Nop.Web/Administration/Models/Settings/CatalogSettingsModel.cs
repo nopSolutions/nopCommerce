@@ -85,6 +85,12 @@ namespace Nop.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ProductsByTagPageSize")]
         public int ProductsByTagPageSize { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ProductsByTagAllowCustomersToSelectPageSize")]
+        public bool ProductsByTagAllowCustomersToSelectPageSize { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ProductsByTagPageSizeOptions")]
+        public string ProductsByTagPageSizeOptions { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.IgnoreTierPrices")]
         public bool IgnoreTierPrices { get; set; }
 

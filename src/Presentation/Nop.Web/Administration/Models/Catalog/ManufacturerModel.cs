@@ -59,6 +59,12 @@ namespace Nop.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.PageSize")]
         public int PageSize { get; set; }
 
+        [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.AllowCustomersToSelectPageSize")]
+        public bool AllowCustomersToSelectPageSize { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.PageSizeOptions")]
+        public string PageSizeOptions { get; set; }
+
         [NopResourceDisplayName("Admin.Catalog.Manufacturers.Fields.PriceRanges")]
         [AllowHtml]
         public string PriceRanges { get; set; }

@@ -12,6 +12,7 @@ namespace Nop.Web.Models.Catalog
             PagingFilteringContext = new CatalogPagingFilteringModel();
             AvailableSortOptions = new List<SelectListItem>();
             AvailableViewModes = new List<SelectListItem>();
+            PageSizeOptions = new List<SelectListItem>();
         }
 
         public string TagName { get; set; }
@@ -22,6 +23,9 @@ namespace Nop.Web.Models.Catalog
         public bool AllowProductViewModeChanging { get; set; }
         public IList<SelectListItem> AvailableViewModes { get; set; }
         
+        public bool AllowCustomersToSelectPageSize { get; set; }
+        public IList<SelectListItem> PageSizeOptions { get; set; }
+
         public IList<ProductModel> Products { get; set; }
     }
 }

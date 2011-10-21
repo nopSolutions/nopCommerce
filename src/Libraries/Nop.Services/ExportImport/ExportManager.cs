@@ -68,6 +68,8 @@ namespace Nop.Services.ExportImport
                     xmlWriter.WriteElementString("ParentCategoryId", null, category.ParentCategoryId.ToString());
                     xmlWriter.WriteElementString("PictureId", null, category.PictureId.ToString());
                     xmlWriter.WriteElementString("PageSize", null, category.PageSize.ToString());
+                    xmlWriter.WriteElementString("AllowCustomersToSelectPageSize", null, category.AllowCustomersToSelectPageSize.ToString());
+                    xmlWriter.WriteElementString("PageSizeOptions", null, category.PageSizeOptions.ToString());
                     xmlWriter.WriteElementString("PriceRanges", null, category.PriceRanges);
                     xmlWriter.WriteElementString("ShowOnHomePage", null, category.ShowOnHomePage.ToString());
                     xmlWriter.WriteElementString("Published", null, category.Published.ToString());
@@ -134,6 +136,8 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteElementString("SEName", null, manufacturer.SeName);
                 xmlWriter.WriteElementString("PictureId", null, manufacturer.PictureId.ToString());
                 xmlWriter.WriteElementString("PageSize", null, manufacturer.PageSize.ToString());
+                xmlWriter.WriteElementString("AllowCustomersToSelectPageSize", null, manufacturer.AllowCustomersToSelectPageSize.ToString());
+                xmlWriter.WriteElementString("PageSizeOptions", null, manufacturer.PageSizeOptions.ToString());
                 xmlWriter.WriteElementString("PriceRanges", null, manufacturer.PriceRanges);
                 xmlWriter.WriteElementString("Published", null, manufacturer.Published.ToString());
                 xmlWriter.WriteElementString("Deleted", null, manufacturer.Deleted.ToString());

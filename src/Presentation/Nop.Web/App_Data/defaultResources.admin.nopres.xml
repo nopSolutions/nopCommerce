@@ -695,6 +695,22 @@
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
+									<LocaleResource Name="AllowCustomersToSelectPageSize">
+										<Value>Allow customers to select page size</Value>
+										<Children>
+											<LocaleResource Name="Hint">
+												<Value>Whether customers are allowed to select the page size from a predefined list of options.</Value>
+											</LocaleResource>
+										</Children>
+									</LocaleResource>
+									<LocaleResource Name="PageSizeOptions">
+										<Value>Page Size options (comma separated)</Value>
+										<Children>
+											<LocaleResource Name="Hint">
+												<Value>Comma separated list of page size options (e.g. 10, 5, 15, 20). First option is the default page size if none are selected.</Value>
+											</LocaleResource>
+										</Children>
+									</LocaleResource>
 									<LocaleResource Name="PriceRanges">
 										<Value>Price ranges</Value>
 										<Children>
@@ -867,6 +883,22 @@
 										<Children>
 											<LocaleResource Name="Hint">
 												<Value>Set the page size for products in this manufacturer e.g. '4' products per page.</Value>
+											</LocaleResource>
+										</Children>
+									</LocaleResource>
+									<LocaleResource Name="AllowCustomersToSelectPageSize">
+										<Value>Allow customers to select page size</Value>
+										<Children>
+											<LocaleResource Name="Hint">
+												<Value>Whether customers are allowed to select the page size from a predefined list of options.</Value>
+											</LocaleResource>
+										</Children>
+									</LocaleResource>
+									<LocaleResource Name="PageSizeOptions">
+										<Value>Page Size options (comma separated)</Value>
+										<Children>
+											<LocaleResource Name="Hint">
+												<Value>Comma separated list of page size options (e.g. 10, 5, 15, 20). First option is the default page size if none are selected.</Value>
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
@@ -3392,6 +3424,22 @@
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
+									<LocaleResource Name="ProductsByTagAllowCustomersToSelectPageSize">
+										<Value>Allow customers to select 'Products by tag' page size</Value>
+										<Children>
+											<LocaleResource Name="Hint">
+												<Value>Whether customers are allowed to select the 'Products by tag' page size from a predefined list of options.</Value>
+											</LocaleResource>
+										</Children>
+									</LocaleResource>
+									<LocaleResource Name="ProductsByTagPageSizeOptions">
+										<Value>'Products by tag' Page Size options (comma separated)</Value>
+										<Children>
+											<LocaleResource Name="Hint">
+												<Value>Comma separated list of page size options (e.g. 10, 5, 15, 20). First option is the default page size if none are selected.</Value>
+											</LocaleResource>
+										</Children>
+									</LocaleResource>									
 									<LocaleResource Name="IgnoreTierPrices">
 										<Value>Ignore tier prices (sitewide)</Value>
 										<Children>

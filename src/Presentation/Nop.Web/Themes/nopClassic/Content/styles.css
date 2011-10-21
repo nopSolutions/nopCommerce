@@ -376,6 +376,7 @@ ul.languagelist li:hover{cursor:pointer;}
 .sub-category-list{margin-bottom:15px;padding:0;}
 .product-sorting{margin:0 auto 10px;float:left;}
 .product-viewmode{margin:0 auto 10px;float:right;}
+.product-page-size{width:165px;margin:0 auto;text-align:center;}
 .product-filters{width:520px;margin:0 auto;border:1px solid #E8E6D2;background:#F7F5E8;}
 .product-filters .filter-title{font-weight:700;padding-left:10px;color:#3A4045;}
 .product-filters .filter-title span{display:block;height:2em;line-height:1.3em;overflow:hidden;padding:4px 10px 8px 0;}

@@ -665,7 +665,6 @@ namespace Nop.Web.Controllers
             //'Continue shopping' URL
             _customerService.SaveCustomerAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.LastContinueShoppingPage, _webHelper.GetThisPageUrl(false));
 
-            if (command.PageSize <= 0) command.PageSize = category.PageSize;
             if (command.PageNumber <= 0) command.PageNumber = 1;
 
             var model = category.ToModel();
@@ -714,7 +713,67 @@ namespace Nop.Web.Controllers
                     Selected = command.ViewMode == "list"
                 });
             }
+                        
+            //page size
+            model.AllowCustomersToSelectPageSize = false;
+            if (category.AllowCustomersToSelectPageSize && category.PageSizeOptions != null)
+            {
+                var pageSizes = category.PageSizeOptions.Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
+                if (pageSizes.Any())
+                {
+                    // get the first page size entry to use as the default (category page load) or if customer enters invalid value via query string
+                    if (command.PageSize <= 0 || !pageSizes.Contains(command.PageSize.ToString()))
+                    {
+                        int temp = 0;
+
+                        if (int.TryParse(pageSizes.FirstOrDefault(), out temp))
+                        {
+                            if (temp > 0)
+                            {
+                                command.PageSize = temp;
+                            }
+                        }
+                    }
+
+                    var currentPageUrl = _webHelper.GetThisPageUrl(true);
+                    var sortUrl = _webHelper.ModifyQueryString(currentPageUrl, "pagesize={0}", null);
+                    sortUrl = _webHelper.RemoveQueryString(sortUrl, "pagenumber");
+
+                    foreach (var pageSize in pageSizes)
+                    {
+                        int temp = 0;
+                        if (!int.TryParse(pageSize, out temp))
+                        {
+                            continue;
+                        }
+                        if (temp <= 0)
+                        {
+                            continue;
+                        }
+
+                        model.PageSizeOptions.Add(new SelectListItem()
+                        {
+                            Text = pageSize,
+                            Value = String.Format(sortUrl, pageSize),
+                            Selected = pageSize.Equals(command.PageSize.ToString(), StringComparison.InvariantCultureIgnoreCase)
+                        });
+                    }
+
+                    if (model.PageSizeOptions.Any())
+                    {
+                        model.PageSizeOptions = model.PageSizeOptions.OrderBy(x => int.Parse(x.Text)).ToList();
+                        model.AllowCustomersToSelectPageSize = true;
+
+                        if (command.PageSize <= 0)
+                        {
+                            command.PageSize = int.Parse(model.PageSizeOptions.FirstOrDefault().Text);
+                        }
+                    }
+                }
+            }
+
+            if (command.PageSize <= 0) command.PageSize = category.PageSize;
 
 
             //price ranges
@@ -855,7 +914,6 @@ namespace Nop.Web.Controllers
             //'Continue shopping' URL
             _customerService.SaveCustomerAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.LastContinueShoppingPage, _webHelper.GetThisPageUrl(false));
 
-            if (command.PageSize <= 0) command.PageSize = manufacturer.PageSize;
             if (command.PageNumber <= 0) command.PageNumber = 1;
 
             var model = manufacturer.ToModel();
@@ -904,7 +962,69 @@ namespace Nop.Web.Controllers
                     Selected = command.ViewMode == "list"
                 });
             }
+                        
+            //page size
+            model.AllowCustomersToSelectPageSize = false;
+            if (manufacturer.AllowCustomersToSelectPageSize && manufacturer.PageSizeOptions != null)
+            {
+                var pageSizes = manufacturer.PageSizeOptions.Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
+                if (pageSizes.Any())
+                {
+                    // get the first page size entry to use as the default (manufacturer page load) or if customer enters invalid value via query string
+                    if (command.PageSize <= 0 || !pageSizes.Contains(command.PageSize.ToString()))
+                    {
+                        int temp = 0;
+
+                        if (int.TryParse(pageSizes.FirstOrDefault(), out temp))
+                        {
+                            if (temp > 0)
+                            {
+                                command.PageSize = temp;
+                            }
+                        }
+                    }
+
+                    var currentPageUrl = _webHelper.GetThisPageUrl(true);
+                    var sortUrl = _webHelper.ModifyQueryString(currentPageUrl, "pagesize={0}", null);
+                    sortUrl = _webHelper.RemoveQueryString(sortUrl, "pagenumber");
+
+                    foreach (var pageSize in pageSizes)
+                    {
+                        int temp = 0;
+                        if (!int.TryParse(pageSize, out temp))
+                        {
+                            continue;
+                        }
+                        if (temp <= 0)
+                        {
+                            continue;
+                        }
+
+                        model.PageSizeOptions.Add(new SelectListItem()
+                        {
+                            Text = pageSize,
+                            Value = String.Format(sortUrl, pageSize),
+                            Selected = pageSize.Equals(command.PageSize.ToString(), StringComparison.InvariantCultureIgnoreCase)
+                        });
+                    }
+
+                    model.PageSizeOptions = model.PageSizeOptions.OrderBy(x => int.Parse(x.Text)).ToList();
+
+                    if (model.PageSizeOptions.Any())
+                    {
+                        model.PageSizeOptions = model.PageSizeOptions.OrderBy(x => int.Parse(x.Text)).ToList();
+                        model.AllowCustomersToSelectPageSize = true;
+
+                        if (command.PageSize <= 0)
+                        {
+                            command.PageSize = int.Parse(model.PageSizeOptions.FirstOrDefault().Text);
+                        }
+                    }
+                }
+            }
+
+            if (command.PageSize <= 0) command.PageSize = manufacturer.PageSize;
 
 
             //price ranges
@@ -1624,8 +1744,7 @@ namespace Nop.Web.Controllers
             var productTag = _productTagService.GetProductById(productTagId);
             if (productTag == null)
                 return RedirectToAction("Index", "Home");
-
-            if (command.PageSize <= 0) command.PageSize = _catalogSettings.ProductsByTagPageSize;
+                        
             if (command.PageNumber <= 0) command.PageNumber = 1;
 
             var model = new ProductsByTagModel()
@@ -1675,6 +1794,66 @@ namespace Nop.Web.Controllers
                 });
             }
 
+            //page size
+            model.AllowCustomersToSelectPageSize = false;
+            if (_catalogSettings.ProductsByTagAllowCustomersToSelectPageSize && _catalogSettings.ProductsByTagPageSizeOptions != null)
+            {
+                var pageSizes = _catalogSettings.ProductsByTagPageSizeOptions.Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+                if (pageSizes.Any())
+                {
+                    // get the first page size entry to use as the default ('products by tag' page load) or if customer enters invalid value via query string
+                    if (command.PageSize <= 0 || !pageSizes.Contains(command.PageSize.ToString()))
+                    {
+                        int temp = 0;
+
+                        if (int.TryParse(pageSizes.FirstOrDefault(), out temp))
+                        {
+                            if (temp > 0)
+                            {
+                                command.PageSize = temp;
+                            }
+                        }
+                    }
+
+                    var currentPageUrl = _webHelper.GetThisPageUrl(true);
+                    var sortUrl = _webHelper.ModifyQueryString(currentPageUrl, "pagesize={0}", null);
+                    sortUrl = _webHelper.RemoveQueryString(sortUrl, "pagenumber");
+
+                    foreach (var pageSize in pageSizes)
+                    {
+                        int temp = 0;
+                        if (!int.TryParse(pageSize, out temp))
+                        {
+                            continue;
+                        }
+                        if (temp <= 0)
+                        {
+                            continue;
+                        }
+
+                        model.PageSizeOptions.Add(new SelectListItem()
+                        {
+                            Text = pageSize,
+                            Value = String.Format(sortUrl, pageSize),
+                            Selected = pageSize.Equals(command.PageSize.ToString(), StringComparison.InvariantCultureIgnoreCase)
+                        });
+                    }
+
+                    if (model.PageSizeOptions.Any())
+                    {
+                        model.PageSizeOptions = model.PageSizeOptions.OrderBy(x => int.Parse(x.Text)).ToList();
+                        model.AllowCustomersToSelectPageSize = true;
+
+                        if (command.PageSize <= 0)
+                        {
+                            command.PageSize = int.Parse(model.PageSizeOptions.FirstOrDefault().Text);
+                        }
+                    }
+                }
+            }
+
+            if (command.PageSize <= 0) command.PageSize = _catalogSettings.ProductsByTagPageSize;
 
             //products
             var products = _productService.SearchProducts(0, 0, false, null, null,

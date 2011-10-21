@@ -22,6 +22,8 @@ namespace Nop.Data.Tests.Catalog
                 SeName = "SE name",
                 PictureId = 3,
                 PageSize = 4,
+                AllowCustomersToSelectPageSize = true,
+                PageSizeOptions = "4, 2, 8, 12",
                 PriceRanges = "1-3;",
                 Published = true,
                 Deleted = false,
@@ -39,6 +41,8 @@ namespace Nop.Data.Tests.Catalog
             fromDb.SeName.ShouldEqual("SE name");
             fromDb.PictureId.ShouldEqual(3);
             fromDb.PageSize.ShouldEqual(4);
+            fromDb.AllowCustomersToSelectPageSize.ShouldEqual(true);
+            fromDb.PageSizeOptions.ShouldEqual("4, 2, 8, 12");
             fromDb.PriceRanges.ShouldEqual("1-3;");
             fromDb.Published.ShouldEqual(true);
             fromDb.Deleted.ShouldEqual(false);
@@ -60,6 +64,8 @@ namespace Nop.Data.Tests.Catalog
                 SeName = "SE name",
                 PictureId = 3,
                 PageSize = 4,
+                AllowCustomersToSelectPageSize = true,
+                PageSizeOptions = "4, 2, 8, 12",
                 PriceRanges = "1-3;",
                 Published = true,
                 Deleted = false,

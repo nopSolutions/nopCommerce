@@ -64,6 +64,16 @@ namespace Nop.Core.Domain.Catalog
         public virtual int PageSize { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether customers can select the page size
+        /// </summary>
+        public virtual bool AllowCustomersToSelectPageSize { get; set; }
+
+        /// <summary>
+        /// Gets or sets the available customer selectable page size options
+        /// </summary>
+        public virtual string PageSizeOptions { get; set; }
+
+        /// <summary>
         /// Gets or sets the available price ranges
         /// </summary>
         public virtual string PriceRanges { get; set; }

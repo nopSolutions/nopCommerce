@@ -17,6 +17,7 @@ namespace Nop.Web.Models.Catalog
             CategoryBreadcrumb = new List<CategoryModel>();
             AvailableSortOptions = new List<SelectListItem>();
             AvailableViewModes = new List<SelectListItem>();
+            PageSizeOptions = new List<SelectListItem>();
         }
 
         public string Name { get; set; }
@@ -40,6 +41,8 @@ namespace Nop.Web.Models.Catalog
         public bool AllowProductViewModeChanging { get; set; }
         public IList<SelectListItem> AvailableViewModes { get; set; }
 
+        public bool AllowCustomersToSelectPageSize { get; set; }
+        public IList<SelectListItem> PageSizeOptions { get; set; }
 
         public bool DisplayCategoryBreadcrumb { get; set; }
         public IList<CategoryModel> CategoryBreadcrumb { get; set; }

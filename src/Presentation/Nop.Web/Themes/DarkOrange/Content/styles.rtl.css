@@ -389,6 +389,7 @@ ul.languagelist li:hover{cursor:pointer;}
 .sub-category-list{margin-bottom:15px;padding:0;}
 .product-sorting{margin:0 auto 10px;float:left;text-align:right;direction:rtl;}
 .product-viewmode{margin:0 auto 10px;float:right;}
+.product-page-size{width:165px;margin:0 auto;text-align:center;}
 .product-filters{width:520px;background:url(images/fb_s_bg.gif) no-repeat 0 100%;margin:0 auto;}
 .product-filters .filter-title{font-weight:700;background:url(images/deal_box_hl.gif) no-repeat 0 0;padding-left:10px;color:#555;}
 .product-filters .filter-title span{background:url(images/deal_box_hr.gif) no-repeat 100% 0;display:block;height:2em;line-height:1.3em;overflow:hidden;padding:4px 10px 8px 0;text-align:right;}
