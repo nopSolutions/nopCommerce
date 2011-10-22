@@ -18,6 +18,15 @@
     {
         currentManufacturerId = Convert.ToInt32(Url.RequestContext.RouteData.Values["manufacturerId"].ToString());
     }
+
+
+    //current product ID
+    int currentProductId = 0;
+    if (Url.RequestContext.RouteData.Values["controller"].ToString().Equals("catalog", StringComparison.InvariantCultureIgnoreCase) &&
+        Url.RequestContext.RouteData.Values["action"].ToString().Equals("product", StringComparison.InvariantCultureIgnoreCase))
+    {
+        currentProductId = Convert.ToInt32(Url.RequestContext.RouteData.Values["productId"].ToString());
+    }
 }
 <div class="master-wrapper-side-2">
     @if (IsSectionDefined("left"))
@@ -32,7 +41,7 @@
         @Html.Action("MiniShoppingCart", "ShoppingCart")
         <div class="clear">
         </div>        
-        @Html.Action("CategoryNavigation", "Catalog", new { currentCategoryId = currentCategoryId })
+        @Html.Action("CategoryNavigation", "Catalog", new { currentCategoryId = currentCategoryId, currentProductId = currentProductId })
         <div class="clear">
         </div>
         @Html.Action("ManufacturerNavigation", "Catalog", new { currentManufacturerId = currentManufacturerId })        

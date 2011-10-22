@@ -874,9 +874,15 @@ namespace Nop.Web.Controllers
 
         [ChildActionOnly]
         //[OutputCache(Duration = 120, VaryByCustom = "WorkingLanguage")]
-        public ActionResult CategoryNavigation(int currentCategoryId)
+        public ActionResult CategoryNavigation(int currentCategoryId, int currentProductId)
         {
             var currentCategory = _categoryService.GetCategoryById(currentCategoryId);
+            if (currentCategory == null && currentProductId > 0)
+            {
+                var productCategories = _categoryService.GetProductCategoriesByProductId(currentProductId);
+                if (productCategories.Count > 0)
+                    currentCategory = productCategories[0].Category;
+            }
             var breadCrumb = currentCategory != null ? GetCategoryBreadCrumb(currentCategory) : new List<Category>();
             var model = GetChildCategoryNavigationModel(breadCrumb, 0, currentCategory, 0);
 
