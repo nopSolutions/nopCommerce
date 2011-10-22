@@ -124,7 +124,8 @@
     {
         <div class="product-page-size">
             @T("Categories.PageSize")
-            @Html.DropDownList("products-pagesize", Model.PageSizeOptions, new { onchange = "setLocation(this.value);", title = @T("Categories.PageSize.PerPage") })
+            @Html.DropDownList("products-pagesize", Model.PageSizeOptions, new { onchange = "setLocation(this.value);" })
+            @T("Categories.PageSize.PerPage")
         </div>
     }
     <div class="clear">

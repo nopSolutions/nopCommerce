@@ -102,19 +102,19 @@ set @resources='
         <Value>Display</Value>
     </LocaleResource>
     <LocaleResource Name="Products.Tags.PageSize.PerPage">
-        <Value>Per Page</Value>
+        <Value>per page</Value>
     </LocaleResource>
     <LocaleResource Name="Categories.PageSize">
         <Value>Display</Value>
     </LocaleResource>
     <LocaleResource Name="Categories.PageSize.PerPage">
-        <Value>Per Page</Value>
+        <Value>per page</Value>
     </LocaleResource>
     <LocaleResource Name="Manufacturers.PageSize">
         <Value>Display</Value>
     </LocaleResource>
     <LocaleResource Name="Manufacturers.PageSize.PerPage">
-        <Value>Per Page</Value>
+        <Value>per page</Value>
     </LocaleResource>
 </Language>
 '

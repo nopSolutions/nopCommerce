@@ -845,7 +845,7 @@
 				<Value>Display</Value>
 				<Children>
 					<LocaleResource Name="PerPage">
-						<Value>Per Page</Value>
+						<Value>per page</Value>
 					</LocaleResource>
 				</Children>
 			</LocaleResource>
@@ -1981,7 +1981,7 @@
 				<Value>Display</Value>
 				<Children>
 					<LocaleResource Name="PerPage">
-						<Value>Per Page</Value>
+						<Value>per page</Value>
 					</LocaleResource>
 				</Children>
 			</LocaleResource>
@@ -2970,7 +2970,7 @@
 						<Value>Display</Value>
 						<Children>
 							<LocaleResource Name="PerPage">
-								<Value>Per Page</Value>
+								<Value>per page</Value>
 							</LocaleResource>
 						</Children>
 					</LocaleResource>

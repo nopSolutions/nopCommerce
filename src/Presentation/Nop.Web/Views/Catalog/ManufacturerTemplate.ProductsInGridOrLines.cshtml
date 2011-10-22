@@ -80,7 +80,8 @@
     {
         <div class="product-page-size">
             @T("Manufacturers.PageSize")
-            @Html.DropDownList("products-pagesize", Model.PageSizeOptions, new { onchange = "setLocation(this.value);", title = @T("Manufacturers.PageSize.PerPage") })
+            @Html.DropDownList("products-pagesize", Model.PageSizeOptions, new { onchange = "setLocation(this.value);" })
+            @T("Manufacturers.PageSize.PerPage")
         </div>
     }
     <div class="clear">
