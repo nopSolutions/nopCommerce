@@ -216,6 +216,15 @@
     <table class="adminContent">
         <tr>
             <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AllowCustomersToSelectPageSize):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(x => x.AllowCustomersToSelectPageSize)
+                @Html.ValidationMessageFor(model => model.AllowCustomersToSelectPageSize)
+            </td>
+        </tr>
+        <tr id="pnlPageSize">
+            <td class="adminTitle">
                 @Html.NopLabelFor(model => model.PageSize):
             </td>
             <td class="adminData">
@@ -223,16 +232,7 @@
                 @Html.ValidationMessageFor(model => model.PageSize)
             </td>
         </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.AllowCustomersToSelectPageSize):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(x => x.AllowCustomersToSelectPageSize)
-                @Html.ValidationMessageFor(model => model.AllowCustomersToSelectPageSize)
-            </td>
-        </tr>        
-        <tr>
+        <tr id="pnlPageSizeOptions">
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.PageSizeOptions):
             </td>
@@ -331,3 +331,20 @@
             @T("Admin.Catalog.Categories.Discounts.NoDiscounts")
         }
 }
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#@Html.FieldIdFor(model => model.AllowCustomersToSelectPageSize)").click(togglePageSize);
+        togglePageSize();
+    });
+
+    function togglePageSize() {
+        if (getE('@Html.FieldIdFor(model => model.AllowCustomersToSelectPageSize)').checked) {
+            $('#pnlPageSize').hide();
+            $('#pnlPageSizeOptions').show();
+        } else {
+            $('#pnlPageSize').show();
+            $('#pnlPageSizeOptions').hide();
+        }
+    }
+</script>

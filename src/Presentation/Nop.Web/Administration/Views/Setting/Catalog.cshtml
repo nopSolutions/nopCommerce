@@ -22,6 +22,7 @@
             $("#@Html.FieldIdFor(model => model.RecentlyAddedProductsEnabled)").click(toggleRecentlyAddedProducts);
             $("#@Html.FieldIdFor(model => model.ShowBestsellersOnHomepage)").click(toggleBestsellersOnHomepage);
             $("#@Html.FieldIdFor(model => model.ProductsAlsoPurchasedEnabled)").click(toggleProductsAlsoPurchasedNumber);
+            $("#@Html.FieldIdFor(model => model.ProductsByTagAllowCustomersToSelectPageSize)").click(togglePageSize);
 
             toggleShowCategoryProductNumberIncludingSubcategories();
             toggleEmailAFriend();
@@ -29,6 +30,7 @@
             toggleRecentlyAddedProducts();
             toggleBestsellersOnHomepage();
             toggleProductsAlsoPurchasedNumber();
+            togglePageSize();
         });
 
         function toggleShowCategoryProductNumberIncludingSubcategories() {
@@ -84,7 +86,16 @@
                 $('#pnlProductsAlsoPurchasedNumber').hide();
             }
         }
-        
+
+        function togglePageSize() {
+            if (getE('@Html.FieldIdFor(model => model.ProductsByTagAllowCustomersToSelectPageSize)').checked) {
+                $('#pnlPageSize').hide();
+                $('#pnlPageSizeOptions').show();
+            } else {
+                $('#pnlPageSize').show();
+                $('#pnlPageSizeOptions').hide();
+            }
+        }
     </script>
 
 @Html.ValidationSummary(false)
@@ -325,28 +336,28 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ProductsByTagAllowCustomersToSelectPageSize):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ProductsByTagAllowCustomersToSelectPageSize)
+                @Html.ValidationMessageFor(model => model.ProductsByTagAllowCustomersToSelectPageSize)
+            </td>
+        </tr>
+        <tr id="pnlPageSize">
+            <td class="adminTitle">
                 @Html.NopLabelFor(model => model.ProductsByTagPageSize):
             </td>
             <td class="adminData">
                 @Html.EditorFor(model => model.ProductsByTagPageSize)
                 @Html.ValidationMessageFor(model => model.ProductsByTagPageSize)
             </td>
-        </tr>        
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.ProductsByTagAllowCustomersToSelectPageSize):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(x => x.ProductsByTagAllowCustomersToSelectPageSize)
-                @Html.ValidationMessageFor(model => model.ProductsByTagAllowCustomersToSelectPageSize)
-            </td>
-        </tr>        
-        <tr>
+        </tr>
+        <tr id="pnlPageSizeOptions">
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.ProductsByTagPageSizeOptions):
             </td>
             <td class="adminData">
-                @Html.EditorFor(x => x.ProductsByTagPageSizeOptions)
+                @Html.EditorFor(model => model.ProductsByTagPageSizeOptions)
                 @Html.ValidationMessageFor(model => model.ProductsByTagPageSizeOptions)
             </td>
         </tr>

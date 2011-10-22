@@ -79,9 +79,9 @@
     @if (Model.AllowCustomersToSelectPageSize && Model.Products.Count > 0)
     {
         <div class="product-page-size">
-            @T("Manufacturers.PageSize")
-            @Html.DropDownList("products-pagesize", Model.PageSizeOptions, new { onchange = "setLocation(this.value);" })
-            @T("Manufacturers.PageSize.PerPage")
+            <span>@T("Manufacturers.PageSize")</span>
+            <span>@Html.DropDownList("products-pagesize", Model.PageSizeOptions, new { onchange = "setLocation(this.value);" })</span>
+            <span>@T("Manufacturers.PageSize.PerPage")</span>
         </div>
     }
     <div class="clear">
