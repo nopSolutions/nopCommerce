@@ -1,0 +1,63 @@
+﻿@model ShippingMethodModel
+@using Telerik.Web.Mvc.UI;
+@Html.ValidationSummary(true)
+@Html.HiddenFor(model => model.Id)
+@(Html.LocalizedEditor<ShippingMethodModel, ShippingMethodLocalizedModel>("shipping-method-localized",
+                @<table class="adminContent">
+                    <tr>
+                        <td class="adminTitle">
+                            @Html.NopLabelFor(model => model.Locales[item].Name):
+                        </td>
+                        <td class="adminData">
+                            @Html.EditorFor(model => Model.Locales[item].Name)
+                            @Html.ValidationMessageFor(model => model.Locales[item].Name)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            @Html.NopLabelFor(model => model.Locales[item].Description):
+                        </td>
+                        <td class="adminData">
+                            @Html.TextAreaFor(model => model.Locales[item].Description)
+                            @Html.ValidationMessageFor(model => model.Locales[item].Description)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            @Html.HiddenFor(model => model.Locales[item].LanguageId)
+                        </td>
+                    </tr>
+                </table>
+                ,
+                @<table class="adminContent">
+                    <tr>
+                        <td class="adminTitle">
+                            @Html.NopLabelFor(model => model.Name):
+                        </td>
+                        <td class="adminData">
+                            @Html.EditorFor(model => model.Name)
+                            @Html.ValidationMessageFor(model => model.Name)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            @Html.NopLabelFor(model => model.Description):
+                        </td>
+                        <td class="adminData">
+                            @Html.TextAreaFor(model => model.Description)
+                            @Html.ValidationMessageFor(model => model.Description)
+                        </td>
+                    </tr>
+                </table>
+            ))
+<table class="adminContent">
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.DisplayOrder):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.DisplayOrder)
+            @Html.ValidationMessageFor(model => model.DisplayOrder)
+        </td>
+    </tr>
+</table>

@@ -117,8 +117,8 @@ namespace Nop.Plugin.Shipping.ByWeight
                 if (rate.HasValue)
                 {
                     var shippingOption = new ShippingOption();
-                    shippingOption.Name = shippingMethod.Name;
-                    shippingOption.Description = shippingMethod.Description;
+                    shippingOption.Name = shippingMethod.GetLocalized(x => x.Name);
+                    shippingOption.Description = shippingMethod.GetLocalized(x => x.Description);
                     shippingOption.Rate = rate.Value;
                     response.ShippingOptions.Add(shippingOption);
                 }

@@ -28,6 +28,8 @@ namespace Nop.Admin.Controllers
         private readonly ICountryService _countryService;
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
+        private readonly ILocalizedEntityService _localizedEntityService;
+        private readonly ILanguageService _languageService;
 
 		#endregion
 
@@ -35,7 +37,8 @@ namespace Nop.Admin.Controllers
 
         public ShippingController(IShippingService shippingService, ShippingSettings shippingSettings,
             ISettingService settingService, ICountryService countryService,
-            ILocalizationService localizationService, IPermissionService permissionService)
+            ILocalizationService localizationService, IPermissionService permissionService,
+             ILocalizedEntityService localizedEntityService, ILanguageService languageService)
 		{
             this._shippingService = shippingService;
             this._shippingSettings = shippingSettings;
@@ -43,9 +46,32 @@ namespace Nop.Admin.Controllers
             this._countryService = countryService;
             this._localizationService = localizationService;
             this._permissionService = permissionService;
+            this._localizedEntityService = localizedEntityService;
+            this._languageService = languageService;
 		}
 
 		#endregion 
+        
+        #region Utilities
+
+        [NonAction]
+        public void UpdateLocales(ShippingMethod shippingMethod, ShippingMethodModel model)
+        {
+            foreach (var localized in model.Locales)
+            {
+                _localizedEntityService.SaveLocalizedValue(shippingMethod,
+                                                               x => x.Name,
+                                                               localized.Name,
+                                                               localized.LanguageId);
+
+                _localizedEntityService.SaveLocalizedValue(shippingMethod,
+                                                           x => x.Description,
+                                                           localized.Description,
+                                                           localized.LanguageId);
+            }
+        }
+
+        #endregion
 
         #region Shipping rate computation methods
 
@@ -192,54 +218,100 @@ namespace Nop.Admin.Controllers
             };
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult MethodUpdate(ShippingMethodModel model, GridCommand command)
+
+        public ActionResult CreateMethod()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
-            if (!ModelState.IsValid)
+            var model = new ShippingMethodModel();
+            //locales
+            AddLocales(_languageService, model.Locales);
+            return View(model);
+        }
+
+        [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
+        public ActionResult CreateMethod(ShippingMethodModel model, bool continueEditing)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedView();
+
+            if (ModelState.IsValid)
             {
-                return RedirectToAction("Methods");
+                var sm = model.ToEntity();
+                _shippingService.InsertShippingMethod(sm);
+                //locales
+                UpdateLocales(sm, model);
+
+                SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.Methods.Added"));
+                return continueEditing ? RedirectToAction("EditMethod", new { id = sm.Id }) : RedirectToAction("Methods");
             }
 
-            var shippingMethod = _shippingService.GetShippingMethodById(model.Id);
-            shippingMethod = model.ToEntity(shippingMethod);
-            _shippingService.UpdateShippingMethod(shippingMethod);
-
-            return Methods(command);
+            //If we got this far, something failed, redisplay form
+            return View(model);
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult MethodAdd([Bind(Exclude = "Id")] ShippingMethodModel model, GridCommand command)
+        public ActionResult EditMethod(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
-            if (!ModelState.IsValid)
+            var sm = _shippingService.GetShippingMethodById(id);
+            if (sm == null)
+                throw new ArgumentException("No shipping method found with the specified id", "id");
+
+            var model = sm.ToModel();
+            //locales
+            AddLocales(_languageService, model.Locales, (locale, languageId) =>
             {
-                return new JsonResult { Data = "error" };
+                locale.Name = sm.GetLocalized(x => x.Name, languageId, false, false);
+                locale.Description = sm.GetLocalized(x => x.Description, languageId, false, false);
+            });
+
+            return View(model);
+        }
+
+        [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
+        public ActionResult EditMethod(ShippingMethodModel model, bool continueEditing)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
+                return AccessDeniedView();
+
+            var sm = _shippingService.GetShippingMethodById(model.Id);
+            if (sm == null)
+                throw new ArgumentException("No shipping method found with the specified id");
+
+            if (ModelState.IsValid)
+            {
+                sm = model.ToEntity(sm);
+                _shippingService.UpdateShippingMethod(sm);
+                //locales
+                UpdateLocales(sm, model);
+                SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.Methods.Updated"));
+                return continueEditing ? RedirectToAction("EditMethod", sm.Id) : RedirectToAction("Methods");
             }
 
-            var shippingMethod = new ShippingMethod();
-            shippingMethod = model.ToEntity(shippingMethod);
-            _shippingService.InsertShippingMethod(shippingMethod);
 
-            return Methods(command);
+            //If we got this far, something failed, redisplay form
+            return View(model);
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult MethodDelete(int id, GridCommand command)
+        [HttpPost]
+        public ActionResult DeleteMethod(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
-            var shippingMethod = _shippingService.GetShippingMethodById(id);
-            _shippingService.DeleteShippingMethod(shippingMethod);
+            var sm = _shippingService.GetShippingMethodById(id);
+            if (sm == null)
+                throw new ArgumentException("No shipping method found with the specified id", "id");
 
-            return Methods(command);
+            _shippingService.DeleteShippingMethod(sm);
+
+            SuccessNotification(_localizationService.GetResource("Admin.Configuration.Shipping.Methods.Deleted"));
+            return RedirectToAction("Methods");
         }
-
+        
         #endregion
         
         #region Restrictions

@@ -1,0 +1,17 @@
+﻿@model ShippingMethodModel
+@using (Html.BeginForm())
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
+            @T("Admin.Configuration.Shipping.Methods.EditMethodDetails") - @Model.Name @Html.ActionLink("(" + T("Admin.Configuration.Shipping.Methods.BackToList") + ")", "Methods")
+        </div>
+        <div class="options">
+            <button type="submit" name="save" value="save" class="t-button">@T("Admin.Common.Save")</button>
+            <button type="submit" name="save" value="save-continue" class="t-button">@T("Admin.Common.SaveContinue")</button>
+            <span id="method-delete" class="t-button">@T("Admin.Common.Delete")</span>
+        </div>
+    </div>
+    @Html.Partial("_CreateOrUpdateMethod", Model)
+}
+@Html.DeleteConfirmation("DeleteMethod", "method-delete")

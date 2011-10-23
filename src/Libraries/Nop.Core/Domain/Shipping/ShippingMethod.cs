@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using Nop.Core.Domain.Directory;
+using Nop.Core.Domain.Localization;
 
 namespace Nop.Core.Domain.Shipping
 {
     /// <summary>
     /// Represents a shipping method (used for offline shipping rate computation methods)
     /// </summary>
-    public partial class ShippingMethod : BaseEntity
+    public partial class ShippingMethod : BaseEntity, ILocalizedEntity
     {
         private ICollection<Country> _restrictedCountries;
 

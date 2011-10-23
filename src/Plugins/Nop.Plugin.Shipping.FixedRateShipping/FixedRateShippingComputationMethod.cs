@@ -4,6 +4,7 @@ using System.Web.Routing;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Plugins;
 using Nop.Services.Configuration;
+using Nop.Services.Localization;
 using Nop.Services.Shipping;
 
 namespace Nop.Plugin.Shipping.FixedRateShipping
@@ -64,8 +65,8 @@ namespace Nop.Plugin.Shipping.FixedRateShipping
             foreach (var shippingMethod in shippingMethods)
             {
                 var shippingOption = new ShippingOption();
-                shippingOption.Name = shippingMethod.Name;
-                shippingOption.Description = shippingMethod.Description;
+                shippingOption.Name = shippingMethod.GetLocalized(x => x.Name);
+                shippingOption.Description = shippingMethod.GetLocalized(x => x.Description);
                 shippingOption.Rate = GetRate(shippingMethod.Id);
                 response.ShippingOptions.Add(shippingOption);
             }

@@ -122,6 +122,24 @@ set @resources='
     <LocaleResource Name="Admin.Configuration.Countries.States.EditStateDetails">
         <Value>Edit state/province</Value>
     </LocaleResource>
+    <LocaleResource Name="Admin.Configuration.Shipping.Methods.Added">
+        <Value>The new shipping method has been added successfully.</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Configuration.Shipping.Methods.Updated">
+        <Value>The shipping method has been updated successfully.</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Configuration.Shipping.Methods.Deleted">
+        <Value>The shipping method has been deleted successfully.</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Configuration.Shipping.Methods.BackToList">
+        <Value>back to shipping method list</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Configuration.Shipping.Methods.AddNew">
+        <Value>Add a new shipping method</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Configuration.Shipping.Methods.EditMethodDetails">
+        <Value>Edit shipping method details</Value>
+    </LocaleResource>
 </Language>
 '
 

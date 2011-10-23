@@ -4714,6 +4714,15 @@
 							<LocaleResource Name="Methods">
 								<Value>Shipping methods</Value>
 								<Children>
+									<LocaleResource Name="AddNew">
+										<Value>Add a new shipping method</Value>
+									</LocaleResource>
+									<LocaleResource Name="BackToList">
+										<Value>back to shipping method list</Value>
+									</LocaleResource>
+									<LocaleResource Name="EditMethodDetails">
+										<Value>Edit shipping method details</Value>
+									</LocaleResource>
 									<LocaleResource Name="Fields">
 										<Children>
 											<LocaleResource Name="Name">
@@ -4731,6 +4740,15 @@
 												<Value>Display order</Value>
 											</LocaleResource>
 										</Children>
+									</LocaleResource>
+									<LocaleResource Name="Added">
+										<Value>The new shipping method has been added successfully.</Value>
+									</LocaleResource>
+									<LocaleResource Name="Deleted">
+										<Value>The shipping method has been deleted successfully.</Value>
+									</LocaleResource>
+									<LocaleResource Name="Updated">
+										<Value>The shipping method has been updated successfully.</Value>
 									</LocaleResource>
 								</Children>
 							</LocaleResource>
