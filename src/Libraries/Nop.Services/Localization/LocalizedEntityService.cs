@@ -17,7 +17,7 @@ namespace Nop.Services.Localization
     {
         #region Constants
 
-        private const string LOCALIZEDPROPERTY_ALL_KEY = "Nop.localizedproperty.allbyentityid-{0}-{1}";
+        private const string LOCALIZEDPROPERTY_KEY = "Nop.localizedproperty.{0}-{1}-{2}-{3}";
         private const string LOCALIZEDPROPERTY_PATTERN_KEY = "Nop.localizedproperty.";
 
         #endregion
@@ -77,6 +77,33 @@ namespace Nop.Services.Localization
         }
 
         /// <summary>
+        /// Find localized value
+        /// </summary>
+        /// <param name="languageId">Language identifier</param>
+        /// <param name="entityId">Entity identifier</param>
+        /// <param name="localeKeyGroup">Locale key group</param>
+        /// <param name="localeKey">Locale key</param>
+        /// <returns>Found localized value</returns>
+        public virtual string GetLocalizedValue(int languageId, int entityId, string localeKeyGroup, string localeKey)
+        {
+            string key = string.Format(LOCALIZEDPROPERTY_KEY, languageId, entityId, localeKeyGroup, localeKey);
+            return _cacheManager.Get(key, () =>
+            {
+                var query = from lp in _localizedPropertyRepository.Table
+                            where lp.LanguageId == languageId && 
+                            lp.EntityId == entityId &&
+                            lp.LocaleKeyGroup == localeKeyGroup &&
+                            lp.LocaleKey == localeKey
+                            select lp.LocaleValue;
+                var localeValue = query.FirstOrDefault();
+                //little hack here. nulls aren't cacheable so set it to ""
+                if (localeValue == null)
+                    localeValue = "";
+                return localeValue;
+            });
+        }
+
+        /// <summary>
         /// Gets localized properties
         /// </summary>
         /// <param name="entityId">Entity identifier</param>
@@ -87,17 +114,13 @@ namespace Nop.Services.Localization
             if (entityId == 0 || string.IsNullOrEmpty(localeKeyGroup))
                 return new List<LocalizedProperty>();
 
-            string key = string.Format(LOCALIZEDPROPERTY_ALL_KEY, entityId, localeKeyGroup);
-            return _cacheManager.Get(key, () =>
-            {
-                var query = from lp in _localizedPropertyRepository.Table
-                            orderby lp.Id
-                            where lp.EntityId ==  entityId &&
-                            lp.LocaleKeyGroup == localeKeyGroup
-                            select lp;
-                var props = query.ToList();
-                return props;
-            });
+            var query = from lp in _localizedPropertyRepository.Table
+                        orderby lp.Id
+                        where lp.EntityId == entityId &&
+                              lp.LocaleKeyGroup == localeKeyGroup
+                        select lp;
+            var props = query.ToList();
+            return props;
         }
 
         /// <summary>

@@ -168,8 +168,10 @@ namespace Nop.Web.Framework
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
                 .InstancePerHttpRequest();
 
-
-            builder.RegisterType<LocalizedEntityService>().As<ILocalizedEntityService>().InstancePerHttpRequest();
+            //pass MemoryCacheManager to LocalizedEntityService as cacheManager (cache locales between requests)
+            builder.RegisterType<LocalizedEntityService>().As<ILocalizedEntityService>()
+                .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
+                .InstancePerHttpRequest();
             builder.RegisterType<LanguageService>().As<ILanguageService>().InstancePerHttpRequest();
 
             builder.RegisterType<DownloadService>().As<IDownloadService>().InstancePerHttpRequest();

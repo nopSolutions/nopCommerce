@@ -25,6 +25,16 @@ namespace Nop.Services.Localization
         LocalizedProperty GetLocalizedPropertyById(int localizedPropertyId);
 
         /// <summary>
+        /// Find localized value
+        /// </summary>
+        /// <param name="languageId">Language identifier</param>
+        /// <param name="entityId">Entity identifier</param>
+        /// <param name="localeKeyGroup">Locale key group</param>
+        /// <param name="localeKey">Locale key</param>
+        /// <returns>Found localized value</returns>
+        string GetLocalizedValue(int languageId, int entityId, string localeKeyGroup, string localeKey);
+
+        /// <summary>
         /// Gets localized properties
         /// </summary>
         /// <param name="entityId">Entity identifier</param>
