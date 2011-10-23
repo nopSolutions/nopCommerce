@@ -258,8 +258,8 @@ namespace Nop.Web.Controllers
                 int? defaultEstimateCountryId = (setEstimateShippingDefaultAddress && _workContext.CurrentCustomer.ShippingAddress != null) ? _workContext.CurrentCustomer.ShippingAddress.CountryId : model.EstimateShipping.CountryId;
                 model.EstimateShipping.AvailableCountries.Add(new SelectListItem() { Text = _localizationService.GetResource("Address.SelectCountry"), Value = "0" });
                 foreach (var c in _countryService.GetAllCountries())
-                    model.EstimateShipping.AvailableCountries.Add(new SelectListItem() { 
-                        Text = c.Name, 
+                    model.EstimateShipping.AvailableCountries.Add(new SelectListItem() {
+                        Text = c.GetLocalized(x => x.Name), 
                         Value = c.Id.ToString(),
                         Selected = c.Id == defaultEstimateCountryId
                     });

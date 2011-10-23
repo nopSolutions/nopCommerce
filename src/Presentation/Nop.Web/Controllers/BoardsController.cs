@@ -535,7 +535,7 @@ namespace Nop.Web.Controllers
                     {
                         var countryId = post.Customer.GetAttribute<int>(SystemCustomerAttributeNames.CountryId);
                         var country = _countryService.GetCountryById(countryId);
-                        forumPostModel.CustomerLocation = country != null ? country.Name : string.Empty;
+                        forumPostModel.CustomerLocation = country != null ? country.GetLocalized(x => x.Name) : string.Empty;
                     }
 
                     // page number is needed for creating post link in _ForumPost partial view

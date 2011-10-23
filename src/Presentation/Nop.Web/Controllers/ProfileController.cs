@@ -133,7 +133,7 @@ namespace Nop.Web.Controllers
                 var country = _countryService.GetCountryById(countryId);
                 if (country != null)
                 {
-                    location = country.Name;
+                    location = country.GetLocalized(x => x.Name);
                 }
                 else
                 {

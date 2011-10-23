@@ -413,7 +413,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Order.BillingCity", HttpUtility.HtmlEncode(order.BillingAddress.City)));
             tokens.Add(new Token("Order.BillingStateProvince", order.BillingAddress.StateProvince != null ? HttpUtility.HtmlEncode(order.BillingAddress.StateProvince.Name) : ""));
             tokens.Add(new Token("Order.BillingZipPostalCode", HttpUtility.HtmlEncode(order.BillingAddress.ZipPostalCode)));
-            tokens.Add(new Token("Order.BillingCountry", order.BillingAddress.Country!=null ? HttpUtility.HtmlEncode(order.BillingAddress.Country.Name) : ""));
+            tokens.Add(new Token("Order.BillingCountry", order.BillingAddress.Country != null ? HttpUtility.HtmlEncode(order.BillingAddress.Country.GetLocalized(x => x.Name)) : ""));
 
             tokens.Add(new Token("Order.ShippingMethod", HttpUtility.HtmlEncode(order.ShippingMethod)));
             tokens.Add(new Token("Order.ShippingFirstName", order.ShippingAddress != null ? HttpUtility.HtmlEncode(order.ShippingAddress.FirstName) : ""));
@@ -427,7 +427,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Order.ShippingCity", order.ShippingAddress != null ? HttpUtility.HtmlEncode(order.ShippingAddress.City) : ""));
             tokens.Add(new Token("Order.ShippingStateProvince", order.ShippingAddress != null && order.ShippingAddress.StateProvince != null ? HttpUtility.HtmlEncode(order.ShippingAddress.StateProvince.Name) : ""));
             tokens.Add(new Token("Order.ShippingZipPostalCode", order.ShippingAddress != null ? HttpUtility.HtmlEncode(order.ShippingAddress.ZipPostalCode) : ""));
-            tokens.Add(new Token("Order.ShippingCountry", order.ShippingAddress != null && order.ShippingAddress.Country != null ? HttpUtility.HtmlEncode(order.ShippingAddress.Country.Name) : ""));
+            tokens.Add(new Token("Order.ShippingCountry", order.ShippingAddress != null && order.ShippingAddress.Country != null ? HttpUtility.HtmlEncode(order.ShippingAddress.Country.GetLocalized(x => x.Name)) : ""));
 
 
             tokens.Add(new Token("Order.TrackingNumber", HttpUtility.HtmlEncode(order.TrackingNumber)));

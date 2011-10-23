@@ -1,14 +1,20 @@
-﻿using System.Web.Mvc;
+﻿using System.Collections.Generic;
+using System.Web.Mvc;
 using FluentValidation.Attributes;
 using Nop.Admin.Validators.Directory;
 using Nop.Web.Framework;
+using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.Directory
 {
     [Validator(typeof(CountryValidator))]
-    public class CountryModel : BaseNopEntityModel
+    public class CountryModel : BaseNopEntityModel, ILocalizedModel<CountryLocalizedModel>
     {
+        public CountryModel()
+        {
+            Locales = new List<CountryLocalizedModel>();
+        }
         [NopResourceDisplayName("Admin.Configuration.Countries.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }
@@ -44,5 +50,16 @@ namespace Nop.Admin.Models.Directory
 
         [NopResourceDisplayName("Admin.Configuration.Countries.Fields.NumberOfStates")]
         public int NumberOfStates { get; set; }
+
+        public IList<CountryLocalizedModel> Locales { get; set; }
+    }
+
+    public class CountryLocalizedModel : ILocalizedModelLocal
+    {
+        public int LanguageId { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Countries.Fields.Name")]
+        [AllowHtml]
+        public string Name { get; set; }
     }
 }

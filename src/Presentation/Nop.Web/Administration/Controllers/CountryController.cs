@@ -24,6 +24,8 @@ namespace Nop.Admin.Controllers
         private readonly ILocalizationService _localizationService;
 	    private readonly IAddressService _addressService;
         private readonly IPermissionService _permissionService;
+	    private readonly ILocalizedEntityService _localizedEntityService;
+	    private readonly ILanguageService _languageService;
 
 	    #endregion
 
@@ -31,16 +33,35 @@ namespace Nop.Admin.Controllers
 
         public CountryController(ICountryService countryService,
             IStateProvinceService stateProvinceService, ILocalizationService localizationService,
-            IAddressService addressService, IPermissionService permissionService)
+            IAddressService addressService, IPermissionService permissionService,
+            ILocalizedEntityService localizedEntityService, ILanguageService languageService)
 		{
             this._countryService = countryService;
             this._stateProvinceService = stateProvinceService;
             this._localizationService = localizationService;
             this._addressService = addressService;
             this._permissionService = permissionService;
+            this._localizedEntityService = localizedEntityService;
+            this._languageService = languageService;
 		}
 
 		#endregion 
+
+        #region Utilities 
+        
+        [NonAction]
+        public void UpdateLocales(Country country, CountryModel model)
+        {
+            foreach (var localized in model.Locales)
+            {
+                _localizedEntityService.SaveLocalizedValue(country,
+                                                               x => x.Name,
+                                                               localized.Name,
+                                                               localized.LanguageId);
+            }
+        }
+
+        #endregion
 
         #region Countries
 
@@ -88,6 +109,8 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var model = new CountryModel();
+            //locales
+            AddLocales(_languageService, model.Locales);
             //default values
             model.Published = true;
             model.AllowsBilling = true;
@@ -105,6 +128,8 @@ namespace Nop.Admin.Controllers
             {
                 var country = model.ToEntity();
                 _countryService.InsertCountry(country);
+                //locales
+                UpdateLocales(country, model);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Countries.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = country.Id }) : RedirectToAction("List");
@@ -122,7 +147,13 @@ namespace Nop.Admin.Controllers
             var country = _countryService.GetCountryById(id);
             if (country == null)
                 throw new ArgumentException("No country found with the specified id", "id");
-            return View(country.ToModel());
+            var model = country.ToModel();
+            //locales
+            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            {
+                locale.Name = country.GetLocalized(x => x.Name, languageId, false, false);
+            });
+            return View(model);
         }
 
         [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
@@ -139,6 +170,8 @@ namespace Nop.Admin.Controllers
             {
                 country = model.ToEntity(country);
                 _countryService.UpdateCountry(country);
+                //locales
+                UpdateLocales(country, model);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Countries.Updated"));
                 return continueEditing ? RedirectToAction("Edit", new { id = country.Id }) : RedirectToAction("List");

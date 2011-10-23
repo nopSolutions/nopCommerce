@@ -115,7 +115,7 @@ namespace Nop.Web.Extensions
                 Email = entity.Email,
                 Company = entity.Company,
                 CountryId = entity.CountryId,
-                CountryName = entity.Country != null ? entity.Country.Name : null,
+                CountryName = entity.Country != null ? entity.Country.GetLocalized(x => x.Name) : null,
                 StateProvinceId = entity.StateProvinceId,
                 StateProvinceName = entity.StateProvince != null ? entity.StateProvince.Name : null,
                 City = entity.City,

@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Shipping;
 
 namespace Nop.Core.Domain.Directory
@@ -7,7 +7,7 @@ namespace Nop.Core.Domain.Directory
     /// <summary>
     /// Represents a country
     /// </summary>
-    public partial class Country : BaseEntity
+    public partial class Country : BaseEntity, ILocalizedEntity
     {
         private ICollection<StateProvince> _stateProvinces;
         private ICollection<ShippingMethod> _restrictedShippingMethods;
