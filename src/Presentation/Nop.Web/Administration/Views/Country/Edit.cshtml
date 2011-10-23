@@ -1,6 +1,6 @@
 ﻿@model CountryModel
 
-@using (Html.BeginForm())
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "country-form" }))
 {
     <div class="section-header">
         <div class="title">

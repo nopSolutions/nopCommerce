@@ -268,8 +268,8 @@ namespace Nop.Web.Controllers
                 var states = defaultEstimateCountryId.HasValue ? _stateProvinceService.GetStateProvincesByCountryId(defaultEstimateCountryId.Value).ToList() : new List<StateProvince>();
                 if (states.Count > 0)
                     foreach (var s in states)
-                        model.EstimateShipping.AvailableStates.Add(new SelectListItem() { 
-                            Text = s.Name,
+                        model.EstimateShipping.AvailableStates.Add(new SelectListItem() {
+                            Text = s.GetLocalized(x => x.Name),
                             Value = s.Id.ToString(),
                             Selected = s.Id == defaultEstimateStateId
                         });

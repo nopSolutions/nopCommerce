@@ -116,6 +116,12 @@ set @resources='
     <LocaleResource Name="Manufacturers.PageSize.PerPage">
         <Value>per page</Value>
     </LocaleResource>
+    <LocaleResource Name="Admin.Configuration.Countries.States.AddNew">
+        <Value>Add a new state/province</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Configuration.Countries.States.EditStateDetails">
+        <Value>Edit state/province</Value>
+    </LocaleResource>
 </Language>
 '
 

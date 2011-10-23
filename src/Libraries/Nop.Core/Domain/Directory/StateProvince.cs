@@ -1,12 +1,12 @@
-using System.Collections.Generic;
-using Nop.Core.Domain.Common;
+
+using Nop.Core.Domain.Localization;
 
 namespace Nop.Core.Domain.Directory
 {
     /// <summary>
     /// Represents a state/province
     /// </summary>
-    public partial class StateProvince : BaseEntity
+    public partial class StateProvince : BaseEntity, ILocalizedEntity
     {
         /// <summary>
         /// Gets or sets the country identifier

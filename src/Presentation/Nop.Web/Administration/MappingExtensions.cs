@@ -39,7 +39,6 @@ using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Topics;
 using Nop.Core.Plugins;
 using Nop.Services.Authentication.External;
-using Nop.Services.Common;
 using Nop.Services.Messages;
 using Nop.Services.Payments;
 using Nop.Services.PromotionFeed;
@@ -543,7 +542,6 @@ namespace Nop.Admin
         }
 
         #endregion
-
 
         #region NewsLetter subscriptions
 

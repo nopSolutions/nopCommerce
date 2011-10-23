@@ -129,7 +129,7 @@ namespace Nop.Web.Controllers
             if (states.Count > 0)
             {
                 foreach (var s in states)
-                    model.NewAddress.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString() });
+                    model.NewAddress.AvailableStates.Add(new SelectListItem() { Text = s.GetLocalized(x => x.Name), Value = s.Id.ToString() });
             }
             else
                 model.NewAddress.AvailableStates.Add(new SelectListItem() { Text = _localizationService.GetResource("Address.OtherNonUS"), Value = "0" });
@@ -157,7 +157,7 @@ namespace Nop.Web.Controllers
             if (states.Count > 0)
             {
                 foreach (var s in states)
-                    model.NewAddress.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString() });
+                    model.NewAddress.AvailableStates.Add(new SelectListItem() { Text = s.GetLocalized(x => x.Name), Value = s.Id.ToString() });
             }
             else
                 model.NewAddress.AvailableStates.Add(new SelectListItem() { Text = _localizationService.GetResource("Address.OtherNonUS"), Value = "0" });

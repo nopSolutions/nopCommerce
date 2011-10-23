@@ -42,7 +42,7 @@ namespace Nop.Web.Controllers
             var country = _countryService.GetCountryById(Convert.ToInt32(countryId));
             var states = country != null ? _stateProvinceService.GetStateProvincesByCountryId(country.Id).ToList() : new List<StateProvince>();
             var result = (from s in states
-                         select new { id = s.Id, name = s.Name }).ToList();
+                          select new { id = s.Id, name = s.GetLocalized(x => x.Name) }).ToList();
             if (addEmptyStateIfRequired && result.Count == 0)
                 result.Insert(0, new { id = 0, name = _localizationService.GetResource("Address.OtherNonUS") });
             return Json(result, JsonRequestBehavior.AllowGet);

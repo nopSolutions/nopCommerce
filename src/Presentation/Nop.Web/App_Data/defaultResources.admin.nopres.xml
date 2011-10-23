@@ -2475,6 +2475,12 @@
 							<LocaleResource Name="States">
 								<Value>States and provinces</Value>
 								<Children>
+									<LocaleResource Name="AddNew">
+										<Value>Add a new state/province</Value>
+									</LocaleResource>
+									<LocaleResource Name="EditStateDetails">
+										<Value>Edit state/province</Value>
+									</LocaleResource>
 									<LocaleResource Name="Fields">
 										<Children>
 											<LocaleResource Name="Name">

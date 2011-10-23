@@ -61,6 +61,17 @@ namespace Nop.Admin.Controllers
             }
         }
 
+        [NonAction]
+        public void UpdateLocales(StateProvince stateProvince, StateProvinceModel model)
+        {
+            foreach (var localized in model.Locales)
+            {
+                _localizedEntityService.SaveLocalizedValue(stateProvince,
+                                                               x => x.Name,
+                                                               localized.Name,
+                                                               localized.LanguageId);
+            }
+        }
         #endregion
 
         #region Countries
@@ -234,49 +245,90 @@ namespace Nop.Admin.Controllers
         }
 
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult StateUpdate(StateProvinceModel model, GridCommand command)
+        //create
+        public ActionResult StateCreatePopup(int countryId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
 
-            if (!ModelState.IsValid)
-            {
-                //TODO:Find out how telerik handles errors
-                //TODO: do the same for all other grid actions
-                //here is solution (not the best one) - http://www.telerik.com/community/forums/aspnet-mvc/grid/how-to-return-error-information-to-grid-in-ajax-editing-mode.aspx
-                return new JsonResult { Data = "error" };
-            }
-            
-            var state = _stateProvinceService.GetStateProvinceById(model.Id);
-            //ensure that country is set because it's not passed countryId is not passed
-            var countryId = state.CountryId;
-            state = model.ToEntity(state);
-            state.CountryId = countryId;
-            //ensure that country is set because it's not passed countryId is not passed
-            _stateProvinceService.UpdateStateProvince(state);
-
-            return States(state.CountryId, command);
+            var model = new StateProvinceModel();
+            model.CountryId = countryId;
+            //locales
+            AddLocales(_languageService, model.Locales);
+            return View(model);
         }
 
-        [GridAction(EnableCustomBinding = true)]
-        public ActionResult StateAdd(StateProvinceModel model, GridCommand command)
+        [HttpPost]
+        public ActionResult StateCreatePopup(string btnId, string formId, StateProvinceModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
                 return AccessDeniedView();
 
-            if (!ModelState.IsValid)
-            {
-                return new JsonResult { Data = "error" };
-            }
-            
-            var state = new StateProvince { CountryId = model.CountryId };
-            state = model.ToEntity(state);
-            _stateProvinceService.InsertStateProvince(state);
+            var country = _countryService.GetCountryById(model.CountryId);
+            if (country == null)
+                throw new ArgumentException("No country found with the specified id");
 
-            return States(state.CountryId, command);
+            if (ModelState.IsValid)
+            {
+                var sp = model.ToEntity();
+
+                _stateProvinceService.InsertStateProvince(sp);
+                UpdateLocales(sp, model);
+
+                ViewBag.RefreshPage = true;
+                ViewBag.btnId = btnId;
+                ViewBag.formId = formId;
+                return View(model);
+            }
+
+            //If we got this far, something failed, redisplay form
+            return View(model);
         }
 
+        //edit
+        public ActionResult StateEditPopup(int id)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
+                return AccessDeniedView();
+
+            var sp = _stateProvinceService.GetStateProvinceById(id);
+            if (sp == null)
+                throw new ArgumentException("No state found with the specified id", "id");
+            var model = sp.ToModel();
+            //locales
+            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            {
+                locale.Name = sp.GetLocalized(x => x.Name, languageId, false, false);
+            });
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult StateEditPopup(string btnId, string formId, StateProvinceModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCountries))
+                return AccessDeniedView();
+
+            var sp = _stateProvinceService.GetStateProvinceById(model.Id);
+            if (sp == null)
+                throw new ArgumentException("No state found with the specified id");
+            if (ModelState.IsValid)
+            {
+                sp = model.ToEntity(sp);
+                _stateProvinceService.UpdateStateProvince(sp);
+
+                UpdateLocales(sp, model);
+
+                ViewBag.RefreshPage = true;
+                ViewBag.btnId = btnId;
+                ViewBag.formId = formId;
+                return View(model);
+            }
+
+            //If we got this far, something failed, redisplay form
+            return View(model);
+        }
 
         [GridAction(EnableCustomBinding = true)]
         public ActionResult StateDelete(int id, GridCommand command)

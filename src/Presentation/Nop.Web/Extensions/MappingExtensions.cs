@@ -117,7 +117,7 @@ namespace Nop.Web.Extensions
                 CountryId = entity.CountryId,
                 CountryName = entity.Country != null ? entity.Country.GetLocalized(x => x.Name) : null,
                 StateProvinceId = entity.StateProvinceId,
-                StateProvinceName = entity.StateProvince != null ? entity.StateProvince.Name : null,
+                StateProvinceName = entity.StateProvince != null ? entity.StateProvince.GetLocalized(x => x.Name) : null,
                 City = entity.City,
                 Address1 = entity.Address1,
                 Address2 = entity.Address2,

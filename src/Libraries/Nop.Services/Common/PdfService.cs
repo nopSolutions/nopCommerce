@@ -155,7 +155,7 @@ namespace Nop.Services.Common
             if (!String.IsNullOrEmpty(order.BillingAddress.Address2))
                 cell.AddElement(new Paragraph("   " + String.Format(_localizationService.GetResource("PDFInvoice.Address2", lang.Id), order.BillingAddress.Address2)));
 
-            cell.AddElement(new Paragraph("   " + String.Format("{0}, {1}", order.BillingAddress.Country != null ? order.BillingAddress.Country.GetLocalized(x => x.Name) : "", order.BillingAddress.StateProvince != null ? order.BillingAddress.StateProvince.Name : "")));
+            cell.AddElement(new Paragraph("   " + String.Format("{0}, {1}", order.BillingAddress.Country != null ? order.BillingAddress.Country.GetLocalized(x => x.Name) : "", order.BillingAddress.StateProvince != null ? order.BillingAddress.StateProvince.GetLocalized(x => x.Name) : "")));
             cell.AddElement(new Paragraph("   " + String.Format("{0}, {1}", order.BillingAddress.City, order.BillingAddress.ZipPostalCode)));
             
             //VAT number
@@ -181,7 +181,7 @@ namespace Nop.Services.Common
                 cell.AddElement(new Paragraph("   " + String.Format(_localizationService.GetResource("PDFInvoice.Address", lang.Id), order.ShippingAddress.Address1)));
                 if (!String.IsNullOrEmpty(order.ShippingAddress.Address2))
                     cell.AddElement(new Paragraph("   " + String.Format(_localizationService.GetResource("PDFInvoice.Address2", lang.Id), order.ShippingAddress.Address2)));
-                cell.AddElement(new Paragraph("   " + String.Format("{0}, {1}", order.ShippingAddress.Country != null ? order.ShippingAddress.Country.GetLocalized(x => x.Name) : "", order.ShippingAddress.StateProvince != null ? order.ShippingAddress.StateProvince.Name : "")));
+                cell.AddElement(new Paragraph("   " + String.Format("{0}, {1}", order.ShippingAddress.Country != null ? order.ShippingAddress.Country.GetLocalized(x => x.Name) : "", order.ShippingAddress.StateProvince != null ? order.ShippingAddress.StateProvince.GetLocalized(x => x.Name) : "")));
                 cell.AddElement(new Paragraph("   " + String.Format("{0}, {1}", order.ShippingAddress.City, order.ShippingAddress.ZipPostalCode)));
                 cell.AddElement(new Paragraph(" "));
                 cell.AddElement(new Paragraph("   " + String.Format(_localizationService.GetResource("PDFInvoice.ShippingMethod", lang.Id), order.ShippingMethod)));
@@ -617,7 +617,7 @@ namespace Nop.Services.Common
                     if (!String.IsNullOrEmpty(order.ShippingAddress.Address2))
                         doc.Add(new Paragraph((String.Format(_localizationService.GetResource("PDFPackagingSlip.Address2"), order.ShippingAddress.Address2))));
 
-                    doc.Add(new Paragraph((String.Format("{0}, {1}", order.ShippingAddress.Country != null ? order.ShippingAddress.Country.GetLocalized(x => x.Name) : "", order.ShippingAddress.StateProvince != null ? order.ShippingAddress.StateProvince.Name : ""))));
+                    doc.Add(new Paragraph((String.Format("{0}, {1}", order.ShippingAddress.Country != null ? order.ShippingAddress.Country.GetLocalized(x => x.Name) : "", order.ShippingAddress.StateProvince != null ? order.ShippingAddress.StateProvince.GetLocalized(x => x.Name) : ""))));
                     doc.Add(new Paragraph((String.Format("{0}, {1}", order.ShippingAddress.City, order.ShippingAddress.ZipPostalCode))));
 
                     doc.Add(new Paragraph(" "));
