@@ -6802,8 +6802,8 @@ namespace Nop.Services.Installation
             };
             productEatingWell.ProductVariants.Add(new ProductVariant()
             {
-                Price = 24M,
-                OldPrice = 37M,
+                Price = 51M,
+                OldPrice = 67M,
                 IsShipEnabled = true,
                 Weight = 2,
                 Length = 2,
