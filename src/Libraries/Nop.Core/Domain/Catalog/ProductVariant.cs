@@ -248,6 +248,21 @@ namespace Nop.Core.Domain.Catalog
         public virtual decimal ProductCost { get; set; }
 
         /// <summary>
+        /// Gets or sets the product special price
+        /// </summary>
+        public virtual decimal? SpecialPrice { get; set; }
+
+        /// <summary>
+        /// Gets or sets the start date and time of the special price
+        /// </summary>
+        public virtual DateTime? SpecialPriceStartDateTimeUtc { get; set; }
+
+        /// <summary>
+        /// Gets or sets the end date and time of the special price
+        /// </summary>
+        public virtual DateTime? SpecialPriceEndDateTimeUtc { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether a customer enters price
         /// </summary>
         public virtual bool CustomerEntersPrice { get; set; }
@@ -293,7 +308,7 @@ namespace Nop.Core.Domain.Catalog
         public virtual DateTime? AvailableStartDateTimeUtc { get; set; }
 
         /// <summary>
-        /// Gets or sets the shipped end date and time
+        /// Gets or sets the available end date and time
         /// </summary>
         public virtual DateTime? AvailableEndDateTimeUtc { get; set; }
 

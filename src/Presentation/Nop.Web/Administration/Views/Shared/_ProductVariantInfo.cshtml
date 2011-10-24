@@ -320,6 +320,33 @@
     </tr>
     <tr>
         <td class="adminTitle">
+            @Html.NopLabelFor(model => model.SpecialPrice):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.SpecialPrice) [@Model.PrimaryStoreCurrencyCode]
+            @Html.ValidationMessageFor(model => model.SpecialPrice)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.SpecialPriceStartDateTimeUtc):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.SpecialPriceStartDateTimeUtc)
+            @Html.ValidationMessageFor(model => model.SpecialPriceStartDateTimeUtc)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.SpecialPriceEndDateTimeUtc):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.SpecialPriceEndDateTimeUtc)
+            @Html.ValidationMessageFor(model => model.SpecialPriceEndDateTimeUtc)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
             @Html.NopLabelFor(model => model.DisableBuyButton):
         </td>
         <td class="adminData">

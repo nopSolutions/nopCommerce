@@ -348,14 +348,34 @@ namespace Nop.Services.Catalog
                 var nowUtc = DateTime.UtcNow;
                 query = from p in query
                         from pv in p.ProductVariants.DefaultIfEmpty()
-                        where (showHidden || !pv.Deleted) &&
-                              (showHidden || pv.Published) &&
-                              (!priceMin.HasValue || pv.Price >= priceMin.Value) &&
-                              (!priceMax.HasValue || pv.Price <= priceMax.Value) &&
-                              (showHidden ||
-                               (!pv.AvailableStartDateTimeUtc.HasValue || pv.AvailableStartDateTimeUtc.Value < nowUtc)) &&
-                              (showHidden ||
-                               (!pv.AvailableEndDateTimeUtc.HasValue || pv.AvailableEndDateTimeUtc.Value > nowUtc))
+                        where
+                            //deleted
+                            (showHidden || !pv.Deleted) &&
+                            //published
+                            (showHidden || pv.Published) &&
+                            //price min
+                            (
+                                !priceMin.HasValue 
+                                ||
+                                //special price (specified price and valid date range)
+                                ((pv.SpecialPrice.HasValue && ((!pv.SpecialPriceStartDateTimeUtc.HasValue || pv.SpecialPriceStartDateTimeUtc.Value < nowUtc) && (!pv.SpecialPriceEndDateTimeUtc.HasValue || pv.SpecialPriceEndDateTimeUtc.Value > nowUtc))) && (pv.SpecialPrice >= priceMin.Value))
+                                ||
+                                //regular price (price isn't specified or date range isn't valid)
+                                ((!pv.SpecialPrice.HasValue || ((pv.SpecialPriceStartDateTimeUtc.HasValue && pv.SpecialPriceStartDateTimeUtc.Value > nowUtc) || (pv.SpecialPriceEndDateTimeUtc.HasValue && pv.SpecialPriceEndDateTimeUtc.Value < nowUtc))) && (pv.Price >= priceMin.Value))
+                            ) &&
+                            //price max
+                            (
+                                !priceMax.HasValue 
+                                ||
+                                //special price (specified price and valid date range)
+                                ((pv.SpecialPrice.HasValue && ((!pv.SpecialPriceStartDateTimeUtc.HasValue || pv.SpecialPriceStartDateTimeUtc.Value < nowUtc) && (!pv.SpecialPriceEndDateTimeUtc.HasValue || pv.SpecialPriceEndDateTimeUtc.Value > nowUtc))) && (pv.SpecialPrice <= priceMax.Value))
+                                ||
+                                //regular price (price isn't specified or date range isn't valid)
+                                ((!pv.SpecialPrice.HasValue || ((pv.SpecialPriceStartDateTimeUtc.HasValue && pv.SpecialPriceStartDateTimeUtc.Value > nowUtc) || (pv.SpecialPriceEndDateTimeUtc.HasValue && pv.SpecialPriceEndDateTimeUtc.Value < nowUtc))) && (pv.Price <= priceMax.Value))
+                            ) &&
+                            //available dates
+                            (showHidden || (!pv.AvailableStartDateTimeUtc.HasValue || pv.AvailableStartDateTimeUtc.Value < nowUtc)) &&
+                            (showHidden || (!pv.AvailableEndDateTimeUtc.HasValue || pv.AvailableEndDateTimeUtc.Value > nowUtc))
                         select p;
 
 
@@ -411,33 +431,21 @@ namespace Nop.Services.Catalog
                 //it'll not work in SQL Server Compact when searching products by a keyword)
                 query = from p in query
                         group p by p.Id
-                            into pGroup
-                            orderby pGroup.Key
-                            select pGroup.FirstOrDefault();
+                        into pGroup
+                        orderby pGroup.Key
+                        select pGroup.FirstOrDefault();
 
                 //sort products
                 if (orderBy == ProductSortingEnum.Position && categoryId > 0)
                 {
                     //category position
-                    //query = query.OrderBy(p => p.ProductCategories.FirstOrDefault().DisplayOrder);
-
-                    //category position
-                    query =
-                        query.OrderBy(
-                            p =>
-                            p.ProductCategories.Where(pc => pc.CategoryId == categoryId).FirstOrDefault().DisplayOrder);
+                    query = query.OrderBy(p => p.ProductCategories.Where(pc => pc.CategoryId == categoryId).FirstOrDefault().DisplayOrder);
                 }
                 else if (orderBy == ProductSortingEnum.Position && manufacturerId > 0)
                 {
                     //manufacturer position
-                    //query = query.OrderBy(p => p.ProductManufacturers.FirstOrDefault().DisplayOrder);
-
-                    //manufacturer position
                     query =
-                        query.OrderBy(
-                            p =>
-                            p.ProductManufacturers.Where(pm => pm.ManufacturerId == manufacturerId).FirstOrDefault().
-                                DisplayOrder);
+                        query.OrderBy(p => p.ProductManufacturers.Where(pm => pm.ManufacturerId == manufacturerId).FirstOrDefault().DisplayOrder);
                 }
                 //else if (orderBy == ProductSortingEnum.Position && relatedToProductId > 0)
                 //{

@@ -141,12 +141,40 @@ BEGIN
 				@ShowHidden = 1 OR pv.Deleted = 0
 			)
 		AND (
-				@PriceMin IS NULL OR @PriceMin=0
-				OR pv.Price >= @PriceMin	
+				--min price
+				(@PriceMin IS NULL OR @PriceMin=0)
+				OR 
+				(
+					--special price (specified price and valid date range)
+					(pv.SpecialPrice IS NOT NULL AND (getutcdate() BETWEEN isnull(pv.SpecialPriceStartDateTimeUtc, '1/1/1900') AND isnull(pv.SpecialPriceEndDateTimeUtc, '1/1/2999')))
+					AND
+					(pv.SpecialPrice >= @PriceMin)
+				)
+				OR 
+				(
+					--regular price (price isn't specified or date range isn't valid)
+					(pv.SpecialPrice IS NULL OR (getutcdate() NOT BETWEEN isnull(pv.SpecialPriceStartDateTimeUtc, '1/1/1900') AND isnull(pv.SpecialPriceEndDateTimeUtc, '1/1/2999')))
+					AND
+					(pv.Price >= @PriceMin)
+				)
 			)
 		AND (
-				@PriceMax IS NULL OR @PriceMax=2147483644 -- max value
-				OR pv.Price <= @PriceMax
+				--max price
+				(@PriceMax IS NULL OR @PriceMax=2147483644) -- max value
+				OR 
+				(
+					--special price (specified price and valid date range)
+					(pv.SpecialPrice IS NOT NULL AND (getutcdate() BETWEEN isnull(pv.SpecialPriceStartDateTimeUtc, '1/1/1900') AND isnull(pv.SpecialPriceEndDateTimeUtc, '1/1/2999')))
+					AND
+					(pv.SpecialPrice <= @PriceMax)
+				)
+				OR 
+				(
+					--regular price (price isn't specified or date range isn't valid)
+					(pv.SpecialPrice IS NULL OR (getutcdate() NOT BETWEEN isnull(pv.SpecialPriceStartDateTimeUtc, '1/1/1900') AND isnull(pv.SpecialPriceEndDateTimeUtc, '1/1/2999')))
+					AND
+					(pv.Price <= @PriceMax)
+				)
 			)
 		AND	(
 				@SearchKeywords = 0 or 

@@ -133,6 +133,7 @@ namespace Nop.Core.Domain.Discounts
             get { return _discountUsageHistory ?? (_discountUsageHistory = new List<DiscountUsageHistory>()); }
             protected set { _discountUsageHistory = value; }
         }
+
         #region Methods
 
         /// <summary>

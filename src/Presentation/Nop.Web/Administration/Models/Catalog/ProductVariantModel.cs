@@ -171,6 +171,18 @@ namespace Nop.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.ProductCost")]
         public decimal ProductCost { get; set; }
 
+        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.SpecialPrice")]
+        [UIHint("DecimalNullable")]
+        public decimal? SpecialPrice { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.SpecialPriceStartDateTimeUtc")]
+        [UIHint("DateNullable")]
+        public DateTime? SpecialPriceStartDateTimeUtc { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.SpecialPriceEndDateTimeUtc")]
+        [UIHint("DateNullable")]
+        public DateTime? SpecialPriceEndDateTimeUtc { get; set; }
+
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.CustomerEntersPrice")]
         public bool CustomerEntersPrice { get; set; }
 

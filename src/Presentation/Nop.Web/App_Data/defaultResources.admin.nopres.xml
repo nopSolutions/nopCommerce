@@ -2023,6 +2023,30 @@
 													</LocaleResource>
 												</Children>
 											</LocaleResource>
+											<LocaleResource Name="SpecialPrice">
+												<Value>Special price</Value>
+												<Children>
+													<LocaleResource Name="Hint">
+														<Value>Set a special price for the product variant. New price will be valid between start and end dates. Leave empty to ignore field.</Value>
+													</LocaleResource>
+												</Children>
+											</LocaleResource>
+											<LocaleResource Name="SpecialPriceStartDateTimeUtc">
+												<Value>Special price start date</Value>
+												<Children>
+													<LocaleResource Name="Hint">
+														<Value>The start date of the special price in Coordinated Universal Time (UTC).</Value>
+													</LocaleResource>
+												</Children>
+											</LocaleResource>
+											<LocaleResource Name="SpecialPriceEndDateTimeUtc">
+												<Value>Special price end date</Value>
+												<Children>
+													<LocaleResource Name="Hint">
+														<Value>The end date of the special price in Coordinated Universal Time (UTC).</Value>
+													</LocaleResource>
+												</Children>
+											</LocaleResource>
 											<LocaleResource Name="StockQuantity">
 												<Value>Stock quantity</Value>
 												<Children>

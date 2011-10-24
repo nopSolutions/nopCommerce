@@ -11,6 +11,13 @@ namespace Nop.Services.Catalog
     public partial interface IPriceCalculationService
     {
         /// <summary>
+        /// Get product variant special price (is valid)
+        /// </summary>
+        /// <param name="productVariant">Product variant</param>
+        /// <returns>Product variant special price</returns>
+        decimal? GetSpecialPrice(ProductVariant productVariant);
+
+        /// <summary>
         /// Gets the final price
         /// </summary>
         /// <param name="productVariant">Product variant</param>
