@@ -1,13 +1,12 @@
 using System;
-using System.Collections.Generic;
-using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Localization;
 
 namespace Nop.Core.Domain.Directory
 {
     /// <summary>
     /// Represents a currency
     /// </summary>
-    public partial class Currency : BaseEntity
+    public partial class Currency : BaseEntity, ILocalizedEntity
     {
         /// <summary>
         /// Gets or sets the name

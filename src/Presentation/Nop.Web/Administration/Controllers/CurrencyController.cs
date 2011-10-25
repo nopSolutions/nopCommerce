@@ -26,6 +26,8 @@ namespace Nop.Admin.Controllers
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
         private readonly IPermissionService _permissionService;
+        private readonly ILocalizedEntityService _localizedEntityService;
+        private readonly ILanguageService _languageService;
 
         #endregion
 
@@ -34,7 +36,8 @@ namespace Nop.Admin.Controllers
         public CurrencyController(ICurrencyService currencyService, 
             CurrencySettings currencySettings, ISettingService settingService,
             IDateTimeHelper dateTimeHelper, ILocalizationService localizationService,
-            IPermissionService permissionService)
+            IPermissionService permissionService,
+            ILocalizedEntityService localizedEntityService, ILanguageService languageService)
         {
             this._currencyService = currencyService;
             this._currencySettings = currencySettings;
@@ -42,8 +45,27 @@ namespace Nop.Admin.Controllers
             this._dateTimeHelper = dateTimeHelper;
             this._localizationService = localizationService;
             this._permissionService = permissionService;
+            this._localizedEntityService = localizedEntityService;
+            this._languageService = languageService;
         }
         
+        #endregion
+
+        #region Utilities
+
+        [NonAction]
+        public void UpdateLocales(Currency currency, CurrencyModel model)
+        {
+            foreach (var localized in model.Locales)
+            {
+                _localizedEntityService.SaveLocalizedValue(currency,
+                                                               x => x.Name,
+                                                               localized.Name,
+                                                               localized.LanguageId);
+            }
+        }
+
+
         #endregion
 
         #region Methods
@@ -172,6 +194,8 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var model = new CurrencyModel();
+            //locales
+            AddLocales(_languageService, model.Locales);
             //default values
             model.Published = true;
             model.Rate = 1;
@@ -190,6 +214,8 @@ namespace Nop.Admin.Controllers
                 currency.CreatedOnUtc = DateTime.UtcNow;
                 currency.UpdatedOnUtc = DateTime.UtcNow;
                 _currencyService.InsertCurrency(currency);
+                //locales
+                UpdateLocales(currency, model);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Currencies.Added"));
                 return continueEditing ? RedirectToAction("Edit", new { id = currency.Id }) : RedirectToAction("List");
@@ -209,6 +235,11 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentException("No currency found with the specified id", "id");
             var model = currency.ToModel();
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(currency.CreatedOnUtc, DateTimeKind.Utc);
+            //locales
+            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            {
+                locale.Name = currency.GetLocalized(x => x.Name, languageId, false, false);
+            });
             return View(model);
         }
 
@@ -227,6 +258,8 @@ namespace Nop.Admin.Controllers
                 currency = model.ToEntity(currency);
                 currency.UpdatedOnUtc = DateTime.UtcNow;
                 _currencyService.UpdateCurrency(currency);
+                //locales
+                UpdateLocales(currency, model);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Currencies.Updated"));
                 return continueEditing ? RedirectToAction("Edit", new { id = currency.Id }) : RedirectToAction("List");

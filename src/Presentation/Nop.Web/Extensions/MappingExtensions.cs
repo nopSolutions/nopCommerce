@@ -76,7 +76,7 @@ namespace Nop.Web.Extensions
             var model = new CurrencyModel()
             {
                 Id = entity.Id,
-                Name = entity.Name,
+                Name = entity.GetLocalized(x => x.Name),
             };
             return model;
         }

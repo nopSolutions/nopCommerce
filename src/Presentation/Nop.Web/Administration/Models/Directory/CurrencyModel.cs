@@ -1,15 +1,21 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Web.Mvc;
 using FluentValidation.Attributes;
 using Nop.Admin.Validators.Directory;
 using Nop.Web.Framework;
+using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.Directory
 {
     [Validator(typeof(CurrencyValidator))]
-    public class CurrencyModel : BaseNopEntityModel
+    public class CurrencyModel : BaseNopEntityModel, ILocalizedModel<CurrencyLocalizedModel>
     {
+        public CurrencyModel()
+        {
+            Locales = new List<CurrencyLocalizedModel>();
+        }
         [NopResourceDisplayName("Admin.Configuration.Currencies.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }
@@ -43,5 +49,16 @@ namespace Nop.Admin.Models.Directory
 
         [NopResourceDisplayName("Admin.Configuration.Currencies.Fields.IsPrimaryStoreCurrency")]
         public bool IsPrimaryStoreCurrency { get; set; }
+
+        public IList<CurrencyLocalizedModel> Locales { get; set; }
+    }
+
+    public class CurrencyLocalizedModel : ILocalizedModelLocal
+    {
+        public int LanguageId { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Currencies.Fields.Name")]
+        [AllowHtml]
+        public string Name { get; set; }
     }
 }
