@@ -1,7 +1,6 @@
 ﻿using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Infrastructure;
-using Nop.Core.Tasks;
 
 namespace Nop.Data
 {

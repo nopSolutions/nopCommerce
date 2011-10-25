@@ -16,7 +16,6 @@ namespace Nop.Core.Configuration
         //private int _cookieExpires = 128;
         private bool _dynamicDiscovery;
         private string _engineType;
-        private XmlNode _scheduleTasks;
         private string _themeBasePath;
 
         #endregion
@@ -64,8 +63,6 @@ namespace Nop.Core.Configuration
                 if (attribute != null)
                     config.ThemeBasePath = attribute.Value;
             }
-
-            config.ScheduleTasks = section.SelectSingleNode("ScheduleTasks");
 
             return config;
         }
@@ -134,21 +131,6 @@ namespace Nop.Core.Configuration
             }
         }
         
-        /// <summary>
-        /// Gets or sets a schedule tasks section
-        /// </summary>
-        public XmlNode ScheduleTasks
-        {
-            get
-            {
-                return _scheduleTasks;
-            }
-            set
-            {
-                _scheduleTasks = value;
-            }
-        }
-
         /// <summary>
         /// Specifices where the themes will be stored (~/Themes/)
         /// </summary>

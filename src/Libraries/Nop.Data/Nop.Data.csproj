@@ -68,6 +68,7 @@
     <Compile Include="Mapping\Catalog\ProductTemplateMap.cs" />
     <Compile Include="Mapping\Cms\WidgetMap.cs" />
     <Compile Include="Mapping\Customers\ExternalAuthenticationRecordMap.cs" />
+    <Compile Include="Mapping\Tasks\ScheduleTaskMap.cs" />
     <Compile Include="SqlServerDataProvider.cs" />
     <Compile Include="SqlCeDataProvider.cs" />
     <Compile Include="IDbContext.cs" />

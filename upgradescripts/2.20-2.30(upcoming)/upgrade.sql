@@ -614,3 +614,58 @@ BEGIN
 	DROP TABLE #PageIndex
 END
 GO
+
+
+--scheduled tasks are stored into database now
+IF NOT EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[dbo].[ScheduleTask]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+BEGIN
+CREATE TABLE [dbo].[ScheduleTask](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [nvarchar](MAX) NOT NULL,
+	[Seconds] [int] NOT NULL,
+	[Type] [nvarchar](MAX) NOT NULL,
+	[Enabled] [bit] NOT NULL,
+	[StopOnError] [bit] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+END
+GO
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[ScheduleTask]
+		WHERE [Name] = N'Send emails')
+BEGIN
+	INSERT [dbo].[ScheduleTask] ([Name], [Seconds], [Type], [Enabled], [StopOnError])
+	VALUES (N'Send emails', 60, N'Nop.Services.Messages.QueuedMessagesSendTask, Nop.Services', 1, 0)
+END
+GO
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[ScheduleTask]
+		WHERE [Name] = N'Delete guests')
+BEGIN
+	INSERT [dbo].[ScheduleTask] ([Name], [Seconds], [Type], [Enabled], [StopOnError])
+	VALUES (N'Delete guests', 600, N'Nop.Services.Customers.DeleteGuestsTask, Nop.Services', 1, 0)
+END
+GO
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[ScheduleTask]
+		WHERE [Name] = N'Clear cache')
+BEGIN
+	INSERT [dbo].[ScheduleTask] ([Name], [Seconds], [Type], [Enabled], [StopOnError])
+	VALUES (N'Clear cache', 600, N'Nop.Services.Caching.ClearCacheTask, Nop.Services', 0, 0)
+END
+GO
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[ScheduleTask]
+		WHERE [Name] = N'Update currency exchange rates')
+BEGIN
+	INSERT [dbo].[ScheduleTask] ([Name], [Seconds], [Type], [Enabled], [StopOnError])
+	VALUES (N'Update currency exchange rates', 900, N'Nop.Services.Directory.UpdateExchangeRateTask, Nop.Services', 1, 0)
+END
+GO

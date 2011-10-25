@@ -84,7 +84,7 @@ namespace Nop.Services.Blogs
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Blog posts</returns>
-        public virtual PagedList<BlogPost> GetAllBlogPosts(int languageId,
+        public virtual IPagedList<BlogPost> GetAllBlogPosts(int languageId,
             DateTime? dateFrom, DateTime? dateTo, int pageIndex, int pageSize)
         {
             var query = _blogPostRepository.Table;

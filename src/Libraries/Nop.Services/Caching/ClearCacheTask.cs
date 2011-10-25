@@ -1,8 +1,5 @@
-﻿using System;
-using System.Diagnostics;
-using System.Xml;
-using Nop.Core.Caching;
-using Nop.Core.Tasks;
+﻿using Nop.Core.Caching;
+using Nop.Services.Tasks;
 
 namespace Nop.Services.Caching
 {
@@ -14,8 +11,7 @@ namespace Nop.Services.Caching
         /// <summary>
         /// Executes a task
         /// </summary>
-        /// <param name="node">Xml node that represents a task description</param>
-        public void Execute(XmlNode node)
+        public void Execute()
         {
             var cacheManager = new MemoryCacheManager();
             cacheManager.Clear();

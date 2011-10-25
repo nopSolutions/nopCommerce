@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading;
-using System.Xml;
+using Nop.Core.Domain.Tasks;
 
-namespace Nop.Core.Tasks 
+namespace Nop.Services.Tasks
 {
     /// <summary>
     /// Represents task thread
@@ -24,15 +24,11 @@ namespace Nop.Core.Tasks
             this._seconds = 10 * 60;
         }
 
-        internal TaskThread(XmlNode node)
+        internal TaskThread(ScheduleTask scheduleTask)
         {
             this._tasks = new Dictionary<string, Task>();
-            this._seconds = 10 * 60;
+            this._seconds = scheduleTask.Seconds;
             this._isRunning = false;
-            if ((node.Attributes["seconds"] != null) && !int.TryParse(node.Attributes["seconds"].Value, out this._seconds))
-            {
-                this._seconds = 10 * 60;
-            }
         }
 
         private void Run()

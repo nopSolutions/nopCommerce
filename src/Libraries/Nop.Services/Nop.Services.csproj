@@ -259,6 +259,12 @@
     <Compile Include="Shipping\IShippingRateComputationMethod.cs" />
     <Compile Include="Shipping\ShippingRateComputationMethodType.cs" />
     <Compile Include="Shipping\ShippingService.cs" />
+    <Compile Include="Tasks\ScheduleTaskService.cs" />
+    <Compile Include="Tasks\IScheduleTaskService.cs" />
+    <Compile Include="Tasks\ITask.cs" />
+    <Compile Include="Tasks\Task.cs" />
+    <Compile Include="Tasks\TaskManager.cs" />
+    <Compile Include="Tasks\TaskThread.cs" />
     <Compile Include="Tax\CalculateTaxRequest.cs" />
     <Compile Include="Tax\CalculateTaxResult.cs" />
     <Compile Include="Tax\ITaxCategoryService.cs" />

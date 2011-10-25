@@ -32,7 +32,7 @@ namespace Nop.Services.Blogs
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Blog posts</returns>
-        PagedList<BlogPost> GetAllBlogPosts(int languageId,
+        IPagedList<BlogPost> GetAllBlogPosts(int languageId,
             DateTime? dateFrom, DateTime? dateTo, int pageIndex, int pageSize);
 
         /// <summary>

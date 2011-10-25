@@ -1,4 +1,4 @@
-﻿namespace Nop.Core.Tasks 
+﻿namespace Nop.Core.Infrastructure
 {
     public interface IStartupTask 
     {

@@ -65,6 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ComponentModel\WriteLockDisposable.cs" />
+    <Compile Include="Domain\Tasks\ScheduleTask.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Data\BaseDataProviderManager.cs" />
     <Compile Include="Data\IDataProvider.cs" />
@@ -177,6 +178,7 @@
     <Compile Include="Domain\StoreInformationSettings.cs" />
     <Compile Include="GenericComparer.cs" />
     <Compile Include="Data\IRepository.cs" />
+    <Compile Include="Infrastructure\IStartupTask.cs" />
     <Compile Include="IPersistentCollection.cs" />
     <Compile Include="IWebHelper.cs" />
     <Compile Include="Domain\Security\DefaultPermissionRecord.cs" />
@@ -293,11 +295,6 @@
     <Compile Include="Domain\Customers\PasswordFormat.cs" />
     <Compile Include="Plugins\IAutoStart.cs" />
     <Compile Include="NopVersion.cs" />
-    <Compile Include="Tasks\IStartupTask.cs" />
-    <Compile Include="Tasks\ITask.cs" />
-    <Compile Include="Tasks\Task.cs" />
-    <Compile Include="Tasks\TaskManager.cs" />
-    <Compile Include="Tasks\TaskThread.cs" />
     <Compile Include="WebHelper.cs" />
     <Compile Include="Domain\Customers\Customer.cs" />
     <Compile Include="Domain\Localization\Language.cs" />

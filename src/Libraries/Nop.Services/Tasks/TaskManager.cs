@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Xml;
+using Nop.Core.Infrastructure;
 
-namespace Nop.Core.Tasks 
+namespace Nop.Services.Tasks
 {
     /// <summary>
     /// Represents task manager
@@ -31,42 +33,19 @@ namespace Nop.Core.Tasks
         /// <summary>
         /// Initializes the task manager with the property values specified in the configuration file.
         /// </summary>
-        /// <param name="configFile">Configuration file</param>
-        /// <param name="nodePath">Node path</param>
-        public void Initialize(string configFile, string nodePath)
-        {
-            var document = new XmlDocument();
-            document.Load(configFile);
-            Initialize(document.SelectSingleNode(nodePath));
-        }
-
-        /// <summary>
-        /// Initializes the task manager with the property values specified in the configuration file.
-        /// </summary>
-        /// <param name="node">Node</param>
-        public void Initialize(XmlNode node)
+        public void Initialize()
         {
             this._taskThreads.Clear();
-            foreach (XmlNode node1 in node.ChildNodes)
+
+            var taskService = EngineContext.Current.Resolve<IScheduleTaskService>();
+            var scheduleTasks = taskService.GetAllTasks().ToList().OrderBy(x => x.Seconds);
+            foreach (var scheduleTask in scheduleTasks)
             {
-                if (node1.Name.ToLower() == "thread")
-                {
-                    var taskThread = new TaskThread(node1);
-                    this._taskThreads.Add(taskThread);
-                    foreach (XmlNode node2 in node1.ChildNodes)
-                    {
-                        if (node2.Name.ToLower() == "task")
-                        {
-                            var attribute = node2.Attributes["type"];
-                            var taskType = Type.GetType(attribute.Value);
-                            if (taskType != null)
-                            {
-                                var task = new Task(taskType, node2);
-                                taskThread.AddTask(task);
-                            }
-                        }
-                    }
-                }
+                //one thread, one task
+                var taskThread = new TaskThread(scheduleTask);
+                this._taskThreads.Add(taskThread);
+                var task = new Task(scheduleTask);
+                taskThread.AddTask(task);
             }
         }
 

@@ -28,14 +28,14 @@ using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Polls;
 using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Shipping;
+using Nop.Core.Domain.Tasks;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Topics;
 using Nop.Core.Infrastructure;
 using Nop.Core.IO;
+using Nop.Services.Customers;
 using Nop.Services.Helpers;
 using Nop.Services.Media;
-using Nop.Services.Customers;
-using Nop.Services.Security;
 
 namespace Nop.Services.Installation
 {
@@ -73,6 +73,7 @@ namespace Nop.Services.Installation
         private readonly IRepository<ProductTemplate> _productTemplateRepository;
         private readonly IRepository<CategoryTemplate> _categoryTemplateRepository;
         private readonly IRepository<ManufacturerTemplate> _manufacturerTemplateRepository;
+        private readonly IRepository<ScheduleTask> _scheduleTaskRepository;
         private readonly ICustomerService _customerService;
 
         #endregion
@@ -109,6 +110,7 @@ namespace Nop.Services.Installation
             IRepository<ProductTemplate> productTemplateRepository,
             IRepository<CategoryTemplate> categoryTemplateRepository,
             IRepository<ManufacturerTemplate> manufacturerTemplateRepository,
+            IRepository<ScheduleTask> scheduleTaskRepository,
             ICustomerService customerService)
         {
             this._measureDimensionRepository = measureDimensionRepository;
@@ -141,6 +143,7 @@ namespace Nop.Services.Installation
             this._productTemplateRepository = productTemplateRepository;
             this._categoryTemplateRepository = categoryTemplateRepository;
             this._manufacturerTemplateRepository = manufacturerTemplateRepository;
+            this._scheduleTaskRepository = scheduleTaskRepository;
             this._customerService = customerService;
         }
 
@@ -9238,6 +9241,47 @@ namespace Nop.Services.Installation
 
         }
 
+        protected virtual void InstallScheduleTasks()
+        {
+            var tasks = new List<ScheduleTask>()
+            {
+                new ScheduleTask()
+                {
+                    Name = "Send emails",
+                    Seconds = 60,
+                    Type = "Nop.Services.Messages.QueuedMessagesSendTask, Nop.Services",
+                    Enabled = true,
+                    StopOnError = false,
+                },
+                new ScheduleTask()
+                {
+                    Name = "Delete guests",
+                    Seconds = 600,
+                    Type = "Nop.Services.Customers.DeleteGuestsTask, Nop.Services",
+                    Enabled = true,
+                    StopOnError = false,
+                },
+                new ScheduleTask()
+                {
+                    Name = "Clear cache",
+                    Seconds = 600,
+                    Type = "Nop.Services.Caching.ClearCacheTask, Nop.Services",
+                    Enabled = false,
+                    StopOnError = false,
+                },
+                new ScheduleTask()
+                {
+                    Name = "Update currency exchange rates",
+                    Seconds = 900,
+                    Type = "Nop.Services.Directory.UpdateExchangeRateTask, Nop.Services",
+                    Enabled = true,
+                    StopOnError = false,
+                },
+            };
+
+            tasks.ForEach(x => _scheduleTaskRepository.Insert(x));
+        }
+
         private void AddProductTag(Product product, string tag)
         {
             var productTag = _productTagRepository.Table.Where(pt => pt.Name == tag).FirstOrDefault();
@@ -9282,6 +9326,7 @@ namespace Nop.Services.Installation
             InstallProductTemplates();
             InstallCategoryTemplates();
             InstallManufacturerTemplates();
+            InstallScheduleTasks();
 
             if (installSampleData)
             {

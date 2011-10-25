@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Xml;
+using Nop.Core.Domain.Tasks;
 
-namespace Nop.Core.Tasks 
+namespace Nop.Services.Tasks
 {
     /// <summary>
     /// Task
@@ -13,7 +13,6 @@ namespace Nop.Core.Tasks
         private readonly Type _taskType;
         private readonly string _name;
         private readonly bool _stopOnError;
-        private readonly XmlNode _configNode;
         private DateTime _lastStarted;
         private DateTime _lastSuccess;
         private DateTime _lastEnd;
@@ -30,28 +29,16 @@ namespace Nop.Core.Tasks
         /// <summary>
         /// Ctor for Task
         /// </summary>
-        /// <param name="taskType">Task type</param>
-        /// <param name="configNode">Config XML node</param>
-        public Task(Type taskType, XmlNode configNode)
+        /// <param name="task">Task </param>
+        public Task(ScheduleTask task)
         {
-            this._enabled = true;
-            this._configNode = configNode;
-            this._taskType = taskType;
-            if ((configNode.Attributes["enabled"] != null) && !bool.TryParse(configNode.Attributes["enabled"].Value, out this._enabled))
-            {
-                this._enabled = true;
-            }
-            if ((configNode.Attributes["stopOnError"] != null) && !bool.TryParse(configNode.Attributes["stopOnError"].Value, out this._stopOnError))
-            {
-                this._stopOnError = true;
-            }
-            if (configNode.Attributes["name"] != null)
-            {
-                this._name = configNode.Attributes["name"].Value;
-            }
+            this._taskType = Type.GetType(task.Type);
+            this._enabled = task.Enabled;
+            this._stopOnError = task.StopOnError;
+            this._name = task.Name;
         }
 
-        private ITask createTask()
+        private ITask CreateTask()
         {
             if (this.Enabled && (this._task == null))
             {
@@ -72,11 +59,11 @@ namespace Nop.Core.Tasks
             this._isRunning = true;
             try
             {
-                var task = this.createTask();
+                var task = this.CreateTask();
                 if (task != null)
                 {
                     this._lastStarted = DateTime.Now;
-                    task.Execute(this._configNode);
+                    task.Execute();
                     this._lastEnd = this._lastSuccess = DateTime.Now;
                 }
             }

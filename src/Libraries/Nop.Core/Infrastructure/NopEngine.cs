@@ -7,7 +7,6 @@ using AutofacContrib.Startable;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure.DependencyManagement;
 using Nop.Core.Plugins;
-using Nop.Core.Tasks;
 
 namespace Nop.Core.Infrastructure
 {
@@ -39,13 +38,6 @@ namespace Nop.Core.Infrastructure
 
         #region Utilities
 
-        private void InitPlugins()
-        {
-            //var bootstrapper = _containerManager.Resolve<IPluginBootstrapper>();
-            //var plugins = bootstrapper.GetPluginDefinitions();
-            //bootstrapper.InitializePlugins(this, plugins);
-        }
-
         private void RunStartupTasks()
         {
             var typeFinder = _containerManager.Resolve<ITypeFinder>();
@@ -58,17 +50,7 @@ namespace Nop.Core.Infrastructure
             foreach (var startUpTask in startUpTasks)
                 startUpTask.Execute();
         }
-
-        private void StartScheduledTasks(NopConfig config)
-        {
-            //initialize task manager
-            if (config.ScheduleTasks != null)
-            {
-                TaskManager.Instance.Initialize(config.ScheduleTasks);
-                TaskManager.Instance.Start();
-            }
-        }
-
+        
         private void InitializeContainer(ContainerConfigurer configurer, EventBroker broker, NopConfig config)
         {
             var builder = new ContainerBuilder();
@@ -90,23 +72,11 @@ namespace Nop.Core.Infrastructure
         /// <param name="databaseIsInstalled">A value indicating whether database is installed</param>
         public void Initialize(NopConfig config, bool databaseIsInstalled)
         {
-            //plugins
-            if (databaseIsInstalled)
-            {
-                InitPlugins();
-            }
-
             //start components
             this.ContainerManager.StartComponents();
 
             //startup tasks
             RunStartupTasks();
-
-            if (databaseIsInstalled)
-            {
-                //scheduled tasks
-                StartScheduledTasks(config);
-            }
         }
 
         public T Resolve<T>() where T : class

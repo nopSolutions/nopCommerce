@@ -13,6 +13,7 @@ using Nop.Core.Data;
 using Nop.Core.Domain;
 using Nop.Core.Infrastructure;
 using Nop.Services.Logging;
+using Nop.Services.Tasks;
 using Nop.Web.Framework;
 using Nop.Web.Framework.EmbeddedViews;
 using Nop.Web.Framework.Mvc;
@@ -53,6 +54,13 @@ namespace Nop.Web
             //initialize engine context
             EngineContext.Initialize(false, DataSettingsHelper.DatabaseIsInstalled());
 
+            //start schedules tasks
+            if (DataSettingsHelper.DatabaseIsInstalled())
+            {
+                TaskManager.Instance.Initialize();
+                TaskManager.Instance.Start();
+            }
+
             //set dependency resolver
             var dependencyResolver = new NopDependencyResolver();
             DependencyResolver.SetResolver(dependencyResolver);
@@ -68,7 +76,7 @@ namespace Nop.Web
                 ViewEngines.Engines.Add(new ThemableRazorViewEngine());
             }
 
-            //Add some functionality on top of the deafult ModelMetadataProvider
+            //Add some functionality on top of the default ModelMetadataProvider
             ModelMetadataProviders.Current = new NopMetadataProvider();
 
             //Registering some regular mvc stuf

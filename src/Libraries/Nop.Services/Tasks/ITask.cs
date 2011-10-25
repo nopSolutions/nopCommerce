@@ -1,6 +1,5 @@
-﻿using System.Xml;
-
-namespace Nop.Core.Tasks 
+﻿
+namespace Nop.Services.Tasks
 {
     /// <summary>
     /// Interface that should be implemented by each task
@@ -10,7 +9,6 @@ namespace Nop.Core.Tasks
         /// <summary>
         /// Execute task
         /// </summary>
-        /// <param name="node">Custom configuration node</param>
-        void Execute(XmlNode node);
+        void Execute();
     }
 }

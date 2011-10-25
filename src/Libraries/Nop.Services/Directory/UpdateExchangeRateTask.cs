@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Xml;
 using Nop.Core.Configuration;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Infrastructure;
-using Nop.Core.Tasks;
 using Nop.Services.Configuration;
+using Nop.Services.Tasks;
 
 namespace Nop.Services.Directory
 {
@@ -16,8 +15,7 @@ namespace Nop.Services.Directory
         /// <summary>
         /// Executes a task
         /// </summary>
-        /// <param name="node">Xml node that represents a task description</param>
-        public void Execute(XmlNode node)
+        public void Execute()
         {
             var currencySettings = EngineContext.Current.Resolve<IConfigurationProvider<CurrencySettings>>().Settings;
             if (!currencySettings.AutoUpdateEnabled)
