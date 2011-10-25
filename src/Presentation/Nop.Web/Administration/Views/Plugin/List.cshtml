@@ -52,6 +52,11 @@
                              .Width(50)
                              .Template(x => x.Installed.ToString().ToLower())
                              .Centered();
+                        columns.Bound(x => x.ConfigurationUrl)
+                             .Width(50)
+                             //allow configuring when a plugin is installed and has a configuration URL specified
+                             .Template(x => (x.Installed && !String.IsNullOrEmpty(x.ConfigurationUrl)) ? string.Format("<a href=\"{0}\">{1}</a>", x.ConfigurationUrl, T("Admin.Configuration.Plugins.Fields.Configure").Text) : "")
+                             .Centered();
                         columns.Bound(x => x.SystemName)
                             .Template(x =>
                                 Html.ActionLink(x.Installed ? T("Admin.Configuration.Plugins.Fields.Uninstall").Text : T("Admin.Configuration.Plugins.Fields.Install").Text,

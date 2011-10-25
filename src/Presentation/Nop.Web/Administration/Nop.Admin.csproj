@@ -148,6 +148,7 @@
     <Compile Include="Models\ExternalAuthentication\AuthenticationMethodModel.cs" />
     <Compile Include="Models\Logging\LogListModel.cs" />
     <Compile Include="Models\Messages\NewsLetterSubscriptionListModel.cs" />
+    <Compile Include="Models\Plugins\MiscPluginModel.cs" />
     <Compile Include="Models\Plugins\PluginModel.cs" />
     <Compile Include="Models\Polls\PollAnswerModel.cs" />
     <Compile Include="Models\Polls\PollModel.cs" />
@@ -976,6 +977,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Shared\EditorTemplates\DecimalNullable.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Plugin\ConfigureMiscPlugin.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

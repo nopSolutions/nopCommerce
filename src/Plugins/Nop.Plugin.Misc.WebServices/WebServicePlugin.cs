@@ -1,10 +1,12 @@
-﻿using Nop.Core.Plugins;
+﻿using System.Web.Routing;
+using Nop.Core.Plugins;
 using Nop.Plugin.Misc.WebServices.Security;
+using Nop.Services.Common;
 using Nop.Services.Security;
 
 namespace Nop.Plugin.Misc.WebServices
 {
-    public class WebServicePlugin : BasePlugin
+    public class WebServicePlugin : BasePlugin, IMiscPlugin
     {
         #region Ctor
 
@@ -37,6 +39,20 @@ namespace Nop.Plugin.Misc.WebServices
             _permissionService.UninstallPermissions(new WebServicePermissionProvider());
 
             base.Uninstall();
+        }
+
+        /// <summary>
+        /// Gets a route for provider configuration
+        /// </summary>
+        /// <param name="actionName">Action name</param>
+        /// <param name="controllerName">Controller name</param>
+        /// <param name="routeValues">Route values</param>
+        public void GetConfigurationRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues)
+        {
+            //configuration is not required
+            actionName = null;
+            controllerName = null;
+            routeValues = null;
         }
 
         #endregion

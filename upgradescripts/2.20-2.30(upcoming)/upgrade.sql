@@ -158,6 +158,15 @@ set @resources='
     <LocaleResource Name="Admin.Catalog.Products.Variants.Fields.SpecialPriceEndDateTimeUtc.Hint">
         <Value>The end date of the special price in Coordinated Universal Time (UTC).</Value>
     </LocaleResource>
+    <LocaleResource Name="Admin.Configuration.Plugins.Fields.Configure">
+        <Value>Configure</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Configuration.Plugins.Misc.Configure">
+        <Value>Configure</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Configuration.Plugins.Misc.BackToList">
+        <Value>back to plugin list</Value>
+    </LocaleResource>
 </Language>
 '
 

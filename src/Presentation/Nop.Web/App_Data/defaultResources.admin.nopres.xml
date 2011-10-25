@@ -3137,6 +3137,9 @@
 									<LocaleResource Name="DisplayOrder">
 										<Value>Display order</Value>
 									</LocaleResource>
+									<LocaleResource Name="Configure">
+										<Value>Configure</Value>
+									</LocaleResource>
 									<LocaleResource Name="Install">
 										<Value>Install</Value>
 									</LocaleResource>
@@ -3150,6 +3153,16 @@
 							</LocaleResource>
 							<LocaleResource Name="Installed">
 								<Value>The plugin has been installed.</Value>
+							</LocaleResource>
+							<LocaleResource Name="Misc">
+								<Children>
+									<LocaleResource Name="Configure">
+										<Value>Configure</Value>
+									</LocaleResource>
+									<LocaleResource Name="BackToList">
+										<Value>back to plugin list</Value>
+									</LocaleResource>
+								</Children>
 							</LocaleResource>
 							<LocaleResource Name="ReloadList">
 								<Value>Reload list of plugins</Value>

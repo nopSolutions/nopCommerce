@@ -1,11 +1,19 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
+using System.Web.Routing;
 using Nop.Admin.Models.Plugins;
 using Nop.Core;
 using Nop.Core.Plugins;
+using Nop.Services.Authentication.External;
+using Nop.Services.Common;
 using Nop.Services.Localization;
+using Nop.Services.Messages;
+using Nop.Services.Payments;
+using Nop.Services.PromotionFeed;
 using Nop.Services.Security;
+using Nop.Services.Shipping;
+using Nop.Services.Tax;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
 
@@ -37,6 +45,55 @@ namespace Nop.Admin.Controllers
 
 		#endregion 
 
+        #region Utilities
+        [NonAction]
+        private PluginModel PreparePluginModel(PluginDescriptor pluginDescriptor)
+        {
+            var pluginModel = pluginDescriptor.ToModel();
+            //set configuration URL
+            //plugins do not provide a genral URL for configuration
+            //because some of them have some custom URLs for configuration
+            //for example, discount requirement plugins require additional parameters and attached to a certain discount
+            var pluginInstance = pluginDescriptor.Instance();
+            if (pluginInstance is IPaymentMethod)
+            {
+                //payment plugin
+                pluginModel.ConfigurationUrl = Url.Action("ConfigureMethod", "Payment", new {systemName = pluginDescriptor.SystemName}, "http");
+            }
+            else if (pluginInstance is IShippingRateComputationMethod)
+            {
+                //shipping rate computation method
+                pluginModel.ConfigurationUrl = Url.Action("ConfigureProvider", "Shipping", new { systemName = pluginDescriptor.SystemName }, "http");
+            }
+            else if (pluginInstance is ITaxProvider)
+            {
+                //tax provider
+                pluginModel.ConfigurationUrl = Url.Action("ConfigureProvider", "Tax", new { systemName = pluginDescriptor.SystemName }, "http");
+            }
+            else if (pluginInstance is IExternalAuthenticationMethod)
+            {
+                //external auth method
+                pluginModel.ConfigurationUrl = Url.Action("ConfigureMethod", "ExternalAuthentication", new { systemName = pluginDescriptor.SystemName }, "http");
+            }
+            else if (pluginInstance is ISmsProvider)
+            {
+                //SMS provider
+                pluginModel.ConfigurationUrl = Url.Action("ConfigureProvider", "Sms", new { systemName = pluginDescriptor.SystemName }, "http");
+            }
+            else if (pluginInstance is IPromotionFeed)
+            {
+                //promotion feed
+                pluginModel.ConfigurationUrl = Url.Action("ConfigureMethod", "PromotionFeed", new { systemName = pluginDescriptor.SystemName }, "http");
+            }
+            else if (pluginInstance is IMiscPlugin)
+            {
+                //Misc plugins
+                pluginModel.ConfigurationUrl = Url.Action("ConfigureMiscPlugin", "Plugin", new { systemName = pluginDescriptor.SystemName }, "http");
+            }
+            return pluginModel;
+        }
+        #endregion
+
         #region Methods
 
         public ActionResult Index()
@@ -53,7 +110,7 @@ namespace Nop.Admin.Controllers
             var pluginDescriptors = _pluginFinder.GetPluginDescriptors(false);
             var model = new GridModel<PluginModel>
             {
-                Data = pluginDescriptors.Select(x => x.ToModel())
+                Data = pluginDescriptors.Select(x => PreparePluginModel(x))
                 .OrderBy(x => x.Group)
                 .ThenBy(x => x.DisplayOrder).ToList(),
                 Total = pluginDescriptors.Count()
@@ -133,6 +190,29 @@ namespace Nop.Admin.Controllers
             //restart application
             _webHelper.RestartAppDomain("~/Admin/Plugin/List");
             return RedirectToAction("List");
+        }
+        
+        public ActionResult ConfigureMiscPlugin(string systemName)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
+                return AccessDeniedView();
+
+
+            var descriptor = _pluginFinder.GetPluginDescriptorBySystemName<IMiscPlugin>(systemName);
+            if (descriptor == null || !descriptor.Installed)
+                return Redirect("List");
+
+            var plugin  = descriptor.Instance<IMiscPlugin>();
+
+            string actionName, controllerName;
+            RouteValueDictionary routeValues;
+            plugin.GetConfigurationRoute(out actionName, out controllerName, out routeValues);
+            var model = new MiscPluginModel();
+            model.FriendlyName = descriptor.FriendlyName;
+            model.ConfigurationActionName = actionName;
+            model.ConfigurationControllerName = controllerName;
+            model.ConfigurationRouteValues = routeValues;
+            return View(model);
         }
         #endregion
     }

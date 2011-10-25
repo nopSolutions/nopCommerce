@@ -29,6 +29,9 @@ namespace Nop.Admin.Models.Plugins
         [NopResourceDisplayName("Admin.Configuration.Plugins.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Plugins.Fields.Configure")]
+        public string ConfigurationUrl { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Plugins.Fields.Installed")]
         public bool Installed { get; set; }
     }

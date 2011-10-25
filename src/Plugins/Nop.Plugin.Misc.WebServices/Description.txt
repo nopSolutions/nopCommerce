@@ -1,8 +1,8 @@
 ﻿Group: Misc
 FriendlyName: Web Services
 SystemName: Misc.WebServices
-Version: 1.00
-SupportedVersions: 2.20, 2.30
+Version: 1.10
+SupportedVersions: 2.30
 Author: Nicolas Muniere, nopCommerce team
 DisplayOrder: 1
 FileName: Nop.Plugin.Misc.WebServices.dll

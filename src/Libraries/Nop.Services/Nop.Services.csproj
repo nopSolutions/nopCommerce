@@ -109,6 +109,7 @@
     <Compile Include="Cms\IWidgetPlugin.cs" />
     <Compile Include="Common\AddressService.cs" />
     <Compile Include="Common\AddressExtentions.cs" />
+    <Compile Include="Common\IMiscPlugin.cs" />
     <Compile Include="Common\IPdfService.cs" />
     <Compile Include="Common\PdfService.cs" />
     <Compile Include="Common\IAddressService.cs" />
