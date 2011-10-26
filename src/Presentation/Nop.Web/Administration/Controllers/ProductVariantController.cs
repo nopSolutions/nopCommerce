@@ -45,6 +45,8 @@ namespace Nop.Admin.Controllers
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IPermissionService _permissionService;
+        private readonly ICategoryService _categoryService;
+        private readonly IManufacturerService _manufacturerService;
 
         private readonly ICurrencyService _currencyService;
         private readonly CurrencySettings _currencySettings;
@@ -62,7 +64,8 @@ namespace Nop.Admin.Controllers
             ITaxCategoryService taxCategoryService, IWorkContext workContext,
             IProductAttributeFormatter productAttributeFormatter, IShoppingCartService shoppingCartService,
             IProductAttributeParser productAttributeParser, ICustomerActivityService customerActivityService,
-            IPermissionService permissionService,
+            IPermissionService permissionService, 
+            ICategoryService categoryService, IManufacturerService manufacturerService,
             ICurrencyService currencyService, CurrencySettings currencySettings,
             IMeasureService measureService, MeasureSettings measureSettings,
             AdminAreaSettings adminAreaSettings)
@@ -82,7 +85,8 @@ namespace Nop.Admin.Controllers
             this._productAttributeParser = productAttributeParser;
             this._customerActivityService = customerActivityService;
             this._permissionService = permissionService;
-
+            this._categoryService = categoryService;
+            this._manufacturerService = manufacturerService;
             this._currencyService = currencyService;
             this._currencySettings = currencySettings;
             this._measureService = measureService;
@@ -471,16 +475,28 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
 
-            return View();
+            var model = new BulkEditListModel();
+            //categories
+            model.AvailableCategories.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var c in _categoryService.GetAllCategories(true))
+                model.AvailableCategories.Add(new SelectListItem() { Text = c.GetCategoryNameWithPrefix(_categoryService), Value = c.Id.ToString() });
+
+            //manufacturers
+            model.AvailableManufacturers.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+            foreach (var m in _manufacturerService.GetAllManufacturers(true))
+                model.AvailableManufacturers.Add(new SelectListItem() { Text = m.Name, Value = m.Id.ToString() });
+
+            return View(model);
         }
         [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult BulkEditSelect(GridCommand command)
+        public ActionResult BulkEditSelect(GridCommand command, BulkEditListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
 
             var gridModel = new GridModel();
-            var productVariants = _productService.SearchProductVariants(0, 0, null, false,
+            var productVariants = _productService.SearchProductVariants(model.SearchCategoryId,
+                model.SearchManufacturerId, model.SearchProductName, false,
                 command.Page - 1, command.PageSize, true);
             gridModel.Data = productVariants.Select(x =>
             {
@@ -506,7 +522,8 @@ namespace Nop.Admin.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult BulkEditSave(GridCommand command, 
             [Bind(Prefix = "updated")]IEnumerable<BulkEditProductVariantModel> updatedProductVariants,
-            [Bind(Prefix = "deleted")]IEnumerable<BulkEditProductVariantModel> deletedProductVariants)
+            [Bind(Prefix = "deleted")]IEnumerable<BulkEditProductVariantModel> deletedProductVariants,
+            BulkEditListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
@@ -537,7 +554,7 @@ namespace Nop.Admin.Controllers
                         _productService.DeleteProductVariant(pv);
                 }
             }
-            return BulkEditSelect(command);
+            return BulkEditSelect(command, model);
         }
         #endregion
 

@@ -134,6 +134,7 @@
     <Compile Include="Infrastructure\AutoMapperStartupTask.cs" />
     <Compile Include="Models\Catalog\AddProductVariantAttributeCombinationModel.cs" />
     <Compile Include="Models\Catalog\BulkEditProductVariantModel.cs" />
+    <Compile Include="Models\Catalog\BulkEditListModel.cs" />
     <Compile Include="Models\Catalog\ManufacturerModel.cs" />
     <Compile Include="Models\Catalog\CopyProductModel.cs" />
     <Compile Include="Models\Cms\WidgetPluginModel.cs" />

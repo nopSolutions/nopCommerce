@@ -167,6 +167,24 @@ set @resources='
     <LocaleResource Name="Admin.Configuration.Plugins.Misc.BackToList">
         <Value>back to plugin list</Value>
     </LocaleResource>
+    <LocaleResource Name="Admin.Catalog.BulkEdit.List.SearchProductName">
+        <Value>Product name</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Catalog.BulkEdit.List.SearchProductName.Hint">
+        <Value>A product name.</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Catalog.BulkEdit.List.SearchCategory">
+        <Value>Category</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Catalog.BulkEdit.List.SearchProductName.Hint">
+        <Value>Search by a specific category.</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Catalog.BulkEdit.List.SearchManufacturer">
+        <Value>Manufacturer</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Catalog.BulkEdit.List.SearchProductName.Hint">
+        <Value>Search by a specific manufacturer.</Value>
+    </LocaleResource>
 </Language>
 '
 

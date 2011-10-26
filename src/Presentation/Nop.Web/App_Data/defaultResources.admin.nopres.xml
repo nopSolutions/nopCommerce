@@ -581,6 +581,34 @@
 									</LocaleResource>
 								</Children>
 							</LocaleResource>
+							<LocaleResource Name="List">
+								<Children>
+									<LocaleResource Name="SearchProductName">
+										<Value>Product name</Value>
+										<Children>
+											<LocaleResource Name="Hint">
+												<Value>A product name.</Value>
+											</LocaleResource>
+										</Children>
+									</LocaleResource>
+									<LocaleResource Name="SearchCategory">
+										<Value>Category</Value>
+										<Children>
+											<LocaleResource Name="Hint">
+												<Value>Search by a specific category.</Value>
+											</LocaleResource>
+										</Children>
+									</LocaleResource>
+									<LocaleResource Name="SearchManufacturer">
+										<Value>Manufacturer</Value>
+										<Children>
+											<LocaleResource Name="Hint">
+												<Value>Search by a specific manufacturer.</Value>
+											</LocaleResource>
+										</Children>
+									</LocaleResource>
+								</Children>
+							</LocaleResource>
 						</Children>
 					</LocaleResource>
 					<LocaleResource Name="Categories">
