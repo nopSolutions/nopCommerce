@@ -33,6 +33,9 @@ namespace Nop.Services.Tasks
 
         private void Run()
         {
+            if (_seconds <=0)
+                return;
+
             this._started = DateTime.Now;
             this._isRunning = true;
             foreach (Task task in this._tasks.Values)
