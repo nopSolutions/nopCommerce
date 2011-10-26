@@ -69,13 +69,21 @@ namespace Nop.Plugin.Payments.GoogleCheckout.Controllers
         {
             var model = new ConfigurationModel();
 
-            System.Configuration.Configuration config = WebConfigurationManager.OpenWebConfiguration("~");
-            string googleEnvironment = config.AppSettings.Settings["GoogleEnvironment"].Value;
-            model.UseSandbox = googleEnvironment == "Sandbox";
-            model.GoogleVendorId = config.AppSettings.Settings["GoogleMerchantID"].Value;
-            model.GoogleMerchantKey = config.AppSettings.Settings["GoogleMerchantKey"].Value;
-            model.AuthenticateCallback = Convert.ToBoolean(config.AppSettings.Settings["GoogleAuthenticateCallback"].Value);
-
+            if (AppDomain.CurrentDomain.IsFullyTrusted)
+            {
+                //full trust
+                System.Configuration.Configuration config = WebConfigurationManager.OpenWebConfiguration("~");
+                string googleEnvironment = config.AppSettings.Settings["GoogleEnvironment"].Value;
+                model.UseSandbox = googleEnvironment == "Sandbox";
+                model.GoogleVendorId = config.AppSettings.Settings["GoogleMerchantID"].Value;
+                model.GoogleMerchantKey = config.AppSettings.Settings["GoogleMerchantKey"].Value;
+                model.AuthenticateCallback = Convert.ToBoolean(config.AppSettings.Settings["GoogleAuthenticateCallback"].Value);
+            }
+            else
+            {
+                //medium trust (can't edit)
+                ModelState.AddModelError("", "Configuring Google Checkout is not allowed in medium trust. Manually update web.config file.");
+            }
             return View("Nop.Plugin.Payments.GoogleCheckout.Views.PaymentGoogleCheckout.Configure", model);
         }
 
