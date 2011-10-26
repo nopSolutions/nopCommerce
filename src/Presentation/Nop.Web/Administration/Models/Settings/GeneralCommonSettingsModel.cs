@@ -95,6 +95,17 @@ namespace Nop.Admin.Models.Settings
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.reCaptchaPrivateKey")]
             [AllowHtml]
             public string ReCaptchaPrivateKey { get; set; }
+
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.UseSSL")]
+            public bool UseSsl { get; set; }
+
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.SharedSSLUrl")]
+            [AllowHtml]
+            public string SharedSslUrl { get; set; }
+
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.NonSharedSSLUrl")]
+            [AllowHtml]
+            public string NonSharedSslUrl { get; set; }
         }
 
         public class PdfSettingsModel

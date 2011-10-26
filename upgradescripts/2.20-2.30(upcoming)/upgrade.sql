@@ -185,6 +185,24 @@ set @resources='
     <LocaleResource Name="Admin.Catalog.BulkEdit.List.SearchProductName.Hint">
         <Value>Search by a specific manufacturer.</Value>
     </LocaleResource>
+    <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.UseSSL">
+        <Value>Use SSL</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.UseSSL.Hint">
+        <Value>Click if your site is secured with SSL. Don''t tick if SSL certificate is not installed.</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SharedSSLUrl">
+        <Value>Shared SSL URL</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SharedSSLUrl.Hint">
+        <Value>Enter your shared SSL URL (used when you have shared SSL certificate installed). For example, https://secure123.yourHosting.com/.</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.NonSharedSSLUrl">
+        <Value>Non-secured URL</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.NonSharedSSLUrl.Hint">
+        <Value>Enter your non-secured URL (used when you have shared SSL certificate installed). Actually it is your site URL. For example, http://www.example.com/.</Value>
+    </LocaleResource>
 </Language>
 '
 

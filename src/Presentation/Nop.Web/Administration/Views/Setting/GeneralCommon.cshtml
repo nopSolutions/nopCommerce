@@ -14,6 +14,27 @@
         </div>
     </div>
         
+    
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#@Html.FieldIdFor(model => model.SecuritySettings.UseSsl)").click(toggleSSL);
+
+        toggleSSL();
+    });
+
+    function toggleSSL() {
+        if (getE('@Html.FieldIdFor(model => model.SecuritySettings.UseSsl)').checked) {
+            $('#ssSharedSslUrlpnl').show();
+            $('#ssNonSharedSslUrlpnl').show();
+        }
+        else {
+            $('#ssSharedSslUrlpnl').hide();
+            $('#ssNonSharedSslUrlpnl').hide();
+        }
+    }
+</script>
+    
     @Html.ValidationSummary(false)
 
     
@@ -191,6 +212,42 @@
             <td class="adminData">
                 @Html.EditorFor(model => model.SecuritySettings.ReCaptchaPrivateKey)
                 @Html.ValidationMessageFor(model => model.SecuritySettings.ReCaptchaPrivateKey)
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <hr />
+                <br />
+                <b>SSL settings</b>
+                <br />
+                <i>SSL settings can be also changed in web.config file.</i>
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SecuritySettings.UseSsl):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SecuritySettings.UseSsl)
+                @Html.ValidationMessageFor(model => model.SecuritySettings.UseSsl)
+            </td>
+        </tr>
+        <tr id="ssSharedSslUrlpnl">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SecuritySettings.SharedSslUrl):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SecuritySettings.SharedSslUrl)
+                @Html.ValidationMessageFor(model => model.SecuritySettings.SharedSslUrl)
+            </td>
+        </tr>
+        <tr id="ssNonSharedSslUrlpnl">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SecuritySettings.NonSharedSslUrl):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SecuritySettings.NonSharedSslUrl)
+                @Html.ValidationMessageFor(model => model.SecuritySettings.NonSharedSslUrl)
             </td>
         </tr>
     </table>

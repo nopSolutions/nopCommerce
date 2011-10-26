@@ -4126,6 +4126,30 @@
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
+									<LocaleResource Name="UseSSL">
+										<Value>Use SSL</Value>
+										<Children>
+											<LocaleResource Name="Hint">
+												<Value>Click if your site is secured with SSL.  Don't tick if SSL certificate is not installed.</Value>
+											</LocaleResource>
+										</Children>
+									</LocaleResource>
+									<LocaleResource Name="reCaptchaPrivateKey">
+										<Value>Shared SSL URL</Value>
+										<Children>
+											<LocaleResource Name="Hint">
+												<Value>Enter your shared SSL URL (used when you have shared SSL certificate installed). For example, https://secure123.yourHosting.com/.</Value>
+											</LocaleResource>
+										</Children>
+									</LocaleResource>
+									<LocaleResource Name="NonSharedSSLUrl">
+										<Value>Non-secured URL</Value>
+										<Children>
+											<LocaleResource Name="Hint">
+												<Value>Enter your non-secured URL (used when you have shared SSL certificate installed). Actually it is your site URL. For example, http://www.example.com/.</Value>
+											</LocaleResource>
+										</Children>
+									</LocaleResource>
 								</Children>
 							</LocaleResource>
 							<LocaleResource Name="Media">
