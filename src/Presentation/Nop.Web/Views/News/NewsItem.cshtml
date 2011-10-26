@@ -1,6 +1,9 @@
 ﻿@model Nop.Web.Models.News.NewsItemModel
 @{
     Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+
+    //title
+    Html.AddTitleParts(Model.Title);
 }
 <div class="newsitem">
     <div class="page-title">

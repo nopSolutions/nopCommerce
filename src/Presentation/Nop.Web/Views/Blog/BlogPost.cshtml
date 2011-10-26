@@ -1,6 +1,9 @@
 ﻿@model Nop.Web.Models.Blogs.BlogPostModel
 @{
     Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+
+    //title
+    Html.AddTitleParts(Model.Title);
 }
 @section left {
     @Html.Action("BlogMonths", "Blog")
