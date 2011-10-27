@@ -63,6 +63,7 @@
     <Compile Include="Initializers\CreateTablesIfNotExist.cs" />
     <Compile Include="EfDataProviderManager.cs" />
     <Compile Include="IEfDataProvider.cs" />
+    <Compile Include="Mapping\Catalog\BackInStockSubscriptionMap.cs" />
     <Compile Include="Mapping\Catalog\ManufacturerTemplateMap.cs" />
     <Compile Include="Mapping\Catalog\CategoryTemplateMap.cs" />
     <Compile Include="Mapping\Catalog\ProductTemplateMap.cs" />

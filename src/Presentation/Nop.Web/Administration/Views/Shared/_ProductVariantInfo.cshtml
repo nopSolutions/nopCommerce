@@ -18,8 +18,9 @@
         $("#@Html.FieldIdFor(model => model.IsShipEnabled)").click(toggleShipping);
         $("#@Html.FieldIdFor(model => model.IsTaxExempt)").click(toggleTax);
         $("#@Html.FieldIdFor(model => model.ManageInventoryMethodId)").change(toggleManageStock);
+        $("#@Html.FieldIdFor(model => model.BackorderModeId)").change(toggleManageStock);
         $("#@Html.FieldIdFor(model => model.DisplayStockAvailability)").click(toggleManageStock);
-
+        
         toggleRequireOtherProducts();
         toggleGiftCard();
         toggleCustomerEntersPrice();
@@ -149,16 +150,17 @@
     function toggleManageStock() {
         var selectedManageInventoryMethod = document.getElementById('@Html.FieldIdFor(model => model.ManageInventoryMethodId)');
         var selectedManageInventoryMethodId = selectedManageInventoryMethod.options[selectedManageInventoryMethod.selectedIndex].value;
-        if (selectedManageInventoryMethodId == 0) {
+        if (selectedManageInventoryMethodId == @(((int)ManageInventoryMethod.DontManageStock).ToString())) {
             $('#pnlStockQuantity').hide();
             $('#pnlDisplayStockAvailability').hide();
             $('#pnlDisplayStockQuantity').hide();
             $('#pnlMinStockQuantity').hide();
             $('#pnlLowStockActivity').hide();
             $('#pnlNotifyForQuantityBelow').hide();
+            $('#pnlAllowBackInStockSubscriptions').hide();            
             $('#pnlBackorders').hide();
         }
-        else if (selectedManageInventoryMethodId == 1) {
+        else if (selectedManageInventoryMethodId == @(((int)ManageInventoryMethod.ManageStock).ToString())) {
             $('#pnlStockQuantity').show();
             $('#pnlDisplayStockAvailability').show();
 
@@ -173,6 +175,16 @@
             $('#pnlLowStockActivity').show();
             $('#pnlNotifyForQuantityBelow').show();
             $('#pnlBackorders').show();
+            var selectedBackorderMode = document.getElementById('@Html.FieldIdFor(model => model.BackorderModeId)');
+            var selectedBackorderModeId = selectedBackorderMode.options[selectedBackorderMode.selectedIndex].value;
+            if (selectedBackorderModeId == @(((int)BackorderMode.NoBackorders).ToString())) {
+                //no backorders
+                $('#pnlAllowBackInStockSubscriptions').show();
+            }
+            else {
+                //backorders are enabled
+                $('#pnlAllowBackInStockSubscriptions').hide();
+            }
         }
         else {
             $('#pnlStockQuantity').hide();
@@ -181,6 +193,7 @@
             $('#pnlMinStockQuantity').hide();
             $('#pnlLowStockActivity').hide();
             $('#pnlNotifyForQuantityBelow').hide();
+            $('#pnlAllowBackInStockSubscriptions').hide();
             $('#pnlBackorders').hide();
         }
     }
@@ -774,6 +787,15 @@
         <td class="adminData">
             @Html.DropDownListFor(model => model.BackorderModeId, ((BackorderMode)Model.BackorderModeId).ToSelectList())
             @Html.ValidationMessageFor(model => model.BackorderModeId)
+        </td>
+    </tr>
+    <tr id="pnlAllowBackInStockSubscriptions">
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.AllowBackInStockSubscriptions):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.AllowBackInStockSubscriptions)
+            @Html.ValidationMessageFor(model => model.AllowBackInStockSubscriptions)
         </td>
     </tr>
     <tr>

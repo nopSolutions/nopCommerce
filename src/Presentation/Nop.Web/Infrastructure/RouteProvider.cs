@@ -82,6 +82,13 @@ namespace Nop.Web.Infrastructure
                             new { controller = "Catalog", action = "ProductReviews" },
                             new[] { "Nop.Web.Controllers" });
 
+            //back in stock notifications
+            routes.MapLocalizedRoute("BackInStockSubscribePopup",
+                            "backinstocksubscribe/{productVariantId}",
+                            new { controller = "Catalog", action = "BackInStockSubscribePopup" },
+                            new { productVariantId = @"\d+" },
+                            new[] { "Nop.Web.Controllers" });
+
             //login, register
             routes.MapLocalizedRoute("Login",
                             "login/",
@@ -243,6 +250,18 @@ namespace Nop.Web.Infrastructure
                             "customer/downloadableproducts",
                             new { controller = "Customer", action = "DownloadableProducts" },
                             new[] { "Nop.Web.Controllers" });
+
+
+            routes.MapLocalizedRoute("CustomerBackInStockSubscriptions",
+                            "customer/backinstocksubscriptions",
+                            new { controller = "Customer", action = "BackInStockSubscriptions" },
+                            new[] { "Nop.Web.Controllers" });
+            routes.MapLocalizedRoute("CustomerBackInStockSubscriptionsPaged",
+                            "customer/backinstocksubscriptions/{page}",
+                            new { controller = "Customer", action = "BackInStockSubscriptions", page = UrlParameter.Optional },
+                            new { page = @"\d+" },
+                            new[] { "Nop.Web.Controllers" });
+
             routes.MapLocalizedRoute("CustomerRewardPoints",
                             "customer/rewardpoints",
                             new { controller = "Customer", action = "RewardPoints" },

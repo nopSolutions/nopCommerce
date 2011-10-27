@@ -64,6 +64,7 @@ namespace Nop.Web.Controllers
         private readonly IForumService _forumService;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IOpenAuthenticationService _openAuthenticationService;
+        private readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
 
         private readonly MediaSettings _mediaSettings;
         private readonly IWorkflowMessageService _workflowMessageService;
@@ -89,7 +90,8 @@ namespace Nop.Web.Controllers
             ICurrencyService currencyService, IPriceFormatter priceFormatter,
             IPictureService pictureService, INewsLetterSubscriptionService newsLetterSubscriptionService,
             IForumService forumService, IShoppingCartService shoppingCartService,
-            IOpenAuthenticationService openAuthenticationService, MediaSettings mediaSettings,
+            IOpenAuthenticationService openAuthenticationService, 
+            IBackInStockSubscriptionService backInStockSubscriptionService, MediaSettings mediaSettings,
             IWorkflowMessageService workflowMessageService, LocalizationSettings localizationSettings,
             CaptchaSettings captchaSettings, ExternalAuthenticationSettings externalAuthenticationSettings)
         {
@@ -118,6 +120,7 @@ namespace Nop.Web.Controllers
             this._forumService = forumService;
             this._shoppingCartService = shoppingCartService;
             this._openAuthenticationService = openAuthenticationService;
+            this._backInStockSubscriptionService = backInStockSubscriptionService;
 
             this._mediaSettings = mediaSettings;
             this._workflowMessageService = workflowMessageService;
@@ -145,6 +148,7 @@ namespace Nop.Web.Controllers
             model.HideForumSubscriptions = !_forumSettings.ForumsEnabled || !_forumSettings.AllowCustomersToManageSubscriptions;
             model.HideReturnRequests = !_orderSettings.ReturnRequestsEnabled || _orderService.SearchReturnRequests(customer.Id, 0, null).Count == 0;
             model.HideDownloadableProducts = _customerSettings.HideDownloadableProductsTab;
+            model.HideBackInStockSubscriptions = _customerSettings.HideBackInStockSubscriptionsTab;
             return model;
         }
 
@@ -1682,6 +1686,95 @@ namespace Nop.Web.Controllers
             }
 
             return RedirectToAction("ForumSubscriptions");
+        }
+
+        #endregion
+
+        #region Back in stock  subscriptions
+
+        public ActionResult BackInStockSubscriptions(int? page)
+        {
+            if (_customerSettings.HideBackInStockSubscriptionsTab)
+            {
+                return RedirectToAction("MyAccount");
+            }
+
+            int pageIndex = 0;
+            if (page > 0)
+            {
+                pageIndex = page.Value - 1;
+            }
+
+            var customer = _workContext.CurrentCustomer;
+            var pageSize = 10;
+            var list = _backInStockSubscriptionService.GetAllSubscriptionsByCustomerId(customer.Id, pageIndex, pageSize);
+
+            var model = new CustomerBackInStockSubscriptionsModel();
+            model.NavigationModel = GetCustomerNavigationModel(customer);
+            model.NavigationModel.SelectedTab = CustomerNavigationEnum.BackInStockSubscriptions;
+
+            foreach (var subscription in list)
+            {
+                var productVariant = subscription.ProductVariant;
+
+                if (productVariant != null)
+                {
+                    var subscriptionModel = new BackInStockSubscriptionModel()
+                    {
+                        Id = subscription.Id,
+                        ProductId = productVariant.Product.Id,
+                        SeName = productVariant.Product.GetSeName(),
+                    };
+                    //product name
+                    if (!String.IsNullOrEmpty(productVariant.GetLocalized(x => x.Name)))
+                        subscriptionModel.ProductName = string.Format("{0} ({1})",
+                                                                      productVariant.Product.GetLocalized(x => x.Name),
+                                                                      productVariant.GetLocalized(x => x.Name));
+                    else
+                        subscriptionModel.ProductName = productVariant.Product.GetLocalized(x => x.Name);
+
+                    model.Subscriptions.Add(subscriptionModel);
+                }
+            }
+
+            model.PagerModel = new PagerModel()
+            {
+                PageSize = list.PageSize,
+                TotalRecords = list.TotalCount,
+                PageIndex = list.PageIndex,
+                ShowTotalSummary = false,
+                RouteActionName = "CustomerBackInStockSubscriptionsPaged",
+                UseRouteLinks = true,
+                RouteValues = new BackInStockSubscriptionsRouteValues { page = pageIndex }
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult BackInStockSubscriptions(FormCollection formCollection)
+        {
+            foreach (var key in formCollection.AllKeys)
+            {
+                var value = formCollection[key];
+
+                if (value.Equals("on") && key.StartsWith("biss", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    var id = key.Replace("biss", "").Trim();
+                    int subscriptionId = 0;
+
+                    if (Int32.TryParse(id, out subscriptionId))
+                    {
+                        var subscription = _backInStockSubscriptionService.GetSubscriptionById(subscriptionId);
+                        if (subscription != null && subscription.CustomerId == _workContext.CurrentCustomer.Id)
+                        {
+                            _backInStockSubscriptionService.DeleteSubscription(subscription);
+                        }
+                    }
+                }
+            }
+
+            return RedirectToAction("BackInStockSubscriptions");
         }
 
         #endregion

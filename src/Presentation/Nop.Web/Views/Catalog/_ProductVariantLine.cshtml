@@ -34,7 +34,12 @@
     }
     <div class="clear">
     </div>
+    <!--product SKU, manufacturer part number, stock info-->
     @Html.Partial("_ProductVariant_SKU_Man_Stock", Model)
+    <div class="clear">
+    </div>
+    <!--Back in stock subscription-->
+    @Html.Partial("_ProductVariantBackInStockSubscription", Model)
     <div class="clear">
     </div>
     @{

@@ -1,5 +1,4 @@
 ﻿using Nop.Core.Domain.Tasks;
-using Nop.Core.Domain.Tax;
 using Nop.Tests;
 using NUnit.Framework;
 

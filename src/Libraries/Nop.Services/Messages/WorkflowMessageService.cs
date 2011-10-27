@@ -217,7 +217,15 @@ namespace Nop.Services.Messages
             _messageTokenProvider.AddPrivateMessageTokens(tokens, privateMessage);
             return tokens;
         }
-
+        private IList<Token> GenerateTokens(BackInStockSubscription stockSubscription)
+        {
+            var tokens = new List<Token>();
+            _messageTokenProvider.AddStoreTokens(tokens);
+            _messageTokenProvider.AddCustomerTokens(tokens, stockSubscription.Customer);
+            _messageTokenProvider.AddBackInStockTokens(tokens, stockSubscription);
+            return tokens;
+        }
+        
         private MessageTemplate GetLocalizedActiveMessageTemplate(string messageTemplateName, int languageId)
         {
             var messageTemplate = _messageTemplateService.GetMessageTemplateByName(messageTemplateName);
@@ -992,6 +1000,34 @@ namespace Nop.Services.Messages
             var toName = emailAccount.DisplayName;
             return SendNotification(messageTemplate, emailAccount,
                 languageId, newsCommentTokens,
+                toEmail, toName);
+        }
+
+        /// <summary>
+        /// Sends a 'Back in stock' notification message to a customer
+        /// </summary>
+        /// <param name="subscription">Subscription</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        public virtual int SendBackInStockNotification(BackInStockSubscription subscription, int languageId)
+        {
+            if (subscription == null)
+                throw new ArgumentNullException("subscription");
+
+            languageId = EnsureLanguageIsActive(languageId);
+
+            var messageTemplate = GetLocalizedActiveMessageTemplate("Customer.BackInStock", languageId);
+            if (messageTemplate == null)
+                return 0;
+
+            var subscriptionTokens = GenerateTokens(subscription);
+
+            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+            var customer = subscription.Customer;
+            var toEmail = customer.Email;
+            var toName = customer.GetFullName();
+            return SendNotification(messageTemplate, emailAccount,
+                languageId, subscriptionTokens,
                 toEmail, toName);
         }
 

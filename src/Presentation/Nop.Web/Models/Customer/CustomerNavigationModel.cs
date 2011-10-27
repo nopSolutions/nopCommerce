@@ -7,6 +7,7 @@ namespace Nop.Web.Models.Customer
         public bool HideInfo { get; set; }
         public bool HideAddresses { get; set; }
         public bool HideOrders { get; set; }
+        public bool HideBackInStockSubscriptions { get; set; }
         public bool HideReturnRequests { get; set; }
         public bool HideDownloadableProducts { get; set; }
         public bool HideRewardPoints { get; set; }
@@ -22,6 +23,7 @@ namespace Nop.Web.Models.Customer
         Info,
         Addresses,
         Orders,
+        BackInStockSubscriptions,
         ReturnRequests,
         DownloadableProducts,
         RewardPoints,

@@ -60,6 +60,7 @@ namespace Nop.Web.Controllers
         private readonly IProductTagService _productTagService;
         private readonly IOrderReportService _orderReportService;
         private readonly ICustomerService _customerService;
+        private readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
 
         private readonly MediaSettings _mediaSetting;
         private readonly CatalogSettings _catalogSettings;
@@ -87,6 +88,7 @@ namespace Nop.Web.Controllers
             IRecentlyViewedProductsService recentlyViewedProductsService, ICompareProductsService compareProductsService,
             IWorkflowMessageService workflowMessageService, IProductTagService productTagService,
             IOrderReportService orderReportService, ICustomerService customerService,
+            IBackInStockSubscriptionService backInStockSubscriptionService,
             MediaSettings mediaSetting, CatalogSettings catalogSettings,
             ShoppingCartSettings shoppingCartSettings, StoreInformationSettings storeInformationSettings,
             LocalizationSettings localizationSettings, CustomerSettings customerSettings)
@@ -117,6 +119,7 @@ namespace Nop.Web.Controllers
             this._productTagService = productTagService;
             this._orderReportService = orderReportService;
             this._customerService = customerService;
+            this._backInStockSubscriptionService = backInStockSubscriptionService;
 
 
             this._mediaSetting = mediaSetting;
@@ -498,6 +501,18 @@ namespace Nop.Web.Controllers
             {
                 model.DownloadSampleUrl = Url.Action("Sample", "Download", new { productVariantId = productVariant.Id });
             }
+            model.IsCurrentCustomerRegistered = _workContext.CurrentCustomer.IsRegistered();
+            //back in stock subscriptions)
+            if (productVariant.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
+                productVariant.BackorderMode == BackorderMode.NoBackorders &&
+                productVariant.AllowBackInStockSubscriptions &&
+                productVariant.StockQuantity <= 0)
+            {
+                //out of stock
+                model.DisplayBackInStockSubscription = true;
+                model.BackInStockAlreadySubscribed = _backInStockSubscriptionService.FindSubscription(_workContext.CurrentCustomer.Id, productVariant.Id) != null;
+            }
+
             #endregion
 
             #region Product variant price
@@ -1688,7 +1703,76 @@ namespace Nop.Web.Controllers
             return PartialView(model);
         }
 
-		#endregion
+        public ActionResult BackInStockSubscribePopup(int productVariantId)
+        {
+            var variant = _productService.GetProductVariantById(productVariantId);
+            if (variant == null || variant.Deleted)
+                throw new ArgumentException("No product variant found with the specified id");
+
+            var model = new BackInStockSubscribeModel();
+            model.IsCurrentCustomerRegistered = _workContext.CurrentCustomer.IsRegistered();
+            model.MaximumBackInStockSubscriptions = _catalogSettings.MaximumBackInStockSubscriptions;
+            model.CurrentNumberOfBackInStockSubscriptions = _backInStockSubscriptionService.GetAllSubscriptionsByCustomerId(_workContext.CurrentCustomer.Id, 0, 1).TotalCount;
+            if (variant.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
+                variant.BackorderMode == BackorderMode.NoBackorders &&
+                variant.AllowBackInStockSubscriptions &&
+                variant.StockQuantity <= 0)
+            {
+                //out of stock
+                model.SubscriptionAllowed = true;
+                model.AlreadySubscribed = _backInStockSubscriptionService.FindSubscription(_workContext.CurrentCustomer.Id, variant.Id) != null;
+            }
+            return View(model);
+        }
+
+        [HttpPost, ActionName("BackInStockSubscribePopup")]
+        public ActionResult BackInStockSubscribePopupPOST(int productVariantId)
+        {
+            var variant = _productService.GetProductVariantById(productVariantId);
+            if (variant == null || variant.Deleted)
+                throw new ArgumentException("No product variant found with the specified id");
+
+            if (!_workContext.CurrentCustomer.IsRegistered())
+                return Content(_localizationService.GetResource("BackInStockSubscriptions.OnlyRegistered"));
+            
+            if (variant.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
+                variant.BackorderMode == BackorderMode.NoBackorders &&
+                variant.AllowBackInStockSubscriptions &&
+                variant.StockQuantity <= 0)
+            {
+                //out of stock
+                var subscription = _backInStockSubscriptionService.FindSubscription(_workContext.CurrentCustomer.Id,
+                                                                                    variant.Id);
+                if (subscription != null)
+                {
+                    //unsubscribe
+                    _backInStockSubscriptionService.DeleteSubscription(subscription);
+                    return Content("Unsubscribed");
+                }
+                else
+                {
+                    if (_backInStockSubscriptionService.GetAllSubscriptionsByCustomerId(_workContext.CurrentCustomer.Id, 0, 1).TotalCount >= _catalogSettings.MaximumBackInStockSubscriptions)
+                        return Content(string.Format(_localizationService.GetResource("BackInStockSubscriptions.MaxSubscriptions"), _catalogSettings.MaximumBackInStockSubscriptions));
+            
+                    //subscribe   
+                    subscription = new BackInStockSubscription()
+                    {
+                        Customer = _workContext.CurrentCustomer,
+                        ProductVariant = variant,
+                        CreatedOnUtc = DateTime.UtcNow
+                    };
+                    _backInStockSubscriptionService.InsertSubscription(subscription);
+                    return Content("Subscribed");
+                }
+                
+            }
+            else
+            {
+                return Content(_localizationService.GetResource("BackInStockSubscriptions.NotAllowed"));
+            }
+        }
+
+        #endregion
 
         #region Product tags
 

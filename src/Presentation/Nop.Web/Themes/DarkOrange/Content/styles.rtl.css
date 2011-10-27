@@ -169,6 +169,7 @@ ul.languagelist li:hover{cursor:pointer;}
 .block-category-navigation .listbox ul .inactive,.block-manufacturer-navigation .listbox ul .inactive{}
 .block-manufacturer-navigation .listbox .viewall a{color:#f93;}
 .block-account-navigation a.active{color:#f93;font-weight:700;text-decoration:none;}
+.block-account-navigation a{white-space:nowrap;}
 .block-account-navigation a.inactive{color:#FFF;font-weight:700;text-decoration:none;}
 .block-newsletter .options{margin-top:5px;}
 .block-newsletter .buttons{margin-top:5px;text-align:left;}
@@ -593,6 +594,13 @@ ul.languagelist li:hover{cursor:pointer;}
 .customer-rewardpoints .section-title{padding:10px 10px 5px 0;font-weight:700;clear:both;font-size:12px;}
 .customer-rewardpoints .reward-points-overview{padding:10px 10px 5px 10px;width:100%;}
 .customer-rewardpoints .reward-points-history{padding:10px 10px 5px 10px;text-align:left;padding:10px;border:1px solid #d7d7d7;height:auto;}
+.backinstock-subscriptions-box{margin:0;padding:5px;font-size:11px;color:#555;}
+.backinstock-subscriptions-box .button{margin-bottom:5px;margin-top:5px;text-align:right;}
+.backinstock-subscriptions-box .backinstock-subscriptions-grid{font-family:arial;font-size:11px;border:1px solid gray;background-color:#FFF;margin-left:0;width:100%;border-collapse:collapse;}
+.backinstock-subscriptions-box .backinstock-subscriptions-grid a{display:block;margin-right:5px;}
+.bissgridpagerstyle{padding:5px;background:#eee;vertical-align:middle;}
+.bissgridpagerstyle span{font-weight:700;font-size:1.1em;}
+
 /* PRODUCT DETAILS */
 .product-details-page{border:1px solid #d3d3d3;margin-top:10px;padding:10px;text-align:right;direction:rtl;}
 .product-collateral{margin-top:10px;margin-bottom:10px;clear:both;}
@@ -745,7 +753,6 @@ ul.languagelist li:hover{cursor:pointer;}
 .forumgroup tr.forum td.forumname .forumdescription{font-size:.9em;color:#555;}
 .forumgroup tr.forum td.lastpost{font-size:.8em;color:#555;}
 .forum-subscriptions-box{margin:0;padding:5px;font-size:11px;color:#555;}
-.forum-subscriptions-box .forum-subscriptions{padding:10px 0px 5px 10px;text-align:right;padding:10px;border:1px solid #d7d7d7;height:auto;}
 .forum-subscriptions-box .button{margin-bottom:5px;margin-top:5px;text-align:right;}
 .forum-subscriptions-box .forum-subscriptions-grid{font-family:arial;font-size:11px;border:1px solid gray;background-color:#FFF;margin-left:0;width:100%;border-collapse:collapse;}
 .forum-subscriptions-box .forum-subscriptions-grid a{display:block;margin-right:5px;}

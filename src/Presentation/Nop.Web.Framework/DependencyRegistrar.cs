@@ -16,7 +16,6 @@ using Nop.Core.Infrastructure;
 using Nop.Core.Infrastructure.DependencyManagement;
 using Nop.Core.Plugins;
 using Nop.Data;
-using Nop.Services;
 using Nop.Services.Affiliates;
 using Nop.Services.Authentication;
 using Nop.Services.Authentication.External;
@@ -44,13 +43,13 @@ using Nop.Services.PromotionFeed;
 using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Shipping;
+using Nop.Services.Tasks;
 using Nop.Services.Tax;
 using Nop.Services.Topics;
 using Nop.Web.Framework.EmbeddedViews;
 using Nop.Web.Framework.Mvc.Routes;
 using Nop.Web.Framework.Themes;
 using Nop.Web.Framework.UI;
-using Nop.Services.Tasks;
 
 namespace Nop.Web.Framework
 {
@@ -118,6 +117,7 @@ namespace Nop.Web.Framework
             builder.RegisterType<WebWorkContext>().As<IWorkContext>().InstancePerHttpRequest();
 
             //services
+            builder.RegisterType<BackInStockSubscriptionService>().As<IBackInStockSubscriptionService>().InstancePerHttpRequest();
             builder.RegisterType<CategoryService>().As<ICategoryService>().InstancePerHttpRequest();
             builder.RegisterType<CompareProductsService>().As<ICompareProductsService>().InstancePerHttpRequest();
             builder.RegisterType<RecentlyViewedProductsService>().As<IRecentlyViewedProductsService>().InstancePerHttpRequest();

@@ -137,7 +137,7 @@ textarea{width:100%;font-family:Verdana, Arial, sans-serif;font-size:11px;}
 .searchboxbutton{background:url(images/orange_button_bg.gif) no-repeat 25% 50% #F80;border:1px solid #F80;color:#FFF;height:18px;padding:0 5px;width:auto;overflow:visible;}
 .productlistproductdetailbutton,.productgridproductdetailbutton{background:url(images/orange_button_bg.gif) no-repeat 25% 50% #F80;border:1px solid #F80;margin-bottom:3px;color:#FFF;height:20px;padding:0 5px;width:auto;overflow:visible;}
 .searchbutton,.contactusbutton,.newsitemaddcommentbutton,.blogpostaddcommentbutton,.productvariantaddtocartbutton,.productwritereviewbutton,.loginbutton,.registerbutton,.checkoutasguestbutton,.savecustomerinfobutton,.addaddressbutton,.changepasswordbutton,.registernextstepbutton,.completeregistrationbutton,.passwordrecoverybutton,.newpasswordbutton,.saveaddressbutton,.sendemailafriendbutton,.checkoutbutton,.selectshippingaddressbutton,.newaddressnextstepbutton,.selectbillingaddressbutton,.sameasshippingaddressbutton,.shippingmethodnextstepbutton,.paymentmethodnextstepbutton,.paymentinfonextstepbutton,.confirmordernextstepbutton,.submitforumtopicbutton,.submitpmbutton,.replypmbutton,.deleteselectedpmbutton,.reorderbutton,.minicartcheckoutbutton,.newsletterbox-subscribebutton,.useragreementbutton,.deleteselectedfsbutton,.submitreturnrequestbutton,.uploadavatarbutton,.checkavailabilitybutton{background:url(images/orange_button_bg.gif) no-repeat 25% 50% #F80;border:1px solid #F80;color:#FFF;height:20px;padding:0 5px;width:auto;overflow:visible;}
-.productlistaddtocartbutton,.productgridaddtocartbutton,.productemailafriendbutton,.productaddtocomparelistbutton,.productvariantaddtowishlistbutton,.editaddressbutton,.deleteaddressbutton,.cancelrecurringorderbutton,.orderdetailsbutton,.returnitemsbutton,.orderdetailsprintbutton,.estimateshippingbutton,.updatewishlistbutton,.applycouponcodebutton,.updatecartbutton,.continueshoppingbutton,.orderprocessedcontinuebutton,.submitpollvotebutton,.cancelforumtopicbutton,.forumsearchbutton,.forumsearchboxbutton,.cancelpmbutton,.deletepmbutton,.backpmbutton,.removeavatarbutton{background:url(images/grey_button_bg.gif) no-repeat 25% 50% #333;border:1px solid #333;color:#FFF;height:20px;padding:0 5px;width:auto;overflow:visible;}
+.productlistaddtocartbutton,.productgridaddtocartbutton,.productemailafriendbutton,.productaddtocomparelistbutton,.productvariantaddtowishlistbutton,.editaddressbutton,.deleteaddressbutton,.cancelrecurringorderbutton,.orderdetailsbutton,.returnitemsbutton,.orderdetailsprintbutton,.estimateshippingbutton,.updatewishlistbutton,.applycouponcodebutton,.updatecartbutton,.continueshoppingbutton,.orderprocessedcontinuebutton,.submitpollvotebutton,.cancelforumtopicbutton,.forumsearchbutton,.forumsearchboxbutton,.cancelpmbutton,.deletepmbutton,.backpmbutton,.removeavatarbutton,.deleteselectedbissbutton{background:url(images/grey_button_bg.gif) no-repeat 25% 50% #333;border:1px solid #333;color:#FFF;height:20px;padding:0 5px;width:auto;overflow:visible;}
 ul.languagelist{display:inline;line-height:25px;}
 ul.languagelist li{list-style:none;display:inline;padding:0 5px;}
 ul.languagelist li .selected{border:solid 1px #ccc!important;}
@@ -168,6 +168,7 @@ ul.languagelist li:hover{cursor:pointer;}
 .block-category-navigation .listbox ul .inactive,.block-manufacturer-navigation .listbox ul .inactive{}
 .block-manufacturer-navigation .listbox .viewall a{color:#f93;}
 .block-account-navigation a.active{color:#f93;font-weight:700;text-decoration:none;}
+.block-account-navigation a{white-space:nowrap;}
 .block-account-navigation a.inactive{color:#FFF;font-weight:700;text-decoration:none;}
 .block-newsletter .options{margin-top:5px;}
 .block-newsletter .buttons{margin-top:5px;}
@@ -590,6 +591,13 @@ ul.languagelist li:hover{cursor:pointer;}
 .customer-rewardpoints .section-title{padding:10px 10px 5px 0;font-weight:700;clear:both;font-size:12px;}
 .customer-rewardpoints .reward-points-overview{padding:10px 10px 5px 0;width:100%;}
 .customer-rewardpoints .reward-points-history{padding:10px 10px 5px 0;text-align:left;padding:10px;border:1px solid #d7d7d7;height:auto;}
+.backinstock-subscriptions-box{margin:0;padding:5px;font-size:11px;color:#555;}
+.backinstock-subscriptions-box .button{margin-bottom:5px;margin-top:5px;text-align:left;}
+.backinstock-subscriptions-box .backinstock-subscriptions-grid{font-family:arial;font-size:11px;border:1px solid gray;background-color:#FFF;margin-left:0;width:100%;border-collapse:collapse;}
+.backinstock-subscriptions-box .backinstock-subscriptions-grid a{display:block;margin-left:5px;}
+.bissgridpagerstyle{padding:5px;background:#eee;vertical-align:middle;}
+.bissgridpagerstyle span{font-weight:700;font-size:1.1em;}
+
 /* PRODUCT DETAILS */
 .product-details-page{border:1px solid #d3d3d3;margin-top:10px;padding:10px;}
 .product-collateral{margin-top:10px;margin-bottom:10px;clear:both;}
@@ -742,7 +750,6 @@ ul.languagelist li:hover{cursor:pointer;}
 .forumgroup tr.forum td.forumname .forumdescription{font-size:.9em;color:#555;}
 .forumgroup tr.forum td.lastpost{font-size:.8em;color:#555;}
 .forum-subscriptions-box{margin:0;padding:5px;font-size:11px;color:#555;}
-.forum-subscriptions-box .forum-subscriptions{padding:10px 10px 5px 0;text-align:left;padding:10px;border:1px solid #d7d7d7;height:auto;}
 .forum-subscriptions-box .button{margin-bottom:5px;margin-top:5px;text-align:left;}
 .forum-subscriptions-box .forum-subscriptions-grid{font-family:arial;font-size:11px;border:1px solid gray;background-color:#FFF;margin-left:0;width:100%;border-collapse:collapse;}
 .forum-subscriptions-box .forum-subscriptions-grid a{display:block;margin-left:5px;}

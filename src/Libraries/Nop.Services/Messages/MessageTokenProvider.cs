@@ -565,6 +565,11 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("PrivateMessage.Text",  privateMessage.FormatPrivateMessageText()));
         }
 
+        public virtual void AddBackInStockTokens(IList<Token> tokens, BackInStockSubscription subscription)
+        {
+            tokens.Add(new Token("BackInStockSubscription.ProductName", HttpUtility.HtmlEncode(subscription.ProductVariant.Product.Name)));
+        }
+
         /// <summary>
         /// Gets list of allowed (supported) message tokens for campaigns
         /// </summary>
@@ -662,7 +667,8 @@ namespace Nop.Services.Messages
                 "%Forums.ForumURL%", 
                 "%Forums.ForumName%", 
                 "%PrivateMessage.Subject%", 
-                "%PrivateMessage.Text%"
+                "%PrivateMessage.Text%",
+                "%BackInStockSubscription.ProductName%",
             };
             return allowedTokens.ToArray();
         }

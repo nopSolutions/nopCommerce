@@ -1,12 +1,13 @@
-﻿@model Nop.Web.Models.Customer.CustomerForumSubscriptionsModel
+﻿@model CustomerBackInStockSubscriptionsModel
 @using Nop.Web;
 @using Nop.Web.Extensions;
 @using Nop.Web.Framework;
+@using Nop.Web.Models.Customer;
 @using MvcContrib.UI.Grid;
 @{    
     Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
 
-    Html.AddTitleParts(T("PageTitle.ForumSubscriptions").Text);
+    Html.AddTitleParts(T("PageTitle.BackInStockSubscriptions").Text);
 }
 @section left
 {
@@ -14,12 +15,15 @@
 }
 <div class="account-page">
     <div class="page-title">
-        <h1>@T("Account.MyAccount") - @T("Account.ForumSubscriptions")</h1>
+        <h1>@T("Account.MyAccount") - @T("Account.BackInStockSubscriptions")</h1>
     </div>
     <div class="clear">
     </div>
     <div class="body">
-        @if (Model.ForumSubscriptions.Count > 0)
+        @T("Account.BackInStockSubscriptions.Description")
+        <br />
+        <br />
+        @if (Model.Subscriptions.Count > 0)
         {
             <script type="text/javascript">
                 $(window).bind('load', function () {
@@ -31,39 +35,36 @@
                     cbRowItem.bind("click", function () { if ($(this).checked == false) cbHeader[0].checked = false; });
                 });
             </script>            
-            using (Html.BeginForm("forumsubscriptions", "customer", FormMethod.Post))
+            using (Html.BeginForm("backinstocksubscriptions", "customer", FormMethod.Post))
             {
-                <div class="forum-subscriptions-box">
-                    @Html.Grid(Model.ForumSubscriptions).Columns(column =>
+                <div class="backinstock-subscriptions-box">
+                    @Html.Grid(Model.Subscriptions).Columns(column =>
                {
-                   column.For(fs => "<span class=\"cbRowItem\"><input type=\"checkbox\" name=\"fs" + fs.Id + "\" /></span>")
+                   column.For(biss => "<span class=\"cbRowItem\"><input type=\"checkbox\" name=\"biss" + biss.Id + "\" /></span>")
                        .Encode(false)
                        .Attributes(style => "width:5%;", align => "center")
                        .Header("<th align=\"center\"><span class=\"cbHeader\"><input type=\"checkbox\" id=\"selectall\" /></span></th>");
-                   column.For(fs => (fs.TopicSubscription) ?
-                                @Html.RouteLink(fs.Title, "TopicSlug", new { Id = fs.ForumTopicId, slug = fs.Slug }) :
-                                @Html.RouteLink(fs.Title, "ForumSlug", new { Id = fs.ForumId, slug = fs.Slug })
-                       )
-                       .Named(@T("ForumSubscriptions.InfoColumn").Text)
+                   column.For(biss => (Html.RouteLink(biss.ProductName, "Product", new { productId = biss.ProductId, SeName = biss.SeName })))
+                       .Named(@T("Account.BackInStockSubscriptions.ProductColumn").Text)
                        .HeaderAttributes(align => "center");
-               }).Attributes(style => "width:100%", @class => "forum-subscriptions-grid", cellspacing => "0", cellpadding => "4", border => "1").Empty("")
+               }).Attributes(style => "width:100%", @class => "backinstock-subscriptions-grid", cellspacing => "0", cellpadding => "4", border => "1").Empty("")
                     @if (Model.PagerModel.TotalPages > 1)
                     {
-                        <div class="fsgridpagerstyle">
+                        <div class="bissgridpagerstyle">
                             @Html.Pager(Model.PagerModel)
                         </div>
                     }
                     <div class="clear">
                     </div>
                     <div class="button">
-                        <input type="submit" value="@T("ForumSubscriptions.DeleteSelected")" class="deleteselectedfsbutton" />
+                        <input type="submit" value="@T("Account.BackInStockSubscriptions.DeleteSelected")" class="deleteselectedbissbutton" />
                     </div>
                 </div>
             }
         }
         else
         {
-            @T("ForumSubscriptions.NoSubscriptions")
+            @T("Account.BackInStockSubscriptions.NoSubscriptions")
         }
     </div>
 </div>

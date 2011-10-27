@@ -208,6 +208,11 @@ namespace Nop.Core.Domain.Catalog
         public virtual int BackorderModeId { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to back in stock subscriptions are allowed
+        /// </summary>
+        public virtual bool AllowBackInStockSubscriptions { get; set; }
+
+        /// <summary>
         /// Gets or sets the order minimum quantity
         /// </summary>
         public virtual int OrderMinimumQuantity { get; set; }

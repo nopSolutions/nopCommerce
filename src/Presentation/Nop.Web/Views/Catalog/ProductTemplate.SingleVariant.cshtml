@@ -77,6 +77,10 @@
                     @Html.Partial("_ProductVariant_SKU_Man_Stock", defaultProductVariant)
                     <div class="clear">
                     </div>
+                    <!--Back in stock subscription-->
+                    @Html.Partial("_ProductVariantBackInStockSubscription", defaultProductVariant)
+                    <div class="clear">
+                    </div>
                     <!--product manufactures-->
                     @Html.Action("ProductManufacturers", "Catalog", new { productId = Model.Id })
                     <div class="clear">

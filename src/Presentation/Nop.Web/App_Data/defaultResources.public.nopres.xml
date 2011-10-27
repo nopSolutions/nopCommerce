@@ -59,6 +59,23 @@
 					</LocaleResource>
 				</Children>
 			</LocaleResource>
+			<LocaleResource Name="BackInStockSubscriptions">
+				<Value>Back in stock subscriptions</Value>
+				<Children>
+					<LocaleResource Name="ProductColumn">
+						<Value>Product</Value>
+					</LocaleResource>
+					<LocaleResource Name="DeleteSelected">
+						<Value>Delete selected</Value>
+					</LocaleResource>
+					<LocaleResource Name="NoSubscriptions">
+						<Value>You are not currently subscribed to any Back In Stock notification lists</Value>
+					</LocaleResource>
+					<LocaleResource Name="Description">
+						<Value>This list of customer have requested to be notified when a particular product is back in stock. Notifications are sent out automatically once the appropriate quantity is updated.</Value>
+					</LocaleResource>
+				</Children>
+			</LocaleResource>
 			<LocaleResource Name="ChangePassword">
 				<Value>Change password</Value>
 				<Children>
@@ -752,6 +769,37 @@
 			</LocaleResource>
 			<LocaleResource Name="SelectCountry">
 				<Value>Select country</Value>
+			</LocaleResource>
+		</Children>
+	</LocaleResource>
+	<LocaleResource Name="BackInStockSubscriptions">
+		<Children>
+			<LocaleResource Name="AlreadySubscribed">
+				<Value>You're already subscribed for this product back in stock notification</Value>
+			</LocaleResource>
+			<LocaleResource Name="PopupTitle">
+				<Value>Receive an email when this arrives in stock</Value>
+			</LocaleResource>
+			<LocaleResource Name="NotAllowed">
+				<Value>Subscriptions are not allowed for this product</Value>
+			</LocaleResource>
+			<LocaleResource Name="OnlyRegistered">
+				<Value>Only registered customers can used this feature</Value>
+			</LocaleResource>
+			<LocaleResource Name="MaxSubscriptions">
+				<Value>You cannot subscribe. Maximum number of allowed subscriptions is {0}</Value>
+			</LocaleResource>
+			<LocaleResource Name="Tooltip">
+				<Value>You'll receive a one time email this product is available for ordering again. We will not send you any other e-mails or add you to our newsletter, you will only be e-mailed about this product!</Value>
+			</LocaleResource>
+			<LocaleResource Name="Unsubscribe">
+				<Value>Unsubscribe</Value>
+			</LocaleResource>
+			<LocaleResource Name="NotifyMe">
+				<Value>Notify me</Value>
+			</LocaleResource>
+			<LocaleResource Name="NotifyMeWhenAvailable">
+				<Value>Notify me when available</Value>
 			</LocaleResource>
 		</Children>
 	</LocaleResource>
@@ -1931,6 +1979,9 @@
 			<LocaleResource Name="InfoColumn">
 				<Value>Forum/Topic</Value>
 			</LocaleResource>
+			<LocaleResource Name="NoSubscriptions">
+				<Value>You are not currently subscribed to any forums</Value>
+			</LocaleResource>
 		</Children>
 	</LocaleResource>
 	<LocaleResource Name="GiftCardAttribute">
@@ -2325,6 +2376,9 @@
 			</LocaleResource>
 			<LocaleResource Name="AccountActivation">
 				<Value>Account Activation</Value>
+			</LocaleResource>
+			<LocaleResource Name="BackInStockSubscriptions">
+				<Value>Back in stock subscriptions</Value>
 			</LocaleResource>
 			<LocaleResource Name="Blog">
 				<Value>Blog</Value>

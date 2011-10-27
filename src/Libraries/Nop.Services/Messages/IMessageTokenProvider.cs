@@ -41,6 +41,8 @@ namespace Nop.Services.Messages
 
         void AddPrivateMessageTokens(IList<Token> tokens, PrivateMessage privateMessage);
 
+        void AddBackInStockTokens(IList<Token> tokens, BackInStockSubscription subscription);
+
         string[] GetListOfCampaignAllowedTokens();
 
         string[] GetListOfAllowedTokens();

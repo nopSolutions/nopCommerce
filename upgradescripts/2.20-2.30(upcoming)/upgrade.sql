@@ -203,6 +203,66 @@ set @resources='
     <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.NonSharedSSLUrl.Hint">
         <Value>Enter your non-secured URL (used when you have shared SSL certificate installed). Actually it is your site URL. For example, http://www.example.com/.</Value>
     </LocaleResource>
+    <LocaleResource Name="Admin.Catalog.Products.Variants.Fields.AllowBackInStockSubscriptions">
+        <Value>Allow back in stock subscriptions</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Catalog.Products.Variants.Fields.AllowBackInStockSubscriptions.Hint">
+        <Value>Allow customers to subscribe to a notification list for a product that has gone out of stock.</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.HideBackInStockSubscriptionsTab">
+        <Value>Hide ''Back in stock subscriptions'' tab</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.HideBackInStockSubscriptionsTab.Hint">
+        <Value>Check to hide ''Back in stock subscriptions'' tab on ''My account'' page</Value>
+    </LocaleResource>
+    <LocaleResource Name="PageTitle.BackInStockSubscriptions">
+        <Value>Back in stock subscriptions</Value>
+    </LocaleResource>
+    <LocaleResource Name="Account.BackInStockSubscriptions">
+        <Value>Back in stock subscriptions</Value>
+    </LocaleResource>
+    <LocaleResource Name="Account.BackInStockSubscriptions.ProductColumn">
+        <Value>Product</Value>
+    </LocaleResource>
+    <LocaleResource Name="Account.BackInStockSubscriptions.DeleteSelected">
+        <Value>Delete selected</Value>
+    </LocaleResource>
+    <LocaleResource Name="Account.BackInStockSubscriptions.NoSubscriptions">
+        <Value>You are not currently subscribed to any Back In Stock notification lists</Value>
+    </LocaleResource>
+    <LocaleResource Name="Account.BackInStockSubscriptions.Description">
+        <Value>This list of customer have requested to be notified when a particular product is back in stock. Notifications are sent out automatically once the appropriate quantity is updated.</Value>
+    </LocaleResource>
+    <LocaleResource Name="ForumSubscriptions.NoSubscriptions">
+        <Value>You are not currently subscribed to any forums</Value>
+    </LocaleResource>
+    <LocaleResource Name="BackInStockSubscriptions.AlreadySubscribed">
+        <Value>You''re already subscribed for this product back in stock notification</Value>
+    </LocaleResource>
+    <LocaleResource Name="BackInStockSubscriptions.PopupTitle">
+        <Value>Receive an email when this arrives in stock</Value>
+    </LocaleResource>
+    <LocaleResource Name="BackInStockSubscriptions.NotAllowed">
+        <Value>Subscriptions are not allowed for this product</Value>
+    </LocaleResource>
+    <LocaleResource Name="BackInStockSubscriptions.OnlyRegistered">
+        <Value>Only registered customers can used this feature</Value>
+    </LocaleResource>
+    <LocaleResource Name="BackInStockSubscriptions.MaxSubscriptions">
+        <Value>You cannot subscribe. Maximum number of allowed subscriptions is {0}</Value>
+    </LocaleResource>
+    <LocaleResource Name="BackInStockSubscriptions.Tooltip">
+        <Value>You''ll receive a one time email this product is available for ordering again. We will not send you any other e-mails or add you to our newsletter, you will only be e-mailed about this product!</Value>
+    </LocaleResource>
+    <LocaleResource Name="BackInStockSubscriptions.Unsubscribe">
+        <Value>Unsubscribe</Value>
+    </LocaleResource>
+    <LocaleResource Name="BackInStockSubscriptions.NotifyMe">
+        <Value>Notify me</Value>
+    </LocaleResource>
+    <LocaleResource Name="BackInStockSubscriptions.NotifyMeWhenAvailable">
+        <Value>Notify me when available</Value>
+    </LocaleResource>
 </Language>
 '
 
@@ -712,5 +772,83 @@ IF NOT EXISTS (
 BEGIN
 	INSERT [dbo].[ScheduleTask] ([Name], [Seconds], [Type], [Enabled], [StopOnError])
 	VALUES (N'Update currency exchange rates', 900, N'Nop.Services.Directory.UpdateExchangeRateTask, Nop.Services', 1, 0)
+END
+GO
+
+
+
+
+--back in stock notification subscriptions
+IF NOT EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[dbo].[BackInStockSubscription]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+BEGIN
+CREATE TABLE [dbo].[BackInStockSubscription](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[ProductVariantId] [int] NOT NULL,
+	[CustomerId] [int] NOT NULL,
+	[CreatedOnUtc] [datetime] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+END
+GO
+IF EXISTS (SELECT 1
+           FROM   sysobjects
+           WHERE  name = 'BackInStockSubscription_ProductVariant'
+           AND parent_obj = Object_id('BackInStockSubscription')
+           AND Objectproperty(id,N'IsForeignKey') = 1)
+ALTER TABLE dbo.BackInStockSubscription
+DROP CONSTRAINT BackInStockSubscription_ProductVariant
+GO
+ALTER TABLE [dbo].[BackInStockSubscription]  WITH CHECK ADD  CONSTRAINT [BackInStockSubscription_ProductVariant] FOREIGN KEY([ProductVariantId])
+REFERENCES [dbo].[ProductVariant] ([Id])
+ON DELETE CASCADE
+GO
+IF EXISTS (SELECT 1
+           FROM   sysobjects
+           WHERE  name = 'BackInStockSubscription_Customer'
+           AND parent_obj = Object_id('BackInStockSubscription')
+           AND Objectproperty(id,N'IsForeignKey') = 1)
+ALTER TABLE dbo.BackInStockSubscription
+DROP CONSTRAINT BackInStockSubscription_Customer
+GO
+ALTER TABLE [dbo].[BackInStockSubscription]  WITH CHECK ADD  CONSTRAINT [BackInStockSubscription_Customer] FOREIGN KEY([CustomerId])
+REFERENCES [dbo].[Customer] ([Id])
+ON DELETE CASCADE
+GO
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[ProductVariant]') and NAME='AllowBackInStockSubscriptions')
+BEGIN
+	ALTER TABLE [dbo].[ProductVariant]
+	ADD [AllowBackInStockSubscriptions] bit NULL
+END
+GO
+UPDATE [dbo].[ProductVariant]
+SET [AllowBackInStockSubscriptions] = 0
+WHERE [AllowBackInStockSubscriptions] IS NULL
+GO
+ALTER TABLE [dbo].[ProductVariant] ALTER COLUMN [AllowBackInStockSubscriptions] bit NOT NULL
+GO
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'customersettings.hidebackinstocksubscriptionstab')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'customersettings.hidebackinstocksubscriptionstab', N'false')
+END
+GO
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.maximumbackinstocksubscriptions')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'catalogsettings.maximumbackinstocksubscriptions', N'200')
+END
+GO
+
+
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[MessageTemplate]
+		WHERE [Name] = N'Customer.BackInStock')
+BEGIN
+	INSERT [dbo].[MessageTemplate] ([Name], [BccEmailAddresses], [Subject], [Body], [IsActive], [EmailAccountId])
+	VALUES (N'Customer.BackInStock', null, N'%Store.Name%. Back in stock notification', N'<p><a href="%Store.URL%">%Store.Name%</a> <br /><br />Hello %Customer.FullName%, <br />Product "%BackInStockSubscription.ProductName%" is in stock.</p>', 1, 0)
 END
 GO

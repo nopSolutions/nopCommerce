@@ -47,7 +47,7 @@ namespace Nop.Admin.Controllers
         private readonly IPermissionService _permissionService;
         private readonly ICategoryService _categoryService;
         private readonly IManufacturerService _manufacturerService;
-
+        private readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
         private readonly ICurrencyService _currencyService;
         private readonly CurrencySettings _currencySettings;
         private readonly IMeasureService _measureService;
@@ -66,6 +66,7 @@ namespace Nop.Admin.Controllers
             IProductAttributeParser productAttributeParser, ICustomerActivityService customerActivityService,
             IPermissionService permissionService, 
             ICategoryService categoryService, IManufacturerService manufacturerService,
+            IBackInStockSubscriptionService backInStockSubscriptionService,
             ICurrencyService currencyService, CurrencySettings currencySettings,
             IMeasureService measureService, MeasureSettings measureSettings,
             AdminAreaSettings adminAreaSettings)
@@ -87,6 +88,7 @@ namespace Nop.Admin.Controllers
             this._permissionService = permissionService;
             this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
+            this._backInStockSubscriptionService = backInStockSubscriptionService;
             this._currencyService = currencyService;
             this._currencySettings = currencySettings;
             this._measureService = measureService;
@@ -357,6 +359,7 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentException("No product variant found with the specified id");
             if (ModelState.IsValid)
             {
+                var prevStockQuantity = variant.StockQuantity;
                 variant = model.ToEntity(variant);
                 variant.UpdatedOnUtc = DateTime.UtcNow;
                 //save variant
@@ -383,7 +386,17 @@ namespace Nop.Admin.Controllers
                 _productService.UpdateProductVariant(variant);
                 //update picture seo file name
                 UpdatePictureSeoNames(variant);
-
+                //back in stock notifications
+                if (variant.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
+                    variant.BackorderMode == BackorderMode.NoBackorders &&
+                    variant.AllowBackInStockSubscriptions &&
+                    variant.StockQuantity > 0 &&
+                    prevStockQuantity <= 0 &&
+                    variant.Published &&
+                    !variant.Deleted)
+                {
+                    _backInStockSubscriptionService.SendNotificationsToSubscribers(variant);
+                }
                 //activity log
                 _customerActivityService.InsertActivity("EditProductVariant", _localizationService.GetResource("ActivityLog.EditProductVariant"), variant.Name);
 

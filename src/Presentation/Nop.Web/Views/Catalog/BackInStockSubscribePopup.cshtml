@@ -1,0 +1,60 @@
+﻿@model BackInStockSubscribeModel
+@using Nop.Web.Models.Catalog
+@{
+    /*pop-up windows*/
+    Layout = "~/Views/Shared/_RootPopup.cshtml";
+}
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "backinstocksubscription-form" }))
+{
+    <div class="backinstocksubscriptionpage">
+        <div>
+            <div class="page-title">
+                <h2>
+                    @if (Model.AlreadySubscribed)
+                    {
+                        @T("BackInStockSubscriptions.AlreadySubscribed")
+                    }
+                    else
+                    {
+                        @T("BackInStockSubscriptions.PopupTitle")
+                    }
+                </h2>
+            </div>
+        </div>
+        <div class="backinstocksubscriptionpage-body">
+            @if (!Model.SubscriptionAllowed)
+            {
+                <div>
+                    @T("BackInStockSubscriptions.NotAllowed")</div>
+            }
+            else if (!Model.IsCurrentCustomerRegistered)
+            {
+                <div>
+                    @("BackInStockSubscriptions.OnlyRegistered")</div>
+            }
+            else if (!Model.AlreadySubscribed && Model.CurrentNumberOfBackInStockSubscriptions >= Model.MaximumBackInStockSubscriptions)
+            {
+                <div>
+                    @string.Format(T("BackInStockSubscriptions.MaxSubscriptions").Text, Model.MaximumBackInStockSubscriptions)</div>
+            }
+            else
+            {
+                if (!Model.AlreadySubscribed)
+                {
+                <div>@T("BackInStockSubscriptions.Tooltip")</div>
+                }
+                <br />
+                <input type="submit" id="backinstocknotifyme" name="backinstocknotifyme" value="@(Model.AlreadySubscribed ? @T("BackInStockSubscriptions.Unsubscribe").Text : @T("BackInStockSubscriptions.NotifyMe").Text)"
+                    class="notifymebutton" />
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $("#backinstocknotifyme").click(function () {
+                            //close fancy box
+                            parent.$.fancybox.close();
+                        });
+                    });
+                </script>
+            }
+        </div>
+    </div>
+}

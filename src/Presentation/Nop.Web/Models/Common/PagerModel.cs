@@ -449,5 +449,13 @@ namespace Nop.Web.Models.Common
         public int page { get; set; }
     }
 
+    /// <summary>
+    /// Class that has only page for route value. Used for (My Account) Back in stock subscriptions pagination
+    /// </summary>
+    public class BackInStockSubscriptionsRouteValues : IRouteValues
+    {
+        public int page { get; set; }
+    }
+
     #endregion Classes
 }

@@ -1664,6 +1664,14 @@
 													</LocaleResource>
 												</Children>
 											</LocaleResource>
+											<LocaleResource Name="AllowBackInStockSubscriptions">
+												<Value>Allow back in stock subscriptions</Value>
+												<Children>
+													<LocaleResource Name="Hint">
+														<Value>Allow customers to subscribe to a notification list for a product that has gone out of stock.</Value>
+													</LocaleResource>
+												</Children>
+											</LocaleResource>
 											<LocaleResource Name="AutomaticallyAddRequiredProductVariants">
 												<Value>Automatically add these product variants to the cart</Value>
 												<Children>
@@ -3602,6 +3610,14 @@
 										<Children>
 											<LocaleResource Name="Hint">
 												<Value>Check to hide 'Downloadable products' tab on 'My account' page</Value>
+											</LocaleResource>
+										</Children>
+									</LocaleResource>
+									<LocaleResource Name="HideBackInStockSubscriptionsTab">
+										<Value>Hide 'Back in stock subscriptions' tab</Value>
+										<Children>
+											<LocaleResource Name="Hint">
+												<Value>Check to hide 'Back in stock subscriptions' tab on 'My account' page</Value>
 											</LocaleResource>
 										</Children>
 									</LocaleResource>

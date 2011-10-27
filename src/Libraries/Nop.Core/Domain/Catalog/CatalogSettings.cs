@@ -150,6 +150,7 @@ namespace Nop.Core.Domain.Catalog
         /// </summary>
         public int ProductsByTagPageSize { get; set; }
 
+        /// <summary>
         /// Gets or sets a value indicating whether customers can select the page size for 'products by tag'
         /// </summary>
         public bool ProductsByTagAllowCustomersToSelectPageSize { get; set; }
@@ -193,5 +194,10 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or set the default value to use for Manufacturer page size opitons (for new Manufacturers)
         /// </summary>
         public string DefaultManufacturerPageSizeOptions { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating maximum number of 'back in stock' subscription
+        /// </summary>
+        public int MaximumBackInStockSubscriptions { get; set; }
     }
 }

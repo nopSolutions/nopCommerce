@@ -143,9 +143,12 @@ namespace Nop.Admin.Models.Catalog
 
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.NotifyAdminForQuantityBelow")]
         public int NotifyAdminForQuantityBelow { get; set; }
-
+        
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.BackorderMode")]
         public int BackorderModeId { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.AllowBackInStockSubscriptions")]
+        public bool AllowBackInStockSubscriptions { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.OrderMinimumQuantity")]
         public int OrderMinimumQuantity { get; set; }

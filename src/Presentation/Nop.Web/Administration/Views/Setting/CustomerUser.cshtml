@@ -159,6 +159,15 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CustomerSettings.HideBackInStockSubscriptionsTab):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.CustomerSettings.HideBackInStockSubscriptionsTab)
+                @Html.ValidationMessageFor(model => model.CustomerSettings.HideBackInStockSubscriptionsTab)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.NopLabelFor(model => model.CustomerSettings.CustomerNameFormat):
             </td>
             <td class="adminData">

@@ -262,6 +262,14 @@ namespace Nop.Services.Messages
         /// <returns>Queued email identifier</returns>
         int SendNewsCommentNotificationMessage(NewsComment newsComment, int languageId);
 
+        /// <summary>
+        /// Sends a 'Back in stock' notification message to a customer
+        /// </summary>
+        /// <param name="subscription">Subscription</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        int SendBackInStockNotification(BackInStockSubscription subscription, int languageId);
+
         #endregion
     }
 }

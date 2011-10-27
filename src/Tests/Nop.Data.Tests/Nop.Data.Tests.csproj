@@ -69,6 +69,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Catalog\CategoryTemplatePersistenceTests.cs" />
+    <Compile Include="Catalog\BackInStockSubscriptionPersistenceTests.cs" />
     <Compile Include="Catalog\ManufacturerTemplatePersistenceTests.cs" />
     <Compile Include="Catalog\ProductTemplatePersistenceTests.cs" />
     <Compile Include="Cms\WidgetPersistenceTests.cs" />

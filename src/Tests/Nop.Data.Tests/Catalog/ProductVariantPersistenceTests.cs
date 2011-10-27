@@ -48,6 +48,7 @@ namespace Nop.Data.Tests.Catalog
                                          LowStockActivityId = 15,
                                          NotifyAdminForQuantityBelow = 16,
                                          BackorderModeId = 17,
+                                         AllowBackInStockSubscriptions = true,
                                          OrderMinimumQuantity = 18,
                                          OrderMaximumQuantity = 19,
                                          DisableBuyButton = true,
@@ -123,6 +124,7 @@ namespace Nop.Data.Tests.Catalog
             fromDb.LowStockActivityId.ShouldEqual(15);
             fromDb.NotifyAdminForQuantityBelow.ShouldEqual(16);
             fromDb.BackorderModeId.ShouldEqual(17);
+            fromDb.AllowBackInStockSubscriptions.ShouldEqual(true);
             fromDb.OrderMinimumQuantity.ShouldEqual(18);
             fromDb.OrderMaximumQuantity.ShouldEqual(19);
             fromDb.DisableBuyButton.ShouldEqual(true);
