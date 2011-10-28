@@ -852,3 +852,13 @@ BEGIN
 	VALUES (N'Customer.BackInStock', null, N'%Store.Name%. Back in stock notification', N'<p><a href="%Store.URL%">%Store.Name%</a> <br /><br />Hello %Customer.FullName%, <br />Product "%BackInStockSubscription.ProductName%" is in stock.</p>', 1, 0)
 END
 GO
+
+--permissions
+UPDATE [PermissionRecord]
+SET [Name] = N'Admin area. ' + [Name]
+WHERE [Name] like N'Manage%'
+GO
+UPDATE [PermissionRecord]
+SET [Name] = N'Plugins. Access Web Service'
+WHERE [Name] = N'Access Web Service'
+GO

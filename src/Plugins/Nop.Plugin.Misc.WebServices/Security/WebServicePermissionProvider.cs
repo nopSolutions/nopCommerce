@@ -7,7 +7,7 @@ namespace Nop.Plugin.Misc.WebServices.Security
 {
     public partial class WebServicePermissionProvider : IPermissionProvider
     {
-        public static readonly PermissionRecord AccessWebService = new PermissionRecord { Name = "Access Web Service", SystemName = "AccessWebService", Category = "Plugin" };
+        public static readonly PermissionRecord AccessWebService = new PermissionRecord { Name = "Plugins. Access Web Service", SystemName = "AccessWebService", Category = "Plugin" };
         
         public virtual IEnumerable<PermissionRecord> GetPermissions()
         {
