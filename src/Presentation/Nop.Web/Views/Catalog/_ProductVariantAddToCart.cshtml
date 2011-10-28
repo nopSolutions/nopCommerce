@@ -9,7 +9,7 @@
         @Model.CustomerEnteredPriceRange
         <br />
     }
-    @if (!Model.DisableBuyButton)
+    @if (!Model.DisableBuyButton || !Model.DisableWishlistButton)
     {
         @Html.LabelFor(model => model.EnteredQuantity)<text>:</text> 
         @Html.TextBoxFor(model => model.EnteredQuantity, new { style = "Width: 40px;" })
