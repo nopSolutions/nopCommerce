@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Security;
@@ -14,29 +15,38 @@ namespace Nop.Services.Security
     /// </summary>
     public partial class PermissionService : IPermissionService
     {
+        #region Constants
+        private const string PERMISSIONS_ALL_KEY = "Nop.permission.all";
+        private const string PERMISSIONS_BY_SYSTEMNAME_KEY = "Nop.permission.name-{0}";
+        private const string PERMISSIONS_PATTERN_KEY = "Nop.permission.";
+        #endregion
+
         #region Fields
 
         private readonly IRepository<PermissionRecord> _permissionPecordRepository;
         private readonly ICustomerService _customerService;
         private readonly IWorkContext _workContext;
+        private readonly ICacheManager _cacheManager;
 
         #endregion
 
         #region Ctor
-        
+
         /// <summary>
         /// Ctor
         /// </summary>
         /// <param name="permissionPecordRepository">Permission repository</param>
         /// <param name="customerService">Customer service</param>
         /// <param name="workContext">Work context</param>
+        /// <param name="cacheManager">Cache manager</param>
         public PermissionService(IRepository<PermissionRecord> permissionPecordRepository,
             ICustomerService customerService,
-            IWorkContext workContext)
+            IWorkContext workContext, ICacheManager cacheManager)
         {
             this._permissionPecordRepository = permissionPecordRepository;
             this._customerService = customerService;
             this._workContext = workContext;
+            this._cacheManager = cacheManager;
         }
 
         #endregion
@@ -53,6 +63,8 @@ namespace Nop.Services.Security
                 throw new ArgumentNullException("permission");
 
             _permissionPecordRepository.Delete(permission);
+
+            _cacheManager.RemoveByPattern(PERMISSIONS_PATTERN_KEY);
         }
 
         /// <summary>
@@ -78,12 +90,25 @@ namespace Nop.Services.Security
             if (String.IsNullOrWhiteSpace(systemName))
                 return null;
 
-            var query = from pr in _permissionPecordRepository.Table
-                        orderby pr.Id
-                        where pr.SystemName == systemName
-                        select pr;
-            var permission = query.FirstOrDefault();
-            return permission;
+
+            //Little performance optimization hack here.
+            //We know that this method is used only in admin area menu when a lot of requests are made
+            //so let's just load all of them (cached) and find required one
+            return GetAllPermissionRecords()
+                .Where(p => systemName.Equals(p.SystemName, StringComparison.InvariantCultureIgnoreCase))
+                .FirstOrDefault();
+
+
+            //string key = string.Format(PERMISSIONS_BY_SYSTEMNAME_KEY, systemName);
+            //return _cacheManager.Get(key, () =>
+            //{
+            //    var query = from pr in _permissionPecordRepository.Table
+            //                orderby pr.Id
+            //                where pr.SystemName == systemName
+            //                select pr;
+            //    var permission = query.FirstOrDefault();
+            //    return permission;
+            //});
         }
 
         /// <summary>
@@ -92,11 +117,15 @@ namespace Nop.Services.Security
         /// <returns>Permissions</returns>
         public virtual IList<PermissionRecord> GetAllPermissionRecords()
         {
-            var query = from cr in _permissionPecordRepository.Table
-                        orderby cr.Name
-                        select cr;
-            var permissions = query.ToList();
-            return permissions;
+            string key = string.Format(PERMISSIONS_ALL_KEY);
+            return _cacheManager.Get(key, () =>
+            {
+                var query = from cr in _permissionPecordRepository.Table
+                            orderby cr.Name
+                            select cr;
+                var permissions = query.ToList();
+                return permissions;
+            });
         }
 
         /// <summary>
@@ -109,6 +138,8 @@ namespace Nop.Services.Security
                 throw new ArgumentNullException("permission");
 
             _permissionPecordRepository.Insert(permission);
+
+            _cacheManager.RemoveByPattern(PERMISSIONS_PATTERN_KEY);
         }
 
         /// <summary>
@@ -121,6 +152,8 @@ namespace Nop.Services.Security
                 throw new ArgumentNullException("permission");
 
             _permissionPecordRepository.Update(permission);
+
+            _cacheManager.RemoveByPattern(PERMISSIONS_PATTERN_KEY);
         }
 
         /// <summary>
@@ -164,11 +197,11 @@ namespace Nop.Services.Security
 
 
                         var defaultMappingProvided = (from p in defaultPermission.PermissionRecords
-                                             where p.SystemName == permission1.SystemName
-                                                    select p).Any();
+                                                      where p.SystemName == permission1.SystemName
+                                                      select p).Any();
                         var mappingExists = (from p in customerRole.PermissionRecords
-                                                    where p.SystemName == permission1.SystemName
-                                                    select p).Any();
+                                             where p.SystemName == permission1.SystemName
+                                             select p).Any();
                         if (defaultMappingProvided && !mappingExists)
                         {
                             permission1.CustomerRoles.Add(customerRole);
@@ -192,7 +225,7 @@ namespace Nop.Services.Security
             {
                 var permission1 = GetPermissionRecordBySystemName(permission.SystemName);
                 if (permission1 != null)
-                {   
+                {
                     DeletePermissionRecord(permission1);
                 }
             }
@@ -233,6 +266,7 @@ namespace Nop.Services.Security
 
             return false;
         }
+
         #endregion
     }
 }
