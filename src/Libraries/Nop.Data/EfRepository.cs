@@ -1,10 +1,9 @@
 using System;
 using System.Data.Entity;
-using System.Diagnostics;
+using System.Data.Entity.Validation;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Data;
-using System.Data.Entity.Validation;
 
 namespace Nop.Data
 {
@@ -14,7 +13,7 @@ namespace Nop.Data
     public partial class EfRepository<T> : IRepository<T> where T : BaseEntity
     {
         private readonly IDbContext _context;
-        private readonly IDbSet<T> _entities;
+        private IDbSet<T> _entities;
 
         /// <summary>
         /// Ctor
@@ -23,12 +22,11 @@ namespace Nop.Data
         public EfRepository(IDbContext context)
         {
             this._context = context;
-            this._entities = context.Set<T>();
         }
 
         public T GetById(object id)
         {
-            return this._entities.Find(id);
+            return this.Entities.Find(id);
         }
 
         public void Insert(T entity)
@@ -38,7 +36,7 @@ namespace Nop.Data
                 if (entity == null)
                     throw new ArgumentNullException("entity");
 
-                this._entities.Add(entity);
+                this.Entities.Add(entity);
 
                 this._context.SaveChanges();
             }
@@ -51,8 +49,7 @@ namespace Nop.Data
                         msg += string.Format("Property: {0} Error: {1}", validationError.PropertyName, validationError.ErrorMessage) + Environment.NewLine;
 
                 var fail = new Exception(msg, dbEx);
-                Debug.WriteLine(fail.Message, fail);
-
+                //Debug.WriteLine(fail.Message, fail);
                 throw fail;
             }
         }
@@ -64,9 +61,6 @@ namespace Nop.Data
                 if (entity == null)
                     throw new ArgumentNullException("entity");
 
-                //if (!this._context.IsAttached(entity))
-                //    this._entities.Attach(entity);
-
                 this._context.SaveChanges();
             }
             catch (DbEntityValidationException dbEx)
@@ -78,8 +72,7 @@ namespace Nop.Data
                         msg += Environment.NewLine + string.Format("Property: {0} Error: {1}", validationError.PropertyName, validationError.ErrorMessage);
 
                 var fail = new Exception(msg, dbEx);
-                Debug.WriteLine(fail.Message, fail);
-
+                //Debug.WriteLine(fail.Message, fail);
                 throw fail;
             }
         }
@@ -91,10 +84,7 @@ namespace Nop.Data
                 if (entity == null)
                     throw new ArgumentNullException("entity");
 
-                //if (!this._context.IsAttached(entity))
-                //    this._entities.Attach(entity);
-
-                this._entities.Remove(entity);
+                this.Entities.Remove(entity);
 
                 this._context.SaveChanges();
             }
@@ -107,8 +97,7 @@ namespace Nop.Data
                         msg += Environment.NewLine + string.Format("Property: {0} Error: {1}", validationError.PropertyName, validationError.ErrorMessage);
 
                 var fail = new Exception(msg, dbEx);
-                Debug.WriteLine(fail.Message, fail);
-
+                //Debug.WriteLine(fail.Message, fail);
                 throw fail;
             }
         }
@@ -117,10 +106,19 @@ namespace Nop.Data
         {
             get
             {
-                return this._entities;
+                return this.Entities;
             }
         }
 
+        private IDbSet<T> Entities
+        {
+            get
+            {
+                if (_entities == null)
+                    _entities = _context.Set<T>();
+                return _entities;
+            }
+        }
         //TODO implement IDisposable interface
     }
 }
