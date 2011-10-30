@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.ServiceModel.Syndication;
 using System.Web.Mvc;
-using System.Xml;
 using Nop.Core;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Catalog;
@@ -19,6 +18,7 @@ using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
+using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Tax;
 using Nop.Web.Extensions;
@@ -26,7 +26,6 @@ using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Models.Catalog;
 using Nop.Web.Models.Media;
-using System.ServiceModel.Syndication;
 
 namespace Nop.Web.Controllers
 {
@@ -61,6 +60,7 @@ namespace Nop.Web.Controllers
         private readonly IOrderReportService _orderReportService;
         private readonly ICustomerService _customerService;
         private readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
+        private readonly IPermissionService _permissionService;
 
         private readonly MediaSettings _mediaSetting;
         private readonly CatalogSettings _catalogSettings;
@@ -89,6 +89,7 @@ namespace Nop.Web.Controllers
             IWorkflowMessageService workflowMessageService, IProductTagService productTagService,
             IOrderReportService orderReportService, ICustomerService customerService,
             IBackInStockSubscriptionService backInStockSubscriptionService,
+            IPermissionService permissionService,
             MediaSettings mediaSetting, CatalogSettings catalogSettings,
             ShoppingCartSettings shoppingCartSettings, StoreInformationSettings storeInformationSettings,
             LocalizationSettings localizationSettings, CustomerSettings customerSettings)
@@ -120,6 +121,7 @@ namespace Nop.Web.Controllers
             this._orderReportService = orderReportService;
             this._customerService = customerService;
             this._backInStockSubscriptionService = backInStockSubscriptionService;
+            this._permissionService = permissionService;
 
 
             this._mediaSetting = mediaSetting;
@@ -190,8 +192,7 @@ namespace Nop.Web.Controllers
                         //only one variant
                         var productVariant = productVariants[0];
 
-                        if (!_catalogSettings.HidePricesForNonRegistered ||
-                            !_workContext.CurrentCustomer.IsGuest())
+                        if (_permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
                         {
                             if (!productVariant.CustomerEntersPrice)
                             {
@@ -235,8 +236,7 @@ namespace Nop.Web.Controllers
                         var productVariant = GetMinimalPriceProductVariant(productVariants);
                         if (productVariant != null)
                         {
-                            if (!_catalogSettings.HidePricesForNonRegistered ||
-                                !_workContext.CurrentCustomer.IsGuest())
+                            if (_permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
                             {
                                 if (!productVariant.CustomerEntersPrice)
                                 {
@@ -280,13 +280,8 @@ namespace Nop.Web.Controllers
 
                         //only one variant
                         var productVariant = productVariants[0];
-                        model.DisableBuyButton = productVariant.DisableBuyButton;
-                        if (!_catalogSettings.HidePricesForNonRegistered ||
-                            !_workContext.CurrentCustomer.IsGuest())
-                        {
-                            //invert condition
-                        }
-                        else
+                        model.DisableBuyButton = productVariant.DisableBuyButton || !_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart);
+                        if (!_permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
                         {
                             model.DisableBuyButton = true;
                         }
@@ -518,8 +513,7 @@ namespace Nop.Web.Controllers
             #region Product variant price
             model.ProductVariantPrice.ProductVariantId = productVariant.Id;
             model.ProductVariantPrice.DynamicPriceUpdate = _catalogSettings.EnableDynamicPriceUpdate;
-            if (!_catalogSettings.HidePricesForNonRegistered ||
-                !_workContext.CurrentCustomer.IsGuest())
+            if (_permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
             {
                 model.ProductVariantPrice.HidePrices = false;
                 if (productVariant.CustomerEntersPrice)
@@ -572,14 +566,9 @@ namespace Nop.Web.Controllers
             model.AddToCart.EnteredQuantity = productVariant.OrderMinimumQuantity;
 
             //'add to cart', 'add to wishlist' buttons
-            model.AddToCart.DisableBuyButton = productVariant.DisableBuyButton;
-            model.AddToCart.DisableWishlistButton = productVariant.DisableWishlistButton || !_shoppingCartSettings.WishlistEnabled;
-            if (!_catalogSettings.HidePricesForNonRegistered ||
-                !_workContext.CurrentCustomer.IsGuest())
-            {
-                //invert condition
-            }
-            else
+            model.AddToCart.DisableBuyButton = productVariant.DisableBuyButton || !_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart);
+            model.AddToCart.DisableWishlistButton = productVariant.DisableWishlistButton || !_permissionService.Authorize(StandardPermissionProvider.EnableWishlist);
+            if (!_permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
             {
                 model.AddToCart.DisableBuyButton = true;
                 model.AddToCart.DisableWishlistButton = true;
@@ -643,8 +632,7 @@ namespace Nop.Web.Controllers
                         pvaModel.Values.Add(pvaValueModel);
                         
                         //display price if allowed
-                        if (!_catalogSettings.HidePricesForNonRegistered ||
-                            !_workContext.CurrentCustomer.IsGuest())
+                        if (_permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
                         {
                             decimal taxRate = decimal.Zero;
                             decimal priceAdjustmentBase = _taxService.GetProductPrice(productVariant, pvaValue.PriceAdjustment, out taxRate);
@@ -1486,9 +1474,8 @@ namespace Nop.Web.Controllers
         {
             if (_catalogSettings.IgnoreTierPrices)
                 return Content(""); //ignore tier prices
-            
-            if (_catalogSettings.HidePricesForNonRegistered &&
-                _workContext.CurrentCustomer.IsGuest())
+
+            if (!_permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
                 return Content(""); //hide prices
 
             var variant = _productService.GetProductVariantById(productVariantId);

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using System.Web.Routing;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -21,15 +22,14 @@ using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
+using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Shipping;
 using Nop.Services.Tax;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Security;
-using Nop.Web.Models.Checkout;
 using Nop.Web.Models.Media;
 using Nop.Web.Models.ShoppingCart;
-using System.Web.Routing;
 
 namespace Nop.Web.Controllers
 {
@@ -60,6 +60,7 @@ namespace Nop.Web.Controllers
         private readonly ICheckoutAttributeService _checkoutAttributeService;
         private readonly IPaymentService _paymentService;
         private readonly IWorkflowMessageService _workflowMessageService;
+        private readonly IPermissionService _permissionService;
         
 
         private readonly MediaSettings _mediaSetting;
@@ -86,6 +87,7 @@ namespace Nop.Web.Controllers
             IOrderTotalCalculationService orderTotalCalculationService,
             ICheckoutAttributeService checkoutAttributeService, IPaymentService paymentService,
             IWorkflowMessageService workflowMessageService,
+            IPermissionService permissionService,
             MediaSettings mediaSetting, ShoppingCartSettings shoppingCartSettings,
             CatalogSettings catalogSettings, OrderSettings orderSettings,
             ShippingSettings shippingSettings,TaxSettings taxSettings)
@@ -113,6 +115,7 @@ namespace Nop.Web.Controllers
             this._checkoutAttributeService = checkoutAttributeService;
             this._paymentService = paymentService;
             this._workflowMessageService = workflowMessageService;
+            this._permissionService = permissionService;
 
             this._mediaSetting = mediaSetting;
             this._shoppingCartSettings = shoppingCartSettings;
@@ -191,8 +194,7 @@ namespace Nop.Web.Controllers
                         caModel.Values.Add(pvaValueModel);
 
                         //display price if allowed
-                        if (!_catalogSettings.HidePricesForNonRegistered ||
-                            !_workContext.CurrentCustomer.IsGuest())
+                        if (_permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
                         {
                             decimal priceAdjustmentBase = _taxService.GetCheckoutAttributePrice(caValue);
                             decimal priceAdjustment = _currencyService.ConvertFromPrimaryStoreCurrency(priceAdjustmentBase, _workContext.WorkingCurrency);
@@ -554,6 +556,9 @@ namespace Nop.Web.Controllers
         [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult Cart()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
+                return RedirectToAction("Index", "Home");
+
             var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
             var model = PrepareShoppingCartModel(new ShoppingCartModel(), cart, true);
             return View(model);
@@ -572,6 +577,9 @@ namespace Nop.Web.Controllers
         [FormValueRequired("updatecart")]
         public ActionResult UpdateCart(FormCollection form)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
+                return RedirectToAction("Index", "Home");
+
             var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
 
             var allIdsToRemove = form["removefromcart"] != null ? form["removefromcart"].Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => int.Parse(x)).ToList() : new List<int>();
@@ -1061,6 +1069,9 @@ namespace Nop.Web.Controllers
             if (!_shoppingCartSettings.MiniShoppingCartEnabled)
                 return Content("");
 
+            if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
+                return Content("");
+
             var model = new MiniShoppingCartModel()
             {
                 DisplayProducts = _shoppingCartSettings.MiniShoppingCartDisplayProducts
@@ -1114,7 +1125,7 @@ namespace Nop.Web.Controllers
         [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult Wishlist(Guid? customerGuid)
         {
-            if (!_shoppingCartSettings.WishlistEnabled)
+            if (!_permissionService.Authorize(StandardPermissionProvider.EnableWishlist))
                 return RedirectToAction("Index", "Home");
 
             Customer customer = customerGuid.HasValue ? 
@@ -1132,7 +1143,7 @@ namespace Nop.Web.Controllers
         [FormValueRequired("updatecart")]
         public ActionResult UpdateWishlist(FormCollection form)
         {
-            if (!_shoppingCartSettings.WishlistEnabled)
+            if (!_permissionService.Authorize(StandardPermissionProvider.EnableWishlist))
                 return RedirectToAction("Index", "Home");
 
             var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist).ToList();
@@ -1168,7 +1179,10 @@ namespace Nop.Web.Controllers
         [FormValueRequired("addtocartbutton")]
         public ActionResult AddtoCartFromWishlist(FormCollection form)
         {
-            if (!_shoppingCartSettings.WishlistEnabled)
+            if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
+                return RedirectToAction("Index", "Home");
+
+            if (!_permissionService.Authorize(StandardPermissionProvider.EnableWishlist))
                 return RedirectToAction("Index", "Home");
 
             var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist).ToList();
@@ -1192,7 +1206,7 @@ namespace Nop.Web.Controllers
 
         public ActionResult EmailWishlist()
         {
-            if (!_shoppingCartSettings.WishlistEnabled || !_shoppingCartSettings.EmailWishlistEnabled)
+            if (!_permissionService.Authorize(StandardPermissionProvider.EnableWishlist) || !_shoppingCartSettings.EmailWishlistEnabled)
                 return RedirectToAction("Index", "Home");
 
             var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist).ToList();
@@ -1211,7 +1225,7 @@ namespace Nop.Web.Controllers
         [FormValueRequired("send-email")]
         public ActionResult EmailWishlistSend(WishlistEmailAFriendModel model)
         {
-            if (!_shoppingCartSettings.WishlistEnabled || !_shoppingCartSettings.EmailWishlistEnabled)
+            if (!_permissionService.Authorize(StandardPermissionProvider.EnableWishlist) || !_shoppingCartSettings.EmailWishlistEnabled)
                 return RedirectToAction("Index", "Home");
             
             var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist).ToList();

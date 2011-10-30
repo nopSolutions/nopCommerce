@@ -4,9 +4,6 @@ namespace Nop.Admin.Models.Settings
 {
     public class CatalogSettingsModel
     {
-        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.HidePricesForNonRegistered")]
-        public bool HidePricesForNonRegistered { get; set; }
-
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ShowProductSku")]
         public bool ShowProductSku { get; set; }
 

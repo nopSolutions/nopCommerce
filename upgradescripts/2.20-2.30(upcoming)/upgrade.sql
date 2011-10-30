@@ -263,6 +263,18 @@ set @resources='
     <LocaleResource Name="BackInStockSubscriptions.NotifyMeWhenAvailable">
         <Value>Notify me when available</Value>
     </LocaleResource>
+    <LocaleResource Name="Admin.Configuration.Settings.Catalog.HidePricesForNonRegistered">
+        <Value></Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Configuration.Settings.Catalog.HidePricesForNonRegistered.Hint">
+        <Value></Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.WishlistEnabled">
+        <Value></Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.WishlistEnabled.Hint">
+        <Value></Value>
+    </LocaleResource>
 </Language>
 '
 
@@ -861,4 +873,103 @@ GO
 UPDATE [PermissionRecord]
 SET [Name] = N'Plugins. Access Web Service'
 WHERE [Name] = N'Access Web Service'
+GO
+
+
+
+--new 'permission records
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[PermissionRecord]
+		WHERE [SystemName] = N'DisplayPrices')
+BEGIN
+	INSERT [dbo].[PermissionRecord] ([Name], [SystemName], [Category])
+	VALUES (N'Public store. Display Prices', N'DisplayPrices', N'PublicStore')
+
+	DECLARE @PermissionRecordId INT 
+	SET @PermissionRecordId = @@IDENTITY
+
+
+	--add it to all roles
+	DECLARE @CustomerRoleId int
+	DECLARE cur_customerrole CURSOR FOR
+	SELECT Id
+	FROM [CustomerRole]
+	OPEN cur_customerrole
+	FETCH NEXT FROM cur_customerrole INTO @CustomerRoleId
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+	
+		INSERT [dbo].[PermissionRecord_Role_Mapping] ([PermissionRecord_Id], [CustomerRole_Id])
+		VALUES (@PermissionRecordId, @CustomerRoleId)
+		
+		FETCH NEXT FROM cur_customerrole INTO @CustomerRoleId
+	END
+	CLOSE cur_customerrole
+	DEALLOCATE cur_customerrole
+END
+GO
+
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[PermissionRecord]
+		WHERE [SystemName] = N'EnableWishlist')
+BEGIN
+	INSERT [dbo].[PermissionRecord] ([Name], [SystemName], [Category])
+	VALUES (N'Public store. Enable wishlist', N'EnableWishlist', N'PublicStore')
+
+	DECLARE @PermissionRecordId INT 
+	SET @PermissionRecordId = @@IDENTITY
+
+
+	--add it to all roles
+	DECLARE @CustomerRoleId int
+	DECLARE cur_customerrole CURSOR FOR
+	SELECT Id
+	FROM [CustomerRole]
+	OPEN cur_customerrole
+	FETCH NEXT FROM cur_customerrole INTO @CustomerRoleId
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+	
+		INSERT [dbo].[PermissionRecord_Role_Mapping] ([PermissionRecord_Id], [CustomerRole_Id])
+		VALUES (@PermissionRecordId, @CustomerRoleId)
+		
+		FETCH NEXT FROM cur_customerrole INTO @CustomerRoleId
+	END
+	CLOSE cur_customerrole
+	DEALLOCATE cur_customerrole
+END
+GO
+
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[PermissionRecord]
+		WHERE [SystemName] = N'EnableShoppingCart')
+BEGIN
+	INSERT [dbo].[PermissionRecord] ([Name], [SystemName], [Category])
+	VALUES (N'Public store. Enable shopping cart', N'EnableShoppingCart', N'PublicStore')
+
+	DECLARE @PermissionRecordId INT 
+	SET @PermissionRecordId = @@IDENTITY
+
+
+	--add it to all roles
+	DECLARE @CustomerRoleId int
+	DECLARE cur_customerrole CURSOR FOR
+	SELECT Id
+	FROM [CustomerRole]
+	OPEN cur_customerrole
+	FETCH NEXT FROM cur_customerrole INTO @CustomerRoleId
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+	
+		INSERT [dbo].[PermissionRecord_Role_Mapping] ([PermissionRecord_Id], [CustomerRole_Id])
+		VALUES (@PermissionRecordId, @CustomerRoleId)
+		
+		FETCH NEXT FROM cur_customerrole INTO @CustomerRoleId
+	END
+	CLOSE cur_customerrole
+	DEALLOCATE cur_customerrole
+END
 GO

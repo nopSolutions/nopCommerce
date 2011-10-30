@@ -25,9 +25,6 @@ namespace Nop.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.ShoppingCart.CrossSellsNumber")]
         public int CrossSellsNumber { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Settings.ShoppingCart.WishlistEnabled")]
-        public bool WishlistEnabled { get; set; }
-
         [NopResourceDisplayName("Admin.Configuration.Settings.ShoppingCart.EmailWishlistEnabled")]
         public bool EmailWishlistEnabled { get; set; }
 

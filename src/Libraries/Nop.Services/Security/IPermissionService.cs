@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Security;
 
 namespace Nop.Services.Security
@@ -71,5 +72,13 @@ namespace Nop.Services.Security
         /// <param name="permission">Permission record</param>
         /// <returns>true - authorized; otherwise, false</returns>
         bool Authorize(PermissionRecord permission);
+
+        /// <summary>
+        /// Authorize permission
+        /// </summary>
+        /// <param name="permission">Permission record</param>
+        /// <param name="customer">Customer</param>
+        /// <returns>true - authorized; otherwise, false</returns>
+        bool Authorize(PermissionRecord permission, Customer customer);
     }
 }

@@ -7,10 +7,9 @@
 @using System.Globalization;
 @using Nop.Web.Framework;
 @using Nop.Services.Customers;
+@using Nop.Services.Security;
 @{
-    var hidePrices = !(!EngineContext.Current.Resolve<CatalogSettings>().HidePricesForNonRegistered ||
-                            (EngineContext.Current.Resolve<IWorkContext>().CurrentCustomer != null &&
-                            !EngineContext.Current.Resolve<IWorkContext>().CurrentCustomer.IsGuest()));
+    var hidePrices = !EngineContext.Current.Resolve<IPermissionService>().Authorize(StandardPermissionProvider.DisplayPrices);
                             
     var dynamicPriceUpdate = EngineContext.Current.Resolve<CatalogSettings>().EnableDynamicPriceUpdate;
     var adjustmentTableScripts = new StringBuilder();

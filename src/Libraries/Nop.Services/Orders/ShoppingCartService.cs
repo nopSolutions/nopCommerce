@@ -11,6 +11,7 @@ using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
+using Nop.Services.Security;
 
 namespace Nop.Services.Orders
 {
@@ -33,7 +34,7 @@ namespace Nop.Services.Orders
         private readonly ICustomerService _customerService;
         private readonly ShoppingCartSettings _shoppingCartSettings;
         private readonly IEventPublisher _eventPublisher;
-
+        private readonly IPermissionService _permissionService;
         #endregion
 
         #region Ctor
@@ -51,8 +52,9 @@ namespace Nop.Services.Orders
         /// <param name="checkoutAttributeParser">Checkout attribute parser</param>
         /// <param name="priceFormatter">Price formatter</param>
         /// <param name="customerService">Customer service</param>
-        /// <param name="shoppingCartSettings"></param>
-        /// <param name="eventPublisher"></param>
+        /// <param name="shoppingCartSettings">Shopping cart settings</param>
+        /// <param name="eventPublisher">Event publisher</param>
+        /// <param name="permissionService">Permission service</param>
         public ShoppingCartService(IRepository<ShoppingCartItem> sciRepository,
             IWorkContext workContext, ICurrencyService currencyService,
             IProductService productService, ILocalizationService localizationService,
@@ -62,7 +64,8 @@ namespace Nop.Services.Orders
             IPriceFormatter priceFormatter,
             ICustomerService customerService,
             ShoppingCartSettings shoppingCartSettings,
-            IEventPublisher eventPublisher)
+            IEventPublisher eventPublisher,
+            IPermissionService permissionService)
         {
             _sciRepository = sciRepository;
             _workContext = workContext;
@@ -76,6 +79,7 @@ namespace Nop.Services.Orders
             _customerService = customerService;
             _shoppingCartSettings = shoppingCartSettings;
             _eventPublisher = eventPublisher;
+            _permissionService = permissionService;
         }
 
         #endregion
@@ -705,9 +709,14 @@ namespace Nop.Services.Orders
                 throw new ArgumentNullException("productVariant");
 
             var warnings = new List<string>();
-            if (shoppingCartType == ShoppingCartType.Wishlist && !_shoppingCartSettings.WishlistEnabled)
+            if (shoppingCartType == ShoppingCartType.ShoppingCart && !_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart, customer))
             {
-                warnings.Add("Wishlits is disabled");
+                warnings.Add("Shopping cart is disabled");
+                return warnings;
+            }
+            if (shoppingCartType == ShoppingCartType.Wishlist && !_permissionService.Authorize(StandardPermissionProvider.EnableWishlist, customer))
+            {
+                warnings.Add("Wishlist is disabled");
                 return warnings;
             }
 

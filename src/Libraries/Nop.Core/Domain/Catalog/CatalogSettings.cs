@@ -6,11 +6,6 @@ namespace Nop.Core.Domain.Catalog
     public class CatalogSettings : ISettings
     {
         /// <summary>
-        /// Gets or sets a value indicating whether to hide prices for non-registered customers
-        /// </summary>
-        public bool HidePricesForNonRegistered { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether to display product SKU
         /// </summary>
         public bool ShowProductSku { get; set; }

@@ -34,8 +34,11 @@
             <li><a href="@Url.RouteUrl("Register")" class="ico-register">@T("Account.Register")</a></li>
             <li><a href="@Url.RouteUrl("Login")" class="ico-login">@T("Account.Login")</a></li>
         }
-        <li><a href="@Url.RouteUrl("ShoppingCart")" class="ico-cart">@T("ShoppingCart")</a>
-            <a href="@Url.RouteUrl("ShoppingCart")">(@Model.ShoppingCartItems)</a> </li>
+        @if (Model.ShoppingCartEnabled)
+        {
+            <li><a href="@Url.RouteUrl("ShoppingCart")" class="ico-cart">@T("ShoppingCart")</a>
+                <a href="@Url.RouteUrl("ShoppingCart")">(@Model.ShoppingCartItems)</a> </li>
+        }
         @if (Model.WishlistEnabled)
         {
             <li><a href="@Url.RouteUrl("Wishlist")" class="ico-wishlist">@T("Wishlist")</a> <a href="@Url.RouteUrl("Wishlist")">

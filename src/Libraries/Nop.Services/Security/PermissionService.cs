@@ -252,6 +252,17 @@ namespace Nop.Services.Security
         /// <returns>true - authorized; otherwise, false</returns>
         public virtual bool Authorize(PermissionRecord permission)
         {
+            return Authorize(permission, _workContext.CurrentCustomer);
+        }
+
+        /// <summary>
+        /// Authorize permission
+        /// </summary>
+        /// <param name="permission">Permission record</param>
+        /// <param name="customer">Customer</param>
+        /// <returns>true - authorized; otherwise, false</returns>
+        public virtual bool Authorize(PermissionRecord permission, Customer customer)
+        {
             if (permission == null)
                 return false;
 

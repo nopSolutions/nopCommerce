@@ -4484,7 +4484,6 @@ namespace Nop.Services.Installation
             EngineContext.Current.Resolve<IConfigurationProvider<CatalogSettings>>()
                 .SaveSettings(new CatalogSettings()
                 {
-                    HidePricesForNonRegistered = false,
                     ShowProductSku = false,
                     ShowManufacturerPartNumber = false,
                     AllowProductSorting = true,
@@ -4645,7 +4644,6 @@ namespace Nop.Services.Installation
                     ShowDiscountBox = true,
                     ShowGiftCardBox = true,
                     CrossSellsNumber = 2,
-                    WishlistEnabled = true,
                     EmailWishlistEnabled = true,
                     MiniShoppingCartEnabled = true,
                     MiniShoppingCartDisplayProducts = false,

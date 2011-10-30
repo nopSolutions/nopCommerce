@@ -39,13 +39,7 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets a number of "Cross-sells" on shopping cart page
         /// </summary>
         public int CrossSellsNumber { get; set; }
-
-
-        /// <summary>
-        /// Gets or sets a value indicating whether "wishlist" feature is enabled
-        /// </summary>
-        public bool WishlistEnabled { get; set; }
-
+        
         /// <summary>
         /// Gets or sets a value indicating whether "email a wishlist" feature is enabled
         /// </summary>

@@ -43,6 +43,10 @@ namespace Nop.Services.Security
         public static readonly PermissionRecord ManageMessageQueue = new PermissionRecord { Name = "Admin area. Manage Message Queue", SystemName = "ManageMessageQueue", Category = "Configuration" };
         public static readonly PermissionRecord ManageMaintenance = new PermissionRecord { Name = "Admin area. Manage Maintenance", SystemName = "ManageMaintenance", Category = "Configuration" };
 
+        public static readonly PermissionRecord DisplayPrices = new PermissionRecord { Name = "Public store. Display Prices", SystemName = "DisplayPrices", Category = "PublicStore" };
+        public static readonly PermissionRecord EnableShoppingCart = new PermissionRecord { Name = "Public store. Enable shopping cart", SystemName = "EnableShoppingCart", Category = "PublicStore" };
+        public static readonly PermissionRecord EnableWishlist = new PermissionRecord { Name = "Public store. Enable wishlist", SystemName = "EnableWishlist", Category = "PublicStore" };
+
         
         public virtual IEnumerable<PermissionRecord> GetPermissions()
         {
@@ -84,6 +88,9 @@ namespace Nop.Services.Security
                 ManageSystemLog,
                 ManageMessageQueue,
                 ManageMaintenance,
+                DisplayPrices,
+                EnableShoppingCart,
+                EnableWishlist,
             };
         }
 
@@ -132,6 +139,39 @@ namespace Nop.Services.Security
                         ManageSystemLog,
                         ManageMessageQueue,
                         ManageMaintenance,
+                        DisplayPrices,
+                        EnableShoppingCart,
+                        EnableWishlist,
+                    }
+                },
+                new DefaultPermissionRecord 
+                {
+                    CustomerRoleSystemName = SystemCustomerRoleNames.ForumModerators,
+                    PermissionRecords = new[] 
+                    {
+                        DisplayPrices,
+                        EnableShoppingCart,
+                        EnableWishlist,
+                    }
+                },
+                new DefaultPermissionRecord 
+                {
+                    CustomerRoleSystemName = SystemCustomerRoleNames.Guests,
+                    PermissionRecords = new[] 
+                    {
+                        DisplayPrices,
+                        EnableShoppingCart,
+                        EnableWishlist,
+                    }
+                },
+                new DefaultPermissionRecord 
+                {
+                    CustomerRoleSystemName = SystemCustomerRoleNames.Registered,
+                    PermissionRecords = new[] 
+                    {
+                        DisplayPrices,
+                        EnableShoppingCart,
+                        EnableWishlist,
                     }
                 },
             };

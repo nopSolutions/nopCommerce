@@ -3287,14 +3287,6 @@
 							<LocaleResource Name="Catalog">
 								<Value>Catalog settings</Value>
 								<Children>
-									<LocaleResource Name="HidePricesForNonRegistered">
-										<Value>Hide prices for non-registered customers</Value>
-										<Children>
-											<LocaleResource Name="Hint">
-												<Value>Check to disable product prices for all non-registered customers so that anyone browsing the site cant see prices. And 'Add to cart'/'Add to wishlist' buttons will be hidden.</Value>
-											</LocaleResource>
-										</Children>
-									</LocaleResource>
 									<LocaleResource Name="ShowProductSku">
 										<Value>Show SKU</Value>
 										<Children>
@@ -4609,14 +4601,6 @@
 										<Children>
 											<LocaleResource Name="Hint">
 												<Value>The number of 'Cross-Sells' to display on shopping cart page; 0 if you don't want to load cross-sells</Value>
-											</LocaleResource>
-										</Children>
-									</LocaleResource>
-									<LocaleResource Name="WishlistEnabled">
-										<Value>'Wishlist' Enabled</Value>
-										<Children>
-											<LocaleResource Name="Hint">
-												<Value>Check to enable customer wishlists in your store.</Value>
 											</LocaleResource>
 										</Children>
 									</LocaleResource>

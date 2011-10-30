@@ -51,7 +51,6 @@ namespace Nop.Web.Controllers
         private readonly IPermissionService _permissionService;
 
         private readonly CustomerSettings _customerSettings;
-        private readonly ShoppingCartSettings _shoppingCartSettings;
         private readonly TaxSettings _taxSettings;
         private readonly CatalogSettings _catalogSettings;
         private readonly StoreInformationSettings _storeInformationSettings;
@@ -70,8 +69,7 @@ namespace Nop.Web.Controllers
             ISitemapGenerator sitemapGenerator, IThemeContext themeContext,
             IThemeProvider themeProvider, IForumService forumService,
             ICustomerService customerService, IWebHelper webHelper,
-            IPermissionService permissionService, 
-            CustomerSettings customerSettings, ShoppingCartSettings shoppingCartSettings,
+            IPermissionService permissionService, CustomerSettings customerSettings, 
             TaxSettings taxSettings, CatalogSettings catalogSettings,
             StoreInformationSettings storeInformationSettings, EmailAccountSettings emailAccountSettings,
             CommonSettings commonSettings, BlogSettings blogSettings, ForumSettings forumSettings,
@@ -96,7 +94,6 @@ namespace Nop.Web.Controllers
             this._permissionService = permissionService;
 
             this._customerSettings = customerSettings;
-            this._shoppingCartSettings = shoppingCartSettings;
             this._taxSettings = taxSettings;
             this._catalogSettings = catalogSettings;
             this._storeInformationSettings = storeInformationSettings;
@@ -236,9 +233,10 @@ namespace Nop.Web.Controllers
                 CustomerEmailUsername = customer.IsRegistered() ? (_customerSettings.UsernamesEnabled ? customer.Username : customer.Email) : "",
                 IsCustomerImpersonated = _workContext.OriginalCustomerIfImpersonated != null,
                 DisplayAdminLink = _permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel),
+                ShoppingCartEnabled = _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart),
                 ShoppingCartItems = customer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList().GetTotalProducts(),
-                WishlistEnabled = _shoppingCartSettings.WishlistEnabled,
-                WishlistItems = customer != null ? customer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist).ToList().GetTotalProducts() : 0,
+                WishlistEnabled = _permissionService.Authorize(StandardPermissionProvider.EnableWishlist),
+                WishlistItems = customer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist).ToList().GetTotalProducts(),
                 AllowPrivateMessages = _forumSettings.AllowPrivateMessages,
                 UnreadPrivateMessages = unreadMessage,
                 AlertMessage = alertMessage,
