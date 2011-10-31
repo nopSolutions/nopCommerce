@@ -1790,21 +1790,26 @@ namespace Nop.Web.Controllers
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
-            var model = product.ProductTags
-                .OrderByDescending(x => x.ProductCount)
-                .Select(x =>
+            var cacheKey = string.Format(ModelCacheEventConsumer.PRODUCTTAG_BY_PRODUCT_MODEL_KEY, product.Id);
+            var cacheModel = _cacheManager.Get(cacheKey, () =>
                 {
-                    var ptModel = new ProductTagModel()
-                    {
-                        Id = x.Id,
-                        Name = x.Name,
-                        ProductCount = x.ProductCount
-                    };
-                    return ptModel;
-                })
-                .ToList();
+                    var model = product.ProductTags
+                        .OrderByDescending(x => x.ProductCount)
+                        .Select(x =>
+                                    {
+                                        var ptModel = new ProductTagModel()
+                                        {
+                                            Id = x.Id,
+                                            Name = x.Name,
+                                            ProductCount = x.ProductCount
+                                        };
+                                        return ptModel;
+                                    })
+                        .ToList();
+                    return model;
+                });
 
-            return PartialView(model);
+            return PartialView(cacheModel);
         }
 
         [ChildActionOnly]

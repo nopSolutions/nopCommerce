@@ -50,6 +50,15 @@ namespace Nop.Web.Infrastructure.Cache
         public const string MANUFACTURER_NAVIGATION_PATTERN_KEY = "nop.pres.manufacturer.navigation";
         
         /// <summary>
+        /// Key for ProductTagModel caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : product id
+        /// </remarks>
+        public const string PRODUCTTAG_BY_PRODUCT_MODEL_KEY = "nop.pres.producttag.byproduct-{0}";
+        public const string PRODUCTTAG_BY_PRODUCT_PATTERN_KEY = "nop.pres.producttag.byproduct";
+
+        /// <summary>
         /// Key for PopularProductTagsModel caching
         /// </summary>
         public const string PRODUCTTAG_POPULAR_MODEL_KEY = "nop.pres.producttag.popular";
@@ -122,14 +131,17 @@ namespace Nop.Web.Infrastructure.Cache
         public void HandleEvent(EntityInserted<ProductTag> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCTTAG_POPULAR_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(PRODUCTTAG_BY_PRODUCT_MODEL_KEY);
         }
         public void HandleEvent(EntityUpdated<ProductTag> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCTTAG_POPULAR_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(PRODUCTTAG_BY_PRODUCT_MODEL_KEY);
         }
         public void HandleEvent(EntityDeleted<ProductTag> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCTTAG_POPULAR_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(PRODUCTTAG_BY_PRODUCT_MODEL_KEY);
         }
         
         //specification attributes
