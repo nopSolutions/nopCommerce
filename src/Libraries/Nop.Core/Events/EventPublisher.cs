@@ -30,6 +30,7 @@ namespace Nop.Core.Events
             }
             finally
             {
+                //TODO actually we should not dispose it
                 var instance = x as IDisposable;
                 if (instance != null)
                 {

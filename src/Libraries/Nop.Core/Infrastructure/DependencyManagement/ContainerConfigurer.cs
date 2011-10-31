@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
+using Autofac;
+using Autofac.Integration.Mvc;
 using Nop.Core.Configuration;
 using Nop.Core.Events;
-using Autofac;
-using Autofac.Builder;
 
 namespace Nop.Core.Infrastructure.DependencyManagement
 {
@@ -51,12 +50,12 @@ namespace Nop.Core.Infrastructure.DependencyManagement
                 foreach(var consumer in consumers)
                 {
                     x.RegisterType(consumer)
-                        .As(consumer
-                                .FindInterfaces((type, criteria) =>
-                                                    {
-                                                        var isMatch = type.IsGenericType && ((Type)criteria).IsAssignableFrom(type.GetGenericTypeDefinition());
-                                                        return isMatch;
-                                                    }, typeof (IConsumer<>)));
+                        .As(consumer.FindInterfaces((type, criteria) =>
+                        {
+                            var isMatch = type.IsGenericType && ((Type)criteria).IsAssignableFrom(type.GetGenericTypeDefinition());
+                            return isMatch;
+                        }, typeof (IConsumer<>)))
+                        .InstancePerHttpRequest();
                 }
             });
 

@@ -4,12 +4,14 @@ using System.Linq;
 using System.ServiceModel.Syndication;
 using System.Web.Mvc;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
@@ -24,6 +26,7 @@ using Nop.Services.Tax;
 using Nop.Web.Extensions;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Catalog;
 using Nop.Web.Models.Media;
 
@@ -68,6 +71,7 @@ namespace Nop.Web.Controllers
         private readonly StoreInformationSettings _storeInformationSettings;
         private readonly LocalizationSettings _localizationSettings;
         private readonly CustomerSettings _customerSettings;
+        private readonly ICacheManager _cacheManager;
         
         #endregion
 
@@ -130,6 +134,9 @@ namespace Nop.Web.Controllers
             this._storeInformationSettings = storeInformationSettings;
             this._localizationSettings = localizationSettings;
             this._customerSettings = customerSettings;
+
+            //TODO inject static cache manager using constructor
+            this._cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
         }
 
         #endregion
@@ -1105,22 +1112,27 @@ namespace Nop.Web.Controllers
         //[OutputCache(Duration = 120, VaryByCustom = "WorkingLanguage")]
         public ActionResult ManufacturerNavigation(int currentManufacturerId)
         {
-            var currentManufacturer = _manufacturerService.GetManufacturerById(currentManufacturerId);
-
-            var model = new List<ManufacturerNavigationModel>();
-            foreach (var manufacturer in _manufacturerService.GetAllManufacturers())
-            {
-                var modelMan = new ManufacturerNavigationModel()
+            string cacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURER_NAVIGATION_MODEL_KEY, currentManufacturerId, _workContext.WorkingLanguage.Id);
+            var cacheModel = _cacheManager.Get(cacheKey, () =>
                 {
-                    Id = manufacturer.Id,
-                    Name = manufacturer.GetLocalized(x => x.Name),
-                    SeName = manufacturer.GetSeName(),
-                    IsActive = currentManufacturer != null && currentManufacturer.Id == manufacturer.Id,
-                };
-                model.Add(modelMan);
-            }
+                    var currentManufacturer = _manufacturerService.GetManufacturerById(currentManufacturerId);
 
-            return PartialView(model);
+                    var model = new List<ManufacturerNavigationModel>();
+                    foreach (var manufacturer in _manufacturerService.GetAllManufacturers())
+                    {
+                        var modelMan = new ManufacturerNavigationModel()
+                        {
+                            Id = manufacturer.Id,
+                            Name = manufacturer.GetLocalized(x => x.Name),
+                            SeName = manufacturer.GetSeName(),
+                            IsActive = currentManufacturer != null && currentManufacturer.Id == manufacturer.Id,
+                        };
+                        model.Add(modelMan);
+                    }
+                    return model;
+                });
+
+            return PartialView(cacheModel);
         }
 
         #endregion
