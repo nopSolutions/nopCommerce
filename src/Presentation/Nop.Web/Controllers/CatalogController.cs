@@ -1806,26 +1806,31 @@ namespace Nop.Web.Controllers
         //[OutputCache(Duration = 120, VaryByCustom = "WorkingLanguage")]
         public ActionResult PopularProductTags()
         {
-            var model = new PopularProductTagsModel();
+            var cacheKey = ModelCacheEventConsumer.PRODUCTTAG_POPULAR_MODEL_KEY;
+            var cacheModel = _cacheManager.Get(cacheKey, () =>
+            {
+                var model = new PopularProductTagsModel();
 
-            //get all tags
-            var tags = _productTagService.GetAllProductTags()
-                .OrderByDescending(x => x.ProductCount)
-                .Where(x => x.ProductCount > 0)
-                .Take(_catalogSettings.NumberOfProductTags)
-                .ToList();
-            //sorting
-            tags = tags.OrderBy(x => x.Name).ToList();
+                //get all tags
+                var tags = _productTagService.GetAllProductTags()
+                    .OrderByDescending(x => x.ProductCount)
+                    .Where(x => x.ProductCount > 0)
+                    .Take(_catalogSettings.NumberOfProductTags)
+                    .ToList();
+                //sorting
+                tags = tags.OrderBy(x => x.Name).ToList();
 
-            foreach (var tag in tags)
-                model.Tags.Add(new ProductTagModel()
-                {
-                    Id = tag.Id,
-                    Name = tag.Name,
-                    ProductCount = tag.ProductCount
-                });
+                foreach (var tag in tags)
+                    model.Tags.Add(new ProductTagModel()
+                    {
+                        Id = tag.Id,
+                        Name = tag.Name,
+                        ProductCount = tag.ProductCount
+                    });
+                return model;
+            });
 
-            return PartialView(model);
+            return PartialView(cacheModel);
         }
 
         public ActionResult ProductsByTag(int productTagId, CatalogPagingFilteringModel command)
