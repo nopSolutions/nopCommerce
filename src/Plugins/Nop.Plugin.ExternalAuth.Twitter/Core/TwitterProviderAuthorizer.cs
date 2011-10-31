@@ -62,7 +62,7 @@ namespace Nop.Plugin.ExternalAuth.Twitter.Core
 
             if (!MvcAuthorizer.IsAuthorized)
             {
-                return new AuthorizeState(returnUrl, OpenAuthenticationStatus.RequresRedirect) { Result = MvcAuthorizer.BeginAuthorization() };
+                return new AuthorizeState(returnUrl, OpenAuthenticationStatus.RequiresRedirect) { Result = MvcAuthorizer.BeginAuthorization() };
             }
 
             var parameters = new OAuthAuthenticationParameters(Provider.SystemName)

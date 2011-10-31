@@ -70,7 +70,7 @@ namespace Nop.Plugin.ExternalAuth.OpenId.Core
                 request.AddExtension(Claims.CreateClaimsRequest(_openAuthenticationProviderPermissionService));
                 request.AddExtension(Claims.CreateFetchRequest(_openAuthenticationProviderPermissionService));
 
-                return new AuthorizeState(returnUrl, OpenAuthenticationStatus.RequresRedirect)
+                return new AuthorizeState(returnUrl, OpenAuthenticationStatus.RequiresRedirect)
                 {
                     Result = request.RedirectingResponse.AsActionResult()
                 };

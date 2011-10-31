@@ -62,14 +62,11 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Core
                     OAuthAccessToken = GetAccessToken(oAuthResult.Code)
                 };
 
+                if (_externalAuthenticationSettings.AutoRegisterEnabled)
+                    GetUserName(parameters);
+
                 var result = _authorizer.Authorize(parameters);
-
-                if (result.Status == OpenAuthenticationStatus.AssociateOnLogon)
-                {
-                    if (_externalAuthenticationSettings.AutoRegisterEnabled)
-                        result = GetUserNameAndRetryAuthorization(parameters);
-                }
-
+                
                 return new AuthorizeState(returnUrl, result);
             }
 
@@ -78,7 +75,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Core
             return state;
         }
 
-        private AuthorizationResult GetUserNameAndRetryAuthorization(OAuthAuthenticationParameters parameters)
+        private void GetUserName(OAuthAuthenticationParameters parameters)
         {
             var client = new FacebookClient(parameters.OAuthAccessToken);
             var me = client.Get("/me");
@@ -87,8 +84,6 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Core
             var claims = claimsTranslator.Translate((IDictionary<string, object>)me);
 
             parameters.AddClaim(claims);
-
-            return _authorizer.Authorize(parameters);
         }
 
         private AuthorizeState GenerateRequestState(string returnUrl)
@@ -109,7 +104,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Core
 
             var result = new RedirectResult(facebookClient.GetLoginUrl(parameters).ToString());
 
-            return new AuthorizeState(returnUrl, OpenAuthenticationStatus.RequresRedirect) { Result = result };
+            return new AuthorizeState(returnUrl, OpenAuthenticationStatus.RequiresRedirect) { Result = result };
         }
 
         private Uri GenerateCallbackUri()

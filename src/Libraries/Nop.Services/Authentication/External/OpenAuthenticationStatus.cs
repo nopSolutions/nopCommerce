@@ -8,7 +8,7 @@ namespace Nop.Services.Authentication.External
         Unknown,
         Error,
         Authenticated,
-        RequresRedirect,
+        RequiresRedirect,
         AssociateOnLogon,
         AutoRegisteredEmailValidation,
         AutoRegisteredAdminApproval,
