@@ -1452,18 +1452,23 @@ namespace Nop.Web.Controllers
         //[OutputCache(Duration = 120, VaryByCustom = "WorkingLanguage")]
         public ActionResult ProductManufacturers(int productId)
         {
-            var model = _manufacturerService.GetProductManufacturersByProductId(productId)
-                .Select(x =>
-                {
-                    var m = x.Manufacturer.ToModel();
-                    m.PictureModel.ImageUrl = _pictureService.GetPictureUrl(x.Manufacturer.PictureId, _mediaSetting.ManufacturerThumbPictureSize, true);
-                    m.PictureModel.Title = string.Format(_localizationService.GetResource("Media.Manufacturer.ImageLinkTitleFormat"), m.Name);
-                    m.PictureModel.AlternateText = string.Format(_localizationService.GetResource("Media.Manufacturer.ImageAlternateTextFormat"), m.Name);
-                    return m;
-                })
-                .ToList();
-            
-            return PartialView(model);
+            string cacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_MANUFACTURERS_MODEL_KEY, productId, _workContext.WorkingLanguage.Id);
+            var cacheModel = _cacheManager.Get(cacheKey, () =>
+            {
+                var model = _manufacturerService.GetProductManufacturersByProductId(productId)
+                    .Select(x =>
+                    {
+                        var m = x.Manufacturer.ToModel();
+                        //m.PictureModel.ImageUrl = _pictureService.GetPictureUrl(x.Manufacturer.PictureId, _mediaSetting.ManufacturerThumbPictureSize, true);
+                        //m.PictureModel.Title = string.Format(_localizationService.GetResource("Media.Manufacturer.ImageLinkTitleFormat"), m.Name);
+                        //m.PictureModel.AlternateText = string.Format(_localizationService.GetResource("Media.Manufacturer.ImageAlternateTextFormat"), m.Name);
+                        return m;
+                    })
+                    .ToList();
+                return model;
+            });
+
+            return PartialView(cacheModel);
         }
 
         [ChildActionOnly]

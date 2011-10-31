@@ -24,6 +24,10 @@ namespace Nop.Web.Infrastructure.Cache
         IConsumer<EntityInserted<Manufacturer>>,
         IConsumer<EntityUpdated<Manufacturer>>,
         IConsumer<EntityDeleted<Manufacturer>>,
+        //product manufacturers
+        IConsumer<EntityInserted<ProductManufacturer>>,
+        IConsumer<EntityUpdated<ProductManufacturer>>,
+        IConsumer<EntityDeleted<ProductManufacturer>>,
         //categories
         IConsumer<EntityInserted<Category>>,
         IConsumer<EntityUpdated<Category>>,
@@ -120,6 +124,16 @@ namespace Nop.Web.Infrastructure.Cache
         public const string PRODUCT_BREADCRUMB_PATTERN_KEY = "nop.pres.product.breadcrumb";
 
         /// <summary>
+        /// Key for ProductManufacturers model caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : product id
+        /// {1} : language id
+        /// </remarks>
+        public const string PRODUCT_MANUFACTURERS_MODEL_KEY = "nop.pres.product.manufacturers-{0}-{1}";
+        public const string PRODUCT_MANUFACTURERS_PATTERN_KEY = "nop.pres.product.manufacturers";
+
+        /// <summary>
         /// Key for ProductSpecificationModel caching
         /// </summary>
         /// <remarks>
@@ -183,6 +197,7 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(TOPIC_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCT_BREADCRUMB_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_NAVIGATION_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(PRODUCT_MANUFACTURERS_PATTERN_KEY);
         }
         public void HandleEvent(EntityUpdated<Language> eventMessage)
         {
@@ -192,6 +207,7 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(TOPIC_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCT_BREADCRUMB_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_NAVIGATION_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(PRODUCT_MANUFACTURERS_PATTERN_KEY);
         }
         public void HandleEvent(EntityDeleted<Language> eventMessage)
         {
@@ -201,6 +217,7 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(TOPIC_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCT_BREADCRUMB_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_NAVIGATION_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(PRODUCT_MANUFACTURERS_PATTERN_KEY);
         }
 
         //settings
@@ -223,14 +240,31 @@ namespace Nop.Web.Infrastructure.Cache
         public void HandleEvent(EntityInserted<Manufacturer> eventMessage)
         {
             _cacheManager.RemoveByPattern(MANUFACTURER_NAVIGATION_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(PRODUCT_MANUFACTURERS_PATTERN_KEY);
         }
         public void HandleEvent(EntityUpdated<Manufacturer> eventMessage)
         {
             _cacheManager.RemoveByPattern(MANUFACTURER_NAVIGATION_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(PRODUCT_MANUFACTURERS_PATTERN_KEY);
         }
         public void HandleEvent(EntityDeleted<Manufacturer> eventMessage)
         {
             _cacheManager.RemoveByPattern(MANUFACTURER_NAVIGATION_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(PRODUCT_MANUFACTURERS_PATTERN_KEY);
+        }
+
+        //product manufacturers
+        public void HandleEvent(EntityInserted<ProductManufacturer> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(PRODUCT_MANUFACTURERS_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityUpdated<ProductManufacturer> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(PRODUCT_MANUFACTURERS_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityDeleted<ProductManufacturer> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(PRODUCT_MANUFACTURERS_PATTERN_KEY);
         }
         
         //categories
