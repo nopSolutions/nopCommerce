@@ -66,7 +66,6 @@ namespace Nop.Web.Models.Catalog
             public int ProductId { get; set; }
             public string ProductName { get; set; }
             public string ProductSeName { get; set; }
-            public bool DisplayBreadcrumb { get; set; }
             public IList<CategoryModel> CategoryBreadcrumb { get; set; }
         }
         

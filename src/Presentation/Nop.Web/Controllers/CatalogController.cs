@@ -1398,18 +1398,18 @@ namespace Nop.Web.Controllers
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
+            if (!_catalogSettings.CategoryBreadcrumbEnabled)
+                return Content("");
+
             var cacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_BREADCRUMB_MODEL_KEY, product.Id, _workContext.WorkingLanguage.Id);
             var cacheModel = _cacheManager.Get(cacheKey, () =>
                 {
                     var model = new ProductModel.ProductBreadcrumbModel()
                         {
-                            DisplayBreadcrumb = _catalogSettings.CategoryBreadcrumbEnabled,
                             ProductId = product.Id,
                             ProductName = product.GetLocalized(x => x.Name),
                             ProductSeName = product.GetSeName()
                         };
-                    if (model.DisplayBreadcrumb)
-                    {
                         var productCategories = _categoryService.GetProductCategoriesByProductId(product.Id);
                         if (productCategories.Count > 0)
                         {
@@ -1427,7 +1427,6 @@ namespace Nop.Web.Controllers
                                 }
                             }
                         }
-                    }
                     return model;
                 });
             

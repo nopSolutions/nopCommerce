@@ -172,13 +172,11 @@ namespace Nop.Web.Infrastructure.Cache
         public void HandleEvent(EntityUpdated<Setting> eventMessage)
         {
             //clear models which depend on settings
-            _cacheManager.RemoveByPattern(PRODUCT_BREADCRUMB_PATTERN_KEY); //depends on CatalogSettings.CategoryBreadcrumbEnabled
             _cacheManager.RemoveByPattern(CATEGORY_NAVIGATION_PATTERN_KEY); //depends on CatalogSettings.ShowCategoryProductNumber and CatalogSettings.ShowCategoryProductNumberIncludingSubcategories
         }
         public void HandleEvent(EntityDeleted<Setting> eventMessage)
         {
             //clear models which depend on settings
-            _cacheManager.RemoveByPattern(PRODUCT_BREADCRUMB_PATTERN_KEY); //depends on CatalogSettings.CategoryBreadcrumbEnabled
             _cacheManager.RemoveByPattern(CATEGORY_NAVIGATION_PATTERN_KEY); //depends on CatalogSettings.ShowCategoryProductNumber and CatalogSettings.ShowCategoryProductNumberIncludingSubcategories
         }
         
