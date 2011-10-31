@@ -388,10 +388,15 @@ namespace Nop.Web.Controllers
             var model = product.ToModel();
 
             //template
-            var template = _productTemplateService.GetProductTemplateById(product.ProductTemplateId);
-            if (template == null)
-                template = _productTemplateService.GetAllProductTemplates().FirstOrDefault();
-            model.ProductTemplateViewPath = template.ViewPath;
+
+            var templateCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_TEMPLATE_MODEL_KEY, product.ProductTemplateId);
+            model.ProductTemplateViewPath = _cacheManager.Get(templateCacheKey, () =>
+            {
+                var template = _productTemplateService.GetProductTemplateById(product.ProductTemplateId);
+                if (template == null)
+                    template = _productTemplateService.GetAllProductTemplates().FirstOrDefault();
+                return template.ViewPath;
+            });
 
             //pictures
             model.DefaultPictureZoomEnabled = _mediaSetting.DefaultPictureZoomEnabled;
@@ -875,11 +880,16 @@ namespace Nop.Web.Controllers
 
 
             //template
-            var template = _categoryTemplateService.GetCategoryTemplateById(category.CategoryTemplateId);
-            if (template == null)
-                template = _categoryTemplateService.GetAllCategoryTemplates().FirstOrDefault();
+            var templateCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_TEMPLATE_MODEL_KEY, category.CategoryTemplateId);
+            var templateViewPath = _cacheManager.Get(templateCacheKey, () =>
+                {
+                    var template = _categoryTemplateService.GetCategoryTemplateById(category.CategoryTemplateId);
+                    if (template == null)
+                        template = _categoryTemplateService.GetAllCategoryTemplates().FirstOrDefault();
+                    return template.ViewPath;
+                });
 
-            return View(template.ViewPath, model);
+            return View(templateViewPath, model);
         }
 
         [ChildActionOnly]
@@ -1090,11 +1100,16 @@ namespace Nop.Web.Controllers
 
 
             //template
-            var template = _manufacturerTemplateService.GetManufacturerTemplateById(manufacturer.ManufacturerTemplateId);
-            if (template == null)
-                template = _manufacturerTemplateService.GetAllManufacturerTemplates().FirstOrDefault();
+            var templateCacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURER_TEMPLATE_MODEL_KEY, manufacturer.ManufacturerTemplateId);
+            var templateViewPath = _cacheManager.Get(templateCacheKey, () =>
+            {
+                var template = _manufacturerTemplateService.GetManufacturerTemplateById(manufacturer.ManufacturerTemplateId);
+                if (template == null)
+                    template = _manufacturerTemplateService.GetAllManufacturerTemplates().FirstOrDefault();
+                return template.ViewPath;
+            });
 
-            return View(template.ViewPath, model);
+            return View(templateViewPath, model);
         }
 
         public ActionResult ManufacturerAll()

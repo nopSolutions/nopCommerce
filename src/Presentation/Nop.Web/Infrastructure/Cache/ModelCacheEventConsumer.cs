@@ -59,7 +59,19 @@ namespace Nop.Web.Infrastructure.Cache
         //Topics
         IConsumer<EntityInserted<Topic>>,
         IConsumer<EntityUpdated<Topic>>,
-        IConsumer<EntityDeleted<Topic>>
+        IConsumer<EntityDeleted<Topic>>,
+        //Category templates
+        IConsumer<EntityInserted<CategoryTemplate>>,
+        IConsumer<EntityUpdated<CategoryTemplate>>,
+        IConsumer<EntityDeleted<CategoryTemplate>>,
+        //Manufacturer templates
+        IConsumer<EntityInserted<ManufacturerTemplate>>,
+        IConsumer<EntityUpdated<ManufacturerTemplate>>,
+        IConsumer<EntityDeleted<ManufacturerTemplate>>,
+        //Product templates
+        IConsumer<EntityInserted<ProductTemplate>>,
+        IConsumer<EntityUpdated<ProductTemplate>>,
+        IConsumer<EntityDeleted<ProductTemplate>>
     {
         /// <summary>
         /// Key for ManufacturerNavigationModel caching
@@ -126,6 +138,33 @@ namespace Nop.Web.Infrastructure.Cache
         /// </remarks>
         public const string TOPIC_MODEL_KEY = "nop.pres.topic.details-{0}-{1}";
         public const string TOPIC_PATTERN_KEY = "nop.pres.topic.details";
+
+        /// <summary>
+        /// Key for CategoryTemplate caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : category template id
+        /// </remarks>
+        public const string CATEGORY_TEMPLATE_MODEL_KEY = "nop.pres.categorytemplate-{0}";
+        public const string CATEGORY_TEMPLATE_PATTERN_KEY = "nop.pres.categorytemplate";
+
+        /// <summary>
+        /// Key for ManufacturerTemplate caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : manufacturer template id
+        /// </remarks>
+        public const string MANUFACTURER_TEMPLATE_MODEL_KEY = "nop.pres.manufacturertemplate-{0}";
+        public const string MANUFACTURER_TEMPLATE_PATTERN_KEY = "nop.pres.manufacturertemplate";
+
+        /// <summary>
+        /// Key for MProductTemplate caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : product template id
+        /// </remarks>
+        public const string PRODUCT_TEMPLATE_MODEL_KEY = "nop.pres.producttemplate-{0}";
+        public const string PRODUCT_TEMPLATE_PATTERN_KEY = "nop.pres.producttemplate";
 
         private readonly ICacheManager _cacheManager;
         
@@ -323,6 +362,48 @@ namespace Nop.Web.Infrastructure.Cache
         public void HandleEvent(EntityDeleted<Topic> eventMessage)
         {
             _cacheManager.RemoveByPattern(TOPIC_PATTERN_KEY);
+        }
+        
+        //Category templates
+        public void HandleEvent(EntityInserted<CategoryTemplate> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(CATEGORY_TEMPLATE_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityUpdated<CategoryTemplate> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(CATEGORY_TEMPLATE_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityDeleted<CategoryTemplate> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(CATEGORY_TEMPLATE_PATTERN_KEY);
+        }
+
+        //Manufacturer templates
+        public void HandleEvent(EntityInserted<ManufacturerTemplate> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(MANUFACTURER_TEMPLATE_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityUpdated<ManufacturerTemplate> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(MANUFACTURER_TEMPLATE_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityDeleted<ManufacturerTemplate> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(MANUFACTURER_TEMPLATE_PATTERN_KEY);
+        }
+
+        //Product templates
+        public void HandleEvent(EntityInserted<ProductTemplate> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(PRODUCT_TEMPLATE_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityUpdated<ProductTemplate> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(PRODUCT_TEMPLATE_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityDeleted<ProductTemplate> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(PRODUCT_TEMPLATE_PATTERN_KEY);
         }
     }
 }
