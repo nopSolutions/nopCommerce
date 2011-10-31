@@ -1466,19 +1466,24 @@ namespace Nop.Web.Controllers
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
-            var model= _specificationAttributeService.GetProductSpecificationAttributesByProductId(product.Id, null, true)
-                .Select(psa =>
-                {
-                    return new ProductSpecificationModel()
+            string cacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_SPECS_MODEL_KEY, product.Id, _workContext.WorkingLanguage.Id);
+            var cacheModel = _cacheManager.Get(cacheKey, () =>
+            {
+                var model = _specificationAttributeService.GetProductSpecificationAttributesByProductId(product.Id, null, true)
+                    .Select(psa =>
                     {
-                        SpecificationAttributeId = psa.SpecificationAttributeOption.SpecificationAttributeId,
-                        SpecificationAttributeName = psa.SpecificationAttributeOption.SpecificationAttribute.GetLocalized(x => x.Name),
-                        SpecificationAttributeOption = psa.SpecificationAttributeOption.GetLocalized(x => x.Name)
-                    };
-                })
-                .ToList();
-            
-            return PartialView(model);
+                        return new ProductSpecificationModel()
+                        {
+                            SpecificationAttributeId = psa.SpecificationAttributeOption.SpecificationAttributeId,
+                            SpecificationAttributeName = psa.SpecificationAttributeOption.SpecificationAttribute.GetLocalized(x => x.Name),
+                            SpecificationAttributeOption = psa.SpecificationAttributeOption.GetLocalized(x => x.Name)
+                        };
+                    })
+                    .ToList();
+                return model;
+            });
+
+            return PartialView(cacheModel);
         }
 
         [ChildActionOnly]

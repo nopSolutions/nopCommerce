@@ -25,7 +25,19 @@ namespace Nop.Web.Infrastructure.Cache
         //product tags
         IConsumer<EntityInserted<ProductTag>>,
         IConsumer<EntityUpdated<ProductTag>>,
-        IConsumer<EntityDeleted<ProductTag>>
+        IConsumer<EntityDeleted<ProductTag>>,
+        //specification attributes
+        IConsumer<EntityInserted<SpecificationAttribute>>,
+        IConsumer<EntityUpdated<SpecificationAttribute>>,
+        IConsumer<EntityDeleted<SpecificationAttribute>>,
+        //specification attribute options
+        IConsumer<EntityInserted<SpecificationAttributeOption>>,
+        IConsumer<EntityUpdated<SpecificationAttributeOption>>,
+        IConsumer<EntityDeleted<SpecificationAttributeOption>>,
+        //Product specification attribute
+        IConsumer<EntityInserted<ProductSpecificationAttribute>>,
+        IConsumer<EntityUpdated<ProductSpecificationAttribute>>,
+        IConsumer<EntityDeleted<ProductSpecificationAttribute>>
     {
         /// <summary>
         /// Key for ManufacturerNavigationModel caching
@@ -40,12 +52,19 @@ namespace Nop.Web.Infrastructure.Cache
         /// <summary>
         /// Key for PopularProductTagsModel caching
         /// </summary>
-        /// <remarks>
-        /// {0} : current manufacturer id
-        /// {1} : language id
-        /// </remarks>
         public const string PRODUCTTAG_POPULAR_MODEL_KEY = "nop.pres.producttag.popular";
         public const string PRODUCTTAG_POPULAR_PATTERN_KEY = "nop.pres.producttag.popular";
+
+        /// <summary>
+        /// Key for ProductSpecificationModel caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : product id
+        /// {1} : language id
+        /// </remarks>
+        public const string PRODUCT_SPECS_MODEL_KEY = "nop.pres.product.specs-{0}-{1}";
+        public const string PRODUCT_SPECS_PATTERN_KEY = "nop.pres.product.specs";
+
         private readonly ICacheManager _cacheManager;
         
         public ModelCacheEventConsumer()
@@ -59,16 +78,19 @@ namespace Nop.Web.Infrastructure.Cache
         {
             //clear all localizable models
             _cacheManager.RemoveByPattern(MANUFACTURER_NAVIGATION_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(PRODUCT_SPECS_PATTERN_KEY);
         }
         public void HandleEvent(EntityUpdated<Language> eventMessage)
         {
             //clear all localizable models
             _cacheManager.RemoveByPattern(MANUFACTURER_NAVIGATION_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(PRODUCT_SPECS_PATTERN_KEY);
         }
         public void HandleEvent(EntityDeleted<Language> eventMessage)
         {
             //clear all localizable models
             _cacheManager.RemoveByPattern(MANUFACTURER_NAVIGATION_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(PRODUCT_SPECS_PATTERN_KEY);
         }
         
         //manufacturers
@@ -108,6 +130,48 @@ namespace Nop.Web.Infrastructure.Cache
         public void HandleEvent(EntityDeleted<ProductTag> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCTTAG_POPULAR_PATTERN_KEY);
+        }
+        
+        //specification attributes
+        public void HandleEvent(EntityInserted<SpecificationAttribute> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(PRODUCT_SPECS_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityUpdated<SpecificationAttribute> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(PRODUCT_SPECS_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityDeleted<SpecificationAttribute> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(PRODUCT_SPECS_PATTERN_KEY);
+        }
+        
+        //specification attribute options
+        public void HandleEvent(EntityInserted<SpecificationAttributeOption> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(PRODUCT_SPECS_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityUpdated<SpecificationAttributeOption> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(PRODUCT_SPECS_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityDeleted<SpecificationAttributeOption> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(PRODUCT_SPECS_PATTERN_KEY);
+        }
+        
+        //Product specification attribute
+        public void HandleEvent(EntityInserted<ProductSpecificationAttribute> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(PRODUCT_SPECS_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityUpdated<ProductSpecificationAttribute> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(PRODUCT_SPECS_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityDeleted<ProductSpecificationAttribute> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(PRODUCT_SPECS_PATTERN_KEY);
         }
     }
 }
