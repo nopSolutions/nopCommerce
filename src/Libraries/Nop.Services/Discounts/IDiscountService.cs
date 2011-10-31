@@ -31,13 +31,6 @@ namespace Nop.Services.Discounts
         IList<Discount> GetAllDiscounts(DiscountType? discountType, bool showHidden = false);
 
         /// <summary>
-        /// Gets all discounts with 'Assigned to categories' type
-        /// </summary>
-        /// <param name="productId">ProductId</param>
-        /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Discounts</returns>
-        IList<Discount> GetDiscountsAssignedToCategoriesByProductId(int productId, bool showHidden = false);
-        /// <summary>
         /// Inserts a discount
         /// </summary>
         /// <param name="discount">Discount</param>
