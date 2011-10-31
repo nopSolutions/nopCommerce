@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Core.Caching;
 using Nop.Core.Data;
+using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Events;
@@ -18,6 +19,7 @@ namespace Nop.Services.Discounts
     {
         #region Constants
         private const string DISCOUNTS_ALL_KEY = "Nop.discount.all-{0}-{1}";
+        private const string DISCOUNTS_ASSIGNED_TO_CATEGORIES_KEY = "Nop.discount.assignedtocategories-{0}-{1}";
         private const string DISCOUNTS_BY_ID_KEY = "Nop.discount.id-{0}";
         private const string DISCOUNTS_PATTERN_KEY = "Nop.discount.";
         #endregion
@@ -41,6 +43,7 @@ namespace Nop.Services.Discounts
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="discountRepository">Discount repository</param>
         /// <param name="discountRequirementRepository">Discount requirement repository</param>
+        /// <param name="discountUsageHistoryRepository">Discount usage history repository</param>
         /// <param name="pluginFinder">Plugin finder</param>
         /// <param name="eventPublisher"></param>
         public DiscountService(ICacheManager cacheManager,
@@ -50,12 +53,12 @@ namespace Nop.Services.Discounts
             IPluginFinder pluginFinder,
             IEventPublisher eventPublisher)
         {
-            _cacheManager = cacheManager;
-            _discountRepository = discountRepository;
-            _discountRequirementRepository = discountRequirementRepository;
-            _discountUsageHistoryRepository = discountUsageHistoryRepository;
-            _pluginFinder = pluginFinder;
-            _eventPublisher = eventPublisher;
+            this._cacheManager = cacheManager;
+            this._discountRepository = discountRepository;
+            this._discountRequirementRepository = discountRequirementRepository;
+            this._discountUsageHistoryRepository = discountUsageHistoryRepository;
+            this._pluginFinder = pluginFinder;
+            this._eventPublisher = eventPublisher;
         }
 
         #endregion
@@ -178,6 +181,56 @@ namespace Nop.Services.Discounts
                 }
                 query = query.OrderByDescending(d => d.Id);
                 
+                var discounts = query.ToList();
+                return discounts;
+            });
+        }
+
+        /// <summary>
+        /// Gets all discounts with 'Assigned to categories' type
+        /// </summary>
+        /// <param name="productId">ProductId</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <returns>Discounts</returns>
+        public virtual IList<Discount> GetDiscountsAssignedToCategoriesByProductId(int productId, bool showHidden = false)
+        {
+            if (productId == 0)
+                return new List<Discount>();
+
+            string key = string.Format(DISCOUNTS_ASSIGNED_TO_CATEGORIES_KEY, showHidden, productId);
+            return _cacheManager.Get(key, () =>
+            {
+                var query = _discountRepository.Table;
+                query = from d in query
+                        from c in d.AppliedToCategories
+                        from pc in c.ProductCategories
+                        where pc.ProductId == productId &&
+                                  !c.Deleted &&
+                                  (showHidden || c.Published)
+                        select d;
+                if (!showHidden)
+                {
+                    //The function 'CurrentUtcDateTime' is not supported by SQL Server Compact. 
+                    //That's why we pass the date value
+                    var nowUtc = DateTime.UtcNow;
+                    query = query.Where(d =>
+                        (!d.StartDateUtc.HasValue || d.StartDateUtc <= nowUtc)
+                        && (!d.EndDateUtc.HasValue || d.EndDateUtc >= nowUtc)
+                        );
+                }
+                int discountTypeId = (int)DiscountType.AssignedToCategories;
+                query = query.Where(d => d.DiscountTypeId == discountTypeId);
+
+                //only distinct discounts (group by ID)
+                //if we use standard Distinct() method, then all fields will be compared (low performance)
+                query = from d in query
+                        group d by d.Id
+                            into dGroup
+                            orderby dGroup.Key
+                            select dGroup.FirstOrDefault();
+
+                query = query.OrderByDescending(d => d.Id);
+
                 var discounts = query.ToList();
                 return discounts;
             });

@@ -886,17 +886,22 @@ namespace Nop.Web.Controllers
         //[OutputCache(Duration = 120, VaryByCustom = "WorkingLanguage")]
         public ActionResult CategoryNavigation(int currentCategoryId, int currentProductId)
         {
-            var currentCategory = _categoryService.GetCategoryById(currentCategoryId);
-            if (currentCategory == null && currentProductId > 0)
+            string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_NAVIGATION_MODEL_KEY, currentCategoryId, currentProductId, _workContext.WorkingLanguage.Id);
+            var cacheModel = _cacheManager.Get(cacheKey, () =>
             {
-                var productCategories = _categoryService.GetProductCategoriesByProductId(currentProductId);
-                if (productCategories.Count > 0)
-                    currentCategory = productCategories[0].Category;
-            }
-            var breadCrumb = currentCategory != null ? GetCategoryBreadCrumb(currentCategory) : new List<Category>();
-            var model = GetChildCategoryNavigationModel(breadCrumb, 0, currentCategory, 0);
+                var currentCategory = _categoryService.GetCategoryById(currentCategoryId);
+                if (currentCategory == null && currentProductId > 0)
+                {
+                    var productCategories = _categoryService.GetProductCategoriesByProductId(currentProductId);
+                    if (productCategories.Count > 0)
+                        currentCategory = productCategories[0].Category;
+                }
+                var breadCrumb = currentCategory != null ? GetCategoryBreadCrumb(currentCategory) : new List<Category>();
+                var model = GetChildCategoryNavigationModel(breadCrumb, 0, currentCategory, 0);
+                return model;
+            });
 
-            return PartialView(model);
+            return PartialView(cacheModel);
         }
 
         [ChildActionOnly]
@@ -1393,34 +1398,40 @@ namespace Nop.Web.Controllers
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
-            var model = new ProductModel.ProductBreadcrumbModel()
-            {
-                DisplayBreadcrumb = _catalogSettings.CategoryBreadcrumbEnabled,
-                ProductId = product.Id,
-                ProductName = product.GetLocalized(x => x.Name),
-                ProductSeName = product.GetSeName()
-            };
-            if (model.DisplayBreadcrumb)
-            {
-                var productCategories = _categoryService.GetProductCategoriesByProductId(product.Id);
-                if (productCategories.Count > 0)
+            var cacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_BREADCRUMB_MODEL_KEY, product.Id, _workContext.WorkingLanguage.Id);
+            var cacheModel = _cacheManager.Get(cacheKey, () =>
                 {
-                    var category = productCategories[0].Category;
-                    if (category != null)
-                    {
-                        foreach (var catBr in GetCategoryBreadCrumb(category))
+                    var model = new ProductModel.ProductBreadcrumbModel()
                         {
-                            model.CategoryBreadcrumb.Add(new CategoryModel()
+                            DisplayBreadcrumb = _catalogSettings.CategoryBreadcrumbEnabled,
+                            ProductId = product.Id,
+                            ProductName = product.GetLocalized(x => x.Name),
+                            ProductSeName = product.GetSeName()
+                        };
+                    if (model.DisplayBreadcrumb)
+                    {
+                        var productCategories = _categoryService.GetProductCategoriesByProductId(product.Id);
+                        if (productCategories.Count > 0)
+                        {
+                            var category = productCategories[0].Category;
+                            if (category != null)
                             {
-                                Id = catBr.Id,
-                                Name = catBr.GetLocalized(x => x.Name),
-                                SeName = catBr.GetSeName()
-                            });
+                                foreach (var catBr in GetCategoryBreadCrumb(category))
+                                {
+                                    model.CategoryBreadcrumb.Add(new CategoryModel()
+                                    {
+                                        Id = catBr.Id,
+                                        Name = catBr.GetLocalized(x => x.Name),
+                                        SeName = catBr.GetSeName()
+                                    });
+                                }
+                            }
                         }
                     }
-                }
-            }
-            return PartialView(model);
+                    return model;
+                });
+            
+            return PartialView(cacheModel);
         }
 
         [ChildActionOnly]
