@@ -1,6 +1,7 @@
 ﻿using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Topics;
 using Nop.Core.Events;
 using Nop.Core.Infrastructure;
 
@@ -37,7 +38,11 @@ namespace Nop.Web.Infrastructure.Cache
         //Product specification attribute
         IConsumer<EntityInserted<ProductSpecificationAttribute>>,
         IConsumer<EntityUpdated<ProductSpecificationAttribute>>,
-        IConsumer<EntityDeleted<ProductSpecificationAttribute>>
+        IConsumer<EntityDeleted<ProductSpecificationAttribute>>,
+        //Topics
+        IConsumer<EntityInserted<Topic>>,
+        IConsumer<EntityUpdated<Topic>>,
+        IConsumer<EntityDeleted<Topic>>
     {
         /// <summary>
         /// Key for ManufacturerNavigationModel caching
@@ -74,6 +79,16 @@ namespace Nop.Web.Infrastructure.Cache
         public const string PRODUCT_SPECS_MODEL_KEY = "nop.pres.product.specs-{0}-{1}";
         public const string PRODUCT_SPECS_PATTERN_KEY = "nop.pres.product.specs";
 
+        /// <summary>
+        /// Key for PopularProductTagsModel caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : topic id
+        /// {1} : language id
+        /// </remarks>
+        public const string TOPIC_MODEL_KEY = "nop.pres.topic.details-{0}-{1}";
+        public const string TOPIC_PATTERN_KEY = "nop.pres.topic.";
+
         private readonly ICacheManager _cacheManager;
         
         public ModelCacheEventConsumer()
@@ -88,18 +103,21 @@ namespace Nop.Web.Infrastructure.Cache
             //clear all localizable models
             _cacheManager.RemoveByPattern(MANUFACTURER_NAVIGATION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCT_SPECS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(TOPIC_PATTERN_KEY);
         }
         public void HandleEvent(EntityUpdated<Language> eventMessage)
         {
             //clear all localizable models
             _cacheManager.RemoveByPattern(MANUFACTURER_NAVIGATION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCT_SPECS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(TOPIC_PATTERN_KEY);
         }
         public void HandleEvent(EntityDeleted<Language> eventMessage)
         {
             //clear all localizable models
             _cacheManager.RemoveByPattern(MANUFACTURER_NAVIGATION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCT_SPECS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(TOPIC_PATTERN_KEY);
         }
         
         //manufacturers
@@ -184,6 +202,20 @@ namespace Nop.Web.Infrastructure.Cache
         public void HandleEvent(EntityDeleted<ProductSpecificationAttribute> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_SPECS_PATTERN_KEY);
+        }
+
+        //Topics
+        public void HandleEvent(EntityInserted<Topic> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(TOPIC_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityUpdated<Topic> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(TOPIC_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityDeleted<Topic> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(TOPIC_PATTERN_KEY);
         }
     }
 }

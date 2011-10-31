@@ -1,8 +1,12 @@
 ﻿using System.Web.Mvc;
 using Nop.Core;
+using Nop.Core.Caching;
+using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
 using Nop.Services.Topics;
 using Nop.Web.Extensions;
+using Nop.Web.Infrastructure.Cache;
+using Nop.Web.Models.Topics;
 
 namespace Nop.Web.Controllers
 {
@@ -13,10 +17,26 @@ namespace Nop.Web.Controllers
         private readonly ITopicService _topicService;
         private readonly IWorkContext _workContext;
         private readonly ILocalizationService _localizationService;
+        private readonly ICacheManager _cacheManager;
 
         #endregion
 
         #region Constructors
+
+        private TopicModel PrepareTopicModel(string systemName)
+        {
+            var topic = _topicService.GetTopicBySystemName(systemName);
+            if (topic == null)
+                return null;
+
+            var model = topic.ToModel();
+            if (model.IsPasswordProtected)
+            {
+                model.Title = string.Empty;
+                model.Body = string.Empty;
+            }
+            return model;
+        }
 
         public TopicController(ITopicService topicService,
             ILocalizationService localizationService,
@@ -25,6 +45,9 @@ namespace Nop.Web.Controllers
             this._topicService = topicService;
             this._workContext = workContext;
             this._localizationService = localizationService;
+
+            //TODO inject static cache manager using constructor
+            this._cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
         }
 
         #endregion
@@ -33,51 +56,37 @@ namespace Nop.Web.Controllers
 
         public ActionResult TopicDetails(string systemName)
         {
-            var topic = _topicService.GetTopicBySystemName(systemName);
-            if (topic == null)
+            var cacheKey = string.Format(ModelCacheEventConsumer.TOPIC_MODEL_KEY, systemName, _workContext.WorkingLanguage.Id);
+            var cacheModel = _cacheManager.Get(cacheKey, () => PrepareTopicModel(systemName));
+
+            if (cacheModel == null)
                 return RedirectToAction("Index", "Home");
-
-            var model = topic.ToModel();
-            if (model.IsPasswordProtected)
-            {
-                model.Title = string.Empty;
-                model.Body = string.Empty;
-            }
-
-            return View("TopicDetails", model);
+            return View("TopicDetails", cacheModel);
         }
 
         public ActionResult TopicDetailsPopup(string systemName)
         {
-            ViewBag.IsPopup = true;
-            var topic = _topicService.GetTopicBySystemName(systemName);
-            if (topic == null)
+            var cacheKey = string.Format(ModelCacheEventConsumer.TOPIC_MODEL_KEY, systemName, _workContext.WorkingLanguage.Id);
+            var cacheModel = _cacheManager.Get(cacheKey, () => PrepareTopicModel(systemName));
+
+            if (cacheModel == null)
                 return RedirectToAction("Index", "Home");
 
-            var model = topic.ToModel();
-            if (model.IsPasswordProtected)
-            {
-                model.Title = string.Empty;
-                model.Body = string.Empty;
-            }
-            return View("TopicDetails", model);
+            ViewBag.IsPopup = true;
+            return View("TopicDetails", cacheModel);
         }
 
         [ChildActionOnly]
         //[OutputCache(Duration = 120, VaryByCustom = "WorkingLanguage")]
         public ActionResult TopicBlock(string systemName)
         {
-            var topic = _topicService.GetTopicBySystemName(systemName);
-            if (topic == null)
+            var cacheKey = string.Format(ModelCacheEventConsumer.TOPIC_MODEL_KEY, systemName, _workContext.WorkingLanguage.Id);
+            var cacheModel = _cacheManager.Get(cacheKey, () => PrepareTopicModel(systemName));
+
+            if (cacheModel == null)
                 return Content("");
 
-            var model = topic.ToModel();
-            if (model.IsPasswordProtected)
-            {
-                model.Title = string.Empty;
-                model.Body = string.Empty;
-            }
-            return PartialView(model);
+            return PartialView(cacheModel);
         }
 
         [HttpPost, ValidateInput(false)]
