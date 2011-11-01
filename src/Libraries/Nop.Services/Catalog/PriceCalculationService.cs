@@ -103,7 +103,7 @@ namespace Nop.Services.Catalog
         /// <param name="customer">Customer</param>
         /// <param name="quantity">Quantity</param>
         /// <returns>Price</returns>
-        protected virtual decimal GetTierPrice(ProductVariant productVariant, Customer customer, int quantity)
+        protected virtual decimal? GetMinimumTierPrice(ProductVariant productVariant, Customer customer, int quantity)
         {
             if (_catalogSettings.IgnoreTierPrices)
                 return decimal.Zero;
@@ -114,7 +114,7 @@ namespace Nop.Services.Catalog
                 .FilterForCustomer(customer);
 
             int previousQty = 1;
-            decimal previousPrice = productVariant.Price;
+            decimal? previousPrice = null;
             foreach (var tierPrice in tierPrices)
             {
                 //check quantity
@@ -236,8 +236,9 @@ namespace Nop.Services.Catalog
             //tier prices)
             if (!_catalogSettings.IgnoreTierPrices && productVariant.TierPrices.Count > 0)
             {
-                decimal tierPrice = GetTierPrice(productVariant, customer, quantity);
-                result = Math.Min(result, tierPrice);
+                decimal? tierPrice = GetMinimumTierPrice(productVariant, customer, quantity);
+                if (tierPrice.HasValue)
+                    result = Math.Min(result, tierPrice.Value);
             }
 
             //discount + additional charge
