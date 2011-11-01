@@ -18,10 +18,21 @@
 <script type="text/javascript">
     $(document).ready(function () {
 
+        $("#@Html.FieldIdFor(model => model.StoreInformationSettings.StoreClosed)").click(toggleStoreClosed);
         $("#@Html.FieldIdFor(model => model.SecuritySettings.UseSsl)").click(toggleSSL);
 
+        toggleStoreClosed();
         toggleSSL();
     });
+
+    function toggleStoreClosed() {
+        if (getE('@Html.FieldIdFor(model => model.StoreInformationSettings.StoreClosed)').checked) {
+            $('#pnlStoreClosedAllowForAdmins').show();
+        }
+        else {
+            $('#pnlStoreClosedAllowForAdmins').hide();
+        }
+    }
 
     function toggleSSL() {
         if (getE('@Html.FieldIdFor(model => model.SecuritySettings.UseSsl)').checked) {
@@ -76,6 +87,15 @@
             <td class="adminData">
                 @Html.EditorFor(model => model.StoreInformationSettings.StoreClosed)
                 @Html.ValidationMessageFor(model => model.StoreInformationSettings.StoreClosed)
+            </td>
+        </tr>
+        <tr id="pnlStoreClosedAllowForAdmins">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.StoreInformationSettings.StoreClosedAllowForAdmins):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.StoreInformationSettings.StoreClosedAllowForAdmins)
+                @Html.ValidationMessageFor(model => model.StoreInformationSettings.StoreClosedAllowForAdmins)
             </td>
         </tr>
         <tr>

@@ -661,6 +661,7 @@ namespace Nop.Admin.Controllers
             model.StoreInformationSettings.StoreName = _storeInformationSettings.StoreName;
             model.StoreInformationSettings.StoreUrl = _storeInformationSettings.StoreUrl;
             model.StoreInformationSettings.StoreClosed = _storeInformationSettings.StoreClosed;
+            model.StoreInformationSettings.StoreClosedAllowForAdmins = _storeInformationSettings.StoreClosedAllowForAdmins;
             model.StoreInformationSettings.DefaultStoreTheme = _storeInformationSettings.DefaultStoreTheme;
             model.StoreInformationSettings.AvailableStoreThemes = _themeProvider
                 .GetThemeConfigurations().Select(x =>
@@ -728,6 +729,7 @@ namespace Nop.Admin.Controllers
             if (!_storeInformationSettings.StoreUrl.EndsWith("/"))
                 _storeInformationSettings.StoreUrl += "/";
             _storeInformationSettings.StoreClosed = model.StoreInformationSettings.StoreClosed;
+            _storeInformationSettings.StoreClosedAllowForAdmins = model.StoreInformationSettings.StoreClosedAllowForAdmins;
             _storeInformationSettings.DefaultStoreTheme = model.StoreInformationSettings.DefaultStoreTheme;
             _storeInformationSettings.AllowCustomerToSelectTheme = model.StoreInformationSettings.AllowCustomerToSelectTheme;
             _settingService.SaveSetting(_storeInformationSettings);

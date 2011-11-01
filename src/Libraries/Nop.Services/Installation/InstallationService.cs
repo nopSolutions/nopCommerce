@@ -4585,6 +4585,7 @@ namespace Nop.Services.Installation
                     StoreName = "Your store name",
                     StoreUrl = "http://www.yourStore.com/",
                     StoreClosed = false,
+                    StoreClosedAllowForAdmins = false,
                     DefaultStoreTheme = "DarkOrange",
                     AllowCustomerToSelectTheme = false,
                     DisplayMiniProfilerInPublicStore = false,

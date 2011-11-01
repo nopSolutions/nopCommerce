@@ -3998,6 +3998,14 @@
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
+									<LocaleResource Name="StoreClosedAllowForAdmins">
+										<Value>Allow an admin to view the closed store</Value>
+										<Children>
+											<LocaleResource Name="Hint">
+												<Value>Check to allow a user with admin access to view the store while it is set to closed.</Value>
+											</LocaleResource>
+										</Children>
+									</LocaleResource>
 									<LocaleResource Name="DefaultStoreTheme">
 										<Value>Store theme</Value>
 										<Children>

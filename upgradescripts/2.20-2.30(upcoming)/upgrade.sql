@@ -275,6 +275,12 @@ set @resources='
     <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.WishlistEnabled.Hint">
         <Value></Value>
     </LocaleResource>
+    <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.StoreClosedAllowForAdmins">
+        <Value>Allow an admin to view the closed store</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.StoreClosedAllowForAdmins.Hint">
+        <Value>Check to allow a user with admin access to view the store while it is set to closed.</Value>
+    </LocaleResource>
 </Language>
 '
 
