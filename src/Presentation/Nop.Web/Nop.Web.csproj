@@ -1098,7 +1098,7 @@
     <Content Include="Views\Checkout\OpcPaymentInfo.cshtml" />
     <Content Include="Views\Checkout\OpcConfirmOrder.cshtml" />
     <Content Include="Views\Shared\_Print.cshtml" />
-    <Content Include="Views\Common\LanguageAttributes.cshtml" />
+    <Content Include="Views\Shared\LanguageAttributes.cshtml" />
     <Content Include="Views\Customer\_CheckUsernameAvailability.cshtml" />
     <Content Include="Views\Boards\ActiveDiscussionsSmall.cshtml" />
     <Content Include="Views\Catalog\_ProductVariantBackInStockSubscription.cshtml" />
@@ -1282,7 +1282,7 @@
     <Content Include="Views\Catalog\ProductTags.cshtml" />
     <Content Include="Views\Catalog\PopularProductTags.cshtml" />
     <Content Include="Views\Catalog\ProductsByTag.cshtml" />
-    <Content Include="Views\Catalog\_SearchBox.cshtml" />
+    <Content Include="Views\Catalog\SearchBox.cshtml" />
     <Content Include="Views\Catalog\Search.cshtml" />
     <Content Include="Views\Catalog\HomepageBestSellers.cshtml" />
     <Content Include="Views\Catalog\HomepageProducts.cshtml" />

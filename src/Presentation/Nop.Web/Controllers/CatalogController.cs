@@ -2401,6 +2401,11 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
+        [ChildActionOnly]
+        public ActionResult SearchBox()
+        {
+            return PartialView();
+        }
         #endregion
     }
 }

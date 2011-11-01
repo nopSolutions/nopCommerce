@@ -10,7 +10,7 @@
     Html.AddTitleParts(T("PageTitle.Checkout").Text);
 }
 <div class="checkout-page">
-    @Html.Partial("~/Views/Checkout/CheckoutProgress.cshtml", new CheckoutProgressModel() { CheckoutProgressStep = CheckoutProgressStep.Payment }, new ViewDataDictionary())
+    @Html.Action("CheckoutProgress", "Checkout", new { step = CheckoutProgressStep.Payment })
     <div class="clear">
     </div>
     <div class="page-title">
