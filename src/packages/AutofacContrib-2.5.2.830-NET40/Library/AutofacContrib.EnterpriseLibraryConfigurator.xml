@@ -1,0 +1,749 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>AutofacContrib.EnterpriseLibraryConfigurator</name>
+    </assembly>
+    <members>
+        <member name="T:AutofacContrib.EnterpriseLibraryConfigurator.AutofacContainerConfigurator">
+            <summary>
+            <see cref="T:Microsoft.Practices.EnterpriseLibrary.Common.Configuration.ContainerModel.IContainerConfigurator"/>
+            implementation for registering Enterprise Library dependencies into
+            an Autofac container.
+            </summary>
+            <remarks>
+            <para>
+            Enterprise Library uses
+            <see cref="T:Microsoft.Practices.EnterpriseLibrary.Common.Configuration.ContainerModel.IContainerConfigurator"/>
+            implementations as a bridge between configuration sources
+            (<see cref="T:Microsoft.Practices.EnterpriseLibrary.Common.Configuration.IConfigurationSource"/>),
+            type registration providers
+            (<see cref="T:Microsoft.Practices.EnterpriseLibrary.Common.Configuration.ContainerModel.ITypeRegistrationsProvider"/>),
+            and inversion of control containers. This implementation allows you to
+            use Autofac as the container from which Enterprise Library services
+            get resolved.
+            </para>
+            <para>
+            Setup of a container via a configurator is done using the
+            <see cref="M:Microsoft.Practices.EnterpriseLibrary.Common.Configuration.EnterpriseLibraryContainer.ConfigureContainer(Microsoft.Practices.EnterpriseLibrary.Common.Configuration.ContainerModel.IContainerConfigurator,Microsoft.Practices.EnterpriseLibrary.Common.Configuration.IConfigurationSource)"/>
+            method. Using this configurator, registering Enterprise Library with
+            Autofac looks like this:
+            </para>
+            <code lang="C#">
+            // Create the ContainerBuilder and register EntLib.
+            var builder = new ContainerBuilder();
+            using (var configSource = ConfigurationSourceFactory.Create())
+            {
+              var configurator = new AutofacContainerConfigurator(builder);
+              EnterpriseLibraryContainer.ConfigureContainer(configurator, configSource);
+            }
+            
+            // Register other services/dependencies, then set the
+            // service locator.
+            var container = builder.Build();
+            var autofacLocator = new AutofacServiceLocator(container);
+            EnterpriseLibraryContainer.Current = autofacLocator;
+            </code>
+            <para>
+            Note the use of <see cref="T:AutofacContrib.CommonServiceLocator.AutofacServiceLocator"/>
+            to set the Enterprise Library service locator. You need to do that so
+            Enterprise Library can do any internal resolutions it requires.
+            </para>
+            <para>
+            Even though you can use this configurator directly, the simplest way
+            to get Enterprise Library configured with Autofac is to use the
+            <see cref="M:AutofacContrib.EnterpriseLibraryConfigurator.EnterpriseLibraryRegistrationExtensions.RegisterEnterpriseLibrary"/>
+            extensions. The above sample code becomes much simpler and more
+            Autofac-styled with the extensions.
+            </para>
+            <code lang="C#">
+            // Create the ContainerBuilder and register EntLib.
+            var builder = new ContainerBuilder();
+            builder.RegisterEnterpriseLibrary();
+            
+            // Register other services/dependencies, then set the
+            // service locator.
+            var container = builder.Build();
+            var autofacLocator = new AutofacServiceLocator(container);
+            EnterpriseLibraryContainer.Current = autofacLocator;
+            </code>
+            <para>
+            Note that using Autofac as the backing store for service resolution
+            in Enterprise Library, changes in the dependency configuration source
+            are not directly supported. That is, if the set of configured services
+            changes, the container is not automatically rebuilt. This is a different
+            behavior from Unity, which supports configuration change and container
+            update during application execution.
+            </para>
+            <para>
+            The reason this is important is that some internal Enterprise Library
+            components make the assumption that the container has a configuration
+            change manager (<see cref="T:Microsoft.Practices.EnterpriseLibrary.Common.Configuration.ContainerModel.ConfigurationChangeEventSource"/>)
+            registered regardless of support. This configurator will add a placeholder
+            implementation to the container to enable these components to function,
+            but developers should be aware that no action will take place if configuration
+            changes even though the component appears to be present in the container.
+            </para>
+            </remarks>
+            <seealso cref="M:AutofacContrib.EnterpriseLibraryConfigurator.EnterpriseLibraryRegistrationExtensions.RegisterEnterpriseLibrary"/>
+        </member>
+        <member name="F:AutofacContrib.EnterpriseLibraryConfigurator.AutofacContainerConfigurator._builder">
+            <summary>
+            The <see cref="T:Autofac.ContainerBuilder"/> to which Enterprise Library
+            registrations should be added.
+            </summary>
+        </member>
+        <member name="M:AutofacContrib.EnterpriseLibraryConfigurator.AutofacContainerConfigurator.#ctor(Autofac.ContainerBuilder)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AutofacContrib.EnterpriseLibraryConfigurator.AutofacContainerConfigurator"/> class.
+            </summary>
+            <param name="builder">
+            The <see cref="T:Autofac.ContainerBuilder"/> to which Enterprise Library
+            registrations should be added.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="builder"/> is <see langword="null"/>.
+            </exception>
+        </member>
+        <member name="M:AutofacContrib.EnterpriseLibraryConfigurator.AutofacContainerConfigurator.RegisterAll(Microsoft.Practices.EnterpriseLibrary.Common.Configuration.IConfigurationSource,Microsoft.Practices.EnterpriseLibrary.Common.Configuration.ContainerModel.ITypeRegistrationsProvider)">
+            <summary>
+            Consume the set of
+            <see cref="T:Microsoft.Practices.EnterpriseLibrary.Common.Configuration.ContainerModel.TypeRegistration"/>
+            objects and configure the associated container.
+            </summary>
+            <param name="configurationSource">
+            Configuration source to read registrations from.
+            </param>
+            <param name="rootProvider">
+            <see cref="T:Microsoft.Practices.EnterpriseLibrary.Common.Configuration.ContainerModel.ITypeRegistrationsProvider"/>
+            that knows how to read the <paramref name="configurationSource"/>
+            and return all relevant type registrations.
+            </param>
+            <remarks>
+            <para>
+            This method is used by <see cref="M:Microsoft.Practices.EnterpriseLibrary.Common.Configuration.EnterpriseLibraryContainer.ConfigureContainer"/>
+            to add registrations from a provided <paramref name="configurationSource"/>
+            to the Autofac container.
+            </para>
+            <para>
+            At the end of the registration process, a placeholder configuration
+            change manager (<see cref="T:Microsoft.Practices.EnterpriseLibrary.Common.Configuration.ContainerModel.ConfigurationChangeEventSource"/>)
+            will be added to the container if one hasn't already been added.
+            This is required because some internal Enterprise Library
+            components make the assumption that the container has a configuration
+            change manager registered regardless of support. Developers should
+            be aware that no action will take place if configuration
+            changes even though the component appears to be present in the container.
+            </para>
+            </remarks>
+        </member>
+        <member name="T:AutofacContrib.EnterpriseLibraryConfigurator.AutofacParameterBuilderVisitor">
+            <summary>
+            Visitor for resolving object construction parameters from
+            <see cref="T:Microsoft.Practices.EnterpriseLibrary.Common.Configuration.ContainerModel.ParameterValue"/>
+            registrations during container configuration.
+            </summary>
+            <remarks>
+            <para>
+            When registering a dependency from Enterprise Library, you get an instance
+            of <see cref="T:Microsoft.Practices.EnterpriseLibrary.Common.Configuration.ContainerModel.TypeRegistration"/>.
+            To construct an instance of the type described by the registration,
+            you need to add the registration to your <see cref="T:Autofac.ContainerBuilder"/>
+            with a corresponding set of <see cref="T:Autofac.Core.Parameter"/>
+            values.
+            </para>
+            <para>
+            To convert the constructor parameters from Enterprise Library format
+            to Autofac format, you need to look at each of the
+            <see cref="P:Microsoft.Practices.EnterpriseLibrary.Common.Configuration.ContainerModel.TypeRegistration.ConstructorParameters"/>
+            and create a corresponding <see cref="T:Autofac.Core.Parameter"/> that
+            can be added to the dependency registration in the Autofac container.
+            </para>
+            <para>
+            This class takes advantage of the
+            <see cref="M:Microsoft.Practices.EnterpriseLibrary.Common.Configuration.ContainerModel.ParameterValueVisitor.Visit(Microsoft.Practices.EnterpriseLibrary.Common.Configuration.ContainerModel.ParameterValue)"/>
+            method to determine the type of the parameter and creates a corresponding
+            <see cref="T:Autofac.Core.ResolvedParameter"/> with the appropriate value.
+            </para>
+            <list type="table">
+            <listheader>
+            <term>Parameter Type</term>
+            <description>Resolved Parameter Value</description>
+            </listheader>
+            <item>
+            <term><see cref="T:Microsoft.Practices.EnterpriseLibrary.Common.Configuration.ContainerModel.ConstantParameterValue"/></term>
+            <description>
+            The exact provided constant value.
+            (<see cref="M:AutofacContrib.EnterpriseLibraryConfigurator.AutofacParameterBuilderVisitor.VisitConstantParameterValue(Microsoft.Practices.EnterpriseLibrary.Common.Configuration.ContainerModel.ConstantParameterValue)"/>)
+            </description>
+            </item>
+            <item>
+            <term><see cref="T:Microsoft.Practices.EnterpriseLibrary.Common.Configuration.ContainerModel.ContainerResolvedEnumerableParameter"/></term>
+            <description>
+            A lambda that builds a generic list of the specified type containing
+            the set of resolved named service instances.
+            (<see cref="M:AutofacContrib.EnterpriseLibraryConfigurator.AutofacParameterBuilderVisitor.VisitEnumerableParameterValue(Microsoft.Practices.EnterpriseLibrary.Common.Configuration.ContainerModel.ContainerResolvedEnumerableParameter)"/>)
+            </description>
+            </item>
+            <item>
+            <term><see cref="T:Microsoft.Practices.EnterpriseLibrary.Common.Configuration.ContainerModel.ContainerResolvedParameter"/></term>
+            <description>
+            If the parameter is a named parameter, the named service is resolved;
+            otherwise the typed service is resolved.
+            (<see cref="M:AutofacContrib.EnterpriseLibraryConfigurator.AutofacParameterBuilderVisitor.VisitResolvedParameterValue(Microsoft.Practices.EnterpriseLibrary.Common.Configuration.ContainerModel.ContainerResolvedParameter)"/>)
+            </description>
+            </item>
+            </list>
+            <para>
+            After calling the
+            <see cref="M:Microsoft.Practices.EnterpriseLibrary.Common.Configuration.ContainerModel.ParameterValueVisitor.Visit(Microsoft.Practices.EnterpriseLibrary.Common.Configuration.ContainerModel.ParameterValue)"/>
+            method on this visitor, the <see cref="P:AutofacContrib.EnterpriseLibraryConfigurator.AutofacParameterBuilderVisitor.AutofacParameter"/>
+            property will be set with the output of the transformation. You can use
+            this in conjunction with <see cref="M:Autofac.RegistrationExtensions.WithParameters``3(Autofac.Builder.IRegistrationBuilder{``0,``1,``2},System.Collections.Generic.IEnumerable{Autofac.Core.Parameter})"/>
+            to add the parameters to the component registration.
+            </para>
+            <para>
+            Normally this class will not be used by itself. Instead, consider using
+            it in conjunction with the <see cref="T:AutofacContrib.EnterpriseLibraryConfigurator.AutofacContainerConfigurator"/>
+            and the Enterprise Library registration extension methods in
+            <see cref="T:AutofacContrib.EnterpriseLibraryConfigurator.EnterpriseLibraryRegistrationExtensions"/>.
+            </para>
+            <para>
+            For more information on how type registrations are created and the possible
+            values of constant and resolved parameters, see
+            <see cref="T:Microsoft.Practices.EnterpriseLibrary.Common.Configuration.ContainerModel.TypeRegistration"/>,
+            which is the entry point for creating parameter values, and
+            <see cref="T:Microsoft.Practices.EnterpriseLibrary.Common.Configuration.ContainerModel.Container"/>,
+            which is the placeholder class used by the registration mechanism for
+            signifying that a parameter value is resolved rather than constant.
+            </para>
+            </remarks>
+            <seealso cref="T:AutofacContrib.EnterpriseLibraryConfigurator.EnterpriseLibraryRegistrationExtensions"/>
+            <seealso cref="T:AutofacContrib.EnterpriseLibraryConfigurator.AutofacContainerConfigurator"/>
+        </member>
+        <member name="F:AutofacContrib.EnterpriseLibraryConfigurator.AutofacParameterBuilderVisitor._methodParameter">
+            <summary>
+            Storage for the reflected parameter information that should receive
+            the resolved value from <see cref="P:AutofacContrib.EnterpriseLibraryConfigurator.AutofacParameterBuilderVisitor.AutofacParameter"/>
+            </summary>
+        </member>
+        <member name="M:AutofacContrib.EnterpriseLibraryConfigurator.AutofacParameterBuilderVisitor.#ctor(System.Reflection.ParameterInfo)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AutofacContrib.EnterpriseLibraryConfigurator.AutofacParameterBuilderVisitor"/> class.
+            </summary>
+            <param name="methodParameter">
+            The reflected information about the method parameter that will be visited.
+            </param>
+            <remarks>
+            <para>
+            When <see cref="M:Microsoft.Practices.EnterpriseLibrary.Common.Configuration.ContainerModel.ParameterValueVisitor.Visit(Microsoft.Practices.EnterpriseLibrary.Common.Configuration.ContainerModel.ParameterValue)"/>
+            is called, the value passed in to be visited should be the value
+            that goes in the constructor parameter indicated by <paramref name="methodParameter"/>.
+            They need to match because the generated
+            <see cref="T:Autofac.Core.Parameter"/> in
+            <see cref="P:AutofacContrib.EnterpriseLibraryConfigurator.AutofacParameterBuilderVisitor.AutofacParameter"/>
+            will match the reflected information about the parameter to the value
+            it has to resolve.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:AutofacContrib.EnterpriseLibraryConfigurator.AutofacParameterBuilderVisitor.CreateResolvedParameter(System.Func{System.Reflection.ParameterInfo,Autofac.IComponentContext,System.Object})">
+            <summary>
+            Creates a <see cref="T:Autofac.Core.ResolvedParameter"/> based on the
+            provided resolution lambda.
+            </summary>
+            <param name="resolution">
+            The function that resolves to the value that should be in the parameter.
+            </param>
+            <returns>
+            A <see cref="T:Autofac.Core.ResolvedParameter"/> attached to the parameter
+            passed into the visitor constructor that will resolve via <paramref name="resolution"/>.
+            </returns>
+        </member>
+        <member name="M:AutofacContrib.EnterpriseLibraryConfigurator.AutofacParameterBuilderVisitor.VisitConstantParameterValue(Microsoft.Practices.EnterpriseLibrary.Common.Configuration.ContainerModel.ConstantParameterValue)">
+            <summary>
+            The method called when a
+            <see cref="T:Microsoft.Practices.EnterpriseLibrary.Common.Configuration.ContainerModel.ConstantParameterValue"/>
+            object is visited.
+            </summary>
+            <param name="parameterValue">
+            The <see cref="T:Microsoft.Practices.EnterpriseLibrary.Common.Configuration.ContainerModel.ConstantParameterValue"/> to process.
+            </param>
+            <remarks>
+            <para>
+            This method creates a <see cref="T:Autofac.Core.ResolvedParameter"/>
+            based on the constant value in <paramref name="parameterValue"/>
+            and ties it to the parameter passed in during construction.
+            </para>
+            </remarks>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="parameterValue"/> is <see langword="null"/>.
+            </exception>
+        </member>
+        <member name="M:AutofacContrib.EnterpriseLibraryConfigurator.AutofacParameterBuilderVisitor.VisitEnumerableParameterValue(Microsoft.Practices.EnterpriseLibrary.Common.Configuration.ContainerModel.ContainerResolvedEnumerableParameter)">
+            <summary>
+            The method called when a
+            <see cref="T:Microsoft.Practices.EnterpriseLibrary.Common.Configuration.ContainerModel.ContainerResolvedEnumerableParameter"/>
+            object is visited.
+            </summary>
+            <param name="parameterValue">
+            The <see cref="T:Microsoft.Practices.EnterpriseLibrary.Common.Configuration.ContainerModel.ContainerResolvedEnumerableParameter"/> to process.
+            </param>
+            <remarks>
+            <para>
+            Resolved enumerables in Enterprise Library are always made up of
+            a list of individual named resolutions - there is no notion of a
+            typed auto-collection resolution the way there is in Autofac.
+            </para>
+            <para>
+            As such, the <see cref="T:Autofac.Core.ResolvedParameter"/> lambda
+            this method generates is a loop over the set of resolved named
+            typed registrations to build them manually into a list of the
+            type specified.
+            </para>
+            </remarks>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="parameterValue"/> is <see langword="null"/>.
+            </exception>
+        </member>
+        <member name="M:AutofacContrib.EnterpriseLibraryConfigurator.AutofacParameterBuilderVisitor.VisitResolvedParameterValue(Microsoft.Practices.EnterpriseLibrary.Common.Configuration.ContainerModel.ContainerResolvedParameter)">
+            <summary>
+            The method called when a
+            <see cref="T:Microsoft.Practices.EnterpriseLibrary.Common.Configuration.ContainerModel.ContainerResolvedParameter"/>
+            object is visited.
+            </summary>
+            <param name="parameterValue">
+            The <see cref="T:Microsoft.Practices.EnterpriseLibrary.Common.Configuration.ContainerModel.ContainerResolvedParameter"/> to process.
+            </param>
+            <remarks>
+            <para>
+            If the <see cref="P:Microsoft.Practices.EnterpriseLibrary.Common.Configuration.ContainerModel.ContainerResolvedParameter.Name"/>
+            is not set on the <paramref name="parameterValue"/>, the value
+            is assumed to be a typed registration. If the
+            <see cref="P:Microsoft.Practices.EnterpriseLibrary.Common.Configuration.ContainerModel.ContainerResolvedParameter.Name"/>
+            is present, the value is assumed to be both typed and named.
+            </para>
+            <para>
+            Either way, a <see cref="T:Autofac.Core.ResolvedParameter"/> will
+            be created with a lambda that resolves the typed (and possibly named,
+            as the case may be) service for the parameter passed in during construction.
+            </para>
+            </remarks>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="parameterValue"/> is <see langword="null"/>.
+            </exception>
+        </member>
+        <member name="P:AutofacContrib.EnterpriseLibraryConfigurator.AutofacParameterBuilderVisitor.AutofacParameter">
+            <summary>
+            Gets the generated <see cref="T:Autofac.Core.Parameter"/>
+            after executing <see cref="M:Microsoft.Practices.EnterpriseLibrary.Common.Configuration.ContainerModel.ParameterValueVisitor.Visit(Microsoft.Practices.EnterpriseLibrary.Common.Configuration.ContainerModel.ParameterValue)"/>.
+            </summary>
+            <value>
+            A <see cref="T:Autofac.Core.Parameter"/> that corresponds to the parameter
+            passed in during construction. This value will be <see langword="null"/>
+            if requested prior to execution of
+            <see cref="M:Microsoft.Practices.EnterpriseLibrary.Common.Configuration.ContainerModel.ParameterValueVisitor.Visit(Microsoft.Practices.EnterpriseLibrary.Common.Configuration.ContainerModel.ParameterValue)"/>.
+            </value>
+            <remarks>
+            <para>
+            This value will always end up being a <see cref="T:Autofac.Core.ResolvedParameter"/>
+            rather than some other type like a <see cref="T:Autofac.PositionalParameter"/>
+            because we need to be very specific about the constructor parameter
+            position, but flexible on the <see cref="T:System.Type"/> of the argument.
+            </para>
+            <para>
+            The <see cref="T:Autofac.PositionalParameter"/>, for example,
+            requires that the <see cref="T:System.Type"/> of the parameter value
+            match exactly with the type at the given position, which isn't
+            always true for Enterprise Library.
+            </para>
+            <para>
+            For example, say you have an object that has two constructors, like:
+            </para>
+            <code lang="C#">
+            public MyObject(ISomeService a, string b) { }
+            public MyObject(string a, string b) { }
+            </code>
+            <para>
+            If you register an object that implements <c>ISomeService</c> (like
+            "<c>SomeServiceImpl</c>") and set it in a <see cref="T:Autofac.PositionalParameter"/>
+            at position 0, Autofac searches through the constructors and says it
+            can't find a constructor that takes a <c>SomeServiceImpl</c> as
+            the first parameter, even though it matches the first constructor.
+            </para>
+            <para>
+            However, if you use <see cref="T:Autofac.Core.ResolvedParameter"/>,
+            you can match on the reflected parameter information rather than
+            position and provide an appropriate value, which allows the above
+            example to work correctly.
+            </para>
+            </remarks>
+        </member>
+        <member name="T:AutofacContrib.EnterpriseLibraryConfigurator.EnterpriseLibraryRegistrationExtensions">
+            <summary>
+            Extension methods that assist in adding Enterprise Library type
+            registrations to an Autofac container.
+            </summary>
+            <remarks>
+            <para>
+            The Microsoft Patterns and Practices Enterprise Library comes with an
+            abstraction around dependency registration. These extension methods
+            help translate these more general
+            <see cref="T:Microsoft.Practices.EnterpriseLibrary.Common.Configuration.ContainerModel.TypeRegistration"/>
+            instances into Autofac-specific registrations.
+            </para>
+            <para>
+            This is particularly useful in conjunction with the <see cref="T:AutofacContrib.CommonServiceLocator.AutofacServiceLocator"/>
+            when you want to use Autofac as the mechanism for resolving Enterprise Library
+            application block dependencies rather than Unity.
+            </para>
+            <para>
+            The primary Enterprise Library entry point is
+            <see cref="M:AutofacContrib.EnterpriseLibraryConfigurator.EnterpriseLibraryRegistrationExtensions.RegisterEnterpriseLibrary"/>.
+            If you're trying to get Enterprise Library application blocks to use
+            Autofac, start there.
+            </para>
+            </remarks>
+            <example>
+            <para>
+            The simplest way to get started with Enterprise Library and Autofac is
+            via <see cref="M:AutofacContrib.EnterpriseLibraryConfigurator.EnterpriseLibraryRegistrationExtensions.RegisterEnterpriseLibrary(Autofac.ContainerBuilder)"/>.
+            While building your Autofac container, use that extension to get the
+            configuration out of the default Enterprise Library configuration location
+            and add the appropriate dependency registrations to your container.
+            </para>
+            <para>
+            After the container is built, use the <see cref="T:AutofacContrib.CommonServiceLocator.AutofacServiceLocator"/>
+            to set the default Enterprise Library container for any internal resolutions
+            it needs to make.
+            </para>
+            <code lang="C#">
+            // Create the container and register EntLib configured dependencies.
+            var builder = new ContainerBuilder();
+            builder.RegisterEnterpriseLibrary();
+            
+            // Register any other dependencies, then build the container and set
+            // the default EntLib service locator.
+            var container = builder.Build();
+            var autofacLocator = new AutofacServiceLocator(container);
+            EnterpriseLibraryContainer.Current = autofacLocator;
+            </code>
+            </example>
+            <seealso cref="T:AutofacContrib.EnterpriseLibraryConfigurator.AutofacContainerConfigurator"/>
+            <seealso cref="T:AutofacContrib.EnterpriseLibraryConfigurator.AutofacParameterBuilderVisitor"/>
+        </member>
+        <member name="M:AutofacContrib.EnterpriseLibraryConfigurator.EnterpriseLibraryRegistrationExtensions.RegisterEnterpriseLibrary(Autofac.ContainerBuilder)">
+            <summary>
+            Adds dependency registrations from the default Enterprise Library
+            configuration source to the provided Autofac container builder.
+            </summary>
+            <param name="builder">
+            The <see cref="T:Autofac.ContainerBuilder"/> to which the registrations
+            from Enterprise Library should be added.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="builder"/> is <see langword="null"/>.
+            </exception>
+            <remarks>
+            <para>
+            This method uses the default Enterprise Library configuration source
+            from <see cref="M:Microsoft.Practices.EnterpriseLibrary.Common.Configuration.ConfigurationSourceFactory.Create"/>
+            to retrieve the set of configured Enterprise Library components and
+            dependencies. It takes this set of configuration and adds the appropriate
+            registrations to the provided <paramref name="builder"/>.
+            </para>
+            <para>
+            If you need to provide a specific configuration source from which
+            the container should be populated, use the
+            <see cref="M:AutofacContrib.EnterpriseLibraryConfigurator.EnterpriseLibraryRegistrationExtensions.RegisterEnterpriseLibrary(Autofac.ContainerBuilder,Microsoft.Practices.EnterpriseLibrary.Common.Configuration.IConfigurationSource)"/>
+            overload of this method.
+            </para>
+            </remarks>
+            <example>
+            <para>
+            This example shows a simple setup of registering Enterprise Library
+            dependencies with Autofac.
+            </para>
+            <para>
+            After the container is built, use the <see cref="T:AutofacContrib.CommonServiceLocator.AutofacServiceLocator"/>
+            to set the default Enterprise Library container for any internal resolutions
+            it needs to make.
+            </para>
+            <code lang="C#">
+            // Create the container and register EntLib configured dependencies.
+            var builder = new ContainerBuilder();
+            builder.RegisterEnterpriseLibrary();
+            
+            // Register any other dependencies, then build the container and set
+            // the default EntLib service locator.
+            var container = builder.Build();
+            var autofacLocator = new AutofacServiceLocator(container);
+            EnterpriseLibraryContainer.Current = autofacLocator;
+            </code>
+            </example>
+        </member>
+        <member name="M:AutofacContrib.EnterpriseLibraryConfigurator.EnterpriseLibraryRegistrationExtensions.RegisterEnterpriseLibrary(Autofac.ContainerBuilder,Microsoft.Practices.EnterpriseLibrary.Common.Configuration.IConfigurationSource)">
+            <summary>
+            Adds dependency registrations from a specified Enterprise Library
+            configuration source to the provided Autofac container builder.
+            </summary>
+            <param name="builder">
+            The <see cref="T:Autofac.ContainerBuilder"/> to which the registrations
+            from Enterprise Library should be added.
+            </param>
+            <param name="configSource">
+            The Enterprise Library configuration source defining the registered
+            services that should be added to the Autofac container.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="builder"/> or <paramref name="configSource"/> is <see langword="null"/>.
+            </exception>
+            <remarks>
+            <para>
+            This method uses the specified Enterprise Library configuration source
+            from <paramref name="configSource"/>
+            to retrieve the set of configured Enterprise Library components and
+            dependencies. It takes this set of configuration and adds the appropriate
+            registrations to the provided <paramref name="builder"/>.
+            </para>
+            <para>
+            If you want to use the default Enterprise Library configuration source,
+            use the
+            <see cref="M:AutofacContrib.EnterpriseLibraryConfigurator.EnterpriseLibraryRegistrationExtensions.RegisterEnterpriseLibrary(Autofac.ContainerBuilder)"/>
+            overload of this method.
+            </para>
+            </remarks>
+            <example>
+            <para>
+            This example shows a simple setup of registering Enterprise Library
+            dependencies with Autofac and a specified configuration source.
+            </para>
+            <para>
+            After the container is built, use the <see cref="T:AutofacContrib.CommonServiceLocator.AutofacServiceLocator"/>
+            to set the default Enterprise Library container for any internal resolutions
+            it needs to make.
+            </para>
+            <code lang="C#">
+            // Create the container and register EntLib configured dependencies.
+            var builder = new ContainerBuilder();
+            using(var configSource = ConfigurationSourceFactory.Create("config-name"))
+            {
+              builder.RegisterEnterpriseLibrary(configSource);
+            }
+            
+            // Register any other dependencies, then build the container and set
+            // the default EntLib service locator.
+            var container = builder.Build();
+            var autofacLocator = new AutofacServiceLocator(container);
+            EnterpriseLibraryContainer.Current = autofacLocator;
+            </code>
+            </example>
+        </member>
+        <member name="M:AutofacContrib.EnterpriseLibraryConfigurator.EnterpriseLibraryRegistrationExtensions.RegisterTypeRegistration(Autofac.ContainerBuilder,Microsoft.Practices.EnterpriseLibrary.Common.Configuration.ContainerModel.TypeRegistration)">
+            <summary>
+            Registers an Enterprise Library type registration with Autofac.
+            </summary>
+            <param name="builder">
+            The <see cref="T:Autofac.ContainerBuilder"/> to which the registration
+            should be added.
+            </param>
+            <param name="registration">
+            The <see cref="T:Microsoft.Practices.EnterpriseLibrary.Common.Configuration.ContainerModel.TypeRegistration"/>
+            that should be translated and added to the Autofac container.
+            </param>
+            <returns>
+            The registration as converted and added to the <paramref name="builder"/>.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="builder"/> or <paramref name="registration"/> is <see langword="null"/>.
+            </exception>
+            <remarks>
+            <para>
+            Generally speaking, developers will not directly interface with this
+            method. The primary entry point to registering Enterprise Library
+            dependencies is
+            <see cref="M:AutofacContrib.EnterpriseLibraryConfigurator.EnterpriseLibraryRegistrationExtensions.RegisterEnterpriseLibrary"/>.
+            However, if you have a specific Enterprise Library registration
+            definition that you need to add to an Autofac container, this method
+            is how you do it.
+            </para>
+            </remarks>
+            <example>
+            <para>
+            In this example, an Enterprise Library type registration is created
+            manually and added to an Autofac container. In normal circumstances,
+            you would get the Enterprise Library type registration from a configuration
+            source.
+            </para>
+            <code lang="C#">
+            // Set up the EntLib type registration.
+            var registration = new TypeRegistration&lt;MyService&gt;(() =&gt; new MyService());
+            registration.IsDefault = true;
+            registration.Lifetime = TypeRegistrationLifetime.Singleton;
+            
+            // Use the extension method to add it to the
+            // Autofac container.
+            var builder = new ContainerBuilder();
+            builder.RegisterTypeRegistration(registration);
+            var container = builder.Build();
+            </code>
+            </example>
+            <seealso cref="M:AutofacContrib.EnterpriseLibraryConfigurator.EnterpriseLibraryRegistrationExtensions.RegisterEnterpriseLibrary"/>
+        </member>
+        <member name="M:AutofacContrib.EnterpriseLibraryConfigurator.EnterpriseLibraryRegistrationExtensions.UsingConstructorFrom``3(Autofac.Builder.IRegistrationBuilder{``0,``1,``2},Microsoft.Practices.EnterpriseLibrary.Common.Configuration.ContainerModel.TypeRegistration)">
+            <summary>
+            Sets a constructor preference on an Autofac registration based on
+            the constructor information in an Enterprise Library type registration.
+            </summary>
+            <param name="registrar">
+            The <see cref="T:Autofac.Builder.IRegistrationBuilder`3"/>
+            on which the constructor preference should be set.
+            </param>
+            <param name="registration">
+            The <see cref="T:Microsoft.Practices.EnterpriseLibrary.Common.Configuration.ContainerModel.TypeRegistration"/>
+            that has the constructor information to be used on the Autofac registration.
+            </param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="registrar"/> or <paramref name="registration"/> is <see langword="null"/>.
+            </exception>
+            <remarks>
+            <para>
+            Generally speaking, developers will not directly interface with this
+            method. The primary entry point to registering Enterprise Library
+            dependencies is
+            <see cref="M:AutofacContrib.EnterpriseLibraryConfigurator.EnterpriseLibraryRegistrationExtensions.RegisterEnterpriseLibrary"/>.
+            However, if you have a specific Enterprise Library registration
+            definition that you want to get the constructor information from and
+            set that on a registration in Autofac, this method is how you do it.
+            </para>
+            </remarks>
+            <example>
+            <para>
+            In this example, an Enterprise Library type registration is created
+            manually and the constructor defined in that registration is set
+            as the constructor to use when Autofac activates the service. In normal circumstances,
+            you would get the Enterprise Library type registration from a configuration
+            source.
+            </para>
+            <code lang="C#">
+            // Set up the EntLib type registration. Note the registration
+            // uses a constructor with parameters of type string and int.
+            var registration = new TypeRegistration&lt;MyService&gt;(() =&gt; new MyService("abc", 2));
+            
+            // Use the extension method to set the constructor preference add it to the
+            // Autofac container.
+            var builder = new ContainerBuilder();
+            builder.RegisterType&lt;MyService&gt;().UsingConstructorFrom(registration);
+            var container = builder.Build();
+            </code>
+            </example>
+            <seealso cref="M:AutofacContrib.EnterpriseLibraryConfigurator.EnterpriseLibraryRegistrationExtensions.RegisterEnterpriseLibrary"/>
+        </member>
+        <member name="M:AutofacContrib.EnterpriseLibraryConfigurator.EnterpriseLibraryRegistrationExtensions.WithInstanceScope``3(Autofac.Builder.IRegistrationBuilder{``0,``1,``2},Microsoft.Practices.EnterpriseLibrary.Common.Configuration.ContainerModel.TypeRegistrationLifetime)">
+            <summary>
+            Sets an object registration to the Autofac equivalent of the provided
+            Enterprise Library instance scope.
+            </summary>
+            <param name="registrar">
+            The <see cref="T:Autofac.Builder.IRegistrationBuilder`3"/>
+            on which the instance scope should be set.
+            </param>
+            <param name="lifetime">The Enterprise Library lifetime to translate to Autofac.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+            <remarks>
+            <para>
+            Enterprise Library lifetimes translate to Autofac as follows:
+            </para>
+            <list type="table">
+            <listheader>
+            <term>Enterprise Library Lifetime</term>
+            <description>Autofac Equivalent</description>
+            </listheader>
+            <item>
+            <term>
+            <see cref="F:Microsoft.Practices.EnterpriseLibrary.Common.Configuration.ContainerModel.TypeRegistrationLifetime.Singleton"/>
+            </term>
+            <description>
+            <see cref="M:Autofac.Builder.IRegistrationBuilder`3.SingleInstance"/>
+            </description>
+            </item>
+            <item>
+            <term>
+            <see cref="F:Microsoft.Practices.EnterpriseLibrary.Common.Configuration.ContainerModel.TypeRegistrationLifetime.Transient"/>
+            </term>
+            <description>
+            <see cref="M:Autofac.Builder.IRegistrationBuilder`3.InstancePerDependency"/>
+            </description>
+            </item>
+            </list>
+            </remarks>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="registrar"/> is <see langword="null"/>.
+            </exception>
+        </member>
+        <member name="M:AutofacContrib.EnterpriseLibraryConfigurator.EnterpriseLibraryRegistrationExtensions.WithParametersFrom``3(Autofac.Builder.IRegistrationBuilder{``0,``1,``2},Microsoft.Practices.EnterpriseLibrary.Common.Configuration.ContainerModel.TypeRegistration)">
+            <summary>
+            Inspects the constructor parameters in an Enterprise Library type
+            registration and applies those to an Autofac service registration.
+            </summary>
+            <param name="registrar">
+            The <see cref="T:Autofac.Builder.IRegistrationBuilder`3"/>
+            to which the parameters from the <paramref name="registration"/>
+            should be added.
+            </param>
+            <param name="registration">
+            The <see cref="T:Microsoft.Practices.EnterpriseLibrary.Common.Configuration.ContainerModel.TypeRegistration"/>
+            to inspect for constructor parameters and convert to Autofac parameters.
+            </param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="registrar"/> or <paramref name="registration"/> is <see langword="null"/>.
+            </exception>
+            <remarks>
+            <para>
+            This method takes each of the <see cref="T:Microsoft.Practices.EnterpriseLibrary.Common.Configuration.ContainerModel.ParameterValue"/>
+            values found in the constructor used by the <paramref name="registration"/>
+            and runs each one through an
+            <see cref="T:AutofacContrib.EnterpriseLibraryConfigurator.AutofacParameterBuilderVisitor"/>.
+            The converted set of parameters gets added to the <paramref name="registrar"/>
+            for use during object construction.
+            </para>
+            <para>
+            Generally speaking, developers will not directly interface with this
+            method. The primary entry point to registering Enterprise Library
+            dependencies is
+            <see cref="M:AutofacContrib.EnterpriseLibraryConfigurator.EnterpriseLibraryRegistrationExtensions.RegisterEnterpriseLibrary"/>.
+            However, if you have a specific Enterprise Library registration
+            definition that you want to get the constructor parameters from and
+            set them on a registration in Autofac, this method is how you do it.
+            </para>
+            </remarks>
+            <example>
+            <para>
+            In this example, an Enterprise Library type registration is created
+            manually and the constructor defined in that registration contains
+            the set of parameters to use when resolving the service from Autofac.
+            In normal circumstances, you would get the Enterprise Library type
+            registration from a configuration source.
+            </para>
+            <code lang="C#">
+            // Set up the EntLib type registration. Note the registration
+            // uses a constructor with parameters of type string and int.
+            var registration = new TypeRegistration&lt;MyService&gt;(() =&gt; new MyService("abc", 2));
+            
+            // Use the extension method to set the constructor parameters on the
+            // Autofac container.
+            var builder = new ContainerBuilder();
+            builder.RegisterType&lt;MyService&gt;().WithParametersFrom(registration);
+            var container = builder.Build();
+            
+            // When you resolve the MyService from Autofac, the values "abc" and "2"
+            // will be passed in - the constructor parameters from the type
+            // registration.
+            </code>
+            </example>
+            <seealso cref="M:AutofacContrib.EnterpriseLibraryConfigurator.EnterpriseLibraryRegistrationExtensions.RegisterEnterpriseLibrary"/>
+            <seealso cref="T:AutofacContrib.EnterpriseLibraryConfigurator.AutofacParameterBuilderVisitor"/>
+        </member>
+    </members>
+</doc>

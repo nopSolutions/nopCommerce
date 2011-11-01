@@ -1,0 +1,1865 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>AutofacContrib.Multitenant</name>
+    </assembly>
+    <members>
+        <member name="T:AutofacContrib.Multitenant.ConfigurationActionBuilder">
+            <summary>
+            Allows you to build up a set of configuration actions that can be used
+            all at once to configure a new <see cref="T:Autofac.ILifetimeScope"/>.
+            </summary>
+            <remarks>
+            <para>
+            Usually when you are building an <see cref="T:Autofac.ILifetimeScope"/>
+            and you wish to update the registrations in the new scope, you are
+            required to pass in a single lambda configuration action. Sometimes,
+            though, there is a need to perform some logic, or otherwise programmatically
+            register several things into the new lifetime across different calls or
+            in different locations in your application.
+            </para>
+            <para>
+            This builder allows you to collect a set of configuration actions and
+            use a final <see cref="M:AutofacContrib.Multitenant.ConfigurationActionBuilder.Build"/>
+            method to create a single aggregate action that can be used to finally
+            create the lifetime scope.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.ConfigurationActionBuilder.Build">
+            <summary>
+            Creates an aggregated action based on the list of actions contained
+            in the builder.
+            </summary>
+            <returns>
+            A <see cref="T:System.Action`1"/> that contains the aggregate set of
+            registered actions that have been added to this builder.
+            </returns>
+        </member>
+        <member name="T:AutofacContrib.Multitenant.DefaultTenantId">
+            <summary>
+            Object type that represents a default tenant ID. Primarily used internally;
+            most applications will not use this type.
+            </summary>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.DefaultTenantId.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> that represents this instance.
+            </summary>
+            <returns>
+            A <see cref="T:System.String"/> that represents this instance.
+            </returns>
+        </member>
+        <member name="T:AutofacContrib.Multitenant.ITenantIdentificationStrategy">
+            <summary>
+            Defines a provider that determines the current tenant ID from
+            execution context.
+            </summary>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.ITenantIdentificationStrategy.TryIdentifyTenant(System.Object@)">
+            <summary>
+            Attempts to identify the tenant from the current execution context.
+            </summary>
+            <param name="tenantId">
+            The current tenant identifier.
+            </param>
+            <returns>
+            <see langword="true" /> if the tenant could be identified; <see langword="false" />
+            if not.
+            </returns>
+        </member>
+        <member name="T:AutofacContrib.Multitenant.MultitenantContainer">
+            <summary>
+            <see cref="T:Autofac.IContainer"/> implementation that provides the ability
+            to register and resolve dependencies in a multitenant environment.
+            </summary>
+            <remarks>
+            <para>
+            This container implementation modifies the definition of the standard
+            container implementation by returning values that are tenant-specific.
+            For example, resolving a component via <see cref="M:AutofacContrib.Multitenant.MultitenantContainer.ResolveComponent(Autofac.Core.IComponentRegistration,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter})"/>
+            will yield a resolution of the dependency for the current tenant, not
+            from a global container/lifetime.
+            </para>
+            <para>
+            The "current tenant ID" is resolved from an implementation of
+            <see cref="T:AutofacContrib.Multitenant.ITenantIdentificationStrategy"/>
+            that is passed into the container during construction.
+            </para>
+            <para>
+            Tenant lifetime scopes are immutable, so once they are retrieved,
+            configured, or an item is resolved, that tenant lifetime scope
+            cannot be updated or otherwise changed. This is important since
+            it means you need to configure your defaults and tenant overrides
+            early, in application startup.
+            </para>
+            <para>
+            If you do not configure a tenant lifetime scope for a tenant but resolve a
+            tenant-specific dependency for that tenant, the lifetime scope
+            will be implicitly created for you.
+            </para>
+            <para>
+            You may explicitly create and configure a tenant lifetime scope
+            using the <see cref="M:AutofacContrib.Multitenant.MultitenantContainer.ConfigureTenant(System.Object,System.Action{Autofac.ContainerBuilder})"/>
+            method. If you need to perform some logic and build up the configuration
+            for a tenant, you can do that using a <see cref="T:AutofacContrib.Multitenant.ConfigurationActionBuilder"/>.
+            </para>
+            </remarks>
+            <seealso cref="T:AutofacContrib.Multitenant.ConfigurationActionBuilder"/>
+        </member>
+        <member name="F:AutofacContrib.Multitenant.MultitenantContainer.TenantLifetimeScopeTag">
+            <summary>
+            Marker object-tag for the tenant-level lifetime scope.
+            </summary>
+        </member>
+        <member name="F:AutofacContrib.Multitenant.MultitenantContainer._defaultTenantId">
+            <summary>
+            Marker object representing the default tenant ID.
+            </summary>
+        </member>
+        <member name="F:AutofacContrib.Multitenant.MultitenantContainer._tenantLifetimeScopes">
+            <summary>
+            Dictionary containing the set of tenant-specific lifetime scopes. Key
+            is <see cref="T:System.Object"/>, value is <see cref="T:Autofac.ILifetimeScope"/>.
+            </summary>
+            <remarks>
+            Using <see cref="T:System.Collections.Hashtable"/> rather than 
+            a generic dictionary because dictionaries aren't threadsafe even with
+            the lock/double-check. Doesn't have to be a synchronized hashtable
+            since we're managing the write operations internally with our own locks.
+            </remarks>
+            <seealso href="http://stackoverflow.com/questions/2624301/how-to-show-that-the-double-checked-lock-pattern-with-dictionarys-trygetvalue-is"/>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.MultitenantContainer.#ctor(AutofacContrib.Multitenant.ITenantIdentificationStrategy,Autofac.IContainer)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AutofacContrib.Multitenant.MultitenantContainer"/> class.
+            </summary>
+            <param name="tenantIdentificationStrategy">
+            The strategy to use for identifying the current tenant.
+            </param>
+            <param name="applicationContainer">
+            The application container from which tenant-specific lifetimes will
+            be created.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="tenantIdentificationStrategy"/> or
+            <paramref name="applicationContainer"/> is <see langword="null"/>.
+            </exception>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.MultitenantContainer.BeginLifetimeScope">
+            <summary>
+            Begin a new nested scope for the current tenant. Component instances created via the new scope
+            will be disposed along with it.
+            </summary>
+            <returns>A new lifetime scope.</returns>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.MultitenantContainer.BeginLifetimeScope(System.Object)">
+            <summary>
+            Begin a new nested scope for the current tenant. Component instances created via the new scope
+            will be disposed along with it.
+            </summary>
+            <param name="tag">The tag applied to the <see cref="T:Autofac.ILifetimeScope"/>.</param>
+            <returns>A new lifetime scope.</returns>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.MultitenantContainer.BeginLifetimeScope(System.Action{Autofac.ContainerBuilder})">
+            <summary>
+            Begin a new nested scope for the current tenant, with additional
+            components available to it. Component instances created via the new scope
+            will be disposed along with it.
+            </summary>
+            <param name="configurationAction">
+            Action on a <see cref="T:Autofac.ContainerBuilder"/>
+            that adds component registations visible only in the new scope.
+            </param>
+            <returns>A new lifetime scope.</returns>
+            <remarks>
+            The components registered in the sub-scope will be treated as though they were
+            registered in the root scope, i.e., SingleInstance() components will live as long
+            as the root scope.
+            </remarks>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.MultitenantContainer.BeginLifetimeScope(System.Object,System.Action{Autofac.ContainerBuilder})">
+            <summary>
+            Begin a new nested scope for the current tenant, with additional
+            components available to it. Component instances created via the new scope
+            will be disposed along with it.
+            </summary>
+            <param name="tag">
+            The tag applied to the <see cref="T:Autofac.ILifetimeScope"/>.
+            </param>
+            <param name="configurationAction">
+            Action on a <see cref="T:Autofac.ContainerBuilder"/>
+            that adds component registrations visible only in the new scope.
+            </param>
+            <returns>A new lifetime scope.</returns>
+            <remarks>
+            The components registered in the sub-scope will be treated as though they were
+            registered in the root scope, i.e., SingleInstance() components will live as long
+            as the root scope.
+            </remarks>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.MultitenantContainer.ConfigureTenant(System.Object,System.Action{Autofac.ContainerBuilder})">
+            <summary>
+            Allows configuration of tenant-specific components. You may only call this
+            method one time per tenant.
+            </summary>
+            <param name="tenantId">
+            The ID of the tenant for which configuration is occurring. If this
+            value is <see langword="null"/>, configuration occurs for the "default
+            tenant" - the tenant that is used when no tenant ID can be determined.
+            </param>
+            <param name="configuration">
+            An action that uses a <see cref="T:Autofac.ContainerBuilder"/> to set
+            up registrations for the tenant.
+            </param>
+            <remarks>
+            <para>
+            If you need to configure a tenant across multiple registration
+            calls, consider using a <see cref="T:AutofacContrib.Multitenant.ConfigurationActionBuilder"/>
+            and configuring the tenant using the aggregate configuration
+            action it produces.
+            </para>
+            </remarks>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="configuration"/> is <see langword="null"/>.
+            </exception>
+            <exception cref="T:System.InvalidOperationException">
+            Thrown if the tenant indicated by <paramref name="tenantId"/>
+            has already been configured.
+            </exception>
+            <seealso cref="T:AutofacContrib.Multitenant.ConfigurationActionBuilder"/>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.MultitenantContainer.Dispose(System.Boolean)">
+            <summary>
+            Releases unmanaged and - optionally - managed resources
+            </summary>
+            <param name="disposing">
+            <see langword="true" /> to release both managed and unmanaged resources;
+            <see langword="false" /> to release only unmanaged resources.
+            </param>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.MultitenantContainer.GetCurrentTenantScope">
+            <summary>
+            Retrieves the lifetime scope for the current tenant based on execution
+            context.
+            </summary>
+            <remarks>
+            <para>
+            This method uses the <see cref="P:AutofacContrib.Multitenant.MultitenantContainer.TenantIdentificationStrategy"/>
+            to retrieve the current tenant ID and then retrieves the scope
+            using <see cref="M:AutofacContrib.Multitenant.MultitenantContainer.GetTenantScope(System.Object)"/>.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.MultitenantContainer.GetTenantScope(System.Object)">
+            <summary>
+            Retrieves the lifetime scope for a specific tenant.
+            </summary>
+            <param name="tenantId">
+            The ID of the tenant for which the lifetime scope should be retrieved. If this
+            value is <see langword="null" />, the scope is returned for the "default
+            tenant" - the tenant that is used when no tenant ID can be determined.
+            </param>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.MultitenantContainer.ResolveComponent(Autofac.Core.IComponentRegistration,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter})">
+            <summary>
+            Resolve an instance of the provided registration within the current tenant context.
+            </summary>
+            <param name="registration">The registration to resolve.</param>
+            <param name="parameters">Parameters for the instance.</param>
+            <returns>The component instance.</returns>
+            <exception cref="T:Autofac.Core.Registration.ComponentNotRegisteredException">
+            Thrown if an attempt is made to resolve a component that is not registered
+            for the current tenant.
+            </exception>
+            <exception cref="T:Autofac.Core.DependencyResolutionException">
+            Thrown if there is a problem resolving the registration. For example,
+            if the component registered requires another component be available
+            but that required component is not available, this exception will be thrown.
+            </exception>
+        </member>
+        <member name="P:AutofacContrib.Multitenant.MultitenantContainer.ApplicationContainer">
+            <summary>
+            Gets the base application container.
+            </summary>
+            <value>
+            An <see cref="T:Autofac.IContainer"/> on which all tenant lifetime
+            scopes will be based.
+            </value>
+        </member>
+        <member name="P:AutofacContrib.Multitenant.MultitenantContainer.ComponentRegistry">
+            <summary>
+            Gets the current tenant's registry that associates services with the
+            components that provide them.
+            </summary>
+            <value>
+            An <see cref="T:Autofac.Core.IComponentRegistry"/> based on the current
+            tenant context.
+            </value>
+        </member>
+        <member name="P:AutofacContrib.Multitenant.MultitenantContainer.Disposer">
+            <summary>
+            Gets the disposer associated with the current tenant's <see cref="T:Autofac.ILifetimeScope"/>.
+            Component instances can be associated with it manually if required.
+            </summary>
+            <value>
+            An <see cref="T:Autofac.Core.IDisposer"/> used in cleaning up component
+            instances for the current tenant.
+            </value>
+            <remarks>
+            Typical usage does not require interaction with this member - it
+            is used when extending the container.
+            </remarks>
+        </member>
+        <member name="P:AutofacContrib.Multitenant.MultitenantContainer.Tag">
+            <summary>
+            Gets the tag applied to the current tenant's <see cref="T:Autofac.ILifetimeScope"/>.
+            </summary>
+            <value>
+            An <see cref="T:System.Object"/> that identifies the current tenant's
+            lifetime scope.
+            </value>
+            <remarks>
+            Tags allow a level in the lifetime hierarchy to be identified.
+            In most applications, tags are not necessary.
+            </remarks>
+            <seealso cref="M:Autofac.Builder.IRegistrationBuilder{T, U, V}.InstancePerMatchingLifetimeScope(System.Object)"/>
+        </member>
+        <member name="E:AutofacContrib.Multitenant.MultitenantContainer.ChildLifetimeScopeBeginning">
+            <summary>
+            Fired when a new scope based on the current scope is beginning.
+            </summary>
+        </member>
+        <member name="E:AutofacContrib.Multitenant.MultitenantContainer.CurrentScopeEnding">
+            <summary>
+            Fired when this scope is ending.
+            </summary>
+        </member>
+        <member name="E:AutofacContrib.Multitenant.MultitenantContainer.ResolveOperationBeginning">
+            <summary>
+            Fired when a resolve operation is beginning in this scope.
+            </summary>
+        </member>
+        <member name="P:AutofacContrib.Multitenant.MultitenantContainer.TenantIdentificationStrategy">
+            <summary>
+            Gets the strategy used for identifying the current tenant.
+            </summary>
+            <value>
+            An <see cref="T:AutofacContrib.Multitenant.ITenantIdentificationStrategy"/>
+            used to identify the current tenant from the execution context.
+            </value>
+        </member>
+        <member name="T:AutofacContrib.Multitenant.Properties.Resources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:AutofacContrib.Multitenant.Properties.Resources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:AutofacContrib.Multitenant.Properties.Resources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:AutofacContrib.Multitenant.Properties.Resources.ArgumentException_StringEmpty">
+            <summary>
+              Looks up a localized string similar to &apos;{0}&apos; may not be empty..
+            </summary>
+        </member>
+        <member name="P:AutofacContrib.Multitenant.Properties.Resources.AutofacHostFactory_ContainerIsNull">
+            <summary>
+              Looks up a localized string similar to The AutofacHostFactory.Container static property must be set before services can be instantiated..
+            </summary>
+        </member>
+        <member name="P:AutofacContrib.Multitenant.Properties.Resources.AutofacHostFactory_NoServiceHostType">
+            <summary>
+              Looks up a localized string similar to No type to host was provided by the &apos;{0}&apos; for the service &apos;{1}&apos;..
+            </summary>
+        </member>
+        <member name="P:AutofacContrib.Multitenant.Properties.Resources.AutofacHostFactory_ServiceHostTypeNotClass">
+            <summary>
+              Looks up a localized string similar to The &apos;{0}&apos; did not provide a type to be hosted by WCF that was a concrete implementation type. WCF requires a service host to host a class, not an interface. Consider using a reflection-based registration or an expression-based registration where the return value is a class type. The current service type being returned by &apos;{0}&apos; for constructor string &apos;{1}&apos; is &apos;{2}&apos;..
+            </summary>
+        </member>
+        <member name="P:AutofacContrib.Multitenant.Properties.Resources.AutofacHostFactory_ServiceNotRegistered">
+            <summary>
+              Looks up a localized string similar to The service &apos;{0}&apos; configured for WCF is not registered with the Autofac container..
+            </summary>
+        </member>
+        <member name="P:AutofacContrib.Multitenant.Properties.Resources.DefaultTenantId_ToString">
+            <summary>
+              Looks up a localized string similar to Default Tenant.
+            </summary>
+        </member>
+        <member name="P:AutofacContrib.Multitenant.Properties.Resources.DynamicProxy_InterfaceTypeToProxyIsGeneric">
+            <summary>
+              Looks up a localized string similar to Interface type &apos;{0}&apos; is a generic type definition. You may not create WCF dynamic proxies from open generic interfaces..
+            </summary>
+        </member>
+        <member name="P:AutofacContrib.Multitenant.Properties.Resources.DynamicProxy_InterfaceTypeToProxyNotInterface">
+            <summary>
+              Looks up a localized string similar to The type &apos;{0}&apos; cannot be turned into a proxy type for WCF hosting because it is not an interface. Multitenant WCF hosting requires you to implement a separate interface for your service contract..
+            </summary>
+        </member>
+        <member name="P:AutofacContrib.Multitenant.Properties.Resources.DynamicProxy_InterfaceTypeToProxyNotPublic">
+            <summary>
+              Looks up a localized string similar to Interface type &apos;{0}&apos; is not public. It must be accessible so a dynamic proxy object can be created from it..
+            </summary>
+        </member>
+        <member name="P:AutofacContrib.Multitenant.Properties.Resources.DynamicProxy_InterfaceTypeToProxyNotServiceContract">
+            <summary>
+              Looks up a localized string similar to The type &apos;{0}&apos; cannot be turned into a proxy type for WCF hosting because it is not marked with System.ServiceModel.ServiceContractAttribute. Multitenant WCF hosting requires you to implement a separate interface for your service contract..
+            </summary>
+        </member>
+        <member name="P:AutofacContrib.Multitenant.Properties.Resources.DynamicProxy_ProxyTargetDoesNotImplementInterface">
+            <summary>
+              Looks up a localized string similar to The service implementation to proxy, type &apos;{0}&apos;, does not implement the service interface &apos;{1}&apos; that the proxy will implement. Check your Autofac registrations to make sure the service implementation type isn&apos;t somehow tied to the service interface..
+            </summary>
+        </member>
+        <member name="P:AutofacContrib.Multitenant.Properties.Resources.MultitenantContainer_TenantAlreadyConfigured">
+            <summary>
+              Looks up a localized string similar to The tenant with ID &apos;{0}&apos; has already been configured. It cannot be reconfigured..
+            </summary>
+        </member>
+        <member name="P:AutofacContrib.Multitenant.Properties.Resources.MultitenantServiceImplementationDataProvider_ServiceInterfaceTypeNotInterface">
+            <summary>
+              Looks up a localized string similar to The string &apos;{0}&apos; resolved to type &apos;{1}&apos; which is not an interface. For multitenancy to work, the service type to host should be the service interface rather than the concrete implementation type. You then register the concrete implementation type as the interface with Autofac, like: builder.RegisterType&lt;ImplementationType&gt;().As&lt;InterfaceType&gt;();.
+            </summary>
+        </member>
+        <member name="P:AutofacContrib.Multitenant.Properties.Resources.MultitenantServiceImplementationDataProvider_ServiceInterfaceTypeNotResolvable">
+            <summary>
+              Looks up a localized string similar to The string &apos;{0}&apos; could not be resolved to a type. Make sure you specify the fully qualified type name, like &quot;Namespace.TypeName, AssemblyName&quot; and not just the type name..
+            </summary>
+        </member>
+        <member name="P:AutofacContrib.Multitenant.Properties.Resources.MultitenantServiceImplementationDataProvider_ServiceInterfaceTypeNotServiceContract">
+            <summary>
+              Looks up a localized string similar to The string &apos;{0}&apos; resolved to type &apos;{1}&apos; which is not marked with the System.ServiceModel.ServiceContractAttribute. For multitenancy to work, the service type to host should be the service contract interface. You then register the concrete implementation type as the interface with Autofac, like: builder.RegisterType&lt;ImplementationType&gt;().As&lt;InterfaceType&gt;();.
+            </summary>
+        </member>
+        <member name="T:AutofacContrib.Multitenant.RegistrationExtensions">
+            <summary>
+            Extends <see cref="T:Autofac.Builder.IRegistrationBuilder`3"/> with methods to support multitenancy.
+            </summary>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.RegistrationExtensions.InstancePerTenant``3(Autofac.Builder.IRegistrationBuilder{``0,``1,``2})">
+            <summary>
+            Share one instance of the component within the context of an individual tenant.
+            </summary>
+            <typeparam name="TLimit">Registration limit type.</typeparam>
+            <typeparam name="TActivatorData">Activator data type.</typeparam>
+            <typeparam name="TRegistrationStyle">Registration style type.</typeparam>
+            <param name="registration">Registration to set the lifetime scope on.</param>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="registration"/> is <see langword="null"/>.
+            </exception>
+            <remarks>
+            <para>
+            This method is useful when there is a desire to register an individual
+            component at the root container level and have one instance of the
+            component created per tenant.
+            </para>
+            </remarks>
+        </member>
+        <member name="T:AutofacContrib.Multitenant.Wcf.AutofacDependencyInjectionServiceBehavior">
+            <summary>
+            Sets the instance provider to an AutofacInstanceProvider.
+            </summary>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.Wcf.AutofacDependencyInjectionServiceBehavior.#ctor(Autofac.IContainer,AutofacContrib.Multitenant.Wcf.ServiceImplementationData)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AutofacContrib.Multitenant.Wcf.AutofacDependencyInjectionServiceBehavior"/> class.
+            </summary>
+            <param name="container">
+            The container from which service implementations should be resolved.
+            </param>
+            <param name="serviceData">
+            Data about which service type should be hosted and how to resolve
+            the type to use for the service implementation.
+            </param>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.Wcf.AutofacDependencyInjectionServiceBehavior.Validate(System.ServiceModel.Description.ServiceDescription,System.ServiceModel.ServiceHostBase)">
+            <summary>
+            Provides the ability to inspect the service host and the service description to confirm that the service can run successfully.
+            </summary>
+            <param name="serviceDescription">The service description.</param>
+            <param name="serviceHostBase">The service host that is currently being constructed.</param>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.Wcf.AutofacDependencyInjectionServiceBehavior.AddBindingParameters(System.ServiceModel.Description.ServiceDescription,System.ServiceModel.ServiceHostBase,System.Collections.ObjectModel.Collection{System.ServiceModel.Description.ServiceEndpoint},System.ServiceModel.Channels.BindingParameterCollection)">
+            <summary>
+            Provides the ability to pass custom data to binding elements to support the contract implementation.
+            </summary>
+            <param name="serviceDescription">The service description of the service.</param>
+            <param name="serviceHostBase">The host of the service.</param>
+            <param name="endpoints">The service endpoints.</param>
+            <param name="bindingParameters">Custom objects to which binding elements have access.</param>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.Wcf.AutofacDependencyInjectionServiceBehavior.ApplyDispatchBehavior(System.ServiceModel.Description.ServiceDescription,System.ServiceModel.ServiceHostBase)">
+            <summary>
+            Provides the ability to change run-time property values or insert custom extension objects such as error handlers, message or parameter interceptors, security extensions, and other custom extension objects.
+            </summary>
+            <param name="serviceDescription">The service description.</param>
+            <param name="serviceHostBase">The host that is currently being built.</param>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="serviceDescription"/> or
+            <paramref name="serviceHostBase"/> is <see langword="null"/>.
+            </exception>
+        </member>
+        <member name="P:AutofacContrib.Multitenant.Wcf.AutofacDependencyInjectionServiceBehavior.Container">
+            <summary>
+            Gets the container from which service instances should be resolved.
+            </summary>
+            <value>
+            An <see cref="T:Autofac.IContainer"/> from which a lifetime scope will
+            be spawned and service instances will be resolved.
+            </value>
+        </member>
+        <member name="P:AutofacContrib.Multitenant.Wcf.AutofacDependencyInjectionServiceBehavior.ServiceData">
+            <summary>
+            Gets the service data for which instances will be resolved.
+            </summary>
+            <value>
+            A <see cref="T:AutofacContrib.Multitenant.Wcf.ServiceImplementationData"/>
+            containing data about the service type that should be resolved.
+            </value>
+        </member>
+        <member name="T:AutofacContrib.Multitenant.Wcf.AutofacHostFactory">
+            <summary>
+            Base class for factories that create service host instances for WCF.
+            </summary>
+            <remarks>
+            <para>
+            This implementation of the Autofac service host factory allows you to change
+            the strategy by which service implementations are resolved. You do this by
+            setting the <see cref="P:AutofacContrib.Multitenant.Wcf.AutofacHostFactory.ServiceImplementationDataProvider"/>
+            with a strategy implementation.
+            </para>
+            <para>
+            If <see cref="P:AutofacContrib.Multitenant.Wcf.AutofacHostFactory.ServiceImplementationDataProvider"/>
+            is <see langword="null"/> a new instance of <see cref="T:AutofacContrib.Multitenant.Wcf.MultitenantServiceImplementationDataProvider"/>
+            will be used. This is different behavior than the standard Autofac
+            service host factory. If you want to use the standard behavior (which is
+            not multitenant), set <see cref="P:AutofacContrib.Multitenant.Wcf.AutofacHostFactory.ServiceImplementationDataProvider"/>
+            to be an instance of <see cref="T:AutofacContrib.Multitenant.Wcf.SimpleServiceImplementationDataProvider"/>.
+            </para>
+            <para>
+            For multitenancy to work properly, you must set the
+            <see cref="P:AutofacContrib.Multitenant.Wcf.AutofacHostFactory.Container"/>
+            to be a <see cref="T:AutofacContrib.Multitenant.MultitenantContainer"/>.
+            </para>
+            <para>
+            You may configure additional behaviors or other aspects of generated
+            service instances by setting the <see cref="P:AutofacContrib.Multitenant.Wcf.AutofacHostFactory.HostConfigurationAction"/>.
+            If this value is not <see langword="null"/>, generated host instances
+            will be run through that action.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.Wcf.AutofacHostFactory.CreateServiceHost(System.String,System.Uri[])">
+            <summary>
+            Creates a <see cref="T:System.ServiceModel.ServiceHost"/> with specific base addresses and initializes it with specified data.
+            </summary>
+            <param name="constructorString">The initialization data passed to the <see cref="T:System.ServiceModel.ServiceHostBase"/> instance being constructed by the factory.</param>
+            <param name="baseAddresses">The <see cref="T:System.Array"/> of type <see cref="T:System.Uri"/> that contains the base addresses for the service hosted.</param>
+            <returns>
+            A <see cref="T:System.ServiceModel.ServiceHost"/> with specific base addresses.
+            </returns>
+            <remarks>
+            <para>
+            If <see cref="P:AutofacContrib.Multitenant.Wcf.AutofacHostFactory.ServiceImplementationDataProvider"/>
+            is <see langword="null"/> a new instance of <see cref="T:AutofacContrib.Multitenant.Wcf.MultitenantServiceImplementationDataProvider"/>
+            will be used. This is different behavior than the standard Autofac
+            service host factory. If you want to use the standard behavior (which is
+            not multitenant), set <see cref="P:AutofacContrib.Multitenant.Wcf.AutofacHostFactory.ServiceImplementationDataProvider"/>
+            to be an instance of <see cref="T:AutofacContrib.Multitenant.Wcf.SimpleServiceImplementationDataProvider"/>.
+            </para>
+            </remarks>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="constructorString"/> or <paramref name="baseAddresses"/> is <see langword="null"/>.
+            </exception>
+            <exception cref="T:System.ArgumentException">
+            Thrown if <paramref name="constructorString"/> is empty.
+            </exception>
+            <exception cref="T:System.InvalidOperationException">
+            Thrown if the <see cref="P:AutofacContrib.Multitenant.Wcf.AutofacHostFactory.Container"/>
+            is <see langword="null"/>.
+            </exception>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.Wcf.AutofacHostFactory.CreateServiceHost(AutofacContrib.Multitenant.Wcf.ServiceImplementationData,System.Uri[])">
+            <summary>
+            Creates the service host and attaches a WCF Service behavior that uses Autofac to resolve the service instance.
+            </summary>
+            <param name="serviceData">Data about which service type to host and how to resolve the implementation type.</param>
+            <param name="baseAddresses">The base addresses.</param>
+            <returns>A <see cref="T:System.ServiceModel.ServiceHost"/> with specific base addresses.</returns>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="serviceData"/> is <see langword="null"/>.
+            </exception>
+            <remarks>
+            <para>
+            If <see cref="P:AutofacContrib.Multitenant.Wcf.AutofacHostFactory.HostConfigurationAction"/>
+            is not <see langword="null"/>, the new service host instance is run
+            through the configuration action prior to being returned. This allows
+            you to programmatically configure behaviors or other aspects of the
+            host.
+            </para>
+            </remarks>
+        </member>
+        <member name="P:AutofacContrib.Multitenant.Wcf.AutofacHostFactory.Container">
+            <summary>
+            Gets or sets the container from which service instances will be retrieved.
+            For multitenancy to work properly, you must set this
+            to be a <see cref="T:AutofacContrib.Multitenant.MultitenantContainer"/>.
+            </summary>
+            <value>
+            An <see cref="T:Autofac.IContainer"/> that will be used to resolve service
+            implementation instances.
+            </value>
+        </member>
+        <member name="P:AutofacContrib.Multitenant.Wcf.AutofacHostFactory.HostConfigurationAction">
+            <summary>
+            Gets or sets an action that can be used to programmatically configure
+            service host instances this factory generates.
+            </summary>
+            <value>
+            An <see cref="T:System.Action`1"/> that can be used to configure service host
+            instances that this factory creates. This action can be used to add
+            behaviors or otherwise modify the host before it gets returned by
+            the factory.
+            </value>
+        </member>
+        <member name="P:AutofacContrib.Multitenant.Wcf.AutofacHostFactory.ServiceImplementationDataProvider">
+            <summary>
+            Gets or sets the service implementation data strategy.
+            </summary>
+            <value>
+            An <see cref="T:AutofacContrib.Multitenant.Wcf.IServiceImplementationDataProvider"/>
+            that will be used to determine the proper service implementation given
+            a service constructor string.
+            </value>
+        </member>
+        <member name="T:AutofacContrib.Multitenant.Wcf.AutofacInstanceContext">
+            <summary>
+            Manages instance lifetimes using an Autofac inner container.
+            </summary>
+            <remarks>
+            <para>
+            This instance context extension creates a child lifetime scope based
+            on a scope provided - generally a tenant-specific lifetime scope - and
+            resolves service instances from that child scope.
+            </para>
+            <para>
+            When this instance context is disposed, the lifetime scope it creates
+            (which contains the resolved service instance) is also disposed.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.Wcf.AutofacInstanceContext.#ctor(Autofac.ILifetimeScope)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AutofacContrib.Multitenant.Wcf.AutofacInstanceContext"/> class.
+            </summary>
+            <param name="parentScope">
+            The outer container/lifetime scope from which the instance scope
+            will be created.
+            </param>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.Wcf.AutofacInstanceContext.Resolve(AutofacContrib.Multitenant.Wcf.ServiceImplementationData)">
+            <summary>
+            Retrieve a service instance from the context.
+            </summary>
+            <param name="serviceData">
+            Data object containing information about how to resolve the service
+            implementation instance.
+            </param>
+            <returns>The service instance.</returns>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="serviceData"/> is <see langword="null"/>.
+            </exception>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.Wcf.AutofacInstanceContext.Attach(System.ServiceModel.InstanceContext)">
+            <summary>
+            Enables an extension object to find out when it has been aggregated.
+            Called when the extension is added to the
+            <see cref="P:System.ServiceModel.IExtensibleObject`1.Extensions"/> property.
+            </summary>
+            <param name="owner">The extensible object that aggregates this extension.</param>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.Wcf.AutofacInstanceContext.Detach(System.ServiceModel.InstanceContext)">
+            <summary>
+            Enables an object to find out when it is no longer aggregated.
+            Called when an extension is removed from the
+            <see cref="P:System.ServiceModel.IExtensibleObject`1.Extensions"/> property.
+            </summary>
+            <param name="owner">The extensible object that aggregates this extension.</param>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.Wcf.AutofacInstanceContext.Dispose(System.Boolean)">
+            <summary>
+            Releases unmanaged and - optionally - managed resources
+            </summary>
+            <param name="disposing">
+            <see langword="true" /> to release both managed and unmanaged
+            resources; <see langword="false" /> to release only unmanaged resources.
+            </param>
+        </member>
+        <member name="P:AutofacContrib.Multitenant.Wcf.AutofacInstanceContext.LifetimeScope">
+            <summary>
+            Gets the lifetime scope for the current instance context.
+            </summary>
+            <value>
+            An <see cref="T:Autofac.ILifetimeScope"/> from which service instances
+            will be resolved.
+            </value>
+        </member>
+        <member name="T:AutofacContrib.Multitenant.Wcf.AutofacInstanceProvider">
+            <summary>
+            Retrieves service instances from an Autofac container.
+            </summary>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.Wcf.AutofacInstanceProvider.#ctor(Autofac.IContainer,AutofacContrib.Multitenant.Wcf.ServiceImplementationData)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AutofacContrib.Multitenant.Wcf.AutofacInstanceProvider"/> class.
+            </summary>
+            <param name="container">
+            The container from which service instances should be resolved.
+            </param>
+            <param name="serviceData">
+            Data object containing information about how to resolve the service
+            implementation instance.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="container"/> or <paramref name="serviceData"/>
+            is <see langword="null"/>.
+            </exception>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.Wcf.AutofacInstanceProvider.GetInstance(System.ServiceModel.InstanceContext)">
+            <summary>
+            Returns a service object given the specified <see cref="T:System.ServiceModel.InstanceContext"/> object.
+            </summary>
+            <param name="instanceContext">The current <see cref="T:System.ServiceModel.InstanceContext"/> object.</param>
+            <returns>A user-defined service object.</returns>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.Wcf.AutofacInstanceProvider.GetInstance(System.ServiceModel.InstanceContext,System.ServiceModel.Channels.Message)">
+            <summary>
+            Returns a service object given the specified <see cref="T:System.ServiceModel.InstanceContext"/> object.
+            </summary>
+            <param name="instanceContext">The current <see cref="T:System.ServiceModel.InstanceContext"/> object.</param>
+            <param name="message">The message that triggered the creation of a service object.</param>
+            <returns>The service object.</returns>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="instanceContext"/> is <see langword="null"/>.
+            </exception>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.Wcf.AutofacInstanceProvider.ReleaseInstance(System.ServiceModel.InstanceContext,System.Object)">
+            <summary>
+            Called when an <see cref="T:System.ServiceModel.InstanceContext"/> object recycles a service object.
+            </summary>
+            <param name="instanceContext">The service's instance context.</param>
+            <param name="instance">The service object to be recycled.</param>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="instanceContext"/> is <see langword="null"/>.
+            </exception>
+        </member>
+        <member name="P:AutofacContrib.Multitenant.Wcf.AutofacInstanceProvider.Container">
+            <summary>
+            Gets the container from which service instances should be resolved.
+            </summary>
+            <value>
+            An <see cref="T:Autofac.IContainer"/> from which a lifetime scope will
+            be spawned and service instances will be resolved.
+            </value>
+        </member>
+        <member name="P:AutofacContrib.Multitenant.Wcf.AutofacInstanceProvider.ServiceData">
+            <summary>
+            Gets the service data for which instances will be resolved.
+            </summary>
+            <value>
+            A <see cref="T:AutofacContrib.Multitenant.Wcf.ServiceImplementationData"/>
+            containing data about the service type that should be resolved.
+            </value>
+        </member>
+        <member name="T:AutofacContrib.Multitenant.Wcf.AutofacServiceHostFactory">
+            <summary>
+            Creates <see cref="T:System.ServiceModel.ServiceHost"/> instances for WCF.
+            </summary>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.Wcf.AutofacServiceHostFactory.CreateServiceHost(System.Type,System.Uri[])">
+            <summary>
+            Creates a <see cref="T:System.ServiceModel.ServiceHost"/> for a specified type of service with a specific base address.
+            </summary>
+            <param name="serviceType">Specifies the type of service to host.</param>
+            <param name="baseAddresses">The <see cref="T:System.Array"/> of type <see cref="T:System.Uri"/> that contains the base addresses for the service hosted.</param>
+            <returns>
+            A <see cref="T:System.ServiceModel.ServiceHost"/> for the type of service specified with a specific base address.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="serviceType"/> or <paramref name="baseAddresses"/> is <see langword="null"/>.
+            </exception>
+        </member>
+        <member name="T:AutofacContrib.Multitenant.Wcf.AutofacWebServiceHostFactory">
+            <summary>
+            Creates <see cref="T:System.ServiceModel.Web.WebServiceHost"/> instances for WCF.
+            </summary>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.Wcf.AutofacWebServiceHostFactory.CreateServiceHost(System.Type,System.Uri[])">
+            <summary>
+            Creates a <see cref="T:System.ServiceModel.ServiceHost"/> for a specified type of service with a specific base address.
+            </summary>
+            <param name="serviceType">Specifies the type of service to host.</param>
+            <param name="baseAddresses">The <see cref="T:System.Array"/> of type <see cref="T:System.Uri"/> that contains the base addresses for the service hosted.</param>
+            <returns>
+            A <see cref="T:System.ServiceModel.Web.WebServiceHost"/> for the type of service specified with a specific base address.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="serviceType"/> or <paramref name="baseAddresses"/> is <see langword="null"/>.
+            </exception>
+        </member>
+        <member name="T:AutofacContrib.Multitenant.Wcf.DynamicProxy.CustomAttributeDataExtensions">
+            <summary>
+            Extension methods for <see cref="T:System.Reflection.CustomAttributeData"/>.
+            </summary>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.Wcf.DynamicProxy.CustomAttributeDataExtensions.ToAttributeBuilder(System.Reflection.CustomAttributeData)">
+            <summary>
+            Converts a custom attribute data object to a custom attribute builder for code generation.
+            </summary>
+            <param name="data">The data about a custom attribute to be converted for code emission.</param>
+            <returns>
+            A <see cref="T:System.Reflection.Emit.CustomAttributeBuilder"/> with
+            the same values as <paramref name="data"/> so it can be copied
+            to another member in code generation.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="data"/> is <see langword="null"/>.
+            </exception>
+        </member>
+        <member name="T:AutofacContrib.Multitenant.Wcf.DynamicProxy.IgnoreAttributeInterfaceProxyInstanceContributor">
+            <summary>
+            Code generator that ignores type-level non-inherited attributes.
+            </summary>
+            <remarks>
+            <para>
+            The default behavior of <see cref="T:Castle.DynamicProxy.Contributors.InterfaceProxyInstanceContributor"/>
+            is to generate a type definition that copies over all of the non-inherited
+            attributes from the target interface. This includes the <see cref="T:System.ServiceModel.ServiceContractAttribute"/>
+            that would be copied over from service interfaces. Unfortunately, WCF
+            doesn't allow a type marked with <see cref="T:System.ServiceModel.ServiceContractAttribute"/>
+            to also implement an interface marked with <see cref="T:System.ServiceModel.ServiceContractAttribute"/>.
+            This code generator does everything that <see cref="T:Castle.DynamicProxy.Contributors.InterfaceProxyInstanceContributor"/>
+            does except it doesn't copy over type-level non-inherited attributes.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.Wcf.DynamicProxy.IgnoreAttributeInterfaceProxyInstanceContributor.#ctor(System.Type,System.String,System.Type[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:AutofacContrib.Multitenant.Wcf.DynamicProxy.IgnoreAttributeInterfaceProxyInstanceContributor"/> class.
+            </summary>
+            <param name="targetType">Type of the target to proxy.</param>
+            <param name="proxyGeneratorId">The proxy generator ID.</param>
+            <param name="interfaces">The additional interfaces to implement.</param>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.Wcf.DynamicProxy.IgnoreAttributeInterfaceProxyInstanceContributor.Generate(Castle.DynamicProxy.Generators.Emitters.ClassEmitter,Castle.DynamicProxy.ProxyGenerationOptions)">
+            <summary>
+            Generates the class defined by the provided class emitter.
+            </summary>
+            <param name="class">
+            The <see cref="T:Castle.DynamicProxy.Generators.Emitters.ClassEmitter"/>
+            being used to build the target type.
+            </param>
+            <param name="options">The options to use during proxy generation.</param>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="class"/> is <see langword="null"/>.
+            </exception>
+            <remarks>
+            <para>
+            This overridden version of the method does everything that the base
+            <see cref="M:Castle.DynamicProxy.Contributors.ProxyInstanceContributor.Generate(Castle.DynamicProxy.Generators.Emitters.ClassEmitter,Castle.DynamicProxy.ProxyGenerationOptions)"/>
+            method does but it skips the part where it checks for non-inherited
+            attributes and copies them over from the proxy target.
+            </para>
+            </remarks>
+        </member>
+        <member name="T:AutofacContrib.Multitenant.Wcf.DynamicProxy.ServiceHostInterfaceProxyGenerator">
+            <summary>
+            Interface proxy generator that builds a proxy that has a default constructor
+            and does not copy over non-inherited type attributes.
+            </summary>
+            <remarks>
+            <para>
+            The standard <see cref="T:Castle.DynamicProxy.Generators.InterfaceProxyWithTargetInterfaceGenerator"/>
+            builds a proxy object that has no default constructor. While a default
+            constructor is not useful from an actual proxying standpoint, the WCF
+            service host will only host object types that have default constructors.
+            As such, if we want to start the service host with a proxy type, the
+            proxy type has to have a default constructor.
+            </para>
+            <para>
+            Also, the standard <see cref="T:Castle.DynamicProxy.Generators.InterfaceProxyWithTargetInterfaceGenerator"/>
+            generates a type that copies all of the non-inherited attributes over
+            from the target interface, which causes WCF to choke on the
+            <see cref="T:System.ServiceModel.ServiceContractAttribute"/>, which is
+            already on the service contract interface. This generator overrides
+            <see cref="M:AutofacContrib.Multitenant.Wcf.DynamicProxy.ServiceHostInterfaceProxyGenerator.GetTypeImplementerMapping(System.Type[],System.Type,System.Collections.Generic.IEnumerable{Castle.DynamicProxy.Contributors.ITypeContributor}@,Castle.DynamicProxy.Generators.INamingScope)"/>
+            to change the set of code generating contributors to make a slimmer
+            proxy that WCF hosting will accept.
+            </para>
+            </remarks>
+            <seealso cref="T:AutofacContrib.Multitenant.Wcf.DynamicProxy.IgnoreAttributeInterfaceProxyInstanceContributor"/>
+        </member>
+        <member name="F:AutofacContrib.Multitenant.Wcf.DynamicProxy.ServiceHostInterfaceProxyGenerator._metadataBuddyType">
+            <summary>
+            Holds the metadata buddy class type for the service interface.
+            </summary>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.Wcf.DynamicProxy.ServiceHostInterfaceProxyGenerator.#ctor(Castle.DynamicProxy.ModuleScope,System.Type)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AutofacContrib.Multitenant.Wcf.DynamicProxy.ServiceHostInterfaceProxyGenerator"/> class.
+            </summary>
+            <param name="scope">The scope of the module being built.</param>
+            <param name="interface">The interface that will be proxied.</param>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.Wcf.DynamicProxy.ServiceHostInterfaceProxyGenerator.CreateTypeAttributes(Castle.DynamicProxy.Generators.Emitters.ClassEmitter)">
+            <summary>
+            Adds custom attributes to the generated type.
+            </summary>
+            <param name="emitter">The class emitter.</param>
+            <remarks>
+            <para>
+            This override calls the base functionality and then uses the metadata
+            buddy class (as specified by a <see cref="T:AutofacContrib.Multitenant.Wcf.ServiceMetadataTypeAttribute"/>
+            on the service interface) to copy over class-level attributes to the
+            dynamic hosting proxy.
+            </para>
+            </remarks>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="emitter"/> is <see langword="null"/>.
+            </exception>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.Wcf.DynamicProxy.ServiceHostInterfaceProxyGenerator.GetTypeImplementerMapping(System.Type[],System.Type,System.Collections.Generic.IEnumerable{Castle.DynamicProxy.Contributors.ITypeContributor}@,Castle.DynamicProxy.Generators.INamingScope)">
+            <summary>
+            Gets the contributors for generating the type definition.
+            </summary>
+            <param name="interfaces">Additional interfaces to implement.</param>
+            <param name="proxyTargetType">The target type for the proxy.</param>
+            <param name="contributors">The list of contributors that will be used to generate the type.</param>
+            <param name="namingScope">The proxy type naming scope.</param>
+            <returns>
+            The list of types being implemented.
+            </returns>
+            <remarks>
+            <para>
+            This version of the method basically does the same thing as the
+            original/base implementation but with these key differences:
+            </para>
+            <list type="bullet">
+            <item>
+            <term>No mixin support</term>
+            <description>
+            The original version of the method looks at the <see cref="P:Castle.DynamicProxy.Generators.BaseProxyGenerator.ProxyGenerationOptions"/>
+            to see if there are any mixins to be added to the generated proxy.
+            There is no need for mixin support in WCF service hosting so mixins
+            aren't even checked for and won't be added.
+            </description>
+            </item>
+            <item>
+            <term>No additional interfaces</term>
+            <description>
+            The original version of the method goes through each of the additional
+            interfaces that the are to be implemented, checks them against collisions
+            with mixin definitions, and adds type mappings for the additional interfaces.
+            The only interface that needs to be implemented for the WCF hosting
+            proxy is the service interface, so all of that additional interface
+            checking is skipped.
+            </description>
+            </item>
+            <item>
+            <term>Custom instance contributor used</term>
+            <description>
+            The original version of the method uses the
+            <see cref="T:Castle.DynamicProxy.Contributors.InterfaceProxyInstanceContributor"/>
+            as the code generator for the proxy type. Unfortunately, that contributor
+            copies over all non-inherited attributes on the interface including
+            the <see cref="T:System.ServiceModel.ServiceContractAttribute"/>. The
+            concrete proxy type can't have that attribute because the interface
+            already has it, so WCF hosting dies. This version of the method uses
+            the <see cref="T:AutofacContrib.Multitenant.Wcf.DynamicProxy.IgnoreAttributeInterfaceProxyInstanceContributor"/>
+            which does not copy over non-inherited attributes.
+            </description>
+            </item>
+            </list>
+            </remarks>
+            <seealso cref="T:AutofacContrib.Multitenant.Wcf.DynamicProxy.IgnoreAttributeInterfaceProxyInstanceContributor"/>
+        </member>
+        <member name="T:AutofacContrib.Multitenant.Wcf.DynamicProxy.ServiceHostProxyBuilder">
+            <summary>
+            Proxy builder that has an additional method to create proxies usable
+            in WCF multitenant hosting.
+            </summary>
+            <remarks>
+            <para>
+            The primary point of interest in this builder type is the
+            <see cref="M:AutofacContrib.Multitenant.Wcf.DynamicProxy.ServiceHostProxyBuilder.CreateWcfProxyType(System.Type)"/>
+            method, which is used to create an interface proxy type that is hostable
+            by WCF.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.Wcf.DynamicProxy.ServiceHostProxyBuilder.AssertValidType(System.Type)">
+            <summary>
+            Validates that the target type to proxy is visible and not generic.
+            </summary>
+            <param name="target">
+            The interface type to proxy.
+            </param>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.Wcf.DynamicProxy.ServiceHostProxyBuilder.CreateWcfProxyType(System.Type)">
+            <summary>
+            Creates an interface proxy type that can be used by the WCF host.
+            </summary>
+            <param name="interfaceToProxy">The service interface to proxy.</param>
+            <returns>
+            A <see cref="T:System.Type"/> that is a proxy for the interface specified
+            by <paramref name="interfaceToProxy"/> that will be able to be
+            hosted by WCF.
+            </returns>
+            <remarks>
+            <para>
+            This proxy type creation method uses the
+            <see cref="T:AutofacContrib.Multitenant.Wcf.DynamicProxy.ServiceHostInterfaceProxyGenerator"/>
+            to create the service host proxy type. As this is a very specialized
+            proxy type, it does not take options like other proxy types.
+            </para>
+            </remarks>
+            <seealso cref="T:AutofacContrib.Multitenant.Wcf.DynamicProxy.ServiceHostInterfaceProxyGenerator"/>
+        </member>
+        <member name="T:AutofacContrib.Multitenant.Wcf.DynamicProxy.ServiceHostProxyGenerator">
+            <summary>
+            Proxy generator used in multitenant service hosting.
+            </summary>
+            <remarks>
+            <para>
+            The WCF service host has very specific requirements around the object type that
+            you pass in when you call <see cref="M:System.ServiceModel.Activation.ServiceHostFactory.CreateServiceHost(System.Type,System.Uri[])"/>.
+            </para>
+            <para>
+            If you have a type that has a <see cref="T:System.ServiceModel.ServiceContractAttribute"/>
+            on it and it implements an interface that has <see cref="T:System.ServiceModel.ServiceContractAttribute"/>
+            on it, the WCF service host complains that you can't have two different
+            service contracts.
+            </para>
+            <para>
+            The proxy generator uses a <see cref="T:AutofacContrib.Multitenant.Wcf.DynamicProxy.ServiceHostProxyBuilder"/>
+            to build the proxy types. This is specifically interesting in the
+            <see cref="M:AutofacContrib.Multitenant.Wcf.DynamicProxy.ServiceHostProxyGenerator.CreateWcfProxy(System.Type,System.Object)"/>
+            method, which uses some special overrides and additions in the builder.
+            </para>
+            <para>
+            The builder, when called through
+            <see cref="M:AutofacContrib.Multitenant.Wcf.DynamicProxy.ServiceHostProxyGenerator.CreateWcfProxy(System.Type,System.Object)"/>,
+            generates proxy types that ignore non-inherited
+            attributes on the service interface (e.g.,
+            <see cref="T:System.ServiceModel.ServiceContractAttribute"/>)
+            so when the proxy type is generated, it doesn't bring over anything
+            that will cause WCF host initialization to fail or get confused.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.Wcf.DynamicProxy.ServiceHostProxyGenerator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:AutofacContrib.Multitenant.Wcf.DynamicProxy.ServiceHostProxyGenerator"/> class.
+            </summary>
+            <remarks>
+            <para>
+            The proxy generator uses a <see cref="T:AutofacContrib.Multitenant.Wcf.DynamicProxy.ServiceHostProxyBuilder"/>
+            to build the proxy types.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.Wcf.DynamicProxy.ServiceHostProxyGenerator.CreateWcfProxy(System.Type,System.Object)">
+            <summary>
+            Creates a proxy object that can be used by the WCF service host.
+            </summary>
+            <param name="interfaceToProxy">
+            The WCF service interface for service implementations.
+            </param>
+            <param name="target">
+            The target of the proxy object that will receive the actual calls.
+            </param>
+            <returns>
+            An object that implements the interface <paramref name="interfaceToProxy"/>
+            and proxies calls to the <paramref name="target"/>.
+            </returns>
+            <remarks>
+            <para>
+            When initializing the service host, call this method with a dummy
+            <paramref name="target"/> object, just to create the dynamic proxy
+            type for the first time and get the service host up and running.
+            Subsequent proxies for that interface should have a valid target
+            implementation type to which service calls will be proxied.
+            </para>
+            </remarks>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="interfaceToProxy"/> or <paramref name="target"/> is <see langword="null"/>.
+            </exception>
+            <exception cref="T:System.ArgumentException">
+            <para>
+            Thrown if:
+            </para>
+            <list type="bullet">
+            <item>
+            <term><paramref name="interfaceToProxy"/> is not an interface.</term>
+            </item>
+            <item>
+            <term><paramref name="interfaceToProxy"/> is an open generic.</term>
+            </item>
+            <item>
+            <term><paramref name="target"/> cannot be cast to <paramref name="interfaceToProxy"/>.</term>
+            </item>
+            </list>
+            </exception>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.Wcf.DynamicProxy.ServiceHostProxyGenerator.CreateWcfProxyType(System.Type)">
+            <summary>
+            Creates the WCF service interface proxy type or retrieves it from cache.
+            </summary>
+            <param name="interfaceToProxy">
+            The interface type that will be proxied.
+            </param>
+            <returns>
+            A generated proxy type that can be used to proxy calls to actual
+            service implementations.
+            </returns>
+        </member>
+        <member name="T:AutofacContrib.Multitenant.Wcf.DynamicProxy.TypeExtensions">
+            <summary>
+            Extension methods for the <see cref="T:System.Type"/> class.
+            </summary>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.Wcf.DynamicProxy.TypeExtensions.GetMetadataClassType(System.Type)">
+            <summary>
+            Gets the metadata buddy class type, if any, as marked by a
+            <see cref="T:AutofacContrib.Multitenant.Wcf.ServiceMetadataTypeAttribute"/>
+            </summary>
+            <param name="interfaceType">The service interface type from which to retrieve the metadata class.</param>
+            <returns>
+            The metadata type for the service interface as specified by a
+            <see cref="T:AutofacContrib.Multitenant.Wcf.ServiceMetadataTypeAttribute"/>,
+            if it exists; otherwise <see langword="null"/>.
+            </returns>
+        </member>
+        <member name="T:AutofacContrib.Multitenant.Wcf.MultitenantServiceImplementationDataProvider">
+            <summary>
+            Service implementation data provider that returns multitenant-aware
+            service hosting information.
+            </summary>
+        </member>
+        <member name="T:AutofacContrib.Multitenant.Wcf.IServiceImplementationDataProvider">
+            <summary>
+            Defines a strategy for resolving which service type should be
+            used for hosting vs. which type is the actual service implementation.
+            </summary>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.Wcf.IServiceImplementationDataProvider.GetServiceImplementationData(System.String)">
+            <summary>
+            Gets data about a service implementation.
+            </summary>
+            <param name="value">
+            The constructor string passed in to the service host factory
+            that is used to determine which type to host/use as a service
+            implementation.
+            </param>
+            <returns>
+            A <see cref="T:AutofacContrib.Multitenant.Wcf.ServiceImplementationData"/>
+            object containing information about which type to use in
+            the service host and how to resolve the implementation.
+            </returns>
+        </member>
+        <member name="F:AutofacContrib.Multitenant.Wcf.MultitenantServiceImplementationDataProvider._generator">
+            <summary>
+            Proxy generator used to create proxy types that will be substituted
+            in during service hosting.
+            </summary>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.Wcf.MultitenantServiceImplementationDataProvider.GetServiceImplementationData(System.String)">
+            <summary>
+            Gets data about a service implementation.
+            </summary>
+            <param name="value">
+            The constructor string passed in to the service host factory
+            that is used to determine which type to host/use as a service
+            implementation.
+            </param>
+            <returns>
+            A <see cref="T:AutofacContrib.Multitenant.Wcf.ServiceImplementationData"/>
+            object containing information about which type to use in
+            the service host and how to resolve the implementation.
+            </returns>
+            <remarks>
+            <para>
+            This method returns a dynamic proxy object as the type to host
+            and resolves the implementation type as a dynamic proxy that proxies
+            to a tenant-specific implementation. This is necessary since
+            WCF will only allow hosting of concrete classes and we need it to,
+            effectively, host an 'interface' - in this case, a dynamic proxy type
+            rather than an actual implementation type.
+            </para>
+            </remarks>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="value"/> is <see langword="null"/>.
+            </exception>
+            <exception cref="T:System.ArgumentException">
+            Thrown if <paramref name="value"/> is empty.
+            </exception>
+            <exception cref="T:System.InvalidOperationException">
+            Thrown if <paramref name="value"/> does not resolve into
+            a known type, resolves to a type that is not an interface, or the
+            interface it resolves to is not marked with a <see cref="T:System.ServiceModel.ServiceContractAttribute"/>.
+            </exception>
+        </member>
+        <member name="T:AutofacContrib.Multitenant.Wcf.ServiceMetadataTypeAttribute">
+            <summary>
+            Specifies the metadata class to associate with a service implementation.
+            </summary>
+            <remarks>
+            <para>
+            When hosting a service in a multitenant environment using <see cref="T:AutofacContrib.Multitenant.Wcf.AutofacHostFactory"/>
+            and the dynamic proxy generation that occurs therein, you can't really
+            mark your "service implementation class" with metadata attributes like
+            the <see cref="T:System.ServiceModel.ServiceBehaviorAttribute"/>. Also,
+            since many of these attributes require you to mark a class rather than
+            the service interface, there's no way to otherwise specify them.
+            </para>
+            <para>
+            This attribute works similar to the <c>System.ComponentModel.DataAnnotations.MetadataTypeAttribute</c>
+            and allows you to mark a service interface such that the generated dynamic
+            proxy class will use a "metadata buddy class" to retrieve various attributes
+            that should be applied during generation.
+            </para>
+            <para>
+            Mark your service interface with one of these attributes, then create an
+            empty class with the <see cref="T:System.ServiceModel.ServiceBehaviorAttribute"/>
+            (or whatever) associated with it. The dynamic proxy generation will copy
+            these attributes, thus allowing you to still make use of service metadata info.
+            </para>
+            <para>
+            This is particularly handy when choosing to specify a service name. Since
+            WCF usually infers the service name (which is also the name of the service
+            element in configuration that it uses to set up the service host) from the
+            type of the implementation, a dynamic proxy implementation results in
+            service names like <c>Castle.Proxies.IMyServiceProxy_1</c>. To manually
+            specify the name, you use the <see cref="P:System.ServiceModel.ServiceBehaviorAttribute.Name"/>
+            property, which can be associated with a service metadata buddy class.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.Wcf.ServiceMetadataTypeAttribute.#ctor(System.Type)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AutofacContrib.Multitenant.Wcf.ServiceMetadataTypeAttribute"/> class.
+            </summary>
+            <param name="metadataClassType">The metadata class type for specifying service metadata.</param>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="metadataClassType"/> is <see langword="null"/>.
+            </exception>
+        </member>
+        <member name="P:AutofacContrib.Multitenant.Wcf.ServiceMetadataTypeAttribute.MetadataClassType">
+            <summary>
+            Gets the metadata class type.
+            </summary>
+            <value>
+            A <see cref="T:System.Type"/> indicating the class to be used to
+            gather metadata for the service implementation proxy.
+            </value>
+        </member>
+        <member name="T:AutofacContrib.Multitenant.Wcf.SimpleServiceImplementationDataProvider">
+            <summary>
+            Simple resolver for WCF service implementations. Allows for single-tenant
+            handling of named or typed services. Does not support multitenancy.
+            </summary>
+            <remarks>
+            <para>
+            The behavior of this resolver is the same as the original WCF integration
+            Autofac host factory where named or typed services are allowed and multitenancy
+            is not supported.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.Wcf.SimpleServiceImplementationDataProvider.GetServiceImplementationData(System.String)">
+            <summary>
+            Gets data about a service implementation.
+            </summary>
+            <param name="value">The constructor string passed in to the service host factory
+            that is used to determine which type to host/use as a service
+            implementation.</param>
+            <returns>
+            A <see cref="T:AutofacContrib.Multitenant.Wcf.ServiceImplementationData"/>
+            object containing information about which type to use in
+            the service host and which type to use to resolve the implementation.
+            </returns>
+            <remarks>
+            <para>
+            This resolver takes the constructor string stored in the .svc file
+            and resolves a matching typed service from the root
+            application container. That resolved type is used both for the
+            service host as well as the implementation type.
+            </para>
+            </remarks>
+            <exception cref="T:System.InvalidOperationException">
+            Thrown if the <see cref="P:AutofacContrib.Multitenant.Wcf.AutofacHostFactory.Container"/>
+            is <see langword="null"/>; or
+            if the service indicated by <paramref name="value"/>
+            is not registered with the <see cref="P:AutofacContrib.Multitenant.Wcf.AutofacHostFactory.Container"/>.
+            </exception>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="value"/> is <see langword="null"/>.
+            </exception>
+            <exception cref="T:System.ArgumentException">
+            Thrown if <paramref name="value"/> is empty.
+            </exception>
+        </member>
+        <member name="T:AutofacContrib.Multitenant.Wcf.OperationContextTenantIdentificationStrategy">
+            <summary>
+            An <see cref="T:AutofacContrib.Multitenant.ITenantIdentificationStrategy"/>
+            implementation that gets the tenant ID from a <see cref="T:AutofacContrib.Multitenant.Wcf.TenantIdentificationContextExtension"/>
+            attached to the current <see cref="T:System.ServiceModel.OperationContext"/>.
+            </summary>
+            <remarks>
+            <para>
+            Use this <see cref="T:AutofacContrib.Multitenant.ITenantIdentificationStrategy"/>
+            if you are using the <see cref="T:AutofacContrib.Multitenant.Wcf.TenantIdentificationContextExtension"/>
+            as the mechanism for tracking which tenant a given operation is running
+            under.
+            </para>
+            <para>
+            For example, you could use an <see cref="T:System.ServiceModel.Dispatcher.IDispatchMessageInspector"/>
+            that gets the tenant ID from an incoming header and adds a
+            <see cref="T:AutofacContrib.Multitenant.Wcf.TenantIdentificationContextExtension"/>
+            to the current <see cref="T:System.ServiceModel.OperationContext"/> with
+            the tenant ID value. Then you could register this provider as the
+            mechanism for determining the tenant ID when resolving multitenant dependencies.
+            </para>
+            <para>
+            The <see cref="T:AutofacContrib.Multitenant.Wcf.TenantPropagationBehavior`1"/>
+            does exactly that - adds the tenant ID to outbound messages on the client
+            and parses them on the service side. For a usage example, see
+            <see cref="T:AutofacContrib.Multitenant.Wcf.TenantPropagationBehavior`1"/>
+            </para>
+            </remarks>
+            <seealso cref="T:AutofacContrib.Multitenant.Wcf.TenantIdentificationContextExtension"/>
+            <seealso cref="T:AutofacContrib.Multitenant.Wcf.TenantPropagationBehavior`1"/>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.Wcf.OperationContextTenantIdentificationStrategy.TryIdentifyTenant(System.Object@)">
+            <summary>
+            Attempts to identify the tenant from the current operation context.
+            </summary>
+            <param name="tenantId">The current tenant identifier.</param>
+            <returns>
+            <see langword="true"/> if the tenant could be identified; <see langword="false"/>
+            if not.
+            </returns>
+            <remarks>
+            <para>
+            The <paramref name="tenantId"/> will be the <see cref="T:System.Object"/> value from the first
+            <see cref="T:AutofacContrib.Multitenant.Wcf.TenantIdentificationContextExtension"/>
+            found on the current <see cref="T:System.ServiceModel.OperationContext"/>,
+            or <see langword="null"/> if there is no extension found on the
+            operation context.
+            </para>
+            </remarks>
+        </member>
+        <member name="T:AutofacContrib.Multitenant.Wcf.ServiceImplementationData">
+            <summary>
+            Contains data about a WCF service implementation.
+            </summary>
+            <remarks>
+            <para>
+            This data transfer object class is used in conjunction with
+            <see cref="T:AutofacContrib.Multitenant.Wcf.IServiceImplementationDataProvider"/>
+            implementations for resolving service implementation instance information.
+            </para>
+            </remarks>
+            <seealso cref="T:AutofacContrib.Multitenant.Wcf.IServiceImplementationDataProvider"/>
+        </member>
+        <member name="P:AutofacContrib.Multitenant.Wcf.ServiceImplementationData.ConstructorString">
+            <summary>
+            Gets or sets the string used to generate the data.
+            </summary>
+            <value>
+            A <see cref="T:System.String"/> used to generate this service
+            implementation data.
+            </value>
+        </member>
+        <member name="P:AutofacContrib.Multitenant.Wcf.ServiceImplementationData.ServiceTypeToHost">
+            <summary>
+            Gets or sets the concrete type to host.
+            </summary>
+            <value>
+            A <see cref="T:System.Type"/> that indicates the type to pass to the
+            service host when it is initially created. This type must be a concrete
+            class and not an interface.
+            </value>
+        </member>
+        <member name="P:AutofacContrib.Multitenant.Wcf.ServiceImplementationData.ImplementationResolver">
+            <summary>
+            Gets or sets a mechanism that allows the <see cref="T:AutofacContrib.Multitenant.Wcf.AutofacInstanceContext"/>
+            to get the actual implementation for a service.
+            </summary>
+            <value>
+            An <see cref="T:System.Func`2"/> that takes in a lifetime scope returns
+            an <see cref="T:System.Object"/> that is the implementation type for the
+            given service. This is the object that the service host will use
+            and should be assignable from the <see cref="P:AutofacContrib.Multitenant.Wcf.ServiceImplementationData.ServiceTypeToHost"/>.
+            </value>
+        </member>
+        <member name="T:AutofacContrib.Multitenant.Wcf.TenantIdentificationContextExtension">
+            <summary>
+            Extension for <see cref="T:System.ServiceModel.OperationContext"/>
+            that allows propagation of the tenant ID.
+            </summary>
+            <remarks>
+            <para>
+            Use this extension in conjunction with the
+            <see cref="T:AutofacContrib.Multitenant.Wcf.OperationContextTenantIdentificationStrategy"/>
+            to determine which tenant a given operation is running under.
+            </para>
+            <para>
+            For example, you could use an <see cref="T:System.ServiceModel.Dispatcher.IDispatchMessageInspector"/>
+            that gets the tenant ID from an incoming header and adds a
+            <see cref="T:AutofacContrib.Multitenant.Wcf.TenantIdentificationContextExtension"/>
+            to the current <see cref="T:System.ServiceModel.OperationContext"/> with
+            the tenant ID value. Then you could register the
+            <see cref="T:AutofacContrib.Multitenant.Wcf.OperationContextTenantIdentificationStrategy"/>
+            as the mechanism for determining the tenant ID when resolving multitenant dependencies.
+            </para>
+            <para>
+            The <see cref="T:AutofacContrib.Multitenant.Wcf.TenantPropagationBehavior`1"/>
+            is a behavior that does exactly that - adds the tenant ID to outbound messages on the client
+            and parses them on the service side. For a usage example, see
+            <see cref="T:AutofacContrib.Multitenant.Wcf.TenantPropagationBehavior`1"/>
+            </para>
+            </remarks>
+            <seealso cref="T:AutofacContrib.Multitenant.Wcf.OperationContextTenantIdentificationStrategy"/>
+            <seealso cref="T:AutofacContrib.Multitenant.Wcf.TenantPropagationBehavior`1"/>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.Wcf.TenantIdentificationContextExtension.Attach(System.ServiceModel.OperationContext)">
+            <summary>
+            Enables an extension object to find out when it has been aggregated.
+            </summary>
+            <param name="owner">
+            The extensible object that aggregates this extension.
+            </param>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.Wcf.TenantIdentificationContextExtension.Detach(System.ServiceModel.OperationContext)">
+            <summary>
+            Enables an object to find out when it is no longer aggregated.
+            </summary>
+            <param name="owner">
+            The extensible object that aggregates this extension.
+            </param>
+        </member>
+        <member name="P:AutofacContrib.Multitenant.Wcf.TenantIdentificationContextExtension.TenantId">
+            <summary>
+            Gets or sets the tenant ID.
+            </summary>
+            <value>
+            An <see cref="T:System.Object"/> that uniquely identifies the tenant
+            under which the current operation is executing.
+            </value>
+        </member>
+        <member name="T:AutofacContrib.Multitenant.Wcf.TenantPropagationBehavior`1">
+            <summary>
+            Behavior for WCF clients and service hosts that is used to propagate
+            tenant ID from client to service.
+            </summary>
+            <typeparam name="TTenantId">
+            The type of the tenant ID to propagate. Must be nullable and
+            serializable so it can be added to a message header.
+            </typeparam>
+            <remarks>
+            <para>
+            This behavior applies the <see cref="T:AutofacContrib.Multitenant.Wcf.TenantPropagationMessageInspector`1"/>
+            to WCF clients and service hosts to automatically get the tenant ID on
+            the WCF client end, add the ID to a header on the outbound message, and
+            have the tenant ID read from headers on the service side and added to the
+            operation context in an
+            <see cref="T:AutofacContrib.Multitenant.Wcf.TenantIdentificationContextExtension"/>.
+            This allows you, on the service side, to use the
+            <see cref="T:AutofacContrib.Multitenant.Wcf.OperationContextTenantIdentificationStrategy"/>
+            as your registered <see cref="T:AutofacContrib.Multitenant.ITenantIdentificationStrategy"/>.
+            </para>
+            </remarks>
+            <example>
+            <para>
+            In the following examples, the tenant ID is a <see cref="T:System.String"/>,
+            so the <typeparamref name="TTenantId"/> in the examples corresponds.
+            In your application, your tenant ID may be a nullable GUID or some other
+            object, so you'd need to update accordingly. That would mean passing
+            a different type as <typeparamref name="TTenantId"/> and implementing
+            a custom <see cref="T:AutofacContrib.Multitenant.ITenantIdentificationStrategy"/>
+            that parses the appropriate tenant ID from the execution context.
+            </para>
+            <para>
+            The following snippet shows what registration of this behavior
+            might look like in an ASP.NET application that consumes WCF services.
+            </para>
+            <code lang="C#">
+            public class MvcApplication : HttpApplication, IContainerProviderAccessor
+            {
+              private static IContainerProvider _containerProvider;
+            
+              public IContainerProvider ContainerProvider
+              {
+                get { return _containerProvider; }
+              }
+            
+              public static void RegisterRoutes(RouteCollection routes)
+              {
+                // Register your routes as normal.
+              }
+            
+              protected void Application_Start()
+              {
+                // Create a tenant ID strategy that will get the tenant from
+                // your ASP.NET request context.
+                var tenantIdStrategy = new RequestParameterTenantIdentificationStrategy("tenant");
+            
+                // Register application-level dependencies and controllers.
+                var builder = new ContainerBuilder();
+                builder.RegisterType&lt;HomeController&gt;();
+                // ... and so on.
+            
+                // When you register the WCF service client, add the
+                // TenantPropagationBehavior to the Opening event:
+            
+                builder.Register(
+                  c =&gt; new ChannelFactory&lt;IMultitenantService&gt;(
+                    new BasicHttpBinding(),
+                    new EndpointAddress("http://server/TheService.svc"))).SingleInstance();
+                builder.Register(
+                  c =&gt;
+                  {
+                    var factory = c.Resolve&lt;ChannelFactory&lt;IMultitenantService&gt;&gt;();
+                    factory.Opening +=
+                      (sender, args) =&gt;
+                        factory.Endpoint.Behaviors.Add(
+                        new TenantPropagationBehavior&lt;string&gt;(tenantIdStrategy);
+                    return factory.CreateChannel()
+                  }).InstancePerHttpRequest();
+            
+                // Create the multitenant container.
+                var mtc = new MultitenantContainer(tenantIdStrategy, builder.Build());
+            
+                // Register tenant specific overrides and set up the
+                // application container provider.
+                _containerProvider = new ContainerProvider(mtc);
+            
+                // Do other MVC setup like route registration, etc.
+                ControllerBuilder.Current.SetControllerFactory(new AutofacControllerFactory(this.ContainerProvider));
+                AreaRegistration.RegisterAllAreas();
+                RegisterRoutes(RouteTable.Routes);
+              }
+            }
+            </code>
+            <para>
+            Note that much of the above code is the standard ASP.NET application
+            wireup with Autofac. The important part is when you register the service
+            client - it needs to have a <see cref="T:AutofacContrib.Multitenant.Wcf.TenantPropagationBehavior`1"/>
+            attached to it that can get the container provider from the
+            current application.
+            </para>
+            <para>
+            The following snippet shows what registration of this behavior
+            looks like in a WCF application hosted in IIS:
+            </para>
+            <code lang="C#">
+            public class Global : System.Web.HttpApplication
+            {
+              protected void Application_Start(object sender, EventArgs e)
+              {
+                  // Create the tenant ID strategy. Required for multitenant integration.
+                  var tenantIdStrategy = new OperationContextTenantIdentificationStrategy();
+            
+                  // Register application-level dependencies and service implementations.
+                  var builder = new ContainerBuilder();
+                  builder.RegisterType&lt;BaseImplementation&gt;().As&lt;IMultitenantService&gt;();
+                  // ... and so on.
+            
+                  // Create the multitenant container.
+                  var mtc = new MultitenantContainer(tenantIdStrategy, builder.Build());
+            
+                  // Configure tenant-specific overrides and set the WCF host container.
+                  AutofacContrib.Multitenant.Wcf.AutofacHostFactory.Container = mtc;
+            
+                  // Add a behavior to service hosts that get created so incoming messages
+                  // get inspected and the tenant ID can be parsed from message headers.
+                  AutofacContrib.Multitenant.Wcf.AutofacHostFactory.HostConfigurationAction =
+                    host =&gt;
+                      host.Opening += (s, args) =&gt;
+                        host.Description.Behaviors.Add(new TenantPropagationBehavior&lt;string&gt;(tenantIdStrategy));
+              }
+            }
+            </code>
+            <para>
+            Note that it is also very similar to standard wireup with Autofac WCF
+            integration, just that you use the multitenant WCF host, a multitenant
+            container, and a behavior to get the tenant ID from the operation context.
+            </para>
+            </example>
+            <seealso cref="T:AutofacContrib.Multitenant.Wcf.TenantPropagationMessageInspector`1"/>
+            <seealso cref="T:AutofacContrib.Multitenant.Wcf.OperationContextTenantIdentificationStrategy"/>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.Wcf.TenantPropagationBehavior`1.#ctor(AutofacContrib.Multitenant.ITenantIdentificationStrategy)">
+            <summary>
+            Initializes a new instance of the
+            <see cref="T:AutofacContrib.Multitenant.Wcf.TenantPropagationBehavior`1"/> class.
+            </summary>
+            <param name="tenantIdentificationStrategy">
+            The strategy to use for identifying the current tenant.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="tenantIdentificationStrategy"/> is <see langword="null"/>.
+            </exception>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.Wcf.TenantPropagationBehavior`1.AddBindingParameters(System.ServiceModel.Description.ServiceEndpoint,System.ServiceModel.Channels.BindingParameterCollection)">
+            <summary>
+            Implement to pass data at runtime to bindings to support custom behavior.
+            </summary>
+            <param name="endpoint">The endpoint to modify.</param>
+            <param name="bindingParameters">
+            The objects that binding elements require to support the behavior.
+            </param>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.Wcf.TenantPropagationBehavior`1.AddBindingParameters(System.ServiceModel.Description.ServiceDescription,System.ServiceModel.ServiceHostBase,System.Collections.ObjectModel.Collection{System.ServiceModel.Description.ServiceEndpoint},System.ServiceModel.Channels.BindingParameterCollection)">
+            <summary>
+            Provides the ability to pass custom data to binding elements to support the contract implementation.
+            </summary>
+            <param name="serviceDescription">The service description of the service.</param>
+            <param name="serviceHostBase">The host of the service.</param>
+            <param name="endpoints">The service endpoints.</param>
+            <param name="bindingParameters">
+            Custom objects to which binding elements have access.
+            </param>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.Wcf.TenantPropagationBehavior`1.ApplyClientBehavior(System.ServiceModel.Description.ServiceEndpoint,System.ServiceModel.Dispatcher.ClientRuntime)">
+            <summary>
+            Adds the <see cref="T:AutofacContrib.Multitenant.Wcf.TenantPropagationMessageInspector`1"/>
+            to the client.
+            </summary>
+            <param name="endpoint">The endpoint that is to be customized.</param>
+            <param name="clientRuntime">The client runtime to be customized.</param>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="clientRuntime"/> is <see langword="null"/>.
+            </exception>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.Wcf.TenantPropagationBehavior`1.ApplyDispatchBehavior(System.ServiceModel.Description.ServiceDescription,System.ServiceModel.ServiceHostBase)">
+            <summary>
+            Adds the <see cref="T:AutofacContrib.Multitenant.Wcf.TenantPropagationMessageInspector`1"/>
+            to the service endpoints.
+            </summary>
+            <param name="serviceDescription">The service description.</param>
+            <param name="serviceHostBase">The host that is currently being built.</param>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="serviceHostBase"/> is <see langword="null"/>.
+            </exception>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.Wcf.TenantPropagationBehavior`1.ApplyDispatchBehavior(System.ServiceModel.Description.ServiceEndpoint,System.ServiceModel.Dispatcher.EndpointDispatcher)">
+            <summary>
+            Implements a modification or extension of the service across an endpoint.
+            </summary>
+            <param name="endpoint">The endpoint that exposes the contract.</param>
+            <param name="endpointDispatcher">The endpoint dispatcher to be modified or extended.</param>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.Wcf.TenantPropagationBehavior`1.Validate(System.ServiceModel.Description.ServiceEndpoint)">
+            <summary>
+            Implement to confirm that the endpoint meets some intended criteria.
+            </summary>
+            <param name="endpoint">The endpoint to validate.</param>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.Wcf.TenantPropagationBehavior`1.Validate(System.ServiceModel.Description.ServiceDescription,System.ServiceModel.ServiceHostBase)">
+            <summary>
+            Provides the ability to inspect the service host and the service description to confirm that the service can run successfully.
+            </summary>
+            <param name="serviceDescription">The service description.</param>
+            <param name="serviceHostBase">The service host that is currently being constructed.</param>
+        </member>
+        <member name="P:AutofacContrib.Multitenant.Wcf.TenantPropagationBehavior`1.TenantIdentificationStrategy">
+            <summary>
+            Gets the strategy used for identifying the current tenant.
+            </summary>
+            <value>
+            An <see cref="T:AutofacContrib.Multitenant.ITenantIdentificationStrategy"/>
+            used to identify the current tenant from the execution context.
+            </value>
+        </member>
+        <member name="T:AutofacContrib.Multitenant.Wcf.TenantPropagationMessageInspector`1">
+            <summary>
+            Message inspector that helps in passing the tenant ID from a WCF client
+            to the respective service.
+            </summary>
+            <typeparam name="TTenantId">
+            The type of the tenant ID to propagate. Must be nullable and
+            serializable so it can be added to a message header.
+            </typeparam>
+            <remarks>
+            <para>
+            Use this in conjunction with the <see cref="T:AutofacContrib.Multitenant.Wcf.TenantPropagationBehavior`1"/>
+            to automatically get the tenant ID on the WCF client end, add the ID
+            to a header on the outbound message, and have the tenant ID read from
+            headers on the service side and added to the operation context in an
+            <see cref="T:AutofacContrib.Multitenant.Wcf.TenantIdentificationContextExtension"/>.
+            This allows you, on the service side, to use the
+            <see cref="T:AutofacContrib.Multitenant.Wcf.OperationContextTenantIdentificationStrategy"/>
+            as your registered <see cref="T:AutofacContrib.Multitenant.ITenantIdentificationStrategy"/>.
+            </para>
+            <para>
+            For a usage example, see <see cref="T:AutofacContrib.Multitenant.Wcf.TenantPropagationBehavior`1"/>.
+            </para>
+            </remarks>
+            <seealso cref="T:AutofacContrib.Multitenant.Wcf.TenantPropagationBehavior`1"/>
+        </member>
+        <member name="F:AutofacContrib.Multitenant.Wcf.TenantPropagationMessageInspector`1.TenantHeaderNamespace">
+            <summary>
+            Namespace of the header that gets added to messages and carries tenant information.
+            </summary>
+        </member>
+        <member name="F:AutofacContrib.Multitenant.Wcf.TenantPropagationMessageInspector`1.TenantHeaderName">
+            <summary>
+            Name of the header that gets added to messages and carries the tenant ID.
+            </summary>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.Wcf.TenantPropagationMessageInspector`1.#ctor(AutofacContrib.Multitenant.ITenantIdentificationStrategy)">
+            <summary>
+            Initializes a new instance of the
+            <see cref="T:AutofacContrib.Multitenant.Wcf.TenantPropagationMessageInspector`1"/> class.
+            </summary>
+            <param name="tenantIdentificationStrategy">
+            The strategy to use for identifying the current tenant.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="tenantIdentificationStrategy"/> is <see langword="null"/>.
+            </exception>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.Wcf.TenantPropagationMessageInspector`1.AfterReceiveReply(System.ServiceModel.Channels.Message@,System.Object)">
+            <summary>
+            Enables inspection or modification of a message after a reply message
+            is received but prior to passing it back to the client application.
+            </summary>
+            <param name="reply">
+            The message to be transformed into types and handed back to the client
+            application.
+            </param>
+            <param name="correlationState">
+            Correlation state data.
+            </param>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.Wcf.TenantPropagationMessageInspector`1.AfterReceiveRequest(System.ServiceModel.Channels.Message@,System.ServiceModel.IClientChannel,System.ServiceModel.InstanceContext)">
+            <summary>
+            Inspects inbound message headers and adds an
+            <see cref="T:AutofacContrib.Multitenant.Wcf.TenantIdentificationContextExtension"/>
+            to the current operation context with the tenant ID.
+            </summary>
+            <param name="request">The request message.</param>
+            <param name="channel">The incoming channel.</param>
+            <param name="instanceContext">The current service instance.</param>
+            <returns>
+            Always returns <see langword="null"/>. There is no correlation state
+            value to be managed in this inspector.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="request"/> is <see langword="null"/>.
+            </exception>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.Wcf.TenantPropagationMessageInspector`1.BeforeSendRequest(System.ServiceModel.Channels.Message@,System.ServiceModel.IClientChannel)">
+            <summary>
+            Adds the tenant ID to the outbound message headers.
+            </summary>
+            <param name="request">The message to be sent to the service.</param>
+            <param name="channel">The client object channel.</param>
+            <returns>
+            Always returns <see langword="null"/>. There is no correlation state
+            value to be managed in this inspector.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="request"/> is <see langword="null"/>.
+            </exception>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.Wcf.TenantPropagationMessageInspector`1.BeforeSendReply(System.ServiceModel.Channels.Message@,System.Object)">
+            <summary>
+            Called after the operation has returned but before the reply message
+            is sent.
+            </summary>
+            <param name="reply">
+            The reply message. This value is <see langword="null" /> if the
+            operation is one way.
+            </param>
+            <param name="correlationState">
+            The correlation object returned from the
+            <see cref="M:System.ServiceModel.Dispatcher.IDispatchMessageInspector.AfterReceiveRequest(System.ServiceModel.Channels.Message@,System.ServiceModel.IClientChannel,System.ServiceModel.InstanceContext)"/>
+            method.
+            </param>
+        </member>
+        <member name="P:AutofacContrib.Multitenant.Wcf.TenantPropagationMessageInspector`1.TenantIdentificationStrategy">
+            <summary>
+            Gets the strategy used for identifying the current tenant.
+            </summary>
+            <value>
+            An <see cref="T:AutofacContrib.Multitenant.ITenantIdentificationStrategy"/>
+            used to identify the current tenant from the execution context.
+            </value>
+        </member>
+        <member name="T:AutofacContrib.Multitenant.Web.RequestParameterTenantIdentificationStrategy">
+            <summary>
+            Uses the specified request parameter (query string, post data etc.) to identify
+            the current tenant.
+            </summary>
+            <remarks>
+            <para>
+            One of many potential ways to get the tenant from a request context, this
+            strategy reads from the incoming request parameters collection (e.g.,
+            querystring, form, etc.) and determines the tenant from there.
+            </para>
+            <para>
+            Note that, due to the request parameter collection being easily modified
+            by an outside party (simply change the querystring!), this is inherently
+            an insecure mechanism for tenant determination. It is helpful for simple
+            web site creation and debugging but is not recommended for production.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.Web.RequestParameterTenantIdentificationStrategy.#ctor(System.String)">
+            <summary>
+            Create a new <see cref="T:AutofacContrib.Multitenant.Web.RequestParameterTenantIdentificationStrategy"/> for
+            the specified parameter name.
+            </summary>
+            <param name="parameterName">
+            The request parameter name that holds the tenant identifier.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="parameterName"/> is <see langword="null"/>.
+            </exception>
+            <exception cref="T:System.ArgumentException">
+            Thrown if <paramref name="parameterName"/> is empty.
+            </exception>
+        </member>
+        <member name="M:AutofacContrib.Multitenant.Web.RequestParameterTenantIdentificationStrategy.TryIdentifyTenant(System.Object@)">
+            <summary>
+            Attempts to identify the tenant from the request parameters.
+            </summary>
+            <param name="tenantId">The current tenant identifier.</param>
+            <returns>
+            <see langword="true"/> if the tenant could be identified; <see langword="false"/>
+            if not.
+            </returns>
+        </member>
+        <member name="P:AutofacContrib.Multitenant.Web.RequestParameterTenantIdentificationStrategy.ParameterName">
+            <summary>
+            Gets the request parameter name from which the tenant ID should be retrieved.
+            </summary>
+            <value>
+            A <see cref="T:System.String"/> corresponding to a parameter in the request
+            parameters collection indicating the tenant ID.
+            </value>
+        </member>
+    </members>
+</doc>
