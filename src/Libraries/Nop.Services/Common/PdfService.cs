@@ -472,7 +472,7 @@ namespace Nop.Services.Common
             {
                 foreach (var item in taxRates)
                 {
-                    string taxRate = String.Format(_localizationService.GetResource("PDFInvoice.Totals.TaxRate"), _priceFormatter.FormatTaxRate(item.Key));
+                    string taxRate = String.Format(_localizationService.GetResource("PDFInvoice.TaxRate"), _priceFormatter.FormatTaxRate(item.Key));
                     //TODO pass languageId to _priceFormatter.FormatPrice
                     string taxValue = _priceFormatter.FormatPrice(_currencyService.ConvertCurrency(item.Value, order.CurrencyRate), true, false);
                     
