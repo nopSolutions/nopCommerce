@@ -4,8 +4,6 @@
 @{
     var gridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSize;
 }
-@using (Html.BeginForm())
-{
     <div class="section-header">
         <div class="title">
             <img src="@Url.Content("~/Administration/Content/images/ico-promotions.png")" alt="" />
@@ -36,19 +34,22 @@
     <table class="adminContent">
         <tr>
             <td>
-                @(Html.Telerik().Grid<NewsLetterSubscriptionModel>()
+                @(Html.Telerik().Grid<NewsLetterSubscriptionModel>(Model.NewsLetterSubscriptions.Data)
                         .Name("newsLetterSubscriptions-grid")
-                        .BindTo(Model.NewsLetterSubscriptions.Data)
                         .DataKeys(x =>
                         {
                             x.Add(y => y.Id).RouteKey("Id");
                         })
                         .Columns(columns =>
                         {
-                            columns.Bound(x => x.Email);
-                            columns.Bound(x => x.Active);
+                            columns.Bound(x => x.Email)
+                                .Width(300);
+                            columns.Bound(x => x.Active)
+                                .Template(x => x.Active.ToString().ToLower())
+                                .Width(100);
                             columns.Bound(x => x.CreatedOn)
-                                .ReadOnly();
+                                .ReadOnly()
+                                .Width(150);
                             columns.Command(commands =>
                             {
                                 commands.Edit();
@@ -83,7 +84,7 @@
             e.data = searchModel;
         }
     </script>  
-}
+
 
 @*import emails form*@
 @{Html.Telerik().Window()
