@@ -293,6 +293,15 @@ set @resources='
     <LocaleResource Name="Admin.Customers.Customers.List.SearchDateOfBirth.Month">
         <Value>Month</Value>
     </LocaleResource>
+    <LocaleResource Name="Account.Fields.Password.LengthValidation">
+        <Value>The password should have at least {0} characters.</Value>
+    </LocaleResource>
+    <LocaleResource Name="Account.ChangePassword.Fields.NewPassword.LengthValidation">
+        <Value>The password should have at least {0} characters.</Value>
+    </LocaleResource>
+    <LocaleResource Name="Account.PasswordRecovery.NewPassword.LengthValidation">
+        <Value>The password should have at least {0} characters.</Value>
+    </LocaleResource>
 </Language>
 '
 
@@ -989,5 +998,14 @@ BEGIN
 	END
 	CLOSE cur_customerrole
 	DEALLOCATE cur_customerrole
+END
+GO
+
+
+--min password length
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'customersettings.passwordminlength')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'customersettings.passwordminlength', N'6')
 END
 GO

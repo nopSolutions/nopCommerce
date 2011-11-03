@@ -26,6 +26,11 @@ namespace Nop.Core.Domain.Customers
         public string HashedPasswordFormat { get; set; }
 
         /// <summary>
+        /// Gets or sets a minimum password length
+        /// </summary>
+        public int PasswordMinLength { get; set; }
+
+        /// <summary>
         /// User registration type
         /// </summary>
         public UserRegistrationType UserRegistrationType { get; set; }

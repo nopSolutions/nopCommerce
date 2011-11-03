@@ -4534,9 +4534,10 @@ namespace Nop.Services.Installation
                 .SaveSettings(new CustomerSettings()
                 {
                     UsernamesEnabled = false,
-                    AllowUsersToChangeUsernames = false,
                     CheckUsernameAvailabilityEnabled = false,
+                    AllowUsersToChangeUsernames = false,
                     HashedPasswordFormat = "SHA1",
+                    PasswordMinLength = 6,
                     UserRegistrationType = UserRegistrationType.Standard,
                     AllowCustomersToUploadAvatars = false,
                     AvatarMaximumSizeBytes = 20000,

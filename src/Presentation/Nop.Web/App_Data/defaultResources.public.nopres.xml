@@ -98,6 +98,9 @@
 									<LocaleResource Name="EnteredPasswordsDoNotMatch">
 										<Value>The new password and confirmation password do not match.</Value>
 									</LocaleResource>
+									<LocaleResource Name="LengthValidation">
+										<Value>The password should have at least {0} characters.</Value>
+									</LocaleResource>
 									<LocaleResource Name="Required">
 										<Value>New password is required.</Value>
 									</LocaleResource>
@@ -304,6 +307,9 @@
 							<LocaleResource Name="EnteredPasswordsDoNotMatch">
 								<Value>The password and confirmation password do not match.</Value>
 							</LocaleResource>
+							<LocaleResource Name="LengthValidation">
+								<Value>The password should have at least {0} characters.</Value>
+							</LocaleResource>
 							<LocaleResource Name="Required">
 								<Value>Password is required.</Value>
 							</LocaleResource>
@@ -464,6 +470,9 @@
 						<Children>
 							<LocaleResource Name="EnteredPasswordsDoNotMatch">
 								<Value>The new password and confirmation password do not match.</Value>
+							</LocaleResource>
+							<LocaleResource Name="LengthValidation">
+								<Value>The password should have at least {0} characters.</Value>
 							</LocaleResource>
 							<LocaleResource Name="Required">
 								<Value>New password is required.</Value>
