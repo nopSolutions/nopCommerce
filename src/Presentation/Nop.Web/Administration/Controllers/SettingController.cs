@@ -890,7 +890,7 @@ namespace Nop.Admin.Controllers
                 //update user information
                 //TODO optimization - load only users with PasswordFormat.Encrypted (don't filter them here)
                 var customers = _customerService.GetAllCustomers(null, null, null,
-                    null, null, null, null, false, null, 0, int.MaxValue)
+                    null, null, null, null, 0, 0, false, null, 0, int.MaxValue)
                     .Where(u => u.PasswordFormat == PasswordFormat.Encrypted);
                 foreach (var customer in customers)
                 {

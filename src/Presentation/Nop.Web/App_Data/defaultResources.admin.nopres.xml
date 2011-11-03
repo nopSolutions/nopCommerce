@@ -6247,6 +6247,20 @@
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
+									<LocaleResource Name="SearchDateOfBirth">
+										<Value>Date of birth</Value>
+										<Children>
+											<LocaleResource Name="Hint">
+												<Value>Filter by date of birth. Don't select any value to load all records.</Value>
+											</LocaleResource>
+											<LocaleResource Name="Day">
+												<Value>Day</Value>
+											</LocaleResource>
+											<LocaleResource Name="Month">
+												<Value>Month</Value>
+											</LocaleResource>
+										</Children>
+									</LocaleResource>
 								</Children>
 							</LocaleResource>
 							<LocaleResource Name="Orders">

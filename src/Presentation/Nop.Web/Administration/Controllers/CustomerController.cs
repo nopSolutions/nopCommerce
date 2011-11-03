@@ -232,11 +232,13 @@ namespace Nop.Admin.Controllers
             var listModel = new CustomerListModel()
             {
                 UsernamesEnabled = _customerSettings.UsernamesEnabled,
+                DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled,
                 AvailableCustomerRoles = _customerService.GetAllCustomerRoles(true).ToList(),
-                SearchCustomerRoleIds = defaultRoleIds
+                SearchCustomerRoleIds = defaultRoleIds,
             };
 
-            var customers = _customerService.GetAllCustomers(null, null, defaultRoleIds, null, null, null, null, false, null, 0, _adminAreaSettings.GridPageSize);
+            var customers = _customerService.GetAllCustomers(null, null, defaultRoleIds, null,
+                null, null, null, 0, 0, false, null, 0, _adminAreaSettings.GridPageSize);
             //customer list
             listModel.Customers = new GridModel<CustomerModel>
             {
@@ -265,10 +267,18 @@ namespace Nop.Admin.Controllers
             string searchCustomerUsername = command.FilterDescriptors.GetValueFromAppliedFilters("searchCustomerUsername");
             string searchCustomerFirstName = command.FilterDescriptors.GetValueFromAppliedFilters("searchCustomerFirstName");
             string searchCustomerLastName = command.FilterDescriptors.GetValueFromAppliedFilters("searchCustomerLastName");
+            int searchCustomerDayOfBirth = 0, searchCustomerMonthOfBirth = 0;
+            string searchCustomerDayOfBirthStr = command.FilterDescriptors.GetValueFromAppliedFilters("searchCustomerDayOfBirth");
+            if (!String.IsNullOrEmpty(searchCustomerDayOfBirthStr))
+                searchCustomerDayOfBirth = Convert.ToInt32(searchCustomerDayOfBirthStr);
+            string searchCustomerMonthOfBirthStr = command.FilterDescriptors.GetValueFromAppliedFilters("searchCustomerMonthOfBirth");
+            if (!String.IsNullOrEmpty(searchCustomerMonthOfBirthStr))
+                searchCustomerMonthOfBirth = Convert.ToInt32(searchCustomerMonthOfBirthStr);
 
             var customers = _customerService.GetAllCustomers(null, null,
                 searchCustomerRoleIds.ToArray(), searchCustomerEmail, searchCustomerUsername,
                 searchCustomerFirstName, searchCustomerLastName,
+                searchCustomerDayOfBirth, searchCustomerMonthOfBirth,
                 false, null, command.Page - 1, command.PageSize);
             var gridModel = new GridModel<CustomerModel>
             {
@@ -289,6 +299,7 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
+            model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
 
             //convert to string because passing int[] to grid is no possible
             string searchCustomerRoleIdsStr = "";
@@ -304,15 +315,26 @@ namespace Nop.Admin.Controllers
             ViewData["searchCustomerUsername"] = model.SearchUsername;
             ViewData["searchCustomerFirstName"] = model.SearchFirstName;
             ViewData["searchCustomerLastName"] = model.SearchLastName;
+            ViewData["searchCustomerDayOfBirth"] = model.SearchDayOfBirth;
+            ViewData["searchCustomerMonthOfBirth"] = model.SearchMonthOfBirth;
 
             //customer roles
             var customerRoles = _customerService.GetAllCustomerRoles(true);
             model.AvailableCustomerRoles = customerRoles.ToList();
 
-            //laod customers
+            //date of birth
+            int searchCustomerDayOfBirth = 0, searchCustomerMonthOfBirth = 0;
+            if (!String.IsNullOrEmpty(model.SearchDayOfBirth))
+                searchCustomerDayOfBirth = Convert.ToInt32(model.SearchDayOfBirth);
+            if (!String.IsNullOrEmpty(model.SearchMonthOfBirth))
+                searchCustomerMonthOfBirth = Convert.ToInt32(model.SearchMonthOfBirth);
+
+            //load customers
             var customers = _customerService.GetAllCustomers(null, null,
                model.SearchCustomerRoleIds, model.SearchEmail, model.SearchUsername,
-               model.SearchFirstName, model.SearchLastName, false, null, 0, _adminAreaSettings.GridPageSize);
+               model.SearchFirstName, model.SearchLastName,
+               searchCustomerDayOfBirth, searchCustomerMonthOfBirth,
+               false, null, 0, _adminAreaSettings.GridPageSize);
             //customer list
             model.Customers = new GridModel<CustomerModel>
             {
@@ -1458,7 +1480,8 @@ namespace Nop.Admin.Controllers
 
             try
             {
-                var customers = _customerService.GetAllCustomers(null, null, null, null, null,null, null, false, null, 0, int.MaxValue);
+                var customers = _customerService.GetAllCustomers(null, null, null, null, 
+                    null, null, null, 0, 0, false, null, 0, int.MaxValue);
 
                 string fileName = string.Format("customers_{0}_{1}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
                 string filePath = string.Format("{0}content\\files\\ExportImport\\{1}", Request.PhysicalApplicationPath, fileName);
@@ -1482,7 +1505,8 @@ namespace Nop.Admin.Controllers
 
             try
             {
-                var customers = _customerService.GetAllCustomers(null, null, null, null, null, null, null, false, null, 0, int.MaxValue);
+                var customers = _customerService.GetAllCustomers(null, null, null, null, 
+                    null, null, null, 0, 0, false, null, 0, int.MaxValue);
                 
                 var fileName = string.Format("customers_{0}.xml", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
                 var xml = _exportManager.ExportCustomersToXml(customers);

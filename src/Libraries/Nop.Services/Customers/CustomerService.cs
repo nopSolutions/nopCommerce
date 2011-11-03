@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -91,6 +92,8 @@ namespace Nop.Services.Customers
         /// <param name="username">Username; null to load all customers</param>
         /// <param name="firstName">First name; null to load all customers</param>
         /// <param name="lastName">Last name; null to load all customers</param>
+        /// <param name="dayOfBirth">Day of birth; 0 to load all customers</param>
+        /// <param name="monthOfBirth">Month of birth; 0 to load all customers</param>
         /// <param name="loadOnlyWithShoppingCart">Value indicating whther to load customers only with shopping cart</param>
         /// <param name="sct">Value indicating what shopping cart type to filter; userd when 'loadOnlyWithShoppingCart' param is 'true'</param>
         /// <param name="pageIndex">Page index</param>
@@ -98,7 +101,7 @@ namespace Nop.Services.Customers
         /// <returns>Customer collection</returns>
         public virtual IPagedList<Customer> GetAllCustomers(DateTime? registrationFrom,
             DateTime? registrationTo, int[] customerRoleIds, string email, string username,
-            string firstName, string lastName, 
+            string firstName, string lastName, int dayOfBirth, int monthOfBirth,
             bool loadOnlyWithShoppingCart, ShoppingCartType? sct, int pageIndex, int pageSize)
         {
             var query = _customerRepository.Table;
@@ -117,6 +120,34 @@ namespace Nop.Services.Customers
                 query = query.Where(c => c.CustomerAttributes.Where(ca => ca.Key == SystemCustomerAttributeNames.FirstName && ca.Value.Contains(firstName)).Count() > 0);
             if (!String.IsNullOrWhiteSpace(lastName))
                 query = query.Where(c => c.CustomerAttributes.Where(ca => ca.Key == SystemCustomerAttributeNames.LastName && ca.Value.Contains(lastName)).Count() > 0);
+            //date of birth is stored as a string into database.
+            //we also know that date of birth is stored in the following format YYYY-MM-DD (for example, 1983-02-18).
+            //so let's search it as a string
+            if (dayOfBirth > 0 && monthOfBirth > 0)
+            {
+                //both are specified
+                string dateOfBirthStr = monthOfBirth.ToString("00", CultureInfo.InvariantCulture) + "-" + dayOfBirth.ToString("00", CultureInfo.InvariantCulture);
+                //EndsWith is not supported by SQL Server Compact
+                //query = query.Where(c => c.CustomerAttributes.Where(ca => ca.Key == SystemCustomerAttributeNames.DateOfBirth && ca.Value.EndsWith(dateOfBirthStr)).Count() > 0);
+                //so let's use the following workaround http://social.msdn.microsoft.com/Forums/is/sqlce/thread/0f810be1-2132-4c59-b9ae-8f7013c0cc00
+                query = query.Where(c => c.CustomerAttributes.Where(ca => ca.Key == SystemCustomerAttributeNames.DateOfBirth && ca.Value.Substring(ca.Value.Length - dateOfBirthStr.Length, dateOfBirthStr.Length) == dateOfBirthStr).Count() > 0);
+            }
+            else if (dayOfBirth > 0)
+            {
+                //only day is specified
+                string dateOfBirthStr = dayOfBirth.ToString("00", CultureInfo.InvariantCulture);
+                //EndsWith is not supported by SQL Server Compact
+                //query = query.Where(c => c.CustomerAttributes.Where(ca => ca.Key == SystemCustomerAttributeNames.DateOfBirth && ca.Value.EndsWith(dateOfBirthStr)).Count() > 0);
+                //so let's use the following workaround http://social.msdn.microsoft.com/Forums/is/sqlce/thread/0f810be1-2132-4c59-b9ae-8f7013c0cc00
+                query = query.Where(c => c.CustomerAttributes.Where(ca => ca.Key == SystemCustomerAttributeNames.DateOfBirth && ca.Value.Substring(ca.Value.Length - dateOfBirthStr.Length, dateOfBirthStr.Length) == dateOfBirthStr).Count() > 0);
+            }
+            else if (monthOfBirth > 0)
+            {
+                //only month is specified
+                string dateOfBirthStr = "-" + monthOfBirth.ToString("00", CultureInfo.InvariantCulture) + "-";
+                query = query.Where(c => c.CustomerAttributes.Where(ca => ca.Key == SystemCustomerAttributeNames.DateOfBirth && ca.Value.Contains(dateOfBirthStr)).Count() > 0);
+            }
+
 
             if (loadOnlyWithShoppingCart)
             {

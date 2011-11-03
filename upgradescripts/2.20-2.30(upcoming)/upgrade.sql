@@ -281,6 +281,18 @@ set @resources='
     <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.StoreClosedAllowForAdmins.Hint">
         <Value>Check to allow a user with admin access to view the store while it is set to closed.</Value>
     </LocaleResource>
+    <LocaleResource Name="Admin.Customers.Customers.List.SearchDateOfBirth">
+        <Value>Date of birth</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Customers.Customers.List.SearchDateOfBirth.Hint">
+        <Value>Filter by date of birth. Don''t select any value to load all records.</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Customers.Customers.List.SearchDateOfBirth.Day">
+        <Value>Day</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Customers.Customers.List.SearchDateOfBirth.Month">
+        <Value>Month</Value>
+    </LocaleResource>
 </Language>
 '
 

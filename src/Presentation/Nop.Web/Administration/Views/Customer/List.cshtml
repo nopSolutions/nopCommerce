@@ -1,6 +1,6 @@
 ﻿@model CustomerListModel
-@using Telerik.Web.Mvc.UI
-
+@using Telerik.Web.Mvc.UI;
+@using System.Globalization;
 @{
     var gridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSize;
 }
@@ -12,8 +12,7 @@
             @T("Admin.Customers.Customers")
         </div>
         <div class="options">
-            <a href="@Url.Action("Create")" class="t-button">@T("Admin.Common.AddNew")</a>
-            <a href="@Url.Action("ExportXml")" class="t-button">@T("Admin.Common.ExportToXml")</a>
+            <a href="@Url.Action("Create")" class="t-button">@T("Admin.Common.AddNew")</a> <a href="@Url.Action("ExportXml")" class="t-button">@T("Admin.Common.ExportToXml")</a>
             <a href="@Url.Action("ExportExcel")" class="t-button">@T("Admin.Common.ExportToExcel")</a>
         </div>
     </div>
@@ -23,7 +22,8 @@
                 @Html.NopLabelFor(model => model.SearchCustomerRoleIds):
             </td>
             <td class="adminData">
-                @foreach (var customerRole in Model.AvailableCustomerRoles) {
+                @foreach (var customerRole in Model.AvailableCustomerRoles)
+                {
                     <input type="checkbox" name="SearchCustomerRoleIds" value="@customerRole.Id"
                 @if (Model.SearchCustomerRoleIds != null && Model.SearchCustomerRoleIds.Contains(customerRole.Id))
                 {
@@ -69,6 +69,32 @@
                 @Html.EditorFor(model => Model.SearchLastName)
             </td>
         </tr>
+        @if (Model.DateOfBirthEnabled)
+        {
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.SearchDayOfBirth):
+                </td>
+                <td class="adminData">
+                    @{
+            var monthOfBirthValues = new List<SelectListItem>();
+            monthOfBirthValues.Add(new SelectListItem() { Text = T("Admin.Customers.Customers.List.SearchDateOfBirth.Month").Text, Value = "0" });
+            for (int i = 1; i <= 12; i++)
+            {
+                monthOfBirthValues.Add(new SelectListItem() { Text = i.ToString(CultureInfo.InvariantCulture), Value = i.ToString(CultureInfo.InvariantCulture) });
+            }
+            var dayOfBirthValues = new List<SelectListItem>();
+            dayOfBirthValues.Add(new SelectListItem() { Text = T("Admin.Customers.Customers.List.SearchDateOfBirth.Day").Text, Value = "0" });
+            for (int i = 1; i <= 31; i++)
+            {
+                dayOfBirthValues.Add(new SelectListItem() { Text = i.ToString(CultureInfo.InvariantCulture), Value = i.ToString(CultureInfo.InvariantCulture) });
+            }
+                    }
+                    @Html.DropDownListFor(model => Model.SearchMonthOfBirth, monthOfBirthValues)
+                    @Html.DropDownListFor(model => Model.SearchDayOfBirth, dayOfBirthValues)
+                </td>
+            </tr>
+        }
         <tr>
             <td colspan="2">
                 <button type="submit" name="search-customers" value="search-customers" class="t-button">@T("Admin.Common.Search")</button>
@@ -127,6 +153,14 @@
                             .Width(5)
                             .Filterable(false)
                             .Hidden(true);
+                        columns.Bound(x => x.SearchCustomerDayOfBirth)
+                            .Width(5)
+                            .Filterable(false)
+                            .Hidden(true);
+                        columns.Bound(x => x.SearchCustomerMonthOfBirth)
+                            .Width(5)
+                            .Filterable(false)
+                            .Hidden(true);
                         columns.Bound(x => x.Active)
                              .Width(100)
                              .Template(x => x.Active.ToString().ToLower())
@@ -175,13 +209,23 @@
                         {
                             filters.Add(x => x.SearchCustomerLastName).Contains((string)ViewData["searchCustomerLastName"]);
                         }
+                        //customer day of birth
+                        if (!String.IsNullOrEmpty(ViewData["searchCustomerDayOfBirth"] as string))
+                        {
+                            filters.Add(x => x.SearchCustomerDayOfBirth).Contains((string)ViewData["searchCustomerDayOfBirth"]);
+                        }
+                        //customer month of birth
+                        if (!String.IsNullOrEmpty(ViewData["searchCustomerMonthOfBirth"] as string))
+                        {
+                            filters.Add(x => x.SearchCustomerMonthOfBirth).Contains((string)ViewData["searchCustomerMonthOfBirth"]);
+                        }
                     }))
                     .EnableCustomBinding(true))
             </td>
         </tr>
     </table>
     
-    @*<script type="text/javascript">
+@*<script type="text/javascript">
         $(document).ready(function () {
             $('#search-customers').click(function () {
                 var grid = $('#customers-grid').data('tGrid');

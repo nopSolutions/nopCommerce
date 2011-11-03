@@ -23,6 +23,8 @@ namespace Nop.Services.Customers
         /// <param name="username">Username; null to load all customers</param>
         /// <param name="firstName">First name; null to load all customers</param>
         /// <param name="lastName">Last name; null to load all customers</param>
+        /// <param name="dayOfBirth">Day of birth; 0 to load all customers</param>
+        /// <param name="monthOfBirth">Month of birth; 0 to load all customers</param>
         /// <param name="loadOnlyWithShoppingCart">Value indicating whther to load customers only with shopping cart</param>
         /// <param name="sct">Value indicating what shopping cart type to filter; userd when 'loadOnlyWithShoppingCart' param is 'true'</param>
         /// <param name="pageIndex">Page index</param>
@@ -30,7 +32,7 @@ namespace Nop.Services.Customers
         /// <returns>Customer collection</returns>
         IPagedList<Customer> GetAllCustomers(DateTime? registrationFrom,
            DateTime? registrationTo, int[] customerRoleIds, string email, string username,
-           string firstName, string lastName,
+           string firstName, string lastName, int dayOfBirth, int monthOfBirth,
            bool loadOnlyWithShoppingCart, ShoppingCartType? sct, int pageIndex, int pageSize);
 
         /// <summary>
