@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Web;
@@ -17,6 +18,7 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Plugins;
 using Nop.Plugin.Payments.PayPalDirect.Controllers;
 using Nop.Plugin.Payments.PayPalDirect.PayPalSvc;
+using Nop.Services.Catalog;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Orders;
@@ -34,6 +36,8 @@ namespace Nop.Plugin.Payments.PayPalDirect
 
         private readonly PayPalDirectPaymentSettings _paypalDirectPaymentSettings;
         private readonly ISettingService _settingService;
+        private readonly ITaxService _taxService;
+        private readonly IPriceCalculationService _priceCalculationService;
         private readonly ICurrencyService _currencyService;
         private readonly CurrencySettings _currencySettings;
         private readonly IWebHelper _webHelper;
@@ -43,12 +47,16 @@ namespace Nop.Plugin.Payments.PayPalDirect
         #region Ctor
 
         public PayPalDirectPaymentProcessor(PayPalDirectPaymentSettings paypalDirectPaymentSettings,
-            ISettingService settingService, ICurrencyService currencyService,
+            ISettingService settingService, 
+            ITaxService taxService, IPriceCalculationService priceCalculationService,
+            ICurrencyService currencyService,
             CurrencySettings currencySettings, IWebHelper webHelper,
             StoreInformationSettings storeInformationSettings)
         {
             this._paypalDirectPaymentSettings = paypalDirectPaymentSettings;
             this._settingService = settingService;
+            this._taxService = taxService;
+            this._priceCalculationService = priceCalculationService;
             this._currencyService = currencyService;
             this._currencySettings = currencySettings;
             this._webHelper = webHelper;
@@ -130,6 +138,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
                 details.PaymentAction = PaymentActionCodeType.Authorization;
             else
                 details.PaymentAction = PaymentActionCodeType.Sale;
+            //credit cart
             details.CreditCard = new CreditCardDetailsType();
             details.CreditCard.CreditCardNumber = processPaymentRequest.CreditCardNumber;
             details.CreditCard.CreditCardType = GetPaypalCreditCardType(processPaymentRequest.CreditCardType);
@@ -141,7 +150,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
             details.CreditCard.CardOwner = new PayerInfoType();
             details.CreditCard.CardOwner.PayerCountry = GetPaypalCountryCodeType(processPaymentRequest.Customer.BillingAddress.Country);
             details.CreditCard.CreditCardTypeSpecified = true;
-
+            //billing address
             details.CreditCard.CardOwner.Address = new AddressType();
             details.CreditCard.CardOwner.Address.CountrySpecified = true;
             details.CreditCard.CardOwner.Address.Street1 = processPaymentRequest.Customer.BillingAddress.Address1;
@@ -157,33 +166,57 @@ namespace Nop.Plugin.Payments.PayPalDirect
             details.CreditCard.CardOwner.PayerName = new PersonNameType();
             details.CreditCard.CardOwner.PayerName.FirstName = processPaymentRequest.Customer.BillingAddress.FirstName;
             details.CreditCard.CardOwner.PayerName.LastName = processPaymentRequest.Customer.BillingAddress.LastName;
+            //order totals
+            var payPalCurrency = PaypalHelper.GetPaypalCurrency(_currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId));
             details.PaymentDetails = new PaymentDetailsType();
             details.PaymentDetails.OrderTotal = new BasicAmountType();
             details.PaymentDetails.OrderTotal.Value = Math.Round(processPaymentRequest.OrderTotal, 2).ToString("N", new CultureInfo("en-us"));
-            details.PaymentDetails.OrderTotal.currencyID = PaypalHelper.GetPaypalCurrency(_currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId));
+            details.PaymentDetails.OrderTotal.currencyID = payPalCurrency;
             details.PaymentDetails.Custom = processPaymentRequest.OrderGuid.ToString();
             details.PaymentDetails.ButtonSource = "nopCommerceCart";
-
-
-            //ShoppingCart cart = IoC.Resolve<IShoppingCartService>().GetShoppingCartByCustomerSessionGUID(ShoppingCartTypeEnum.ShoppingCart, NopContext.Current.Session.CustomerSessionGUID);
-            //PaymentDetailsItemType[] cartItems = new PaymentDetailsItemType[cart.Count];
-            //for (int i = 0; i < cart.Count; i++)
+            //UNDONE pass product names and totals to PayPal
+            //if (_paypalDirectPaymentSettings.PassProductNamesAndTotals)
             //{
-            //    ShoppingCartItem item = cart[i];
-            //    cartItems[i] = new PaymentDetailsItemType()
+            //    //individual items
+            //    var cart = processPaymentRequest.Customer.ShoppingCartItems
+            //        .Where(x=>x.ShoppingCartType == ShoppingCartType.ShoppingCart)
+            //        .ToList();
+            //    var cartItems = new PaymentDetailsItemType[cart.Count];
+            //    for (int i = 0; i < cart.Count; i++)
             //    {
-            //        Name = item.ProductVariant.FullProductName,
-            //        Number = item.ProductVariant.ProductVariantID.ToString(),
-            //        Quantity = item.Quantity.ToString(),
-            //        Amount = new BasicAmountType()
+            //        var sc = cart[i];
+            //        decimal taxRate = decimal.Zero;
+            //        var customer = processPaymentRequest.Customer;
+            //        decimal scUnitPrice = _priceCalculationService.GetUnitPrice(sc, true);
+            //        decimal scSubTotal = _priceCalculationService.GetSubTotal(sc, true);
+            //        decimal scUnitPriceInclTax = _taxService.GetProductPrice(sc.ProductVariant, scUnitPrice, true, customer, out taxRate);
+            //        decimal scUnitPriceExclTax = _taxService.GetProductPrice(sc.ProductVariant, scUnitPrice, false, customer, out taxRate);
+            //        //decimal scSubTotalInclTax = _taxService.GetProductPrice(sc.ProductVariant, scSubTotal, true, customer, out taxRate);
+            //        //decimal scSubTotalExclTax = _taxService.GetProductPrice(sc.ProductVariant, scSubTotal, false, customer, out taxRate);
+            //        cartItems[i] = new PaymentDetailsItemType()
             //        {
-            //            currencyID = PaypalHelper.GetPaypalCurrency(IoC.Resolve<ICurrencyService>().PrimaryStoreCurrency),
-            //            Value = (item.Quantity * item.ProductVariant.Price).ToString("N", new CultureInfo("en-us"))
-            //        }
+            //            Name = sc.ProductVariant.FullProductName,
+            //            Number = sc.ProductVariant.Id.ToString(),
+            //            Quantity = sc.Quantity.ToString(),
+            //            Amount = new BasicAmountType()
+            //            {
+            //                currencyID = payPalCurrency,
+            //                Value = scUnitPriceExclTax.ToString("N", new CultureInfo("en-us")),
+            //            },
+            //            Tax = new BasicAmountType()
+            //            {
+            //                currencyID = payPalCurrency,
+            //                Value = (scUnitPriceInclTax - scUnitPriceExclTax).ToString("N", new CultureInfo("en-us")),
+            //            },
+            //        };
             //    };
-            //};
-            //details.PaymentDetails.PaymentDetailsItem = cartItems;
-
+            //    details.PaymentDetails.PaymentDetailsItem = cartItems;
+            //    //other totals (TODO)
+            //    details.PaymentDetails.ItemTotal = null;
+            //    details.PaymentDetails.ShippingTotal = null;
+            //    details.PaymentDetails.TaxTotal = null;
+            //    details.PaymentDetails.HandlingTotal = null;
+            //}
             //shipping
             if (processPaymentRequest.Customer.ShippingAddress != null)
             {
@@ -201,6 +234,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
                 }
             }
 
+            //send request
             using (var service2 = new PayPalAPIAASoapBinding())
             {
                 if (!_paypalDirectPaymentSettings.UseSandbox)
