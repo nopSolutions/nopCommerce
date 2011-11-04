@@ -4,6 +4,28 @@
 @model ConfigurationModel
 @using Nop.Plugin.Payments.PayPalStandard.Models;
 @using Nop.Web.Framework;
+
+<script type="text/javascript">
+	$(document).ready(function () {
+
+		$("#@Html.FieldIdFor(model => model.EnableIpn)").click(toggleEnableIpn);
+
+		toggleEnableIpn();
+	});
+
+
+	function toggleEnableIpn() {
+		if (getE('@Html.FieldIdFor(model => model.EnableIpn)').checked) {
+			$('#pnlIpnUrl').show();
+		}
+		else {
+			$('#pnlIpnUrl').hide();
+		}
+	}
+
+   
+</script>
+
 @using (Html.BeginForm())
 {
     <table class="adminContent">
@@ -38,11 +60,17 @@
             9. Scroll down to the Payment Data Transfer section of the page to view your PDT
             identity token.
             
+				<br />
+            <br />
+            <b>Two ways to be able to receive IPN messages (optional):</b>
             
             <br />
             <br />
-            Before being able to receive IPN messages (optional), you'll need to activate this service; follow these steps:
+            <b>The first way is to ckeck 'Enable IPN' below.</b> It will include in the request the url of you IPN handler
+            
             <br />
+            <br />
+            <b>The second way is to confugure your paypal account to activate this service</b>; follow these steps:
             <br />
             1. Log in to your Premier or Business account.
             <br />
@@ -55,8 +83,6 @@
             5. Select 'Receive IPN messages' (Enabled) and enter the URL of your IPN handler (http://www.yourStore.com/Plugins/PaymentPayPalStandard/IPNHandler).
             <br />
             6. Click Save, and you should get a message that you have successfully activated IPN.
-            <br />
-            Note. Or you can simply enter the URL of your IPN handler below
         </td>
     </tr>
     <tr>
@@ -119,6 +145,15 @@
             </td>
         </tr>
         <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.EnableIpn):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.EnableIpn)
+                @Html.ValidationMessageFor(model => model.EnableIpn)
+            </td>
+        </tr>
+		  <tr id="pnlIpnUrl">
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.IpnUrl):
             </td>

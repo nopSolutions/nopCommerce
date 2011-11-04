@@ -300,8 +300,17 @@ namespace Nop.Plugin.Payments.PayPalStandard
             string returnUrl = _webHelper.GetStoreLocation(false) + "Plugins/PaymentPayPalStandard/PDTHandler";
             string cancelReturnUrl = _webHelper.GetStoreLocation(false) + "Plugins/PaymentPayPalStandard/CancelOrder";
             builder.AppendFormat("&return={0}&cancel_return={1}", HttpUtility.UrlEncode(returnUrl), HttpUtility.UrlEncode(cancelReturnUrl));
-            if (!String.IsNullOrWhiteSpace(_paypalStandardPaymentSettings.IpnUrl))
-                builder.AppendFormat("&notify_url={0}", HttpUtility.UrlEncode(_paypalStandardPaymentSettings.IpnUrl));
+            
+            //Instant Payment Notification (server to serveur message)
+            if (_paypalStandardPaymentSettings.EnableIpn)
+            {
+                string ipnUrl;
+                if (String.IsNullOrWhiteSpace(_paypalStandardPaymentSettings.IpnUrl))
+                    ipnUrl = _webHelper.GetStoreLocation(false) + "Plugins/PaymentPayPalStandard/IPNHandler";
+                else
+                    ipnUrl = _paypalStandardPaymentSettings.IpnUrl;
+                builder.AppendFormat("&notify_url={0}", ipnUrl);
+            }
 
             //address
             //TODO move this param [address_override] to settings (PayPal configuration page)

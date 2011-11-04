@@ -24,7 +24,10 @@ namespace Nop.Plugin.Payments.PayPalStandard.Models
         [DisplayName("Pass product names and order totals to PayPal")]
         public bool PassProductNamesAndTotals { get; set; }
 
-        [DisplayName("Override the URL of IPN handler (optional)")]
+        [DisplayName("Enable IPN (Instant Payment Notification)")]
+        public bool EnableIpn { get; set; }
+
+        [DisplayName("Leave blanck to use the default IPN handler url. Orelse you could choose another url for example to use a different domain name (http://payment.myStore.com/Plugins/PaymentPayPalStandard/IPNHandler) or to log IPN on another system.")]
         public string IpnUrl { get; set; }
     }
 }
