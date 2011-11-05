@@ -301,7 +301,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
             string cancelReturnUrl = _webHelper.GetStoreLocation(false) + "Plugins/PaymentPayPalStandard/CancelOrder";
             builder.AppendFormat("&return={0}&cancel_return={1}", HttpUtility.UrlEncode(returnUrl), HttpUtility.UrlEncode(cancelReturnUrl));
             
-            //Instant Payment Notification (server to serveur message)
+            //Instant Payment Notification (server to server message)
             if (_paypalStandardPaymentSettings.EnableIpn)
             {
                 string ipnUrl;
@@ -476,6 +476,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
                 BusinessEmail = "test@test.com",
                 PdtToken= "Your PDT token here...",
                 PdtValidateOrderTotal = true,
+                EnableIpn = true,
             };
             _settingService.SaveSetting(settings);
 

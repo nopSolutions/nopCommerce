@@ -27,7 +27,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Models
         [DisplayName("Enable IPN (Instant Payment Notification)")]
         public bool EnableIpn { get; set; }
 
-        [DisplayName("Leave blanck to use the default IPN handler url. Orelse you could choose another url for example to use a different domain name (http://payment.myStore.com/Plugins/PaymentPayPalStandard/IPNHandler) or to log IPN on another system.")]
+        [DisplayName("IPN Handler")]
         public string IpnUrl { get; set; }
     }
 }

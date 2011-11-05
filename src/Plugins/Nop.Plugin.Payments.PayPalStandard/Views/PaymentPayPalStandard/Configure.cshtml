@@ -156,6 +156,8 @@
 		  <tr id="pnlIpnUrl">
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.IpnUrl):
+                <br />
+                <i>Leave blank to use the default IPN handler url.</i>
             </td>
             <td class="adminData">
                 @Html.EditorFor(model => model.IpnUrl)

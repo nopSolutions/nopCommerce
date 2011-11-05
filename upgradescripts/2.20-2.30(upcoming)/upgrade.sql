@@ -1009,3 +1009,12 @@ BEGIN
 	VALUES (N'customersettings.passwordminlength', N'6')
 END
 GO
+
+
+--new PayPal setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'paypalstandardpaymentsettings.enableipn')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'paypalstandardpaymentsettings.enableipn', N'true')
+END
+GO
