@@ -180,8 +180,8 @@ namespace Nop.Web.Controllers
                 null, null, 0, int.MaxValue);
             foreach (var blogPost in blogPosts)
             {
-                string topicUrl = Url.RouteUrl("BlogPost", new { blogPostId = blogPost.Id, SeName = blogPost.GetSeName() }, "http");
-                items.Add(new SyndicationItem(blogPost.Title, blogPost.Body, new Uri(topicUrl), String.Format("Blog:{0}", blogPost.Id), blogPost.CreatedOnUtc));
+                string blogPostUrl = Url.RouteUrl("BlogPost", new { blogPostId = blogPost.Id, SeName = blogPost.GetSeName() }, "http");
+                items.Add(new SyndicationItem(blogPost.Title, blogPost.Body, new Uri(blogPostUrl), String.Format("Blog:{0}", blogPost.Id), blogPost.CreatedOnUtc));
             }
             feed.Items = items;
             return new RssActionResult() { Feed = feed };
@@ -237,13 +237,10 @@ namespace Nop.Web.Controllers
                     if (_blogSettings.NotifyAboutNewBlogComments)
                         _workflowMessageService.SendBlogCommentNotificationMessage(comment, _localizationSettings.DefaultAdminLanguageId);
 
-
-                    PrepareBlogPostModel(model, blogPost, true);
-                    model.AddNewComment.CommentText = null;
-
-                    model.AddNewComment.Result = _localizationService.GetResource("Blog.Comments.SuccessfullyAdded");
-
-                    return View(model);
+                    //The text boxes should be cleared after a comment has been posted
+                    //That' why we reload the page
+                    TempData["nop.blog.addcomment.result"] = _localizationService.GetResource("Blog.Comments.SuccessfullyAdded");
+                    return RedirectToRoute("BlogPost", new { blogPostId = blogPost.Id, SeName = blogPost.GetSeName() });
                 }
             }
 

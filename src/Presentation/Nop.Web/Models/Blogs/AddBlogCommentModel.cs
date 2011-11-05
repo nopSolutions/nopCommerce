@@ -9,7 +9,5 @@ namespace Nop.Web.Models.Blogs
         [NopResourceDisplayName("Blog.Comments.CommentText")]
         [AllowHtml]
         public string CommentText { get; set; }
-
-        public string Result { get; set; }
     }
 }

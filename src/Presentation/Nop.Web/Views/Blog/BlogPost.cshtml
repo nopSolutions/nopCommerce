@@ -73,9 +73,12 @@
                         </tr>
                         <tr>
                             <td class="message-error" colspan="2">
-                                @if (!String.IsNullOrEmpty(Model.AddNewComment.Result))
+                                @{
+                                    string result = TempData["nop.blog.addcomment.result"] as string;
+                                }
+                                @if (!String.IsNullOrEmpty(result))
                                 {
-                                    @Model.AddNewComment.Result
+                                    @result
                                     <br />
                                 }
                                 @Html.ValidationSummary(false)

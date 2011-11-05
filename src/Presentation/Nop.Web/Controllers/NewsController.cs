@@ -248,13 +248,11 @@ namespace Nop.Web.Controllers
                     //notify store owner
                     if (_newsSettings.NotifyAboutNewNewsComments)
                         _workflowMessageService.SendNewsCommentNotificationMessage(comment, _localizationSettings.DefaultAdminLanguageId);
-
-
-                    PrepareNewsItemModel(model, newsItem, true);
-                    model.AddNewComment.CommentText = null;
-                    model.AddNewComment.Result = _localizationService.GetResource("News.Comments.SuccessfullyAdded");
-
-                    return View(model);
+                    
+                    //The text boxes should be cleared after a comment has been posted
+                    //That' why we reload the page
+                    TempData["nop.news.addcomment.result"] = _localizationService.GetResource("News.Comments.SuccessfullyAdded");
+                    return RedirectToRoute("NewsItem", new { newsItemId = newsItem.Id, SeName = newsItem.GetSeName() });
                 }
             }
 
