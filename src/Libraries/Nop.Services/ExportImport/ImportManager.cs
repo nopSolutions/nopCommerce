@@ -121,6 +121,9 @@ namespace Nop.Services.ExportImport
                     "Price",
                     "OldPrice",
                     "ProductCost",
+                    "SpecialPrice",
+                    "SpecialPriceStartDateTimeUtc",
+                    "SpecialPriceEndDateTimeUtc",
                     "CustomerEntersPrice",
                     "MinimumCustomerEnteredPrice",
                     "MaximumCustomerEnteredPrice",
@@ -201,6 +204,19 @@ namespace Nop.Services.ExportImport
                     decimal price = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "Price")].Value);
                     decimal oldPrice = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "OldPrice")].Value);
                     decimal productCost = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "ProductCost")].Value);
+                    decimal? specialPrice = null;
+                    var specialPriceExcel = worksheet.Cells[iRow, GetColumnIndex(properties, "SpecialPrice")].Value;
+                    if (specialPriceExcel != null)
+                        specialPrice = Convert.ToDecimal(specialPriceExcel);
+                    DateTime? specialPriceStartDateTimeUtc = null;
+                    var specialPriceStartDateTimeUtcExcel = worksheet.Cells[iRow, GetColumnIndex(properties, "SpecialPriceStartDateTimeUtc")].Value;
+                    if (specialPriceStartDateTimeUtcExcel != null)
+                        specialPriceStartDateTimeUtc = DateTime.FromOADate(Convert.ToDouble(specialPriceStartDateTimeUtcExcel));
+                    DateTime? specialPriceEndDateTimeUtc = null;
+                    var specialPriceEndDateTimeUtcExcel = worksheet.Cells[iRow, GetColumnIndex(properties, "SpecialPriceEndDateTimeUtc")].Value;
+                    if (specialPriceEndDateTimeUtcExcel != null)
+                        specialPriceEndDateTimeUtc = DateTime.FromOADate(Convert.ToDouble(specialPriceEndDateTimeUtcExcel));
+                    
                     bool customerEntersPrice = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "CustomerEntersPrice")].Value);
                     decimal minimumCustomerEnteredPrice = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "MinimumCustomerEnteredPrice")].Value);
                     decimal maximumCustomerEnteredPrice = Convert.ToDecimal(worksheet.Cells[iRow, GetColumnIndex(properties, "MaximumCustomerEnteredPrice")].Value);
@@ -277,6 +293,9 @@ namespace Nop.Services.ExportImport
                         productVariant.Price = price;
                         productVariant.OldPrice = oldPrice;
                         productVariant.ProductCost = productCost;
+                        productVariant.SpecialPrice = specialPrice;
+                        productVariant.SpecialPriceStartDateTimeUtc = specialPriceStartDateTimeUtc;
+                        productVariant.SpecialPriceEndDateTimeUtc = specialPriceEndDateTimeUtc;
                         productVariant.CustomerEntersPrice = customerEntersPrice;
                         productVariant.MinimumCustomerEnteredPrice = minimumCustomerEnteredPrice;
                         productVariant.MaximumCustomerEnteredPrice = maximumCustomerEnteredPrice;
@@ -351,6 +370,9 @@ namespace Nop.Services.ExportImport
                             Price = price,
                             OldPrice = oldPrice,
                             ProductCost = productCost,
+                            SpecialPrice = specialPrice,
+                            SpecialPriceStartDateTimeUtc = specialPriceStartDateTimeUtc,
+                            SpecialPriceEndDateTimeUtc = specialPriceEndDateTimeUtc,
                             CustomerEntersPrice = customerEntersPrice,
                             MinimumCustomerEnteredPrice = minimumCustomerEnteredPrice,
                             MaximumCustomerEnteredPrice = maximumCustomerEnteredPrice,

@@ -285,6 +285,9 @@ namespace Nop.Services.ExportImport
                         xmlWriter.WriteElementString("Price", null, productVariant.Price.ToString());
                         xmlWriter.WriteElementString("OldPrice", null, productVariant.OldPrice.ToString());
                         xmlWriter.WriteElementString("ProductCost", null, productVariant.ProductCost.ToString());
+                        xmlWriter.WriteElementString("SpecialPrice", null, productVariant.SpecialPrice.HasValue ? productVariant.SpecialPrice.ToString() : "");
+                        xmlWriter.WriteElementString("SpecialPriceStartDateTimeUtc", null, productVariant.SpecialPriceStartDateTimeUtc.HasValue ? productVariant.SpecialPriceStartDateTimeUtc.ToString() : "");
+                        xmlWriter.WriteElementString("SpecialPriceEndDateTimeUtc", null, productVariant.SpecialPriceEndDateTimeUtc.HasValue ? productVariant.SpecialPriceEndDateTimeUtc.ToString() : "");
                         xmlWriter.WriteElementString("CustomerEntersPrice", null, productVariant.CustomerEntersPrice.ToString());
                         xmlWriter.WriteElementString("MinimumCustomerEnteredPrice", null, productVariant.MinimumCustomerEnteredPrice.ToString());
                         xmlWriter.WriteElementString("MaximumCustomerEnteredPrice", null, productVariant.MaximumCustomerEnteredPrice.ToString());
@@ -493,6 +496,9 @@ namespace Nop.Services.ExportImport
                     "Price",
                     "OldPrice",
                     "ProductCost",
+                    "SpecialPrice",
+                    "SpecialPriceStartDateTimeUtc",
+                    "SpecialPriceEndDateTimeUtc",
                     "CustomerEntersPrice",
                     "MinimumCustomerEnteredPrice",
                     "MaximumCustomerEnteredPrice",
@@ -675,6 +681,15 @@ namespace Nop.Services.ExportImport
                         col++;
 
                         worksheet.Cells[row, col].Value = pv.ProductCost;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = pv.SpecialPrice;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = pv.SpecialPriceStartDateTimeUtc;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = pv.SpecialPriceEndDateTimeUtc;
                         col++;
 
                         worksheet.Cells[row, col].Value = pv.CustomerEntersPrice;
