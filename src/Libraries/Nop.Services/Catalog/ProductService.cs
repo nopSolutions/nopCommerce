@@ -748,6 +748,7 @@ namespace Nop.Services.Catalog
 
                         bool newPublished = productVariant.Published;
                         bool newDisableBuyButton = productVariant.DisableBuyButton;
+                        bool newDisableWishlistButton = productVariant.DisableWishlistButton;
 
                         //check if minimum quantity is reached
                         if (decrease)
@@ -758,6 +759,7 @@ namespace Nop.Services.Catalog
                                 {
                                     case LowStockActivity.DisableBuyButton:
                                         newDisableBuyButton = true;
+                                        newDisableWishlistButton = true;
                                         break;
                                     case LowStockActivity.Unpublish:
                                         newPublished = false;
@@ -770,6 +772,7 @@ namespace Nop.Services.Catalog
 
                         productVariant.StockQuantity = newStockQuantity;
                         productVariant.DisableBuyButton = newDisableBuyButton;
+                        productVariant.DisableWishlistButton = newDisableWishlistButton;
                         productVariant.Published = newPublished;
                         UpdateProductVariant(productVariant);
 
