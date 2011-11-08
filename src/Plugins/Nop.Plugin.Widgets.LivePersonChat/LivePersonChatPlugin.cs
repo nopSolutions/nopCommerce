@@ -3,6 +3,7 @@ using System.Web.Routing;
 using Nop.Core.Domain.Cms;
 using Nop.Core.Plugins;
 using Nop.Services.Cms;
+using Nop.Services.Localization;
 
 namespace Nop.Plugin.Widgets.LivePersonChat
 {
@@ -55,5 +56,18 @@ namespace Nop.Plugin.Widgets.LivePersonChat
             routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Widgets.LivePersonChat.Controllers" }, { "area", null }, { "widgetId", widgetId } };
         }
         
+        /// <summary>
+        /// Install plugin
+        /// </summary>
+        public override void Install()
+        {
+            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.LivePersonChat.ButtonCode", "Button code(max 2000)");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.LivePersonChat.ButtonCode.Hint", "Enter your button code here.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.LivePersonChat.LiveChat", "Live chat");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.LivePersonChat.MonitoringCode", "Monitoring code(max 2000)");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.LivePersonChat.MonitoringCode.Hint", "Enter your monitoring code here.");
+
+            base.Install();
+        }
     }
 }

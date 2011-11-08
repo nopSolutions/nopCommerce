@@ -5,6 +5,7 @@ using Nop.Core.Domain;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Plugins;
 using Nop.Services.Configuration;
+using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Messages;
 
@@ -99,8 +100,14 @@ namespace Nop.Plugin.SMS.Verizon
             };
             _settingService.SaveSetting(settings);
 
+            this.AddOrUpdatePluginLocaleResource("Plugins.Sms.Verizon.TestFailed", "Test message sending failed");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Sms.Verizon.TestSuccess", "Test message was sent (queued)");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Sms.Verizon.Fields.Email", "Email");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Sms.Verizon.Fields.Email.Hint", "Verizon email address(e.g. your_phone_number@vtext.com)");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Sms.Verizon.Fields.TestMessage", "Message text");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Sms.Verizon.Fields.TestMessage.Hint", "Text of the test message");
+
             base.Install();
         }
-
     }
 }

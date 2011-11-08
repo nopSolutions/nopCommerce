@@ -5,6 +5,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Plugins;
 using Nop.Services.Customers;
 using Nop.Services.Discounts;
+using Nop.Services.Localization;
 
 namespace Nop.Plugin.DiscountRules.HadSpentAmount
 {
@@ -47,6 +48,13 @@ namespace Nop.Plugin.DiscountRules.HadSpentAmount
             if (discountRequirementId.HasValue)
                 result += string.Format("&discountRequirementId={0}", discountRequirementId.Value);
             return result;
+        }
+
+        public override void Install()
+        {
+            this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRules.HadSpentAmount.Fields.Amount", "Required spent amount");
+            this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRules.HadSpentAmount.Fields.Amount.Hint", "Discount will be applied if customer has spent/purchased x.xx amount.");
+            base.Install();
         }
     }
 }

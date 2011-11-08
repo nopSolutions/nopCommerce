@@ -95,12 +95,12 @@ namespace Nop.Services.Localization
         /// <summary>
         /// Gets a locale string resource
         /// </summary>
-        /// <param name="name">A string representing a resource name</param>
+        /// <param name="resourceName">A string representing a resource name</param>
         /// <returns>Locale string resource</returns>
-        public virtual LocaleStringResource GetLocaleStringResourceByName(string name)
+        public virtual LocaleStringResource GetLocaleStringResourceByName(string resourceName)
         {
             if (_workContext.WorkingLanguage != null)
-                return GetLocaleStringResourceByName(name, _workContext.WorkingLanguage.Id);
+                return GetLocaleStringResourceByName(resourceName, _workContext.WorkingLanguage.Id);
 
             return null;
         }
@@ -108,37 +108,42 @@ namespace Nop.Services.Localization
         /// <summary>
         /// Gets a locale string resource
         /// </summary>
-        /// <param name="name">A string representing a resource name</param>
+        /// <param name="resourceName">A string representing a resource name</param>
         /// <param name="languageId">Language identifier</param>
         /// <param name="logIfNotFound">A value indicating whether to log error if locale string resource is not found</param>
         /// <returns>Locale string resource</returns>
-        public virtual LocaleStringResource GetLocaleStringResourceByName(string name, int languageId,
+        public virtual LocaleStringResource GetLocaleStringResourceByName(string resourceName, int languageId,
             bool logIfNotFound = true)
         {
             LocaleStringResource localeStringResource = null;
 
-            var resourceName = name;
-            if (string.IsNullOrEmpty(resourceName))
+            if (_localizationSettings.LoadAllLocaleRecordsOnStartup)
             {
-                // using an empty string so the request can still be logged
-                resourceName = string.Empty;
-            }
-            resourceName = resourceName.Trim().ToLowerInvariant();
-            var resources = GetAllResourcesByLanguageId(languageId);
-            if (resources.ContainsKey(resourceName))
-            {
-                var localeStringResourceId = resources[resourceName].Id;
+                //load all records
 
-                localeStringResource = _lsrRepository.GetById(localeStringResourceId);
+                // using an empty string so the request can still be logged
+                if (string.IsNullOrEmpty(resourceName))
+                    resourceName = string.Empty;
+                resourceName = resourceName.Trim().ToLowerInvariant();
+
+                var resources = GetAllResourcesByLanguageId(languageId);
+                if (resources.ContainsKey(resourceName))
+                {
+                    var localeStringResourceId = resources[resourceName].Id;
+                    localeStringResource = _lsrRepository.GetById(localeStringResourceId);
+                }
             }
             else
             {
-                if (logIfNotFound)
-                {
-                    _logger.Warning(string.Format("Resource string ({0}) not found. Language ID = {1}", name, languageId));
-                }
+                //gradual loading
+                var query = from lsr in _lsrRepository.Table
+                            orderby lsr.ResourceName
+                            where lsr.LanguageId == languageId && lsr.ResourceName == resourceName
+                            select lsr;
+                localeStringResource = query.FirstOrDefault();
             }
-
+            if (localeStringResource == null && logIfNotFound)
+                _logger.Warning(string.Format("Resource string ({0}) not found. Language ID = {1}", resourceName, languageId));
             return localeStringResource;
         }
 

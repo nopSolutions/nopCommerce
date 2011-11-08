@@ -308,6 +308,9 @@ set @resources='
     <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.HideAdminMenuItemsBasedOnPermissions.Hint">
         <Value>Hide admin menu items when access to them is denied according to access control list (permissions).</Value>
     </LocaleResource>
+    <LocaleResource Name="Admin.Promotions.Discounts.Requirements.Saved">
+        <Value>Discount requirement saved</Value>
+    </LocaleResource>
 </Language>
 '
 

@@ -253,9 +253,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\SqlServer.StoredProcedures.sql" />
-    <Content Include="App_Data\defaultResources.plugins.nopres.xml">
-      <SubType>Designer</SubType>
-    </Content>
     <Content Include="App_Data\defaultResources.admin.nopres.xml">
       <SubType>Designer</SubType>
     </Content>

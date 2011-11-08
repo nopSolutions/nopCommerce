@@ -2,6 +2,7 @@
 using Nop.Core.Plugins;
 using Nop.Plugin.Tax.CountryStateZip.Data;
 using Nop.Plugin.Tax.CountryStateZip.Services;
+using Nop.Services.Localization;
 using Nop.Services.Tax;
 
 namespace Nop.Plugin.Tax.CountryStateZip
@@ -65,6 +66,18 @@ namespace Nop.Plugin.Tax.CountryStateZip
         public override void Install()
         {
             _objectContext.Install();
+
+            this.AddOrUpdatePluginLocaleResource("Plugins.Tax.CountryStateZip.Fields.Country", "Country");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Tax.CountryStateZip.Fields.Country.Hint", "The country.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Tax.CountryStateZip.Fields.StateProvince", "State / province");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Tax.CountryStateZip.Fields.StateProvince.Hint", "If an asteriks is selected, then this tax rate will apply to all customers from the given country, regardless of the state.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Tax.CountryStateZip.Fields.Zip", "Zip");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Tax.CountryStateZip.Fields.Zip.Hint", "Zip / postal code. If zip is empty, then this tax rate will apply to all customers from the given country or state, regardless of the zip code.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Tax.CountryStateZip.Fields.TaxCategory", "Tax category");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Tax.CountryStateZip.Fields.TaxCategory.Hint", "The tax category.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Tax.CountryStateZip.Fields.Percentage", "Percentage");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Tax.CountryStateZip.Fields.Percentage.Hint", "The tax rate.");
+
             base.Install();
         }
 

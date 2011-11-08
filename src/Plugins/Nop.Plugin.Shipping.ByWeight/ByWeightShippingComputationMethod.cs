@@ -150,14 +150,31 @@ namespace Nop.Plugin.Shipping.ByWeight
             controllerName = "ShippingByWeight";
             routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Shipping.ByWeight.Controllers" }, { "area", null } };
         }
-
-
+        
         /// <summary>
         /// Install plugin
         /// </summary>
         public override void Install()
         {
             _objectContext.Install();
+
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.Country", "Country");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.Country.Hint", "If an asteriks is selected, then this tax rate will apply to all customers, regardless of the country.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.ShippingMethod", "Shipping method");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.ShippingMethod.Hint", "The shipping method.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.From", "Order weight from");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.From.Hint", "Order weight from.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.To", "Order weight to");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.To.Hint", "Order weight toy.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.UsePercentage", "Use percentage");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.UsePercentage.Hint", "Check to use 'charge percentage' value.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.ShippingChargePercentage", "Charge percentage (of subtotal)");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.ShippingChargePercentage.Hint", "Charge percentage (of subtotal).");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.ShippingChargeAmount", "Charge amount");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.ShippingChargeAmount.Hint", "Charge amount.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.LimitMethodsToCreated", "Limit shipping methods to configured ones");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.LimitMethodsToCreated.Hint", "If you check this option, then your customers will be limited to shipping options configured here. Otherwise, they'll be able to choose any existing shipping options even they've not configured here (zero shipping fee in this case).");
+
             base.Install();
         }
 

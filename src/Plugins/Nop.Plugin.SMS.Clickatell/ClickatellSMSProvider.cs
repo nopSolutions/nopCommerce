@@ -4,6 +4,7 @@ using System.Web.Routing;
 using Nop.Core;
 using Nop.Core.Plugins;
 using Nop.Plugin.SMS.Clickatell.Clickatell;
+using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Messages;
 
@@ -73,6 +74,27 @@ namespace Nop.Plugin.SMS.Clickatell
             actionName = "Configure";
             controllerName = "SmsClickatell";
             routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.SMS.Clickatell.Controllers" }, { "area", null } };
+        }
+
+        /// <summary>
+        /// Install plugin
+        /// </summary>
+        public override void Install()
+        {
+            this.AddOrUpdatePluginLocaleResource("Plugins.Sms.Clickatell.TestFailed", "Test message sending failed");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Sms.Clickatell.TestSuccess", "Test message was sent");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Sms.Clickatell.Fields.ApiId", "API ID");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Sms.Clickatell.Fields.ApiId.Hint", "Clickatell API ID");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Sms.Clickatell.Fields.Password", "Password");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Sms.Clickatell.Fields.Password.Hint", "Clickatell password");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Sms.Clickatell.Fields.PhoneNumber", "Phone number");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Sms.Clickatell.Fields.PhoneNumber.Hint", "Your phone number");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Sms.Clickatell.Fields.Username", "Username");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Sms.Clickatell.Fields.Username.Hint", "Clickatell username");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Sms.Clickatell.Fields.TestMessage", "Message text");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Sms.Clickatell.Fields.TestMessage.Hint", "Text of the test message");
+
+            base.Install();
         }
     }
 }

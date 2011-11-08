@@ -4,6 +4,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Plugins;
 using Nop.Plugin.Payments.PurchaseOrder.Controllers;
+using Nop.Services.Localization;
 using Nop.Services.Payments;
 
 namespace Nop.Plugin.Payments.PurchaseOrder
@@ -163,6 +164,17 @@ namespace Nop.Plugin.Payments.PurchaseOrder
             return typeof(PaymentPurchaseOrderController);
         }
 
+        /// <summary>
+        /// Install plugin
+        /// </summary>
+        public override void Install()
+        {
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PurchaseOrder.PurchaseOrderNumber", "PO Number");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PurchaseOrder.AdditionalFee", "Additional fee");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PurchaseOrder.AdditionalFee.Hint", "The additional fee.");
+
+            base.Install();
+        }
         #endregion
 
         #region Properies

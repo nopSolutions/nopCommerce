@@ -1,6 +1,7 @@
 using System.Web.Routing;
 using Nop.Core.Plugins;
 using Nop.Services.Authentication.External;
+using Nop.Services.Localization;
 
 namespace Nop.Plugin.ExternalAuth.Twitter
 {
@@ -49,7 +50,19 @@ namespace Nop.Plugin.ExternalAuth.Twitter
             controllerName = "ExternalAuthTwitter";
             routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.ExternalAuth.Twitter.Controllers" }, { "area", null } };
         }
-        
+
+        /// <summary>
+        /// Install plugin
+        /// </summary>
+        public override void Install()
+        {
+            this.AddOrUpdatePluginLocaleResource("Plugins.ExternalAuth.Twitter.ConsumerKey", "Consumer key");
+            this.AddOrUpdatePluginLocaleResource("Plugins.ExternalAuth.Twitter.ConsumerKey.Hint", "Enter your consumer key here.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.ExternalAuth.Twitter.ConsumerSecret", "Consumer secret");
+            this.AddOrUpdatePluginLocaleResource("Plugins.ExternalAuth.Twitter.ConsumerSecret.Hint", "Enter your consumer secret here.");
+
+            base.Install();
+        }
         #endregion
         
     }

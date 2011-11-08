@@ -417,7 +417,6 @@ namespace Nop.Web.Controllers
                     }
 
                     //save settings
-                    //save settings
                     var dataProvider = model.DataProvider;
                     var settings = new DataSettings()
                     {

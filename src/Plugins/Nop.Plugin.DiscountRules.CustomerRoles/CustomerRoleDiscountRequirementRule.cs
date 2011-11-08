@@ -3,6 +3,7 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Plugins;
 using Nop.Services.Discounts;
+using Nop.Services.Localization;
 
 namespace Nop.Plugin.DiscountRules.CustomerRoles
 {
@@ -47,6 +48,13 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles
             if (discountRequirementId.HasValue)
                 result += string.Format("&discountRequirementId={0}", discountRequirementId.Value);
             return result;
+        }
+
+        public override void Install()
+        {
+            this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRules.CustomerRoles.Fields.CustomerRole", "Required customer role");
+            this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRules.CustomerRoles.Fields.CustomerRole.Hint", "Discount will be applied if customer is in the selected customer role.");
+            base.Install();
         }
     }
 }

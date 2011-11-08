@@ -1,6 +1,7 @@
 using System.Web.Routing;
 using Nop.Core.Plugins;
 using Nop.Services.Authentication.External;
+using Nop.Services.Localization;
 
 namespace Nop.Plugin.ExternalAuth.Facebook
 {
@@ -49,7 +50,19 @@ namespace Nop.Plugin.ExternalAuth.Facebook
             controllerName = "ExternalAuthFacebook";
             routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.ExternalAuth.Facebook.Controllers" }, { "area", null } };
         }
-        
+
+        /// <summary>
+        /// Install plugin
+        /// </summary>
+        public override void Install()
+        {
+            this.AddOrUpdatePluginLocaleResource("Plugins.ExternalAuth.Facebook.ClientKeyIdentifier", "Client key identifier");
+            this.AddOrUpdatePluginLocaleResource("Plugins.ExternalAuth.Facebook.ClientKeyIdentifier.Hint", "Enter your client key identifier here.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.ExternalAuth.Facebook.ClientSecret", "Client secret");
+            this.AddOrUpdatePluginLocaleResource("Plugins.ExternalAuth.Facebook.ClientSecret.Hint", "Enter your client secret here.");
+
+            base.Install();
+        }
         #endregion
         
     }

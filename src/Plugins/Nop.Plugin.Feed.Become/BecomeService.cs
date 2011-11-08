@@ -14,6 +14,7 @@ using Nop.Core.Plugins;
 using Nop.Services.Catalog;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
+using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.PromotionFeed;
 using Nop.Services.Seo;
@@ -216,6 +217,14 @@ namespace Nop.Plugin.Feed.Become
                 ProductPictureSize = 125
             };
             _settingService.SaveSetting(settings);
+
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Become.ClickHere", "Click here");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Become.Currency", "Currency");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Become.Currency.Hint", "Select the default currency that will be used to generate the feed.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Become.Generate", "Generate feed");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Become.ProductPictureSize", "Product thumbnail image size");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Become.ProductPictureSize.Hint", "The default size (pixels) for product thumbnail images.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Become.SuccessResult", "Become.com feed has been successfully generated. {0} to see generated feed");
 
             base.Install();
         }

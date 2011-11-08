@@ -14,10 +14,13 @@
 }
 @if (Model.DynamicPriceUpdate)
 {
-    <script type="text/javascript">    
+    <script type="text/javascript">
+    
 //<![CDATA[
-        var priceValForDynUpd_@(Model.ProductVariantId) = @(((float)(Model.PriceValue != Model.PriceWithDiscountValue ? Model.PriceWithDiscountValue : Model.PriceValue)).ToString());//]]>
-    </script>
+        var priceValForDynUpd_@(Model.ProductVariantId) = @(((float)(Model.PriceValue != Model.PriceWithDiscountValue ? Model.PriceWithDiscountValue : Model.PriceValue)).ToString());//]]>
+
+    </script>
+
 }
 <div class="price">
     @if (Model.CustomerEntersPrice)

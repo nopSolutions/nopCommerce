@@ -5,6 +5,7 @@ using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Plugins;
 using Nop.Services.Discounts;
+using Nop.Services.Localization;
 using Nop.Services.Orders;
 
 namespace Nop.Plugin.DiscountRules.PurchasedOneProduct
@@ -94,6 +95,13 @@ namespace Nop.Plugin.DiscountRules.PurchasedOneProduct
             if (discountRequirementId.HasValue)
                 result += string.Format("&discountRequirementId={0}", discountRequirementId.Value);
             return result;
+        }
+
+        public override void Install()
+        {
+            this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRules.PurchasedOneProduct.Fields.ProductVariants", "Restricted product variants");
+            this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRules.PurchasedOneProduct.Fields.ProductVariants.Hint", "The comma-separated list of product variant identifiers (e.g. 77, 123, 156). You can find a product variant ID on its details page.");
+            base.Install();
         }
     }
 }

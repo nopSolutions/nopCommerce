@@ -5,6 +5,7 @@ using Nop.Core.Domain.Payments;
 using Nop.Core.Plugins;
 using Nop.Plugin.Payments.PayInStore.Controllers;
 using Nop.Services.Configuration;
+using Nop.Services.Localization;
 using Nop.Services.Payments;
 
 namespace Nop.Plugin.Payments.PayInStore
@@ -175,6 +176,11 @@ namespace Nop.Plugin.Payments.PayInStore
             };
             _settingService.SaveSetting(settings);
 
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PayInStore.DescriptionText", "Description");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PayInStore.DescriptionText.Hint", "Enter info that will be shown to customers during checkout");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PayInStore.AdditionalFee", "Additional fee");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PayInStore.AdditionalFee.Hint", "The additional fee.");
+            
             base.Install();
         }
 

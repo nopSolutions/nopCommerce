@@ -7683,6 +7683,9 @@
 									<LocaleResource Name="SaveBeforeEdit">
 										<Value>You need to save the discount before you can add requirements for this discount page.</Value>
 									</LocaleResource>
+									<LocaleResource Name="Saved">
+										<Value>Discount requirement saved</Value>
+									</LocaleResource>
 								</Children>
 							</LocaleResource>
 							<LocaleResource Name="Added">

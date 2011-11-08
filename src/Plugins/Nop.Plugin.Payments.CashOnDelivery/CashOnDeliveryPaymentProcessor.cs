@@ -5,6 +5,7 @@ using Nop.Core.Domain.Payments;
 using Nop.Core.Plugins;
 using Nop.Plugin.Payments.CashOnDelivery.Controllers;
 using Nop.Services.Configuration;
+using Nop.Services.Localization;
 using Nop.Services.Payments;
 
 namespace Nop.Plugin.Payments.CashOnDelivery
@@ -175,6 +176,11 @@ namespace Nop.Plugin.Payments.CashOnDelivery
             };
             _settingService.SaveSetting(settings);
 
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payment.CashOnDelivery.DescriptionText", "Description");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payment.CashOnDelivery.DescriptionText.Hint", "Enter info that will be shown to customers during checkout");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payment.CashOnDelivery.AdditionalFee", "Additional fee");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payment.CashOnDelivery.AdditionalFee.Hint", "The additional fee.");
+            
             base.Install();
         }
 
