@@ -311,6 +311,9 @@ set @resources='
     <LocaleResource Name="Admin.Promotions.Discounts.Requirements.Saved">
         <Value>Discount requirement saved</Value>
     </LocaleResource>
+    <LocaleResource Name="ShoppingCart.DiscountCouponCode.CurrentCode">
+        <Value>Entered coupon code - {0}</Value>
+    </LocaleResource>
 </Language>
 '
 

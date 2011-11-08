@@ -60,7 +60,16 @@ namespace Nop.Services.Discounts
         /// </summary>
         /// <returns>Discount requirement rules</returns>
         IList<IDiscountRequirementRule> LoadAllDiscountRequirementRules();
-        
+
+
+        /// <summary>
+        /// Get discount by coupon code
+        /// </summary>
+        /// <param name="couponCode">CouponCode</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <returns>Discount</returns>
+        Discount GetDiscountByCouponCode(string couponCode, bool showHidden = false);
+
         /// <summary>
         /// Check discount requirements
         /// </summary>

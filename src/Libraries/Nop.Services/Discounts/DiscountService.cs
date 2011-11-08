@@ -261,6 +261,24 @@ namespace Nop.Services.Discounts
         }
 
         /// <summary>
+        /// Get discount by coupon code
+        /// </summary>
+        /// <param name="couponCode">CouponCode</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <returns>Discount</returns>
+        public virtual Discount GetDiscountByCouponCode(string couponCode, bool showHidden = false)
+        {
+            if (String.IsNullOrWhiteSpace(couponCode))
+                return null;
+
+            var discounts = GetAllDiscounts(null, showHidden);
+            var discount = discounts.
+                Where(d => !String.IsNullOrEmpty(d.CouponCode) && d.CouponCode.Equals(couponCode, StringComparison.InvariantCultureIgnoreCase))
+                .FirstOrDefault();
+            return discount;
+        }
+
+        /// <summary>
         /// Check discount requirements
         /// </summary>
         /// <param name="discount">Discount</param>

@@ -38,6 +38,7 @@ namespace Nop.Web.Models.ShoppingCart
 
         public bool ShowDiscountBox { get; set; }
         public string DiscountMessage { get; set; }
+        public string CurrentDiscountCode { get; set; }
 
         public bool ShowGiftCardBox { get; set; }
         public string GiftCardMessage { get; set; }

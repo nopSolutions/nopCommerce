@@ -3363,6 +3363,9 @@
 					<LocaleResource Name="WrongDiscount">
 						<Value>The coupon code you entered couldn't be applied to your order</Value>
 					</LocaleResource>
+					<LocaleResource Name="CurrentCode">
+						<Value>Entered coupon code - {0}</Value>
+					</LocaleResource>
 				</Children>
 			</LocaleResource>
 			<LocaleResource Name="EstimateShipping">

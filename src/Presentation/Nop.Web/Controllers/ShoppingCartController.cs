@@ -155,7 +155,12 @@ namespace Nop.Web.Controllers
                 model.MinOrderSubtotalWarning = string.Format(_localizationService.GetResource("Checkout.MinOrderSubtotalAmount"), _priceFormatter.FormatPrice(minOrderSubtotalAmount, true, false));
             }
             model.TermsOfServiceEnabled = _orderSettings.TermsOfServiceEnabled;
+
+            //gift card and gift card boxes
             model.ShowDiscountBox = _shoppingCartSettings.ShowDiscountBox;
+            var currentDiscountWithCode = _discountService.GetDiscountByCouponCode(_workContext.CurrentCustomer.DiscountCouponCode);
+            model.CurrentDiscountCode = currentDiscountWithCode != null && currentDiscountWithCode.RequiresCouponCode 
+                ? currentDiscountWithCode.CouponCode : null;
             model.ShowGiftCardBox = _shoppingCartSettings.ShowGiftCardBox;
 
             //cart warnings
@@ -754,9 +759,8 @@ namespace Nop.Web.Controllers
 
             if (!String.IsNullOrWhiteSpace(discountcouponcode))
             {
-                var discounts = _discountService.GetAllDiscounts(null);
-                var discount = discounts.Where(d => !String.IsNullOrEmpty(d.CouponCode) && d.CouponCode.Equals(discountcouponcode, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
-                bool isDiscountValid = discount != null;
+                var discount = _discountService.GetDiscountByCouponCode(discountcouponcode);
+                bool isDiscountValid = discount != null && discount.RequiresCouponCode;
                 if (isDiscountValid)
                 {
                     _workContext.CurrentCustomer.DiscountCouponCode = discountcouponcode;
@@ -1031,7 +1035,7 @@ namespace Nop.Web.Controllers
 
         [ValidateInput(false)]
         [HttpPost, ActionName("Cart")]
-        [FormValueRequired("removesubtotaldiscount", "removeordertotaldiscount")]
+        [FormValueRequired("removesubtotaldiscount", "removeordertotaldiscount", "removediscountcouponcode")]
         public ActionResult RemoveDiscountCoupon()
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();

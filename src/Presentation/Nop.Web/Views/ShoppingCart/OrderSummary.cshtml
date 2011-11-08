@@ -291,6 +291,17 @@
                                         </div>
                                     </div>
                                 }
+                                @if (!String.IsNullOrEmpty(Model.CurrentDiscountCode))
+                                {
+                                    <div class="clear">
+                                    </div>
+                                    <div class="current-code">
+                                        <br />
+                                        @string.Format(T("ShoppingCart.DiscountCouponCode.CurrentCode").Text, Model.CurrentDiscountCode)
+                                        @*empty value (little hack for FormValueExistsAttribute)*@
+                                        <input id="removediscountcouponcode" type="submit" name="removediscountcouponcode" value=" " title="@T("Common.Remove")" class="removediscountbutton" />
+                                    </div>
+                                }                                
                             </div>
                             }
                         }
