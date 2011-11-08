@@ -302,6 +302,12 @@ set @resources='
     <LocaleResource Name="Account.PasswordRecovery.NewPassword.LengthValidation">
         <Value>The password should have at least {0} characters.</Value>
     </LocaleResource>
+    <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.HideAdminMenuItemsBasedOnPermissions">
+        <Value>Hide admin menu items based on permissions</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.HideAdminMenuItemsBasedOnPermissions.Hint">
+        <Value>Hide admin menu items when access to them is denied according to access control list (permissions).</Value>
+    </LocaleResource>
 </Language>
 '
 

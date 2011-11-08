@@ -201,6 +201,15 @@
             </td>
         </tr>
         <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SecuritySettings.HideAdminMenuItemsBasedOnPermissions):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SecuritySettings.HideAdminMenuItemsBasedOnPermissions)
+                @Html.ValidationMessageFor(model => model.SecuritySettings.HideAdminMenuItemsBasedOnPermissions)
+            </td>
+        </tr>
+        <tr>
             <td colspan="2">
                 <hr />
                 <br />

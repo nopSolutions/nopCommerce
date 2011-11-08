@@ -692,6 +692,7 @@ namespace Nop.Admin.Controllers
                     if (i != _securitySettings.AdminAreaAllowedIpAddresses.Count - 1)
                         model.SecuritySettings.AdminAreaAllowedIpAddresses += ",";
                 }
+            model.SecuritySettings.HideAdminMenuItemsBasedOnPermissions = _securitySettings.HideAdminMenuItemsBasedOnPermissions;
             model.SecuritySettings.CaptchaEnabled = _captchaSettings.Enabled;
             model.SecuritySettings.ReCaptchaPublicKey = _captchaSettings.ReCaptchaPublicKey;
             model.SecuritySettings.ReCaptchaPrivateKey = _captchaSettings.ReCaptchaPrivateKey;
@@ -755,6 +756,7 @@ namespace Nop.Admin.Controllers
                 foreach (string s in model.SecuritySettings.AdminAreaAllowedIpAddresses.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                     if (!String.IsNullOrWhiteSpace(s))
                         _securitySettings.AdminAreaAllowedIpAddresses.Add(s.Trim());
+            _securitySettings.HideAdminMenuItemsBasedOnPermissions = model.SecuritySettings.HideAdminMenuItemsBasedOnPermissions;
             _settingService.SaveSetting(_securitySettings);
             _captchaSettings.Enabled = model.SecuritySettings.CaptchaEnabled;
             _captchaSettings.ReCaptchaPublicKey = model.SecuritySettings.ReCaptchaPublicKey;

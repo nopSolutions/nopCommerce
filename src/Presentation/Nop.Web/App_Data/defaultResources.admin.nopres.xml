@@ -4102,6 +4102,14 @@
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
+									<LocaleResource Name="HideAdminMenuItemsBasedOnPermissions">
+										<Value>Hide admin menu items based on permissions</Value>
+										<Children>
+											<LocaleResource Name="Hint">
+												<Value>Hide admin menu items when access to them is denied according to access control list (permissions).</Value>
+											</LocaleResource>
+										</Children>
+									</LocaleResource>
 									<LocaleResource Name="UseImagesForLanguageSelection">
 										<Value>Use images for language selection</Value>
 										<Children>
