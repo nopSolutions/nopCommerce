@@ -1018,3 +1018,12 @@ BEGIN
 	VALUES (N'paypalstandardpaymentsettings.enableipn', N'true')
 END
 GO
+
+
+--new setting indicating we should store last visited page URL for each customer
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'customersettings.storelastvisitedpage')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'customersettings.storelastvisitedpage', N'true')
+END
+GO

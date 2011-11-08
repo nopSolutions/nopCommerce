@@ -4564,6 +4564,7 @@ namespace Nop.Services.Installation
                     NewsletterEnabled = true,
                     HideNewsletterBlock = false,
                     OnlineCustomerMinutes = 20,
+                    StoreLastVisitedPage = true,
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<MediaSettings>>()

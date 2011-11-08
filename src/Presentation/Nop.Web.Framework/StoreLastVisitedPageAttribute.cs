@@ -26,20 +26,21 @@ namespace Nop.Web.Framework
             if (!String.Equals(filterContext.HttpContext.Request.HttpMethod, "GET", StringComparison.OrdinalIgnoreCase))
                 return;
 
-            {
-                var webHelper = EngineContext.Current.Resolve<IWebHelper>();
-                var pageUrl = webHelper.GetThisPageUrl(true);
-                if (!String.IsNullOrEmpty(pageUrl))
-                {
-                    var workContext = EngineContext.Current.Resolve<IWorkContext>();
-                    var customerService = EngineContext.Current.Resolve<ICustomerService>();
+            var customerSettings = EngineContext.Current.Resolve<CustomerSettings>();
+            if (!customerSettings.StoreLastVisitedPage)
+                return;
 
-                    var previousPageUrl = workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.LastVisitedPage);
-                    if (!pageUrl.Equals(previousPageUrl))
-                    {
-                        customerService.SaveCustomerAttribute(workContext.CurrentCustomer,
-                            SystemCustomerAttributeNames.LastVisitedPage, pageUrl);
-                    }
+            var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+            var pageUrl = webHelper.GetThisPageUrl(true);
+            if (!String.IsNullOrEmpty(pageUrl))
+            {
+                var workContext = EngineContext.Current.Resolve<IWorkContext>();
+                var customerService = EngineContext.Current.Resolve<ICustomerService>();
+
+                var previousPageUrl = workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.LastVisitedPage);
+                if (!pageUrl.Equals(previousPageUrl))
+                {
+                    customerService.SaveCustomerAttribute(workContext.CurrentCustomer, SystemCustomerAttributeNames.LastVisitedPage, pageUrl);
                 }
             }
         }
