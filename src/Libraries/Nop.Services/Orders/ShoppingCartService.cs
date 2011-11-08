@@ -774,7 +774,7 @@ namespace Nop.Services.Orders
                     }
 
                     DateTime now = DateTime.UtcNow;
-                    customer.ShoppingCartItems.Add(new ShoppingCartItem()
+                    shoppingCartItem = new ShoppingCartItem()
                     {
                         ShoppingCartType = shoppingCartType,
                         ProductVariant = productVariant,
@@ -783,7 +783,8 @@ namespace Nop.Services.Orders
                         Quantity = quantity,
                         CreatedOnUtc = now,
                         UpdatedOnUtc = now
-                    });
+                    };
+                    customer.ShoppingCartItems.Add(shoppingCartItem);
                     _customerService.UpdateCustomer(customer);
 
                     //event notification
