@@ -176,13 +176,13 @@ set @resources='
     <LocaleResource Name="Admin.Catalog.BulkEdit.List.SearchCategory">
         <Value>Category</Value>
     </LocaleResource>
-    <LocaleResource Name="Admin.Catalog.BulkEdit.List.SearchProductName.Hint">
+    <LocaleResource Name="Admin.Catalog.BulkEdit.List.SearchCategory.Hint">
         <Value>Search by a specific category.</Value>
     </LocaleResource>
     <LocaleResource Name="Admin.Catalog.BulkEdit.List.SearchManufacturer">
         <Value>Manufacturer</Value>
     </LocaleResource>
-    <LocaleResource Name="Admin.Catalog.BulkEdit.List.SearchProductName.Hint">
+    <LocaleResource Name="Admin.Catalog.BulkEdit.List.SearchManufacturer.Hint">
         <Value>Search by a specific manufacturer.</Value>
     </LocaleResource>
     <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.UseSSL">
@@ -252,7 +252,7 @@ set @resources='
         <Value>You cannot subscribe. Maximum number of allowed subscriptions is {0}</Value>
     </LocaleResource>
     <LocaleResource Name="BackInStockSubscriptions.Tooltip">
-        <Value>You''ll receive a one time email this product is available for ordering again. We will not send you any other e-mails or add you to our newsletter, you will only be e-mailed about this product!</Value>
+        <Value>You''ll receive a one time e-mail when this product is available for ordering again. We will not send you any other e-mails or add you to our newsletter, you will only be e-mailed about this product!</Value>
     </LocaleResource>
     <LocaleResource Name="BackInStockSubscriptions.Unsubscribe">
         <Value>Unsubscribe</Value>
@@ -313,6 +313,9 @@ set @resources='
     </LocaleResource>
     <LocaleResource Name="ShoppingCart.DiscountCouponCode.CurrentCode">
         <Value>Entered coupon code - {0}</Value>
+    </LocaleResource>
+    <LocaleResource Name="Products.Availability.Backordering">
+        <Value>Out of Stock - on backorder and will be dispatched once in stock.</Value>
     </LocaleResource>
 </Language>
 '

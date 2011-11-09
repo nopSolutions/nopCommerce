@@ -174,7 +174,7 @@ namespace Nop.Services.Localization
         }
 
         /// <summary>
-        /// Add a locale resource (if new) or update an existing on
+        /// Add a locale resource (if new) or update an existing one
         /// </summary>
         /// <param name="plugin">Plugin</param>
         /// <param name="resourceName">Resource name</param>
@@ -188,7 +188,7 @@ namespace Nop.Services.Localization
                  languageService, resourceName, resourceValue);
         }
         /// <summary>
-        /// Add a locale resource (if new) or update an existing on
+        /// Add a locale resource (if new) or update an existing one
         /// </summary>
         /// <param name="plugin">Plugin</param>
         /// <param name="localizationService">Localization service</param>

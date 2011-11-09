@@ -20,11 +20,11 @@
     <div class="clear">
     </div>
     <div class="body">
-        @T("Account.BackInStockSubscriptions.Description")
-        <br />
-        <br />
         @if (Model.Subscriptions.Count > 0)
         {
+            @T("Account.BackInStockSubscriptions.Description")
+            <br />
+            <br />
             <script type="text/javascript">
                 $(window).bind('load', function () {
                     var cbHeader = $(".cbHeader input");

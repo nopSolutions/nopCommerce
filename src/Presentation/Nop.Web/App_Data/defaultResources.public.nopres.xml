@@ -799,7 +799,7 @@
 				<Value>You cannot subscribe. Maximum number of allowed subscriptions is {0}</Value>
 			</LocaleResource>
 			<LocaleResource Name="Tooltip">
-				<Value>You'll receive a one time email this product is available for ordering again. We will not send you any other e-mails or add you to our newsletter, you will only be e-mailed about this product!</Value>
+				<Value>You'll receive a one time e-mail when this product is available for ordering again. We will not send you any other e-mails or add you to our newsletter, you will only be e-mailed about this product!</Value>
 			</LocaleResource>
 			<LocaleResource Name="Unsubscribe">
 				<Value>Unsubscribe</Value>
@@ -2848,7 +2848,7 @@
 				<Value>Availability</Value>
 				<Children>
 					<LocaleResource Name="Backordering">
-						<Value>Out of Stock - on backorder and will be despatched once in stock.</Value>
+						<Value>Out of Stock - on backorder and will be dispatched once in stock.</Value>
 					</LocaleResource>
 					<LocaleResource Name="InStock">
 						<Value>In stock</Value>
