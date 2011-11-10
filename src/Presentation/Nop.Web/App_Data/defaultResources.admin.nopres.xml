@@ -4030,6 +4030,14 @@
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
+									<LocaleResource Name="PdfLetterPageSizeEnabled">
+										<Value>Use Letter page size</Value>
+										<Children>
+											<LocaleResource Name="Hint">
+												<Value>If checked, uses Letter page size for PDF documents. Uses A4 page size if unchecked.</Value>
+											</LocaleResource>
+										</Children>
+									</LocaleResource>
 									<LocaleResource Name="PdfLogo">
 										<Value>PDF logo</Value>
 										<Children>
@@ -4158,7 +4166,7 @@
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
-									<LocaleResource Name="reCaptchaPrivateKey">
+									<LocaleResource Name="SharedSSLUrl">
 										<Value>Shared SSL URL</Value>
 										<Children>
 											<LocaleResource Name="Hint">

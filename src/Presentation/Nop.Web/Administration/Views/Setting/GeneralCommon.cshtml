@@ -308,6 +308,15 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.NopLabelFor(model => model.PdfSettings.LetterPageSizeEnabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.PdfSettings.LetterPageSizeEnabled)
+                @Html.ValidationMessageFor(model => model.PdfSettings.LetterPageSizeEnabled)
+            </td>
+        </tr>        
+        <tr>
+            <td class="adminTitle">
                 @Html.NopLabelFor(model => model.PdfSettings.LogoPictureId):
             </td>
             <td class="adminData">

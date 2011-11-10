@@ -706,6 +706,7 @@ namespace Nop.Admin.Controllers
 
             //PDF settings
             model.PdfSettings.Enabled = _pdfSettings.Enabled;
+            model.PdfSettings.LetterPageSizeEnabled = _pdfSettings.LetterPageSizeEnabled;
             model.PdfSettings.LogoPictureId = _pdfSettings.LogoPictureId;
 
             //lcoalization
@@ -814,6 +815,7 @@ namespace Nop.Admin.Controllers
 
             //PDF settings
             _pdfSettings.Enabled = model.PdfSettings.Enabled;
+            _pdfSettings.LetterPageSizeEnabled = model.PdfSettings.LetterPageSizeEnabled;
             _pdfSettings.LogoPictureId = model.PdfSettings.LogoPictureId;
             _settingService.SaveSetting(_pdfSettings);
 

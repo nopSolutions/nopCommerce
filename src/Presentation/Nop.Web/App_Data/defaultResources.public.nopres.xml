@@ -72,7 +72,7 @@
 						<Value>You are not currently subscribed to any Back In Stock notification lists</Value>
 					</LocaleResource>
 					<LocaleResource Name="Description">
-						<Value>This list of customer have requested to be notified when a particular product is back in stock. Notifications are sent out automatically once the appropriate quantity is updated.</Value>
+						<Value>You will receive an e-mail when a particular product is back in stock.</Value>
 					</LocaleResource>
 				</Children>
 			</LocaleResource>

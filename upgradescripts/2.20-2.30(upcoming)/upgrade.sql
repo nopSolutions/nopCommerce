@@ -231,7 +231,7 @@ set @resources='
         <Value>You are not currently subscribed to any Back In Stock notification lists</Value>
     </LocaleResource>
     <LocaleResource Name="Account.BackInStockSubscriptions.Description">
-        <Value>This list of customer have requested to be notified when a particular product is back in stock. Notifications are sent out automatically once the appropriate quantity is updated.</Value>
+        <Value>You will receive an e-mail when a particular product is back in stock.</Value>
     </LocaleResource>
     <LocaleResource Name="ForumSubscriptions.NoSubscriptions">
         <Value>You are not currently subscribed to any forums</Value>
@@ -316,6 +316,12 @@ set @resources='
     </LocaleResource>
     <LocaleResource Name="Products.Availability.Backordering">
         <Value>Out of Stock - on backorder and will be dispatched once in stock.</Value>
+    </LocaleResource>    
+    <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.PdfLetterPageSizeEnabled">
+        <Value>Use Letter page size</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.PdfLetterPageSizeEnabled.Hint">
+        <Value>If checked, uses Letter page size for PDF documents. Uses A4 page size if unchecked.</Value>
     </LocaleResource>
 </Language>
 '
@@ -1040,5 +1046,13 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'customersettings.storela
 BEGIN
 	INSERT [Setting] ([Name], [Value])
 	VALUES (N'customersettings.storelastvisitedpage', N'true')
+END
+GO
+
+--new PDF setting enables PDF documents to use Letter page size if true, else A4 page size
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'pdfsettings.letterpagesizeenabled')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'pdfsettings.letterpagesizeenabled', N'false')
 END
 GO

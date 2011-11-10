@@ -4450,6 +4450,7 @@ namespace Nop.Services.Installation
                 .SaveSettings(new PdfSettings()
                 {
                     Enabled = true,
+                    LetterPageSizeEnabled = false,
                     RenderOrderNotes = true,
                 });
 
