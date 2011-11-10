@@ -280,6 +280,15 @@ namespace Nop.Plugin.Feed.Froogle
                          * You need to submit at least two attributes of 'brand', 'gtin' and 'mpn', but we recommend that you submit all three if available. For media (such as books, movies, music and video games), you must submit the 'gtin' attribute, but we recommend that you include 'brand' and 'mpn' if available.
                         */
 
+                        //GTIN [gtin] - GTIN
+                        var gtin = productVariant.Gtin;
+                        if (!String.IsNullOrEmpty(gtin))
+                        {
+                            writer.WriteStartElement("g", "gtin", googleBaseNamespace);
+                            writer.WriteCData(gtin);
+                            writer.WriteFullEndElement(); // g:gtin
+                        }
+
                         //brand [brand] - Brand of the item
                         var defaultManufacturer =
                             _manufacturerService.GetProductManufacturersByProductId((product.Id)).FirstOrDefault();
@@ -292,13 +301,13 @@ namespace Nop.Plugin.Feed.Froogle
 
 
                         //mpn [mpn] - Manufacturer Part Number (MPN) of the item
-                        writer.WriteStartElement("g", "mpn", googleBaseNamespace);
                         var mpn = productVariant.ManufacturerPartNumber;
-                        //at least two are required for Unique product identifiers. So let's set it to a product variant name
-                        //if (String.IsNullOrEmpty((mpn)))
-                        //    mpn = productVariant.FullProductName;
-                        writer.WriteCData(mpn);
-                        writer.WriteFullEndElement(); // g:brand
+                        if (!String.IsNullOrEmpty(mpn))
+                        {
+                            writer.WriteStartElement("g", "mpn", googleBaseNamespace);
+                            writer.WriteCData(mpn);
+                            writer.WriteFullEndElement(); // g:mpn
+                        }
 
                         #endregion
                         

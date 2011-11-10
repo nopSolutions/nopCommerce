@@ -14,6 +14,7 @@ namespace Nop.Data.Mapping.Catalog
             this.Property(pv => pv.Description).IsMaxLength();
             this.Property(pv => pv.AdminComment).IsMaxLength();
             this.Property(pv => pv.ManufacturerPartNumber).HasMaxLength(400);
+            this.Property(pv => pv.Gtin).HasMaxLength(400);
             this.Property(pv => pv.UserAgreementText).IsMaxLength();
 
             this.Property(pv => pv.AdditionalShippingCharge).HasPrecision(18, 4);

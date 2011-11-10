@@ -275,6 +275,7 @@ namespace Nop.Services.Catalog
                         Description = productVariant.Description,
                         AdminComment = productVariant.AdminComment,
                         ManufacturerPartNumber = productVariant.ManufacturerPartNumber,
+                        Gtin = productVariant.Gtin,
                         IsGiftCard = productVariant.IsGiftCard,
                         GiftCardType = productVariant.GiftCardType,
                         RequireOtherProducts = productVariant.RequireOtherProducts,

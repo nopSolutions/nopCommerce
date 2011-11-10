@@ -242,6 +242,7 @@ namespace Nop.Services.ExportImport
                         xmlWriter.WriteElementString("Description", null, productVariant.Description);
                         xmlWriter.WriteElementString("AdminComment", null, productVariant.AdminComment);
                         xmlWriter.WriteElementString("ManufacturerPartNumber", null, productVariant.ManufacturerPartNumber);
+                        xmlWriter.WriteElementString("Gtin", null, productVariant.Gtin);
                         xmlWriter.WriteElementString("IsGiftCard", null, productVariant.IsGiftCard.ToString());
                         xmlWriter.WriteElementString("GiftCardType", null, productVariant.GiftCardType.ToString());
                         xmlWriter.WriteElementString("RequireOtherProducts", null, productVariant.RequireOtherProducts.ToString());
@@ -457,6 +458,7 @@ namespace Nop.Services.ExportImport
                     "Published",
                     "SKU",
                     "ManufacturerPartNumber",
+                    "Gtin",
                     "IsGiftCard",
                     "GiftCardTypeId",
                     "RequireOtherProducts",
@@ -564,6 +566,9 @@ namespace Nop.Services.ExportImport
                         col++;
 
                         worksheet.Cells[row, col].Value = pv.ManufacturerPartNumber;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = pv.Gtin;
                         col++;
 
                         worksheet.Cells[row, col].Value = pv.IsGiftCard;

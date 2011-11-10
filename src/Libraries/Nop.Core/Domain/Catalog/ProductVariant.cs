@@ -48,6 +48,11 @@ namespace Nop.Core.Domain.Catalog
         public virtual string ManufacturerPartNumber { get; set; }
 
         /// <summary>
+        /// Gets or sets the Global Trade Item Number (GTIN). These identifiers include UPC (in North America), EAN (in Europe), JAN (in Japan), and ISBN (for books).
+        /// </summary>
+        public virtual string Gtin { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether the product variant is gift card
         /// </summary>
         public virtual bool IsGiftCard { get; set; }

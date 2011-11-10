@@ -1800,6 +1800,14 @@
 													</LocaleResource>
 												</Children>
 											</LocaleResource>
+											<LocaleResource Name="GTIN">
+												<Value>GTIN (global trade item number)</Value>
+												<Children>
+													<LocaleResource Name="Hint">
+														<Value>Enter global trade item number (GTIN). These identifiers include UPC (in North America), EAN (in Europe), JAN (in Japan), and ISBN (for books).</Value>
+													</LocaleResource>
+												</Children>
+											</LocaleResource>
 											<LocaleResource Name="HasSampleDownload">
 												<Value>Has sample download file</Value>
 												<Children>

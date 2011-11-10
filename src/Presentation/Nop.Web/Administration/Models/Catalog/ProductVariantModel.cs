@@ -47,6 +47,10 @@ namespace Nop.Admin.Models.Catalog
         [AllowHtml]
         public string ManufacturerPartNumber { get; set; }
 
+        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.GTIN")]
+        [AllowHtml]
+        public virtual string Gtin { get; set; }
+
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.IsGiftCard")]
         public bool IsGiftCard { get; set; }
 

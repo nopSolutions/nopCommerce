@@ -82,6 +82,7 @@ namespace Nop.Services.ExportImport
                     "Published",
                     "SKU",
                     "ManufacturerPartNumber",
+                    "Gtin",
                     "IsGiftCard",
                     "GiftCardTypeId",
                     "RequireOtherProducts",
@@ -165,6 +166,7 @@ namespace Nop.Services.ExportImport
                     bool published = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "Published")].Value);
                     string sku = worksheet.Cells[iRow, GetColumnIndex(properties, "SKU")].Value as string;
                     string manufacturerPartNumber = worksheet.Cells[iRow, GetColumnIndex(properties, "ManufacturerPartNumber")].Value as string;
+                    string gtin = worksheet.Cells[iRow, GetColumnIndex(properties, "Gtin")].Value as string;
                     bool isGiftCard = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "IsGiftCard")].Value);
                     int giftCardTypeId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "GiftCardTypeId")].Value);
                     bool requireOtherProducts = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "RequireOtherProducts")].Value);
@@ -254,6 +256,7 @@ namespace Nop.Services.ExportImport
 
                         productVariant.Sku = sku;
                         productVariant.ManufacturerPartNumber = manufacturerPartNumber;
+                        productVariant.Gtin = gtin;
                         productVariant.IsGiftCard = isGiftCard;
                         productVariant.GiftCardTypeId = giftCardTypeId;
                         productVariant.RequireOtherProducts = requireOtherProducts;
@@ -332,6 +335,7 @@ namespace Nop.Services.ExportImport
                             ProductId = product.Id,
                             Sku = sku,
                             ManufacturerPartNumber = manufacturerPartNumber,
+                            Gtin = gtin,
                             IsGiftCard = isGiftCard,
                             GiftCardTypeId = giftCardTypeId,
                             RequireOtherProducts = requireOtherProducts,

@@ -19,6 +19,7 @@ namespace Nop.Data.Tests.Catalog
                                          Description = "description",
                                          AdminComment = "adminComment",
                                          ManufacturerPartNumber = "manufacturerPartNumber",
+                                         Gtin = "gtin 1",
                                          IsGiftCard = true,
                                          GiftCardTypeId = 1,
                                          IsDownload = true,
@@ -95,6 +96,7 @@ namespace Nop.Data.Tests.Catalog
             fromDb.Description.ShouldEqual("description");
             fromDb.AdminComment.ShouldEqual("adminComment");
             fromDb.ManufacturerPartNumber.ShouldEqual("manufacturerPartNumber");
+            fromDb.Gtin.ShouldEqual("gtin 1");
             fromDb.IsGiftCard.ShouldEqual(true);
             fromDb.GiftCardTypeId.ShouldEqual(1);
             fromDb.IsDownload.ShouldEqual(true);

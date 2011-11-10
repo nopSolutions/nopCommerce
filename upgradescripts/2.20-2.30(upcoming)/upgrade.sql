@@ -323,6 +323,12 @@ set @resources='
     <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.PdfLetterPageSizeEnabled.Hint">
         <Value>If checked, uses Letter page size for PDF documents. Uses A4 page size if unchecked.</Value>
     </LocaleResource>
+    <LocaleResource Name="Admin.Catalog.Products.Variants.Fields.GTIN">
+        <Value>GTIN (global trade item number)</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Catalog.Products.Variants.Fields.GTIN.Hint">
+        <Value>Enter global trade item number (GTIN). These identifiers include UPC (in North America), EAN (in Europe), JAN (in Japan), and ISBN (for books).</Value>
+    </LocaleResource>
 </Language>
 '
 
@@ -1054,5 +1060,13 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'pdfsettings.letterpagesi
 BEGIN
 	INSERT [Setting] ([Name], [Value])
 	VALUES (N'pdfsettings.letterpagesizeenabled', N'false')
+END
+GO
+
+--new GTIN property of product variants
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[ProductVariant]') and NAME='Gtin')
+BEGIN
+	ALTER TABLE [dbo].[ProductVariant]
+	ADD [Gtin] nvarchar(400) NULL
 END
 GO
