@@ -53,6 +53,7 @@ namespace Nop.Plugin.Payments.GoogleCheckout
         private readonly IOrderProcessingService _orderProcessingService;
         private readonly IOrderService _orderService;
         private readonly ILogger _logger;
+        private readonly HttpContextBase _httpContext;
 
         #endregion
 
@@ -64,7 +65,7 @@ namespace Nop.Plugin.Payments.GoogleCheckout
             IPriceCalculationService priceCalculationService, IWorkContext workContext,
             ICustomerService customerService, ICountryService countryService,
             IStateProvinceService stateProvinceService, IOrderProcessingService orderProcessingService,
-            IOrderService orderService, ILogger logger)
+            IOrderService orderService, ILogger logger, HttpContextBase httpContext)
         {
             this._settingService = settingService;
             this._webHelper = webHelper;
@@ -79,6 +80,7 @@ namespace Nop.Plugin.Payments.GoogleCheckout
             this._orderProcessingService = orderProcessingService;
             this._orderService = orderService;
             this._logger = logger;
+            this._httpContext = httpContext;
         }
 
         #endregion
@@ -92,7 +94,7 @@ namespace Nop.Plugin.Payments.GoogleCheckout
                 if (!_settingService.GetSettingByKey<bool>("googlecheckoutpaymentsettings.logfileenabled"))
                     return;
                 message = string.Format("{0}*******{1}{2}", DateTime.Now, Environment.NewLine, message);
-                string logPath = HttpContext.Current.Server.MapPath("~/App_Data/googlecheckout_log.txt");
+                string logPath = _httpContext.Server.MapPath("~/App_Data/googlecheckout_log.txt");
                 using (var fs = new FileStream(logPath, FileMode.Append, FileAccess.Write, FileShare.Read))
                 using (var sw = new StreamWriter(fs))
                 {

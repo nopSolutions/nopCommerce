@@ -114,7 +114,7 @@ namespace Nop.Core.Infrastructure
 
         protected static bool IsStaticResource(object sender)
         {
-            HttpApplication application = sender as HttpApplication;
+            var application = sender as HttpApplication;
             if (application != null)
             {
                 IWebHelper webHelper = new WebHelper();

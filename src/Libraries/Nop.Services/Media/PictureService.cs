@@ -28,7 +28,7 @@ namespace Nop.Services.Media
         private readonly ISettingService _settingService;
         private readonly IWebHelper _webHelper;
         private readonly MediaSettings _mediaSettings;
-        
+        private readonly HttpContextBase _httpContext;
 
         #endregion
 
@@ -42,16 +42,18 @@ namespace Nop.Services.Media
         /// <param name="settingService">Setting service</param>
         /// <param name="webHelper">Web helper</param>
         /// <param name="mediaSettings">Media settings</param>
+        /// <param name="httpContext">HTTP context</param>
         public PictureService(IRepository<Picture> pictureRepository,
             IRepository<ProductPicture> productPictureRepository,
-            ISettingService settingService, IWebHelper webHelper, 
-            MediaSettings mediaSettings)
+            ISettingService settingService, IWebHelper webHelper,
+            MediaSettings mediaSettings, HttpContextBase httpContext)
         {
             this._pictureRepository = pictureRepository;
             this._productPictureRepository = productPictureRepository;
             this._settingService = settingService;
             this._webHelper = webHelper;
             this._mediaSettings = mediaSettings;
+            this._httpContext = httpContext;
         }
 
         #endregion
@@ -722,7 +724,7 @@ namespace Nop.Services.Media
         {
             get
             {
-                string path = HttpContext.Current.Request.PhysicalApplicationPath + "content\\images\\thumbs";
+                string path = _httpContext.Request.PhysicalApplicationPath + "content\\images\\thumbs";
                 return path;
             }
         }
@@ -734,7 +736,7 @@ namespace Nop.Services.Media
         {
             get
             {
-                string path = HttpContext.Current.Request.PhysicalApplicationPath + "content\\images";
+                string path = _httpContext.Request.PhysicalApplicationPath + "content\\images";
                 return path;
             }
         }

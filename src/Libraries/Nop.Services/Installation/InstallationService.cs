@@ -75,6 +75,7 @@ namespace Nop.Services.Installation
         private readonly IRepository<ManufacturerTemplate> _manufacturerTemplateRepository;
         private readonly IRepository<ScheduleTask> _scheduleTaskRepository;
         private readonly ICustomerService _customerService;
+        private readonly HttpContextBase _httpContext;
 
         #endregion
 
@@ -111,7 +112,8 @@ namespace Nop.Services.Installation
             IRepository<CategoryTemplate> categoryTemplateRepository,
             IRepository<ManufacturerTemplate> manufacturerTemplateRepository,
             IRepository<ScheduleTask> scheduleTaskRepository,
-            ICustomerService customerService)
+            ICustomerService customerService,
+            HttpContextBase httpContext)
         {
             this._measureDimensionRepository = measureDimensionRepository;
             this._measureWeightRepository = measureWeightRepository;
@@ -145,6 +147,7 @@ namespace Nop.Services.Installation
             this._manufacturerTemplateRepository = manufacturerTemplateRepository;
             this._scheduleTaskRepository = scheduleTaskRepository;
             this._customerService = customerService;
+            this._httpContext = httpContext;
         }
 
         #endregion
@@ -4931,7 +4934,7 @@ namespace Nop.Services.Installation
         {
             //pictures
             var pictureService = EngineContext.Current.Resolve<IPictureService>();
-            var sampleImagesPath = string.Format("{0}content\\samples\\", HttpContext.Current.Request.PhysicalApplicationPath);
+            var sampleImagesPath = string.Format("{0}content\\samples\\", _httpContext.Request.PhysicalApplicationPath);
 
 
 
@@ -5295,11 +5298,11 @@ namespace Nop.Services.Installation
             
             //pictures
             var pictureService = EngineContext.Current.Resolve<IPictureService>();
-            var sampleImagesPath = string.Format("{0}content\\samples\\", HttpContext.Current.Request.PhysicalApplicationPath);
+            var sampleImagesPath = string.Format("{0}content\\samples\\", _httpContext.Request.PhysicalApplicationPath);
 
             //downloads
             var downloadService = EngineContext.Current.Resolve<IDownloadService>();
-            var sampleDownloadsPath = string.Format("{0}content\\samples\\", HttpContext.Current.Request.PhysicalApplicationPath);
+            var sampleDownloadsPath = string.Format("{0}content\\samples\\", _httpContext.Request.PhysicalApplicationPath);
 
 
             //products

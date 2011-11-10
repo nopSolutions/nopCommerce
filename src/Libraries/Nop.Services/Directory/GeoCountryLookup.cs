@@ -34,6 +34,14 @@ namespace Nop.Services.Directory
 									"Venezuela","Virgin Islands, British","Virgin Islands, U.S.","Vietnam","Vanuatu","Wallis and Futuna","Samoa","Yemen","Mayotte","Serbia","South Africa","Zambia","Montenegro","Zimbabwe","Anonymous Proxy","Satellite Provider",
 									"Other","Aland Islands","Guernsey","Isle of Man","Jersey","Saint Barthelemy","Saint Martin"};
 
+        private readonly HttpContextBase _httpContext;
+        #endregion
+
+        #region Ctor
+        public GeoCountryLookup(HttpContextBase httpContext)
+        {
+            this._httpContext = httpContext;
+        }
         #endregion
 
         #region Utilities
@@ -68,9 +76,9 @@ namespace Nop.Services.Directory
             {
                 //you can download the latest GeoIP database here http://www.maxmind.com/app/free
                 string fileName = string.Empty;
-                if (HttpContext.Current != null && HttpContext.Current.Request != null)
+                if (_httpContext != null && _httpContext.Request != null)
                 {
-                    fileName = String.Format("{0}App_Data\\GeoIP.dat", HttpContext.Current.Request.PhysicalApplicationPath);
+                    fileName = String.Format("{0}App_Data\\GeoIP.dat", _httpContext.Request.PhysicalApplicationPath);
                 }
                 using (var fileInput = new FileStream(fileName, FileMode.Open, FileAccess.Read))
                 {

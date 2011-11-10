@@ -1,5 +1,7 @@
 ﻿using System.Collections.Specialized;
 using System.Web;
+using Nop.Core.Infrastructure;
+
 namespace Nop.Web.Framework
 {
     /// <summary>
@@ -7,7 +9,8 @@ namespace Nop.Web.Framework
     /// </summary>
     public partial class RemotePost
     {
-        protected NameValueCollection inputValues;
+        private readonly HttpContextBase _httpContext;
+        private readonly NameValueCollection _inputValues;
 
         /// <summary>
         /// Gets or sets a remote URL
@@ -28,7 +31,7 @@ namespace Nop.Web.Framework
         {
             get
             {
-                return inputValues;
+                return _inputValues;
             }
         }
 
@@ -37,10 +40,12 @@ namespace Nop.Web.Framework
         /// </summary>
         public RemotePost()
         {
-            inputValues = new NameValueCollection();
+            _inputValues = new NameValueCollection();
             Url = "http://www.someurl.com";
             Method = "post";
             FormName = "formName";
+            //TODO inject 
+            _httpContext = EngineContext.Current.Resolve<HttpContextBase>();
         }
 
         /// <summary>
@@ -50,25 +55,23 @@ namespace Nop.Web.Framework
         /// <param name="value">The value of the element to add.</param>
         public void Add(string name, string value)
         {
-            inputValues.Add(name, value);
+            _inputValues.Add(name, value);
         }
-
-
+        
         /// <summary>
         /// Post
         /// </summary>
         public void Post()
         {
-            var context = HttpContext.Current;
-            context.Response.Clear();
-            context.Response.Write("<html><head>");
-            context.Response.Write(string.Format("</head><body onload=\"document.{0}.submit()\">", FormName));
-            context.Response.Write(string.Format("<form name=\"{0}\" method=\"{1}\" action=\"{2}\" >", FormName, Method, Url));
-            for (int i = 0; i < inputValues.Keys.Count; i++)
-                context.Response.Write(string.Format("<input name=\"{0}\" type=\"hidden\" value=\"{1}\">", HttpUtility.HtmlEncode(inputValues.Keys[i]), HttpUtility.HtmlEncode(inputValues[inputValues.Keys[i]])));
-            context.Response.Write("</form>");
-            context.Response.Write("</body></html>");
-            context.Response.End();
+            _httpContext.Response.Clear();
+            _httpContext.Response.Write("<html><head>");
+            _httpContext.Response.Write(string.Format("</head><body onload=\"document.{0}.submit()\">", FormName));
+            _httpContext.Response.Write(string.Format("<form name=\"{0}\" method=\"{1}\" action=\"{2}\" >", FormName, Method, Url));
+            for (int i = 0; i < _inputValues.Keys.Count; i++)
+                _httpContext.Response.Write(string.Format("<input name=\"{0}\" type=\"hidden\" value=\"{1}\">", HttpUtility.HtmlEncode(_inputValues.Keys[i]), HttpUtility.HtmlEncode(_inputValues[_inputValues.Keys[i]])));
+            _httpContext.Response.Write("</form>");
+            _httpContext.Response.Write("</body></html>");
+            _httpContext.Response.End();
         }
     }
 }

@@ -1,8 +1,6 @@
 //Contributor:  Nicholas Mayne
 
 using System;
-using System.Collections.Generic;
-using System.Web;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
@@ -25,7 +23,6 @@ namespace Nop.Services.Authentication.External
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly LocalizationSettings _localizationSettings;
-        
         #endregion
 
         #region Ctor
@@ -78,11 +75,6 @@ namespace Nop.Services.Authentication.External
             return userFound != null && userLoggedIn != null;
         }
 
-        private void StoreParametersForRoundTrip(OpenAuthenticationParameters parameters)
-        {
-            HttpContext.Current.Session["nop.externalauth.parameters"] = parameters;
-        }
-
         #endregion
 
         #region Methods
@@ -107,7 +99,7 @@ namespace Nop.Services.Authentication.External
             }
             if (AccountDoesNotExistAndUserIsNotLoggedOn(userFound, userLoggedIn))
             {
-                StoreParametersForRoundTrip(parameters);
+                ExternalAuthorizerHelper.StoreParametersForRoundTrip(parameters);
 
                 if (AutoRegistrationIsEnabled())
                 {

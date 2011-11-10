@@ -15,7 +15,7 @@ namespace Nop.Plugin.ExternalAuth.Twitter.Core
         private readonly IExternalAuthorizer _authorizer;
         private readonly IOpenAuthenticationService _openAuthenticationService;
         private readonly TwitterExternalAuthSettings _twitterExternalAuthSettings;
-        private readonly HttpContextBase _httpContextBase;
+        private readonly HttpContextBase _httpContext;
 
         private IOAuthCredentials _credentials;
         private MvcAuthorizer _mvcAuthorizer;
@@ -23,12 +23,12 @@ namespace Nop.Plugin.ExternalAuth.Twitter.Core
         public TwitterProviderAuthorizer(IExternalAuthorizer authorizer,
             IOpenAuthenticationService openAuthenticationService,
             TwitterExternalAuthSettings twitterExternalAuthSettings,
-            HttpContextBase httpContextBase)
+            HttpContextBase httpContext)
         {
             this._authorizer = authorizer;
             this._openAuthenticationService = openAuthenticationService;
             this._twitterExternalAuthSettings = twitterExternalAuthSettings;
-            this._httpContextBase = httpContextBase;
+            this._httpContext = httpContext;
         }
 
         private IOAuthCredentials Credentials
@@ -57,9 +57,6 @@ namespace Nop.Plugin.ExternalAuth.Twitter.Core
 
             MvcAuthorizer.CompleteAuthorization(GenerateCallbackUri());
 
-            if (_httpContextBase.Session == null)
-                throw new NullReferenceException("Session is required.");
-
             if (!MvcAuthorizer.IsAuthorized)
             {
                 return new AuthorizeState(returnUrl, OpenAuthenticationStatus.RequiresRedirect) { Result = MvcAuthorizer.BeginAuthorization() };
@@ -75,7 +72,7 @@ namespace Nop.Plugin.ExternalAuth.Twitter.Core
 
             var result = _authorizer.Authorize(parameters);
 
-            var tempReturnUrl = _httpContextBase.Request.QueryString["?ReturnUrl"];
+            var tempReturnUrl = _httpContext.Request.QueryString["?ReturnUrl"];
             if (!string.IsNullOrEmpty(tempReturnUrl) && string.IsNullOrEmpty(returnUrl))
             {
                 returnUrl = tempReturnUrl;
@@ -86,8 +83,8 @@ namespace Nop.Plugin.ExternalAuth.Twitter.Core
 
         private Uri GenerateCallbackUri()
         {
-            UriBuilder builder = new UriBuilder(_httpContextBase.Request.Url);
-            var path = _httpContextBase.Request.ApplicationPath + "/Plugins/ExternalAuthTwitter/Login/";
+            UriBuilder builder = new UriBuilder(_httpContext.Request.Url);
+            var path = _httpContext.Request.ApplicationPath + "/Plugins/ExternalAuthTwitter/Login/";
             builder.Path = path.Replace(@"//", @"/");
             builder.Query = builder.Query.Replace(@"??", @"?");
 

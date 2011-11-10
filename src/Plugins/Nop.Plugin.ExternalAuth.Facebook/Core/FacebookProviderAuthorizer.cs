@@ -18,7 +18,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Core
         private readonly IOpenAuthenticationService _openAuthenticationService;
         private readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
         private readonly FacebookExternalAuthSettings _facebookExternalAuthSettings;
-        private readonly HttpContextBase _httpContextBase;
+        private readonly HttpContextBase _httpContext;
 
         private FacebookApplication _facebookApplication;
 
@@ -26,13 +26,13 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Core
             IOpenAuthenticationService openAuthenticationService,
             ExternalAuthenticationSettings externalAuthenticationSettings,
             FacebookExternalAuthSettings facebookExternalAuthSettings,
-            HttpContextBase httpContextBase)
+            HttpContextBase httpContext)
         {
             this._authorizer = authorizer;
             this._openAuthenticationService = openAuthenticationService;
             this._externalAuthenticationSettings = externalAuthenticationSettings;
             this._facebookExternalAuthSettings = facebookExternalAuthSettings;
-            this._httpContextBase = httpContextBase;
+            this._httpContext = httpContext;
         }
 
         private FacebookApplication FacebookApplication
@@ -43,7 +43,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Core
         public AuthorizeState Authorize(string returnUrl)
         {
             FacebookOAuthResult oAuthResult;
-            if (FacebookOAuthResult.TryParse(HttpContext.Current.Request.Url, out oAuthResult))
+            if (FacebookOAuthResult.TryParse(_httpContext.Request.Url, out oAuthResult))
             {
                 return TranslateResponseState(returnUrl, oAuthResult);
             }
@@ -109,8 +109,8 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Core
 
         private Uri GenerateCallbackUri()
         {
-            UriBuilder builder = new UriBuilder(_httpContextBase.Request.Url.GetLeftPart(UriPartial.Authority));
-            var path = _httpContextBase.Request.ApplicationPath + "/Plugins/ExternalAuthFacebook/Login/";
+            var builder = new UriBuilder(_httpContext.Request.Url.GetLeftPart(UriPartial.Authority));
+            var path = _httpContext.Request.ApplicationPath + "/Plugins/ExternalAuthFacebook/Login/";
             builder.Path = path.Replace(@"//", @"/");
 
             return builder.Uri;

@@ -208,7 +208,10 @@ namespace Nop.Services.Seo
             while (name2.Contains("__"))
                 name2 = name2.Replace("__", "_");
             if (urlEncode)
-                name2 = HttpContext.Current.Server.UrlEncode(name2);
+            {
+                var httpContext = EngineContext.Current.Resolve<HttpContextBase>();
+                name2 = httpContext.Server.UrlEncode(name2);
+            }
             return name2;
         }
 

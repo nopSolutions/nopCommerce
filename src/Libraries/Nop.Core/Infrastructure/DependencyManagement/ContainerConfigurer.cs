@@ -27,7 +27,7 @@ namespace Nop.Core.Infrastructure.DependencyManagement
 
         public virtual void Configure(IEngine engine, ContainerManager containerManager, EventBroker broker, NopConfig configuration)
         {
-            //register dependencies provided by other asemblies
+            //register dependencies provided by other assemblies
             containerManager.AddComponent<IWebHelper, WebHelper>("nop.webHelper");
             containerManager.AddComponent<ITypeFinder, WebAppTypeFinder>("nop.typeFinder");
             var typeFinder = containerManager.Resolve<ITypeFinder>();
