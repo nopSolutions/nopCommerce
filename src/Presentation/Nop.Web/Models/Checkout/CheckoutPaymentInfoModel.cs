@@ -8,5 +8,10 @@ namespace Nop.Web.Models.Checkout
         public string PaymentInfoActionName { get; set; }
         public string PaymentInfoControllerName { get; set; }
         public RouteValueDictionary PaymentInfoRouteValues { get; set; }
+
+        /// <summary>
+        /// Used on one-page checkout page
+        /// </summary>
+        public bool DisplayOrderTotals { get; set; }
     }
 }

@@ -263,7 +263,7 @@ namespace Nop.Web.Controllers
             model.PaymentInfoActionName = actionName;
             model.PaymentInfoControllerName = controllerName;
             model.PaymentInfoRouteValues = routeValues;
-
+            model.DisplayOrderTotals = _orderSettings.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab;
             return model;
         }
 

@@ -34,6 +34,11 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets a value indicating whether 'One-page checkout' is enabled
         /// </summary>
         public bool OnePageCheckoutEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether order totals should be displayed on 'Payment info' tab of 'One-page checkout' page
+        /// </summary>
+        public bool OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab { get; set; }
         
         /// <summary>
         /// Gets or sets a value indicating whether "Return requests" are allowed

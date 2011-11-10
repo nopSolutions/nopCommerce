@@ -16,4 +16,12 @@
             @Html.ValidationSummary(false)
         </div>
     </div>
+    @if (Model.DisplayOrderTotals)
+    {
+        <div class="clear">
+        </div>
+        <div class="order-summary-body">
+            @Html.Action("OrderSummary", "ShoppingCart", new { isEditable = false })
+        </div>
+    }
 </div>

@@ -16,6 +16,9 @@ namespace Nop.Web.Models.Checkout
 
         public AddressModel NewAddress { get; set; }
 
+        /// <summary>
+        /// Used on one-page checkout page
+        /// </summary>
         public bool NewAddressPreselected { get; set; }
     }
 }

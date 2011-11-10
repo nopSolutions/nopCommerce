@@ -1070,3 +1070,11 @@ BEGIN
 	ADD [Gtin] nvarchar(400) NULL
 END
 GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'ordersettings.onepagecheckoutdisplayordertotalsonpaymentinfotab')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'ordersettings.onepagecheckoutdisplayordertotalsonpaymentinfotab', N'false')
+END
+GO
