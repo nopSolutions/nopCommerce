@@ -43,10 +43,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Autofac.Mvc3.2.5.2.830\lib\NET40\Autofac.Integration.Mvc.dll</HintPath>
     </Reference>
-    <Reference Include="AutofacContrib.Startable, Version=2.5.1.827, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\AutofacContrib-2.5.2.830-NET40\Library\AutofacContrib.Startable.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.configuration" />
@@ -294,7 +290,6 @@
     <Compile Include="IO\IStorageFolder.cs" />
     <Compile Include="IO\IStorageProvider.cs" />
     <Compile Include="Domain\Customers\PasswordFormat.cs" />
-    <Compile Include="Plugins\IAutoStart.cs" />
     <Compile Include="NopVersion.cs" />
     <Compile Include="WebHelper.cs" />
     <Compile Include="Domain\Customers\Customer.cs" />

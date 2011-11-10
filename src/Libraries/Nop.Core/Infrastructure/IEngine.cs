@@ -18,8 +18,7 @@ namespace Nop.Core.Infrastructure
         /// Initialize components and plugins in the nop environment.
         /// </summary>
         /// <param name="config">Config</param>
-        /// <param name="databaseIsInstalled">A value indicating whether database is installed</param>
-        void Initialize(NopConfig config, bool databaseIsInstalled);
+        void Initialize(NopConfig config);
 
         T Resolve<T>() where T : class;
 

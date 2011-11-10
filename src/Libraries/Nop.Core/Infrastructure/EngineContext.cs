@@ -14,9 +14,8 @@ namespace Nop.Core.Infrastructure
         #region Initialization Methods
         /// <summary>Initializes a static instance of the Nop factory.</summary>
         /// <param name="forceRecreate">Creates a new factory instance even though the factory has been previously initialized.</param>
-        /// <param name="databaseIsInstalled">A value indicating whether database is installed</param>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public static IEngine Initialize(bool forceRecreate, bool databaseIsInstalled)
+        public static IEngine Initialize(bool forceRecreate)
         {
             if (Singleton<IEngine>.Instance == null || forceRecreate)
             {
@@ -24,7 +23,7 @@ namespace Nop.Core.Infrastructure
                 Debug.WriteLine("Constructing engine " + DateTime.Now);
                 Singleton<IEngine>.Instance = CreateEngineInstance(config);
                 Debug.WriteLine("Initializing engine " + DateTime.Now);
-                Singleton<IEngine>.Instance.Initialize(config, databaseIsInstalled);
+                Singleton<IEngine>.Instance.Initialize(config);
             }
             return Singleton<IEngine>.Instance;
         }
@@ -65,7 +64,7 @@ namespace Nop.Core.Infrastructure
             {
                 if (Singleton<IEngine>.Instance == null)
                 {
-                    Initialize(false, true);
+                    Initialize(false);
                 }
                 return Singleton<IEngine>.Instance;
             }

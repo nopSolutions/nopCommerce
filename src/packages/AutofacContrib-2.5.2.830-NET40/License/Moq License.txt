@@ -1,1 +1,0 @@
-New BSD License linked at http://www.opensource.org/licenses/bsd-license.php

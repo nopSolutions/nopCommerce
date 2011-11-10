@@ -53,7 +53,7 @@ namespace Nop.Web
         protected void Application_Start()
         {
             //initialize engine context
-            EngineContext.Initialize(false, DataSettingsHelper.DatabaseIsInstalled());
+            EngineContext.Initialize(false);
 
             //start schedules tasks
             if (DataSettingsHelper.DatabaseIsInstalled())

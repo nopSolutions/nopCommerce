@@ -31,17 +31,9 @@ namespace Nop.Core.Configuration
         /// <returns>The created section handler object.</returns>
         public object Create(object parent, object configContext, XmlNode section)
         {
-            NopConfig config = new NopConfig();
-            //var sqlServerNode = section.SelectSingleNode("SqlServer");
-            //if (sqlServerNode != null)
-            //{
-            //    XmlAttribute attribute = sqlServerNode.Attributes["ConnectionStringName"];
-            //    if ((attribute != null) && (WebConfigurationManager.ConnectionStrings[attribute.Value] != null))
-            //        config.ConnectionString = WebConfigurationManager.ConnectionStrings[attribute.Value].ConnectionString;
-            //}
-
+            var config = new NopConfig();
             var dynamicDiscoveryNode = section.SelectSingleNode("DynamicDiscovery");
-            if (dynamicDiscoveryNode != null)
+            if (dynamicDiscoveryNode != null && dynamicDiscoveryNode.Attributes != null)
             {
                 var attribute = dynamicDiscoveryNode.Attributes["Enabled"];
                 if (attribute != null)
@@ -49,7 +41,7 @@ namespace Nop.Core.Configuration
             }
 
             var engineNode = section.SelectSingleNode("Engine");
-            if (engineNode != null)
+            if (engineNode != null && engineNode.Attributes != null)
             {
                 var attribute = engineNode.Attributes["Type"];
                 if (attribute != null)
@@ -57,7 +49,7 @@ namespace Nop.Core.Configuration
             }
 
             var themeNode = section.SelectSingleNode("Themes");
-            if (themeNode != null)
+            if (themeNode != null && themeNode.Attributes != null)
             {
                 var attribute = themeNode.Attributes["basePath"];
                 if (attribute != null)

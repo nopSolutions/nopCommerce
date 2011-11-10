@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using Autofac;
-using AutofacContrib.Startable;
 using Nop.Core.Configuration;
 using Nop.Core.Infrastructure.DependencyManagement;
-using Nop.Core.Plugins;
 
 namespace Nop.Core.Infrastructure
 {
@@ -54,10 +52,8 @@ namespace Nop.Core.Infrastructure
         private void InitializeContainer(ContainerConfigurer configurer, EventBroker broker, NopConfig config)
         {
             var builder = new ContainerBuilder();
-            builder.RegisterModule(new StartableModule<IAutoStart>(s => s.Start()));
 
             _containerManager = new ContainerManager(builder.Build());
-
             configurer.Configure(this, _containerManager, broker, config);
         }
 
@@ -69,12 +65,8 @@ namespace Nop.Core.Infrastructure
         /// Initialize components and plugins in the nop environment.
         /// </summary>
         /// <param name="config">Config</param>
-        /// <param name="databaseIsInstalled">A value indicating whether database is installed</param>
-        public void Initialize(NopConfig config, bool databaseIsInstalled)
+        public void Initialize(NopConfig config)
         {
-            //start components
-            this.ContainerManager.StartComponents();
-
             //startup tasks
             RunStartupTasks();
         }
