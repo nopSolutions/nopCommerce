@@ -142,14 +142,7 @@ namespace Nop.Web.Controllers
             }
 
             //private message
-            bool pmEnabled = false;
-            if (_forumSettings.AllowPrivateMessages)
-            {
-                if (!customer.IsGuest())
-                {
-                    pmEnabled = true;
-                }
-            }
+            bool pmEnabled = _forumSettings.AllowPrivateMessages && !customer.IsGuest();
 
             //total forum posts
             bool totalPostsEnabled = false;
@@ -175,7 +168,7 @@ namespace Nop.Web.Controllers
             string dateOfBirth = string.Empty;
             if (_customerSettings.DateOfBirthEnabled)
             {
-                DateTime? dob = customer.GetAttribute<DateTime?>(SystemCustomerAttributeNames.DateOfBirth);
+                var dob = customer.GetAttribute<DateTime?>(SystemCustomerAttributeNames.DateOfBirth);
                 if (dob.HasValue)
                 {
                     dateOfBirthEnabled = true;

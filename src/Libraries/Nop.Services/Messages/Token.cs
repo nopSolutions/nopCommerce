@@ -3,17 +3,34 @@ namespace Nop.Services.Messages
 {
     public sealed class Token
     {
-        private readonly string key;
-        private readonly string value;
+        private readonly string _key;
+        private readonly string _value;
+        private readonly bool _neverHtmlEncoded;
 
-        public Token(string key, string value)
+        public Token(string key, string value):
+            this(key, value, false)
         {
-            this.key = key;
-            this.value = value;
+            
+        }
+        public Token(string key, string value, bool  neverHtmlEncoded)
+        {
+            this._key = key;
+            this._value = value;
+            this._neverHtmlEncoded = neverHtmlEncoded;
         }
 
-        public string Key { get { return key; } }
-        public string Value { get { return value; } }
+        /// <summary>
+        /// Token key
+        /// </summary>
+        public string Key { get { return _key; } }
+        /// <summary>
+        /// Token value
+        /// </summary>
+        public string Value { get { return _value; } }
+        /// <summary>
+        /// Indicates whether this token should not be HTML encoded
+        /// </summary>
+        public bool NeverHtmlEncoded { get { return _neverHtmlEncoded; } }
 
         public override string ToString()
         {

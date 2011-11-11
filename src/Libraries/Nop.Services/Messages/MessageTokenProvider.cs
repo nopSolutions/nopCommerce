@@ -387,7 +387,7 @@ namespace Nop.Services.Messages
         public virtual void AddStoreTokens(IList<Token> tokens)
         {
             tokens.Add(new Token("Store.Name", _storeSettings.StoreName));
-            tokens.Add(new Token("Store.URL", _storeSettings.StoreUrl));
+            tokens.Add(new Token("Store.URL", _storeSettings.StoreUrl, true));
             var defaultEmailAccount = _emailAccountService.GetEmailAccountById(_emailAccountSettings.DefaultEmailAccountId);
             if (defaultEmailAccount == null)
                 defaultEmailAccount = _emailAccountService.GetAllEmailAccounts().FirstOrDefault();
@@ -398,42 +398,42 @@ namespace Nop.Services.Messages
         {
             tokens.Add(new Token("Order.OrderNumber", order.Id.ToString()));
 
-            tokens.Add(new Token("Order.CustomerFullName", HttpUtility.HtmlEncode(string.Format("{0} {1}", order.BillingAddress.FirstName, order.BillingAddress.LastName))));
-            tokens.Add(new Token("Order.CustomerEmail", HttpUtility.HtmlEncode(order.BillingAddress.Email)));
+            tokens.Add(new Token("Order.CustomerFullName", string.Format("{0} {1}", order.BillingAddress.FirstName, order.BillingAddress.LastName)));
+            tokens.Add(new Token("Order.CustomerEmail", order.BillingAddress.Email));
 
 
-            tokens.Add(new Token("Order.BillingFirstName", HttpUtility.HtmlEncode(order.BillingAddress.FirstName)));
-            tokens.Add(new Token("Order.BillingLastName", HttpUtility.HtmlEncode(order.BillingAddress.LastName)));
-            tokens.Add(new Token("Order.BillingPhoneNumber", HttpUtility.HtmlEncode(order.BillingAddress.PhoneNumber)));
-            tokens.Add(new Token("Order.BillingEmail", HttpUtility.HtmlEncode(order.BillingAddress.Email)));
-            tokens.Add(new Token("Order.BillingFaxNumber", HttpUtility.HtmlEncode(order.BillingAddress.FaxNumber)));
-            tokens.Add(new Token("Order.BillingCompany", HttpUtility.HtmlEncode(order.BillingAddress.Company)));
-            tokens.Add(new Token("Order.BillingAddress1", HttpUtility.HtmlEncode(order.BillingAddress.Address1)));
-            tokens.Add(new Token("Order.BillingAddress2", HttpUtility.HtmlEncode(order.BillingAddress.Address2)));
-            tokens.Add(new Token("Order.BillingCity", HttpUtility.HtmlEncode(order.BillingAddress.City)));
-            tokens.Add(new Token("Order.BillingStateProvince", order.BillingAddress.StateProvince != null ? HttpUtility.HtmlEncode(order.BillingAddress.StateProvince.GetLocalized(x => x.Name)) : ""));
-            tokens.Add(new Token("Order.BillingZipPostalCode", HttpUtility.HtmlEncode(order.BillingAddress.ZipPostalCode)));
-            tokens.Add(new Token("Order.BillingCountry", order.BillingAddress.Country != null ? HttpUtility.HtmlEncode(order.BillingAddress.Country.GetLocalized(x => x.Name)) : ""));
+            tokens.Add(new Token("Order.BillingFirstName", order.BillingAddress.FirstName));
+            tokens.Add(new Token("Order.BillingLastName", order.BillingAddress.LastName));
+            tokens.Add(new Token("Order.BillingPhoneNumber", order.BillingAddress.PhoneNumber));
+            tokens.Add(new Token("Order.BillingEmail", order.BillingAddress.Email));
+            tokens.Add(new Token("Order.BillingFaxNumber", order.BillingAddress.FaxNumber));
+            tokens.Add(new Token("Order.BillingCompany", order.BillingAddress.Company));
+            tokens.Add(new Token("Order.BillingAddress1", order.BillingAddress.Address1));
+            tokens.Add(new Token("Order.BillingAddress2", order.BillingAddress.Address2));
+            tokens.Add(new Token("Order.BillingCity", order.BillingAddress.City));
+            tokens.Add(new Token("Order.BillingStateProvince", order.BillingAddress.StateProvince != null ? order.BillingAddress.StateProvince.GetLocalized(x => x.Name) : ""));
+            tokens.Add(new Token("Order.BillingZipPostalCode", order.BillingAddress.ZipPostalCode));
+            tokens.Add(new Token("Order.BillingCountry", order.BillingAddress.Country != null ? order.BillingAddress.Country.GetLocalized(x => x.Name) : ""));
 
-            tokens.Add(new Token("Order.ShippingMethod", HttpUtility.HtmlEncode(order.ShippingMethod)));
-            tokens.Add(new Token("Order.ShippingFirstName", order.ShippingAddress != null ? HttpUtility.HtmlEncode(order.ShippingAddress.FirstName) : ""));
-            tokens.Add(new Token("Order.ShippingLastName", order.ShippingAddress != null ? HttpUtility.HtmlEncode(order.ShippingAddress.LastName) : ""));
-            tokens.Add(new Token("Order.ShippingPhoneNumber", order.ShippingAddress != null ? HttpUtility.HtmlEncode(order.ShippingAddress.PhoneNumber) : ""));
-            tokens.Add(new Token("Order.ShippingEmail", order.ShippingAddress != null ? HttpUtility.HtmlEncode(order.ShippingAddress.Email) : ""));
-            tokens.Add(new Token("Order.ShippingFaxNumber", order.ShippingAddress != null ? HttpUtility.HtmlEncode(order.ShippingAddress.FaxNumber) : ""));
-            tokens.Add(new Token("Order.ShippingCompany", order.ShippingAddress != null ? HttpUtility.HtmlEncode(order.ShippingAddress.Company) : ""));
-            tokens.Add(new Token("Order.ShippingAddress1", order.ShippingAddress != null ? HttpUtility.HtmlEncode(order.ShippingAddress.Address1) : ""));
-            tokens.Add(new Token("Order.ShippingAddress2", order.ShippingAddress != null ? HttpUtility.HtmlEncode(order.ShippingAddress.Address2) : ""));
-            tokens.Add(new Token("Order.ShippingCity", order.ShippingAddress != null ? HttpUtility.HtmlEncode(order.ShippingAddress.City) : ""));
-            tokens.Add(new Token("Order.ShippingStateProvince", order.ShippingAddress != null && order.ShippingAddress.StateProvince != null ? HttpUtility.HtmlEncode(order.ShippingAddress.StateProvince.GetLocalized(x => x.Name)) : ""));
-            tokens.Add(new Token("Order.ShippingZipPostalCode", order.ShippingAddress != null ? HttpUtility.HtmlEncode(order.ShippingAddress.ZipPostalCode) : ""));
-            tokens.Add(new Token("Order.ShippingCountry", order.ShippingAddress != null && order.ShippingAddress.Country != null ? HttpUtility.HtmlEncode(order.ShippingAddress.Country.GetLocalized(x => x.Name)) : ""));
+            tokens.Add(new Token("Order.ShippingMethod", order.ShippingMethod));
+            tokens.Add(new Token("Order.ShippingFirstName", order.ShippingAddress != null ? order.ShippingAddress.FirstName : ""));
+            tokens.Add(new Token("Order.ShippingLastName", order.ShippingAddress != null ? order.ShippingAddress.LastName : ""));
+            tokens.Add(new Token("Order.ShippingPhoneNumber", order.ShippingAddress != null ? order.ShippingAddress.PhoneNumber : ""));
+            tokens.Add(new Token("Order.ShippingEmail", order.ShippingAddress != null ? order.ShippingAddress.Email : ""));
+            tokens.Add(new Token("Order.ShippingFaxNumber", order.ShippingAddress != null ? order.ShippingAddress.FaxNumber : ""));
+            tokens.Add(new Token("Order.ShippingCompany", order.ShippingAddress != null ? order.ShippingAddress.Company : ""));
+            tokens.Add(new Token("Order.ShippingAddress1", order.ShippingAddress != null ? order.ShippingAddress.Address1 : ""));
+            tokens.Add(new Token("Order.ShippingAddress2", order.ShippingAddress != null ? order.ShippingAddress.Address2 : ""));
+            tokens.Add(new Token("Order.ShippingCity", order.ShippingAddress != null ? order.ShippingAddress.City : ""));
+            tokens.Add(new Token("Order.ShippingStateProvince", order.ShippingAddress != null && order.ShippingAddress.StateProvince != null ? order.ShippingAddress.StateProvince.GetLocalized(x => x.Name) : ""));
+            tokens.Add(new Token("Order.ShippingZipPostalCode", order.ShippingAddress != null ? order.ShippingAddress.ZipPostalCode : ""));
+            tokens.Add(new Token("Order.ShippingCountry", order.ShippingAddress != null && order.ShippingAddress.Country != null ? order.ShippingAddress.Country.GetLocalized(x => x.Name) : ""));
 
 
-            tokens.Add(new Token("Order.TrackingNumber", HttpUtility.HtmlEncode(order.TrackingNumber)));
-            tokens.Add(new Token("Order.VatNumber", HttpUtility.HtmlEncode(order.VatNumber)));
+            tokens.Add(new Token("Order.TrackingNumber", order.TrackingNumber));
+            tokens.Add(new Token("Order.VatNumber", order.VatNumber));
 
-            tokens.Add(new Token("Order.Product(s)", ProductListToHtmlTable(order, languageId)));
+            tokens.Add(new Token("Order.Product(s)", ProductListToHtmlTable(order, languageId), true));
 
             var language = _languageService.GetLanguageById(languageId);
             if (language != null && !String.IsNullOrEmpty(language.LanguageCulture))
@@ -447,7 +447,7 @@ namespace Nop.Services.Messages
             }
 
             //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
-            tokens.Add(new Token("Order.OrderURLForCustomer", string.Format("{0}orderdetails/{1}", _webHelper.GetStoreLocation(false), order.Id)));
+            tokens.Add(new Token("Order.OrderURLForCustomer", string.Format("{0}orderdetails/{1}", _webHelper.GetStoreLocation(false), order.Id), true));
         }
 
         public virtual void AddReturnRequestTokens(IList<Token> tokens, ReturnRequest returnRequest, OrderProductVariant opv)
@@ -455,40 +455,43 @@ namespace Nop.Services.Messages
 
             tokens.Add(new Token("ReturnRequest.ID", returnRequest.Id.ToString()));
             tokens.Add(new Token("ReturnRequest.Product.Quantity", returnRequest.Quantity.ToString()));
-            tokens.Add(new Token("ReturnRequest.Product.Name", HttpUtility.HtmlEncode(opv.ProductVariant.FullProductName)));
-            tokens.Add(new Token("ReturnRequest.Reason", HttpUtility.HtmlEncode(returnRequest.ReasonForReturn)));
-            tokens.Add(new Token("ReturnRequest.RequestedAction", HttpUtility.HtmlEncode(returnRequest.RequestedAction)));
-            tokens.Add(new Token("ReturnRequest.CustomerComment", HtmlHelper.FormatText(returnRequest.CustomerComments, false, true, false, false, false, false)));
+            tokens.Add(new Token("ReturnRequest.Product.Name", opv.ProductVariant.FullProductName));
+            tokens.Add(new Token("ReturnRequest.Reason", returnRequest.ReasonForReturn));
+            tokens.Add(new Token("ReturnRequest.RequestedAction", returnRequest.RequestedAction));
+            tokens.Add(new Token("ReturnRequest.CustomerComment", HtmlHelper.FormatText(returnRequest.CustomerComments, false, true, false, false, false, false), true));
         }
 
         public virtual void AddGiftCardTokens(IList<Token> tokens, GiftCard giftCard)
         {
-            tokens.Add(new Token("GiftCard.SenderName", HttpUtility.HtmlEncode(giftCard.SenderName)));
-            tokens.Add(new Token("GiftCard.SenderEmail",HttpUtility.HtmlEncode(giftCard.SenderEmail)));
-            tokens.Add(new Token("GiftCard.RecipientName", HttpUtility.HtmlEncode(giftCard.RecipientName)));
-            tokens.Add(new Token("GiftCard.RecipientEmail", HttpUtility.HtmlEncode(giftCard.RecipientEmail)));
-            tokens.Add(new Token("GiftCard.Amount", HttpUtility.HtmlEncode(_priceFormatter.FormatPrice(giftCard.Amount, true, false))));
-            tokens.Add(new Token("GiftCard.CouponCode", HttpUtility.HtmlEncode(giftCard.GiftCardCouponCode)));
+            tokens.Add(new Token("GiftCard.SenderName", giftCard.SenderName));
+            tokens.Add(new Token("GiftCard.SenderEmail",giftCard.SenderEmail));
+            tokens.Add(new Token("GiftCard.RecipientName", giftCard.RecipientName));
+            tokens.Add(new Token("GiftCard.RecipientEmail", giftCard.RecipientEmail));
+            tokens.Add(new Token("GiftCard.Amount", _priceFormatter.FormatPrice(giftCard.Amount, true, false)));
+            tokens.Add(new Token("GiftCard.CouponCode", giftCard.GiftCardCouponCode));
 
             var giftCardMesage = !String.IsNullOrWhiteSpace(giftCard.Message) ? 
                 HtmlHelper.FormatText(giftCard.Message, false, true, false, false, false, false) : "";
 
-            tokens.Add(new Token("GiftCard.Message", giftCardMesage));
+            tokens.Add(new Token("GiftCard.Message", giftCardMesage, true));
         }
 
         public virtual void AddCustomerTokens(IList<Token> tokens, Customer customer)
         {
-            tokens.Add(new Token("Customer.Email", HttpUtility.HtmlEncode(customer.Email)));
-            tokens.Add(new Token("Customer.Username", HttpUtility.HtmlEncode(customer.Username)));
-            tokens.Add(new Token("Customer.FullName", HttpUtility.HtmlEncode(customer.GetFullName())));
-            tokens.Add(new Token("Customer.VatNumber", HttpUtility.HtmlEncode(customer.VatNumber)));
-            tokens.Add(new Token("Customer.VatNumberStatus", HttpUtility.HtmlEncode(customer.VatNumberStatus.ToString())));
+            tokens.Add(new Token("Customer.Email", customer.Email));
+            tokens.Add(new Token("Customer.Username", customer.Username));
+            tokens.Add(new Token("Customer.FullName", customer.GetFullName()));
+            tokens.Add(new Token("Customer.VatNumber", customer.VatNumber));
+            tokens.Add(new Token("Customer.VatNumberStatus", customer.VatNumberStatus.ToString()));
 
 
             //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
-            tokens.Add(new Token("Customer.PasswordRecoveryURL", string.Format("{0}passwordrecovery/confirm?token={1}&email={2}", _webHelper.GetStoreLocation(false), customer.GetAttribute<string>(SystemCustomerAttributeNames.PasswordRecoveryToken), customer.Email)));
-            tokens.Add(new Token("Customer.AccountActivationURL", string.Format("{0}customer/activation?token={1}&email={2}", _webHelper.GetStoreLocation(false), customer.GetAttribute<string>(SystemCustomerAttributeNames.AccountActivationToken), customer.Email)));
-            tokens.Add(new Token("Wishlist.URLForCustomer", string.Format("{0}wishlist/{1}", _webHelper.GetStoreLocation(false), customer.CustomerGuid)));
+            string passwordRecoveryUrl = string.Format("{0}passwordrecovery/confirm?token={1}&email={2}", _webHelper.GetStoreLocation(false), customer.GetAttribute<string>(SystemCustomerAttributeNames.PasswordRecoveryToken), customer.Email);
+            string accountActivationUrl = string.Format("{0}customer/activation?token={1}&email={2}", _webHelper.GetStoreLocation(false), customer.GetAttribute<string>(SystemCustomerAttributeNames.AccountActivationToken), customer.Email);
+            var wishlistUrl = string.Format("{0}wishlist/{1}", _webHelper.GetStoreLocation(false), customer.CustomerGuid);
+            tokens.Add(new Token("Customer.PasswordRecoveryURL", passwordRecoveryUrl, true));
+            tokens.Add(new Token("Customer.AccountActivationURL", accountActivationUrl, true));
+            tokens.Add(new Token("Wishlist.URLForCustomer", wishlistUrl, true));
         }
 
         public virtual void AddNewsLetterSubscriptionTokens(IList<Token> tokens, NewsLetterSubscription subscription)
@@ -499,75 +502,75 @@ namespace Nop.Services.Messages
             const string urlFormat = "{0}newsletter/subscriptionactivation/{1}/{2}";
 
             var activationUrl = String.Format(urlFormat, _webHelper.GetStoreLocation(false), subscription.NewsLetterSubscriptionGuid, "true");
-            tokens.Add(new Token("NewsLetterSubscription.ActivationUrl", activationUrl));
+            tokens.Add(new Token("NewsLetterSubscription.ActivationUrl", activationUrl, true));
 
             var deActivationUrl = String.Format(urlFormat, _webHelper.GetStoreLocation(false), subscription.NewsLetterSubscriptionGuid, "false");
-            tokens.Add(new Token("NewsLetterSubscription.DeactivationUrl", deActivationUrl));
+            tokens.Add(new Token("NewsLetterSubscription.DeactivationUrl", deActivationUrl, true));
         }
 
         public virtual void AddProductReviewTokens(IList<Token> tokens, ProductReview productReview)
         {
-            tokens.Add(new Token("ProductReview.ProductName", HttpUtility.HtmlEncode(productReview.Product.Name)));
+            tokens.Add(new Token("ProductReview.ProductName", productReview.Product.Name));
         }
 
         public virtual void AddBlogCommentTokens(IList<Token> tokens, BlogComment blogComment)
         {
-            tokens.Add(new Token("BlogComment.BlogPostTitle", HttpUtility.HtmlEncode(blogComment.BlogPost.Title)));
+            tokens.Add(new Token("BlogComment.BlogPostTitle", blogComment.BlogPost.Title));
         }
 
         public virtual void AddNewsCommentTokens(IList<Token> tokens, NewsComment newsComment)
         {
-            tokens.Add(new Token("NewsComment.NewsTitle", HttpUtility.HtmlEncode(newsComment.NewsItem.Title)));
+            tokens.Add(new Token("NewsComment.NewsTitle", newsComment.NewsItem.Title));
         }
 
         public virtual void AddProductTokens(IList<Token> tokens, Product product)
         {
-            tokens.Add(new Token("Product.Name", HttpUtility.HtmlEncode(product.Name)));
-            tokens.Add(new Token("Product.ShortDescription", product.ShortDescription));
+            tokens.Add(new Token("Product.Name", product.Name));
+            tokens.Add(new Token("Product.ShortDescription", product.ShortDescription, true));
 
             //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
             var productUrl = string.Format("{0}p/{1}/{2}", _webHelper.GetStoreLocation(false), product.Id, product.GetSeName());
-            tokens.Add(new Token("Product.ProductURLForCustomer", productUrl));
+            tokens.Add(new Token("Product.ProductURLForCustomer", productUrl, true));
         }
 
         public virtual void AddProductVariantTokens(IList<Token> tokens, ProductVariant productVariant)
         {
-            tokens.Add(new Token("ProductVariant.ID", HttpUtility.HtmlEncode(productVariant.Id)));
-            tokens.Add(new Token("ProductVariant.FullProductName", HttpUtility.HtmlEncode(productVariant.FullProductName)));
-            tokens.Add(new Token("ProductVariant.StockQuantity", HttpUtility.HtmlEncode(productVariant.StockQuantity)));
+            tokens.Add(new Token("ProductVariant.ID", productVariant.Id.ToString()));
+            tokens.Add(new Token("ProductVariant.FullProductName", productVariant.FullProductName));
+            tokens.Add(new Token("ProductVariant.StockQuantity", productVariant.StockQuantity.ToString()));
         }
 
         public virtual void AddForumTopicTokens(IList<Token> tokens, ForumTopic forumTopic)
         {
             //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
             var topicUrl = string.Format("{0}boards/topic/{1}/{2}", _webHelper.GetStoreLocation(false), forumTopic.Id, forumTopic.GetSeName());
-            tokens.Add(new Token("Forums.TopicURL", topicUrl));
-            tokens.Add(new Token("Forums.TopicName", HttpUtility.HtmlEncode(forumTopic.Subject)));
+            tokens.Add(new Token("Forums.TopicURL", topicUrl, true));
+            tokens.Add(new Token("Forums.TopicName", forumTopic.Subject));
         }
 
         public virtual void AddForumPostTokens(IList<Token> tokens, ForumPost forumPost)
         {
-            tokens.Add(new Token("Forums.PostAuthor", HttpUtility.HtmlEncode(forumPost.Customer.FormatUserName())));
-            tokens.Add(new Token("Forums.PostBody", forumPost.FormatPostText()));
+            tokens.Add(new Token("Forums.PostAuthor", forumPost.Customer.FormatUserName()));
+            tokens.Add(new Token("Forums.PostBody", forumPost.FormatPostText(), true));
         }
 
         public virtual void AddForumTokens(IList<Token> tokens, Forum forum)
         {
             //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
             var forumUrl = string.Format("{0}boards/forum/{1}/{2}", _webHelper.GetStoreLocation(false), forum.Id, forum.GetSeName());
-            tokens.Add(new Token("Forums.ForumURL", forumUrl));
-            tokens.Add(new Token("Forums.ForumName", HttpUtility.HtmlEncode(forum.Name)));
+            tokens.Add(new Token("Forums.ForumURL", forumUrl, true));
+            tokens.Add(new Token("Forums.ForumName", forum.Name));
         }
 
         public virtual void AddPrivateMessageTokens(IList<Token> tokens, PrivateMessage privateMessage)
         {
-            tokens.Add(new Token("PrivateMessage.Subject", HttpUtility.HtmlEncode(privateMessage.Subject)));
-            tokens.Add(new Token("PrivateMessage.Text",  privateMessage.FormatPrivateMessageText()));
+            tokens.Add(new Token("PrivateMessage.Subject", privateMessage.Subject));
+            tokens.Add(new Token("PrivateMessage.Text",  privateMessage.FormatPrivateMessageText(), true));
         }
 
         public virtual void AddBackInStockTokens(IList<Token> tokens, BackInStockSubscription subscription)
         {
-            tokens.Add(new Token("BackInStockSubscription.ProductName", HttpUtility.HtmlEncode(subscription.ProductVariant.Product.Name)));
+            tokens.Add(new Token("BackInStockSubscription.ProductName", subscription.ProductVariant.FullProductName));
         }
 
         /// <summary>

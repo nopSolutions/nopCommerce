@@ -512,6 +512,7 @@ namespace Nop.Web.Controllers
                         ForumPostCount = post.Customer.GetAttribute<int>(SystemCustomerAttributeNames.ForumPostCount),
                         ShowCustomersJoinDate = _customerSettings.ShowCustomersJoinDate,
                         CustomerJoinDate = post.Customer.CreatedOnUtc,
+                        AllowPrivateMessages = _forumSettings.AllowPrivateMessages,
                         SignaturesEnabled = _forumSettings.SignaturesEnabled,
                         FormattedSignature = post.Customer.GetAttribute<string>(SystemCustomerAttributeNames.Signature).FormatForumSignatureText(),
                     };

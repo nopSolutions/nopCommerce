@@ -63,8 +63,8 @@ namespace Nop.Services.Messages
             var body = messageTemplate.GetLocalized((mt) => mt.Body, languageId);
 
             //Replace subject and body tokens 
-            var subjectReplaced = _tokenizer.Replace(subject, tokens);
-            var bodyReplaced = _tokenizer.Replace(body, tokens);
+            var subjectReplaced = _tokenizer.Replace(subject, tokens, false);
+            var bodyReplaced = _tokenizer.Replace(body, tokens, true);
             
             var email = new QueuedEmail()
             {
@@ -631,7 +631,7 @@ namespace Nop.Services.Messages
                 return 0;
 
             var customerProductTokens = GenerateTokens(customer, product);
-            customerProductTokens.Add(new Token("EmailAFriend.PersonalMessage", personalMessage));
+            customerProductTokens.Add(new Token("EmailAFriend.PersonalMessage", personalMessage, true));
             customerProductTokens.Add(new Token("EmailAFriend.Email", customerEmail));
 
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
@@ -664,9 +664,7 @@ namespace Nop.Services.Messages
                 return 0;
 
             var customerTokens = GenerateTokens(customer);
-            //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
-            customerTokens.Add(new Token("Wishlist.URLForCustomer", string.Format("{0}wishlist/{1}", _webHelper.GetStoreLocation(false), customer.CustomerGuid)));
-            customerTokens.Add(new Token("Wishlist.PersonalMessage", personalMessage));
+            customerTokens.Add(new Token("Wishlist.PersonalMessage", personalMessage, true));
             customerTokens.Add(new Token("Wishlist.Email", customerEmail));
 
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);

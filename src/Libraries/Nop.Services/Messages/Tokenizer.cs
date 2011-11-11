@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Web;
 using Nop.Core.Domain.Messages;
 
 namespace Nop.Services.Messages
 {
     public partial class Tokenizer:ITokenizer
     {
-        private readonly StringComparison stringComparizon;
+        private readonly StringComparison _stringComparizon;
 
         /// <summary>
         /// Ctor
@@ -14,7 +15,7 @@ namespace Nop.Services.Messages
         /// <param name="settings">Message templates settings</param>
         public Tokenizer(MessageTemplatesSettings settings)
         {
-            stringComparizon = settings.CaseInvariantReplacement ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+            _stringComparizon = settings.CaseInvariantReplacement ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
         }
 
         /// <summary>
@@ -22,8 +23,9 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="template">The template with token keys inside</param>
         /// <param name="tokens">The sequence of tokens to use</param>
+        /// <param name="htmlEncode">The value indicating whether tokens should be HTML encoded</param>
         /// <returns>Text with all token keys replaces by token value</returns>
-        public string Replace(string template, IEnumerable<Token> tokens)
+        public string Replace(string template, IEnumerable<Token> tokens, bool htmlEncode)
         {
             if (string.IsNullOrWhiteSpace(template))
                 throw new ArgumentNullException("template");
@@ -32,14 +34,20 @@ namespace Nop.Services.Messages
                 throw new ArgumentNullException("tokens");
 
             foreach (var token in tokens)
-                template = Replace(template, String.Format(@"%{0}%", token.Key),  token.Value);
+            {
+                string tokenValue = token.Value;
+                //do not encode URLs
+                if (htmlEncode && !token.NeverHtmlEncoded)
+                    tokenValue = HttpUtility.HtmlEncode(tokenValue);
+                template = Replace(template, String.Format(@"%{0}%", token.Key), tokenValue);
+            }
             return template;
 
         }
 
         private string Replace(string original, string pattern, string replacement)
         {
-            if (stringComparizon == StringComparison.Ordinal)
+            if (_stringComparizon == StringComparison.Ordinal)
             {
                 return original.Replace(pattern, replacement);
             }
@@ -49,7 +57,7 @@ namespace Nop.Services.Messages
                 count = position0 = position1 = 0;
                 int inc = (original.Length / pattern.Length) * (replacement.Length - pattern.Length);
                 char[] chars = new char[original.Length + Math.Max(0, inc)];
-                while ((position1 = original.IndexOf(pattern, position0, stringComparizon)) != -1)
+                while ((position1 = original.IndexOf(pattern, position0, _stringComparizon)) != -1)
                 {
                     for (int i = position0; i < position1; ++i)
                         chars[count++] = original[i];

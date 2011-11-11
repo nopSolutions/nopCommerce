@@ -137,8 +137,8 @@ namespace Nop.Services.Messages
                 _messageTokenProvider.AddStoreTokens(tokens);
                 _messageTokenProvider.AddNewsLetterSubscriptionTokens(tokens, subscription);
 
-                string subject = _tokenizer.Replace(campaign.Subject, tokens);
-                string body = _tokenizer.Replace(campaign.Body, tokens);
+                string subject = _tokenizer.Replace(campaign.Subject, tokens, false);
+                string body = _tokenizer.Replace(campaign.Body, tokens, true);
 
                 var email = new QueuedEmail()
                 {

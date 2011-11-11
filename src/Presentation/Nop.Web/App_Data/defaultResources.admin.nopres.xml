@@ -2839,6 +2839,9 @@
 											<LocaleResource Name="Button">
 												<Value>The email address to which you want to send your test email.</Value>
 											</LocaleResource>
+											<LocaleResource Name="Hint">
+												<Value>Send test email to ensure that everything is properly configured.</Value>
+											</LocaleResource>
 										</Children>
 									</LocaleResource>
 								</Children>

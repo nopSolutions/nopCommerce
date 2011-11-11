@@ -25,11 +25,10 @@ namespace Nop.Web.Framework
                 //do not cache resources because it causes issues when you have multiple languages
                 //if (!_resourceValueRetrived)
                 //{
-                    _resourceValue = EngineContext.Current.Resolve<ILocalizationService>().GetResource(ResourceKey,
-                                                                                     EngineContext.Current.Resolve
-                                                                                         <IWorkContext>().
-                                                                                         WorkingLanguage.Id, true,
-                                                                                     ResourceKey);
+                var langId = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Id;
+                    _resourceValue = EngineContext.Current
+                        .Resolve<ILocalizationService>()
+                        .GetResource(ResourceKey, langId, true, ResourceKey);
                 //    _resourceValueRetrived = true;
                 //}
                 return _resourceValue;

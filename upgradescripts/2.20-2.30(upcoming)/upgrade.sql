@@ -329,6 +329,9 @@ set @resources='
     <LocaleResource Name="Admin.Catalog.Products.Variants.Fields.GTIN.Hint">
         <Value>Enter global trade item number (GTIN). These identifiers include UPC (in North America), EAN (in Europe), JAN (in Japan), and ISBN (for books).</Value>
     </LocaleResource>
+    <LocaleResource Name="Admin.Configuration.EmailAccounts.Fields.SendTestEmailTo.Hint">
+        <Value>Send test email to ensure that everything is properly configured.</Value>
+    </LocaleResource>
 </Language>
 '
 

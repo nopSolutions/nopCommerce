@@ -135,10 +135,10 @@ namespace Nop.Web.Framework
                 var resourceDisplayName = value as NopResourceDisplayName;
                 if (resourceDisplayName != null && displayHint)
                 {
+                    var langId = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Id;
                     hintResource =
-                        EngineContext.Current.Resolve<ILocalizationService>().GetResource(
-                            resourceDisplayName.ResourceKey + ".Hint",
-                            EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Id);
+                        EngineContext.Current.Resolve<ILocalizationService>()
+                        .GetResource(resourceDisplayName.ResourceKey + ".Hint", langId);
 
                     result.Append(helper.Hint(hintResource).ToHtmlString());
                 }
