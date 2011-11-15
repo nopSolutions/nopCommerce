@@ -731,6 +731,8 @@ namespace Nop.Services.Catalog
             if (productVariant == null)
                 throw new ArgumentNullException("productVariant");
 
+            var prevStockQuantity = productVariant.StockQuantity;
+
             switch (productVariant.ManageInventoryMethod)
             {
                 case ManageInventoryMethod.DontManageStock:
@@ -820,6 +822,18 @@ namespace Nop.Services.Catalog
                 default:
                     break;
             }
+
+            //TODO send back in stock notifications?
+            //if (productVariant.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
+            //    productVariant.BackorderMode == BackorderMode.NoBackorders &&
+            //    productVariant.AllowBackInStockSubscriptions &&
+            //    productVariant.StockQuantity > 0 &&
+            //    prevStockQuantity <= 0 &&
+            //    productVariant.Published &&
+            //    !productVariant.Deleted)
+            //{
+            //    //_backInStockSubscriptionService.SendNotificationsToSubscribers(productVariant);
+            //}
         }
 
         /// <summary>
