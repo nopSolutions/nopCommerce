@@ -941,6 +941,9 @@
 			<LocaleResource Name="MinOrderTotalAmount">
 				<Value>Minimum order total amount is {0}</Value>
 			</LocaleResource>
+			<LocaleResource Name="NewAddress">
+				<Value>New Address</Value>
+			</LocaleResource>
 			<LocaleResource Name="NextButton">
 				<Value>Next</Value>
 			</LocaleResource>

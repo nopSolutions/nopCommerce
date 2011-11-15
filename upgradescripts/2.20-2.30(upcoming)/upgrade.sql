@@ -332,6 +332,9 @@ set @resources='
     <LocaleResource Name="Admin.Configuration.EmailAccounts.Fields.SendTestEmailTo.Hint">
         <Value>Send test email to ensure that everything is properly configured.</Value>
     </LocaleResource>
+    <LocaleResource Name="Checkout.NewAddress">
+        <Value>New Address</Value>
+    </LocaleResource>
 </Language>
 '
 

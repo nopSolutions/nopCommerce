@@ -28,8 +28,7 @@
                                 }
                                 <option value="@(address.Id)">@(addressLine)</option>
                             }
-                            <option value="" @(Model.NewAddressPreselected ? " selected=\"selected\"" : null)>New
-                                Address</option>
+                            <option value="" @(Model.NewAddressPreselected ? " selected=\"selected\"" : null)>@T("Checkout.NewAddress")</option>
                         </select>
                     </div>
                 </div>
