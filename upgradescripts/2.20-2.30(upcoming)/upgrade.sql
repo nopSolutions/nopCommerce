@@ -1084,3 +1084,11 @@ BEGIN
 	VALUES (N'ordersettings.onepagecheckoutdisplayordertotalsonpaymentinfotab', N'false')
 END
 GO
+
+--new setting (PDF font path)
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'pdfsettings.fontfilename')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'pdfsettings.fontfilename', N'arialuni.ttf')
+END
+GO
