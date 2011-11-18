@@ -500,6 +500,8 @@ namespace Nop.Web.Controllers
             model.Description = productVariant.GetLocalized(x => x.Description);
             model.ShowManufacturerPartNumber = _catalogSettings.ShowManufacturerPartNumber;
             model.ManufacturerPartNumber = productVariant.ManufacturerPartNumber;
+            model.ShowGtin = _catalogSettings.ShowGtin;
+            model.Gtin = productVariant.Gtin;
             model.StockAvailablity = productVariant.FormatStockMessage(_localizationService);
             model.PictureModel.ImageUrl = _pictureService.GetPictureUrl(productVariant.PictureId, _mediaSetting.ProductVariantPictureSize, false);
             model.PictureModel.Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), model.Name);

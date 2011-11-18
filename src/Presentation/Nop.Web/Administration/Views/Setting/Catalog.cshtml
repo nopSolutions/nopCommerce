@@ -120,6 +120,15 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ShowGtin):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ShowGtin)
+                @Html.ValidationMessageFor(model => model.ShowGtin)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.NopLabelFor(model => model.AllowProductSorting):
             </td>
             <td class="adminData">

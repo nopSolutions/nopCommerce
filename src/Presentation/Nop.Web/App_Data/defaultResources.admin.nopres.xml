@@ -3314,6 +3314,14 @@
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
+									<LocaleResource Name="ShowGtin">
+										<Value>Show GTIN</Value>
+										<Children>
+											<LocaleResource Name="Hint">
+												<Value>Check to show GTIN in public store.</Value>
+											</LocaleResource>
+										</Children>
+									</LocaleResource>
 									<LocaleResource Name="AllowProductSorting">
 										<Value>Allow product sorting</Value>
 										<Children>

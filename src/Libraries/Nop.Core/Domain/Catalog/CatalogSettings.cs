@@ -16,6 +16,11 @@ namespace Nop.Core.Domain.Catalog
         public bool ShowManufacturerPartNumber { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to display GTIN of a product
+        /// </summary>
+        public bool ShowGtin { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether product sorting is enabled
         /// </summary>
         public bool AllowProductSorting { get; set; }

@@ -6,19 +6,29 @@
         @T("Products.Sku")<text>:</text>
         @Model.Sku
     </div>
+    <div class="clear">
+    </div>
 }
-<div class="clear">
-</div>
-@*MPN*@
+@*Manufacturer part number*@
 @if (!String.IsNullOrWhiteSpace(Model.ManufacturerPartNumber) && Model.ShowManufacturerPartNumber)
 {
     <div class="manufacturerpartnumber">
         @T("Products.ManufacturerPartNumber")<text>:</text>
         @Model.ManufacturerPartNumber
     </div>
+    <div class="clear">
+    </div>
 }
-<div class="clear">
-</div>
+@*GTIN*@
+@if (!String.IsNullOrWhiteSpace(Model.Gtin) && Model.ShowGtin)
+{
+    <div class="gtin">
+        @T("Products.GTIN")<text>:</text>
+        @Model.Gtin
+    </div>
+    <div class="clear">
+    </div>
+}
 @*Stock availability*@
 @if (!String.IsNullOrWhiteSpace(Model.StockAvailablity))
 {

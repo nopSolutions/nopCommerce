@@ -83,14 +83,15 @@ namespace Nop.Web.Models.Catalog
             public string Name { get; set; }
 
             public bool ShowSku { get; set; }
-
             public string Sku { get; set; }
 
             public string Description { get; set; }
 
             public bool ShowManufacturerPartNumber { get; set; }
-
             public string ManufacturerPartNumber { get; set; }
+
+            public bool ShowGtin { get; set; }
+            public string Gtin { get; set; }
 
             public string DownloadSampleUrl { get; set; }
 

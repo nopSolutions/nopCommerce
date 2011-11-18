@@ -2969,6 +2969,9 @@
 					</LocaleResource>
 				</Children>
 			</LocaleResource>
+			<LocaleResource Name="GTIN">
+				<Value>GTIN</Value>
+			</LocaleResource>
 			<LocaleResource Name="InclTaxSuffix">
 				<Value>{0} incl tax</Value>
 			</LocaleResource>

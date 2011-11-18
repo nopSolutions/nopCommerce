@@ -335,6 +335,15 @@ set @resources='
     <LocaleResource Name="Checkout.NewAddress">
         <Value>New Address</Value>
     </LocaleResource>
+    <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowGtin">
+        <Value>Show GTIN</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowGtin.Hint">
+        <Value>Check to show GTIN in public store.</Value>
+    </LocaleResource>
+    <LocaleResource Name="Products.GTIN">
+        <Value>GTIN</Value>
+    </LocaleResource>
 </Language>
 '
 
@@ -1090,5 +1099,13 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'pdfsettings.fontfilename
 BEGIN
 	INSERT [Setting] ([Name], [Value])
 	VALUES (N'pdfsettings.fontfilename', N'arialuni.ttf')
+END
+GO
+
+--new setting (display GTIN)
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.showgtin')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'catalogsettings.showgtin', N'false')
 END
 GO

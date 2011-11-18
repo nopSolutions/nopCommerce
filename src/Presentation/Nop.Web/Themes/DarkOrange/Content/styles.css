@@ -607,7 +607,7 @@ ul.languagelist li:hover{cursor:pointer;}
 .product-details-info .picture{float:left;width:300px;margin-top:25px;margin-bottom:15px;}
 .product-details-info .overview{float:right;width:230px;margin-right:15px;margin-top:25px;padding:5px;border:dashed 1px #d3d3d3;}
 .product-details-info .overview .productname{color:#f93;font-size:1.3em;margin-bottom:.3em;}
-.product-details-info .overview .shortdescription,.product-details-info .overview .manufacturers,.product-details-info .overview .sku,.product-details-info .overview .manufacturerpartnumber,.product-details-info .overview .stock{color:#555;margin-bottom:.3em;font-size:1.1em;}
+.product-details-info .overview .shortdescription,.product-details-info .overview .manufacturers,.product-details-info .overview .sku,.product-details-info .overview .manufacturerpartnumber,.product-details-info .overview .stock,.product-details-info .overview .gtin{color:#555;margin-bottom:.3em;font-size:1.1em;}
 .backinstocksubscription{margin-top:10px;margin-bottom:10px;}
 .backinstocksubscription a.subscribebutton{text-decoration:underline;}
 .product-details-info .fulldescription{border-top:solid 1px #d3d3d3;clear:both;color:#555;margin-bottom:.3em;}
@@ -647,7 +647,7 @@ ul.languagelist li:hover{cursor:pointer;}
 .product-variant-line .price .oldProductPrice{color:red;text-decoration:line-through;}
 .product-variant-line .add-info{padding-top:10px;}
 .product-variant-line .attributes{}
-.product-variant-line .stock,.product-variant-line .sku,.product-variant-line .manufacturerpartnumber{}
+.product-variant-line .stock,.product-variant-line .sku,.product-variant-line .manufacturerpartnumber,.product-variant-line .gtin{}
 .product-variant-line .giftCard{}
 .product-variant-line .giftCard dt{clear:left;float:left;width:150px;}
 .product-details-page .error{font-weight:700;color:Red;}

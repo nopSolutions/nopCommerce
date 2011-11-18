@@ -10,6 +10,9 @@ namespace Nop.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ShowManufacturerPartNumber")]
         public bool ShowManufacturerPartNumber { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ShowGtin")]
+        public bool ShowGtin { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.AllowProductSorting")]
         public bool AllowProductSorting { get; set; }
 
