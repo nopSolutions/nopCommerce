@@ -4452,7 +4452,7 @@ namespace Nop.Services.Installation
                     Enabled = true,
                     LetterPageSizeEnabled = false,
                     RenderOrderNotes = true,
-                    FontFileName = "arialuni.ttf",
+                    FontFileName = "FreeSerif.ttf",
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<CommonSettings>>()

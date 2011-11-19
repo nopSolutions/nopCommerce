@@ -1098,7 +1098,7 @@ GO
 IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'pdfsettings.fontfilename')
 BEGIN
 	INSERT [Setting] ([Name], [Value])
-	VALUES (N'pdfsettings.fontfilename', N'arialuni.ttf')
+	VALUES (N'pdfsettings.fontfilename', N'FreeSerif.ttf')
 END
 GO
 

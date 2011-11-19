@@ -79,8 +79,8 @@ namespace Nop.Services.Common
         protected virtual Font GetFont()
         {
             //nopCommerce supports unicode characters
-            //nopCommerce uses Arial Unicode MS font by default (~/App_Data/Pdf/ARIALUNI.TTF file)
-            //This font is provided along with the solution because it cannot be read from c:\windows\fonts\ directory in medium trust
+            //nopCommerce uses Free Serif font by default (~/App_Data/Pdf/FreeSerif.ttf file)
+            //It was downloaded from http://savannah.gnu.org/projects/freefont
             string fontPath = Path.Combine(HostingEnvironment.MapPath("~/App_Data/Pdf/"), _pdfSettings.FontFileName);
             var baseFont = BaseFont.CreateFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
             var font = new Font(baseFont, 10, Font.NORMAL);
