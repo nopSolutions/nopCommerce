@@ -60,7 +60,7 @@ namespace Nop.Web.Controllers
                     {
                         if (!subscription.Active)
                         {
-                            _workflowMessageService.SendNewsLetterSubscriptionActivationMessage(subscription, _workContext.WorkingCurrency.Id);
+                            _workflowMessageService.SendNewsLetterSubscriptionActivationMessage(subscription, _workContext.WorkingLanguage.Id);
                         }
                         result = _localizationService.GetResource("Newsletter.SubscribeEmailSent");
                     }

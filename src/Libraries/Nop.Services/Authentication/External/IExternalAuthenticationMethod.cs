@@ -1,14 +1,12 @@
 //Contributor:  Nicholas Mayne
 
-using System.Collections.Generic;
 using System.Web.Routing;
-using Nop.Core.Domain.Cms;
 using Nop.Core.Plugins;
 
 namespace Nop.Services.Authentication.External
 {
     /// <summary>
-    /// Provides an interface for creating tax providers
+    /// Provides an interface for creating external authentication methods
     /// </summary>
     public partial interface IExternalAuthenticationMethod : IPlugin
     {
