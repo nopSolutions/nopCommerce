@@ -18,7 +18,7 @@ namespace Nop.Plugin.ExchangeRate.McExchange
         public IList<Nop.Core.Domain.Directory.ExchangeRate> GetCurrencyLiveRates(string exchangeRateCurrencyCode)
         {
             var exchangeRates = new List<Nop.Core.Domain.Directory.ExchangeRate>();
-            string url = string.Format("http://themoneyconverter.com/{0}/rss.xml", exchangeRateCurrencyCode);
+            string url = string.Format("http://themoneyconverter.com/rss-feed/{0}/rss.xml", exchangeRateCurrencyCode);
 
             HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;
             using (WebResponse response = request.GetResponse())
