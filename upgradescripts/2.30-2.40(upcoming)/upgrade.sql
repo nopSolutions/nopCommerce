@@ -5,9 +5,12 @@ declare @resources xml
 --a resource will be delete if its value is empty
 set @resources='
 <Language>
-  <LocaleResource Name="">
-        <Value></Value>
-    </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.IgnoreDiscounts.Hint">
+    <Value>Check to ignore discounts (sitewide). It can significantly improve performance.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.IgnoreFeaturedProducts.Hint">
+    <Value>Check to ignore featured products (sitewide). It can significantly improve performance.</Value>
+  </LocaleResource>  
 </Language>
 '
 

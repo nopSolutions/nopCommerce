@@ -3542,7 +3542,7 @@
 										<Value>Ignore discounts (sitewide)</Value>
 										<Children>
 											<LocaleResource Name="Hint">
-												<Value>Check to ignore tier prices (sitewide). It can significantly improve performance.</Value>
+												<Value>Check to ignore discounts (sitewide). It can significantly improve performance.</Value>
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
@@ -3550,7 +3550,7 @@
 										<Value>Ignore featured products (sitewide)</Value>
 										<Children>
 											<LocaleResource Name="Hint">
-												<Value>Check to ignore tier prices (sitewide). It can significantly improve performance.</Value>
+												<Value>Check to ignore featured products (sitewide). It can significantly improve performance.</Value>
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
