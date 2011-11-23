@@ -929,6 +929,7 @@ namespace Nop.Services.ExportImport
                 //Create Headers and format them
                 var properties = new string[]
                     {
+                        //order properties
                         "OrderId",
                         "OrderGuid",
                         "CustomerId",
@@ -958,6 +959,32 @@ namespace Nop.Services.ExportImport
                         "ShippingRateComputationMethodSystemName",
                         "VatNumber",
                         "CreatedOnUtc",
+                        //billing address
+                        "BillingFirstName",
+                        "BillingLastName",
+                        "BillingEmail",
+                        "BillingCompany",
+                        "BillingCountry",
+                        "BillingStateProvince",
+                        "BillingCity",
+                        "BillingAddress1",
+                        "BillingAddress2",
+                        "BillingZipPostalCode",
+                        "BillingPhoneNumber",
+                        "BillingFaxNumber",
+                        //shipping address
+                        "ShippingFirstName",
+                        "ShippingLastName",
+                        "ShippingEmail",
+                        "ShippingCompany",
+                        "ShippingCountry",
+                        "ShippingStateProvince",
+                        "ShippingCity",
+                        "ShippingAddress1",
+                        "ShippingAddress2",
+                        "ShippingZipPostalCode",
+                        "ShippingPhoneNumber",
+                        "ShippingFaxNumber",
                     };
                 for (int i = 0; i < properties.Length; i++)
                 {
@@ -973,6 +1000,7 @@ namespace Nop.Services.ExportImport
                     {
                         int col = 1;
 
+                        //order properties
                         worksheet.Cells[row, col].Value = order.Id;
                         col++;
 
@@ -1057,6 +1085,82 @@ namespace Nop.Services.ExportImport
                         worksheet.Cells[row, col].Value = order.CreatedOnUtc.ToOADate();
                         col++;
 
+                        
+                        //billing address
+                        worksheet.Cells[row, col].Value = order.BillingAddress != null ? order.BillingAddress.FirstName : "";
+                        col++;
+                        
+                        worksheet.Cells[row, col].Value = order.BillingAddress != null ? order.BillingAddress.LastName : "";
+                        col++;
+                        
+                        worksheet.Cells[row, col].Value = order.BillingAddress != null ? order.BillingAddress.Email : "";
+                        col++;
+                        
+                        worksheet.Cells[row, col].Value = order.BillingAddress != null ? order.BillingAddress.Company : "";
+                        col++;
+                        
+                        worksheet.Cells[row, col].Value = order.BillingAddress != null && order.BillingAddress.Country != null ? order.BillingAddress.Country.Name : "";
+                        col++;
+                        
+                        worksheet.Cells[row, col].Value = order.BillingAddress != null && order.BillingAddress.StateProvince != null ? order.BillingAddress.StateProvince.Name : "";
+                        col++;
+                        
+                        worksheet.Cells[row, col].Value = order.BillingAddress != null ? order.BillingAddress.City : "";
+                        col++;
+                        
+                        worksheet.Cells[row, col].Value = order.BillingAddress != null ? order.BillingAddress.Address1 : "";
+                        col++;
+                        
+                        worksheet.Cells[row, col].Value = order.BillingAddress != null ? order.BillingAddress.Address2 : "";
+                        col++;
+                        
+                        worksheet.Cells[row, col].Value = order.BillingAddress != null ? order.BillingAddress.ZipPostalCode : "";
+                        col++;
+                        
+                        worksheet.Cells[row, col].Value = order.BillingAddress != null ? order.BillingAddress.PhoneNumber : "";
+                        col++;
+
+                        worksheet.Cells[row, col].Value = order.BillingAddress != null ? order.BillingAddress.FaxNumber : "";
+                        col++;
+
+                        //shipping address
+                        worksheet.Cells[row, col].Value = order.ShippingAddress != null ? order.ShippingAddress.FirstName : "";
+                        col++;
+                        
+                        worksheet.Cells[row, col].Value = order.ShippingAddress != null ? order.ShippingAddress.LastName : "";
+                        col++;
+                        
+                        worksheet.Cells[row, col].Value = order.ShippingAddress != null ? order.ShippingAddress.Email : "";
+                        col++;
+                        
+                        worksheet.Cells[row, col].Value = order.ShippingAddress != null ? order.ShippingAddress.Company : "";
+                        col++;
+                        
+                        worksheet.Cells[row, col].Value = order.ShippingAddress != null && order.ShippingAddress.Country != null ? order.ShippingAddress.Country.Name : "";
+                        col++;
+                        
+                        worksheet.Cells[row, col].Value = order.ShippingAddress != null && order.ShippingAddress.StateProvince != null ? order.ShippingAddress.StateProvince.Name : "";
+                        col++;
+                        
+                        worksheet.Cells[row, col].Value = order.ShippingAddress != null ? order.ShippingAddress.City : "";
+                        col++;
+                        
+                        worksheet.Cells[row, col].Value = order.ShippingAddress != null ? order.ShippingAddress.Address1 : "";
+                        col++;
+                        
+                        worksheet.Cells[row, col].Value = order.ShippingAddress != null ? order.ShippingAddress.Address2 : "";
+                        col++;
+                        
+                        worksheet.Cells[row, col].Value = order.ShippingAddress != null ? order.ShippingAddress.ZipPostalCode : "";
+                        col++;
+                        
+                        worksheet.Cells[row, col].Value = order.ShippingAddress != null ? order.ShippingAddress.PhoneNumber : "";
+                        col++;
+
+                        worksheet.Cells[row, col].Value = order.ShippingAddress != null ? order.ShippingAddress.FaxNumber : "";
+                        col++;
+                        
+                        //next row
                         row++;
                     }
 
