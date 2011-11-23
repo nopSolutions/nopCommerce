@@ -190,11 +190,13 @@ namespace Nop.Services.Messages
         /// <param name="forumPost">Forum post</param>
         /// <param name="forumTopic">Forum Topic</param>
         /// <param name="forum">Forum</param>
+        /// <param name="friendlyForumTopicPageIndex">Friendly (starts with 1) forum topic page to use for URL generation</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
         int SendNewForumPostMessage(Customer customer,
             ForumPost forumPost, ForumTopic forumTopic,
-            Forum forum, int languageId);
+            Forum forum, int friendlyForumTopicPageIndex, 
+            int languageId);
 
         /// <summary>
         /// Sends a private message notification

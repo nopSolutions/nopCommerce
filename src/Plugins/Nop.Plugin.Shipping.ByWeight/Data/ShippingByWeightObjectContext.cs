@@ -55,7 +55,7 @@ namespace Nop.Plugin.Shipping.ByWeight.Data
         /// </summary>
         public void Uninstall()
         {
-            //TODO don't drop the table if it already exists
+            //TODO don't drop the table if it does not exist
             var dbScript = "DROP TABLE ShippingByWeight";
             Database.ExecuteSqlCommand(dbScript);
             SaveChanges();

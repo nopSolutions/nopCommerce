@@ -35,7 +35,8 @@ namespace Nop.Services.Messages
 
         void AddForumTokens(IList<Token> tokens, Forum forum);
 
-        void AddForumTopicTokens(IList<Token> tokens, ForumTopic forumTopic);
+        void AddForumTopicTokens(IList<Token> tokens, ForumTopic forumTopic,
+            int? friendlyForumTopicPageIndex = null, int? appendedPostIdentifierAnchor = null);
 
         void AddForumPostTokens(IList<Token> tokens, ForumPost forumPost);
 

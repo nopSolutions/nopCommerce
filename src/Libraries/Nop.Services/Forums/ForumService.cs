@@ -873,6 +873,10 @@ namespace Nop.Services.Forums
 
                 var languageId = _workContext.WorkingLanguage.Id;
 
+                int friendlyTopicPageIndex = CalculateTopicPageIndex(forumPost.TopicId,
+                    _forumSettings.PostsPageSize > 0 ? _forumSettings.PostsPageSize : 10, 
+                    forumPost.Id) + 1;
+
                 foreach (ForumSubscription subscription in subscriptions)
                 {
                     if (subscription.CustomerId == forumPost.CustomerId)
@@ -883,7 +887,7 @@ namespace Nop.Services.Forums
                     if (!String.IsNullOrEmpty(subscription.Customer.Email))
                     {
                         _workflowMessageService.SendNewForumPostMessage(subscription.Customer, forumPost,
-                            forumTopic, forum, languageId);
+                            forumTopic, forum, friendlyTopicPageIndex, languageId);
                     }
                 }
             }

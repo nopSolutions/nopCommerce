@@ -540,10 +540,17 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("ProductVariant.StockQuantity", productVariant.StockQuantity.ToString()));
         }
 
-        public virtual void AddForumTopicTokens(IList<Token> tokens, ForumTopic forumTopic)
+        public virtual void AddForumTopicTokens(IList<Token> tokens, ForumTopic forumTopic, 
+            int? friendlyForumTopicPageIndex = null, int? appendedPostIdentifierAnchor = null)
         {
             //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
-            var topicUrl = string.Format("{0}boards/topic/{1}/{2}", _webHelper.GetStoreLocation(false), forumTopic.Id, forumTopic.GetSeName());
+            string topicUrl = null;
+            if (friendlyForumTopicPageIndex.HasValue && friendlyForumTopicPageIndex.Value > 1)
+                topicUrl = string.Format("{0}boards/topic/{1}/{2}/page/{3}", _webHelper.GetStoreLocation(false), forumTopic.Id, forumTopic.GetSeName(), friendlyForumTopicPageIndex.Value);
+            else
+                topicUrl = string.Format("{0}boards/topic/{1}/{2}", _webHelper.GetStoreLocation(false), forumTopic.Id, forumTopic.GetSeName());
+            if (appendedPostIdentifierAnchor.HasValue && appendedPostIdentifierAnchor.Value > 0)
+                topicUrl = string.Format("{0}#{1}", topicUrl, appendedPostIdentifierAnchor.Value);
             tokens.Add(new Token("Forums.TopicURL", topicUrl, true));
             tokens.Add(new Token("Forums.TopicName", forumTopic.Subject));
         }

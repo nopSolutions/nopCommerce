@@ -464,9 +464,20 @@ namespace Nop.Web.Controllers
 
             if (forumTopic != null)
             {
+                //load posts
+                var posts = _forumService.GetAllPosts(forumTopic.Id, 0, string.Empty,
+                    page - 1, _forumSettings.PostsPageSize);
+                //if not posts loaded, redirect to the first page
+                if (posts.Count == 0 && page > 1)
+                {
+                    return RedirectToRoute("TopicSlug", new {id = forumTopic.Id, slug = forumTopic.GetSeName()});
+                }
+
+                //update view count
                 forumTopic.Views += 1;
                 _forumService.UpdateTopic(forumTopic);
 
+                //prepare model
                 var model = new ForumTopicPageModel();
                 model.Id = forumTopic.Id;
                 model.Subject= forumTopic.Subject;
@@ -488,8 +499,6 @@ namespace Nop.Web.Controllers
                         model.WatchTopicText = _localizationService.GetResource("Forum.UnwatchTopic");
                     }
                 }
-                var posts = _forumService.GetAllPosts(forumTopic.Id, 0, string.Empty,
-                    page - 1, _forumSettings.PostsPageSize);
                 model.PostsPageIndex = posts.PageIndex;
                 model.PostsPageSize = posts.PageSize;
                 model.PostsTotalRecords = posts.TotalCount;
