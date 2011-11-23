@@ -1619,14 +1619,14 @@ namespace Nop.Web.Controllers
         }
 
         //recently viewed products
-        public ActionResult RecentlyViewedProducts(int? productThumbPictureSize)
+        public ActionResult RecentlyViewedProducts()
         {
             var model = new List<ProductModel>();
             if (_catalogSettings.RecentlyViewedProductsEnabled)
             {
                 var products = _recentlyViewedProductsService.GetRecentlyViewedProducts(_catalogSettings.RecentlyViewedProductsNumber);
                 foreach (var product in products)
-                    model.Add(PrepareProductOverviewModel(product, true, true, productThumbPictureSize));
+                    model.Add(PrepareProductOverviewModel(product));
             }
             return View(model);
         }
@@ -1645,7 +1645,7 @@ namespace Nop.Web.Controllers
         }
 
         //recently added products
-        public ActionResult RecentlyAddedProducts(int? productThumbPictureSize)
+        public ActionResult RecentlyAddedProducts()
         {
             var model = new List<ProductModel>();
             if (_catalogSettings.RecentlyAddedProductsEnabled)
@@ -1654,7 +1654,7 @@ namespace Nop.Web.Controllers
                     null, 0, null, false, _workContext.WorkingLanguage.Id,
                     null, ProductSortingEnum.CreatedOn, 0, _catalogSettings.RecentlyAddedProductsNumber);
                 foreach (var product in products)
-                    model.Add(PrepareProductOverviewModel(product, true, true, productThumbPictureSize));
+                    model.Add(PrepareProductOverviewModel(product));
             }
             return View(model);
         }
