@@ -49,10 +49,9 @@ namespace Nop.Plugin.Misc.WebServices
         /// <param name="routeValues">Route values</param>
         public void GetConfigurationRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues)
         {
-            //configuration is not required
-            actionName = null;
-            controllerName = null;
-            routeValues = null;
+            actionName = "Configure";
+            controllerName = "MiscWebServices";
+            routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Misc.WebServices.Controllers.Controllers" }, { "area", null } };
         }
 
         #endregion
