@@ -254,26 +254,7 @@ BEGIN
 
 	--return products (returned properties should be synchronized with 'Product' entity)
 	SELECT  
-		p.Id,
-		p.Name,
-		p.ShortDescription,
-		p.FullDescription,
-		p.AdminComment,
-		p.ProductTemplateId,
-		p.ShowOnHomePage,
-		p.MetaKeywords,
-		p.MetaDescription,
-		p.MetaTitle,
-		p.SeName,
-		p.AllowCustomerReviews,
-		p.ApprovedRatingSum,
-		p.NotApprovedRatingSum,
-		p.ApprovedTotalReviews,
-		p.NotApprovedTotalReviews,
-		p.Published,
-		p.Deleted,
-		p.CreatedOnUtc,
-		p.UpdatedOnUtc
+		p.*
 	FROM
 		#PageIndex [pi]
 		INNER JOIN Product p with (NOLOCK) on p.Id = [pi].[ProductId]
