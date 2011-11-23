@@ -306,7 +306,7 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        private ProductModel PrepareProductOverviewModel(Product product, bool preparePriceModel = true, bool preparePictureModel = true)
+        private ProductModel PrepareProductOverviewModel(Product product, bool preparePriceModel = true, bool preparePictureModel = true, int? productThumbPictureSize = null)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
@@ -320,11 +320,13 @@ namespace Nop.Web.Controllers
             //picture
             if (preparePictureModel)
             {
+                //If a size has been set in the view, we use it in priority
+                int pictureSize = productThumbPictureSize.HasValue ? productThumbPictureSize.Value : _mediaSetting.ProductThumbPictureSize;
                 var picture = product.GetDefaultProductPicture(_pictureService);
                 if (picture != null)
-                    model.DefaultPictureModel.ImageUrl = _pictureService.GetPictureUrl(picture, _mediaSetting.ProductThumbPictureSize, true);
+                    model.DefaultPictureModel.ImageUrl = _pictureService.GetPictureUrl(picture, pictureSize, true);
                 else
-                    model.DefaultPictureModel.ImageUrl = _pictureService.GetDefaultPictureUrl(_mediaSetting.ProductThumbPictureSize);
+                    model.DefaultPictureModel.ImageUrl = _pictureService.GetDefaultPictureUrl(pictureSize);
                 model.DefaultPictureModel.Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), model.Name);
                 model.DefaultPictureModel.AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), model.Name);
             }
@@ -1552,7 +1554,7 @@ namespace Nop.Web.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult RelatedProducts(int productId)
+        public ActionResult RelatedProducts(int productId, int? productThumbPictureSize)
         {
             var products = new List<Product>();
             foreach (var rp in _productService.GetRelatedProductsByProductId1(productId))
@@ -1568,12 +1570,12 @@ namespace Nop.Web.Controllers
             }
 
 
-            var model = products.Select(x => PrepareProductOverviewModel(x, false, true)).ToList();
+            var model = products.Select(x => PrepareProductOverviewModel(x, false, true, productThumbPictureSize)).ToList();
             return PartialView(model);
         }
 
         [ChildActionOnly]
-        public ActionResult ProductsAlsoPurchased(int productId)
+        public ActionResult ProductsAlsoPurchased(int productId, int? productThumbPictureSize)
         {
             if (!_catalogSettings.ProductsAlsoPurchasedEnabled)
                 return Content("");
@@ -1581,7 +1583,7 @@ namespace Nop.Web.Controllers
             var products = _orderReportService.GetProductsAlsoPurchasedById(productId,
                 _catalogSettings.ProductsAlsoPurchasedNumber);
 
-            var model = products.Select(x => PrepareProductOverviewModel(x, false, true)).ToList();
+            var model = products.Select(x => PrepareProductOverviewModel(x, false, true, productThumbPictureSize)).ToList();
 
             return PartialView(model);
         }
@@ -1605,45 +1607,45 @@ namespace Nop.Web.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult CrossSellProducts()
+        public ActionResult CrossSellProducts(int? productThumbPictureSize)
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
 
             var products = _productService.GetCrosssellProductsByShoppingCart(cart, _shoppingCartSettings.CrossSellsNumber);
-            var model = products.Select(x => PrepareProductOverviewModel(x))
+            var model = products.Select(x => PrepareProductOverviewModel(x, true, true, productThumbPictureSize))
             .ToList();
 
             return PartialView(model);
         }
 
         //recently viewed products
-        public ActionResult RecentlyViewedProducts()
+        public ActionResult RecentlyViewedProducts(int? productThumbPictureSize)
         {
             var model = new List<ProductModel>();
             if (_catalogSettings.RecentlyViewedProductsEnabled)
             {
                 var products = _recentlyViewedProductsService.GetRecentlyViewedProducts(_catalogSettings.RecentlyViewedProductsNumber);
                 foreach (var product in products)
-                    model.Add(PrepareProductOverviewModel(product));
+                    model.Add(PrepareProductOverviewModel(product, true, true, productThumbPictureSize));
             }
             return View(model);
         }
 
         [ChildActionOnly]
-        public ActionResult RecentlyViewedProductsBlock()
+        public ActionResult RecentlyViewedProductsBlock(int? productThumbPictureSize)
         {
             var model = new List<ProductModel>();
             if (_catalogSettings.RecentlyViewedProductsEnabled)
             {
                 var products = _recentlyViewedProductsService.GetRecentlyViewedProducts(_catalogSettings.RecentlyViewedProductsNumber);
                 foreach (var product in products)
-                    model.Add(PrepareProductOverviewModel(product, false, false));
+                    model.Add(PrepareProductOverviewModel(product, false, false, productThumbPictureSize));
             }
             return PartialView(model);
         }
 
         //recently added products
-        public ActionResult RecentlyAddedProducts()
+        public ActionResult RecentlyAddedProducts(int? productThumbPictureSize)
         {
             var model = new List<ProductModel>();
             if (_catalogSettings.RecentlyAddedProductsEnabled)
@@ -1652,7 +1654,7 @@ namespace Nop.Web.Controllers
                     null, 0, null, false, _workContext.WorkingLanguage.Id,
                     null, ProductSortingEnum.CreatedOn, 0, _catalogSettings.RecentlyAddedProductsNumber);
                 foreach (var product in products)
-                    model.Add(PrepareProductOverviewModel(product));
+                    model.Add(PrepareProductOverviewModel(product, true, true, productThumbPictureSize));
             }
             return View(model);
         }
@@ -1683,7 +1685,7 @@ namespace Nop.Web.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult HomepageBestSellers()
+        public ActionResult HomepageBestSellers(int? productThumbPictureSize)
         {
             if (!_catalogSettings.ShowBestsellersOnHomepage || _catalogSettings.NumberOfBestsellersOnHomepage == 0)
                 return Content("");
@@ -1720,20 +1722,20 @@ namespace Nop.Web.Controllers
                 UseSmallProductBox = _catalogSettings.UseSmallProductBoxOnHomePage,
             };
             model.Products = products
-                .Select(x => PrepareProductOverviewModel(x, !_catalogSettings.UseSmallProductBoxOnHomePage, true))
+                .Select(x => PrepareProductOverviewModel(x, !_catalogSettings.UseSmallProductBoxOnHomePage, true, productThumbPictureSize))
                 .ToList();
             return PartialView(model);
         }
 
         [ChildActionOnly]
-        public ActionResult HomepageProducts()
+        public ActionResult HomepageProducts(int? productThumbPictureSize)
         {
             var model = new HomePageProductsModel()
             {
                 UseSmallProductBox = _catalogSettings.UseSmallProductBoxOnHomePage
             };
             model.Products = _productService.GetAllProductsDisplayedOnHomePage()
-                .Select(x => PrepareProductOverviewModel(x, !_catalogSettings.UseSmallProductBoxOnHomePage, true))
+                .Select(x => PrepareProductOverviewModel(x, !_catalogSettings.UseSmallProductBoxOnHomePage, true, productThumbPictureSize))
                 .ToList();
 
             return PartialView(model);
