@@ -16,12 +16,15 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Html;
+using Nop.Core.Infrastructure;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Forums;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
+using Nop.Services.Media;
+using Nop.Services.Orders;
 using Nop.Services.Seo;
 
 namespace Nop.Services.Messages
@@ -116,14 +119,18 @@ namespace Nop.Services.Messages
                     productName = opv.ProductVariant.Product.GetLocalized(x => x.Name, languageId);
 
                 sb.AppendLine("<td style=\"padding: 0.6em 0.4em;text-align: left;\">" + HttpUtility.HtmlEncode(productName));
-                //TODO add download link
-                //if (IoC.Resolve<IOrderService>().IsDownloadAllowed(opv))
-                //{
-                //    string downloadUrl = string.Format("<a class=\"link\" href=\"{0}\" >{1}</a>", IoC.Resolve<IDownloadService>().GetDownloadUrl(opv), _localizationService.GetResource("Messages.Order.Products(s).Download", languageId));
-                //    sb.AppendLine("&nbsp;&nbsp;(");
-                //    sb.AppendLine(downloadUrl);
-                //    sb.AppendLine(")");
-                //}
+                //add download link
+                //TODO we should inject dependencies in contructor but now it causes circular references
+                var orderProcessingService = EngineContext.Current.Resolve<IOrderProcessingService>();
+                if (orderProcessingService.IsDownloadAllowed(opv))
+                {
+                    //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
+                    string downloadUrl = string.Format("{0}download/getdownload?opvId={1}", _webHelper.GetStoreLocation(false), opv.OrderProductVariantGuid);
+                    string downloadLink = string.Format("<a class=\"link\" href=\"{0}\">{1}</a>", downloadUrl, _localizationService.GetResource("Messages.Order.Products(s).Download", languageId));
+                    sb.AppendLine("&nbsp;&nbsp;(");
+                    sb.AppendLine(downloadLink);
+                    sb.AppendLine(")");
+                }
                 //attributes
                 if (!String.IsNullOrEmpty(opv.AttributeDescription))
                 {

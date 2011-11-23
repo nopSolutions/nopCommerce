@@ -10,6 +10,9 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.IgnoreFeaturedProducts.Hint">
     <Value>Check to ignore featured products (sitewide). It can significantly improve performance.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Messages.Order.Products(s).Download">
+    <Value>Download</Value>
   </LocaleResource>  
 </Language>
 '

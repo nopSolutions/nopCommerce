@@ -2100,6 +2100,9 @@
 					<LocaleResource Name="Product(s)">
 						<Value>Product(s)</Value>
 						<Children>
+							<LocaleResource Name="Download">
+								<Value>Download</Value>
+							</LocaleResource>
 							<LocaleResource Name="SKU">
 								<Value>SKU: {0}</Value>
 							</LocaleResource>
