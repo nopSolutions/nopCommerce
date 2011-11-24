@@ -10,12 +10,9 @@ namespace Nop.Core.IO
         private readonly string _storagePath;
         private readonly string _publicPath;
 
-        public FileSystemStorageProvider(FileSystemSettings settings)
+        public FileSystemStorageProvider(FileSystemSettings settings, IWebHelper webHelper)
         {
-            var mediaPath = HostingEnvironment.IsHosted
-                                ? HostingEnvironment.MapPath("~/Media/") ?? ""
-                                : Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Media");
-
+            var mediaPath = webHelper.MapPath("~/Media/");
             _storagePath = Path.Combine(mediaPath, settings.DirectoryName);
 
             var appPath = "";

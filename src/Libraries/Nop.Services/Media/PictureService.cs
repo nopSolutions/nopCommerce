@@ -28,7 +28,6 @@ namespace Nop.Services.Media
         private readonly ISettingService _settingService;
         private readonly IWebHelper _webHelper;
         private readonly MediaSettings _mediaSettings;
-        private readonly HttpContextBase _httpContext;
 
         #endregion
 
@@ -42,18 +41,16 @@ namespace Nop.Services.Media
         /// <param name="settingService">Setting service</param>
         /// <param name="webHelper">Web helper</param>
         /// <param name="mediaSettings">Media settings</param>
-        /// <param name="httpContext">HTTP context</param>
         public PictureService(IRepository<Picture> pictureRepository,
             IRepository<ProductPicture> productPictureRepository,
             ISettingService settingService, IWebHelper webHelper,
-            MediaSettings mediaSettings, HttpContextBase httpContext)
+            MediaSettings mediaSettings)
         {
             this._pictureRepository = pictureRepository;
             this._productPictureRepository = productPictureRepository;
             this._settingService = settingService;
             this._webHelper = webHelper;
             this._mediaSettings = mediaSettings;
-            this._httpContext = httpContext;
         }
 
         #endregion
@@ -449,13 +446,9 @@ namespace Nop.Services.Media
         {
             string url = GetPictureUrl(picture, targetSize, showDefaultPicture);
             if(String.IsNullOrEmpty(url))
-            {
                 return String.Empty;
-            }
             else
-            {
                 return Path.Combine(this.LocalThumbImagePath, Path.GetFileName(url));
-            }
         }
 
         /// <summary>
@@ -694,11 +687,11 @@ namespace Nop.Services.Media
         /// <summary>
         /// Gets a local thumb image path
         /// </summary>
-        public string LocalThumbImagePath
+        protected virtual string LocalThumbImagePath
         {
             get
             {
-                string path = _httpContext.Request.PhysicalApplicationPath + "content\\images\\thumbs";
+                string path = _webHelper.MapPath("~/content/images/thumbs");
                 return path;
             }
         }
@@ -706,11 +699,11 @@ namespace Nop.Services.Media
         /// <summary>
         /// Gets the local image path
         /// </summary>
-        public string LocalImagePath
+        protected virtual string LocalImagePath
         {
             get
             {
-                string path = _httpContext.Request.PhysicalApplicationPath + "content\\images";
+                string path = _webHelper.MapPath("~/content/images");
                 return path;
             }
         }
@@ -718,7 +711,7 @@ namespace Nop.Services.Media
         /// <summary>
         /// Gets or sets a value indicating whether the images should be stored in data base.
         /// </summary>
-        public bool StoreInDb
+        public virtual bool StoreInDb
         {
             get
             {

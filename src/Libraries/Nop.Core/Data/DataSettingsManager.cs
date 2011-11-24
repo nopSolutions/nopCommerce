@@ -56,6 +56,7 @@ namespace Nop.Core.Data
 
         public virtual DataSettings LoadSettings()
         {
+            //use webHelper.MapPath instead of HostingEnvironment.MapPath which is not available in unit tests
             string filePath = Path.Combine(HostingEnvironment.MapPath("~/App_Data/"), filename);
             if (File.Exists(filePath))
             {
@@ -70,7 +71,8 @@ namespace Nop.Core.Data
         {
             if (settings == null)
                 throw new ArgumentNullException("settings");
-            
+
+            //use webHelper.MapPath instead of HostingEnvironment.MapPath which is not available in unit tests
             string filePath = Path.Combine(HostingEnvironment.MapPath("~/App_Data/"), filename);
             if (!File.Exists(filePath))
             {

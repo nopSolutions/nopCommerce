@@ -402,8 +402,6 @@ namespace Nop.Web.Controllers
                     else
                     {
                         //SQL CE
-                        //little hack here (SQL CE 4 bug - http://www.hanselman.com/blog/PDC10BuildingABlogWithMicrosoftUnnamedPackageOfWebLove.aspx)
-                        //string databasePath = HostingEnvironment.MapPath("~/App_Data/") + @"Nop.Db.sdf";
                         string databaseFileName = "Nop.Db.sdf";
                         string databasePath = @"|DataDirectory|\" + databaseFileName;
                         connectionString = "Data Source=" + databasePath + ";Persist Security Info=False";

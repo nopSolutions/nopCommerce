@@ -26,7 +26,9 @@ namespace Nop.Core.Tests
             var subsubfolder1 = Path.Combine(subfolder1, "SubSubfolder1");
             Directory.CreateDirectory(subsubfolder1);
 
-            _storageProvider = new FileSystemStorageProvider(new FileSystemSettings { DirectoryName = "Default" });
+            var webHelper = new WebHelper();
+
+            _storageProvider = new FileSystemStorageProvider(new FileSystemSettings { DirectoryName = "Default" }, webHelper);
         }
 
         [TearDown]

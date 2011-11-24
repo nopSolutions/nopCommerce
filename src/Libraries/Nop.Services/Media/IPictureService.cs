@@ -154,19 +154,10 @@ namespace Nop.Services.Media
         #region Properties
 
         /// <summary>
-        /// Gets a local thumb image path
-        /// </summary>
-        string LocalThumbImagePath { get; }
-
-        /// <summary>
-        /// Gets the local image path
-        /// </summary>
-        string LocalImagePath { get; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether the images should be stored in data base.
         /// </summary>
         bool StoreInDb { get; set; }
+
         #endregion
     }
 }

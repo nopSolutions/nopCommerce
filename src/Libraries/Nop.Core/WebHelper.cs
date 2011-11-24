@@ -218,7 +218,8 @@ namespace Nop.Core
             string result = GetStoreHost(useSsl);
             if (result.EndsWith("/"))
                 result = result.Substring(0, result.Length - 1);
-            result = result + HttpContext.Current.Request.ApplicationPath;
+            if (HttpContext.Current != null && HttpContext.Current.Request != null)
+                result = result + HttpContext.Current.Request.ApplicationPath;
             if (!result.EndsWith("/"))
                 result += "/";
 
@@ -270,6 +271,30 @@ namespace Nop.Core
 
             return false;
         }
+
+        /// <summary>
+        /// Gets a physical disk path of \Bin directory
+        /// </summary>
+        /// <returns>The physical path. E.g. "c:\inetpub\wwwroot\bin"</returns>
+        public virtual string GetBinDirectory()
+        {
+            if (HostingEnvironment.IsHosted)
+            {
+                //hosted
+                return HttpRuntime.BinDirectory;
+            }
+            else
+            {
+                //not hosted. For example, run in unit tests
+                string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+                int binIndex = baseDirectory.IndexOf("\\bin\\");
+                if (binIndex >= 0)
+                    baseDirectory = baseDirectory.Substring(0, binIndex);
+                else if (baseDirectory.EndsWith("\\bin"))
+                    baseDirectory = baseDirectory.Substring(0, baseDirectory.Length - 4);
+                return Path.Combine(baseDirectory, "bin");
+            }
+        }
         
         /// <summary>
         /// Maps a virtual path to a physical disk path.
@@ -278,19 +303,15 @@ namespace Nop.Core
         /// <returns>The physical path. E.g. "c:\inetpub\wwwroot\bin"</returns>
         public virtual string MapPath(string path)
         {
-            if (HttpContext.Current != null)
+            if (HostingEnvironment.IsHosted)
             {
+                //hosted
                 return HostingEnvironment.MapPath(path);
             }
             else
             {
+                //not hosted. For example, run in unit tests
                 string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
-                int binIndex = baseDirectory.IndexOf("\\bin\\");
-                if (binIndex >= 0)
-                    baseDirectory = baseDirectory.Substring(0, binIndex);
-                else if (baseDirectory.EndsWith("\\bin"))
-                    baseDirectory = baseDirectory.Substring(0, baseDirectory.Length - 4);
-
                 path = path.Replace("~/", "").TrimStart('/').Replace('/', '\\');
                 return Path.Combine(baseDirectory, path);
             }

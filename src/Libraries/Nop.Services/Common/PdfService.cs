@@ -39,6 +39,7 @@ namespace Nop.Services.Common
         private readonly IMeasureService _measureService;
         private readonly IPictureService _pictureService;
         private readonly IProductService _productService;
+        private readonly IWebHelper _webHelper;
 
         private readonly CurrencySettings _currencySettings;
         private readonly MeasureSettings _measureSettings;
@@ -53,23 +54,25 @@ namespace Nop.Services.Common
         public PdfService(ILocalizationService localizationService, IOrderService orderService,
             IDateTimeHelper dateTimeHelper, IPriceFormatter priceFormatter,
             ICurrencyService currencyService, IMeasureService measureService,
-            IPictureService pictureService, IProductService productService, CurrencySettings currencySettings,
+            IPictureService pictureService, IProductService productService, 
+            IWebHelper webHelper, CurrencySettings currencySettings,
             MeasureSettings measureSettings, PdfSettings pdfSettings, TaxSettings taxSettings,
             StoreInformationSettings storeInformationSettings)
         {
-            _localizationService = localizationService;
-            _orderService = orderService;
-            _dateTimeHelper = dateTimeHelper;
-            _priceFormatter = priceFormatter;
-            _currencyService = currencyService;
-            _measureService = measureService;
-            _pictureService = pictureService;
-            _productService = productService;
-            _currencySettings = currencySettings;
-            _measureSettings = measureSettings;
-            _pdfSettings = pdfSettings;
-            _taxSettings = taxSettings;
-            _storeInformationSettings = storeInformationSettings;
+            this._localizationService = localizationService;
+            this._orderService = orderService;
+            this._dateTimeHelper = dateTimeHelper;
+            this._priceFormatter = priceFormatter;
+            this._currencyService = currencyService;
+            this._measureService = measureService;
+            this._pictureService = pictureService;
+            this._productService = productService;
+            this._webHelper = webHelper;
+            this._currencySettings = currencySettings;
+            this._measureSettings = measureSettings;
+            this._pdfSettings = pdfSettings;
+            this._taxSettings = taxSettings;
+            this._storeInformationSettings = storeInformationSettings;
         }
 
         #endregion
@@ -81,7 +84,7 @@ namespace Nop.Services.Common
             //nopCommerce supports unicode characters
             //nopCommerce uses Free Serif font by default (~/App_Data/Pdf/FreeSerif.ttf file)
             //It was downloaded from http://savannah.gnu.org/projects/freefont
-            string fontPath = Path.Combine(HostingEnvironment.MapPath("~/App_Data/Pdf/"), _pdfSettings.FontFileName);
+            string fontPath = Path.Combine(_webHelper.MapPath("~/App_Data/Pdf/"), _pdfSettings.FontFileName);
             var baseFont = BaseFont.CreateFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
             var font = new Font(baseFont, 10, Font.NORMAL);
             return font;
