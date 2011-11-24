@@ -13,10 +13,10 @@ namespace Nop.Services.Common
         /// <summary>
         /// Print an order to PDF
         /// </summary>
-        /// <param name="order">Order</param>
+        /// <param name="orders">Orders</param>
         /// <param name="lang">Language</param>
         /// <param name="filePath">File path</param>
-        void PrintOrderToPdf(Order order, Language lang, string filePath);
+        void PrintOrdersToPdf(IList<Order> orders, Language lang, string filePath);
 
         /// <summary>
         /// Print packaging slips to PDF

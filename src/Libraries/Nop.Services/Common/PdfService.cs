@@ -94,13 +94,13 @@ namespace Nop.Services.Common
         /// <summary>
         /// Print an order to PDF
         /// </summary>
-        /// <param name="order">Order</param>
+        /// <param name="orders">Orders</param>
         /// <param name="lang">Language</param>
         /// <param name="filePath">File path</param>
-        public virtual void PrintOrderToPdf(Order order, Language lang, string filePath)
+        public virtual void PrintOrdersToPdf(IList<Order> orders, Language lang, string filePath)
         {
-            if (order == null)
-                throw new ArgumentNullException("order");
+            if (orders == null)
+                throw new ArgumentNullException("orders");
 
             if (lang == null)
                 throw new ArgumentNullException("lang");
@@ -128,478 +128,489 @@ namespace Nop.Services.Common
             var attributesFont = GetFont();
             attributesFont.SetStyle(Font.ITALIC);
 
-            #region Header
+            int ordCount = orders.Count;
+            int ordNum = 0;
 
-            //logo
-            var logoPicture = _pictureService.GetPictureById(_pdfSettings.LogoPictureId);
-            var logoExists = logoPicture != null;
-            
-            //header
-            var headerTable = new PdfPTable(logoExists ? 2 : 1);
-            headerTable.WidthPercentage = 100f;
-            if (logoExists)
-                headerTable.SetWidths(new[] { 50, 50 });
-
-            //logo
-            if (logoExists)
+            foreach (var order in orders)
             {
-                var logoFilePath = _pictureService.GetPictureLocalPath(logoPicture, 0, false);
-                var cellLogo = new PdfPCell(Image.GetInstance(logoFilePath));
-                cellLogo.Border = Rectangle.NO_BORDER;
-                headerTable.AddCell(cellLogo);
-            }
-            //store info
-            var cell = new PdfPCell();
-            cell.Border = Rectangle.NO_BORDER;
-            cell.AddElement(new Paragraph(String.Format(_localizationService.GetResource("PDFInvoice.Order#", lang.Id), order.Id), titleFont));
-            var anchor = new Anchor(_storeInformationSettings.StoreUrl.Trim(new char[] { '/' }), font);
-            anchor.Reference = _storeInformationSettings.StoreUrl;
-            cell.AddElement(new Paragraph(anchor));
-            cell.AddElement(new Paragraph(String.Format(_localizationService.GetResource("PDFInvoice.OrderDate", lang.Id), _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc).ToString("D")), font));
-            headerTable.AddCell(cell);
-            doc.Add(headerTable);
+                #region Header
 
-            #endregion
+                //logo
+                var logoPicture = _pictureService.GetPictureById(_pdfSettings.LogoPictureId);
+                var logoExists = logoPicture != null;
 
-            #region Addresses
-            
-            var addressTable = new PdfPTable(2);
-            addressTable.WidthPercentage = 100f;
-            addressTable.SetWidths(new[] { 50, 50 });
+                //header
+                var headerTable = new PdfPTable(logoExists ? 2 : 1);
+                headerTable.WidthPercentage = 100f;
+                if (logoExists)
+                    headerTable.SetWidths(new[] { 50, 50 });
 
-            //billing info
-            cell = new PdfPCell();
-            cell.Border = Rectangle.NO_BORDER;
-            cell.AddElement(new Paragraph(_localizationService.GetResource("PDFInvoice.BillingInformation", lang.Id), titleFont));
-            
-            if (!String.IsNullOrEmpty(order.BillingAddress.Company))
-                cell.AddElement(new Paragraph("   " + String.Format(_localizationService.GetResource("PDFInvoice.Company", lang.Id), order.BillingAddress.Company), font));
+                //logo
+                if (logoExists)
+                {
+                    var logoFilePath = _pictureService.GetPictureLocalPath(logoPicture, 0, false);
+                    var cellLogo = new PdfPCell(Image.GetInstance(logoFilePath));
+                    cellLogo.Border = Rectangle.NO_BORDER;
+                    headerTable.AddCell(cellLogo);
+                }
+                //store info
+                var cell = new PdfPCell();
+                cell.Border = Rectangle.NO_BORDER;
+                cell.AddElement(new Paragraph(String.Format(_localizationService.GetResource("PDFInvoice.Order#", lang.Id), order.Id), titleFont));
+                var anchor = new Anchor(_storeInformationSettings.StoreUrl.Trim(new char[] { '/' }), font);
+                anchor.Reference = _storeInformationSettings.StoreUrl;
+                cell.AddElement(new Paragraph(anchor));
+                cell.AddElement(new Paragraph(String.Format(_localizationService.GetResource("PDFInvoice.OrderDate", lang.Id), _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc).ToString("D")), font));
+                headerTable.AddCell(cell);
+                doc.Add(headerTable);
 
-            cell.AddElement(new Paragraph("   " + String.Format(_localizationService.GetResource("PDFInvoice.Name", lang.Id), order.BillingAddress.FirstName + " " + order.BillingAddress.LastName), font));
-            cell.AddElement(new Paragraph("   " + String.Format(_localizationService.GetResource("PDFInvoice.Phone", lang.Id), order.BillingAddress.PhoneNumber), font));
-            if (!String.IsNullOrEmpty(order.BillingAddress.FaxNumber))
-                cell.AddElement(new Paragraph("   " + String.Format(_localizationService.GetResource("PDFInvoice.Fax", lang.Id), order.BillingAddress.FaxNumber), font));
-            cell.AddElement(new Paragraph("   " + String.Format(_localizationService.GetResource("PDFInvoice.Address", lang.Id), order.BillingAddress.Address1), font));
-            if (!String.IsNullOrEmpty(order.BillingAddress.Address2))
-                cell.AddElement(new Paragraph("   " + String.Format(_localizationService.GetResource("PDFInvoice.Address2", lang.Id), order.BillingAddress.Address2), font));
+                #endregion
 
-            cell.AddElement(new Paragraph("   " + String.Format("{0}, {1} {2}", order.BillingAddress.City, order.BillingAddress.StateProvince != null ? order.BillingAddress.StateProvince.GetLocalized(x => x.Name) : "", order.BillingAddress.ZipPostalCode), font));
-            cell.AddElement(new Paragraph("   " + String.Format("{0}", order.BillingAddress.Country != null ? order.BillingAddress.Country.GetLocalized(x => x.Name) : ""), font));
+                #region Addresses
 
-            //VAT number
-            if (!String.IsNullOrEmpty(order.VatNumber))
-                cell.AddElement(new Paragraph("   " + String.Format(_localizationService.GetResource("PDFInvoice.VATNumber", lang.Id), order.VatNumber), font));
-            addressTable.AddCell(cell);
+                var addressTable = new PdfPTable(2);
+                addressTable.WidthPercentage = 100f;
+                addressTable.SetWidths(new[] { 50, 50 });
 
-            //shipping info
-            if (order.ShippingStatus != ShippingStatus.ShippingNotRequired)
-            {
-                if (order.ShippingAddress == null)
-                    throw new NopException(string.Format("Shipping is required, but address is not available. Order ID = {0}", order.Id));
+                //billing info
                 cell = new PdfPCell();
                 cell.Border = Rectangle.NO_BORDER;
+                cell.AddElement(new Paragraph(_localizationService.GetResource("PDFInvoice.BillingInformation", lang.Id), titleFont));
 
-                cell.AddElement(new Paragraph(_localizationService.GetResource("PDFInvoice.ShippingInformation", lang.Id), titleFont));
-                if (!String.IsNullOrEmpty(order.ShippingAddress.Company))
-                    cell.AddElement(new Paragraph("   " + String.Format(_localizationService.GetResource("PDFInvoice.Company", lang.Id), order.ShippingAddress.Company), font));
-                cell.AddElement(new Paragraph("   " + String.Format(_localizationService.GetResource("PDFInvoice.Name", lang.Id), order.ShippingAddress.FirstName + " " + order.ShippingAddress.LastName), font));
-                cell.AddElement(new Paragraph("   " + String.Format(_localizationService.GetResource("PDFInvoice.Phone", lang.Id), order.ShippingAddress.PhoneNumber), font));
-                if (!String.IsNullOrEmpty(order.ShippingAddress.FaxNumber))
-                    cell.AddElement(new Paragraph("   " + String.Format(_localizationService.GetResource("PDFInvoice.Fax", lang.Id), order.ShippingAddress.FaxNumber), font));
-                cell.AddElement(new Paragraph("   " + String.Format(_localizationService.GetResource("PDFInvoice.Address", lang.Id), order.ShippingAddress.Address1), font));
-                if (!String.IsNullOrEmpty(order.ShippingAddress.Address2))
-                    cell.AddElement(new Paragraph("   " + String.Format(_localizationService.GetResource("PDFInvoice.Address2", lang.Id), order.ShippingAddress.Address2), font));
-                cell.AddElement(new Paragraph("   " + String.Format("{0}, {1} {2}", order.ShippingAddress.City, order.ShippingAddress.StateProvince != null ? order.ShippingAddress.StateProvince.GetLocalized(x => x.Name) : "", order.ShippingAddress.ZipPostalCode), font));
-                cell.AddElement(new Paragraph("   " + String.Format("{0}", order.ShippingAddress.Country != null ? order.ShippingAddress.Country.GetLocalized(x => x.Name) : ""), font));
-                cell.AddElement(new Paragraph(" "));
-                cell.AddElement(new Paragraph("   " + String.Format(_localizationService.GetResource("PDFInvoice.ShippingMethod", lang.Id), order.ShippingMethod), font));
-                cell.AddElement(new Paragraph());
-            
+                if (!String.IsNullOrEmpty(order.BillingAddress.Company))
+                    cell.AddElement(new Paragraph("   " + String.Format(_localizationService.GetResource("PDFInvoice.Company", lang.Id), order.BillingAddress.Company), font));
+
+                cell.AddElement(new Paragraph("   " + String.Format(_localizationService.GetResource("PDFInvoice.Name", lang.Id), order.BillingAddress.FirstName + " " + order.BillingAddress.LastName), font));
+                cell.AddElement(new Paragraph("   " + String.Format(_localizationService.GetResource("PDFInvoice.Phone", lang.Id), order.BillingAddress.PhoneNumber), font));
+                if (!String.IsNullOrEmpty(order.BillingAddress.FaxNumber))
+                    cell.AddElement(new Paragraph("   " + String.Format(_localizationService.GetResource("PDFInvoice.Fax", lang.Id), order.BillingAddress.FaxNumber), font));
+                cell.AddElement(new Paragraph("   " + String.Format(_localizationService.GetResource("PDFInvoice.Address", lang.Id), order.BillingAddress.Address1), font));
+                if (!String.IsNullOrEmpty(order.BillingAddress.Address2))
+                    cell.AddElement(new Paragraph("   " + String.Format(_localizationService.GetResource("PDFInvoice.Address2", lang.Id), order.BillingAddress.Address2), font));
+
+                cell.AddElement(new Paragraph("   " + String.Format("{0}, {1} {2}", order.BillingAddress.City, order.BillingAddress.StateProvince != null ? order.BillingAddress.StateProvince.GetLocalized(x => x.Name) : "", order.BillingAddress.ZipPostalCode), font));
+                cell.AddElement(new Paragraph("   " + String.Format("{0}", order.BillingAddress.Country != null ? order.BillingAddress.Country.GetLocalized(x => x.Name) : ""), font));
+
+                //VAT number
+                if (!String.IsNullOrEmpty(order.VatNumber))
+                    cell.AddElement(new Paragraph("   " + String.Format(_localizationService.GetResource("PDFInvoice.VATNumber", lang.Id), order.VatNumber), font));
                 addressTable.AddCell(cell);
-            }
-            else
-            {
-                cell = new PdfPCell(new Phrase(" "));
-                cell.Border = Rectangle.NO_BORDER;
-                addressTable.AddCell(cell);
-            }
 
-            doc.Add(addressTable);
-            doc.Add(new Paragraph(" "));
+                //shipping info
+                if (order.ShippingStatus != ShippingStatus.ShippingNotRequired)
+                {
+                    if (order.ShippingAddress == null)
+                        throw new NopException(string.Format("Shipping is required, but address is not available. Order ID = {0}", order.Id));
+                    cell = new PdfPCell();
+                    cell.Border = Rectangle.NO_BORDER;
 
-            #endregion
-            
-            #region Products
-            //products
-            doc.Add(new Paragraph(_localizationService.GetResource("PDFInvoice.Product(s)", lang.Id), titleFont));
-            doc.Add(new Paragraph(" "));
+                    cell.AddElement(new Paragraph(_localizationService.GetResource("PDFInvoice.ShippingInformation", lang.Id), titleFont));
+                    if (!String.IsNullOrEmpty(order.ShippingAddress.Company))
+                        cell.AddElement(new Paragraph("   " + String.Format(_localizationService.GetResource("PDFInvoice.Company", lang.Id), order.ShippingAddress.Company), font));
+                    cell.AddElement(new Paragraph("   " + String.Format(_localizationService.GetResource("PDFInvoice.Name", lang.Id), order.ShippingAddress.FirstName + " " + order.ShippingAddress.LastName), font));
+                    cell.AddElement(new Paragraph("   " + String.Format(_localizationService.GetResource("PDFInvoice.Phone", lang.Id), order.ShippingAddress.PhoneNumber), font));
+                    if (!String.IsNullOrEmpty(order.ShippingAddress.FaxNumber))
+                        cell.AddElement(new Paragraph("   " + String.Format(_localizationService.GetResource("PDFInvoice.Fax", lang.Id), order.ShippingAddress.FaxNumber), font));
+                    cell.AddElement(new Paragraph("   " + String.Format(_localizationService.GetResource("PDFInvoice.Address", lang.Id), order.ShippingAddress.Address1), font));
+                    if (!String.IsNullOrEmpty(order.ShippingAddress.Address2))
+                        cell.AddElement(new Paragraph("   " + String.Format(_localizationService.GetResource("PDFInvoice.Address2", lang.Id), order.ShippingAddress.Address2), font));
+                    cell.AddElement(new Paragraph("   " + String.Format("{0}, {1} {2}", order.ShippingAddress.City, order.ShippingAddress.StateProvince != null ? order.ShippingAddress.StateProvince.GetLocalized(x => x.Name) : "", order.ShippingAddress.ZipPostalCode), font));
+                    cell.AddElement(new Paragraph("   " + String.Format("{0}", order.ShippingAddress.Country != null ? order.ShippingAddress.Country.GetLocalized(x => x.Name) : ""), font));
+                    cell.AddElement(new Paragraph(" "));
+                    cell.AddElement(new Paragraph("   " + String.Format(_localizationService.GetResource("PDFInvoice.ShippingMethod", lang.Id), order.ShippingMethod), font));
+                    cell.AddElement(new Paragraph());
+
+                    addressTable.AddCell(cell);
+                }
+                else
+                {
+                    cell = new PdfPCell(new Phrase(" "));
+                    cell.Border = Rectangle.NO_BORDER;
+                    addressTable.AddCell(cell);
+                }
+
+                doc.Add(addressTable);
+                doc.Add(new Paragraph(" "));
+
+                #endregion
+
+                #region Products
+                //products
+                doc.Add(new Paragraph(_localizationService.GetResource("PDFInvoice.Product(s)", lang.Id), titleFont));
+                doc.Add(new Paragraph(" "));
 
 
-            var orderProductVariants = _orderService.GetAllOrderProductVariants(order.Id, null, null, null, null, null, null);
+                var orderProductVariants = _orderService.GetAllOrderProductVariants(order.Id, null, null, null, null, null, null);
 
-            var productsTable = new PdfPTable(4);
-            productsTable.WidthPercentage = 100f;
-            productsTable.SetWidths(new[] { 40, 20, 20, 20 });
-
-            //product name
-            cell = new PdfPCell(new Phrase(_localizationService.GetResource("PDFInvoice.ProductName", lang.Id), font));
-            cell.BackgroundColor = BaseColor.LIGHT_GRAY;
-            cell.HorizontalAlignment = Element.ALIGN_CENTER;
-            productsTable.AddCell(cell);
-
-            //price
-            cell = new PdfPCell(new Phrase(_localizationService.GetResource("PDFInvoice.ProductPrice", lang.Id), font));
-            cell.BackgroundColor = BaseColor.LIGHT_GRAY;
-            cell.HorizontalAlignment = Element.ALIGN_CENTER;
-            productsTable.AddCell(cell);
-
-            //qty
-            cell = new PdfPCell(new Phrase(_localizationService.GetResource("PDFInvoice.ProductQuantity", lang.Id), font));
-            cell.BackgroundColor = BaseColor.LIGHT_GRAY;
-            cell.HorizontalAlignment = Element.ALIGN_CENTER;
-            productsTable.AddCell(cell);
-
-            //total
-            cell = new PdfPCell(new Phrase(_localizationService.GetResource("PDFInvoice.ProductTotal", lang.Id), font));
-            cell.BackgroundColor = BaseColor.LIGHT_GRAY;
-            cell.HorizontalAlignment = Element.ALIGN_CENTER;
-            productsTable.AddCell(cell);
-            
-            for (int i = 0; i < orderProductVariants.Count; i++)
-            {
-                var orderProductVariant = orderProductVariants[i];
-                var pv = orderProductVariant.ProductVariant;
+                var productsTable = new PdfPTable(4);
+                productsTable.WidthPercentage = 100f;
+                productsTable.SetWidths(new[] { 40, 20, 20, 20 });
 
                 //product name
-                string name = "";
-                if (!String.IsNullOrEmpty(pv.GetLocalized(x => x.Name)))
-                    name = string.Format("{0} ({1})", pv.Product.GetLocalized(x => x.Name), pv.GetLocalized(x => x.Name));
-                else
-                    name = pv.Product.GetLocalized(x => x.Name);
-                cell = new PdfPCell();
-                cell.AddElement(new Paragraph(name, font));
-                cell.HorizontalAlignment = Element.ALIGN_LEFT;
-                var attributesParagraph = new Paragraph(HtmlHelper.ConvertHtmlToPlainText(orderProductVariant.AttributeDescription, true), attributesFont);
-                cell.AddElement(attributesParagraph);
+                cell = new PdfPCell(new Phrase(_localizationService.GetResource("PDFInvoice.ProductName", lang.Id), font));
+                cell.BackgroundColor = BaseColor.LIGHT_GRAY;
+                cell.HorizontalAlignment = Element.ALIGN_CENTER;
                 productsTable.AddCell(cell);
-                
+
                 //price
-                string unitPrice = string.Empty;
-                switch (order.CustomerTaxDisplayType)
-                {
-                    case TaxDisplayType.ExcludingTax:
-                        {
-                            var opvUnitPriceExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderProductVariant.UnitPriceExclTax, order.CurrencyRate);
-                            unitPrice = _priceFormatter.FormatPrice(opvUnitPriceExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, false);
-                        }
-                        break;
-                    case TaxDisplayType.IncludingTax:
-                        {
-                            var opvUnitPriceInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderProductVariant.UnitPriceInclTax, order.CurrencyRate);
-                            unitPrice = _priceFormatter.FormatPrice(opvUnitPriceInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, true);
-                        }
-                        break;
-                }
-                cell = new PdfPCell(new Phrase(unitPrice, font));
-                cell.HorizontalAlignment = Element.ALIGN_LEFT;
+                cell = new PdfPCell(new Phrase(_localizationService.GetResource("PDFInvoice.ProductPrice", lang.Id), font));
+                cell.BackgroundColor = BaseColor.LIGHT_GRAY;
+                cell.HorizontalAlignment = Element.ALIGN_CENTER;
                 productsTable.AddCell(cell);
 
                 //qty
-                cell = new PdfPCell(new Phrase(orderProductVariant.Quantity.ToString(), font));
-                cell.HorizontalAlignment = Element.ALIGN_LEFT;
+                cell = new PdfPCell(new Phrase(_localizationService.GetResource("PDFInvoice.ProductQuantity", lang.Id), font));
+                cell.BackgroundColor = BaseColor.LIGHT_GRAY;
+                cell.HorizontalAlignment = Element.ALIGN_CENTER;
                 productsTable.AddCell(cell);
 
                 //total
-                string subTotal = string.Empty;
-                switch (order.CustomerTaxDisplayType)
-                {
-                    case TaxDisplayType.ExcludingTax:
-                        {
-                            var opvPriceExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderProductVariant.PriceExclTax, order.CurrencyRate);
-                            subTotal = _priceFormatter.FormatPrice(opvPriceExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, false);
-                        }
-                        break;
-                    case TaxDisplayType.IncludingTax:
-                        {
-                            var opvPriceInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderProductVariant.PriceInclTax, order.CurrencyRate);
-                            subTotal = _priceFormatter.FormatPrice(opvPriceInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, true);
-                        }
-                        break;
-                }
-                cell = new PdfPCell(new Phrase(subTotal, font));
-                cell.HorizontalAlignment = Element.ALIGN_LEFT;
+                cell = new PdfPCell(new Phrase(_localizationService.GetResource("PDFInvoice.ProductTotal", lang.Id), font));
+                cell.BackgroundColor = BaseColor.LIGHT_GRAY;
+                cell.HorizontalAlignment = Element.ALIGN_CENTER;
                 productsTable.AddCell(cell);
-            }
-            doc.Add(productsTable);
 
-            #endregion
+                for (int i = 0; i < orderProductVariants.Count; i++)
+                {
+                    var orderProductVariant = orderProductVariants[i];
+                    var pv = orderProductVariant.ProductVariant;
 
-            #region Checkout attributes
+                    //product name
+                    string name = "";
+                    if (!String.IsNullOrEmpty(pv.GetLocalized(x => x.Name)))
+                        name = string.Format("{0} ({1})", pv.Product.GetLocalized(x => x.Name), pv.GetLocalized(x => x.Name));
+                    else
+                        name = pv.Product.GetLocalized(x => x.Name);
+                    cell = new PdfPCell();
+                    cell.AddElement(new Paragraph(name, font));
+                    cell.HorizontalAlignment = Element.ALIGN_LEFT;
+                    var attributesParagraph = new Paragraph(HtmlHelper.ConvertHtmlToPlainText(orderProductVariant.AttributeDescription, true), attributesFont);
+                    cell.AddElement(attributesParagraph);
+                    productsTable.AddCell(cell);
 
-            if (!String.IsNullOrEmpty(order.CheckoutAttributeDescription))
-            {
-                doc.Add(new Paragraph(" "));
-                string attributes = HtmlHelper.ConvertHtmlToPlainText(order.CheckoutAttributeDescription, true);
-                var pCheckoutAttributes = new Paragraph(attributes, font);
-                pCheckoutAttributes.Alignment = Element.ALIGN_RIGHT;
-                doc.Add(pCheckoutAttributes);
-                doc.Add(new Paragraph(" "));
-            }
-
-            #endregion
-            
-            #region Totals
-
-            //subtotal
-            doc.Add(new Paragraph(" "));
-            switch (order.CustomerTaxDisplayType)
-            {
-                case TaxDisplayType.ExcludingTax:
+                    //price
+                    string unitPrice = string.Empty;
+                    switch (order.CustomerTaxDisplayType)
                     {
-                        var orderSubtotalExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderSubtotalExclTax, order.CurrencyRate);
-                        string orderSubtotalExclTaxStr = _priceFormatter.FormatPrice(orderSubtotalExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, false);
-
-                        var p = new Paragraph(String.Format("{0} {1}", _localizationService.GetResource("PDFInvoice.Sub-Total", lang.Id), orderSubtotalExclTaxStr), font);
-                        p.Alignment = Element.ALIGN_RIGHT;
-                        doc.Add(p);
+                        case TaxDisplayType.ExcludingTax:
+                            {
+                                var opvUnitPriceExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderProductVariant.UnitPriceExclTax, order.CurrencyRate);
+                                unitPrice = _priceFormatter.FormatPrice(opvUnitPriceExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, false);
+                            }
+                            break;
+                        case TaxDisplayType.IncludingTax:
+                            {
+                                var opvUnitPriceInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderProductVariant.UnitPriceInclTax, order.CurrencyRate);
+                                unitPrice = _priceFormatter.FormatPrice(opvUnitPriceInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, true);
+                            }
+                            break;
                     }
-                    break;
-                case TaxDisplayType.IncludingTax:
+                    cell = new PdfPCell(new Phrase(unitPrice, font));
+                    cell.HorizontalAlignment = Element.ALIGN_LEFT;
+                    productsTable.AddCell(cell);
+
+                    //qty
+                    cell = new PdfPCell(new Phrase(orderProductVariant.Quantity.ToString(), font));
+                    cell.HorizontalAlignment = Element.ALIGN_LEFT;
+                    productsTable.AddCell(cell);
+
+                    //total
+                    string subTotal = string.Empty;
+                    switch (order.CustomerTaxDisplayType)
                     {
-                        var orderSubtotalInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderSubtotalInclTax, order.CurrencyRate);
-                        string orderSubtotalInclTaxStr = _priceFormatter.FormatPrice(orderSubtotalInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, true);
-
-                        var p = new Paragraph(String.Format("{0} {1}", _localizationService.GetResource("PDFInvoice.Sub-Total", lang.Id), orderSubtotalInclTaxStr), font);
-                        p.Alignment = Element.ALIGN_RIGHT;
-                        doc.Add(p);
+                        case TaxDisplayType.ExcludingTax:
+                            {
+                                var opvPriceExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderProductVariant.PriceExclTax, order.CurrencyRate);
+                                subTotal = _priceFormatter.FormatPrice(opvPriceExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, false);
+                            }
+                            break;
+                        case TaxDisplayType.IncludingTax:
+                            {
+                                var opvPriceInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(orderProductVariant.PriceInclTax, order.CurrencyRate);
+                                subTotal = _priceFormatter.FormatPrice(opvPriceInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, true);
+                            }
+                            break;
                     }
-                    break;
-            }
-            //discount (applied to order subtotal)
-            if (order.OrderSubTotalDiscountExclTax > decimal.Zero)
-            {
+                    cell = new PdfPCell(new Phrase(subTotal, font));
+                    cell.HorizontalAlignment = Element.ALIGN_LEFT;
+                    productsTable.AddCell(cell);
+                }
+                doc.Add(productsTable);
+
+                #endregion
+
+                #region Checkout attributes
+
+                if (!String.IsNullOrEmpty(order.CheckoutAttributeDescription))
+                {
+                    doc.Add(new Paragraph(" "));
+                    string attributes = HtmlHelper.ConvertHtmlToPlainText(order.CheckoutAttributeDescription, true);
+                    var pCheckoutAttributes = new Paragraph(attributes, font);
+                    pCheckoutAttributes.Alignment = Element.ALIGN_RIGHT;
+                    doc.Add(pCheckoutAttributes);
+                    doc.Add(new Paragraph(" "));
+                }
+
+                #endregion
+
+                #region Totals
+
+                //subtotal
+                doc.Add(new Paragraph(" "));
                 switch (order.CustomerTaxDisplayType)
                 {
                     case TaxDisplayType.ExcludingTax:
                         {
-                            var orderSubTotalDiscountExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderSubTotalDiscountExclTax, order.CurrencyRate);
-                            string orderSubTotalDiscountInCustomerCurrencyStr = _priceFormatter.FormatPrice(-orderSubTotalDiscountExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, false);
+                            var orderSubtotalExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderSubtotalExclTax, order.CurrencyRate);
+                            string orderSubtotalExclTaxStr = _priceFormatter.FormatPrice(orderSubtotalExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, false);
 
-                            var p = new Paragraph(String.Format("{0} {1}", _localizationService.GetResource("PDFInvoice.Discount", lang.Id), orderSubTotalDiscountInCustomerCurrencyStr), font);
+                            var p = new Paragraph(String.Format("{0} {1}", _localizationService.GetResource("PDFInvoice.Sub-Total", lang.Id), orderSubtotalExclTaxStr), font);
                             p.Alignment = Element.ALIGN_RIGHT;
                             doc.Add(p);
                         }
                         break;
                     case TaxDisplayType.IncludingTax:
                         {
-                            var orderSubTotalDiscountInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderSubTotalDiscountInclTax, order.CurrencyRate);
-                            string orderSubTotalDiscountInCustomerCurrencyStr = _priceFormatter.FormatPrice(-orderSubTotalDiscountInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, true);
+                            var orderSubtotalInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderSubtotalInclTax, order.CurrencyRate);
+                            string orderSubtotalInclTaxStr = _priceFormatter.FormatPrice(orderSubtotalInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, true);
 
-                            var p = new Paragraph(String.Format("{0} {1}", _localizationService.GetResource("PDFInvoice.Discount", lang.Id), orderSubTotalDiscountInCustomerCurrencyStr), font);
+                            var p = new Paragraph(String.Format("{0} {1}", _localizationService.GetResource("PDFInvoice.Sub-Total", lang.Id), orderSubtotalInclTaxStr), font);
                             p.Alignment = Element.ALIGN_RIGHT;
                             doc.Add(p);
                         }
                         break;
                 }
-            }
-
-            //shipping
-            if (order.ShippingStatus != ShippingStatus.ShippingNotRequired)
-            {
-                switch (order.CustomerTaxDisplayType)
+                //discount (applied to order subtotal)
+                if (order.OrderSubTotalDiscountExclTax > decimal.Zero)
                 {
-                    case TaxDisplayType.ExcludingTax:
-                        {
-                            var orderShippingExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderShippingExclTax, order.CurrencyRate);
-                            string orderShippingExclTaxStr = _priceFormatter.FormatShippingPrice(orderShippingExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, false);
+                    switch (order.CustomerTaxDisplayType)
+                    {
+                        case TaxDisplayType.ExcludingTax:
+                            {
+                                var orderSubTotalDiscountExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderSubTotalDiscountExclTax, order.CurrencyRate);
+                                string orderSubTotalDiscountInCustomerCurrencyStr = _priceFormatter.FormatPrice(-orderSubTotalDiscountExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, false);
 
-                            var p = new Paragraph(String.Format("{0} {1}", _localizationService.GetResource("PDFInvoice.Shipping", lang.Id), orderShippingExclTaxStr), font);
-                            p.Alignment = Element.ALIGN_RIGHT;
-                            doc.Add(p);
-                        }
-                        break;
-                    case TaxDisplayType.IncludingTax:
-                        {
-                            var orderShippingInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderShippingInclTax, order.CurrencyRate);
-                            string orderShippingInclTaxStr = _priceFormatter.FormatShippingPrice(orderShippingInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, true);
+                                var p = new Paragraph(String.Format("{0} {1}", _localizationService.GetResource("PDFInvoice.Discount", lang.Id), orderSubTotalDiscountInCustomerCurrencyStr), font);
+                                p.Alignment = Element.ALIGN_RIGHT;
+                                doc.Add(p);
+                            }
+                            break;
+                        case TaxDisplayType.IncludingTax:
+                            {
+                                var orderSubTotalDiscountInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderSubTotalDiscountInclTax, order.CurrencyRate);
+                                string orderSubTotalDiscountInCustomerCurrencyStr = _priceFormatter.FormatPrice(-orderSubTotalDiscountInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, true);
 
-                            var p = new Paragraph(String.Format("{0} {1}", _localizationService.GetResource("PDFInvoice.Shipping", lang.Id), orderShippingInclTaxStr), font);
-                            p.Alignment = Element.ALIGN_RIGHT;
-                            doc.Add(p);
-                        }
-                        break;
+                                var p = new Paragraph(String.Format("{0} {1}", _localizationService.GetResource("PDFInvoice.Discount", lang.Id), orderSubTotalDiscountInCustomerCurrencyStr), font);
+                                p.Alignment = Element.ALIGN_RIGHT;
+                                doc.Add(p);
+                            }
+                            break;
+                    }
                 }
-            }
 
-            //payment fee
-            if (order.PaymentMethodAdditionalFeeExclTax > decimal.Zero)
-            {
-                switch (order.CustomerTaxDisplayType)
+                //shipping
+                if (order.ShippingStatus != ShippingStatus.ShippingNotRequired)
                 {
-                    case TaxDisplayType.ExcludingTax:
-                        {
-                            var paymentMethodAdditionalFeeExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.PaymentMethodAdditionalFeeExclTax, order.CurrencyRate);
-                            string paymentMethodAdditionalFeeExclTaxStr = _priceFormatter.FormatPaymentMethodAdditionalFee(paymentMethodAdditionalFeeExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, false);
+                    switch (order.CustomerTaxDisplayType)
+                    {
+                        case TaxDisplayType.ExcludingTax:
+                            {
+                                var orderShippingExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderShippingExclTax, order.CurrencyRate);
+                                string orderShippingExclTaxStr = _priceFormatter.FormatShippingPrice(orderShippingExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, false);
 
-                            var p = new Paragraph(String.Format("{0} {1}", _localizationService.GetResource("PDFInvoice.PaymentMethodAdditionalFee", lang.Id), paymentMethodAdditionalFeeExclTaxStr), font);
-                            p.Alignment = Element.ALIGN_RIGHT;
-                            doc.Add(p);
-                        }
-                        break;
-                    case TaxDisplayType.IncludingTax:
-                        {
-                            var paymentMethodAdditionalFeeInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.PaymentMethodAdditionalFeeInclTax, order.CurrencyRate);
-                            string paymentMethodAdditionalFeeInclTaxStr = _priceFormatter.FormatPaymentMethodAdditionalFee(paymentMethodAdditionalFeeInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, true);
+                                var p = new Paragraph(String.Format("{0} {1}", _localizationService.GetResource("PDFInvoice.Shipping", lang.Id), orderShippingExclTaxStr), font);
+                                p.Alignment = Element.ALIGN_RIGHT;
+                                doc.Add(p);
+                            }
+                            break;
+                        case TaxDisplayType.IncludingTax:
+                            {
+                                var orderShippingInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderShippingInclTax, order.CurrencyRate);
+                                string orderShippingInclTaxStr = _priceFormatter.FormatShippingPrice(orderShippingInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, true);
 
-                            var p = new Paragraph(String.Format("{0} {1}", _localizationService.GetResource("PDFInvoice.PaymentMethodAdditionalFee", lang.Id), paymentMethodAdditionalFeeInclTaxStr), font);
-                            p.Alignment = Element.ALIGN_RIGHT;
-                            doc.Add(p);
-                        }
-                        break;
+                                var p = new Paragraph(String.Format("{0} {1}", _localizationService.GetResource("PDFInvoice.Shipping", lang.Id), orderShippingInclTaxStr), font);
+                                p.Alignment = Element.ALIGN_RIGHT;
+                                doc.Add(p);
+                            }
+                            break;
+                    }
                 }
-            }
 
-            //tax
-            string taxStr = string.Empty;
-            var taxRates = new SortedDictionary<decimal, decimal>();
-            bool displayTax = true;
-            bool displayTaxRates = true;
-            if (_taxSettings.HideTaxInOrderSummary && order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
-            {
-                displayTax = false;
-            }
-            else
-            {
-                if (order.OrderTax == 0 && _taxSettings.HideZeroTax)
+                //payment fee
+                if (order.PaymentMethodAdditionalFeeExclTax > decimal.Zero)
+                {
+                    switch (order.CustomerTaxDisplayType)
+                    {
+                        case TaxDisplayType.ExcludingTax:
+                            {
+                                var paymentMethodAdditionalFeeExclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.PaymentMethodAdditionalFeeExclTax, order.CurrencyRate);
+                                string paymentMethodAdditionalFeeExclTaxStr = _priceFormatter.FormatPaymentMethodAdditionalFee(paymentMethodAdditionalFeeExclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, false);
+
+                                var p = new Paragraph(String.Format("{0} {1}", _localizationService.GetResource("PDFInvoice.PaymentMethodAdditionalFee", lang.Id), paymentMethodAdditionalFeeExclTaxStr), font);
+                                p.Alignment = Element.ALIGN_RIGHT;
+                                doc.Add(p);
+                            }
+                            break;
+                        case TaxDisplayType.IncludingTax:
+                            {
+                                var paymentMethodAdditionalFeeInclTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.PaymentMethodAdditionalFeeInclTax, order.CurrencyRate);
+                                string paymentMethodAdditionalFeeInclTaxStr = _priceFormatter.FormatPaymentMethodAdditionalFee(paymentMethodAdditionalFeeInclTaxInCustomerCurrency, true, order.CustomerCurrencyCode, lang, true);
+
+                                var p = new Paragraph(String.Format("{0} {1}", _localizationService.GetResource("PDFInvoice.PaymentMethodAdditionalFee", lang.Id), paymentMethodAdditionalFeeInclTaxStr), font);
+                                p.Alignment = Element.ALIGN_RIGHT;
+                                doc.Add(p);
+                            }
+                            break;
+                    }
+                }
+
+                //tax
+                string taxStr = string.Empty;
+                var taxRates = new SortedDictionary<decimal, decimal>();
+                bool displayTax = true;
+                bool displayTaxRates = true;
+                if (_taxSettings.HideTaxInOrderSummary && order.CustomerTaxDisplayType == TaxDisplayType.IncludingTax)
                 {
                     displayTax = false;
-                    displayTaxRates = false;
                 }
                 else
                 {
-                    taxRates = order.TaxRatesDictionary;
+                    if (order.OrderTax == 0 && _taxSettings.HideZeroTax)
+                    {
+                        displayTax = false;
+                        displayTaxRates = false;
+                    }
+                    else
+                    {
+                        taxRates = order.TaxRatesDictionary;
 
-                    displayTaxRates = _taxSettings.DisplayTaxRates && taxRates.Count > 0;
-                    displayTax = !displayTaxRates;
+                        displayTaxRates = _taxSettings.DisplayTaxRates && taxRates.Count > 0;
+                        displayTax = !displayTaxRates;
 
-                    var orderTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderTax, order.CurrencyRate);
-                    //TODO pass languageId to _priceFormatter.FormatPrice
-                    taxStr = _priceFormatter.FormatPrice(orderTaxInCustomerCurrency, true, order.CustomerCurrencyCode, false);
+                        var orderTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderTax, order.CurrencyRate);
+                        //TODO pass languageId to _priceFormatter.FormatPrice
+                        taxStr = _priceFormatter.FormatPrice(orderTaxInCustomerCurrency, true, order.CustomerCurrencyCode, false);
+                    }
                 }
-            }
-            if (displayTax)
-            {
-                var p = new Paragraph(String.Format("{0} {1}", _localizationService.GetResource("PDFInvoice.Tax", lang.Id), taxStr), font);
-                p.Alignment = Element.ALIGN_RIGHT;
-                doc.Add(p);
-            }
-            if (displayTaxRates)
-            {
-                foreach (var item in taxRates)
+                if (displayTax)
                 {
-                    string taxRate = String.Format(_localizationService.GetResource("PDFInvoice.TaxRate"), _priceFormatter.FormatTaxRate(item.Key));
-                    //TODO pass languageId to _priceFormatter.FormatPrice
-                    string taxValue = _priceFormatter.FormatPrice(_currencyService.ConvertCurrency(item.Value, order.CurrencyRate), true, false);
-
-                    var p = new Paragraph(String.Format("{0} {1}", taxRate, taxValue), font);
+                    var p = new Paragraph(String.Format("{0} {1}", _localizationService.GetResource("PDFInvoice.Tax", lang.Id), taxStr), font);
                     p.Alignment = Element.ALIGN_RIGHT;
                     doc.Add(p);
                 }
-            }
-
-            //discount (applied to order total)
-            if (order.OrderDiscount > decimal.Zero)
-            {
-                var orderDiscountInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderDiscount, order.CurrencyRate);
-                string orderDiscountInCustomerCurrencyStr = _priceFormatter.FormatPrice(-orderDiscountInCustomerCurrency, true, order.CustomerCurrencyCode, false);
-
-                var p = new Paragraph(String.Format("{0} {1}", _localizationService.GetResource("PDFInvoice.Discount", lang.Id), orderDiscountInCustomerCurrencyStr), font);
-                p.Alignment = Element.ALIGN_RIGHT;
-                doc.Add(p);
-            }
-
-            //gift cards
-            foreach (var gcuh in order.GiftCardUsageHistory)
-            {
-                string gcTitle = string.Format(_localizationService.GetResource("PDFInvoice.GiftCardInfo", lang.Id), gcuh.GiftCard.GiftCardCouponCode);
-                string gcAmountStr = _priceFormatter.FormatPrice(-(_currencyService.ConvertCurrency(gcuh.UsedValue, order.CurrencyRate)), true, order.CustomerCurrencyCode, false);
-
-                var p = new Paragraph(String.Format("{0} {1}", gcTitle, gcAmountStr), font);
-                p.Alignment = Element.ALIGN_RIGHT;
-                doc.Add(p);
-            }
-
-            //reward points
-            if (order.RedeemedRewardPointsEntry != null)
-            {
-                string rpTitle = string.Format(_localizationService.GetResource("PDFInvoice.RewardPoints", lang.Id), -order.RedeemedRewardPointsEntry.Points);
-                string rpAmount = _priceFormatter.FormatPrice(-(_currencyService.ConvertCurrency(order.RedeemedRewardPointsEntry.UsedAmount, order.CurrencyRate)), true, order.CustomerCurrencyCode, false);
-
-                var p = new Paragraph(String.Format("{0} {1}", rpTitle, rpAmount), font);
-                p.Alignment = Element.ALIGN_RIGHT;
-                doc.Add(p);
-            }
-
-            //order total
-            var orderTotalInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderTotal, order.CurrencyRate);
-            //TODO pass languageId to _priceFormatter.FormatPrice
-            string orderTotalStr = _priceFormatter.FormatPrice(orderTotalInCustomerCurrency, true, order.CustomerCurrencyCode, false);
-
-
-            var pTotal = new Paragraph(String.Format("{0} {1}", _localizationService.GetResource("PDFInvoice.OrderTotal", lang.Id), orderTotalStr), titleFont);
-            pTotal.Alignment = Element.ALIGN_RIGHT;
-            doc.Add(pTotal);
-            
-            #endregion
-
-            #region Order notes
-
-            if (_pdfSettings.RenderOrderNotes)
-            {
-                var orderNotes = order.OrderNotes
-                    .Where(on => on.DisplayToCustomer)
-                    .OrderByDescending(on => on.CreatedOnUtc)
-                    .ToList();
-                if (orderNotes.Count > 0)
+                if (displayTaxRates)
                 {
-                    doc.Add(new Paragraph(_localizationService.GetResource("PDFInvoice.OrderNotes", lang.Id), titleFont));
-
-                    doc.Add(new Paragraph(" "));
-
-                    var notesTable = new PdfPTable(2);
-                    notesTable.WidthPercentage = 100f;
-                    notesTable.SetWidths(new[] { 30, 70 });
-
-                    //created on
-                    cell = new PdfPCell(new Phrase(_localizationService.GetResource("PDFInvoice.OrderNotes.CreatedOn", lang.Id), font));
-                    cell.BackgroundColor = BaseColor.LIGHT_GRAY;
-                    cell.HorizontalAlignment = Element.ALIGN_CENTER;
-                    notesTable.AddCell(cell);
-
-                    //note
-                    cell = new PdfPCell(new Phrase(_localizationService.GetResource("PDFInvoice.OrderNotes.Note", lang.Id), font));
-                    cell.BackgroundColor = BaseColor.LIGHT_GRAY;
-                    cell.HorizontalAlignment = Element.ALIGN_CENTER;
-                    notesTable.AddCell(cell);
-
-                    foreach (var orderNote in orderNotes)
+                    foreach (var item in taxRates)
                     {
-                        cell = new PdfPCell();
-                        cell.AddElement(new Paragraph(_dateTimeHelper.ConvertToUserTime(orderNote.CreatedOnUtc, DateTimeKind.Utc).ToString(), font));
-                        cell.HorizontalAlignment = Element.ALIGN_LEFT;
+                        string taxRate = String.Format(_localizationService.GetResource("PDFInvoice.TaxRate"), _priceFormatter.FormatTaxRate(item.Key));
+                        //TODO pass languageId to _priceFormatter.FormatPrice
+                        string taxValue = _priceFormatter.FormatPrice(_currencyService.ConvertCurrency(item.Value, order.CurrencyRate), true, false);
+
+                        var p = new Paragraph(String.Format("{0} {1}", taxRate, taxValue), font);
+                        p.Alignment = Element.ALIGN_RIGHT;
+                        doc.Add(p);
+                    }
+                }
+
+                //discount (applied to order total)
+                if (order.OrderDiscount > decimal.Zero)
+                {
+                    var orderDiscountInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderDiscount, order.CurrencyRate);
+                    string orderDiscountInCustomerCurrencyStr = _priceFormatter.FormatPrice(-orderDiscountInCustomerCurrency, true, order.CustomerCurrencyCode, false);
+
+                    var p = new Paragraph(String.Format("{0} {1}", _localizationService.GetResource("PDFInvoice.Discount", lang.Id), orderDiscountInCustomerCurrencyStr), font);
+                    p.Alignment = Element.ALIGN_RIGHT;
+                    doc.Add(p);
+                }
+
+                //gift cards
+                foreach (var gcuh in order.GiftCardUsageHistory)
+                {
+                    string gcTitle = string.Format(_localizationService.GetResource("PDFInvoice.GiftCardInfo", lang.Id), gcuh.GiftCard.GiftCardCouponCode);
+                    string gcAmountStr = _priceFormatter.FormatPrice(-(_currencyService.ConvertCurrency(gcuh.UsedValue, order.CurrencyRate)), true, order.CustomerCurrencyCode, false);
+
+                    var p = new Paragraph(String.Format("{0} {1}", gcTitle, gcAmountStr), font);
+                    p.Alignment = Element.ALIGN_RIGHT;
+                    doc.Add(p);
+                }
+
+                //reward points
+                if (order.RedeemedRewardPointsEntry != null)
+                {
+                    string rpTitle = string.Format(_localizationService.GetResource("PDFInvoice.RewardPoints", lang.Id), -order.RedeemedRewardPointsEntry.Points);
+                    string rpAmount = _priceFormatter.FormatPrice(-(_currencyService.ConvertCurrency(order.RedeemedRewardPointsEntry.UsedAmount, order.CurrencyRate)), true, order.CustomerCurrencyCode, false);
+
+                    var p = new Paragraph(String.Format("{0} {1}", rpTitle, rpAmount), font);
+                    p.Alignment = Element.ALIGN_RIGHT;
+                    doc.Add(p);
+                }
+
+                //order total
+                var orderTotalInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderTotal, order.CurrencyRate);
+                //TODO pass languageId to _priceFormatter.FormatPrice
+                string orderTotalStr = _priceFormatter.FormatPrice(orderTotalInCustomerCurrency, true, order.CustomerCurrencyCode, false);
+
+
+                var pTotal = new Paragraph(String.Format("{0} {1}", _localizationService.GetResource("PDFInvoice.OrderTotal", lang.Id), orderTotalStr), titleFont);
+                pTotal.Alignment = Element.ALIGN_RIGHT;
+                doc.Add(pTotal);
+
+                #endregion
+
+                #region Order notes
+
+                if (_pdfSettings.RenderOrderNotes)
+                {
+                    var orderNotes = order.OrderNotes
+                        .Where(on => on.DisplayToCustomer)
+                        .OrderByDescending(on => on.CreatedOnUtc)
+                        .ToList();
+                    if (orderNotes.Count > 0)
+                    {
+                        doc.Add(new Paragraph(_localizationService.GetResource("PDFInvoice.OrderNotes", lang.Id), titleFont));
+
+                        doc.Add(new Paragraph(" "));
+
+                        var notesTable = new PdfPTable(2);
+                        notesTable.WidthPercentage = 100f;
+                        notesTable.SetWidths(new[] { 30, 70 });
+
+                        //created on
+                        cell = new PdfPCell(new Phrase(_localizationService.GetResource("PDFInvoice.OrderNotes.CreatedOn", lang.Id), font));
+                        cell.BackgroundColor = BaseColor.LIGHT_GRAY;
+                        cell.HorizontalAlignment = Element.ALIGN_CENTER;
                         notesTable.AddCell(cell);
 
-                        cell = new PdfPCell();
-                        cell.AddElement(new Paragraph(HtmlHelper.ConvertHtmlToPlainText(HtmlHelper.FormatText(orderNote.Note, false, true, false, false, false, false), true), font));
-                        cell.HorizontalAlignment = Element.ALIGN_LEFT;
+                        //note
+                        cell = new PdfPCell(new Phrase(_localizationService.GetResource("PDFInvoice.OrderNotes.Note", lang.Id), font));
+                        cell.BackgroundColor = BaseColor.LIGHT_GRAY;
+                        cell.HorizontalAlignment = Element.ALIGN_CENTER;
                         notesTable.AddCell(cell);
+
+                        foreach (var orderNote in orderNotes)
+                        {
+                            cell = new PdfPCell();
+                            cell.AddElement(new Paragraph(_dateTimeHelper.ConvertToUserTime(orderNote.CreatedOnUtc, DateTimeKind.Utc).ToString(), font));
+                            cell.HorizontalAlignment = Element.ALIGN_LEFT;
+                            notesTable.AddCell(cell);
+
+                            cell = new PdfPCell();
+                            cell.AddElement(new Paragraph(HtmlHelper.ConvertHtmlToPlainText(HtmlHelper.FormatText(orderNote.Note, false, true, false, false, false, false), true), font));
+                            cell.HorizontalAlignment = Element.ALIGN_LEFT;
+                            notesTable.AddCell(cell);
+                        }
+                        doc.Add(notesTable);
                     }
-                    doc.Add(notesTable);
+                }
+
+                #endregion
+
+                ordNum++;
+                if (ordNum < ordCount)
+                {
+                    doc.NewPage();
                 }
             }
-
-            #endregion
-
             doc.Close();
         }
 
