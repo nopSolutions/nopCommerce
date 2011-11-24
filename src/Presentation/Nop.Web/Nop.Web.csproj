@@ -34,13 +34,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FluentValidation, Version=2.0.0.0, Culture=neutral, PublicKeyToken=a82054b837897c66, processorArchitecture=MSIL">
+    <Reference Include="FluentValidation, Version=3.2.0.0, Culture=neutral, PublicKeyToken=a82054b837897c66, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\FluentValidation.2.0.0.0\lib\NET35\FluentValidation.dll</HintPath>
+      <HintPath>..\..\packages\FluentValidation.3.2.0.0\lib\Net40\FluentValidation.dll</HintPath>
     </Reference>
-    <Reference Include="FluentValidation.Mvc, Version=2.0.0.0, Culture=neutral, PublicKeyToken=a82054b837897c66, processorArchitecture=MSIL">
+    <Reference Include="FluentValidation.Mvc, Version=3.2.0.0, Culture=neutral, PublicKeyToken=a82054b837897c66, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\FluentValidation.MVC3.2.0.0.0\lib\NET4\FluentValidation.Mvc.dll</HintPath>
+      <HintPath>..\..\packages\FluentValidation.MVC3.3.2.0.0\lib\Net40\FluentValidation.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Web.Mvc">
       <HintPath>..\..\packages\Mvc2Futures.2.0.50217.0\lib\Microsoft.Web.Mvc.dll</HintPath>

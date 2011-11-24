@@ -32,8 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="FluentValidation">
-      <HintPath>..\..\packages\FluentValidation.2.0.0.0\lib\NET35\FluentValidation.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\packages\FluentValidation.3.2.0.0\lib\Net40\FluentValidation.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -96,8 +95,8 @@
       </SubType>
     </EmbeddedResource>
     <Content Include="Notes.txt" />
-    <Content Include="packages.config" />
     <None Include="app.config" />
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
