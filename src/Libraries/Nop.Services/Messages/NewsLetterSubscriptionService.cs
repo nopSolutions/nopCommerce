@@ -34,7 +34,8 @@ namespace Nop.Services.Messages
         /// Inserts a newsletter subscription
         /// </summary>
         /// <param name="newsLetterSubscription">NewsLetter subscription</param>
-        public virtual void InsertNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription)
+        /// <param name="publishSubscriptionEvents">if set to <c>true</c> [publish subscription events].</param>
+        public virtual void InsertNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = false)
         {
             if (newsLetterSubscription == null)
                 throw new ArgumentNullException("newsLetterSubscription");
@@ -58,7 +59,8 @@ namespace Nop.Services.Messages
         /// Updates a newsletter subscription
         /// </summary>
         /// <param name="newsLetterSubscription">NewsLetter subscription</param>
-        public virtual void UpdateNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription)
+        /// <param name="publishSubscriptionEvents">if set to <c>true</c> [publish subscription events].</param>
+        public virtual void UpdateNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = false)
         {
             if (newsLetterSubscription == null)
                 throw new ArgumentNullException("newsLetterSubscription");
@@ -82,7 +84,8 @@ namespace Nop.Services.Messages
         /// Deletes a newsletter subscription
         /// </summary>
         /// <param name="newsLetterSubscription">NewsLetter subscription</param>
-        public virtual void DeleteNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription)
+        /// <param name="publishSubscriptionEvents">if set to <c>true</c> [publish subscription events].</param>
+        public virtual void DeleteNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = false)
         {
             if (newsLetterSubscription == null)
                 throw new ArgumentNullException("newsLetterSubscription");
