@@ -1,0 +1,140 @@
+using System;
+using System.Linq;
+using Nop.Core;
+using Nop.Core.Data;
+using Nop.Core.Domain.Messages;
+using Nop.Core.Events;
+
+namespace Nop.Services.Messages {
+    public class NewsLetterSubscriptionServiceWithEventing : INewsLetterSubscriptionService {
+        private readonly IEventPublisher _eventPublisher;
+        private readonly IRepository<NewsLetterSubscription> _subscriptionRepository;
+
+        public NewsLetterSubscriptionServiceWithEventing(IRepository<NewsLetterSubscription> subscriptionRepository, IEventPublisher eventPublisher) {
+            _subscriptionRepository = subscriptionRepository;
+            _eventPublisher = eventPublisher;
+        }
+
+        #region Implementation of INewsLetterSubscriptionService
+
+        /// <summary>
+        /// Inserts a newsletter subscription
+        /// </summary>
+        /// <param name="newsLetterSubscription">NewsLetter subscription</param>
+        public void InsertNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription) {
+            if (newsLetterSubscription == null) {
+                throw new ArgumentNullException("newsLetterSubscription");
+            }
+
+            //Handle e-mail
+            newsLetterSubscription.Email = CommonHelper.EnsureSubscriberEmailOrThrow(newsLetterSubscription.Email);
+
+            //Persist
+            _subscriptionRepository.Insert(newsLetterSubscription);
+
+            //Publish event
+            _eventPublisher.EntityInserted(newsLetterSubscription);
+        }
+
+        /// <summary>
+        /// Updates a newsletter subscription
+        /// </summary>
+        /// <param name="newsLetterSubscription">NewsLetter subscription</param>
+        public void UpdateNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription) {
+            if (newsLetterSubscription == null) {
+                throw new ArgumentNullException("newsLetterSubscription");
+            }
+
+            //Handle e-mail
+            newsLetterSubscription.Email = CommonHelper.EnsureSubscriberEmailOrThrow(newsLetterSubscription.Email);
+
+            //Persist
+            _subscriptionRepository.Update(newsLetterSubscription);
+
+            //Publish event
+            _eventPublisher.EntityUpdated(newsLetterSubscription);
+        }
+
+        /// <summary>
+        /// Deletes a newsletter subscription
+        /// </summary>
+        /// <param name="newsLetterSubscription">NewsLetter subscription</param>
+        public virtual void DeleteNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription) {
+            if (newsLetterSubscription == null) throw new ArgumentNullException("newsLetterSubscription");
+
+            _subscriptionRepository.Delete(newsLetterSubscription);
+
+            //event notification
+            _eventPublisher.EntityDeleted(newsLetterSubscription);
+        }
+
+        /// <summary>
+        /// Gets a newsletter subscription by newsletter subscription identifier
+        /// </summary>
+        /// <param name="newsLetterSubscriptionId">The newsletter subscription identifier</param>
+        /// <returns>NewsLetter subscription</returns>
+        public virtual NewsLetterSubscription GetNewsLetterSubscriptionById(int newsLetterSubscriptionId) {
+            if (newsLetterSubscriptionId == 0) return null;
+
+            NewsLetterSubscription queuedEmail = _subscriptionRepository.GetById(newsLetterSubscriptionId);
+            return queuedEmail;
+        }
+
+        /// <summary>
+        /// Gets a newsletter subscription by newsletter subscription GUID
+        /// </summary>
+        /// <param name="newsLetterSubscriptionGuid">The newsletter subscription GUID</param>
+        /// <returns>NewsLetter subscription</returns>
+        public virtual NewsLetterSubscription GetNewsLetterSubscriptionByGuid(Guid newsLetterSubscriptionGuid) {
+            if (newsLetterSubscriptionGuid == Guid.Empty) return null;
+
+            IOrderedQueryable<NewsLetterSubscription> newsLetterSubscriptions = from nls in _subscriptionRepository.Table
+                                                                                where nls.NewsLetterSubscriptionGuid == newsLetterSubscriptionGuid
+                                                                                orderby nls.Id
+                                                                                select nls;
+
+            return newsLetterSubscriptions.FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Gets a newsletter subscription by email
+        /// </summary>
+        /// <param name="email">The newsletter subscription email</param>
+        /// <returns>NewsLetter subscription</returns>
+        public virtual NewsLetterSubscription GetNewsLetterSubscriptionByEmail(string email) {
+            if (!CommonHelper.IsValidEmail(email)) return null;
+
+            email = email.Trim();
+
+            IOrderedQueryable<NewsLetterSubscription> newsLetterSubscriptions = from nls in _subscriptionRepository.Table
+                                                                                where nls.Email == email
+                                                                                orderby nls.Id
+                                                                                select nls;
+
+            return newsLetterSubscriptions.FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Gets the newsletter subscription list
+        /// </summary>
+        /// <param name="email">Email to search or string. Empty to load all records.</param>
+        /// <param name="showHidden">A value indicating whether the not active subscriptions should be loaded</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>NewsLetterSubscription entity list</returns>
+        public virtual IPagedList<NewsLetterSubscription> GetAllNewsLetterSubscriptions(string email,
+                                                                                        int pageIndex, int pageSize, bool showHidden = false) {
+            IQueryable<NewsLetterSubscription> query = _subscriptionRepository.Table;
+            if (!String.IsNullOrEmpty(email)) query = query.Where(nls => nls.Email.Contains(email));
+            if (!showHidden) {
+                query = query.Where(nls => nls.Active);
+            }
+            query = query.OrderBy(nls => nls.Email);
+
+            var newsletterSubscriptions = new PagedList<NewsLetterSubscription>(query, pageIndex, pageSize);
+            return newsletterSubscriptions;
+        }
+
+        #endregion
+    }
+}

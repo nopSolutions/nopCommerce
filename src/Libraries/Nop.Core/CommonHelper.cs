@@ -18,6 +18,23 @@ namespace Nop.Core
     public partial class CommonHelper
     {
         /// <summary>
+        /// Ensures the subscriber email or throw.
+        /// </summary>
+        /// <param name="email">The email.</param>
+        /// <returns></returns>
+        public static string EnsureSubscriberEmailOrThrow(string email) {
+            string output = EnsureNotNull(email);
+            output = output.Trim();
+            output = EnsureMaximumLength(output, 255);
+
+            if(!IsValidEmail(output)) {
+                throw new NopException("Email is not valid.");
+            }
+
+            return output;
+        }
+
+        /// <summary>
         /// Verifies that a string is in valid e-mail format
         /// </summary>
         /// <param name="email">Email to verify</param>

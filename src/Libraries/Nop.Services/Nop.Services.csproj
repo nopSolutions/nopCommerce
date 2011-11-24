@@ -123,6 +123,7 @@
     <Compile Include="Directory\IGeoCountryLookup.cs" />
     <Compile Include="Directory\GeoCountryLookup.cs" />
     <Compile Include="Forums\ForumExtensions.cs" />
+    <Compile Include="Messages\NewsLetterSubscriptionServiceWithEventing.cs" />
     <Compile Include="News\NewsService.cs" />
     <Compile Include="News\INewsService.cs" />
     <Compile Include="Customers\CustomerExtentions.cs" />
