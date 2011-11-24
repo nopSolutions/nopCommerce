@@ -6,7 +6,7 @@ using System.Text;
 namespace Nop.Core.Events
 {
     /// <summary>
-    /// A containe for entities that are udpated.
+    /// A container for entities that are updated.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class EntityUpdated<T> where T : BaseEntity

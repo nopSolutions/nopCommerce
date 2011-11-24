@@ -22,8 +22,7 @@ namespace Nop.Services.Messages {
         /// </summary>
         /// <param name="newsLetterSubscription">NewsLetter subscription</param>
         /// <param name="publishSubscriptionEvents">if set to <c>true</c> [publish subscription events].</param>
-        public void InsertNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = false)
-        {
+        public void InsertNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = false) {
             if (newsLetterSubscription == null) {
                 throw new ArgumentNullException("newsLetterSubscription");
             }
@@ -34,6 +33,11 @@ namespace Nop.Services.Messages {
             //Persist
             _subscriptionRepository.Insert(newsLetterSubscription);
 
+            //Publish the subscription event 
+            if (newsLetterSubscription.Active) {
+                PublishSubscriptionEvent(newsLetterSubscription.Email, true, publishSubscriptionEvents);
+            }
+
             //Publish event
             _eventPublisher.EntityInserted(newsLetterSubscription);
         }
@@ -43,8 +47,7 @@ namespace Nop.Services.Messages {
         /// </summary>
         /// <param name="newsLetterSubscription">NewsLetter subscription</param>
         /// <param name="publishSubscriptionEvents">if set to <c>true</c> [publish subscription events].</param>
-        public void UpdateNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = false)
-        {
+        public void UpdateNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = false) {
             if (newsLetterSubscription == null) {
                 throw new ArgumentNullException("newsLetterSubscription");
             }
@@ -52,8 +55,23 @@ namespace Nop.Services.Messages {
             //Handle e-mail
             newsLetterSubscription.Email = CommonHelper.EnsureSubscriberEmailOrThrow(newsLetterSubscription.Email);
 
+            //Get original subscription record
+            NewsLetterSubscription originalSubscription = _subscriptionRepository.GetById(newsLetterSubscription.Id);
+
             //Persist
             _subscriptionRepository.Update(newsLetterSubscription);
+
+            //Publish the subscription event 
+            if ((originalSubscription.Active == false && newsLetterSubscription.Active) || 
+                (newsLetterSubscription.Active && (originalSubscription.Email != newsLetterSubscription.Email))) {
+                //If the previous entry was false, but this one is true, publish a subscribe.
+                PublishSubscriptionEvent(newsLetterSubscription.Email, true, publishSubscriptionEvents);
+            }
+
+            if((originalSubscription.Active && newsLetterSubscription.Active) && (originalSubscription.Email != newsLetterSubscription.Email)) {
+                //If the two emails are different publish an unsubscribe.
+                PublishSubscriptionEvent(originalSubscription.Email, false, publishSubscriptionEvents);
+            }
 
             //Publish event
             _eventPublisher.EntityUpdated(newsLetterSubscription);
@@ -64,11 +82,13 @@ namespace Nop.Services.Messages {
         /// </summary>
         /// <param name="newsLetterSubscription">NewsLetter subscription</param>
         /// <param name="publishSubscriptionEvents">if set to <c>true</c> [publish subscription events].</param>
-        public virtual void DeleteNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = false)
-        {
+        public virtual void DeleteNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = false) {
             if (newsLetterSubscription == null) throw new ArgumentNullException("newsLetterSubscription");
 
             _subscriptionRepository.Delete(newsLetterSubscription);
+
+            //Publish the unsubscribe event 
+            PublishSubscriptionEvent(newsLetterSubscription.Email, false, publishSubscriptionEvents);
 
             //event notification
             _eventPublisher.EntityDeleted(newsLetterSubscription);
@@ -139,6 +159,23 @@ namespace Nop.Services.Messages {
 
             var newsletterSubscriptions = new PagedList<NewsLetterSubscription>(query, pageIndex, pageSize);
             return newsletterSubscriptions;
+        }
+
+        /// <summary>
+        /// Publishes the subscription event.
+        /// </summary>
+        /// <param name="email">The email.</param>
+        /// <param name="isSubscribe">if set to <c>true</c> [is subscribe].</param>
+        /// <param name="publishSubscriptionEvents">if set to <c>true</c> [publish subscription events].</param>
+        private void PublishSubscriptionEvent(string email, bool isSubscribe, bool publishSubscriptionEvents) {
+            if (publishSubscriptionEvents) {
+                if (isSubscribe) {
+                    _eventPublisher.PublishSubscribe(email);
+                }
+                else {
+                    _eventPublisher.PublishUnsubscribe(email);
+                }
+            }
         }
 
         #endregion
