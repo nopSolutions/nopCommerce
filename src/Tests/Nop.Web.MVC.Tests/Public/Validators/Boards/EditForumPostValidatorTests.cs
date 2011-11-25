@@ -17,7 +17,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Boards
         }
         
         [Test]
-        public void Should_have_error_when_text_is_null()
+        public void Should_have_error_when_text_is_null_or_empty()
         {
             var model = new EditForumPostModel();
             model.Text = null;

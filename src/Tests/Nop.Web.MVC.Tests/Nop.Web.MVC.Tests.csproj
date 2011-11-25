@@ -73,6 +73,10 @@
     <Compile Include="Public\Validators\Blogs\BlogPostValidatorTests.cs" />
     <Compile Include="Public\Validators\Boards\EditForumTopicValidatorTests.cs" />
     <Compile Include="Public\Validators\Boards\EditForumPostValidatorTests.cs" />
+    <Compile Include="Public\Validators\Catalog\ProductReviewsValidatorTests.cs" />
+    <Compile Include="Public\Validators\Catalog\ProductEmailAFriendValidatorTests.cs" />
+    <Compile Include="Public\Validators\Common\AddressValidatorTests.cs" />
+    <Compile Include="Public\Validators\Common\ContactUsValidatorTests.cs" />
     <Compile Include="Public\Validators\Person.cs" />
     <Compile Include="Public\Validators\TestValidator.cs" />
     <Compile Include="Public\Validators\CreditCardValidatorTests.cs" />
