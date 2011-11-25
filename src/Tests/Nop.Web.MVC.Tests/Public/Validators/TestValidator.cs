@@ -1,7 +1,7 @@
 ﻿using System;
 using FluentValidation;
 
-namespace Nop.Web.MVC.Tests.Validators
+namespace Nop.Web.MVC.Tests.Public.Validators
 {
     public class TestValidator : InlineValidator<Person>
     {

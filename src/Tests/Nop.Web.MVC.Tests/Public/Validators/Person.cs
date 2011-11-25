@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using FluentValidation.Attributes;
 
-namespace Nop.Web.MVC.Tests.Validators
+namespace Nop.Web.MVC.Tests.Public.Validators
 {
     [Validator(typeof(TestValidator))]
     public class Person
