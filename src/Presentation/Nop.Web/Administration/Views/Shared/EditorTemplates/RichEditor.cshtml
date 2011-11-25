@@ -5,9 +5,7 @@
     var clientId = (ViewData.TemplateInfo.GetFullHtmlFieldName(string.Empty));
     var random = CommonHelper.GenerateRandomInteger();
 }
-@(Html.Telerik().Editor().Name(clientId)
-/*.Encode(false) weird. Settings "Encode(false)" doesn't work on category & product details page
-Now we have to manually decode values*/
+@(Html.Telerik().Editor().Name(clientId).Encode(false)
 .Value(Model)
 .Tools(tools => tools
 .Custom(settings => settings.HtmlAttributes(new { @class = "t-html", onclick = "viewRichHtmlEditorSource" + random + "(event)", title="Edit HTML" })))
@@ -17,6 +15,9 @@ Now we have to manually decode values*/
     .DeleteFile("DeleteFile", "ImageBrowser")
     .DeleteDirectory("DeleteDirectory", "ImageBrowser")
     .CreateDirectory("CreateDirectory", "ImageBrowser")))
+
+    
+@*source: http://demos.telerik.com/aspnet-mvc/editor/customtools*@
 <script type="text/javascript">
     var htmlSourcePopup;
     
@@ -51,32 +52,33 @@ Now we have to manually decode values*/
                         $popup.find('.textarea')
                                 .css('width', function () {
                                     return 700 - (this.offsetWidth - $(this).width());
+                                })
+                                .focus()
+                                .end()
+                                .find('#htmlCancel')
+                                .unbind('click')
+                                .click(function () {
+                                    htmlSourcePopup.close();
+                                })
+                                .end()
+                                .find('#htmlUpdate')
+                                .unbind('click')
+                                .click(function () {
+                                    var value = $popup.find('textarea').val();
+                                    editor.value(value);
+                                    htmlSourcePopup.close();
                                 });
-                    }})
+                    },
+                    onClose: function() {
+                        editor.focus();
+                    },
+                    effects: $.telerik.fx.toggle.defaults()
+                })
                 .data('tWindow');
         }
+        
+        $(htmlSourcePopup.element).find('textarea').text(html);
 
-        var element = $(htmlSourcePopup.element);
-
-        element.find('.textarea')
-                .focus()
-                .end()
-                .find('#htmlCancel')
-                .unbind('click')
-                .click(function () {
-                    htmlSourcePopup.close();
-                })
-                .end()
-                .find('#htmlUpdate')
-                .unbind('click')
-                .click(function () {
-                    var value = element.find('textarea').val();
-                    editor.value(value);
-                    editor.focus();
-                    htmlSourcePopup.close();
-                });
-
-        element.find('textarea').val(html);
         htmlSourcePopup.center().open();
     }
 </script>

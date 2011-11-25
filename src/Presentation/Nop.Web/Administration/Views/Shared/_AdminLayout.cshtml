@@ -104,9 +104,9 @@
     </div>
     <!--These need to be at the end of the page to ensure that all the controls requiring scripts have been rendered-->
     @MvcHtmlString.Create(HttpUtility.HtmlDecode(Html.Telerik().StyleSheetRegistrar().DefaultGroup(group => group
-                                                    .Add("2011.2.712/telerik.common.css")
-                                                    .Add("2011.2.712/telerik.vista.css")
-                                                    .Add("2011.2.712/telerik.rtl.css")).ToHtmlString()))
+                                                        .Add("2011.3.1115/telerik.common.min.css")
+                                                        .Add("2011.3.1115/telerik.vista.min.css")
+                                                        .Add("2011.3.1115/telerik.rtl.min.css")).ToHtmlString()))
     @(MvcHtmlString.Create(HttpUtility.HtmlDecode(Html.Telerik().ScriptRegistrar()
     .jQuery(false).ToHtmlString())))
 </body>

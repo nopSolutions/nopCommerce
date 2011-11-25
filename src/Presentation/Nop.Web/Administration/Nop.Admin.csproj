@@ -72,9 +72,9 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
-    <Reference Include="Telerik.Web.Mvc, Version=2011.1.315.340, Culture=neutral, PublicKeyToken=121fae78165ba3d4, processorArchitecture=MSIL">
+    <Reference Include="Telerik.Web.Mvc, Version=2011.3.1115.340, Culture=neutral, PublicKeyToken=29ac1a93ec063d92, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\packages\TelerikMvcExtensions.2011.2.712\lib\net40\Telerik.Web.Mvc.dll</HintPath>
+      <HintPath>..\..\..\packages\TelerikMvcExtensions.2011.3.1115\lib\net40\Telerik.Web.Mvc.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

@@ -8927,37 +8927,6 @@
 							</LocaleResource>
 						</Children>
 					</LocaleResource>
-					<LocaleResource Name="EditorLocalization">
-						<Children>
-							<LocaleResource Name="Cancel">
-								<Value>Cancel</Value>
-							</LocaleResource>
-							<LocaleResource Name="DropFilesHere">
-								<Value>drop files here to upload</Value>
-							</LocaleResource>
-							<LocaleResource Name="Remove">
-								<Value>Remove</Value>
-							</LocaleResource>
-							<LocaleResource Name="Retry">
-								<Value>Retry</Value>
-							</LocaleResource>
-							<LocaleResource Name="Select">
-								<Value>Select...</Value>
-							</LocaleResource>
-							<LocaleResource Name="StatusFailed">
-								<Value>failed</Value>
-							</LocaleResource>
-							<LocaleResource Name="StatusUploaded">
-								<Value>uploaded</Value>
-							</LocaleResource>
-							<LocaleResource Name="StatusUploading">
-								<Value>uploading</Value>
-							</LocaleResource>
-							<LocaleResource Name="UploadSelectedFiles">
-								<Value>Upload files</Value>
-							</LocaleResource>
-						</Children>
-					</LocaleResource>
 					<LocaleResource Name="UploadLocalization">
 						<Children>
 							<LocaleResource Name="Cancel">
@@ -8965,9 +8934,6 @@
 							</LocaleResource>
 							<LocaleResource Name="DropFilesHere">
 								<Value>Drop files here</Value>
-							</LocaleResource>
-							<LocaleResource Name="drop files here to upload">
-								<Value></Value>
 							</LocaleResource>
 							<LocaleResource Name="Remove">
 								<Value>Remove</Value>
