@@ -122,9 +122,6 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNews))
                 return AccessDeniedView();
 
-            //decode body
-            model.Full = HttpUtility.HtmlDecode(model.Full);
-
             if (ModelState.IsValid)
             {
                 var newsItem = model.ToEntity();
@@ -163,9 +160,6 @@ namespace Nop.Admin.Controllers
             var newsItem = _newsService.GetNewsById(model.Id);
             if (newsItem == null)
                 throw new ArgumentException("No news item found with the specified id");
-
-            //decode body
-            model.Full = HttpUtility.HtmlDecode(model.Full);
 
             if (ModelState.IsValid)
             {

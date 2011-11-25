@@ -137,11 +137,6 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageTopics))
                 return AccessDeniedView();
 
-            //decode description
-            model.Body = HttpUtility.HtmlDecode(model.Body);
-            foreach (var localized in model.Locales)
-                localized.Body = HttpUtility.HtmlDecode(localized.Body);
-
             if (ModelState.IsValid)
             {
                 if (!model.IsPasswordProtected)
@@ -194,11 +189,6 @@ namespace Nop.Admin.Controllers
             var topic = _topicService.GetTopicById(model.Id);
             if (topic == null)
                 throw new ArgumentException("No topic found with the specified id");
-
-            //decode description
-            model.Body = HttpUtility.HtmlDecode(model.Body);
-            foreach (var localized in model.Locales)
-                localized.Body = HttpUtility.HtmlDecode(localized.Body);
 
             model.Url = Url.RouteUrl("Topic", new { SystemName = topic.SystemName }, "http");
 

@@ -204,11 +204,6 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
 
-            //decode description
-            model.Description = HttpUtility.HtmlDecode(model.Description);
-            foreach (var localized in model.Locales)
-                localized.Description = HttpUtility.HtmlDecode(localized.Description);
-
             if (ModelState.IsValid)
             {
                 var manufacturer = model.ToEntity();
@@ -267,12 +262,6 @@ namespace Nop.Admin.Controllers
             var manufacturer = _manufacturerService.GetManufacturerById(model.Id);
             if (manufacturer == null || manufacturer.Deleted)
                 throw new ArgumentException("No manufacturer found with the specified id");
-
-            //decode description
-            model.Description = HttpUtility.HtmlDecode(model.Description);
-            foreach (var localized in model.Locales)
-                localized.Description = HttpUtility.HtmlDecode(localized.Description);
-
 
             if (ModelState.IsValid)
             {

@@ -296,11 +296,6 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
 
-            //decode description
-            model.Description = HttpUtility.HtmlDecode(model.Description);
-            foreach (var localized in model.Locales)
-                localized.Description = HttpUtility.HtmlDecode(localized.Description);
-
             if (ModelState.IsValid)
             {
                 var category = model.ToEntity();
@@ -391,12 +386,6 @@ namespace Nop.Admin.Controllers
             var category = _categoryService.GetCategoryById(model.Id);
             if (category == null || category.Deleted)
                 throw new ArgumentException("No category found with the specified id");
-
-            //decode description
-            model.Description = HttpUtility.HtmlDecode(model.Description);
-            foreach (var localized in model.Locales)
-                localized.Description = HttpUtility.HtmlDecode(localized.Description);
-
 
             if (ModelState.IsValid)
             {

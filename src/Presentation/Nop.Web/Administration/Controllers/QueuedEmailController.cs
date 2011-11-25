@@ -117,9 +117,6 @@ namespace Nop.Admin.Controllers
             if (email == null)
                 throw new ArgumentException("No email found with the specified id");
 
-            //decode body
-            model.Body = HttpUtility.HtmlDecode(model.Body);
-
             if (ModelState.IsValid)
             {
                 email = model.ToEntity(email);
