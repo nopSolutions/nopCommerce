@@ -1,7 +1,5 @@
 ﻿using FluentValidation.TestHelper;
 using Nop.Web.Models.Common;
-using Nop.Web.Models.Catalog;
-using Nop.Web.Validators.Catalog;
 using Nop.Web.Validators.Common;
 using NUnit.Framework;
 

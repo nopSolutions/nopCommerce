@@ -77,7 +77,16 @@
     <Compile Include="Public\Validators\Catalog\ProductEmailAFriendValidatorTests.cs" />
     <Compile Include="Public\Validators\Common\AddressValidatorTests.cs" />
     <Compile Include="Public\Validators\Common\ContactUsValidatorTests.cs" />
+    <Compile Include="Public\Validators\Customer\ChangePasswordValidatorTests.cs" />
+    <Compile Include="Public\Validators\Customer\RegisterValidatorTests.cs" />
+    <Compile Include="Public\Validators\Customer\PasswordRecoveryValidatorTests.cs" />
+    <Compile Include="Public\Validators\Customer\PasswordRecoveryConfirmValidatorTests.cs" />
+    <Compile Include="Public\Validators\Customer\CustomerInfoValidatorTests.cs" />
+    <Compile Include="Public\Validators\Install\InstallValidatorTests.cs" />
+    <Compile Include="Public\Validators\Newsletter\NewsletterBoxValidatorTests.cs" />
     <Compile Include="Public\Validators\Person.cs" />
+    <Compile Include="Public\Validators\PrivateMessages\PrivateMessageValidatorTests.cs" />
+    <Compile Include="Public\Validators\ShoppingCart\WishlistEmailAFriendValidatorTests.cs" />
     <Compile Include="Public\Validators\TestValidator.cs" />
     <Compile Include="Public\Validators\CreditCardValidatorTests.cs" />
   </ItemGroup>
