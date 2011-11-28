@@ -6,7 +6,6 @@ using System.IO;
 using System.Text;
 using System.Web;
 using System.Web.Hosting;
-using Nop.Core.Fakes;
 
 namespace Nop.Core
 {
@@ -309,9 +308,9 @@ namespace Nop.Core
         /// </summary>
         /// <param name="url">Url to modify</param>
         /// <param name="queryStringModification">Query string modification</param>
-        /// <param name="targetLocationModification">Target location modification</param>
+        /// <param name="anchor">Anchor</param>
         /// <returns>New url</returns>
-        public virtual string ModifyQueryString(string url, string queryStringModification, string targetLocationModification)
+        public virtual string ModifyQueryString(string url, string queryStringModification, string anchor)
         {
             if (url == null)
                 url = string.Empty;
@@ -321,9 +320,9 @@ namespace Nop.Core
                 queryStringModification = string.Empty;
             queryStringModification = queryStringModification.ToLowerInvariant();
 
-            if (targetLocationModification == null)
-                targetLocationModification = string.Empty;
-            targetLocationModification = targetLocationModification.ToLowerInvariant();
+            if (anchor == null)
+                anchor = string.Empty;
+            anchor = anchor.ToLowerInvariant();
 
 
             string str = string.Empty;
@@ -394,9 +393,9 @@ namespace Nop.Core
                     str = queryStringModification;
                 }
             }
-            if (!string.IsNullOrEmpty(targetLocationModification))
+            if (!string.IsNullOrEmpty(anchor))
             {
-                str2 = targetLocationModification;
+                str2 = anchor;
             }
             return (url + (string.IsNullOrEmpty(str) ? "" : ("?" + str)) + (string.IsNullOrEmpty(str2) ? "" : ("#" + str2))).ToLowerInvariant();
         }

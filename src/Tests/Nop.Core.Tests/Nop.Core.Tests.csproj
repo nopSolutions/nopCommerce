@@ -57,6 +57,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="WebHelperTests.cs" />
     <Compile Include="ComponentModel\GenericListTypeConverterTests.cs" />
     <Compile Include="ExtensionsTests.cs" />
     <Compile Include="Domain\Blogs\BlogPostTests.cs" />

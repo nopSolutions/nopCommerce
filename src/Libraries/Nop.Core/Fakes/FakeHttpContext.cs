@@ -16,6 +16,7 @@ namespace Nop.Core.Fakes
         private readonly string _relativeUrl;
         private readonly string _method;
         private readonly SessionStateItemCollection _sessionItems;
+        private readonly NameValueCollection _serverVariables;
         private HttpResponseBase _response;
         private HttpRequestBase _request;
         private readonly Dictionary<object, object> _items;
@@ -26,25 +27,27 @@ namespace Nop.Core.Fakes
         }
 
         public FakeHttpContext(string relativeUrl, string method)
-            : this(relativeUrl, method, null, null, null, null, null)
+            : this(relativeUrl, method, null, null, null, null, null, null)
         {
         }
 
-        public FakeHttpContext(string relativeUrl) 
-            : this(relativeUrl, null, null, null, null, null)
+        public FakeHttpContext(string relativeUrl)
+            : this(relativeUrl, null, null, null, null, null, null)
         {
         }
 
-        public FakeHttpContext(string relativeUrl, IPrincipal principal, NameValueCollection formParams,
-                               NameValueCollection queryStringParams, HttpCookieCollection cookies,
-                               SessionStateItemCollection sessionItems) 
-            : this(relativeUrl, null, principal, formParams, queryStringParams, cookies, sessionItems)
+        public FakeHttpContext(string relativeUrl, 
+            IPrincipal principal, NameValueCollection formParams,
+            NameValueCollection queryStringParams, HttpCookieCollection cookies,
+            SessionStateItemCollection sessionItems, NameValueCollection serverVariables)
+            : this(relativeUrl, null, principal, formParams, queryStringParams, cookies, sessionItems, serverVariables)
         {
         }
 
-        public FakeHttpContext(string relativeUrl, string method, IPrincipal principal, NameValueCollection formParams,
-                               NameValueCollection queryStringParams, HttpCookieCollection cookies,
-                               SessionStateItemCollection sessionItems)
+        public FakeHttpContext(string relativeUrl, string method,
+            IPrincipal principal, NameValueCollection formParams,
+            NameValueCollection queryStringParams, HttpCookieCollection cookies,
+            SessionStateItemCollection sessionItems, NameValueCollection serverVariables)
         {
             _relativeUrl = relativeUrl;
             _method = method;
@@ -53,6 +56,7 @@ namespace Nop.Core.Fakes
             _queryStringParams = queryStringParams;
             _cookies = cookies;
             _sessionItems = sessionItems;
+            _serverVariables = serverVariables;
 
             _items = new Dictionary<object, object>();
         }
@@ -62,7 +66,7 @@ namespace Nop.Core.Fakes
             get
             {
                 return _request ??
-                       new FakeHttpRequest(_relativeUrl, _method, _formParams, _queryStringParams, _cookies);
+                       new FakeHttpRequest(_relativeUrl, _method, _formParams, _queryStringParams, _cookies, _serverVariables);
             }
         }
 
