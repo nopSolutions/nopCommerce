@@ -4,7 +4,7 @@ using Nop.Core.Events;
 using Nop.Core.Infrastructure;
 using NUnit.Framework;
 
-namespace Nop.Core.Tests.Events
+namespace Nop.Web.MVC.Tests.Events
 {
     [TestFixture]
     public class EventsTests

@@ -49,6 +49,7 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -67,8 +68,6 @@
     <Compile Include="Domain\Orders\RecurringPaymentTests.cs" />
     <Compile Include="Domain\Orders\GiftCardTests.cs" />
     <Compile Include="Domain\Shipping\ShippingOptionTypeConverterTests.cs" />
-    <Compile Include="Events\DateTimeConsumer.cs" />
-    <Compile Include="Events\EventsTests.cs" />
     <Compile Include="Fakes\FakeTypeFinder.cs" />
     <Compile Include="FileSystemStorageProviderTests.cs" />
     <Compile Include="Infrastructure\DependencyManagement\ContainerSanityTests.cs" />

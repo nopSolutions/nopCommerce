@@ -90,13 +90,7 @@ namespace Nop.Core
         /// .ashx
         /// </remarks>
         bool IsStaticResource(HttpRequest request);
-
-        /// <summary>
-        /// Gets a physical disk path of \Bin directory
-        /// </summary>
-        /// <returns>The physical path. E.g. "c:\inetpub\wwwroot\bin"</returns>
-        string GetBinDirectory();
-
+        
         /// <summary>
         /// Maps a virtual path to a physical disk path.
         /// </summary>

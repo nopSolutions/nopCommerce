@@ -272,7 +272,7 @@ namespace Nop.Core.Infrastructure
         /// <param name="directoryPath">The physical path to a directory containing dlls to load in the app domain.</param>
         protected virtual void LoadMatchingAssemblies(string directoryPath)
         {
-            List<string> loadedAssemblyNames = new List<string>();
+            var loadedAssemblyNames = new List<string>();
             foreach (Assembly a in GetAssemblies())
             {
                 loadedAssemblyNames.Add(a.FullName);

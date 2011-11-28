@@ -104,5 +104,19 @@ namespace Nop.Core.Fakes
                 return _httpMethod;
             }
         }
+
+        public override string UserHostAddress
+        {
+            get { return null; }
+        }
+
+        public override string RawUrl
+        {
+            get { return null; }
+        }
+        public override bool IsSecureConnection
+        {
+            get { return false; }
+        }
     }
 }

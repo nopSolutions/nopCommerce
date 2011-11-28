@@ -9,6 +9,27 @@ namespace Nop.Core.Data
         protected const char separator = ':';
         protected const string filename = "Settings.txt";
 
+        /// <summary>
+        /// Maps a virtual path to a physical disk path.
+        /// </summary>
+        /// <param name="path">The path to map. E.g. "~/bin"</param>
+        /// <returns>The physical path. E.g. "c:\inetpub\wwwroot\bin"</returns>
+        protected virtual string MapPath(string path)
+        {
+            if (HostingEnvironment.IsHosted)
+            {
+                //hosted
+                return HostingEnvironment.MapPath(path);
+            }
+            else
+            {
+                //not hosted. For example, run in unit tests
+                string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+                path = path.Replace("~/", "").TrimStart('/').Replace('/', '\\');
+                return Path.Combine(baseDirectory, path);
+            }
+        }
+
         protected virtual DataSettings ParseSettings(string text)
         {
             var shellSettings = new DataSettings();
@@ -57,7 +78,7 @@ namespace Nop.Core.Data
         public virtual DataSettings LoadSettings()
         {
             //use webHelper.MapPath instead of HostingEnvironment.MapPath which is not available in unit tests
-            string filePath = Path.Combine(HostingEnvironment.MapPath("~/App_Data/"), filename);
+            string filePath = Path.Combine(MapPath("~/App_Data/"), filename);
             if (File.Exists(filePath))
             {
                 string text = File.ReadAllText(filePath);
@@ -73,7 +94,7 @@ namespace Nop.Core.Data
                 throw new ArgumentNullException("settings");
 
             //use webHelper.MapPath instead of HostingEnvironment.MapPath which is not available in unit tests
-            string filePath = Path.Combine(HostingEnvironment.MapPath("~/App_Data/"), filename);
+            string filePath = Path.Combine(MapPath("~/App_Data/"), filename);
             if (!File.Exists(filePath))
             {
                 using (File.Create(filePath))

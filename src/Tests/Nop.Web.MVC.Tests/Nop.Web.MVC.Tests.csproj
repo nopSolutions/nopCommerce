@@ -68,6 +68,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\Controllers\CategoryControllerTests.cs" />
+    <Compile Include="Events\DateTimeConsumer.cs" />
+    <Compile Include="Events\EventsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Public\Validators\BaseValidatorTests.cs" />
     <Compile Include="Public\Validators\Blogs\BlogPostValidatorTests.cs" />
@@ -113,6 +115,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>

@@ -11,6 +11,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
 using Nop.Core.Data;
+using Nop.Core.Events;
 using Nop.Core.Fakes;
 using Nop.Core.Infrastructure;
 using Nop.Core.Infrastructure.DependencyManagement;
@@ -57,6 +58,31 @@ namespace Nop.Web.Framework
     {
         public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder)
         {
+            //HTTP context ans other related stuff
+            builder.Register(c => 
+                //register FakeHttpContext when HttpContext is not available
+                HttpContext.Current != null ?
+                (new HttpContextWrapper(HttpContext.Current) as HttpContextBase) :
+                (new FakeHttpContext("~/") as HttpContextBase))
+                .As<HttpContextBase>()
+                .InstancePerHttpRequest();
+            builder.Register(c => c.Resolve<HttpContextBase>().Request)
+                .As<HttpRequestBase>()
+                .InstancePerHttpRequest();
+            builder.Register(c => c.Resolve<HttpContextBase>().Response)
+                .As<HttpResponseBase>()
+                .InstancePerHttpRequest();
+            builder.Register(c => c.Resolve<HttpContextBase>().Server)
+                .As<HttpServerUtilityBase>()
+                .InstancePerHttpRequest();
+            builder.Register(c => c.Resolve<HttpContextBase>().Session)
+                .As<HttpSessionStateBase>()
+                .InstancePerHttpRequest();
+
+            //web helper
+            builder.RegisterType<WebHelper>().As<IWebHelper>().InstancePerHttpRequest();
+
+            //controllers
             builder.RegisterControllers(typeFinder.GetAssemblies().ToArray());
 
             //data layer
@@ -85,26 +111,6 @@ namespace Nop.Web.Framework
 
             builder.RegisterGeneric(typeof(EfRepository<>)).As(typeof(IRepository<>)).InstancePerHttpRequest();
             
-            //register FakeHttpContext when HttpContext is not available
-            builder.Register(c => HttpContext.Current != null ? 
-                (new HttpContextWrapper(HttpContext.Current) as HttpContextBase) : 
-                (new FakeHttpContext("~/") as HttpContextBase))
-                .As<HttpContextBase>()
-                .InstancePerHttpRequest();
-            builder.Register(c => c.Resolve<HttpContextBase>().Request)
-                .As<HttpRequestBase>()
-                .InstancePerHttpRequest();
-            builder.Register(c => c.Resolve<HttpContextBase>().Response)
-                .As<HttpResponseBase>()
-                .InstancePerHttpRequest();
-            builder.Register(c => c.Resolve<HttpContextBase>().Server)
-                .As<HttpServerUtilityBase>()
-                .InstancePerHttpRequest();
-            builder.Register(c => c.Resolve<HttpContextBase>().Session)
-                .As<HttpSessionStateBase>()
-                .InstancePerHttpRequest();
-
-
             //plugins
             builder.RegisterType<PluginFinder>().As<IPluginFinder>().InstancePerHttpRequest();
 
@@ -235,7 +241,7 @@ namespace Nop.Web.Framework
             builder.RegisterType<ExportManager>().As<IExportManager>().InstancePerHttpRequest();
             builder.RegisterType<ImportManager>().As<IImportManager>().InstancePerHttpRequest();
             builder.RegisterType<PdfService>().As<IPdfService>().InstancePerHttpRequest();
-            builder.RegisterType<ThemeProvider>().As<IThemeProvider>().SingleInstance();
+            builder.RegisterType<ThemeProvider>().As<IThemeProvider>().InstancePerHttpRequest();
             builder.RegisterType<ThemeContext>().As<IThemeContext>().InstancePerHttpRequest();
 
 
@@ -246,6 +252,23 @@ namespace Nop.Web.Framework
                 
             builder.RegisterType<EmbeddedViewResolver>().As<IEmbeddedViewResolver>().SingleInstance();
             builder.RegisterType<RoutePublisher>().As<IRoutePublisher>().SingleInstance();
+
+
+            //Register event consumers
+            var consumers = typeFinder.FindClassesOfType(typeof(IConsumer<>)).ToList();
+            foreach (var consumer in consumers)
+            {
+                builder.RegisterType(consumer)
+                    .As(consumer.FindInterfaces((type, criteria) =>
+                    {
+                        var isMatch = type.IsGenericType && ((Type)criteria).IsAssignableFrom(type.GetGenericTypeDefinition());
+                        return isMatch;
+                    }, typeof(IConsumer<>)))
+                    .InstancePerHttpRequest();
+            }
+            builder.RegisterType<EventPublisher>().As<IEventPublisher>().SingleInstance();
+            builder.RegisterType<SubscriptionService>().As<ISubscriptionService>().SingleInstance();
+
         }
 
         public int Order

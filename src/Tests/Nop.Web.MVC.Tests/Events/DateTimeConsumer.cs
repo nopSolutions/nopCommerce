@@ -1,7 +1,7 @@
 ﻿using System;
 using Nop.Core.Events;
 
-namespace Nop.Core.Tests.Events
+namespace Nop.Web.MVC.Tests.Events
 {
     public class DateTimeConsumer : IConsumer<DateTime>
     {

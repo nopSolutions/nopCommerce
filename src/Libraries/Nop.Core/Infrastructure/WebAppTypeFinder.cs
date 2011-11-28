@@ -1,5 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
+using System.Web;
+using System.Web.Hosting;
 using Nop.Core.Configuration;
 
 namespace Nop.Core.Infrastructure
@@ -10,22 +14,21 @@ namespace Nop.Core.Infrastructure
     /// </summary>
     public class WebAppTypeFinder : AppDomainTypeFinder
     {
+        #region Fields
+
         private bool _ensureBinFolderAssembliesLoaded = true;
         private bool _binFolderAssembliesLoaded = false;
 
-        private IWebHelper _webHelper;
+        #endregion
 
-        public WebAppTypeFinder(IWebHelper webHelper)
-        {
-            this._webHelper = webHelper;
-        }
+        #region Ctor
 
-        public WebAppTypeFinder(IWebHelper webHelper, NopConfig config)
+        public WebAppTypeFinder(NopConfig config)
         {
-            this._webHelper = webHelper;
             this._ensureBinFolderAssembliesLoaded = config.DynamicDiscovery;
-            //this_.ensurePluginFolderAssembliesLoaded = config.DynamicDiscovery;
         }
+
+        #endregion
 
         #region Properties
 
@@ -37,17 +40,36 @@ namespace Nop.Core.Infrastructure
             get { return _ensureBinFolderAssembliesLoaded; }
             set { _ensureBinFolderAssembliesLoaded = value; }
         }
-
-
+        
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Gets a physical disk path of \Bin directory
+        /// </summary>
+        /// <returns>The physical path. E.g. "c:\inetpub\wwwroot\bin"</returns>
+        public virtual string GetBinDirectory()
+        {
+            if (HostingEnvironment.IsHosted)
+            {
+                //hosted
+                return HttpRuntime.BinDirectory;
+            }
+            else
+            {
+                //not hosted. For example, run either in unit tests
+                return AppDomain.CurrentDomain.BaseDirectory;
+            }
+        }
+
+
         public override IList<Assembly> GetAssemblies()
         {
             if (this.EnsureBinFolderAssembliesLoaded && !_binFolderAssembliesLoaded)
             {
                 _binFolderAssembliesLoaded = true;
-                string binPath = _webHelper.GetBinDirectory();
+                string binPath = GetBinDirectory();
                 //binPath = _webHelper.MapPath("~/bin");
                 LoadMatchingAssemblies(binPath);
             }
