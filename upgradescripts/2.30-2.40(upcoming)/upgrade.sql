@@ -339,3 +339,12 @@ SET [Value]= N'<!-- AddThis Button BEGIN -->
 <!-- AddThis Button END -->'
 WHERE [name] = N'catalogsettings.pagesharecode'
 GO
+
+--deleted obsolute settings
+DELETE [Setting]
+WHERE [name] = N'catalogsettings.hidepricesfornonregistered'
+GO
+
+DELETE [Setting]
+WHERE [name] = N'shoppingcartsettings.wishlistenabled'
+GO
