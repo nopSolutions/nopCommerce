@@ -340,7 +340,7 @@ SET [Value]= N'<!-- AddThis Button BEGIN -->
 WHERE [name] = N'catalogsettings.pagesharecode'
 GO
 
---deleted obsolute settings
+--deleted obsolete settings
 DELETE [Setting]
 WHERE [name] = N'catalogsettings.hidepricesfornonregistered'
 GO
