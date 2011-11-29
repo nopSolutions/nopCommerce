@@ -81,6 +81,7 @@
     <Compile Include="Helpers\DateTimeHelperTests.cs" />
     <Compile Include="Localization\LanguageServiceTests.cs" />
     <Compile Include="Logging\CustomerActivityServiceTests.cs" />
+    <Compile Include="Messages\TokenizerTests.cs" />
     <Compile Include="Orders\CheckoutAttributeParserAndFormatterTests.cs" />
     <Compile Include="Orders\OrderProcessingServiceTests.cs" />
     <Compile Include="Orders\OrderTotalCalculationServiceTests.cs" />
