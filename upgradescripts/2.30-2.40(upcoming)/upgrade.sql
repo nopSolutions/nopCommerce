@@ -35,6 +35,18 @@ set @resources='
   <LocaleResource Name="Admin.Common.Check">
     <Value>Check</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.ProductThumbPictureSizeOnProductDetailsPage">
+    <Value>Product thumbnail image size (product page)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.ProductThumbPictureSizeOnProductDetailsPage.Hint">
+    <Value>The default size (pixels) for product thumbnail images displayed on product details page when if you have more than one product image.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.ProductThumbPictureSize">
+    <Value>Product thumbnail image size (catalog)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.ProductThumbPictureSize.Hint">
+    <Value>The default size (pixels) for product thumbnail images displayed on category or manufacturer pages.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -368,4 +380,12 @@ GO
 
 DELETE [Setting]
 WHERE [name] = N'shoppingcartsettings.wishlistenabled'
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'mediasettings.productthumbpicturesizeonproductdetailspage')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'mediasettings.productthumbpicturesizeonproductdetailspage', N'70')
+END
 GO

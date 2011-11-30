@@ -418,7 +418,7 @@ namespace Nop.Web.Controllers
                 {
                     model.PictureModels.Add(new PictureModel()
                     {
-                        ImageUrl = _pictureService.GetPictureUrl(picture, 70),
+                        ImageUrl = _pictureService.GetPictureUrl(picture, _mediaSetting.ProductThumbPictureSizeOnProductDetailsPage),
                         FullSizeImageUrl = _pictureService.GetPictureUrl(picture),
                         Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), model.Name),
                         AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), model.Name),

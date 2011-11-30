@@ -14,6 +14,8 @@ namespace Nop.Admin.Models.Settings
         public int ProductThumbPictureSize { get; set; }
         [NopResourceDisplayName("Admin.Configuration.Settings.Media.ProductDetailsPictureSize")]
         public int ProductDetailsPictureSize { get; set; }
+        [NopResourceDisplayName("Admin.Configuration.Settings.Media.ProductThumbPictureSizeOnProductDetailsPage")]
+        public int ProductThumbPictureSizeOnProductDetailsPage { get; set; }
         [NopResourceDisplayName("Admin.Configuration.Settings.Media.ProductVariantPictureSize")]
         public int ProductVariantPictureSize { get; set; }
         [NopResourceDisplayName("Admin.Configuration.Settings.Media.CategoryThumbPictureSize")]

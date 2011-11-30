@@ -4251,10 +4251,10 @@
 										</Children>
 									</LocaleResource>
 									<LocaleResource Name="ProductThumbPictureSize">
-										<Value>Product thumbnail image size</Value>
+										<Value>Product thumbnail image size (catalog)</Value>
 										<Children>
 											<LocaleResource Name="Hint">
-												<Value>The default size (pixels) for product thumbnail images.</Value>
+												<Value>The default size (pixels) for product thumbnail images displayed on category or manufacturer pages.</Value>
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
@@ -4263,6 +4263,14 @@
 										<Children>
 											<LocaleResource Name="Hint">
 												<Value>The default size (pixels) for product detail images.</Value>
+											</LocaleResource>
+										</Children>
+									</LocaleResource>
+									<LocaleResource Name="ProductThumbPictureSizeOnProductDetailsPage">
+										<Value>Product thumbnail image size (product page)</Value>
+										<Children>
+											<LocaleResource Name="Hint">
+												<Value>The default size (pixels) for product thumbnail images displayed on product details page when if you have more than one product image.</Value>
 											</LocaleResource>
 										</Children>
 									</LocaleResource>

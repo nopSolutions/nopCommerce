@@ -4578,6 +4578,7 @@ namespace Nop.Services.Installation
                     AvatarPictureSize = 85,
                     ProductThumbPictureSize = 125,
                     ProductDetailsPictureSize = 300,
+                    ProductThumbPictureSizeOnProductDetailsPage = 70,
                     ProductVariantPictureSize = 125,
                     CategoryThumbPictureSize = 125,
                     ManufacturerThumbPictureSize = 125,

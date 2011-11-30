@@ -62,6 +62,15 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ProductThumbPictureSizeOnProductDetailsPage):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ProductThumbPictureSizeOnProductDetailsPage)
+                @Html.ValidationMessageFor(model => model.ProductThumbPictureSizeOnProductDetailsPage)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.NopLabelFor(model => model.ProductVariantPictureSize):
             </td>
             <td class="adminData">
