@@ -582,15 +582,15 @@
                     + "<#= City #>, <#= StateProvinceName #>, <#= ZipPostalCode #><br />"
                     + "<#= CountryName #><br />"
                     + "</div>")
-            .Title("Address");
+            .Title(T("Admin.Address").Text);
         columns.Bound(x => x.Id)
             .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/Customer/AddressEdit?customerId=") + @Model.Id + "&addressid=<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
-            .Title("Edit");
+            .Title(T("Admin.Common.Edit").Text);
         columns.Command(commands =>
         {
             commands.Delete();
         })
-            .Title("Delete");
+            .Title(T("Admin.Common.Delete").Text);
     }))
     <div class="clear">
     </div>

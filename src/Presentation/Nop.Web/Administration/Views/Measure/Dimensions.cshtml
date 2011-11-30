@@ -10,8 +10,7 @@
 <table class="adminContent">
     <tr>
         <td>
-            <b>NOTE: if you change your primary dimension, then do not forget to update the appropriate
-                ratios of the units</b>
+            <b>@T("Admin.Configuration.Measures.Dimensions.Description")</b>
         </td>
     </tr>
     <tr>
@@ -25,12 +24,13 @@
                     .Columns(columns =>
                     {
                         columns.Bound(x => x.Name).Width(200);
-                        columns.Bound(x => x.SystemKeyword).Width(200);
+                        columns.Bound(x => x.SystemKeyword).Width(150);
                         columns.Bound(x => x.Ratio).Width(100);
                         columns.Bound(x => x.DisplayOrder).Width(100);
                         columns.Bound(x => x.IsPrimaryDimension).Width(100)
                             .Template(x => x.IsPrimaryDimension.ToString().ToLower()).ReadOnly();
-                        columns.Command(commands => commands.Select()).Title("Mark as primary dimension").Width(100);
+                        columns.Command(commands => commands.Select())
+                            .Title(T("Admin.Configuration.Measures.Dimensions.Fields.MarkAsPrimaryDimension").Text).Width(100);
                         columns.Command(commands =>
                         {
                             commands.Edit();

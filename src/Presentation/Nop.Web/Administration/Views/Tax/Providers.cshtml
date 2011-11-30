@@ -24,7 +24,8 @@
                             .Template(x => x.IsPrimaryTaxProvider.ToString().ToLower())
                             .Width(100)
                             .ReadOnly();
-                        columns.Command(commands => commands.Select()).Title("Mark as primary provider").Width(100);
+                        columns.Command(commands => commands.Select())
+                            .Title(T("Admin.Configuration.Tax.Providers.Fields.MarkAsPrimaryProvider").Text).Width(100);
                         columns.Template(
                                 @<div>
                                     @Html.ActionLink(T("Admin.Configuration.Tax.Providers.Configure").Text, "ConfigureProvider", new { systemName = @item.SystemName })

@@ -13,7 +13,28 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Messages.Order.Products(s).Download">
     <Value>Download</Value>
-  </LocaleResource>  
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Measures.Weights.Fields.MarkAsPrimaryWeight">
+    <Value>Mark as primary weight</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Measures.Dimensions.Fields.MarkAsPrimaryDimension">
+    <Value>Mark as primary dimension</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Measures.Weights.Description">
+    <Value>NOTE: if you change your primary weight, then do not forget to update the appropriate ratios of the units</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Measures.Dimensions.Description">
+    <Value>NOTE: if you change your primary dimension, then do not forget to update the appropriate ratios of the units</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.EmailAccounts.Fields.MarkAsDefaultEmail">
+    <Value>Mark as default email account</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Tax.Providers.Fields.MarkAsPrimaryProvider">
+    <Value>Mark as primary provider</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.Check">
+    <Value>Check</Value>
+  </LocaleResource>
 </Language>
 '
 

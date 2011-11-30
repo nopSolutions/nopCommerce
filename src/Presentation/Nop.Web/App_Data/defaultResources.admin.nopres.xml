@@ -2250,6 +2250,9 @@
 					<LocaleResource Name="Change">
 						<Value>Change</Value>
 					</LocaleResource>
+					<LocaleResource Name="Check">
+						<Value>Check</Value>
+					</LocaleResource>
 					<LocaleResource Name="Clear">
 						<Value>Clear</Value>
 					</LocaleResource>
@@ -2833,6 +2836,9 @@
 									<LocaleResource Name="IsDefaultEmailAccount">
 										<Value>Is default email account</Value>
 									</LocaleResource>
+									<LocaleResource Name="MarkAsDefaultEmail">
+										<Value>Mark as default email account</Value>
+									</LocaleResource>
 									<LocaleResource Name="SendTestEmailTo">
 										<Value>Send email to</Value>
 										<Children>
@@ -3045,6 +3051,9 @@
 							<LocaleResource Name="Weights">
 								<Value>Weights</Value>
 								<Children>
+									<LocaleResource Name="Description">
+										<Value>NOTE: if you change your primary weight, then do not forget to update the appropriate ratios of the units</Value>
+									</LocaleResource>
 									<LocaleResource Name="Fields">
 										<Children>
 											<LocaleResource Name="Name">
@@ -3072,15 +3081,19 @@
 											<LocaleResource Name="IsPrimaryWeight">
 												<Value>Is primary weight</Value>
 											</LocaleResource>
+											<LocaleResource Name="MarkAsPrimaryWeight">
+												<Value>Mark as primary weight</Value>
+											</LocaleResource>
 										</Children>
 									</LocaleResource>
 								</Children>
 							</LocaleResource>
-						</Children>
-						<Children>
 							<LocaleResource Name="Dimensions">
 								<Value>Dimensions</Value>
 								<Children>
+									<LocaleResource Name="Description">
+										<Value>NOTE: if you change your primary dimension, then do not forget to update the appropriate ratios of the units</Value>
+									</LocaleResource>
 									<LocaleResource Name="Fields">
 										<Children>
 											<LocaleResource Name="Name">
@@ -3107,6 +3120,9 @@
 											</LocaleResource>
 											<LocaleResource Name="IsPrimaryWeight">
 												<Value>Is primary dimension</Value>
+											</LocaleResource>
+											<LocaleResource Name="MarkAsPrimaryDimension">
+												<Value>Mark as primary dimension</Value>
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
@@ -4996,6 +5012,9 @@
 											</LocaleResource>
 											<LocaleResource Name="IsPrimaryTaxProvider">
 												<Value>Is primary provider</Value>
+											</LocaleResource>
+											<LocaleResource Name="MarkAsPrimaryProvider">
+												<Value>Mark as primary provider</Value>
 											</LocaleResource>
 										</Children>
 									</LocaleResource>

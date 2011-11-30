@@ -74,7 +74,7 @@
                                 </text>
                         )
                         .ClientTemplate("<input type='checkbox' name='SelectedProductIds' value='<#= Id #>' />")
-                        .Title("Check")
+                        .Title(T("Admin.Common.Check").Text)
                         .Width(50);
                         columns.Bound(x => x.Name);
                         columns.Bound(x => x.Published)
