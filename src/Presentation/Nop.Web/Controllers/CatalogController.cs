@@ -849,6 +849,7 @@ namespace Nop.Web.Controllers
                         Name = subCatName,
                         SeName = x.GetSeName(),
                     };
+                    subCatModel.PictureModel.FullSizeImageUrl = _pictureService.GetPictureUrl(x.PictureId);
                     subCatModel.PictureModel.ImageUrl = _pictureService.GetPictureUrl(x.PictureId, _mediaSetting.CategoryThumbPictureSize, true);
                     subCatModel.PictureModel.Title = string.Format(_localizationService.GetResource("Media.Category.ImageLinkTitleFormat"), subCatName);
                     subCatModel.PictureModel.AlternateText = string.Format(_localizationService.GetResource("Media.Category.ImageAlternateTextFormat"), subCatName);
@@ -1123,6 +1124,7 @@ namespace Nop.Web.Controllers
             foreach (var manufacturer in manufacturers)
             {
                 var modelMan = manufacturer.ToModel();
+                modelMan.PictureModel.FullSizeImageUrl = _pictureService.GetPictureUrl(manufacturer.PictureId);
                 modelMan.PictureModel.ImageUrl = _pictureService.GetPictureUrl(manufacturer.PictureId, _mediaSetting.ManufacturerThumbPictureSize, true);
                 modelMan.PictureModel.Title = string.Format(_localizationService.GetResource("Media.Manufacturer.ImageLinkTitleFormat"), modelMan.Name);
                 modelMan.PictureModel.AlternateText = string.Format(_localizationService.GetResource("Media.Manufacturer.ImageAlternateTextFormat"), modelMan.Name);
@@ -1463,6 +1465,7 @@ namespace Nop.Web.Controllers
                     .Select(x =>
                     {
                         var m = x.Manufacturer.ToModel();
+                        //UNCOMMENT if you need picture model in ProductManufacturers method
                         //m.PictureModel.ImageUrl = _pictureService.GetPictureUrl(x.Manufacturer.PictureId, _mediaSetting.ManufacturerThumbPictureSize, true);
                         //m.PictureModel.Title = string.Format(_localizationService.GetResource("Media.Manufacturer.ImageLinkTitleFormat"), m.Name);
                         //m.PictureModel.AlternateText = string.Format(_localizationService.GetResource("Media.Manufacturer.ImageAlternateTextFormat"), m.Name);
