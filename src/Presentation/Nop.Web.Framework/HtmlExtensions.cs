@@ -151,7 +151,6 @@ namespace Nop.Web.Framework
         {
             return LabelFor(html, expression, new RouteValueDictionary(htmlAttributes));
         }
-
         public static MvcHtmlString LabelFor<TModel, TValue>(this HtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression, IDictionary<string, object> htmlAttributes)
         {
             ModelMetadata metadata = ModelMetadata.FromLambdaExpression(expression, html.ViewData);
@@ -168,7 +167,22 @@ namespace Nop.Web.Framework
             tag.SetInnerText(labelText);
             return MvcHtmlString.Create(tag.ToString(TagRenderMode.Normal));
         }
-        
+
+        public static MvcHtmlString RequiredHint(this HtmlHelper helper, string additionalText = null)
+        {
+            // Create tag builder
+            var builder = new TagBuilder("span");
+            builder.AddCssClass("required");
+            var innerText = "*";
+            //add additinal text if specified
+            if (!String.IsNullOrEmpty(additionalText))
+                innerText += " " + additionalText;
+            builder.SetInnerText(innerText);
+            // Render tag
+            return MvcHtmlString.Create(builder.ToString());
+        }
+
+
         public static string FieldNameFor<T, TResult>(this HtmlHelper<T> html, Expression<Func<T, TResult>> expression)
         {
             return html.ViewData.TemplateInfo.GetFullHtmlFieldName(ExpressionHelper.GetExpressionText(expression));

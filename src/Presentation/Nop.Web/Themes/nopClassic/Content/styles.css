@@ -432,6 +432,7 @@ ul.languagelist li:hover{cursor:pointer;}
 .registration-page .section-title{padding:10px 10px 5px 0;font-weight:700;clear:both;font-size:12px;}
 .registration-page .section-body{text-align:left;padding:10px;border:1px solid #E8E6D2;height:auto;}
 .registration-page .button{float:right;margin-bottom:5px;margin-top:5px;text-align:center;clear:both;}
+.registration-page .required{color:red;}
 .availablestatus{color:green;padding-left:5px;}
 .notavailablestatus{color:red;padding-left:5px;}
 .password-recovery-page,newsletter-page{margin-bottom:15px;padding-bottom:5px;padding-left:0;}
