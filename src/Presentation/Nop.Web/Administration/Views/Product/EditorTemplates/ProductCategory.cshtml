@@ -11,9 +11,17 @@
     var categoryList = new List<SelectListItem>();
     foreach (var c in allCategories)
     {
+        var name = c.GetCategoryBreadCrumb(_categoryService);
+        if (name != null)
+        {
+            //Telerik has an issue when quotes are used. That'why we manually remove all quotes
+            //Find more info here: http://www.nopcommerce.com/boards/t/11413/tabs-can-not-be-selected-in-admin-edit-products.aspx
+            //TODO remove this code once it's fixed by Telerik team
+            name = name.Replace("\"", "");
+        }
         var item = new SelectListItem()
         {
-            Text = c.GetCategoryBreadCrumb(_categoryService),
+            Text = name,
             Value = c.Id.ToString()
         };
         categoryList.Add(item);
