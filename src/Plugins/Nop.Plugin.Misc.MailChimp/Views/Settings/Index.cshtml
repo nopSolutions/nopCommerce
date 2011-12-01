@@ -1,0 +1,21 @@
+﻿@{ Layout = null; }
+@using System.Web.Mvc.Html
+@using Nop.Plugin.Misc.MailChimp.Models
+
+@model MailChimpSettingsModel
+
+<div>
+    @using (Html.BeginForm()) {
+        <div>
+            @Html.LabelFor(m => m.ApiKey):
+            @Html.EditorFor(m => m.ApiKey)
+        </div>
+        <div>
+            @Html.LabelFor(m => m.DefaultListId):
+            @Html.DropDownListFor(m => m.DefaultListId, Model.ListOptions)
+        </div>
+        <div>
+            <input type="submit" value="@T("Admin.Common.Save")" />
+        </div>
+    }
+</div>
