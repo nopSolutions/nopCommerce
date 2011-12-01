@@ -74,14 +74,13 @@ namespace Nop.Web
                 //remove all view engines
                 ViewEngines.Engines.Clear();
                 //except the themeable razor view engine we use
-                ViewEngines.Engines.Add(new ThemableRazorViewEngine());
+                ViewEngines.Engines.Add(new MobileCapableRazorViewEngine());
             }
 
             //Add some functionality on top of the default ModelMetadataProvider
             ModelMetadataProviders.Current = new NopMetadataProvider();
 
             //Registering some regular mvc stuf
-            //ViewEngines.Engines.Add(new ThemableRazorViewEngine());
             AreaRegistration.RegisterAllAreas();
             if (DataSettingsHelper.DatabaseIsInstalled() &&
                 EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerInPublicStore)

@@ -131,6 +131,7 @@
     <Compile Include="StatefulStorage.cs" />
     <Compile Include="TelerikLocalizationService.cs" />
     <Compile Include="TelerikLocalizationServiceFactory.cs" />
+    <Compile Include="Themes\MobileCapableRazorViewEngine.cs" />
     <Compile Include="Themes\IThemeProvider.cs" />
     <Compile Include="Themes\IThemeContext.cs" />
     <Compile Include="Themes\ThemeableBuildManagerViewEngine .cs" />
