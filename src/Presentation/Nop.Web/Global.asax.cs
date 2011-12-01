@@ -94,16 +94,29 @@ namespace Nop.Web
             //For debugging
             //RouteDebug.RouteDebugger.RewriteRoutesForTesting(RouteTable.Routes);
 
-            DataAnnotationsModelValidatorProvider
-                .AddImplicitRequiredAttributeForValueTypes = false;
+            DataAnnotationsModelValidatorProvider.AddImplicitRequiredAttributeForValueTypes = false;
 
-            ModelValidatorProviders.Providers.Add(
-                new FluentValidationModelValidatorProvider(new NopValidatorFactory()));
+            ModelValidatorProviders.Providers.Add(new FluentValidationModelValidatorProvider(new NopValidatorFactory()));
 
             //register virtual path provider for embedded views
             var embeddedViewResolver = EngineContext.Current.Resolve<IEmbeddedViewResolver>();
             var embeddedProvider = new EmbeddedViewVirtualPathProvider(embeddedViewResolver.GetEmbeddedViews());
             HostingEnvironment.RegisterVirtualPathProvider(embeddedProvider);
+
+            if (DataSettingsHelper.DatabaseIsInstalled())
+            {
+                if (EngineContext.Current.Resolve<StoreInformationSettings>().MobileDevicesSupported)
+                {
+                    //Enable the mobile detection provider (if enabled)
+                    HttpCapabilitiesBase.BrowserCapabilitiesProvider = new FiftyOne.Foundation.Mobile.Detection.MobileCapabilitiesProvider();
+                }
+                else
+                {
+                    //set BrowserCapabilitiesProvider to null because 51Degrees assembly always sets it to MobileCapabilitiesProvider
+                    //it'll allow us to use default browserCaps.config file
+                    HttpCapabilitiesBase.BrowserCapabilitiesProvider = null;
+                }
+            }
         }
 
         protected void Application_BeginRequest(object sender, EventArgs e)

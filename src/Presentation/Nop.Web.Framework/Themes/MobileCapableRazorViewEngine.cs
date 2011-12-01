@@ -1,4 +1,6 @@
 ﻿using System.Web.Mvc;
+using Nop.Core.Domain;
+using Nop.Core.Infrastructure;
 
 namespace Nop.Web.Framework.Themes
 {
@@ -21,17 +23,22 @@ namespace Nop.Web.Framework.Themes
             return controllerContext.HttpContext.Request.Browser.IsMobileDevice;
         }
 
+        protected virtual bool MobileDevicesSupported()
+        {
+            return EngineContext.Current.Resolve<StoreInformationSettings>().MobileDevicesSupported;
+        }
+
         public override ViewEngineResult FindView(ControllerContext controllerContext, 
             string viewName, string masterName, bool useCache)
         {
-            bool isMobileDevice = IsMobileDevice(controllerContext);
-            string overrideViewName = isMobileDevice ?
+            bool useMobileDevice = IsMobileDevice(controllerContext) && MobileDevicesSupported();
+            string overrideViewName = useMobileDevice ?
                 string.Format("{0}.{1}", viewName, MobileViewModifier)
                 : viewName;
 
             ViewEngineResult result = base.FindView(controllerContext, overrideViewName, masterName, useCache);
             // If we're looking for a Mobile view and couldn't find it try again without modifying the viewname
-            if (isMobileDevice && (result == null || result.View == null))
+            if (useMobileDevice && (result == null || result.View == null))
                 result = base.FindView(controllerContext, viewName, masterName, useCache);
             return result;
         }
@@ -39,14 +46,14 @@ namespace Nop.Web.Framework.Themes
         public override ViewEngineResult FindPartialView(ControllerContext controllerContext, 
             string partialViewName, bool useCache)
         {
-            bool isMobileDevice = IsMobileDevice(controllerContext);
-            string overrideViewName = isMobileDevice ?
+            bool useMobileDevice = IsMobileDevice(controllerContext) && MobileDevicesSupported();
+            string overrideViewName = useMobileDevice ?
                 string.Format("{0}.{1}", partialViewName, MobileViewModifier)
                 : partialViewName;
 
             ViewEngineResult result = base.FindPartialView(controllerContext, overrideViewName, useCache);
             // If we're looking for a Mobile view and couldn't find it try again without modifying the viewname
-            if (isMobileDevice && (result == null || result.View == null))
+            if (useMobileDevice && (result == null || result.View == null))
                 result = base.FindPartialView(controllerContext, partialViewName, useCache);
             return result;
         }

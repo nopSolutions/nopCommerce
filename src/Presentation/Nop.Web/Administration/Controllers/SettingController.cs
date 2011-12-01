@@ -61,6 +61,7 @@ namespace Nop.Admin.Controllers
         private readonly ICustomerService _customerService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IPermissionService _permissionService;
+        private readonly IWebHelper _webHelper;
 
 
         private BlogSettings _blogSettings;
@@ -97,7 +98,7 @@ namespace Nop.Admin.Controllers
             IOrderService orderService, IEncryptionService encryptionService,
             IThemeProvider themeProvider, ICustomerService customerService, 
             ICustomerActivityService customerActivityService, IPermissionService permissionService,
-            BlogSettings blogSettings,
+            IWebHelper webHelper, BlogSettings blogSettings,
             ForumSettings forumSettings, NewsSettings newsSettings,
             ShippingSettings shippingSettings, TaxSettings taxSettings,
             CatalogSettings catalogSettings, RewardPointsSettings rewardPointsSettings,
@@ -124,6 +125,7 @@ namespace Nop.Admin.Controllers
             this._customerService = customerService;
             this._customerActivityService = customerActivityService;
             this._permissionService = permissionService;
+            this._webHelper = webHelper;
 
             this._blogSettings = blogSettings;
             this._forumSettings = forumSettings;
@@ -660,6 +662,7 @@ namespace Nop.Admin.Controllers
             var model = new GeneralCommonSettingsModel();
             model.StoreInformationSettings.StoreName = _storeInformationSettings.StoreName;
             model.StoreInformationSettings.StoreUrl = _storeInformationSettings.StoreUrl;
+            model.StoreInformationSettings.MobileDevicesSupported = _storeInformationSettings.MobileDevicesSupported;
             model.StoreInformationSettings.StoreClosed = _storeInformationSettings.StoreClosed;
             model.StoreInformationSettings.StoreClosedAllowForAdmins = _storeInformationSettings.StoreClosedAllowForAdmins;
             model.StoreInformationSettings.DefaultStoreTheme = _storeInformationSettings.DefaultStoreTheme;
@@ -730,6 +733,10 @@ namespace Nop.Admin.Controllers
             //ensure we have "/" at the end
             if (!_storeInformationSettings.StoreUrl.EndsWith("/"))
                 _storeInformationSettings.StoreUrl += "/";
+            //store whether MobileDevicesSupported setting has been changed (requires application restart)
+            bool mobileDevicesSupportedChanged = _storeInformationSettings.MobileDevicesSupported !=
+                                                 model.StoreInformationSettings.MobileDevicesSupported;
+            _storeInformationSettings.MobileDevicesSupported = model.StoreInformationSettings.MobileDevicesSupported;
             _storeInformationSettings.StoreClosed = model.StoreInformationSettings.StoreClosed;
             _storeInformationSettings.StoreClosedAllowForAdmins = model.StoreInformationSettings.StoreClosedAllowForAdmins;
             _storeInformationSettings.DefaultStoreTheme = model.StoreInformationSettings.DefaultStoreTheme;
@@ -832,6 +839,13 @@ namespace Nop.Admin.Controllers
 
             //activity log
             _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
+
+            if (mobileDevicesSupportedChanged)
+            {
+                //MobileDevicesSupported setting has been changed
+                //restart application
+                _webHelper.RestartAppDomain("~/Admin/Setting/GeneralCommon");
+            }
 
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
             return RedirectToAction("GeneralCommon");

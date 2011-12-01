@@ -13,6 +13,11 @@ namespace Nop.Core.Domain
         /// Gets or sets a store URL
         /// </summary>
         public string StoreUrl { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether mobile devices supported
+        /// </summary>
+        public bool MobileDevicesSupported { get; set; }
         
         /// <summary>
         /// Gets or sets a value indicating whether store is closed

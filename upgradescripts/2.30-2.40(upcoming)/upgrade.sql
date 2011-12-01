@@ -47,6 +47,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Media.ProductThumbPictureSize.Hint">
     <Value>The default size (pixels) for product thumbnail images displayed on category or manufacturer pages.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.MobileDevicesSupported">
+    <Value>Mobile devices supported</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.MobileDevicesSupported.Hint">
+    <Value>Check to enable mobile devices support.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -387,5 +393,13 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'mediasettings.productthu
 BEGIN
 	INSERT [Setting] ([Name], [Value])
 	VALUES (N'mediasettings.productthumbpicturesizeonproductdetailspage', N'70')
+END
+GO
+
+--mobile devices support
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'storeinformationsettings.mobiledevicessupported')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'storeinformationsettings.mobiledevicessupported', N'false')
 END
 GO
