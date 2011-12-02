@@ -5,22 +5,34 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Nop.Core.Domain;
 using Nop.Core.Infrastructure;
 
 namespace Nop.Web.Framework.Themes
 {
     public abstract class ThemeableVirtualPathProviderViewEngine : VirtualPathProviderViewEngine
     {
+        #region Fields
+
         internal Func<string, string> GetExtensionThunk;
+
+        private readonly string[] _emptyLocations = null;
+        private readonly string _mobileViewModifier = "Mobile";
+
+        #endregion
+
+        #region Ctor
 
         protected ThemeableVirtualPathProviderViewEngine()
         {
             GetExtensionThunk = new Func<string, string>(VirtualPathUtility.GetExtension);
         }
 
-        private static readonly string[] _emptyLocations = null;
+        #endregion
 
-        private string GetPath(ControllerContext controllerContext, string[] locations, string[] areaLocations, string locationsPropertyName, string name, string controllerName, string theme, string cacheKeyPrefix, bool useCache, out string[] searchedLocations)
+        #region Utilities
+
+        protected virtual string GetPath(ControllerContext controllerContext, string[] locations, string[] areaLocations, string locationsPropertyName, string name, string controllerName, string theme, string cacheKeyPrefix, bool useCache, out string[] searchedLocations)
         {
             searchedLocations = _emptyLocations;
             if (string.IsNullOrEmpty(name))
@@ -63,7 +75,7 @@ namespace Nop.Web.Framework.Themes
             return this.GetPathFromSpecificName(controllerContext, name, key, ref searchedLocations);
         }
 
-        private bool FilePathIsSupported(string virtualPath)
+        protected virtual bool FilePathIsSupported(string virtualPath)
         {
             if (this.FileExtensions == null)
             {
@@ -73,7 +85,7 @@ namespace Nop.Web.Framework.Themes
             return this.FileExtensions.Contains<string>(str, StringComparer.OrdinalIgnoreCase);
         }
 
-        private string GetPathFromSpecificName(ControllerContext controllerContext, string name, string cacheKey, ref string[] searchedLocations)
+        protected virtual string GetPathFromSpecificName(ControllerContext controllerContext, string name, string cacheKey, ref string[] searchedLocations)
         {
             string virtualPath = name;
             if (!this.FilePathIsSupported(name) || !this.FileExists(controllerContext, name))
@@ -85,7 +97,7 @@ namespace Nop.Web.Framework.Themes
             return virtualPath;
         }
 
-        private string GetPathFromGeneralName(ControllerContext controllerContext, List<ViewLocation> locations, string name, string controllerName, string areaName, string theme, string cacheKey, ref string[] searchedLocations)
+        protected virtual string GetPathFromGeneralName(ControllerContext controllerContext, List<ViewLocation> locations, string name, string controllerName, string areaName, string theme, string cacheKey, ref string[] searchedLocations)
         {
             string virtualPath = string.Empty;
             searchedLocations = new string[locations.Count];
@@ -104,12 +116,44 @@ namespace Nop.Web.Framework.Themes
             return virtualPath;
         }
 
-        private string CreateCacheKey(string prefix, string name, string controllerName, string areaName, string theme)
+        protected virtual string CreateCacheKey(string prefix, string name, string controllerName, string areaName, string theme)
         {
             return string.Format(CultureInfo.InvariantCulture, ":ViewCacheEntry:{0}:{1}:{2}:{3}:{4}:{5}", new object[] { base.GetType().AssemblyQualifiedName, prefix, name, controllerName, areaName, theme });
         }
 
-        public static string GetAreaName(RouteData routeData)
+        protected virtual List<ViewLocation> GetViewLocations(string[] viewLocationFormats, string[] areaViewLocationFormats)
+        {
+            var list = new List<ViewLocation>();
+            if (areaViewLocationFormats != null)
+            {
+                list.AddRange(areaViewLocationFormats.Select(str => new AreaAwareViewLocation(str)).Cast<ViewLocation>());
+            }
+            if (viewLocationFormats != null)
+            {
+                list.AddRange(viewLocationFormats.Select(str2 => new ViewLocation(str2)));
+            }
+            return list;
+        }
+
+        protected virtual bool IsSpecificPath(string name)
+        {
+            char ch = name[0];
+            if (ch != '~')
+            {
+                return (ch == '/');
+            }
+            return true;
+        }
+
+        protected virtual string GetCurrentTheme(bool mobile)
+        {
+            if (mobile)
+                return EngineContext.Current.Resolve<StoreInformationSettings>().DefaultStoreThemeForMobileDevices ?? "Mobile";
+            else
+                return EngineContext.Current.Resolve<IThemeContext>().WorkingDesktopTheme;
+        }
+
+        protected virtual string GetAreaName(RouteData routeData)
         {
             object obj2;
             if (routeData.DataTokens.TryGetValue("area", out obj2))
@@ -119,7 +163,7 @@ namespace Nop.Web.Framework.Themes
             return GetAreaName(routeData.Route);
         }
 
-        public static string GetAreaName(RouteBase route)
+        protected virtual string GetAreaName(RouteBase route)
         {
             var area = route as IRouteWithArea;
             if (area != null)
@@ -134,36 +178,17 @@ namespace Nop.Web.Framework.Themes
             return null;
         }
 
-        private static List<ViewLocation> GetViewLocations(string[] viewLocationFormats, string[] areaViewLocationFormats)
+        protected virtual bool IsMobileDevice(ControllerContext controllerContext)
         {
-            var list = new List<ViewLocation>();
-            if (areaViewLocationFormats != null)
-            {
-                list.AddRange(areaViewLocationFormats.Select(str => new AreaAwareViewLocation(str)).Cast<ViewLocation>());
-            }
-            if (viewLocationFormats != null)
-            {
-                list.AddRange(viewLocationFormats.Select(str2 => new ViewLocation(str2)));
-            }
-            return list;
+            return controllerContext.HttpContext.Request.Browser.IsMobileDevice;
         }
 
-        private static bool IsSpecificPath(string name)
+        protected virtual bool MobileDevicesSupported()
         {
-            char ch = name[0];
-            if (ch != '~')
-            {
-                return (ch == '/');
-            }
-            return true;
+            return EngineContext.Current.Resolve<StoreInformationSettings>().MobileDevicesSupported;
         }
 
-        private string CurrentTheme
-        {
-            get { return EngineContext.Current.Resolve<IThemeContext>().WorkingTheme; }
-        }
-
-        public override ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName, bool useCache)
+        protected virtual ViewEngineResult FindThemeableView(ControllerContext controllerContext, string viewName, string masterName, bool useCache, bool mobile)
         {
             string[] strArray;
             string[] strArray2;
@@ -175,7 +200,7 @@ namespace Nop.Web.Framework.Themes
             {
                 throw new ArgumentException("View name cannot be null or empty.", "viewName");
             }
-            var theme = CurrentTheme;
+            var theme = GetCurrentTheme(mobile);
             string requiredString = controllerContext.RouteData.GetRequiredString("controller");
             string str2 = this.GetPath(controllerContext, this.ViewLocationFormats, this.AreaViewLocationFormats, "ViewLocationFormats", viewName, requiredString, theme, "View", useCache, out strArray);
             string str3 = this.GetPath(controllerContext, this.MasterLocationFormats, this.AreaMasterLocationFormats, "MasterLocationFormats", masterName, requiredString, theme, "Master", useCache, out strArray2);
@@ -183,7 +208,7 @@ namespace Nop.Web.Framework.Themes
             {
                 return new ViewEngineResult(this.CreateView(controllerContext, str2, str3), this);
             }
-            if(strArray2 == null)
+            if (strArray2 == null)
             {
                 strArray2 = new string[0];
             }
@@ -191,7 +216,7 @@ namespace Nop.Web.Framework.Themes
 
         }
 
-        public override ViewEngineResult FindPartialView(ControllerContext controllerContext, string partialViewName, bool useCache)
+        protected virtual ViewEngineResult FindThemeablePartialView(ControllerContext controllerContext, string partialViewName, bool useCache, bool mobile)
         {
             string[] strArray;
             if (controllerContext == null)
@@ -202,7 +227,7 @@ namespace Nop.Web.Framework.Themes
             {
                 throw new ArgumentException("Partial view name cannot be null or empty.", "partialViewName");
             }
-            var theme = CurrentTheme;
+            var theme = GetCurrentTheme(mobile);
             string requiredString = controllerContext.RouteData.GetRequiredString("controller");
             string str2 = this.GetPath(controllerContext, this.PartialViewLocationFormats, this.AreaPartialViewLocationFormats, "PartialViewLocationFormats", partialViewName, requiredString, theme, "Partial", useCache, out strArray);
             if (string.IsNullOrEmpty(str2))
@@ -212,7 +237,42 @@ namespace Nop.Web.Framework.Themes
             return new ViewEngineResult(this.CreatePartialView(controllerContext, str2), this);
 
         }
-    }
+    
+        #endregion
+
+        #region Methods
+
+        public override ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName, bool useCache)
+        {
+            bool useMobileDevice = IsMobileDevice(controllerContext) && MobileDevicesSupported();
+            string overrideViewName = useMobileDevice ?
+                string.Format("{0}.{1}", viewName, _mobileViewModifier)
+                : viewName;
+
+            ViewEngineResult result = FindThemeableView(controllerContext, overrideViewName, masterName, useCache, useMobileDevice);
+            // If we're looking for a Mobile view and couldn't find it try again without modifying the viewname
+            if (useMobileDevice && (result == null || result.View == null))
+                result = FindThemeableView(controllerContext, viewName, masterName, useCache, false);
+            return result;
+
+        }
+
+        public override ViewEngineResult FindPartialView(ControllerContext controllerContext, string partialViewName, bool useCache)
+        {
+            bool useMobileDevice = IsMobileDevice(controllerContext) && MobileDevicesSupported();
+            string overrideViewName = useMobileDevice ?
+                string.Format("{0}.{1}", partialViewName, _mobileViewModifier)
+                : partialViewName;
+
+            ViewEngineResult result = FindThemeablePartialView(controllerContext, overrideViewName, useCache, useMobileDevice);
+            // If we're looking for a Mobile view and couldn't find it try again without modifying the viewname
+            if (useMobileDevice && (result == null || result.View == null))
+                result = FindThemeablePartialView(controllerContext, partialViewName, useCache, false);
+            return result;
+        }
+    
+        #endregion
+}
 
     public class AreaAwareViewLocation : ViewLocation
     {

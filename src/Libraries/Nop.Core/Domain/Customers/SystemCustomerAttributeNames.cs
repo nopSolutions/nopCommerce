@@ -49,7 +49,7 @@ namespace Nop.Core.Domain.Customers
 
         public static string LastVisitedPage { get { return "LastVisitedPage"; } }
 
-        public static string WorkingThemeName { get { return "WorkingThemeName"; } }
+        public static string WorkingDesktopThemeName { get { return "WorkingDesktopThemeName"; } }
 
         public static string ImpersonatedCustomerId { get { return "ImpersonatedCustomerId"; } }
     }

@@ -3,9 +3,9 @@ using System.Web.Mvc;
 
 namespace Nop.Web.Framework.Themes
 {
-    public class ThemableRazorViewEngine : ThemeableBuildManagerViewEngine
+    public class ThemeableRazorViewEngine : ThemeableBuildManagerViewEngine
     {
-        public ThemableRazorViewEngine()
+        public ThemeableRazorViewEngine()
         {
             AreaViewLocationFormats = new[]
                                           {

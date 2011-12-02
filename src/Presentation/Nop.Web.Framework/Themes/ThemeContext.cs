@@ -29,9 +29,9 @@ namespace Nop.Web.Framework.Themes
         }
 
         /// <summary>
-        /// Get or set current theme (e.g. darkOrange)
+        /// Get or set current theme for desktops (e.g. darkOrange)
         /// </summary>
-        public string WorkingTheme
+        public string WorkingDesktopTheme
         {
             get
             {
@@ -42,7 +42,7 @@ namespace Nop.Web.Framework.Themes
                 if (_storeInformationSettings.AllowCustomerToSelectTheme)
                 {
                     if (_workContext.CurrentCustomer != null)
-                        theme = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.WorkingThemeName);
+                        theme = _workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.WorkingDesktopThemeName);
                 }
 
                 //default store theme
@@ -66,7 +66,7 @@ namespace Nop.Web.Framework.Themes
                 if (_workContext.CurrentCustomer == null)
                     return;
 
-                _customerService.SaveCustomerAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.WorkingThemeName, value);
+                _customerService.SaveCustomerAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.WorkingDesktopThemeName, value);
 
                 //clear cache
                 this._themeIsCached = false;

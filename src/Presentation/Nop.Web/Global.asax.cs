@@ -75,7 +75,7 @@ namespace Nop.Web
                 //remove all view engines
                 ViewEngines.Engines.Clear();
                 //except the themeable razor view engine we use
-                ViewEngines.Engines.Add(new MobileCapableRazorViewEngine());
+                ViewEngines.Engines.Add(new ThemeableRazorViewEngine());
             }
 
             //Add some functionality on top of the default ModelMetadataProvider

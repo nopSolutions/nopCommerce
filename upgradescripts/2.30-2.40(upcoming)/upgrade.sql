@@ -403,3 +403,15 @@ BEGIN
 	VALUES (N'storeinformationsettings.mobiledevicessupported', N'false')
 END
 GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'storeinformationsettings.defaultstorethemeformobiledevices')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'storeinformationsettings.defaultstorethemeformobiledevices', N'Mobile')
+END
+GO
+
+UPDATE [CustomerAttribute]
+SET [Key] = N'WorkingDesktopThemeName'
+WHERE [Key] = N'WorkingThemeName'
+GO

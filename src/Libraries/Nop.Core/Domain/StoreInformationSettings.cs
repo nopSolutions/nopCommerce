@@ -13,11 +13,6 @@ namespace Nop.Core.Domain
         /// Gets or sets a store URL
         /// </summary>
         public string StoreUrl { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether mobile devices supported
-        /// </summary>
-        public bool MobileDevicesSupported { get; set; }
         
         /// <summary>
         /// Gets or sets a value indicating whether store is closed
@@ -38,6 +33,16 @@ namespace Nop.Core.Domain
         /// Gets or sets a value indicating whether customers are allowed to select a theme
         /// </summary>
         public bool AllowCustomerToSelectTheme { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether mobile devices supported
+        /// </summary>
+        public bool MobileDevicesSupported { get; set; }
+
+        /// <summary>
+        /// Gets or sets a default store theme used by mobile devices (if enabled)
+        /// </summary>
+        public string DefaultStoreThemeForMobileDevices { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether mini profiler should be displayed in public store (used for debugging)

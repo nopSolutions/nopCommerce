@@ -131,13 +131,12 @@
     <Compile Include="StatefulStorage.cs" />
     <Compile Include="TelerikLocalizationService.cs" />
     <Compile Include="TelerikLocalizationServiceFactory.cs" />
-    <Compile Include="Themes\MobileCapableRazorViewEngine.cs" />
     <Compile Include="Themes\IThemeProvider.cs" />
     <Compile Include="Themes\IThemeContext.cs" />
     <Compile Include="Themes\ThemeableBuildManagerViewEngine .cs" />
     <Compile Include="Themes\ThemeableVirtualPathProviderViewEngine.cs" />
     <Compile Include="Themes\ThemeConfiguration.cs" />
-    <Compile Include="Themes\ThemableRazorViewEngine.cs" />
+    <Compile Include="Themes\ThemeableRazorViewEngine.cs" />
     <Compile Include="Themes\ThemeProvider.cs" />
     <Compile Include="Themes\ThemeContext.cs" />
     <Compile Include="UI\Captcha\CaptchaSettings.cs" />

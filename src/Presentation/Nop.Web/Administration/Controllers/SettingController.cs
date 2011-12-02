@@ -662,12 +662,13 @@ namespace Nop.Admin.Controllers
             var model = new GeneralCommonSettingsModel();
             model.StoreInformationSettings.StoreName = _storeInformationSettings.StoreName;
             model.StoreInformationSettings.StoreUrl = _storeInformationSettings.StoreUrl;
-            model.StoreInformationSettings.MobileDevicesSupported = _storeInformationSettings.MobileDevicesSupported;
             model.StoreInformationSettings.StoreClosed = _storeInformationSettings.StoreClosed;
             model.StoreInformationSettings.StoreClosedAllowForAdmins = _storeInformationSettings.StoreClosedAllowForAdmins;
             model.StoreInformationSettings.DefaultStoreTheme = _storeInformationSettings.DefaultStoreTheme;
             model.StoreInformationSettings.AvailableStoreThemes = _themeProvider
-                .GetThemeConfigurations().Select(x =>
+                .GetThemeConfigurations()
+                .Where(x => !x.MobileTheme)  //do not display themes for mobile devices
+                .Select(x =>
                 {
                     return new SelectListItem()
                     {
@@ -675,8 +676,10 @@ namespace Nop.Admin.Controllers
                         Value = x.ThemeName,
                         Selected = x.ThemeName.Equals(_storeInformationSettings.DefaultStoreTheme, StringComparison.InvariantCultureIgnoreCase)
                     };
-                }).ToList();
+                })
+                .ToList();
             model.StoreInformationSettings.AllowCustomerToSelectTheme = _storeInformationSettings.AllowCustomerToSelectTheme;
+            model.StoreInformationSettings.MobileDevicesSupported = _storeInformationSettings.MobileDevicesSupported;
 
             //seo settings
             model.SeoSettings.PageTitleSeparator = _seoSettings.PageTitleSeparator;
@@ -733,14 +736,14 @@ namespace Nop.Admin.Controllers
             //ensure we have "/" at the end
             if (!_storeInformationSettings.StoreUrl.EndsWith("/"))
                 _storeInformationSettings.StoreUrl += "/";
-            //store whether MobileDevicesSupported setting has been changed (requires application restart)
-            bool mobileDevicesSupportedChanged = _storeInformationSettings.MobileDevicesSupported !=
-                                                 model.StoreInformationSettings.MobileDevicesSupported;
-            _storeInformationSettings.MobileDevicesSupported = model.StoreInformationSettings.MobileDevicesSupported;
             _storeInformationSettings.StoreClosed = model.StoreInformationSettings.StoreClosed;
             _storeInformationSettings.StoreClosedAllowForAdmins = model.StoreInformationSettings.StoreClosedAllowForAdmins;
             _storeInformationSettings.DefaultStoreTheme = model.StoreInformationSettings.DefaultStoreTheme;
             _storeInformationSettings.AllowCustomerToSelectTheme = model.StoreInformationSettings.AllowCustomerToSelectTheme;
+            //store whether MobileDevicesSupported setting has been changed (requires application restart)
+            bool mobileDevicesSupportedChanged = _storeInformationSettings.MobileDevicesSupported !=
+                                                 model.StoreInformationSettings.MobileDevicesSupported;
+            _storeInformationSettings.MobileDevicesSupported = model.StoreInformationSettings.MobileDevicesSupported;
             _settingService.SaveSetting(_storeInformationSettings);
 
 
