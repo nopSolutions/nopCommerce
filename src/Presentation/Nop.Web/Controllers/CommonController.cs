@@ -414,13 +414,15 @@ namespace Nop.Web.Controllers
                 return Content("");
 
             var model = new StoreThemeSelectorModel();
-            var currentTheme = _themeProvider.GetThemeConfiguration(_themeContext.WorkingTheme);
+            var currentTheme = _themeProvider.GetThemeConfiguration(_themeContext.WorkingDesktopTheme);
             model.CurrentStoreTheme = new StoreThemeModel()
             {
                 Name = currentTheme.ThemeName,
                 Title = currentTheme.ThemeTitle
             };
             model.AvailableStoreThemes = _themeProvider.GetThemeConfigurations()
+                //do not display themes for mobile devices
+                .Where(x => !x.MobileTheme)
                 .Select(x =>
                 {
                     return new StoreThemeModel()
@@ -435,16 +437,18 @@ namespace Nop.Web.Controllers
 
         public ActionResult StoreThemeSelected(string themeName)
         {
-            _themeContext.WorkingTheme = themeName;
+            _themeContext.WorkingDesktopTheme = themeName;
             
             var model = new StoreThemeSelectorModel();
-            var currentTheme = _themeProvider.GetThemeConfiguration(_themeContext.WorkingTheme);
+            var currentTheme = _themeProvider.GetThemeConfiguration(_themeContext.WorkingDesktopTheme);
             model.CurrentStoreTheme = new StoreThemeModel()
             {
                 Name = currentTheme.ThemeName,
                 Title = currentTheme.ThemeTitle
             };
             model.AvailableStoreThemes = _themeProvider.GetThemeConfigurations()
+                //do not display themes for mobile devices
+                .Where(x => !x.MobileTheme)
                 .Select(x =>
                 {
                     return new StoreThemeModel()

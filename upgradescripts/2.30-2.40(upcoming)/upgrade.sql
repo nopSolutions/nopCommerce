@@ -13,7 +13,46 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Messages.Order.Products(s).Download">
     <Value>Download</Value>
-  </LocaleResource>  
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Measures.Weights.Fields.MarkAsPrimaryWeight">
+    <Value>Mark as primary weight</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Measures.Dimensions.Fields.MarkAsPrimaryDimension">
+    <Value>Mark as primary dimension</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Measures.Weights.Description">
+    <Value>NOTE: if you change your primary weight, then do not forget to update the appropriate ratios of the units</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Measures.Dimensions.Description">
+    <Value>NOTE: if you change your primary dimension, then do not forget to update the appropriate ratios of the units</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.EmailAccounts.Fields.MarkAsDefaultEmail">
+    <Value>Mark as default email account</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Tax.Providers.Fields.MarkAsPrimaryProvider">
+    <Value>Mark as primary provider</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.Check">
+    <Value>Check</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.ProductThumbPictureSizeOnProductDetailsPage">
+    <Value>Product thumbnail image size (product page)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.ProductThumbPictureSizeOnProductDetailsPage.Hint">
+    <Value>The default size (pixels) for product thumbnail images displayed on product details page when if you have more than one product image.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.ProductThumbPictureSize">
+    <Value>Product thumbnail image size (catalog)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.ProductThumbPictureSize.Hint">
+    <Value>The default size (pixels) for product thumbnail images displayed on category or manufacturer pages.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.MobileDevicesSupported">
+    <Value>Mobile devices supported</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.MobileDevicesSupported.Hint">
+    <Value>Check to enable mobile devices support.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -321,4 +360,58 @@ BEGIN
 
 	DROP TABLE #PageIndex
 END
+GO
+
+
+--updated AddThis.com sharing code setting
+UPDATE [Setting]
+SET [Value]= N'<!-- AddThis Button BEGIN -->
+<div class="addthis_toolbox addthis_default_style ">
+<a class="addthis_button_preferred_1"></a>
+<a class="addthis_button_preferred_2"></a>
+<a class="addthis_button_preferred_3"></a>
+<a class="addthis_button_preferred_4"></a>
+<a class="addthis_button_compact"></a>
+<a class="addthis_counter addthis_bubble_style"></a>
+</div>
+<script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=nopsolutions"></script>
+<!-- AddThis Button END -->'
+WHERE [name] = N'catalogsettings.pagesharecode'
+GO
+
+--deleted obsolete settings
+DELETE [Setting]
+WHERE [name] = N'catalogsettings.hidepricesfornonregistered'
+GO
+
+DELETE [Setting]
+WHERE [name] = N'shoppingcartsettings.wishlistenabled'
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'mediasettings.productthumbpicturesizeonproductdetailspage')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'mediasettings.productthumbpicturesizeonproductdetailspage', N'70')
+END
+GO
+
+--mobile devices support
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'storeinformationsettings.mobiledevicessupported')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'storeinformationsettings.mobiledevicessupported', N'false')
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'storeinformationsettings.defaultstorethemeformobiledevices')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'storeinformationsettings.defaultstorethemeformobiledevices', N'Mobile')
+END
+GO
+
+UPDATE [CustomerAttribute]
+SET [Key] = N'WorkingDesktopThemeName'
+WHERE [Key] = N'WorkingThemeName'
 GO

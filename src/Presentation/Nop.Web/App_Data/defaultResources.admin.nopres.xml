@@ -2250,6 +2250,9 @@
 					<LocaleResource Name="Change">
 						<Value>Change</Value>
 					</LocaleResource>
+					<LocaleResource Name="Check">
+						<Value>Check</Value>
+					</LocaleResource>
 					<LocaleResource Name="Clear">
 						<Value>Clear</Value>
 					</LocaleResource>
@@ -2833,6 +2836,9 @@
 									<LocaleResource Name="IsDefaultEmailAccount">
 										<Value>Is default email account</Value>
 									</LocaleResource>
+									<LocaleResource Name="MarkAsDefaultEmail">
+										<Value>Mark as default email account</Value>
+									</LocaleResource>
 									<LocaleResource Name="SendTestEmailTo">
 										<Value>Send email to</Value>
 										<Children>
@@ -3045,6 +3051,9 @@
 							<LocaleResource Name="Weights">
 								<Value>Weights</Value>
 								<Children>
+									<LocaleResource Name="Description">
+										<Value>NOTE: if you change your primary weight, then do not forget to update the appropriate ratios of the units</Value>
+									</LocaleResource>
 									<LocaleResource Name="Fields">
 										<Children>
 											<LocaleResource Name="Name">
@@ -3072,15 +3081,19 @@
 											<LocaleResource Name="IsPrimaryWeight">
 												<Value>Is primary weight</Value>
 											</LocaleResource>
+											<LocaleResource Name="MarkAsPrimaryWeight">
+												<Value>Mark as primary weight</Value>
+											</LocaleResource>
 										</Children>
 									</LocaleResource>
 								</Children>
 							</LocaleResource>
-						</Children>
-						<Children>
 							<LocaleResource Name="Dimensions">
 								<Value>Dimensions</Value>
 								<Children>
+									<LocaleResource Name="Description">
+										<Value>NOTE: if you change your primary dimension, then do not forget to update the appropriate ratios of the units</Value>
+									</LocaleResource>
 									<LocaleResource Name="Fields">
 										<Children>
 											<LocaleResource Name="Name">
@@ -3107,6 +3120,9 @@
 											</LocaleResource>
 											<LocaleResource Name="IsPrimaryWeight">
 												<Value>Is primary dimension</Value>
+											</LocaleResource>
+											<LocaleResource Name="MarkAsPrimaryDimension">
+												<Value>Mark as primary dimension</Value>
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
@@ -4009,6 +4025,14 @@
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
+									<LocaleResource Name="MobileDevicesSupported">
+										<Value>Mobile devices supported</Value>
+										<Children>
+											<LocaleResource Name="Hint">
+												<Value>Check to enable mobile devices support.</Value>
+											</LocaleResource>
+										</Children>
+									</LocaleResource>
 									<LocaleResource Name="StoreClosed">
 										<Value>Store closed</Value>
 										<Children>
@@ -4235,10 +4259,10 @@
 										</Children>
 									</LocaleResource>
 									<LocaleResource Name="ProductThumbPictureSize">
-										<Value>Product thumbnail image size</Value>
+										<Value>Product thumbnail image size (catalog)</Value>
 										<Children>
 											<LocaleResource Name="Hint">
-												<Value>The default size (pixels) for product thumbnail images.</Value>
+												<Value>The default size (pixels) for product thumbnail images displayed on category or manufacturer pages.</Value>
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
@@ -4247,6 +4271,14 @@
 										<Children>
 											<LocaleResource Name="Hint">
 												<Value>The default size (pixels) for product detail images.</Value>
+											</LocaleResource>
+										</Children>
+									</LocaleResource>
+									<LocaleResource Name="ProductThumbPictureSizeOnProductDetailsPage">
+										<Value>Product thumbnail image size (product page)</Value>
+										<Children>
+											<LocaleResource Name="Hint">
+												<Value>The default size (pixels) for product thumbnail images displayed on product details page when if you have more than one product image.</Value>
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
@@ -4996,6 +5028,9 @@
 											</LocaleResource>
 											<LocaleResource Name="IsPrimaryTaxProvider">
 												<Value>Is primary provider</Value>
+											</LocaleResource>
+											<LocaleResource Name="MarkAsPrimaryProvider">
+												<Value>Mark as primary provider</Value>
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
@@ -8927,37 +8962,6 @@
 							</LocaleResource>
 						</Children>
 					</LocaleResource>
-					<LocaleResource Name="EditorLocalization">
-						<Children>
-							<LocaleResource Name="Cancel">
-								<Value>Cancel</Value>
-							</LocaleResource>
-							<LocaleResource Name="DropFilesHere">
-								<Value>drop files here to upload</Value>
-							</LocaleResource>
-							<LocaleResource Name="Remove">
-								<Value>Remove</Value>
-							</LocaleResource>
-							<LocaleResource Name="Retry">
-								<Value>Retry</Value>
-							</LocaleResource>
-							<LocaleResource Name="Select">
-								<Value>Select...</Value>
-							</LocaleResource>
-							<LocaleResource Name="StatusFailed">
-								<Value>failed</Value>
-							</LocaleResource>
-							<LocaleResource Name="StatusUploaded">
-								<Value>uploaded</Value>
-							</LocaleResource>
-							<LocaleResource Name="StatusUploading">
-								<Value>uploading</Value>
-							</LocaleResource>
-							<LocaleResource Name="UploadSelectedFiles">
-								<Value>Upload files</Value>
-							</LocaleResource>
-						</Children>
-					</LocaleResource>
 					<LocaleResource Name="UploadLocalization">
 						<Children>
 							<LocaleResource Name="Cancel">
@@ -8965,9 +8969,6 @@
 							</LocaleResource>
 							<LocaleResource Name="DropFilesHere">
 								<Value>Drop files here</Value>
-							</LocaleResource>
-							<LocaleResource Name="drop files here to upload">
-								<Value></Value>
 							</LocaleResource>
 							<LocaleResource Name="Remove">
 								<Value>Remove</Value>

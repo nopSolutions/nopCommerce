@@ -124,11 +124,6 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
 
-            //decode description
-            model.Description = HttpUtility.HtmlDecode(model.Description);
-            foreach (var localized in model.Locales)
-                localized.Description = HttpUtility.HtmlDecode(localized.Description);
-
             if (ModelState.IsValid)
             {
                 var productAttribute = model.ToEntity();
@@ -176,11 +171,6 @@ namespace Nop.Admin.Controllers
             if (productAttribute == null)
                 throw new ArgumentException("No product attribute found with the specified id");
             
-            //decode description
-            model.Description = HttpUtility.HtmlDecode(model.Description);
-            foreach (var localized in model.Locales)
-                localized.Description = HttpUtility.HtmlDecode(localized.Description);
-
             if (ModelState.IsValid)
             {
                 productAttribute = model.ToEntity(productAttribute);

@@ -8,7 +8,6 @@ namespace Nop.Data
     {
         public override IDbConnectionFactory GetConnectionFactory()
         {
-            //return new SqlCeConnectionFactory("System.Data.SqlServerCe.4.0", HostingEnvironment.MapPath("~/App_Data/"), "");
             return new SqlCeConnectionFactory("System.Data.SqlServerCe.4.0");
         }
         public override void SetDatabaseInitializer()

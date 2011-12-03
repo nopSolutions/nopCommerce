@@ -79,7 +79,7 @@
                                 .ClientTemplate("<a href=\"View/<#= Id #>\">" + T("Admin.Common.View").Text + "</a>")
                                 .Width(50)
                                 .Centered()
-                                .Title("Edit");
+                                .Title(T("Admin.Common.View").Text);
                         })
                         .Pageable(settings => settings.PageSize(gridPageSize).Position(GridPagerPosition.Both))
                         .DataBinding(dataBinding => dataBinding.Ajax().Select("LogList", "Log", Model))

@@ -454,6 +454,7 @@ namespace Nop.Services.ExportImport
                     "MetaKeywords",
                     "MetaDescription",
                     "MetaTitle",
+                    "SeName",
                     "AllowCustomerReviews",
                     "Published",
                     "SKU",
@@ -554,6 +555,9 @@ namespace Nop.Services.ExportImport
                         col++;
 
                         worksheet.Cells[row, col].Value = p.MetaTitle;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = p.SeName;
                         col++;
 
                         worksheet.Cells[row, col].Value = p.AllowCustomerReviews;

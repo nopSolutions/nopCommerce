@@ -75,7 +75,7 @@ namespace Nop.Services.Installation
         private readonly IRepository<ManufacturerTemplate> _manufacturerTemplateRepository;
         private readonly IRepository<ScheduleTask> _scheduleTaskRepository;
         private readonly ICustomerService _customerService;
-        private readonly HttpContextBase _httpContext;
+        private readonly IWebHelper _webHelper;
 
         #endregion
 
@@ -113,7 +113,7 @@ namespace Nop.Services.Installation
             IRepository<ManufacturerTemplate> manufacturerTemplateRepository,
             IRepository<ScheduleTask> scheduleTaskRepository,
             ICustomerService customerService,
-            HttpContextBase httpContext)
+            IWebHelper webHelper)
         {
             this._measureDimensionRepository = measureDimensionRepository;
             this._measureWeightRepository = measureWeightRepository;
@@ -147,7 +147,7 @@ namespace Nop.Services.Installation
             this._manufacturerTemplateRepository = manufacturerTemplateRepository;
             this._scheduleTaskRepository = scheduleTaskRepository;
             this._customerService = customerService;
-            this._httpContext = httpContext;
+            this._webHelper = webHelper;
         }
 
         #endregion
@@ -270,7 +270,7 @@ namespace Nop.Services.Installation
         private void AddLocaleResources(Language language)
         {
             //insert default sting resources (temporary solution). Requires some performance optimization
-            foreach (var filePath in System.IO.Directory.EnumerateFiles(HostingEnvironment.MapPath("~/App_Data/"), "*.nopres.xml"))
+            foreach (var filePath in System.IO.Directory.EnumerateFiles(_webHelper.MapPath("~/App_Data/"), "*.nopres.xml"))
             {
                 //read and parse original file with resources (with <Children> elements)
 
@@ -4497,7 +4497,7 @@ namespace Nop.Services.Installation
                     ShowCategoryProductNumberIncludingSubcategories = false,
                     CategoryBreadcrumbEnabled = true,
                     ShowShareButton = true,
-                    PageShareCode = "<!-- AddThis Button BEGIN --> <a class=\"addthis_button\" href=\"http://www.addthis.com/bookmark.php?v=250&amp;username=nopsolutions\"><img src=\"http://s7.addthis.com/static/btn/v2/lg-share-en.gif\" width=\"125\" height=\"16\" alt=\"Bookmark and Share\" style=\"border:0\"/></a><script type=\"text/javascript\" src=\"http://s7.addthis.com/js/250/addthis_widget.js#username=nopsolutions\"></script> <!-- AddThis Button END -->",
+                    PageShareCode = "<!-- AddThis Button BEGIN --><div class=\"addthis_toolbox addthis_default_style \"><a class=\"addthis_button_preferred_1\"></a><a class=\"addthis_button_preferred_2\"></a><a class=\"addthis_button_preferred_3\"></a><a class=\"addthis_button_preferred_4\"></a><a class=\"addthis_button_compact\"></a><a class=\"addthis_counter addthis_bubble_style\"></a></div><script type=\"text/javascript\" src=\"http://s7.addthis.com/js/250/addthis_widget.js#pubid=nopsolutions\"></script><!-- AddThis Button END -->",
                     ProductReviewsMustBeApproved = true,
                     AllowAnonymousUsersToReviewProduct = false,
                     NotifyStoreOwnerAboutNewProductReviews = false,
@@ -4578,6 +4578,7 @@ namespace Nop.Services.Installation
                     AvatarPictureSize = 85,
                     ProductThumbPictureSize = 125,
                     ProductDetailsPictureSize = 300,
+                    ProductThumbPictureSizeOnProductDetailsPage = 70,
                     ProductVariantPictureSize = 125,
                     CategoryThumbPictureSize = 125,
                     ManufacturerThumbPictureSize = 125,
@@ -4595,6 +4596,8 @@ namespace Nop.Services.Installation
                     StoreClosedAllowForAdmins = false,
                     DefaultStoreTheme = "DarkOrange",
                     AllowCustomerToSelectTheme = false,
+                    MobileDevicesSupported = false,
+                    DefaultStoreThemeForMobileDevices = "Mobile",
                     DisplayMiniProfilerInPublicStore = false,
                 });
 
@@ -4936,7 +4939,7 @@ namespace Nop.Services.Installation
         {
             //pictures
             var pictureService = EngineContext.Current.Resolve<IPictureService>();
-            var sampleImagesPath = string.Format("{0}content\\samples\\", _httpContext.Request.PhysicalApplicationPath);
+            var sampleImagesPath = _webHelper.MapPath("~/content/samples/");
 
 
 
@@ -5300,11 +5303,11 @@ namespace Nop.Services.Installation
             
             //pictures
             var pictureService = EngineContext.Current.Resolve<IPictureService>();
-            var sampleImagesPath = string.Format("{0}content\\samples\\", _httpContext.Request.PhysicalApplicationPath);
+            var sampleImagesPath = _webHelper.MapPath("~/content/samples/");
 
             //downloads
             var downloadService = EngineContext.Current.Resolve<IDownloadService>();
-            var sampleDownloadsPath = string.Format("{0}content\\samples\\", _httpContext.Request.PhysicalApplicationPath);
+            var sampleDownloadsPath = _webHelper.MapPath("~/content/samples/");
 
 
             //products

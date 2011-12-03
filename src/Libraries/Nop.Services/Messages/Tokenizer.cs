@@ -7,7 +7,7 @@ namespace Nop.Services.Messages
 {
     public partial class Tokenizer:ITokenizer
     {
-        private readonly StringComparison _stringComparizon;
+        private readonly StringComparison _stringComparison;
 
         /// <summary>
         /// Ctor
@@ -15,7 +15,7 @@ namespace Nop.Services.Messages
         /// <param name="settings">Message templates settings</param>
         public Tokenizer(MessageTemplatesSettings settings)
         {
-            _stringComparizon = settings.CaseInvariantReplacement ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+            _stringComparison = settings.CaseInvariantReplacement ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
         }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace Nop.Services.Messages
 
         private string Replace(string original, string pattern, string replacement)
         {
-            if (_stringComparizon == StringComparison.Ordinal)
+            if (_stringComparison == StringComparison.Ordinal)
             {
                 return original.Replace(pattern, replacement);
             }
@@ -57,7 +57,7 @@ namespace Nop.Services.Messages
                 count = position0 = position1 = 0;
                 int inc = (original.Length / pattern.Length) * (replacement.Length - pattern.Length);
                 char[] chars = new char[original.Length + Math.Max(0, inc)];
-                while ((position1 = original.IndexOf(pattern, position0, _stringComparizon)) != -1)
+                while ((position1 = original.IndexOf(pattern, position0, _stringComparison)) != -1)
                 {
                     for (int i = position0; i < position1; ++i)
                         chars[count++] = original[i];

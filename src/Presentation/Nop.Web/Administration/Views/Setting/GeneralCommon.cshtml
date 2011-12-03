@@ -129,6 +129,15 @@
                 @Html.ValidationMessageFor(model => model.StoreInformationSettings.AllowCustomerToSelectTheme)
             </td>
         </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.StoreInformationSettings.MobileDevicesSupported):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.StoreInformationSettings.MobileDevicesSupported)
+                @Html.ValidationMessageFor(model => model.StoreInformationSettings.MobileDevicesSupported)
+            </td>
+        </tr>
     </table>
 }
 @helper TabSEOSettings()

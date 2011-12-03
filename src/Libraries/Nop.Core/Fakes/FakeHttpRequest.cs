@@ -16,27 +16,38 @@ namespace Nop.Core.Fakes
         private readonly Uri _urlReferrer;
         private readonly string _httpMethod;
 
-        public FakeHttpRequest(string relativeUrl, string method, NameValueCollection formParams, NameValueCollection queryStringParams,
-                               HttpCookieCollection cookies)
+        public FakeHttpRequest(string relativeUrl, string method,
+            NameValueCollection formParams, NameValueCollection queryStringParams,
+            HttpCookieCollection cookies, NameValueCollection serverVariables)
         {
             _httpMethod = method;
             _relativeUrl = relativeUrl;
             _formParams = formParams;
             _queryStringParams = queryStringParams;
             _cookies = cookies;
-            _serverVariables = new NameValueCollection();
+            _serverVariables = serverVariables;
+            //ensure collections are not null
+            if (_formParams == null)
+                _formParams = new NameValueCollection();
+            if (_queryStringParams == null)
+                _queryStringParams = new NameValueCollection();
+            if (_cookies == null)
+                _cookies = new HttpCookieCollection();
+            if (_serverVariables == null)
+                _serverVariables = new NameValueCollection();
         }
 
-        public FakeHttpRequest(string relativeUrl, string method, Uri url, Uri urlReferrer, NameValueCollection formParams, NameValueCollection queryStringParams,
-                               HttpCookieCollection cookies)
-            : this(relativeUrl, method, formParams, queryStringParams, cookies)
+        public FakeHttpRequest(string relativeUrl, string method, Uri url, Uri urlReferrer,
+            NameValueCollection formParams, NameValueCollection queryStringParams,
+            HttpCookieCollection cookies, NameValueCollection serverVariables)
+            : this(relativeUrl, method, formParams, queryStringParams, cookies, serverVariables)
         {
             _url = url;
             _urlReferrer = urlReferrer;
         }
 
         public FakeHttpRequest(string relativeUrl, Uri url, Uri urlReferrer)
-            : this(relativeUrl, HttpVerbs.Get.ToString("g"), url, urlReferrer, null, null, null)
+            : this(relativeUrl, HttpVerbs.Get.ToString("g"), url, urlReferrer, null, null, null, null)
         {
         }
 
@@ -86,14 +97,18 @@ namespace Nop.Core.Fakes
 
         public override string PathInfo
         {
-            get { return String.Empty; }
+            get { return ""; }
         }
 
         public override string ApplicationPath
         {
             get
             {
-                return "";
+                //we know that relative paths always start with ~/
+                //ApplicationPath should start with /
+                if (_relativeUrl != null && _relativeUrl.StartsWith("~/"))
+                    return _relativeUrl.Remove(0, 1);
+                return null;
             }
         }
 
@@ -103,6 +118,20 @@ namespace Nop.Core.Fakes
             {
                 return _httpMethod;
             }
+        }
+
+        public override string UserHostAddress
+        {
+            get { return null; }
+        }
+
+        public override string RawUrl
+        {
+            get { return null; }
+        }
+        public override bool IsSecureConnection
+        {
+            get { return false; }
         }
     }
 }

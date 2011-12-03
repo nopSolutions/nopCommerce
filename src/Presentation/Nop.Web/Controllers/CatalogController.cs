@@ -418,7 +418,7 @@ namespace Nop.Web.Controllers
                 {
                     model.PictureModels.Add(new PictureModel()
                     {
-                        ImageUrl = _pictureService.GetPictureUrl(picture, 70),
+                        ImageUrl = _pictureService.GetPictureUrl(picture, _mediaSetting.ProductThumbPictureSizeOnProductDetailsPage),
                         FullSizeImageUrl = _pictureService.GetPictureUrl(picture),
                         Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), model.Name),
                         AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), model.Name),
@@ -505,6 +505,7 @@ namespace Nop.Web.Controllers
             model.ShowGtin = _catalogSettings.ShowGtin;
             model.Gtin = productVariant.Gtin;
             model.StockAvailablity = productVariant.FormatStockMessage(_localizationService);
+            model.PictureModel.FullSizeImageUrl = _pictureService.GetPictureUrl(productVariant.PictureId, 0, false);
             model.PictureModel.ImageUrl = _pictureService.GetPictureUrl(productVariant.PictureId, _mediaSetting.ProductVariantPictureSize, false);
             model.PictureModel.Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), model.Name);
             model.PictureModel.AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), model.Name);
@@ -849,6 +850,7 @@ namespace Nop.Web.Controllers
                         Name = subCatName,
                         SeName = x.GetSeName(),
                     };
+                    subCatModel.PictureModel.FullSizeImageUrl = _pictureService.GetPictureUrl(x.PictureId);
                     subCatModel.PictureModel.ImageUrl = _pictureService.GetPictureUrl(x.PictureId, _mediaSetting.CategoryThumbPictureSize, true);
                     subCatModel.PictureModel.Title = string.Format(_localizationService.GetResource("Media.Category.ImageLinkTitleFormat"), subCatName);
                     subCatModel.PictureModel.AlternateText = string.Format(_localizationService.GetResource("Media.Category.ImageAlternateTextFormat"), subCatName);
@@ -1123,6 +1125,7 @@ namespace Nop.Web.Controllers
             foreach (var manufacturer in manufacturers)
             {
                 var modelMan = manufacturer.ToModel();
+                modelMan.PictureModel.FullSizeImageUrl = _pictureService.GetPictureUrl(manufacturer.PictureId);
                 modelMan.PictureModel.ImageUrl = _pictureService.GetPictureUrl(manufacturer.PictureId, _mediaSetting.ManufacturerThumbPictureSize, true);
                 modelMan.PictureModel.Title = string.Format(_localizationService.GetResource("Media.Manufacturer.ImageLinkTitleFormat"), modelMan.Name);
                 modelMan.PictureModel.AlternateText = string.Format(_localizationService.GetResource("Media.Manufacturer.ImageAlternateTextFormat"), modelMan.Name);
@@ -1463,6 +1466,7 @@ namespace Nop.Web.Controllers
                     .Select(x =>
                     {
                         var m = x.Manufacturer.ToModel();
+                        //UNCOMMENT if you need picture model in ProductManufacturers method
                         //m.PictureModel.ImageUrl = _pictureService.GetPictureUrl(x.Manufacturer.PictureId, _mediaSetting.ManufacturerThumbPictureSize, true);
                         //m.PictureModel.Title = string.Format(_localizationService.GetResource("Media.Manufacturer.ImageLinkTitleFormat"), m.Name);
                         //m.PictureModel.AlternateText = string.Format(_localizationService.GetResource("Media.Manufacturer.ImageAlternateTextFormat"), m.Name);

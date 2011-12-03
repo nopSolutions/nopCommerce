@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Nop.Core.Fakes;
 using Nop.Core.IO;
 using NUnit.Framework;
 
@@ -26,7 +27,10 @@ namespace Nop.Core.Tests
             var subsubfolder1 = Path.Combine(subfolder1, "SubSubfolder1");
             Directory.CreateDirectory(subsubfolder1);
 
-            _storageProvider = new FileSystemStorageProvider(new FileSystemSettings { DirectoryName = "Default" });
+            var context = new FakeHttpContext("~/");
+            var webHelper = new WebHelper(context);
+
+            _storageProvider = new FileSystemStorageProvider(new FileSystemSettings { DirectoryName = "Default" }, webHelper);
         }
 
         [TearDown]

@@ -799,10 +799,11 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var order = _orderService.GetOrderById(orderId);
-
+            var orders = new List<Order>();
+            orders.Add(order);
             string fileName = string.Format("order_{0}_{1}.pdf", order.OrderGuid, DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
             string filePath = string.Format("{0}content\\files\\ExportImport\\{1}", this.Request.PhysicalApplicationPath, fileName);
-            _pdfService.PrintOrderToPdf(order, _workContext.WorkingLanguage, filePath);
+            _pdfService.PrintOrdersToPdf(orders, _workContext.WorkingLanguage, filePath);
             var bytes = System.IO.File.ReadAllBytes(filePath);
             return File(bytes, "application/pdf", fileName);
         }

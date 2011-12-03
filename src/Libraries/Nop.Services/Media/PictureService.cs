@@ -28,7 +28,6 @@ namespace Nop.Services.Media
         private readonly ISettingService _settingService;
         private readonly IWebHelper _webHelper;
         private readonly MediaSettings _mediaSettings;
-        private readonly HttpContextBase _httpContext;
 
         #endregion
 
@@ -42,18 +41,16 @@ namespace Nop.Services.Media
         /// <param name="settingService">Setting service</param>
         /// <param name="webHelper">Web helper</param>
         /// <param name="mediaSettings">Media settings</param>
-        /// <param name="httpContext">HTTP context</param>
         public PictureService(IRepository<Picture> pictureRepository,
             IRepository<ProductPicture> productPictureRepository,
             ISettingService settingService, IWebHelper webHelper,
-            MediaSettings mediaSettings, HttpContextBase httpContext)
+            MediaSettings mediaSettings)
         {
             this._pictureRepository = pictureRepository;
             this._productPictureRepository = productPictureRepository;
             this._settingService = settingService;
             this._webHelper = webHelper;
             this._mediaSettings = mediaSettings;
-            this._httpContext = httpContext;
         }
 
         #endregion
@@ -61,11 +58,38 @@ namespace Nop.Services.Media
         #region Utilities
 
         /// <summary>
+        /// Returns the file extension from mime type.
+        /// </summary>
+        /// <param name="mimeType">Mime type</param>
+        /// <returns>File extension</returns>
+        protected virtual string GetFileExtensionFromMimeType(string mimeType)
+        {
+            if (mimeType == null)
+                return null;
+
+            string[] parts = mimeType.Split('/');
+            string lastPart = parts[parts.Length - 1];
+            switch (lastPart)
+            {
+                case "pjpeg":
+                    lastPart = "jpg";
+                    break;
+                case "x-png":
+                    lastPart = "png";
+                    break;
+                case "x-icon":
+                    lastPart = "ico";
+                    break;
+            }
+            return lastPart;
+        }
+
+        /// <summary>
         /// Returns the first ImageCodecInfo instance with the specified mime type.
         /// </summary>
         /// <param name="mimeType">Mime type</param>
         /// <returns>ImageCodecInfo</returns>
-        private ImageCodecInfo GetImageCodecInfoFromMimeType(string mimeType)
+        protected virtual  ImageCodecInfo GetImageCodecInfoFromMimeType(string mimeType)
         {
             var info = ImageCodecInfo.GetImageEncoders();
             foreach (var ici in info)
@@ -79,7 +103,7 @@ namespace Nop.Services.Media
         /// </summary>
         /// <param name="fileExt">File extension</param>
         /// <returns>ImageCodecInfo</returns>
-        private ImageCodecInfo GetImageCodecInfoFromExtension(string fileExt)
+        protected virtual  ImageCodecInfo GetImageCodecInfoFromExtension(string fileExt)
         {
             fileExt = fileExt.TrimStart(".".ToCharArray()).ToLower().Trim();
             switch (fileExt)
@@ -104,22 +128,9 @@ namespace Nop.Services.Media
         /// <param name="pictureId">Picture identifier</param>
         /// <param name="pictureBinary">Picture binary</param>
         /// <param name="mimeType">MIME type</param>
-        private void SavePictureInFile(int pictureId, byte[] pictureBinary, string mimeType)
+        protected virtual  void SavePictureInFile(int pictureId, byte[] pictureBinary, string mimeType)
         {
-            string[] parts = mimeType.Split('/');
-            string lastPart = parts[parts.Length - 1];
-            switch(lastPart)
-            {
-                case "pjpeg":
-                    lastPart = "jpg";
-                    break;
-                case "x-png":
-                    lastPart = "png";
-                    break;
-                case "x-icon":
-                    lastPart = "ico";
-                    break;
-            }
+            string lastPart = GetFileExtensionFromMimeType(mimeType);
             string localFilename = string.Format("{0}_0.{1}", pictureId.ToString("0000000"), lastPart);            
             File.WriteAllBytes(Path.Combine(LocalImagePath, localFilename), pictureBinary);
         }
@@ -128,25 +139,12 @@ namespace Nop.Services.Media
         /// Delete a picture on file system
         /// </summary>
         /// <param name="picture">Picture</param>
-        private void DeletePictureOnFileSystem(Picture picture)
+        protected virtual  void DeletePictureOnFileSystem(Picture picture)
         {
             if (picture == null)
                 throw new ArgumentNullException("picture");
 
-            string[] parts = picture.MimeType.Split('/');
-            string lastPart = parts[parts.Length - 1];
-            switch (lastPart)
-            {
-                case "pjpeg":
-                    lastPart = "jpg";
-                    break;
-                case "x-png":
-                    lastPart = "png";
-                    break;
-                case "x-icon":
-                    lastPart = "ico";
-                    break;
-            }
+            string lastPart = GetFileExtensionFromMimeType(picture.MimeType);
             string localFilename = string.Format("{0}_0.{1}", picture.Id.ToString("0000000"), lastPart);
             string localFilepath = Path.Combine(LocalImagePath, localFilename);
             if (File.Exists(localFilepath))
@@ -161,7 +159,7 @@ namespace Nop.Services.Media
         /// <param name="originalSize">The original picture size</param>
         /// <param name="targetSize">The target picture size (longest side)</param>
         /// <returns></returns>
-        private Size CalculateDimensions(Size originalSize, int targetSize)
+        protected virtual  Size CalculateDimensions(Size originalSize, int targetSize)
         {
             var newSize = new Size();
             if (originalSize.Height > originalSize.Width) // portrait 
@@ -181,7 +179,7 @@ namespace Nop.Services.Media
         /// Delete picture thumbs
         /// </summary>
         /// <param name="picture">Picture</param>
-        private void DeletePictureThumbs(Picture picture)
+        protected virtual  void DeletePictureThumbs(Picture picture)
         {
             string filter = string.Format("{0}*.*", picture.Id.ToString("0000000"));
             string[] currentFiles = System.IO.Directory.GetFiles(this.LocalThumbImagePath, filter);
@@ -298,20 +296,7 @@ namespace Nop.Services.Media
         /// <returns>Picture binary</returns>
         public virtual byte[] LoadPictureFromFile(int pictureId, string mimeType)
         {
-            string[] parts = mimeType.Split('/');
-            string lastPart = parts[parts.Length - 1];
-            switch (lastPart)
-            {
-                case "pjpeg":
-                    lastPart = "jpg";
-                    break;
-                case "x-png":
-                    lastPart = "png";
-                    break;
-                case "x-icon":
-                    lastPart = "ico";
-                    break;
-            }
+            string lastPart = GetFileExtensionFromMimeType(mimeType);
             string localFilename = string.Format("{0}_0.{1}", pictureId.ToString("0000000"), lastPart);
             if (!File.Exists(Path.Combine(LocalImagePath, localFilename)))
                 return new byte[0];
@@ -379,21 +364,7 @@ namespace Nop.Services.Media
                 return url;
             }
 
-            string[] parts = picture.MimeType.Split('/');
-            string lastPart = parts[parts.Length - 1];
-            switch (lastPart)
-            {
-                case "pjpeg":
-                    lastPart = "jpg";
-                    break;
-                case "x-png":
-                    lastPart = "png";
-                    break;
-                case "x-icon":
-                    lastPart = "ico";
-                    break;
-            }
-
+            string lastPart = GetFileExtensionFromMimeType(picture.MimeType);
             string localFilename;
             if (picture.IsNew)
             {
@@ -475,13 +446,9 @@ namespace Nop.Services.Media
         {
             string url = GetPictureUrl(picture, targetSize, showDefaultPicture);
             if(String.IsNullOrEmpty(url))
-            {
                 return String.Empty;
-            }
             else
-            {
                 return Path.Combine(this.LocalThumbImagePath, Path.GetFileName(url));
-            }
         }
 
         /// <summary>
@@ -720,11 +687,11 @@ namespace Nop.Services.Media
         /// <summary>
         /// Gets a local thumb image path
         /// </summary>
-        public string LocalThumbImagePath
+        protected virtual string LocalThumbImagePath
         {
             get
             {
-                string path = _httpContext.Request.PhysicalApplicationPath + "content\\images\\thumbs";
+                string path = _webHelper.MapPath("~/content/images/thumbs");
                 return path;
             }
         }
@@ -732,11 +699,11 @@ namespace Nop.Services.Media
         /// <summary>
         /// Gets the local image path
         /// </summary>
-        public string LocalImagePath
+        protected virtual string LocalImagePath
         {
             get
             {
-                string path = _httpContext.Request.PhysicalApplicationPath + "content\\images";
+                string path = _webHelper.MapPath("~/content/images");
                 return path;
             }
         }
@@ -744,7 +711,7 @@ namespace Nop.Services.Media
         /// <summary>
         /// Gets or sets a value indicating whether the images should be stored in data base.
         /// </summary>
-        public bool StoreInDb
+        public virtual bool StoreInDb
         {
             get
             {

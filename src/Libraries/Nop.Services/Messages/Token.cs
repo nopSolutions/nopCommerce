@@ -12,7 +12,7 @@ namespace Nop.Services.Messages
         {
             
         }
-        public Token(string key, string value, bool  neverHtmlEncoded)
+        public Token(string key, string value, bool neverHtmlEncoded)
         {
             this._key = key;
             this._value = value;

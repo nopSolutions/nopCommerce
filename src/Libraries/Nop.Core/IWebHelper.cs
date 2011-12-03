@@ -90,7 +90,7 @@ namespace Nop.Core
         /// .ashx
         /// </remarks>
         bool IsStaticResource(HttpRequest request);
-
+        
         /// <summary>
         /// Maps a virtual path to a physical disk path.
         /// </summary>
@@ -104,9 +104,9 @@ namespace Nop.Core
         /// </summary>
         /// <param name="url">Url to modify</param>
         /// <param name="queryStringModification">Query string modification</param>
-        /// <param name="targetLocationModification">Target location modification</param>
+        /// <param name="anchor">Anchor</param>
         /// <returns>New url</returns>
-        string ModifyQueryString(string url, string queryStringModification, string targetLocationModification);
+        string ModifyQueryString(string url, string queryStringModification, string anchor);
 
         /// <summary>
         /// Remove query string from url

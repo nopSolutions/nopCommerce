@@ -86,6 +86,7 @@
                             </td>
                             <td class="item-value">
                                 @Html.EditorFor(model => model.FirstName)
+                                @Html.RequiredHint()
                                 @Html.ValidationMessageFor(model => model.FirstName)
                             </td>
                         </tr>
@@ -95,6 +96,7 @@
                             </td>
                             <td class="item-value">
                                 @Html.EditorFor(model => model.LastName)
+                                @Html.RequiredHint()
                                 @Html.ValidationMessageFor(model => model.LastName)
                             </td>
                         </tr>
@@ -125,6 +127,7 @@
                             </td>
                             <td class="item-value">
                                 @Html.EditorFor(model => model.Email)
+                                @Html.RequiredHint()
                                 @Html.ValidationMessageFor(model => model.Email)
                             </td>
                         </tr>
@@ -136,6 +139,7 @@
                                 </td>
                                 <td class="item-value">
                                     @Html.EditorFor(model => model.Username)
+                                    @Html.RequiredHint()
                                     @Html.ValidationMessageFor(model => model.Username)
                                 </td>
                             </tr>
@@ -396,6 +400,7 @@
                             </td>
                             <td class="item-value">
                                 @Html.EditorFor(model => model.Password)
+                                @Html.RequiredHint()
                                 @Html.ValidationMessageFor(model => model.Password)
                             </td>
                         </tr>
@@ -405,6 +410,7 @@
                             </td>
                             <td class="item-value">
                                 @Html.EditorFor(model => model.ConfirmPassword)
+                                @Html.RequiredHint()
                                 @Html.ValidationMessageFor(model => model.ConfirmPassword)
                             </td>
                         </tr>

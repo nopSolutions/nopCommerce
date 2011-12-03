@@ -1,4 +1,5 @@
-﻿using Nop.Core.Infrastructure;
+﻿using Nop.Core.Configuration;
+using Nop.Core.Infrastructure;
 using Nop.Core.Infrastructure.DependencyManagement;
 using NUnit.Framework;
 
@@ -14,7 +15,7 @@ namespace Nop.Core.Tests.Infrastructure.DependencyManagement
             return engine;
         }
     }
-
+    
     /// <summary>
     /// Class that allows you to unit test any IEngine implementations
     /// </summary>
@@ -33,11 +34,10 @@ namespace Nop.Core.Tests.Infrastructure.DependencyManagement
         [Test]
         public void CanRetrieve_ImportantServices()
         {
-            Assert.That(container.Resolve<IWebHelper>(), Is.Not.Null);
+            Assert.That(container.Resolve<NopConfig>(), Is.Not.Null);
             Assert.That(container.Resolve<IEngine>(), Is.Not.Null);
-            //Assert.That(container.Resolve<IPluginBootstrapper>(), Is.Not.Null);
         }
-
+        
         [Test]
         public void AddComponentLifeStyle_DoesNotReturnSameServiceTwiceWhenSingleton()
         {

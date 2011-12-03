@@ -78,6 +78,7 @@ namespace Nop.Services.ExportImport
                     "MetaKeywords",
                     "MetaDescription",
                     "MetaTitle",
+                    "SeName",
                     "AllowCustomerReviews",
                     "Published",
                     "SKU",
@@ -162,6 +163,7 @@ namespace Nop.Services.ExportImport
                     string metaKeywords = worksheet.Cells[iRow, GetColumnIndex(properties, "MetaKeywords")].Value as string;
                     string metaDescription = worksheet.Cells[iRow, GetColumnIndex(properties, "MetaDescription")].Value as string;
                     string metaTitle = worksheet.Cells[iRow, GetColumnIndex(properties, "MetaTitle")].Value as string;
+                    string seName = worksheet.Cells[iRow, GetColumnIndex(properties, "SeName")].Value as string;
                     bool allowCustomerReviews = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "AllowCustomerReviews")].Value);
                     bool published = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "Published")].Value);
                     string sku = worksheet.Cells[iRow, GetColumnIndex(properties, "SKU")].Value as string;
@@ -247,6 +249,7 @@ namespace Nop.Services.ExportImport
                         product.MetaKeywords = metaKeywords;
                         product.MetaDescription = metaDescription;
                         product.MetaTitle = metaTitle;
+                        product.SeName = seName;
                         product.AllowCustomerReviews = allowCustomerReviews;
                         product.Published = published;
                         product.CreatedOnUtc = createdOnUtc;
@@ -323,6 +326,7 @@ namespace Nop.Services.ExportImport
                             MetaKeywords = metaKeywords,
                             MetaDescription = metaDescription,
                             MetaTitle = metaTitle,
+                            SeName = seName,
                             AllowCustomerReviews = allowCustomerReviews,
                             Published = published,
                             CreatedOnUtc = createdOnUtc,

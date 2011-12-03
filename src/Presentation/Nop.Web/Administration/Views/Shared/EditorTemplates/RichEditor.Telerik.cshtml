@@ -1,0 +1,85 @@
+﻿@*This is our previous HTML Editor. Now we use TinyMCE, but this one is not deleted. Maybe, somebody would like to use this one.*@
+@model System.String
+@using Telerik.Web.Mvc.UI
+@using Nop.Core;
+@{
+    var clientId = (ViewData.TemplateInfo.GetFullHtmlFieldName(string.Empty));
+    var random = CommonHelper.GenerateRandomInteger();
+}
+@(Html.Telerik().Editor().Name(clientId).Encode(false)
+.Value(Model)
+.Tools(tools => tools
+.Custom(settings => settings.HtmlAttributes(new { @class = "t-html", onclick = "viewRichHtmlEditorSource" + random + "(event)", title="Edit HTML" })))
+.FileBrowser(browser => browser.Browse("Browse", "ImageBrowser")
+    .Thumbnail("Thumbnail", "ImageBrowser")
+    .Upload("Upload", "ImageBrowser")
+    .DeleteFile("DeleteFile", "ImageBrowser")
+    .DeleteDirectory("DeleteDirectory", "ImageBrowser")
+    .CreateDirectory("CreateDirectory", "ImageBrowser")))
+
+    
+@*source: http://demos.telerik.com/aspnet-mvc/editor/customtools*@
+<script type="text/javascript">
+    var htmlSourcePopup;
+    
+    function viewRichHtmlEditorSource@(random)(e) {
+        var editorSelector = '@(clientId.Replace("[", "\\\\[").Replace("]", "\\\\]"))';
+        e = $.Event(e);
+        e.stopPropagation();
+        e.preventDefault();
+        var editor = $('#' + editorSelector.replace('.', '_')).data('tEditor');        
+        var html = editor.value();
+
+        if (!htmlSourcePopup) 
+        {
+            htmlSourcePopup =
+                $('<div class="html-view">' +
+                        '<div class="textarea t-state-default"><textarea style="width: 100%; height: 300px;"></textarea></div>' +
+                        '<div class="t-button-wrapper">' +
+                            '<button id="htmlCancel" class="t-button" style="float: right;">@T("Admin.Common.Cancel")</button>' +
+                            '<button id="htmlUpdate" class="t-button">@T("Admin.Common.Update")</button>' +
+                        '</div>' +
+                    '</div>')
+                .css('display', 'none')
+                .tWindow({
+                    title: 'View Generated HTML',
+                    modal: true,
+                    resizable: false,
+                    draggable: true,
+                    width: 700,
+                    onLoad: function () 
+                    {
+                        var $popup = $(this);
+                        $popup.find('.textarea')
+                                .css('width', function () {
+                                    return 700 - (this.offsetWidth - $(this).width());
+                                })
+                                .focus()
+                                .end()
+                                .find('#htmlCancel')
+                                .unbind('click')
+                                .click(function () {
+                                    htmlSourcePopup.close();
+                                })
+                                .end()
+                                .find('#htmlUpdate')
+                                .unbind('click')
+                                .click(function () {
+                                    var value = $popup.find('textarea').val();
+                                    editor.value(value);
+                                    htmlSourcePopup.close();
+                                });
+                    },
+                    onClose: function() {
+                        editor.focus();
+                    },
+                    effects: $.telerik.fx.toggle.defaults()
+                })
+                .data('tWindow');
+        }
+        
+        $(htmlSourcePopup.element).find('textarea').text(html);
+
+        htmlSourcePopup.center().open();
+    }
+</script>

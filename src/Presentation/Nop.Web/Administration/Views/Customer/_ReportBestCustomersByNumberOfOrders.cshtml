@@ -67,7 +67,7 @@
                         .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/Customer/Edit/") + "<#= CustomerId #>\">" + T("Admin.Common.View").Text + "</a>")
                         .Width(50)
                         .Centered()
-                        .Title("View");
+                        .Title(T("Admin.Common.View").Text);
                 })
                 .DataBinding(dataBinding => dataBinding.Ajax().Select("ReportBestCustomersByNumberOfOrdersList", "Customer"))
                 .EnableCustomBinding(true))

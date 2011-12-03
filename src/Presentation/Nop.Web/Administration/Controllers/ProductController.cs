@@ -515,11 +515,6 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
 
-            //decode description
-            model.FullDescription = HttpUtility.HtmlDecode(model.FullDescription);
-            foreach (var localized in model.Locales)
-                localized.FullDescription = HttpUtility.HtmlDecode(localized.FullDescription);
-
             if (ModelState.IsValid)
             {
                 //product
@@ -602,11 +597,6 @@ namespace Nop.Admin.Controllers
             var product = _productService.GetProductById(model.Id);
             if (product == null || product.Deleted)
                 throw new ArgumentException("No product found with the specified id");
-
-            //decode description
-            model.FullDescription = HttpUtility.HtmlDecode(model.FullDescription);
-            foreach (var localized in model.Locales)
-                localized.FullDescription = HttpUtility.HtmlDecode(localized.FullDescription);
 
             if (ModelState.IsValid)
             {

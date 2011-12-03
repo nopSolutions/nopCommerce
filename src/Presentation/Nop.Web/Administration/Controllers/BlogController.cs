@@ -121,9 +121,6 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
                 return AccessDeniedView();
 
-            //decode body
-            model.Body = HttpUtility.HtmlDecode(model.Body);
-
             if (ModelState.IsValid)
             {
                 var blogPost = model.ToEntity();
@@ -162,9 +159,6 @@ namespace Nop.Admin.Controllers
             var blogPost = _blogService.GetBlogPostById(model.Id);
             if (blogPost == null)
                 throw new ArgumentException("No blog post found with the specified id");
-
-            //decode body
-            model.Body = HttpUtility.HtmlDecode(model.Body);
 
             if (ModelState.IsValid)
             {

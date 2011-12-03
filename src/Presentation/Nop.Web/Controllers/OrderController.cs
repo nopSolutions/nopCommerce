@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Nop.Core;
@@ -419,9 +420,11 @@ namespace Nop.Web.Controllers
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
                 return new HttpUnauthorizedResult();
 
+            var orders = new List<Order>();
+            orders.Add(order);
             string fileName = string.Format("order_{0}_{1}.pdf", order.OrderGuid, DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
             string filePath = string.Format("{0}content\\files\\ExportImport\\{1}", this.Request.PhysicalApplicationPath, fileName);
-            _pdfService.PrintOrderToPdf(order, _workContext.WorkingLanguage, filePath);
+            _pdfService.PrintOrdersToPdf(orders, _workContext.WorkingLanguage, filePath);
             var pdfBytes = System.IO.File.ReadAllBytes(filePath);
             return File(pdfBytes, "application/pdf", fileName);
         }

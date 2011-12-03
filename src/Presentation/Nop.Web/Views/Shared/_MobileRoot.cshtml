@@ -1,0 +1,42 @@
+﻿@using Nop.Core
+@using Nop.Core.Infrastructure
+@using Nop.Core.Infrastructure.DependencyManagement
+@{
+    var storeLocation = EngineContext.Current.Resolve<Nop.Core.IWebHelper>().GetStoreLocation();
+}
+<!DOCTYPE html> 
+<html> 
+	<head> 
+        <title>@Html.NopTitle()</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1"> 
+        
+        @*store URL js variable used by some JS files*@
+        <script type="text/javascript">
+            var nop_store_directory_root = "@(storeLocation)";
+        </script>
+        @*This is used so that themes can inject content into the header*@
+        @Html.Partial("MobileHead")
+        @*custom css*@
+        @Html.NopCssFiles()
+	    <link rel="stylesheet" href="@Url.Content("~/Content/jquery.mobile-1.0b2.min.css")" />
+	    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery-1.5.1.min.js")"></script>
+        <script type="text/javascript">
+            $(document).bind("mobileinit", function () {
+                // As of Beta 1, jQuery Mobile's Ajax navigation does not work in all cases (e.g., on WP7,
+                // or when navigating from a mobile to a non-mobile page), hence disabling it.
+                $.mobile.ajaxEnabled = false;
+            });
+        </script>
+        <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.mobile-1.0.min.js")"></script>
+    </head> 
+<body> 
+    <div data-role="page" data-theme="b">
+	    <div data-role="header">
+		    <h1>@Html.NopTitle()</h1>
+	    </div>
+	    <div data-role="content">	
+		    @RenderBody()		
+	    </div>
+    </div>
+</body>
+</html>

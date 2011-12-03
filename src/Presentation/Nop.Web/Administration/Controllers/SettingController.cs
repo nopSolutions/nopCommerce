@@ -61,6 +61,7 @@ namespace Nop.Admin.Controllers
         private readonly ICustomerService _customerService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IPermissionService _permissionService;
+        private readonly IWebHelper _webHelper;
 
 
         private BlogSettings _blogSettings;
@@ -97,7 +98,7 @@ namespace Nop.Admin.Controllers
             IOrderService orderService, IEncryptionService encryptionService,
             IThemeProvider themeProvider, ICustomerService customerService, 
             ICustomerActivityService customerActivityService, IPermissionService permissionService,
-            BlogSettings blogSettings,
+            IWebHelper webHelper, BlogSettings blogSettings,
             ForumSettings forumSettings, NewsSettings newsSettings,
             ShippingSettings shippingSettings, TaxSettings taxSettings,
             CatalogSettings catalogSettings, RewardPointsSettings rewardPointsSettings,
@@ -124,6 +125,7 @@ namespace Nop.Admin.Controllers
             this._customerService = customerService;
             this._customerActivityService = customerActivityService;
             this._permissionService = permissionService;
+            this._webHelper = webHelper;
 
             this._blogSettings = blogSettings;
             this._forumSettings = forumSettings;
@@ -664,7 +666,9 @@ namespace Nop.Admin.Controllers
             model.StoreInformationSettings.StoreClosedAllowForAdmins = _storeInformationSettings.StoreClosedAllowForAdmins;
             model.StoreInformationSettings.DefaultStoreTheme = _storeInformationSettings.DefaultStoreTheme;
             model.StoreInformationSettings.AvailableStoreThemes = _themeProvider
-                .GetThemeConfigurations().Select(x =>
+                .GetThemeConfigurations()
+                .Where(x => !x.MobileTheme)  //do not display themes for mobile devices
+                .Select(x =>
                 {
                     return new SelectListItem()
                     {
@@ -672,8 +676,10 @@ namespace Nop.Admin.Controllers
                         Value = x.ThemeName,
                         Selected = x.ThemeName.Equals(_storeInformationSettings.DefaultStoreTheme, StringComparison.InvariantCultureIgnoreCase)
                     };
-                }).ToList();
+                })
+                .ToList();
             model.StoreInformationSettings.AllowCustomerToSelectTheme = _storeInformationSettings.AllowCustomerToSelectTheme;
+            model.StoreInformationSettings.MobileDevicesSupported = _storeInformationSettings.MobileDevicesSupported;
 
             //seo settings
             model.SeoSettings.PageTitleSeparator = _seoSettings.PageTitleSeparator;
@@ -734,6 +740,10 @@ namespace Nop.Admin.Controllers
             _storeInformationSettings.StoreClosedAllowForAdmins = model.StoreInformationSettings.StoreClosedAllowForAdmins;
             _storeInformationSettings.DefaultStoreTheme = model.StoreInformationSettings.DefaultStoreTheme;
             _storeInformationSettings.AllowCustomerToSelectTheme = model.StoreInformationSettings.AllowCustomerToSelectTheme;
+            //store whether MobileDevicesSupported setting has been changed (requires application restart)
+            bool mobileDevicesSupportedChanged = _storeInformationSettings.MobileDevicesSupported !=
+                                                 model.StoreInformationSettings.MobileDevicesSupported;
+            _storeInformationSettings.MobileDevicesSupported = model.StoreInformationSettings.MobileDevicesSupported;
             _settingService.SaveSetting(_storeInformationSettings);
 
 
@@ -832,6 +842,13 @@ namespace Nop.Admin.Controllers
 
             //activity log
             _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
+
+            if (mobileDevicesSupportedChanged)
+            {
+                //MobileDevicesSupported setting has been changed
+                //restart application
+                _webHelper.RestartAppDomain("~/Admin/Setting/GeneralCommon");
+            }
 
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
             return RedirectToAction("GeneralCommon");

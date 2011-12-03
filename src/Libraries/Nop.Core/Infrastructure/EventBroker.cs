@@ -51,7 +51,7 @@ namespace Nop.Core.Infrastructure
         
         protected void Application_BeginRequest(object sender, EventArgs e)
         {
-            if (BeginRequest != null && !IsStaticResource(sender))
+            if (BeginRequest != null)
             {
                 Debug.WriteLine("Application_BeginRequest");
                 BeginRequest(sender, e);
@@ -60,7 +60,7 @@ namespace Nop.Core.Infrastructure
 
         protected void Application_AuthorizeRequest(object sender, EventArgs e)
         {
-            if (AuthorizeRequest != null && !IsStaticResource(sender))
+            if (AuthorizeRequest != null)
             {
                 Debug.WriteLine("Application_AuthorizeRequest");
                 AuthorizeRequest(sender, e);
@@ -69,7 +69,7 @@ namespace Nop.Core.Infrastructure
 
         private void Application_PostResolveRequestCache(object sender, EventArgs e)
         {
-            if (PostResolveRequestCache != null && !IsStaticResource(sender))
+            if (PostResolveRequestCache != null)
             {
                 Debug.WriteLine("Application_PostResolveRequestCache");
                 PostResolveRequestCache(sender, e);
@@ -78,7 +78,7 @@ namespace Nop.Core.Infrastructure
 
         private void Application_PostMapRequestHandler(object sender, EventArgs e)
         {
-            if (PostMapRequestHandler != null && !IsStaticResource(sender))
+            if (PostMapRequestHandler != null)
             {
                 Debug.WriteLine("Application_PostMapRequestHandler");
                 PostMapRequestHandler(sender, e);
@@ -87,7 +87,7 @@ namespace Nop.Core.Infrastructure
 
         protected void Application_AcquireRequestState(object sender, EventArgs e)
         {
-            if (AcquireRequestState != null && !IsStaticResource(sender))
+            if (AcquireRequestState != null)
             {
                 Debug.WriteLine("Application_AcquireRequestState");
                 AcquireRequestState(sender, e);
@@ -96,13 +96,13 @@ namespace Nop.Core.Infrastructure
 
         protected void Application_Error(object sender, EventArgs e)
         {
-            if (Error != null && !IsStaticResource(sender))
+            if (Error != null)
                 Error(sender, e);
         }
 
         protected void Application_EndRequest(object sender, EventArgs e)
         {
-            if (EndRequest != null && !IsStaticResource(sender))
+            if (EndRequest != null)
                 EndRequest(sender, e);
         }
 
@@ -110,17 +110,6 @@ namespace Nop.Core.Infrastructure
         void Application_Disposed(object sender, EventArgs e)
         {
             Trace.WriteLine("EventBroker: Disposing " + sender);
-        }
-
-        protected static bool IsStaticResource(object sender)
-        {
-            var application = sender as HttpApplication;
-            if (application != null)
-            {
-                IWebHelper webHelper = new WebHelper();
-                return webHelper.IsStaticResource(application.Request);
-            }
-            return false;
         }
     }
 }
