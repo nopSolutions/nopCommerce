@@ -25,6 +25,15 @@ namespace Nop.Plugin.Misc.MailChimp.Models {
         public virtual string DefaultListId { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether [auto sync].
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [auto sync]; otherwise, <c>false</c>.
+        /// </value>
+        [NopResourceDisplayName("Nop.Plugin.Misc.MailChimp.AutoSync")]
+        public virtual bool AutoSync { get; set; }
+
+        /// <summary>
         /// Gets or sets the list options.
         /// </summary>
         /// <value>
