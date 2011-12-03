@@ -4,13 +4,17 @@ using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Events;
+using Nop.Data;
 
 namespace Nop.Services.Messages {
+    
     public class NewsLetterSubscriptionServiceWithEventing : INewsLetterSubscriptionService {
         private readonly IEventPublisher _eventPublisher;
+        private readonly IDbContext _context;
         private readonly IRepository<NewsLetterSubscription> _subscriptionRepository;
 
-        public NewsLetterSubscriptionServiceWithEventing(IRepository<NewsLetterSubscription> subscriptionRepository, IEventPublisher eventPublisher) {
+        public NewsLetterSubscriptionServiceWithEventing(IDbContext context, IRepository<NewsLetterSubscription> subscriptionRepository, IEventPublisher eventPublisher) {
+            _context = context;
             _subscriptionRepository = subscriptionRepository;
             _eventPublisher = eventPublisher;
         }
@@ -22,7 +26,7 @@ namespace Nop.Services.Messages {
         /// </summary>
         /// <param name="newsLetterSubscription">NewsLetter subscription</param>
         /// <param name="publishSubscriptionEvents">if set to <c>true</c> [publish subscription events].</param>
-        public void InsertNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = false) {
+        public void InsertNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = true) {
             if (newsLetterSubscription == null) {
                 throw new ArgumentNullException("newsLetterSubscription");
             }
@@ -47,7 +51,7 @@ namespace Nop.Services.Messages {
         /// </summary>
         /// <param name="newsLetterSubscription">NewsLetter subscription</param>
         /// <param name="publishSubscriptionEvents">if set to <c>true</c> [publish subscription events].</param>
-        public void UpdateNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = false) {
+        public void UpdateNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = true) {
             if (newsLetterSubscription == null) {
                 throw new ArgumentNullException("newsLetterSubscription");
             }
@@ -56,7 +60,7 @@ namespace Nop.Services.Messages {
             newsLetterSubscription.Email = CommonHelper.EnsureSubscriberEmailOrThrow(newsLetterSubscription.Email);
 
             //Get original subscription record
-            NewsLetterSubscription originalSubscription = _subscriptionRepository.GetById(newsLetterSubscription.Id);
+            NewsLetterSubscription originalSubscription = _context.LoadOriginalCopy(newsLetterSubscription);
 
             //Persist
             _subscriptionRepository.Update(newsLetterSubscription);
@@ -82,7 +86,7 @@ namespace Nop.Services.Messages {
         /// </summary>
         /// <param name="newsLetterSubscription">NewsLetter subscription</param>
         /// <param name="publishSubscriptionEvents">if set to <c>true</c> [publish subscription events].</param>
-        public virtual void DeleteNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = false) {
+        public virtual void DeleteNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = true) {
             if (newsLetterSubscription == null) throw new ArgumentNullException("newsLetterSubscription");
 
             _subscriptionRepository.Delete(newsLetterSubscription);

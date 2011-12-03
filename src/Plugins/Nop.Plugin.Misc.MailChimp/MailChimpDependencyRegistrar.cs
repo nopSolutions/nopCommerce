@@ -2,7 +2,6 @@
 using Autofac.Core;
 using Autofac.Integration.Mvc;
 using Nop.Core.Data;
-using Nop.Core.Events;
 using Nop.Core.Infrastructure;
 using Nop.Core.Infrastructure.DependencyManagement;
 using Nop.Data;
@@ -21,8 +20,6 @@ namespace Nop.Plugin.Misc.MailChimp {
         /// <param name="builder">The builder.</param>
         /// <param name="typeFinder">The type finder.</param>
         public void Register(ContainerBuilder builder, ITypeFinder typeFinder) {
-            builder.RegisterType<SubscriptionEventConsumer>().As<IConsumer<EmailSubscribed>>().InstancePerHttpRequest();
-            builder.RegisterType<SubscriptionEventConsumer>().As<IConsumer<EmailUnsubscribed>>().InstancePerHttpRequest();
             builder.RegisterType<SubscriptionEventQueueingService>().As<ISubscriptionEventQueueingService>().InstancePerHttpRequest();
             builder.RegisterType<MailChimpInstallationService>().AsSelf().InstancePerHttpRequest();
 
