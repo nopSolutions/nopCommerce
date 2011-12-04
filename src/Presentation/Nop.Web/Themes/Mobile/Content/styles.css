@@ -21,9 +21,6 @@
 .clear{border:medium none;clear:both;float:none;font-size:0;height:0;line-height:0;}
 .nobr{white-space:nowrap!important;}
 .message-error{font-family:Verdana, Arial, sans-serif;font-size:10px;font-weight:700;color:red;}
-.productlistproductdetailbutton,.productgridproductdetailbutton{background:url(images/orange_button_bg.gif) no-repeat 25% 50% #F80;border:1px solid #F80;margin-bottom:3px;color:#FFF;height:20px;padding:0 5px;width:auto;overflow:visible;}
-.searchbutton,.contactusbutton,.newsitemaddcommentbutton,.blogpostaddcommentbutton,.productvariantaddtocartbutton,.productwritereviewbutton,.loginbutton,.registerbutton,.checkoutasguestbutton,.savecustomerinfobutton,.addaddressbutton,.changepasswordbutton,.registernextstepbutton,.completeregistrationbutton,.passwordrecoverybutton,.newpasswordbutton,.saveaddressbutton,.sendemailafriendbutton,.checkoutbutton,.selectshippingaddressbutton,.newaddressnextstepbutton,.selectbillingaddressbutton,.sameasshippingaddressbutton,.shippingmethodnextstepbutton,.paymentmethodnextstepbutton,.paymentinfonextstepbutton,.confirmordernextstepbutton,.submitforumtopicbutton,.submitpmbutton,.replypmbutton,.deleteselectedpmbutton,.reorderbutton,.minicartcheckoutbutton,.newsletterbox-subscribebutton,.useragreementbutton,.deleteselectedfsbutton,.submitreturnrequestbutton,.uploadavatarbutton,.checkavailabilitybutton{background:url(images/orange_button_bg.gif) no-repeat 25% 50% #F80;border:1px solid #F80;color:#FFF;height:20px;padding:0 5px;width:auto;overflow:visible;}
-.productlistaddtocartbutton,.productgridaddtocartbutton,.productemailafriendbutton,.productaddtocomparelistbutton,.productvariantaddtowishlistbutton,.editaddressbutton,.deleteaddressbutton,.cancelrecurringorderbutton,.orderdetailsbutton,.returnitemsbutton,.orderdetailsprintbutton,.estimateshippingbutton,.updatewishlistbutton,.applycouponcodebutton,.updatecartbutton,.continueshoppingbutton,.orderprocessedcontinuebutton,.submitpollvotebutton,.cancelforumtopicbutton,.forumsearchbutton,.forumsearchboxbutton,.cancelpmbutton,.deletepmbutton,.backpmbutton,.removeavatarbutton,.deleteselectedbissbutton{background:url(images/grey_button_bg.gif) no-repeat 25% 50% #333;border:1px solid #333;color:#FFF;height:20px;padding:0 5px;width:auto;overflow:visible;}
 ul.languagelist{display:inline;line-height:25px;}
 ul.languagelist li{list-style:none;display:inline;padding:0 5px;}
 ul.languagelist li .selected{border:solid 1px #ccc!important;}
@@ -234,26 +231,23 @@ ul.languagelist li:hover{cursor:pointer;}
 .bissgridpagerstyle span{font-weight:700;font-size:1.1em;}
 
 /* PRODUCT DETAILS */
-.product-details-page{border:1px solid #d3d3d3;margin-top:10px;padding:10px;}
+.product-details-page{}
 .product-collateral{margin-top:10px;margin-bottom:10px;clear:both;}
 .product-essential{}
 .product-details-info{}
-.product-details-info .picture{float:left;width:300px;margin-top:25px;margin-bottom:15px;}
-.product-details-info .overview{float:right;width:230px;margin-right:15px;margin-top:25px;padding:5px;border:dashed 1px #d3d3d3;}
+.product-details-info .picture{margin-top:25px;margin-bottom:15px;}
+.product-details-info .overview{margin-right:15px;margin-top:25px;padding:5px;}
 .product-details-info .overview .productname{color:#f93;font-size:1.3em;margin-bottom:.3em;}
 .product-details-info .overview .shortdescription,.product-details-info .overview .manufacturers,.product-details-info .overview .sku,.product-details-info .overview .manufacturerpartnumber,.product-details-info .overview .stock,.product-details-info .overview .gtin{color:#555;margin-bottom:.3em;font-size:1.1em;}
 .backinstocksubscription{margin-top:10px;margin-bottom:10px;}
 .backinstocksubscription a.subscribebutton{text-decoration:underline;}
 .product-details-info .fulldescription{border-top:solid 1px #d3d3d3;clear:both;color:#555;margin-bottom:.3em;}
-.product-share-button{margin-top:10px;margin-bottom:10px;}
 .product-reviews-overview{margin-top:20px;margin-bottom:20px;}
 .product-reviews-overview .product-review-box{margin-right:5px;width:69px;height:13px;}
 .product-review-box .rating{height:13px;width:55px;background:url(images/star_x_inactive.gif) 0 0 repeat-x;}
 .product-review-box .rating div{height:12px;background:url(images/star_x_active.gif) 0 0 repeat-x;}
-.product-reviews-overview .product-review-links .separator{margin:0 2px;}
 .product-reviews-overview .product-review-links{margin:0;}
 .product-no-reviews{margin-top:20px;margin-bottom:20px;}
-.product-no-reviews a{text-decoration:underline;}
 .product-reviews-page{margin-bottom:15px;padding-bottom:5px;padding-left:0;}
 .product-reviews-page .page-title{border-bottom:0 none;}
 .product-reviews-page .page-title a{border-bottom:0 none;text-decoration:underline;}
@@ -275,15 +269,14 @@ ul.languagelist li:hover{cursor:pointer;}
 .product-variant-line .overview .productname{color:#f93;font-size:1.3em;margin-bottom:.3em;}
 .product-variant-line .description{clear:both;color:#555;margin-bottom:.3em;}
 .product-details-page .downloadsample{clear:both;color:#555;margin-top:15px;margin-bottom:15px;}
-.product-details-page .downloadsample .downloadsamplebutton{-x-system-font:none!important;background:#F1F1F1 url(images/btn_download_bg.gif) repeat-x scroll 0 100%;border:1px solid #B5B5B5;color:#444;cursor:pointer;font-family:arial,sans-serif!important;font-size:11px!important;font-size-adjust:none!important;font-stretch:normal!important;font-style:normal!important;font-variant:normal!important;font-weight:700!important;line-height:normal!important;overflow:visible;padding:1px 5px;text-align:center;text-transform:uppercase;vertical-align:middle;width:auto;}
-.product-variant-line .price{float:left;padding-top:10px;margin-right:30px;}
+.product-details-page .downloadsample .downloadsamplebutton{}
+.product-variant-line .price{padding-top:10px;margin-right:30px;}
 .product-variant-line .price .productPrice{color:green;}
 .product-variant-line .price .oldProductPrice{color:red;text-decoration:line-through;}
 .product-variant-line .add-info{padding-top:10px;}
 .product-variant-line .attributes{}
 .product-variant-line .stock,.product-variant-line .sku,.product-variant-line .manufacturerpartnumber,.product-variant-line .gtin{}
 .product-variant-line .giftCard{}
-.product-variant-line .giftCard dt{clear:left;float:left;width:150px;}
 .product-details-page .error{font-weight:700;color:Red;}
 .product-essential .price{margin-top:15px;margin-bottom:15px;}
 .product-essential .price .productPrice{color:green;}

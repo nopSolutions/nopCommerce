@@ -28,24 +28,10 @@
     {
         <div class="product-essential">
             <div class="product-details-info">
-                <!--product pictures-->
-                @Html.Partial("_ProductDetailsPictures", Model)
                 <div class="overview">
                     <h1 class="productname">
                         @Model.Name
                     </h1>
-                    <br />
-                    <div class="shortdescription">
-                        @Html.Raw(Model.ShortDescription)
-                    </div>
-                    <div class="clear">
-                    </div>
-                    <!--product manufactures-->
-                    @Html.Action("ProductManufacturers", "Catalog", new { productId = Model.Id })
-                    <div class="clear">
-                    </div>
-                    <!--product reviews-->
-                    @Html.Action("ProductReviewOverview", "Catalog", new { productId = Model.Id })
                     <div class="clear">
                     </div>
                     @if (errors.Count > 0)
@@ -64,7 +50,25 @@
                         <div class="clear">
                         </div>
                     }
-                    <br />
+                    <div class="clear">
+                    </div>
+                    <div class="shortdescription">
+                        @Html.Raw(Model.ShortDescription)
+                    </div>
+                    <div class="clear">
+                    </div>
+                    <!--product pictures-->
+                    @Html.Partial("_ProductDetailsPictures", Model)
+                    <div class="clear">
+                    </div>
+                    <!--product manufactures-->
+                    @Html.Action("ProductManufacturers", "Catalog", new { productId = Model.Id })
+                    <div class="clear">
+                    </div>
+                    <!--product reviews-->
+                    @Html.Action("ProductReviewOverview", "Catalog", new { productId = Model.Id })
+                    <div class="clear">
+                    </div>
                     @Html.Action("ProductEmailAFriendButton", "Catalog", new { productId = Model.Id })
                 </div>
                 <div class="fulldescription">
@@ -76,14 +80,14 @@
         </div>
         <div class="product-collateral">
             <!--product variants-->
-            @*UNDONE <div class="product-variant-list">
+            <div class="product-variant-list">
                 @foreach (var variant in Model.ProductVariantModels)
                 {
                     var dataDictVariant = new ViewDataDictionary();
                     dataDictVariant.TemplateInfo.HtmlFieldPrefix = string.Format("variant_{0}", variant.Id);
                     @Html.Partial("_ProductVariantLine", variant, dataDictVariant)
                 }
-            </div>*@
+            </div>
             <div class="clear">
             </div>
             <div>

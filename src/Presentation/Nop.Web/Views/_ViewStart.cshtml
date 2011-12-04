@@ -1,3 +1,6 @@
 ﻿@{
-    Layout = "~/Views/Shared/_ColumnsFluid.cshtml";
+    //we do not specify layout in _ViewStart.cshtml
+    //because sometimes this layout is set for mobile devices (it shouldn't)
+    //for example, of product details page after clicking F5 button (really weird)
+    //Layout = "~/Views/Shared/_ColumnsFluid.cshtml";
 }
