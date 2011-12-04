@@ -18,23 +18,23 @@
         @Html.Partial("MobileHead")
         @*custom css*@
         @Html.NopCssFiles()
-	    <link rel="stylesheet" href="@Url.Content("~/Content/jquery.mobile-1.0b2.min.css")" />
 	    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery-1.5.1.min.js")"></script>
-        <script type="text/javascript">
+        @*<script type="text/javascript">
             $(document).bind("mobileinit", function () {
-                // As of Beta 1, jQuery Mobile's Ajax navigation does not work in all cases (e.g., on WP7,
-                // or when navigating from a mobile to a non-mobile page), hence disabling it.
                 $.mobile.ajaxEnabled = false;
             });
-        </script>
+        </script>*@
         <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.mobile-1.0.min.js")"></script>
     </head> 
 <body> 
     <div data-role="page" data-theme="b">
-	    <div data-role="header">
-		    <h1>@Html.NopTitle()</h1>
+	    <div data-role="header" data-position="inline">
+            <a href="#" data-rel="back">Back</a>
+	        <h1>@Html.NopTitle()</h1>
+            <a href="@(storeLocation)">Home</a>
 	    </div>
 	    <div data-role="content">	
+            @Html.Action("SearchBox", "Catalog")
 		    @RenderBody()		
 	    </div>
     </div>
