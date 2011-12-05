@@ -4,39 +4,42 @@
 @{
     var storeLocation = EngineContext.Current.Resolve<Nop.Core.IWebHelper>().GetStoreLocation();
 }
-<!DOCTYPE html> 
-<html> 
-	<head> 
-        <title>@Html.NopTitle()</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1"> 
-        
-        @*store URL js variable used by some JS files*@
-        <script type="text/javascript">
-            var nop_store_directory_root = "@(storeLocation)";
-        </script>
-        @*This is used so that themes can inject content into the header*@
-        @Html.Partial("MobileHead")
-        @*custom css*@
-        @Html.NopCssFiles()
-	    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery-1.7.1.min.js")"></script>
-        @*<script type="text/javascript">
-            $(document).bind("mobileinit", function () {
-                $.mobile.ajaxEnabled = false;
-            });
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@Html.NopTitle()</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    @*store URL js variable used by some JS files*@
+    <script type="text/javascript">
+        var nop_store_directory_root = "@(storeLocation)";
+    </script>
+    @*This is used so that themes can inject content into the header*@
+    @Html.Partial("MobileHead")
+    @*custom css*@
+    @Html.NopCssFiles()
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery-1.7.1.min.js")"></script>
+    @*<script type="text/javascript">
+          $(document).bind("mobileinit", function () {
+              $.mobile.ajaxEnabled = false;
+          });
         </script>*@
-        <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.mobile-1.0.min.js")"></script>
-    </head> 
-<body> 
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.mobile-1.0.min.js")"></script>
+</head>
+<body>
     <div data-role="page" data-theme="b">
-	    <div data-role="header" data-position="inline">
-            <a href="#" data-rel="back">Back</a>
-	        <h1>@Html.NopTitle()</h1>
-            <a href="@Url.RouteUrl("HomePage")">Home</a>
-	    </div>
-	    <div data-role="content">	
+        <div data-role="header" data-position="inline">
+            @Html.Partial("Header")
+        </div>
+        <div data-role="header" data-position="inline">
+            @Html.Action("HeaderLinks", "Common")
+        </div>
+        <div data-role="content">
             @Html.Action("SearchBox", "Catalog")
-		    @RenderBody()		
-	    </div>
+            @RenderBody()
+        </div>
+        <div data-role="footer">
+            @Html.Action("Footer", "Common")
+        </div>
     </div>
 </body>
 </html>
