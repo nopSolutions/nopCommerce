@@ -31,7 +31,7 @@
 	    <div data-role="header" data-position="inline">
             <a href="#" data-rel="back">Back</a>
 	        <h1>@Html.NopTitle()</h1>
-            <a href="@(storeLocation)">Home</a>
+            <a href="@Url.RouteUrl("HomePage")">Home</a>
 	    </div>
 	    <div data-role="content">	
             @Html.Action("SearchBox", "Catalog")
