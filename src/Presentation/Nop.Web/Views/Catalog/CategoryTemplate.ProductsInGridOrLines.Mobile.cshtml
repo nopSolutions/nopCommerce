@@ -1,0 +1,89 @@
+﻿@model CategoryModel
+@{
+    Layout = "~/Views/Shared/_MobileRoot.cshtml";
+    Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Name);
+}
+@using Nop.Core;
+@using Nop.Core.Domain.Common;
+@using Nop.Core.Infrastructure;
+@using Nop.Web;
+@using Nop.Web.Framework.UI;
+@using Nop.Web.Models.Catalog;
+@using Nop.Web.Extensions;
+<div class="category-page">   
+
+
+    @*description*@
+    <div class="category-description">
+        @Html.Raw(Model.Description)
+    </div>
+    <div class="clear">
+    </div>
+
+
+    
+    @*subcategories*@
+    @if (Model.SubCategories.Count > 0)
+    {
+        <div class="sub-category-grid">
+            <ul data-role="listview" data-inset="true" data-filter="false">
+            @foreach (var category in Model.SubCategories)
+            {
+                <li><a href="@Url.RouteUrl("Category", new { categoryId = category.Id, SeName = category.SeName })" data-transition="pop">
+                    @category.Name</a></li>
+            }
+            </ul>
+        </div>
+        <div class="clear">
+        </div>
+    }
+
+
+    
+    @*featured products*@
+    @if (Model.FeaturedProducts.Count > 0)
+    {
+        <div class="featured-product-grid">
+            <div class="title">
+                @T("Products.FeaturedProducts")
+            </div>
+            <div class="product-list">
+                <ul data-role="listview" data-inset="true" data-filter="false" data-theme="c">
+                    @foreach (var product in Model.Products)
+                    {
+                        <li>
+                            @Html.Partial("_ProductBox", product)
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+        <div class="clear">
+        </div>
+    }
+    
+    
+    
+    
+    @*product list*@
+    @if (Model.Products.Count > 0)
+    {
+        <div class="product-list">
+            <ul data-role="listview" data-inset="true" data-filter="false" data-theme="c">
+                @foreach (var product in Model.Products)
+                {
+                    <li>
+                        @Html.Partial("_ProductBox", product)
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+    
+    <div class="clear">
+    </div>
+                
+    <div class="pager">
+    @Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber")
+    </div>
+</div>

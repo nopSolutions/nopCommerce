@@ -133,11 +133,9 @@
         }
     }
     
-            <div class="clear">
-            </div>  
-    
-    @*TODO allow customer to select page size*@
-    
+    <div class="clear">
+    </div>  
+        
     <div class="pager">
     @Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber")
     </div>

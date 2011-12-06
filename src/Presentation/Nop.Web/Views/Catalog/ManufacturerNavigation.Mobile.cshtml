@@ -1,0 +1,21 @@
+﻿@model IList<ManufacturerNavigationModel>
+@using Nop.Core.Domain.Catalog
+@using Nop.Core.Infrastructure
+@using Nop.Services.Catalog
+@using Nop.Web.Models.Catalog
+@if (Model.Count > 0)
+{<div class="block block-manufacturer-navigation">
+    <div class="title">
+        @T("Manufacturers")
+    </div>
+    <div class="clear">
+    </div>
+    <ul data-role="listview" data-inset="true" data-filter="false">
+        @foreach (var manufacturer in Model)
+        {
+            <li><a href="@Url.RouteUrl("Manufacturer", new { manufacturerId = manufacturer.Id, SeName = manufacturer.SeName })" data-transition="pop">
+                @manufacturer.Name</a></li>
+        }
+    </ul>
+    </div>
+}

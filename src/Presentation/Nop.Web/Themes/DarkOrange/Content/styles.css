@@ -387,7 +387,6 @@ ul.languagelist li:hover{cursor:pointer;}
 .sub-category-grid .sub-category-item,.manufacturer-grid .manufacturer-item{text-align:center;margin:10px;width:150px;height:auto;background:url(images/home-cat-bg.gif) no-repeat 0 100%;}
 .sub-category-grid .sub-category-item .category-title,.manufacturer-grid .manufacturer-item .man-title{text-align:center;font-weight:700;background:url(images/home-cat-title.gif);font-size:.9em;display:block;overflow:hidden;height:1.8em;padding:8px 0 5px;}
 .sub-category-grid .sub-category-item .picture,.manufacturer-grid .manufacturer-item .picture{text-align:center;padding:10px 0;}
-.sub-category-list{margin-bottom:15px;padding:0;}
 .product-sorting{margin:0 auto 10px;float:left;}
 .product-viewmode{margin:0 auto 10px;float:right;}
 .product-page-size{width:165px;margin:0 auto;text-align:center;}

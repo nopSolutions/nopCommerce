@@ -1,0 +1,30 @@
+﻿@model Nop.Web.Models.Common.InfoBlockModel
+<div data-role="navbar">
+    <ul>
+        <li><a href="@Url.RouteUrl("ContactUs")" data-role="button">@T("ContactUs")</a></li>
+        <li><a href="@Url.RouteUrl("Topic", new { SystemName = "aboutus" })" data-role="button">@T("AboutUs")</a></li>
+        @if (Model.BlogEnabled)
+        {
+            <li><a href="@Url.RouteUrl("Blog")" data-role="button">@T("Blog")</a></li>
+        }
+        @if (Model.ForumEnabled)
+        {
+            <li><a href="@Url.RouteUrl("Boards")" data-role="button">@T("Forum.Forums")</a></li>
+        }
+    </ul>
+</div>
+<div data-role="navbar">
+    <ul>
+        @if (Model.CompareProductsEnabled)
+        {
+            <li><a href="@Url.RouteUrl("CompareProducts")" data-role="button">@T("Products.Compare.List")</a></li>            
+        }
+        <li><a href="@Url.RouteUrl("Topic", new { SystemName = "shippinginfo" })" data-role="button">@T("ShippingReturns")</a></li>
+    </ul>
+</div>
+<div data-role="navbar">
+    <ul>
+        <li><a href="@Url.RouteUrl("Topic", new { SystemName = "privacyinfo" })" data-role="button">@T("PrivacyNotice")</a></li>
+        <li><a href="@Url.RouteUrl("Topic", new { SystemName = "conditionsofUse" })" data-role="button">@T("ConditionsOfUse")</a></li>
+    </ul>
+</div>

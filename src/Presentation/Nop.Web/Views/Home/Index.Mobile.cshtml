@@ -1,4 +1,5 @@
 ﻿@{
     Layout = "~/Views/Shared/_MobileRoot.cshtml";
 }
-UNDONE: Home page for mobile device.
+@Html.Action("CategoryNavigation", "Catalog", new { currentCategoryId = 0, currentProductId = 0 })
+@Html.Action("ManufacturerNavigation", "Catalog", new { currentManufacturerId = 0 })

@@ -1,0 +1,103 @@
+﻿@model Nop.Web.Models.Catalog.ProductModel
+@using Nop.Core;
+@using Nop.Core.Domain.Common;
+@using Nop.Core.Infrastructure;
+@using Nop.Web;
+@using Nop.Web.Framework.UI;
+@using Nop.Web.Models.Catalog;
+@{
+    Layout = "~/Views/Shared/_MobileRoot.cshtml";
+
+    //title
+    Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Name);
+}
+
+@{
+    //errors
+    var errors = new List<string>();
+    foreach (var modelState in ViewData.ModelState.Values)
+    {
+        foreach (var error in modelState.Errors)
+        {
+            errors.Add(error.ErrorMessage);
+        }
+    }
+}
+<div class="product-details-page">
+    @using (Html.BeginRouteForm("Product", new { productId = Model.Id, SeName = Model.SeName }, FormMethod.Post))
+    {
+        <div class="product-essential">
+            <div class="product-details-info">
+                <div class="overview">
+                    <h1 class="productname">
+                        @Model.Name
+                    </h1>
+                    <div class="clear">
+                    </div>
+                    @if (errors.Count > 0)
+                    {
+                        //display errors   
+                        <span class="error">
+                            @for (int i = 0; i < errors.Count; i++)
+                            {
+                                @errors[i]
+                                if (i != errors.Count - 1)
+                                {
+                                <text><br /></text>
+                                }
+                            }
+                        </span>
+                        <div class="clear">
+                        </div>
+                    }
+                    <div class="clear">
+                    </div>
+                    <div class="shortdescription">
+                        @Html.Raw(Model.ShortDescription)
+                    </div>
+                    <div class="clear">
+                    </div>
+                    <!--product pictures-->
+                    @Html.Partial("_ProductDetailsPictures", Model)
+                    <div class="clear">
+                    </div>
+                    <!--product manufactures-->
+                    @Html.Action("ProductManufacturers", "Catalog", new { productId = Model.Id })
+                    <div class="clear">
+                    </div>
+                    <!--product reviews-->
+                    @Html.Action("ProductReviewOverview", "Catalog", new { productId = Model.Id })
+                    <div class="clear">
+                    </div>
+                    @Html.Action("ProductEmailAFriendButton", "Catalog", new { productId = Model.Id })
+                </div>
+                <div class="fulldescription">
+                    @Html.Raw(Model.FullDescription)
+                </div>
+            </div>
+        </div>
+        <div class="clear">
+        </div>
+        <div class="product-collateral">
+            <!--product variants-->
+            <div class="product-variant-list">
+                @foreach (var variant in Model.ProductVariantModels)
+                {
+                    var dataDictVariant = new ViewDataDictionary();
+                    dataDictVariant.TemplateInfo.HtmlFieldPrefix = string.Format("variant_{0}", variant.Id);
+                    @Html.Partial("_ProductVariantLine", variant, dataDictVariant)
+                }
+            </div>
+            <div class="clear">
+            </div>
+            <div>
+                @Html.Action("ProductSpecifications", "Catalog", new { productId = Model.Id })
+            </div>
+            <div class="clear">
+            </div>
+            <div>
+                @Html.Action("ProductTags", "Catalog", new { productId = Model.Id })
+            </div>
+        </div>
+    }
+</div>

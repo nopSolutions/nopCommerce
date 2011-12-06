@@ -1,0 +1,55 @@
+﻿@model Nop.Web.Models.Catalog.ProductModel.ProductVariantModel.ProductVariantPriceModel
+@using Nop.Web.Models.Catalog;
+@using Nop.Core.Domain.Catalog;
+@using Nop.Core.Infrastructure;
+@using Nop.Core;
+@using System.Text;
+@using System.Globalization;
+@using Nop.Web.Framework;
+@using Nop.Services.Customers;
+@using System.Text.RegularExpressions;
+<div class="price">
+    @if (Model.CustomerEntersPrice)
+    {
+        /*display nothing*/
+    }
+    else if (Model.CallForPrice)
+    {
+        <span class="productPrice">@T("Products.CallForPrice")</span>
+    }
+    else
+    {
+        if (!String.IsNullOrWhiteSpace(Model.OldPrice))
+        {
+        @T("Products.Price.OldPrice")<text>:</text>
+        <span class="oldProductPrice">@Model.OldPrice</span>
+        <br />
+        }
+        if (!String.IsNullOrWhiteSpace(Model.OldPrice) ||
+            !String.IsNullOrWhiteSpace(Model.PriceWithDiscount))
+        {
+        @T("Products.Price")<text>:</text>
+        }
+        
+        
+        <span 
+        @if (String.IsNullOrWhiteSpace(Model.PriceWithDiscount))
+        {
+            <text>class="productPrice"</text>
+        }
+        >
+            @Html.Raw(Model.Price)
+        </span>
+        
+        
+        
+        if (!String.IsNullOrWhiteSpace(Model.PriceWithDiscount))
+        {
+        <br />
+        @T("Products.Price.WithDiscount")<text>:</text>
+        <span class="productPrice">
+            @Html.Raw(Model.PriceWithDiscount)
+        </span>
+        }
+    }
+</div>

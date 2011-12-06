@@ -1,0 +1,35 @@
+﻿@model ProductReviewOverviewModel
+@using Nop.Web.Framework.UI;
+@using Nop.Web.Models.Catalog;
+@{
+    int ratingPercent = 0;
+    if (Model.TotalReviews != 0)
+    {
+        ratingPercent = ((Model.RatingSum * 100) / Model.TotalReviews) / 5;
+    }
+}
+@if (Model.AllowCustomerReviews)
+{
+    if (Model.TotalReviews > 0)
+    {
+        /*CSS stars: http://www.thebroth.com/blog/119/css-rating-stars*/
+    <div class="product-reviews-overview">
+        <div class="product-review-box">
+            <div class="rating">
+                <div style="width: @(ratingPercent)%">
+                </div>
+            </div>
+        </div>
+        <div class="product-review-links">
+            <a href="@Url.RouteUrl("ProductReviews", new { productId = Model.ProductId })">@Model.TotalReviews
+                @T("Reviews.Overview.Reviews")</a> <a href="@Url.RouteUrl("ProductReviews", new { productId = Model.ProductId })" data-role="button">@T("Reviews.Overview.AddNew")</a>
+        </div>
+    </div>
+    }
+    else
+    {
+    <div class="product-no-reviews">
+        <a href="@Url.RouteUrl("ProductReviews", new { productId = Model.ProductId })" data-role="button">@T("Reviews.Overview.First")</a>
+    </div>
+    }
+}
