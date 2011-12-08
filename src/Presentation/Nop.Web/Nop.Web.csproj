@@ -1517,7 +1517,6 @@
       <SubType>Designer</SubType>
     </None>
     <Content Include="Views\Customer\Login.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\Date.cshtml" />
     <Content Include="Views\Customer\Register.cshtml" />
     <Content Include="Views\Customer\RegisterResult.cshtml" />
     <Content Include="Views\Customer\Info.cshtml" />
