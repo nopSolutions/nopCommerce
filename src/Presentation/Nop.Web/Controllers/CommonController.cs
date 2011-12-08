@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Nop.Core;
@@ -318,7 +319,6 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost, ActionName("ContactUs")]
-        [FormValueRequired("send-email")]
         public ActionResult ContactUsSend(ContactUsModel model)
         {
             //ajax form
@@ -338,7 +338,9 @@ namespace Nop.Web.Controllers
                 {
                     from = emailAccount.Email;
                     fromName = emailAccount.DisplayName;
-                    body = string.Format("<b>From</b>: {0} - {1}<br /><br />{2}", Server.HtmlEncode(fullName), Server.HtmlEncode(email), body);
+                    body = string.Format("<b>From</b>: {0} - {1}<br /><br />{2}", 
+                        Server.HtmlEncode(fullName), 
+                        Server.HtmlEncode(email), body);
                 }
                 else
                 {
@@ -346,22 +348,31 @@ namespace Nop.Web.Controllers
                     fromName = fullName;
                 }
                 _queuedEmailService.InsertQueuedEmail(new QueuedEmail()
-                    {
-                        From = from,
-                        FromName = fromName,
-                        To = emailAccount.Email,
-                        ToName = emailAccount.DisplayName,
-                        Priority = 5,
-                        Subject = subject,
-                        Body = body,
-                        CreatedOnUtc = DateTime.UtcNow,
-                        EmailAccountId = emailAccount.Id
-                    });
-                
-                return Content(_localizationService.GetResource("ContactUs.YourEnquiryHasBeenSent"));
+                {
+                    From = from,
+                    FromName = fromName,
+                    To = emailAccount.Email,
+                    ToName = emailAccount.DisplayName,
+                    Priority = 5,
+                    Subject = subject,
+                    Body = body,
+                    CreatedOnUtc = DateTime.UtcNow,
+                    EmailAccountId = emailAccount.Id
+                });
+
+                return Json(new { SuccessfullySent = true, Result = _localizationService.GetResource("ContactUs.YourEnquiryHasBeenSent") });
             }
 
-            return Content(ModelState.Values.FirstOrDefault().Errors.FirstOrDefault().ErrorMessage);
+            //errors
+            var errors = new List<string>();
+            foreach (var modelState in ModelState.Values)
+            {
+                foreach (var error in modelState.Errors)
+                {
+                    errors.Add(error.ErrorMessage);
+                }
+            }
+            return Json(new { SuccessfullySent = false, Result = errors.FirstOrDefault() });
         }
 
         //sitemap page

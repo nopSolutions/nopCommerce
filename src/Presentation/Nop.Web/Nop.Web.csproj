@@ -1419,6 +1419,7 @@
     <Content Include="Views\Shared\Header.Mobile.cshtml" />
     <Content Include="Views\Common\HeaderLinks.Mobile.cshtml" />
     <Content Include="Views\Common\InfoBlock.Mobile.cshtml" />
+    <Content Include="Views\Common\ContactUs.Mobile.cshtml" />
     <None Include="Views\Shared\Footer.Mobile.cshtml" />
     <Content Include="Views\Topic\TopicDetails.Mobile.cshtml" />
     <None Include="_bin_deployableAssemblies\amd64\Microsoft.VC90.CRT\README_ENU.txt" />
