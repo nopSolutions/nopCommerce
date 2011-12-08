@@ -1,0 +1,54 @@
+﻿@model Nop.Web.Models.Common.ContactUsModel
+@{
+    Layout = "~/Views/Shared/_MobileRoot.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.ContactUs").Text);
+}
+<div class="contact-form">
+    @Html.Action("TopicBlock", "Topic", new { systemName = "ContactUs" })
+    <div class="clear">
+    </div>
+    <script type="text/javascript">
+        $(function () {
+            $('#send-email').click(function () {
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("ContactUs", "Common")',
+                    data: $(this.form).serialize(),
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.SuccessfullySent) {
+                            $('#contactus-send-form').hide();
+                        }
+                        $('#contactus-result').html(data.Result);
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        $('#contactus-result').html('Failed to send email');
+                    }
+                });
+                return false;
+            });
+        });
+    </script>
+    @using (Html.BeginForm())
+    {
+        <div class="send-email" id="contactus-send-form">
+            @Html.LabelFor(model => model.FullName)
+            @Html.TextBoxFor(model => model.FullName)
+            @Html.ValidationMessageFor(model => model.FullName)
+            @Html.LabelFor(model => model.Email)
+            @Html.TextBoxFor(model => model.Email)
+            @Html.ValidationMessageFor(model => model.Email)
+            @Html.LabelFor(model => model.Enquiry)
+            @Html.TextAreaFor(model => model.Enquiry)
+            @Html.ValidationMessageFor(model => model.Enquiry)
+            <input type="submit" id="send-email" name="send-email" value="@T("ContactUs.Button")" />
+        </div>        
+        <div class="clear">
+        </div>
+        <div class="result">
+            <strong><span id="contactus-result"></span></strong>
+        </div>        
+    }
+</div>
