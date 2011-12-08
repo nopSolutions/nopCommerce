@@ -1422,6 +1422,8 @@
     <Content Include="Views\Common\ContactUs.Mobile.cshtml" />
     <Content Include="Views\Blog\List.Mobile.cshtml" />
     <Content Include="Views\Blog\BlogPost.Mobile.cshtml" />
+    <Content Include="Views\News\List.Mobile.cshtml" />
+    <Content Include="Views\News\NewsItem.Mobile.cshtml" />
     <None Include="Views\Shared\Footer.Mobile.cshtml" />
     <Content Include="Views\Topic\TopicDetails.Mobile.cshtml" />
     <None Include="_bin_deployableAssemblies\amd64\Microsoft.VC90.CRT\README_ENU.txt" />
