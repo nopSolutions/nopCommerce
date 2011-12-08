@@ -1,0 +1,79 @@
+﻿@model TopicModel
+@using Nop.Web.Models.Topics;
+@using Nop.Web.Framework;
+@{
+    Layout = "~/Views/Shared/_MobileRoot.cshtml";
+
+    if (!Model.IsPasswordProtected)
+    {
+        Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Title);
+    }
+}
+@if (Model.IsPasswordProtected)
+{
+    
+    
+    <script type="text/javascript">
+        $(function () {
+            $('#btnPassword').click(function () {
+                var topicId = $("#@Html.FieldIdFor(model => model.Id)").val();
+                var password = $('#password').val();
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("Authenticate", "Topic")',
+                    data: "id=" + topicId + "&password=" + password,
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.Authenticated) {
+                            $('#phTitle .page-title h1').html(data.Title);
+                            if ($('#phTitle .page-title h1').text().length == 0) {
+                                $('#phTitle').hide();
+                            }
+                            $('#phTopic .topicpage-body').html(data.Body);
+                            $('#phPassword').hide();
+                            $('#phTopic').show();
+                        }
+                        else {
+                            $('#passworderror').text(data.Error);
+                            $('#phPassword #password').select().focus();
+                        }
+                    }
+                });
+                return false;
+            });
+        });
+    </script>
+    
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#phTopic').hide();
+            $('#phPassword #password').select().focus();
+        });
+    </script>
+    <div id="phPassword">
+        @using (Html.BeginForm("Authenticate", "Topic"))
+        {
+            <p>
+                @Html.HiddenFor(model => model.Id)
+                @T("Topic.EnterPassword")
+            </p>
+            @Html.Password("password", null, new { @class = "textBox" })
+            <input type="submit" id="btnPassword" value ="@T("Topic.Button")"/>            
+            <br />
+            <span id="passworderror"></span>
+        }
+    </div>
+}
+<div class="topicpage" id="phTopic">
+    <div id="phTitle">
+        <div class="page-title">
+            <h1>
+                @Html.Raw(@Model.Title)</h1>
+        </div>
+        <div class="clear">
+        </div>
+    </div>
+    <div class="topicpage-body">
+        @Html.Raw(Model.Body)
+    </div>
+</div>
