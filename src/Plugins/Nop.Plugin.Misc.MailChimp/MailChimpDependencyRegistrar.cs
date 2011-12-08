@@ -22,6 +22,7 @@ namespace Nop.Plugin.Misc.MailChimp {
         public void Register(ContainerBuilder builder, ITypeFinder typeFinder) {
             builder.RegisterType<SubscriptionEventQueueingService>().As<ISubscriptionEventQueueingService>().InstancePerHttpRequest();
             builder.RegisterType<MailChimpInstallationService>().AsSelf().InstancePerHttpRequest();
+            builder.RegisterType<MailChimpApiService>().As<IMailChimpApiService>().InstancePerHttpRequest();
 
             //Register object context
             RegisterObjectContext(builder);

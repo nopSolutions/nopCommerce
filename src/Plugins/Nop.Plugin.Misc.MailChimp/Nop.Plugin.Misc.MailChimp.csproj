@@ -43,6 +43,10 @@
       <HintPath>..\..\Presentation\Nop.Web\Administration\Bin\EntityFramework.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="PerceptiveMCAPI">
+      <HintPath>..\..\packages\PerceptiveMCAPI\PerceptiveMCAPI.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Entity" />
@@ -66,6 +70,8 @@
     <Compile Include="MailChimpRouteProvider.cs" />
     <Compile Include="Models\MailChimpSettingsModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\IMailChimpApiService.cs" />
+    <Compile Include="Services\MailChimpApiService.cs" />
     <Compile Include="Services\MailChimpInstallationService.cs" />
     <Compile Include="Services\ISubscriptionEventQueueingService.cs" />
     <Compile Include="Services\SubscriptionEventConsumer.cs" />
