@@ -1,0 +1,275 @@
+﻿@model Nop.Web.Models.Customer.CustomerInfoModel
+@using Nop.Web.Framework;
+@{
+    Layout = "~/Views/Shared/_MobileRoot.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Account").Text);
+}
+@section top
+{
+    @Html.Partial("MyAccountNavigation", Model.NavigationModel, new ViewDataDictionary())
+}
+@if (Model.CountryEnabled && Model.StateProvinceEnabled)
+{
+    <script type="text/javascript">
+     $(function() {
+            $("#@Html.FieldIdFor(model => model.CountryId)").change(function() {
+                var selectedItem = $(this).val();
+                var ddlStates = $("#@Html.FieldIdFor(model => model.StateProvinceId)");
+                var statesProgress = $("#states-loading-progress");
+                statesProgress.show();
+                $.ajax({
+                    cache:false,
+                    type: "GET",
+                    url: "@(Url.Action("GetStatesByCountryId", "Country"))",
+                    data: "countryId=" + selectedItem + "&addEmptyStateIfRequired=true",
+                    success: function (data) {
+                        ddlStates.html('');
+                        $.each(data, function(id, option) {
+                            ddlStates.append($('<option></option>').val(option.id).html(option.name));
+                        });
+                        statesProgress.hide();
+
+                        //jQuery Mobile. If you manipulate a select via JavaScript, you must call the refresh method on it to update the visual styling.
+                        ddlStates.selectmenu("refresh");
+                    },
+                    error:function (xhr, ajaxOptions, thrownError){
+                        alert('Failed to retrieve states.');
+                        statesProgress.hide();
+                    }  
+                });
+            });
+        });
+    </script>
+}
+<div class="account-page">
+    <div class="page-title">
+        <h1>@T("Account.MyAccount") - @T("Account.CustomerInfo")</h1>
+    </div>
+    <div class="clear">
+    </div>
+    <div class="body">
+        <div class="section-body">
+            @using (Html.BeginForm())
+            {
+                <div class="customer-info-box">
+                    <div class="message-error">
+                        @Html.ValidationSummary(false)
+                    </div>
+                    <div class="clear">
+                    </div>
+                    <div class="section-title">
+                        @T("Account.YourPersonalDetails")
+                    </div>
+                    <div class="clear">
+                    </div>
+                    <div class="section-body">
+                        @if (Model.GenderEnabled)
+                        {
+                            @Html.LabelFor(model => model.Gender)
+                            <div data-role="fieldcontain">
+                                <fieldset data-role="controlgroup" data-type="horizontal">
+                                    <input type="radio" name="Gender" id="Gender_Male" value="M" @(Model.Gender == "M" ? " checked=\"checked\"" : null)  />
+                                    <label for="Gender_Male">@T("Account.Fields.Gender.Male")</label>
+                                    <input type="radio" name="Gender" id="Gender_Female" value="F" @(Model.Gender == "F" ? " checked=\"checked\"" : null) />
+                                    <label for="Gender_Female">@T("Account.Fields.Gender.Female")</label>
+                                </fieldset>
+                            </div>          
+                        }
+                        @Html.LabelFor(model => model.FirstName)
+                        @Html.EditorFor(model => model.FirstName)
+                        @Html.ValidationMessageFor(model => model.FirstName)
+                        @Html.LabelFor(model => model.LastName)
+                        @Html.EditorFor(model => model.LastName)
+                        @Html.ValidationMessageFor(model => model.LastName)
+                        @if (Model.DateOfBirthEnabled)
+                        {
+                            @Html.LabelFor(model => model.DateOfBirthDay)
+                            <div data-role="fieldcontain">
+                                <fieldset data-role="controlgroup" data-type="horizontal">
+                                    @Html.DatePickerDropDowns(Html.FieldNameFor(x => x.DateOfBirthDay),
+                                        Html.FieldNameFor(x => x.DateOfBirthMonth),
+                                        Html.FieldNameFor(x => x.DateOfBirthYear),
+                                        DateTime.Now.Year - 110,
+                                        DateTime.Now.Year,
+                                        Model.DateOfBirthDay,
+                                        Model.DateOfBirthMonth,
+                                        Model.DateOfBirthYear)
+                                    @Html.ValidationMessageFor(model => model.DateOfBirthDay)
+                                    @Html.ValidationMessageFor(model => model.DateOfBirthMonth)
+                                    @Html.ValidationMessageFor(model => model.DateOfBirthYear)
+                                </fieldset>
+                            </div>
+                        }
+                        @Html.LabelFor(model => model.Email)
+                        @Html.EditorFor(model => model.Email)
+                        @Html.ValidationMessageFor(model => model.Email)
+                        @if (Model.UsernamesEnabled)
+                        {
+                            if (Model.AllowUsersToChangeUsernames)
+                            {
+                            @Html.LabelFor(model => model.Username)
+                            @Html.EditorFor(model => model.Username)
+                            @Html.ValidationMessageFor(model => model.Username)
+                            }
+                            else
+                            {
+                            @Html.LabelFor(model => model.Username)
+                            @Model.Username
+                            }
+                        }
+                    </div>
+                    <div class="clear">
+                    </div>
+                    @if (Model.CompanyEnabled || Model.DisplayVatNumber)
+                    {
+                        <div class="section-title">
+                            @T("Account.CompanyDetails")
+                        </div>
+                        <div class="clear">
+                        </div>
+                        <div class="section-body">
+                            @if (Model.CompanyEnabled)
+                            {
+                                @Html.LabelFor(model => model.Company)
+                                @Html.EditorFor(model => model.Company)
+                                @Html.ValidationMessageFor(model => model.Company)
+                            }
+                            @if (Model.DisplayVatNumber)
+                            {
+                                @Html.LabelFor(model => model.VatNumber)
+                                @Html.EditorFor(model => model.VatNumber)
+                                <p>
+                                    @*TODO localize 'Status'*@
+                                   Status: @Model.VatNumberStatusNote
+                                </p>
+                                <i>@T("Account.Fields.VatNumber.Note")</i>
+                            }
+                        </div>
+                        <div class="clear">
+                        </div>
+                    }
+                    @if (Model.StreetAddressEnabled ||
+                        Model.StreetAddress2Enabled ||
+                        Model.ZipPostalCodeEnabled ||
+                        Model.CityEnabled ||
+                        Model.CountryEnabled)
+                    {
+                        <div class="section-title">
+                            @T("Account.YourAddress")
+                        </div>
+                        <div class="clear">
+                        </div>
+                        <div class="section-body">
+                            @if (Model.StreetAddressEnabled)
+                            {
+                                @Html.LabelFor(model => model.StreetAddress)
+                                @Html.EditorFor(model => model.StreetAddress)
+                                @Html.ValidationMessageFor(model => model.StreetAddress)
+                            }
+                            @if (Model.StreetAddress2Enabled)
+                            {
+                                @Html.LabelFor(model => model.StreetAddress2)
+                                @Html.EditorFor(model => model.StreetAddress2)
+                                @Html.ValidationMessageFor(model => model.StreetAddress2)
+                            }
+                            @if (Model.ZipPostalCodeEnabled)
+                            {
+                                @Html.LabelFor(model => model.ZipPostalCode)
+                                @Html.EditorFor(model => model.ZipPostalCode)
+                                @Html.ValidationMessageFor(model => model.ZipPostalCode)
+                            }
+                            @if (Model.CityEnabled)
+                            {
+                                @Html.LabelFor(model => model.City)
+                                @Html.EditorFor(model => model.City)
+                                @Html.ValidationMessageFor(model => model.City)
+                            }
+                            @if (Model.CountryEnabled)
+                            {
+                                @Html.LabelFor(model => model.CountryId)
+                                @Html.DropDownList("CountryId", Model.AvailableCountries)
+                            }
+                            @if (Model.CountryEnabled && Model.StateProvinceEnabled)
+                            {
+                                @Html.LabelFor(model => model.StateProvinceId)
+                                @Html.DropDownList("StateProvinceId", Model.AvailableStates)
+                                <span id="states-loading-progress" style="display: none;">@T("Common.Wait...")
+                                    <img src='@Url.Content("~/Content/Images/ajax_loader_small.gif")' alt="@T("Common.Wait...")" />
+                                </span>
+                            }
+                        </div>
+                        <div class="clear">
+                        </div>
+                    }
+                    @if (Model.PhoneEnabled || Model.FaxEnabled)
+                    {
+                        <div class="section-title">
+                            @T("Account.YourContactInformation")
+                        </div>
+                        <div class="clear">
+                        </div>
+                        <div class="section-body">
+                            @if (Model.PhoneEnabled)
+                            {
+                                @Html.LabelFor(model => model.Phone)
+                                @Html.EditorFor(model => model.Phone)
+                                @Html.ValidationMessageFor(model => model.Phone)
+                            }
+                            @if (Model.FaxEnabled)
+                            {
+                                @Html.LabelFor(model => model.Fax)
+                                @Html.EditorFor(model => model.Fax)
+                                @Html.ValidationMessageFor(model => model.Fax)
+                            }
+                        </div>
+                        <div class="clear">
+                        </div>
+                    }
+                    @if (Model.NewsletterEnabled)
+                    {
+                        <div class="section-title">
+                            @T("Account.Options")
+                        </div>
+                        <div class="clear">
+                        </div>
+                        <div class="section-body">
+                            @Html.LabelFor(model => model.Newsletter)
+                            @Html.EditorFor(model => model.Newsletter)
+                            @Html.ValidationMessageFor(model => model.Newsletter)
+                        </div>
+                        <div class="clear">
+                        </div>
+                    }
+                    @if (Model.AllowCustomersToSetTimeZone || Model.SignatureEnabled)
+                    {
+                        <div class="section-title">
+                            @T("Account.Preferences")
+                        </div>
+                        <div class="clear">
+                        </div>
+                        <div class="section-body">
+                            @if (Model.AllowCustomersToSetTimeZone)
+                            {
+                                @Html.LabelFor(model => model.TimeZoneId)
+                                @Html.DropDownList("TimeZoneId", Model.AvailableTimeZones)
+                                @Html.ValidationMessageFor(model => model.TimeZoneId)
+                            }
+                            @if (Model.SignatureEnabled)
+                            {
+                                @Html.LabelFor(model => model.Signature)
+                                @Html.TextAreaFor(model => model.Signature)
+                            }
+                        </div>
+                        <div class="clear">
+                        </div>
+                    }
+                    <div class="button">
+                        <input type="submit" id="save-info-button" value="@T("Common.Save")" name="save-info-button" />
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

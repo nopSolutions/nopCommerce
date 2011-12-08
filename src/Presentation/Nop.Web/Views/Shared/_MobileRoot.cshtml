@@ -30,11 +30,22 @@
         <div data-role="header" data-position="inline">
             @Html.Partial("Header")
         </div>
-        <div data-role="header" data-position="inline">
-            @Html.Action("HeaderLinks", "Common")
-        </div>
+        @if (IsSectionDefined("headerlinks"))
+        {
+            @RenderSection("headerlinks")
+        }
+        else
+        {
+            <div data-role="header" data-position="inline">
+                @Html.Action("HeaderLinks", "Common")
+            </div>
+        }
         <div data-role="content">
             @Html.Action("SearchBox", "Catalog")
+            @if (IsSectionDefined("top"))
+            {
+                @RenderSection("top")
+            }
             @RenderBody()
         </div>
         <div data-role="footer">

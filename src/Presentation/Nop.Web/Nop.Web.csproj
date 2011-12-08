@@ -1428,6 +1428,8 @@
     <Content Include="Views\Customer\RegisterResult.Mobile.cshtml" />
     <Content Include="Views\Customer\Register.Mobile.cshtml" />
     <Content Include="Views\Customer\AccountActivation.Mobile.cshtml" />
+    <Content Include="Views\Customer\MyAccountNavigation.Mobile.cshtml" />
+    <Content Include="Views\Customer\Info.Mobile.cshtml" />
     <None Include="Views\Shared\Footer.Mobile.cshtml" />
     <Content Include="Views\Topic\TopicDetails.Mobile.cshtml" />
     <None Include="_bin_deployableAssemblies\amd64\Microsoft.VC90.CRT\README_ENU.txt" />

@@ -1,0 +1,47 @@
+﻿@model Nop.Web.Models.Customer.CustomerNavigationModel
+@using Nop.Web.Models.Customer
+<div data-role="navbar">
+    <ul>
+            @if (!Model.HideInfo)
+            {
+                <li><a href="@Url.RouteUrl("CustomerInfo")" @(Model.SelectedTab == CustomerNavigationEnum.Info ? " class=\"ui-btn-active\"" : null) >@T("Account.CustomerInfo")</a></li>
+            }
+            @if (!Model.HideAddresses)
+            {
+                <li><a href="@Url.RouteUrl("CustomerAddresses")" @(Model.SelectedTab == CustomerNavigationEnum.Addresses ? " class=\"ui-btn-active\"" : null) >@T("Account.CustomerAddresses")</a></li>
+            }
+            @if (!Model.HideOrders)
+            {
+                <li><a href="@Url.RouteUrl("CustomerOrders")" @(Model.SelectedTab == CustomerNavigationEnum.Orders ? " class=\"ui-btn-active\"" : null) >@T("Account.CustomerOrders")</a></li>
+            }
+            @if (!Model.HideReturnRequests)
+            {
+                <li><a href="@Url.RouteUrl("CustomerReturnRequests")" @(Model.SelectedTab == CustomerNavigationEnum.ReturnRequests ? " class=\"ui-btn-active\"" : null) >@T("Account.CustomerReturnRequests")</a></li>
+            }
+            @if (!Model.HideDownloadableProducts)
+            {
+                <li><a href="@Url.RouteUrl("CustomerDownloadableProducts")" @(Model.SelectedTab == CustomerNavigationEnum.DownloadableProducts ? " class=\"ui-btn-active\"" : null) >@T("Account.DownloadableProducts")</a></li>
+            }
+            @if (!Model.HideBackInStockSubscriptions)
+            {
+                <li><a href="@Url.RouteUrl("CustomerBackInStockSubscriptions")" @(Model.SelectedTab == CustomerNavigationEnum.BackInStockSubscriptions ? " class=\"ui-btn-active\"" : null) >@T("Account.BackInStockSubscriptions")</a></li>
+            }
+            @if (!Model.HideRewardPoints)
+            {
+                <li><a href="@Url.RouteUrl("CustomerRewardPoints")" @(Model.SelectedTab == CustomerNavigationEnum.RewardPoints ? " class=\"ui-btn-active\"" : null) >@T("Account.RewardPoints")</a></li>
+            }
+            @if (!Model.HideChangePassword)
+            {
+                <li><a href="@Url.RouteUrl("CustomerChangePassword")" @(Model.SelectedTab == CustomerNavigationEnum.ChangePassword ? " class=\"ui-btn-active\"" : null) >@T("Account.RewardPoints")</a></li>
+            }
+            @if (!Model.HideAvatar)
+            {
+                <li><a href="@Url.RouteUrl("CustomerAvatar")" @(Model.SelectedTab == CustomerNavigationEnum.Avatar ? " class=\"ui-btn-active\"" : null) >@T("Account.Avatar")</a></li>
+            }
+            @if (!Model.HideForumSubscriptions)
+            {
+                <li><a href="@Url.RouteUrl("CustomerForumSubscriptions")" @(Model.SelectedTab == CustomerNavigationEnum.ForumSubscriptions ? " class=\"ui-btn-active\"" : null) >@T("Account.ForumSubscriptions")</a></li>
+            }
+        
+    </ul>
+</div>
