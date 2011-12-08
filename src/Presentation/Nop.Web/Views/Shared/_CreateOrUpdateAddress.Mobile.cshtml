@@ -1,0 +1,120 @@
+﻿@model Nop.Web.Models.Common.AddressModel
+@using Nop.Web.Framework;
+<script type="text/javascript">
+     $(function() {
+            $("#@Html.FieldIdFor(model => model.CountryId)").change(function() {
+                var selectedItem = $(this).val();
+                var ddlStates = $("#@Html.FieldIdFor(model => model.StateProvinceId)");
+                var statesProgress = $("#states-loading-progress");
+                statesProgress.show();
+                $.ajax({
+                    cache:false,
+                    type: "GET",
+                    url: "@(Url.Action("GetStatesByCountryId", "Country"))",
+                    data: "countryId=" + selectedItem + "&addEmptyStateIfRequired=true",
+                    success: function (data) {
+                        ddlStates.html('');
+                        $.each(data, function(id, option) {
+                            ddlStates.append($('<option></option>').val(option.id).html(option.name));
+                        });
+                        statesProgress.hide();
+
+                        //jQuery Mobile. If you manipulate a select via JavaScript, you must call the refresh method on it to update the visual styling.
+                        ddlStates.selectmenu("refresh");
+                    },
+                    error:function (xhr, ajaxOptions, thrownError){
+                        alert('Failed to retrieve states.');
+                        statesProgress.hide();
+                    }  
+                });
+            });
+        });
+</script>
+@Html.HiddenFor(model => model.Id)
+@Html.HiddenFor(model => model.FirstNameDisabled)
+@Html.HiddenFor(model => model.LastNameDisabled)
+@Html.HiddenFor(model => model.EmailDisabled)
+@Html.HiddenFor(model => model.CompanyDisabled)
+@Html.HiddenFor(model => model.CountryDisabled)
+@Html.HiddenFor(model => model.StateProvinceDisabled)
+@Html.HiddenFor(model => model.CityDisabled)
+@Html.HiddenFor(model => model.Address1Disabled)
+@Html.HiddenFor(model => model.Address2Disabled)
+@Html.HiddenFor(model => model.ZipPostalCodeDisabled)
+@Html.HiddenFor(model => model.PhoneNumberDisabled)
+@Html.HiddenFor(model => model.FaxNumberDisabled)
+@if (!Model.FirstNameDisabled)
+{
+    @Html.LabelFor(model => model.FirstName)
+    @Html.EditorFor(model => model.FirstName)
+    @Html.ValidationMessageFor(model => model.FirstName)
+}
+@if (!Model.LastNameDisabled)
+{
+    @Html.LabelFor(model => model.LastName)
+    @Html.EditorFor(model => model.LastName)
+    @Html.ValidationMessageFor(model => model.LastName)
+}
+@if (!Model.EmailDisabled)
+{
+    @Html.LabelFor(model => model.Email)
+    @Html.EditorFor(model => model.Email)
+    @Html.ValidationMessageFor(model => model.Email)
+}
+@if (!Model.CompanyDisabled)
+{
+    @Html.LabelFor(model => model.Company)
+    @Html.EditorFor(model => model.Company)
+    @Html.ValidationMessageFor(model => model.Company)
+}
+@if (!Model.CountryDisabled)
+{
+    @Html.LabelFor(model => model.CountryId)
+    @Html.DropDownListFor(model => model.CountryId, Model.AvailableCountries)
+    @Html.ValidationMessageFor(model => model.CountryId)
+}
+@if (!Model.StateProvinceDisabled)
+{
+    @Html.LabelFor(model => model.StateProvinceId)
+    @Html.DropDownListFor(model => model.StateProvinceId, Model.AvailableStates)
+    <span id="states-loading-progress" style="display: none;">@T("Common.Wait...")
+        <img src='@Url.Content("~/Content/Images/ajax_loader_small.gif")' alt="@T("Common.Wait...")" />
+    </span>
+    @Html.ValidationMessageFor(model => model.StateProvinceId)
+}
+@if (!Model.CityDisabled)
+{
+    @Html.LabelFor(model => model.City)
+    @Html.EditorFor(model => model.City)
+    @Html.ValidationMessageFor(model => model.City)
+}
+@if (!Model.Address1Disabled)
+{
+    @Html.LabelFor(model => model.Address1)
+    @Html.EditorFor(model => model.Address1)
+    @Html.ValidationMessageFor(model => model.Address1)
+}
+@if (!Model.Address2Disabled)
+{
+    @Html.LabelFor(model => model.Address2)
+    @Html.EditorFor(model => model.Address2)
+    @Html.ValidationMessageFor(model => model.Address2)
+}
+@if (!Model.ZipPostalCodeDisabled)
+{
+    @Html.LabelFor(model => model.ZipPostalCode)
+    @Html.EditorFor(model => model.ZipPostalCode)
+    @Html.ValidationMessageFor(model => model.ZipPostalCode)
+}
+@if (!Model.PhoneNumberDisabled)
+{
+    @Html.LabelFor(model => model.PhoneNumber)
+    @Html.EditorFor(model => model.PhoneNumber)
+    @Html.ValidationMessageFor(model => model.PhoneNumber)
+}
+@if (!Model.FaxNumberDisabled)
+{
+    @Html.LabelFor(model => model.FaxNumber)
+    @Html.EditorFor(model => model.FaxNumber)
+    @Html.ValidationMessageFor(model => model.FaxNumber)
+}

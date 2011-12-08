@@ -1,0 +1,40 @@
+﻿@model Nop.Web.Models.Customer.CustomerAddressEditModel
+@{
+    Layout = "~/Views/Shared/_MobileRoot.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Account").Text);
+}
+@using Nop.Web.Framework;
+@section top
+{
+    @Html.Partial("MyAccountNavigation", Model.NavigationModel, new ViewDataDictionary())
+}
+@using (Html.BeginForm())
+{
+    <div class="account-page">
+        <div class="page-title">
+            <h1>@T("Account.MyAccount") - @T("Account.CustomerAddresses.AddNew")</h1>
+        </div>
+        <div class="clear">
+        </div>
+        <div class="body">
+            @{
+    var dataDictAddress = new ViewDataDictionary();
+    //Merge ModelState (required for validation)
+    dataDictAddress.ModelState.Merge(ViewData.ModelState);
+    dataDictAddress.TemplateInfo.HtmlFieldPrefix = "Address";
+                @Html.Partial("_CreateOrUpdateAddress", Model.Address, dataDictAddress)              
+            }
+            <table width="100%" cellspacing="0" cellpadding="2" border="0">
+                <tbody>
+                    <tr>
+                        <td align="left">
+                            <input type="submit" value="@T("Common.Save")" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+}

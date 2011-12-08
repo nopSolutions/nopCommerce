@@ -1,0 +1,16 @@
+﻿@model Nop.Web.Models.Profile.ProfileIndexModel
+@{    
+    Layout = "~/Views/Shared/_MobileRoot.cshtml";
+
+    Html.AddTitleParts(T("PageTitle.Profile").Text);
+}
+<div class="profile-page">
+    <div class="title">
+        <h1>@Model.ProfileTitle</h1>
+    </div>
+    <div class="clear">
+    </div>
+    <div class="body">
+        @Html.Action("info", new { customerProfileId = Model.CustomerProfileId })
+    </div>
+</div>

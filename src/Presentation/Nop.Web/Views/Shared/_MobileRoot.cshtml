@@ -41,7 +41,14 @@
             </div>
         }
         <div data-role="content">
-            @Html.Action("SearchBox", "Catalog")
+            @if (IsSectionDefined("productsearchbox"))
+            {
+                @RenderSection("productsearchbox")
+            }
+            else
+            {
+                @Html.Action("SearchBox", "Catalog")
+            }
             @if (IsSectionDefined("top"))
             {
                 @RenderSection("top")

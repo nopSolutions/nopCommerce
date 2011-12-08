@@ -1,0 +1,41 @@
+﻿@model Nop.Web.Models.Customer.UserAgreementModel
+@{
+    Layout = "~/Views/Shared/_MobileRoot.cshtml";
+}
+@using Nop.Web.Framework;
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#agreementagree").click(toggleContinueButton);
+
+        toggleContinueButton();
+    });
+
+    function toggleContinueButton() {
+        if ($('#agreementagree').is(':checked')) {
+            $('#continuedownloading').removeAttr('disabled');
+        } else {
+            $('#continuedownloading').attr('disabled', 'disabled');
+        }
+        //jQuery Mobile. If you manipulate a select via JavaScript, you must call the refresh method on it to update the visual styling.
+        $('#continuedownloading').button("refresh");
+    }
+</script>
+
+<div class="user-agreement-page">
+    <div class="page-title">
+        <h1>@T("DownloadableProducts.UserAgreement")</h1>
+    </div>
+    <div class="clear">
+    </div>
+    <div class="page-body">
+        @Html.Raw(Model.UserAgreementText)
+        <br />
+        <br />
+        <input id="agreementagree" type="checkbox" name="agreementagree" value="@T("DownloadableProducts.IAgree")" />
+        <label for="agreementagree">@T("DownloadableProducts.IAgree")</label>
+        <br />
+        <input type="submit" id="continuedownloading" value="@T("Common.Continue")" onclick="setLocation('@Url.Action("GetDownload", "Download", new { opvId = Model.OrderProductVariantGuid, agree = true })')" />
+    </div>
+</div>

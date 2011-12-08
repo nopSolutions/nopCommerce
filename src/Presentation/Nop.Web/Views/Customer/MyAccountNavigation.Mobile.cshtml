@@ -32,7 +32,7 @@
             }
             @if (!Model.HideChangePassword)
             {
-                <li><a href="@Url.RouteUrl("CustomerChangePassword")" @(Model.SelectedTab == CustomerNavigationEnum.ChangePassword ? " class=\"ui-btn-active\"" : null) >@T("Account.RewardPoints")</a></li>
+                <li><a href="@Url.RouteUrl("CustomerChangePassword")" @(Model.SelectedTab == CustomerNavigationEnum.ChangePassword ? " class=\"ui-btn-active\"" : null) >@T("Account.ChangePassword")</a></li>
             }
             @if (!Model.HideAvatar)
             {

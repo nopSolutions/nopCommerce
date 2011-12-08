@@ -1430,6 +1430,15 @@
     <Content Include="Views\Customer\AccountActivation.Mobile.cshtml" />
     <Content Include="Views\Customer\MyAccountNavigation.Mobile.cshtml" />
     <Content Include="Views\Customer\Info.Mobile.cshtml" />
+    <Content Include="Views\Profile\Index.Mobile.cshtml" />
+    <Content Include="Views\Profile\Info.Mobile.cshtml" />
+    <Content Include="Views\Customer\Addresses.Mobile.cshtml" />
+    <Content Include="Views\Customer\AddressAdd.Mobile.cshtml" />
+    <Content Include="Views\Customer\AddressEdit.Mobile.cshtml" />
+    <Content Include="Views\Shared\_CreateOrUpdateAddress.Mobile.cshtml" />
+    <Content Include="Views\Customer\ChangePassword.Mobile.cshtml" />
+    <Content Include="Views\Customer\Avatar.Mobile.cshtml" />
+    <Content Include="Views\Customer\UserAgreement.Mobile.cshtml" />
     <None Include="Views\Shared\Footer.Mobile.cshtml" />
     <Content Include="Views\Topic\TopicDetails.Mobile.cshtml" />
     <None Include="_bin_deployableAssemblies\amd64\Microsoft.VC90.CRT\README_ENU.txt" />
