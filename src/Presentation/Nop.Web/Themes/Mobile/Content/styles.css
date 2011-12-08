@@ -62,8 +62,8 @@ ul.languagelist li:hover{cursor:pointer;}
 .login-page .forgot-password{font-weight:700;}
 .registration-page{margin-bottom:15px;padding-bottom:5px;padding-left:0;}
 .registration-page .page-title{border-bottom:0 none;}
-.registration-page .body{margin:0;padding:0;font-size:11px;color:#555;background-color:inherit;}
-.registration-page .section-title{padding:10px 10px 5px 0;font-weight:700;clear:both;font-size:12px;}
+.registration-page .body{margin:0;padding:0;color:#555;background-color:inherit;}
+.registration-page .section-title{padding:10px 10px 5px 0;font-weight:700;clear:both;}
 .registration-page .section-body{text-align:left;padding:10px;border:1px solid #d7d7d7;height:auto;}
 .registration-page .button{float:right;margin-bottom:5px;margin-top:5px;text-align:center;clear:both;}
 .registration-page .required{color:red;}
@@ -71,15 +71,15 @@ ul.languagelist li:hover{cursor:pointer;}
 .notavailablestatus{color:red;padding-left:5px;}
 .password-recovery-page,newsletter-page{margin-bottom:15px;padding-bottom:5px;padding-left:0;}
 .password-recovery-page .page-title,newsletter-page .page-title{border-bottom:0 none;}
-.password-recovery-page .body,newsletter-page .body{margin:0;padding:0;font-size:11px;color:#555;background-color:inherit;}
+.password-recovery-page .body,newsletter-page .body{margin:0;padding:0;color:#555;background-color:inherit;}
 .customer-avatar{padding:10px;}
 .customer-avatar .button{margin:5px 0;}
 .account-activation-page{margin-bottom:15px;padding-bottom:5px;padding-left:0;}
 .account-activation-page .page-title{border-bottom:0 none;}
-.account-activation-page .body{margin:0;padding:0;font-size:11px;color:#555;background-color:inherit;}
+.account-activation-page .body{margin:0;padding:0;color:#555;background-color:inherit;}
 .address-edit-page{margin-bottom:15px;padding-bottom:5px;padding-left:0;}
 .address-edit-page .page-title{border-bottom:0 none;}
-.address-edit-page .body{margin:0;padding:0;font-size:11px;color:#555;background-color:inherit;}
+.address-edit-page .body{margin:0;padding:0;color:#555;background-color:inherit;}
 .search-panel{margin-bottom:15px;padding:0;}
 .search-panel .page-title{border-bottom:0 none;}
 .search-panel .search-input{border:1px solid #d7d7d7;padding:10px;}
@@ -172,9 +172,9 @@ ul.languagelist li:hover{cursor:pointer;}
 .blogcomment .commentcontent .commentbody{padding:3px;}
 .todays-poll-box{margin-bottom:15px;padding-bottom:5px;padding-left:0;}
 .todays-poll-box .title{padding:10px 10px 5px 0;font-weight:700;text-transform:uppercase;clear:both;}
-.todays-poll-box .todays-poll-box-block{margin:0;padding:0;font-size:11px;color:#555;background-color:inherit;}
+.todays-poll-box .todays-poll-box-block{margin:0;padding:0;color:#555;background-color:inherit;}
 .todays-poll-box .poll-item{float:left;text-align:left;vertical-align:top;padding:10px;}
-.block-poll .poll-item{margin:0;padding:0;font-size:11px;background-color:inherit;text-align:left;vertical-align:top;}
+.block-poll .poll-item{margin:0;padding:0;background-color:inherit;text-align:left;vertical-align:top;}
 .poll-item label{margin:0 0 0 5px;}
 .poll-take-poll,.poll-results{border:dashed 1px #666;padding:5px;margin-top:10px;}
 .poll-display-text{font-weight:700;}
@@ -192,32 +192,32 @@ ul.languagelist li:hover{cursor:pointer;}
 /* CUSTOMER ACCOUNT */
 .account-page{margin-bottom:15px;padding-bottom:5px;padding-left:0;}
 .account-page .page-title{border-bottom:0 none;}
-.account-page .body{margin:0;padding:0;font-size:11px;color:#555;}
-.customer-info-box{margin:0;padding:5px;font-size:11px;color:#555;}
-.customer-info-box .section-title{padding:10px 10px 5px 0;font-weight:700;clear:both;font-size:12px;}
+.account-page .body{margin:0;padding:0;color:#555;}
+.customer-info-box{margin:0;padding:5px;color:#555;}
+.customer-info-box .section-title{padding:10px 10px 5px 0;font-weight:700;clear:both;}
 .customer-info-box .section-body{text-align:left;padding:10px;border:1px solid #d7d7d7;height:auto;}
 .customer-info-box .button{margin-bottom:5px;margin-top:5px;text-align:center;}
-.customer-addresses{margin:0;padding:5px;font-size:11px;color:#555;background-color:inherit;}
-.customer-addresses .section-title{padding:10px 10px 5px 0;font-weight:700;clear:both;font-size:12px;}
+.customer-addresses{margin:0;padding:5px;color:#555;background-color:inherit;}
+.customer-addresses .section-title{padding:10px 10px 5px 0;font-weight:700;clear:both;}
 .customer-addresses .address-list{}
 .customer-addresses .address-list .buttons {text-align:right;}
 .customer-addresses .address-list .address-item{text-align:left;margin-bottom:10px;padding:10px;border:1px solid #d7d7d7;height:auto;}
 .customer-addresses .add-button{margin-bottom:5px;margin-top:5px;float:right;text-align:right;}
-.customer-orders{margin:0;padding:5px;font-size:11px;color:#555;background-color:inherit;}
+.customer-orders{margin:0;padding:5px;color:#555;background-color:inherit;}
 .customer-orders .recurring-payments{padding:10px 10px 5px 0;width:100%;clear:both;}
-.customer-orders .recurring-payments .section-title{padding:10px 10px 5px 0;font-weight:700;clear:both;font-size:12px;}
+.customer-orders .recurring-payments .section-title{padding:10px 10px 5px 0;font-weight:700;clear:both;}
 .customer-orders .recurring-payments .recurring-payments-box{text-align:left;padding:10px;border:1px solid #d7d7d7;height:auto;}
 .customer-orders .order-list{}
 .customer-orders .order-list .order-item{text-align:left;margin-bottom:10px;padding:10px;border:1px solid #d7d7d7;height:auto;}
 .customer-orders .order-list .order-item .buttons{text-align:right;}
-.customer-pass-recovery{padding:5px;font-size:11px;color:#555;background-color:inherit;}
-.customer-rewardpoints{margin:0;padding:5px;font-size:11px;color:#555;background-color:inherit;}
-.customer-rewardpoints .section-title{padding:10px 10px 5px 0;font-weight:700;clear:both;font-size:12px;}
+.customer-pass-recovery{padding:5px;color:#555;background-color:inherit;}
+.customer-rewardpoints{margin:0;padding:5px;color:#555;background-color:inherit;}
+.customer-rewardpoints .section-title{padding:10px 10px 5px 0;font-weight:700;clear:both;}
 .customer-rewardpoints .reward-points-overview{padding:10px 10px 5px 0;width:100%;}
 .customer-rewardpoints .reward-points-history{padding:10px 10px 5px 0;text-align:left;padding:10px;border:1px solid #d7d7d7;height:auto;}
-.backinstock-subscriptions-box{margin:0;padding:5px;font-size:11px;color:#555;}
+.backinstock-subscriptions-box{margin:0;padding:5px;color:#555;}
 .backinstock-subscriptions-box .button{margin-bottom:5px;margin-top:5px;text-align:left;}
-.backinstock-subscriptions-box .backinstock-subscriptions-grid{font-family:arial;font-size:11px;border:1px solid gray;background-color:#FFF;margin-left:0;width:100%;border-collapse:collapse;}
+.backinstock-subscriptions-box .backinstock-subscriptions-grid{font-family:arial;border:1px solid gray;background-color:#FFF;margin-left:0;width:100%;border-collapse:collapse;}
 .backinstock-subscriptions-box .backinstock-subscriptions-grid a{display:block;margin-left:5px;}
 .bissgridpagerstyle{padding:5px;background:#eee;vertical-align:middle;}
 .bissgridpagerstyle span{font-weight:700;font-size:1.1em;}
@@ -251,7 +251,7 @@ ul.languagelist li:hover{cursor:pointer;}
 .product-review-list .product-review-item .review-text{float:left;margin-bottom:5px;}
 .product-review-list .product-review-item .review-info{float:left;margin-bottom:5px;}
 .product-review-list .product-review-item .review-info .separator{margin:0 2px;}
-.product-review-helpfulness{font-size:11px;color:#333;clear:both;}
+.product-review-helpfulness{color:#333;clear:both;}
 .product-review-helpfulness .vote{color:#f93;font-weight:700;text-decoration:none;}
 .product-review-helpfulness .vote:hover{cursor:pointer;text-decoration:none;}
 .product-variant-list{margin-bottom:15px;padding:0;}

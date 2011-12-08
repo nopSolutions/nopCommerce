@@ -49,7 +49,6 @@
         <div class="body">
             <div class="message-error">
                 <div>
-                    @*@Html.ValidationSummary(true, T("Account.Register.Unsuccessful").Text)*@
                     @Html.ValidationSummary(true)
                 </div>
             </div>
@@ -284,6 +283,9 @@
                                     </td>
                                     <td class="item-value">
                                         @Html.DropDownList("StateProvinceId", Model.AvailableStates)
+                                        <span id="states-loading-progress" style="display: none;">@T("Common.Wait...")
+                                            <img src='@Url.Content("~/Content/Images/ajax_loader_small.gif")' alt="@T("Common.Wait...")" />
+                                        </span>
                                     </td>
                                 </tr>
                             }
