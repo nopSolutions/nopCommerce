@@ -1,0 +1,74 @@
+﻿@model Nop.Web.Models.Customer.LoginModel
+@{
+    Layout = "~/Views/Shared/_MobileRoot.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Login").Text);
+}
+<div class="login-page">
+    <div class="page-title">
+        <h1>@T("Account.Login.Welcome")</h1>
+    </div>
+    <div class="clear">
+    </div>
+    <div class="wrapper">
+        <div class="returning-wrapper">
+            <span class="login-title">@T("Account.Login.ReturningCustomer")</span>
+            <div class="login-block">
+                @Html.ValidationSummary(true, T("Account.Login.Unsuccessful").Text)
+                @using (Html.BeginForm())
+                {
+                    if (Model.UsernamesEnabled)
+                    {
+                    @Html.LabelFor(m => m.Username)
+                    @Html.TextBoxFor(m => m.Username) 
+                    @Html.ValidationMessageFor(m => m.Username)
+                    }
+                    else
+                    {
+                    @Html.LabelFor(m => m.Email)
+                    @Html.TextBoxFor(m => m.Email)
+                    @Html.ValidationMessageFor(m => m.Email)
+                    }
+                    @Html.LabelFor(m => m.Password)
+                    @Html.PasswordFor(m => m.Password)
+                    @Html.ValidationMessageFor(m => m.Password)
+                    @Html.CheckBoxFor(m => m.RememberMe)
+                    @Html.LabelFor(m => m.RememberMe)
+                    <div class="buttons">
+                        <button type="submit">@T("Account.Login.LoginButton")</button>
+                    </div>
+                    <div class="forgot-password">
+                        @Html.RouteLink(T("Account.Login.ForgotPassword").Text, "PasswordRecovery")
+                    </div>
+                }
+            </div>
+        </div>
+        @if (Model.CheckoutAsGuest)
+        {
+            <div class="new-wrapper">
+                <span class="register-title">@T("Account.Login.CheckoutAsGuestOrRegister")</span>
+                <div class="checkout-as-guest-or-register-block">
+                    <div class="buttons">
+                        <a href="@(Url.RouteUrl("Checkout"))" data-role="button">@T("Account.Login.CheckoutAsGuest")</a>
+                        <a href="@(Url.RouteUrl("Register"))" data-role="button">@T("Account.Register")</a>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="new-wrapper">
+                <span class="register-title">@T("Account.Login.NewCustomer")</span>
+                <div class="register-block">
+                    <div class="buttons">
+                        <a href="@(Url.RouteUrl("Register"))" data-role="button">@T("Account.Register")</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="clear">
+    </div>
+    @*TODO add Captcha support*@
+</div>
