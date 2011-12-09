@@ -13,5 +13,10 @@ namespace Nop.Plugin.Misc.MailChimp.Services {
         /// </summary>
         /// <returns></returns>
         MailChimpEventQueueRecord Dequeue();
+
+        /// <summary>
+        /// Queues all subscriptions.
+        /// </summary>
+        void QueueAll();
     }
 }

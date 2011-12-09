@@ -11,17 +11,23 @@ namespace Nop.Plugin.Misc.MailChimp.Controllers {
         private const string VIEW_PATH = "Nop.Plugin.Misc.MailChimp.Views.Settings.Index";
         private readonly ISettingService _settingService;
         private readonly IMailChimpApiService _mailChimpApiService;
+        private readonly ISubscriptionEventQueueingService _subscriptionEventQueueingService;
         private readonly MailChimpSettings _settings;
 
-        public SettingsController(ISettingService settingService, IMailChimpApiService mailChimpApiService, MailChimpSettings settings) {
+        public SettingsController(ISettingService settingService, IMailChimpApiService mailChimpApiService, ISubscriptionEventQueueingService subscriptionEventQueueingService, MailChimpSettings settings) {
             _settingService = settingService;
             _mailChimpApiService = mailChimpApiService;
+            _subscriptionEventQueueingService = subscriptionEventQueueingService;
             _settings = settings;
         }
 
         [AdminAuthorize]
         [ChildActionOnly]
         public ActionResult Index() {
+            return MailChimpConfiguration();
+        }
+
+        private ActionResult MailChimpConfiguration() {
             var model = new MailChimpSettingsModel();
 
             //Set the properties
@@ -62,6 +68,15 @@ namespace Nop.Plugin.Misc.MailChimp.Controllers {
             MapListOptions(model);
 
             return View(VIEW_PATH, model);
+        }
+
+        [HttpPost]
+        [AdminAuthorize]
+        public ActionResult QueueAll() {
+            _subscriptionEventQueueingService.QueueAll();
+
+            //NOTE: System name could be pulled by loading the plugin.
+            return RedirectToAction("ConfigureMiscPlugin", "Plugin", new { systemName = "Misc.MailChimp", area = "admin" });
         }
     }
 }

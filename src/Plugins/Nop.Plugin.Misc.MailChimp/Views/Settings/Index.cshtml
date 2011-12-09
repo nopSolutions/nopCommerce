@@ -18,4 +18,8 @@
             <input type="submit" value="@T("Admin.Common.Save")" />
         </div>
     }
+
+    @using(Html.BeginForm("QueueAll", "Settings")) {
+        <input type="submit" value="@T("Nop.Plugin.Misc.MailChimp.QueueAll")" />
+    }
 </div>
