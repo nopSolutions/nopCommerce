@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using Nop.Core;
 using Nop.Core.Domain;
@@ -14,6 +15,7 @@ using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Catalog;
+using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Forums;
@@ -24,7 +26,6 @@ using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Topics;
 using Nop.Web.Extensions;
-using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Themes;
 using Nop.Web.Models.Common;
@@ -50,6 +51,8 @@ namespace Nop.Web.Controllers
         private readonly ICustomerService _customerService;
         private readonly IWebHelper _webHelper;
         private readonly IPermissionService _permissionService;
+        private readonly IMobileDeviceHelper _mobileDeviceHelper;
+        private readonly HttpContextBase _httpContext;
 
         private readonly CustomerSettings _customerSettings;
         private readonly TaxSettings _taxSettings;
@@ -70,7 +73,8 @@ namespace Nop.Web.Controllers
             ISitemapGenerator sitemapGenerator, IThemeContext themeContext,
             IThemeProvider themeProvider, IForumService forumService,
             ICustomerService customerService, IWebHelper webHelper,
-            IPermissionService permissionService, CustomerSettings customerSettings, 
+            IPermissionService permissionService, IMobileDeviceHelper mobileDeviceHelper,
+            HttpContextBase httpContext, CustomerSettings customerSettings, 
             TaxSettings taxSettings, CatalogSettings catalogSettings,
             StoreInformationSettings storeInformationSettings, EmailAccountSettings emailAccountSettings,
             CommonSettings commonSettings, BlogSettings blogSettings, ForumSettings forumSettings,
@@ -93,6 +97,8 @@ namespace Nop.Web.Controllers
             this._customerService = customerService;
             this._webHelper = webHelper;
             this._permissionService = permissionService;
+            this._mobileDeviceHelper = mobileDeviceHelper;
+            this._httpContext = httpContext;
 
             this._customerSettings = customerSettings;
             this._taxSettings = taxSettings;
@@ -483,6 +489,31 @@ namespace Nop.Web.Controllers
             };
             
             return PartialView(model);
+        }
+
+        /// <summary>
+        /// Change presentation layer (desktop or mobile version)
+        /// </summary>
+        /// <param name="dontUseMobileVersion">True - use desktop version; false - use version for mobile devices</param>
+        /// <returns>Action result</returns>
+        public ActionResult ChangeDevice(bool dontUseMobileVersion)
+        {
+            _customerService.SaveCustomerAttribute(_workContext.CurrentCustomer,
+                SystemCustomerAttributeNames.DontUseMobileVersion, dontUseMobileVersion);
+            return RedirectToAction("Index", "Home");
+        }
+        [ChildActionOnly]
+        public ActionResult ChangeDeviceBlock()
+        {
+            if (!_mobileDeviceHelper.MobileDevicesSupported())
+                //mobile devices support is disabled
+                return Content("");
+
+            if (!_mobileDeviceHelper.IsMobileDevice(_httpContext))
+                //request is made by a desktop computer
+                return Content("");
+
+            return View();
         }
     }
 }

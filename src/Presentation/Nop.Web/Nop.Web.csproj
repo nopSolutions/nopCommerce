@@ -1448,6 +1448,8 @@
     <Content Include="Views\Customer\PasswordRecovery.Mobile.cshtml" />
     <Content Include="Views\Customer\PasswordRecoveryConfirm.Mobile.cshtml" />
     <Content Include="Views\Newsletter\SubscriptionActivation.Mobile.cshtml" />
+    <Content Include="Views\Common\ChangeDeviceBlock.Mobile.cshtml" />
+    <Content Include="Views\Common\ChangeDeviceBlock.cshtml" />
     <None Include="Views\Shared\Footer.Mobile.cshtml" />
     <Content Include="Views\Topic\TopicDetails.Mobile.cshtml" />
     <None Include="_bin_deployableAssemblies\amd64\Microsoft.VC90.CRT\README_ENU.txt" />
