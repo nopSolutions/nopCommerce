@@ -12,7 +12,7 @@
         <ul data-role="listview" data-inset="true" data-filter="false">
             @foreach (var category in Model)
             {
-                <li><a href="@Url.RouteUrl("Category", new { categoryId = category.Id, SeName = category.SeName })" data-transition="pop">
+                <li><a href="@Url.RouteUrl("Category", new { categoryId = category.Id, SeName = category.SeName })">
                     @category.Name</a></li>
             }
         </ul>

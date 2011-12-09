@@ -1439,6 +1439,9 @@
     <Content Include="Views\Customer\ChangePassword.Mobile.cshtml" />
     <Content Include="Views\Customer\Avatar.Mobile.cshtml" />
     <Content Include="Views\Customer\UserAgreement.Mobile.cshtml" />
+    <Content Include="Views\Catalog\RecentlyViewedProducts.Mobile.cshtml" />
+    <Content Include="Views\Catalog\RecentlyAddedProducts.Mobile.cshtml" />
+    <Content Include="Views\Catalog\ManufacturerAll.Mobile.cshtml" />
     <None Include="Views\Shared\Footer.Mobile.cshtml" />
     <Content Include="Views\Topic\TopicDetails.Mobile.cshtml" />
     <None Include="_bin_deployableAssemblies\amd64\Microsoft.VC90.CRT\README_ENU.txt" />
