@@ -1442,6 +1442,12 @@
     <Content Include="Views\Catalog\RecentlyViewedProducts.Mobile.cshtml" />
     <Content Include="Views\Catalog\RecentlyAddedProducts.Mobile.cshtml" />
     <Content Include="Views\Catalog\ManufacturerAll.Mobile.cshtml" />
+    <Content Include="Views\Customer\DownloadableProducts.Mobile.cshtml" />
+    <Content Include="Views\Customer\RewardPoints.Mobile.cshtml" />
+    <Content Include="Views\Customer\ReturnRequests.Mobile.cshtml" />
+    <Content Include="Views\Customer\PasswordRecovery.Mobile.cshtml" />
+    <Content Include="Views\Customer\PasswordRecoveryConfirm.Mobile.cshtml" />
+    <Content Include="Views\Newsletter\SubscriptionActivation.Mobile.cshtml" />
     <None Include="Views\Shared\Footer.Mobile.cshtml" />
     <Content Include="Views\Topic\TopicDetails.Mobile.cshtml" />
     <None Include="_bin_deployableAssemblies\amd64\Microsoft.VC90.CRT\README_ENU.txt" />
