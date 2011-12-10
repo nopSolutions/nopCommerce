@@ -52,5 +52,10 @@ namespace Nop.Core.Domain.Customers
         public static string WorkingDesktopThemeName { get { return "WorkingDesktopThemeName"; } }
 
         public static string ImpersonatedCustomerId { get { return "ImpersonatedCustomerId"; } }
+
+        /// <summary>
+        /// Indicates whether customer decided to don't use mobile version of the site (prefer to use full desktop version)
+        /// </summary>
+        public static string DontUseMobileVersion { get { return "DontUseMobileVersion"; } }
     }
 }

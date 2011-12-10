@@ -1,0 +1,21 @@
+﻿@model Nop.Web.Models.Customer.AccountActivationModel
+@{
+    Layout = "~/Views/Shared/_MobileRoot.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.AccountActivation").Text);
+}
+<div class="account-activation-page">
+    <div class="page-title">
+        <h1>@T("Account.AccountActivation")</h1>
+    </div>
+    <div class="clear">
+    </div>
+    <div class="body">
+        <div>
+            <strong>
+                @Model.Result
+            </strong>
+        </div>
+    </div>
+</div>

@@ -1419,7 +1419,39 @@
     <Content Include="Views\Shared\Header.Mobile.cshtml" />
     <Content Include="Views\Common\HeaderLinks.Mobile.cshtml" />
     <Content Include="Views\Common\InfoBlock.Mobile.cshtml" />
+    <Content Include="Views\Common\ContactUs.Mobile.cshtml" />
+    <Content Include="Views\Blog\List.Mobile.cshtml" />
+    <Content Include="Views\Blog\BlogPost.Mobile.cshtml" />
+    <Content Include="Views\News\List.Mobile.cshtml" />
+    <Content Include="Views\News\NewsItem.Mobile.cshtml" />
+    <Content Include="Views\Customer\Login.Mobile.cshtml" />
+    <Content Include="Views\Customer\RegisterResult.Mobile.cshtml" />
+    <Content Include="Views\Customer\Register.Mobile.cshtml" />
+    <Content Include="Views\Customer\AccountActivation.Mobile.cshtml" />
+    <Content Include="Views\Customer\MyAccountNavigation.Mobile.cshtml" />
+    <Content Include="Views\Customer\Info.Mobile.cshtml" />
+    <Content Include="Views\Profile\Index.Mobile.cshtml" />
+    <Content Include="Views\Profile\Info.Mobile.cshtml" />
+    <Content Include="Views\Customer\Addresses.Mobile.cshtml" />
+    <Content Include="Views\Customer\AddressAdd.Mobile.cshtml" />
+    <Content Include="Views\Customer\AddressEdit.Mobile.cshtml" />
+    <Content Include="Views\Shared\_CreateOrUpdateAddress.Mobile.cshtml" />
+    <Content Include="Views\Customer\ChangePassword.Mobile.cshtml" />
+    <Content Include="Views\Customer\Avatar.Mobile.cshtml" />
+    <Content Include="Views\Customer\UserAgreement.Mobile.cshtml" />
+    <Content Include="Views\Catalog\RecentlyViewedProducts.Mobile.cshtml" />
+    <Content Include="Views\Catalog\RecentlyAddedProducts.Mobile.cshtml" />
+    <Content Include="Views\Catalog\ManufacturerAll.Mobile.cshtml" />
+    <Content Include="Views\Customer\DownloadableProducts.Mobile.cshtml" />
+    <Content Include="Views\Customer\RewardPoints.Mobile.cshtml" />
+    <Content Include="Views\Customer\ReturnRequests.Mobile.cshtml" />
+    <Content Include="Views\Customer\PasswordRecovery.Mobile.cshtml" />
+    <Content Include="Views\Customer\PasswordRecoveryConfirm.Mobile.cshtml" />
+    <Content Include="Views\Newsletter\SubscriptionActivation.Mobile.cshtml" />
+    <Content Include="Views\Common\ChangeDeviceBlock.Mobile.cshtml" />
+    <Content Include="Views\Common\ChangeDeviceBlock.cshtml" />
     <None Include="Views\Shared\Footer.Mobile.cshtml" />
+    <Content Include="Views\Topic\TopicDetails.Mobile.cshtml" />
     <None Include="_bin_deployableAssemblies\amd64\Microsoft.VC90.CRT\README_ENU.txt" />
     <None Include="_bin_deployableAssemblies\amd64\Microsoft.VC90.CRT\msvcr90.dll" />
     <None Include="_bin_deployableAssemblies\amd64\Microsoft.VC90.CRT\Microsoft.VC90.CRT.manifest" />
@@ -1510,7 +1542,6 @@
       <SubType>Designer</SubType>
     </None>
     <Content Include="Views\Customer\Login.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\Date.cshtml" />
     <Content Include="Views\Customer\Register.cshtml" />
     <Content Include="Views\Customer\RegisterResult.cshtml" />
     <Content Include="Views\Customer\Info.cshtml" />

@@ -12,10 +12,8 @@
     @using (Ajax.BeginForm(new AjaxOptions
     {
         HttpMethod = "post",
-        UpdateTargetId = "contactus-result",
         LoadingElementId = "contactus-sending-progress",
-        InsertionMode = InsertionMode.Replace,
-        OnSuccess = "onContactUsRequestSuccess();",
+        OnSuccess = "onContactUsRequestSuccess",
     }))
     { 
         <div class="send-email" id="contactus-send-form">
@@ -66,9 +64,11 @@
         </div>        
     }
     <script type="text/javascript">
-        
-        function onContactUsRequestSuccess() {
-            $('#contactus-send-form').hide();
+        function onContactUsRequestSuccess(context) {
+            if (context.SuccessfullySent) {
+                $('#contactus-send-form').hide();
+            }
+            $('#contactus-result').html(context.Result);
         }
     </script>
 </div>

@@ -49,7 +49,7 @@
                         {
                             foreach (var pvaValue in attribute.Values)
                             {
-                    <input id="@(controlId)" type="radio" name="@(controlId)" value="@pvaValue.Id" @(pvaValue.IsPreSelected ? " checked=\"checked\"" : null) <text> /></text>
+                    <input id="@(controlId)" type="radio" name="@(controlId)" value="@pvaValue.Id" @(pvaValue.IsPreSelected ? " checked=\"checked\"" : null) />
                     <label for="@(controlId)">@pvaValue.Name</label>
                             }
                         }
@@ -58,7 +58,7 @@
                         {
                             foreach (var pvaValue in attribute.Values)
                             {
-                    <input id="@(controlId)" type="checkbox" name="@(controlId)" value="@pvaValue.Id" @(pvaValue.IsPreSelected ? " checked=\"checked\"" : null) <text> /></text>
+                    <input id="@(controlId)" type="checkbox" name="@(controlId)" value="@pvaValue.Id" @(pvaValue.IsPreSelected ? " checked=\"checked\"" : null) />
                     <label for="@(controlId)">@pvaValue.Name</label>
                             }
                         }

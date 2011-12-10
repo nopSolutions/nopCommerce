@@ -1,0 +1,94 @@
+﻿@model Nop.Web.Models.Customer.CustomerAddressListModel
+@{
+    Layout = "~/Views/Shared/_MobileRoot.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Account").Text);
+}
+@using Nop.Web.Framework;
+@section top
+{
+    @Html.Partial("MyAccountNavigation", Model.NavigationModel, new ViewDataDictionary())
+}
+<div class="account-page">
+    <div class="page-title">
+        <h1>@T("Account.MyAccount") - @T("Account.CustomerAddresses")</h1>
+    </div>
+    <div class="clear">
+    </div>
+    <div class="body">
+        <div class="customer-addresses">
+            <div class="add-button">
+                <a href="@Url.RouteUrl("CustomerAddressAdd")" data-role="button">@T("Common.AddNew")</a>
+            </div>
+            <div class="clear">
+            </div>
+            <div class="address-list">
+                @if (Model.Addresses.Count > 0)
+                {
+                    for (int i = 0; i < Model.Addresses.Count; i++)
+                    {
+                        var address = Model.Addresses[i];
+                    <div class="address-item">
+                        <div>
+                            <div>
+                                <b>@address.FirstName @address.LastName</b>
+                            </div>
+                            <div>
+                                @Html.LabelFor(model => model.Addresses[i].Email):
+                                @address.Email
+                            </div>
+                            <div>
+                                @Html.LabelFor(model => model.Addresses[i].PhoneNumber):
+                                @address.PhoneNumber
+                            </div>
+                            <div>
+                                @Html.LabelFor(model => model.Addresses[i].FaxNumber):
+                                @address.FaxNumber
+                            </div>
+                            @if (!String.IsNullOrEmpty(address.Company))
+                            {
+                                <div>
+                                    @address.Company
+                                </div>
+                            }
+                            <div>
+                                @address.Address1
+                            </div>
+                            @if (!String.IsNullOrEmpty(address.Address2))
+                            {
+                                <div>
+                                    @address.Address2
+                                </div>
+                            }
+                            <div>
+                                @address.City,
+                                @address.StateProvinceName
+                                @address.ZipPostalCode</div>
+                            @if (!String.IsNullOrEmpty(address.CountryName))
+                            {
+                                <div>
+                                    @address.CountryName
+                                </div>
+                            }
+                        </div>
+                        <div class="buttons">
+                            <a href="@Url.RouteUrl("CustomerAddressEdit", new { addressId = address.Id })" data-role="button">@T("Common.Edit")</a>
+                            <a href="@Url.RouteUrl("CustomerAddressDelete", new { addressId = address.Id })" data-role="button">@T("Common.Delete")</a>
+                        </div>
+                    </div>
+                            if (i != Model.Addresses.Count - 1)
+                            {
+                    <div class="clear">
+                    </div>
+                            }
+                    }
+                }
+                else
+                {
+                    @T("Account.CustomerAddresses.NoAddresses")
+                }
+            </div>
+        </div>
+    </div>
+</div>

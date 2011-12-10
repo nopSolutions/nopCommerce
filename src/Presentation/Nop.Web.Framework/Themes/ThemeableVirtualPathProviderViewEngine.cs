@@ -5,8 +5,12 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Nop.Core;
 using Nop.Core.Domain;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Infrastructure;
+using Nop.Services.Common;
+using Nop.Services.Customers;
 
 namespace Nop.Web.Framework.Themes
 {
@@ -178,16 +182,6 @@ namespace Nop.Web.Framework.Themes
             return null;
         }
 
-        protected virtual bool IsMobileDevice(ControllerContext controllerContext)
-        {
-            return controllerContext.HttpContext.Request.Browser.IsMobileDevice;
-        }
-
-        protected virtual bool MobileDevicesSupported()
-        {
-            return EngineContext.Current.Resolve<StoreInformationSettings>().MobileDevicesSupported;
-        }
-
         protected virtual ViewEngineResult FindThemeableView(ControllerContext controllerContext, string viewName, string masterName, bool useCache, bool mobile)
         {
             string[] strArray;
@@ -244,7 +238,11 @@ namespace Nop.Web.Framework.Themes
 
         public override ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName, bool useCache)
         {
-            bool useMobileDevice = IsMobileDevice(controllerContext) && MobileDevicesSupported();
+            var mobileDeviceHelper = EngineContext.Current.Resolve<IMobileDeviceHelper>();
+            bool useMobileDevice = mobileDeviceHelper.IsMobileDevice(controllerContext.HttpContext)
+                && mobileDeviceHelper.MobileDevicesSupported()
+                && !mobileDeviceHelper.CustomerDontUseMobileVersion();
+
             string overrideViewName = useMobileDevice ?
                 string.Format("{0}.{1}", viewName, _mobileViewModifier)
                 : viewName;
@@ -259,7 +257,11 @@ namespace Nop.Web.Framework.Themes
 
         public override ViewEngineResult FindPartialView(ControllerContext controllerContext, string partialViewName, bool useCache)
         {
-            bool useMobileDevice = IsMobileDevice(controllerContext) && MobileDevicesSupported();
+            var mobileDeviceHelper = EngineContext.Current.Resolve<IMobileDeviceHelper>();
+            bool useMobileDevice = mobileDeviceHelper.IsMobileDevice(controllerContext.HttpContext)
+                && mobileDeviceHelper.MobileDevicesSupported()
+                && !mobileDeviceHelper.CustomerDontUseMobileVersion();
+
             string overrideViewName = useMobileDevice ?
                 string.Format("{0}.{1}", partialViewName, _mobileViewModifier)
                 : partialViewName;

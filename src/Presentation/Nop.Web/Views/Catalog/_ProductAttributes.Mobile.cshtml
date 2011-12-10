@@ -65,7 +65,7 @@
                         {
                             foreach (var pvaValue in attribute.Values)
                             {
-                    <input id="@(controlId)_@(pvaValue.Id)" type="radio" name="@(controlId)" value="@pvaValue.Id" @(pvaValue.IsPreSelected ? " checked=\"checked\"" : null) <text> /></text>
+                    <input id="@(controlId)_@(pvaValue.Id)" type="radio" name="@(controlId)" value="@pvaValue.Id" @(pvaValue.IsPreSelected ? " checked=\"checked\"" : null) />
                     <label for="@(controlId)_@(pvaValue.Id)">@pvaValue.Name @(!String.IsNullOrEmpty(pvaValue.PriceAdjustment) ? " [" + pvaValue.PriceAdjustment + "]" : null)</label>
                             }
                         }
@@ -74,7 +74,7 @@
                         {
                             foreach (var pvaValue in attribute.Values)
                             {
-                    <input id="@(controlId)_@(pvaValue.Id)" type="checkbox" name="@(controlId)" value="@pvaValue.Id" @(pvaValue.IsPreSelected ? " checked=\"checked\"" : null) <text> /></text>
+                    <input id="@(controlId)_@(pvaValue.Id)" type="checkbox" name="@(controlId)" value="@pvaValue.Id" @(pvaValue.IsPreSelected ? " checked=\"checked\"" : null) />
                     <label for="@(controlId)_@(pvaValue.Id)">@pvaValue.Name @(!String.IsNullOrEmpty(pvaValue.PriceAdjustment) ? " [" + pvaValue.PriceAdjustment + "]" : null)</label>
                             }
                         }

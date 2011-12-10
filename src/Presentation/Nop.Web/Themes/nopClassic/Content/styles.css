@@ -62,6 +62,7 @@ a.logo{background:url(images/logo.gif);display:block;width:225px;height:60px;tex
 .footer-disclaimer{float:right;font-size:11px;}
 .footer-poweredby{float:left;font-size:11px;}
 .footer-storetheme{float:right;margin:0 100px 0 10px;font-size:11px;}
+.changedevice{clear:both;text-align:right;}
 /* MISC. CLASSES */
 .page-title{border-bottom:1px solid;margin:0 0 10px;overflow:hidden;width:100%;}
 .page-title h1,.page-title h2{padding:5px 5px 5px 0;font-size:20px;margin:0;font-family:Arial,Helvetica,sans-serif;font-weight:400;}

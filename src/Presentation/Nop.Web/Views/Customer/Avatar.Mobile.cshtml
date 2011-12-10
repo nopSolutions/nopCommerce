@@ -1,0 +1,56 @@
+﻿@model Nop.Web.Models.Customer.CustomerAvatarModel
+@{
+    Layout = "~/Views/Shared/_MobileRoot.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Account").Text);
+}
+@using Nop.Web.Framework;
+@section top
+{
+    @Html.Partial("MyAccountNavigation", Model.NavigationModel, new ViewDataDictionary())
+}
+@*set "data-ajax" attribute to "false" because jQuery Mobile does not support file uploading*@
+@using (Html.BeginForm("Avatar", "Customer", FormMethod.Post,
+    new Dictionary<string, Object> { { "enctype", "multipart/form-data" }, { "data-ajax", "false" } }))
+{
+    <div class="account-page">
+        <div class="page-title">
+            <h1>@T("Account.MyAccount") - @T("Account.Avatar")</h1>
+        </div>
+        <div class="clear">
+        </div>
+        <div class="body">
+            <div class="customer-avatar">
+                <div class="error-block">
+                    <div class="message-error">
+                        @Html.ValidationSummary(true)
+                    </div>
+                </div>
+                <div class="clear">
+                </div>
+                <div class="section-body">
+                    @if (!String.IsNullOrEmpty(Model.AvatarUrl))
+                    {
+                        <img src="@(Model.AvatarUrl)" alt="avatar" />
+                        <br />
+                    }
+                    <input name="uploadedFile" type="file" />
+                </div>
+                <div class="clear">
+                </div>
+                <div class="button">
+                    <button type="submit" name="upload-avatar" value="upload-avatar">@T("Common.Upload")</button>
+                    @if (!String.IsNullOrEmpty(Model.AvatarUrl))
+                    {
+                        <button type="submit" name="remove-avatar" value="remove-avatar">@T("Account.Avatar.RemoveAvatar")</button>
+                    }
+                </div>
+                <div class="clear">
+                </div>
+                <div>
+                    @T("Account.Avatar.UploadRules")</div>
+            </div>
+        </div>
+    </div>
+}

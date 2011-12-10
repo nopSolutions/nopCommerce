@@ -1,0 +1,57 @@
+﻿@model Nop.Web.Models.Customer.UserAgreementModel
+@{
+    Layout = "~/Views/Shared/_MobileRoot.cshtml";
+}
+@using Nop.Web.Framework;
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#agreementagree").click(toggleContinueButton);
+
+        toggleContinueButton();
+    });
+
+    //    function toggleContinueButton() {
+    //        if ($('#agreementagree').is(':checked')) {
+    //            $('#continuedownloading').removeAttr('disabled');
+    //        } else {
+    //            $('#continuedownloading').attr('disabled', 'disabled');
+    //        }
+    //        //jQuery Mobile. If you manipulate a select via JavaScript, you must call the refresh method on it to update the visual styling.
+    //        $('#continuedownloading').button("refresh");
+    //    }
+    /*
+    Links styled like buttons have all the same visual options as true form-based buttons below, 
+    but there are a few important differences. Link-based buttons aren't part of the button plugin 
+    and only just use the underlying buttonMarkup plugin to generate the button styles so the form 
+    button methods (enable, disable, refresh) aren't supported. 
+    If you need to disable a link-based button (or any element), 
+    it's possible to apply the disabled class ui-disabled yourself with JavaScript to achieve the same effect.
+    */
+
+    function toggleContinueButton() {
+        if ($('#agreementagree').is(':checked')) {
+            $('#continuedownloading').removeClass('ui-disabled');
+        } else {
+            $('#continuedownloading').addClass('ui-disabled');
+        }
+    }
+
+</script>
+<div class="user-agreement-page">
+    <div class="page-title">
+        <h1>@T("DownloadableProducts.UserAgreement")</h1>
+    </div>
+    <div class="clear">
+    </div>
+    <div class="page-body">
+        @Html.Raw(Model.UserAgreementText)
+        <p>
+            <input id="agreementagree" type="checkbox" name="agreementagree" value="@T("DownloadableProducts.IAgree")" />
+            <label for="agreementagree">@T("DownloadableProducts.IAgree")</label>
+        </p>
+        <p>
+            <a id="continuedownloading" data-ajax="false" data-role="button" href="@Url.Action("GetDownload", "Download", new { opvId = Model.OrderProductVariantGuid, agree = true })">@T("Common.Continue")</a>
+        </p>
+    </div>
+</div>
