@@ -61,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\SettingsController.cs" />
+    <Compile Include="Controllers\WebHooksController.cs" />
     <Compile Include="Data\MailChimpEventQueueRecord.cs" />
     <Compile Include="Data\MailChimpEventQueueRecordMap.cs" />
     <Compile Include="Data\MailChimpObjectContext.cs" />

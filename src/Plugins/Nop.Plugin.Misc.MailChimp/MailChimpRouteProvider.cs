@@ -11,6 +11,10 @@ namespace Nop.Plugin.Misc.MailChimp {
                             new {controller = "Settings", action = "Index"},
                             new[] {"Nop.Plugin.Misc.MailChimp.Controllers"}
                 );
+
+            routes.MapRoute("Plugin.Misc.MailChimp.WebHook", "Plugins/MiscMailChimp/WebHook/{webHookKey}", 
+                new {controller = "WebHooks", action = "index"}, 
+                new[] {"Nop.Plugin.Misc.MailChimp.Controllers"});
         }
 
         #endregion
