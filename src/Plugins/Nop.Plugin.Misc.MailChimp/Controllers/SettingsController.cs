@@ -78,5 +78,15 @@ namespace Nop.Plugin.Misc.MailChimp.Controllers {
             //NOTE: System name could be pulled by loading the plugin.
             return RedirectToAction("ConfigureMiscPlugin", "Plugin", new { systemName = "Misc.MailChimp", area = "admin" });
         }
+
+        [HttpPost]
+        [AdminAuthorize]
+        public ActionResult Sync() {
+            _mailChimpApiService.BatchSubscribe();
+            _mailChimpApiService.BatchUnsubscribe();
+
+            //NOTE: System name could be pulled by loading the plugin.
+            return RedirectToAction("ConfigureMiscPlugin", "Plugin", new { systemName = "Misc.MailChimp", area = "admin" });
+        }
     }
 }

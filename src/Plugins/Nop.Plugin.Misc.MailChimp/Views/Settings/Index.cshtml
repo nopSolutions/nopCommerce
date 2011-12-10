@@ -22,4 +22,8 @@
     @using(Html.BeginForm("QueueAll", "Settings")) {
         <input type="submit" value="@T("Nop.Plugin.Misc.MailChimp.QueueAll")" />
     }
+
+    @using(Html.BeginForm("Sync", "Settings")) {
+        <input type="submit" value="@T("Nop.Plugin.Misc.MailChimp.ManualSync")" />
+    }
 </div>
