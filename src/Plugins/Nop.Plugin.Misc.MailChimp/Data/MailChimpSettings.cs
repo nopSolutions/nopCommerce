@@ -11,6 +11,14 @@ namespace Nop.Plugin.Misc.MailChimp.Data {
         public virtual string ApiKey { get; set; }
 
         /// <summary>
+        /// Gets or sets the web hook key.
+        /// </summary>
+        /// <value>
+        /// The web hook key.
+        /// </value>
+        public virtual string WebHookKey { get; set; }
+
+        /// <summary>
         /// Gets or sets the default list id.
         /// </summary>
         /// <value>

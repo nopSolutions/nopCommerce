@@ -11,6 +11,10 @@
             @Html.EditorFor(m => m.ApiKey)
         </div>
         <div>
+            @Html.LabelFor(m => m.WebHookKey):
+            @Html.EditorFor(m => m.WebHookKey)
+        </div>
+        <div>
             @Html.LabelFor(m => m.DefaultListId):
             @Html.DropDownListFor(m => m.DefaultListId, Model.ListOptions)
         </div>

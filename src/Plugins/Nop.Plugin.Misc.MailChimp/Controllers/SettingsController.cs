@@ -1,21 +1,27 @@
-﻿using System.Collections.Specialized;
+﻿using System;
+using System.Collections.Specialized;
+using System.Linq;
 using System.Web.Mvc;
+using Nop.Core.Domain.Tasks;
 using Nop.Plugin.Misc.MailChimp.Data;
 using Nop.Plugin.Misc.MailChimp.Models;
 using Nop.Plugin.Misc.MailChimp.Services;
 using Nop.Services.Configuration;
+using Nop.Services.Tasks;
 using Nop.Web.Framework.Controllers;
 
 namespace Nop.Plugin.Misc.MailChimp.Controllers {
     public class SettingsController : Controller {
         private const string VIEW_PATH = "Nop.Plugin.Misc.MailChimp.Views.Settings.Index";
-        private readonly ISettingService _settingService;
         private readonly IMailChimpApiService _mailChimpApiService;
-        private readonly ISubscriptionEventQueueingService _subscriptionEventQueueingService;
+        private readonly IScheduleTaskService _scheduleTaskService;
+        private readonly ISettingService _settingService;
         private readonly MailChimpSettings _settings;
+        private readonly ISubscriptionEventQueueingService _subscriptionEventQueueingService;
 
-        public SettingsController(ISettingService settingService, IMailChimpApiService mailChimpApiService, ISubscriptionEventQueueingService subscriptionEventQueueingService, MailChimpSettings settings) {
+        public SettingsController(ISettingService settingService, IScheduleTaskService scheduleTaskService, IMailChimpApiService mailChimpApiService, ISubscriptionEventQueueingService subscriptionEventQueueingService, MailChimpSettings settings) {
             _settingService = settingService;
+            _scheduleTaskService = scheduleTaskService;
             _mailChimpApiService = mailChimpApiService;
             _subscriptionEventQueueingService = subscriptionEventQueueingService;
             _settings = settings;
@@ -33,6 +39,7 @@ namespace Nop.Plugin.Misc.MailChimp.Controllers {
             //Set the properties
             model.ApiKey = _settings.ApiKey;
             model.DefaultListId = _settings.DefaultListId;
+            model.WebHookKey = _settings.WebHookKey;
 
             //Maps the list options
             MapListOptions(model);
@@ -48,8 +55,8 @@ namespace Nop.Plugin.Misc.MailChimp.Controllers {
             //Ensure there will not be duplicates
             model.ListOptions.Clear();
 
-            foreach(var key in listOptions.AllKeys) {
-                model.ListOptions.Add( new SelectListItem { Text = key, Value = listOptions[key] });
+            foreach (string key in listOptions.AllKeys) {
+                model.ListOptions.Add(new SelectListItem {Text = key, Value = listOptions[key]});
             }
         }
 
@@ -60,12 +67,18 @@ namespace Nop.Plugin.Misc.MailChimp.Controllers {
             if (ModelState.IsValid) {
                 _settings.DefaultListId = model.DefaultListId;
                 _settings.ApiKey = model.ApiKey;
+                _settings.WebHookKey = model.WebHookKey;
 
                 _settingService.SaveSetting(_settings);
             }
 
             //Maps the list options
             MapListOptions(model);
+
+            // Update the task
+            ScheduleTask task = FindScheduledTask();
+            task.Enabled = model.AutoSync;
+            _scheduleTaskService.UpdateTask(task);
 
             return View(VIEW_PATH, model);
         }
@@ -76,7 +89,7 @@ namespace Nop.Plugin.Misc.MailChimp.Controllers {
             _subscriptionEventQueueingService.QueueAll();
 
             //NOTE: System name could be pulled by loading the plugin.
-            return RedirectToAction("ConfigureMiscPlugin", "Plugin", new { systemName = "Misc.MailChimp", area = "admin" });
+            return RedirectToAction("ConfigureMiscPlugin", "Plugin", new {systemName = "Misc.MailChimp", area = "admin"});
         }
 
         [HttpPost]
@@ -86,7 +99,12 @@ namespace Nop.Plugin.Misc.MailChimp.Controllers {
             _mailChimpApiService.BatchUnsubscribe();
 
             //NOTE: System name could be pulled by loading the plugin.
-            return RedirectToAction("ConfigureMiscPlugin", "Plugin", new { systemName = "Misc.MailChimp", area = "admin" });
+            return RedirectToAction("ConfigureMiscPlugin", "Plugin", new {systemName = "Misc.MailChimp", area = "admin"});
+        }
+
+        [NonAction]
+        private ScheduleTask FindScheduledTask() {
+            return _scheduleTaskService.GetAllTasks().Where(x => x.Type.Equals("Nop.Plugin.Misc.MailChimp.MailChimpSyncTask, Nop.Plugin.Misc.MailChimp", StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
         }
     }
 }
