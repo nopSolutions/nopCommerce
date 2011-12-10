@@ -19,6 +19,10 @@
             @Html.DropDownListFor(m => m.DefaultListId, Model.ListOptions)
         </div>
         <div>
+            @Html.LabelFor(m => m.AutoSync):
+            @Html.DropDownListFor(m => m.AutoSync, Model.ListOptions)
+        </div>
+        <div>
             <input type="submit" value="@T("Admin.Common.Save")" />
         </div>
     }

@@ -11,15 +11,20 @@ namespace Nop.Plugin.Misc.MailChimp.Services {
         private const string API_KEY_NAME = "Nop.Plugin.Misc.MailChimp.ApiKey";
         private const string DEFAULT_LIST_NAME = "Nop.Plugin.Misc.MailChimp.DefaultListId";
         private const string AUTO_SYNC_NAME = "Nop.Plugin.Misc.MailChimp.AutoSync";
+        private const string WEB_HOOK_KEY = "Nop.Plugin.Misc.MailChimp.WebHookKey";
+        private const string QUEUE_ALL = "Nop.Plugin.Misc.MailChimp.QueueAll";
+        private const string MANUAL_SYNC = "Nop.Plugin.Misc.MailChimp.ManualSync";
 
         private readonly ILocalizationService _localizationService;
         private readonly MailChimpObjectContext _mailChimpObjectContext;
         private readonly IScheduleTaskService _scheduleTaskService;
+        private readonly ILanguageService _languageService;
 
-        public MailChimpInstallationService(MailChimpObjectContext mailChimpObjectContext, ILocalizationService localizationService, IScheduleTaskService scheduleTaskService) {
+        public MailChimpInstallationService(MailChimpObjectContext mailChimpObjectContext, ILocalizationService localizationService, IScheduleTaskService scheduleTaskService, ILanguageService languageService) {
             _mailChimpObjectContext = mailChimpObjectContext;
             _localizationService = localizationService;
             _scheduleTaskService = scheduleTaskService;
+            _languageService = languageService;
         }
 
         /// <summary>
@@ -30,6 +35,9 @@ namespace Nop.Plugin.Misc.MailChimp.Services {
             UpdateOrInstallStringResource(API_KEY_NAME, "MailChimp API Key");
             UpdateOrInstallStringResource(DEFAULT_LIST_NAME, "Default MailChimp List");
             UpdateOrInstallStringResource(AUTO_SYNC_NAME, "Use AutoSync Task");
+            UpdateOrInstallStringResource(WEB_HOOK_KEY, "WebHooks Key");
+            UpdateOrInstallStringResource(QUEUE_ALL, "Initial Queue");
+            UpdateOrInstallStringResource(MANUAL_SYNC, "Manual Sync");
 
             //Install sync task
             InstallSyncTask();
@@ -59,7 +67,7 @@ namespace Nop.Plugin.Misc.MailChimp.Services {
         }
 
         private ScheduleTask FindScheduledTask() {
-            return _scheduleTaskService.GetAllTasks().Where(x => x.Type.Equals("Nop.Plugin.Misc.MailChimp.MailChimpSyncTask, Nop.Plugin.Misc.MailChimp", StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+            return _scheduleTaskService.GetAllTasks().Where(x => x.Type.Equals("Nop.Plugin.Misc.MailChimp.MailChimpSynchronizationTask, Nop.Plugin.Misc.MailChimp", StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
         }
 
         /// <summary>
@@ -68,7 +76,8 @@ namespace Nop.Plugin.Misc.MailChimp.Services {
         /// <param name="name">The name.</param>
         /// <param name="value">The value.</param>
         private void UpdateOrInstallStringResource(string name, string value) {
-            LocaleStringResource resource = (_localizationService.GetLocaleStringResourceByName(name) ?? new LocaleStringResource {ResourceName = name});
+            Language languageById = _languageService.GetLanguageById(1);
+            LocaleStringResource resource = (_localizationService.GetLocaleStringResourceByName(name) ?? new LocaleStringResource {ResourceName = name, Language = languageById });
             resource.ResourceValue = value;
 
             if (resource.Id > 0) {

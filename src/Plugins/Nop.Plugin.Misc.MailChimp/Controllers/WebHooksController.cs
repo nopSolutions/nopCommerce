@@ -25,6 +25,7 @@ namespace Nop.Plugin.Misc.MailChimp.Controllers {
                     if(subscription != null) {
                         // Do not publish unsubscribe event. Or duplicate events will occur.
                         _newsLetterSubscriptionService.DeleteNewsLetterSubscription(subscription, false);
+                        return Content("OK");
                     }
                 }
             }

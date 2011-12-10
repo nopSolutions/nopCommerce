@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using Nop.Plugin.Misc.MailChimp.Data;
+using Nop.Services.Logging;
 using PerceptiveMCAPI;
 using PerceptiveMCAPI.Methods;
 using PerceptiveMCAPI.Types;
@@ -12,10 +13,12 @@ namespace Nop.Plugin.Misc.MailChimp.Services {
     public class MailChimpApiService : IMailChimpApiService {
         private readonly MailChimpSettings _mailChimpSettings;
         private readonly ISubscriptionEventQueueingService _subscriptionEventQueueingService;
+        private readonly ILogger _log;
 
-        public MailChimpApiService(MailChimpSettings mailChimpSettings, ISubscriptionEventQueueingService subscriptionEventQueueingService) {
+        public MailChimpApiService(MailChimpSettings mailChimpSettings, ISubscriptionEventQueueingService subscriptionEventQueueingService, ILogger log) {
             _mailChimpSettings = mailChimpSettings;
             _subscriptionEventQueueingService = subscriptionEventQueueingService;
+            _log = log;
         }
 
         #region Implementation of IMailChimpApiService
@@ -26,20 +29,23 @@ namespace Nop.Plugin.Misc.MailChimp.Services {
         /// <returns></returns>
         public NameValueCollection RetrieveLists() {
             var output = new NameValueCollection();
+            try {
 
-            // input parameters
-            var listInput = new listsInput(_mailChimpSettings.ApiKey);
+                // input parameters
+                var listInput = new listsInput(_mailChimpSettings.ApiKey);
 
-            // execute the request
-            var cmd = new lists(listInput);
-            listsOutput listOutput = cmd.Execute();
+                // execute the request
+                var cmd = new lists(listInput);
+                listsOutput listOutput = cmd.Execute();
 
-            if (listOutput != null && listOutput.result != null && listOutput.result.total > 0) {
-                foreach (listsResults.DataItem item in listOutput.result.data) {
-                    output.Add(item.name, item.id);
+                if (listOutput != null && listOutput.result != null && listOutput.result.total > 0) {
+                    foreach (listsResults.DataItem item in listOutput.result.data) {
+                        output.Add(item.name, item.id);
+                    }
                 }
+            } catch(Exception e) {
+                _log.Debug(e.Message, e);
             }
-
             return output;
         }
 
