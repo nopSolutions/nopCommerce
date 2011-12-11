@@ -3921,7 +3921,7 @@
 										<Value>Signature enabled</Value>
 										<Children>
 											<LocaleResource Name="Hint">
-												<Value>Add an opportunity for customers to specify signature. Signature will be dispayed below each forum post.</Value>
+												<Value>Add an opportunity for customers to specify signature. Signature will be displayed below each forum post.</Value>
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
