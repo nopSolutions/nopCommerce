@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
@@ -250,8 +251,12 @@ namespace Nop.Web.Framework
 
             months.AppendFormat("<option value='{0}'>{1}</option>", "0", monthLocale);
             for (int i = 1; i <= 12; i++)
-                months.AppendFormat("<option value='{0}'{1}>{0}</option>", i,
-                    (selectedMonth.HasValue && selectedMonth.Value == i) ? " selected=\"selected\"" : null);
+            {
+                months.AppendFormat("<option value='{0}'{1}>{2}</option>",
+                                    i, 
+                                    (selectedMonth.HasValue && selectedMonth.Value == i) ? " selected=\"selected\"" : null,
+                                    CultureInfo.CurrentUICulture.DateTimeFormat.GetMonthName(i));
+            }
 
 
             years.AppendFormat("<option value='{0}'>{1}</option>", "0", yearLocale);
