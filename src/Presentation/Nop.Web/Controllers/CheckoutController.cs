@@ -1270,19 +1270,27 @@ namespace Nop.Web.Controllers
 
 
                     var paymentMethod = _paymentService.LoadPaymentMethodBySystemName(placeOrderResult.PlacedOrder.PaymentMethodSystemName);
-                    if (paymentMethod == null)
-                        throw new Exception("Payment method is not available"); //actually it's impossible
-                    if (paymentMethod.PaymentMethodType == PaymentMethodType.Redirection)
+                    if (paymentMethod != null)
                     {
-                        //Redirection will not work because it's AJAX request.
-                        //That's why we don't process it here (we redirect a user to another page where he'll be redirected)
+                        if (paymentMethod.PaymentMethodType == PaymentMethodType.Redirection)
+                        {
+                            //Redirection will not work because it's AJAX request.
+                            //That's why we don't process it here (we redirect a user to another page where he'll be redirected)
 
-                        //redirect
-                        return Json(new { redirect = string.Format("{0}checkout/OpcCompleteRedirectionPayment", _webHelper.GetStoreLocation()) });
+                            //redirect
+                            return Json(new { redirect = string.Format("{0}checkout/OpcCompleteRedirectionPayment", _webHelper.GetStoreLocation()) });
+                        }
+                        else
+                        {
+                            _paymentService.PostProcessPayment(postProcessPaymentRequest);
+                            //success
+                            return Json(new { success = 1 });
+                        }
                     }
                     else
                     {
-                        _paymentService.PostProcessPayment(postProcessPaymentRequest);
+                        //payment method could be null if order total is 0
+
                         //success
                         return Json(new { success = 1 });
                     }
