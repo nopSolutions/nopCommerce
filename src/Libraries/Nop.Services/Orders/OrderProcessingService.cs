@@ -1013,9 +1013,7 @@ namespace Nop.Services.Orders
                             }
 
                             //clear shopping cart
-                            //customer.ShoppingCartItems.Clear();
-                            //_customerService.UpdateCustomer(customer);
-                            customer.ShoppingCartItems.ToList().ForEach(sci => _shoppingCartService.DeleteShoppingCartItem(sci, false));
+                            cart.ToList().ForEach(sci => _shoppingCartService.DeleteShoppingCartItem(sci, false));
                         }
                         else
                         {
