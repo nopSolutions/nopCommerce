@@ -1450,6 +1450,9 @@
     <Content Include="Views\Newsletter\SubscriptionActivation.Mobile.cshtml" />
     <Content Include="Views\Common\ChangeDeviceBlock.Mobile.cshtml" />
     <Content Include="Views\Common\ChangeDeviceBlock.cshtml" />
+    <Content Include="Views\Customer\Orders.Mobile.cshtml" />
+    <Content Include="Views\Order\ReturnRequest.Mobile.cshtml" />
+    <Content Include="Views\Order\Details.Mobile.cshtml" />
     <None Include="Views\Shared\Footer.Mobile.cshtml" />
     <Content Include="Views\Topic\TopicDetails.Mobile.cshtml" />
     <None Include="_bin_deployableAssemblies\amd64\Microsoft.VC90.CRT\README_ENU.txt" />
