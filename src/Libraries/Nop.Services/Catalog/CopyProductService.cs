@@ -131,8 +131,11 @@ namespace Nop.Services.Catalog
                     foreach (var productPicture in product.ProductPictures)
                     {
                         var picture = productPicture.Picture;
-
-                        var pictureCopy = _pictureService.InsertPicture(picture.PictureBinary, picture.MimeType, _pictureService.GetPictureSeName(newName), true);
+                        var pictureCopy = _pictureService.InsertPicture(
+                            _pictureService.LoadPictureBinary(picture),
+                            picture.MimeType, 
+                            _pictureService.GetPictureSeName(newName), 
+                            true);
                         _productService.InsertProductPicture(new ProductPicture()
                         {
                             ProductId = productCopy.Id,
@@ -218,7 +221,11 @@ namespace Nop.Services.Catalog
                         var picture = _pictureService.GetPictureById(productVariant.PictureId);
                         if (picture != null)
                         {
-                            var pictureCopy = _pictureService.InsertPicture(picture.PictureBinary, picture.MimeType, _pictureService.GetPictureSeName(productVariant.Name), true);
+                            var pictureCopy = _pictureService.InsertPicture(
+                                _pictureService.LoadPictureBinary(picture), 
+                                picture.MimeType, 
+                                _pictureService.GetPictureSeName(productVariant.Name),
+                                true);
                             pictureId = pictureCopy.Id;
                         }
                     }
