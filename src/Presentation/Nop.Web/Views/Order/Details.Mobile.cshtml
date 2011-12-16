@@ -83,8 +83,8 @@
                         @Model.PaymentMethod
                         @if (Model.CanRePostProcessPayment)
                         {
-@*Completing payment support (for redirection payment methods)*                            
-@*set "data-ajax" attribute to "false" because jQuery Mobile does not support file uploading*@
+@*Completing payment support (for redirection payment methods)*
+@*set "data-ajax" attribute to "false"*@
                             using (Html.BeginForm("Details", "Order", FormMethod.Post,
                                 new Dictionary<string, Object> { { "data-ajax", "false" } }))
                             {

@@ -1455,6 +1455,9 @@
     <Content Include="Views\Order\Details.Mobile.cshtml" />
     <Content Include="Views\Shared\Footer.Mobile.cshtml" />
     <Content Include="Views\Topic\TopicDetails.Mobile.cshtml" />
+    <Content Include="Views\ShoppingCart\OrderSummary.Mobile.cshtml" />
+    <Content Include="Views\ShoppingCart\OrderTotals.Mobile.cshtml" />
+    <Content Include="Views\ShoppingCart\EmailWishlist.Mobile.cshtml" />
     <None Include="_bin_deployableAssemblies\amd64\Microsoft.VC90.CRT\README_ENU.txt" />
     <None Include="_bin_deployableAssemblies\amd64\Microsoft.VC90.CRT\msvcr90.dll" />
     <None Include="_bin_deployableAssemblies\amd64\Microsoft.VC90.CRT\Microsoft.VC90.CRT.manifest" />
@@ -1693,7 +1696,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>2669</DevelopmentServerPort>
+          <DevelopmentServerPort>7725</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost:2451/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
