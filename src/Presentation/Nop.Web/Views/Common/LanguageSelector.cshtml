@@ -6,7 +6,7 @@
     <ul class="languagelist">
         @foreach (var lang in Model.AvailableLanguages)
         {
-            <li><a href="@(@Url.Action("setlanguage", "common", new { langid = lang.Id }))" title="@lang.Name">
+            <li><a href="@Url.Action("setlanguage", "common", new { langid = lang.Id })" title="@lang.Name">
                 <img title='@lang.Name' alt='@lang.Name' @(lang.Id == Model.CurrentLanguage.Id ? " class=selected" : null)
                  src="@Url.Content("~/Content/Images/flags/" + @lang.FlagImageFileName) " />
             </a></li>

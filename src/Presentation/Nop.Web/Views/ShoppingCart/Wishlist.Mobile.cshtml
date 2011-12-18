@@ -137,7 +137,7 @@
                             <input type="submit" name="addtocartbutton" value="@T("ShoppingCart.AddToCart")" id="addtocartbutton" />
                             @if (Model.EmailWishlistEnabled)
                             {
-                                <a href="@(@Url.RouteUrl("EmailWishlist"))" data-role="button">@T("Wishlist.EmailAFriend")</a>
+                                <a href="@Url.RouteUrl("EmailWishlist")" data-role="button">@T("Wishlist.EmailAFriend")</a>
                             }
                         </div>
                     }

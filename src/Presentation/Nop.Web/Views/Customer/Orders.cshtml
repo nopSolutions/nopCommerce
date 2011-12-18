@@ -134,10 +134,10 @@
                                     <td class="buttons">
                                         @if (order.IsReturnRequestAllowed)
                                         {
-                                            <input type="button" name="returnitems" value="@T("Account.CustomerOrders.ReturnItems")" id="returnitems" class="returnitemsbutton" onclick="setLocation('@(@Url.RouteUrl("ReturnRequest", new { orderId = @order.Id }))')" />
+                                            <input type="button" name="returnitems" value="@T("Account.CustomerOrders.ReturnItems")" id="returnitems" class="returnitemsbutton" onclick="setLocation('@Url.RouteUrl("ReturnRequest", new { orderId = @order.Id })')" />
                                             <text>&nbsp;&nbsp;&nbsp;</text>
                                         }
-                                        <input type="button" name="orderdetails" value="@T("Account.CustomerOrders.OrderDetails")" id="orderdetails" class="orderdetailsbutton" onclick="setLocation('@(@Url.RouteUrl("OrderDetails", new { orderId = @order.Id }))')" />
+                                        <input type="button" name="orderdetails" value="@T("Account.CustomerOrders.OrderDetails")" id="orderdetails" class="orderdetailsbutton" onclick="setLocation('@Url.RouteUrl("OrderDetails", new { orderId = @order.Id })')" />
                                     </td>
                                 </tr>
                                 <tr>

@@ -32,7 +32,7 @@
                                 <div class="item-box">
                                     <div class="address-item">
                                         <div class="select-button">
-                                            <a href="@(@Url.RouteUrl("CheckoutSelectBillingAddress", new { addressId = @item.Id }))" data-role="button" data-ajax="false">@T("Checkout.BillToThisAddress")</a>
+                                            <a href="@Url.RouteUrl("CheckoutSelectBillingAddress", new { addressId = @item.Id })" data-role="button" data-ajax="false">@T("Checkout.BillToThisAddress")</a>
                                         </div>
                                         <div class="address-box">
                                             <table width="100%" cellspacing="0" cellpadding="2" border="0">
