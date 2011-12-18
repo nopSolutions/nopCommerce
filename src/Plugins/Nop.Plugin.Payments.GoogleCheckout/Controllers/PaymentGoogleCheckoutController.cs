@@ -128,8 +128,6 @@ namespace Nop.Plugin.Payments.GoogleCheckout.Controllers
 
             var model = new PaymentInfoModel()
             {
-                Width = 168,
-                Height = 44,
                 GifFileName = "checkout",
                 BackgroundType = BackgroundType.Transparent,
                 MerchantId = GCheckoutConfigurationHelper.MerchantID.ToString(),

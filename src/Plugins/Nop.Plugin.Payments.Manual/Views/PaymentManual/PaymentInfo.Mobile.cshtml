@@ -1,0 +1,24 @@
+﻿@{
+    Layout = "";
+}
+@model Nop.Plugin.Payments.Manual.Models.PaymentInfoModel
+@using Nop.Web.Framework;
+@Html.NopLabelFor(model => model.CreditCardTypes, false)
+@Html.DropDownListFor(model => model.CreditCardType, Model.CreditCardTypes)
+@Html.NopLabelFor(model => model.CardholderName, false)
+@Html.TextBoxFor(model => model.CardholderName, new { autocomplete = "off" })
+@Html.ValidationMessageFor(model => model.CardholderName)
+@Html.NopLabelFor(model => model.CardNumber, false)
+@Html.TextBoxFor(model => model.CardNumber, new { autocomplete = "off", maxlength = 22 })
+@Html.ValidationMessageFor(model => model.CardNumber)
+@Html.NopLabelFor(model => model.ExpireMonth, false)
+<div data-role="fieldcontain">
+    <fieldset data-role="controlgroup" data-type="horizontal">
+        @Html.DropDownListFor(model => model.ExpireMonth, Model.ExpireMonths)
+        /
+        @Html.DropDownListFor(model => model.ExpireYear, Model.ExpireYears)
+    </fieldset>
+</div>
+@Html.NopLabelFor(model => model.CardCode, false)
+@Html.TextBoxFor(model => model.CardCode, new { style = "Width: 60px;", autocomplete = "off", maxlength = 4 })
+@Html.ValidationMessageFor(model => model.CardCode)

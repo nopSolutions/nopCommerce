@@ -29,8 +29,8 @@
     }
     string imageUrl = "";
 
-    var buttonWidth = 168;
-    var buttonHeight = 44;
+    var buttonWidth = 160;
+    var buttonHeight = 43;
     if (Model.Environment == EnvironmentType.Sandbox)
     {
         imageUrl = string.Format(
@@ -48,7 +48,9 @@
           variantInUrl, Model.GifFileName, location);
     }
 }
-@using (Html.BeginRouteForm("Plugin.Payments.GoogleCheckout.SubmitButton", FormMethod.Post, new { id = "form-googlecheckout" }))
+@*set "data-ajax" attribute to "false"*@
+@using (Html.BeginRouteForm("Plugin.Payments.GoogleCheckout.SubmitButton", FormMethod.Post,
+    new Dictionary<string, Object> { { "data-ajax", "false" }, {"id", "form-googlecheckout"} }))
 {
     <img id="googleCheckoutImage" alt="" src="@Html.Raw(imageUrl)" style="cursor:pointer;" />
 }

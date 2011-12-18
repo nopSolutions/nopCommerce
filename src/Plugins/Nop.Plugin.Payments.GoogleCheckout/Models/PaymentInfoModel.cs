@@ -1,8 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Web.Mvc;
-using GCheckout;
+﻿using GCheckout;
 using GCheckout.Checkout;
-using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
 
 
@@ -10,10 +7,6 @@ namespace Nop.Plugin.Payments.GoogleCheckout.Models
 {
     public class PaymentInfoModel : BaseNopModel
     {
-        public int Width { get; set; }
-
-        public int Height { get; set; }
-
         public string GifFileName { get; set; }
 
         public BackgroundType BackgroundType { get; set; }

@@ -20,6 +20,13 @@
         @using (Html.BeginRouteForm("CheckoutPaymentInfo", FormMethod.Post,
                 new Dictionary<string, Object> { { "data-ajax", "false" } }))
         {
+            <div class="error-block">
+                <div class="message-error">
+                    @Html.ValidationSummary(false)
+                </div>
+            </div>
+            <div class="clear">
+            </div>
             <div class="payment-info">
                 <div class="body">
                     @Html.Action(Model.PaymentInfoActionName, Model.PaymentInfoControllerName, Model.PaymentInfoRouteValues)
@@ -28,14 +35,6 @@
                 </div>
                 <div class="select-button">
                     <input type="submit" name="nextstep" value="@T("Checkout.NextButton")" id="nextstep"/>
-                </div>
-            </div>
-            
-            <div class="clear">
-            </div>
-            <div class="error-block">
-                <div class="message-error">
-                    @Html.ValidationSummary(false)
                 </div>
             </div>
         }

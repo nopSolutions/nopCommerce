@@ -74,6 +74,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Views\PaymentPurchaseOrder\Configure.cshtml" />
     <EmbeddedResource Include="Views\PaymentPurchaseOrder\PaymentInfo.cshtml" />
+    <EmbeddedResource Include="Views\PaymentPurchaseOrder\PaymentInfo.Mobile.cshtml" />
     <None Include="web.config" />
   </ItemGroup>
   <ItemGroup>

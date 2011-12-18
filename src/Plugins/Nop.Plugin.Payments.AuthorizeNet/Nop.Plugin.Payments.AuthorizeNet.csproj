@@ -95,6 +95,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <EmbeddedResource Include="Views\PaymentAuthorizeNet\PaymentInfo.Mobile.cshtml" />
     <None Include="Web References\net.authorize.api\ANetApiResponseType.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>

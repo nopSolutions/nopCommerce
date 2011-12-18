@@ -20,7 +20,24 @@
         @using (Html.BeginRouteForm("CheckoutConfirm", FormMethod.Post,
                 new Dictionary<string, Object> { { "data-ajax", "false" }, { "id", "confirmorderform" } }))
         {
-            
+
+            if (Model.Warnings.Count > 0)
+            {
+            <div class="clear">
+            </div>
+            <div class="error-block">
+                <div class="message-error">
+                    @for (int i = 0; i < Model.Warnings.Count; i++)
+                    {
+                        @Model.Warnings[i]
+                        if (i != Model.Warnings.Count - 1)
+                        {
+                        <br />
+                        }
+                    }
+                </div>
+            </div>
+            }
             <script type="text/javascript">
                 $(document).ready(function () {
                     $('#confirmorderform').submit(function () {
@@ -40,23 +57,6 @@
                         <input type="submit" name="nextstep" value="@T("Checkout.ConfirmButton")" id="nextstep" />
                     }
                 </div>
-                @if (Model.Warnings.Count > 0)
-                {
-                    <div class="clear">
-                    </div>
-                    <div class="error-block">
-                        <div class="message-error">
-                            @for (int i = 0; i < Model.Warnings.Count; i++)
-                            {
-                                @Model.Warnings[i]
-                                if (i != Model.Warnings.Count - 1)
-                                {
-                                <br />
-                                }
-                            }
-                        </div>
-                    </div>
-                }
             </div>  
         }
         <div class="clear">

@@ -20,7 +20,7 @@
 .user-agreement-page .page-body{}
 .clear{border:medium none;clear:both;float:none;font-size:0;height:0;line-height:0;}
 .nobr{white-space:nowrap!important;}
-.message-error{font-family:Verdana, Arial, sans-serif;font-size:10px;font-weight:700;color:red;}
+.message-error{font-family:Verdana, Arial, sans-serif;font-weight:700;color:red;}
 ul.languagelist{display:inline;line-height:25px;}
 ul.languagelist li{list-style:none;display:inline;padding:0 5px;}
 ul.languagelist li .selected{border:solid 1px #ccc!important;}
