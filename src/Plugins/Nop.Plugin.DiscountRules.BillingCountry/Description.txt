@@ -2,7 +2,7 @@
 FriendlyName: Billing country is
 SystemName: DiscountRequirement.BillingCountryIs
 Version: 1.01
-SupportedVersions: 2.30
+SupportedVersions: 2.30,2.40
 Author: nopCommerce team
 DisplayOrder: 1
 FileName: Nop.Plugin.DiscountRules.BillingCountry.dll
