@@ -429,9 +429,7 @@ namespace Nop.Web.Controllers
             return File(pdfBytes, "application/pdf", fileName);
         }
 
-        [HttpPost, ActionName("Details")]
-        [FormValueRequired("reorder")]
-        public ActionResult Reorder(int orderId)
+        public ActionResult ReOrder(int orderId)
         {
             var order = _orderService.GetOrderById(orderId);
             if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)

@@ -1,0 +1,37 @@
+﻿@model Nop.Web.Models.Checkout.CheckoutCompletedModel
+@using Nop.Core.Domain.Orders
+@using Nop.Web.Models.Checkout
+@using Nop.Web.Models.Common
+@using Nop.Web.Framework.UI
+@{
+    Layout = "~/Views/Shared/_MobileRoot.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Checkout").Text);
+}
+<div class="checkout-page">
+    <div class="page-title">
+        <h1>@T("Checkout.ThankYou")</h1>
+    </div>
+    <div class="clear">
+    </div>
+    <div class="checkout-data">
+        <div class="order-completed">
+            <div class="body">
+                <b>
+                    @T("Checkout.YourOrderHasBeenSuccessfullyProcessed")</b>
+                <p>
+                    @T("Checkout.OrderNumber"): @Model.OrderId
+                </p>
+                <p>
+                    <a href="@Url.RouteUrl("OrderDetails", new { orderID = @Model.OrderId })" data-role="button">@T("Checkout.PlacedOrderDetails")</a>
+                </p>
+            </div>
+            <div class="clear">
+            </div>
+            <div class="select-button">
+                <a href="@Url.Action("index", "home")" data-role="button">@T("Checkout.Continue")</a>
+            </div>
+        </div>
+    </div>
+</div>

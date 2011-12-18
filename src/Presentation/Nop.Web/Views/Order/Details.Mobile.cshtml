@@ -281,16 +281,13 @@
                     </div>
                 }
 @*Reorder support*@
-                @using (Html.BeginForm("Details", "Order", FormMethod.Post))
+                @if (Model.IsReOrderAllowed)
                 {
-                    if (Model.IsReOrderAllowed)
-                    {
-                    <input type="submit" name="reorder" value="@T("Order.Reorder")" id="reorder" />
-                    }
-                    if (Model.IsReturnRequestAllowed)
-                    {
+                    <a href="@Url.RouteUrl("ReOrder", new { orderId = @Model.Id })" data-role="button">@T("Order.Reorder")</a>
+                }
+                @if (Model.IsReturnRequestAllowed)
+                {
                     <a href="@Url.RouteUrl("ReturnRequest", new { orderId = @Model.Id })" data-role="button">@T("Order.ReturnItems")</a>
-                    }
                 }
             </div>
             <div class="clear">
@@ -482,7 +479,7 @@
                         </tbody>
                     </table>
                 </div>
-                }
+            }
         </div>
     </div>
 </div>

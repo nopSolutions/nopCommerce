@@ -322,17 +322,14 @@
                 {
                     <br />
                     @*Reorder support*@
-                    using (Html.BeginForm("Details", "Order", FormMethod.Post))
+                    if (Model.IsReOrderAllowed)
                     {
-                        if (Model.IsReOrderAllowed)
-                        {
-                    <input type="submit" name="reorder" value="@T("Order.Reorder")" id="reorder" class="reorderbutton" />
-                        }
-                        if (Model.IsReturnRequestAllowed)
-                        {
-                    <text>&nbsp; &nbsp; &nbsp;</text>
-                    <input type="button" name="returnitems" value="@T("Order.ReturnItems")" id="returnitems" class="returnitemsbutton" onclick="setLocation('@(@Url.RouteUrl("ReturnRequest", new { orderId = @Model.Id }))')" />
-                        }
+                        <input type="button" name="reorder" value="@T("Order.Reorder")" id="reorder" class="reorderbutton" onclick="setLocation('@(@Url.RouteUrl("ReOrder", new { orderId = @Model.Id }))')" />
+                    }
+                    if (Model.IsReturnRequestAllowed)
+                    {
+                        <text>&nbsp; &nbsp; &nbsp;</text>
+                        <input type="button" name="returnitems" value="@T("Order.ReturnItems")" id="returnitems" class="returnitemsbutton" onclick="setLocation('@(@Url.RouteUrl("ReturnRequest", new { orderId = @Model.Id }))')" />
                     }
                 }
             </div>
@@ -366,7 +363,7 @@
                                 </span>
                             </td>
                         </tr>
-                }
+                    }
                     @if (Model.IsShippable)
                     {
                         <tr>
@@ -380,7 +377,7 @@
                                 </span>
                             </td>
                         </tr>
-                }
+                    }
                     @if (!string.IsNullOrEmpty(Model.PaymentMethodAdditionalFee))
                     {
                         <tr>
@@ -394,7 +391,7 @@
                                 </span>
                             </td>
                         </tr>
-                }
+                    }
                     @if (Model.DisplayTaxRates && Model.TaxRates.Count > 0)
                     {
                         foreach (var taxRate in Model.TaxRates)
@@ -410,8 +407,8 @@
                                 </span>
                             </td>
                         </tr>
+                        }
                     }
-                }
                     @if (Model.DisplayTax)
                     {
                         <tr>
@@ -425,7 +422,7 @@
                                 </span>
                             </td>
                         </tr>
-                }
+                    }
                     @if (!string.IsNullOrEmpty(Model.OrderTotalDiscount))
                     {
                         <tr>
@@ -439,7 +436,7 @@
                                 </span>
                             </td>
                         </tr>
-                }
+                    }
                     @if (Model.GiftCards.Count > 0)
                     {
                         foreach (var gc in Model.GiftCards)
@@ -455,8 +452,8 @@
                                 </span>
                             </td>
                         </tr>
+                        }
                     }
-                }
                     @if (Model.RedeemedRewardPoints > 0)
                     {
                         <tr>
@@ -469,7 +466,7 @@
                                 </span>
                             </td>
                         </tr>
-                }
+                    }
                     <tr>
                         <td class="cart_total_left">
                             <b>
@@ -523,7 +520,7 @@
                                         </div>
                                     </td>
                                 </tr>
-                        }
+                            }
                         </tbody>
                     </table>
                 </div>
