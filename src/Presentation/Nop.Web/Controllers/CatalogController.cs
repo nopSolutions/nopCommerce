@@ -324,9 +324,15 @@ namespace Nop.Web.Controllers
                 int pictureSize = productThumbPictureSize.HasValue ? productThumbPictureSize.Value : _mediaSetting.ProductThumbPictureSize;
                 var picture = product.GetDefaultProductPicture(_pictureService);
                 if (picture != null)
+                {
                     model.DefaultPictureModel.ImageUrl = _pictureService.GetPictureUrl(picture, pictureSize, true);
+                    model.DefaultPictureModel.FullSizeImageUrl = _pictureService.GetPictureUrl(picture);
+                }
                 else
+                {
                     model.DefaultPictureModel.ImageUrl = _pictureService.GetDefaultPictureUrl(pictureSize);
+                    model.DefaultPictureModel.FullSizeImageUrl = _pictureService.GetDefaultPictureUrl();
+                }
                 model.DefaultPictureModel.Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), model.Name);
                 model.DefaultPictureModel.AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), model.Name);
             }

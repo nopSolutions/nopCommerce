@@ -90,12 +90,13 @@ ul.languagelist li .selected{border:solid 1px #ccc!important;}
 .order-summary-body{text-align:center;margin:10px;border:1px solid #d7d7d7;height:auto;}
 .checkout-data .select-address-title{padding:10px 10px 5px 0;font-weight:700;clear:both;}
 .checkout-data .address-grid{margin-bottom:15px;padding:0;}
-.checkout-data .address-grid .item-box{padding-bottom:10px;text-align:center;vertical-align:text-top;}
-.checkout-data .address-grid .address-item{text-align:center;margin:10px;border:1px solid #d7d7d7;width:200px;height:auto;}
-.checkout-data .address-grid .address-item .select-button{margin-bottom:5px;margin-top:5px;text-align:center;}
+.checkout-data .address-grid ul{padding:0px;}
+.checkout-data .address-grid li{list-style: none;}
+.checkout-data .address-grid .address-item{border:1px solid #d7d7d7;height:auto;}
+.checkout-data .address-grid .address-item .select-button{margin-bottom:5px;margin-top:5px;}
 .checkout-data .address-grid .address-item .address-box{text-align:left;}
 .checkout-data .enter-address-title{padding:10px 10px 5px 0;font-weight:700;clear:both;}
-.checkout-data .enter-address{text-align:center;margin:10px;border:1px solid #d7d7d7;height:auto;}
+.checkout-data .enter-address{text-align:center;border:1px solid #d7d7d7;height:auto;}
 .checkout-data .enter-address .enter-address-body{text-align:left;margin:10px;}
 .checkout-data .enter-address .button{margin:10px;text-align:left;}
 .checkout-data .enter-address .the-same-address{text-align:left;margin:10px;}

@@ -562,6 +562,10 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("CheckoutPaymentInfo");
             }
 
+            //TODO? redirect to 'PaymentInfo' info page 
+            //if we have only one payment method 
+            //and reward points are disabled or current customer doesn't have any points?
+
             //model
             var model = PreparePaymentMethodModel(cart);
             return View(model);
