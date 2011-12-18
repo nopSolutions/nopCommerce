@@ -416,38 +416,29 @@ ul.languagelist li .selected{border:solid 1px #ccc!important;}
 .tier-prices .prices .header-table td{border-bottom:solid 3px #d7d7d7;padding-top:3px;padding-bottom:3px;font-weight:700;}
 .tier-prices .prices .prices-table .field-header{font-weight:700;text-align:center;}
 /* PRIVATE MESSAGES */
-.sendpmbox{background-color:#EEE;border:1px solid #A0A0A0;color:#555;display:block;float:left;font-family:Arial;font-size:10px;font-weight:700;margin:2px 0 2px 2px;padding:2px;text-decoration:none;text-transform:uppercase;}
-.sendpmbox .pmlinkbutton{line-height:14px;padding:1px 6px 2px 18px;background:url(images/ico-pm.png) no-repeat;}
-.privatemessagesend{background:url(images/pm-footer-bg.gif) repeat-x bottom;}
-.privatemessagesend .title{background:url(images/pm-header-bg.gif) repeat-x 50%;color:#FFF;border:solid 1px #6a6a6a;height:28px;line-height:28px;font-weight:700;padding-left:3px;}
+.sendpmbox{}
+.sendpmbox .pmlinkbutton{}
+.privatemessagesend{}
+.privatemessagesend .page-title{border-bottom:0 none;}
 .privatemessagesend .wrapper{padding:5px;}
-.privatemessagesend table.postmessage{width:100%;vertical-align:middle;border-collapse:collapse;}
-.privatemessagesend table.postmessage td{padding:4px;}
-.privatemessagesend table.postmessage td.fieldname{font-weight:700;width:20%;color:#555;}
-.privatemessagesend table.postmessage td.options{text-align:right;}
-.privatemessageview{background:url(images/pm-footer-bg.gif) repeat-x bottom;}
-.privatemessageview .title{background:url(images/pm-header-bg.gif) repeat-x 50%;color:#FFF;border:solid 1px #6a6a6a;height:28px;line-height:28px;font-weight:700;padding-left:3px;}
+.privatemessagesend .postmessage{}
+.privatemessagesend .postmessage .options{}
+.privatemessageview{}
+.privatemessageview .page-title{border-bottom:0 none;}
 .privatemessageview .wrapper{padding:5px;}
-.privatemessageview table.viewmessage{width:100%;vertical-align:middle;border-collapse:collapse;}
-.privatemessageview table.viewmessage td{padding:4px;}
-.privatemessageview table.viewmessage td.fieldname{font-weight:700;width:20%;color:#555;}
-.privatemessageview table.viewmessage a{color:#f93;text-decoration:underline;}
-.privatemessageview table.viewmessage td.options{text-align:right;}
+.privatemessageview .viewmessage{}
+.privatemessageview .viewmessage .subject-label{font-weight:bold;}
+.privatemessageview .viewmessage .message-label{font-weight:bold;}
+.privatemessageview .viewmessage .options{}
 .private-messages-page{margin-bottom:15px;padding-bottom:5px;padding-left:0;}
 .private-messages-page .page-title{border-bottom:0 none;}
-.private-messages-page .body{margin:0;padding:0;font-size:11px;color:#555;}
-.private-messages-box{margin:0;padding:5px;font-size:11px;color:#555;}
+.private-messages-page .body{margin:0;padding:0;color:#555;}
+.private-messages-box{margin:0;padding:5px;color:#555;}
 .private-messages-box .section-body{text-align:left;padding:10px;height:auto;}
-.private-messages-box .button{margin-bottom:5px;margin-top:5px;text-align:left;}
-.pmgridtablestyle{font-family:arial;font-size:11px;border:1px solid gray;background-color:#FFF;margin-left:0;width:100%;}
-.pmgridtablestyle td a{text-decoration:none;display:block;}
-.pmgridaltrowstyle{background-color:#F4FAFF;}
-.pmgridheaderstyle th{background:url(images/grid-bg.gif) repeat-x 50%;color:#fff;padding:5px 10px;text-align:center;vertical-align:middle;font-weight:700;border:solid 1px #676767;}
-.pmgridrowstyle td,.pmgridaltrowstyle td{padding:4px 10px;border-right:solid 1px #A0C0E7;border-right-color:gray;}
 .pmgridpagerstyle,.latestpostsgridpagerstyle,.fsgridpagerstyle{padding:5px;background:#eee;vertical-align:middle;}
-.pmgridpagerstyle span,.latestpostsgridpagerstyle span,.fsgridpagerstyle span{font-weight:700;font-size:1.1em;}
+.pmgridpagerstyle span,.latestpostsgridpagerstyle span,.fsgridpagerstyle span{font-weight:700;}
 .pmread{}
-.pmunread{font-weight:700;}
+.pmunread{font-size:16px;}
 /* FORUM MAIN */
 .forumsmain{}
 .forumsmain .forumsmainheader{border-bottom:solid 1px #f3f3f3;height:35px;}

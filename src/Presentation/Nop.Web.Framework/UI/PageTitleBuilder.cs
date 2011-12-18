@@ -2,13 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Web;
 using Nop.Core.Domain.Common;
+using Nop.Services.Common;
 
 namespace Nop.Web.Framework.UI
 {
     public class PageTitleBuilder : IPageTitleBuilder
     {
         private readonly SeoSettings _seoSettings;
+        private readonly HttpContextBase _httpContext;
+        private readonly IMobileDeviceHelper _mobileDeviceHelper;
         private readonly List<string> _titleParts;
         private readonly List<string> _metaDescriptionParts;
         private readonly List<string> _metaKeywordParts;
@@ -16,8 +20,12 @@ namespace Nop.Web.Framework.UI
         private readonly List<string> _cssParts;
         private readonly List<string> _canonicalUrlParts;
 
-        public PageTitleBuilder(SeoSettings seoSettings)
+        public PageTitleBuilder(IMobileDeviceHelper mobileDeviceHelper,
+            HttpContextBase httpContext,
+            SeoSettings seoSettings)
         {
+            this._mobileDeviceHelper = mobileDeviceHelper;
+            this._httpContext = httpContext;
             this._seoSettings = seoSettings;
             this._titleParts = new List<string>();
             this._metaDescriptionParts = new List<string>();
@@ -46,7 +54,17 @@ namespace Nop.Web.Framework.UI
             string result = "";
             var specificTitle = string.Join(_seoSettings.PageTitleSeparator, _titleParts.AsEnumerable().Reverse().ToArray());
             if (!String.IsNullOrEmpty(specificTitle))
-                result = string.Join(_seoSettings.PageTitleSeparator, _seoSettings.DefaultTitle, specificTitle);
+            {
+                bool useMobileDevice = _mobileDeviceHelper.IsMobileDevice(_httpContext)
+                                       && _mobileDeviceHelper.MobileDevicesSupported()
+                                       && !_mobileDeviceHelper.CustomerDontUseMobileVersion();
+                result = useMobileDevice
+                         //do not display store name in mobile version
+                         ? specificTitle
+                         : 
+                         //desktop version
+                         string.Join(_seoSettings.PageTitleSeparator, _seoSettings.DefaultTitle, specificTitle);
+            }
             else
                 result = _seoSettings.DefaultTitle;
             return result;

@@ -17,8 +17,8 @@
             $("#@Html.FieldIdFor(model => model.CountryId)").change(function() {
                 var selectedItem = $(this).val();
                 var ddlStates = $("#@Html.FieldIdFor(model => model.StateProvinceId)");
-                var statesProgress = $("#states-loading-progress");
-                statesProgress.show();
+                //show progress
+                $.mobile.showPageLoadingMsg();
                 $.ajax({
                     cache:false,
                     type: "GET",
@@ -29,14 +29,16 @@
                         $.each(data, function(id, option) {
                             ddlStates.append($('<option></option>').val(option.id).html(option.name));
                         });
-                        statesProgress.hide();
+                        //hide progress
+                        $.mobile.hidePageLoadingMsg();
 
                         //jQuery Mobile. If you manipulate a select via JavaScript, you must call the refresh method on it to update the visual styling.
                         ddlStates.selectmenu("refresh");
                     },
                     error:function (xhr, ajaxOptions, thrownError){
                         alert('Failed to retrieve states.');
-                        statesProgress.hide();
+                        //hide progress
+                        $.mobile.hidePageLoadingMsg();
                     }  
                 });
             });
@@ -195,9 +197,6 @@
                             {
                                 @Html.LabelFor(model => model.StateProvinceId)
                                 @Html.DropDownList("StateProvinceId", Model.AvailableStates)
-                                <span id="states-loading-progress" style="display: none;">@T("Common.Wait...")
-                                    <img src='@Url.Content("~/Content/Images/ajax_loader_small.gif")' alt="@T("Common.Wait...")" />
-                                </span>
                             }
                         </div>
                         <div class="clear">

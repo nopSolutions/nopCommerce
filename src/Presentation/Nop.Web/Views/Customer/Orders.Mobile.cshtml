@@ -1,6 +1,9 @@
 ﻿@model Nop.Web.Models.Customer.CustomerOrderListModel
 @{
     Layout = "~/Views/Shared/_MobileRoot.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Account").Text);
 }
 @using Nop.Web.Framework;
 @section top

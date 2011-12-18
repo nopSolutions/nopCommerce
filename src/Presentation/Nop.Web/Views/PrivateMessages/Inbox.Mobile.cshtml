@@ -1,0 +1,38 @@
+﻿@model PrivateMessageListModel 
+@using MvcContrib.UI.Grid;
+@using MvcContrib;
+@using Nop.Web;
+@using Nop.Web.Extensions;
+@using Nop.Web.Models.PrivateMessages;
+@{
+    var dateTimeHelper = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Helpers.IDateTimeHelper>();
+}
+<div class="private-messages-box">
+    @if (Model.Messages.Count > 0)
+    {
+        <ul data-role="listview" data-inset="true" data-filter="false">
+            @foreach (var pm in Model.Messages)
+            {
+                <li>
+                    <div>
+                        <div>
+                            @T("PrivateMessages.Inbox.SubjectColumn"): @Html.RouteLink(pm.Subject, "ViewPM", new { privateMessageId = pm.Id }, new { @class = (pm.IsRead) ? "pmread" : "pmunread" })
+                        </div>
+                        <div>
+                            @T("PrivateMessages.Inbox.FromColumn"): @pm.customerFromName
+                        </div>
+                        <div>
+                            @T("PrivateMessages.Inbox.DateColumn"): @dateTimeHelper.ConvertToUserTime(pm.CreatedOnUtc)
+                        </div>
+                    </div>
+                </li>
+            }
+        </ul>
+            if (Model.PagerModel.TotalPages > 1)
+            {
+        <div class="pmgridpagerstyle">
+            @Html.Pager(Model.PagerModel)
+        </div>
+            }
+    }
+</div>
