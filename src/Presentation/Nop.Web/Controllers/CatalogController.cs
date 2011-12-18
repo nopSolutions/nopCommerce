@@ -1580,7 +1580,7 @@ namespace Nop.Web.Controllers
             }
 
 
-            var model = products.Select(x => PrepareProductOverviewModel(x, false, true, productThumbPictureSize)).ToList();
+            var model = products.Select(x => PrepareProductOverviewModel(x, true, true, productThumbPictureSize)).ToList();
             return PartialView(model);
         }
 
@@ -1593,7 +1593,7 @@ namespace Nop.Web.Controllers
             var products = _orderReportService.GetProductsAlsoPurchasedById(productId,
                 _catalogSettings.ProductsAlsoPurchasedNumber);
 
-            var model = products.Select(x => PrepareProductOverviewModel(x, false, true, productThumbPictureSize)).ToList();
+            var model = products.Select(x => PrepareProductOverviewModel(x, true, true, productThumbPictureSize)).ToList();
 
             return PartialView(model);
         }

@@ -29,19 +29,30 @@
             </div>
             <div class="clear">
             </div>
-            <div class="reward-points-history">                
+            <div class="reward-points-history">
                 @if (Model.RewardPoints.Count > 0)
                 {
-                    @Html.Grid(Model.RewardPoints).Columns(column => {
-                       column.For(rph => rph.CreatedOn).Named(T("RewardPoints.Fields.Date").Text).Attributes(style => "width:20%;");
-                       column.For(rph => rph.Points).Named(T("RewardPoints.Fields.Points").Text).Attributes(style => "width:20%;");
-                       column.For(rph => rph.PointsBalance).Named(T("RewardPoints.Fields.PointsBalance").Text).Attributes(style => "width:20%;");
-                       column.For(rph => rph.Message).Named(T("RewardPoints.Fields.Message").Text).Attributes(style => "width:40%;");
-                   }).Attributes(style => "width: 100%; border: 0px").RowStart((row) =>
-                   {
-                       if (row.IsAlternate) { return "<tr style='background-color: #F4FAFF;'>"; }
-                       else { return "<tr>"; }
-                   })
+                    <ul data-role="listview" data-inset="true" data-filter="false">
+                        @foreach (var rph in Model.RewardPoints)
+                        {
+                            <li>
+                                <div class="item">
+                                    <div>
+                                        @T("RewardPoints.Fields.Date"): @rph.CreatedOn
+                                    </div>
+                                    <div>
+                                        @T("RewardPoints.Fields.Points"): @rph.Points
+                                    </div>
+                                    <div>
+                                        @T("RewardPoints.Fields.PointsBalance"): @rph.PointsBalance
+                                    </div>
+                                    <div>
+                                        @T("RewardPoints.Fields.Message"): @rph.Message
+                                    </div>
+                                </div>
+                            </li>
+                        }
+                    </ul>
                 }
                 else
                 {

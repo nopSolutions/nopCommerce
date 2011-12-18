@@ -1,0 +1,23 @@
+﻿@model IList<ProductModel>
+@using Nop.Web.Framework.UI;
+@using Nop.Web.Models.Catalog;
+@if (Model.Count > 0)
+{
+    <div class="related-products-grid">
+        <div class="title">
+            @T("Products.RelatedProducts")
+        </div>
+        <div class="clear">
+        </div>
+        <div class="product-list">
+            <ul data-role="listview" data-inset="true" data-filter="false" data-theme="c">
+                @foreach (var product in Model)
+                {
+                    <li>
+                        @Html.Partial("_ProductBox", product)
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+}

@@ -21,72 +21,49 @@
             <div class="info">
                 @if (Model.Items.Count > 0)
                 {
-                    
-                    <table border="1" cellspacing="0" style="width: 100%; border-collapse: collapse;">
-                        <col />
-                        <col />
-                        <col />
-                        <col />
-                        <thead>
-                            <tr>
-                                <th align="center">
-                                    @T("DownloadableProducts.Fields.Order")
-                                </th>
-                                <th align="center">
-                                    @T("DownloadableProducts.Fields.Date")
-                                </th>
-                                <th align="center">
-                                    @T("DownloadableProducts.Fields.Product")
-                                </th>
-                                <th align="center">
-                                    @T("DownloadableProducts.Fields.Download")
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model.Items)
-                            {
-                                <tr>
-                                    <td style="width: 15%; text-align: center;">
-                                        <div style="padding-left: 10px; padding-right: 10px;">
-                                            <a class="link" href="@Url.RouteUrl("OrderDetails", new { orderId = @item.OrderId })">@item.OrderId</a>
-                                        </div>
-                                    </td>
-                                    <td style="width: 15%; text-align: center;">
-                                        <div style="padding-left: 10px; padding-right: 10px;">
-                                            @item.CreatedOn.ToString("d")
-                                        </div>
-                                    </td>
-                                    <td style="width: 45%; text-align: center;">
-                                        <a href="@Url.RouteUrl("Product", new { productId = item.ProductId, SeName = item.ProductSeName })" title="View details">@item.ProductName</a>
+                    <ul data-role="listview" data-inset="true" data-filter="false">
+                        @foreach (var item in Model.Items)
+                        {
+                            <li>
+                                <div class="item">
+                                    <div>
+                                        @T("DownloadableProducts.Fields.Order"): <a class="link" href="@Url.RouteUrl("OrderDetails", new { orderId = @item.OrderId })">@item.OrderId</a>
+                                    </div>
+                                    <div>
+                                        @T("DownloadableProducts.Fields.Date"): @item.CreatedOn.ToString("d")
+                                    </div>
+                                    <div>
+                                        @T("DownloadableProducts.Fields.Product"): <a href="@Url.RouteUrl("Product", new { productId = item.ProductId, SeName = item.ProductSeName })" title="View details">@item.ProductName</a>
                                         @if (!String.IsNullOrEmpty(item.ProductAttributes))
                                         {
                                             <br />
                                             @Html.Raw(item.ProductAttributes)
                                         }
-                                    </td>
-                                    <td style="width: 25%; text-align: center;">
-                                        <div style="padding-left: 10px; padding-right: 10px;">
-                                            @if (item.DownloadId > 0)
-                                            {
+                                    </div>
+                                    <div>
+                                        @if (item.DownloadId > 0)
+                                        {
+                                            <div>
                                                 <a data-ajax="false" class="link" href="@Url.Action("GetDownload", "Download", new { opvId = item.OrderProductVariantGuid })">@T("DownloadableProducts.Fields.Download")</a>
-                                            }
-                                            else
-                                            {
-                                                @T("DownloadableProducts.Fields.Download.NA")
-                                            }
-                                        </div>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div>
+                                                @T("DownloadableProducts.Fields.Download"): @T("DownloadableProducts.Fields.Download.NA")
+                                            </div>
+                                        }
                                         @if (item.LicenseId > 0)
                                         {
-                                            <div style="padding-left: 10px; padding-right: 10px;">
+                                            <div>
                                                 <a class="link" href="@Url.Action("GetLicense", "Download", new { opvId = item.OrderProductVariantGuid })">@T("DownloadableProducts.Fields.DownloadLicense")</a>
                                             </div>
                                         }
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
+                                    </div>
+                                </div>
+                            </li>
+                        }
+                    </ul>
                     
                 }
                 else
