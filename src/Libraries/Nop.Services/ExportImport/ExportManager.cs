@@ -80,7 +80,7 @@ namespace Nop.Services.ExportImport
 
 
                     xmlWriter.WriteStartElement("Products");
-                    var productCategories = _categoryService.GetProductCategoriesByCategoryId(category.Id);
+                    var productCategories = _categoryService.GetProductCategoriesByCategoryId(category.Id, true);
                     foreach (var productCategory in productCategories)
                     {
                         var product = productCategory.Product;
@@ -146,7 +146,7 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteElementString("UpdatedOnUtc", null, manufacturer.UpdatedOnUtc.ToString());
 
                 xmlWriter.WriteStartElement("Products");
-                var productManufacturers = _manufacturerService.GetProductManufacturersByManufacturerId(manufacturer.Id);
+                var productManufacturers = _manufacturerService.GetProductManufacturersByManufacturerId(manufacturer.Id, true);
                 if (productManufacturers != null)
                 {
                     foreach (var productManufacturer in productManufacturers)
@@ -229,7 +229,7 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteElementString("UpdatedOnUtc", null, product.UpdatedOnUtc.ToString());
 
                 xmlWriter.WriteStartElement("ProductVariants");
-                var productVariants = _productService.GetProductVariantsByProductId(product.Id);
+                var productVariants = _productService.GetProductVariantsByProductId(product.Id, true);
                 if (productVariants != null)
                 {
                     foreach (var productVariant in productVariants)
@@ -528,7 +528,7 @@ namespace Nop.Services.ExportImport
                 int row = 2;
                 foreach (var p in products)
                 {
-                    var productVariants = _productService.GetProductVariantsByProductId(p.Id);
+                    var productVariants = _productService.GetProductVariantsByProductId(p.Id, true);
                     foreach (var pv in productVariants)
                     {
                         int col = 1;

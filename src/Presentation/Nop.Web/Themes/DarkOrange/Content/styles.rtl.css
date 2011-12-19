@@ -287,7 +287,6 @@ ul.languagelist li:hover{cursor:pointer;}
 .order-details .products-box .subtotal{text-align:right;}
 .downloable-products{margin:0;padding:5px;font-size:11px;color:#555;background-color:inherit;}
 .downloable-products .info{padding:10px;}
-.downloable-products .products-box{text-align:left;padding:10px;border:1px solid #d7d7d7;height:auto;}
 .order-progress{height:45px;margin:0 auto;text-align:center;border-bottom:solid 2px #f3f3f3;}
 .order-progress ul{padding:0;margin:0;}
 .order-progress ul li{list-style:none;display:inline;padding:5px 20px 0;float:right;}

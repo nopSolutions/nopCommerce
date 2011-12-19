@@ -11,7 +11,6 @@
     //title
     Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Name);
 }
-
 @{
     //errors
     var errors = new List<string>();
@@ -97,6 +96,16 @@
             </div>
             <div>
                 @Html.Action("ProductTags", "Catalog", new { productId = Model.Id })
+            </div>
+            <div class="clear">
+            </div>
+            <div>
+                @Html.Action("ProductsAlsoPurchased", "Catalog", new { productId = Model.Id })
+            </div>
+            <div class="clear">
+            </div>
+            <div>
+                @Html.Action("RelatedProducts", "Catalog", new { productId = Model.Id })
             </div>
         </div>
     }

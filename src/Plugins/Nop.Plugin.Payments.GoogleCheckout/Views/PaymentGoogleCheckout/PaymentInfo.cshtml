@@ -29,12 +29,14 @@
     }
     string imageUrl = "";
 
+    var buttonWidth = 168;
+    var buttonHeight = 44;
     if (Model.Environment == EnvironmentType.Sandbox)
     {
         imageUrl = string.Format(
           "{0}://sandbox.google.com/checkout/buttons/{6}.gif?" +
           "merchant_id={1}&w={2}&h={3}&style={4}&variant={5}&loc={7}",
-          protocol, Model.MerchantId, Model.Width, Model.Height, styleInUrl,
+          protocol, Model.MerchantId, buttonWidth, buttonHeight, styleInUrl,
           variantInUrl, Model.GifFileName, location);
     }
     else
@@ -42,7 +44,7 @@
         imageUrl = string.Format(
           "{0}://checkout.google.com/buttons/{6}.gif?" +
           "merchant_id={1}&w={2}&h={3}&style={4}&variant={5}&loc={7}",
-          protocol, Model.MerchantId, Model.Width, Model.Height, styleInUrl,
+          protocol, Model.MerchantId, buttonWidth, buttonHeight, styleInUrl,
           variantInUrl, Model.GifFileName, location);
     }
 }

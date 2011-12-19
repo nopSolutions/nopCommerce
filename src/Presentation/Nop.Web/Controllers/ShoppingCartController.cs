@@ -588,6 +588,9 @@ namespace Nop.Web.Controllers
             var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
 
             var allIdsToRemove = form["removefromcart"] != null ? form["removefromcart"].Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => int.Parse(x)).ToList() : new List<int>();
+
+            //current warnings <cart item identifier, warnings>
+            var innerWarnings = new Dictionary<int, IList<string>>();
             foreach (var sci in cart)
             {
                 bool remove = allIdsToRemove.Contains(sci.Id);
@@ -602,14 +605,27 @@ namespace Nop.Web.Controllers
                             int.TryParse(form[formKey], out newQuantity);
                             break;
                         }
-                    _shoppingCartService.UpdateShoppingCartItem(_workContext.CurrentCustomer,
+                    var currSciWarnings = _shoppingCartService.UpdateShoppingCartItem(_workContext.CurrentCustomer,
                         sci.Id, newQuantity, true);
+                    innerWarnings.Add(sci.Id, currSciWarnings);
                 }
             }
 
             //updated cart
             cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
             var model = PrepareShoppingCartModel(new ShoppingCartModel(), cart, true);
+            //update current warnings
+            foreach (var kvp in innerWarnings)
+            {
+                //kvp = <cart item identifier, warnings>
+                var sciId = kvp.Key;
+                var warnings = kvp.Value;
+                //find model
+                var sciModel = model.Items.Where(x => x.Id == sciId).FirstOrDefault();
+                if (sciModel != null)
+                    foreach (var w in warnings)
+                        sciModel.Warnings.Add(w);
+            }
             return View(model);
         }
 
@@ -1153,6 +1169,9 @@ namespace Nop.Web.Controllers
             var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist).ToList();
 
             var allIdsToRemove = form["removefromcart"] != null ? form["removefromcart"].Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => int.Parse(x)).ToList() : new List<int>();
+
+            //current warnings <cart item identifier, warnings>
+            var innerWarnings = new Dictionary<int, IList<string>>();
             foreach (var sci in cart)
             {
                 bool remove = allIdsToRemove.Contains(sci.Id);
@@ -1167,14 +1186,27 @@ namespace Nop.Web.Controllers
                             int.TryParse(form[formKey], out newQuantity);
                             break;
                         }
-                    _shoppingCartService.UpdateShoppingCartItem(_workContext.CurrentCustomer,
+                    var currSciWarnings = _shoppingCartService.UpdateShoppingCartItem(_workContext.CurrentCustomer,
                         sci.Id, newQuantity, true);
+                    innerWarnings.Add(sci.Id, currSciWarnings);
                 }
             }
 
             //updated cart
             cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist).ToList();
             var model = PrepareWishlistModel(new WishlistModel(), cart, true);
+            //update current warnings
+            foreach (var kvp in innerWarnings)
+            {
+                //kvp = <cart item identifier, warnings>
+                var sciId = kvp.Key;
+                var warnings = kvp.Value;
+                //find model
+                var sciModel = model.Items.Where(x => x.Id == sciId).FirstOrDefault();
+                if (sciModel != null)
+                    foreach (var w in warnings)
+                        sciModel.Warnings.Add(w);
+            }
             return View(model);
         }
 

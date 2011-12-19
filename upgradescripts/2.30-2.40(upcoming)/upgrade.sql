@@ -53,6 +53,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.MobileDevicesSupported.Hint">
     <Value>Check to enable mobile devices support.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Forums.SignaturesEnabled.Hint">
+    <Value>Add an opportunity for customers to specify signature. Signature will be displayed below each forum post.</Value>
+  </LocaleResource>
 </Language>
 '
 

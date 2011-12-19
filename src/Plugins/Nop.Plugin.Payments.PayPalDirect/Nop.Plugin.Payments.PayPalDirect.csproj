@@ -102,6 +102,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <EmbeddedResource Include="Views\PaymentPayPalDirect\PaymentInfo.Mobile.cshtml" />
     <None Include="Web References\PayPalSvc\AddressVerifyResponseType.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>

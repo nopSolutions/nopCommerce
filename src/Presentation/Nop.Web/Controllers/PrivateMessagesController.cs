@@ -334,6 +334,7 @@ namespace Nop.Web.Controllers
             {
                 return RedirectToAction("Index");
             }
+            model.customerToName = toCustomer.FormatUserName();
 
             try
             {

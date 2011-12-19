@@ -1,0 +1,49 @@
+﻿@model Nop.Web.Models.PrivateMessages.PrivateMessageModel
+@using Nop.Web;
+@using Nop.Web.Extensions;
+@{    
+    Layout = "~/Views/Shared/_MobileRoot.cshtml";
+
+    Html.AddTitleParts(T("PageTitle.SendPM").Text);
+}
+@using (Html.BeginForm())
+{
+    <div class="privatemessagesend">
+        <div class="page-title">
+            <h1>@T("PrivateMessages.Send.PostMessage")</h1>
+        </div>
+        <div class="wrapper">
+            <div class="error-block">
+                <div class="message-error">
+                    @Model.PostError
+                </div>
+            </div>
+            @Html.ValidationSummary(false)
+            @Html.HiddenFor(model => model.ToCustomerId)
+            @Html.HiddenFor(model => model.ReplyToMessageId)
+            <div class="clear">
+            </div>
+            <div class="postmessage">
+                <div>
+                    @T("PrivateMessages.Send.To") @Model.customerToName
+                </div>
+                <div>
+                    @T("PrivateMessages.Send.Subject")
+                </div>
+                <div>
+                    @Html.TextBoxFor(model => model.Subject, new { @class = "pmtitletext" })
+                </div>
+                <div>
+                    @T("PrivateMessages.Send.Message")
+                </div>
+                <div>
+                    @Html.TextAreaFor(model => model.Message)
+                </div>
+                <div class="options">
+                    <input type="submit" value="@T("PrivateMessages.Send.SendButton")" data-inline="true" />
+                    <a href="@Url.RouteUrl("PrivateMessages")" data-role="button" data-inline="true">@T("PrivateMessages.Send.CancelButton")</a>
+                </div>
+            </div>
+        </div>
+    </div>
+}

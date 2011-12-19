@@ -81,6 +81,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Views\PaymentGoogleCheckout\Configure.cshtml" />
     <EmbeddedResource Include="Views\PaymentGoogleCheckout\PaymentInfo.cshtml" />
+    <EmbeddedResource Include="Views\PaymentGoogleCheckout\PaymentInfo.Mobile.cshtml" />
     <None Include="web.config" />
   </ItemGroup>
   <ItemGroup>

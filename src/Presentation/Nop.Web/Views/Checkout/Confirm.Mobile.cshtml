@@ -1,0 +1,73 @@
+﻿@model CheckoutConfirmModel
+@using Nop.Core.Domain.Orders
+@using Nop.Web.Models.Checkout
+@using Nop.Web.Models.Common
+@using Nop.Web.Framework.UI
+@{
+    Layout = "~/Views/Shared/_MobileRoot.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Checkout").Text);
+}
+<div class="checkout-page">
+    <div class="page-title">
+        <h1>@T("Checkout.ConfirmYourOrder")</h1>
+    </div>
+    <div class="clear">
+    </div>
+    <div class="checkout-data">
+        @*set "data-ajax" attribute to "false"*@
+        @using (Html.BeginRouteForm("CheckoutConfirm", FormMethod.Post,
+                new Dictionary<string, Object> { { "data-ajax", "false" }, { "id", "confirmorderform" } }))
+        {
+
+            if (Model.Warnings.Count > 0)
+            {
+            <div class="clear">
+            </div>
+            <div class="error-block">
+                <div class="message-error">
+                    @for (int i = 0; i < Model.Warnings.Count; i++)
+                    {
+                        @Model.Warnings[i]
+                        if (i != Model.Warnings.Count - 1)
+                        {
+                        <br />
+                        }
+                    }
+                </div>
+            </div>
+            }
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#confirmorderform').submit(function () {
+                        $('#nextstep').addClass('ui-disabled');
+                    });
+                });
+            </script>
+            
+            <div class="confirm-order">
+                <div class="select-button">
+                    @if (!String.IsNullOrEmpty(Model.MinOrderTotalWarning))
+                    {
+                        @Model.MinOrderTotalWarning
+                    }
+                    else
+                    {
+                        <input type="submit" name="nextstep" value="@T("Checkout.ConfirmButton")" id="nextstep" />
+                    }
+                </div>
+            </div>  
+        }
+        <div class="clear">
+        </div>
+        <div class="order-summary-title">
+            @T("Checkout.OrderSummary")
+        </div>
+        <div class="clear">
+        </div>
+        <div class="order-summary-body">
+            @Html.Action("OrderSummary", "ShoppingCart", new { isEditable = false })
+        </div>
+    </div>
+</div>

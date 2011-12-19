@@ -324,9 +324,15 @@ namespace Nop.Web.Controllers
                 int pictureSize = productThumbPictureSize.HasValue ? productThumbPictureSize.Value : _mediaSetting.ProductThumbPictureSize;
                 var picture = product.GetDefaultProductPicture(_pictureService);
                 if (picture != null)
+                {
                     model.DefaultPictureModel.ImageUrl = _pictureService.GetPictureUrl(picture, pictureSize, true);
+                    model.DefaultPictureModel.FullSizeImageUrl = _pictureService.GetPictureUrl(picture);
+                }
                 else
+                {
                     model.DefaultPictureModel.ImageUrl = _pictureService.GetDefaultPictureUrl(pictureSize);
+                    model.DefaultPictureModel.FullSizeImageUrl = _pictureService.GetDefaultPictureUrl();
+                }
                 model.DefaultPictureModel.Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), model.Name);
                 model.DefaultPictureModel.AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), model.Name);
             }
@@ -1574,7 +1580,7 @@ namespace Nop.Web.Controllers
             }
 
 
-            var model = products.Select(x => PrepareProductOverviewModel(x, false, true, productThumbPictureSize)).ToList();
+            var model = products.Select(x => PrepareProductOverviewModel(x, true, true, productThumbPictureSize)).ToList();
             return PartialView(model);
         }
 
@@ -1587,7 +1593,7 @@ namespace Nop.Web.Controllers
             var products = _orderReportService.GetProductsAlsoPurchasedById(productId,
                 _catalogSettings.ProductsAlsoPurchasedNumber);
 
-            var model = products.Select(x => PrepareProductOverviewModel(x, false, true, productThumbPictureSize)).ToList();
+            var model = products.Select(x => PrepareProductOverviewModel(x, true, true, productThumbPictureSize)).ToList();
 
             return PartialView(model);
         }

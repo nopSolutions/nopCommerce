@@ -1,0 +1,64 @@
+﻿@{
+    Layout = "";
+}
+@model Nop.Plugin.Payments.GoogleCheckout.Models.PaymentInfoModel
+@using Nop.Web.Framework;
+@using GCheckout;
+@using GCheckout.Checkout;
+@{
+
+    string styleInUrl = "white";
+    if (Model.BackgroundType == BackgroundType.Transparent)
+    {
+        styleInUrl = "trans";
+    }
+    string variantInUrl = "text";
+    //if (!Enabled)
+    //{
+    //    variantInUrl = "disabled";
+    //}
+    string protocol = "http";
+    if (Model.UseHttps)
+    {
+        protocol = "https";
+    }
+    string location = "en_US";
+    if (Model.Currency == "GBP")
+    {
+        location = "en_GB";
+    }
+    string imageUrl = "";
+
+    var buttonWidth = 160;
+    var buttonHeight = 43;
+    if (Model.Environment == EnvironmentType.Sandbox)
+    {
+        imageUrl = string.Format(
+          "{0}://sandbox.google.com/checkout/buttons/{6}.gif?" +
+          "merchant_id={1}&w={2}&h={3}&style={4}&variant={5}&loc={7}",
+          protocol, Model.MerchantId, buttonWidth, buttonHeight, styleInUrl,
+          variantInUrl, Model.GifFileName, location);
+    }
+    else
+    {
+        imageUrl = string.Format(
+          "{0}://checkout.google.com/buttons/{6}.gif?" +
+          "merchant_id={1}&w={2}&h={3}&style={4}&variant={5}&loc={7}",
+          protocol, Model.MerchantId, buttonWidth, buttonHeight, styleInUrl,
+          variantInUrl, Model.GifFileName, location);
+    }
+}
+@*set "data-ajax" attribute to "false"*@
+@using (Html.BeginRouteForm("Plugin.Payments.GoogleCheckout.SubmitButton", FormMethod.Post,
+    new Dictionary<string, Object> { { "data-ajax", "false" }, {"id", "form-googlecheckout"} }))
+{
+    <img id="googleCheckoutImage" alt="" src="@Html.Raw(imageUrl)" style="cursor:pointer;" />
+}
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('#googleCheckoutImage').click(function () {
+            $("#form-googlecheckout").submit();
+        });
+    });
+</script>

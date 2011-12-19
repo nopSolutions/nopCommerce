@@ -1,0 +1,8 @@
+﻿@{
+    Layout = "";
+}
+@model Nop.Plugin.Payments.PurchaseOrder.Models.PaymentInfoModel
+@using Nop.Web.Framework;
+@Html.NopLabelFor(model => model.PurchaseOrderNumber, false)
+@Html.TextBoxFor(model => model.PurchaseOrderNumber, new { autocomplete = "off" })
+@Html.ValidationMessageFor(model => model.PurchaseOrderNumber)

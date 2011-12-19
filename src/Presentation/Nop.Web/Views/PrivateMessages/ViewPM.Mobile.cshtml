@@ -1,0 +1,40 @@
+﻿@model Nop.Web.Models.PrivateMessages.PrivateMessageModel
+@{
+    Layout = "~/Views/Shared/_MobileRoot.cshtml";
+
+    Html.AddTitleParts(T("PageTitle.ViewPM").Text);
+}
+<div class="privatemessageview">
+    <div class="page-title">
+        <h1>@T("PrivateMessages.View.ViewMessage")</h1>
+    </div>
+    <div class="wrapper">
+        <div class="viewmessage">
+            <div>
+                @T("PrivateMessages.View.From") @Model.customerFromName
+            </div>
+            <div>
+                @T("PrivateMessages.View.To") @Model.customerToName
+            </div>
+            <div class="subject-label">
+                @T("PrivateMessages.View.Subject")
+            </div>
+            <div>
+                @Html.Raw(@Model.Subject)
+            </div>
+            <div class="message-label">
+                @T("PrivateMessages.View.Message")
+            </div>
+            <div>
+                @Html.Raw(@Model.Message)
+            </div>
+            <div>
+                <div class="options">
+                    <a href="@Url.RouteUrl("SendPMReply", new { toCustomerId = @Model.ToCustomerId, replyToMessageId = @Model.Id })" data-role="button" data-inline="true">@T("PrivateMessages.View.ReplyButton")</a>
+                    <a href="@Url.RouteUrl("DeletePM", new { privateMessageId = @Model.Id })" data-role="button" data-inline="true">@T("PrivateMessages.View.DeleteButton")</a>
+                    <a href="@Url.RouteUrl("PrivateMessages")" data-role="button" data-inline="true">@T("PrivateMessages.View.BackButton")</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
