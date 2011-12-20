@@ -6,32 +6,69 @@
 
 <div>
     @using (Html.BeginForm()) {
-        <div>
-            @Html.LabelFor(m => m.ApiKey):
-            @Html.EditorFor(m => m.ApiKey)
-        </div>
-        <div>
-            @Html.LabelFor(m => m.WebHookKey):
-            @Html.EditorFor(m => m.WebHookKey)
-        </div>
-        <div>
-            @Html.LabelFor(m => m.DefaultListId):
-            @Html.DropDownListFor(m => m.DefaultListId, Model.ListOptions)
-        </div>
-        <div>
-            @Html.LabelFor(m => m.AutoSync):
-            @Html.EditorFor(m => m.AutoSync)
-        </div>
-        <div>
-            <input type="submit" value="@T("Admin.Common.Save")" />
-        </div>
-    }
+        <table class="adminContent">
+            <tr>
+                <td class="adminTitle">
+                    @Html.LabelFor(m => m.ApiKey):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(m => m.ApiKey)
+                    @Html.ValidationMessageFor(m => m.ApiKey)
+                </td>
+            </tr>
+            <tr>
+                <td class="adminTitle">
+                    @Html.LabelFor(m => m.WebHookKey):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(m => m.WebHookKey)
+                    @Html.ValidationMessageFor(m => m.WebHookKey)
+                </td>
+            </tr>
+            <tr>
+                <td class="adminTitle">
+                    @Html.LabelFor(m => m.DefaultListId):
+                </td>
+                <td class="adminData">
+                    @Html.DropDownListFor(m => m.DefaultListId, Model.ListOptions)
+                    @Html.ValidationMessageFor(m => m.DefaultListId)
+                </td>
+            </tr>
+            <tr>
+                <td class="adminTitle">
+                    @Html.LabelFor(m => m.AutoSync):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(m => m.AutoSync)
+                    @Html.ValidationMessageFor(m => m.AutoSync)
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" style="width: 100%">
+                    <input type="submit" class="t-button" value="@T("Admin.Common.Save")" />
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" style="width: 100%">
 
     @using(Html.BeginForm("QueueAll", "Settings")) {
-        <input type="submit" value="@T("Nop.Plugin.Misc.MailChimp.QueueAll")" />
+        <input type="submit" class="t-button" value="@T("Nop.Plugin.Misc.MailChimp.QueueAll")" />
     }
 
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" style="width: 100%">
+
     @using(Html.BeginForm("Sync", "Settings")) {
-        <input type="submit" value="@T("Nop.Plugin.Misc.MailChimp.ManualSync")" />
+        <input type="submit" class="t-button" value="@T("Nop.Plugin.Misc.MailChimp.ManualSync")" />
     }
+                </td>
+            </tr>
+        </table>
+        <div>
+            
+        </div>
+    }
+
 </div>
