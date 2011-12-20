@@ -186,7 +186,7 @@ namespace Nop.Web.Framework
 
             builder.RegisterType<MessageTemplateService>().As<IMessageTemplateService>().InstancePerHttpRequest();
             builder.RegisterType<QueuedEmailService>().As<IQueuedEmailService>().InstancePerHttpRequest();
-            builder.RegisterType<NewsLetterSubscriptionServiceWithEventing>().As<INewsLetterSubscriptionService>().InstancePerHttpRequest();
+            builder.RegisterType<NewsLetterSubscriptionService>().As<INewsLetterSubscriptionService>().InstancePerHttpRequest();
             builder.RegisterType<CampaignService>().As<ICampaignService>().InstancePerHttpRequest();
             builder.RegisterType<EmailAccountService>().As<IEmailAccountService>().InstancePerHttpRequest();
             builder.RegisterType<WorkflowMessageService>().As<IWorkflowMessageService>().InstancePerHttpRequest();

@@ -65,10 +65,10 @@
     <Compile Include="Data\MailChimpEventQueueRecord.cs" />
     <Compile Include="Data\MailChimpEventQueueRecordMap.cs" />
     <Compile Include="Data\MailChimpObjectContext.cs" />
-    <Compile Include="Data\MailChimpSettings.cs" />
-    <Compile Include="MailChimpDependencyRegistrar.cs" />
+    <Compile Include="MailChimpSettings.cs" />
+    <Compile Include="DependencyRegistrar.cs" />
     <Compile Include="MailChimpPlugin.cs" />
-    <Compile Include="MailChimpRouteProvider.cs" />
+    <Compile Include="RouteProvider.cs" />
     <Compile Include="MailChimpSynchronizationTask.cs" />
     <Compile Include="Models\MailChimpSettingsModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

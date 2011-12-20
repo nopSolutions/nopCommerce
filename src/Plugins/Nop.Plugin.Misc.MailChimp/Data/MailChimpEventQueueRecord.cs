@@ -1,7 +1,9 @@
 ﻿using Nop.Core;
 
-namespace Nop.Plugin.Misc.MailChimp.Data {
-    public class MailChimpEventQueueRecord : BaseEntity {
+namespace Nop.Plugin.Misc.MailChimp.Data
+{
+    public class MailChimpEventQueueRecord : BaseEntity
+    {
         /// <summary>
         /// Gets or sets the email.
         /// </summary>

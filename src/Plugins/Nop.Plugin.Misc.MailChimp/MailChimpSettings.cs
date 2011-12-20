@@ -1,7 +1,9 @@
 ﻿using Nop.Core.Configuration;
 
-namespace Nop.Plugin.Misc.MailChimp.Data {
-    public class MailChimpSettings : ISettings {
+namespace Nop.Plugin.Misc.MailChimp
+{
+    public class MailChimpSettings : ISettings
+    {
         /// <summary>
         /// Gets or sets the API key.
         /// </summary>

@@ -13,20 +13,22 @@
         }
 
         /// <summary>
-        /// Publishes the subscribe event.
+        /// Publishes the newsletter subscribe event.
         /// </summary>
         /// <param name="eventPublisher">The event publisher.</param>
         /// <param name="email">The email.</param>
-        public static void PublishSubscribe(this IEventPublisher eventPublisher, string email) {
+        public static void PublishNewsletterSubscribe(this IEventPublisher eventPublisher, string email)
+        {
             eventPublisher.Publish(new EmailSubscribed(email));
         }
 
         /// <summary>
-        /// Publishes the unsubscribe event.
+        /// Publishes the newsletter unsubscribe event.
         /// </summary>
         /// <param name="eventPublisher">The event publisher.</param>
         /// <param name="email">The email.</param>
-        public static void PublishUnsubscribe(this IEventPublisher eventPublisher, string email) {
+        public static void PublishNewsletterUnsubscribe(this IEventPublisher eventPublisher, string email)
+        {
             eventPublisher.Publish(new EmailUnsubscribed(email));
         }
     }

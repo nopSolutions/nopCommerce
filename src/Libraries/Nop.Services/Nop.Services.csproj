@@ -125,7 +125,7 @@
     <Compile Include="Directory\IGeoCountryLookup.cs" />
     <Compile Include="Directory\GeoCountryLookup.cs" />
     <Compile Include="Forums\ForumExtensions.cs" />
-    <Compile Include="Messages\NewsLetterSubscriptionServiceWithEventing.cs" />
+    <Compile Include="Messages\NewsLetterSubscriptionService.cs" />
     <Compile Include="News\NewsService.cs" />
     <Compile Include="News\INewsService.cs" />
     <Compile Include="Customers\CustomerExtentions.cs" />
@@ -185,7 +185,6 @@
     <Compile Include="Messages\ITokenizer.cs" />
     <Compile Include="Messages\IWorkflowMessageService.cs" />
     <Compile Include="Messages\MessageTemplateService.cs" />
-    <Compile Include="Messages\NewsLetterSubscriptionService.cs" />
     <Compile Include="Messages\SmsExtentions.cs" />
     <Compile Include="Messages\QueuedEmailService.cs" />
     <Compile Include="Messages\QueuedMessagesSendTask.cs" />

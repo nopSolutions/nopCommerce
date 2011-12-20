@@ -1,11 +1,32 @@
-﻿@{ Layout = null; }
+﻿@{
+    Layout = null; 
+}
 @using System.Web.Mvc.Html
 @using Nop.Plugin.Misc.MailChimp.Models
-
+@using Nop.Web.Framework
 @model MailChimpSettingsModel
-
 <div>
-    @using (Html.BeginForm()) {
+    @using (Html.BeginForm())
+    {
+        <script type="text/javascript">
+            $(document).ready(function () {
+
+                $("#@Html.FieldIdFor(model => model.AutoSync)").click(toggleAutoSync);
+
+                toggleAutoSync();
+            });
+
+            function toggleAutoSync() {
+                if (getE('@Html.FieldIdFor(model => model.AutoSync)').checked) {
+                    $('#pnlAutoSyncEachMinutes').show();
+                }
+                else {
+                    $('#pnlAutoSyncEachMinutes').hide();
+                }
+            }
+
+        </script>
+    
         <table class="adminContent">
             <tr>
                 <td class="adminTitle">
@@ -43,32 +64,61 @@
                     @Html.ValidationMessageFor(m => m.AutoSync)
                 </td>
             </tr>
+            <tr id="pnlAutoSyncEachMinutes">
+                <td class="adminTitle">
+                    @Html.LabelFor(model => model.AutoSyncEachMinutes):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(model => model.AutoSyncEachMinutes)
+                    @Html.ValidationMessageFor(model => model.AutoSyncEachMinutes)
+                </td>
+            </tr>
+            @if (!String.IsNullOrEmpty(Model.SaveResult))
+            {
+                <tr>
+                    <td colspan="2" width="100%" style="color: red">
+                        @Model.SaveResult
+                    </td>
+                </tr>
+            }
             <tr>
-                <td colspan="2" style="width: 100%">
-                    <input type="submit" class="t-button" value="@T("Admin.Common.Save")" />
+                <td colspan="2" width="100%">
+                    <button type="submit" name="save" value="save" class="t-button">
+                        @T("Admin.Common.Save")</button>
                 </td>
             </tr>
             <tr>
-                <td colspan="2" style="width: 100%">
-
-    @using(Html.BeginForm("QueueAll", "Settings")) {
-        <input type="submit" class="t-button" value="@T("Nop.Plugin.Misc.MailChimp.QueueAll")" />
-    }
-
+                <td colspan="2" align="left">
+                <hr />
+                    <b>Manually synchronize nopCommerce newsletter subscribers with MailChimp database</b>
+                </td>
+            </tr>
+            @if (!String.IsNullOrEmpty(Model.SyncResult))
+            {
+                <tr>
+                    <td colspan="2" width="100%" style="color: red">
+                        @Html.Raw(Model.SyncResult)
+                    </td>
+                </tr>
+            }
+            <tr>
+                <td colspan="2" width="100%">
+                    <button type="submit" name="sync" value="sync" class="t-button">
+                        @T("Plugin.Misc.MailChimp.ManualSync")</button>
                 </td>
             </tr>
             <tr>
-                <td colspan="2" style="width: 100%">
-
-    @using(Html.BeginForm("Sync", "Settings")) {
-        <input type="submit" class="t-button" value="@T("Nop.Plugin.Misc.MailChimp.ManualSync")" />
-    }
+                <td colspan="2" align="left">
+                <hr />
+                    <b>Queue existing newsletter subscribers (run only once)</b>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" width="100%">
+                    <button type="submit" name="queueall" value="queueall" class="t-button">
+                        @T("Plugin.Misc.MailChimp.QueueAll")</button>
                 </td>
             </tr>
         </table>
-        <div>
-            
-        </div>
     }
-
 </div>

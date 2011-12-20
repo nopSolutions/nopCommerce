@@ -2,8 +2,10 @@
 using System.Web.Mvc;
 using Nop.Web.Framework;
 
-namespace Nop.Plugin.Misc.MailChimp.Models {
-    public class MailChimpSettingsModel {
+namespace Nop.Plugin.Misc.MailChimp.Models
+{
+    public class MailChimpSettingsModel
+    {
         private IList<SelectListItem> _listOptions;
 
         /// <summary>
@@ -12,7 +14,7 @@ namespace Nop.Plugin.Misc.MailChimp.Models {
         /// <value>
         /// The API key.
         /// </value>
-        [NopResourceDisplayName("Nop.Plugin.Misc.MailChimp.ApiKey")]
+        [NopResourceDisplayName("Plugin.Misc.MailChimp.ApiKey")]
         public virtual string ApiKey { get; set; }
 
         /// <summary>
@@ -21,7 +23,7 @@ namespace Nop.Plugin.Misc.MailChimp.Models {
         /// <value>
         /// The web hook key.
         /// </value>
-        [NopResourceDisplayName("Nop.Plugin.Misc.MailChimp.WebHookKey")]
+        [NopResourceDisplayName("Plugin.Misc.MailChimp.WebHookKey")]
         public virtual string WebHookKey { get; set; }
 
         /// <summary>
@@ -30,7 +32,7 @@ namespace Nop.Plugin.Misc.MailChimp.Models {
         /// <value>
         /// The default list id.
         /// </value>
-        [NopResourceDisplayName("Nop.Plugin.Misc.MailChimp.DefaultListId")]
+        [NopResourceDisplayName("Plugin.Misc.MailChimp.DefaultListId")]
         public virtual string DefaultListId { get; set; }
 
         /// <summary>
@@ -39,8 +41,11 @@ namespace Nop.Plugin.Misc.MailChimp.Models {
         /// <value>
         ///   <c>true</c> if [auto sync]; otherwise, <c>false</c>.
         /// </value>
-        [NopResourceDisplayName("Nop.Plugin.Misc.MailChimp.AutoSync")]
+        [NopResourceDisplayName("Plugin.Misc.MailChimp.AutoSync")]
         public virtual bool AutoSync { get; set; }
+
+        [NopResourceDisplayName("Plugin.Misc.MailChimp.AutoSyncEachMinutes")]
+        public virtual int AutoSyncEachMinutes { get; set; }
 
         /// <summary>
         /// Gets or sets the list options.
@@ -48,9 +53,14 @@ namespace Nop.Plugin.Misc.MailChimp.Models {
         /// <value>
         /// The list options.
         /// </value>
-        public virtual IList<SelectListItem> ListOptions {
+        public virtual IList<SelectListItem> ListOptions
+        {
             get { return _listOptions ?? (_listOptions = new List<SelectListItem>()); }
             set { _listOptions = value; }
         }
+
+        public string SaveResult { get; set; }
+
+        public string SyncResult { get; set; }
     }
 }

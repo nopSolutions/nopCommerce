@@ -174,6 +174,45 @@ namespace Nop.Services.Localization
         }
 
         /// <summary>
+        /// Delete a locale resource
+        /// </summary>
+        /// <param name="plugin">Plugin</param>
+        /// <param name="resourceName">Resource name</param>
+        public static void DeletePluginLocaleResource(this BasePlugin plugin,
+            string resourceName)
+        {
+            var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
+            var languageService = EngineContext.Current.Resolve<ILanguageService>();
+            DeletePluginLocaleResource(plugin, localizationService,
+                languageService, resourceName);
+        }
+        /// <summary>
+        /// Delete a locale resource
+        /// </summary>
+        /// <param name="plugin">Plugin</param>
+        /// <param name="localizationService">Localization service</param>
+        /// <param name="languageService">Language service</param>
+        /// <param name="resourceName">Resource name</param>
+        public static void DeletePluginLocaleResource(this BasePlugin plugin,
+            ILocalizationService localizationService, ILanguageService languageService,
+            string resourceName)
+        {
+            //actually plugin instance is not required
+            if (plugin == null)
+                throw new ArgumentNullException("plugin");
+            if (localizationService == null)
+                throw new ArgumentNullException("localizationService");
+            if (languageService == null)
+                throw new ArgumentNullException("languageService");
+
+            foreach (var lang in languageService.GetAllLanguages(true))
+            {
+                var lsr = localizationService.GetLocaleStringResourceByName(resourceName, lang.Id, false);
+                if (lsr != null)
+                    localizationService.DeleteLocaleStringResource(lsr);
+            }
+        }
+        /// <summary>
         /// Add a locale resource (if new) or update an existing one
         /// </summary>
         /// <param name="plugin">Plugin</param>

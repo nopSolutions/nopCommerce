@@ -1,32 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Data;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Events;
+using Nop.Data;
 
 namespace Nop.Services.Messages
 {
-    public partial class NewsLetterSubscriptionService: INewsLetterSubscriptionService
-    {
-        private readonly IRepository<NewsLetterSubscription> _newsLetterSubscriptionRepository;
-        private readonly IRepository<Customer> _customersRepository;
-        private readonly IEventPublisher _eventPublisher;
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="newsLetterSubscriptionRepository">NewsLetter subscription repository</param>
-        /// <param name="customersRepository">Customer repository</param>
-        /// <param name="eventPublisher"></param>
-        public NewsLetterSubscriptionService(IRepository<NewsLetterSubscription> newsLetterSubscriptionRepository,
-            IRepository<Customer> customersRepository,
-            IEventPublisher eventPublisher)
+    public class NewsLetterSubscriptionService : INewsLetterSubscriptionService
+    {
+        private readonly IEventPublisher _eventPublisher;
+        private readonly IDbContext _context;
+        private readonly IRepository<NewsLetterSubscription> _subscriptionRepository;
+
+        public NewsLetterSubscriptionService(IDbContext context, IRepository<NewsLetterSubscription> subscriptionRepository, IEventPublisher eventPublisher)
         {
-            _newsLetterSubscriptionRepository = newsLetterSubscriptionRepository;
-            _customersRepository = customersRepository;
+            _context = context;
+            _subscriptionRepository = subscriptionRepository;
             _eventPublisher = eventPublisher;
         }
 
@@ -35,23 +27,26 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="newsLetterSubscription">NewsLetter subscription</param>
         /// <param name="publishSubscriptionEvents">if set to <c>true</c> [publish subscription events].</param>
-        public virtual void InsertNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = false)
+        public void InsertNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = true)
         {
             if (newsLetterSubscription == null)
-                throw new ArgumentNullException("newsLetterSubscription");
-
-            if (!CommonHelper.IsValidEmail(newsLetterSubscription.Email))
             {
-                throw new NopException("Email is not valid.");
+                throw new ArgumentNullException("newsLetterSubscription");
             }
 
-            newsLetterSubscription.Email = CommonHelper.EnsureNotNull(newsLetterSubscription.Email);
-            newsLetterSubscription.Email = newsLetterSubscription.Email.Trim();
-            newsLetterSubscription.Email = CommonHelper.EnsureMaximumLength(newsLetterSubscription.Email, 255);
+            //Handle e-mail
+            newsLetterSubscription.Email = CommonHelper.EnsureSubscriberEmailOrThrow(newsLetterSubscription.Email);
 
-            _newsLetterSubscriptionRepository.Insert(newsLetterSubscription);
+            //Persist
+            _subscriptionRepository.Insert(newsLetterSubscription);
 
-            //event notification
+            //Publish the subscription event 
+            if (newsLetterSubscription.Active)
+            {
+                PublishSubscriptionEvent(newsLetterSubscription.Email, true, publishSubscriptionEvents);
+            }
+
+            //Publish event
             _eventPublisher.EntityInserted(newsLetterSubscription);
         }
 
@@ -60,23 +55,37 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="newsLetterSubscription">NewsLetter subscription</param>
         /// <param name="publishSubscriptionEvents">if set to <c>true</c> [publish subscription events].</param>
-        public virtual void UpdateNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = false)
+        public void UpdateNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = true)
         {
             if (newsLetterSubscription == null)
-                throw new ArgumentNullException("newsLetterSubscription");
-
-            newsLetterSubscription.Email = CommonHelper.EnsureNotNull(newsLetterSubscription.Email);
-            newsLetterSubscription.Email = newsLetterSubscription.Email.Trim();
-            newsLetterSubscription.Email = CommonHelper.EnsureMaximumLength(newsLetterSubscription.Email, 255);
-
-            if (!CommonHelper.IsValidEmail(newsLetterSubscription.Email))
             {
-                throw new NopException("Email is not valid.");
+                throw new ArgumentNullException("newsLetterSubscription");
             }
 
-            _newsLetterSubscriptionRepository.Update(newsLetterSubscription);
+            //Handle e-mail
+            newsLetterSubscription.Email = CommonHelper.EnsureSubscriberEmailOrThrow(newsLetterSubscription.Email);
 
-            //event notification
+            //Get original subscription record
+            NewsLetterSubscription originalSubscription = _context.LoadOriginalCopy(newsLetterSubscription);
+
+            //Persist
+            _subscriptionRepository.Update(newsLetterSubscription);
+
+            //Publish the subscription event 
+            if ((originalSubscription.Active == false && newsLetterSubscription.Active) ||
+                (newsLetterSubscription.Active && (originalSubscription.Email != newsLetterSubscription.Email)))
+            {
+                //If the previous entry was false, but this one is true, publish a subscribe.
+                PublishSubscriptionEvent(newsLetterSubscription.Email, true, publishSubscriptionEvents);
+            }
+
+            if ((originalSubscription.Active && newsLetterSubscription.Active) && (originalSubscription.Email != newsLetterSubscription.Email))
+            {
+                //If the two emails are different publish an unsubscribe.
+                PublishSubscriptionEvent(originalSubscription.Email, false, publishSubscriptionEvents);
+            }
+
+            //Publish event
             _eventPublisher.EntityUpdated(newsLetterSubscription);
         }
 
@@ -85,12 +94,14 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="newsLetterSubscription">NewsLetter subscription</param>
         /// <param name="publishSubscriptionEvents">if set to <c>true</c> [publish subscription events].</param>
-        public virtual void DeleteNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = false)
+        public virtual void DeleteNewsLetterSubscription(NewsLetterSubscription newsLetterSubscription, bool publishSubscriptionEvents = true)
         {
-            if (newsLetterSubscription == null)
-                throw new ArgumentNullException("newsLetterSubscription");
+            if (newsLetterSubscription == null) throw new ArgumentNullException("newsLetterSubscription");
 
-            _newsLetterSubscriptionRepository.Delete(newsLetterSubscription);
+            _subscriptionRepository.Delete(newsLetterSubscription);
+
+            //Publish the unsubscribe event 
+            PublishSubscriptionEvent(newsLetterSubscription.Email, false, publishSubscriptionEvents);
 
             //event notification
             _eventPublisher.EntityDeleted(newsLetterSubscription);
@@ -103,10 +114,9 @@ namespace Nop.Services.Messages
         /// <returns>NewsLetter subscription</returns>
         public virtual NewsLetterSubscription GetNewsLetterSubscriptionById(int newsLetterSubscriptionId)
         {
-            if (newsLetterSubscriptionId == 0)
-                return null;
+            if (newsLetterSubscriptionId == 0) return null;
 
-            var queuedEmail = _newsLetterSubscriptionRepository.GetById(newsLetterSubscriptionId);
+            var queuedEmail = _subscriptionRepository.GetById(newsLetterSubscriptionId);
             return queuedEmail;
         }
 
@@ -117,10 +127,9 @@ namespace Nop.Services.Messages
         /// <returns>NewsLetter subscription</returns>
         public virtual NewsLetterSubscription GetNewsLetterSubscriptionByGuid(Guid newsLetterSubscriptionGuid)
         {
-            if (newsLetterSubscriptionGuid == Guid.Empty)
-                return null;
+            if (newsLetterSubscriptionGuid == Guid.Empty) return null;
 
-            var newsLetterSubscriptions = from nls in _newsLetterSubscriptionRepository.Table
+            var newsLetterSubscriptions = from nls in _subscriptionRepository.Table
                                           where nls.NewsLetterSubscriptionGuid == newsLetterSubscriptionGuid
                                           orderby nls.Id
                                           select nls;
@@ -135,18 +144,16 @@ namespace Nop.Services.Messages
         /// <returns>NewsLetter subscription</returns>
         public virtual NewsLetterSubscription GetNewsLetterSubscriptionByEmail(string email)
         {
-            if (!CommonHelper.IsValidEmail(email))
-                return null;
+            if (!CommonHelper.IsValidEmail(email)) return null;
 
             email = email.Trim();
 
-            var newsLetterSubscriptions = from nls in _newsLetterSubscriptionRepository.Table
+            var newsLetterSubscriptions = from nls in _subscriptionRepository.Table
                                           where nls.Email == email
                                           orderby nls.Id
                                           select nls;
 
             return newsLetterSubscriptions.FirstOrDefault();
-
         }
 
         /// <summary>
@@ -157,31 +164,11 @@ namespace Nop.Services.Messages
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>NewsLetterSubscription entity list</returns>
-        public virtual IPagedList<NewsLetterSubscription> GetAllNewsLetterSubscriptions(string email, 
+        public virtual IPagedList<NewsLetterSubscription> GetAllNewsLetterSubscriptions(string email,
             int pageIndex, int pageSize, bool showHidden = false)
         {
-            //var query1 = from nls in _newsLetterSubscriptionRepository.Table
-            //             from c in _customersRepository.Table
-            //             .Where(c => c.Email == nls.Email)
-            //             .DefaultIfEmpty()
-            //             where
-            //             (showHidden || nls.Active) &&
-            //             (c == null || c.Id == 0 || (c.Active && !c.Deleted)) &&
-            //             (String.IsNullOrEmpty(email) || nls.Email.Contains(email))
-            //             select nls.Id;
-
-            //var query2 = from nls in _newsLetterSubscriptionRepository.Table
-            //             where query1.Contains(nls.Id)
-            //             orderby nls.Email
-            //             select nls;
-
-            //var newsletterSubscriptions = query2.ToList();
-            //return newsletterSubscriptions;
-
-
-            var query = _newsLetterSubscriptionRepository.Table;
-            if (!String.IsNullOrEmpty(email))
-                query = query.Where(nls => nls.Email.Contains(email));
+            var query = _subscriptionRepository.Table;
+            if (!String.IsNullOrEmpty(email)) query = query.Where(nls => nls.Email.Contains(email));
             if (!showHidden)
             {
                 query = query.Where(nls => nls.Active);
@@ -190,6 +177,27 @@ namespace Nop.Services.Messages
 
             var newsletterSubscriptions = new PagedList<NewsLetterSubscription>(query, pageIndex, pageSize);
             return newsletterSubscriptions;
+        }
+
+        /// <summary>
+        /// Publishes the subscription event.
+        /// </summary>
+        /// <param name="email">The email.</param>
+        /// <param name="isSubscribe">if set to <c>true</c> [is subscribe].</param>
+        /// <param name="publishSubscriptionEvents">if set to <c>true</c> [publish subscription events].</param>
+        private void PublishSubscriptionEvent(string email, bool isSubscribe, bool publishSubscriptionEvents)
+        {
+            if (publishSubscriptionEvents)
+            {
+                if (isSubscribe)
+                {
+                    _eventPublisher.PublishNewsletterSubscribe(email);
+                }
+                else
+                {
+                    _eventPublisher.PublishNewsletterUnsubscribe(email);
+                }
+            }
         }
     }
 }

@@ -1,7 +1,10 @@
 ﻿using System.Collections.Specialized;
+using PerceptiveMCAPI.Types;
 
-namespace Nop.Plugin.Misc.MailChimp.Services {
-    public interface IMailChimpApiService {
+namespace Nop.Plugin.Misc.MailChimp.Services
+{
+    public interface IMailChimpApiService
+    {
         /// <summary>
         /// Retrieves the lists.
         /// </summary>
@@ -11,11 +14,11 @@ namespace Nop.Plugin.Misc.MailChimp.Services {
         /// <summary>
         /// Batches the unsubscribe.
         /// </summary>
-        void BatchUnsubscribe();
+        listBatchUnsubscribeOutput BatchUnsubscribe();
 
         /// <summary>
         /// Batches the subscribe.
         /// </summary>
-        void BatchSubscribe();
+        listBatchSubscribeOutput BatchSubscribe();
     }
 }
