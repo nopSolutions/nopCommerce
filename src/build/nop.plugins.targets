@@ -135,7 +135,11 @@
         <MSBuild Projects ="$(MSBuildProjectFullPath)"
                         Targets="Plugin-CopyToWeb"
                         Properties="
-                        PluginProjectName=Nop.Plugin.Misc.WebServices"/>
+                        PluginProjectName=Nop.Plugin.Misc.WebServices"/>        
+		<MSBuild Projects ="$(MSBuildProjectFullPath)"
+                        Targets="Plugin-CopyToWeb"
+                        Properties="
+                        PluginProjectName=Nop.Plugin.Misc.MailChimp"/>
     </Target>
     
     <!--Payment plugins-->
