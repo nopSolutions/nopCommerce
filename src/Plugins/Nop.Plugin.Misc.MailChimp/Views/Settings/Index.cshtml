@@ -20,7 +20,7 @@
         </div>
         <div>
             @Html.LabelFor(m => m.AutoSync):
-            @Html.DropDownListFor(m => m.AutoSync, Model.ListOptions)
+            @Html.EditorFor(m => m.AutoSync)
         </div>
         <div>
             <input type="submit" value="@T("Admin.Common.Save")" />
