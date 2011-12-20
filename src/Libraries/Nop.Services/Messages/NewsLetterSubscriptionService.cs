@@ -78,10 +78,17 @@ namespace Nop.Services.Messages
                 //If the previous entry was false, but this one is true, publish a subscribe.
                 PublishSubscriptionEvent(newsLetterSubscription.Email, true, publishSubscriptionEvents);
             }
-
-            if ((originalSubscription.Active && newsLetterSubscription.Active) && (originalSubscription.Email != newsLetterSubscription.Email))
+            
+            if ((originalSubscription.Active && newsLetterSubscription.Active) && 
+                (originalSubscription.Email != newsLetterSubscription.Email))
             {
                 //If the two emails are different publish an unsubscribe.
+                PublishSubscriptionEvent(originalSubscription.Email, false, publishSubscriptionEvents);
+            }
+
+            if ((originalSubscription.Active && !newsLetterSubscription.Active))
+            {
+                //If the previous entry was true, but this one is false
                 PublishSubscriptionEvent(originalSubscription.Email, false, publishSubscriptionEvents);
             }
 

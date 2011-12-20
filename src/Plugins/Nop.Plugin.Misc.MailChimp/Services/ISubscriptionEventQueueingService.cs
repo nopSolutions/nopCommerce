@@ -25,8 +25,7 @@ namespace Nop.Plugin.Misc.MailChimp.Services
         /// <summary>
         /// Reads the list.
         /// </summary>
-        /// <param name="subscribeOnly">if set to <c>true</c> [subscribe only].</param>
-        /// <returns></returns>
-        IList<MailChimpEventQueueRecord> ReadList(bool subscribeOnly);
+        /// <returns>Result</returns>
+        IList<MailChimpEventQueueRecord> GetAll();
     }
 }

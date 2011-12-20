@@ -1,4 +1,5 @@
-﻿using Nop.Core;
+﻿using System;
+using Nop.Core;
 
 namespace Nop.Plugin.Misc.MailChimp.Data
 {
@@ -19,5 +20,7 @@ namespace Nop.Plugin.Misc.MailChimp.Data
         /// 	<c>true</c> if this instance is subscribe; otherwise, <c>false</c>.
         /// </value>
         public virtual bool IsSubscribe { get; set; }
+
+        public virtual DateTime CreatedOnUtc { get; set; }
     }
 }

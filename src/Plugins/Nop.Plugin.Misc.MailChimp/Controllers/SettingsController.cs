@@ -47,30 +47,6 @@ namespace Nop.Plugin.Misc.MailChimp.Controllers
             }
         }
 
-
-        [NonAction]
-        private string ParseErrorReport(IList<Api_Error> apiErrorMessages)
-        {
-            if (apiErrorMessages.Count > 0)
-            {
-                var sb = new StringBuilder();
-                //output.api_Request, output.api_Response, // raw data
-                //output.api_ErrorMessages, output.api_ValidatorMessages); // & errors
-                for (int i = 0; i < apiErrorMessages.Count; i++)
-                {
-                    sb.Append(apiErrorMessages[i].error);
-                    if (i != apiErrorMessages.Count - 1) sb.Append("<br />");
-                }
-                //output.result.add_count
-                //output.result.error_count
-                //output.result.update_count
-                //output.result.errors
-
-                return sb.ToString();
-            }
-            return null;
-        }
-
         [NonAction]
         private MailChimpSettingsModel PrepareModel()
         {
@@ -155,44 +131,28 @@ namespace Nop.Plugin.Misc.MailChimp.Controllers
             {
                 var sb = new StringBuilder();
 
+                var result = _mailChimpApiService.Synchronize();
                 //subscribe
-                var subscribeResult = _mailChimpApiService.BatchSubscribe();
                 sb.Append("Subscribe results: ");
-                if (subscribeResult.api_ErrorMessages.Count > 0)
+                sb.Append(result.SubscribeResult);
+                sb.Append("<br />");
+                for (int i = 0; i < result.SubscribeErrors.Count; i++)
                 {
-                    //output.result.add_count
-                    //output.result.error_count
-                    //output.result.update_count
-                    //output.result.errors
-                    //output.api_Request, output.api_Response, // raw data
-                    //output.api_ErrorMessages, output.api_ValidatorMessages); // & errors
-                    for (int i = 0; i < subscribeResult.api_ErrorMessages.Count; i++)
-                    {
-                        sb.Append(subscribeResult.api_ErrorMessages[i].error);
-                        if (i != subscribeResult.api_ErrorMessages.Count - 1) 
-                            sb.Append("<br />");
-                    }
-                }
-                else
-                {
-                    sb.Append(subscribeResult);
+                    sb.Append(result.SubscribeErrors[i]);
+                    if (i != result.SubscribeErrors.Count - 1)
+                        sb.Append("<br />");
                 }
 
                 //unsubscribe
-                var unsubscribeResult = _mailChimpApiService.BatchUnsubscribe();
-                sb.Append("<br />Unsubscribe results: ");
-                if (unsubscribeResult.api_ErrorMessages.Count > 0)
+                sb.Append("<br />");
+                sb.Append("Unsubscribe results: ");
+                sb.Append(result.UnsubscribeResult);
+                sb.Append("<br />");
+                for (int i = 0; i < result.UnsubscribeErrors.Count; i++)
                 {
-                    for (int i = 0; i < unsubscribeResult.api_ErrorMessages.Count; i++)
-                    {
-                        sb.Append(unsubscribeResult.api_ErrorMessages[i].error);
-                        if (i != unsubscribeResult.api_ErrorMessages.Count - 1) 
-                            sb.Append("<br />");
-                    }
-                }
-                else
-                {
-                    sb.Append(unsubscribeResult);
+                    sb.Append(result.UnsubscribeErrors[i]);
+                    if (i != result.UnsubscribeErrors.Count - 1)
+                        sb.Append("<br />");
                 }
                 //set result text
                 model.SyncResult = sb.ToString();

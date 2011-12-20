@@ -76,6 +76,7 @@
     <Compile Include="Services\MailChimpApiService.cs" />
     <Compile Include="Services\MailChimpInstallationService.cs" />
     <Compile Include="Services\ISubscriptionEventQueueingService.cs" />
+    <Compile Include="Services\MailChimpSettingsModel.cs" />
     <Compile Include="Services\SubscriptionEventConsumer.cs" />
     <Compile Include="Services\SubscriptionEventQueueingService.cs" />
   </ItemGroup>

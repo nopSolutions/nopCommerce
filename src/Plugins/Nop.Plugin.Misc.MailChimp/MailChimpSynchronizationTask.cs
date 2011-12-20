@@ -25,8 +25,7 @@ namespace Nop.Plugin.Misc.MailChimp
             if (plugin == null || !plugin.IsConfigured())
                 return;
 
-            _mailChimpApiService.BatchSubscribe();
-            _mailChimpApiService.BatchUnsubscribe();
+            _mailChimpApiService.Synchronize();
         }
     }
 }

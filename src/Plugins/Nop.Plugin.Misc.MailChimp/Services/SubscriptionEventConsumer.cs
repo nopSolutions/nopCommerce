@@ -1,4 +1,5 @@
-﻿using Nop.Core.Events;
+﻿using System;
+using Nop.Core.Events;
 using Nop.Core.Plugins;
 using Nop.Plugin.Misc.MailChimp.Data;
 
@@ -27,7 +28,7 @@ namespace Nop.Plugin.Misc.MailChimp.Services
             if (pluginDescriptor == null || !pluginDescriptor.Installed)
                 return;
             
-            _service.Insert(new MailChimpEventQueueRecord { Email = eventMessage.Email, IsSubscribe = true });
+            _service.Insert(new MailChimpEventQueueRecord { Email = eventMessage.Email, IsSubscribe = true, CreatedOnUtc = DateTime.UtcNow});
         }
 
         /// <summary>
@@ -41,7 +42,7 @@ namespace Nop.Plugin.Misc.MailChimp.Services
             if (pluginDescriptor == null || !pluginDescriptor.Installed)
                 return;
 
-            _service.Insert(new MailChimpEventQueueRecord { Email = eventMessage.Email, IsSubscribe = false });
+            _service.Insert(new MailChimpEventQueueRecord { Email = eventMessage.Email, IsSubscribe = false, CreatedOnUtc = DateTime.UtcNow });
         }
     }
 }

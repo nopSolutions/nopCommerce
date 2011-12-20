@@ -28,8 +28,7 @@ namespace Nop.Plugin.Misc.MailChimp.Controllers
 
             if (IsUnsubscribe())
             {
-                NewsLetterSubscription subscription =
-                    _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmail(FindEmail());
+                var subscription = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmail(FindEmail());
 
                 if (subscription != null)
                 {

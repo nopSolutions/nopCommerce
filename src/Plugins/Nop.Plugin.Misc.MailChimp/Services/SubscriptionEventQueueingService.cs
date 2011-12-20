@@ -8,7 +8,7 @@ namespace Nop.Plugin.Misc.MailChimp.Services
 {
     public class SubscriptionEventQueueingService : ISubscriptionEventQueueingService
     {
-        private const string QUEUE_ALL_RECORDS = "INSERT INTO MailChimpEventQueueRecord (Email, IsSubscribe) SELECT Email, 1 FROM NewsLetterSubscription WHERE Active = 1";
+        private const string QUEUE_ALL_RECORDS = "INSERT INTO MailChimpEventQueueRecord (Email, IsSubscribe, CreatedOnUtc) SELECT Email, 1, getutcdate() FROM NewsLetterSubscription WHERE Active = 1";
 
         private readonly IRepository<MailChimpEventQueueRecord> _repository;
         private readonly MailChimpObjectContext _context;
@@ -58,13 +58,11 @@ namespace Nop.Plugin.Misc.MailChimp.Services
         /// <summary>
         /// Dequeues the list.
         /// </summary>
-        /// <param name="subscribeOnly">if set to <c>true</c> [subscribe only].</param>
         /// <returns></returns>
-        public virtual IList<MailChimpEventQueueRecord> ReadList(bool subscribeOnly)
+        public virtual IList<MailChimpEventQueueRecord> GetAll()
         {
             var query = from r in _repository.Table
-                        orderby r.Id
-                        where r.IsSubscribe == subscribeOnly
+                        orderby r.CreatedOnUtc descending 
                         select r;
 
             return query.ToList();
