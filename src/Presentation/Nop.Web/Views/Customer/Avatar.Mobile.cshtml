@@ -6,17 +6,13 @@
     Html.AddTitleParts(T("PageTitle.Account").Text);
 }
 @using Nop.Web.Framework;
-@section top
-{
-    @Html.Partial("MyAccountNavigation", Model.NavigationModel, new ViewDataDictionary())
-}
 @*set "data-ajax" attribute to "false" because jQuery Mobile does not support file uploading*@
 @using (Html.BeginForm("Avatar", "Customer", FormMethod.Post,
     new Dictionary<string, Object> { { "enctype", "multipart/form-data" }, { "data-ajax", "false" } }))
 {
     <div class="account-page">
         <div class="page-title">
-            <h1>@T("Account.MyAccount") - @T("Account.Avatar")</h1>
+            <h1>@T("Account.Avatar")</h1>
         </div>
         <div class="clear">
         </div>

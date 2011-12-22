@@ -1,0 +1,9 @@
+﻿@model Nop.Web.Models.Customer.CustomerNavigationModel
+@using Nop.Web.Framework;
+@{
+    Layout = "~/Views/Shared/_MobileRoot.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Account").Text);
+}
+@Html.Partial("MyAccountNavigation", Model, new ViewDataDictionary())

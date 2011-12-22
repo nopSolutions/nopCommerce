@@ -15,11 +15,11 @@ namespace Nop.Web.Framework.UI
             var pageTitleBuilder  = EngineContext.Current.Resolve<IPageTitleBuilder>();
             pageTitleBuilder.AppendTitleParts(parts);
         }
-        public static MvcHtmlString NopTitle(this HtmlHelper html, params string[] parts)
+        public static MvcHtmlString NopTitle(this HtmlHelper html, bool addDefaultTitle, params string[] parts)
         {
             var pageTitleBuilder = EngineContext.Current.Resolve<IPageTitleBuilder>();
             html.AppendTitleParts(parts);
-            return MvcHtmlString.Create(html.Encode(pageTitleBuilder.GenerateTitle()));
+            return MvcHtmlString.Create(html.Encode(pageTitleBuilder.GenerateTitle(addDefaultTitle)));
         }
 
 

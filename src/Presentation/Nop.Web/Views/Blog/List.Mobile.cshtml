@@ -9,29 +9,23 @@
 }
 <div class="blog">
     <div class="page-title">
-        <table width="100%">
-            <tr>
-                <td class="title">
-                    <h1>
-                        @if (String.IsNullOrEmpty(Model.PagingFilteringContext.Tag))
-                        {
-                            if (Model.PagingFilteringContext.GetParsedMonth().HasValue)
-                            {
-                            @string.Format(T("Blog.FilteredByMonth").Text, Model.PagingFilteringContext.GetParsedMonth().Value.Year, Model.PagingFilteringContext.GetParsedMonth().Value.ToString("MMMM"));
-                            }
-                            else
-                            {
-                            @T("Blog")
-                            }
-                        }
-                        else
-                        {
-                            @string.Format(T("Blog.TaggedWith").Text, Model.PagingFilteringContext.Tag);
-                        }
-                    </h1>
-                </td>
-            </tr>
-        </table>
+        <h1>
+            @if (String.IsNullOrEmpty(Model.PagingFilteringContext.Tag))
+            {
+                if (Model.PagingFilteringContext.GetParsedMonth().HasValue)
+                {
+                @string.Format(T("Blog.FilteredByMonth").Text, Model.PagingFilteringContext.GetParsedMonth().Value.Year, Model.PagingFilteringContext.GetParsedMonth().Value.ToString("MMMM"));
+                }
+                else
+                {
+                @T("Blog")
+                }
+            }
+            else
+            {
+                @string.Format(T("Blog.TaggedWith").Text, Model.PagingFilteringContext.Tag);
+            }
+        </h1>
     </div>
     <div class="clear">
     </div>

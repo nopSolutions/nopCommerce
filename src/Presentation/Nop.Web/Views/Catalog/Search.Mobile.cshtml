@@ -12,6 +12,8 @@
 @using Nop.Web.Framework.UI;
 @using Nop.Web.Models.Catalog;
 @using Nop.Web.Extensions;
+@*product search box*@
+@Html.Action("SearchBox", "Catalog")
 <div class="search-panel">
     @using (Html.BeginRouteForm("ProductSearch", FormMethod.Get))
     {

@@ -615,7 +615,13 @@ namespace Nop.Web.Controllers
         [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult MyAccount()
         {
-            return RedirectToAction("info");
+            if (!IsCurrentUserRegistered())
+                return new HttpUnauthorizedResult();
+
+            var customer = _workContext.CurrentCustomer;
+
+            var model = GetCustomerNavigationModel(customer);
+            return View(model);
         }
 
         #region Info

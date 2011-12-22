@@ -1,5 +1,9 @@
 ﻿@{
     Layout = "~/Views/Shared/_MobileRoot.cshtml";
 }
+@*product search box*@
+@Html.Action("SearchBox", "Catalog")
+@*categories*@
 @Html.Action("CategoryNavigation", "Catalog", new { currentCategoryId = 0, currentProductId = 0 })
+@*manufacturers*@
 @Html.Action("ManufacturerNavigation", "Catalog", new { currentManufacturerId = 0 })

@@ -6,13 +6,9 @@
     Html.AddTitleParts(T("PageTitle.Account").Text);
 }
 @using Nop.Web.Framework;
-@section top
-{
-    @Html.Partial("MyAccountNavigation", Model.NavigationModel, new ViewDataDictionary())
-}
 <div class="account-page">
     <div class="page-title">
-        <h1>@T("Account.MyAccount") - @T("Account.CustomerAddresses")</h1>
+        <h1>@T("Account.CustomerAddresses")</h1>
     </div>
     <div class="clear">
     </div>

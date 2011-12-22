@@ -4,7 +4,7 @@
     {
         void AddTitleParts(params string[] parts);
         void AppendTitleParts(params string[] parts);
-        string GenerateTitle();
+        string GenerateTitle(bool addDefaultTitle);
 
         void AddMetaDescriptionParts(params string[] parts);
         void AppendMetaDescriptionParts(params string[] parts);

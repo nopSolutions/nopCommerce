@@ -7,7 +7,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>@Html.NopTitle()</title>
+    <title>@Html.NopTitle(false)</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     @*store URL js variable used by some JS files*@
     <script type="text/javascript">
@@ -41,18 +41,6 @@
             </div>
         }
         <div data-role="content">
-            @if (IsSectionDefined("productsearchbox"))
-            {
-                @RenderSection("productsearchbox")
-            }
-            else
-            {
-                @Html.Action("SearchBox", "Catalog")
-            }
-            @if (IsSectionDefined("top"))
-            {
-                @RenderSection("top")
-            }
             @RenderBody()
         </div>
         <div data-role="footer">

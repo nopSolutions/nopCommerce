@@ -6,10 +6,6 @@
     //title
     Html.AddTitleParts(T("PageTitle.Account").Text);
 }
-@section top
-{
-    @Html.Partial("MyAccountNavigation", Model.NavigationModel, new ViewDataDictionary())
-}
 @if (Model.CountryEnabled && Model.StateProvinceEnabled)
 {
     <script type="text/javascript">
@@ -47,7 +43,7 @@
 }
 <div class="account-page">
     <div class="page-title">
-        <h1>@T("Account.MyAccount") - @T("Account.CustomerInfo")</h1>
+        <h1>@T("Account.CustomerInfo")</h1>
     </div>
     <div class="clear">
     </div>
