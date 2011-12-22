@@ -12,5 +12,101 @@
 
     Html.AddTitleParts(T("Forum.PageTitle.Search").Text);    
 }
+<div class="forumsearch">
+    <div class="forum-search-panel">
+        <div class="page-title">
+            <h1>@T("Forum.Search")</h1>
+        </div>
+        <div class="clear">
+        </div>
+        <div class="search-input">
+            @using (Html.BeginForm("Search", "Boards", FormMethod.Get))
+            {
+                <label for="searchterms" class="ui-hidden-accessible">@T("Forum.SearchButton"):</label>
+                <input type="search" name="searchterms" id="searchterms" value="@Model.SearchTerms"  />
+            }
+        </div>
+        <div class="search-error">
+            @Model.Error
+        </div>
+        <div class="clear">
+        </div>
+        <div class="pager">
+            @{
+                var searchterms = Model.SearchTerms;
+                string adv = null;
+                string within = null;
+                string limitDays = null;
+                string forumId = null;
 
-TODO boards for mobile devices
+                if (Model.ShowAdvancedSearch)
+                {
+                    adv = "true";
+                    within = Model.WithinSelected.ToString();
+                    limitDays = Model.LimitDaysSelected.ToString();
+                    forumId = Model.ForumIdSelected.ToString();
+                }
+
+                var pager = @Html.Pager(new PagerModel()
+                {
+                    PageSize = Model.TopicPageSize,
+                    TotalRecords = Model.TopicTotalRecords,
+                    PageIndex = Model.TopicPageIndex,
+                    ShowTotalSummary = false,
+                    RouteActionName = "Search",
+                    RouteValues = new ForumSearchRouteValues { adv = adv, searchterms = searchterms, forumId = forumId, within = within, limitDays = limitDays },
+                });
+            }
+            @pager
+        </div>
+        <div class="search-results">
+            @if (@Model.NoResultsVisisble == true)
+            {   
+                <span class="result">@T("Forum.SearchNoResultsText")</span>                
+            }
+            <div class="topics">
+                @if (@Model.SearchResultsVisible == true)
+                {
+                    <ul data-role="listview" data-inset="true" data-filter="false">
+                        @foreach (var topic in Model.ForumTopics)
+                        {
+                            <li>
+                                <div class="topic">
+                                    <a href="@Url.RouteUrl("TopicSlug", new { id = @topic.Id, slug = @topic.SeName })">
+                                        @{
+                            var topicType = "post";
+                            var topicText = String.Empty;
+                            switch (topic.ForumTopicType)
+                            {
+                                case ForumTopicType.Normal:
+                                    topicType = "post";
+                                    break;
+                                case ForumTopicType.Sticky:
+                                    topicType = "poststicky";
+                                    break;
+                                case ForumTopicType.Announcement:
+                                    topicType = "postannoucement";
+                                    break;
+                                default:
+                                    topicType = "post";
+                                    break;
+                            }
+                                            <div class="@topicType">
+                                            </div>
+                                        }
+                                        <span class="topicname">@topic.Subject</span> <span class="replies">@T("Forum.Replies.Count", topic.NumReplies)</span>
+                                    </a>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                }
+            </div>
+        </div>
+        <div class="clear">
+        </div>
+        <div class="pager">
+            @pager
+        </div>
+    </div>
+</div>

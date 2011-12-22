@@ -13,5 +13,80 @@
 
     Html.AddTitleParts(Model.Name);
 }
-
-TODO boards for mobile devices
+<div class="forum">
+    @Html.Partial("_SearchBox")
+    <div class="top">
+        <div class="foruminfo">
+            <span class="forumname">
+                @Model.Name</span>
+            <br />
+            <span class="forumdescription">
+                @Model.Description</span>
+        </div>
+        <div class="actions">
+            <a href="@Url.RouteUrl("TopicCreate", new { id = @Model.Id })" class="newtopic" data-role="button">@T("Forum.NewTopic")</a>
+        </div>
+    </div>
+    <div class="clear">
+    </div>
+    <div class="pager">
+        @{
+            var pager = @Html.Pager(new PagerModel()
+            {
+                PageSize = Model.TopicPageSize,
+                TotalRecords = Model.TopicTotalRecords,
+                PageIndex = Model.TopicPageIndex,
+                ShowTotalSummary = false,
+                RouteActionName = "ForumSlugPaged",
+                UseRouteLinks = true,
+                RouteValues = new RouteValues { id = Model.Id, slug = Model.SeName }
+            });
+        }
+        @pager
+    </div>
+    <div class="clear">
+    </div>
+    <div class="topics">
+        @if (Model.ForumTopics.Count > 0)
+        {
+            <ul data-role="listview" data-inset="true" data-filter="false">
+                @foreach (var topic in Model.ForumTopics)
+                {
+                    <li>
+                        <div class="topic">
+                            <a href="@Url.RouteUrl("TopicSlug", new { id = @topic.Id, slug = @topic.SeName })">
+                                @{
+                    var topicType = "post";
+                    var topicText = String.Empty;
+                    switch (topic.ForumTopicType)
+                    {
+                        case ForumTopicType.Normal:
+                            topicType = "post";
+                            break;
+                        case ForumTopicType.Sticky:
+                            topicType = "poststicky";
+                            break;
+                        case ForumTopicType.Announcement:
+                            topicType = "postannoucement";
+                            break;
+                        default:
+                            topicType = "post";
+                            break;
+                    }
+                                    <div class="@topicType">
+                                    </div>
+                                }
+                                <span class="topicname">@topic.Subject</span> <span class="replies">@T("Forum.Replies.Count", topic.NumReplies)</span>
+                            </a>
+                        </div>
+                    </li>
+                }
+            </ul>
+        }
+    </div>
+    <div class="clear">
+    </div>
+    <div class="pager">
+        @pager
+    </div>
+</div>

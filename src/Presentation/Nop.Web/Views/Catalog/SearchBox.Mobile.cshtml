@@ -1,16 +1,7 @@
-﻿@{
-    var currentSearchTerm = this.Request.Params["Q"];
-    if (String.IsNullOrEmpty(currentSearchTerm))
-    {
-        currentSearchTerm = @T("Search.SearchBox.Tooltip").Text;
-    }
-}
-<div class="searchbox">
+﻿<div class="searchbox">
     @using (Html.BeginRouteForm("ProductSearch", FormMethod.Get))
     {
-@*<div data-role="fieldcontain" class="ui-hide-label">*@
         <label for="small-searchterms" class="ui-hidden-accessible">@T("Search"):</label>
-        <input type="search" name="q" id="small-searchterms" value="@(currentSearchTerm)" onfocus="if(this.value=='@T("Search.SearchBox.Tooltip")')this.value=''" onblur="if(this.value=='') {this.value = '@T("Search.SearchBox.Tooltip")';}"  />
-@*</div>*@
+        <input type="search" name="q" id="small-searchterms"  placeholder="@T("Search.SearchBox.Tooltip")"  />
     }
 </div>

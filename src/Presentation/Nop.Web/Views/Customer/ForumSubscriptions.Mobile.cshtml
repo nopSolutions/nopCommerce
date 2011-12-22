@@ -1,0 +1,60 @@
+﻿@model Nop.Web.Models.Customer.CustomerForumSubscriptionsModel
+@using Nop.Web;
+@using Nop.Web.Extensions;
+@using Nop.Web.Framework;
+@using MvcContrib.UI.Grid;
+@{    
+    Layout = "~/Views/Shared/_MobileRoot.cshtml";
+
+    Html.AddTitleParts(T("PageTitle.ForumSubscriptions").Text);
+}
+<div class="account-page">
+    <div class="page-title">
+        <h1>
+            @T("Account.ForumSubscriptions")</h1>
+    </div>
+    <div class="clear">
+    </div>
+    <div class="body">
+        <div class="forum-subscriptions-box">
+            @if (Model.ForumSubscriptions.Count > 0)
+            {
+                <div>
+                    @T("Account.BackInStockSubscriptions.Description")
+                </div>
+                <ul data-role="listview" data-inset="true" data-filter="false">
+                    @foreach (var fs in Model.ForumSubscriptions)
+                    {
+                        <li>
+                            <div>
+                                <div>
+                                    @if (fs.TopicSubscription)
+                                    {
+                                        @Html.RouteLink(fs.Title, "TopicSlug", new { Id = fs.ForumTopicId, slug = fs.Slug })
+                                    }
+                                    else
+                                    {
+                                        @Html.RouteLink(fs.Title, "ForumSlug", new { Id = fs.ForumId, slug = fs.Slug })
+                                    }
+                                </div>
+                                <div class="button">
+                                    <a href="@Url.RouteUrl("DeleteForumSubscription", new { subscriptionId = @fs.Id })" data-role="button">@T("Common.Delete")</a>
+                                </div>
+                            </div>
+                        </li>
+                    }
+                </ul>
+                    if (Model.PagerModel.TotalPages > 1)
+                    {
+                <div class="fsgridpagerstyle">
+                    @Html.Pager(Model.PagerModel)
+                </div>
+                    }
+            }
+            else
+            {
+                @T("ForumSubscriptions.NoSubscriptions")
+            }
+        </div>
+    </div>
+</div>

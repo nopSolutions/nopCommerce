@@ -12,11 +12,13 @@
 @using Nop.Web.Framework.UI;
 @using Nop.Web.Models.Catalog;
 @using Nop.Web.Extensions;
-@*product search box*@
-@Html.Action("SearchBox", "Catalog")
 <div class="search-panel">
     @using (Html.BeginRouteForm("ProductSearch", FormMethod.Get))
     {
+        <div class="search-input">
+            <label for="small-searchterms" class="ui-hidden-accessible">@T("Search"):</label>
+            <input type="search" name="q" id="small-searchterms" value="@Model.Q"  />
+        </div>
         <div class="search-results">
             @if (!String.IsNullOrEmpty(Model.Warning))
             {
@@ -30,7 +32,7 @@
                     @T("Search.NoResultsText")
                 </span>
             }
-            @*product list*@
+@*product list*@
             @if (Model.Products.Count > 0)
             {
                 <div class="product-list">

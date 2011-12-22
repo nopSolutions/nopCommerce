@@ -27,15 +27,15 @@
         <div class="manage">
             @if (Model.IsCustomerAllowedToEditTopic)
             {
-                @Html.RouteLink(@T("Forum.EditTopic").ToString(), "TopicEdit", new { id = @Model.Id }, new { @class = "edittopiclinkbutton" })
+                @Html.RouteLink(@T("Forum.EditTopic").Text, "TopicEdit", new { id = @Model.Id }, new { @class = "edittopiclinkbutton" })
             }
             @if (Model.IsCustomerAllowedToDeleteTopic)
             {                
-                @Html.RouteLink(@T("Forum.DeleteTopic").ToString(), "TopicDelete", new { id = @Model.Id }, new { onClick = String.Format("return confirm('{0}');", @T("Common.AreYouSure").Text), @class = "deletetopiclinkbutton" })
+                @Html.RouteLink(@T("Forum.DeleteTopic").Text, "TopicDelete", new { id = @Model.Id }, new { onClick = String.Format("return confirm('{0}');", @T("Common.AreYouSure").Text), @class = "deletetopiclinkbutton" })
             }
             @if (Model.IsCustomerAllowedToMoveTopic)
             {
-                @Html.RouteLink(@T("Forum.MoveTopic").ToString(), "TopicMove", new { id = @Model.Id }, new { @class = "movetopiclinkbutton" })
+                @Html.RouteLink(@T("Forum.MoveTopic").Text, "TopicMove", new { id = @Model.Id }, new { @class = "movetopiclinkbutton" })
             }
         </div>
     </div>
@@ -93,6 +93,4 @@
     <div class="pager">
         @pager
     </div>
-</div>
-<div class="clear">
 </div>

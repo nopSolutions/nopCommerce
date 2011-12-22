@@ -5,5 +5,9 @@
 
     Html.AddTitleParts(Model.Name);
 }
-
-TODO boards for mobile devices
+<div class="forumgrouppage">
+    @Html.Partial("_SearchBox")
+    <div class="forumgroup">
+        @Html.Partial("_ForumGroup", Model)
+    </div>
+</div>

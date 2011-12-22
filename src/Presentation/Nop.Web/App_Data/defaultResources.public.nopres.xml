@@ -1853,6 +1853,11 @@
 			</LocaleResource>
 			<LocaleResource Name="Replies">
 				<Value>Replies</Value>
+				<Children>
+					<LocaleResource Name="Count">
+						<Value>{0} Replies</Value>
+					</LocaleResource>
+				</Children>
 			</LocaleResource>
 			<LocaleResource Name="Reply">
 				<Value>Reply</Value>
@@ -1951,6 +1956,9 @@
 				<Children>
 					<LocaleResource Name="GotoPostPager">
 						<Value>[Go to page: {0}]</Value>
+					</LocaleResource>
+					<LocaleResource Name="Count">
+						<Value>{0} Topics</Value>
 					</LocaleResource>
 				</Children>
 			</LocaleResource>

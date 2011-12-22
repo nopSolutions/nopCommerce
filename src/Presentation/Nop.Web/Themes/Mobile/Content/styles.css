@@ -187,8 +187,7 @@ ul.languagelist li .selected{border:solid 1px #ccc!important;}
 .address-edit-page{margin-bottom:15px;padding-bottom:5px;padding-left:0;}
 .address-edit-page .body{margin:0;padding:0;color:#555;background-color:inherit;}
 .search-panel{margin-bottom:15px;padding:0;}
-.search-panel .search-input{border:1px solid #d7d7d7;padding:10px;}
-.search-panel .search-input .buttons{text-align:right;}
+.search-panel .search-input{}
 .search-panel .search-results{padding-top:10px;}
 .search-panel .search-results .result{font-weight:700;color:#555;}
 .search-panel table.basic-search,.search-panel table.adv-search{border-collapse:collapse;color:#333;margin:0;width:100%;vertical-align:middle;text-align:left;table-layout:fixed;}
@@ -295,9 +294,7 @@ ul.languagelist li .selected{border:solid 1px #ccc!important;}
 .customer-rewardpoints .reward-points-overview{padding:10px 10px 5px 0;width:100%;}
 .customer-rewardpoints .reward-points-history{padding:10px 10px 5px 0;text-align:left;padding:10px;border:1px solid #d7d7d7;height:auto;}
 .backinstock-subscriptions-box{margin:0;padding:5px;color:#555;}
-.backinstock-subscriptions-box .button{margin-bottom:5px;margin-top:5px;text-align:left;}
-.backinstock-subscriptions-box .backinstock-subscriptions-grid{font-family:arial;border:1px solid gray;background-color:#FFF;margin-left:0;width:100%;border-collapse:collapse;}
-.backinstock-subscriptions-box .backinstock-subscriptions-grid a{display:block;margin-left:5px;}
+.backinstock-subscriptions-box .button{}
 .bissgridpagerstyle{padding:5px;background:#eee;vertical-align:middle;}
 .bissgridpagerstyle span{font-weight:700;font-size:1.1em;}
 
@@ -391,140 +388,78 @@ ul.languagelist li .selected{border:solid 1px #ccc!important;}
 .pmunread{font-size:16px;}
 /* FORUM MAIN */
 .forumsmain{}
-.forumsmain .forumsmainheader{border-bottom:solid 1px #f3f3f3;height:35px;}
-.forumsmain .forumsmainheader .currenttime{padding-top:20px;font-size:.9em;color:#555;float:left;}
-.forumsmain .forumsmainheader .forumsearchbox{float:right;text-align:right;}
-.forumsmain .forumgroups{margin-top:10px;}
+.forumgroup a{text-decoration:none;}
+.forumsmain .forumsmainheader{}
+.forumsmain .forumsmainheader .forumsearchbox{}
 .forumsmain .activediscussions{margin-top:50px;}
-.forumbreadcrumb{padding:0;margin-bottom:10px;font-weight:700;text-transform:uppercase;font-size:1.1em;}
-.forumbreadcrumb a{text-decoration:none;color:#3a3a3a;}
-.forumgrouppage .forumsearchbox{text-align:right;}
-.forumgroup{background:url(images/forum-footer-bg.gif) repeat-x bottom;}
-.forumgroups .forumgroup .grouptitle{font-size:1.1em;padding-bottom:5px;}
-.forumgroup .grouptitle a{font-weight:700;}
-.forumgroup table.groups{width:100%;border-collapse:collapse;text-align:center;vertical-align:middle;margin-top:10px;margin-bottom:15px;}
-.forumgroup table.groups td{padding:3px 0;}
-.forumgroup tr.groupheader{font-weight:700;}
-.forumgroup tr.groupheader td{background:url(images/forum-header-bg.gif) repeat-x 50%;color:#FFF;border-right:solid 1px #6a6a6a;height:20px;}
-.forumgroup tr.groupheader td.forumname{width:55%;text-align:left;padding-left:3px;}
-.forumgroup tr.groupheader td.topics{width:10%;}
-.forumgroup tr.groupheader td.posts{width:10%;}
-.forumgroup tr.groupheader td.lastpost{width:25%;}
-.forumgroup tr.forum td.image div{text-align:left;width:36px;height:36px;background:url(images/ico-forum.gif) no-repeat 40% 40%;}
-.forumgroup tr.forum td{border-bottom:1px solid #c5c5c5;vertical-align:middle;padding-left:3px;}
-.forumgroup tr.forum td.forumname{text-align:left;width:55%;}
-.forumgroup tr.forum td.forumname .forumtitle{font-weight:700;font-size:1.1em;line-height:18px;}
-.forumgroup tr.forum td.forumname .forumdescription{font-size:.9em;color:#555;}
-.forumgroup tr.forum td.lastpost{font-size:.8em;color:#555;}
-.forum-subscriptions-box{margin:0;padding:5px;font-size:11px;color:#555;}
-.forum-subscriptions-box .button{margin-bottom:5px;margin-top:5px;text-align:left;}
-.forum-subscriptions-box .forum-subscriptions-grid{font-family:arial;font-size:11px;border:1px solid gray;background-color:#FFF;margin-left:0;width:100%;border-collapse:collapse;}
-.forum-subscriptions-box .forum-subscriptions-grid a{display:block;margin-left:5px;}
+.forumgrouppage .forumsearchbox{}
+.forumgroup{}
+.forumgroup .grouptitle{font-size:1.1em;font-weight:700;padding-bottom:5px;}
+.forumgroup .grouptitle a{color:#555;}
+.forumgroup .forum {vertical-align:middle;padding-left:3px;min-height:40px;}
+.forumgroup .forum .image {float:left;width:36px;height:36px;background:url(images/ico-forum.gif) no-repeat 40% 40%;}
+.forumgroup .forum .forumname{font-weight:700;color:#555;float:left;margin:11px 0 0 7px;}
+.forumgroup .forum .topics{font-size:.8em;color:#555;float:right;margin:11px 0 0 7px;}
 /* FORUM PAGE */
 .forum{}
 .forum .forumheader{}
-.forum .top .foruminfo{float:left;}
-.forum .top .foruminfo .forumname{font-weight:700;font-size:1.2em;line-height:25px;}
+.forum .top .foruminfo{}
+.forum .top .foruminfo .forumname{font-weight:700;font-size:1.2em;}
 .forum .top .foruminfo .forumdescription{color:#555;}
-.forum .top .actions{float:right;text-align:right;}
-.forum .top .actions .newtopic{background:url(images/ico-forum-post-add.gif) no-repeat;padding:0 10px 3px 20px;}
-.forum .top .actions .watchforum{background:url(images/ico-forum-watch.gif) no-repeat;padding-left:20px;}
-.forum .top .actions .forumsearchbox{padding-top:5px;}
-.forum .topicsgroup{background:url(images/forum-footer-bg.gif) repeat-x bottom;}
-.forum table.topics{width:100%;border-collapse:collapse;vertical-align:middle;text-align:center;}
-.forum table.topics td{padding:3px 0;}
-.forum table.topics tr.forumheader{font-weight:700;}
-.forum table.topics tr.forumheader td{background:url(images/forum-header-bg.gif) repeat-x 50%;color:#FFF;border-right:solid 1px #6a6a6a;height:20px;}
-.forum table.topics tr.forumheader td.topicname{width:55%;text-align:left;padding-left:3px;}
-.forum table.topics tr.forumheader td.replies{width:10%;}
-.forum table.topics tr.forumheader td.views{width:10%;}
-.forum table.topics tr.forumheader td.lastpost{width:25%;}
-.forum table.topics tr.topic td{border-bottom:1px solid #c5c5c5;vertical-align:middle;padding-left:3px;}
-.forum table.topics tr.topic td.image div{text-align:left;width:36px;height:36px;background:url(images/ico-forum.gif) no-repeat 40% 40%;}
-.forum table.topics tr.topic td.topicname{text-align:left;width:55%;}
-.forum table.topics tr.topic td.topicname .topictype{font-size:.9em;line-height:18px;}
-.forum table.topics tr.topic td.topicname .topictitle{font-weight:700;font-size:1.1em;line-height:18px;}
-.forum table.topics tr.topic td.topicname .topicstarter{font-size:.9em;color:#555;}
-.forum table.topics tr.topic td.topicname .topicspager{font-size:.9em;color:#555;}
-.forum table.topics tr.topic td.lastpost{font-size:.8em;color:#555;}
-.forum table.topics tr.topic .post{text-align:left;width:36px;height:36px;background:url(images/ico-forum-post.gif) no-repeat 40% 40%;}
-.forum table.topics tr.topic .postannoucement,.forum table.topics tr.topic .poststicky{text-align:left;width:36px;height:36px;background:url(images/ico-forum-post-high.gif) no-repeat 40% 40%;}
-.forum .pager{text-align:right;padding:5px 3px 5px 0;}
+.forum .top .actions{}
+.forum .top .actions .newtopic{}
+.forum .topics{}
+.forum .topics .topic {vertical-align:middle;padding-left:3px;min-height:40px;}
+.forum .topics .topic .topicname{font-weight:700;color:#555;float:left;margin:11px 0 0 7px;}
+.forum .topics .topic .replies{font-size:.8em;color:#555;float:right;margin:11px 0 0 7px;}
+.forum .topics .topic .post{float:left;width:36px;height:36px;background:url(images/ico-forum-post.gif) no-repeat 40% 40%;}
+.forum .topics .topic .postannoucement,.forum .topics .topic .poststicky{float:left;width:36px;height:36px;background:url(images/ico-forum-post-high.gif) no-repeat 40% 40%;}
+.forum .pager{padding:5px 3px 5px 0;}
 /* FORUM TOPIC EDIT */
-.postedit{background:url(images/forum-footer-bg.gif) repeat-x bottom;}
-.postedit .title{background:url(images/forum-header-bg.gif) repeat-x 50%;color:#FFF;border:solid 1px #6a6a6a;height:28px;line-height:28px;font-weight:700;padding-left:3px;}
-.postedit .wrapper{padding:5px;}
-.postedit table.posttopic{width:100%;vertical-align:middle;border-collapse:collapse;}
-.postedit table.posttopic td{padding:4px;}
-.postedit table.posttopic td.fieldname{font-weight:700;width:20%;color:#555;}
-.postedit table.posttopic td.options{text-align:right;}
-.moveforumtopic{background:url(images/forum-footer-bg.gif) repeat-x bottom;}
-.moveforumtopic .title{background:url(images/forum-header-bg.gif) repeat-x 50%;color:#FFF;border:solid 1px #6a6a6a;height:28px;line-height:28px;font-weight:700;padding-left:3px;}
-.moveforumtopic .wrapper{padding:5px;}
-.moveforumtopic table.movetopic{width:100%;vertical-align:middle;border-collapse:collapse;}
-.moveforumtopic table.movetopic td{padding:4px;}
-.moveforumtopic table.movetopic td.fieldname{font-weight:700;width:30%;color:#555;white-space:nowrap;}
-.moveforumtopic table.movetopic td.options{text-align:left;}
+.postedit{}
+.postedit .wrapper{}
+.postedit .posttopic{}
+.postedit .posttopic .options{}
+.moveforumtopic{}
+.moveforumtopic .body{}
+.moveforumtopic .body .options{}
 /* FORUM TOPIC */
-.forumtopic{background:url(images/forum-footer-bg.gif) repeat-x bottom;}
-.forumtopic .title{background:url(images/forum-header-bg.gif) repeat-x 50%;color:#FFF;border:solid 1px #6a6a6a;height:28px;line-height:28px;font-weight:700;padding-left:3px;}
-.forumtopic .title .topicname{float:left;font-size:12px;}
-.forumtopic .title .manage{float:right;text-align:right;}
-.forumtopic .title .manage a{color:#F3F3F3;}
-.forumtopic .topicheader{padding:5px;background:#F3F3F3;border-bottom:solid 1px #6a6a6a;height:16px;}
-.forumtopic .topicheader .topicoptions,.topicfooter .topicoptions{float:right;text-align:right;}
-.forumtopic .topicheader .topicoptions a,.topicfooter .topicoptions a{font-weight:700;}
+.forumtopic{}
+.forumtopic .manage{}
+.forumtopic .topicheader{}
+.forumtopic .topicheader .topicoptions,.topicfooter .topicoptions{}
+.forumtopic .topicheader .topicoptions a,.topicfooter .topicoptions a{}
 .forumtopic .posts{}
-.topicfooter{padding:5px;background:#F3F3F3;border-top:solid 1px #6a6a6a;height:16px;}
-.forumtopic .pager,.topicfooter .pager{text-align:left;}
-.forumpost{border-bottom:solid 1px #E3E3E3;}
-.postinfo{width:170px;float:left;padding:5px;height:100%;border-right:solid 1px #F3F3F3;}
-.postinfo .manage{line-height:20px;}
-.postinfo .manage a{font-weight:700;color:#555;}
-.postinfo .userinfo{padding-top:5px;}
+.topicfooter{}
+.forumtopic .pager,.topicfooter .pager{padding:10px 0 10px 0;}
+.forumpost{border:1px solid #878787;margin:10px 0;}
+.postinfo{padding:5px;border-bottom:solid 1px #F3F3F3;}
+.postinfo .manage{}
+.postinfo .userinfo{font-weight:700;line-height:20px;padding:3px;background:#e3f3f3;}
 .postinfo .userinfo a.username{font-weight:700;margin-bottom:5px;}
 .postinfo .userinfo span.username{font-weight:700;margin-bottom:5px;}
-.postinfo .userinfo .avatar{margin:5px 0;}
-.postinfo .userinfo .avatar .avatar-img{border:solid 2px #CEDBE1!important;}
-.postinfo .userinfo .userstats{font-size:.9em;text-align:left;font-weight:700;color:#555;}
-.postinfo .userinfo .userstats .statvalue{font-weight:400;}
-.postcontent{margin-left:180px;border-left:solid 1px #F3F3F3;}
-.postcontent .posttime{font-weight:700;line-height:20px;padding:3px;background:#e3f3f3;}
-.postcontent .posttime .statvalue{font-weight:400;}
+.postcontent{}
+.postinfo .posttime{padding:3px;background:#e3f3f3;}
+.postinfo .posttime .statvalue{}
 .postcontent .postbody{padding:3px;}
 .postcontent .postbody a{text-decoration:underline;}
 .postcontent .postbody .posttext{}
 .postcontent .postbody .posttext .quote{padding:5px;border:dashed 1px #000;background-color:#fff;}
 .postcontent .signature{border-color:#DDD;border-style:solid;border-width:1px 0 0;font-size:90%;margin:1em 8px 8px;padding:1em 0 20px;text-align:left;font-style:italic;}
 /* FORUM SEARCH */
-.forumsearchbox{font-size:.9em;float:right;text-align:right;padding:5px 0;}
+.forumsearchbox{padding:5px 0 15px 0;}
 .forumsearch{}
 .forumsearch .forum-search-panel{}
 .forumsearch .forum-search-panel .search-input{}
 .forumsearch .forum-search-panel .search-error{color:Red;}
 .forumsearch .forum-search-panel .search-results{}
-.forum-search-panel table.adv-search{border-collapse:collapse;color:#333;margin:10px 0 0;width:100%;vertical-align:middle;text-align:left;border-top:solid #D3D3D3 1px;}
-.forum-search-panel table.adv-search td.title{padding:4px;text-align:left;vertical-align:middle;width:130px;}
-.forum-search-panel table.adv-search td.data{padding:4px;text-align:left;vertical-align:middle;white-space:nowrap;}
-.forumsearch .topicsgroup{background:url(images/forum-footer-bg.gif) repeat-x bottom;}
-.forumsearch table.topics{width:100%;border-collapse:collapse;vertical-align:middle;text-align:center;}
-.forumsearch table.topics td{padding:3px 0;}
-.forumsearch table.topics tr.forumheader{font-weight:700;}
-.forumsearch table.topics tr.forumheader td{background:url(images/forum-header-bg.gif) repeat-x 50%;color:#FFF;border-right:solid 1px #6a6a6a;height:20px;}
-.forumsearch table.topics tr.forumheader td.topicname{width:55%;text-align:left;padding-left:3px;}
-.forumsearch table.topics tr.forumheader td.replies{width:10%;}
-.forumsearch table.topics tr.forumheader td.views{width:10%;}
-.forumsearch table.topics tr.forumheader td.lastpost{width:25%;}
-.forumsearch table.topics tr.topic td{border-bottom:1px solid #c5c5c5;vertical-align:middle;padding-left:3px;}
-.forumsearch table.topics tr.topic td.image div{text-align:left;width:36px;height:36px;background:url(images/ico-forum.gif) no-repeat 40% 40%;}
-.forumsearch table.topics tr.topic td.topicname{text-align:left;width:55%;}
-.forumsearch table.topics tr.topic td.topicname .topictype{font-size:.9em;line-height:18px;}
-.forumsearch table.topics tr.topic td.topicname .topictitle{font-weight:700;font-size:1.1em;line-height:18px;}
-.forumsearch table.topics tr.topic td.topicname .topicstarter{font-size:.9em;color:#555;}
-.forumsearch table.topics tr.topic td.lastpost{font-size:.8em;color:#555;}
-.forumsearch table.topics tr.topic .post{text-align:left;width:36px;height:36px;background:url(images/ico-forum-post.gif) no-repeat 40% 40%;}
-.forumsearch table.topics tr.topic .postannoucement,.forumsearch table.topics tr.topic .poststicky{text-align:left;width:36px;height:36px;background:url(images/ico-forum-post-high.gif) no-repeat 40% 40%;}
-.forumsearch .pager{text-align:right;padding:5px 3px 5px 0;}
+.forumsearch .topics{}
+.forumsearch .topics .topic {vertical-align:middle;padding-left:3px;min-height:40px;}
+.forumsearch .topics .topic .topicname{font-weight:700;color:#555;float:left;margin:11px 0 0 7px;}
+.forumsearch .topics .topic .replies{font-size:.8em;color:#555;float:right;margin:11px 0 0 7px;}
+.forumsearch .topics .topic .post{float:left;width:36px;height:36px;background:url(images/ico-forum-post.gif) no-repeat 40% 40%;}
+.forumsearch .topics .topic .postannoucement,.forumsearch .topics .topic .poststicky{float:left;width:36px;height:36px;background:url(images/ico-forum-post-high.gif) no-repeat 40% 40%;}
+.forumsearch .pager{padding:5px 3px 5px 0;}
 /* PROFILE PAGE */
 .profile-page{}
 .profile-page .title{}
@@ -542,21 +477,10 @@ ul.languagelist li .selected{border:solid 1px #ccc!important;}
 .activediscussionspage{}
 .activediscussions .activediscussionstitle{font-size:1.1em;padding-bottom:5px;font-weight:700;}
 .activediscussions .activediscussionstitle .viewall{float:right;text-align:right;}
-.activediscussions .topicsgroup{background:url(images/forum-footer-bg.gif) repeat-x bottom;}
-.activediscussions table.topics{width:100%;border-collapse:collapse;vertical-align:middle;text-align:center;}
-.activediscussions table.topics td{padding:3px 0;}
-.activediscussions table.topics tr.activediscussionsheader{font-weight:700;}
-.activediscussions table.topics tr.activediscussionsheader td{background:url(images/forum-header-bg.gif) repeat-x 50%;color:#FFF;border-right:solid 1px #6a6a6a;height:20px;}
-.activediscussions table.topics tr.activediscussionsheader td.topicname{width:55%;text-align:left;padding-left:3px;}
-.activediscussions table.topics tr.activediscussionsheader td.replies{width:10%;}
-.activediscussions table.topics tr.activediscussionsheader td.views{width:10%;}
-.activediscussions table.topics tr.activediscussionsheader td.lastpost{width:25%;}
-.activediscussions table.topics tr.topic td{border-bottom:1px solid #c5c5c5;vertical-align:middle;padding-left:3px;}
-.activediscussions table.topics tr.topic td.topicname{text-align:left;width:55%;}
-.activediscussions table.topics tr.topic td.topicname .topictitle{font-weight:700;font-size:1.1em;line-height:18px;}
-.activediscussions table.topics tr.topic td.topicname .topicstarter{font-size:.9em;color:#555;}
-.activediscussions table.topics tr.topic td.topicname .topicspager{font-size:.9em;color:#555;}
-.activediscussions table.topics tr.topic td.lastpost{font-size:.8em;color:#555;}
+.activediscussions .topics{}
+.activediscussions .topics .topic {vertical-align:middle;padding-left:3px;min-height:40px;}
+.activediscussions .topics .topic .topicname{font-weight:700;color:#555;float:left;margin:11px 0 0 7px;}
+.activediscussions .topics .topic .replies{font-size:.8em;color:#555;float:right;margin:11px 0 0 7px;}
 /* BBCODES */
 pre{white-space:pre-wrap;/* css-3 */white-space:0;/* Mozilla, since 1999 */white-space:0;/* Opera 4-6 */white-space:0;/* Opera 7 */word-wrap:break-word;/* Internet Explorer 5.5+ */}
 .csharpcode,.csharpcode pre{font-size:small;color:#000;font-family:Consolas, "Courier New", Courier, Monospace;background-color:#fff;}

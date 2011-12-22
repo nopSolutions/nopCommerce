@@ -88,6 +88,11 @@ namespace Nop.Web.Infrastructure
                             new { controller = "Catalog", action = "BackInStockSubscribePopup" },
                             new { productVariantId = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
+            routes.MapLocalizedRoute("DeleteBackInStockSubscription",
+                            "backinstocksubscribe/delete/{subscriptionId}",
+                            new { controller = "Customer", action = "DeleteBackInStockSubscription" },
+                            new { subscriptionId = @"\d+" },
+                            new[] { "Nop.Web.Controllers" });
 
             //login, register
             routes.MapLocalizedRoute("Login",
@@ -302,6 +307,11 @@ namespace Nop.Web.Infrastructure
                             new { controller = "Customer", action = "ForumSubscriptions", page = UrlParameter.Optional },
                             new { page = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
+            routes.MapLocalizedRoute("DeleteForumSubscription",
+                            "customer/forumsubscriptions/delete/{subscriptionId}",
+                            new { controller = "Customer", action = "DeleteForumSubscription" },
+                            new { subscriptionId = @"\d+" },
+                            new[] { "Nop.Web.Controllers" });
             //addresses
             routes.MapLocalizedRoute("CustomerAddressDelete",
                             "customer/addressdelete/{addressId}",
@@ -400,6 +410,11 @@ namespace Nop.Web.Infrastructure
             routes.MapLocalizedRoute("TopicWatch",
                             "boards/topicwatch/{id}",
                             new { controller = "Boards", action = "TopicWatch" },
+                            new { id = @"\d+" },
+                            new[] { "Nop.Web.Controllers" });
+            routes.MapLocalizedRoute("TopicWatchGET",
+                            "boards/topicwatchget/{id}",
+                            new { controller = "Boards", action = "TopicWatchGET" },
                             new { id = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
             routes.MapLocalizedRoute("TopicSlug",

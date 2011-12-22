@@ -4,5 +4,6 @@
 
     Html.AddTitleParts(T("Forum.PageTitle.ActiveDiscussions").Text);
 }
-
-TODO boards for mobile devices
+<div class="activediscussionspage">
+    @Html.Partial("_ActiveTopics", @Model)
+</div>

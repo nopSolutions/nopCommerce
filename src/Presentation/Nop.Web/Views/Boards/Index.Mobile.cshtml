@@ -7,5 +7,19 @@
 
     Html.AddTitleParts(T("Forum.PageTitle.Default").Text);
 }
-
-TODO boards for mobile devices
+<div class="forumsmain">
+    <div>
+        @Html.Action("TopicBlock", "Topic", new { systemName = "ForumWelcomeMessage" })
+    </div>
+    <div class="clear">
+    </div>
+    <div class="forumsmainheader">
+        @Html.Partial("_SearchBox")
+    </div>
+    <div class="clear">
+    </div>
+    @foreach (var forumGroup in Model.ForumGroups)
+    {
+        Html.RenderPartial("_ForumGroup", forumGroup);
+    }
+</div>

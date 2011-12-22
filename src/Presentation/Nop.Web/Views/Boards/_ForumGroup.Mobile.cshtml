@@ -1,0 +1,27 @@
+﻿@model ForumGroupModel
+@using Nop.Services.Forums;
+@using Nop.Services.Seo;
+@using Nop.Web.Models.Boards;
+<div class="forumgroup">
+    <div class="grouptitle">
+        @Html.RouteLink(Model.Name, "ForumGroupSlug", new { id = Model.Id, slug = Model.SeName })
+    </div>
+    <div>
+        @if (Model.Forums.Count > 0)
+        {
+            <ul data-role="listview" data-inset="true" data-filter="false">
+                @foreach (var forum in Model.Forums)
+                {
+                    <li>
+                        <div class="forum">
+                            <a href="@Url.RouteUrl("ForumSlug", new { id = @forum.Id, slug = @forum.SeName })">
+                                <div class="image"></div>
+                                <span class="forumname">@forum.Name</span> <span class="topics">@T("Forum.Topics.Count", forum.NumTopics)</span>
+                            </a>
+                        </div>
+                    </li>
+                }
+            </ul>
+        }
+    </div>
+</div>

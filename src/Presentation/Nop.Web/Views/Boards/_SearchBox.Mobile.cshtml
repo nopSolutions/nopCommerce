@@ -1,0 +1,7 @@
+﻿<div class="forumsearchbox">
+    @using (Html.BeginForm("Search", "Boards", FormMethod.Get))
+    {
+        <label for="searchterms" class="ui-hidden-accessible">@T("Forum.SearchForumsTooltip"):</label>
+        <input type="search" name="searchterms" id="searchterms" placeholder="@T("Forum.SearchForumsTooltip")" />
+    }
+</div>

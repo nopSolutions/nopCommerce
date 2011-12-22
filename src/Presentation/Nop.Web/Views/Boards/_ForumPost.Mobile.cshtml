@@ -1,0 +1,50 @@
+﻿@model ForumPostModel
+@using Nop.Services.Customers;
+@using Nop.Services.Forums;
+@using Nop.Services.Seo;
+@using Nop.Web.Framework;
+@using Nop.Web.Models.Boards;
+<div class="forumpost">
+    <div class="postinfo">
+        <div class="userinfo">
+            @if (@Model.CustomerId > 0)
+            {
+                if (Model.AllowViewingProfiles && !Model.IsCustomerGuest)
+                {
+                @Html.RouteLink(Model.CustomerName, "CustomerProfile", new { id = Model.CustomerId }, new { @class = "username" })
+                }
+                else
+                {                    
+                <span class="username">@Model.CustomerName</span>
+                }
+            }
+        </div>
+        <div class="posttime">
+            @T("Forum.Posted"): <span class="statvalue">@Model.PostCreatedOnStr</span> @*@Html.RouteLink(@T("Forum.QuotePost").Text, "PostCreateQuote", new { id = @Model.ForumTopicId, quote = @Model.Id })*@
+        </div>
+        <div class="manage">
+            @if (Model.IsCurrentCustomerAllowedToEditPost)
+            {          
+                <a href="@Url.RouteUrl("PostEdit", new { id = @Model.Id })" data-inline="true" data-role="button">@T("Forum.EditPost")</a>         
+            }
+            @if (Model.IsCurrentCustomerAllowedToDeletePost)
+            {
+                <a href="@Url.RouteUrl("PostDelete", new { id = @Model.Id })" data-inline="true" data-role="button">@T("Forum.DeletePost")</a>
+            }
+        </div>
+    </div>
+    <div class="postcontent">
+        <div class="postbody">
+            <div class="posttext">
+                @Html.Raw(@Model.FormattedText)
+            </div>
+            @Html.Hidden("Id", @Model.Id)
+        </div>
+        @if (Model.SignaturesEnabled & !String.IsNullOrEmpty(Model.FormattedSignature))
+        {            
+            <div class="signature">
+                @Html.Raw(@Model.FormattedSignature)
+            </div>
+        }
+    </div>
+</div>

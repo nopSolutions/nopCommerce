@@ -56,6 +56,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Forums.SignaturesEnabled.Hint">
     <Value>Add an opportunity for customers to specify signature. Signature will be displayed below each forum post.</Value>
   </LocaleResource>
+  <LocaleResource Name="Forum.Topics.Count">
+    <Value>{0} Topics</Value>
+  </LocaleResource>
+  <LocaleResource Name="Forum.Replies.Count">
+    <Value>{0} Replies</Value>
+  </LocaleResource>
 </Language>
 '
 

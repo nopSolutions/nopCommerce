@@ -10,5 +10,65 @@
 
     Html.AddTitleParts(Model.Subject);
 }
-
-TODO boards for mobile devices
+<div class="forumtopic">
+    <div class="page-title">
+        <h2>@Model.Subject</h2>
+    </div>
+    <div class="clear">
+    </div>
+    <div class="manage">
+        @if (Model.IsCustomerAllowedToEditTopic)
+        {
+            <a href="@Url.RouteUrl("TopicEdit", new { id = @Model.Id })" data-inline="true" data-role="button">@T("Forum.EditTopic")</a>   
+        }
+        @if (Model.IsCustomerAllowedToDeleteTopic)
+        {
+            <a href="@Url.RouteUrl("TopicDelete", new { id = @Model.Id })" data-inline="true" data-role="button">@T("Forum.DeleteTopic")</a>
+        }
+        @if (Model.IsCustomerAllowedToMoveTopic)
+        {
+            <a href="@Url.RouteUrl("TopicMove", new { id = @Model.Id })" data-inline="true" data-role="button">@T("Forum.MoveTopic")</a>
+        }
+    </div>
+    <div class="clear">
+    </div>
+    <div class="topicheader">
+        <div class="topicoptions">
+            <a href="@Url.RouteUrl("PostCreate", new { id = @Model.Id })" data-role="button">@T("Forum.Reply")</a>
+        </div>
+        <div class="pager">
+            @{
+                var pager = @Html.Pager(new PagerModel()
+                {
+                    PageSize = Model.PostsPageSize,
+                    TotalRecords = Model.PostsTotalRecords,
+                    PageIndex = Model.PostsPageIndex,
+                    ShowTotalSummary = false,
+                    RouteActionName = "TopicSlugPaged",
+                    UseRouteLinks = true,
+                    RouteValues = new RouteValues { id = Model.Id, slug = Model.SeName }
+                });
+            }
+            @pager
+        </div>
+    </div>
+    <div class="clear">
+    </div>
+    <div class="posts">
+        @foreach (var post in @Model.ForumPostModels)
+        {
+            Html.RenderPartial("_ForumPost", post);
+        }
+    </div>
+</div>
+<div class="topicfooter">
+    <div class="topicoptions">
+        @if (Model.IsCustomerAllowedToSubscribe)
+        {
+            <a href="@Url.RouteUrl("TopicWatchGET", new { id = @Model.Id })" data-role="button">@Model.WatchTopicText</a>
+        }
+    </div>
+    <div class="pager">
+        @pager
+    </div>
+</div>

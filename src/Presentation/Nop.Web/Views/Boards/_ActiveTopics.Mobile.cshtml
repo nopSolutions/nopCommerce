@@ -1,0 +1,42 @@
+﻿@model ActiveDiscussionsModel
+@using Nop.Services.Customers;
+@using Nop.Services.Forums;
+@using Nop.Services.Seo;
+@using Nop.Web;
+@using Nop.Web.Extensions;
+@using Nop.Web.Models.Boards;
+@using Nop.Web.Models.Common;
+@if (Model.ViewAllLinkEnabled == true)
+{
+    Html.RenderPartial("_SearchBox");
+    <div class="clear">
+    </div>    
+}
+<div class="activediscussions">
+    <div class="activediscussionstitle">
+        @T("Forum.ActiveDiscussions")
+        @if (Model.ViewAllLinkEnabled == false)
+        {        
+            <div class="viewall">
+                [@Html.RouteLink(@T("Forum.ActiveDiscussions.ViewAll").Text, "ActiveDiscussions")]
+            </div>
+        }
+    </div>
+    <div class="topics">
+        @if (Model.ForumTopics.Count > 0)
+        {
+            <ul data-role="listview" data-inset="true" data-filter="false">
+                @foreach (var topic in Model.ForumTopics)
+                {
+                    <li>
+                        <div class="topic">
+                            <a href="@Url.RouteUrl("TopicSlug", new { id = @topic.Id, slug = @topic.SeName })"><span
+                                class="topicname">@topic.Subject</span> <span class="replies">@T("Forum.Replies.Count", topic.NumReplies)</span>
+                            </a>
+                        </div>
+                    </li>
+                }
+            </ul>
+        }
+    </div>
+</div>

@@ -603,6 +603,41 @@ namespace Nop.Web.Controllers
             return Json(new { Subscribed = subscribed, Text = returnText, Error = false });
         }
 
+        public ActionResult TopicWatchGET(int id)
+        {
+            var forumTopic = _forumService.GetTopicById(id);
+            if (forumTopic == null)
+            {
+                return RedirectToRoute("Boards");
+            }
+
+            if (!_forumService.IsCustomerAllowedToSubscribe(_workContext.CurrentCustomer))
+            {
+                return RedirectToRoute("Boards");
+            }
+
+            var forumSubscription = _forumService.GetAllSubscriptions(_workContext.CurrentCustomer.Id,
+                0, forumTopic.Id, 0, 1).FirstOrDefault();
+
+            if (forumSubscription == null)
+            {
+                forumSubscription = new ForumSubscription()
+                {
+                    SubscriptionGuid = Guid.NewGuid(),
+                    CustomerId = _workContext.CurrentCustomer.Id,
+                    TopicId = forumTopic.Id,
+                    CreatedOnUtc = DateTime.UtcNow
+                };
+                _forumService.InsertSubscription(forumSubscription);
+            }
+            else
+            {
+                _forumService.DeleteSubscription(forumSubscription);
+            }
+
+            return RedirectToRoute("TopicSlug", new { id = forumTopic.Id, slug = forumTopic.GetSeName() });
+        }
+
         public ActionResult TopicMove(int id)
         {
             if (!ForumsEnabled())

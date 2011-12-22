@@ -1,0 +1,59 @@
+﻿@model EditForumPostModel
+@using Nop.Core.Domain.Forums;
+@using Nop.Services.Forums;
+@using Nop.Services.Seo;
+@using Nop.Web;
+@using Nop.Web.Extensions;
+@using Nop.Web.Models.Boards;
+@using (Html.BeginForm())
+{
+    <div class="postedit">
+        <div class="page-title">
+            @if (Model.IsEdit)
+            {
+                <h1>@T("Forum.EditPost")</h1>
+            }
+            else
+            {
+                <h1>@T("Forum.NewPost")</h1>
+            }
+        </div>
+        <div class="wrapper">
+            @if (!String.IsNullOrEmpty(Model.PostError))
+            {
+                <div class="error-block">
+                    <div class="message-error">
+                        @Model.PostError
+                    </div>
+                </div>
+            }
+            @Html.ValidationSummary(false)
+            @Html.HiddenFor(model => model.Id)
+            @Html.HiddenFor(model => model.ForumTopicId)
+            <div class="clear">
+            </div>
+            <div class="posttopic">
+                <div>
+                    @T("Forum.ForumName"): @Model.ForumName
+                </div>
+                <div>
+                    @T("Forum.TopicTitle"): @Model.ForumTopicSubject
+                </div>
+                <div>
+                    @Html.TextAreaFor(model => model.Text)
+                </div>
+                @if (Model.IsCustomerAllowedToSubscribe)
+                {
+                    <div>
+                        @Html.EditorFor(model => model.Subscribed)
+                        @Html.LabelFor(model => model.Subscribed, @T("Forum.NotifyWhenSomeonePostsInThisTopic").Text)
+                    </div>
+                }
+                <div class="options">
+                    <input type="submit" value="@T("Forum.Submit")" data-inline="true" />
+                    <a href="@Url.RouteUrl("TopicSlug", new { id = @Model.ForumTopicId, slug = @Model.ForumTopicSeName })" data-inline="true" data-role="button">@T("Forum.Cancel")</a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
