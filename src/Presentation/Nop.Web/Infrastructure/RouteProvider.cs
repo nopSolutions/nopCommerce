@@ -412,11 +412,6 @@ namespace Nop.Web.Infrastructure
                             new { controller = "Boards", action = "TopicWatch" },
                             new { id = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
-            routes.MapLocalizedRoute("TopicWatchGET",
-                            "boards/topicwatchget/{id}",
-                            new { controller = "Boards", action = "TopicWatchGET" },
-                            new { id = @"\d+" },
-                            new[] { "Nop.Web.Controllers" });
             routes.MapLocalizedRoute("TopicSlug",
                             "boards/topic/{id}/{slug}",
                             new { controller = "Boards", action = "Topic", slug = UrlParameter.Optional },

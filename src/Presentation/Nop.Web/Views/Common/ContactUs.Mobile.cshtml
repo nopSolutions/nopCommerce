@@ -12,6 +12,8 @@
     <script type="text/javascript">
         $(function () {
             $('#send-email').click(function () {
+                //show progress
+                $.mobile.showPageLoadingMsg();
                 $.ajax({
                     type: 'POST',
                     url: '@Url.Action("ContactUs", "Common")',
@@ -22,9 +24,13 @@
                             $('#contactus-send-form').hide();
                         }
                         $('#contactus-result').html(data.Result);
+                        //hide progress
+                        $.mobile.hidePageLoadingMsg();
                     },
                     error: function (xhr, ajaxOptions, thrownError) {
                         $('#contactus-result').html('Failed to send email');
+                        //hide progress
+                        $.mobile.hidePageLoadingMsg();
                     }
                 });
                 return false;
