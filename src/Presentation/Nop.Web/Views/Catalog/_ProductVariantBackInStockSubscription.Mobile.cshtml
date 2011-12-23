@@ -1,0 +1,15 @@
+﻿@model ProductModel.ProductVariantModel
+@using Nop.Web.Models.Catalog;
+@if (Model.DisplayBackInStockSubscription)
+{
+    <div class="backinstocksubscription">
+        @if (Model.IsCurrentCustomerRegistered)
+        {
+            <a href="@Url.RouteUrl("BackInStockSubscribePopup", new { productVariantId = Model.Id })" data-role="button" data-ajax="false">@T("BackInStockSubscriptions.NotifyMeWhenAvailable")</a>
+        }
+        else
+        {
+            <a href="@Url.RouteUrl("Login")" data-role="button">@T("BackInStockSubscriptions.NotifyMeWhenAvailable")</a>
+        }
+    </div>
+}

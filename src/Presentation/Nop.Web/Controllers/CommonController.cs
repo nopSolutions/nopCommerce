@@ -307,7 +307,8 @@ namespace Nop.Web.Controllers
                 CompareProductsEnabled = _catalogSettings.CompareProductsEnabled,
                 BlogEnabled = _blogSettings.Enabled,
                 SitemapEnabled = _commonSettings.SitemapEnabled,
-                ForumEnabled = _forumSettings.ForumsEnabled
+                ForumEnabled = _forumSettings.ForumsEnabled,
+                AllowPrivateMessages = _forumSettings.AllowPrivateMessages,
             };
 
             return PartialView(model);

@@ -74,13 +74,7 @@
                             type: 'POST',
                             url: '@Url.RouteUrl("TopicWatch", new { id = @Model.Id })',
                             dataType: 'json',
-                            success: function (data) {
-                                $('#watchtopic').val(data.Text);
-                                $('#watchtopic').button("refresh");
-                                //hide progress
-                                $.mobile.hidePageLoadingMsg();
-                            },
-                            error: function (xhr, ajaxOptions, thrownError) {
+                            complete: function (data) {
                                 $('#watchtopic').val(data.Text);
                                 $('#watchtopic').button("refresh");
                                 //hide progress

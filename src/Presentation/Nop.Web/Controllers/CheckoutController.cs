@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Nop.Core;
@@ -50,6 +51,8 @@ namespace Nop.Web.Controllers
         private readonly ILogger _logger;
         private readonly IOrderService _orderService;
         private readonly IWebHelper _webHelper;
+        private readonly HttpContextBase _httpContext;
+        private readonly IMobileDeviceHelper _mobileDeviceHelper;
         
 
         private readonly OrderSettings _orderSettings;
@@ -68,6 +71,7 @@ namespace Nop.Web.Controllers
             IStateProvinceService stateProvinceService, IShippingService shippingService, 
             IPaymentService paymentService, IOrderTotalCalculationService orderTotalCalculationService,
             ILogger logger, IOrderService orderService, IWebHelper webHelper,
+            HttpContextBase httpContext, IMobileDeviceHelper mobileDeviceHelper,
             OrderSettings orderSettings, RewardPointsSettings rewardPointsSettings,
             PaymentSettings paymentSettings)
         {
@@ -87,6 +91,8 @@ namespace Nop.Web.Controllers
             this._logger = logger;
             this._orderService = orderService;
             this._webHelper = webHelper;
+            this._httpContext = httpContext;
+            this._mobileDeviceHelper = mobileDeviceHelper;
 
             this._orderSettings = orderSettings;
             this._rewardPointsSettings = rewardPointsSettings;
@@ -281,6 +287,20 @@ namespace Nop.Web.Controllers
             return model;
         }
 
+        [NonAction]
+        private bool UseOnePageCheckout()
+        {
+            bool useMobileDevice = _mobileDeviceHelper.IsMobileDevice(_httpContext)
+                && _mobileDeviceHelper.MobileDevicesSupported()
+                && !_mobileDeviceHelper.CustomerDontUseMobileVersion();
+
+            //mobile version doesn't support one-page checkout
+            if (useMobileDevice)
+                return false;
+
+            //check the appropriate setting
+            return _orderSettings.OnePageCheckoutEnabled;
+        }
 
         #endregion
 
@@ -298,28 +318,25 @@ namespace Nop.Web.Controllers
             //reset checkout data
             _customerService.ResetCheckoutData(_workContext.CurrentCustomer, false);
 
-            //validation
+            //validation (cart)
             var scWarnings = _shoppingCartService.GetShoppingCartWarnings(cart, _workContext.CurrentCustomer.CheckoutAttributes, true);
             if (scWarnings.Count > 0)
                 return RedirectToRoute("ShoppingCart");
-            else
+            //validation (each shopping cart item)
+            foreach (ShoppingCartItem sci in cart)
             {
-                foreach (ShoppingCartItem sci in cart)
-                {
-                    var sciWarnings = _shoppingCartService.GetShoppingCartItemWarnings(_workContext.CurrentCustomer,
-                        sci.ShoppingCartType,
-                        sci.ProductVariant,
-                        sci.AttributesXml,
-                        sci.CustomerEnteredPrice,
-                        sci.Quantity, 
-                        false);
-                    if (sciWarnings.Count > 0)
-                        return RedirectToRoute("ShoppingCart");
-                }
+                var sciWarnings = _shoppingCartService.GetShoppingCartItemWarnings(_workContext.CurrentCustomer,
+                    sci.ShoppingCartType,
+                    sci.ProductVariant,
+                    sci.AttributesXml,
+                    sci.CustomerEnteredPrice,
+                    sci.Quantity,
+                    false);
+                if (sciWarnings.Count > 0)
+                    return RedirectToRoute("ShoppingCart");
             }
 
-
-            if (_orderSettings.OnePageCheckoutEnabled)
+            if (UseOnePageCheckout())
                 return RedirectToRoute("CheckoutOnePage");
             else
                 return RedirectToRoute("CheckoutBillingAddress");
@@ -333,7 +350,7 @@ namespace Nop.Web.Controllers
             if (cart.Count == 0)
                 return RedirectToRoute("ShoppingCart");
 
-            if (_orderSettings.OnePageCheckoutEnabled)
+            if (UseOnePageCheckout())
                 return RedirectToRoute("CheckoutOnePage");
 
             if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
@@ -363,7 +380,7 @@ namespace Nop.Web.Controllers
             if (cart.Count == 0)
                 return RedirectToRoute("ShoppingCart");
 
-            if (_orderSettings.OnePageCheckoutEnabled)
+            if (UseOnePageCheckout())
                 return RedirectToRoute("CheckoutOnePage");
 
             if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
@@ -398,7 +415,7 @@ namespace Nop.Web.Controllers
             if (cart.Count == 0)
                 return RedirectToRoute("ShoppingCart");
 
-            if (_orderSettings.OnePageCheckoutEnabled)
+            if (UseOnePageCheckout())
                 return RedirectToRoute("CheckoutOnePage");
 
             if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
@@ -435,7 +452,7 @@ namespace Nop.Web.Controllers
             if (cart.Count == 0)
                 return RedirectToRoute("ShoppingCart");
 
-            if (_orderSettings.OnePageCheckoutEnabled)
+            if (UseOnePageCheckout())
                 return RedirectToRoute("CheckoutOnePage");
 
             if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
@@ -478,7 +495,7 @@ namespace Nop.Web.Controllers
             if (cart.Count == 0)
                 return RedirectToRoute("ShoppingCart");
 
-            if (_orderSettings.OnePageCheckoutEnabled)
+            if (UseOnePageCheckout())
                 return RedirectToRoute("CheckoutOnePage");
 
             if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
@@ -505,7 +522,7 @@ namespace Nop.Web.Controllers
             if (cart.Count == 0)
                 return RedirectToRoute("ShoppingCart");
 
-            if (_orderSettings.OnePageCheckoutEnabled)
+            if (UseOnePageCheckout())
                 return RedirectToRoute("CheckoutOnePage");
 
             if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
@@ -547,7 +564,7 @@ namespace Nop.Web.Controllers
             if (cart.Count == 0)
                 return RedirectToRoute("ShoppingCart");
 
-            if (_orderSettings.OnePageCheckoutEnabled)
+            if (UseOnePageCheckout())
                 return RedirectToRoute("CheckoutOnePage");
 
             if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
@@ -580,7 +597,7 @@ namespace Nop.Web.Controllers
             if (cart.Count == 0)
                 return RedirectToRoute("ShoppingCart");
 
-            if (_orderSettings.OnePageCheckoutEnabled)
+            if (UseOnePageCheckout())
                 return RedirectToRoute("CheckoutOnePage");
 
             if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
@@ -621,7 +638,7 @@ namespace Nop.Web.Controllers
             if (cart.Count == 0)
                 return RedirectToRoute("ShoppingCart");
 
-            if (_orderSettings.OnePageCheckoutEnabled)
+            if (UseOnePageCheckout())
                 return RedirectToRoute("CheckoutOnePage");
 
             if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
@@ -652,7 +669,7 @@ namespace Nop.Web.Controllers
             if (cart.Count == 0)
                 return RedirectToRoute("ShoppingCart");
 
-            if (_orderSettings.OnePageCheckoutEnabled)
+            if (UseOnePageCheckout())
                 return RedirectToRoute("CheckoutOnePage");
 
             if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
@@ -697,7 +714,7 @@ namespace Nop.Web.Controllers
             if (cart.Count == 0)
                 return RedirectToRoute("ShoppingCart");
 
-            if (_orderSettings.OnePageCheckoutEnabled)
+            if (UseOnePageCheckout())
                 return RedirectToRoute("CheckoutOnePage");
 
             if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
@@ -716,7 +733,7 @@ namespace Nop.Web.Controllers
             if (cart.Count == 0)
                 return RedirectToRoute("ShoppingCart");
 
-            if (_orderSettings.OnePageCheckoutEnabled)
+            if (UseOnePageCheckout())
                 return RedirectToRoute("CheckoutOnePage");
 
             if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
@@ -806,7 +823,7 @@ namespace Nop.Web.Controllers
             if (cart.Count == 0)
                 return RedirectToRoute("ShoppingCart");
 
-            if (!_orderSettings.OnePageCheckoutEnabled)
+            if (!UseOnePageCheckout())
                 return RedirectToRoute("Checkout");
 
             if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
@@ -836,7 +853,7 @@ namespace Nop.Web.Controllers
                 if (cart.Count == 0)
                     throw new Exception("Your cart is empty");
 
-                if (!_orderSettings.OnePageCheckoutEnabled)
+                if (!UseOnePageCheckout())
                     throw new Exception("One page checkout is disabled");
 
                 if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
@@ -947,7 +964,7 @@ namespace Nop.Web.Controllers
                 if (cart.Count == 0)
                     throw new Exception("Your cart is empty");
 
-                if (!_orderSettings.OnePageCheckoutEnabled)
+                if (!UseOnePageCheckout())
                     throw new Exception("One page checkout is disabled");
 
                 if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
@@ -1040,7 +1057,7 @@ namespace Nop.Web.Controllers
                 if (cart.Count == 0)
                     throw new Exception("Your cart is empty");
 
-                if (!_orderSettings.OnePageCheckoutEnabled)
+                if (!UseOnePageCheckout())
                     throw new Exception("One page checkout is disabled");
 
                 if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
@@ -1120,7 +1137,7 @@ namespace Nop.Web.Controllers
                 if (cart.Count == 0)
                     throw new Exception("Your cart is empty");
 
-                if (!_orderSettings.OnePageCheckoutEnabled)
+                if (!UseOnePageCheckout())
                     throw new Exception("One page checkout is disabled");
 
                 if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
@@ -1178,7 +1195,7 @@ namespace Nop.Web.Controllers
                 if (cart.Count == 0)
                     throw new Exception("Your cart is empty");
 
-                if (!_orderSettings.OnePageCheckoutEnabled)
+                if (!UseOnePageCheckout())
                     throw new Exception("One page checkout is disabled");
 
                 if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
@@ -1242,7 +1259,7 @@ namespace Nop.Web.Controllers
                 if (cart.Count == 0)
                     throw new Exception("Your cart is empty");
 
-                if (!_orderSettings.OnePageCheckoutEnabled)
+                if (!UseOnePageCheckout())
                     throw new Exception("One page checkout is disabled");
 
                 if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
@@ -1329,7 +1346,7 @@ namespace Nop.Web.Controllers
             try
             {
                 //validation
-                if (!_orderSettings.OnePageCheckoutEnabled)
+                if (!UseOnePageCheckout())
                     return RedirectToAction("Index", "Home");
 
                 if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))

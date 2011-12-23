@@ -69,6 +69,9 @@
                     <div class="clear">
                     </div>
                     @Html.Action("ProductEmailAFriendButton", "Catalog", new { productId = Model.Id })
+                    <div class="clear">
+                    </div>
+                    @Html.Action("CompareProductsButton", "Catalog", new { productId = Model.Id })
                 </div>
                 <div class="fulldescription">
                     @Html.Raw(Model.FullDescription)

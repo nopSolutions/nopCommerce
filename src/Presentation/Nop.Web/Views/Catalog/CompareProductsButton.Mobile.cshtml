@@ -1,0 +1,3 @@
+﻿@model AddToCompareListModel
+@using Nop.Web.Models.Catalog
+<a href="@Url.RouteUrl("AddProductToCompare", new { productId = Model.ProductId })" data-role="button" data-ajax="false">@T("Products.Compare.AddToCompareList")</a>

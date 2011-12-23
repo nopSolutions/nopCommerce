@@ -1757,7 +1757,13 @@ namespace Nop.Web.Controllers
             if (variant == null || variant.Deleted)
                 throw new ArgumentException("No product variant found with the specified id");
 
+            var product = variant.Product;
+
             var model = new BackInStockSubscribeModel();
+            model.ProductId = product.Id;
+            model.ProductName = product.GetLocalized(x => x.Name);
+            model.ProductSeName = product.GetSeName();
+            model.ProductVariantId = variant.Id;
             model.IsCurrentCustomerRegistered = _workContext.CurrentCustomer.IsRegistered();
             model.MaximumBackInStockSubscriptions = _catalogSettings.MaximumBackInStockSubscriptions;
             model.CurrentNumberOfBackInStockSubscriptions = _backInStockSubscriptionService.GetAllSubscriptionsByCustomerId(_workContext.CurrentCustomer.Id, 0, 1).TotalCount;

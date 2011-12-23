@@ -28,3 +28,12 @@
         <li><a href="@Url.RouteUrl("Topic", new { SystemName = "conditionsofUse" })" data-role="button">@T("ConditionsOfUse")</a></li>
     </ul>
 </div>
+@if (Model.AllowPrivateMessages)
+{
+                
+    <div data-role="navbar">
+        <ul>
+            <li><a href="@Url.RouteUrl("PrivateMessages", new { tab = "" })" data-role="button">@T("PrivateMessages.Inbox")</a></li>
+        </ul>
+    </div>
+}

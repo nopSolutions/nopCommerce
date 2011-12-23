@@ -1,0 +1,76 @@
+﻿@model BackInStockSubscribeModel
+@using Nop.Web.Models.Catalog
+@{
+    Layout = "~/Views/Shared/_MobileRoot.cshtml";
+}
+@using (Html.BeginForm())
+{
+    <div class="backinstocksubscriptionpage">
+        <div>
+            <div class="page-title">
+                <h1>
+                    @if (Model.AlreadySubscribed)
+                    {
+                        @T("BackInStockSubscriptions.AlreadySubscribed")
+                    }
+                    else
+                    {
+                        @T("BackInStockSubscriptions.PopupTitle")
+                    }
+                </h1>
+            </div>
+        </div>
+        <div>
+            <a href="@Url.RouteUrl("Product", new { productId = Model.ProductId, SeName = Model.ProductSeName })">@Model.ProductName</a>
+        </div>
+        <div class="backinstocksubscriptionpage-body">
+            @if (!Model.SubscriptionAllowed)
+            {
+                <div>
+                    @T("BackInStockSubscriptions.NotAllowed")</div>
+            }
+            else if (!Model.IsCurrentCustomerRegistered)
+            {
+                <div>
+                    @("BackInStockSubscriptions.OnlyRegistered")</div>
+            }
+            else if (!Model.AlreadySubscribed && Model.CurrentNumberOfBackInStockSubscriptions >= Model.MaximumBackInStockSubscriptions)
+            {
+                <div>
+                    @string.Format(T("BackInStockSubscriptions.MaxSubscriptions").Text, Model.MaximumBackInStockSubscriptions)</div>
+            }
+            else
+            {
+                if (!Model.AlreadySubscribed)
+                {
+                <div>@T("BackInStockSubscriptions.Tooltip")</div>
+                }
+                <br />
+                <input type="submit" id="backinstocknotifyme" name="backinstocknotifyme" value="@(Model.AlreadySubscribed ? @T("BackInStockSubscriptions.Unsubscribe").Text : @T("BackInStockSubscriptions.NotifyMe").Text)" />
+
+                <script type="text/javascript">
+                    $(function () {
+                        $('#backinstocknotifyme').click(function () {
+                            //show progress
+                            $.mobile.showPageLoadingMsg();
+                            $.ajax({
+                                type: 'POST',
+                                url: '@Url.RouteUrl("BackInStockSubscribePopup", new { productVariantId = Model.ProductVariantId })',
+                                data: $(this.form).serialize(),
+                                dataType: 'json',
+                                complete: function (data) {
+                                    //hide progress
+                                    $.mobile.hidePageLoadingMsg();
+
+                                    //redirect to product details page
+                                    document.location.href = "@Url.RouteUrl("Product", new { productId = Model.ProductId, SeName = Model.ProductSeName })";
+                                }
+                            });
+                            return false;
+                        });
+                    });
+                </script>
+            }
+        </div>
+    </div>
+}
