@@ -545,6 +545,12 @@ namespace Nop.Web.Infrastructure
                             "search/",
                             new { controller = "Catalog", action = "Search" },
                             new[] { "Nop.Web.Controllers" });
+
+            //config
+            routes.MapLocalizedRoute("Config",
+                            "config",
+                            new { controller = "Common", action = "Config" },
+                            new[] { "Nop.Web.Controllers" });
         }
 
         public int Priority

@@ -1064,6 +1064,9 @@
 			<LocaleResource Name="Cancel">
 				<Value>Cancel</Value>
 			</LocaleResource>
+			<LocaleResource Name="Config">
+				<Value>Config</Value>
+			</LocaleResource>
 			<LocaleResource Name="Confirm">
 				<Value>Confirm</Value>
 			</LocaleResource>
@@ -1084,6 +1087,9 @@
 			</LocaleResource>
 			<LocaleResource Name="Edit">
 				<Value>Edit</Value>
+			</LocaleResource>
+			<LocaleResource Name="Home">
+				<Value>Home</Value>
 			</LocaleResource>
 			<LocaleResource Name="LoadingNextStep">
 				<Value>Loading next step...</Value>
@@ -1173,6 +1179,9 @@
 				<Value>Copyright &amp;copy; {0} {1}. All rights reserved.</Value>
 			</LocaleResource>
 		</Children>
+	</LocaleResource>
+	<LocaleResource Name="Currencies">
+		<Value>Currencies</Value>
 	</LocaleResource>
 	<LocaleResource Name="Customer">
 		<Children>
@@ -2024,6 +2033,9 @@
 	</LocaleResource>
 	<LocaleResource Name="Information">
 		<Value>Information</Value>
+	</LocaleResource>
+	<LocaleResource Name="Languages">
+		<Value>Languages</Value>
 	</LocaleResource>
 	<LocaleResource Name="Manufacturers">
 		<Value>Manufacturers</Value>
@@ -3579,6 +3591,9 @@
 			</LocaleResource>
 			<LocaleResource Name="Inclusive">
 				<Value>Show prices tax inclusive</Value>
+			</LocaleResource>
+			<LocaleResource Name="SelectType">
+				<Value>Tax display type</Value>
 			</LocaleResource>
 		</Children>
 	</LocaleResource>

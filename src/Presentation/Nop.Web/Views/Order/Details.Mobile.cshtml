@@ -197,99 +197,51 @@
                 @T("Order.Product(s)")</div>
             <div class="clear">
             </div>
+            foreach (var item in Model.Items)
+            {
             <div class="products-box">
-                <table border="1" cellspacing="0" style="width: 100%; border-collapse: collapse;">
-                    @if (Model.ShowSku)
+                <div class="product">
+                    <b><a href="@Url.RouteUrl("Product", new { productId = item.ProductId, SeName = item.ProductSeName })" title="View details">@item.ProductName</a></b>
+                    @if (!String.IsNullOrEmpty(item.AttributeInfo))
                     {
-                        <col width="1" />
+                        <br />
+                        @Html.Raw(item.AttributeInfo)
                     }
-                    <col />
-                    <col />
-                    <col />
-                    <col />
-                    <thead>
-                        <tr>
-                            @if (Model.ShowSku)
-                            {
-                                <th align="center">
-                                    @T("Order.Product(s).SKU")
-                                </th>
-                            }
-                            <th align="center">
-                                @T("Order.Product(s).Name")
-                            </th>
-                            <th align="center">
-                                @T("Order.Product(s).Price")
-                            </th>
-                            <th align="center">
-                                @T("Order.Product(s).Quantity")
-                            </th>
-                            <th align="center">
-                                @T("Order.Product(s).Total")
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model.Items)
-                        {
-                            <tr>
-                                @if (Model.ShowSku)
-                                {
-                                    <td class="sku">
-                                        <div style="padding: 0px 10px;">
-                                            @item.Sku
-                                        </div>
-                                    </td>
-                                }
-                                <td class="product">
-                                    <div style="padding: 0px 10px;">
-                                        <em><a href="@Url.RouteUrl("Product", new { productId = item.ProductId, SeName = item.ProductSeName })" title="View details">@item.ProductName</a></em>
-                                        @if (!String.IsNullOrEmpty(item.AttributeInfo))
-                                        {
-                                            <br />
-                                            @Html.Raw(item.AttributeInfo)
-                                        }
-                                    </div>
-                                </td>
-                                <td class="unitprice">
-                                    <div style="padding: 0px 10px;">
-                                        @item.UnitPrice
-                                    </div>
-                                </td>
-                                <td class="qty">
-                                    <div style="padding: 0px 10px;">
-                                        @item.Quantity
-                                    </div>
-                                </td>
-                                <td class="subtotal">
-                                    <div style="padding: 0px 10px;">
-                                        @item.SubTotal
-                                    </div>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-                <div class="clear">
                 </div>
-                @if (!String.IsNullOrEmpty(Model.CheckoutAttributeInfo))
+                @if (Model.ShowSku && !string.IsNullOrEmpty(item.Sku))
                 {
-                    <div class="checkout-attributes">
-                        @Html.Raw(Model.CheckoutAttributeInfo)
-                    </div>
-                    <div class="clear">
+                    <div class="sku">
+                        @T("Order.Product(s).SKU"): @item.Sku
                     </div>
                 }
-@*Reorder support*@
-                @if (Model.IsReOrderAllowed)
-                {
-                    <a href="@Url.RouteUrl("ReOrder", new { orderId = @Model.Id })" data-role="button">@T("Order.Reorder")</a>
-                }
-                @if (Model.IsReturnRequestAllowed)
-                {
-                    <a href="@Url.RouteUrl("ReturnRequest", new { orderId = @Model.Id })" data-role="button">@T("Order.ReturnItems")</a>
-                }
+                <div class="unitprice">
+                    @T("Order.Product(s).Price"): @item.UnitPrice
+                </div>
+                <div class="qty">
+                    @T("Order.Product(s).Quantity"): @item.Quantity
+                </div>
+                <div class="subtotal">
+                    @T("Order.Product(s).Total"): @item.SubTotal
+                </div>
             </div>
+            }
+            if (!String.IsNullOrEmpty(Model.CheckoutAttributeInfo))
+            {
+            <div class="checkout-attributes">
+                @Html.Raw(Model.CheckoutAttributeInfo)
+            </div>
+            <div class="clear">
+            </div>
+            }
+@*Reorder support*@
+            if (Model.IsReOrderAllowed)
+            {
+            <a href="@Url.RouteUrl("ReOrder", new { orderId = @Model.Id })" data-role="button">@T("Order.Reorder")</a>
+            }
+            if (Model.IsReturnRequestAllowed)
+            {
+            <a href="@Url.RouteUrl("ReturnRequest", new { orderId = @Model.Id })" data-role="button">@T("Order.ReturnItems")</a>
+            }
             <div class="clear">
             </div>
         }
@@ -446,39 +398,13 @@
                 </div>
                 <div class="clear">
                 </div>
-                <div class="ordernotes-box">
-                    <table border="1" cellspacing="0" style="width: 100%; border-collapse: collapse;">
-                        <col />
-                        <col />
-                        <thead>
-                            <tr>
-                                <th align="center">
-                                    @T("Order.Notes.CreatedOn")
-                                </th>
-                                <th align="center">
-                                    @T("Order.Notes.Note")
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model.OrderNotes)
-                            {
-                                <tr>
-                                    <td style="width: 20%;">
-                                        <div style="padding: 0px 10px;">
-                                            @item.CreatedOn.ToString()
-                                        </div>
-                                    </td>
-                                    <td style="width: 80%;">
-                                        <div style="padding: 0px 10px;">
-                                            @Html.Raw(item.Note)
-                                        </div>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
+                foreach (var item in Model.OrderNotes)
+                {         
+                    <div class="ordernotes-box">
+                        <div>@T("Order.Notes.CreatedOn"): @item.CreatedOn.ToString()</div>
+                        <div>@T("Order.Notes.Note"): @Html.Raw(item.Note)</div>
+                    </div>
+                }
             }
         </div>
     </div>

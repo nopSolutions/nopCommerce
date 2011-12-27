@@ -25,64 +25,64 @@
             </div>
             <div class="clear">
             </div>
-            <div class="newcomment">            
+            <div class="newcomment">
                 @using (Html.BeginForm())
                 {
-                <table>
-                    <tr>
-                        <td colspan="2" class="leavetitle">
-                            <strong>
-                                @T("News.Comments.LeaveYourComment")
-                            </strong>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            @Html.LabelFor(model => model.AddNewComment.CommentTitle):
-                        </td>
-                        <td>
-                            @Html.TextBoxFor(model => model.AddNewComment.CommentTitle, new { style = "Width: 350px;" })
-                            @Html.ValidationMessageFor(model => model.AddNewComment.CommentTitle)
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            @Html.LabelFor(model => model.AddNewComment.CommentText):
-                        </td>
-                        <td>
-                            @Html.TextAreaFor(model => model.AddNewComment.CommentText, new { style = "Width: 350px; Height: 150px;" })
-                            @Html.ValidationMessageFor(model => model.AddNewComment.CommentText)
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="message-error" colspan="2">
-                            @{
-                                string result = TempData["nop.news.addcomment.result"] as string;
-                            }
-                            @if (!String.IsNullOrEmpty(result))
-                            {
-                                @result
-                                <br />
+                    <table>
+                        <tr>
+                            <td colspan="2" class="leavetitle">
+                                <strong>
+                                    @T("News.Comments.LeaveYourComment")
+                                </strong>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                @Html.LabelFor(model => model.AddNewComment.CommentTitle):
+                            </td>
+                            <td>
+                                @Html.TextBoxFor(model => model.AddNewComment.CommentTitle, new { style = "Width: 350px;" })
+                                @Html.ValidationMessageFor(model => model.AddNewComment.CommentTitle)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                @Html.LabelFor(model => model.AddNewComment.CommentText):
+                            </td>
+                            <td>
+                                @Html.TextAreaFor(model => model.AddNewComment.CommentText, new { style = "Width: 350px; Height: 150px;" })
+                                @Html.ValidationMessageFor(model => model.AddNewComment.CommentText)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="message-error" colspan="2">
+                                @{
+                    string result = TempData["nop.news.addcomment.result"] as string;
                                 }
-                            @Html.ValidationSummary(false)
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                        </td>
-                        <td class="button">
-                            <input type="submit" id="add-comment" name="add-comment" class="newsitemaddcommentbutton" value="@T("News.Comments.SubmitButton")" />
-                        </td>
-                    </tr>
-                </table>
+                                @if (!String.IsNullOrEmpty(result))
+                                {
+                                    @result
+                                    <br />
+                                }
+                                @Html.ValidationSummary(false)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                            </td>
+                            <td class="button">
+                                <input type="submit" id="add-comment" name="add-comment" class="newsitemaddcommentbutton" value="@T("News.Comments.SubmitButton")" />
+                            </td>
+                        </tr>
+                    </table>
                 }
             </div>
             <div class="clear">
             </div>
             <div class="commentlist">
-                <div class="newscomment">
-                    @foreach (var comment in Model.Comments)
-                    {
+                @foreach (var comment in Model.Comments)
+                {
+                    <div class="newscomment">
                         <div class="commentinfo">
                             <div class="userinfo">
                                 @if (comment.AllowViewingProfiles)
@@ -112,10 +112,10 @@
                                 <span class="commenttext">@Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(comment.CommentText, false, true, false, false, false, false))</span>
                             </div>
                         </div>
-                        <div class="clear">
-                        </div>
-                    }
-                </div>
+                    </div>
+                    <div class="clear">
+                    </div>
+                }
             </div>
         </div>
     }

@@ -50,16 +50,18 @@
                         }
                         @Html.ValidationSummary(false)
                     </div>
-                    <input type="submit" id="add-comment" name="add-comment" value="@T("News.Comments.SubmitButton")" />
+                    <div class="button">
+                        <input type="submit" id="add-comment" name="add-comment" value="@T("News.Comments.SubmitButton")" />
+                    </div>
                        
                 }
             </div>
             <div class="clear">
             </div>
             <div class="commentlist">
-                <div class="newscomment">
-                    @foreach (var comment in Model.Comments)
-                    {
+                @foreach (var comment in Model.Comments)
+                {
+                    <div class="newscomment">
                         <div class="commentinfo">
                             <div class="userinfo">
                                 @if (comment.AllowViewingProfiles)
@@ -70,18 +72,12 @@
                                 {
                                     <span class="username">@(comment.CustomerName)</span>
                                 }
-                                <div class="avatar">
-                                    @if (!String.IsNullOrEmpty(comment.CustomerAvatarUrl))
-                                    {
-                                        <img src="@(comment.CustomerAvatarUrl)" class="avatar-img" title="avatar" alt="avatar" />
-                                    }
-                                </div>
                             </div>
-                        </div>
-                        <div class="commentcontent">
                             <div class="commenttime">
                                 @T("News.Comments.CreatedOn"): <span class="statvalue">@comment.CreatedOn.ToString("g")</span>
                             </div>
+                        </div>
+                        <div class="commentcontent">
                             <div class="commenttitle">
                                 <span class="commenttext">@comment.CommentTitle</span>
                             </div>
@@ -89,10 +85,10 @@
                                 <span class="commenttext">@Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(comment.CommentText, false, true, false, false, false, false))</span>
                             </div>
                         </div>
-                        <div class="clear">
-                        </div>
-                    }
-                </div>
+                    </div>
+                    <div class="clear">
+                    </div>
+                }
             </div>
         </div>
     }

@@ -1,0 +1,18 @@
+﻿@model Nop.Web.Models.Common.TaxTypeSelectorModel
+@using Nop.Core.Domain.Tax
+@if (Model.Enabled)
+{
+    <div class="taxdisplaytypeselector">
+        <div class="title">
+            @T("Tax.SelectType")
+        </div>
+        <ul data-role="listview" data-inset="true" data-filter="false">
+            <li @(Model.CurrentTaxType == TaxDisplayType.IncludingTax ? " data-icon=false" : null)>
+                <a href="@Url.Action("taxtypeselected", "common", new { customerTaxType = ((int)TaxDisplayType.IncludingTax).ToString() })" data-ajax="false">
+                    @T("Tax.Inclusive")</a></li>
+            <li @(Model.CurrentTaxType == TaxDisplayType.ExcludingTax ? " data-icon=false" : null)>
+                <a href="@Url.Action("taxtypeselected", "common", new { customerTaxType = ((int)TaxDisplayType.ExcludingTax).ToString() })" data-ajax="false">
+                    @T("Tax.Exclusive")</a></li>
+        </ul>
+    </div>
+}

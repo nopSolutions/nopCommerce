@@ -30,15 +30,15 @@
         {
             @T("Blog.Tags") 
             <text>:&nbsp;</text>
-       for (int i = 0; i < Model.Tags.Count; i++)
-       {
-           var tag = Model.Tags[i];
+            for (int i = 0; i < Model.Tags.Count; i++)
+            {
+                var tag = Model.Tags[i];
             <a href="@Url.RouteUrl("BlogByTag", new { tag = tag })">@tag</a>
-                                                               if (i != Model.Tags.Count - 1)
-                                                               {
+                if (i != Model.Tags.Count - 1)
+                {
             <text>,&nbsp;</text>
-                                                               }
-       }
+                }
+            }
         }
     </div>
     @if (Model.AllowComments)
@@ -74,7 +74,7 @@
                         <tr>
                             <td class="message-error" colspan="2">
                                 @{
-                                    string result = TempData["nop.blog.addcomment.result"] as string;
+                    string result = TempData["nop.blog.addcomment.result"] as string;
                                 }
                                 @if (!String.IsNullOrEmpty(result))
                                 {
@@ -97,9 +97,9 @@
             <div class="clear">
             </div>
             <div class="commentlist">
-                <div class="blogcomment">
-                    @foreach (var comment in Model.Comments)
-                    {
+                @foreach (var comment in Model.Comments)
+                {
+                    <div class="blogcomment">
                         <div class="commentinfo">
                             <div class="userinfo">
                                 @if (comment.AllowViewingProfiles)
@@ -120,17 +120,16 @@
                         </div>
                         <div class="commentcontent">
                             <div class="commenttime">
-                                @T("Blog.Comments.CreatedOn"):
-                                <span class="statvalue">@comment.CreatedOn.ToString("g")</span>
+                                @T("Blog.Comments.CreatedOn"): <span class="statvalue">@comment.CreatedOn.ToString("g")</span>
                             </div>
                             <div class="commentbody">
                                 @Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(comment.CommentText, false, true, false, false, false, false))
                             </div>
                         </div>
-                        <div class="clear">
-                        </div>
-                    }
-                </div>
+                    </div>
+                    <div class="clear">
+                    </div>
+                }
             </div>
         </div>
     }

@@ -1,0 +1,16 @@
+﻿@model Nop.Web.Models.Common.CurrencySelectorModel
+@if (Model.AvailableCurrencies.Count > 1)
+{
+    <div class="currencyselector">
+        <div class="title">
+            @T("Currencies")
+        </div>
+        <ul data-role="listview" data-inset="true" data-filter="false">
+            @foreach (var currency in Model.AvailableCurrencies)
+            {
+                <li @(currency.Id == Model.CurrentCurrency.Id ? " data-icon=false" : null)><a href="@Url.Action("currencyselected", "common", new { customerCurrency = currency.Id })" data-ajax="false">
+                    @currency.Name</a></li>
+            }
+        </ul>
+    </div>
+}

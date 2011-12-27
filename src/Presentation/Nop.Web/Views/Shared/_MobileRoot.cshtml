@@ -28,7 +28,27 @@
 <body>
     <div data-role="page" data-theme="b">
         <div data-role="header" data-position="inline">
-            @Html.Partial("Header")
+            @*do not use @Html.Partial("Header")
+            use sections right here so they can be overriden in the views*@
+            @if (IsSectionDefined("top-left-button"))
+            {
+                @RenderSection("top-left-button")
+            }
+            else
+            {
+                <a href="@Url.RouteUrl("HomePage")" data-icon="home">@T("Common.Home")</a>
+            }
+            @*title*@
+            <h1>@Html.NopTitle(false)</h1>
+            @if (IsSectionDefined("top-right-button"))
+            {
+                @RenderSection("top-right-button")
+            }
+            else
+            {
+                @*<a href="#" data-rel="back" data-icon="back">Back</a>*@
+                @Html.Action("ConfigButton", "Common")
+            }
         </div>
         @if (IsSectionDefined("headerlinks"))
         {
@@ -43,9 +63,16 @@
         <div data-role="content">
             @RenderBody()
         </div>
-        <div data-role="footer">
-            @Html.Action("Footer", "Common")
-        </div>
+        @if (IsSectionDefined("footer"))
+        {
+            @RenderSection("footer")
+        }
+        else
+        {
+            <div data-role="footer">
+                @Html.Action("Footer", "Common")
+            </div>
+        }
     </div>
 </body>
 </html>

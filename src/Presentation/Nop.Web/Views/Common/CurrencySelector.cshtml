@@ -1,25 +1,24 @@
 ﻿@model Nop.Web.Models.Common.CurrencySelectorModel
 @if (Model.AvailableCurrencies.Count > 1)
 {
-    using (Ajax.BeginForm("CurrencySelected", "Common", new AjaxOptions { OnComplete = "onCurrencyChangedRequestCompleted();" }, new { id = "form-currencyselector" }))
+    var currencies = Model.AvailableCurrencies.Select(x => new SelectListItem
     {
-        var currencies = Model.AvailableCurrencies.Select(x => new SelectListItem
-        {
-            Text = x.Name,
-            Value = x.Id.ToString(),
-            Selected = x.Id.Equals(Model.CurrentCurrency.Id)
-        });
+        Text = x.Name,
+        Value = x.Id.ToString(),
+        Selected = x.Id.Equals(Model.CurrentCurrency.Id)
+    });
     
     @Html.DropDownList("customerCurrency",
                  currencies,
                  new { onChange = "onCurrencyChanged();" })
-    }
+    
     <script type="text/javascript">
         function onCurrencyChanged() {
-            $("#form-currencyselector").submit();
-        }
-        function onCurrencyChangedRequestCompleted() {
-            location.reload();
+            var selectedCurrency = document.getElementById('customerCurrency');
+            var selectedCurrencyId = selectedCurrency.options[selectedCurrency.selectedIndex].value;
+            var changeCurrencyActionUrl = '@Url.Action("CurrencySelected", "Common", new { customerCurrency = "currencyplaceholder" })';
+            changeCurrencyActionUrl = changeCurrencyActionUrl.replace("currencyplaceholder", selectedCurrencyId);
+            setLocation(changeCurrencyActionUrl);
         }
     </script>
 }

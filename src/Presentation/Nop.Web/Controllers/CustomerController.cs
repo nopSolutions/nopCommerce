@@ -1120,8 +1120,6 @@ namespace Nop.Web.Controllers
             if (!IsCurrentUserRegistered())
                 return new HttpUnauthorizedResult();
 
-            var customer = _workContext.CurrentCustomer;
-
             //get recurring payment identifier
             int recurringPaymentId = 0;
             foreach (var formValue in form.AllKeys)
@@ -1129,6 +1127,12 @@ namespace Nop.Web.Controllers
                     recurringPaymentId = Convert.ToInt32(formValue.Substring("cancelRecurringPayment".Length));
 
             var recurringPayment = _orderService.GetRecurringPaymentById(recurringPaymentId);
+            if (recurringPayment == null)
+            {
+                return RedirectToAction("Orders");
+            }
+
+            var customer = _workContext.CurrentCustomer;
             if (_orderProcessingService.CanCancelRecurringPayment(customer, recurringPayment))
             {
                 var errors = _orderProcessingService.CancelRecurringPayment(recurringPayment);

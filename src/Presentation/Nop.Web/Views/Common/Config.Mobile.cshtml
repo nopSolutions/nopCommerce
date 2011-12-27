@@ -1,0 +1,9 @@
+﻿@{
+    Layout = "~/Views/Shared/_MobileRoot.cshtml";
+
+    //title
+    Html.AddTitleParts(T("Common.Config").Text);
+}
+@Html.Action("TaxTypeSelector", "Common")
+@Html.Action("CurrencySelector", "Common")
+@Html.Action("LanguageSelector", "Common")

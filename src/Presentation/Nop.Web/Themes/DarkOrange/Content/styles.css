@@ -496,7 +496,7 @@ ul.languagelist li:hover{cursor:pointer;}
 .newscomments .newcomment td.leavetitle{padding:0 10px 10px 0;font-weight:700;font-size:1.1em;color:#3a3a3a;}
 .newscomments .newcomment td.button{text-align:right;}
 .newscomments .commentlist{border-top:solid 1px #6a6a6a;margin-top:10px;background:url(images/cart-footer-bg.gif) repeat-x bottom;}
-.newscomment{border-bottom:solid 1px #E3E3E3;}
+.newscomment{}
 .newscomment .commentinfo{width:170px;float:left;padding:5px;height:100%;border-right:solid 1px #F3F3F3;}
 .newscomment .commentinfo .userinfo{padding-top:5px;}
 .newscomment .commentinfo .userinfo a.username{font-weight:700;margin-bottom:5px;}
@@ -533,7 +533,7 @@ ul.languagelist li:hover{cursor:pointer;}
 .blogcomments .newcomment td.leavetitle{padding:0 10px 10px 0;font-weight:700;font-size:1.1em;color:#3a3a3a;}
 .blogcomments .newcomment td.button{text-align:right;}
 .blogcomments .commentlist{border-top:solid 1px #6a6a6a;margin-top:10px;background:url(images/cart-footer-bg.gif) repeat-x bottom;}
-.blogcomment{border-bottom:solid 1px #E3E3E3;}
+.blogcomment{}
 .blogcomment .commentinfo{width:170px;float:left;padding:5px;height:100%;border-right:solid 1px #F3F3F3;}
 .blogcomment .commentinfo .userinfo{padding-top:5px;}
 .blogcomment .commentinfo .userinfo a.username{font-weight:700;margin-bottom:5px;}

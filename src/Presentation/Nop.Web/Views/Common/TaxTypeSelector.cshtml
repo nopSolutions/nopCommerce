@@ -2,32 +2,31 @@
 @using Nop.Core.Domain.Tax
 @if (Model.Enabled)
 {
-    using (Ajax.BeginForm("TaxTypeSelected", "Common", new AjaxOptions { OnComplete = "onTaxTypeChangedRequestCompleted();" }, new { id = "form-taxtypeselector" }))
+    var taxTypes = new List<SelectListItem>();
+    taxTypes.Add(new SelectListItem()
     {
-        var taxTypes = new List<SelectListItem>();
-        taxTypes.Add(new SelectListItem()
-        {
-            Text = T("Tax.Inclusive").Text,
-            Value = ((int)TaxDisplayType.IncludingTax).ToString(),
-            Selected = Model.CurrentTaxType == TaxDisplayType.IncludingTax
-        });
-        taxTypes.Add(new SelectListItem()
-        {
-            Text = T("Tax.Exclusive").Text,
-            Value = ((int)TaxDisplayType.ExcludingTax).ToString(),
-            Selected = Model.CurrentTaxType == TaxDisplayType.ExcludingTax
-        });
+        Text = T("Tax.Inclusive").Text,
+        Value = ((int)TaxDisplayType.IncludingTax).ToString(),
+        Selected = Model.CurrentTaxType == TaxDisplayType.IncludingTax
+    });
+    taxTypes.Add(new SelectListItem()
+    {
+        Text = T("Tax.Exclusive").Text,
+        Value = ((int)TaxDisplayType.ExcludingTax).ToString(),
+        Selected = Model.CurrentTaxType == TaxDisplayType.ExcludingTax
+    });
     
     @Html.DropDownList("customerTaxType",
         taxTypes,
         new { onChange = "onTaxTypeChanged();" })
-    }
+    
     <script type="text/javascript">
         function onTaxTypeChanged() {
-            $("#form-taxtypeselector").submit();
-        }
-        function onTaxTypeChangedRequestCompleted() {
-            location.reload();
+            var selectedTaxType = document.getElementById('customerTaxType');
+            var selectedTaxTypeId = selectedTaxType.options[selectedTaxType.selectedIndex].value;
+            var changeTaxTypeActionUrl = '@Url.Action("TaxTypeSelected", "Common", new { customerTaxType = "taxtypeplaceholder" })';
+            changeTaxTypeActionUrl = changeTaxTypeActionUrl.replace("taxtypeplaceholder", selectedTaxTypeId);
+            setLocation(changeTaxTypeActionUrl);
         }
     </script>
 }

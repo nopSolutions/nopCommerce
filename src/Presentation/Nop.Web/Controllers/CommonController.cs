@@ -112,8 +112,8 @@ namespace Nop.Web.Controllers
         }
 
         //language
-        [ChildActionOnly]
-        public ActionResult LanguageSelector()
+        [NonAction]
+        private LanguageSelectorModel PrepareLanguageSelectorModel()
         {
             var model = new LanguageSelectorModel()
             {
@@ -121,9 +121,14 @@ namespace Nop.Web.Controllers
                 AvailableLanguages = _languageService.GetAllLanguages().Select(x => x.ToModel()).ToList(),
                 UseImages = _localizationSettings.UseImagesForLanguageSelection
             };
+            return model;
+        }
+        [ChildActionOnly]
+        public ActionResult LanguageSelector()
+        {
+            var model = PrepareLanguageSelectorModel();
             return PartialView(model);
         }
-
         public ActionResult SetLanguage(int langid)
         {
             var language = _languageService.GetLanguageById(langid);
@@ -169,47 +174,91 @@ namespace Nop.Web.Controllers
         }
 
         //currency
+        [NonAction]
+        private CurrencySelectorModel PrepareCurrencySelectorModel()
+        {
+            var model = new CurrencySelectorModel()
+            {
+                CurrentCurrency = _workContext.WorkingCurrency.ToModel(),
+                AvailableCurrencies = _currencyService.GetAllCurrencies().Select(x => x.ToModel()).ToList()
+            };
+            return model;
+        }
         [ChildActionOnly]
         public ActionResult CurrencySelector()
         {
-            var model = new CurrencySelectorModel();
-            model.CurrentCurrency = _workContext.WorkingCurrency.ToModel();
-            model.AvailableCurrencies = _currencyService.GetAllCurrencies().Select(x => x.ToModel()).ToList();
+            var model = PrepareCurrencySelectorModel();
             return PartialView(model);
         }
-
         public ActionResult CurrencySelected(int customerCurrency)
         {
             var currency = _currencyService.GetCurrencyById(customerCurrency);
             if (currency != null)
-            {
                 _workContext.WorkingCurrency = currency;
+
+            //TODO: URL referrer is null in IE 8. Fix it
+            if (HttpContext.Request.UrlReferrer != null)
+            {
+                return Redirect(HttpContext.Request.UrlReferrer.PathAndQuery);
             }
-            var model = new CurrencySelectorModel();
-            model.CurrentCurrency = _workContext.WorkingCurrency.ToModel();
-            model.AvailableCurrencies = _currencyService.GetAllCurrencies().Select(x => x.ToModel()).ToList();
-            return PartialView("CurrencySelector", model);
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         //tax type
+        [NonAction]
+        private TaxTypeSelectorModel PrepareTaxTypeSelectorModel()
+        {
+            var model = new TaxTypeSelectorModel()
+            {
+                Enabled = _taxSettings.AllowCustomersToSelectTaxDisplayType,
+                CurrentTaxType = _workContext.TaxDisplayType
+            };
+            return model;
+        }
         [ChildActionOnly]
         public ActionResult TaxTypeSelector()
         {
-            var model = new TaxTypeSelectorModel();
-            model.Enabled = _taxSettings.AllowCustomersToSelectTaxDisplayType;
-            model.CurrentTaxType = _workContext.TaxDisplayType;
+            var model = PrepareTaxTypeSelectorModel();
             return PartialView(model);
         }
-
         public ActionResult TaxTypeSelected(int customerTaxType)
         {
             var taxDisplayType = (TaxDisplayType)Enum.ToObject(typeof(TaxDisplayType), customerTaxType);
             _workContext.TaxDisplayType = taxDisplayType;
 
-            var model = new TaxTypeSelectorModel();
-            model.Enabled = _taxSettings.AllowCustomersToSelectTaxDisplayType;
-            model.CurrentTaxType = _workContext.TaxDisplayType;
-            return PartialView("TaxTypeSelector", model);
+            //TODO: URL referrer is null in IE 8. Fix it
+            if (HttpContext.Request.UrlReferrer != null)
+            {
+                return Redirect(HttpContext.Request.UrlReferrer.PathAndQuery);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+        }
+
+        //Configuration page (used on mobile devices)
+        [ChildActionOnly]
+        public ActionResult ConfigButton()
+        {
+            var langModel = PrepareLanguageSelectorModel();
+            var currModel = PrepareCurrencySelectorModel();
+            var taxModel = PrepareTaxTypeSelectorModel();
+            //should we display the button?
+            if (langModel.AvailableLanguages.Count > 1 ||
+                currModel.AvailableCurrencies.Count > 1 ||
+                taxModel.Enabled)
+                return PartialView();
+            else
+                return Content("");
+        }
+
+        public ActionResult Config()
+        {
+            return View();
         }
 
         //header links

@@ -62,6 +62,21 @@ set @resources='
   <LocaleResource Name="Forum.Replies.Count">
     <Value>{0} Replies</Value>
   </LocaleResource>
+  <LocaleResource Name="Common.Config">
+    <Value>Config</Value>
+  </LocaleResource>
+  <LocaleResource Name="Languages">
+    <Value>Languages</Value>
+  </LocaleResource>
+  <LocaleResource Name="Currencies">
+    <Value>Currencies</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tax.SelectType">
+    <Value>Tax display type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Common.Home">
+    <Value>Home</Value>
+  </LocaleResource>
 </Language>
 '
 
