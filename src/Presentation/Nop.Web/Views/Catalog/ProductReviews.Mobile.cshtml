@@ -60,46 +60,50 @@
             <div>
                 <strong>@T("Reviews.ExistingReviews")</strong>
             </div>
-            @foreach (var review in Model.Items)
-            {
-                int ratingPercent = review.Rating * 20;
+            <ul data-role="listview" data-inset="true" data-filter="false">
+                @foreach (var review in Model.Items)
+                {
+                    int ratingPercent = review.Rating * 20;
                 
-                <div class="product-review-item">
-                    <div class="review-title">
-                        @review.Title
-                    </div>
-                    <div class="product-review-box">
-                        <div class="rating">
-                            <div style="width: @(ratingPercent)%">
+                    <li>
+                        <div class="product-review-item">
+                            <div class="review-title">
+                                @review.Title
+                            </div>
+                            <div class="product-review-box">
+                                <div class="rating">
+                                    <div style="width: @(ratingPercent)%">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clear">
+                            </div>
+                            <div class="review-text">
+                                @Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(review.ReviewText, false, true, false, false, false, false))
+                            </div>
+                            <div class="clear">
+                            </div>
+                            <div class="review-info">
+                                <div>
+                                    @T("Reviews.From")<text>:</text>
+                                    @if (review.AllowViewingProfiles)
+                                    {
+                                        <a href="@Url.RouteUrl("CustomerProfile", new { id = review.CustomerId })">@(review.CustomerName)</a>
+                                    }
+                                    else
+                                    {
+                                        @review.CustomerName
+                                    }
+                                </div>
+                                <div>
+                                    @T("Reviews.Date")<text>:</text>
+                                    @review.WrittenOnStr
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="clear">
-                    </div>
-                    <div class="review-text">
-                        @Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(review.ReviewText, false, true, false, false, false, false))
-                    </div>
-                    <div class="clear">
-                    </div>
-                    <div class="review-info">
-                        <div>
-                            @T("Reviews.From")<text>:</text>
-                            @if (review.AllowViewingProfiles)
-                            {
-                                <a href="@Url.RouteUrl("CustomerProfile", new { id = review.CustomerId })">@(review.CustomerName)</a>
-                            }
-                            else
-                            {
-                                @review.CustomerName
-                            }
-                        </div>
-                        <div>
-                            @T("Reviews.Date")<text>:</text>
-                            @review.WrittenOnStr
-                        </div>
-                    </div>
-                </div>
-            }
+                    </li>
+                }
+            </ul>
         </div>
     }
 </div>

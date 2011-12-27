@@ -42,33 +42,37 @@
                     <div class="clear">
                     </div>
                     <div>
-                        @foreach (var item in Model.RecurringOrders)
-                        {
-                            <div class="recurring-payments-box">
-                                <div>
-                                    @T("Account.CustomerOrders.RecurringOrders.StartDate"): @item.StartDate
-                                </div>
-                                <div>
-                                    @T("Account.CustomerOrders.RecurringOrders.CycleInfo"): @item.CycleInfo</div>
-                                <div>
-                                    @T("Account.CustomerOrders.RecurringOrders.NextPayment"): @item.NextPayment</div>
-                                <div>
-                                    @T("Account.CustomerOrders.RecurringOrders.TotalCycles"): @item.TotalCycles
-                                </div>
-                                <div>
-                                    @T("Account.CustomerOrders.RecurringOrders.CyclesRemaining"): @item.CyclesRemaining
-                                </div>
-                                <div>
-                                    @T("Account.CustomerOrders.RecurringOrders.InitialOrder"): <a class="link" href="@Url.RouteUrl("OrderDetails", new { orderId = @item.InitialOrderId })">@string.Format(@T("Account.CustomerOrders.RecurringOrders.ViewInitialOrder").Text, item.InitialOrderId)</a>
-                                </div>
-                                <div>
-                                    @if (item.CanCancel)
-                                    {
-                                        <input type="submit" name="cancelRecurringPayment@(item.Id)" value="@T("Account.CustomerOrders.RecurringOrders.Cancel")" id="cancelRecurringPayment@(item.Id)" />
-                                    }
-                                </div>
-                            </div>
-                        }
+                        <ul data-role="listview" data-inset="true" data-filter="false">
+                            @foreach (var item in Model.RecurringOrders)
+                            {
+                                <li>
+                                    <div class="recurring-payments-box">
+                                        <div>
+                                            @T("Account.CustomerOrders.RecurringOrders.StartDate"): @item.StartDate
+                                        </div>
+                                        <div>
+                                            @T("Account.CustomerOrders.RecurringOrders.CycleInfo"): @item.CycleInfo</div>
+                                        <div>
+                                            @T("Account.CustomerOrders.RecurringOrders.NextPayment"): @item.NextPayment</div>
+                                        <div>
+                                            @T("Account.CustomerOrders.RecurringOrders.TotalCycles"): @item.TotalCycles
+                                        </div>
+                                        <div>
+                                            @T("Account.CustomerOrders.RecurringOrders.CyclesRemaining"): @item.CyclesRemaining
+                                        </div>
+                                        <div>
+                                            @T("Account.CustomerOrders.RecurringOrders.InitialOrder"): <a class="link" href="@Url.RouteUrl("OrderDetails", new { orderId = @item.InitialOrderId })">@string.Format(@T("Account.CustomerOrders.RecurringOrders.ViewInitialOrder").Text, item.InitialOrderId)</a>
+                                        </div>
+                                        <div class="buttons">
+                                            @if (item.CanCancel)
+                                            {
+                                                <input type="submit" name="cancelRecurringPayment@(item.Id)" value="@T("Account.CustomerOrders.RecurringOrders.Cancel")" id="cancelRecurringPayment@(item.Id)" />
+                                            }
+                                        </div>
+                                    </div>
+                                </li>
+                            }
+                        </ul>
                     </div>
                 </div>
                 }
@@ -78,32 +82,34 @@
             <div class="order-list">
                 @if (Model.Orders.Count > 0)
                 {
-                    foreach (var order in Model.Orders)
-                    {
-                    <div class="order-item">
-                        <div>
-                            <div>
-                                <b>@T("Account.CustomerOrders.OrderNumber"): @order.Id</b>
-                            </div>
-                            <div>
-                                @T("Account.CustomerOrders.OrderStatus"): @order.OrderStatus</div>
-                            <div>
-                                @T("Account.CustomerOrders.OrderDate"): @order.CreatedOn.ToString()</div>
-                            <div>
-                                @T("Account.CustomerOrders.OrderTotal"): @order.OrderTotal
-                            </div>
-                        </div>
-                        <div class="buttons">
-                            @if (order.IsReturnRequestAllowed)
-                            {
-                                <a href="@Url.RouteUrl("ReturnRequest", new { orderId = @order.Id })" data-role="button">@T("Account.CustomerOrders.ReturnItems")</a>
-                            }
-                            <a href="@Url.RouteUrl("OrderDetails", new { orderId = @order.Id })" data-role="button">@T("Account.CustomerOrders.OrderDetails")</a>
-                        </div>
-                    </div>
-                    <div class="clear">
-                    </div>
-                    }
+                    <ul data-role="listview" data-inset="true" data-filter="false">
+                        @foreach (var order in Model.Orders)
+                        {
+                            <li>
+                                <div class="order-item">
+                                    <div>
+                                        <div>
+                                            <b>@T("Account.CustomerOrders.OrderNumber"): @order.Id</b>
+                                        </div>
+                                        <div>
+                                            @T("Account.CustomerOrders.OrderStatus"): @order.OrderStatus</div>
+                                        <div>
+                                            @T("Account.CustomerOrders.OrderDate"): @order.CreatedOn.ToString()</div>
+                                        <div>
+                                            @T("Account.CustomerOrders.OrderTotal"): @order.OrderTotal
+                                        </div>
+                                    </div>
+                                    <div class="buttons">
+                                        @if (order.IsReturnRequestAllowed)
+                                        {
+                                            <a href="@Url.RouteUrl("ReturnRequest", new { orderId = @order.Id })" data-role="button">@T("Account.CustomerOrders.ReturnItems")</a>
+                                        }
+                                        <a href="@Url.RouteUrl("OrderDetails", new { orderId = @order.Id })" data-role="button">@T("Account.CustomerOrders.OrderDetails")</a>
+                                    </div>
+                                </div>
+                            </li>
+                        }
+                    </ul>
                 }
                 else
                 {

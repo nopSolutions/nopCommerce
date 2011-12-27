@@ -1,10 +1,13 @@
 ﻿@model Nop.Web.Models.Catalog.ProductModel
 <a href="@Url.RouteUrl("Product", new { productId = Model.Id, SeName = Model.SeName })">
     <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" />
-    <h2 class="product-title">@Model.Name</h2>
-    <div class="description">
-        @Html.Raw(Model.ShortDescription)
-    </div>
+    <div class="product-title">@Model.Name</div>
+    @if (!String.IsNullOrEmpty(Model.ShortDescription))
+    {
+        <div class="description">
+            @Html.Raw(Model.ShortDescription)
+        </div>
+    }
     <div class="prices">
         @Html.Partial("_ProductPrice", Model.ProductPrice)
     </div>

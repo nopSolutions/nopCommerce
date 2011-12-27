@@ -197,51 +197,56 @@
                 @T("Order.Product(s)")</div>
             <div class="clear">
             </div>
-            foreach (var item in Model.Items)
-            {
-            <div class="products-box">
-                <div class="product">
-                    <b><a href="@Url.RouteUrl("Product", new { productId = item.ProductId, SeName = item.ProductSeName })" title="View details">@item.ProductName</a></b>
-                    @if (!String.IsNullOrEmpty(item.AttributeInfo))
-                    {
-                        <br />
-                        @Html.Raw(item.AttributeInfo)
-                    }
-                </div>
-                @if (Model.ShowSku && !string.IsNullOrEmpty(item.Sku))
+            
+            <ul data-role="listview" data-inset="true" data-filter="false">
+                @foreach (var item in Model.Items)
                 {
-                    <div class="sku">
-                        @T("Order.Product(s).SKU"): @item.Sku
-                    </div>
+                    <li>
+                        <div class="products-box">
+                            <div class="product">
+                                <b><a href="@Url.RouteUrl("Product", new { productId = item.ProductId, SeName = item.ProductSeName })" title="View details">@item.ProductName</a></b>
+                                @if (!String.IsNullOrEmpty(item.AttributeInfo))
+                                {
+                                    <br />
+                                    @Html.Raw(item.AttributeInfo)
+                                }
+                            </div>
+                            @if (Model.ShowSku && !string.IsNullOrEmpty(item.Sku))
+                            {
+                                <div class="sku">
+                                    @T("Order.Product(s).SKU"): @item.Sku
+                                </div>
+                            }
+                            <div class="unitprice">
+                                @T("Order.Product(s).Price"): @item.UnitPrice
+                            </div>
+                            <div class="qty">
+                                @T("Order.Product(s).Quantity"): @item.Quantity
+                            </div>
+                            <div class="subtotal">
+                                @T("Order.Product(s).Total"): @item.SubTotal
+                            </div>
+                        </div>
+                    </li>
                 }
-                <div class="unitprice">
-                    @T("Order.Product(s).Price"): @item.UnitPrice
-                </div>
-                <div class="qty">
-                    @T("Order.Product(s).Quantity"): @item.Quantity
-                </div>
-                <div class="subtotal">
-                    @T("Order.Product(s).Total"): @item.SubTotal
-                </div>
-            </div>
-            }
-            if (!String.IsNullOrEmpty(Model.CheckoutAttributeInfo))
-            {
+            </ul>
+                if (!String.IsNullOrEmpty(Model.CheckoutAttributeInfo))
+                {
             <div class="checkout-attributes">
                 @Html.Raw(Model.CheckoutAttributeInfo)
             </div>
             <div class="clear">
             </div>
-            }
+                }
 @*Reorder support*@
-            if (Model.IsReOrderAllowed)
-            {
+                if (Model.IsReOrderAllowed)
+                {
             <a href="@Url.RouteUrl("ReOrder", new { orderId = @Model.Id })" data-role="button">@T("Order.Reorder")</a>
-            }
-            if (Model.IsReturnRequestAllowed)
-            {
+                }
+                if (Model.IsReturnRequestAllowed)
+                {
             <a href="@Url.RouteUrl("ReturnRequest", new { orderId = @Model.Id })" data-role="button">@T("Order.ReturnItems")</a>
-            }
+                }
             <div class="clear">
             </div>
         }
@@ -395,16 +400,18 @@
             {
                 <div class="section-title">
                     @T("Order.Notes")
-                </div>
-                <div class="clear">
-                </div>
-                foreach (var item in Model.OrderNotes)
-                {         
-                    <div class="ordernotes-box">
-                        <div>@T("Order.Notes.CreatedOn"): @item.CreatedOn.ToString()</div>
-                        <div>@T("Order.Notes.Note"): @Html.Raw(item.Note)</div>
-                    </div>
-                }
+                </div>                
+                <ul data-role="listview" data-inset="true" data-filter="false">
+                    @foreach (var item in Model.OrderNotes)
+                    {      
+                        <li>
+                            <div class="ordernotes-box">
+                                <div>@T("Order.Notes.CreatedOn"): @item.CreatedOn.ToString()</div>
+                                <div>@T("Order.Notes.Note"): @Html.Raw(item.Note)</div>
+                            </div>
+                        </li>
+                    }
+                </ul>
             }
         </div>
     </div>

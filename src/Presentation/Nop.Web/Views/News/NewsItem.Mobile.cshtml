@@ -59,35 +59,40 @@
             <div class="clear">
             </div>
             <div class="commentlist">
-                @foreach (var comment in Model.Comments)
+                @if (Model.Comments.Count > 0)
                 {
-                    <div class="newscomment">
-                        <div class="commentinfo">
-                            <div class="userinfo">
-                                @if (comment.AllowViewingProfiles)
-                                {
-                                    <a href="@Url.RouteUrl("CustomerProfile", new { id = comment.CustomerId })" class="username">@(comment.CustomerName)</a>
-                                }
-                                else
-                                {
-                                    <span class="username">@(comment.CustomerName)</span>
-                                }
-                            </div>
-                            <div class="commenttime">
-                                @T("News.Comments.CreatedOn"): <span class="statvalue">@comment.CreatedOn.ToString("g")</span>
-                            </div>
-                        </div>
-                        <div class="commentcontent">
-                            <div class="commenttitle">
-                                <span class="commenttext">@comment.CommentTitle</span>
-                            </div>
-                            <div class="commentbody">
-                                <span class="commenttext">@Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(comment.CommentText, false, true, false, false, false, false))</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="clear">
-                    </div>
+                    <ul data-role="listview" data-inset="true" data-filter="false">
+                        @foreach (var comment in Model.Comments)
+                        {
+                            <li>
+                                <div class="newscomment">
+                                    <div class="commentinfo">
+                                        <div class="userinfo">
+                                            @if (comment.AllowViewingProfiles)
+                                            {
+                                                <a href="@Url.RouteUrl("CustomerProfile", new { id = comment.CustomerId })" class="username">@(comment.CustomerName)</a>
+                                            }
+                                            else
+                                            {
+                                                <span class="username">@(comment.CustomerName)</span>
+                                            }
+                                        </div>
+                                        <div class="commenttime">
+                                            @T("News.Comments.CreatedOn"): <span class="statvalue">@comment.CreatedOn.ToString("g")</span>
+                                        </div>
+                                    </div>
+                                    <div class="commentcontent">
+                                        <div class="commenttitle">
+                                            <span class="commenttext">@comment.CommentTitle</span>
+                                        </div>
+                                        <div class="commentbody">
+                                            <span class="commenttext">@Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(comment.CommentText, false, true, false, false, false, false))</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        }
+                    </ul>
                 }
             </div>
         </div>

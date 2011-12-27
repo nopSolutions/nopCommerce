@@ -19,14 +19,11 @@
         <div class="forum-subscriptions-box">
             @if (Model.ForumSubscriptions.Count > 0)
             {
-                <div>
-                    @T("Account.BackInStockSubscriptions.Description")
-                </div>
                 <ul data-role="listview" data-inset="true" data-filter="false">
                     @foreach (var fs in Model.ForumSubscriptions)
                     {
                         <li>
-                            <div>
+                            <div class="item">
                                 <div>
                                     @if (fs.TopicSubscription)
                                     {

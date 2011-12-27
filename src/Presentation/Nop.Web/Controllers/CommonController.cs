@@ -550,7 +550,16 @@ namespace Nop.Web.Controllers
         {
             _customerService.SaveCustomerAttribute(_workContext.CurrentCustomer,
                 SystemCustomerAttributeNames.DontUseMobileVersion, dontUseMobileVersion);
-            return RedirectToAction("Index", "Home");
+
+            //TODO: URL referrer is null in IE 8. Fix it
+            if (HttpContext.Request.UrlReferrer != null)
+            {
+                return Redirect(HttpContext.Request.UrlReferrer.PathAndQuery);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
         [ChildActionOnly]
         public ActionResult ChangeDeviceBlock()

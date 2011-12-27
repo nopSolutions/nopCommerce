@@ -22,63 +22,63 @@
             <div class="address-list">
                 @if (Model.Addresses.Count > 0)
                 {
-                    for (int i = 0; i < Model.Addresses.Count; i++)
-                    {
-                        var address = Model.Addresses[i];
-                    <div class="address-item">
-                        <div>
-                            <div>
-                                <b>@address.FirstName @address.LastName</b>
-                            </div>
-                            <div>
-                                @Html.LabelFor(model => model.Addresses[i].Email):
-                                @address.Email
-                            </div>
-                            <div>
-                                @Html.LabelFor(model => model.Addresses[i].PhoneNumber):
-                                @address.PhoneNumber
-                            </div>
-                            <div>
-                                @Html.LabelFor(model => model.Addresses[i].FaxNumber):
-                                @address.FaxNumber
-                            </div>
-                            @if (!String.IsNullOrEmpty(address.Company))
-                            {
-                                <div>
-                                    @address.Company
+                    <ul data-role="listview" data-inset="true" data-filter="false">
+                        @for (int i = 0; i < Model.Addresses.Count; i++)
+                        {
+                            var address = Model.Addresses[i];
+                        
+                            <li>
+                                <div class="address-item">
+                                    <div>
+                                        <div>
+                                            <b>@address.FirstName @address.LastName</b>
+                                        </div>
+                                        <div>
+                                            @Html.LabelFor(model => model.Addresses[i].Email):
+                                            @address.Email
+                                        </div>
+                                        <div>
+                                            @Html.LabelFor(model => model.Addresses[i].PhoneNumber):
+                                            @address.PhoneNumber
+                                        </div>
+                                        <div>
+                                            @Html.LabelFor(model => model.Addresses[i].FaxNumber):
+                                            @address.FaxNumber
+                                        </div>
+                                        @if (!String.IsNullOrEmpty(address.Company))
+                                        {
+                                            <div>
+                                                @address.Company
+                                            </div>
+                                        }
+                                        <div>
+                                            @address.Address1
+                                        </div>
+                                        @if (!String.IsNullOrEmpty(address.Address2))
+                                        {
+                                            <div>
+                                                @address.Address2
+                                            </div>
+                                        }
+                                        <div>
+                                            @address.City,
+                                            @address.StateProvinceName
+                                            @address.ZipPostalCode</div>
+                                        @if (!String.IsNullOrEmpty(address.CountryName))
+                                        {
+                                            <div>
+                                                @address.CountryName
+                                            </div>
+                                        }
+                                    </div>
+                                    <div class="buttons">
+                                        <a href="@Url.RouteUrl("CustomerAddressEdit", new { addressId = address.Id })" data-role="button">@T("Common.Edit")</a>
+                                        <a href="@Url.RouteUrl("CustomerAddressDelete", new { addressId = address.Id })" data-role="button">@T("Common.Delete")</a>
+                                    </div>
                                 </div>
-                            }
-                            <div>
-                                @address.Address1
-                            </div>
-                            @if (!String.IsNullOrEmpty(address.Address2))
-                            {
-                                <div>
-                                    @address.Address2
-                                </div>
-                            }
-                            <div>
-                                @address.City,
-                                @address.StateProvinceName
-                                @address.ZipPostalCode</div>
-                            @if (!String.IsNullOrEmpty(address.CountryName))
-                            {
-                                <div>
-                                    @address.CountryName
-                                </div>
-                            }
-                        </div>
-                        <div class="buttons">
-                            <a href="@Url.RouteUrl("CustomerAddressEdit", new { addressId = address.Id })" data-role="button">@T("Common.Edit")</a>
-                            <a href="@Url.RouteUrl("CustomerAddressDelete", new { addressId = address.Id })" data-role="button">@T("Common.Delete")</a>
-                        </div>
-                    </div>
-                            if (i != Model.Addresses.Count - 1)
-                            {
-                    <div class="clear">
-                    </div>
-                            }
-                    }
+                            </li>
+                        }
+                    </ul>
                 }
                 else
                 {

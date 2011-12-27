@@ -14,7 +14,7 @@
             @foreach (var pm in Model.Messages)
             {
                 <li>
-                    <div>
+                    <div class="item">
                         <div>
                             @T("PrivateMessages.Inbox.SubjectColumn"): @Html.RouteLink(pm.Subject, "ViewPM", new { privateMessageId = pm.Id }, new { @class = (pm.IsRead) ? "pmread" : "pmunread" })
                         </div>
