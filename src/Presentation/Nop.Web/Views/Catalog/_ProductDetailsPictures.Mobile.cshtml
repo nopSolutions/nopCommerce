@@ -1,14 +1,30 @@
 ﻿@model Nop.Web.Models.Catalog.ProductModel
-<div class="picture">
-    <table style="margin-top: 10px;">
-        <tr>
-            @foreach (var picture in Model.PictureModels)
-            {
-                <td align="left">
-                    @*UNDONE display thumbs for mobile devices?*@
-                    <img src="@picture.ImageUrl" alt="@picture.AlternateText" title="@picture.Title" />
-                </td>
-            }
-        </tr>
-    </table>
-</div>
+@if (Model.PictureModels.Count > 0)
+{
+    //we do not use Model.DefaultPictureModel in mobile version
+    var defaultPicture = Model.PictureModels.FirstOrDefault();
+    <div class="defaultpicture">
+        <img id="defaultimage" alt="@defaultPicture.AlternateText" src="@defaultPicture.FullSizeImageUrl" title="@defaultPicture.Title" />
+    </div>
+}
+@if (Model.PictureModels.Count > 1)
+{
+    <script language="javascript" type="text/javascript">
+        function UpdateMainImage(url) {
+            //show progress
+            $.mobile.showPageLoadingMsg();
+            var imgMain = document.getElementById('defaultimage');
+            imgMain.src = url;
+            //hide progress
+            $.mobile.hidePageLoadingMsg();
+        }
+    </script>
+    <ul>
+        @foreach (var picture in Model.PictureModels)
+        {
+            <li class="picture">
+                <img src="@picture.ImageUrl" alt="@picture.AlternateText" title="@picture.Title" onclick="UpdateMainImage('@(picture.FullSizeImageUrl)')" />
+            </li>
+        }
+    </ul>
+}

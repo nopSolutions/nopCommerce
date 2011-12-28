@@ -17,7 +17,7 @@
     <script type="text/javascript">
     
 //<![CDATA[
-        var priceValForDynUpd_@(Model.ProductVariantId) = @(((float)(Model.PriceValue != Model.PriceWithDiscountValue ? Model.PriceWithDiscountValue : Model.PriceValue)).ToString());//]]>
+        var priceValForDynUpd_@(Model.ProductVariantId) = @(((float)(Model.PriceValue != Model.PriceWithDiscountValue ? Model.PriceWithDiscountValue : Model.PriceValue)).ToString(new CultureInfo("en-US")));//]]>
 
     </script>
 

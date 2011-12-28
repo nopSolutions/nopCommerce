@@ -274,7 +274,10 @@
 .product-collateral{margin-top:10px;margin-bottom:10px;clear:both;}
 .product-essential{}
 .product-details-info{}
-.product-details-info .picture{margin-top:25px;margin-bottom:15px;}
+.product-details-info .defaultpicture{margin:5px;}
+.product-details-info .defaultpicture img{max-width:100%;}
+.product-details-info .picture{margin:5px;display:inline !important;}
+.product-details-info .picture img{max-width:100%;}
 .product-details-info .overview{margin-right:15px;margin-top:25px;padding:5px;}
 .product-details-info .overview .productname{color:#f93;font-size:1.3em;margin-bottom:.3em;}
 .product-details-info .overview .shortdescription,.product-details-info .overview .manufacturers,.product-details-info .overview .sku,.product-details-info .overview .manufacturerpartnumber,.product-details-info .overview .stock,.product-details-info .overview .gtin{margin-bottom:.3em;font-size:1.1em;}
@@ -309,7 +312,11 @@
 .product-variant-line .price{padding-top:10px;margin-right:30px;}
 .product-variant-line .price .productPrice{color:green;}
 .product-variant-line .price .oldProductPrice{color:red;text-decoration:line-through;}
-.product-variant-line .add-info{padding-top:10px;}
+.product-variant-line .add-info{padding-top:10px;width:100%;}
+.product-variant-line .add-info .enter-price-label{display:inline-block;margin-right:10px;}
+.product-variant-line .add-info .enter-price-input{display:inline-block;width:60px;}
+.product-variant-line .add-info .qty-label{display:inline-block;margin-right:10px;}
+.product-variant-line .add-info .qty-input{display:inline-block;width:40px;}
 .product-variant-line .attributes{}
 .product-variant-line .stock,.product-variant-line .sku,.product-variant-line .manufacturerpartnumber,.product-variant-line .gtin{}
 .product-variant-line .giftCard{}

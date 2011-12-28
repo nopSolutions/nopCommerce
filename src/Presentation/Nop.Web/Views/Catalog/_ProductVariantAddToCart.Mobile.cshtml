@@ -1,18 +1,21 @@
 ﻿@model Nop.Web.Models.Catalog.ProductModel.ProductVariantModel.AddToCartModel
+@using Nop.Web.Framework;
 <div class="add-info">
     @if (Model.CustomerEntersPrice)
     {
-        @Html.LabelFor(model => model.CustomerEnteredPrice)
-        //round price
-        @Html.TextBox("CustomerEnteredPrice", Convert.ToInt32(Math.Ceiling(Model.CustomerEnteredPrice)), new { style = "Width: 60px;" })
-        <br />
-        @Model.CustomerEnteredPriceRange
-        <br />
+        <div>
+            @Html.LabelFor(model => model.CustomerEnteredPrice, new { @class = "enter-price-label" })
+            @*round price*@
+            @Html.TextBox("CustomerEnteredPrice", Convert.ToInt32(Math.Ceiling(Model.CustomerEnteredPrice)), new { @class = "enter-price-input" })
+        </div>
+        <div>
+            @Model.CustomerEnteredPriceRange
+        </div>
     }
     @if (!Model.DisableBuyButton || !Model.DisableWishlistButton)
     {
-        @Html.LabelFor(model => model.EnteredQuantity)
-        @Html.TextBoxFor(model => model.EnteredQuantity, new { style = "Width: 40px;" })
+        @Html.LabelFor(model => model.EnteredQuantity, new { @class = "qty-label" }) 
+        @Html.TextBoxFor(model => model.EnteredQuantity, new { @class = "qty-input" })
     }
     @if (!Model.DisableBuyButton)
     {
@@ -20,6 +23,6 @@
     }
     @if (!Model.DisableWishlistButton)
     {
-        <input type="submit" name="addtowishlist-@(Model.ProductVariantId)" data-role="button" value="@T("ShoppingCart.AddToWishlist")" />
+        <input type="submit" name="addtowishlist-@(Model.ProductVariantId)" value="@T("ShoppingCart.AddToWishlist")" />
     }
 </div>
