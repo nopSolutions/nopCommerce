@@ -168,7 +168,7 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentException("No gift card found with the specified id", "id");
 
             var model = giftCard.ToModel();
-            model.PurchasedWithOrderId = giftCard.PurchasedWithOrderProductVariant != null ? (int?)giftCard.PurchasedWithOrderProductVariant.Id : null;
+            model.PurchasedWithOrderId = giftCard.PurchasedWithOrderProductVariant != null ? (int?)giftCard.PurchasedWithOrderProductVariant.OrderId : null;
             model.RemainingAmountStr = _priceFormatter.FormatPrice(giftCard.GetGiftCardRemainingAmount(), true, false);
             model.AmountStr = _priceFormatter.FormatPrice(giftCard.Amount, true, false);
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(giftCard.CreatedOnUtc, DateTimeKind.Utc);
@@ -186,7 +186,7 @@ namespace Nop.Admin.Controllers
 
             var giftCard = _giftCardService.GetGiftCardById(model.Id);
 
-            model.PurchasedWithOrderId = giftCard.PurchasedWithOrderProductVariant != null ? (int?)giftCard.PurchasedWithOrderProductVariant.Id : null;
+            model.PurchasedWithOrderId = giftCard.PurchasedWithOrderProductVariant != null ? (int?)giftCard.PurchasedWithOrderProductVariant.OrderId : null;
             model.RemainingAmountStr = _priceFormatter.FormatPrice(giftCard.GetGiftCardRemainingAmount(), true, false);
             model.AmountStr = _priceFormatter.FormatPrice(giftCard.Amount, true, false);
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(giftCard.CreatedOnUtc, DateTimeKind.Utc);
@@ -224,7 +224,7 @@ namespace Nop.Admin.Controllers
             var giftCard = _giftCardService.GetGiftCardById(model.Id);
 
             model = giftCard.ToModel();
-            model.PurchasedWithOrderId = giftCard.PurchasedWithOrderProductVariant != null ? (int?)giftCard.PurchasedWithOrderProductVariant.Id : null;
+            model.PurchasedWithOrderId = giftCard.PurchasedWithOrderProductVariant != null ? (int?)giftCard.PurchasedWithOrderProductVariant.OrderId : null;
             model.RemainingAmountStr = _priceFormatter.FormatPrice(giftCard.GetGiftCardRemainingAmount(), true, false);
             model.AmountStr = _priceFormatter.FormatPrice(giftCard.Amount, true, false);
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(giftCard.CreatedOnUtc, DateTimeKind.Utc);
