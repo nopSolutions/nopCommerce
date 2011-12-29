@@ -151,10 +151,13 @@ namespace Nop.Web.Framework.Themes
 
         protected virtual string GetCurrentTheme(bool mobile)
         {
+            var themeContext = EngineContext.Current.Resolve<IThemeContext>();
             if (mobile)
-                return EngineContext.Current.Resolve<StoreInformationSettings>().DefaultStoreThemeForMobileDevices ?? "Mobile";
+                //mobile theme
+                return themeContext.WorkingMobileTheme;
             else
-                return EngineContext.Current.Resolve<IThemeContext>().WorkingDesktopTheme;
+                //desktop theme
+                return themeContext.WorkingDesktopTheme;
         }
 
         protected virtual string GetAreaName(RouteData routeData)

@@ -19,10 +19,12 @@
     $(document).ready(function () {
 
         $("#@Html.FieldIdFor(model => model.StoreInformationSettings.StoreClosed)").click(toggleStoreClosed);
+        $("#@Html.FieldIdFor(model => model.StoreInformationSettings.MobileDevicesSupported)").click(toggleMobileDevicesSupported);
         $("#@Html.FieldIdFor(model => model.SecuritySettings.CaptchaEnabled)").click(toggleReCaptcha);
         $("#@Html.FieldIdFor(model => model.SecuritySettings.UseSsl)").click(toggleSSL);
 
         toggleStoreClosed();
+        toggleMobileDevicesSupported();
         toggleReCaptcha();
         toggleSSL();
     });
@@ -36,6 +38,15 @@
         }
     }
 
+    function toggleMobileDevicesSupported() {
+        if (getE('@Html.FieldIdFor(model => model.StoreInformationSettings.MobileDevicesSupported)').checked) {
+            $('#pnlDefaultStoreThemeForMobileDevices').show();
+        }
+        else {
+            $('#pnlDefaultStoreThemeForMobileDevices').hide();
+        }
+    }
+    
     function toggleReCaptcha() {
         if (getE('@Html.FieldIdFor(model => model.SecuritySettings.CaptchaEnabled)').checked) {
             $('#ssReCaptchaPublicKeypnl').show();
@@ -113,11 +124,11 @@
         </tr>
         <tr>
             <td class="adminTitle">
-                @Html.NopLabelFor(model => model.StoreInformationSettings.DefaultStoreTheme):
+                @Html.NopLabelFor(model => model.StoreInformationSettings.DefaultStoreThemeForDesktops):
             </td>
             <td class="adminData">
-                @Html.DropDownListFor(model => model.StoreInformationSettings.DefaultStoreTheme, Model.StoreInformationSettings.AvailableStoreThemes)
-                @Html.ValidationMessageFor(model => model.StoreInformationSettings.DefaultStoreTheme)
+                @Html.DropDownListFor(model => model.StoreInformationSettings.DefaultStoreThemeForDesktops, Model.StoreInformationSettings.AvailableStoreThemesForDesktops)
+                @Html.ValidationMessageFor(model => model.StoreInformationSettings.DefaultStoreThemeForDesktops)
             </td>
         </tr>
         <tr>
@@ -136,6 +147,15 @@
             <td class="adminData">
                 @Html.EditorFor(model => model.StoreInformationSettings.MobileDevicesSupported)
                 @Html.ValidationMessageFor(model => model.StoreInformationSettings.MobileDevicesSupported)
+            </td>
+        </tr>
+        <tr id="pnlDefaultStoreThemeForMobileDevices">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.StoreInformationSettings.DefaultStoreThemeForMobileDevices):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.StoreInformationSettings.DefaultStoreThemeForMobileDevices, Model.StoreInformationSettings.AvailableStoreThemesForMobileDevices)
+                @Html.ValidationMessageFor(model => model.StoreInformationSettings.DefaultStoreThemeForMobileDevices)
             </td>
         </tr>
     </table>

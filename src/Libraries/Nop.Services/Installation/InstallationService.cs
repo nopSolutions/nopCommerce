@@ -4592,7 +4592,7 @@ namespace Nop.Services.Installation
                     StoreUrl = "http://www.yourStore.com/",
                     StoreClosed = false,
                     StoreClosedAllowForAdmins = false,
-                    DefaultStoreTheme = "DarkOrange",
+                    DefaultStoreThemeForDesktops = "DarkOrange",
                     AllowCustomerToSelectTheme = false,
                     MobileDevicesSupported = false,
                     DefaultStoreThemeForMobileDevices = "Mobile",

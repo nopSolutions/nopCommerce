@@ -77,6 +77,24 @@ set @resources='
   <LocaleResource Name="Common.Home">
     <Value>Home</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DefaultStoreThemeForDesktops">
+    <Value>Desktop store theme</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DefaultStoreThemeForDesktops.Hint">
+    <Value>The public store theme for desktops. You can download themes from the extensions page at www.nopcommerce.com.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DefaultStoreTheme">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DefaultStoreTheme.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DefaultStoreThemeForMobileDevices">
+    <Value>Mobile store theme</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DefaultStoreThemeForMobileDevices.Hint">
+    <Value>The public store theme for mobile devices. You can download themes from the extensions page at www.nopcommerce.com.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -438,4 +456,9 @@ GO
 UPDATE [CustomerAttribute]
 SET [Key] = N'WorkingDesktopThemeName'
 WHERE [Key] = N'WorkingThemeName'
+GO
+
+UPDATE [Setting]
+SET [Name] = N'storeinformationsettings.defaultstorethemefordesktops'
+WHERE [Name] = N'storeinformationsettings.defaultstoretheme'
 GO

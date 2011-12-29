@@ -664,8 +664,9 @@ namespace Nop.Admin.Controllers
             model.StoreInformationSettings.StoreUrl = _storeInformationSettings.StoreUrl;
             model.StoreInformationSettings.StoreClosed = _storeInformationSettings.StoreClosed;
             model.StoreInformationSettings.StoreClosedAllowForAdmins = _storeInformationSettings.StoreClosedAllowForAdmins;
-            model.StoreInformationSettings.DefaultStoreTheme = _storeInformationSettings.DefaultStoreTheme;
-            model.StoreInformationSettings.AvailableStoreThemes = _themeProvider
+            //desktop themes
+            model.StoreInformationSettings.DefaultStoreThemeForDesktops = _storeInformationSettings.DefaultStoreThemeForDesktops;
+            model.StoreInformationSettings.AvailableStoreThemesForDesktops = _themeProvider
                 .GetThemeConfigurations()
                 .Where(x => !x.MobileTheme)  //do not display themes for mobile devices
                 .Select(x =>
@@ -674,12 +675,27 @@ namespace Nop.Admin.Controllers
                     {
                         Text = x.ThemeTitle,
                         Value = x.ThemeName,
-                        Selected = x.ThemeName.Equals(_storeInformationSettings.DefaultStoreTheme, StringComparison.InvariantCultureIgnoreCase)
+                        Selected = x.ThemeName.Equals(_storeInformationSettings.DefaultStoreThemeForDesktops, StringComparison.InvariantCultureIgnoreCase)
                     };
                 })
                 .ToList();
             model.StoreInformationSettings.AllowCustomerToSelectTheme = _storeInformationSettings.AllowCustomerToSelectTheme;
             model.StoreInformationSettings.MobileDevicesSupported = _storeInformationSettings.MobileDevicesSupported;
+            //mobile device themes
+            model.StoreInformationSettings.DefaultStoreThemeForMobileDevices = _storeInformationSettings.DefaultStoreThemeForMobileDevices;
+            model.StoreInformationSettings.AvailableStoreThemesForMobileDevices = _themeProvider
+                .GetThemeConfigurations()
+                .Where(x => x.MobileTheme)  //do not display themes for desktops
+                .Select(x =>
+                {
+                    return new SelectListItem()
+                    {
+                        Text = x.ThemeTitle,
+                        Value = x.ThemeName,
+                        Selected = x.ThemeName.Equals(_storeInformationSettings.DefaultStoreThemeForMobileDevices, StringComparison.InvariantCultureIgnoreCase)
+                    };
+                })
+                .ToList();
 
             //seo settings
             model.SeoSettings.PageTitleSeparator = _seoSettings.PageTitleSeparator;
@@ -738,12 +754,13 @@ namespace Nop.Admin.Controllers
                 _storeInformationSettings.StoreUrl += "/";
             _storeInformationSettings.StoreClosed = model.StoreInformationSettings.StoreClosed;
             _storeInformationSettings.StoreClosedAllowForAdmins = model.StoreInformationSettings.StoreClosedAllowForAdmins;
-            _storeInformationSettings.DefaultStoreTheme = model.StoreInformationSettings.DefaultStoreTheme;
+            _storeInformationSettings.DefaultStoreThemeForDesktops = model.StoreInformationSettings.DefaultStoreThemeForDesktops;
             _storeInformationSettings.AllowCustomerToSelectTheme = model.StoreInformationSettings.AllowCustomerToSelectTheme;
             //store whether MobileDevicesSupported setting has been changed (requires application restart)
             bool mobileDevicesSupportedChanged = _storeInformationSettings.MobileDevicesSupported !=
                                                  model.StoreInformationSettings.MobileDevicesSupported;
             _storeInformationSettings.MobileDevicesSupported = model.StoreInformationSettings.MobileDevicesSupported;
+            _storeInformationSettings.DefaultStoreThemeForMobileDevices = model.StoreInformationSettings.DefaultStoreThemeForMobileDevices;
             _settingService.SaveSetting(_storeInformationSettings);
 
 

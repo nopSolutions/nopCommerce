@@ -28,7 +28,8 @@ namespace Nop.Admin.Models.Settings
         {
             public StoreInformationSettingsModel()
             {
-                this.AvailableStoreThemes = new List<SelectListItem>();
+                this.AvailableStoreThemesForDesktops = new List<SelectListItem>();
+                this.AvailableStoreThemesForMobileDevices = new List<SelectListItem>();
             }
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.StoreName")]
             [AllowHtml]
@@ -47,10 +48,15 @@ namespace Nop.Admin.Models.Settings
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.StoreClosedAllowForAdmins")]
             public bool StoreClosedAllowForAdmins { get; set; }
 
-            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DefaultStoreTheme")]
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DefaultStoreThemeForDesktops")]
             [AllowHtml]
-            public string DefaultStoreTheme { get; set; }
-            public IList<SelectListItem> AvailableStoreThemes { get; set; }
+            public string DefaultStoreThemeForDesktops { get; set; }
+            public IList<SelectListItem> AvailableStoreThemesForDesktops { get; set; }
+
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DefaultStoreThemeForMobileDevices")]
+            [AllowHtml]
+            public string DefaultStoreThemeForMobileDevices { get; set; }
+            public IList<SelectListItem> AvailableStoreThemesForMobileDevices { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.AllowCustomerToSelectTheme")]
             public bool AllowCustomerToSelectTheme { get; set; }

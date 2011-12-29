@@ -25,9 +25,9 @@ namespace Nop.Core.Domain
         public bool StoreClosedAllowForAdmins { get; set; }
 
         /// <summary>
-        /// Gets or sets a default store theme
+        /// Gets or sets a default store theme for desktops
         /// </summary>
-        public string DefaultStoreTheme { get; set; }
+        public string DefaultStoreThemeForDesktops { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether customers are allowed to select a theme

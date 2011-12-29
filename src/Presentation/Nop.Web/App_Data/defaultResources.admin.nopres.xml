@@ -4025,14 +4025,6 @@
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
-									<LocaleResource Name="MobileDevicesSupported">
-										<Value>Mobile devices supported</Value>
-										<Children>
-											<LocaleResource Name="Hint">
-												<Value>Check to enable mobile devices support.</Value>
-											</LocaleResource>
-										</Children>
-									</LocaleResource>
 									<LocaleResource Name="StoreClosed">
 										<Value>Store closed</Value>
 										<Children>
@@ -4049,11 +4041,11 @@
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
-									<LocaleResource Name="DefaultStoreTheme">
-										<Value>Store theme</Value>
+									<LocaleResource Name="DefaultStoreThemeForDesktops">
+										<Value>Desktop store theme</Value>
 										<Children>
 											<LocaleResource Name="Hint">
-												<Value>The public store theme. You can download themes from the extensions page at www.nopcommerce.com.</Value>
+												<Value>The public store theme for desktops. You can download themes from the extensions page at www.nopcommerce.com.</Value>
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
@@ -4062,6 +4054,22 @@
 										<Children>
 											<LocaleResource Name="Hint">
 												<Value>Check to allow customers to select a store theme.</Value>
+											</LocaleResource>
+										</Children>
+									</LocaleResource>
+									<LocaleResource Name="MobileDevicesSupported">
+										<Value>Mobile devices supported</Value>
+										<Children>
+											<LocaleResource Name="Hint">
+												<Value>Check to enable mobile devices support.</Value>
+											</LocaleResource>
+										</Children>
+									</LocaleResource>
+									<LocaleResource Name="DefaultStoreThemeForMobileDevices">
+										<Value>Mobile store theme</Value>
+										<Children>
+											<LocaleResource Name="Hint">
+												<Value>The public store theme for mobile devices. You can download themes from the extensions page at www.nopcommerce.com.</Value>
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
