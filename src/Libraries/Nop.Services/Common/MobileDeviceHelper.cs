@@ -44,7 +44,8 @@ namespace Nop.Services.Common
         /// <returns>Result</returns>
         public virtual bool IsMobileDevice(HttpContextBase httpContext)
         {
-            return httpContext.Request.Browser.IsMobileDevice;
+            return httpContext.Request.Browser.IsMobileDevice ||
+                _storeInformationSettings.EmulateMobileDevice;
         }
 
         /// <summary>

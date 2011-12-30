@@ -462,3 +462,11 @@ UPDATE [Setting]
 SET [Name] = N'storeinformationsettings.defaultstorethemefordesktops'
 WHERE [Name] = N'storeinformationsettings.defaultstoretheme'
 GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'storeinformationsettings.emulatemobiledevice')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'storeinformationsettings.emulatemobiledevice', N'false')
+END
+GO

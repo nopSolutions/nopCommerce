@@ -45,6 +45,11 @@ namespace Nop.Core.Domain
         public string DefaultStoreThemeForMobileDevices { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether all requests will be handled as mobile devices (used for testing)
+        /// </summary>
+        public bool EmulateMobileDevice { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether mini profiler should be displayed in public store (used for debugging)
         /// </summary>
         public bool DisplayMiniProfilerInPublicStore { get; set; }

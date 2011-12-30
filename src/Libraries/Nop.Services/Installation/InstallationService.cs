@@ -4596,6 +4596,7 @@ namespace Nop.Services.Installation
                     AllowCustomerToSelectTheme = false,
                     MobileDevicesSupported = false,
                     DefaultStoreThemeForMobileDevices = "Mobile",
+                    EmulateMobileDevice = false,
                     DisplayMiniProfilerInPublicStore = false,
                 });
 
