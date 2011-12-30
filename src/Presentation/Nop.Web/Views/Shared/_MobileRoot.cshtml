@@ -14,11 +14,14 @@
     @*custom css*@
     @Html.NopCssFiles()
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery-1.7.1.min.js")"></script>
-    @*<script type="text/javascript">
+    @*do not handle links via ajax by default
+    1. automatically update page URLs (for example, when adding a product to the cart
+    2. process SSL redirections*@
+    <script type="text/javascript">
           $(document).bind("mobileinit", function () {
               $.mobile.ajaxEnabled = false;
           });
-        </script>*@
+        </script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.mobile-1.0.min.js")"></script>
     <!--Powered by nopCommerce - http://www.nopCommerce.com-->
     <!--Copyright (c) 2008-2011-->
