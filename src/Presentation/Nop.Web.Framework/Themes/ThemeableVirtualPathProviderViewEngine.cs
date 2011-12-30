@@ -36,7 +36,7 @@ namespace Nop.Web.Framework.Themes
 
         #region Utilities
 
-        protected virtual string GetPath(ControllerContext controllerContext, string[] locations, string[] areaLocations, string locationsPropertyName, string name, string controllerName, string theme, string cacheKeyPrefix, bool useCache, out string[] searchedLocations)
+        protected virtual string GetPath(ControllerContext controllerContext, string[] locations, string[] areaLocations, string locationsPropertyName, string name, string controllerName, string theme, string cacheKeyPrefix, bool useCache, bool mobile, out string[] searchedLocations)
         {
             searchedLocations = _emptyLocations;
             if (string.IsNullOrEmpty(name))
@@ -48,6 +48,12 @@ namespace Nop.Web.Framework.Themes
             //little hack to get nop's admin area to be in /Administration/ instead of /Nop/Admin/ or Areas/Admin/
             if (!string.IsNullOrEmpty(areaName) && areaName.Equals("admin", StringComparison.InvariantCultureIgnoreCase))
             {
+                //admin area does not support mobile devices
+                if (mobile)
+                {
+                    searchedLocations = new string[0];
+                    return string.Empty;
+                }
                 var newLocations = areaLocations.ToList();
                 newLocations.Insert(0, "~/Administration/Views/{1}/{0}.cshtml");
                 newLocations.Insert(0, "~/Administration/Views/{1}/{0}.vbhtml");
@@ -199,8 +205,8 @@ namespace Nop.Web.Framework.Themes
             }
             var theme = GetCurrentTheme(mobile);
             string requiredString = controllerContext.RouteData.GetRequiredString("controller");
-            string str2 = this.GetPath(controllerContext, this.ViewLocationFormats, this.AreaViewLocationFormats, "ViewLocationFormats", viewName, requiredString, theme, "View", useCache, out strArray);
-            string str3 = this.GetPath(controllerContext, this.MasterLocationFormats, this.AreaMasterLocationFormats, "MasterLocationFormats", masterName, requiredString, theme, "Master", useCache, out strArray2);
+            string str2 = this.GetPath(controllerContext, this.ViewLocationFormats, this.AreaViewLocationFormats, "ViewLocationFormats", viewName, requiredString, theme, "View", useCache, mobile, out strArray);
+            string str3 = this.GetPath(controllerContext, this.MasterLocationFormats, this.AreaMasterLocationFormats, "MasterLocationFormats", masterName, requiredString, theme, "Master", useCache, mobile, out strArray2);
             if (!string.IsNullOrEmpty(str2) && (!string.IsNullOrEmpty(str3) || string.IsNullOrEmpty(masterName)))
             {
                 return new ViewEngineResult(this.CreateView(controllerContext, str2, str3), this);
@@ -226,7 +232,7 @@ namespace Nop.Web.Framework.Themes
             }
             var theme = GetCurrentTheme(mobile);
             string requiredString = controllerContext.RouteData.GetRequiredString("controller");
-            string str2 = this.GetPath(controllerContext, this.PartialViewLocationFormats, this.AreaPartialViewLocationFormats, "PartialViewLocationFormats", partialViewName, requiredString, theme, "Partial", useCache, out strArray);
+            string str2 = this.GetPath(controllerContext, this.PartialViewLocationFormats, this.AreaPartialViewLocationFormats, "PartialViewLocationFormats", partialViewName, requiredString, theme, "Partial", useCache, mobile, out strArray);
             if (string.IsNullOrEmpty(str2))
             {
                 return new ViewEngineResult(strArray);

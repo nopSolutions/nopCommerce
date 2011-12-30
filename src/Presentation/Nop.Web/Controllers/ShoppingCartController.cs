@@ -624,7 +624,8 @@ namespace Nop.Web.Controllers
                 var sciModel = model.Items.Where(x => x.Id == sciId).FirstOrDefault();
                 if (sciModel != null)
                     foreach (var w in warnings)
-                        sciModel.Warnings.Add(w);
+                        if (!sciModel.Warnings.Contains(w))
+                            sciModel.Warnings.Add(w);
             }
             return View(model);
         }
@@ -1205,7 +1206,8 @@ namespace Nop.Web.Controllers
                 var sciModel = model.Items.Where(x => x.Id == sciId).FirstOrDefault();
                 if (sciModel != null)
                     foreach (var w in warnings)
-                        sciModel.Warnings.Add(w);
+                        if (!sciModel.Warnings.Contains(w))
+                            sciModel.Warnings.Add(w);
             }
             return View(model);
         }

@@ -9,10 +9,6 @@
 <head>
     <title>@Html.NopTitle(false)</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    @*store URL js variable used by some JS files*@
-    <script type="text/javascript">
-        var nop_store_directory_root = "@(storeLocation)";
-    </script>
     @*This is used so that themes can inject content into the header*@
     @Html.Partial("MobileHead")
     @*custom css*@
