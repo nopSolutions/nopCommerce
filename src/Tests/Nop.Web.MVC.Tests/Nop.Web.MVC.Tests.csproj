@@ -77,6 +77,9 @@
     <Compile Include="Events\EventsTests.cs" />
     <Compile Include="Framework\Controllers\AdminAuthorizeAttributeTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Public\Infrastructure\RouteTestingExtensions.cs" />
+    <Compile Include="Public\Infrastructure\RoutesTests.cs" />
+    <Compile Include="Public\Infrastructure\RoutesTestsBase.cs" />
     <Compile Include="Public\Validators\BaseValidatorTests.cs" />
     <Compile Include="Public\Validators\Blogs\BlogPostValidatorTests.cs" />
     <Compile Include="Public\Validators\Boards\EditForumTopicValidatorTests.cs" />

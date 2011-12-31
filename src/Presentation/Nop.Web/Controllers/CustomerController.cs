@@ -1672,8 +1672,8 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        [HttpPost]
-        public ActionResult ForumSubscriptions(FormCollection formCollection)
+        [HttpPost, ActionName("ForumSubscriptions")]
+        public ActionResult ForumSubscriptionsPOST(FormCollection formCollection)
         {
             foreach (var key in formCollection.AllKeys)
             {
@@ -1772,8 +1772,8 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        [HttpPost]
-        public ActionResult BackInStockSubscriptions(FormCollection formCollection)
+        [HttpPost, ActionName("BackInStockSubscriptions")]
+        public ActionResult BackInStockSubscriptionsPOST(FormCollection formCollection)
         {
             foreach (var key in formCollection.AllKeys)
             {

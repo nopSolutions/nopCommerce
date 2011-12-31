@@ -100,7 +100,7 @@ namespace Nop.Web.Infrastructure
                             new { controller = "Customer", action = "Login" },
                             new[] { "Nop.Web.Controllers" });
             routes.MapLocalizedRoute("LoginCheckoutAsGuest",
-                            "login/checkoutAsGuest",
+                            "login/checkoutasguest",
                             new { controller = "Customer", action = "Login", checkoutAsGuest = true },
                             new[] { "Nop.Web.Controllers" });
             routes.MapLocalizedRoute("Register",
