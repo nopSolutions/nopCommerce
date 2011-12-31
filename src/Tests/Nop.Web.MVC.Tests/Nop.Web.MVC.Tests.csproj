@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AutoMapper">
+      <HintPath>..\..\packages\nopCommerceCustom\AutoMapper.dll</HintPath>
+    </Reference>
     <Reference Include="FluentValidation, Version=3.2.0.0, Culture=neutral, PublicKeyToken=a82054b837897c66, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\FluentValidation.3.2.0.0\lib\Net40\FluentValidation.dll</HintPath>
@@ -73,6 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\Controllers\CategoryControllerTests.cs" />
+    <Compile Include="Admin\Infrastructure\AutoMapperConfigurationTest.cs" />
     <Compile Include="Events\DateTimeConsumer.cs" />
     <Compile Include="Events\EventsTests.cs" />
     <Compile Include="Framework\Controllers\AdminAuthorizeAttributeTests.cs" />
@@ -113,6 +117,10 @@
     <ProjectReference Include="..\..\Presentation\Nop.Web.Framework\Nop.Web.Framework.csproj">
       <Project>{75FD4163-333C-4DD5-854D-2EF294E45D94}</Project>
       <Name>Nop.Web.Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Presentation\Nop.Web\Administration\Nop.Admin.csproj">
+      <Project>{152C761A-DD2E-4C1F-AF89-DFB2547A3BCA}</Project>
+      <Name>Nop.Admin</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Presentation\Nop.Web\Nop.Web.csproj">
       <Project>{4F1F649C-1020-45BE-A487-F416D9297FF3}</Project>

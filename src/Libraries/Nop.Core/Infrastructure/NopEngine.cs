@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Linq;
 using Autofac;
 using Nop.Core.Configuration;
+using Nop.Core.Data;
 using Nop.Core.Infrastructure.DependencyManagement;
 
 namespace Nop.Core.Infrastructure
@@ -67,8 +68,12 @@ namespace Nop.Core.Infrastructure
         /// <param name="config">Config</param>
         public void Initialize(NopConfig config)
         {
-            //startup tasks
-            RunStartupTasks();
+            bool databaseInstalled = DataSettingsHelper.DatabaseIsInstalled();
+            if (databaseInstalled)
+            {
+                //startup tasks
+                RunStartupTasks();
+            }
         }
 
         public T Resolve<T>() where T : class

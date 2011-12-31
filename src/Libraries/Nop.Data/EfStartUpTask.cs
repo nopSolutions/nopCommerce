@@ -8,9 +8,6 @@ namespace Nop.Data
     {
         public void Execute()
         {
-            if (!DataSettingsHelper.DatabaseIsInstalled())
-                return;
-
             var settings = EngineContext.Current.Resolve<DataSettings>();
             if (settings != null && settings.IsValid())
             {

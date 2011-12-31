@@ -56,8 +56,9 @@ namespace Nop.Web
             //initialize engine context
             EngineContext.Initialize(false);
 
-            //start schedules tasks
-            if (DataSettingsHelper.DatabaseIsInstalled())
+            bool databaseInstalled = DataSettingsHelper.DatabaseIsInstalled();
+            //start scheduled tasks
+            if (databaseInstalled)
             {
                 TaskManager.Instance.Initialize();
                 TaskManager.Instance.Start();
@@ -70,7 +71,7 @@ namespace Nop.Web
             //model binders
             ModelBinders.Binders.Add(typeof(BaseNopModel), new NopModelBinder());
 
-            if (DataSettingsHelper.DatabaseIsInstalled())
+            if (databaseInstalled)
             {
                 //remove all view engines
                 ViewEngines.Engines.Clear();
@@ -83,7 +84,7 @@ namespace Nop.Web
 
             //Registering some regular mvc stuf
             AreaRegistration.RegisterAllAreas();
-            if (DataSettingsHelper.DatabaseIsInstalled() &&
+            if (databaseInstalled &&
                 EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerInPublicStore)
             {
                 GlobalFilters.Filters.Add(new ProfilingActionFilter());
@@ -103,7 +104,7 @@ namespace Nop.Web
             var embeddedProvider = new EmbeddedViewVirtualPathProvider(embeddedViewResolver.GetEmbeddedViews());
             HostingEnvironment.RegisterVirtualPathProvider(embeddedProvider);
 
-            if (DataSettingsHelper.DatabaseIsInstalled())
+            if (databaseInstalled)
             {
                 if (EngineContext.Current.Resolve<StoreInformationSettings>().MobileDevicesSupported)
                 {
