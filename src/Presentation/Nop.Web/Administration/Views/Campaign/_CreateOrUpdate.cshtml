@@ -59,7 +59,7 @@
             @Html.NopLabelFor(model => model.Body):
         </td>
         <td class="adminData">
-            @Html.TextAreaFor(model => model.Body, new { style = "Width: 550px; Height: 350px;" })
+            @Html.EditorFor(model => model.Body, "RichEditor")
             @Html.ValidationMessageFor(model => model.Body)
         </td>
     </tr>
