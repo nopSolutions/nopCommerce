@@ -18,10 +18,21 @@
 
             $("#@Html.FieldIdFor(model => model.CustomerSettings.AllowCustomersToUploadAvatars)").click(toggleAvatar);
             $("#@Html.FieldIdFor(model => model.CustomerSettings.UsernamesEnabled)").click(toggleUsername);
+            $("#@Html.FieldIdFor(model => model.CustomerSettings.CountryEnabled)").click(toggleCountryFormField);
 
             toggleAvatar();
             toggleUsername();
+            toggleCountryFormField();
         });
+
+        function toggleCountryFormField() {
+            if (getE('@Html.FieldIdFor(model => model.CustomerSettings.CountryEnabled)').checked) {
+                $('#pnlStateProvincEnabled').show();
+            }
+            else {
+                $('#pnlStateProvincEnabled').hide();
+            }
+        }
 
         function toggleAvatar() {
             if (getE('@Html.FieldIdFor(model => model.CustomerSettings.AllowCustomersToUploadAvatars)').checked) {
@@ -264,7 +275,7 @@
                 @Html.ValidationMessageFor(model => model.CustomerSettings.CountryEnabled)
             </td>
         </tr>
-        <tr>
+        <tr id="pnlStateProvincEnabled">
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.CustomerSettings.StateProvinceEnabled):
             </td>
