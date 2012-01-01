@@ -115,7 +115,7 @@
                 <div style="height: 250px; width: 300px; overflow: auto; border: solid 1px #bbb;">
                     @foreach (var csd in Model.AvailableCarrierServices)
                     {
-                        <input type="checkbox" name="CheckedCarrierServices" value="@(csd)" @(Model.CarrierServicesOffered.Contains(csd) ? " checked=\"checked\"" : null) <text> /></text>
+                        <input type="checkbox" name="CheckedCarrierServices" value="@(csd)" @(Model.CarrierServicesOffered.Contains(csd) ? " checked=\"checked\"" : null) />
                         <label>@csd</label>
                         <br />
                     }
