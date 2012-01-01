@@ -331,7 +331,7 @@ namespace Nop.Web.Controllers
             //validate permissions
             string rootDir = Server.MapPath("~/");
             var dirsToCheck = new List<string>();
-            dirsToCheck.Add(rootDir);
+            //dirsToCheck.Add(rootDir);
             dirsToCheck.Add(rootDir + "App_Data");
             dirsToCheck.Add(rootDir + "bin");
             dirsToCheck.Add(rootDir + "content");
