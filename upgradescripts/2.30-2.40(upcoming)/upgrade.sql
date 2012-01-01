@@ -95,6 +95,27 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DefaultStoreThemeForMobileDevices.Hint">
     <Value>The public store theme for mobile devices. You can download themes from the extensions page at www.nopcommerce.com.</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.ForumSubscriptions.Description">
+    <Value>You will receive an e-mail when a new forum topic/post is created.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ForumSubscriptions.DeleteSelected">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="ForumSubscriptions.InfoColumn">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="ForumSubscriptions.NoSubscriptions">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.ForumSubscriptions.DeleteSelected">
+    <Value>Delete Selected</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.ForumSubscriptions.InfoColumn">
+    <Value>Forum/Topic</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.ForumSubscriptions.NoSubscriptions">
+    <Value>You are not currently subscribed to any forums</Value>
+  </LocaleResource>
 </Language>
 '
 

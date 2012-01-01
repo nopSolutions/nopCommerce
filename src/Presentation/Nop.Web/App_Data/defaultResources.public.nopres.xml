@@ -354,6 +354,20 @@
 			</LocaleResource>
 			<LocaleResource Name="ForumSubscriptions">
 				<Value>Forum subscriptions</Value>
+				<Children>
+					<LocaleResource Name="DeleteSelected">
+						<Value>Delete Selected</Value>
+					</LocaleResource>
+					<LocaleResource Name="Description">
+						<Value>You will receive an e-mail when a new forum topic/post is created.</Value>
+					</LocaleResource>
+					<LocaleResource Name="InfoColumn">
+						<Value>Forum/Topic</Value>
+					</LocaleResource>
+					<LocaleResource Name="NoSubscriptions">
+						<Value>You are not currently subscribed to any forums</Value>
+					</LocaleResource>
+				</Children>
 			</LocaleResource>
 			<LocaleResource Name="ImpersonatedAs">
 				<Value>Impersonated as {0}</Value>
@@ -1997,19 +2011,6 @@
 			</LocaleResource>
 			<LocaleResource Name="AdvancedSearch">
 				<Value>Advanced search</Value>
-			</LocaleResource>
-		</Children>
-	</LocaleResource>
-	<LocaleResource Name="ForumSubscriptions">
-		<Children>
-			<LocaleResource Name="DeleteSelected">
-				<Value>Delete Selected</Value>
-			</LocaleResource>
-			<LocaleResource Name="InfoColumn">
-				<Value>Forum/Topic</Value>
-			</LocaleResource>
-			<LocaleResource Name="NoSubscriptions">
-				<Value>You are not currently subscribed to any forums</Value>
 			</LocaleResource>
 		</Children>
 	</LocaleResource>
