@@ -13,7 +13,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Blogs
         private BlogPostValidator _validator;
         
         [SetUp]
-        public void Setup()
+        public new void Setup()
         {
             _validator = new BlogPostValidator(_localizationService);
         }

@@ -11,7 +11,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Common
         private AddressValidator _validator;
         
         [SetUp]
-        public void Setup()
+        public new void Setup()
         {
             _validator = new AddressValidator(_localizationService);
         }

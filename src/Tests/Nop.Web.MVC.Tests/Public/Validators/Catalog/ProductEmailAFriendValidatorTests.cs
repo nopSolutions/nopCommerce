@@ -12,7 +12,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Catalog
         private ProductEmailAFriendValidator _validator;
         
         [SetUp]
-        public void Setup()
+        public new void Setup()
         {
             _validator = new ProductEmailAFriendValidator(_localizationService);
         }

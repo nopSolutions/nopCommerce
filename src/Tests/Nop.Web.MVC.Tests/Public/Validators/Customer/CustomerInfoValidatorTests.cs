@@ -11,7 +11,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
         private CustomerInfoValidator _validator;
         
         [SetUp]
-        public void Setup()
+        public new void Setup()
         {
             _validator = new CustomerInfoValidator(_localizationService);
         }

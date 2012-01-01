@@ -11,7 +11,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.ShoppingCart
         private WishlistEmailAFriendValidator _validator;
         
         [SetUp]
-        public void Setup()
+        public new void Setup()
         {
             _validator = new WishlistEmailAFriendValidator(_localizationService);
         }

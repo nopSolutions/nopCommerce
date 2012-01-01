@@ -11,7 +11,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Boards
         private EditForumTopicValidator _validator;
         
         [SetUp]
-        public void Setup()
+        public new void Setup()
         {
             _validator = new EditForumTopicValidator(_localizationService);
         }

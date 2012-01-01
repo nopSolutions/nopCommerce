@@ -1,6 +1,5 @@
 ﻿using FluentValidation.TestHelper;
 using Nop.Web.Models.Install;
-using Nop.Web.Validators.Customer;
 using Nop.Web.Validators.Install;
 using NUnit.Framework;
 
@@ -10,9 +9,9 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Install
     public class InstallValidatorTests : BaseValidatorTests
     {
         private InstallValidator _validator;
-        
+
         [SetUp]
-        public void Setup()
+        public new void Setup()
         {
             _validator = new InstallValidator();
         }

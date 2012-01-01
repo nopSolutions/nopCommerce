@@ -11,7 +11,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.PrivateMessages
         private PrivateMessageValidator _validator;
         
         [SetUp]
-        public void Setup()
+        public new void Setup()
         {
             _validator = new PrivateMessageValidator(_localizationService);
         }

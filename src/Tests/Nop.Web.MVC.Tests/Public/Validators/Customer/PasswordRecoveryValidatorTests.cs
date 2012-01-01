@@ -11,7 +11,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
         private PasswordRecoveryValidator _validator;
         
         [SetUp]
-        public void Setup()
+        public new void Setup()
         {
             _validator = new PasswordRecoveryValidator(_localizationService);
         }

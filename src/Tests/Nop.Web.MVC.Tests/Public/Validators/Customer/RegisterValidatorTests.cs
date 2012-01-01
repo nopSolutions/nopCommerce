@@ -13,7 +13,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
         private CustomerSettings _customerSettings;
         
         [SetUp]
-        public void Setup()
+        public new void Setup()
         {
             _customerSettings = new CustomerSettings();
             _validator = new RegisterValidator(_localizationService, _customerSettings);
