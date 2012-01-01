@@ -278,6 +278,7 @@ namespace Nop.Services.ExportImport
                         xmlWriter.WriteElementString("LowStockActivityId", null, productVariant.LowStockActivityId.ToString());
                         xmlWriter.WriteElementString("NotifyAdminForQuantityBelow", null, productVariant.NotifyAdminForQuantityBelow.ToString());
                         xmlWriter.WriteElementString("BackorderModeId", null, productVariant.BackorderModeId.ToString());
+                        xmlWriter.WriteElementString("AllowBackInStockSubscriptions", null, productVariant.AllowBackInStockSubscriptions.ToString());
                         xmlWriter.WriteElementString("OrderMinimumQuantity", null, productVariant.OrderMinimumQuantity.ToString());
                         xmlWriter.WriteElementString("OrderMaximumQuantity", null, productVariant.OrderMaximumQuantity.ToString());
                         xmlWriter.WriteElementString("DisableBuyButton", null, productVariant.DisableBuyButton.ToString());
@@ -491,6 +492,7 @@ namespace Nop.Services.ExportImport
                     "LowStockActivityId",
                     "NotifyAdminForQuantityBelow",
                     "BackorderModeId",
+                    "AllowBackInStockSubscriptions",
                     "OrderMinimumQuantity",
                     "OrderMaximumQuantity",
                     "DisableBuyButton",
@@ -666,6 +668,9 @@ namespace Nop.Services.ExportImport
                         col++;
 
                         worksheet.Cells[row, col].Value = pv.BackorderModeId;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = pv.AllowBackInStockSubscriptions;
                         col++;
 
                         worksheet.Cells[row, col].Value = pv.OrderMinimumQuantity;

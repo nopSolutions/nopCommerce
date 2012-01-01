@@ -115,6 +115,7 @@ namespace Nop.Services.ExportImport
                     "LowStockActivityId",
                     "NotifyAdminForQuantityBelow",
                     "BackorderModeId",
+                    "AllowBackInStockSubscriptions",
                     "OrderMinimumQuantity",
                     "OrderMaximumQuantity",
                     "DisableBuyButton",
@@ -200,6 +201,7 @@ namespace Nop.Services.ExportImport
                     int lowStockActivityId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "LowStockActivityId")].Value);
                     int notifyAdminForQuantityBelow = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "NotifyAdminForQuantityBelow")].Value);
                     int backorderModeId = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "BackorderModeId")].Value);
+                    bool allowBackInStockSubscriptions = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "AllowBackInStockSubscriptions")].Value);
                     int orderMinimumQuantity = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "OrderMinimumQuantity")].Value);
                     int orderMaximumQuantity = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "OrderMaximumQuantity")].Value);
                     bool disableBuyButton = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "DisableBuyButton")].Value);
@@ -291,6 +293,7 @@ namespace Nop.Services.ExportImport
                         productVariant.LowStockActivityId = lowStockActivityId;
                         productVariant.NotifyAdminForQuantityBelow = notifyAdminForQuantityBelow;
                         productVariant.BackorderModeId = backorderModeId;
+                        productVariant.AllowBackInStockSubscriptions = allowBackInStockSubscriptions;
                         productVariant.OrderMinimumQuantity = orderMinimumQuantity;
                         productVariant.OrderMaximumQuantity = orderMaximumQuantity;
                         productVariant.DisableBuyButton = disableBuyButton;
@@ -371,6 +374,7 @@ namespace Nop.Services.ExportImport
                             LowStockActivityId = lowStockActivityId,
                             NotifyAdminForQuantityBelow = notifyAdminForQuantityBelow,
                             BackorderModeId = backorderModeId,
+                            AllowBackInStockSubscriptions = allowBackInStockSubscriptions,
                             OrderMinimumQuantity = orderMinimumQuantity,
                             OrderMaximumQuantity = orderMaximumQuantity,
                             DisableBuyButton = disableBuyButton,
