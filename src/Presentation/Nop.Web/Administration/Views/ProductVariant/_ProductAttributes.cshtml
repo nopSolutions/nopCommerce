@@ -39,7 +39,7 @@
                         }
                         @foreach (var pvaValue in attribute.Values)
                         {
-                            <option @(pvaValue.IsPreSelected ? " selected=\"selected\"" : null) value="@pvaValue.Id">@pvaValue.Name
+                            <option @(pvaValue.IsPreSelected ? Html.Raw(" selected=\"selected\"") : null) value="@pvaValue.Id">@pvaValue.Name
                             </option>
                         }
                     </select>
@@ -49,7 +49,7 @@
                         {
                             foreach (var pvaValue in attribute.Values)
                             {
-                    <input id="@(controlId)" type="radio" name="@(controlId)" value="@pvaValue.Id" @(pvaValue.IsPreSelected ? " checked=\"checked\"" : null) />
+                    <input id="@(controlId)" type="radio" name="@(controlId)" value="@pvaValue.Id" @(pvaValue.IsPreSelected ? Html.Raw(" checked=\"checked\"") : null) />
                     <label for="@(controlId)">@pvaValue.Name</label>
                             }
                         }
@@ -58,7 +58,7 @@
                         {
                             foreach (var pvaValue in attribute.Values)
                             {
-                    <input id="@(controlId)" type="checkbox" name="@(controlId)" value="@pvaValue.Id" @(pvaValue.IsPreSelected ? " checked=\"checked\"" : null) />
+                    <input id="@(controlId)" type="checkbox" name="@(controlId)" value="@pvaValue.Id" @(pvaValue.IsPreSelected ? Html.Raw(" checked=\"checked\"") : null) />
                     <label for="@(controlId)">@pvaValue.Name</label>
                             }
                         }

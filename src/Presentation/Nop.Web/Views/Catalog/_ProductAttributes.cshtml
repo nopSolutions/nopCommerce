@@ -160,7 +160,7 @@
                         }
                         @foreach (var pvaValue in attribute.Values)
                         {
-                            <option @(pvaValue.IsPreSelected ? " selected=\"selected\"" : null) value="@pvaValue.Id">@pvaValue.Name
+                            <option @(pvaValue.IsPreSelected ? Html.Raw(" selected=\"selected\"") : null) value="@pvaValue.Id">@pvaValue.Name
                                 @(!String.IsNullOrEmpty(pvaValue.PriceAdjustment) ? " [" + pvaValue.PriceAdjustment + "]" : null)
                             </option>
                         }
@@ -171,7 +171,7 @@
                         {
                             foreach (var pvaValue in attribute.Values)
                             {
-                    <input id="@(controlId)_@(pvaValue.Id)" type="radio" name="@(controlId)" value="@pvaValue.Id" @(pvaValue.IsPreSelected ? " checked=\"checked\"" : null) />
+                    <input id="@(controlId)_@(pvaValue.Id)" type="radio" name="@(controlId)" value="@pvaValue.Id" @(pvaValue.IsPreSelected ? Html.Raw(" checked=\"checked\"") : null) />
                     <label for="@(controlId)_@(pvaValue.Id)">@pvaValue.Name @(!String.IsNullOrEmpty(pvaValue.PriceAdjustment) ? " [" + pvaValue.PriceAdjustment + "]" : null)</label>
                             }
                         }
@@ -180,7 +180,7 @@
                         {
                             foreach (var pvaValue in attribute.Values)
                             {
-                    <input id="@(controlId)_@(pvaValue.Id)" type="checkbox" name="@(controlId)" value="@pvaValue.Id" @(pvaValue.IsPreSelected ? " checked=\"checked\"" : null) />
+                    <input id="@(controlId)_@(pvaValue.Id)" type="checkbox" name="@(controlId)" value="@pvaValue.Id" @(pvaValue.IsPreSelected ? Html.Raw(" checked=\"checked\"") : null) />
                     <label for="@(controlId)_@(pvaValue.Id)">@pvaValue.Name @(!String.IsNullOrEmpty(pvaValue.PriceAdjustment) ? " [" + pvaValue.PriceAdjustment + "]" : null)</label>
                             }
                         }

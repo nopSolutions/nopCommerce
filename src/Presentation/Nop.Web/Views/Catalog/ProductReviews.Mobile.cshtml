@@ -39,7 +39,7 @@
                         {
                             string ratingControlId = "addproductrating" + i.ToString();
             
-                            <input type="radio" name="@Html.FieldNameFor(model => model.AddProductReview.Rating)" id="@(ratingControlId)" value="@(i.ToString())" @(i == Model.AddProductReview.Rating ? " checked=\"checked\"" : null) />
+                            <input type="radio" name="@Html.FieldNameFor(model => model.AddProductReview.Rating)" id="@(ratingControlId)" value="@(i.ToString())" @(i == Model.AddProductReview.Rating ? Html.Raw(" checked=\"checked\"") : null) />
                             <label for="@(ratingControlId)">@(i.ToString())</label>
                         }
                     </fieldset>

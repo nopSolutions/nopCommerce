@@ -20,7 +20,7 @@
                     var paymentMethod = Model.PaymentMethods[i];
                     <div class="payment-method-item">
                         <div class="option-name">
-                            <input id="paymentmethod_@(i)" type="radio" name="paymentmethod" value="@(paymentMethod.PaymentMethodSystemName)"  @(i == 0 ? " checked=\"checked\"" : null) />
+                            <input id="paymentmethod_@(i)" type="radio" name="paymentmethod" value="@(paymentMethod.PaymentMethodSystemName)"  @(i == 0 ? Html.Raw(" checked=\"checked\"") : null) />
                             <label for="paymentmethod_@(i)">@paymentMethod.Name</label>
                             @if (!String.IsNullOrEmpty(paymentMethod.Fee))
                             {

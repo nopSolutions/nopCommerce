@@ -39,7 +39,7 @@
                         }
                         @foreach (var caValue in attribute.Values)
                         {
-                            <option @(caValue.IsPreSelected ? " selected=\"selected\"" : null) value="@caValue.Id">@caValue.Name
+                            <option @(caValue.IsPreSelected ? Html.Raw(" selected=\"selected\"") : null) value="@caValue.Id">@caValue.Name
                                 @(!String.IsNullOrEmpty(caValue.PriceAdjustment) ? " [" + caValue.PriceAdjustment + "]" : null)
                             </option>
                         }
@@ -50,7 +50,7 @@
                         {
                             foreach (var caValue in attribute.Values)
                             {
-                    <input id="@(controlId)" type="radio" name="@(controlId)" value="@caValue.Id" @(caValue.IsPreSelected ? " checked=\"checked\"" : null) />
+                    <input id="@(controlId)" type="radio" name="@(controlId)" value="@caValue.Id" @(caValue.IsPreSelected ? Html.Raw(" checked=\"checked\"") : null) />
                     <label for="@(controlId)">@caValue.Name @(!String.IsNullOrEmpty(caValue.PriceAdjustment) ? " [" + caValue.PriceAdjustment + "]" : null)</label>
                             }
                         }
@@ -59,7 +59,7 @@
                         {
                             foreach (var caValue in attribute.Values)
                             {
-                    <input id="@(controlId)" type="checkbox" name="@(controlId)" value="@caValue.Id" @(caValue.IsPreSelected ? " checked=\"checked\"" : null) />
+                    <input id="@(controlId)" type="checkbox" name="@(controlId)" value="@caValue.Id" @(caValue.IsPreSelected ? Html.Raw(" checked=\"checked\"") : null) />
                     <label for="@(controlId)">@caValue.Name @(!String.IsNullOrEmpty(caValue.PriceAdjustment) ? " [" + caValue.PriceAdjustment + "]" : null)</label>
                             }
                         }
