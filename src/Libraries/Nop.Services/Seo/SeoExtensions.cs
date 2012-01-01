@@ -167,15 +167,30 @@ namespace Nop.Services.Seo
         /// <param name="name">Name</param>
         /// <param name="urlEncode">A value indicating whether encode URL</param>
         /// <returns>Result</returns>
-        private static string GetSeName(string name, bool urlEncode = false)
+        public static string GetSeName(string name, bool urlEncode = false)
+        {
+            var seoSettings = EngineContext.Current.Resolve<SeoSettings>();
+            return GetSeName(name, seoSettings.ConvertNonWesternChars,
+                             seoSettings.AllowUnicodeCharsInUrls, urlEncode);
+        }
+
+        /// <summary>
+        /// Get SE name
+        /// </summary>
+        /// <param name="name">Name</param>
+        /// <param name="convertNonWesternChars">A value indicating whether non western chars should be converted</param>
+        /// <param name="allowUnicodeCharsInUrls">A value indicating whether Unicode chars are allowed</param>
+        /// <param name="urlEncode">A value indicating whether encode URL</param>
+        /// <returns>Result</returns>
+        public static string GetSeName(string name, bool convertNonWesternChars, 
+            bool allowUnicodeCharsInUrls, bool urlEncode = false)
         {
             if (String.IsNullOrEmpty(name))
-                return string.Empty;
+                return name;
             string okChars = "abcdefghijklmnopqrstuvwxyz1234567890 _-";
             name = name.Trim().ToLowerInvariant();
 
-            var seoSettings = EngineContext.Current.Resolve<SeoSettings>();
-            if (seoSettings.ConvertNonWesternChars)
+            if (convertNonWesternChars)
             {
                 if (_seoCharacterTable == null)
                     InitializeSeoCharacterTable();
@@ -185,13 +200,13 @@ namespace Nop.Services.Seo
             foreach (char c in name.ToCharArray())
             {
                 string c2 = c.ToString();
-                if (seoSettings.ConvertNonWesternChars)
+                if (convertNonWesternChars)
                 {
                     if (_seoCharacterTable.ContainsKey(c2))
                         c2 = _seoCharacterTable[c2];
                 }
 
-                if (seoSettings.AllowUnicodeCharsInUrls)
+                if (allowUnicodeCharsInUrls)
                 {
                     if (char.IsLetterOrDigit(c) || okChars.Contains(c2))
                         sb.Append(c2);
@@ -209,8 +224,7 @@ namespace Nop.Services.Seo
                 name2 = name2.Replace("__", "_");
             if (urlEncode)
             {
-                var httpContext = EngineContext.Current.Resolve<HttpContextBase>();
-                name2 = httpContext.Server.UrlEncode(name2);
+                name2 = HttpUtility.UrlEncode(name2);
             }
             return name2;
         }
