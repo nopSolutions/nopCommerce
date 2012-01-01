@@ -119,65 +119,106 @@ namespace Nop.Admin.Controllers
             //primary exchange rate currency
             var perCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryExchangeRateCurrencyId);
             if (perCurrency != null)
+            {
                 model.Add(new SystemWarningModel()
                 {
                     Level = SystemWarningLevel.Pass,
                     Text = "Primary exchange rate currency is set",
                 });
+                if (perCurrency.Rate != 1)
+                {
+                    model.Add(new SystemWarningModel()
+                    {
+                        Level = SystemWarningLevel.Fail,
+                        Text = "Primary exchange rate currency. The rate should be set to 1."
+                    });
+                }
+            }
             else
+            {
                 model.Add(new SystemWarningModel()
                 {
                     Level = SystemWarningLevel.Fail,
                     Text = "Primary exchange rate currency is not set"
                 });
-
+            }
 
             //primary store currency
             var pscCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
             if (pscCurrency != null)
+            {
                 model.Add(new SystemWarningModel()
                 {
                     Level = SystemWarningLevel.Pass,
                     Text = "Primary store currency is set",
                 });
+            }
             else
+            {
                 model.Add(new SystemWarningModel()
                 {
                     Level = SystemWarningLevel.Fail,
                     Text = "Primary store currency is not set"
                 });
+            }
 
 
             //base measure weight
             var bWeight = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId);
             if (bWeight != null)
+            {
                 model.Add(new SystemWarningModel()
                 {
                     Level = SystemWarningLevel.Pass,
                     Text = "Default weight is set",
                 });
+
+                if (bWeight.Ratio != 1)
+                {
+                    model.Add(new SystemWarningModel()
+                    {
+                        Level = SystemWarningLevel.Fail,
+                        Text = "Default weight. The ratio should be set to 1."
+                    });
+                }
+            }
             else
+            {
                 model.Add(new SystemWarningModel()
                 {
                     Level = SystemWarningLevel.Fail,
                     Text = "Default weight is not set"
                 });
+            }
 
 
             //base dimension weight
             var bDimension = _measureService.GetMeasureDimensionById(_measureSettings.BaseDimensionId);
             if (bDimension != null)
+            {
                 model.Add(new SystemWarningModel()
                 {
                     Level = SystemWarningLevel.Pass,
                     Text = "Default dimension is set",
                 });
+
+                if (bDimension.Ratio != 1)
+                {
+                    model.Add(new SystemWarningModel()
+                    {
+                        Level = SystemWarningLevel.Fail,
+                        Text = "Default dimension. The ratio should be set to 1."
+                    });
+                }
+            }
             else
+            {
                 model.Add(new SystemWarningModel()
                 {
                     Level = SystemWarningLevel.Fail,
                     Text = "Default dimension is not set"
                 });
+            }
 
             //shipping rate coputation methods
             if (_shippingService.LoadActiveShippingRateComputationMethods()
