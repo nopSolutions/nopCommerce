@@ -579,12 +579,18 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("CheckoutPaymentInfo");
             }
 
-            //TODO? redirect to 'PaymentInfo' info page 
-            //if we have only one payment method 
-            //and reward points are disabled or current customer doesn't have any points?
-
             //model
             var model = PreparePaymentMethodModel(cart);
+
+            //if we have only one payment method and reward points are disabled or the current customer doesn't have any reward points
+            if (_paymentSettings.BypassPaymentMethodSelectionIfOnlyOne &&
+                model.PaymentMethods.Count == 1 && !model.DisplayRewardPoints)
+            {
+                _workContext.CurrentCustomer.SelectedPaymentMethodSystemName = model.PaymentMethods[0].PaymentMethodSystemName;
+                _customerService.UpdateCustomer(_workContext.CurrentCustomer);
+                return RedirectToRoute("CheckoutPaymentInfo");
+            }
+
             return View(model);
         }
         [HttpPost, ActionName("PaymentMethod")]

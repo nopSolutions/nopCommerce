@@ -4701,6 +4701,7 @@ namespace Nop.Services.Installation
                         "Payments.PurchaseOrder",
                     },
                     AllowRePostingPayments = true,
+                    BypassPaymentMethodSelectionIfOnlyOne = true,
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<TaxSettings>>()

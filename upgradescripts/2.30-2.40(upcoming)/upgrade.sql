@@ -491,3 +491,11 @@ BEGIN
 	VALUES (N'storeinformationsettings.emulatemobiledevice', N'false')
 END
 GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'paymentsettings.bypasspaymentmethodselectionifonlyone')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'paymentsettings.bypasspaymentmethodselectionifonlyone', N'true')
+END
+GO
