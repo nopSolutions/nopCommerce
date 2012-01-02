@@ -116,6 +116,9 @@ set @resources='
   <LocaleResource Name="Account.ForumSubscriptions.NoSubscriptions">
     <Value>You are not currently subscribed to any forums</Value>
   </LocaleResource>
+  <LocaleResource Name="ShippingReturns">
+    <Value><![CDATA[Shipping &amp; Returns]]></Value>
+  </LocaleResource>
 </Language>
 '
 

@@ -3352,7 +3352,7 @@
 		</Children>
 	</LocaleResource>
 	<LocaleResource Name="ShippingReturns">
-		<Value><![CDATA[Shipping & Returns]]></Value>
+		<Value>Shipping &amp; Returns</Value>
 	</LocaleResource>
 	<LocaleResource Name="ShoppingCart">
 		<Value>Shopping cart</Value>
