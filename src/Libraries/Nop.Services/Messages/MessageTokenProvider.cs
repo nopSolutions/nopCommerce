@@ -40,6 +40,7 @@ namespace Nop.Services.Messages
         private readonly IPriceFormatter _priceFormatter;
         private readonly ICurrencyService _currencyService;
         private readonly IWebHelper _webHelper;
+        private readonly IWorkContext _workContext;
 
         private readonly StoreInformationSettings _storeSettings;
         private readonly MessageTemplatesSettings _templatesSettings;
@@ -55,6 +56,7 @@ namespace Nop.Services.Messages
             ILocalizationService localizationService, IDateTimeHelper dateTimeHelper,
             IEmailAccountService emailAccountService,
             IPriceFormatter priceFormatter, ICurrencyService currencyService,IWebHelper webHelper,
+            IWorkContext workContext,
             StoreInformationSettings storeSettings, MessageTemplatesSettings templatesSettings,
             EmailAccountSettings emailAccountSettings, CatalogSettings catalogSettings,
             TaxSettings taxSettings)
@@ -66,6 +68,7 @@ namespace Nop.Services.Messages
             this._priceFormatter = priceFormatter;
             this._currencyService = currencyService;
             this._webHelper = webHelper;
+            this._workContext = workContext;
 
             this._storeSettings = storeSettings;
             this._templatesSettings = templatesSettings;
@@ -459,13 +462,14 @@ namespace Nop.Services.Messages
 
         public virtual void AddReturnRequestTokens(IList<Token> tokens, ReturnRequest returnRequest, OrderProductVariant opv)
         {
-
             tokens.Add(new Token("ReturnRequest.ID", returnRequest.Id.ToString()));
             tokens.Add(new Token("ReturnRequest.Product.Quantity", returnRequest.Quantity.ToString()));
             tokens.Add(new Token("ReturnRequest.Product.Name", opv.ProductVariant.FullProductName));
             tokens.Add(new Token("ReturnRequest.Reason", returnRequest.ReasonForReturn));
             tokens.Add(new Token("ReturnRequest.RequestedAction", returnRequest.RequestedAction));
             tokens.Add(new Token("ReturnRequest.CustomerComment", HtmlHelper.FormatText(returnRequest.CustomerComments, false, true, false, false, false, false), true));
+            tokens.Add(new Token("ReturnRequest.StaffNotes", HtmlHelper.FormatText(returnRequest.StaffNotes, false, true, false, false, false, false), true));
+            tokens.Add(new Token("ReturnRequest.Status", returnRequest.ReturnRequestStatus.GetLocalizedEnum(_localizationService, _workContext)));
         }
 
         public virtual void AddGiftCardTokens(IList<Token> tokens, GiftCard giftCard)
@@ -650,6 +654,8 @@ namespace Nop.Services.Messages
                 "%ReturnRequest.Reason%", 
                 "%ReturnRequest.RequestedAction%", 
                 "%ReturnRequest.CustomerComment%", 
+                "%ReturnRequest.StaffNotes%",
+                "%ReturnRequest.Status%",
                 "%GiftCard.SenderName%", 
                 "%GiftCard.SenderEmail%",
                 "%GiftCard.RecipientName%", 
