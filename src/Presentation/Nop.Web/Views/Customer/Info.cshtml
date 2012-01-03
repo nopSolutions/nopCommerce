@@ -50,6 +50,7 @@
         <div class="section-body">
             @using (Html.BeginForm())
             {
+                @Html.AntiForgeryToken()
                 <div class="customer-info-box">
                     <div class="message-error">
                         @Html.ValidationSummary(true)

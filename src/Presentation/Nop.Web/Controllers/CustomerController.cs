@@ -271,6 +271,7 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [CaptchaValidator]
+        [ValidateAntiForgeryToken]
         public ActionResult Register(RegisterModel model, bool? captchaValid)
         {
             //check whether registration is allowed
@@ -640,7 +641,8 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
-        [HttpPost]        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Info(CustomerInfoModel model)
         {
             if (!IsCurrentUserRegistered())
@@ -1356,6 +1358,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult ChangePassword(ChangePasswordModel model)
         {
             if (!IsCurrentUserRegistered())
