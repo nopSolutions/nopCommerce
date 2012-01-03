@@ -232,7 +232,7 @@ namespace Nop.Web.Controllers
             }
 
             var boundPaymentMethods = _paymentService
-                .LoadActivePaymentMethods()
+                .LoadActivePaymentMethods(_workContext.CurrentCustomer.Id)
                 .Where(pm => pm.PaymentMethodType == PaymentMethodType.Standard || pm.PaymentMethodType == PaymentMethodType.Redirection)
                 .ToList();
             foreach (var pm in boundPaymentMethods)

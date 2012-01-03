@@ -11,8 +11,9 @@ namespace Nop.Services.Payments
         /// <summary>
         /// Load active payment methods
         /// </summary>
+        /// <param name="filterByCustomerId">Filter payment methods by customer; null to load all records</param>
         /// <returns>Payment methods</returns>
-        IList<IPaymentMethod> LoadActivePaymentMethods();
+        IList<IPaymentMethod> LoadActivePaymentMethods(int? filterByCustomerId = null);
 
         /// <summary>
         /// Load payment provider by system name

@@ -385,7 +385,7 @@ namespace Nop.Web.Controllers
             #region Button payment methods
 
             var boundPaymentMethods = _paymentService
-                .LoadActivePaymentMethods()
+                .LoadActivePaymentMethods(_workContext.CurrentCustomer.Id)
                 .Where(pm => pm.PaymentMethodType == PaymentMethodType.Button)
                 .ToList();
             foreach (var pm in boundPaymentMethods)
