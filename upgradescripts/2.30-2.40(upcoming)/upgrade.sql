@@ -508,3 +508,11 @@ BEGIN
 	VALUES (N'paymentsettings.bypasspaymentmethodselectionifonlyone', N'true')
 END
 GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.defaultviewmode')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'catalogsettings.defaultviewmode', N'grid')
+END
+GO

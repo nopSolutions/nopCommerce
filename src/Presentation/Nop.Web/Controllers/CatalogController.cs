@@ -721,6 +721,9 @@ namespace Nop.Web.Controllers
 
             //view mode
             model.AllowProductViewModeChanging = _catalogSettings.AllowProductViewModeChanging;
+            var viewMode = !string.IsNullOrEmpty(command.ViewMode) 
+                ? command.ViewMode
+                : _catalogSettings.DefaultViewMode;
             if (model.AllowProductViewModeChanging)
             {
                 var currentPageUrl = _webHelper.GetThisPageUrl(true);
@@ -729,14 +732,14 @@ namespace Nop.Web.Controllers
                 {
                     Text = _localizationService.GetResource("Categories.ViewMode.Grid"),
                     Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode=grid", null),
-                    Selected = command.ViewMode == "grid"
+                    Selected = viewMode == "grid"
                 });
                 //list
                 model.AvailableViewModes.Add(new SelectListItem()
                 {
                     Text = _localizationService.GetResource("Categories.ViewMode.List"),
                     Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode=list", null),
-                    Selected = command.ViewMode == "list"
+                    Selected = viewMode == "list"
                 });
             }
                         
@@ -888,7 +891,7 @@ namespace Nop.Web.Controllers
             model.Products = products.Select(x => PrepareProductOverviewModel(x)).ToList();
 
             model.PagingFilteringContext.LoadPagedList(products);
-            model.PagingFilteringContext.ViewMode = command.ViewMode;
+            model.PagingFilteringContext.ViewMode = viewMode;
 
 
             //template
@@ -987,6 +990,9 @@ namespace Nop.Web.Controllers
 
             //view mode
             model.AllowProductViewModeChanging = _catalogSettings.AllowProductViewModeChanging;
+            var viewMode = !string.IsNullOrEmpty(command.ViewMode)
+                ? command.ViewMode
+                : _catalogSettings.DefaultViewMode;
             if (model.AllowProductViewModeChanging)
             {
                 var currentPageUrl = _webHelper.GetThisPageUrl(true);
@@ -995,14 +1001,14 @@ namespace Nop.Web.Controllers
                 {
                     Text = _localizationService.GetResource("Manufacturers.ViewMode.Grid"),
                     Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode=grid", null),
-                    Selected = command.ViewMode == "grid"
+                    Selected = viewMode == "grid"
                 });
                 //list
                 model.AvailableViewModes.Add(new SelectListItem()
                 {
                     Text = _localizationService.GetResource("Manufacturers.ViewMode.List"),
                     Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode=list", null),
-                    Selected = command.ViewMode == "list"
+                    Selected = viewMode == "list"
                 });
             }
                         
@@ -1108,7 +1114,7 @@ namespace Nop.Web.Controllers
             model.Products = products.Select(x => PrepareProductOverviewModel(x)).ToList();
 
             model.PagingFilteringContext.LoadPagedList(products);
-            model.PagingFilteringContext.ViewMode = command.ViewMode;
+            model.PagingFilteringContext.ViewMode = viewMode;
 
 
             //template
@@ -1929,6 +1935,9 @@ namespace Nop.Web.Controllers
 
             //view mode
             model.AllowProductViewModeChanging = _catalogSettings.AllowProductViewModeChanging;
+            var viewMode = !string.IsNullOrEmpty(command.ViewMode)
+                ? command.ViewMode
+                : _catalogSettings.DefaultViewMode;
             if (model.AllowProductViewModeChanging)
             {
                 var currentPageUrl = _webHelper.GetThisPageUrl(true);
@@ -1937,14 +1946,14 @@ namespace Nop.Web.Controllers
                 {
                     Text = _localizationService.GetResource("Categories.ViewMode.Grid"),
                     Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode=grid", null),
-                    Selected = command.ViewMode == "grid"
+                    Selected = viewMode == "grid"
                 });
                 //list
                 model.AvailableViewModes.Add(new SelectListItem()
                 {
                     Text = _localizationService.GetResource("Categories.ViewMode.List"),
                     Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode=list", null),
-                    Selected = command.ViewMode == "list"
+                    Selected = viewMode == "list"
                 });
             }
 
@@ -2016,7 +2025,7 @@ namespace Nop.Web.Controllers
             model.Products = products.Select(x => PrepareProductOverviewModel(x)).ToList();
 
             model.PagingFilteringContext.LoadPagedList(products);
-            model.PagingFilteringContext.ViewMode = command.ViewMode;
+            model.PagingFilteringContext.ViewMode = viewMode;
             return View(model);
         }
 

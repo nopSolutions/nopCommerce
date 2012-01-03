@@ -29,6 +29,10 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether customers are allowed to change product view mode
         /// </summary>
         public bool AllowProductViewModeChanging { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether customers are allowed to change product view mode
+        /// </summary>
+        public string DefaultViewMode { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether number of products should be displayed beside each category

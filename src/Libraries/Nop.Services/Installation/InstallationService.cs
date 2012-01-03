@@ -4491,6 +4491,7 @@ namespace Nop.Services.Installation
                     ShowManufacturerPartNumber = false,
                     AllowProductSorting = true,
                     AllowProductViewModeChanging = true,
+                    DefaultViewMode = "grid",
                     ShowCategoryProductNumber = false,
                     ShowCategoryProductNumberIncludingSubcategories = false,
                     CategoryBreadcrumbEnabled = true,
