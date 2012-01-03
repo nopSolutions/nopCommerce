@@ -1,24 +1,3 @@
-(function ($) {
-    $.fn.nopBlock = function (message) {
-        this.each(function () {
-            $(this).block({ overlayCSS: {
-                backgroundColor: '#fff'
-            },
-                css: {
-                    border: 'none',
-                    padding: '15px',
-                    backgroundColor: '#fff',
-                    '-webkit-border-radius': '10px',
-                    '-moz-border-radius': '10px',
-                    opacity: 1,
-                    color: '#009FFF'
-                },
-                message: '<h1>' + message + '</h1>'
-            });
-        });
-    };
-})(jQuery);
-
 var currentModelId = "";
 function closeModalWindow() {
     $('#' + currentModelId).data('tWindow').close();
