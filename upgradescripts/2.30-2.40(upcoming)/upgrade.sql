@@ -119,6 +119,12 @@ set @resources='
   <LocaleResource Name="ShippingReturns">
     <Value><![CDATA[Shipping &amp; Returns]]></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Orders.ID">
+    <Value>Order ID</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Orders.Order">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 

@@ -259,7 +259,7 @@ namespace Nop.Admin.Models.Customers
 
         public class OrderModel : BaseNopEntityModel
         {
-            [NopResourceDisplayName("Admin.Customers.Customers.Orders.Order")]
+            [NopResourceDisplayName("Admin.Customers.Customers.Orders.ID")]
             public override int Id { get; set; }
 
             [NopResourceDisplayName("Admin.Customers.Customers.Orders.OrderStatus")]

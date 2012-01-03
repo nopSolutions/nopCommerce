@@ -6347,8 +6347,8 @@
 									<LocaleResource Name="CreatedOn">
 										<Value>Created on</Value>
 									</LocaleResource>
-									<LocaleResource Name="Order">
-										<Value>Order</Value>
+									<LocaleResource Name="ID">
+										<Value>Order ID</Value>
 									</LocaleResource>
 									<LocaleResource Name="OrderStatus">
 										<Value>Order status</Value>
