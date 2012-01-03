@@ -1201,11 +1201,9 @@
     <Content Include="Scripts\jquery-1.5.1.min.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
     <Content Include="Scripts\jquery-1.7.1.min.js" />
-    <Content Include="Scripts\jquery.blockUI.js" />
     <Content Include="Scripts\jquery.fancybox-1.3.4.pack.js" />
     <Content Include="Scripts\jquery.mobile-1.0.js" />
     <Content Include="Scripts\jquery.mobile-1.0.min.js" />
-    <Content Include="Scripts\jquery.superfishmenu.js" />
     <Content Include="Scripts\jquery.tmpl.min.js" />
     <Content Include="Scripts\jquery.uploadify.v2.1.4.min.js" />
     <Content Include="Scripts\onepagecheckout.js" />
