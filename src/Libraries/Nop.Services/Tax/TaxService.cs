@@ -612,10 +612,6 @@ namespace Nop.Services.Tax
             name = string.Empty;
             address = string.Empty;
 
-            if (vatNumber == null)
-                vatNumber = string.Empty;
-            vatNumber = vatNumber.Trim();
-
             if (String.IsNullOrEmpty(twoLetterIsoCode))
                 return VatNumberStatus.Empty;
 
@@ -644,12 +640,21 @@ namespace Nop.Services.Tax
             name = string.Empty;
             address = string.Empty;
 
+            if (vatNumber == null)
+                vatNumber = string.Empty;
+            vatNumber = vatNumber.Trim().Replace(" ", "");
+
+            if (twoLetterIsoCode == null)
+                twoLetterIsoCode = string.Empty;
+            if (!String.IsNullOrEmpty(twoLetterIsoCode))
+                //The service returns INVALID_INPUT for country codes that are not uppercase.
+                twoLetterIsoCode = twoLetterIsoCode.ToUpper();
+
             EuropaCheckVatService.checkVatService s = null;
 
             try
             {
                 bool valid;
-                vatNumber = vatNumber.Trim().Replace(" ", "");
 
                 s = new EuropaCheckVatService.checkVatService();
                 s.checkVat(ref twoLetterIsoCode, ref vatNumber, out valid, out name, out address);
