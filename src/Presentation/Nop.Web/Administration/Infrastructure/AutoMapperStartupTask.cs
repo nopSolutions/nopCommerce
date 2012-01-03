@@ -460,6 +460,7 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.ActiveShippingRateComputationMethodSystemNames, mo => mo.Ignore());
             Mapper.CreateMap<CatalogSettings, CatalogSettingsModel>();
             Mapper.CreateMap<CatalogSettingsModel, CatalogSettings>()
+                .ForMember(dest => dest.DefaultViewMode, mo => mo.Ignore())
                 .ForMember(dest => dest.PageShareCode, mo => mo.Ignore())
                 .ForMember(dest => dest.ProductSearchTermMinimumLength, mo => mo.Ignore())
                 .ForMember(dest => dest.UseSmallProductBoxOnHomePage, mo => mo.Ignore())

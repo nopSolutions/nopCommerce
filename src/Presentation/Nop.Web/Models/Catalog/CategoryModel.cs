@@ -15,43 +15,24 @@ namespace Nop.Web.Models.Catalog
             PagingFilteringContext = new CatalogPagingFilteringModel();
             SubCategories = new List<SubCategoryModel>();
             CategoryBreadcrumb = new List<CategoryModel>();
-            AvailableSortOptions = new List<SelectListItem>();
-            AvailableViewModes = new List<SelectListItem>();
-            PageSizeOptions = new List<SelectListItem>();
         }
 
         public string Name { get; set; }
-
         public string Description { get; set; }
-
         public string MetaKeywords { get; set; }
-
         public string MetaDescription { get; set; }
-
         public string MetaTitle { get; set; }
-
         public string SeName { get; set; }
-
-
+        
         public PictureModel PictureModel { get; set; }
 
         public CatalogPagingFilteringModel PagingFilteringContext { get; set; }
-        public bool AllowProductSorting { get; set; }
-        public IList<SelectListItem> AvailableSortOptions { get; set; }
-        public bool AllowProductViewModeChanging { get; set; }
-        public IList<SelectListItem> AvailableViewModes { get; set; }
-
-        public bool AllowCustomersToSelectPageSize { get; set; }
-        public IList<SelectListItem> PageSizeOptions { get; set; }
 
         public bool DisplayCategoryBreadcrumb { get; set; }
         public IList<CategoryModel> CategoryBreadcrumb { get; set; }
-
-
-
+        
         public IList<SubCategoryModel> SubCategories { get; set; }
-
-
+        
         public IList<ProductModel> FeaturedProducts { get; set; }
         public IList<ProductModel> Products { get; set; }
         

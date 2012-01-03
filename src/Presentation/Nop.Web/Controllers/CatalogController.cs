@@ -699,8 +699,8 @@ namespace Nop.Web.Controllers
 
 
             //sorting
-            model.AllowProductSorting = _catalogSettings.AllowProductSorting;
-            if (model.AllowProductSorting)
+            model.PagingFilteringContext.AllowProductSorting = _catalogSettings.AllowProductSorting;
+            if (model.PagingFilteringContext.AllowProductSorting)
             {
                 foreach (ProductSortingEnum enumValue in Enum.GetValues(typeof(ProductSortingEnum)))
                 {
@@ -708,7 +708,7 @@ namespace Nop.Web.Controllers
                     var sortUrl = _webHelper.ModifyQueryString(currentPageUrl, "orderby=" + ((int)enumValue).ToString(), null);
                     
                     var sortValue = enumValue.GetLocalizedEnum(_localizationService, _workContext);
-                    model.AvailableSortOptions.Add(new SelectListItem()
+                    model.PagingFilteringContext.AvailableSortOptions.Add(new SelectListItem()
                         {
                             Text = sortValue,
                             Value = sortUrl,
@@ -720,22 +720,22 @@ namespace Nop.Web.Controllers
 
 
             //view mode
-            model.AllowProductViewModeChanging = _catalogSettings.AllowProductViewModeChanging;
+            model.PagingFilteringContext.AllowProductViewModeChanging = _catalogSettings.AllowProductViewModeChanging;
             var viewMode = !string.IsNullOrEmpty(command.ViewMode) 
                 ? command.ViewMode
                 : _catalogSettings.DefaultViewMode;
-            if (model.AllowProductViewModeChanging)
+            if (model.PagingFilteringContext.AllowProductViewModeChanging)
             {
                 var currentPageUrl = _webHelper.GetThisPageUrl(true);
                 //grid
-                model.AvailableViewModes.Add(new SelectListItem()
+                model.PagingFilteringContext.AvailableViewModes.Add(new SelectListItem()
                 {
                     Text = _localizationService.GetResource("Categories.ViewMode.Grid"),
                     Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode=grid", null),
                     Selected = viewMode == "grid"
                 });
                 //list
-                model.AvailableViewModes.Add(new SelectListItem()
+                model.PagingFilteringContext.AvailableViewModes.Add(new SelectListItem()
                 {
                     Text = _localizationService.GetResource("Categories.ViewMode.List"),
                     Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode=list", null),
@@ -744,7 +744,7 @@ namespace Nop.Web.Controllers
             }
                         
             //page size
-            model.AllowCustomersToSelectPageSize = false;
+            model.PagingFilteringContext.AllowCustomersToSelectPageSize = false;
             if (category.AllowCustomersToSelectPageSize && category.PageSizeOptions != null)
             {
                 var pageSizes = category.PageSizeOptions.Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
@@ -781,7 +781,7 @@ namespace Nop.Web.Controllers
                             continue;
                         }
 
-                        model.PageSizeOptions.Add(new SelectListItem()
+                        model.PagingFilteringContext.PageSizeOptions.Add(new SelectListItem()
                         {
                             Text = pageSize,
                             Value = String.Format(sortUrl, pageSize),
@@ -789,14 +789,14 @@ namespace Nop.Web.Controllers
                         });
                     }
 
-                    if (model.PageSizeOptions.Any())
+                    if (model.PagingFilteringContext.PageSizeOptions.Any())
                     {
-                        model.PageSizeOptions = model.PageSizeOptions.OrderBy(x => int.Parse(x.Text)).ToList();
-                        model.AllowCustomersToSelectPageSize = true;
+                        model.PagingFilteringContext.PageSizeOptions = model.PagingFilteringContext.PageSizeOptions.OrderBy(x => int.Parse(x.Text)).ToList();
+                        model.PagingFilteringContext.AllowCustomersToSelectPageSize = true;
 
                         if (command.PageSize <= 0)
                         {
-                            command.PageSize = int.Parse(model.PageSizeOptions.FirstOrDefault().Text);
+                            command.PageSize = int.Parse(model.PagingFilteringContext.PageSizeOptions.FirstOrDefault().Text);
                         }
                     }
                 }
@@ -968,8 +968,8 @@ namespace Nop.Web.Controllers
 
 
             //sorting
-            model.AllowProductSorting = _catalogSettings.AllowProductSorting;
-            if (model.AllowProductSorting)
+            model.PagingFilteringContext.AllowProductSorting = _catalogSettings.AllowProductSorting;
+            if (model.PagingFilteringContext.AllowProductSorting)
             {
                 foreach (ProductSortingEnum enumValue in Enum.GetValues(typeof(ProductSortingEnum)))
                 {
@@ -977,7 +977,7 @@ namespace Nop.Web.Controllers
                     var sortUrl = _webHelper.ModifyQueryString(currentPageUrl, "orderby=" + ((int)enumValue).ToString(), null);
 
                     var sortValue = enumValue.GetLocalizedEnum(_localizationService, _workContext);
-                    model.AvailableSortOptions.Add(new SelectListItem()
+                    model.PagingFilteringContext.AvailableSortOptions.Add(new SelectListItem()
                     {
                         Text = sortValue,
                         Value = sortUrl,
@@ -989,22 +989,22 @@ namespace Nop.Web.Controllers
 
 
             //view mode
-            model.AllowProductViewModeChanging = _catalogSettings.AllowProductViewModeChanging;
+            model.PagingFilteringContext.AllowProductViewModeChanging = _catalogSettings.AllowProductViewModeChanging;
             var viewMode = !string.IsNullOrEmpty(command.ViewMode)
                 ? command.ViewMode
                 : _catalogSettings.DefaultViewMode;
-            if (model.AllowProductViewModeChanging)
+            if (model.PagingFilteringContext.AllowProductViewModeChanging)
             {
                 var currentPageUrl = _webHelper.GetThisPageUrl(true);
                 //grid
-                model.AvailableViewModes.Add(new SelectListItem()
+                model.PagingFilteringContext.AvailableViewModes.Add(new SelectListItem()
                 {
                     Text = _localizationService.GetResource("Manufacturers.ViewMode.Grid"),
                     Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode=grid", null),
                     Selected = viewMode == "grid"
                 });
                 //list
-                model.AvailableViewModes.Add(new SelectListItem()
+                model.PagingFilteringContext.AvailableViewModes.Add(new SelectListItem()
                 {
                     Text = _localizationService.GetResource("Manufacturers.ViewMode.List"),
                     Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode=list", null),
@@ -1013,7 +1013,7 @@ namespace Nop.Web.Controllers
             }
                         
             //page size
-            model.AllowCustomersToSelectPageSize = false;
+            model.PagingFilteringContext.AllowCustomersToSelectPageSize = false;
             if (manufacturer.AllowCustomersToSelectPageSize && manufacturer.PageSizeOptions != null)
             {
                 var pageSizes = manufacturer.PageSizeOptions.Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
@@ -1050,7 +1050,7 @@ namespace Nop.Web.Controllers
                             continue;
                         }
 
-                        model.PageSizeOptions.Add(new SelectListItem()
+                        model.PagingFilteringContext.PageSizeOptions.Add(new SelectListItem()
                         {
                             Text = pageSize,
                             Value = String.Format(sortUrl, pageSize),
@@ -1058,16 +1058,16 @@ namespace Nop.Web.Controllers
                         });
                     }
 
-                    model.PageSizeOptions = model.PageSizeOptions.OrderBy(x => int.Parse(x.Text)).ToList();
+                    model.PagingFilteringContext.PageSizeOptions = model.PagingFilteringContext.PageSizeOptions.OrderBy(x => int.Parse(x.Text)).ToList();
 
-                    if (model.PageSizeOptions.Any())
+                    if (model.PagingFilteringContext.PageSizeOptions.Any())
                     {
-                        model.PageSizeOptions = model.PageSizeOptions.OrderBy(x => int.Parse(x.Text)).ToList();
-                        model.AllowCustomersToSelectPageSize = true;
+                        model.PagingFilteringContext.PageSizeOptions = model.PagingFilteringContext.PageSizeOptions.OrderBy(x => int.Parse(x.Text)).ToList();
+                        model.PagingFilteringContext.AllowCustomersToSelectPageSize = true;
 
                         if (command.PageSize <= 0)
                         {
-                            command.PageSize = int.Parse(model.PageSizeOptions.FirstOrDefault().Text);
+                            command.PageSize = int.Parse(model.PagingFilteringContext.PageSizeOptions.FirstOrDefault().Text);
                         }
                     }
                 }
@@ -1914,8 +1914,8 @@ namespace Nop.Web.Controllers
 
 
             //sorting
-            model.AllowProductSorting = _catalogSettings.AllowProductSorting;
-            if (model.AllowProductSorting)
+            model.PagingFilteringContext.AllowProductSorting = _catalogSettings.AllowProductSorting;
+            if (model.PagingFilteringContext.AllowProductSorting)
             {
                 foreach (ProductSortingEnum enumValue in Enum.GetValues(typeof(ProductSortingEnum)))
                 {
@@ -1923,7 +1923,7 @@ namespace Nop.Web.Controllers
                     var sortUrl = _webHelper.ModifyQueryString(currentPageUrl, "orderby=" + ((int)enumValue).ToString(), null);
 
                     var sortValue = enumValue.GetLocalizedEnum(_localizationService, _workContext);
-                    model.AvailableSortOptions.Add(new SelectListItem()
+                    model.PagingFilteringContext.AvailableSortOptions.Add(new SelectListItem()
                     {
                         Text = sortValue,
                         Value = sortUrl,
@@ -1934,22 +1934,22 @@ namespace Nop.Web.Controllers
 
 
             //view mode
-            model.AllowProductViewModeChanging = _catalogSettings.AllowProductViewModeChanging;
+            model.PagingFilteringContext.AllowProductViewModeChanging = _catalogSettings.AllowProductViewModeChanging;
             var viewMode = !string.IsNullOrEmpty(command.ViewMode)
                 ? command.ViewMode
                 : _catalogSettings.DefaultViewMode;
-            if (model.AllowProductViewModeChanging)
+            if (model.PagingFilteringContext.AllowProductViewModeChanging)
             {
                 var currentPageUrl = _webHelper.GetThisPageUrl(true);
                 //grid
-                model.AvailableViewModes.Add(new SelectListItem()
+                model.PagingFilteringContext.AvailableViewModes.Add(new SelectListItem()
                 {
                     Text = _localizationService.GetResource("Categories.ViewMode.Grid"),
                     Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode=grid", null),
                     Selected = viewMode == "grid"
                 });
                 //list
-                model.AvailableViewModes.Add(new SelectListItem()
+                model.PagingFilteringContext.AvailableViewModes.Add(new SelectListItem()
                 {
                     Text = _localizationService.GetResource("Categories.ViewMode.List"),
                     Value = _webHelper.ModifyQueryString(currentPageUrl, "viewmode=list", null),
@@ -1958,7 +1958,7 @@ namespace Nop.Web.Controllers
             }
 
             //page size
-            model.AllowCustomersToSelectPageSize = false;
+            model.PagingFilteringContext.AllowCustomersToSelectPageSize = false;
             if (_catalogSettings.ProductsByTagAllowCustomersToSelectPageSize && _catalogSettings.ProductsByTagPageSizeOptions != null)
             {
                 var pageSizes = _catalogSettings.ProductsByTagPageSizeOptions.Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
@@ -1995,7 +1995,7 @@ namespace Nop.Web.Controllers
                             continue;
                         }
 
-                        model.PageSizeOptions.Add(new SelectListItem()
+                        model.PagingFilteringContext.PageSizeOptions.Add(new SelectListItem()
                         {
                             Text = pageSize,
                             Value = String.Format(sortUrl, pageSize),
@@ -2003,14 +2003,14 @@ namespace Nop.Web.Controllers
                         });
                     }
 
-                    if (model.PageSizeOptions.Any())
+                    if (model.PagingFilteringContext.PageSizeOptions.Any())
                     {
-                        model.PageSizeOptions = model.PageSizeOptions.OrderBy(x => int.Parse(x.Text)).ToList();
-                        model.AllowCustomersToSelectPageSize = true;
+                        model.PagingFilteringContext.PageSizeOptions = model.PagingFilteringContext.PageSizeOptions.OrderBy(x => int.Parse(x.Text)).ToList();
+                        model.PagingFilteringContext.AllowCustomersToSelectPageSize = true;
 
                         if (command.PageSize <= 0)
                         {
-                            command.PageSize = int.Parse(model.PageSizeOptions.FirstOrDefault().Text);
+                            command.PageSize = int.Parse(model.PagingFilteringContext.PageSizeOptions.FirstOrDefault().Text);
                         }
                     }
                 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Web.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Catalog;
@@ -18,6 +19,10 @@ namespace Nop.Web.Models.Catalog
 
         public CatalogPagingFilteringModel()
         {
+            this.AvailableSortOptions = new List<SelectListItem>();
+            this.AvailableViewModes = new List<SelectListItem>();
+            this.PageSizeOptions = new List<SelectListItem>();
+
             this.PriceRangeFilter = new PriceRangeFilterModel();
             this.SpecificationFilter = new SpecificationFilterModel();
         }
@@ -25,10 +30,6 @@ namespace Nop.Web.Models.Catalog
         #endregion
 
         #region Properties
-
-        public int CategoryId { get; set; }
-
-        public int ManufacturerId { get; set; }
 
         /// <summary>
         /// Price range filter model
@@ -39,6 +40,15 @@ namespace Nop.Web.Models.Catalog
         /// Specification filter model
         /// </summary>
         public SpecificationFilterModel SpecificationFilter { get; set; }
+
+        public bool AllowProductSorting { get; set; }
+        public IList<SelectListItem> AvailableSortOptions { get; set; }
+
+        public bool AllowProductViewModeChanging { get; set; }
+        public IList<SelectListItem> AvailableViewModes { get; set; }
+
+        public bool AllowCustomersToSelectPageSize { get; set; }
+        public IList<SelectListItem> PageSizeOptions { get; set; }
 
         /// <summary>
         /// Order by
