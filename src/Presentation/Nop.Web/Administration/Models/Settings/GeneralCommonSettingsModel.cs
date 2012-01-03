@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
+using Nop.Core.Domain.Common;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
 
@@ -67,6 +68,10 @@ namespace Nop.Admin.Models.Settings
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.PageTitleSeparator")]
             [AllowHtml]
             public string PageTitleSeparator { get; set; }
+            
+            [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.PageTitleSeoAdjustment")]
+            public PageTitleSeoAdjustment PageTitleSeoAdjustment { get; set; }
+            public SelectList PageTitleSeoAdjustmentValues { get; set; }
 
             [NopResourceDisplayName("Admin.Configuration.Settings.GeneralCommon.DefaultTitle")]
             [AllowHtml]

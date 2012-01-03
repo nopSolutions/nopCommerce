@@ -4105,6 +4105,14 @@
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
+									<LocaleResource Name="PageTitleSeoAdjustment">
+										<Value>Page title SEO adjustment</Value>
+										<Children>
+											<LocaleResource Name="Hint">
+												<Value>Select a page title SEO adjustment. For example, generated page title could be (PAGE NAME | YOURSTORE.COM) instead of (YOURSTORE.COM | PAGE NAME).</Value>
+											</LocaleResource>
+										</Children>
+									</LocaleResource>
 									<LocaleResource Name="DefaultTitle">
 										<Value>Default title</Value>
 										<Children>

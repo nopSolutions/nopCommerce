@@ -125,6 +125,18 @@ set @resources='
   <LocaleResource Name="Admin.Customers.Customers.Orders.Order">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.PageTitleSeoAdjustment">
+    <Value>Page title SEO adjustment</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.PageTitleSeoAdjustment.Hint">
+    <Value>Select a page title SEO adjustment. For example, generated page title could be (PAGE NAME | YOURSTORE.COM) instead of (YOURSTORE.COM | PAGE NAME).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Common.PageTitleSeoAdjustment.PagenameAfterStorename">
+    <Value>Page name comes after store name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Common.PageTitleSeoAdjustment.StorenameAfterPagename">
+    <Value>Store name comes after page name</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -522,5 +534,13 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.defaultp
 BEGIN
 	INSERT [Setting] ([Name], [Value])
 	VALUES (N'catalogsettings.defaultproductratingvalue', N'5')
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'seosettings.pagetitleseoadjustment')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'seosettings.pagetitleseoadjustment', N'0')
 END
 GO

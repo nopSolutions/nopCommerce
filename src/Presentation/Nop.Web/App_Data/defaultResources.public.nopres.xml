@@ -1405,6 +1405,16 @@
 					</LocaleResource>
 				</Children>
 			</LocaleResource>
+			<LocaleResource Name="Nop.Core.Domain.Common.PageTitleSeoAdjustment">
+				<Children>
+					<LocaleResource Name="PagenameAfterStorename">
+						<Value>Page name comes after store name</Value>
+					</LocaleResource>
+					<LocaleResource Name="StorenameAfterPagename">
+						<Value>Store name comes after page name</Value>
+					</LocaleResource>
+				</Children>
+			</LocaleResource>
 			<LocaleResource Name="Nop.Core.Domain.Customers.ShowEmails">
 				<Children>
 					<LocaleResource Name="ShowEmails">

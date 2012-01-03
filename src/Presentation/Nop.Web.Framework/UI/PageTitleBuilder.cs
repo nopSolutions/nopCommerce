@@ -46,11 +46,37 @@ namespace Nop.Web.Framework.UI
             string result = "";
             var specificTitle = string.Join(_seoSettings.PageTitleSeparator, _titleParts.AsEnumerable().Reverse().ToArray());
             if (!String.IsNullOrEmpty(specificTitle))
-                result = addDefaultTitle
-                         ? string.Join(_seoSettings.PageTitleSeparator, _seoSettings.DefaultTitle, specificTitle)
-                         : specificTitle;
+            {
+                if (addDefaultTitle)
+                {
+                    //store name + page title
+                    switch (_seoSettings.PageTitleSeoAdjustment)
+                    {
+                        case PageTitleSeoAdjustment.PagenameAfterStorename:
+                            {
+                                result = string.Join(_seoSettings.PageTitleSeparator, _seoSettings.DefaultTitle, specificTitle);
+                            }
+                            break;
+                        case PageTitleSeoAdjustment.StorenameAfterPagename:
+                        default:
+                            {
+                                result = string.Join(_seoSettings.PageTitleSeparator, specificTitle, _seoSettings.DefaultTitle);
+                            }
+                            break;
+                            
+                    }
+                }
+                else
+                {
+                    //page title only
+                    result = specificTitle;
+                }
+            }
             else
+            {
+                //store name only
                 result = _seoSettings.DefaultTitle;
+            }
             return result;
         }
 

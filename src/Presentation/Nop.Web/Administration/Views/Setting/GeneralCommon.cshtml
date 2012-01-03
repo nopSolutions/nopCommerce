@@ -175,6 +175,18 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SeoSettings.PageTitleSeoAdjustment):
+            </td>
+            <td class="adminData">
+                @(Html.Telerik().DropDownListFor(model => model.SeoSettings.PageTitleSeoAdjustment)
+                            .BindTo(Model.SeoSettings.PageTitleSeoAdjustmentValues)
+                            .HtmlAttributes(new { style = "width:255px" })
+                )
+                @Html.ValidationMessageFor(model => model.SeoSettings.PageTitleSeoAdjustment)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.NopLabelFor(model => model.SeoSettings.DefaultTitle):
             </td>
             <td class="adminData">

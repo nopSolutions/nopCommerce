@@ -4470,6 +4470,7 @@ namespace Nop.Services.Installation
                 .SaveSettings(new SeoSettings()
                 {
                     PageTitleSeparator = ". ",
+                    PageTitleSeoAdjustment = PageTitleSeoAdjustment.PagenameAfterStorename,
                     DefaultTitle = "Your store",
                     DefaultMetaKeywords = "",
                     DefaultMetaDescription = "",
