@@ -18,7 +18,7 @@ namespace Nop.Web.Models.Catalog
         public string TagName { get; set; }
 
         public CatalogPagingFilteringModel PagingFilteringContext { get; set; }
-        public bool AllowProductFiltering { get; set; }
+        public bool AllowProductSorting { get; set; }
         public IList<SelectListItem> AvailableSortOptions { get; set; }
         public bool AllowProductViewModeChanging { get; set; }
         public IList<SelectListItem> AvailableViewModes { get; set; }

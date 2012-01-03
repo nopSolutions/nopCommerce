@@ -32,7 +32,7 @@
     
     
     @*sorting*@
-    @if (Model.AllowProductFiltering && Model.Products.Count > 0)
+    @if (Model.AllowProductSorting && Model.Products.Count > 0)
     {
         <div class="product-sorting">
             @Html.LabelFor(model => model.PagingFilteringContext.OrderBy)

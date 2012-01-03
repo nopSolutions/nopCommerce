@@ -699,8 +699,8 @@ namespace Nop.Web.Controllers
 
 
             //sorting
-            model.AllowProductFiltering = _catalogSettings.AllowProductSorting;
-            if (model.AllowProductFiltering)
+            model.AllowProductSorting = _catalogSettings.AllowProductSorting;
+            if (model.AllowProductSorting)
             {
                 foreach (ProductSortingEnum enumValue in Enum.GetValues(typeof(ProductSortingEnum)))
                 {
@@ -965,8 +965,8 @@ namespace Nop.Web.Controllers
 
 
             //sorting
-            model.AllowProductFiltering = _catalogSettings.AllowProductSorting;
-            if (model.AllowProductFiltering)
+            model.AllowProductSorting = _catalogSettings.AllowProductSorting;
+            if (model.AllowProductSorting)
             {
                 foreach (ProductSortingEnum enumValue in Enum.GetValues(typeof(ProductSortingEnum)))
                 {
@@ -1908,8 +1908,8 @@ namespace Nop.Web.Controllers
 
 
             //sorting
-            model.AllowProductFiltering = _catalogSettings.AllowProductSorting;
-            if (model.AllowProductFiltering)
+            model.AllowProductSorting = _catalogSettings.AllowProductSorting;
+            if (model.AllowProductSorting)
             {
                 foreach (ProductSortingEnum enumValue in Enum.GetValues(typeof(ProductSortingEnum)))
                 {
