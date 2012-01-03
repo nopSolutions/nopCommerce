@@ -2,7 +2,10 @@
 
 @using Nop.Core.Domain.Discounts;
 @using Telerik.Web.Mvc.UI;
-
+@using Nop.Web.Framework.UI;
+@{
+    Html.AddScriptParts(@Url.Content("~/Administration/Scripts/jquery.tmpl.min.js"));
+}
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
 @Html.Telerik().TabStrip().Name("discount-edit").Items(x =>

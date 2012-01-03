@@ -92,8 +92,8 @@ a img{border:0;}
 .status-bar .breadcrumb{float:right;text-align:right;padding-top:5px;}
 /* MASTER ERRORS */
 .messageBox{background-color:#F4F4F4;background-position:7px 5px;background-repeat:no-repeat;color:#333;font-family:Tahoma;font-size:11px;margin:5px 0;padding:8px 8px 8px 30px;}
-.messageBoxError{background-color:#FFECEC;background-image:url(images/ErrorMessage.gif);}
-.messageBoxSuccess{background-image:url(images/SuccessMessage.gif);}
+.messageBoxError{background-color:#FFECEC;background-image:url(images/error-message.gif);}
+.messageBoxSuccess{background-image:url(images/success-message.gif);}
 /* MASTER CONTENT */
 .content .cph{padding:20px 15px 5px;}
 /* DASHBOARD */

@@ -1,6 +1,13 @@
 ﻿@model int
 @using Nop.Core;
+@using Nop.Web.Framework.UI;
 @{
+    //register CSS and JS
+    Html.AddCssFileParts(@Url.Content("~/Administration/Content/uploadify.css"));
+    Html.AddScriptParts(@Url.Content("~/Administration/Scripts/swfobject.js"));
+    Html.AddScriptParts(@Url.Content("~/Administration/Scripts/jquery.uploadify.v2.1.4.min.js"));
+    
+    //other variables
     var randomNumber = CommonHelper.GenerateRandomInteger();
     var clientId = "download" + randomNumber;
     var downloadService = EngineContext.Current.Resolve<Nop.Services.Media.IDownloadService>();
@@ -60,7 +67,7 @@
             </td>
             <td class="adminData">
                 <input type="checkbox" name="cbUseDownloadURL@(randomNumber)" id="cbUseDownloadURL@(randomNumber)" 
-                @if (download !=null && download.UseDownloadUrl) 
+                @if (download != null && download.UseDownloadUrl)
                 {
                     <text>checked="checked"</text>
                 }
@@ -73,7 +80,7 @@
             </td>
             <td class="adminData">
                 <input type="text" name="downloadurl@(randomNumber)" id="downloadurl@(randomNumber)"
-                @if (download !=null && !String.IsNullOrEmpty(download.DownloadUrl)) 
+                @if (download != null && !String.IsNullOrEmpty(download.DownloadUrl))
                 {
                     <text>value="@(download.DownloadUrl)"</text>
                 }
@@ -93,7 +100,7 @@
                     $(function () {
                         $(function () {
                         
-                            var authToken = '@(this.Context.Request.Cookies[FormsAuthentication.FormsCookieName]==null ? string.Empty : Request.Cookies[FormsAuthentication.FormsCookieName].Value)';
+                            var authToken = '@(this.Context.Request.Cookies[FormsAuthentication.FormsCookieName] == null ? string.Empty : Request.Cookies[FormsAuthentication.FormsCookieName].Value)';
 
                             $("#@clientId").uploadify({
                                 "uploader": "@(Url.Content("~/Content/Flash/uploadify.swf"))",

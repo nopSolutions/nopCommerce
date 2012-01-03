@@ -1,6 +1,13 @@
 ﻿@model int
 @using Nop.Core;
+@using Nop.Web.Framework.UI;
 @{
+    //register CSS and JS
+    Html.AddCssFileParts(@Url.Content("~/Administration/Content/uploadify.css"));
+    Html.AddScriptParts(@Url.Content("~/Administration/Scripts/swfobject.js"));
+    Html.AddScriptParts(@Url.Content("~/Administration/Scripts/jquery.uploadify.v2.1.4.min.js"));
+    
+    //other variables
     var random = CommonHelper.GenerateRandomInteger();
     var clientId = "picture" + random;
     var pictureService = EngineContext.Current.Resolve<Nop.Services.Media.IPictureService>();
@@ -12,7 +19,8 @@
 <div id="@(clientId + "image")">
     <img src="@(pictureService.GetPictureUrl(Model, 100, true))" />
 </div>
-@if(picture != null){
+@if (picture != null)
+{
     <span id="@(clientId + "remove")" class="t-button">@T("Admin.Picture.RemovePicture")</span>
 }
 else
@@ -25,7 +33,7 @@ else
     $(function () {
         $(function () {
 
-            var authToken = '@(this.Context.Request.Cookies[FormsAuthentication.FormsCookieName]==null ? string.Empty : Request.Cookies[FormsAuthentication.FormsCookieName].Value)';
+            var authToken = '@(this.Context.Request.Cookies[FormsAuthentication.FormsCookieName] == null ? string.Empty : Request.Cookies[FormsAuthentication.FormsCookieName].Value)';
 
             $("#@clientId").uploadify({
                 "uploader": "@(Url.Content("~/Content/Flash/uploadify.swf"))",
