@@ -65,6 +65,11 @@ namespace Nop.Core.Domain.Catalog
         public bool ProductReviewsMustBeApproved { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating the default rating value of the product reviews
+        /// </summary>
+        public int DefaultProductRatingValue { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether to allow anonymous users write product reviews.
         /// </summary>
         public bool AllowAnonymousUsersToReviewProduct { get; set; }

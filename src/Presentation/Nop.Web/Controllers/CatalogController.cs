@@ -2047,7 +2047,7 @@ namespace Nop.Web.Controllers
             if (_workContext.CurrentCustomer.IsGuest() && !_catalogSettings.AllowAnonymousUsersToReviewProduct)
                 ModelState.AddModelError("", _localizationService.GetResource("Reviews.OnlyRegisteredUsersCanWriteReviews"));
             //default value
-            model.AddProductReview.Rating = 4;
+            model.AddProductReview.Rating = _catalogSettings.DefaultProductRatingValue;
             return View(model);
         }
 
@@ -2070,7 +2070,7 @@ namespace Nop.Web.Controllers
                     //save review
                     int rating = model.AddProductReview.Rating;
                     if (rating < 1 || rating > 5)
-                        rating = 4;
+                        rating = _catalogSettings.DefaultProductRatingValue;
                     bool isApproved = !_catalogSettings.ProductReviewsMustBeApproved;
 
                     var productReview = new ProductReview()

@@ -462,6 +462,7 @@ namespace Nop.Admin.Infrastructure
             Mapper.CreateMap<CatalogSettingsModel, CatalogSettings>()
                 .ForMember(dest => dest.DefaultViewMode, mo => mo.Ignore())
                 .ForMember(dest => dest.PageShareCode, mo => mo.Ignore())
+                .ForMember(dest => dest.DefaultProductRatingValue, mo => mo.Ignore())
                 .ForMember(dest => dest.ProductSearchTermMinimumLength, mo => mo.Ignore())
                 .ForMember(dest => dest.UseSmallProductBoxOnHomePage, mo => mo.Ignore())
                 .ForMember(dest => dest.EnsureWeHaveFilterableSpecAttributes, mo => mo.Ignore())
