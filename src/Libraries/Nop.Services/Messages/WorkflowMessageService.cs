@@ -110,6 +110,7 @@ namespace Nop.Services.Messages
 
             _messageTokenProvider.AddStoreTokens(tokens);
             _messageTokenProvider.AddOrderTokens(tokens, order, languageId);
+            _messageTokenProvider.AddCustomerTokens(tokens, order.Customer);
 
             return tokens;
         }
