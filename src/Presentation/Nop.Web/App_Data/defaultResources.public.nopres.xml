@@ -2617,6 +2617,9 @@
 			<LocaleResource Name="OrderTotal">
 				<Value>Order total:</Value>
 			</LocaleResource>
+			<LocaleResource Name="PaymentMethod">
+				<Value>Payment method: {0}</Value>
+			</LocaleResource>
 			<LocaleResource Name="PaymentMethodAdditionalFee">
 				<Value>Payment Method Additional Fee:</Value>
 			</LocaleResource>

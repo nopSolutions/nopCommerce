@@ -137,6 +137,9 @@ set @resources='
   <LocaleResource Name="Enums.Nop.Core.Domain.Common.PageTitleSeoAdjustment.StorenameAfterPagename">
     <Value>Store name comes after page name</Value>
   </LocaleResource>
+  <LocaleResource Name="PDFInvoice.PaymentMethod">
+    <Value>Payment method: {0}</Value>
+  </LocaleResource>
 </Language>
 '
 

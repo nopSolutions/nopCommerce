@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Web.Hosting;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
+using Nop.Core;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -20,7 +20,7 @@ using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Orders;
-using Nop.Core;
+using Nop.Services.Payments;
 
 namespace Nop.Services.Common
 {
@@ -33,6 +33,7 @@ namespace Nop.Services.Common
 
         private readonly ILocalizationService _localizationService;
         private readonly IOrderService _orderService;
+        private readonly IPaymentService _paymentService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IPriceFormatter _priceFormatter;
         private readonly ICurrencyService _currencyService;
@@ -52,6 +53,7 @@ namespace Nop.Services.Common
         #region Ctor
 
         public PdfService(ILocalizationService localizationService, IOrderService orderService,
+            IPaymentService paymentService,
             IDateTimeHelper dateTimeHelper, IPriceFormatter priceFormatter,
             ICurrencyService currencyService, IMeasureService measureService,
             IPictureService pictureService, IProductService productService, 
@@ -61,6 +63,7 @@ namespace Nop.Services.Common
         {
             this._localizationService = localizationService;
             this._orderService = orderService;
+            this._paymentService = paymentService;
             this._dateTimeHelper = dateTimeHelper;
             this._priceFormatter = priceFormatter;
             this._currencyService = currencyService;
@@ -197,6 +200,16 @@ namespace Nop.Services.Common
                 //VAT number
                 if (!String.IsNullOrEmpty(order.VatNumber))
                     cell.AddElement(new Paragraph("   " + String.Format(_localizationService.GetResource("PDFInvoice.VATNumber", lang.Id), order.VatNumber), font));
+
+                //payment method
+                var paymentMethod = _paymentService.LoadPaymentMethodBySystemName(order.PaymentMethodSystemName);
+                string paymentMethodStr = paymentMethod != null ? paymentMethod.PluginDescriptor.FriendlyName : order.PaymentMethodSystemName;
+                if (!String.IsNullOrEmpty(paymentMethodStr))
+                {
+                    cell.AddElement(new Paragraph(" "));
+                    cell.AddElement(new Paragraph("   " + String.Format(_localizationService.GetResource("PDFInvoice.PaymentMethod", lang.Id), paymentMethodStr), font));
+                    cell.AddElement(new Paragraph());
+                }
                 addressTable.AddCell(cell);
 
                 //shipping info
