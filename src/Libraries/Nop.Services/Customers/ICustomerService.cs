@@ -96,6 +96,20 @@ namespace Nop.Services.Customers
         Customer GetCustomerByUsername(string username);
 
         /// <summary>
+        /// Get customers by language identifer
+        /// </summary>
+        /// <param name="languageId">Language identifer</param>
+        /// <returns>Customers</returns>
+        IList<Customer> GetCustomersByLanguageId(int languageId);
+
+        /// <summary>
+        /// Get customers by currency identifer
+        /// </summary>
+        /// <param name="currencyId">Currency identifer</param>
+        /// <returns>Customers</returns>
+        IList<Customer> GetCustomersByCurrencyId(int currencyId);
+
+        /// <summary>
         /// Validate customer
         /// </summary>
         /// <param name="usernameOrEmail">Username or email</param>

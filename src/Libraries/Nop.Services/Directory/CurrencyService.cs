@@ -7,6 +7,7 @@ using Nop.Core.Data;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Events;
 using Nop.Core.Plugins;
+using Nop.Services.Customers;
 
 namespace Nop.Services.Directory
 {
@@ -25,6 +26,7 @@ namespace Nop.Services.Directory
 
         private readonly IRepository<Currency> _currencyRepository;
         private readonly ICacheManager _cacheManager;
+        private readonly ICustomerService _customerService;
         private readonly CurrencySettings _currencySettings;
         private readonly IPluginFinder _pluginFinder;
         private readonly IEventPublisher _eventPublisher;
@@ -38,20 +40,23 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="currencyRepository">Currency repository</param>
+        /// <param name="customerService">Customer service</param>
         /// <param name="currencySettings">Currency settings</param>
         /// <param name="pluginFinder">Plugin finder</param>
         /// <param name="eventPublisher"></param>
         public CurrencyService(ICacheManager cacheManager,
             IRepository<Currency> currencyRepository,
+            ICustomerService customerService,
             CurrencySettings currencySettings,
             IPluginFinder pluginFinder,
             IEventPublisher eventPublisher)
         {
-            _cacheManager = cacheManager;
-            _currencyRepository = currencyRepository;
-            _currencySettings = currencySettings;
-            _pluginFinder = pluginFinder;
-            _eventPublisher = eventPublisher;
+            this._cacheManager = cacheManager;
+            this._currencyRepository = currencyRepository;
+            this._customerService = customerService;
+            this._currencySettings = currencySettings;
+            this._pluginFinder = pluginFinder;
+            this._eventPublisher = eventPublisher;
         }
 
         #endregion
@@ -78,6 +83,15 @@ namespace Nop.Services.Directory
             if (currency == null)
                 throw new ArgumentNullException("currency");
             
+            //update appropriate customers (their currency)
+            //it can take a lot of time if you have thousands of associated customers
+            var customers = _customerService.GetCustomersByCurrencyId(currency.Id);
+            foreach (var customer in customers)
+            {
+                customer.CurrencyId = null;
+                _customerService.UpdateCustomer(customer);
+            }
+
             _currencyRepository.Delete(currency);
 
             _cacheManager.RemoveByPattern(CURRENCIES_PATTERN_KEY);

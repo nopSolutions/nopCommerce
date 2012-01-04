@@ -9,10 +9,10 @@ using Nop.Core.Data;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Tax;
-using Nop.Core.Events;
 using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
 using Nop.Services.Catalog;
+using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Tests;
@@ -26,6 +26,7 @@ namespace Nop.Services.Tests.Catalog
     {
         IRepository<Currency> _currencyRepo;
         ICurrencyService _currencyService;
+        ICustomerService _customerService;
         CurrencySettings _currencySettings;
         IWorkContext _workContext;
         ILocalizationService _localizationService;
@@ -67,8 +68,11 @@ namespace Nop.Services.Tests.Catalog
             _currencyRepo = MockRepository.GenerateMock<IRepository<Currency>>();
             _currencyRepo.Expect(x => x.Table).Return(new List<Currency>() { currency1, currency2 }.AsQueryable());
 
+            _customerService = MockRepository.GenerateMock<ICustomerService>();
+
             var pluginFinder = new PluginFinder(new AppDomainTypeFinder());
-            _currencyService = new CurrencyService(cacheManager, _currencyRepo, _currencySettings, pluginFinder,null);
+            _currencyService = new CurrencyService(cacheManager, _currencyRepo,
+                _customerService, _currencySettings, pluginFinder, null);
             
             _taxSettings = new TaxSettings();
 

@@ -6,6 +6,7 @@ using Nop.Core.Data;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Events;
 using Nop.Services.Configuration;
+using Nop.Services.Customers;
 
 namespace Nop.Services.Localization
 {
@@ -23,6 +24,7 @@ namespace Nop.Services.Localization
         #region Fields
 
         private readonly IRepository<Language> _languageRepository;
+        private readonly ICustomerService _customerService;
         private readonly ICacheManager _cacheManager;
         private readonly ISettingService _settingService;
         private readonly LocalizationSettings _localizationSettings;
@@ -37,20 +39,23 @@ namespace Nop.Services.Localization
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="languageRepository">Language repository</param>
+        /// <param name="customerService">Customer service</param>
         /// <param name="settingService">Setting service</param>
         /// <param name="localizationSettings">Localization settings</param>
         /// <param name="eventPublisher"></param>
         public LanguageService(ICacheManager cacheManager,
             IRepository<Language> languageRepository,
+            ICustomerService customerService,
             ISettingService settingService,
             LocalizationSettings localizationSettings,
             IEventPublisher eventPublisher)
         {
-            _cacheManager = cacheManager;
-            _languageRepository = languageRepository;
-            _settingService = settingService;
-            _localizationSettings = localizationSettings;
-            _eventPublisher = eventPublisher;
+            this._cacheManager = cacheManager;
+            this._languageRepository = languageRepository;
+            this._customerService = customerService;
+            this._settingService = settingService;
+            this._localizationSettings = localizationSettings;
+            this._eventPublisher = eventPublisher;
         }
 
         #endregion
@@ -78,6 +83,15 @@ namespace Nop.Services.Localization
                         break;
                     }
                 }
+            }
+            
+            //update appropriate customers (their language)
+            //it can take a lot of time if you have thousands of associated customers
+            var customers = _customerService.GetCustomersByLanguageId(language.Id);
+            foreach (var customer in customers)
+            {
+                customer.LanguageId = null;
+                _customerService.UpdateCustomer(customer);
             }
 
             _languageRepository.Delete(language);

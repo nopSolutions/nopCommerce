@@ -311,6 +311,40 @@ namespace Nop.Services.Customers
         }
 
         /// <summary>
+        /// Get customers by language identifer
+        /// </summary>
+        /// <param name="languageId">Language identifer</param>
+        /// <returns>Customers</returns>
+        public virtual IList<Customer> GetCustomersByLanguageId(int languageId)
+        {
+            var query = _customerRepository.Table;
+            if (languageId > 0)
+                query = query.Where(c => c.LanguageId.HasValue && c.LanguageId.Value == languageId);
+            else
+                query = query.Where(c => !c.LanguageId.HasValue);
+            query = query.OrderBy(c => c.Id);
+            var customers = query.ToList();
+            return customers;
+        }
+
+        /// <summary>
+        /// Get customers by currency identifer
+        /// </summary>
+        /// <param name="currencyId">Currency identifer</param>
+        /// <returns>Customers</returns>
+        public virtual IList<Customer> GetCustomersByCurrencyId(int currencyId)
+        {
+            var query = _customerRepository.Table;
+            if (currencyId > 0)
+                query = query.Where(c => c.CurrencyId.HasValue && c.CurrencyId.Value == currencyId);
+            else
+                query = query.Where(c => !c.CurrencyId.HasValue);
+            query = query.OrderBy(c => c.Id);
+            var customers = query.ToList();
+            return customers;
+        }
+
+        /// <summary>
         /// Validate customer
         /// </summary>
         /// <param name="usernameOrEmail">Username or email</param>
