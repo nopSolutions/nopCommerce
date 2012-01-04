@@ -144,7 +144,8 @@ namespace Nop.Admin.Controllers
 
             var newsItem = _newsService.GetNewsById(id);
             if (newsItem == null)
-                throw new ArgumentException("No news item found with the specified id", "id");
+                //No news item found with the specified id
+                return RedirectToAction("List");
 
             ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
             var model = newsItem.ToModel();
@@ -159,7 +160,8 @@ namespace Nop.Admin.Controllers
 
             var newsItem = _newsService.GetNewsById(model.Id);
             if (newsItem == null)
-                throw new ArgumentException("No news item found with the specified id");
+                //No news item found with the specified id
+                return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
@@ -183,7 +185,9 @@ namespace Nop.Admin.Controllers
 
             var newsItem = _newsService.GetNewsById(id);
             if (newsItem == null)
-                throw new ArgumentException("No news item found with the specified id", "id");
+                //No news item found with the specified id
+                return RedirectToAction("List");
+
             _newsService.DeleteNews(newsItem);
 
             SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.News.NewsItems.Deleted"));

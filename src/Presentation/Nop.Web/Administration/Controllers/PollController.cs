@@ -142,7 +142,8 @@ namespace Nop.Admin.Controllers
 
             var poll = _pollService.GetPollById(id);
             if (poll == null)
-                throw new ArgumentException("No poll found with the specified id", "id");
+                //No poll found with the specified id
+                return RedirectToAction("List");
 
             ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
             var model = poll.ToModel();
@@ -159,7 +160,8 @@ namespace Nop.Admin.Controllers
 
             var poll = _pollService.GetPollById(model.Id);
             if (poll == null)
-                throw new ArgumentException("No poll found with the specified id");
+                //No poll found with the specified id
+                return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
@@ -185,7 +187,8 @@ namespace Nop.Admin.Controllers
 
             var poll = _pollService.GetPollById(id);
             if (poll == null)
-                throw new ArgumentException("No poll found with the specified id", "id");
+                //No poll found with the specified id
+                return RedirectToAction("List");
             
             _pollService.DeletePoll(poll);
 
@@ -243,6 +246,9 @@ namespace Nop.Admin.Controllers
             }
 
             var pollAnswer = _pollService.GetPollAnswerById(model.Id);
+            if (pollAnswer == null)
+                throw new ArgumentException("No poll answer found with the specified id", "id");
+
             pollAnswer.Name = model.Name;
             pollAnswer.DisplayOrder = model.DisplayOrder1;
             _pollService.UpdatePoll(pollAnswer.Poll);
@@ -283,6 +289,8 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var pollAnswer = _pollService.GetPollAnswerById(id);
+            if (pollAnswer == null)
+                throw new ArgumentException("No poll answer found with the specified id", "id");
 
             int pollId = pollAnswer.PollId;
             _pollService.DeletePollAnswer(pollAnswer);

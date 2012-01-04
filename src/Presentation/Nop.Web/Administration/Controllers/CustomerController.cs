@@ -548,7 +548,8 @@ namespace Nop.Admin.Controllers
 
             var customer = _customerService.GetCustomerById(id);
             if (customer == null || customer.Deleted)
-                throw new ArgumentException("No customer found with the specified id", "id");
+                //No customer found with the specified id
+                return RedirectToAction("List");
 
             var model = new CustomerModel();
             model.Id = customer.Id;
@@ -651,7 +652,8 @@ namespace Nop.Admin.Controllers
 
             var customer = _customerService.GetCustomerById(model.Id);
             if (customer == null || customer.Deleted)
-                throw new ArgumentException("No customer found with the specified id");
+                //No customer found with the specified id
+                return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
@@ -833,7 +835,8 @@ namespace Nop.Admin.Controllers
 
             var customer = _customerService.GetCustomerById(model.Id);
             if (customer == null)
-                throw new ArgumentException("No customer found with the specified id");
+                //No customer found with the specified id
+                return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
@@ -859,7 +862,8 @@ namespace Nop.Admin.Controllers
 
             var customer = _customerService.GetCustomerById(model.Id);
             if (customer == null)
-                throw new ArgumentException("No customer found with the specified id", "id");
+                //No customer found with the specified id
+                return RedirectToAction("List");
 
             customer.VatNumberStatus = VatNumberStatus.Valid;
             _customerService.UpdateCustomer(customer);
@@ -876,7 +880,8 @@ namespace Nop.Admin.Controllers
 
             var customer = _customerService.GetCustomerById(model.Id);
             if (customer == null)
-                throw new ArgumentException("No customer found with the specified id", "id");
+                //No customer found with the specified id
+                return RedirectToAction("List");
 
             customer.VatNumberStatus = VatNumberStatus.Invalid;
             _customerService.UpdateCustomer(customer);
@@ -891,8 +896,9 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var customer = _customerService.GetCustomerById(id);
-            if (customer == null) 
-                throw new ArgumentException("No customer found with the specified id", "id");
+            if (customer == null)
+                //No customer found with the specified id
+                return RedirectToAction("List");
 
             try
             {
@@ -920,7 +926,9 @@ namespace Nop.Admin.Controllers
 
             var customer = _customerService.GetCustomerById(id);
             if (customer == null)
-                throw new ArgumentException("No customer found with the specified id", "id");
+                //No customer found with the specified id
+                return RedirectToAction("List");
+
             _customerService.SaveCustomerAttribute<int?>(_workContext.CurrentCustomer,
                 SystemCustomerAttributeNames.ImpersonatedCustomerId, customer.Id);
 
@@ -934,7 +942,8 @@ namespace Nop.Admin.Controllers
 
             var customer = _customerService.GetCustomerById(model.Id);
             if (customer == null)
-                throw new ArgumentException("No customer found with the specified id");
+                //No customer found with the specified id
+                return RedirectToAction("List");
 
             try
             {
@@ -982,7 +991,8 @@ namespace Nop.Admin.Controllers
 
             var customer = _customerService.GetCustomerById(model.Id);
             if (customer == null)
-                throw new ArgumentException("No customer found with the specified id");
+                //No customer found with the specified id
+                return RedirectToAction("List");
 
             try
             {
@@ -1031,7 +1041,7 @@ namespace Nop.Admin.Controllers
 
             var customer = _customerService.GetCustomerById(customerId);
             if (customer == null)
-                throw new ArgumentException("No customer found with the specified id", "id");
+                throw new ArgumentException("No customer found with the specified id");
 
             var model = new List<CustomerModel.RewardPointsHistoryModel>();
             foreach (var rph in customer.RewardPointsHistory.OrderByDescending(rph => rph.CreatedOnUtc).ThenByDescending(rph => rph.Id))
@@ -1063,7 +1073,7 @@ namespace Nop.Admin.Controllers
 
             var customer = _customerService.GetCustomerById(customerId);
             if (customer == null)
-                throw new ArgumentException("No customer found with the specified id");
+                return Json(new { Result = false }, JsonRequestBehavior.AllowGet);
 
             customer.AddRewardPointsHistoryEntry(addRewardPointsValue, addRewardPointsMessage);
             _customerService.UpdateCustomer(customer);
@@ -1131,7 +1141,8 @@ namespace Nop.Admin.Controllers
 
             var customer = _customerService.GetCustomerById(customerId);
             if (customer == null)
-                throw new ArgumentException("No customer found with the specified id", "customerId");
+                //No customer found with the specified id
+                return RedirectToAction("List");
 
             var model = new CustomerAddressModel();
             model.Address = new AddressModel();
@@ -1153,7 +1164,8 @@ namespace Nop.Admin.Controllers
 
             var customer = _customerService.GetCustomerById(model.CustomerId);
             if (customer == null)
-                throw new ArgumentException("No customer found with the specified id");
+                //No customer found with the specified id
+                return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
@@ -1196,11 +1208,13 @@ namespace Nop.Admin.Controllers
 
             var customer = _customerService.GetCustomerById(customerId);
             if (customer == null)
-                throw new ArgumentException("No customer found with the specified id");
+                //No customer found with the specified id
+                return RedirectToAction("List");
 
             var address = _addressService.GetAddressById(addressId);
             if (address == null)
-                throw new ArgumentException("No address found with the specified id", "addressId");
+                //No address found with the specified id
+                return RedirectToAction("Edit", new { id = customer.Id });
 
             var model = new CustomerAddressModel();
             model.CustomerId = customerId;
@@ -1230,11 +1244,13 @@ namespace Nop.Admin.Controllers
 
             var customer = _customerService.GetCustomerById(model.CustomerId);
             if (customer == null)
-                throw new ArgumentException("No customer found with the specified id");
+                //No customer found with the specified id
+                return RedirectToAction("List");
 
             var address = _addressService.GetAddressById(model.Address.Id);
             if (address == null)
-                throw new ArgumentException("No address found with the specified id");
+                //No address found with the specified id
+                return RedirectToAction("Edit", new { id = customer.Id });
 
             if (ModelState.IsValid)
             {

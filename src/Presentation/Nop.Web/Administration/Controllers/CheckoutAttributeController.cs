@@ -203,7 +203,9 @@ namespace Nop.Admin.Controllers
 
             var checkoutAttribute = _checkoutAttributeService.GetCheckoutAttributeById(id);
             if (checkoutAttribute == null)
-                throw new ArgumentException("No checkout attribute found with the specified id", "id");
+                //No checkout attribute found with the specified id
+                return RedirectToAction("List");
+
             var model = checkoutAttribute.ToModel();
             //locales
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
@@ -224,7 +226,9 @@ namespace Nop.Admin.Controllers
 
             var checkoutAttribute = _checkoutAttributeService.GetCheckoutAttributeById(model.Id);
             if (checkoutAttribute == null)
-                throw new ArgumentException("No checkout attribute found with the specified id");
+                //No checkout attribute found with the specified id
+                return RedirectToAction("List");
+
             if (ModelState.IsValid)
             {
                 checkoutAttribute = model.ToEntity(checkoutAttribute);
@@ -317,7 +321,8 @@ namespace Nop.Admin.Controllers
 
             var checkoutAttribute = _checkoutAttributeService.GetCheckoutAttributeById(model.CheckoutAttributeId);
             if (checkoutAttribute == null)
-                throw new ArgumentException("No checkout attribute found with the specified id");
+                //No checkout attribute found with the specified id
+                return RedirectToAction("List");
 
             model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
             model.BaseWeightIn = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).Name;
@@ -347,7 +352,9 @@ namespace Nop.Admin.Controllers
 
             var cav = _checkoutAttributeService.GetCheckoutAttributeValueById(id);
             if (cav == null)
-                throw new ArgumentException("No checkout attribute value found with the specified id", "id");
+                //No checkout attribute value found with the specified id
+                return RedirectToAction("List");
+
             var model = cav.ToModel();
             model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
             model.BaseWeightIn = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).Name;
@@ -369,7 +376,9 @@ namespace Nop.Admin.Controllers
 
             var cav = _checkoutAttributeService.GetCheckoutAttributeValueById(model.Id);
             if (cav == null)
-                throw new ArgumentException("No checkout attribute value found with the specified id");
+                //No checkout attribute value found with the specified id
+                return RedirectToAction("List");
+
             model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
             model.BaseWeightIn = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).Name;
 

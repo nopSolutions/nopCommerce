@@ -347,7 +347,9 @@ namespace Nop.Admin.Controllers
 
             var category = _categoryService.GetCategoryById(id);
             if (category == null || category.Deleted) 
-                throw new ArgumentException("No category found with the specified id", "id");
+                //No category found with the specified id
+                return RedirectToAction("List");
+
             var model = category.ToModel();
             //parent categories
             model.ParentCategories = new List<DropDownItem> { new DropDownItem { Text = "[None]", Value = "0" } };
@@ -385,7 +387,8 @@ namespace Nop.Admin.Controllers
 
             var category = _categoryService.GetCategoryById(model.Id);
             if (category == null || category.Deleted)
-                throw new ArgumentException("No category found with the specified id");
+                //No category found with the specified id
+                return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
@@ -448,6 +451,10 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var category = _categoryService.GetCategoryById(id);
+            if (category == null)
+                //No category found with the specified id
+                return RedirectToAction("List");
+
             _categoryService.DeleteCategory(category);
 
             //activity log

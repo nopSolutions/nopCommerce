@@ -142,7 +142,8 @@ namespace Nop.Admin.Controllers
 
             var campaign = _campaignService.GetCampaignById(id);
             if (campaign == null)
-                throw new ArgumentException("No campaign found with the specified id", "id");
+                //No campaign found with the specified id
+                return RedirectToAction("List");
 
             var model = campaign.ToModel();
             model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfCampaignAllowedTokens());
@@ -159,7 +160,8 @@ namespace Nop.Admin.Controllers
 
             var campaign = _campaignService.GetCampaignById(model.Id);
             if (campaign == null)
-                throw new ArgumentException("No campaign found with the specified id");
+                //No campaign found with the specified id
+                return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
@@ -184,7 +186,8 @@ namespace Nop.Admin.Controllers
 
             var campaign = _campaignService.GetCampaignById(model.Id);
             if (campaign == null)
-                throw new ArgumentException("No campaign found with the specified id");
+                //No campaign found with the specified id
+                return RedirectToAction("List");
 
 
             model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfCampaignAllowedTokens());
@@ -216,7 +219,8 @@ namespace Nop.Admin.Controllers
 
             var campaign = _campaignService.GetCampaignById(model.Id);
             if (campaign == null)
-                throw new ArgumentException("No campaign found with the specified id");
+                //No campaign found with the specified id
+                return RedirectToAction("List");
 
 
             model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfCampaignAllowedTokens());
@@ -249,7 +253,9 @@ namespace Nop.Admin.Controllers
 
             var campaign = _campaignService.GetCampaignById(id);
             if (campaign == null)
-                throw new ArgumentException("No campaign found with the specified id", "id");
+                //No campaign found with the specified id
+                return RedirectToAction("List");
+
             _campaignService.DeleteCampaign(campaign);
 
             SuccessNotification(_localizationService.GetResource("Admin.Promotions.Campaigns.Deleted"));

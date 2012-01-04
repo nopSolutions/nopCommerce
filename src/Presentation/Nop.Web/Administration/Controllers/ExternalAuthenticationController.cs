@@ -130,7 +130,9 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var eam = _openAuthenticationService.LoadExternalAuthenticationMethodBySystemName(systemName);
-            if (eam == null) throw new ArgumentException("No authentication method found with the specified system name", "systemName");
+            if (eam == null)
+                //No authentication method found with the specified id
+                return RedirectToAction("Methods");
 
             var model = eam.ToModel();
             string actionName, controllerName;

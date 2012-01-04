@@ -149,7 +149,9 @@ namespace Nop.Admin.Controllers
 
             var productAttribute = _productAttributeService.GetProductAttributeById(id);
             if (productAttribute == null)
-                throw new ArgumentException("No product attribute found with the specified id", "id");
+                //No product attribute found with the specified id
+                return RedirectToAction("List");
+
             var model = productAttribute.ToModel();
             //locales
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
@@ -169,7 +171,8 @@ namespace Nop.Admin.Controllers
 
             var productAttribute = _productAttributeService.GetProductAttributeById(model.Id);
             if (productAttribute == null)
-                throw new ArgumentException("No product attribute found with the specified id");
+                //No product attribute found with the specified id
+                return RedirectToAction("List");
             
             if (ModelState.IsValid)
             {
@@ -197,6 +200,10 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var productAttribute = _productAttributeService.GetProductAttributeById(id);
+            if (productAttribute == null)
+                //No product attribute found with the specified id
+                return RedirectToAction("List");
+
             _productAttributeService.DeleteProductAttribute(productAttribute);
 
             //activity log

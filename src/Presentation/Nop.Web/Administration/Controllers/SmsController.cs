@@ -128,8 +128,9 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var smsProvider = _smsService.LoadSmsProviderBySystemName(systemName);
-            if (smsProvider == null) 
-                throw new ArgumentException("No SMS provider found with the specified system name", "systemName");
+            if (smsProvider == null)
+                //No SMS provider found with the specified id
+                return RedirectToAction("Providers");
 
             var model = smsProvider.ToModel();
             string actionName, controllerName;

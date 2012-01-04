@@ -100,7 +100,9 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var taxProvider = _taxService.LoadTaxProviderBySystemName(systemName);
-            if (taxProvider == null) throw new ArgumentException("No tax provider found with the specified system name", "systemName");
+            if (taxProvider == null)
+                //No tax provider found with the specified id
+                return RedirectToAction("Providers");
 
             var model = taxProvider.ToModel();
             string actionName, controllerName;

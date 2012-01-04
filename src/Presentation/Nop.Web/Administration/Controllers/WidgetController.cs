@@ -100,7 +100,8 @@ namespace Nop.Admin.Controllers
 
             var widgetPlugin = _widgetService.LoadWidgetPluginBySystemName(systemName);
             if (widgetPlugin == null)
-                throw new ArgumentException("No widget plugin found with the specified system name");
+                //No widget plugin found with the specified id
+                return RedirectToAction("List");
             
             var model = new EditWidgetModel();
             model.DisplayOrder = 1; //default value
@@ -134,8 +135,8 @@ namespace Nop.Admin.Controllers
 
             var widgetPlugin = _widgetService.LoadWidgetPluginBySystemName(systemName);
             if (widgetPlugin == null)
-                throw new ArgumentException("No widget plugin found with the specified system name");
-
+                //No widget plugin found with the specified id
+                return RedirectToAction("List");
 
             var widget = new Widget();
             widget.PluginSystemName = systemName;
@@ -184,11 +185,13 @@ namespace Nop.Admin.Controllers
 
             var widget = _widgetService.GetWidgetById(id);
             if (widget == null)
-                throw new ArgumentException("No widget found with the specified id", "id");
+                //No widget found with the specified id
+                return RedirectToAction("List");
 
             var widgetPlugin = _widgetService.LoadWidgetPluginBySystemName(widget.PluginSystemName);
             if (widgetPlugin == null)
-                throw new ArgumentException("No widget plugin found with the specified system name");
+                //No widget plugin found with the specified id
+                return RedirectToAction("List");
 
 
             var model = new EditWidgetModel();
@@ -226,11 +229,13 @@ namespace Nop.Admin.Controllers
 
             var widget = _widgetService.GetWidgetById(model.Id);
             if (widget == null)
-                throw new ArgumentException("No widget found with the specified id");
+                //No widget found with the specified id
+                return RedirectToAction("List");
 
             var widgetPlugin = _widgetService.LoadWidgetPluginBySystemName(widget.PluginSystemName);
             if (widgetPlugin == null)
-                throw new ArgumentException("No widget plugin found with the specified system name");
+                //No widget plugin found with the specified id
+                return RedirectToAction("List");
 
             string actionName, controllerName;
             RouteValueDictionary routeValues;
@@ -273,7 +278,8 @@ namespace Nop.Admin.Controllers
 
             var widget = _widgetService.GetWidgetById(id);
             if (widget == null)
-                throw new ArgumentException("No widget found with the specified id");
+                //No widget found with the specified id
+                return RedirectToAction("List");
 
             _widgetService.DeleteWidget(widget);
 

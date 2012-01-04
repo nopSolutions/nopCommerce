@@ -129,11 +129,12 @@ namespace Nop.Admin.Controllers
                     .Where(x => x.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase))
                     .FirstOrDefault();
                 if (pluginDescriptor == null)
-                    throw new ArgumentException("No plugin found with the specified system name");
+                    //No plugin found with the specified id
+                    return RedirectToAction("List");
 
                 //check whether plugin is not installed
                 if (pluginDescriptor.Installed)
-                    throw new ArgumentException("Plugin is already installed");
+                    return RedirectToAction("List");
 
                 //install plugin
                 pluginDescriptor.Instance().Install();
@@ -161,11 +162,12 @@ namespace Nop.Admin.Controllers
                     .Where(x => x.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase))
                     .FirstOrDefault();
                 if (pluginDescriptor == null)
-                    throw new ArgumentException("No plugin found with the specified system name");
+                    //No plugin found with the specified id
+                    return RedirectToAction("List");
 
                 //check whether plugin is installed
                 if (!pluginDescriptor.Installed)
-                    throw new ArgumentException("Plugin is not installed");
+                    return RedirectToAction("List");
 
                 //uninstall plugin
                 pluginDescriptor.Instance().Uninstall();

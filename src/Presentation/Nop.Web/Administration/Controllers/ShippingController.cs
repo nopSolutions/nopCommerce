@@ -163,8 +163,9 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var srcm = _shippingService.LoadShippingRateComputationMethodBySystemName(systemName);
-            if (srcm == null) 
-                throw new ArgumentException("No shipping rate computation method found with the specified system name", "systemName");
+            if (srcm == null)
+                //No shipping rate computation method found with the specified id
+                return RedirectToAction("Providers");
 
             var model = srcm.ToModel();
             string actionName, controllerName;
@@ -258,7 +259,8 @@ namespace Nop.Admin.Controllers
 
             var sm = _shippingService.GetShippingMethodById(id);
             if (sm == null)
-                throw new ArgumentException("No shipping method found with the specified id", "id");
+                //No shipping method found with the specified id
+                return RedirectToAction("Methods");
 
             var model = sm.ToModel();
             //locales
@@ -279,7 +281,8 @@ namespace Nop.Admin.Controllers
 
             var sm = _shippingService.GetShippingMethodById(model.Id);
             if (sm == null)
-                throw new ArgumentException("No shipping method found with the specified id");
+                //No shipping method found with the specified id
+                return RedirectToAction("Methods");
 
             if (ModelState.IsValid)
             {
@@ -304,7 +307,8 @@ namespace Nop.Admin.Controllers
 
             var sm = _shippingService.GetShippingMethodById(id);
             if (sm == null)
-                throw new ArgumentException("No shipping method found with the specified id", "id");
+                //No shipping method found with the specified id
+                return RedirectToAction("Methods");
 
             _shippingService.DeleteShippingMethod(sm);
 

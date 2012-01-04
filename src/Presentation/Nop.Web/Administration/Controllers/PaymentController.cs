@@ -128,7 +128,9 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var pm = _paymentService.LoadPaymentMethodBySystemName(systemName);
-            if (pm == null) throw new ArgumentException("No payment method found with the specified system name", "systemName");
+            if (pm == null)
+                //No payment method found with the specified id
+                return RedirectToAction("Methods");
 
             var model = pm.ToModel();
             string actionName, controllerName;

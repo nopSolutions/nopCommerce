@@ -132,8 +132,10 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
 			var emailAccount = _emailAccountService.GetEmailAccountById(id);
-			if (emailAccount == null) 
-                throw new ArgumentException("No email account found with the specified id", "id");
+            if (emailAccount == null)
+                //No email account found with the specified id
+                return RedirectToAction("List");
+
 			return View(emailAccount.ToModel());
 		}
         
@@ -146,7 +148,8 @@ namespace Nop.Admin.Controllers
 
             var emailAccount = _emailAccountService.GetEmailAccountById(model.Id);
             if (emailAccount == null)
-                throw new ArgumentException("No email account found with the specified id");
+                //No email account found with the specified id
+                return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
@@ -170,7 +173,8 @@ namespace Nop.Admin.Controllers
 
             var emailAccount = _emailAccountService.GetEmailAccountById(model.Id);
             if (emailAccount == null)
-                throw new ArgumentException("No email account found with the specified id");
+                //No email account found with the specified id
+                return RedirectToAction("List");
 
             try
             {
@@ -202,7 +206,8 @@ namespace Nop.Admin.Controllers
 
             var emailAccount = _emailAccountService.GetEmailAccountById(id);
             if (emailAccount == null)
-                throw new ArgumentException("No email account found with the specified id", "id");
+                //No email account found with the specified id
+                return RedirectToAction("List");
 
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.EmailAccounts.Deleted"));
             _emailAccountService.DeleteEmailAccount(emailAccount);

@@ -116,7 +116,8 @@ namespace Nop.Admin.Controllers
 
             var log = _logger.GetLogById(id);
             if (log == null)
-                throw new ArgumentException("No log found with the specified id", "id");
+                //No log found with the specified id
+                return RedirectToAction("List");
 
             var model = new LogModel()
             {
@@ -143,7 +144,8 @@ namespace Nop.Admin.Controllers
 
             var log = _logger.GetLogById(id);
             if (log == null)
-                throw new ArgumentException("No log found with the specified id", "id");
+                //No log found with the specified id
+                return RedirectToAction("List");
 
             _logger.DeleteLog(log);
 

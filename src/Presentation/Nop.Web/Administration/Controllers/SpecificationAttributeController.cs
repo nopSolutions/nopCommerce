@@ -154,7 +154,9 @@ namespace Nop.Admin.Controllers
 
             var specificationAttribute = _specificationAttributeService.GetSpecificationAttributeById(id);
             if (specificationAttribute == null)
-                throw new ArgumentException("No specification attribute found with the specified id", "id");
+                //No specification attribute found with the specified id
+                return RedirectToAction("List");
+
             var model = specificationAttribute.ToModel();
             //locales
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
@@ -173,7 +175,9 @@ namespace Nop.Admin.Controllers
 
             var specificationAttribute = _specificationAttributeService.GetSpecificationAttributeById(model.Id);
             if (specificationAttribute == null)
-                throw new ArgumentException("No specification attribute found with the specified id");
+                //No specification attribute found with the specified id
+                return RedirectToAction("List");
+
             if (ModelState.IsValid)
             {
                 specificationAttribute = model.ToEntity(specificationAttribute);
@@ -200,6 +204,10 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var specificationAttribute = _specificationAttributeService.GetSpecificationAttributeById(id);
+            if (specificationAttribute == null)
+                //No specification attribute found with the specified id
+                return RedirectToAction("List");
+
             _specificationAttributeService.DeleteSpecificationAttribute(specificationAttribute);
 
             //activity log
@@ -262,7 +270,8 @@ namespace Nop.Admin.Controllers
 
             var specificationAttribute = _specificationAttributeService.GetSpecificationAttributeById(model.SpecificationAttributeId);
             if (specificationAttribute == null)
-                throw new ArgumentException("No specification attribute found with the specified id");
+                //No specification attribute found with the specified id
+                return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
@@ -289,7 +298,9 @@ namespace Nop.Admin.Controllers
 
             var sao = _specificationAttributeService.GetSpecificationAttributeOptionById(id);
             if (sao == null)
-                throw new ArgumentException("No specification attribute option found with the specified id", "id");
+                //No specification attribute option found with the specified id
+                return RedirectToAction("List");
+
             var model = sao.ToModel();
             //locales
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
@@ -308,7 +319,9 @@ namespace Nop.Admin.Controllers
 
             var sao = _specificationAttributeService.GetSpecificationAttributeOptionById(model.Id);
             if (sao == null)
-                throw new ArgumentException("No specification attribute option found with the specified id");
+                //No specification attribute option found with the specified id
+                return RedirectToAction("List");
+
             if (ModelState.IsValid)
             {
                 sao = model.ToEntity(sao);
@@ -334,6 +347,10 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var sao = _specificationAttributeService.GetSpecificationAttributeOptionById(optionId);
+            if (sao == null)
+                //No specification attribute option found with the specified id
+                return RedirectToAction("List");
+
             _specificationAttributeService.DeleteSpecificationAttributeOption(sao);
 
             return OptionList(specificationAttributeId, command);

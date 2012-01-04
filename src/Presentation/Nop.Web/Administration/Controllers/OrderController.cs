@@ -508,7 +508,8 @@ namespace Nop.Admin.Controllers
 
             var order = _orderService.GetOrderById(id);
             if (order == null || order.Deleted)
-                throw new ArgumentException("No order found with the specified id", "id");
+                //No order found with the specified id
+                return RedirectToAction("List");
 
             var model = new OrderModel();
             PrepareOrderDetailsModel(model, order);
@@ -525,7 +526,8 @@ namespace Nop.Admin.Controllers
 
             var order = _orderService.GetOrderById(id);
             if (order == null)
-                throw new ArgumentException("No order found with the specified id");
+                //No order found with the specified id
+                return RedirectToAction("List");
             
             try
             {
@@ -553,7 +555,8 @@ namespace Nop.Admin.Controllers
 
             var order = _orderService.GetOrderById(id);
             if (order == null)
-                throw new ArgumentException("No order found with the specified id");
+                //No order found with the specified id
+                return RedirectToAction("List");
             
             try
             {
@@ -584,7 +587,8 @@ namespace Nop.Admin.Controllers
 
             var order = _orderService.GetOrderById(id);
             if (order == null)
-                throw new ArgumentException("No order found with the specified id");
+                //No order found with the specified id
+                return RedirectToAction("List");
             
             try
             {
@@ -612,7 +616,8 @@ namespace Nop.Admin.Controllers
 
             var order = _orderService.GetOrderById(id);
             if (order == null)
-                throw new ArgumentException("No order found with the specified id");
+                //No order found with the specified id
+                return RedirectToAction("List");
 
             try
             {
@@ -642,7 +647,8 @@ namespace Nop.Admin.Controllers
 
             var order = _orderService.GetOrderById(id);
             if (order == null)
-                throw new ArgumentException("No order found with the specified id");
+                //No order found with the specified id
+                return RedirectToAction("List");
 
             try
             {
@@ -670,7 +676,8 @@ namespace Nop.Admin.Controllers
 
             var order = _orderService.GetOrderById(id);
             if (order == null)
-                throw new ArgumentException("No order found with the specified id");
+                //No order found with the specified id
+                return RedirectToAction("List");
 
             try
             {
@@ -700,7 +707,8 @@ namespace Nop.Admin.Controllers
 
             var order = _orderService.GetOrderById(id);
             if (order == null)
-                throw new ArgumentException("No order found with the specified id");
+                //No order found with the specified id
+                return RedirectToAction("List");
 
             try
             {
@@ -728,7 +736,8 @@ namespace Nop.Admin.Controllers
 
             var order = _orderService.GetOrderById(id);
             if (order == null)
-                throw new ArgumentException("No order found with the specified id");
+                //No order found with the specified id
+                return RedirectToAction("List");
 
             if (order.AllowStoringCreditCardNumber)
             {
@@ -762,7 +771,8 @@ namespace Nop.Admin.Controllers
 
             var order = _orderService.GetOrderById(id);
             if (order == null)
-                throw new ArgumentException("No order found with the specified id");
+                //No order found with the specified id
+                return RedirectToAction("List");
 
             order.OrderSubtotalInclTax = model.OrderSubtotalInclTaxValue;
             order.OrderSubtotalExclTax = model.OrderSubtotalExclTaxValue;
@@ -832,7 +842,8 @@ namespace Nop.Admin.Controllers
 
             var order = _orderService.GetOrderById(model.Id);
             if (order == null)
-                throw new ArgumentException("No order found with the specified id");
+                //No order found with the specified id
+                return RedirectToAction("List");
 
             order.TrackingNumber = model.TrackingNumber;
             _orderService.UpdateOrder(order);
@@ -851,7 +862,8 @@ namespace Nop.Admin.Controllers
 
             var order = _orderService.GetOrderById(id);
             if (order == null)
-                throw new ArgumentException("No order found with the specified id");
+                //No order found with the specified id
+                return RedirectToAction("List");
 
             ViewData["selectedTab"] = "shippinginfo";
 
@@ -881,7 +893,8 @@ namespace Nop.Admin.Controllers
 
             var order = _orderService.GetOrderById(id);
             if (order == null)
-                throw new ArgumentException("No order found with the specified id");
+                //No order found with the specified id
+                return RedirectToAction("List");
 
             ViewData["selectedTab"] = "shippinginfo";
 
@@ -909,7 +922,8 @@ namespace Nop.Admin.Controllers
 
             var order = _orderService.GetOrderById(id);
             if (order == null)
-                throw new ArgumentException("No order found with the specified id");
+                //No order found with the specified id
+                return RedirectToAction("List");
 
             var model = new OrderModel();
             PrepareOrderDetailsModel(model, order);
@@ -926,7 +940,8 @@ namespace Nop.Admin.Controllers
 
             var order = _orderService.GetOrderById(id);
             if (order == null)
-                throw new ArgumentException("No order found with the specified id");
+                //No order found with the specified id
+                return RedirectToAction("List");
 
             try
             {
@@ -982,7 +997,8 @@ namespace Nop.Admin.Controllers
 
             var order = _orderService.GetOrderById(id);
             if (order == null)
-                throw new ArgumentException("No order found with the specified id");
+                //No order found with the specified id
+                return RedirectToAction("List");
 
             ViewData["selectedTab"] = "products";
 
@@ -1045,7 +1061,8 @@ namespace Nop.Admin.Controllers
 
             var order = _orderService.GetOrderById(id);
             if (order == null)
-                throw new ArgumentException("No order found with the specified id");
+                //No order found with the specified id
+                return RedirectToAction("List");
 
             ViewData["selectedTab"] = "products";
 
@@ -1076,7 +1093,8 @@ namespace Nop.Admin.Controllers
 
             var order = _orderService.GetOrderById(id);
             if (order == null)
-                throw new ArgumentException("No order found with the specified id");
+                //No order found with the specified id
+                return RedirectToAction("List");
 
             ViewData["selectedTab"] = "products";
 
@@ -1108,7 +1126,8 @@ namespace Nop.Admin.Controllers
 
             var order = _orderService.GetOrderById(id);
             if (order == null)
-                throw new ArgumentException("No order found with the specified id");
+                //No order found with the specified id
+                return RedirectToAction("List");
 
             ViewData["selectedTab"] = "products";
 
@@ -1137,7 +1156,8 @@ namespace Nop.Admin.Controllers
 
             var order = _orderService.GetOrderById(id);
             if (order == null)
-                throw new ArgumentException("No order found with the specified id");
+                //No order found with the specified id
+                return RedirectToAction("List");
 
             var orderProductVariant = order.OrderProductVariants.Where(x => x.Id == opvId).FirstOrDefault();
             if (orderProductVariant == null)
@@ -1165,7 +1185,8 @@ namespace Nop.Admin.Controllers
 
             var order = _orderService.GetOrderById(model.OrderId);
             if (order == null)
-                throw new ArgumentException("No order found with the specified id");
+                //No order found with the specified id
+                return RedirectToAction("List");
 
             var orderProductVariant = order.OrderProductVariants.Where(x => x.Id == model.OrderProductVariantId).FirstOrDefault();
             if (orderProductVariant == null)
@@ -1195,7 +1216,8 @@ namespace Nop.Admin.Controllers
 
             var order = _orderService.GetOrderById(model.OrderId);
             if (order == null)
-                throw new ArgumentException("No order found with the specified id");
+                //No order found with the specified id
+                return RedirectToAction("List");
 
             var orderProductVariant = order.OrderProductVariants.Where(x => x.Id == model.OrderProductVariantId).FirstOrDefault();
             if (orderProductVariant == null)
@@ -1223,7 +1245,8 @@ namespace Nop.Admin.Controllers
 
             var order = _orderService.GetOrderById(orderId);
             if (order == null)
-                throw new ArgumentException("No order found with the specified id");
+                //No order found with the specified id
+                return RedirectToAction("List");
 
             var address = _addressService.GetAddressById(addressId);
             if (address == null)
@@ -1257,7 +1280,8 @@ namespace Nop.Admin.Controllers
 
             var order = _orderService.GetOrderById(model.OrderId);
             if (order == null)
-                throw new ArgumentException("No order found with the specified id");
+                //No order found with the specified id
+                return RedirectToAction("List");
 
             var address = _addressService.GetAddressById(model.Address.Id);
             if (address == null)
@@ -1340,7 +1364,7 @@ namespace Nop.Admin.Controllers
 
             var order = _orderService.GetOrderById(orderId);
             if (order == null)
-                throw new ArgumentException("No order found with the specified id");
+                return Json(new { Result = false }, JsonRequestBehavior.AllowGet);
 
             order.OrderNotes.Add(new OrderNote()
             {

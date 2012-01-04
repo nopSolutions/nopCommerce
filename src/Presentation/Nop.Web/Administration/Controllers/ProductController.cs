@@ -563,7 +563,8 @@ namespace Nop.Admin.Controllers
 
             var product = _productService.GetProductById(id);
             if (product == null || product.Deleted)
-                throw new ArgumentException("No product found with the specified id", "id");
+                //No product found with the specified id
+                return RedirectToAction("List");
 
             var model = product.ToModel();
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
@@ -596,7 +597,8 @@ namespace Nop.Admin.Controllers
 
             var product = _productService.GetProductById(model.Id);
             if (product == null || product.Deleted)
-                throw new ArgumentException("No product found with the specified id");
+                //No product found with the specified id
+                return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
@@ -1164,9 +1166,6 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
-
-            if (productId == 0)
-                throw new ArgumentException();
 
             if (pictureId == 0)
                 throw new ArgumentException();

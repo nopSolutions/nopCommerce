@@ -122,8 +122,9 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
 			var language = _languageService.GetLanguageById(id);
-			if (language == null) 
-                throw new ArgumentException("No language found with the specified id", "id");
+            if (language == null)
+                //No language found with the specified id
+                return RedirectToAction("List");
 
             //set page timeout to 5 minutes
             this.Server.ScriptTimeout = 300;
@@ -138,6 +139,10 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var language = _languageService.GetLanguageById(model.Id);
+            if (language == null)
+                //No language found with the specified id
+                return RedirectToAction("List");
+
             if (ModelState.IsValid)
             {
                 language = model.ToEntity(language);
@@ -158,6 +163,10 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
 			var language = _languageService.GetLanguageById(id);
+            if (language == null)
+                //No language found with the specified id
+                return RedirectToAction("List");
+
 			_languageService.DeleteLanguage(language);
 
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Languages.Deleted"));
@@ -300,7 +309,8 @@ namespace Nop.Admin.Controllers
 
             var language = _languageService.GetLanguageById(id);
             if (language == null)
-                throw new ArgumentException("No language found with the specified id", "id");
+                //No language found with the specified id
+                return RedirectToAction("List");
 
             try
             {
@@ -323,7 +333,8 @@ namespace Nop.Admin.Controllers
 
             var language = _languageService.GetLanguageById(id);
             if (language == null)
-                throw new ArgumentException("No language found with the specified id", "id");
+                //No language found with the specified id
+                return RedirectToAction("List");
 
             //set page timeout to 5 minutes
             this.Server.ScriptTimeout = 300;

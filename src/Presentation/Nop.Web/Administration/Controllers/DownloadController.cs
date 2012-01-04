@@ -30,7 +30,7 @@ namespace Nop.Admin.Controllers
         {
             var download = _downloadService.GetDownloadById(downloadId);
             if (download == null)
-                throw new ArgumentException("No download record found with the specified id", "downloadId");
+                return Content("No download record found with the specified id");
 
             if (download.UseDownloadUrl)
             {
@@ -40,7 +40,7 @@ namespace Nop.Admin.Controllers
             {
                 //use stored data
                 if (download.DownloadBinary == null)
-                    throw new NopException(string.Format("Download data is not available any more. Download ID={0}", downloadId));
+                    return Content(string.Format("Download data is not available any more. Download ID={0}", downloadId));
                 
                 string fileName = download.Filename ?? downloadId.ToString();
                 return new FileContentResult(download.DownloadBinary, download.ContentType) { FileDownloadName = fileName + download.Extension };

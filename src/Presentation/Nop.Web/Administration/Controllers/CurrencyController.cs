@@ -231,8 +231,10 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var currency = _currencyService.GetCurrencyById(id);
-            if (currency == null) 
-                throw new ArgumentException("No currency found with the specified id", "id");
+            if (currency == null)
+                //No currency found with the specified id
+                return RedirectToAction("List");
+
             var model = currency.ToModel();
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(currency.CreatedOnUtc, DateTimeKind.Utc);
             //locales
@@ -251,7 +253,8 @@ namespace Nop.Admin.Controllers
 
             var currency = _currencyService.GetCurrencyById(model.Id);
             if (currency == null)
-                throw new ArgumentException("No currency found with the specified id");
+                //No currency found with the specified id
+                return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
@@ -278,7 +281,8 @@ namespace Nop.Admin.Controllers
 
             var currency = _currencyService.GetCurrencyById(id);
             if (currency == null)
-                throw new ArgumentException("No currency found with the specified id", "id");
+                //No currency found with the specified id
+                return RedirectToAction("List");
             
             try
             {

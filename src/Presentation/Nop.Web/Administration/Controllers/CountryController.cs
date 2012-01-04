@@ -157,7 +157,9 @@ namespace Nop.Admin.Controllers
 
             var country = _countryService.GetCountryById(id);
             if (country == null)
-                throw new ArgumentException("No country found with the specified id", "id");
+                //No country found with the specified id
+                return RedirectToAction("List");
+
             var model = country.ToModel();
             //locales
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
@@ -175,7 +177,8 @@ namespace Nop.Admin.Controllers
 
             var country = _countryService.GetCountryById(model.Id);
             if (country == null)
-                throw new ArgumentException("No country found with the specified id");
+                //No country found with the specified id
+                return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
@@ -200,7 +203,8 @@ namespace Nop.Admin.Controllers
 
             var country = _countryService.GetCountryById(id);
             if (country == null)
-                throw new ArgumentException("No country found with the specified id", "id");
+                //No country found with the specified id
+                return RedirectToAction("List");
 
             try
             {
@@ -266,7 +270,8 @@ namespace Nop.Admin.Controllers
 
             var country = _countryService.GetCountryById(model.CountryId);
             if (country == null)
-                throw new ArgumentException("No country found with the specified id");
+                //No country found with the specified id
+                return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
@@ -293,7 +298,9 @@ namespace Nop.Admin.Controllers
 
             var sp = _stateProvinceService.GetStateProvinceById(id);
             if (sp == null)
-                throw new ArgumentException("No state found with the specified id", "id");
+                //No state found with the specified id
+                return RedirectToAction("List");
+
             var model = sp.ToModel();
             //locales
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
@@ -312,7 +319,9 @@ namespace Nop.Admin.Controllers
 
             var sp = _stateProvinceService.GetStateProvinceById(model.Id);
             if (sp == null)
-                throw new ArgumentException("No state found with the specified id");
+                //No state found with the specified id
+                return RedirectToAction("List");
+
             if (ModelState.IsValid)
             {
                 sp = model.ToEntity(sp);

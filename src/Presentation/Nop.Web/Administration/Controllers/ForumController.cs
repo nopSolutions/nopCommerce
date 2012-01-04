@@ -133,8 +133,10 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var forumGroup = _forumService.GetForumGroupById(id);
-            if (forumGroup == null) 
-                throw new ArgumentException("No Forum Group found with the specified id", "id");
+            if (forumGroup == null)
+                //No forum group found with the specified id
+                return RedirectToAction("List");
+
             var model = forumGroup.ToModel();
             return View(model);
         }
@@ -146,6 +148,9 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var forumGroup = _forumService.GetForumGroupById(model.Id);
+            if (forumGroup == null)
+                //No forum group found with the specified id
+                return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
@@ -167,8 +172,10 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var forum = _forumService.GetForumById(id);
-            if (forum == null) 
-                throw new ArgumentException("No Forum found with the specified id", "id");
+            if (forum == null)
+                //No forum found with the specified id
+                return RedirectToAction("List");
+
             var model = forum.ToModel();
             model.ForumGroups = _forumService.GetAllForumGroups().ToList();
             return View(model);
@@ -181,6 +188,10 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var forum = _forumService.GetForumById(model.Id);
+            if (forum == null)
+                //No forum found with the specified id
+                return RedirectToAction("List");
+
             if (ModelState.IsValid)
             {
                 forum = model.ToEntity(forum);
@@ -207,6 +218,10 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var forumGroup = _forumService.GetForumGroupById(id);
+            if (forumGroup == null)
+                //No forum group found with the specified id
+                return RedirectToAction("List");
+
             _forumService.DeleteForumGroup(forumGroup);
 
             SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Forums.ForumGroup.Deleted"));
@@ -220,6 +235,10 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var forum = _forumService.GetForumById(id);
+            if (forum == null)
+                //No forum found with the specified id
+                return RedirectToAction("List");
+
             _forumService.DeleteForum(forum);
 
             SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Forums.Forum.Deleted"));

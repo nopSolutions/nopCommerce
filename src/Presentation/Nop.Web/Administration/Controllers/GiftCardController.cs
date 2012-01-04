@@ -164,8 +164,9 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var giftCard = _giftCardService.GetGiftCardById(id);
-            if (giftCard == null) 
-                throw new ArgumentException("No gift card found with the specified id", "id");
+            if (giftCard == null)
+                //No gift card found with the specified id
+                return RedirectToAction("List");
 
             var model = giftCard.ToModel();
             model.PurchasedWithOrderId = giftCard.PurchasedWithOrderProductVariant != null ? (int?)giftCard.PurchasedWithOrderProductVariant.OrderId : null;
@@ -259,6 +260,10 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var giftCard = _giftCardService.GetGiftCardById(id);
+            if (giftCard == null)
+                //No gift card found with the specified id
+                return RedirectToAction("List");
+
             _giftCardService.DeleteGiftCard(giftCard);
 
             //activity log
@@ -277,7 +282,8 @@ namespace Nop.Admin.Controllers
 
             var giftCard = _giftCardService.GetGiftCardById(giftCardId);
             if (giftCard == null)
-                throw new ArgumentException("No gift card found with the specified id");
+                //No gift card found with the specified id
+                return RedirectToAction("List");
 
             var usageHistoryModel = giftCard.GiftCardUsageHistory.OrderByDescending(gcuh => gcuh.CreatedOnUtc)
                 .Select(x =>

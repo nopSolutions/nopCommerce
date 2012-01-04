@@ -116,7 +116,10 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
             
             var customerRole = _customerService.GetCustomerRoleById(id);
-            if (customerRole == null) throw new ArgumentException("No customer role found with the specified id", "id");
+            if (customerRole == null)
+                //No customer role found with the specified id
+                return RedirectToAction("List");
+
             return View(customerRole.ToModel());
 		}
 
@@ -127,8 +130,9 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
             
             var customerRole = _customerService.GetCustomerRoleById(model.Id);
-            if (customerRole == null) 
-                throw new ArgumentException("No customer role found with the specified id");
+            if (customerRole == null)
+                //No customer role found with the specified id
+                return RedirectToAction("List");
 
             try
             {
@@ -169,7 +173,8 @@ namespace Nop.Admin.Controllers
             
             var customerRole = _customerService.GetCustomerRoleById(id);
             if (customerRole == null)
-                throw new ArgumentException("No customer role found with the specified id");
+                //No customer role found with the specified id
+                return RedirectToAction("List");
 
             try
             {

@@ -96,8 +96,10 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
 			var email = _queuedEmailService.GetQueuedEmailById(id);
-			if (email == null) 
-                throw new ArgumentException("No email found with the specified id", "id");
+            if (email == null)
+                //No email found with the specified id
+                return RedirectToAction("List");
+
             var model = email.ToModel();
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(email.CreatedOnUtc, DateTimeKind.Utc);
             if (email.SentOnUtc.HasValue)
@@ -115,7 +117,8 @@ namespace Nop.Admin.Controllers
 
             var email = _queuedEmailService.GetQueuedEmailById(model.Id);
             if (email == null)
-                throw new ArgumentException("No email found with the specified id");
+                //No email found with the specified id
+                return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
@@ -132,7 +135,7 @@ namespace Nop.Admin.Controllers
                 model.SentOn = _dateTimeHelper.ConvertToUserTime(email.SentOnUtc.Value, DateTimeKind.Utc);
             return View(model);
 		}
-        
+
         [HttpPost, ActionName("Edit"), FormValueRequired("requeue")]
         public ActionResult Requeue(QueuedEmailModel queuedEmailModel)
         {
@@ -140,38 +143,41 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var queuedEmail = _queuedEmailService.GetQueuedEmailById(queuedEmailModel.Id);
-            if (queuedEmail != null)
-            {
-                var requeuedEmail = new QueuedEmail()
-                {
-                    Priority = queuedEmail.Priority,
-                    From = queuedEmail.From,
-                    FromName = queuedEmail.FromName,
-                    To = queuedEmail.To,
-                    ToName = queuedEmail.ToName,
-                    CC = queuedEmail.CC,
-                    Bcc = queuedEmail.Bcc,
-                    Subject = queuedEmail.Subject,
-                    Body = queuedEmail.Body,
-                    CreatedOnUtc = DateTime.UtcNow,
-                    EmailAccountId = queuedEmail.EmailAccountId
-                };
-                _queuedEmailService.InsertQueuedEmail(requeuedEmail);
-
-                SuccessNotification(_localizationService.GetResource("Admin.System.QueuedEmails.Requeued"));
-                return RedirectToAction("Edit", requeuedEmail.Id);
-            }
-            else
+            if (queuedEmail == null)
+                //No email found with the specified id
                 return RedirectToAction("List");
+
+            var requeuedEmail = new QueuedEmail()
+            {
+                Priority = queuedEmail.Priority,
+                From = queuedEmail.From,
+                FromName = queuedEmail.FromName,
+                To = queuedEmail.To,
+                ToName = queuedEmail.ToName,
+                CC = queuedEmail.CC,
+                Bcc = queuedEmail.Bcc,
+                Subject = queuedEmail.Subject,
+                Body = queuedEmail.Body,
+                CreatedOnUtc = DateTime.UtcNow,
+                EmailAccountId = queuedEmail.EmailAccountId
+            };
+            _queuedEmailService.InsertQueuedEmail(requeuedEmail);
+
+            SuccessNotification(_localizationService.GetResource("Admin.System.QueuedEmails.Requeued"));
+            return RedirectToAction("Edit", requeuedEmail.Id);
         }
 
-		[HttpPost, ActionName("Delete")]
+	    [HttpPost, ActionName("Delete")]
 		public ActionResult DeleteConfirmed(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageQueue))
                 return AccessDeniedView();
 
 			var email = _queuedEmailService.GetQueuedEmailById(id);
+            if (email == null)
+                //No email found with the specified id
+                return RedirectToAction("List");
+
             _queuedEmailService.DeleteQueuedEmail(email);
 
             SuccessNotification(_localizationService.GetResource("Admin.System.QueuedEmails.Deleted"));

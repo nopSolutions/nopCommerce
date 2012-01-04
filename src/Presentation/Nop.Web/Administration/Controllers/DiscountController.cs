@@ -186,7 +186,9 @@ namespace Nop.Admin.Controllers
 
             var discount = _discountService.GetDiscountById(id);
             if (discount == null)
-                throw new ArgumentException("No discount found with the specified id", "id");
+                //No discount found with the specified id
+                return RedirectToAction("List");
+
             var model = discount.ToModel();
             PrepareDiscountModel(model, discount);
             return View(model);
@@ -200,7 +202,9 @@ namespace Nop.Admin.Controllers
 
             var discount = _discountService.GetDiscountById(model.Id);
             if (discount == null)
-                throw new ArgumentException("No discount found with the specified id");
+                //No discount found with the specified id
+                return RedirectToAction("List");
+
             if (ModelState.IsValid)
             {
                 discount = model.ToEntity(discount);

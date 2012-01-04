@@ -153,7 +153,9 @@ namespace Nop.Admin.Controllers
 
             var payment = _orderService.GetRecurringPaymentById(id);
             if (payment == null || payment.Deleted)
-                throw new ArgumentException("No recurring payment found with the specified id", "id");
+                //No recurring payment found with the specified id
+                return RedirectToAction("List");
+
             var model = new RecurringPaymentModel();
             PrepareRecurringPaymentModel(model, payment, true);
             return View(model);
@@ -168,7 +170,8 @@ namespace Nop.Admin.Controllers
 
             var payment = _orderService.GetRecurringPaymentById(model.Id);
             if (payment == null || payment.Deleted)
-                throw new ArgumentException("No recurring payment found with the specified id");
+                //No recurring payment found with the specified id
+                return RedirectToAction("List");
 
             payment.CycleLength = model.CycleLength;
             payment.CyclePeriodId = model.CyclePeriodId;
@@ -188,6 +191,10 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var payment = _orderService.GetRecurringPaymentById(id);
+            if (payment == null)
+                //No recurring payment found with the specified id
+                return RedirectToAction("List");
+
             _orderService.DeleteRecurringPayment(payment);
 
             SuccessNotification(_localizationService.GetResource("Admin.RecurringPayments.Deleted"));
@@ -237,7 +244,8 @@ namespace Nop.Admin.Controllers
 
             var payment = _orderService.GetRecurringPaymentById(id);
             if (payment == null)
-                throw new ArgumentException("No recurring payment found with the specified id");
+                //No recurring payment found with the specified id
+                return RedirectToAction("List");
 
             ViewData["selectedTab"] = "history";
 
@@ -269,7 +277,8 @@ namespace Nop.Admin.Controllers
 
             var payment = _orderService.GetRecurringPaymentById(id);
             if (payment == null)
-                throw new ArgumentException("No recurring payment found with the specified id");
+                //No recurring payment found with the specified id
+                return RedirectToAction("List");
 
             ViewData["selectedTab"] = "history";
 

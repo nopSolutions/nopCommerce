@@ -185,7 +185,8 @@ namespace Nop.Admin.Controllers
 
             var affiliate = _affiliateService.GetAffiliateById(id);
             if (affiliate == null || affiliate.Deleted)
-                throw new ArgumentException("No affiliate found with the specified id", "id");
+                //No affiliate found with the specified id
+                return RedirectToAction("List");
 
             var model = new AffiliateModel();
             PrepareAffiliateModel(model, affiliate, false);
@@ -200,7 +201,8 @@ namespace Nop.Admin.Controllers
 
             var affiliate = _affiliateService.GetAffiliateById(model.Id);
             if (affiliate == null || affiliate.Deleted)
-                throw new ArgumentException("No affiliate found with the specified id");
+                //No affiliate found with the specified id
+                return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
@@ -230,6 +232,10 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var affiliate = _affiliateService.GetAffiliateById(id);
+            if (affiliate == null)
+                //No affiliate found with the specified id
+                return RedirectToAction("List");
+
             _affiliateService.DeleteAffiliate(affiliate);
             SuccessNotification(_localizationService.GetResource("Admin.Affiliates.Deleted"));
             return RedirectToAction("List");

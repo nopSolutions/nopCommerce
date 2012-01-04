@@ -164,7 +164,9 @@ namespace Nop.Admin.Controllers
 
             var topic = _topicService.GetTopicById(id);
             if (topic == null)
-                throw new ArgumentException("No topic found with the specified id", "id");
+                //No topic found with the specified id
+                return RedirectToAction("List");
+
             var model = topic.ToModel();
             model.Url = Url.RouteUrl("Topic", new { SystemName = topic.SystemName }, "http");
             //locales
@@ -188,7 +190,8 @@ namespace Nop.Admin.Controllers
 
             var topic = _topicService.GetTopicById(model.Id);
             if (topic == null)
-                throw new ArgumentException("No topic found with the specified id");
+                //No topic found with the specified id
+                return RedirectToAction("List");
 
             model.Url = Url.RouteUrl("Topic", new { SystemName = topic.SystemName }, "http");
 
@@ -220,6 +223,10 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var topic = _topicService.GetTopicById(id);
+            if (topic == null)
+                //No topic found with the specified id
+                return RedirectToAction("List");
+
             _topicService.DeleteTopic(topic);
 
             SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Topics.Deleted"));

@@ -80,8 +80,9 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var feed = _promotionFeedService.LoadPromotionFeedBySystemName(systemName);
-            if (feed == null) 
-                throw new ArgumentException("No feed found with the specified system name", "systemName");
+            if (feed == null)
+                //No feed found with the specified id
+                return RedirectToAction("List");
 
             var model = feed.ToModel();
             string actionName, controllerName;

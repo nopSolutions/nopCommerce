@@ -122,7 +122,8 @@ namespace Nop.Admin.Controllers
 
             var productReview = _customerContentService.GetCustomerContentById(id) as ProductReview;
             if (productReview == null)
-                throw new ArgumentException("No product review found with the specified id", "id");
+                //No product review found with the specified id
+                return RedirectToAction("List");
 
             var model = new ProductReviewModel();
             PrepareProductReviewModel(model, productReview, false, false);
@@ -137,7 +138,8 @@ namespace Nop.Admin.Controllers
 
             var productReview = _customerContentService.GetCustomerContentById(model.Id) as ProductReview;
             if (productReview == null)
-                throw new ArgumentException("No product review found with the specified id");
+                //No product review found with the specified id
+                return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
@@ -169,7 +171,8 @@ namespace Nop.Admin.Controllers
 
             var productReview = _customerContentService.GetCustomerContentById(id) as ProductReview;
             if (productReview == null)
-                throw new ArgumentException("No product review found with the specified id");
+                //No product review found with the specified id
+                return RedirectToAction("List");
 
             var product = productReview.Product;
             _customerContentService.DeleteCustomerContent(productReview);

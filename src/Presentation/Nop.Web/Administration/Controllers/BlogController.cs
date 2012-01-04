@@ -143,7 +143,8 @@ namespace Nop.Admin.Controllers
 
             var blogPost = _blogService.GetBlogPostById(id);
             if (blogPost == null)
-                throw new ArgumentException("No blog post found with the specified id", "id");
+                //No blog post found with the specified id
+                return RedirectToAction("List");
 
             ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
             var model = blogPost.ToModel();
@@ -158,7 +159,8 @@ namespace Nop.Admin.Controllers
 
             var blogPost = _blogService.GetBlogPostById(model.Id);
             if (blogPost == null)
-                throw new ArgumentException("No blog post found with the specified id");
+                //No blog post found with the specified id
+                return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
@@ -182,7 +184,9 @@ namespace Nop.Admin.Controllers
 
             var blogPost = _blogService.GetBlogPostById(id);
             if (blogPost == null)
-                throw new ArgumentException("No blog post found with the specified id", "id");
+                //No blog post found with the specified id
+                return RedirectToAction("List");
+
             _blogService.DeleteBlogPost(blogPost);
 
             SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Deleted"));

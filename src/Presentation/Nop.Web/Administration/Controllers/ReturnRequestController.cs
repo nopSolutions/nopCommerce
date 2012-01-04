@@ -141,7 +141,8 @@ namespace Nop.Admin.Controllers
 
             var returnRequest = _orderService.GetReturnRequestById(id);
             if (returnRequest == null)
-                throw new ArgumentException("No return request found with the specified id", "id");
+                //No return request found with the specified id
+                return RedirectToAction("List");
             
             var model = new ReturnRequestModel();
             PrepareReturnRequestModel(model, returnRequest, false);
@@ -157,7 +158,8 @@ namespace Nop.Admin.Controllers
 
             var returnRequest = _orderService.GetReturnRequestById(model.Id);
             if (returnRequest == null)
-                throw new ArgumentException("No return request found with the specified id");
+                //No return request found with the specified id
+                return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
@@ -191,9 +193,10 @@ namespace Nop.Admin.Controllers
 
             var returnRequest = _orderService.GetReturnRequestById(model.Id);
             if (returnRequest == null)
-                throw new ArgumentException("No return request found with the specified id");
+                //No return request found with the specified id
+                return RedirectToAction("List");
 
-            var customer = returnRequest.Customer;
+            //var customer = returnRequest.Customer;
             var opv = _orderService.GetOrderProductVariantById(returnRequest.OrderProductVariantId);
             int queuedEmailId = _workflowMessageService.SendReturnRequestStatusChangedCustomerNotification(returnRequest, opv, _localizationSettings.DefaultAdminLanguageId);
             if (queuedEmailId > 0)
@@ -209,6 +212,10 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var returnRequest = _orderService.GetReturnRequestById(id);
+            if (returnRequest == null)
+                //No return request found with the specified id
+                return RedirectToAction("List");
+
             _orderService.DeleteReturnRequest(returnRequest);
 
             //activity log

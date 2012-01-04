@@ -137,7 +137,10 @@ namespace Nop.Admin.Controllers
 
             var messageTemplate = _messageTemplateService.GetMessageTemplateById(id);
             if (messageTemplate == null)
-                throw new ArgumentException("No message template found with the specified id", "id");
+                //No message template found with the specified id
+                return RedirectToAction("List");
+
+
             var model = messageTemplate.ToModel();
             model.AllowedTokens = FormatTokens(_messageTokenProvider.GetListOfAllowedTokens());
             //available email accounts
@@ -165,7 +168,8 @@ namespace Nop.Admin.Controllers
 
             var messageTemplate = _messageTemplateService.GetMessageTemplateById(model.Id);
             if (messageTemplate == null)
-                throw new ArgumentException("No message template found with the specified id");
+                //No message template found with the specified id
+                return RedirectToAction("List");
             
             if (ModelState.IsValid)
             {

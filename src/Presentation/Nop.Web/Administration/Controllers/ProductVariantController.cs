@@ -258,7 +258,9 @@ namespace Nop.Admin.Controllers
 
             var product = _productService.GetProductById(productId);
             if (product == null)
-                throw new ArgumentException("No product found with the specified id", "productId");
+                //No product review found with the specified id
+                return RedirectToAction("Edit", "Product", new { id = productId });
+
             var model = new ProductVariantModel()
             {
                 ProductId = productId,
@@ -330,7 +332,9 @@ namespace Nop.Admin.Controllers
 
             var variant = _productService.GetProductVariantById(id);
             if (variant == null || variant.Deleted)
-                throw new ArgumentException("No product variant found with the specified id", "id");
+                //No product variant found with the specified id
+                return RedirectToAction("List", "Product");
+
             var model = variant.ToModel();
             //locales
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
@@ -356,7 +360,9 @@ namespace Nop.Admin.Controllers
 
             var variant = _productService.GetProductVariantById(model.Id);
             if (variant == null || variant.Deleted)
-                throw new ArgumentException("No product variant found with the specified id");
+                //No product variant found with the specified id
+                return RedirectToAction("List", "Product");
+
             if (ModelState.IsValid)
             {
                 var prevStockQuantity = variant.StockQuantity;
@@ -423,7 +429,9 @@ namespace Nop.Admin.Controllers
 
             var variant = _productService.GetProductVariantById(id);
             if (variant == null)
-                throw new ArgumentException("No product variant found with the specified id");
+                //No product variant found with the specified id
+                return RedirectToAction("List", "Product");
+
             var productId = variant.ProductId;
             _productService.DeleteProductVariant(variant);
 
@@ -855,7 +863,8 @@ namespace Nop.Admin.Controllers
 
             var pva = _productAttributeService.GetProductVariantAttributeById(model.ProductVariantAttributeId);
             if (pva == null)
-                throw new ArgumentException("No product variant attribute found with the specified id");
+                //No product variant attribute found with the specified id
+                return RedirectToAction("List", "Product");
 
             if (ModelState.IsValid)
             {
@@ -890,7 +899,9 @@ namespace Nop.Admin.Controllers
 
             var pvav = _productAttributeService.GetProductVariantAttributeValueById(id);
             if (pvav == null)
-                throw new ArgumentException("No attribute value found with the specified id", "id");
+                //No attribute value found with the specified id
+                return RedirectToAction("List", "Product");
+
             var model = new ProductVariantModel.ProductVariantAttributeValueModel()
             {
                 ProductVariantAttributeId = pvav.ProductVariantAttributeId,
@@ -917,7 +928,9 @@ namespace Nop.Admin.Controllers
 
             var pvav = _productAttributeService.GetProductVariantAttributeValueById(model.Id);
             if (pvav == null)
-                throw new ArgumentException("No attribute value found with the specified id");
+                //No attribute value found with the specified id
+                return RedirectToAction("List", "Product");
+
             if (ModelState.IsValid)
             {
                 pvav.Name = model.Name;
@@ -1032,7 +1045,8 @@ namespace Nop.Admin.Controllers
 
             var variant = _productService.GetProductVariantById(productVariantId);
             if (variant == null)
-                throw new ArgumentException("No product variant found with the specified id", "productVariantId");
+                //No product variant found with the specified id
+                return RedirectToAction("List", "Product");
 
             var model = new AddProductVariantAttributeCombinationModel();
             PrepareAddProductAttributeCombinationModel(model, variant);
@@ -1049,7 +1063,8 @@ namespace Nop.Admin.Controllers
 
             var variant = _productService.GetProductVariantById(productVariantId);
             if (variant == null)
-                throw new ArgumentException("No product variant found with the specified id", "productVariantId");
+                //No product variant found with the specified id
+                return RedirectToAction("List", "Product");
 
 
             int stockQuantity = model.StockQuantity;

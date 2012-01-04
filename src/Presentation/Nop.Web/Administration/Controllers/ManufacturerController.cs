@@ -235,7 +235,9 @@ namespace Nop.Admin.Controllers
 
             var manufacturer = _manufacturerService.GetManufacturerById(id);
             if (manufacturer == null || manufacturer.Deleted)
-                throw new ArgumentException("No manufacturer found with the specified id", "id");
+                //No manufacturer found with the specified id
+                return RedirectToAction("List");
+
             var model = manufacturer.ToModel();
             //locales
             AddLocales(_languageService, model.Locales, (locale, languageId) =>
@@ -261,7 +263,8 @@ namespace Nop.Admin.Controllers
 
             var manufacturer = _manufacturerService.GetManufacturerById(model.Id);
             if (manufacturer == null || manufacturer.Deleted)
-                throw new ArgumentException("No manufacturer found with the specified id");
+                //No manufacturer found with the specified id
+                return RedirectToAction("List");
 
             if (ModelState.IsValid)
             {
@@ -295,6 +298,10 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var manufacturer = _manufacturerService.GetManufacturerById(id);
+            if (manufacturer == null)
+                //No manufacturer found with the specified id
+                return RedirectToAction("List");
+
             _manufacturerService.DeleteManufacturer(manufacturer);
 
             //activity log
