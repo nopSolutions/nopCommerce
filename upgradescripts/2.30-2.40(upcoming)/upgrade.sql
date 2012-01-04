@@ -140,6 +140,9 @@ set @resources='
   <LocaleResource Name="PDFInvoice.PaymentMethod">
     <Value>Payment method: {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.AssociatedExternalAuth.Hint">
+    <Value>A list of external authentication identifiers.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -545,5 +548,30 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'seosettings.pagetitleseo
 BEGIN
 	INSERT [Setting] ([Name], [Value])
 	VALUES (N'seosettings.pagetitleseoadjustment', N'0')
+END
+GO
+
+
+--missed 'Upload Pictures' permission record
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[PermissionRecord]
+		WHERE [SystemName] = N'UploadPictures')
+BEGIN
+	INSERT [dbo].[PermissionRecord] ([Name], [SystemName], [Category])
+	VALUES (N'Admin area. Upload Pictures', N'UploadPictures', N'Configuration')
+
+	DECLARE @PermissionRecordId INT 
+	SET @PermissionRecordId = @@IDENTITY
+
+
+	--add it to admin role be default
+	DECLARE @AdminCustomerRoleId int
+	SELECT @AdminCustomerRoleId = Id
+	FROM [CustomerRole]
+	WHERE IsSystemRole=1 and [SystemName] = N'Administrators'
+
+	INSERT [dbo].[PermissionRecord_Role_Mapping] ([PermissionRecord_Id], [CustomerRole_Id])
+	VALUES (@PermissionRecordId, @AdminCustomerRoleId)
 END
 GO

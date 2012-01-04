@@ -45,9 +45,13 @@ else
                 "cancelImg": "@Url.Content("~/Administration/Content/images/cancel-uploading.png")",
                 "onComplete": function (event, ID, fileObj, response, data) {
                     var json = jQuery.parseJSON(response);
+                    if (json.success) {
                     $("#@(clientId + "image")").html("<img src='" + json.imageUrl + "'/>");
                     $("#@(clientId + "value") input").val(json.pictureId);
                     $("#@(clientId + "remove")").show();
+                    } else {
+                        alert(json.error);
+                    }
                 }
             });
 

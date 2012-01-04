@@ -266,10 +266,10 @@ namespace Nop.Services.Security
             if (permission == null)
                 return false;
 
-            if (_workContext.CurrentCustomer == null)
+            if (customer == null)
                 return false;
 
-            var customerRoles = _workContext.CurrentCustomer.CustomerRoles.Where(cr => cr.Active);
+            var customerRoles = customer.CustomerRoles.Where(cr => cr.Active);
             foreach (var role in customerRoles)
                 foreach (var permission1 in role.PermissionRecords)
                     if (permission1.SystemName.Equals(permission.SystemName, StringComparison.InvariantCultureIgnoreCase))

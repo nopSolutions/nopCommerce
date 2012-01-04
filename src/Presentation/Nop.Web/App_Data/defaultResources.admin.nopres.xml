@@ -5995,6 +5995,9 @@
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
+									<LocaleResource Name="Hint">
+										<Value>A list of external authentication identifiers.</Value>
+									</LocaleResource>
 								</Children>
 							</LocaleResource>
 							<LocaleResource Name="BackToList">
