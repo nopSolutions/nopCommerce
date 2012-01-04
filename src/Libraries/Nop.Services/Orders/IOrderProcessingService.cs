@@ -17,6 +17,11 @@ namespace Nop.Services.Orders
         /// <returns>Place order result</returns>
         PlaceOrderResult PlaceOrder(ProcessPaymentRequest processPaymentRequest);
 
+        /// <summary>
+        /// Deletes an order
+        /// </summary>
+        /// <param name="order">The order</param>
+        void DeleteOrder(Order order);
 
 
         /// <summary>

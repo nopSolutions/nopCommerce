@@ -206,7 +206,7 @@ namespace Nop.Plugin.Misc.WebServices
             {
                 try
                 {
-                    _orderService.DeleteOrder(order);
+                    _orderProcessingService.DeleteOrder(order);
                 }
                 catch (Exception ex)
                 {

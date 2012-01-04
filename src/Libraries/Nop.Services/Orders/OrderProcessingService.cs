@@ -1278,6 +1278,38 @@ namespace Nop.Services.Orders
             return result;
         }
 
+        /// <summary>
+        /// Deletes an order
+        /// </summary>
+        /// <param name="order">The order</param>
+        public virtual void DeleteOrder(Order order)
+        {
+            if (order == null)
+                throw new ArgumentNullException("order");
+
+            //add a note
+            order.OrderNotes.Add(new OrderNote()
+            {
+                Note = "Order has been deleted",
+                DisplayToCustomer = false,
+                CreatedOnUtc = DateTime.UtcNow
+            });
+            _orderService.UpdateOrder(order);
+
+            //cancel recurring payments
+            //var recurringPayments = _orderService.SearchRecurringPayments(0, order.Id, null);
+            //foreach (var rp in recurringPayments)
+            //{
+            //    var errors = CancelRecurringPayment(rp);
+            //}
+
+            //Adjust inventory
+            foreach (var opv in order.OrderProductVariants)
+                _productService.AdjustInventory(opv.ProductVariant, false, opv.Quantity, opv.AttributesXml);
+
+            //now delete an order
+            _orderService.DeleteOrder(order);
+        }
 
 
         /// <summary>

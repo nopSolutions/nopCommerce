@@ -789,7 +789,7 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var order = _orderService.GetOrderById(id);
-            _orderService.DeleteOrder(order);
+            _orderProcessingService.DeleteOrder(order);
             return RedirectToAction("List");
         }
 
