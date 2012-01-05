@@ -20,6 +20,7 @@ using Nop.Plugin.Payments.PayPalDirect.Controllers;
 using Nop.Plugin.Payments.PayPalDirect.PayPalSvc;
 using Nop.Services.Catalog;
 using Nop.Services.Configuration;
+using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
@@ -39,6 +40,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
         private readonly ITaxService _taxService;
         private readonly IPriceCalculationService _priceCalculationService;
         private readonly ICurrencyService _currencyService;
+        private readonly ICustomerService _customerService;
         private readonly CurrencySettings _currencySettings;
         private readonly IWebHelper _webHelper;
         private readonly StoreInformationSettings _storeInformationSettings;
@@ -49,7 +51,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
         public PayPalDirectPaymentProcessor(PayPalDirectPaymentSettings paypalDirectPaymentSettings,
             ISettingService settingService, 
             ITaxService taxService, IPriceCalculationService priceCalculationService,
-            ICurrencyService currencyService,
+            ICurrencyService currencyService, ICustomerService customerService,
             CurrencySettings currencySettings, IWebHelper webHelper,
             StoreInformationSettings storeInformationSettings)
         {
@@ -58,6 +60,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
             this._taxService = taxService;
             this._priceCalculationService = priceCalculationService;
             this._currencyService = currencyService;
+            this._customerService = customerService;
             this._currencySettings = currencySettings;
             this._webHelper = webHelper;
             this._storeInformationSettings = storeInformationSettings;
@@ -98,22 +101,22 @@ namespace Nop.Plugin.Payments.PayPalDirect
         /// <summary>
         /// Get Paypal credit card type
         /// </summary>
-        /// <param name="CreditCardType">Credit card type</param>
+        /// <param name="creditCardType">Credit card type</param>
         /// <returns>Paypal credit card type</returns>
-        protected CreditCardTypeType GetPaypalCreditCardType(string CreditCardType)
+        protected CreditCardTypeType GetPaypalCreditCardType(string creditCardType)
         {
-            CreditCardTypeType creditCardTypeType = (CreditCardTypeType)Enum.Parse(typeof(CreditCardTypeType), CreditCardType);
+            var creditCardTypeType = (CreditCardTypeType)Enum.Parse(typeof(CreditCardTypeType), creditCardType);
             return creditCardTypeType;
-            //if (CreditCardType.ToLower() == "visa")
+            //if (creditCardType.ToLower() == "visa")
             //    return CreditCardTypeType.Visa;
 
-            //if (CreditCardType.ToLower() == "mastercard")
+            //if (creditCardType.ToLower() == "mastercard")
             //    return CreditCardTypeType.MasterCard;
 
-            //if (CreditCardType.ToLower() == "americanexpress")
+            //if (creditCardType.ToLower() == "americanexpress")
             //    return CreditCardTypeType.Amex;
 
-            //if (CreditCardType.ToLower() == "discover")
+            //if (creditCardType.ToLower() == "discover")
             //    return CreditCardTypeType.Discover;
 
             //throw new NopException("Unknown credit card type");
@@ -128,6 +131,8 @@ namespace Nop.Plugin.Payments.PayPalDirect
         {
             var result = new ProcessPaymentResult();
 
+            var customer = _customerService.GetCustomerById(processPaymentRequest.CustomerId);
+
             var req = new DoDirectPaymentReq();
             req.DoDirectPaymentRequest = new DoDirectPaymentRequestType();
             req.DoDirectPaymentRequest.Version = GetApiVersion();
@@ -138,7 +143,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
                 details.PaymentAction = PaymentActionCodeType.Authorization;
             else
                 details.PaymentAction = PaymentActionCodeType.Sale;
-            //credit cart
+            //credit card
             details.CreditCard = new CreditCardDetailsType();
             details.CreditCard.CreditCardNumber = processPaymentRequest.CreditCardNumber;
             details.CreditCard.CreditCardType = GetPaypalCreditCardType(processPaymentRequest.CreditCardType);
@@ -148,24 +153,24 @@ namespace Nop.Plugin.Payments.PayPalDirect
             details.CreditCard.ExpYear = processPaymentRequest.CreditCardExpireYear;
             details.CreditCard.CVV2 = processPaymentRequest.CreditCardCvv2;
             details.CreditCard.CardOwner = new PayerInfoType();
-            details.CreditCard.CardOwner.PayerCountry = GetPaypalCountryCodeType(processPaymentRequest.Customer.BillingAddress.Country);
+            details.CreditCard.CardOwner.PayerCountry = GetPaypalCountryCodeType(customer.BillingAddress.Country);
             details.CreditCard.CreditCardTypeSpecified = true;
             //billing address
             details.CreditCard.CardOwner.Address = new AddressType();
             details.CreditCard.CardOwner.Address.CountrySpecified = true;
-            details.CreditCard.CardOwner.Address.Street1 = processPaymentRequest.Customer.BillingAddress.Address1;
-            details.CreditCard.CardOwner.Address.Street2 = processPaymentRequest.Customer.BillingAddress.Address2;
-            details.CreditCard.CardOwner.Address.CityName = processPaymentRequest.Customer.BillingAddress.City;
-            if (processPaymentRequest.Customer.BillingAddress.StateProvince != null)
-                details.CreditCard.CardOwner.Address.StateOrProvince = processPaymentRequest.Customer.BillingAddress.StateProvince.Abbreviation;
+            details.CreditCard.CardOwner.Address.Street1 = customer.BillingAddress.Address1;
+            details.CreditCard.CardOwner.Address.Street2 = customer.BillingAddress.Address2;
+            details.CreditCard.CardOwner.Address.CityName = customer.BillingAddress.City;
+            if (customer.BillingAddress.StateProvince != null)
+                details.CreditCard.CardOwner.Address.StateOrProvince = customer.BillingAddress.StateProvince.Abbreviation;
             else
                 details.CreditCard.CardOwner.Address.StateOrProvince = "CA";
-            details.CreditCard.CardOwner.Address.Country = GetPaypalCountryCodeType(processPaymentRequest.Customer.BillingAddress.Country);
-            details.CreditCard.CardOwner.Address.PostalCode = processPaymentRequest.Customer.BillingAddress.ZipPostalCode;
-            details.CreditCard.CardOwner.Payer = processPaymentRequest.Customer.BillingAddress.Email;
+            details.CreditCard.CardOwner.Address.Country = GetPaypalCountryCodeType(customer.BillingAddress.Country);
+            details.CreditCard.CardOwner.Address.PostalCode = customer.BillingAddress.ZipPostalCode;
+            details.CreditCard.CardOwner.Payer = customer.BillingAddress.Email;
             details.CreditCard.CardOwner.PayerName = new PersonNameType();
-            details.CreditCard.CardOwner.PayerName.FirstName = processPaymentRequest.Customer.BillingAddress.FirstName;
-            details.CreditCard.CardOwner.PayerName.LastName = processPaymentRequest.Customer.BillingAddress.LastName;
+            details.CreditCard.CardOwner.PayerName.FirstName = customer.BillingAddress.FirstName;
+            details.CreditCard.CardOwner.PayerName.LastName = customer.BillingAddress.LastName;
             //order totals
             var payPalCurrency = PaypalHelper.GetPaypalCurrency(_currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId));
             details.PaymentDetails = new PaymentDetailsType();
@@ -218,17 +223,17 @@ namespace Nop.Plugin.Payments.PayPalDirect
             //    details.PaymentDetails.HandlingTotal = null;
             //}
             //shipping
-            if (processPaymentRequest.Customer.ShippingAddress != null)
+            if (customer.ShippingAddress != null)
             {
-                if (processPaymentRequest.Customer.ShippingAddress.StateProvince != null && processPaymentRequest.Customer.ShippingAddress.Country != null)
+                if (customer.ShippingAddress.StateProvince != null && customer.ShippingAddress.Country != null)
                 {
-                    AddressType shippingAddress = new AddressType();
-                    shippingAddress.Name = processPaymentRequest.Customer.ShippingAddress.FirstName + " " + processPaymentRequest.Customer.ShippingAddress.LastName;
-                    shippingAddress.Street1 = processPaymentRequest.Customer.ShippingAddress.Address1;
-                    shippingAddress.CityName = processPaymentRequest.Customer.ShippingAddress.City;
-                    shippingAddress.StateOrProvince = processPaymentRequest.Customer.ShippingAddress.StateProvince.Abbreviation;
-                    shippingAddress.PostalCode = processPaymentRequest.Customer.ShippingAddress.ZipPostalCode;
-                    shippingAddress.Country = (CountryCodeType)Enum.Parse(typeof(CountryCodeType), processPaymentRequest.Customer.ShippingAddress.Country.TwoLetterIsoCode, true);
+                    var shippingAddress = new AddressType();
+                    shippingAddress.Name = customer.ShippingAddress.FirstName + " " + customer.ShippingAddress.LastName;
+                    shippingAddress.Street1 = customer.ShippingAddress.Address1;
+                    shippingAddress.CityName = customer.ShippingAddress.City;
+                    shippingAddress.StateOrProvince = customer.ShippingAddress.StateProvince.Abbreviation;
+                    shippingAddress.PostalCode = customer.ShippingAddress.ZipPostalCode;
+                    shippingAddress.Country = (CountryCodeType)Enum.Parse(typeof(CountryCodeType), customer.ShippingAddress.Country.TwoLetterIsoCode, true);
                     shippingAddress.CountrySpecified = true;
                     details.PaymentDetails.ShipToAddress = shippingAddress;
                 }
@@ -518,6 +523,8 @@ namespace Nop.Plugin.Payments.PayPalDirect
         {
             var result = new ProcessPaymentResult();
 
+            var customer = _customerService.GetCustomerById(processPaymentRequest.CustomerId);
+
             var req = new CreateRecurringPaymentsProfileReq();
             req.CreateRecurringPaymentsProfileRequest = new CreateRecurringPaymentsProfileRequestType();
             req.CreateRecurringPaymentsProfileRequest.Version = GetApiVersion();
@@ -533,24 +540,24 @@ namespace Nop.Plugin.Payments.PayPalDirect
             details.CreditCard.ExpYear = processPaymentRequest.CreditCardExpireYear;
             details.CreditCard.CVV2 = processPaymentRequest.CreditCardCvv2;
             details.CreditCard.CardOwner = new PayerInfoType();
-            details.CreditCard.CardOwner.PayerCountry = GetPaypalCountryCodeType(processPaymentRequest.Customer.BillingAddress.Country);
+            details.CreditCard.CardOwner.PayerCountry = GetPaypalCountryCodeType(customer.BillingAddress.Country);
             details.CreditCard.CreditCardTypeSpecified = true;
 
             details.CreditCard.CardOwner.Address = new AddressType();
             details.CreditCard.CardOwner.Address.CountrySpecified = true;
-            details.CreditCard.CardOwner.Address.Street1 = processPaymentRequest.Customer.BillingAddress.Address1;
-            details.CreditCard.CardOwner.Address.Street2 = processPaymentRequest.Customer.BillingAddress.Address2;
-            details.CreditCard.CardOwner.Address.CityName = processPaymentRequest.Customer.BillingAddress.City;
-            if (processPaymentRequest.Customer.BillingAddress.StateProvince != null)
-                details.CreditCard.CardOwner.Address.StateOrProvince = processPaymentRequest.Customer.BillingAddress.StateProvince.Abbreviation;
+            details.CreditCard.CardOwner.Address.Street1 = customer.BillingAddress.Address1;
+            details.CreditCard.CardOwner.Address.Street2 = customer.BillingAddress.Address2;
+            details.CreditCard.CardOwner.Address.CityName = customer.BillingAddress.City;
+            if (customer.BillingAddress.StateProvince != null)
+                details.CreditCard.CardOwner.Address.StateOrProvince = customer.BillingAddress.StateProvince.Abbreviation;
             else
                 details.CreditCard.CardOwner.Address.StateOrProvince = "CA";
-            details.CreditCard.CardOwner.Address.Country = GetPaypalCountryCodeType(processPaymentRequest.Customer.BillingAddress.Country);
-            details.CreditCard.CardOwner.Address.PostalCode = processPaymentRequest.Customer.BillingAddress.ZipPostalCode;
-            details.CreditCard.CardOwner.Payer = processPaymentRequest.Customer.BillingAddress.Email;
+            details.CreditCard.CardOwner.Address.Country = GetPaypalCountryCodeType(customer.BillingAddress.Country);
+            details.CreditCard.CardOwner.Address.PostalCode = customer.BillingAddress.ZipPostalCode;
+            details.CreditCard.CardOwner.Payer = customer.BillingAddress.Email;
             details.CreditCard.CardOwner.PayerName = new PersonNameType();
-            details.CreditCard.CardOwner.PayerName.FirstName = processPaymentRequest.Customer.BillingAddress.FirstName;
-            details.CreditCard.CardOwner.PayerName.LastName = processPaymentRequest.Customer.BillingAddress.LastName;
+            details.CreditCard.CardOwner.PayerName.FirstName = customer.BillingAddress.FirstName;
+            details.CreditCard.CardOwner.PayerName.LastName = customer.BillingAddress.LastName;
 
             //start date
             details.RecurringPaymentsProfileDetails = new RecurringPaymentsProfileDetailsType();

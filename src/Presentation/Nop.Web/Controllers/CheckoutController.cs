@@ -760,7 +760,7 @@ namespace Nop.Web.Controllers
                         processPaymentRequest = new ProcessPaymentRequest();
                 }
 
-                processPaymentRequest.Customer = _workContext.CurrentCustomer;
+                processPaymentRequest.CustomerId = _workContext.CurrentCustomer.Id;
                 processPaymentRequest.PaymentMethodSystemName = _workContext.CurrentCustomer.SelectedPaymentMethodSystemName;
                 var placeOrderResult = _orderProcessingService.PlaceOrder(processPaymentRequest);
                 if (placeOrderResult.Success)
@@ -1284,7 +1284,7 @@ namespace Nop.Web.Controllers
                         processPaymentRequest = new ProcessPaymentRequest();
                 }
 
-                processPaymentRequest.Customer = _workContext.CurrentCustomer;
+                processPaymentRequest.CustomerId = _workContext.CurrentCustomer.Id;
                 processPaymentRequest.PaymentMethodSystemName = _workContext.CurrentCustomer.SelectedPaymentMethodSystemName;
                 var placeOrderResult = _orderProcessingService.PlaceOrder(processPaymentRequest);
                 if (placeOrderResult.Success)

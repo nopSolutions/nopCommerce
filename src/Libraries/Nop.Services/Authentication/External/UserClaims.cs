@@ -4,6 +4,7 @@ using System;
 
 namespace Nop.Services.Authentication.External
 {
+    [Serializable]
     public partial class UserClaims
     {
         public BirthDateClaims BirthDate { get; set; }
@@ -17,6 +18,7 @@ namespace Nop.Services.Authentication.External
         public MediaClaims Media { get; set; }
     }
 
+    [Serializable]
     public partial class ImageClaims
     {
         public string Aspect11 { get; set; }
@@ -26,6 +28,7 @@ namespace Nop.Services.Authentication.External
         public string FavIcon { get; set; }
     }
 
+    [Serializable]
     public partial class MediaClaims
     {
         public string AudioGreeting { get; set; }
@@ -35,6 +38,7 @@ namespace Nop.Services.Authentication.External
         public ImageClaims Images { get; set; }
     }
 
+    [Serializable]
     public partial class WebClaims
     {
         public string Amazon { get; set; }
@@ -45,6 +49,7 @@ namespace Nop.Services.Authentication.External
         public string LinkedIn { get; set; }
     }
 
+    [Serializable]
     public partial class TelephoneClaims
     {
         public string Fax { get; set; }
@@ -54,6 +59,7 @@ namespace Nop.Services.Authentication.External
         public string Work { get; set; }
     }
 
+    [Serializable]
     public partial class InstantMessagingClaims
     {
         public string AOL { get; set; }
@@ -64,12 +70,14 @@ namespace Nop.Services.Authentication.External
         public string Yahoo { get; set; }
     }
 
+    [Serializable]
     public partial class CompanyClaims
     {
         public string CompanyName { get; set; }
         public string JobTitle { get; set; }
     }
 
+    [Serializable]
     public partial class AddressClaims
     {
         public string SingleLineAddress { get; set; }
@@ -85,12 +93,14 @@ namespace Nop.Services.Authentication.External
         public string StreetAddressLine2 { get; set; }
     }
 
+    [Serializable]
     public partial class PersonClaims
     {
         public string Gender { get; set; }
         public string Biography { get; set; }
     }
 
+    [Serializable]
     public partial class NameClaims
     {
         public string FullName { get; set; }
@@ -103,6 +113,7 @@ namespace Nop.Services.Authentication.External
         public string Suffix { get; set; }
     }
 
+    [Serializable]
     public partial class PreferenceClaims
     {
         public string Language { get; set; }
@@ -110,6 +121,7 @@ namespace Nop.Services.Authentication.External
         public string TimeZone { get; set; }
     }
 
+    [Serializable]
     public partial class ContactClaims
     {
         public string Email { get; set; }
@@ -122,6 +134,7 @@ namespace Nop.Services.Authentication.External
         public AddressClaims WorkAddress { get; set; }
     }
 
+    [Serializable]
     public partial class BirthDateClaims
     {
         public int DayOfMonth { get; set; }

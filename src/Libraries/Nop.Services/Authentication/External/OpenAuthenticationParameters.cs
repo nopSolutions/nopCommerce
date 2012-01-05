@@ -1,9 +1,11 @@
 //Contributor:  Nicholas Mayne
 
+using System;
 using System.Collections.Generic;
 
 namespace Nop.Services.Authentication.External
 {
+    [Serializable]
     public abstract partial class OpenAuthenticationParameters
     {
         public abstract string ProviderSystemName { get; }

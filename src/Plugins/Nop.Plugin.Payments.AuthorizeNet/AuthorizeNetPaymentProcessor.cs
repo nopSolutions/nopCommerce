@@ -13,6 +13,7 @@ using Nop.Core.Plugins;
 using Nop.Plugin.Payments.AuthorizeNet.Controllers;
 using Nop.Plugin.Payments.AuthorizeNet.net.authorize.api;
 using Nop.Services.Configuration;
+using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Payments;
 using Nop.Core.Domain;
@@ -29,6 +30,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet
         private readonly AuthorizeNetPaymentSettings _authorizeNetPaymentSettings;
         private readonly ISettingService _settingService;
         private readonly ICurrencyService _currencyService;
+        private readonly ICustomerService _customerService;
         private readonly CurrencySettings _currencySettings;
         private readonly IWebHelper _webHelper;
         private readonly StoreInformationSettings _storeInformationSettings;
@@ -39,12 +41,14 @@ namespace Nop.Plugin.Payments.AuthorizeNet
 
         public AuthorizeNetPaymentProcessor(AuthorizeNetPaymentSettings authorizeNetPaymentSettings,
             ISettingService settingService, ICurrencyService currencyService,
+            ICustomerService customerService,
             CurrencySettings currencySettings, IWebHelper webHelper,
             StoreInformationSettings storeInformationSettings)
         {
             this._authorizeNetPaymentSettings = authorizeNetPaymentSettings;
             this._settingService = settingService;
             this._currencyService = currencyService;
+            this._customerService = customerService;
             this._currencySettings = currencySettings;
             this._webHelper = webHelper;
             this._storeInformationSettings = storeInformationSettings;
@@ -108,6 +112,8 @@ namespace Nop.Plugin.Payments.AuthorizeNet
         {
             var result = new ProcessPaymentResult();
 
+            var customer = _customerService.GetCustomerById(processPaymentRequest.CustomerId);
+
             var webClient = new WebClient();
             var form = new NameValueCollection();
             form.Add("x_login", _authorizeNetPaymentSettings.LoginId);
@@ -136,17 +142,17 @@ namespace Nop.Plugin.Payments.AuthorizeNet
             form.Add("x_card_num", processPaymentRequest.CreditCardNumber);
             form.Add("x_exp_date", processPaymentRequest.CreditCardExpireMonth.ToString("D2") + processPaymentRequest.CreditCardExpireYear.ToString());
             form.Add("x_card_code", processPaymentRequest.CreditCardCvv2);
-            form.Add("x_first_name", processPaymentRequest.Customer.BillingAddress.FirstName);
-            form.Add("x_last_name", processPaymentRequest.Customer.BillingAddress.LastName);
-            if (!string.IsNullOrEmpty(processPaymentRequest.Customer.BillingAddress.Company))
-                form.Add("x_company", processPaymentRequest.Customer.BillingAddress.Company);
-            form.Add("x_address", processPaymentRequest.Customer.BillingAddress.Address1);
-            form.Add("x_city", processPaymentRequest.Customer.BillingAddress.City);
-            if (processPaymentRequest.Customer.BillingAddress.StateProvince != null)
-                form.Add("x_state", processPaymentRequest.Customer.BillingAddress.StateProvince.Abbreviation);
-            form.Add("x_zip", processPaymentRequest.Customer.BillingAddress.ZipPostalCode);
-            if (processPaymentRequest.Customer.BillingAddress.Country != null)
-                form.Add("x_country", processPaymentRequest.Customer.BillingAddress.Country.TwoLetterIsoCode);
+            form.Add("x_first_name", customer.BillingAddress.FirstName);
+            form.Add("x_last_name", customer.BillingAddress.LastName);
+            if (!string.IsNullOrEmpty(customer.BillingAddress.Company))
+                form.Add("x_company", customer.BillingAddress.Company);
+            form.Add("x_address", customer.BillingAddress.Address1);
+            form.Add("x_city", customer.BillingAddress.City);
+            if (customer.BillingAddress.StateProvince != null)
+                form.Add("x_state", customer.BillingAddress.StateProvince.Abbreviation);
+            form.Add("x_zip", customer.BillingAddress.ZipPostalCode);
+            if (customer.BillingAddress.Country != null)
+                form.Add("x_country", customer.BillingAddress.Country.TwoLetterIsoCode);
             //20 chars maximum
             form.Add("x_invoice_num", processPaymentRequest.OrderGuid.ToString().Substring(0, 20));
             form.Add("x_customer_ip", _webHelper.GetCurrentIpAddress());
@@ -311,6 +317,8 @@ namespace Nop.Plugin.Payments.AuthorizeNet
             var authentication = PopulateMerchantAuthentication();
             if (!processPaymentRequest.IsRecurringPayment)
             {
+                var customer = _customerService.GetCustomerById(processPaymentRequest.CustomerId);
+
                 var subscription = new ARBSubscriptionType();
                 var creditCard = new net.authorize.api.CreditCardType();
 
@@ -324,34 +332,34 @@ namespace Nop.Plugin.Payments.AuthorizeNet
                 subscription.payment.Item = creditCard;
 
                 subscription.billTo = new NameAndAddressType();
-                subscription.billTo.firstName = processPaymentRequest.Customer.BillingAddress.FirstName;
-                subscription.billTo.lastName = processPaymentRequest.Customer.BillingAddress.LastName;
-                subscription.billTo.address = processPaymentRequest.Customer.BillingAddress.Address1 + " " + processPaymentRequest.Customer.BillingAddress.Address2;
-                subscription.billTo.city = processPaymentRequest.Customer.BillingAddress.City;
-                if (processPaymentRequest.Customer.BillingAddress.StateProvince != null)
+                subscription.billTo.firstName = customer.BillingAddress.FirstName;
+                subscription.billTo.lastName = customer.BillingAddress.LastName;
+                subscription.billTo.address = customer.BillingAddress.Address1 + " " + customer.BillingAddress.Address2;
+                subscription.billTo.city = customer.BillingAddress.City;
+                if (customer.BillingAddress.StateProvince != null)
                 {
-                    subscription.billTo.state = processPaymentRequest.Customer.BillingAddress.StateProvince.Abbreviation;
+                    subscription.billTo.state = customer.BillingAddress.StateProvince.Abbreviation;
                 }
-                subscription.billTo.zip = processPaymentRequest.Customer.BillingAddress.ZipPostalCode;
+                subscription.billTo.zip = customer.BillingAddress.ZipPostalCode;
 
-                if (processPaymentRequest.Customer.ShippingAddress != null)
+                if (customer.ShippingAddress != null)
                 {
                     subscription.shipTo = new NameAndAddressType();
-                    subscription.shipTo.firstName = processPaymentRequest.Customer.ShippingAddress.FirstName;
-                    subscription.shipTo.lastName = processPaymentRequest.Customer.ShippingAddress.LastName;
-                    subscription.shipTo.address = processPaymentRequest.Customer.ShippingAddress.Address1 + " " + processPaymentRequest.Customer.ShippingAddress.Address2;
-                    subscription.shipTo.city = processPaymentRequest.Customer.ShippingAddress.City;
-                    if (processPaymentRequest.Customer.ShippingAddress.StateProvince != null)
+                    subscription.shipTo.firstName = customer.ShippingAddress.FirstName;
+                    subscription.shipTo.lastName = customer.ShippingAddress.LastName;
+                    subscription.shipTo.address = customer.ShippingAddress.Address1 + " " + customer.ShippingAddress.Address2;
+                    subscription.shipTo.city = customer.ShippingAddress.City;
+                    if (customer.ShippingAddress.StateProvince != null)
                     {
-                        subscription.shipTo.state = processPaymentRequest.Customer.ShippingAddress.StateProvince.Abbreviation;
+                        subscription.shipTo.state = customer.ShippingAddress.StateProvince.Abbreviation;
                     }
-                    subscription.shipTo.zip = processPaymentRequest.Customer.ShippingAddress.ZipPostalCode;
+                    subscription.shipTo.zip = customer.ShippingAddress.ZipPostalCode;
 
                 }
 
                 subscription.customer = new CustomerType();
-                subscription.customer.email = processPaymentRequest.Customer.BillingAddress.Email;
-                subscription.customer.phoneNumber = processPaymentRequest.Customer.BillingAddress.PhoneNumber;
+                subscription.customer.email = customer.BillingAddress.Email;
+                subscription.customer.phoneNumber = customer.BillingAddress.PhoneNumber;
 
                 subscription.order = new OrderType();
                 subscription.order.description = string.Format("{0} {1}", _storeInformationSettings.StoreName, "Recurring payment");

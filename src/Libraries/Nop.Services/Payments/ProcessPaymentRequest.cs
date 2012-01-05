@@ -8,12 +8,13 @@ namespace Nop.Services.Payments
     /// <summary>
     /// Represents a payment info holder
     /// </summary>
+    [Serializable]
     public partial class ProcessPaymentRequest
     {
         /// <summary>
         /// Gets or sets a customer
         /// </summary>
-        public Customer Customer { get; set; }
+        public int CustomerId { get; set; }
 
         /// <summary>
         /// Gets or sets an order unique identifier. Used when order is not saved yet (payment gateways that do not redirect a customer to a third-party URL)
@@ -96,7 +97,7 @@ namespace Nop.Services.Payments
         /// <summary>
         /// Gets or sets an initial (parent) order identifier if order is recurring
         /// </summary>
-        public Order InitialOrder { get; set; }
+        public int InitialOrderId { get; set; }
         
         /// <summary>
         /// Gets or sets the cycle length

@@ -275,7 +275,7 @@ namespace Nop.Plugin.Payments.GoogleCheckout
                 var paymentInfo = new ProcessPaymentRequest()
                 {
                     PaymentMethodSystemName = "Payments.GoogleCheckout",
-                    Customer = customer,
+                    CustomerId = customer.Id,
                     GoogleOrderNumber = googleOrderNumber
                 };
                 //TODO set customer language and currency

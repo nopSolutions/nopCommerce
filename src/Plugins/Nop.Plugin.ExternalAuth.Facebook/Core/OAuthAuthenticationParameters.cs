@@ -1,10 +1,12 @@
 //Contributor:  Nicholas Mayne
 
+using System;
 using System.Collections.Generic;
 using Nop.Services.Authentication.External;
 
 namespace Nop.Plugin.ExternalAuth.Facebook.Core
 {
+    [Serializable]
     public class OAuthAuthenticationParameters : OpenAuthenticationParameters
     {
         private readonly string _providerSystemName;

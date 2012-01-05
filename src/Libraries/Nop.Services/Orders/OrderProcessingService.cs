@@ -395,7 +395,7 @@ namespace Nop.Services.Orders
 
 
                 //Recurring orders. Load initial order
-                Order initialOrder = processPaymentRequest.InitialOrder;
+                Order initialOrder = _orderService.GetOrderById(processPaymentRequest.InitialOrderId);
                 if (processPaymentRequest.IsRecurringPayment)
                 {
                     if (initialOrder == null)
@@ -405,7 +405,7 @@ namespace Nop.Services.Orders
                 }
 
                 //customer
-                var customer = processPaymentRequest.Customer;
+                var customer = _customerService.GetCustomerById(processPaymentRequest.CustomerId);
                 if (customer == null)
                     throw new ArgumentException("Customer is not set");
 
@@ -505,17 +505,20 @@ namespace Nop.Services.Orders
                 }
 
                 //min totals validation
-                bool minOrderSubtotalAmountOk = ValidateMinOrderSubtotalAmount(cart);
-                if (!minOrderSubtotalAmountOk)
+                if (!processPaymentRequest.IsRecurringPayment)
                 {
-                    decimal minOrderSubtotalAmount = _currencyService.ConvertFromPrimaryStoreCurrency(_orderSettings.MinOrderSubtotalAmount, _workContext.WorkingCurrency);
-                    throw new NopException(string.Format(_localizationService.GetResource("Checkout.MinOrderSubtotalAmount"), _priceFormatter.FormatPrice(minOrderSubtotalAmount, true, false)));
-                }
-                bool minOrderTotalAmountOk = ValidateMinOrderTotalAmount(cart);
-                if (!minOrderTotalAmountOk)
-                {
-                    decimal minOrderTotalAmount = _currencyService.ConvertFromPrimaryStoreCurrency(_orderSettings.MinOrderTotalAmount, _workContext.WorkingCurrency);
-                    throw new NopException(string.Format(_localizationService.GetResource("Checkout.MinOrderTotalAmount"), _priceFormatter.FormatPrice(minOrderTotalAmount, true, false)));
+                    bool minOrderSubtotalAmountOk = ValidateMinOrderSubtotalAmount(cart);
+                    if (!minOrderSubtotalAmountOk)
+                    {
+                        decimal minOrderSubtotalAmount = _currencyService.ConvertFromPrimaryStoreCurrency(_orderSettings.MinOrderSubtotalAmount, _workContext.WorkingCurrency);
+                        throw new NopException(string.Format(_localizationService.GetResource("Checkout.MinOrderSubtotalAmount"), _priceFormatter.FormatPrice(minOrderSubtotalAmount, true, false)));
+                    }
+                    bool minOrderTotalAmountOk = ValidateMinOrderTotalAmount(cart);
+                    if (!minOrderTotalAmountOk)
+                    {
+                        decimal minOrderTotalAmount = _currencyService.ConvertFromPrimaryStoreCurrency(_orderSettings.MinOrderTotalAmount, _workContext.WorkingCurrency);
+                        throw new NopException(string.Format(_localizationService.GetResource("Checkout.MinOrderTotalAmount"), _priceFormatter.FormatPrice(minOrderTotalAmount, true, false)));
+                    }
                 }
 
                 //tax display type
@@ -1340,10 +1343,10 @@ namespace Nop.Services.Orders
                 //payment info
                 var paymentInfo = new ProcessPaymentRequest()
                 {
-                    Customer = customer,
+                    CustomerId = customer.Id,
                     OrderGuid = Guid.NewGuid(),
                     IsRecurringPayment = true,
-                    InitialOrder = initialOrder,
+                    InitialOrderId = initialOrder.Id,
                     RecurringCycleLength = recurringPayment.CycleLength,
                     RecurringCyclePeriod = recurringPayment.CyclePeriod,
                     RecurringTotalCycles = recurringPayment.TotalCycles,
