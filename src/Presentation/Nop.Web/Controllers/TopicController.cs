@@ -23,6 +23,20 @@ namespace Nop.Web.Controllers
 
         #region Constructors
 
+        public TopicController(ITopicService topicService,
+            ILocalizationService localizationService,
+            IWorkContext workContext, ICacheManager cacheManager)
+        {
+            this._topicService = topicService;
+            this._workContext = workContext;
+            this._localizationService = localizationService;
+            this._cacheManager = cacheManager;
+        }
+
+        #endregion
+
+        #region Utilities
+
         private TopicModel PrepareTopicModel(string systemName)
         {
             var topic = _topicService.GetTopicBySystemName(systemName);
@@ -36,18 +50,6 @@ namespace Nop.Web.Controllers
                 model.Body = string.Empty;
             }
             return model;
-        }
-
-        public TopicController(ITopicService topicService,
-            ILocalizationService localizationService,
-            IWorkContext workContext)
-        {
-            this._topicService = topicService;
-            this._workContext = workContext;
-            this._localizationService = localizationService;
-
-            //TODO inject static cache manager using constructor
-            this._cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
         }
 
         #endregion

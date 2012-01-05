@@ -96,7 +96,7 @@ namespace Nop.Web.Controllers
             IPermissionService permissionService,
             MediaSettings mediaSetting, CatalogSettings catalogSettings,
             ShoppingCartSettings shoppingCartSettings, StoreInformationSettings storeInformationSettings,
-            LocalizationSettings localizationSettings, CustomerSettings customerSettings)
+            LocalizationSettings localizationSettings, CustomerSettings customerSettings, ICacheManager cacheManager)
         {
             this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
@@ -135,8 +135,7 @@ namespace Nop.Web.Controllers
             this._localizationSettings = localizationSettings;
             this._customerSettings = customerSettings;
 
-            //TODO inject static cache manager using constructor
-            this._cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
+            this._cacheManager = cacheManager;
         }
 
         #endregion

@@ -91,10 +91,7 @@ namespace Nop.Web
             }
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
-
-            //For debugging
-            //RouteDebug.RouteDebugger.RewriteRoutesForTesting(RouteTable.Routes);
-
+            
             DataAnnotationsModelValidatorProvider.AddImplicitRequiredAttributeForValueTypes = false;
 
             ModelValidatorProviders.Providers.Add(new FluentValidationModelValidatorProvider(new NopValidatorFactory()));

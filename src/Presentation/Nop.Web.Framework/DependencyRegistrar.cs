@@ -58,7 +58,7 @@ namespace Nop.Web.Framework
     {
         public virtual void Register(ContainerBuilder builder, ITypeFinder typeFinder)
         {
-            //HTTP context ans other related stuff
+            //HTTP context and other related stuff
             builder.Register(c => 
                 //register FakeHttpContext when HttpContext is not available
                 HttpContext.Current != null ?

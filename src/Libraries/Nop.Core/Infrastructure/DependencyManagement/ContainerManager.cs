@@ -113,7 +113,6 @@ namespace Nop.Core.Infrastructure.DependencyManagement
         public object Resolve(Type type)
         {
             return Scope().Resolve(type);
-
         }
 
         public T[] ResolveAll<T>(string key = "")
