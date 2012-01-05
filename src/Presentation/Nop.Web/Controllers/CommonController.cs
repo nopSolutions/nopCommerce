@@ -28,6 +28,7 @@ using Nop.Services.Topics;
 using Nop.Web.Extensions;
 using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Themes;
+using Nop.Web.Framework.UI.Captcha;
 using Nop.Web.Models.Common;
 
 namespace Nop.Web.Controllers
@@ -63,6 +64,7 @@ namespace Nop.Web.Controllers
         private readonly BlogSettings _blogSettings;
         private readonly ForumSettings _forumSettings;
         private readonly LocalizationSettings _localizationSettings;
+        private readonly CaptchaSettings _captchaSettings;
 
         public CommonController(ICategoryService categoryService, IProductService productService,
             IManufacturerService manufacturerService, ITopicService topicService,
@@ -78,7 +80,7 @@ namespace Nop.Web.Controllers
             TaxSettings taxSettings, CatalogSettings catalogSettings,
             StoreInformationSettings storeInformationSettings, EmailAccountSettings emailAccountSettings,
             CommonSettings commonSettings, BlogSettings blogSettings, ForumSettings forumSettings,
-            LocalizationSettings localizationSettings)
+            LocalizationSettings localizationSettings, CaptchaSettings captchaSettings)
         {
             this._categoryService = categoryService;
             this._productService = productService;
@@ -109,6 +111,7 @@ namespace Nop.Web.Controllers
             this._blogSettings = blogSettings;
             this._forumSettings = forumSettings;
             this._localizationSettings = localizationSettings;
+            this._captchaSettings = captchaSettings;
         }
 
         //language
@@ -369,15 +372,22 @@ namespace Nop.Web.Controllers
             var model = new ContactUsModel()
             {
                 Email = _workContext.CurrentCustomer.Email,
-                FullName = _workContext.CurrentCustomer.GetFullName()
+                FullName = _workContext.CurrentCustomer.GetFullName(),
+                DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnContactUsPage
             };
             return View(model);
         }
 
         [HttpPost, ActionName("ContactUs")]
-        public ActionResult ContactUsSend(ContactUsModel model)
+        [CaptchaValidator]
+        public ActionResult ContactUsSend(ContactUsModel model, bool captchaValid)
         {
-            //ajax form
+            //validate CAPTCHA
+            if (_captchaSettings.Enabled && _captchaSettings.ShowOnContactUsPage && !captchaValid)
+            {
+                ModelState.AddModelError("", _localizationService.GetResource("Common.WrongCaptcha"));
+            }
+
             if (ModelState.IsValid)
             {
                 string email = model.Email.Trim();
@@ -415,20 +425,14 @@ namespace Nop.Web.Controllers
                     CreatedOnUtc = DateTime.UtcNow,
                     EmailAccountId = emailAccount.Id
                 });
-
-                return Json(new { SuccessfullySent = true, Result = _localizationService.GetResource("ContactUs.YourEnquiryHasBeenSent") });
+                
+                model.SuccessfullySent = true;
+                model.Result = _localizationService.GetResource("ContactUs.YourEnquiryHasBeenSent");
+                return View(model);
             }
 
-            //errors
-            var errors = new List<string>();
-            foreach (var modelState in ModelState.Values)
-            {
-                foreach (var error in modelState.Errors)
-                {
-                    errors.Add(error.ErrorMessage);
-                }
-            }
-            return Json(new { SuccessfullySent = false, Result = errors.FirstOrDefault() });
+            model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnContactUsPage;
+            return View(model);
         }
 
         //sitemap page

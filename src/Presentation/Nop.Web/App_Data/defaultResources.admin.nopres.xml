@@ -4201,6 +4201,22 @@
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
+									<LocaleResource Name="CaptchaShowOnRegistrationPage">
+										<Value>Show on registration page</Value>
+										<Children>
+											<LocaleResource Name="Hint">
+												<Value>Check to show CAPTCHA registration page.</Value>
+											</LocaleResource>
+										</Children>
+									</LocaleResource>
+									<LocaleResource Name="CaptchaShowOnContactUsPage">
+										<Value>Show on contact us page</Value>
+										<Children>
+											<LocaleResource Name="Hint">
+												<Value>Check to show CAPTCHA on contact us page.</Value>
+											</LocaleResource>
+										</Children>
+									</LocaleResource>
 									<LocaleResource Name="reCaptchaPublicKey">
 										<Value>reCAPTCHA public key</Value>
 										<Children>

@@ -20,5 +20,10 @@ namespace Nop.Web.Models.Common
         [AllowHtml]
         [NopResourceDisplayName("ContactUs.FullName")]
         public string FullName { get; set; }
+
+        public bool SuccessfullySent { get; set; }
+        public string Result { get; set; }
+
+        public bool DisplayCaptcha { get; set; }
     }
 }

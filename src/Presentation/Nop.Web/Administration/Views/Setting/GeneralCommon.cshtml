@@ -49,10 +49,14 @@
     
     function toggleReCaptcha() {
         if (getE('@Html.FieldIdFor(model => model.SecuritySettings.CaptchaEnabled)').checked) {
+            $('#ssCaptchaShowOnRegistrationPagepnl').show();
+            $('#ssCaptchaShowOnContactUsPagepnl').show();
             $('#ssReCaptchaPublicKeypnl').show();
             $('#ssReCaptchaPrivateKeypnl').show();
         }
         else {
+            $('#ssCaptchaShowOnRegistrationPagepnl').hide();
+            $('#ssCaptchaShowOnContactUsPagepnl').hide();
             $('#ssReCaptchaPublicKeypnl').hide();
             $('#ssReCaptchaPrivateKeypnl').hide();
         }
@@ -277,6 +281,24 @@
             <td class="adminData">
                 @Html.EditorFor(model => model.SecuritySettings.CaptchaEnabled)
                 @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaEnabled)
+            </td>
+        </tr>
+        <tr id="ssCaptchaShowOnRegistrationPagepnl">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SecuritySettings.CaptchaShowOnRegistrationPage):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SecuritySettings.CaptchaShowOnRegistrationPage)
+                @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaShowOnRegistrationPage)
+            </td>
+        </tr>
+        <tr id="ssCaptchaShowOnContactUsPagepnl">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SecuritySettings.CaptchaShowOnContactUsPage):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SecuritySettings.CaptchaShowOnContactUsPage)
+                @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaShowOnContactUsPage)
             </td>
         </tr>
         <tr id="ssReCaptchaPublicKeypnl">

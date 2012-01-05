@@ -10,24 +10,30 @@ namespace Nop.Web.Framework.UI.Captcha
 
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            var captchaSettings = EngineContext.Current.Resolve<CaptchaSettings>();
-            if (captchaSettings.Enabled)
+            bool valid = false;
+            var captchaChallengeValue = filterContext.HttpContext.Request.Form[CHALLENGE_FIELD_KEY];
+            var captchaResponseValue = filterContext.HttpContext.Request.Form[RESPONSE_FIELD_KEY];
+            if (!string.IsNullOrEmpty(captchaChallengeValue) && !string.IsNullOrEmpty(captchaResponseValue))
             {
-                var captchaChallengeValue = filterContext.HttpContext.Request.Form[CHALLENGE_FIELD_KEY];
-                var captchaResponseValue = filterContext.HttpContext.Request.Form[RESPONSE_FIELD_KEY];
-                var captchaValidtor = new Recaptcha.RecaptchaValidator
-                                          {
-                                              PrivateKey = captchaSettings.ReCaptchaPrivateKey,
-                                              RemoteIP = filterContext.HttpContext.Request.UserHostAddress,
-                                              Challenge = captchaChallengeValue,
-                                              Response = captchaResponseValue
-                                          };
+                var captchaSettings = EngineContext.Current.Resolve<CaptchaSettings>();
+                if (captchaSettings.Enabled)
+                {
+                    //validate captcha
+                    var captchaValidtor = new Recaptcha.RecaptchaValidator
+                    {
+                        PrivateKey = captchaSettings.ReCaptchaPrivateKey,
+                        RemoteIP = filterContext.HttpContext.Request.UserHostAddress,
+                        Challenge = captchaChallengeValue,
+                        Response = captchaResponseValue
+                    };
 
-                var recaptchaResponse = captchaValidtor.Validate();
-
-                // this will push the result value into a parameter in our Action  
-                filterContext.ActionParameters["captchaValid"] = recaptchaResponse.IsValid;
+                    var recaptchaResponse = captchaValidtor.Validate();
+                    valid = recaptchaResponse.IsValid;
+                }
             }
+
+            //this will push the result value into a parameter in our Action  
+            filterContext.ActionParameters["captchaValid"] = valid;
 
             base.OnActionExecuting(filterContext);
         }

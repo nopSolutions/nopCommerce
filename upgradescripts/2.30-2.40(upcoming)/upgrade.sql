@@ -143,6 +143,18 @@ set @resources='
   <LocaleResource Name="Admin.Customers.Customers.AssociatedExternalAuth.Hint">
     <Value>A list of external authentication identifiers.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnRegistrationPage">
+    <Value>Show on registration page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnRegistrationPage.Hint">
+    <Value>Check to show CAPTCHA registration page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnContactUsPage">
+    <Value>Show on contact us page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnContactUsPage.Hint">
+    <Value>Check to show CAPTCHA on contact us page.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -573,5 +585,21 @@ BEGIN
 
 	INSERT [dbo].[PermissionRecord_Role_Mapping] ([PermissionRecord_Id], [CustomerRole_Id])
 	VALUES (@PermissionRecordId, @AdminCustomerRoleId)
+END
+GO
+
+--new CAPTCHA settings
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'captchasettings.showonregistrationpage')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'captchasettings.showonregistrationpage', N'true')
+END
+GO
+
+--new CAPTCHA settings
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'captchasettings.showoncontactuspage')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'captchasettings.showoncontactuspage', N'false')
 END
 GO

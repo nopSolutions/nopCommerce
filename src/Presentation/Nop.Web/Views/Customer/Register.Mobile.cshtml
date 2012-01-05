@@ -260,7 +260,9 @@
                 @Html.ValidationMessageFor(model => model.ConfirmPassword)
                 @if (Model.DisplayCaptcha)
                 {
-                    @Html.Raw(Html.GenerateCaptcha())
+                    <div>
+                        @Html.Raw(Html.GenerateCaptcha())
+                    </div>
                 }
             </div>
             <div class="clear">
