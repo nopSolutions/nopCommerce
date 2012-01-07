@@ -12,7 +12,6 @@ namespace Nop.Core.Domain.Discounts
         private ICollection<DiscountRequirement> _discountRequirements;
         private ICollection<Category> _appliedToCategories;
         private ICollection<ProductVariant> _appliedToProductVariants;
-        private ICollection<DiscountUsageHistory> _discountUsageHistory;
 
         /// <summary>
         /// Gets or sets the name
@@ -124,14 +123,6 @@ namespace Nop.Core.Domain.Discounts
         {
             get { return _appliedToProductVariants ?? (_appliedToProductVariants = new List<ProductVariant>()); }
             protected set { _appliedToProductVariants = value; }
-        }
-        /// <summary>
-        /// Gets or sets discount usage history
-        /// </summary>
-        public virtual ICollection<DiscountUsageHistory> DiscountUsageHistory
-        {
-            get { return _discountUsageHistory ?? (_discountUsageHistory = new List<DiscountUsageHistory>()); }
-            protected set { _discountUsageHistory = value; }
         }
 
         #region Methods

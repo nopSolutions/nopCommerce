@@ -317,9 +317,12 @@ namespace Nop.Admin.Controllers
             var discount = _discountService.GetDiscountById(discountId);
             if (discount == null)
                 throw new ArgumentException("No discount found with the specified id");
+
+            var duh = _discountService.GetAllDiscountUsageHistory(discount.Id, null, command.Page - 1, command.PageSize);
             
-            var usageHistoryModel = discount.DiscountUsageHistory.OrderByDescending(duh => duh.CreatedOnUtc)
-                .Select(x =>
+            var model = new GridModel<DiscountModel.DiscountUsageHistoryModel>
+            {
+                Data = duh.Select(x =>
                 {
                     return new DiscountModel.DiscountUsageHistoryModel()
                     {
@@ -328,14 +331,9 @@ namespace Nop.Admin.Controllers
                         OrderId = x.OrderId,
                         CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc)
                     };
-                })
-                .ToList();
-            var model = new GridModel<DiscountModel.DiscountUsageHistoryModel>
-            {
-                Data = usageHistoryModel.PagedForCommand(command),
-                Total = usageHistoryModel.Count
+                }),
+                Total = duh.TotalCount
             };
-
             return new JsonResult
             {
                 Data = model
@@ -357,7 +355,7 @@ namespace Nop.Admin.Controllers
                 return new JsonResult { Data = "error" };
             }
 
-            var duh = discount.DiscountUsageHistory.Where(x => x.Id == id).FirstOrDefault();
+            var duh = _discountService.GetDiscountUsageHistoryById(id);
             if (duh != null)
                 _discountService.DeleteDiscountUsageHistory(duh);
             return UsageHistoryList(discountId, command);

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 
@@ -77,6 +78,36 @@ namespace Nop.Services.Discounts
         /// <param name="customer">Customer</param>
         /// <returns>true - requirement is met; otherwise, false</returns>
         bool IsDiscountValid(Discount discount, Customer customer);
+
+        /// <summary>
+        /// Gets a discount usage history record
+        /// </summary>
+        /// <param name="discountUsageHistoryId">Discount usage history record identifier</param>
+        /// <returns>Discount usage history</returns>
+        DiscountUsageHistory GetDiscountUsageHistoryById(int discountUsageHistoryId);
+        
+        /// <summary>
+        /// Gets all discount usage history records
+        /// </summary>
+        /// <param name="discountId">Discount identifer</param>
+        /// <param name="customerId">Customer identifer</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>Discount usage history records</returns>
+        IPagedList<DiscountUsageHistory> GetAllDiscountUsageHistory(int? discountId, 
+            int? customerId, int pageIndex, int pageSize);
+
+        /// <summary>
+        /// Insert discount usage history record
+        /// </summary>
+        /// <param name="discountUsageHistory">Discount usage history record</param>
+        void InsertDiscountUsageHistory(DiscountUsageHistory discountUsageHistory);
+        
+        /// <summary>
+        /// Update discount usage history record
+        /// </summary>
+        /// <param name="discountUsageHistory">Discount usage history record</param>
+        void UpdateDiscountUsageHistory(DiscountUsageHistory discountUsageHistory);
 
         /// <summary>
         /// Delete discount usage history record

@@ -408,8 +408,7 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.DiscountLimitation, mo => mo.Ignore())
                 .ForMember(dest => dest.DiscountRequirements, mo => mo.Ignore())
                 .ForMember(dest => dest.AppliedToCategories, mo => mo.Ignore())
-                .ForMember(dest => dest.AppliedToProductVariants, mo => mo.Ignore())
-                .ForMember(dest => dest.DiscountUsageHistory, mo => mo.Ignore());
+                .ForMember(dest => dest.AppliedToProductVariants, mo => mo.Ignore());
             //gift cards
             Mapper.CreateMap<GiftCard, GiftCardModel>()
                 .ForMember(dest => dest.PurchasedWithOrderId, mo => mo.Ignore())

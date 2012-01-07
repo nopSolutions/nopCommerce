@@ -1091,8 +1091,7 @@ namespace Nop.Services.Orders
                                     Order = order,
                                     CreatedOnUtc = DateTime.UtcNow
                                 };
-                                discount.DiscountUsageHistory.Add(duh);
-                                _discountService.UpdateDiscount(discount);
+                                _discountService.InsertDiscountUsageHistory(duh);
                             }
 
                         //gift card usage history

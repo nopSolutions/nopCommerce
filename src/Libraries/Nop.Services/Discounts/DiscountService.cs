@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
@@ -83,19 +84,16 @@ namespace Nop.Services.Discounts
                     }
                 case DiscountLimitationType.NTimesOnly:
                     {
-                        var usageHistory = discount.DiscountUsageHistory;
-                        return usageHistory.Count < discount.LimitationTimes;
+                        var totalDuh = GetAllDiscountUsageHistory(discount.Id, null, 0, 1).TotalCount;
+                        return totalDuh < discount.LimitationTimes;
                     }
                 case DiscountLimitationType.NTimesPerCustomer:
                     {
                         if (customer != null && !customer.IsGuest())
                         {
                             //registered customer
-                            var usageHistory = discount.DiscountUsageHistory
-                                .Where(duh => duh.Order != null
-                                    //&& !duh.Order.Deleted 
-                                    && duh.Order.CustomerId == customer.Id).ToList();
-                            return usageHistory.Count < discount.LimitationTimes;
+                            var totalDuh = GetAllDiscountUsageHistory(discount.Id, customer.Id, 0, 1).TotalCount;
+                            return totalDuh < discount.LimitationTimes;
                         }
                         else
                         {
@@ -339,6 +337,75 @@ namespace Nop.Services.Discounts
         }
 
         /// <summary>
+        /// Gets a discount usage history record
+        /// </summary>
+        /// <param name="discountUsageHistoryId">Discount usage history record identifier</param>
+        /// <returns>Discount usage history</returns>
+        public virtual DiscountUsageHistory GetDiscountUsageHistoryById(int discountUsageHistoryId)
+        {
+            if (discountUsageHistoryId == 0)
+                return null;
+
+            var duh = _discountUsageHistoryRepository.GetById(discountUsageHistoryId);
+            return duh;
+        }
+
+        /// <summary>
+        /// Gets all discount usage history records
+        /// </summary>
+        /// <param name="discountId">Discount identifer</param>
+        /// <param name="customerId">Customer identifer</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>Discount usage history records</returns>
+        public virtual IPagedList<DiscountUsageHistory> GetAllDiscountUsageHistory(int? discountId,
+            int? customerId, int pageIndex, int pageSize)
+        {
+            var query = _discountUsageHistoryRepository.Table;
+            if (discountId.HasValue && discountId.Value > 0)
+                query = query.Where(duh => duh.DiscountId == discountId.Value);
+            if (customerId.HasValue && customerId.Value > 0)
+                query = query.Where(duh => duh.Order != null && duh.Order.CustomerId == customerId.Value);
+            query = query.OrderByDescending(c => c.CreatedOnUtc);
+            return new PagedList<DiscountUsageHistory>(query, pageIndex, pageSize);
+        }
+
+        /// <summary>
+        /// Insert discount usage history record
+        /// </summary>
+        /// <param name="discountUsageHistory">Discount usage history record</param>
+        public virtual void InsertDiscountUsageHistory(DiscountUsageHistory discountUsageHistory)
+        {
+            if (discountUsageHistory == null)
+                throw new ArgumentNullException("discountUsageHistory");
+
+            _discountUsageHistoryRepository.Insert(discountUsageHistory);
+
+            _cacheManager.RemoveByPattern(DISCOUNTS_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityInserted(discountUsageHistory);
+        }
+
+
+        /// <summary>
+        /// Update discount usage history record
+        /// </summary>
+        /// <param name="discountUsageHistory">Discount usage history record</param>
+        public virtual void UpdateDiscountUsageHistory(DiscountUsageHistory discountUsageHistory)
+        {
+            if (discountUsageHistory == null)
+                throw new ArgumentNullException("discountUsageHistory");
+
+            _discountUsageHistoryRepository.Update(discountUsageHistory);
+
+            _cacheManager.RemoveByPattern(DISCOUNTS_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityUpdated(discountUsageHistory);
+        }
+
+        /// <summary>
         /// Delete discount usage history record
         /// </summary>
         /// <param name="discountUsageHistory">Discount usage history record</param>
@@ -354,6 +421,7 @@ namespace Nop.Services.Discounts
             //event notification
             _eventPublisher.EntityDeleted(discountUsageHistory);
         }
+
         #endregion
     }
 }

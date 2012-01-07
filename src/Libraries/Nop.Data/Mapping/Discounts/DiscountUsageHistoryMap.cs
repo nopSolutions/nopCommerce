@@ -11,7 +11,7 @@ namespace Nop.Data.Mapping.Discounts
             this.HasKey(duh => duh.Id);
             
             this.HasRequired(duh => duh.Discount)
-                .WithMany(d => d.DiscountUsageHistory)
+                .WithMany()
                 .HasForeignKey(duh => duh.DiscountId);
 
             this.HasRequired(duh => duh.Order)
