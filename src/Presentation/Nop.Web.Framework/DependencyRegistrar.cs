@@ -247,7 +247,6 @@ namespace Nop.Web.Framework
 
 
             builder.RegisterType<ExternalAuthorizer>().As<IExternalAuthorizer>().InstancePerHttpRequest();
-            builder.RegisterType<OpenAuthenticationProviderPermissionService>().As<IOpenAuthenticationProviderPermissionService>().InstancePerHttpRequest();
             builder.RegisterType<OpenAuthenticationService>().As<IOpenAuthenticationService>().InstancePerHttpRequest();
            
                 

@@ -1,7 +1,6 @@
 //Contributor:  Nicholas Mayne
 
 
-using System.Collections.Generic;
 using DotNetOpenAuth.Messaging;
 using DotNetOpenAuth.OpenId.RelyingParty;
 using Nop.Services.Authentication.External;
@@ -12,15 +11,12 @@ namespace Nop.Plugin.ExternalAuth.OpenId.Core
     {
         private readonly IOpenIdRelyingPartyService _openIdRelyingPartyService;
         private readonly IExternalAuthorizer _authorizer;
-        private readonly IOpenAuthenticationProviderPermissionService _openAuthenticationProviderPermissionService;
 
         public OpenIdProviderAuthorizer(IOpenIdRelyingPartyService openIdRelyingPartyService,
-            IExternalAuthorizer authorizer,
-            IOpenAuthenticationProviderPermissionService openAuthenticationProviderPermissionService)
+            IExternalAuthorizer authorizer)
         {
             _openIdRelyingPartyService = openIdRelyingPartyService;
             _authorizer = authorizer;
-            _openAuthenticationProviderPermissionService = openAuthenticationProviderPermissionService;
         }
 
         public AuthorizeState Authorize(string returnUrl)
@@ -67,8 +63,8 @@ namespace Nop.Plugin.ExternalAuth.OpenId.Core
             {
                 var request = _openIdRelyingPartyService.CreateRequest(identifier);
 
-                request.AddExtension(Claims.CreateClaimsRequest(_openAuthenticationProviderPermissionService));
-                request.AddExtension(Claims.CreateFetchRequest(_openAuthenticationProviderPermissionService));
+                request.AddExtension(Claims.CreateClaimsRequest());
+                request.AddExtension(Claims.CreateFetchRequest());
 
                 return new AuthorizeState(returnUrl, OpenAuthenticationStatus.RequiresRedirect)
                 {

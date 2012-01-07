@@ -66,8 +66,6 @@
     <Compile Include="Authentication\External\OpenAuthenticationService.cs" />
     <Compile Include="Authentication\External\IExternalAuthorizer.cs" />
     <Compile Include="Authentication\External\ExternalAuthorizer.cs" />
-    <Compile Include="Authentication\External\IOpenAuthenticationProviderPermissionService.cs" />
-    <Compile Include="Authentication\External\OpenAuthenticationProviderPermissionService.cs" />
     <Compile Include="Authentication\External\IExternalProviderAuthorizer.cs" />
     <Compile Include="Authentication\External\OpenAuthentificationExtentions.cs" />
     <Compile Include="Authentication\External\RegistrationDetails.cs" />

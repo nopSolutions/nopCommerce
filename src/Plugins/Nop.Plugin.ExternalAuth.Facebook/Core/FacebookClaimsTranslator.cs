@@ -9,11 +9,17 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Core
     {
         public UserClaims Translate(IDictionary<string, object> response)
         {
-            UserClaims claims = new UserClaims();
+            var claims = new UserClaims();
 
             claims.Contact = new ContactClaims();
             if (response.ContainsKey("email"))
                 claims.Contact.Email = response["email"].ToString();
+
+            claims.Name = new NameClaims();
+            if (response.ContainsKey("first_name"))
+                claims.Name.First = response["first_name"].ToString();
+            if (response.ContainsKey("last_name"))
+                claims.Name.Last = response["last_name"].ToString();
 
             return claims;
         }

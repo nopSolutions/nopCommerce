@@ -116,6 +116,13 @@ namespace Nop.Services.Authentication.External
                     var registrationResult = _customerService.RegisterCustomer(registrationRequest);
                     if (registrationResult.Success)
                     {
+                        //store other parameters (form fields)
+                        if (!String.IsNullOrEmpty(details.FirstName))
+                            _customerService.SaveCustomerAttribute(currentCustomer, SystemCustomerAttributeNames.FirstName, details.FirstName);
+                        if (!String.IsNullOrEmpty(details.LastName))
+                            _customerService.SaveCustomerAttribute(currentCustomer, SystemCustomerAttributeNames.LastName, details.LastName);
+                    
+
                         userFound = currentCustomer;
                         _openAuthenticationService.AssociateExternalAccountWithUser(currentCustomer, parameters);
                         ExternalAuthorizerHelper.RemoveParameters();

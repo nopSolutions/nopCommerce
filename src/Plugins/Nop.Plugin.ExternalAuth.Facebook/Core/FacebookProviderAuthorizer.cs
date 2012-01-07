@@ -63,7 +63,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Core
                 };
 
                 if (_externalAuthenticationSettings.AutoRegisterEnabled)
-                    GetUserName(parameters);
+                    GetClaims(parameters);
 
                 var result = _authorizer.Authorize(parameters);
                 
@@ -75,7 +75,7 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Core
             return state;
         }
 
-        private void GetUserName(OAuthAuthenticationParameters parameters)
+        private void GetClaims(OAuthAuthenticationParameters parameters)
         {
             var client = new FacebookClient(parameters.OAuthAccessToken);
             var me = client.Get("/me");
@@ -90,12 +90,12 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Core
         {
             var facebookClient = new FacebookOAuthClient(FacebookApplication);
 
-            var extendedPermissions = new[] { "publish_stream", "read_stream", "offline_access", "email" };
+            var extendedPermissions = new[] { "publish_stream", "read_stream", "offline_access", "email", "user_about_me" };
             var parameters = new Dictionary<string, object> {
                 {"redirect_uri", GenerateCallbackUri() }
             };
 
-            if (extendedPermissions != null && extendedPermissions.Length > 0)
+            if (extendedPermissions.Length > 0)
             {
                 var scope = new StringBuilder();
                 scope.Append(string.Join(",", extendedPermissions));
@@ -130,11 +130,11 @@ namespace Nop.Plugin.ExternalAuth.Facebook.Core
 
         private string GetAccessToken(string code)
         {
-            FacebookOAuthClient cl = new FacebookOAuthClient(FacebookApplication);
+            var cl = new FacebookOAuthClient(FacebookApplication);
             cl.RedirectUri = GenerateCallbackUri();
             cl.AppId = FacebookApplication.AppId;
             cl.AppSecret = FacebookApplication.AppSecret;
-            JsonObject dict = (JsonObject)cl.ExchangeCodeForAccessToken(code, new Dictionary<string, object> { { "permissions", "offline_access" } });
+            var dict = (JsonObject)cl.ExchangeCodeForAccessToken(code, new Dictionary<string, object> { { "permissions", "offline_access" } });
 
             return dict.Values.ElementAt(0).ToString();
         }
