@@ -164,7 +164,7 @@ namespace Nop.Plugin.Feed.Froogle
                         //title should be not longer than 70 characters
                         if (title.Length > 70)
                             title = title.Substring(0, 70);
-                        writer.WriteCData(productVariant.FullProductName);
+                        writer.WriteCData(title);
                         writer.WriteEndElement(); // title
 
                         //description [description] - Description of the item
@@ -222,13 +222,13 @@ namespace Nop.Plugin.Feed.Froogle
 
                         //image link [image_link] - URL of an image of the item
                         string imageUrl;
-                        var pictures = _pictureService.GetPicturesByProductId(product.Id, 1);
-                        if (pictures.Count > 0)
-                            imageUrl = _pictureService.GetPictureUrl(pictures[0], _froogleSettings.ProductPictureSize,
-                                                                     true);
+                        var picture = _pictureService.GetPictureById(productVariant.PictureId);
+                        if (picture == null)
+                            picture = _pictureService.GetPicturesByProductId(product.Id, 1).FirstOrDefault();
+                        if (picture != null)
+                            imageUrl = _pictureService.GetPictureUrl(picture, _froogleSettings.ProductPictureSize, true);
                         else
-                            imageUrl = _pictureService.GetDefaultPictureUrl(_froogleSettings.ProductPictureSize,
-                                                                            PictureType.Entity);
+                            imageUrl = _pictureService.GetDefaultPictureUrl(_froogleSettings.ProductPictureSize, PictureType.Entity);
 
                         writer.WriteElementString("g", "image_link", googleBaseNamespace, imageUrl);
 
