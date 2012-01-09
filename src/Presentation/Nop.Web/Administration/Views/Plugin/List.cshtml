@@ -22,50 +22,81 @@
             </ol>
         </td>
     </tr>
+    <tr>
+        <td>
+            <h4>Editing</h4>
+            This grid allows the bulk editting of the 'Friendly name' and 'Display order' fields. To enter edit mode just click a cell.
+        </td>
+    </tr>
     @*TODO display pop-up "waiting..." window (similar to installation wizard) when clicking on "install" or "uninstall"*@
     <tr>
         <td>
             @(Html.Telerik().Grid<PluginModel>()
                     .Name("plugins-grid")
+                    .DataKeys(keys =>
+                    {
+                        keys.Add(x => x.SystemName);
+                    })
                     .BindTo(Model.Data)
                     .Columns(columns =>
                     {
                         columns.Bound(x => x.Group)
+                            .ReadOnly()
                             .Width(150)
                             .Centered();
                         columns.Bound(x => x.FriendlyName)
                              .Width(150)
                              .Centered();
                         columns.Bound(x => x.SystemName)
+                            .ReadOnly()
                             .Width(150)
                             .Centered();
                         columns.Bound(x => x.Version)
+                            .ReadOnly()
                             .Width(50)
                             .Centered();
                         columns.Bound(x => x.Author)
+                            .ReadOnly()
                             .Width(100)
                             .Centered();
                         columns.Bound(x => x.DisplayOrder)
                             .Width(50)
                             .Centered();
                         columns.Bound(x => x.Installed)
-                             .Width(50)
-                             .Template(x => x.Installed.ToString().ToLower())
-                             .Centered();
+                            .ReadOnly()
+                            .Width(50)
+                            .Template(x => x.Installed.ToString().ToLower())
+                            .Centered();
                         columns.Bound(x => x.ConfigurationUrl)
-                             .Width(50)
-                             //allow configuring when a plugin is installed and has a configuration URL specified
-                             .Template(x => (x.Installed && !String.IsNullOrEmpty(x.ConfigurationUrl)) ? string.Format("<a href=\"{0}\">{1}</a>", x.ConfigurationUrl, T("Admin.Configuration.Plugins.Fields.Configure").Text) : "")
-                             .Centered();
+                            .ReadOnly()
+                            .Width(50)
+                            //allow configuration only when a plugin has a configuration URL specified
+                            .Template(x => (!String.IsNullOrEmpty(x.ConfigurationUrl)) ? string.Format("<a href=\"{0}\">{1}</a>", x.ConfigurationUrl, T("Admin.Configuration.Plugins.Fields.Configure").Text) : "")
+                            .ClientTemplate("<# if (ConfigurationUrl && ConfigurationUrl.length > 0)  { #> <a href=\"<#= ConfigurationUrl #>\">" + T("Admin.Configuration.Plugins.Fields.Configure").Text + "</a> <# } else { #>  <# } #>")
+                            .Centered();
                         columns.Bound(x => x.SystemName)
+                            .ReadOnly()
                             .Template(x =>
                                 Html.ActionLink(x.Installed ? T("Admin.Configuration.Plugins.Fields.Uninstall").Text : T("Admin.Configuration.Plugins.Fields.Install").Text,
                                 x.Installed ? "Uninstall" : "Install", new { systemName = x.SystemName }))
+                            .ClientTemplate("<# if (Installed)  { #> <a href=\"" + @Url.Content("~/Admin/Plugin/Uninstall/") + "?systemName=<#= SystemName #>\">" + T("Admin.Configuration.Plugins.Fields.Uninstall").Text + "</a> <# } else { #> <a href=\"" + @Url.Content("~/Admin/Plugin/Install/") + "?systemName=<#= SystemName #>\">" + T("Admin.Configuration.Plugins.Fields.Install").Text + "</a> <# } #>")
                             .Width(50)
                             .Centered()
                             .HeaderTemplate("Installation");
                     })
+                    .ToolBar(commands =>
+                    {
+                        commands.SubmitChanges();
+                    })
+                    .DataBinding(dataBinding =>
+                        dataBinding.Ajax()
+                            .Select("BulkEditSelect", "Plugin")
+                            .Update("BulkEditSave", "Plugin")
+                    )
+                    .Editable(editing => editing.Mode(GridEditMode.InCell))
                     .Footer(false))
+
+                    
         </td>
     </tr>
 </table>

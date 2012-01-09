@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -46,52 +47,74 @@ namespace Nop.Admin.Controllers
 		#endregion 
 
         #region Utilities
+
         [NonAction]
         private PluginModel PreparePluginModel(PluginDescriptor pluginDescriptor)
         {
             var pluginModel = pluginDescriptor.ToModel();
-            //set configuration URL
-            //plugins do not provide a genral URL for configuration
-            //because some of them have some custom URLs for configuration
-            //for example, discount requirement plugins require additional parameters and attached to a certain discount
-            var pluginInstance = pluginDescriptor.Instance();
-            if (pluginInstance is IPaymentMethod)
+            if (pluginDescriptor.Installed)
             {
-                //payment plugin
-                pluginModel.ConfigurationUrl = Url.Action("ConfigureMethod", "Payment", new {systemName = pluginDescriptor.SystemName}, "http");
-            }
-            else if (pluginInstance is IShippingRateComputationMethod)
-            {
-                //shipping rate computation method
-                pluginModel.ConfigurationUrl = Url.Action("ConfigureProvider", "Shipping", new { systemName = pluginDescriptor.SystemName }, "http");
-            }
-            else if (pluginInstance is ITaxProvider)
-            {
-                //tax provider
-                pluginModel.ConfigurationUrl = Url.Action("ConfigureProvider", "Tax", new { systemName = pluginDescriptor.SystemName }, "http");
-            }
-            else if (pluginInstance is IExternalAuthenticationMethod)
-            {
-                //external auth method
-                pluginModel.ConfigurationUrl = Url.Action("ConfigureMethod", "ExternalAuthentication", new { systemName = pluginDescriptor.SystemName }, "http");
-            }
-            else if (pluginInstance is ISmsProvider)
-            {
-                //SMS provider
-                pluginModel.ConfigurationUrl = Url.Action("ConfigureProvider", "Sms", new { systemName = pluginDescriptor.SystemName }, "http");
-            }
-            else if (pluginInstance is IPromotionFeed)
-            {
-                //promotion feed
-                pluginModel.ConfigurationUrl = Url.Action("ConfigureMethod", "PromotionFeed", new { systemName = pluginDescriptor.SystemName }, "http");
-            }
-            else if (pluginInstance is IMiscPlugin)
-            {
-                //Misc plugins
-                pluginModel.ConfigurationUrl = Url.Action("ConfigureMiscPlugin", "Plugin", new { systemName = pluginDescriptor.SystemName }, "http");
+                //specify configuration URL only when a plugin is already installed
+
+                //plugins do not provide a general URL for configuration
+                //because some of them have some custom URLs for configuration
+                //for example, discount requirement plugins require additional parameters and attached to a certain discount
+                var pluginInstance = pluginDescriptor.Instance();
+                string configurationUrl = null;
+                if (pluginInstance is IPaymentMethod)
+                {
+                    //payment plugin
+                    configurationUrl = Url.Action("ConfigureMethod", "Payment", new { systemName = pluginDescriptor.SystemName }, "http");
+                }
+                else if (pluginInstance is IShippingRateComputationMethod)
+                {
+                    //shipping rate computation method
+                    configurationUrl = Url.Action("ConfigureProvider", "Shipping", new { systemName = pluginDescriptor.SystemName }, "http");
+                }
+                else if (pluginInstance is ITaxProvider)
+                {
+                    //tax provider
+                    configurationUrl = Url.Action("ConfigureProvider", "Tax", new { systemName = pluginDescriptor.SystemName }, "http");
+                }
+                else if (pluginInstance is IExternalAuthenticationMethod)
+                {
+                    //external auth method
+                    configurationUrl = Url.Action("ConfigureMethod", "ExternalAuthentication", new { systemName = pluginDescriptor.SystemName }, "http");
+                }
+                else if (pluginInstance is ISmsProvider)
+                {
+                    //SMS provider
+                    configurationUrl = Url.Action("ConfigureProvider", "Sms", new { systemName = pluginDescriptor.SystemName }, "http");
+                }
+                else if (pluginInstance is IPromotionFeed)
+                {
+                    //promotion feed
+                    configurationUrl = Url.Action("ConfigureMethod", "PromotionFeed", new { systemName = pluginDescriptor.SystemName }, "http");
+                }
+                else if (pluginInstance is IMiscPlugin)
+                {
+                    //Misc plugins
+                    configurationUrl = Url.Action("ConfigureMiscPlugin", "Plugin", new { systemName = pluginDescriptor.SystemName }, "http");
+                }
+                pluginModel.ConfigurationUrl = configurationUrl;
             }
             return pluginModel;
         }
+
+        [NonAction]
+        private GridModel<PluginModel> PreparePluginListModel()
+        {
+            var pluginDescriptors = _pluginFinder.GetPluginDescriptors(false);
+            var model = new GridModel<PluginModel>
+            {
+                Data = pluginDescriptors.Select(x => PreparePluginModel(x))
+                .OrderBy(x => x.Group)
+                .ThenBy(x => x.DisplayOrder).ToList(),
+                Total = pluginDescriptors.Count()
+            };
+            return model;
+        }
+
         #endregion
 
         #region Methods
@@ -106,16 +129,53 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return AccessDeniedView();
 
-            //TODO allow store owner to edit display order of plugins
-            var pluginDescriptors = _pluginFinder.GetPluginDescriptors(false);
-            var model = new GridModel<PluginModel>
-            {
-                Data = pluginDescriptors.Select(x => PreparePluginModel(x))
-                .OrderBy(x => x.Group)
-                .ThenBy(x => x.DisplayOrder).ToList(),
-                Total = pluginDescriptors.Count()
-            };
+            var model = PreparePluginListModel();
             return View(model);
+        }
+
+        public ActionResult BulkEditSelect(GridCommand command)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
+                return AccessDeniedView();
+
+            var model = PreparePluginListModel();
+            return new JsonResult
+            {
+                Data = model
+            };
+        }
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        [HttpPost, GridAction(EnableCustomBinding = true)]
+        public ActionResult BulkEditSave(GridCommand command,
+            [Bind(Prefix = "updated")]IEnumerable<PluginModel> updatedPlugins)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
+                return AccessDeniedView();
+
+            //bool changed = false;
+            if (updatedPlugins != null)
+            {
+                foreach (var pluginModel in updatedPlugins)
+                {
+                    //update
+                    var pluginDescriptor = _pluginFinder.GetPluginDescriptorBySystemName(pluginModel.SystemName, false);
+                    if (pluginDescriptor != null)
+                    {
+                        //we allow editing of 'friendly name' and 'display order'
+                        pluginDescriptor.FriendlyName = pluginModel.FriendlyName;
+                        pluginDescriptor.DisplayOrder = pluginModel.DisplayOrder;
+                        PluginManager.SavePluginDescriptionFile(pluginDescriptor);
+                        //changed = true;
+                    }
+                }
+            }
+
+            //if (changed)
+                //restart application
+                //_webHelper.RestartAppDomain("~/Admin/Plugin/List");
+
+            return BulkEditSelect(command);
         }
 
         public ActionResult Install(string systemName)
@@ -216,6 +276,7 @@ namespace Nop.Admin.Controllers
             model.ConfigurationRouteValues = routeValues;
             return View(model);
         }
+
         #endregion
     }
 }

@@ -25,7 +25,7 @@ namespace Nop.Core.Plugins
         {
             EnsurePluginsAreLoaded();
 
-            foreach (var plugin in _plugins)
+            foreach (var plugin in _plugins.OrderBy(x => x.DisplayOrder))
                 if (typeof(T).IsAssignableFrom(plugin.PluginType))
                     if (!installedOnly || plugin.Installed)
                         yield return plugin.Instance<T>();
@@ -35,7 +35,7 @@ namespace Nop.Core.Plugins
         {
             EnsurePluginsAreLoaded();
 
-            foreach (var plugin in _plugins)
+            foreach (var plugin in _plugins.OrderBy(x => x.DisplayOrder))
                 if (!installedOnly || plugin.Installed)
                     yield return plugin;
         }
@@ -44,7 +44,7 @@ namespace Nop.Core.Plugins
         {
             EnsurePluginsAreLoaded();
 
-            foreach (var plugin in _plugins)
+            foreach (var plugin in _plugins.OrderBy(x => x.DisplayOrder))
                 if (typeof(T).IsAssignableFrom(plugin.PluginType))
                     if (!installedOnly || plugin.Installed)
                         yield return plugin;

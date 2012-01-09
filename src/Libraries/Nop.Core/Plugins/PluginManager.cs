@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Threading;
 using System.Web;
 using System.Web.Compilation;
@@ -169,7 +170,7 @@ namespace Nop.Core.Plugins
             }
         }
 
-        protected static bool IsAlreadyLoaded(FileInfo fileInfo)
+        private static bool IsAlreadyLoaded(FileInfo fileInfo)
         {
             //compare full assembly name
             //var fileAssemblyName = AssemblyName.GetAssemblyName(fileInfo.FullName);
@@ -499,6 +500,40 @@ namespace Nop.Core.Plugins
 
             return descriptor;
         }
+        
+        public static void SavePluginDescriptionFile(PluginDescriptor plugin)
+        {
+            if (plugin == null)
+                throw new ArgumentException("plugin");
 
+            //get the Description.txt file path
+            if (plugin.OriginalAssemblyFile == null)
+                throw new Exception(string.Format("Cannot load original assembly path for {0} plugin.", plugin.SystemName));
+            var filePath = Path.Combine(plugin.OriginalAssemblyFile.Directory.FullName, "Description.txt");
+            if (!File.Exists(filePath))
+                throw new Exception(string.Format("Description file for {0} plugin does not exist. {1}", plugin.SystemName, filePath));
+
+            var keyValues = new List<KeyValuePair<string, string>>();
+            keyValues.Add(new KeyValuePair<string, string>("Group", plugin.Group));
+            keyValues.Add(new KeyValuePair<string, string>("FriendlyName", plugin.FriendlyName));
+            keyValues.Add(new KeyValuePair<string, string>("SystemName", plugin.SystemName));
+            keyValues.Add(new KeyValuePair<string, string>("Version", plugin.Version));
+            keyValues.Add(new KeyValuePair<string, string>("SupportedVersions", string.Join(",", plugin.SupportedVersions)));
+            keyValues.Add(new KeyValuePair<string, string>("Author", plugin.Author));
+            keyValues.Add(new KeyValuePair<string, string>("DisplayOrder", plugin.DisplayOrder.ToString()));
+            keyValues.Add(new KeyValuePair<string, string>("FileName", plugin.PluginFileName));
+
+            var sb = new StringBuilder();
+            for (int i = 0; i < keyValues.Count; i++)
+            {
+                var key = keyValues[i].Key;
+                var value = keyValues[i].Value;
+                sb.AppendFormat("{0}: {1}", key, value);
+                if (i != keyValues.Count -1)
+                    sb.Append("\r\n");
+            }
+            //save the file
+            File.WriteAllText(filePath, sb.ToString());
+        }
     }
 }
