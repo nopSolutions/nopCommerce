@@ -1401,12 +1401,29 @@ namespace Nop.Web.Controllers
             {
                 switch (cartType)
                 {
-                    case ShoppingCartType.ShoppingCart:
-                        return RedirectToRoute("ShoppingCart");
                     case ShoppingCartType.Wishlist:
-                        return RedirectToRoute("Wishlist");
+                        {
+                            //redirect to the wishlist page
+                            return RedirectToRoute("Wishlist");
+                        }
+                    case ShoppingCartType.ShoppingCart:
                     default:
-                        return RedirectToRoute("ShoppingCart");
+                        {
+                            if (_shoppingCartSettings.DisplayCartAfterAddingProduct)
+                            {
+                                //redirect to the shopping cart page
+                                return RedirectToRoute("ShoppingCart");
+                            }
+                            else
+                            {
+                                //redisplay the page with "Product has been added to the cart notification message
+
+                                //TODO set already entered values (quantity, customer entered price, gift card attributes, product attributes
+                                var model = PrepareProductDetailsPageModel(product);
+                                model.DisplayProductAddedMessage = true;
+                                return View(model.ProductTemplateViewPath, model);
+                            }
+                        }
                 }
             }
             else
@@ -1418,7 +1435,6 @@ namespace Nop.Web.Controllers
                 //If we got this far, something failed, redisplay form
                 //TODO set already entered values (quantity, customer entered price, gift card attributes, product attributes
                 var model = PrepareProductDetailsPageModel(product);
-
                 return View(model.ProductTemplateViewPath, model);
             }
         }

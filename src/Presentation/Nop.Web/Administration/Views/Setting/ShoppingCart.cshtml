@@ -36,6 +36,15 @@
     <table class="adminContent">
         <tr>
             <td class="adminTitle">
+                @Html.NopLabelFor(model => model.DisplayCartAfterAddingProduct):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.DisplayCartAfterAddingProduct)
+                @Html.ValidationMessageFor(model => model.DisplayCartAfterAddingProduct)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.NopLabelFor(model => model.MaximumShoppingCartItems):
             </td>
             <td class="adminData">

@@ -51,6 +51,15 @@
         });
     </script>
 }
+@if (Model.DisplayProductAddedMessage)
+{
+    //display notification   
+    <script type="text/javascript">
+        $(document).ready(function () {
+            alert('@T("Products.ProductHasBeenAddedToTheCart").Text');
+        });
+    </script>
+}
 <!--product breadcrumb-->
 @Html.Action("ProductBreadcrumb", "Catalog", new { productId = Model.Id })
 <div class="clear">

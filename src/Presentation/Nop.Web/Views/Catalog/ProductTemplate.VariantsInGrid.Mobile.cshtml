@@ -22,6 +22,15 @@
         }
     }
 }
+@if (Model.DisplayProductAddedMessage)
+{
+    //TODO display notification in pop-up window for mobile devices
+    <script type="text/javascript">
+        $(document).ready(function () {
+            alert('@T("Products.ProductHasBeenAddedToTheCart").Text');
+        });
+    </script>
+}
 <div class="product-details-page">
     @using (Html.BeginRouteForm("Product", new { productId = Model.Id, SeName = Model.SeName }, FormMethod.Post))
     {

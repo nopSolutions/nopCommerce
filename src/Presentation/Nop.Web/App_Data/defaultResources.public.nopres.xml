@@ -3048,6 +3048,9 @@
 			<LocaleResource Name="PriceRangeFrom">
 				<Value>From {0}</Value>
 			</LocaleResource>
+			<LocaleResource Name="ProductHasBeenAddedToTheCart">
+				<Value>The product has been added to the cart</Value>
+			</LocaleResource>
 			<LocaleResource Name="Qty">
 				<Value>Qty</Value>
 			</LocaleResource>

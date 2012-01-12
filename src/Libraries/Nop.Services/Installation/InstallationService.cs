@@ -4650,6 +4650,7 @@ namespace Nop.Services.Installation
             EngineContext.Current.Resolve<IConfigurationProvider<ShoppingCartSettings>>()
                 .SaveSettings(new ShoppingCartSettings()
                 {
+                    DisplayCartAfterAddingProduct = true,
                     MaximumShoppingCartItems = 1000,
                     MaximumWishlistItems = 1000,
                     ShowProductImagesOnShoppingCart = true,

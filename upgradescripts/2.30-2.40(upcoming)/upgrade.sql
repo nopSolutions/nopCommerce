@@ -155,6 +155,15 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnContactUsPage.Hint">
     <Value>Check to show CAPTCHA on contact us page.</Value>
   </LocaleResource>
+  <LocaleResource Name="Products.ProductHasBeenAddedToTheCart">
+    <Value>The product has been added to the cart</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.DisplayCartAfterAddingProduct">
+    <Value>Display cart after adding product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.DisplayCartAfterAddingProduct.Hint">
+    <Value>If checked a customer will be taken to the Shopping Cart page immediately after adding a product to their cart. If unchecked a customer will stay on the same page that they are adding the product to the cart from.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -601,5 +610,14 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'captchasettings.showonco
 BEGIN
 	INSERT [Setting] ([Name], [Value])
 	VALUES (N'captchasettings.showoncontactuspage', N'false')
+END
+GO
+
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'shoppingcartsettings.displaycartafteraddingproduct')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'shoppingcartsettings.displaycartafteraddingproduct', N'true')
 END
 GO

@@ -4655,6 +4655,14 @@
 							<LocaleResource Name="ShoppingCart">
 								<Value>Shopping cart settings</Value>
 								<Children>
+									<LocaleResource Name="DisplayCartAfterAddingProduct">
+										<Value>Display cart after adding product</Value>
+										<Children>
+											<LocaleResource Name="Hint">
+												<Value>If checked a customer will be taken to the Shopping Cart page immediately after adding a product to their cart. If unchecked a customer will stay on the same page that they are adding the product to the cart from.</Value>
+											</LocaleResource>
+										</Children>
+									</LocaleResource>
 									<LocaleResource Name="MaximumShoppingCartItems">
 										<Value>Maximum shopping cart items</Value>
 										<Children>
