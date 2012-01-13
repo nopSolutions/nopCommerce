@@ -197,6 +197,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
                 foreach (var item in cartItems)
                 {
                     var unitPriceExclTax = item.UnitPriceExclTax;
+                    var priceExclTax = item.PriceExclTax;
                     //round
                     var unitPriceExclTaxRounded = Math.Round(unitPriceExclTax, 2);
                     //get the product variant so we can get the name
@@ -204,7 +205,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
                     builder.AppendFormat("&amount_" + x + "={0}", unitPriceExclTaxRounded.ToString("0.00", CultureInfo.InvariantCulture));
                     builder.AppendFormat("&quantity_" + x + "={0}", item.Quantity);
                     x++;
-                    cartTotal += unitPriceExclTax;
+                    cartTotal += priceExclTax;
                 }
 
                 //the checkout attributes that have a dollar value and send them to Paypal as items to be paid for
