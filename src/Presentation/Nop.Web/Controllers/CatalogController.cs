@@ -884,7 +884,9 @@ namespace Nop.Web.Controllers
 
 
             //products
-            var products = _productService.SearchProducts(category.Id, 0, false, minPriceConverted, maxPriceConverted,
+            var products = _productService.SearchProducts(category.Id, 0, 
+                _catalogSettings.IncludeFeaturedProductsInNormalLists ? null : (bool?)false, 
+                minPriceConverted, maxPriceConverted,
                 0, string.Empty, false, _workContext.WorkingLanguage.Id, selectedSpecs,
                 (ProductSortingEnum)command.OrderBy, command.PageNumber - 1, command.PageSize);
             model.Products = products.Select(x => PrepareProductOverviewModel(x)).ToList();
@@ -1107,7 +1109,9 @@ namespace Nop.Web.Controllers
 
 
             //products
-            var products = _productService.SearchProducts(0, manufacturer.Id, false, minPriceConverted, maxPriceConverted,
+            var products = _productService.SearchProducts(0, manufacturer.Id, 
+                _catalogSettings.IncludeFeaturedProductsInNormalLists ? null : (bool?)false, 
+                minPriceConverted, maxPriceConverted,
                 0, string.Empty, false, _workContext.WorkingLanguage.Id, null,
                 (ProductSortingEnum)command.OrderBy, command.PageNumber - 1, command.PageSize);
             model.Products = products.Select(x => PrepareProductOverviewModel(x)).ToList();

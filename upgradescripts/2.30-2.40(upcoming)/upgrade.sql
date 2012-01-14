@@ -621,3 +621,12 @@ BEGIN
 	VALUES (N'shoppingcartsettings.displaycartafteraddingproduct', N'true')
 END
 GO
+
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.includefeaturedproductsinnormallists')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'catalogsettings.includefeaturedproductsinnormallists', N'false')
+END
+GO

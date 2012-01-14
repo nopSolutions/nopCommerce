@@ -175,6 +175,11 @@ namespace Nop.Core.Domain.Catalog
         public bool UseSmallProductBoxOnHomePage { get; set; }
 
         /// <summary>
+        /// An option indicating whether products on category and manufacturer pages should include featured products as well
+        /// </summary>
+        public bool IncludeFeaturedProductsInNormalLists { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether to ignore tier prices (side-wide)
         /// </summary>
         public bool IgnoreTierPrices { get; set; }
