@@ -1,7 +1,7 @@
 
 namespace Nop.Core.Domain.Customers
 {
-    public static class SystemCustomerRoleNames
+    public static partial class SystemCustomerRoleNames
     {
         public static string Administrators { get { return "Administrators"; } }
         

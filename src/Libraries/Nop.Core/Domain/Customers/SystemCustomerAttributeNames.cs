@@ -1,7 +1,7 @@
 
 namespace Nop.Core.Domain.Customers
 {
-    public static class SystemCustomerAttributeNames
+    public static partial class SystemCustomerAttributeNames
     {
         //Form fields
         public static string FirstName { get { return "FirstName"; } }
