@@ -7,6 +7,7 @@ namespace Nop.Services.Security
     public partial class StandardPermissionProvider : IPermissionProvider
     {
         public static readonly PermissionRecord AccessAdminPanel = new PermissionRecord { Name = "Access admin area", SystemName = "AccessAdminPanel", Category = "Standard" };
+        public static readonly PermissionRecord AllowCustomerImpersonation = new PermissionRecord { Name = "Admin area. Allow Customer Impersonation", SystemName = "AllowCustomerImpersonation", Category = "Customers" };
         public static readonly PermissionRecord ManageCatalog = new PermissionRecord { Name = "Admin area. Manage Catalog", SystemName = "ManageCatalog", Category = "Catalog" };
         public static readonly PermissionRecord ManageCustomers = new PermissionRecord { Name = "Admin area. Manage Customers", SystemName = "ManageCustomers", Category = "Customers" };
         public static readonly PermissionRecord ManageCustomerRoles = new PermissionRecord { Name = "Admin area. Manage Customer Roles", SystemName = "ManageCustomerRoles", Category = "Customers" };
@@ -54,6 +55,7 @@ namespace Nop.Services.Security
             return new[] 
             {
                 AccessAdminPanel,
+                AllowCustomerImpersonation,
                 ManageCatalog,
                 ManageCustomers,
                 ManageCustomerRoles,
@@ -106,6 +108,7 @@ namespace Nop.Services.Security
                     PermissionRecords = new[] 
                     {
                         AccessAdminPanel,
+                        AllowCustomerImpersonation,
                         ManageCatalog,
                         ManageCustomers,
                         ManageCustomerRoles,

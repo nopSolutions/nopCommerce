@@ -921,7 +921,7 @@ namespace Nop.Admin.Controllers
         [FormValueRequired("impersonate")]
         public ActionResult Impersonate(int id)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+            if (!_permissionService.Authorize(StandardPermissionProvider.AllowCustomerImpersonation))
                 return AccessDeniedView();
 
             var customer = _customerService.GetCustomerById(id);

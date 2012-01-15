@@ -17,7 +17,6 @@ namespace Nop.Services.Security
     {
         #region Constants
         private const string PERMISSIONS_ALL_KEY = "Nop.permission.all";
-        private const string PERMISSIONS_BY_SYSTEMNAME_KEY = "Nop.permission.name-{0}";
         private const string PERMISSIONS_PATTERN_KEY = "Nop.permission.";
         #endregion
 
