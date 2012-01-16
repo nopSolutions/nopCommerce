@@ -164,6 +164,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.DisplayCartAfterAddingProduct.Hint">
     <Value>If checked a customer will be taken to the Shopping Cart page immediately after adding a product to their cart. If unchecked a customer will stay on the same page that they are adding the product to the cart from.</Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.ByWeight.Fields.CalculatePerWeightUnit">
+    <Value>Calculate per weight unit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.ByWeight.Fields.CalculatePerWeightUnit.Hint">
+    <Value>If you check this option, then rates are multipied per weight unit (lb, kg, etc). This option is used for the fixed rates (without percents).</Value>
+  </LocaleResource>
 </Language>
 '
 
