@@ -36,7 +36,7 @@ namespace Nop.Core.Data
             if (String.IsNullOrEmpty(text))
                 return shellSettings;
 
-            var settings = text.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+            var settings = text.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
             foreach (var setting in settings)
             {
                 var separatorIndex = setting.IndexOf(separator);
@@ -69,9 +69,10 @@ namespace Nop.Core.Data
             if (settings == null)
                 return "";
 
-            return string.Format("DataProvider: {0}\r\nDataConnectionString: {1}\r\n",
+            return string.Format("DataProvider: {0}{2}DataConnectionString: {1}{2}",
                                  settings.DataProvider,
-                                 settings.DataConnectionString
+                                 settings.DataConnectionString,
+                                 Environment.NewLine
                 );
         }
 

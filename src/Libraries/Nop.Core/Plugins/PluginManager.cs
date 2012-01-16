@@ -417,7 +417,7 @@ namespace Nop.Core.Plugins
                     return new List<string>();
 
                 systemNames = new List<string>();
-                var lines = text.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+                var lines = text.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (var line in lines)
                     systemNames.Add(line.Trim());
             }
@@ -432,7 +432,7 @@ namespace Nop.Core.Plugins
 
             string result = "";
             foreach (var sn in pluginSystemNames)
-                result += string.Format("{0}\r\n", sn);
+                result += string.Format("{0}{1}", sn, Environment.NewLine);
             return result;
         }
 
@@ -444,7 +444,7 @@ namespace Nop.Core.Plugins
             if (String.IsNullOrEmpty(text))
                 return descriptor;
 
-            var settings = text.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+            var settings = text.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
             foreach (var setting in settings)
             {
                 var separatorIndex = setting.IndexOf(':');
@@ -530,7 +530,7 @@ namespace Nop.Core.Plugins
                 var value = keyValues[i].Value;
                 sb.AppendFormat("{0}: {1}", key, value);
                 if (i != keyValues.Count -1)
-                    sb.Append("\r\n");
+                    sb.Append(Environment.NewLine);
             }
             //save the file
             File.WriteAllText(filePath, sb.ToString());

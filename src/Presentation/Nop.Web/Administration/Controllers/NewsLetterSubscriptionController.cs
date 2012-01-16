@@ -133,7 +133,7 @@ namespace Nop.Admin.Controllers
 				sb.Append(subscription.Email);
                 sb.Append("\t");
                 sb.Append(subscription.Active);
-                sb.Append("\r\n");  //new line
+                sb.Append(Environment.NewLine);  //new line
 			}
 			string result = sb.ToString();
 

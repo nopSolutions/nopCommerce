@@ -502,18 +502,18 @@ namespace Nop.Core
                 bool success = TryWriteWebConfig();
                 if (!success)
                 {
-                    throw new NopException("nopCommerce needs to be restarted due to a configuration change, but was unable to do so.\r\n" +
-                        "To prevent this issue in the future, a change to the web server configuration is required:\r\n" +
-                        "- run the application in a full trust environment, or\r\n" +
+                    throw new NopException("nopCommerce needs to be restarted due to a configuration change, but was unable to do so." + Environment.NewLine +
+                        "To prevent this issue in the future, a change to the web server configuration is required:" + Environment.NewLine + 
+                        "- run the application in a full trust environment, or" + Environment.NewLine +
                         "- give the application write access to the 'web.config' file.");
                 }
 
                 success = TryWriteGlobalAsax();
                 if (!success)
                 {
-                    throw new NopException("nopCommerce needs to be restarted due to a configuration change, but was unable to do so.\r\n" +
-                        "To prevent this issue in the future, a change to the web server configuration is required:\r\n" +
-                        "- run the application in a full trust environment, or\r\n" +
+                    throw new NopException("nopCommerce needs to be restarted due to a configuration change, but was unable to do so." + Environment.NewLine +
+                        "To prevent this issue in the future, a change to the web server configuration is required:" + Environment.NewLine +
+                        "- run the application in a full trust environment, or" + Environment.NewLine +
                         "- give the application write access to the 'Global.asax' file.");
                 }
             }
