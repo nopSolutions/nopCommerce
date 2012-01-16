@@ -139,7 +139,8 @@ namespace Nop.Services.Orders
         /// Gets shopping cart total
         /// </summary>
         /// <param name="cart">Cart</param>
-        decimal? GetShoppingCartTotal(IList<ShoppingCartItem> cart);
+        /// <param name="ignoreRewardPonts">A value indicating whether we should ignore reward points (if enabled and a customer is going to use them)</param>
+        decimal? GetShoppingCartTotal(IList<ShoppingCartItem> cart, bool ignoreRewardPonts = false);
 
         /// <summary>
         /// Gets shopping cart total
@@ -150,11 +151,13 @@ namespace Nop.Services.Orders
         /// <param name="appliedDiscount">Applied discount</param>
         /// <param name="redeemedRewardPoints">Reward points to redeem</param>
         /// <param name="redeemedRewardPointsAmount">Reward points amount in primary store currency to redeem</param>
+        /// <param name="ignoreRewardPonts">A value indicating whether we should ignore reward points (if enabled and a customer is going to use them)</param>
         /// <returns>Shopping cart total;Null if shopping cart total couldn't be calculated now</returns>
         decimal? GetShoppingCartTotal(IList<ShoppingCartItem> cart,
             out decimal discountAmount, out Discount appliedDiscount,
             out List<AppliedGiftCard> appliedGiftCards,
-            out int redeemedRewardPoints, out decimal redeemedRewardPointsAmount);
+            out int redeemedRewardPoints, out decimal redeemedRewardPointsAmount,
+            bool ignoreRewardPonts = false);
 
         /// <summary>
         /// Gets an order discount (applied to order total)

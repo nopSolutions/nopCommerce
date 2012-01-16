@@ -646,8 +646,10 @@ namespace Nop.Services.Orders
         /// Gets shopping cart total
         /// </summary>
         /// <param name="cart">Cart</param>
+        /// <param name="ignoreRewardPonts">A value indicating whether we should ignore reward points (if enabled and a customer is going to use them)</param>
         /// <returns>Shopping cart total;Null if shopping cart total couldn't be calculated now</returns>
-        public virtual decimal? GetShoppingCartTotal(IList<ShoppingCartItem> cart)
+        public virtual decimal? GetShoppingCartTotal(IList<ShoppingCartItem> cart,
+            bool ignoreRewardPonts = false)
         {
             decimal discountAmount = decimal.Zero;
             Discount appliedDiscount = null;
@@ -657,7 +659,7 @@ namespace Nop.Services.Orders
             List<AppliedGiftCard> appliedGiftCards = null;
             return GetShoppingCartTotal(cart, out discountAmount, out appliedDiscount,
                 out appliedGiftCards,
-                out redeemedRewardPoints, out redeemedRewardPointsAmount);
+                out redeemedRewardPoints, out redeemedRewardPointsAmount, ignoreRewardPonts);
         }
 
         /// <summary>
@@ -669,11 +671,13 @@ namespace Nop.Services.Orders
         /// <param name="appliedDiscount">Applied discount</param>
         /// <param name="redeemedRewardPoints">Reward points to redeem</param>
         /// <param name="redeemedRewardPointsAmount">Reward points amount in primary store currency to redeem</param>
+        /// <param name="ignoreRewardPonts">A value indicating whether we should ignore reward points (if enabled and a customer is going to use them)</param>
         /// <returns>Shopping cart total;Null if shopping cart total couldn't be calculated now</returns>
         public virtual decimal? GetShoppingCartTotal(IList<ShoppingCartItem> cart,
             out decimal discountAmount, out Discount appliedDiscount,
             out List<AppliedGiftCard> appliedGiftCards,
-            out int redeemedRewardPoints, out decimal redeemedRewardPointsAmount)
+            out int redeemedRewardPoints, out decimal redeemedRewardPointsAmount,
+            bool ignoreRewardPonts = false)
         {
             redeemedRewardPoints = 0;
             redeemedRewardPointsAmount = decimal.Zero;
@@ -802,11 +806,9 @@ namespace Nop.Services.Orders
 
             #region Reward points
 
-            bool useRewardPoints = false;
-            if (customer != null)
-                useRewardPoints = customer.UseRewardPointsDuringCheckout;
-            
-            if (_rewardPointsSettings.Enabled && useRewardPoints && customer != null)
+            if (_rewardPointsSettings.Enabled && 
+                customer != null && customer.UseRewardPointsDuringCheckout && 
+                !ignoreRewardPonts)
             {
                 int rewardPointsBalance = customer.GetRewardPointsBalance();
                 decimal rewardPointsBalanceAmount = ConvertRewardPointsToAmount(rewardPointsBalance);

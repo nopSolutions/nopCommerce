@@ -104,12 +104,12 @@ namespace Nop.Web.Controllers
         #region Utilities
 
         [NonAction]
-        private bool IsPaymentWorkflowRequired(IList<ShoppingCartItem> cart)
+        private bool IsPaymentWorkflowRequired(IList<ShoppingCartItem> cart, bool ignoreRewardPoints = false)
         {
             bool result = true;
 
             //check whether order total equals zero
-            decimal? shoppingCartTotalBase = _orderTotalCalculationService.GetShoppingCartTotal(cart);
+            decimal? shoppingCartTotalBase = _orderTotalCalculationService.GetShoppingCartTotal(cart, ignoreRewardPoints);
             if (shoppingCartTotalBase.HasValue && shoppingCartTotalBase.Value == decimal.Zero)
                 result = false;
             return result;
@@ -571,7 +571,8 @@ namespace Nop.Web.Controllers
                 return new HttpUnauthorizedResult();
 
             //Check whether payment workflow is required
-            bool isPaymentWorkflowRequired = IsPaymentWorkflowRequired(cart);
+            //we ignore reward points during cart total calculation
+            bool isPaymentWorkflowRequired = IsPaymentWorkflowRequired(cart, true);
             if (!isPaymentWorkflowRequired)
             {
                 _workContext.CurrentCustomer.SelectedPaymentMethodSystemName = "";
@@ -609,6 +610,10 @@ namespace Nop.Web.Controllers
             if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
                 return new HttpUnauthorizedResult();
 
+            //reward points
+            _workContext.CurrentCustomer.UseRewardPointsDuringCheckout = model.UseRewardPoints;
+            _customerService.UpdateCustomer(_workContext.CurrentCustomer);
+
             //Check whether payment workflow is required
             bool isPaymentWorkflowRequired = IsPaymentWorkflowRequired(cart);
             if (!isPaymentWorkflowRequired)
@@ -620,10 +625,6 @@ namespace Nop.Web.Controllers
             //payment method 
             if (String.IsNullOrEmpty(paymentmethod))
                 return PaymentMethod();
-
-            //reward points
-            _workContext.CurrentCustomer.UseRewardPointsDuringCheckout = model.UseRewardPoints;
-            _customerService.UpdateCustomer(_workContext.CurrentCustomer);
 
             var paymentMethodInst = _paymentService.LoadPaymentMethodBySystemName(paymentmethod);
             if (paymentMethodInst == null || !paymentMethodInst.IsPaymentMethodActive(_paymentSettings))
@@ -941,16 +942,41 @@ namespace Nop.Web.Controllers
                     //shipping is not required
                     _customerService.SaveCustomerAttribute<ShippingOption>(_workContext.CurrentCustomer, SystemCustomerAttributeNames.LastShippingOption, null);
 
-                    var paymentMethodModel = PreparePaymentMethodModel(cart);
-                    return Json(new
+
+                    //Check whether payment workflow is required
+                    //we ignore reward points during cart total calculation
+                    bool isPaymentWorkflowRequired = IsPaymentWorkflowRequired(cart, true);
+                    if (isPaymentWorkflowRequired)
                     {
-                        update_section = new UpdateSectionJsonModel()
+                        //payment is required
+                        var paymentMethodModel = PreparePaymentMethodModel(cart);
+                        return Json(new
                         {
-                            name = "payment-method",
-                            html = RenderPartialViewToString("OpcPaymentMethods", paymentMethodModel)
-                        },
-                        goto_section = "payment_method"
-                    });
+                            update_section = new UpdateSectionJsonModel()
+                            {
+                                name = "payment-method",
+                                html = RenderPartialViewToString("OpcPaymentMethods", paymentMethodModel)
+                            },
+                            goto_section = "payment_method"
+                        });
+                    }
+                    else
+                    {
+                        //payment is not required
+                        _workContext.CurrentCustomer.SelectedPaymentMethodSystemName = "";
+                        _customerService.UpdateCustomer(_workContext.CurrentCustomer);
+
+                        var confirmOrderModel = PrepareConfirmOrderModel(cart);
+                        return Json(new
+                        {
+                            update_section = new UpdateSectionJsonModel()
+                            {
+                                name = "confirm-order",
+                                html = RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
+                            },
+                            goto_section = "confirm_order"
+                        });
+                    }
                 }
             }
             catch (Exception exc)
@@ -1093,7 +1119,7 @@ namespace Nop.Web.Controllers
                 _customerService.SaveCustomerAttribute<ShippingOption>(_workContext.CurrentCustomer, SystemCustomerAttributeNames.LastShippingOption, shippingOption);
 
 
-                bool isPaymentWorkflowRequired = IsPaymentWorkflowRequired(cart);
+                bool isPaymentWorkflowRequired = IsPaymentWorkflowRequired(cart, true);
                 if (isPaymentWorkflowRequired)
                 {
                     //payment is required
@@ -1161,6 +1187,27 @@ namespace Nop.Web.Controllers
                 //reward points
                 _workContext.CurrentCustomer.UseRewardPointsDuringCheckout = model.UseRewardPoints;
                 _customerService.UpdateCustomer(_workContext.CurrentCustomer);
+
+                //Check whether payment workflow is required
+                //we ignore reward points during cart total calculation
+                bool isPaymentWorkflowRequired = IsPaymentWorkflowRequired(cart);
+                if (!isPaymentWorkflowRequired)
+                {
+                    //payment is not required
+                    _workContext.CurrentCustomer.SelectedPaymentMethodSystemName = "";
+                    _customerService.UpdateCustomer(_workContext.CurrentCustomer);
+
+                    var confirmOrderModel = PrepareConfirmOrderModel(cart);
+                    return Json(new
+                    {
+                        update_section = new UpdateSectionJsonModel()
+                        {
+                            name = "confirm-order",
+                            html = RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
+                        },
+                        goto_section = "confirm_order"
+                    });
+                }
 
                 var paymentMethodInst = _paymentService.LoadPaymentMethodBySystemName(paymentmethod);
                 if (paymentMethodInst == null || !paymentMethodInst.IsPaymentMethodActive(_paymentSettings))
