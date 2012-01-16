@@ -73,6 +73,7 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
             foreach (var c in countries)
                 model.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString() });
             model.LimitMethodsToCreated = _shippingByWeightSettings.LimitMethodsToCreated;
+            model.CalculatePerWeightUnit = _shippingByWeightSettings.CalculatePerWeightUnit;
             model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
             model.BaseWeightIn = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).Name;
 
@@ -210,6 +211,7 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
         {
             //save settings
             _shippingByWeightSettings.LimitMethodsToCreated = model.LimitMethodsToCreated;
+            _shippingByWeightSettings.CalculatePerWeightUnit = model.CalculatePerWeightUnit;
             _settingService.SaveSetting(_shippingByWeightSettings);
             
             return Configure();
