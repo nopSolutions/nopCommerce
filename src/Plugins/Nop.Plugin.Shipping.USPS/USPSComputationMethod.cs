@@ -589,7 +589,8 @@ namespace Nop.Plugin.Shipping.USPS
                 return response;
             }
 
-            getShippingOptionRequest.ZipPostalCodeFrom = _uspsSettings.ZipPostalCodeFrom;
+            if (String.IsNullOrEmpty(getShippingOptionRequest.ZipPostalCodeFrom))
+                getShippingOptionRequest.ZipPostalCodeFrom = _uspsSettings.ZipPostalCodeFrom;
 
 
             bool isDomestic = IsDomesticRequest(getShippingOptionRequest);
