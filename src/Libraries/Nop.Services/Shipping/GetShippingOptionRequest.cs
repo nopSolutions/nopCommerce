@@ -49,9 +49,9 @@ namespace Nop.Services.Shipping
         #region Methods
 
         /// <summary>
-        /// Gets total weight
+        /// Gets total width
         /// </summary>
-        /// <returns>Total weight</returns>
+        /// <returns>Total width</returns>
         public decimal GetTotalWidth()
         {
             decimal totalWidth = decimal.Zero;
