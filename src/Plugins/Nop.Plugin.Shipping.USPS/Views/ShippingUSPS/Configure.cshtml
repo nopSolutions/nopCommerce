@@ -53,9 +53,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
-                <b>Domestic</b> Carrier Services:
-                <br />
-                -select the services you want to offer to customers.
+                @Html.NopLabelFor(model => model.AvailableCarrierServicesDomestic):
             </td>
             <td class="adminData">
                 <div style="height: 250px; width: 300px; overflow: auto; border: solid 1px #bbb;">
@@ -70,9 +68,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
-                <b>International</b> Carrier Services:
-                <br />
-                -select the services you want to offer to customers.
+                @Html.NopLabelFor(model => model.AvailableCarrierServicesInternational):
             </td>
             <td class="adminData">
                 <div style="height: 250px; width: 300px; overflow: auto; border: solid 1px #bbb;">
@@ -87,8 +83,7 @@
         </tr>
         <tr>
             <td colspan="2" width="100%">
-                <button type="submit" name="save" value="save" class="t-button">
-                    Save</button>
+                <button type="submit" name="save" value="save" class="t-button">@T("Admin.Common.Save")</button>
             </td>
         </tr>
     </table>    

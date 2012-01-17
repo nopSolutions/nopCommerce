@@ -85,8 +85,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
         [ChildActionOnly]
         public ActionResult PaymentInfo()
         {
-            var model = new PaymentInfoModel();
-            return View("Nop.Plugin.Payments.PayPalStandard.Views.PaymentPayPalStandard.PaymentInfo", model);
+            return View("Nop.Plugin.Payments.PayPalStandard.Views.PaymentPayPalStandard.PaymentInfo");
         }
 
         [NonAction]

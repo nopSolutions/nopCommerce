@@ -170,6 +170,540 @@ set @resources='
   <LocaleResource Name="Plugins.Shipping.ByWeight.Fields.CalculatePerWeightUnit.Hint">
     <Value>If you check this option, then rates are multipied per weight unit (lb, kg, etc). This option is used for the fixed rates (without percents).</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Requirements.FailedToSave">
+    <Value>Failed to save requirement</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.DiscountRules.BillingCountry.Fields.SelectCountry">
+    <Value>Select country</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.DiscountRules.ShippingCountry.Fields.SelectCountry">
+    <Value>Select country</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.ExchangeRate.EcbExchange.SetCurrencyToEURO">
+    <Value>You can use ECB (European central bank) exchange rate provider only when exchange rate currency code is set to EURO</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.ExternalAuth.Facebook.Login">
+    <Value>Login using Facebook account</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.ExternalAuth.OpenId.Login">
+    <Value>Login using OpenID account</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.ExternalAuth.OpenId.YourAccount">
+    <Value>Please click your account provider</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.ExternalAuth.OpenId.Manually">
+    <Value>Enter manually your OpenID</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.ExternalAuth.OpenId.SignIn">
+    <Value>Sign In</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.ExternalAuth.Twitter.Login">
+    <Value>Login using Twitter account</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugin.Misc.MailChimp.ManualSync.Hint">
+    <Value>Manually synchronize nopCommerce newsletter subscribers with MailChimp database</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugin.Misc.MailChimp.QueueAll.Hint">
+    <Value>Queue existing newsletter subscribers (run only once)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugin.Misc.MailChimp.AutoSyncRestart">
+    <Value>If sync task period has been changed, please restart the application</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Misc.WebServices.Description1">
+    <Value>Actually configuration is not required. Just some notes:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Misc.WebServices.Description2">
+    <Value>Ensure that permissions are properly configured on Access Control List page (disabled by default)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Misc.WebServices.Description3">
+    <Value>To access service use {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Misc.WebServices.Description4">
+    <Value>For mex endpoint use {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.AuthorizeNet.Notes">
+    <Value>If you''re using this gateway ensure that your primary store currency is supported by Authorize.NET.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.AuthorizeNet.Fields.UseSandbox">
+    <Value>Use Sandbox</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.AuthorizeNet.Fields.UseSandbox.Hint">
+    <Value>Check to enable Sandbox (testing environment).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.AuthorizeNet.Fields.TransactModeValues">
+    <Value>Transaction mode</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.AuthorizeNet.Fields.TransactModeValues.Hint">
+    <Value>Choose transaction mode</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.AuthorizeNet.Fields.TransactionKey">
+    <Value>Transaction key</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.AuthorizeNet.Fields.TransactionKey.Hint">
+    <Value>Specify transaction key</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.AuthorizeNet.Fields.LoginId">
+    <Value>Login ID</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.AuthorizeNet.Fields.LoginId.Hint">
+    <Value>Specify login identifier.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.AuthorizeNet.Fields.AdditionalFee">
+    <Value>Additional fee</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.AuthorizeNet.Fields.AdditionalFee.Hint">
+    <Value>Enter additional fee to charge your customers.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.GoogleCheckout.Fields.UseSandbox">
+    <Value>Use Sandbox</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.GoogleCheckout.Fields.UseSandbox.Hint">
+    <Value>Check to enable Sandbox (testing environment).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.GoogleCheckout.Fields.GoogleVendorId">
+    <Value>Google Vendor ID</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.GoogleCheckout.Fields.GoogleVendorId.Hint">
+    <Value>Specify Google Vendor ID.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.GoogleCheckout.Fields.GoogleMerchantKey">
+    <Value>Google Merchant Key</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.GoogleCheckout.Fields.GoogleMerchantKey.Hint">
+    <Value>Specify Google Merchant Key.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.GoogleCheckout.Fields.AuthenticateCallback">
+    <Value>Authenticate callback</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.GoogleCheckout.Fields.AuthenticateCallback.Hint">
+    <Value>Check to ensure that Google handler callback is authenticated.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Manual.Fields.AdditionalFee">
+    <Value>Additional fee</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Manual.Fields.AdditionalFee.Hint">
+    <Value>Enter additional fee to charge your customers.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Manual.Fields.TransactMode">
+    <Value>After checkout mark payment as</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Manual.Fields.TransactMode.Hint">
+    <Value>Specify transaction mode.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalDirect.Fields.UseSandbox">
+    <Value>Use Sandbox</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalDirect.Fields.UseSandbox.Hint">
+    <Value>Check to enable Sandbox (testing environment).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalDirect.Fields.TransactMode">
+    <Value>Transaction mode</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalDirect.Fields.TransactMode.Hint">
+    <Value>Specify transaction mode.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalDirect.Fields.ApiAccountName">
+    <Value>API Account Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalDirect.Fields.ApiAccountName.Hint">
+    <Value>Specify API account name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalDirect.Fields.ApiAccountPassword">
+    <Value>API Account Password</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalDirect.Fields.ApiAccountPassword.Hint">
+    <Value>Specify API account password.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalDirect.Fields.Signature">
+    <Value>Signature</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalDirect.Fields.Signature.Hint">
+    <Value>Specify signature.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalDirect.Fields.AdditionalFee">
+    <Value>Additional fee</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalDirect.Fields.AdditionalFee.Hint">
+    <Value>Enter additional fee to charge your customers.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalStandard.Fields.RedirectionTip">
+    <Value>You will be redirected to PayPal site to complete the order.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalStandard.Fields.UseSandbox">
+    <Value>Use Sandbox</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalStandard.Fields.UseSandbox.Hint">
+    <Value>Check to enable Sandbox (testing environment).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalStandard.Fields.BusinessEmail">
+    <Value>Business Email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalStandard.Fields.BusinessEmail.Hint">
+    <Value>Specify your PayPal business email.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalStandard.Fields.PDTToken">
+    <Value>PDT Identity Token</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalStandard.Fields.PDTToken.Hint">
+    <Value>Specify PDT identity token</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalStandard.Fields.PDTValidateOrderTotal">
+    <Value>PDT. Validate order total</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalStandard.Fields.PDTValidateOrderTotal.Hint">
+    <Value>Check if PDT handler should validate order totals.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalStandard.Fields.AdditionalFee">
+    <Value>Additional fee</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalStandard.Fields.AdditionalFee.Hint">
+    <Value>Enter additional fee to charge your customers.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalStandard.Fields.PassProductNamesAndTotals">
+    <Value>Pass product names and order totals to PayPal</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalStandard.Fields.PassProductNamesAndTotals.Hint">
+    <Value>Check if product names and order totals should be passed to PayPal.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalStandard.Fields.EnableIpn">
+    <Value>Enable IPN (Instant Payment Notification)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalStandard.Fields.EnableIpn.Hint">
+    <Value>Check if IPN is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalStandard.Fields.IpnUrl">
+    <Value>IPN Handler</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalStandard.Fields.IpnUrl.Hint">
+    <Value>Specify IPN Handler.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.PayPalStandard.Fields.EnableIpn.Hint2">
+    <Value>Leave blank to use the default IPN handler url.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.AustraliaPost.Fields.GatewayUrl">
+    <Value>Gateway URL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.AustraliaPost.Fields.GatewayUrl.Hint">
+    <Value>Specify gateway URL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.AustraliaPost.Fields.AdditionalHandlingCharge">
+    <Value>Additional handling charge.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.AustraliaPost.Fields.AdditionalHandlingCharge.Hint">
+    <Value>Enter additional handling fee to charge your customers.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.AustraliaPost.Fields.ShippedFromZipPostalCode">
+    <Value>Shipped from zip</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.AustraliaPost.Fields.ShippedFromZipPostalCode.Hint">
+    <Value>Specify origin zip code.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.ByWeight.AddRecord">
+    <Value>Add record</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.ByWeight.AddRecord.Hint">
+    <Value>Adding a new record</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.CanadaPost.Fields.Url">
+    <Value>Canada Post URL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.CanadaPost.Fields.Url.Hint">
+    <Value>Specify Canada Post URL.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.CanadaPost.Fields.Port">
+    <Value>Canada Post Port</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.CanadaPost.Fields.Port.Hint">
+    <Value>Specify Canada Post port.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.CanadaPost.Fields.CustomerId">
+    <Value>Canada Post Customer ID</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.CanadaPost.Fields.CustomerId.Hint">
+    <Value>Specify Canada Post customer identifer.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.Fedex.Fields.Url">
+    <Value>URL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.Fedex.Fields.Url.Hint">
+    <Value>Specify FedEx URL.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.Fedex.Fields.Key">
+    <Value>Key</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.Fedex.Fields.Key.Hint">
+    <Value>Specify FedEx key.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.Fedex.Fields.Password">
+    <Value>Password</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.Fedex.Fields.Password.Hint">
+    <Value>Specify FedEx password.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.Fedex.Fields.AccountNumber">
+    <Value>Account number</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.Fedex.Fields.AccountNumber.Hint">
+    <Value>Specify FedEx account number.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.Fedex.Fields.MeterNumber">
+    <Value>Meter number</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.Fedex.Fields.MeterNumber.Hint">
+    <Value>Specify FedEx meter number.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.Fedex.Fields.UseResidentialRates">
+    <Value>Use residential rates</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.Fedex.Fields.UseResidentialRates.Hint">
+    <Value>Check to use residential rates.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.Fedex.Fields.ApplyDiscounts">
+    <Value>Use discounted rates</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.Fedex.Fields.ApplyDiscounts.Hint">
+    <Value>Check to use discounted rates (instead of list rates).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.Fedex.Fields.AdditionalHandlingCharge">
+    <Value>Additional handling charge</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.Fedex.Fields.AdditionalHandlingCharge.Hint">
+    <Value>Enter additional handling fee to charge your customers.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.Fedex.Fields.CarrierServices">
+    <Value>Carrier Services Offered</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.Fedex.Fields.CarrierServices.Hint">
+    <Value>Select the services you want to offer to customers.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.Fedex.Fields.Street">
+    <Value>Shipping origin. Street</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.Fedex.Fields.Street.Hint">
+    <Value>Specify origin street.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.Fedex.Fields.City">
+    <Value>Shipping origin. City</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.Fedex.Fields.City.Hint">
+    <Value>Specify origin city.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.Fedex.Fields.StateOrProvinceCode">
+    <Value>Shipping origin. State code (2 characters)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.Fedex.Fields.StateOrProvinceCode.Hint">
+    <Value>Specify origin state code (2 characters).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.Fedex.Fields.PostalCode">
+    <Value>Shipping origin. Zip</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.Fedex.Fields.PostalCode.Hint">
+    <Value>Specify origin zip code.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.Fedex.Fields.CountryCode">
+    <Value>Shipping origin. Country code</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.Fedex.Fields.CountryCode.Hint">
+    <Value>Specify origin country code.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedRateShipping.Fields.ShippingMethodName">
+    <Value>Shipping method</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedRateShipping.Fields.Rate">
+    <Value>Rate</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.Url">
+    <Value>URL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.Url.Hint">
+    <Value>Specify UPS URL.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.AccessKey">
+    <Value>Access Key</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.AccessKey.Hint">
+    <Value>Specify UPS access key.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.Username">
+    <Value>Username</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.Username.Hint">
+    <Value>Specify UPS username.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.Password">
+    <Value>Password</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.Password.Hint">
+    <Value>Specify UPS password.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.AdditionalHandlingCharge">
+    <Value>Additional handling charge</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.AdditionalHandlingCharge.Hint">
+    <Value>Enter additional handling fee to charge your customers.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.InsurePackage">
+    <Value>Insure package</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.InsurePackage.Hint">
+    <Value>Check to ensure packages.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.CustomerClassification">
+    <Value>UPS Customer Classification</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.CustomerClassification.Hint">
+    <Value>Choose customer classification.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.PickupType">
+    <Value>UPS Pickup Type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.PickupType.Hint">
+    <Value>Choose UPS pickup type.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.PackagingType">
+    <Value>UPS Packaging Type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.PackagingType.Hint">
+    <Value>Choose UPS packaging type.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.DefaultShippedFromCountry">
+    <Value>Shipped from country</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.DefaultShippedFromCountry.Hint">
+    <Value>Specify origin country.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.DefaultShippedFromZipPostalCode">
+    <Value>Shipped from zip</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.DefaultShippedFromZipPostalCode.Hint">
+    <Value>Specify origin zip code.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.AvailableCarrierServices">
+    <Value>Carrier Services</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Fields.AvailableCarrierServices.Hint">
+    <Value>Select the services you want to offer to customers.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.USPS.Fields.Url">
+    <Value>URL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.USPS.Fields.Url.Hint">
+    <Value>Specify USPS URL.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.USPS.Fields.Username">
+    <Value>Username</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.USPS.Fields.Username.Hint">
+    <Value>Specify USPS username.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.USPS.Fields.Password">
+    <Value>Password</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.USPS.Fields.Password.Hint">
+    <Value>Specify USPS password.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.USPS.Fields.AdditionalHandlingCharge">
+    <Value>Additional handling charge</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.USPS.Fields.AdditionalHandlingCharge.Hint">
+    <Value>Enter additional handling fee to charge your customers.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.USPS.Fields.ZipPostalCodeFrom">
+    <Value>Shipped from zip</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.USPS.Fields.ZipPostalCodeFrom.Hint">
+    <Value>Specify origin zip code.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.USPS.Fields.AvailableCarrierServicesDomestic">
+    <Value>Domestic Carrier Services</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.USPS.Fields.AvailableCarrierServicesDomestic.Hint">
+    <Value>Select the services you want to offer to customers.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.USPS.Fields.AvailableCarrierServicesInternational">
+    <Value>International Carrier Services</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.USPS.Fields.AvailableCarrierServicesInternational.Hint">
+    <Value>Select the services you want to offer to customers.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Sms.Clickatell.SendTest">
+    <Value>Send</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Sms.Clickatell.SendTest.Hint">
+    <Value>Send test message</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Sms.Verizon.SendTest">
+    <Value>Send</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Sms.Verizon.SendTest.Hint">
+    <Value>Send test message</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.CountryStateZip.AddRecord">
+    <Value>Add tax rate</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.CountryStateZip.AddRecord.Hint">
+    <Value>Adding a new tax rate</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.FixedRate.Fields.TaxCategoryName">
+    <Value>Tax category</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.FixedRate.Fields.Rate">
+    <Value>Rate</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.StrikeIron.UserId">
+    <Value>StrikeIron User ID</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.StrikeIron.UserId.Hint">
+    <Value>Specify StrikeIron user identifer.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.StrikeIron.Password">
+    <Value>StrikeIron Password</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.StrikeIron.Password.Hint">
+    <Value>Specify StrikeIron password.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.StrikeIron.TestingUsa.Button">
+    <Value>Test (USA)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.StrikeIron.TestingUsa.Title">
+    <Value>Test Online Tax Service (USA)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.StrikeIron.TestingUsa.Zip">
+    <Value>Zip Code</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.StrikeIron.TestingUsa.Zip.Hint">
+    <Value>Specify zip code for testing.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.StrikeIron.TestingCanada.Button">
+    <Value>Test (Canada)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.StrikeIron.TestingCanada.Title">
+    <Value>Test Online Tax Service (Canada)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.StrikeIron.TestingCanada.ProvinceCode">
+    <Value>Two Letter Province Code</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.StrikeIron.TestingCanada.ProvinceCode.Hint">
+    <Value>Specify postal code for testing.</Value>
+  </LocaleResource>
+  <LocaleResource Name="">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 

@@ -15,22 +15,22 @@ namespace Nop.Plugin.ExchangeRate.McExchange
         /// </summary>
         /// <param name="exchangeRateCurrencyCode">Exchange rate currency code</param>
         /// <returns>Exchange rates</returns>
-        public IList<Nop.Core.Domain.Directory.ExchangeRate> GetCurrencyLiveRates(string exchangeRateCurrencyCode)
+        public IList<Core.Domain.Directory.ExchangeRate> GetCurrencyLiveRates(string exchangeRateCurrencyCode)
         {
-            var exchangeRates = new List<Nop.Core.Domain.Directory.ExchangeRate>();
+            var exchangeRates = new List<Core.Domain.Directory.ExchangeRate>();
             string url = string.Format("http://themoneyconverter.com/rss-feed/{0}/rss.xml", exchangeRateCurrencyCode);
 
-            HttpWebRequest request = WebRequest.Create(url) as HttpWebRequest;
-            using (WebResponse response = request.GetResponse())
+            var request = WebRequest.Create(url) as HttpWebRequest;
+            using (var response = request.GetResponse())
             {
-                XmlDocument xmlDoc = new XmlDocument();
+                var xmlDoc = new XmlDocument();
                 xmlDoc.Load(response.GetResponseStream());
-                XmlNamespaceManager nsmgr = new XmlNamespaceManager(xmlDoc.NameTable);
+                var nsmgr = new XmlNamespaceManager(xmlDoc.NameTable);
                 nsmgr.AddNamespace("atom", "http://www.w3.org/2005/Atom");
                 nsmgr.AddNamespace("cf", "http://www.microsoft.com/schemas/rss/core/2005");
                 nsmgr.AddNamespace("cfi", "http://www.microsoft.com/schemas/rss/core/2005/internal");
 
-                NumberFormatInfo provider = new NumberFormatInfo();
+                var provider = new NumberFormatInfo();
                 provider.NumberDecimalSeparator = ".";
                 provider.NumberGroupSeparator = "";
 
@@ -55,7 +55,7 @@ namespace Nop.Plugin.ExchangeRate.McExchange
                                   <cfi:lastdownloadtime>2009-02-20T08:05:27.168Z</cfi:lastdownloadtime>
                                 </item>
                         */
-                        Nop.Core.Domain.Directory.ExchangeRate rate = new Nop.Core.Domain.Directory.ExchangeRate();
+                        var rate = new Core.Domain.Directory.ExchangeRate();
                         foreach (XmlNode detailNode in node.ChildNodes)
                         {
                             switch (detailNode.Name)

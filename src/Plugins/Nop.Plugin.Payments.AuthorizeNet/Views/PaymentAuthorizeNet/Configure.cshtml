@@ -7,12 +7,11 @@
 @using (Html.BeginForm())
 {
     <table class="adminContent">
-    <tr>
-        <td colspan="2">
-            <b>If you're using this gateway ensure that your primary store currency is supported
-                by Authorize.NET.</b>
-        </td>
-    </tr>
+        <tr>
+            <td colspan="2">
+                <b>@T("Plugins.Payments.AuthorizeNet.Notes")</b>
+            </td>
+        </tr>
         <tr>
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.UseSandbox):
@@ -60,7 +59,7 @@
         <tr>
             <td colspan="2" width="100%">
                 <button type="submit" name="save" value="save" class="t-button">
-                    Save</button>
+                    @T("Admin.Common.Save")</button>
             </td>
         </tr>
     </table>

@@ -56,6 +56,8 @@ namespace Nop.Plugin.ExternalAuth.Facebook
         /// </summary>
         public override void Install()
         {
+            //locales
+            this.AddOrUpdatePluginLocaleResource("Plugins.ExternalAuth.Facebook.Login", "Login using Facebook account");
             this.AddOrUpdatePluginLocaleResource("Plugins.ExternalAuth.Facebook.ClientKeyIdentifier", "Client key identifier");
             this.AddOrUpdatePluginLocaleResource("Plugins.ExternalAuth.Facebook.ClientKeyIdentifier.Hint", "Enter your client key identifier here.");
             this.AddOrUpdatePluginLocaleResource("Plugins.ExternalAuth.Facebook.ClientSecret", "Client secret");
@@ -63,6 +65,19 @@ namespace Nop.Plugin.ExternalAuth.Facebook
 
             base.Install();
         }
+
+        public override void Uninstall()
+        {
+            //locales
+            this.DeletePluginLocaleResource("Plugins.ExternalAuth.Facebook.Login");
+            this.DeletePluginLocaleResource("Plugins.ExternalAuth.Facebook.ClientKeyIdentifier");
+            this.DeletePluginLocaleResource("Plugins.ExternalAuth.Facebook.ClientKeyIdentifier.Hint");
+            this.DeletePluginLocaleResource("Plugins.ExternalAuth.Facebook.ClientSecret");
+            this.DeletePluginLocaleResource("Plugins.ExternalAuth.Facebook.ClientSecret.Hint");
+
+            base.Uninstall();
+        }
+
         #endregion
         
     }

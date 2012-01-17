@@ -12,15 +12,16 @@ using System.Text;
 using System.Web.Routing;
 using System.Xml;
 using Nop.Core;
+using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Plugins;
 using Nop.Plugin.Shipping.UPS.Domain;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
+using Nop.Services.Localization;
 using Nop.Services.Orders;
 using Nop.Services.Shipping;
-using Nop.Core.Domain.Directory;
 
 namespace Nop.Plugin.Shipping.UPS
 {
@@ -71,7 +72,7 @@ namespace Nop.Plugin.Shipping.UPS
 
         #region Utilities
 
-        private string CreateRequest(string AccessKey, string Username, string Password,
+        private string CreateRequest(string accessKey, string username, string password,
             GetShippingOptionRequest getShippingOptionRequest, UPSCustomerClassification customerClassification,
             UPSPickupType pickupType, UPSPackagingType packagingType)
         {
@@ -113,9 +114,9 @@ namespace Nop.Plugin.Shipping.UPS
             var sb = new StringBuilder();
             sb.Append("<?xml version='1.0'?>");
             sb.Append("<AccessRequest xml:lang='en-US'>");
-            sb.AppendFormat("<AccessLicenseNumber>{0}</AccessLicenseNumber>", AccessKey);
-            sb.AppendFormat("<UserId>{0}</UserId>", Username);
-            sb.AppendFormat("<Password>{0}</Password>", Password);
+            sb.AppendFormat("<AccessLicenseNumber>{0}</AccessLicenseNumber>", accessKey);
+            sb.AppendFormat("<UserId>{0}</UserId>", username);
+            sb.AppendFormat("<Password>{0}</Password>", password);
             sb.Append("</AccessRequest>");
             sb.Append("<?xml version='1.0'?>");
             sb.Append("<RatingServiceSelectionRequest xml:lang='en-US'>");
@@ -587,6 +588,7 @@ namespace Nop.Plugin.Shipping.UPS
         /// </summary>
         public override void Install()
         {
+            //settings
             var settings = new UPSSettings()
             {
                 Url = "https://www.ups.com/ups.app/xml/Rate",
@@ -601,7 +603,67 @@ namespace Nop.Plugin.Shipping.UPS
             };
             _settingService.SaveSetting(settings);
 
+            //locales
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.Url", "URL");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.Url.Hint", "Specify UPS URL.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.AccessKey", "Access Key");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.AccessKey.Hint", "Specify UPS access key.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.Username", "Username");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.Username.Hint", "Specify UPS username.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.Password", "Password");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.Password.Hint", "Specify UPS password.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.AdditionalHandlingCharge", "Additional handling charge");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.AdditionalHandlingCharge.Hint", "Enter additional handling fee to charge your customers.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.InsurePackage", "Insure package");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.InsurePackage.Hint", "Check to ensure packages.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.CustomerClassification", "UPS Customer Classification");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.CustomerClassification.Hint", "Choose customer classification.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.PickupType", "UPS Pickup Type");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.PickupType.Hint", "Choose UPS pickup type.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.PackagingType", "UPS Packaging Type");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.PackagingType.Hint", "Choose UPS packaging type.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.DefaultShippedFromCountry", "Shipped from country");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.DefaultShippedFromCountry.Hint", "Specify origin country.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.DefaultShippedFromZipPostalCode", "Shipped from zip");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.DefaultShippedFromZipPostalCode.Hint", "Specify origin zip code.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.AvailableCarrierServices", "Carrier Services");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.AvailableCarrierServices.Hint", "Select the services you want to offer to customers.");
+
             base.Install();
+        }
+
+        /// <summary>
+        /// Uninstall plugin
+        /// </summary>
+        public override void Uninstall()
+        {
+            //locales
+            this.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.Url");
+            this.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.Url.Hint");
+            this.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.AccessKey");
+            this.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.AccessKey.Hint");
+            this.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.Username");
+            this.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.Username.Hint");
+            this.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.Password");
+            this.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.Password.Hint");
+            this.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.AdditionalHandlingCharge");
+            this.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.AdditionalHandlingCharge.Hint");
+            this.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.InsurePackage");
+            this.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.InsurePackage.Hint");
+            this.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.CustomerClassification");
+            this.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.CustomerClassification.Hint");
+            this.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.PickupType");
+            this.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.PickupType.Hint");
+            this.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.PackagingType");
+            this.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.PackagingType.Hint");
+            this.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.DefaultShippedFromCountry");
+            this.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.DefaultShippedFromCountry.Hint");
+            this.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.DefaultShippedFromZipPostalCode");
+            this.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.DefaultShippedFromZipPostalCode.Hint");
+            this.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.AvailableCarrierServices");
+            this.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.AvailableCarrierServices.Hint");
+
+            base.Uninstall();
         }
 
         #endregion

@@ -56,6 +56,8 @@ namespace Nop.Plugin.ExternalAuth.Twitter
         /// </summary>
         public override void Install()
         {
+            //locales
+            this.AddOrUpdatePluginLocaleResource("Plugins.ExternalAuth.Twitter.Login", "Login using Twitter account");
             this.AddOrUpdatePluginLocaleResource("Plugins.ExternalAuth.Twitter.ConsumerKey", "Consumer key");
             this.AddOrUpdatePluginLocaleResource("Plugins.ExternalAuth.Twitter.ConsumerKey.Hint", "Enter your consumer key here.");
             this.AddOrUpdatePluginLocaleResource("Plugins.ExternalAuth.Twitter.ConsumerSecret", "Consumer secret");
@@ -63,6 +65,19 @@ namespace Nop.Plugin.ExternalAuth.Twitter
 
             base.Install();
         }
+
+        public override void Uninstall()
+        {
+            //locales
+            this.DeletePluginLocaleResource("Plugins.ExternalAuth.Twitter.Login");
+            this.DeletePluginLocaleResource("Plugins.ExternalAuth.Twitter.ConsumerKey");
+            this.DeletePluginLocaleResource("Plugins.ExternalAuth.Twitter.ConsumerKey.Hint");
+            this.DeletePluginLocaleResource("Plugins.ExternalAuth.Twitter.ConsumerSecret");
+            this.DeletePluginLocaleResource("Plugins.ExternalAuth.Twitter.ConsumerSecret.Hint");
+            
+            base.Uninstall();
+        }
+
         #endregion
         
     }

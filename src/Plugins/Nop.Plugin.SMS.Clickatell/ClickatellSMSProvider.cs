@@ -81,6 +81,7 @@ namespace Nop.Plugin.SMS.Clickatell
         /// </summary>
         public override void Install()
         {
+            //locales
             this.AddOrUpdatePluginLocaleResource("Plugins.Sms.Clickatell.TestFailed", "Test message sending failed");
             this.AddOrUpdatePluginLocaleResource("Plugins.Sms.Clickatell.TestSuccess", "Test message was sent");
             this.AddOrUpdatePluginLocaleResource("Plugins.Sms.Clickatell.Fields.ApiId", "API ID");
@@ -93,8 +94,34 @@ namespace Nop.Plugin.SMS.Clickatell
             this.AddOrUpdatePluginLocaleResource("Plugins.Sms.Clickatell.Fields.Username.Hint", "Clickatell username");
             this.AddOrUpdatePluginLocaleResource("Plugins.Sms.Clickatell.Fields.TestMessage", "Message text");
             this.AddOrUpdatePluginLocaleResource("Plugins.Sms.Clickatell.Fields.TestMessage.Hint", "Text of the test message");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Sms.Clickatell.SendTest", "Send");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Sms.Clickatell.SendTest.Hint", "Send test message");
 
             base.Install();
+        }
+
+        /// <summary>
+        /// Uninstall plugin
+        /// </summary>
+        public override void Uninstall()
+        {
+            //locales
+            this.DeletePluginLocaleResource("Plugins.Sms.Clickatell.TestFailed");
+            this.DeletePluginLocaleResource("Plugins.Sms.Clickatell.TestSuccess");
+            this.DeletePluginLocaleResource("Plugins.Sms.Clickatell.Fields.ApiId");
+            this.DeletePluginLocaleResource("Plugins.Sms.Clickatell.Fields.ApiId.Hint");
+            this.DeletePluginLocaleResource("Plugins.Sms.Clickatell.Fields.Password");
+            this.DeletePluginLocaleResource("Plugins.Sms.Clickatell.Fields.Password.Hint");
+            this.DeletePluginLocaleResource("Plugins.Sms.Clickatell.Fields.PhoneNumber");
+            this.DeletePluginLocaleResource("Plugins.Sms.Clickatell.Fields.PhoneNumber.Hint");
+            this.DeletePluginLocaleResource("Plugins.Sms.Clickatell.Fields.Username");
+            this.DeletePluginLocaleResource("Plugins.Sms.Clickatell.Fields.Username.Hint");
+            this.DeletePluginLocaleResource("Plugins.Sms.Clickatell.Fields.TestMessage");
+            this.DeletePluginLocaleResource("Plugins.Sms.Clickatell.Fields.TestMessage.Hint");
+            this.DeletePluginLocaleResource("Plugins.Sms.Clickatell.SendTest");
+            this.DeletePluginLocaleResource("Plugins.Sms.Clickatell.SendTest.Hint");
+
+            base.Uninstall();
         }
     }
 }

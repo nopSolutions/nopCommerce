@@ -66,7 +66,7 @@
             
             <br />
             <br />
-            <b>The first way is to ckeck 'Enable IPN' below.</b> It will include in the request the url of you IPN handler
+            <b>The first way is to check 'Enable IPN' below.</b> It will include in the request the url of you IPN handler
             
             <br />
             <br />
@@ -157,7 +157,7 @@
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.IpnUrl):
                 <br />
-                <i>Leave blank to use the default IPN handler url.</i>
+                <i>@T("Plugins.Payments.PayPalStandard.Fields.EnableIpn.Hint2")</i>
             </td>
             <td class="adminData">
                 @Html.EditorFor(model => model.IpnUrl)
@@ -167,7 +167,7 @@
         <tr>
             <td colspan="2" width="100%">
                 <button type="submit" name="save" value="save" class="t-button">
-                    Save</button>
+                    @T("Admin.Common.Save")</button>
             </td>
         </tr>
     </table>

@@ -51,9 +51,20 @@ namespace Nop.Plugin.DiscountRules.ShippingCountry
 
         public override void Install()
         {
+            //locales
+            this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRules.ShippingCountry.Fields.SelectCountry", "Select country");
             this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRules.ShippingCountry.Fields.Country", "Shipping country");
             this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRules.ShippingCountry.Fields.Country.Hint", "Select required shipping country.");
             base.Install();
+        }
+
+        public override void Uninstall()
+        {
+            //locales
+            this.DeletePluginLocaleResource("Plugins.DiscountRules.ShippingCountry.Fields.SelectCountry");
+            this.DeletePluginLocaleResource("Plugins.DiscountRules.ShippingCountry.Fields.Country");
+            this.DeletePluginLocaleResource("Plugins.DiscountRules.ShippingCountry.Fields.Country.Hint");
+            base.Uninstall();
         }
     }
 }

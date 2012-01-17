@@ -24,7 +24,7 @@
                          }
                     },
                     error:function (xhr, ajaxOptions, thrownError){
-                        alert('Failed to save requirement.')
+                        alert('@T("Admin.Promotions.Discounts.Requirements.FailedToSave")')
                     }  
                 });
             });
@@ -37,7 +37,7 @@
                 @Html.NopLabelFor(model => model.CustomerRoleId):
             </td>
             <td class="adminData">
-                <div>@Html.DropDownListFor(model => model.CustomerRoleId, Model.AvailableCustomerRoles) <button type="button" name="savecustomerrolesrequirement@(Model.RequirementId)" id="savecustomerrolesrequirement@(Model.RequirementId)" class="t-button">Save</button></div>
+                <div>@Html.DropDownListFor(model => model.CustomerRoleId, Model.AvailableCustomerRoles) <button type="button" name="savecustomerrolesrequirement@(Model.RequirementId)" id="savecustomerrolesrequirement@(Model.RequirementId)" class="t-button">@T("Admin.Common.Save")</button></div>
                 <div id="pnl-save-requirement-result@(Model.RequirementId)" style="display:none;">@T("Admin.Promotions.Discounts.Requirements.Saved")</div>
             </td>
         </tr>

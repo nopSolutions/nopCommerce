@@ -183,6 +183,17 @@ namespace Nop.Plugin.Payments.PayInStore
             
             base.Install();
         }
+        
+        public override void Uninstall()
+        {
+            //locales
+            this.DeletePluginLocaleResource("Plugins.Payment.PayInStore.DescriptionText");
+            this.DeletePluginLocaleResource("Plugins.Payment.PayInStore.DescriptionText.Hint");
+            this.DeletePluginLocaleResource("Plugins.Payment.PayInStore.AdditionalFee");
+            this.DeletePluginLocaleResource("Plugins.Payment.PayInStore.AdditionalFee.Hint");
+            
+            base.Uninstall();
+        }
 
         #endregion
 

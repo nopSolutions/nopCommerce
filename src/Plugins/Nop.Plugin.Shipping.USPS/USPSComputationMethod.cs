@@ -19,6 +19,7 @@ using Nop.Core.Plugins;
 using Nop.Plugin.Shipping.USPS.Domain;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
+using Nop.Services.Localization;
 using Nop.Services.Shipping;
 using Nop.Services.Catalog;
 
@@ -644,6 +645,7 @@ namespace Nop.Plugin.Shipping.USPS
         /// </summary>
         public override void Install()
         {
+            //settings
             var settings = new USPSSettings()
             {
                 Url = "http://production.shippingapis.com/ShippingAPI.dll",
@@ -656,7 +658,48 @@ namespace Nop.Plugin.Shipping.USPS
             };
             _settingService.SaveSetting(settings);
 
+
+            //locales
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.USPS.Fields.Url", "URL");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.USPS.Fields.Url.Hint", "Specify USPS URL.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.USPS.Fields.Username", "Username");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.USPS.Fields.Username.Hint", "Specify USPS username.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.USPS.Fields.Password", "Password");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.USPS.Fields.Password.Hint", "Specify USPS password.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.USPS.Fields.AdditionalHandlingCharge", "Additional handling charge");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.USPS.Fields.AdditionalHandlingCharge.Hint", "Enter additional handling fee to charge your customers.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.USPS.Fields.ZipPostalCodeFrom", "Shipped from zip");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.USPS.Fields.ZipPostalCodeFrom.Hint", "Specify origin zip code.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.USPS.Fields.AvailableCarrierServicesDomestic", "Domestic Carrier Services");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.USPS.Fields.AvailableCarrierServicesDomestic.Hint", "Select the services you want to offer to customers.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.USPS.Fields.AvailableCarrierServicesInternational", "International Carrier Services");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.USPS.Fields.AvailableCarrierServicesInternational.Hint", "Select the services you want to offer to customers.");
+
             base.Install();
+        }
+
+        /// <summary>
+        /// Uninstall plugin
+        /// </summary>
+        public override void Uninstall()
+        {
+            //locales
+            this.DeletePluginLocaleResource("Plugins.Shipping.USPS.Fields.Url");
+            this.DeletePluginLocaleResource("Plugins.Shipping.USPS.Fields.Url.Hint");
+            this.DeletePluginLocaleResource("Plugins.Shipping.USPS.Fields.Username");
+            this.DeletePluginLocaleResource("Plugins.Shipping.USPS.Fields.Username.Hint");
+            this.DeletePluginLocaleResource("Plugins.Shipping.USPS.Fields.Password");
+            this.DeletePluginLocaleResource("Plugins.Shipping.USPS.Fields.Password.Hint");
+            this.DeletePluginLocaleResource("Plugins.Shipping.USPS.Fields.AdditionalHandlingCharge");
+            this.DeletePluginLocaleResource("Plugins.Shipping.USPS.Fields.AdditionalHandlingCharge.Hint");
+            this.DeletePluginLocaleResource("Plugins.Shipping.USPS.Fields.ZipPostalCodeFrom");
+            this.DeletePluginLocaleResource("Plugins.Shipping.USPS.Fields.ZipPostalCodeFrom.Hint");
+            this.DeletePluginLocaleResource("Plugins.Shipping.USPS.Fields.AvailableCarrierServicesDomestic");
+            this.DeletePluginLocaleResource("Plugins.Shipping.USPS.Fields.AvailableCarrierServicesDomestic.Hint");
+            this.DeletePluginLocaleResource("Plugins.Shipping.USPS.Fields.AvailableCarrierServicesInternational");
+            this.DeletePluginLocaleResource("Plugins.Shipping.USPS.Fields.AvailableCarrierServicesInternational.Hint");
+
+            base.Uninstall();
         }
 
         #endregion

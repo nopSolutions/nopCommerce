@@ -18,7 +18,7 @@
         <tr>
             <td colspan="2" width="100%">
                 <button type="submit" name="save" value="save" class="t-button">
-                    Save</button>
+                    @T("Admin.Common.Save")</button>
             </td>
         </tr>
         <tr class="adminSeparator">
@@ -29,7 +29,7 @@
         <tr>
             <td colspan="2">
                 <p>
-                    <strong>Send test message</strong>
+                    <strong>@T("Plugins.Sms.Verizon.SendTest.Hint")</strong>
                 </p>
             </td>
         </tr>
@@ -45,7 +45,7 @@
         <tr>
             <td colspan="2" width="100%">
                 <button type="submit" name="test-sms" value="test-sms" class="t-button">
-                    Send</button>
+                    @T("Plugins.Sms.Verizon.SendTest")</button>
             </td>
         </tr>
         @if (!String.IsNullOrEmpty(Model.TestSmsResult))

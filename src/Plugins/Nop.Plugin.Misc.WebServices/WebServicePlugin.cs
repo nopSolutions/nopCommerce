@@ -2,6 +2,7 @@
 using Nop.Core.Plugins;
 using Nop.Plugin.Misc.WebServices.Security;
 using Nop.Services.Common;
+using Nop.Services.Localization;
 using Nop.Services.Security;
 
 namespace Nop.Plugin.Misc.WebServices
@@ -30,6 +31,12 @@ namespace Nop.Plugin.Misc.WebServices
             //install new permissions
             _permissionService.InstallPermissions(new WebServicePermissionProvider());
 
+            //locales
+            this.AddOrUpdatePluginLocaleResource("Plugins.Misc.WebServices.Description1", "Actually configuration is not required. Just some notes:");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Misc.WebServices.Description2", "Ensure that permissions are properly configured on Access Control List page (disabled by default)");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Misc.WebServices.Description3", "To access service use {0}");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Misc.WebServices.Description4", "For mex endpoint use {0}");
+            
             base.Install();
         }
 
@@ -38,6 +45,12 @@ namespace Nop.Plugin.Misc.WebServices
             //uninstall permissions
             _permissionService.UninstallPermissions(new WebServicePermissionProvider());
 
+            //locales
+            this.DeletePluginLocaleResource("Plugins.Misc.WebServices.Description1");
+            this.DeletePluginLocaleResource("Plugins.Misc.WebServices.Description2");
+            this.DeletePluginLocaleResource("Plugins.Misc.WebServices.Description3");
+            this.DeletePluginLocaleResource("Plugins.Misc.WebServices.Description4");
+            
             base.Uninstall();
         }
 

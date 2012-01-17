@@ -1,25 +1,25 @@
-﻿using System.ComponentModel;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
+using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
 
 namespace Nop.Plugin.Payments.AuthorizeNet.Models
 {
     public class ConfigurationModel : BaseNopModel
     {
-        [DisplayName("Use Sandbox")]
+        [NopResourceDisplayName("Plugins.Payments.AuthorizeNet.Fields.UseSandbox")]
         public bool UseSandbox { get; set; }
 
         public int TransactModeId { get; set; }
-        [DisplayNameAttribute("Transaction mode")]
+        [NopResourceDisplayName("Plugins.Payments.AuthorizeNet.Fields.TransactModeValues")]
         public SelectList TransactModeValues { get; set; }
 
-        [DisplayName("Transaction key")]
+        [NopResourceDisplayName("Plugins.Payments.AuthorizeNet.Fields.TransactionKey")]
         public string TransactionKey { get; set; }
 
-        [DisplayName("Login ID")]
+        [NopResourceDisplayName("Plugins.Payments.AuthorizeNet.Fields.LoginId")]
         public string LoginId { get; set; }
 
-        [DisplayName("Additional fee")]
+        [NopResourceDisplayName("Plugins.Payments.AuthorizeNet.Fields.AdditionalFee")]
         public decimal AdditionalFee { get; set; }
     }
 }

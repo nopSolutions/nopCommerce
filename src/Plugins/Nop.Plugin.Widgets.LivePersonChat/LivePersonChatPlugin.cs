@@ -69,5 +69,20 @@ namespace Nop.Plugin.Widgets.LivePersonChat
 
             base.Install();
         }
+
+        /// <summary>
+        /// Uninstall plugin
+        /// </summary>
+        public override void Uninstall()
+        {
+            //locales
+            this.DeletePluginLocaleResource("Plugins.Widgets.LivePersonChat.ButtonCode");
+            this.DeletePluginLocaleResource("Plugins.Widgets.LivePersonChat.ButtonCode.Hint");
+            this.DeletePluginLocaleResource("Plugins.Widgets.LivePersonChat.LiveChat");
+            this.DeletePluginLocaleResource("Plugins.Widgets.LivePersonChat.MonitoringCode");
+            this.DeletePluginLocaleResource("Plugins.Widgets.LivePersonChat.MonitoringCode.Hint");
+
+            base.Uninstall();
+        }
     }
 }

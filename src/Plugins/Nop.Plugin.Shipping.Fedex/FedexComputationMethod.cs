@@ -4,11 +4,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Diagnostics;
-using System.IO;
-using System.Net;
-using System.Text;
 using System.Web.Routing;
 using System.Web.Services.Protocols;
 using Nop.Core;
@@ -20,6 +16,7 @@ using Nop.Plugin.Shipping.Fedex.Domain;
 using Nop.Plugin.Shipping.Fedex.RateServiceWebReference;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
+using Nop.Services.Localization;
 using Nop.Services.Orders;
 using Nop.Services.Shipping;
 
@@ -485,6 +482,7 @@ namespace Nop.Plugin.Shipping.Fedex
         /// </summary>
         public override void Install()
         {
+            //settings
             var settings = new FedexSettings()
             {
                 Url = "https://gatewaybeta.fedex.com:443/web-services/rate",
@@ -496,7 +494,75 @@ namespace Nop.Plugin.Shipping.Fedex
             };
             _settingService.SaveSetting(settings);
 
+            //locales
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.Fedex.Fields.Url", "URL");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.Fedex.Fields.Url.Hint", "Specify FedEx URL.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.Fedex.Fields.Key", "Key");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.Fedex.Fields.Key.Hint", "Specify FedEx key.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.Fedex.Fields.Password", "Password");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.Fedex.Fields.Password.Hint", "Specify FedEx password.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.Fedex.Fields.AccountNumber", "Account number");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.Fedex.Fields.AccountNumber.Hint", "Specify FedEx account number.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.Fedex.Fields.MeterNumber", "Meter number");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.Fedex.Fields.MeterNumber.Hint", "Specify FedEx meter number.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.Fedex.Fields.UseResidentialRates", "Use residential rates");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.Fedex.Fields.UseResidentialRates.Hint", "Check to use residential rates.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.Fedex.Fields.ApplyDiscounts", "Use discounted rates");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.Fedex.Fields.ApplyDiscounts.Hint", "Check to use discounted rates (instead of list rates).");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.Fedex.Fields.AdditionalHandlingCharge", "Additional handling charge");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.Fedex.Fields.AdditionalHandlingCharge.Hint", "Enter additional handling fee to charge your customers.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.Fedex.Fields.CarrierServices", "Carrier Services Offered");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.Fedex.Fields.CarrierServices.Hint", "Select the services you want to offer to customers.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.Fedex.Fields.Street", "Shipping origin. Street");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.Fedex.Fields.Street.Hint", "Specify origin street.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.Fedex.Fields.City", "Shipping origin. City");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.Fedex.Fields.City.Hint", "Specify origin city.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.Fedex.Fields.StateOrProvinceCode", "Shipping origin. State code (2 characters)");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.Fedex.Fields.StateOrProvinceCode.Hint", "Specify origin state code (2 characters).");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.Fedex.Fields.PostalCode", "Shipping origin. Zip");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.Fedex.Fields.PostalCode.Hint", "Specify origin zip code.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.Fedex.Fields.CountryCode", "Shipping origin. Country code");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.Fedex.Fields.CountryCode.Hint", "Specify origin country code.");
+            
             base.Install();
+        }
+        
+        /// <summary>
+        /// Uninstall plugin
+        /// </summary>
+        public override void Uninstall()
+        {
+            //locales
+            this.DeletePluginLocaleResource("Plugins.Shipping.Fedex.Fields.Url");
+            this.DeletePluginLocaleResource("Plugins.Shipping.Fedex.Fields.Url.Hint");
+            this.DeletePluginLocaleResource("Plugins.Shipping.Fedex.Fields.Key");
+            this.DeletePluginLocaleResource("Plugins.Shipping.Fedex.Fields.Key.Hint");
+            this.DeletePluginLocaleResource("Plugins.Shipping.Fedex.Fields.Password");
+            this.DeletePluginLocaleResource("Plugins.Shipping.Fedex.Fields.Password.Hint");
+            this.DeletePluginLocaleResource("Plugins.Shipping.Fedex.Fields.AccountNumber");
+            this.DeletePluginLocaleResource("Plugins.Shipping.Fedex.Fields.AccountNumber.Hint");
+            this.DeletePluginLocaleResource("Plugins.Shipping.Fedex.Fields.MeterNumber");
+            this.DeletePluginLocaleResource("Plugins.Shipping.Fedex.Fields.MeterNumber.Hint");
+            this.DeletePluginLocaleResource("Plugins.Shipping.Fedex.Fields.UseResidentialRates");
+            this.DeletePluginLocaleResource("Plugins.Shipping.Fedex.Fields.UseResidentialRates.Hint");
+            this.DeletePluginLocaleResource("Plugins.Shipping.Fedex.Fields.ApplyDiscounts");
+            this.DeletePluginLocaleResource("Plugins.Shipping.Fedex.Fields.ApplyDiscounts.Hint");
+            this.DeletePluginLocaleResource("Plugins.Shipping.Fedex.Fields.AdditionalHandlingCharge");
+            this.DeletePluginLocaleResource("Plugins.Shipping.Fedex.Fields.AdditionalHandlingCharge.Hint");
+            this.DeletePluginLocaleResource("Plugins.Shipping.Fedex.Fields.CarrierServices");
+            this.DeletePluginLocaleResource("Plugins.Shipping.Fedex.Fields.CarrierServices.Hint");
+            this.DeletePluginLocaleResource("Plugins.Shipping.Fedex.Fields.Street");
+            this.DeletePluginLocaleResource("Plugins.Shipping.Fedex.Fields.Street.Hint");
+            this.DeletePluginLocaleResource("Plugins.Shipping.Fedex.Fields.City");
+            this.DeletePluginLocaleResource("Plugins.Shipping.Fedex.Fields.City.Hint");
+            this.DeletePluginLocaleResource("Plugins.Shipping.Fedex.Fields.StateOrProvinceCode");
+            this.DeletePluginLocaleResource("Plugins.Shipping.Fedex.Fields.StateOrProvinceCode.Hint");
+            this.DeletePluginLocaleResource("Plugins.Shipping.Fedex.Fields.PostalCode");
+            this.DeletePluginLocaleResource("Plugins.Shipping.Fedex.Fields.PostalCode.Hint");
+            this.DeletePluginLocaleResource("Plugins.Shipping.Fedex.Fields.CountryCode");
+            this.DeletePluginLocaleResource("Plugins.Shipping.Fedex.Fields.CountryCode.Hint");
+            
+            base.Uninstall();
         }
 
         #endregion

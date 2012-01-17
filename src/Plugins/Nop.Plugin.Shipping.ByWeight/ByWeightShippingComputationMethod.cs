@@ -156,8 +156,10 @@ namespace Nop.Plugin.Shipping.ByWeight
         /// </summary>
         public override void Install()
         {
+            //database objects
             _objectContext.Install();
 
+            //locales
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.Country", "Country");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.Country.Hint", "If an asteriks is selected, then this tax rate will apply to all customers, regardless of the country.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.ShippingMethod", "Shipping method");
@@ -176,7 +178,9 @@ namespace Nop.Plugin.Shipping.ByWeight
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.LimitMethodsToCreated.Hint", "If you check this option, then your customers will be limited to shipping options configured here. Otherwise, they'll be able to choose any existing shipping options even they've not configured here (zero shipping fee in this case).");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.CalculatePerWeightUnit", "Calculate per weight unit");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.CalculatePerWeightUnit.Hint", "If you check this option, then rates are multipied per weight unit (lb, kg, etc). This option is used for the fixed rates (without percents).");
-
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.AddRecord", "Add record");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.AddRecord.Hint", "Adding a new record");
+            
             base.Install();
         }
 
@@ -185,9 +189,34 @@ namespace Nop.Plugin.Shipping.ByWeight
         /// </summary>
         public override void Uninstall()
         {
+            //database objects
             _objectContext.Uninstall();
+
+            //locales
+            this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.Country");
+            this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.Country.Hint");
+            this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.ShippingMethod");
+            this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.ShippingMethod.Hint");
+            this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.From");
+            this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.From.Hint");
+            this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.To");
+            this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.To.Hint");
+            this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.UsePercentage");
+            this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.UsePercentage.Hint");
+            this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.ShippingChargePercentage");
+            this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.ShippingChargePercentage.Hint");
+            this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.ShippingChargeAmount");
+            this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.ShippingChargeAmount.Hint");
+            this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.LimitMethodsToCreated");
+            this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.LimitMethodsToCreated.Hint");
+            this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.CalculatePerWeightUnit");
+            this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.CalculatePerWeightUnit.Hint");
+            this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.AddRecord");
+            this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.AddRecord.Hint");
+            
             base.Uninstall();
         }
+
         #endregion
 
         #region Properties

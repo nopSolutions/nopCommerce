@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
-using System.Text;
 using Nop.Plugin.Misc.MailChimp.Data;
 using Nop.Services.Logging;
 using PerceptiveMCAPI;

@@ -51,9 +51,20 @@ namespace Nop.Plugin.DiscountRules.BillingCountry
         
         public override void Install()
         {
+            //locales
+            this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRules.BillingCountry.Fields.SelectCountry", "Select country");
             this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRules.BillingCountry.Fields.Country", "Billing country");
             this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRules.BillingCountry.Fields.Country.Hint", "Select required billing country.");
             base.Install();
+        }
+
+        public override void Uninstall()
+        {
+            //locales
+            this.DeletePluginLocaleResource("Plugins.DiscountRules.BillingCountry.Fields.SelectCountry");
+            this.DeletePluginLocaleResource("Plugins.DiscountRules.BillingCountry.Fields.Country");
+            this.DeletePluginLocaleResource("Plugins.DiscountRules.BillingCountry.Fields.Country.Hint");
+            base.Uninstall();
         }
     }
 }

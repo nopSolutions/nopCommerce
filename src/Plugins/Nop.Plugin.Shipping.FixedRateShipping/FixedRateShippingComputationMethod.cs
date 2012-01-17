@@ -115,6 +115,31 @@ namespace Nop.Plugin.Shipping.FixedRateShipping
             routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Shipping.FixedRateShipping.Controllers" }, { "area", null } };
         }
 
+        /// <summary>
+        /// Install plugin
+        /// </summary>
+        public override void Install()
+        {
+            //locales
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.FixedRateShipping.Fields.ShippingMethodName", "Shipping method");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.FixedRateShipping.Fields.Rate", "Rate");
+
+            base.Install();
+        }
+
+
+        /// <summary>
+        /// Uninstall plugin
+        /// </summary>
+        public override void Uninstall()
+        {
+            //locales
+            this.DeletePluginLocaleResource("Plugins.Shipping.FixedRateShipping.Fields.ShippingMethodName");
+            this.DeletePluginLocaleResource("Plugins.Shipping.FixedRateShipping.Fields.Rate");
+
+            base.Uninstall();
+        }
+
         #endregion
 
         #region Properties

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Web;
 using System.Web.Mvc;
-using Nop.Core.Domain.Messages;
 using Nop.Services.Messages;
 
 namespace Nop.Plugin.Misc.MailChimp.Controllers

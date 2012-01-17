@@ -183,6 +183,17 @@ namespace Nop.Plugin.Payments.CashOnDelivery
             
             base.Install();
         }
+        
+        public override void Uninstall()
+        {
+            //locales
+            this.DeletePluginLocaleResource("Plugins.Payment.CashOnDelivery.DescriptionText");
+            this.DeletePluginLocaleResource("Plugins.Payment.CashOnDelivery.DescriptionText.Hint");
+            this.DeletePluginLocaleResource("Plugins.Payment.CashOnDelivery.AdditionalFee");
+            this.DeletePluginLocaleResource("Plugins.Payment.CashOnDelivery.AdditionalFee.Hint");
+            
+            base.Uninstall();
+        }
 
         #endregion
 

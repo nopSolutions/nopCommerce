@@ -92,9 +92,18 @@ namespace Nop.Plugin.DiscountRules.HasAllProducts
 
         public override void Install()
         {
+            //locales
             this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRules.HasAllProducts.Fields.ProductVariants", "Restricted product variants");
             this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRules.HasAllProducts.Fields.ProductVariants.Hint", "The comma-separated list of product variant identifiers (e.g. 77, 123, 156). You can find a product variant ID on its details page.");
             base.Install();
+        }
+
+        public override void Uninstall()
+        {
+            //locales
+            this.DeletePluginLocaleResource("Plugins.DiscountRules.HasAllProducts.Fields.ProductVariants");
+            this.DeletePluginLocaleResource("Plugins.DiscountRules.HasAllProducts.Fields.ProductVariants.Hint");
+            base.Uninstall();
         }
     }
 }

@@ -5,6 +5,7 @@ using Nop.Core.Domain.Payments;
 using Nop.Core.Plugins;
 using Nop.Plugin.Payments.Manual.Controllers;
 using Nop.Services.Configuration;
+using Nop.Services.Localization;
 using Nop.Services.Payments;
 
 namespace Nop.Plugin.Payments.Manual
@@ -208,13 +209,32 @@ namespace Nop.Plugin.Payments.Manual
 
         public override void Install()
         {
+            //settings
             var settings = new ManualPaymentSettings()
             {
                 TransactMode = TransactMode.Pending
             };
             _settingService.SaveSetting(settings);
 
+            //locales
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFee", "Additional fee");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFee.Hint", "Enter additional fee to charge your customers.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Manual.Fields.TransactMode", "After checkout mark payment as");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Manual.Fields.TransactMode.Hint", "Specify transaction mode.");
+            
+
             base.Install();
+        }
+
+        public override void Uninstall()
+        {
+            //locales
+            this.DeletePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFee");
+            this.DeletePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFee.Hint");
+            this.DeletePluginLocaleResource("Plugins.Payments.Manual.Fields.TransactMode");
+            this.DeletePluginLocaleResource("Plugins.Payments.Manual.Fields.TransactMode.Hint");
+            
+            base.Uninstall();
         }
 
         #endregion

@@ -1,6 +1,7 @@
 using System.Web.Routing;
 using Nop.Core.Plugins;
 using Nop.Services.Authentication.External;
+using Nop.Services.Localization;
 
 namespace Nop.Plugin.ExternalAuth.OpenId
 {
@@ -37,7 +38,32 @@ namespace Nop.Plugin.ExternalAuth.OpenId
             controllerName = "ExternalAuthOpenId";
             routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.ExternalAuth.OpenId.Controllers" }, { "area", null } };
         }
-        
+
+        /// <summary>
+        /// Install plugin
+        /// </summary>
+        public override void Install()
+        {
+            //locales
+            this.AddOrUpdatePluginLocaleResource("Plugins.ExternalAuth.OpenId.Login", "Login using OpenID account");
+            this.AddOrUpdatePluginLocaleResource("Plugins.ExternalAuth.OpenId.YourAccount", "Please click your account provider");
+            this.AddOrUpdatePluginLocaleResource("Plugins.ExternalAuth.OpenId.Manually", "Enter manually your OpenID");
+            this.AddOrUpdatePluginLocaleResource("Plugins.ExternalAuth.OpenId.SignIn", "Sign In");
+            
+            base.Install();
+        }
+
+        public override void Uninstall()
+        {
+            //locales
+            this.DeletePluginLocaleResource("Plugins.ExternalAuth.OpenId.Login");
+            this.DeletePluginLocaleResource("Plugins.ExternalAuth.OpenId.YourAccount");
+            this.DeletePluginLocaleResource("Plugins.ExternalAuth.OpenId.Manually");
+            this.DeletePluginLocaleResource("Plugins.ExternalAuth.OpenId.SignIn");
+
+            base.Uninstall();
+        }
+
         #endregion
         
     }

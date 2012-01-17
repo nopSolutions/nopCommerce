@@ -169,12 +169,24 @@ namespace Nop.Plugin.Payments.PurchaseOrder
         /// </summary>
         public override void Install()
         {
+            //locales
             this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PurchaseOrder.PurchaseOrderNumber", "PO Number");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PurchaseOrder.AdditionalFee", "Additional fee");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PurchaseOrder.AdditionalFee.Hint", "The additional fee.");
 
             base.Install();
         }
+
+        public override void Uninstall()
+        {
+            //locales
+            this.DeletePluginLocaleResource("Plugins.Payment.PurchaseOrder.PurchaseOrderNumber");
+            this.DeletePluginLocaleResource("Plugins.Payment.PurchaseOrder.AdditionalFee");
+            this.DeletePluginLocaleResource("Plugins.Payment.PurchaseOrder.AdditionalFee.Hint");
+
+            base.Uninstall();
+        }
+
         #endregion
 
         #region Properies

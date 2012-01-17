@@ -64,17 +64,21 @@ namespace Nop.Plugin.Sms.Clickatell.Controllers
             try
             {
                 if (String.IsNullOrEmpty(model.TestMessage))
-                    throw new NopException("Enter test message");
-
-                var smsProvider = _smsService.LoadSmsProviderBySystemName("Mobile.SMS.Clickatell");
-
-                if (!smsProvider.SendSms(model.TestMessage))
                 {
-                    model.TestSmsResult = _localizationService.GetResource("Plugins.Sms.Clickatell.TestFailed");
+                    model.TestSmsResult = "Enter test message";
                 }
                 else
                 {
-                    model.TestSmsResult = _localizationService.GetResource("Plugins.Sms.Clickatell.TestSuccess");
+                    var smsProvider = _smsService.LoadSmsProviderBySystemName("Mobile.SMS.Clickatell");
+
+                    if (!smsProvider.SendSms(model.TestMessage))
+                    {
+                        model.TestSmsResult = _localizationService.GetResource("Plugins.Sms.Clickatell.TestFailed");
+                    }
+                    else
+                    {
+                        model.TestSmsResult = _localizationService.GetResource("Plugins.Sms.Clickatell.TestSuccess");
+                    }
                 }
             }
             catch(Exception exc)

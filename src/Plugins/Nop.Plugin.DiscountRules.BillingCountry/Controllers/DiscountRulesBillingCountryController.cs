@@ -5,6 +5,7 @@ using Nop.Core.Domain.Discounts;
 using Nop.Plugin.DiscountRules.BillingCountry.Models;
 using Nop.Services.Directory;
 using Nop.Services.Discounts;
+using Nop.Services.Localization;
 using Nop.Web.Framework.Controllers;
 
 namespace Nop.Plugin.DiscountRules.BillingCountry.Controllers
@@ -12,12 +13,14 @@ namespace Nop.Plugin.DiscountRules.BillingCountry.Controllers
     [AdminAuthorize]
     public class DiscountRulesBillingCountryController : Controller
     {
+        private readonly ILocalizationService _localizationService;
         private readonly IDiscountService _discountService;
         private readonly ICountryService _countryService;
 
-        public DiscountRulesBillingCountryController(IDiscountService discountService,
-            ICountryService countryService)
+        public DiscountRulesBillingCountryController(ILocalizationService localizationService, 
+            IDiscountService discountService, ICountryService countryService)
         {
+            this._localizationService = localizationService;
             this._discountService = discountService;
             this._countryService = countryService;
         }
@@ -40,7 +43,7 @@ namespace Nop.Plugin.DiscountRules.BillingCountry.Controllers
             model.RequirementId = discountRequirementId.HasValue ? discountRequirementId.Value : 0;
             model.DiscountId = discountId;
             //countries
-            model.AvailableCountries.Add(new SelectListItem() { Text = "Select country", Value = "0" });
+            model.AvailableCountries.Add(new SelectListItem() { Text = _localizationService.GetResource("Plugins.DiscountRules.BillingCountry.Fields.SelectCountry"), Value = "0" });
             foreach (var c in _countryService.GetAllCountries(true))
                 model.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString(), Selected = discountRequirement != null && c.Id == discountRequirement.BillingCountryId });
 

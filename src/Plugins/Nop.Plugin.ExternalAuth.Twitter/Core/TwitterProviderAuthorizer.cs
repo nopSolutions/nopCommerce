@@ -2,7 +2,6 @@
 
 using System;
 using System.Linq;
-using System.Threading;
 using System.Web;
 using LinqToTwitter;
 using Nop.Core.Domain.Customers;

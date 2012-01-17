@@ -1,33 +1,32 @@
-﻿using System.ComponentModel;
-using System.Web.Mvc;
+﻿using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
 
 namespace Nop.Plugin.Payments.PayPalStandard.Models
 {
     public class ConfigurationModel : BaseNopModel
     {
-        [DisplayName("Use Sandbox")]
+        [NopResourceDisplayName("Plugins.Payments.PayPalStandard.Fields.UseSandbox")]
         public bool UseSandbox { get; set; }
 
-        [DisplayName("Business Email")]
+        [NopResourceDisplayName("Plugins.Payments.PayPalStandard.Fields.BusinessEmail")]
         public string BusinessEmail { get; set; }
 
-        [DisplayName("PDT Identity Token")]
+        [NopResourceDisplayName("Plugins.Payments.PayPalStandard.Fields.PDTToken")]
         public string PdtToken { get; set; }
 
-        [DisplayName("PDT. Validate order total")]
+        [NopResourceDisplayName("Plugins.Payments.PayPalStandard.Fields.PDTValidateOrderTotal")]
         public bool PdtValidateOrderTotal { get; set; }
 
-        [DisplayName("Additional fee")]
+        [NopResourceDisplayName("Plugins.Payments.PayPalStandard.Fields.AdditionalFee")]
         public decimal AdditionalFee { get; set; }
 
-        [DisplayName("Pass product names and order totals to PayPal")]
+        [NopResourceDisplayName("Plugins.Payments.PayPalStandard.Fields.PassProductNamesAndTotals")]
         public bool PassProductNamesAndTotals { get; set; }
 
-        [DisplayName("Enable IPN (Instant Payment Notification)")]
+        [NopResourceDisplayName("Plugins.Payments.PayPalStandard.Fields.EnableIpn")]
         public bool EnableIpn { get; set; }
 
-        [DisplayName("IPN Handler")]
+        [NopResourceDisplayName("Plugins.Payments.PayPalStandard.Fields.IpnUrl")]
         public string IpnUrl { get; set; }
     }
 }

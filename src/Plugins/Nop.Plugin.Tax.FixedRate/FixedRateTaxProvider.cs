@@ -1,6 +1,7 @@
 ﻿using System.Web.Routing;
 using Nop.Core.Plugins;
 using Nop.Services.Configuration;
+using Nop.Services.Localization;
 using Nop.Services.Tax;
 
 namespace Nop.Plugin.Tax.FixedRate
@@ -53,6 +54,27 @@ namespace Nop.Plugin.Tax.FixedRate
             actionName = "Configure";
             controllerName = "TaxFixedRate";
             routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Tax.FixedRate.Controllers" }, { "area", null } };
+        }
+
+        public override void Install()
+        {
+            //locales
+            this.AddOrUpdatePluginLocaleResource("Plugins.Tax.FixedRate.Fields.TaxCategoryName", "Tax category");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Tax.FixedRate.Fields.Rate", "Rate");
+            
+            base.Install();
+        }
+
+        /// <summary>
+        /// Uninstall plugin
+        /// </summary>
+        public override void Uninstall()
+        {
+            //locales
+            this.DeletePluginLocaleResource("Plugins.Tax.FixedRate.Fields.TaxCategoryName");
+            this.DeletePluginLocaleResource("Plugins.Tax.FixedRate.Fields.Rate");
+            
+            base.Uninstall();
         }
     }
 }

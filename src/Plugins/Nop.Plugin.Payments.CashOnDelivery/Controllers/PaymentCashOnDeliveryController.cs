@@ -2,7 +2,6 @@
 using System.Web.Mvc;
 using Nop.Plugin.Payments.CashOnDelivery.Models;
 using Nop.Services.Configuration;
-using Nop.Services.Localization;
 using Nop.Services.Payments;
 using Nop.Web.Framework.Controllers;
 

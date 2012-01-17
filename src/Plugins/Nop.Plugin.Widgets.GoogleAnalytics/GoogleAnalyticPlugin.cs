@@ -80,5 +80,19 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
 
             base.Install();
         }
+
+        /// <summary>
+        /// Uninstall plugin
+        /// </summary>
+        public override void Uninstall()
+        {
+            //locales
+            this.DeletePluginLocaleResource("Plugins.Widgets.GoogleAnalytics.GoogleId");
+            this.DeletePluginLocaleResource("Plugins.Widgets.GoogleAnalytics.GoogleId.Hint");
+            this.DeletePluginLocaleResource("Plugins.Widgets.GoogleAnalytics.JavaScript");
+            this.DeletePluginLocaleResource("Plugins.Widgets.GoogleAnalytics.JavaScript.Hint");
+
+            base.Uninstall();
+        }
     }
 }

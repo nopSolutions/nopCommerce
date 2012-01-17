@@ -13,7 +13,6 @@ using GCheckout.Checkout;
 using GCheckout.Util;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
@@ -115,8 +114,8 @@ namespace Nop.Plugin.Payments.GoogleCheckout
 
                 XmlNode customerInfo = newOrderNotification.shoppingcart.merchantprivatedata.Any[0];
                 int customerId = Convert.ToInt32(customerInfo.Attributes["CustomerID"].Value);
-                int customerLanguageId = Convert.ToInt32(customerInfo.Attributes["CustomerLanguageID"].Value);
-                int customerCurrencyId = Convert.ToInt32(customerInfo.Attributes["CustomerCurrencyID"].Value);
+                //int customerLanguageId = Convert.ToInt32(customerInfo.Attributes["CustomerLanguageID"].Value);
+                //int customerCurrencyId = Convert.ToInt32(customerInfo.Attributes["CustomerCurrencyID"].Value);
                 var customer = _customerService.GetCustomerById(customerId);
 
                 if (customer == null)
@@ -721,6 +720,36 @@ namespace Nop.Plugin.Payments.GoogleCheckout
             {
                 LogMessage(string.Format("An error occurred: {0}", exc));
             }
+        }
+
+        public override void Install()
+        {
+            //locales
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.GoogleCheckout.Fields.UseSandbox", "Use Sandbox");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.GoogleCheckout.Fields.UseSandbox.Hint", "Check to enable Sandbox (testing environment).");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.GoogleCheckout.Fields.GoogleVendorId", "Google Vendor ID");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.GoogleCheckout.Fields.GoogleVendorId.Hint", "Specify Google Vendor ID.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.GoogleCheckout.Fields.GoogleMerchantKey", "Google Merchant Key");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.GoogleCheckout.Fields.GoogleMerchantKey.Hint", "Specify Google Merchant Key.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.GoogleCheckout.Fields.AuthenticateCallback", "Authenticate callback");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.GoogleCheckout.Fields.AuthenticateCallback.Hint", "Check to ensure that Google handler callback is authenticated.");
+
+            base.Install();
+        }
+        
+        public override void Uninstall()
+        {
+            //locales
+            this.DeletePluginLocaleResource("Plugins.Payments.GoogleCheckout.Fields.UseSandbox");
+            this.DeletePluginLocaleResource("Plugins.Payments.GoogleCheckout.Fields.UseSandbox.Hint");
+            this.DeletePluginLocaleResource("Plugins.Payments.GoogleCheckout.Fields.GoogleVendorId");
+            this.DeletePluginLocaleResource("Plugins.Payments.GoogleCheckout.Fields.GoogleVendorId.Hint");
+            this.DeletePluginLocaleResource("Plugins.Payments.GoogleCheckout.Fields.GoogleMerchantKey");
+            this.DeletePluginLocaleResource("Plugins.Payments.GoogleCheckout.Fields.GoogleMerchantKey.Hint");
+            this.DeletePluginLocaleResource("Plugins.Payments.GoogleCheckout.Fields.AuthenticateCallback");
+            this.DeletePluginLocaleResource("Plugins.Payments.GoogleCheckout.Fields.AuthenticateCallback.Hint");
+
+            base.Uninstall();
         }
 
         #endregion

@@ -1,8 +1,8 @@
 //Contributor:  Nicholas Mayne
 
 
-using DotNetOpenAuth.OpenId.Extensions.AttributeExchange;
 using System;
+using DotNetOpenAuth.OpenId.Extensions.AttributeExchange;
 using Nop.Services.Authentication.External;
 
 namespace Nop.Plugin.ExternalAuth.OpenId.Core

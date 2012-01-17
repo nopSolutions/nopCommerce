@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
@@ -8,9 +7,9 @@ using Nop.Core.Domain.Tasks;
 using Nop.Plugin.Misc.MailChimp.Models;
 using Nop.Plugin.Misc.MailChimp.Services;
 using Nop.Services.Configuration;
+using Nop.Services.Localization;
 using Nop.Services.Tasks;
 using Nop.Web.Framework.Controllers;
-using PerceptiveMCAPI.Types;
 
 namespace Nop.Plugin.Misc.MailChimp.Controllers
 {
@@ -21,16 +20,20 @@ namespace Nop.Plugin.Misc.MailChimp.Controllers
         private readonly IMailChimpApiService _mailChimpApiService;
         private readonly IScheduleTaskService _scheduleTaskService;
         private readonly ISettingService _settingService;
+        private readonly ILocalizationService _localizationService;
         private readonly MailChimpSettings _settings;
         private readonly ISubscriptionEventQueueingService _subscriptionEventQueueingService;
 
-        public SettingsController(ISettingService settingService, IScheduleTaskService scheduleTaskService, IMailChimpApiService mailChimpApiService, ISubscriptionEventQueueingService subscriptionEventQueueingService, MailChimpSettings settings)
+        public SettingsController(ISettingService settingService, IScheduleTaskService scheduleTaskService, 
+            IMailChimpApiService mailChimpApiService, ISubscriptionEventQueueingService subscriptionEventQueueingService, 
+            ILocalizationService localizationService, MailChimpSettings settings)
         {
-            _settingService = settingService;
-            _scheduleTaskService = scheduleTaskService;
-            _mailChimpApiService = mailChimpApiService;
-            _subscriptionEventQueueingService = subscriptionEventQueueingService;
-            _settings = settings;
+            this._settingService = settingService;
+            this._scheduleTaskService = scheduleTaskService;
+            this._mailChimpApiService = mailChimpApiService;
+            this._subscriptionEventQueueingService = subscriptionEventQueueingService;
+            this._localizationService = localizationService;
+            this._settings = settings;
         }
 
         [NonAction]
@@ -103,7 +106,7 @@ namespace Nop.Plugin.Misc.MailChimp.Controllers
                 task.Enabled = model.AutoSync;
                 task.Seconds = model.AutoSyncEachMinutes*60;
                 _scheduleTaskService.UpdateTask(task);
-                saveResult = "If sync task period has been changed, please restart the application";
+                saveResult = _localizationService.GetResource("Plugin.Misc.MailChimp.AutoSyncRestart");
             }
 
             model = PrepareModel();

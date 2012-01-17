@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+﻿using Nop.Web.Framework;
 
 namespace Nop.Plugin.Shipping.FixedRateShipping.Models
 {
@@ -6,10 +6,10 @@ namespace Nop.Plugin.Shipping.FixedRateShipping.Models
     {
         public int ShippingMethodId { get; set; }
 
-        [DisplayName("Shipping method")]
+        [NopResourceDisplayName("Plugins.Shipping.FixedRateShipping.Fields.ShippingMethodName")]
         public string ShippingMethodName { get; set; }
 
-        [DisplayNameAttribute("Rate")]
+        [NopResourceDisplayName("Plugins.Shipping.FixedRateShipping.Fields.Rate")]
         public decimal Rate { get; set; }
     }
 }

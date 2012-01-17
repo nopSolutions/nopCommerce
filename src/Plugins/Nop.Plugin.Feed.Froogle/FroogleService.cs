@@ -344,6 +344,7 @@ namespace Nop.Plugin.Feed.Froogle
         /// </summary>
         public override void Install()
         {
+            //settings
             var settings = new FroogleSettings()
             {
                 ProductPictureSize = 125,
@@ -351,8 +352,10 @@ namespace Nop.Plugin.Feed.Froogle
             };
             _settingService.SaveSetting(settings);
             
+            //data
             _objectContext.Install();
 
+            //locales
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.ClickHere", "Click here");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Currency", "Currency");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Currency.Hint", "Select the default currency that will be used to generate the feed.");
@@ -385,7 +388,34 @@ namespace Nop.Plugin.Feed.Froogle
         /// </summary>
         public override void Uninstall()
         {
+            //data
             _objectContext.Uninstall();
+
+            //locales
+            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.ClickHere");
+            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Currency");
+            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Currency.Hint");
+            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.DefaultGoogleCategory");
+            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.DefaultGoogleCategory.Hint");
+            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.FtpHostname");
+            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.FtpHostname.Hint");
+            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.FtpFilename");
+            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.FtpFilename.Hint");
+            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.FtpUsername");
+            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.FtpUsername.Hint");
+            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.FtpPassword");
+            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.FtpPassword.Hint");
+            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.FtpUploadStatus");
+            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.General");
+            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Generate");
+            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Override");
+            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.ProductPictureSize");
+            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.ProductPictureSize.Hint");
+            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Products.ProductName");
+            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Products.GoogleCategory");
+            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.SuccessResult");
+            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Upload");
+
             base.Uninstall();
         }
 

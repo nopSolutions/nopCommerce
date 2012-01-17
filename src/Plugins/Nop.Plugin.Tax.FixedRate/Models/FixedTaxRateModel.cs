@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+﻿using Nop.Web.Framework;
 
 namespace Nop.Plugin.Tax.FixedRate.Models
 {
@@ -6,10 +6,10 @@ namespace Nop.Plugin.Tax.FixedRate.Models
     {
         public int TaxCategoryId { get; set; }
 
-        [DisplayName("Tax category")]
+        [NopResourceDisplayName("Plugins.Tax.FixedRate.Fields.TaxCategoryName")]
         public string TaxCategoryName { get; set; }
 
-        [DisplayNameAttribute("Rate")]
+        [NopResourceDisplayName("Plugins.Tax.FixedRate.Fields.Rate")]
         public decimal Rate { get; set; }
     }
 }

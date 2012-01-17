@@ -10,6 +10,7 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Plugins;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
+using Nop.Services.Localization;
 using Nop.Services.Shipping;
 
 namespace Nop.Plugin.Shipping.AustraliaPost
@@ -303,15 +304,36 @@ namespace Nop.Plugin.Shipping.AustraliaPost
         /// </summary>
         public override void Install()
         {
+            //settings
             var settings = new AustraliaPostSettings()
             {
                 GatewayUrl = "http://drc.edeliver.com.au/ratecalc.asp",
             };
             _settingService.SaveSetting(settings);
 
+            //locales
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.AustraliaPost.Fields.GatewayUrl", "Gateway URL");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.AustraliaPost.Fields.GatewayUrl.Hint", "Specify gateway URL");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.AustraliaPost.Fields.AdditionalHandlingCharge", "Additional handling charge.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.AustraliaPost.Fields.AdditionalHandlingCharge.Hint", "Enter additional handling fee to charge your customers.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.AustraliaPost.Fields.ShippedFromZipPostalCode", "Shipped from zip");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.AustraliaPost.Fields.ShippedFromZipPostalCode.Hint", "Specify origin zip code.");
+            
             base.Install();
         }
 
+        public override void Uninstall()
+        {
+            //locales
+            this.DeletePluginLocaleResource("Plugins.Shipping.AustraliaPost.Fields.GatewayUrl");
+            this.DeletePluginLocaleResource("Plugins.Shipping.AustraliaPost.Fields.GatewayUrl.Hint");
+            this.DeletePluginLocaleResource("Plugins.Shipping.AustraliaPost.Fields.AdditionalHandlingCharge");
+            this.DeletePluginLocaleResource("Plugins.Shipping.AustraliaPost.Fields.AdditionalHandlingCharge.Hint");
+            this.DeletePluginLocaleResource("Plugins.Shipping.AustraliaPost.Fields.ShippedFromZipPostalCode");
+            this.DeletePluginLocaleResource("Plugins.Shipping.AustraliaPost.Fields.ShippedFromZipPostalCode.Hint");
+            
+            base.Uninstall();
+        }
         #endregion
 
         #region Properties

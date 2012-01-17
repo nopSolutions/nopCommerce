@@ -1,28 +1,28 @@
-﻿using System.ComponentModel;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
+using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
 
 namespace Nop.Plugin.Payments.PayPalDirect.Models
 {
     public class ConfigurationModel : BaseNopModel
     {
-        [DisplayName("Use Sandbox")]
+        [NopResourceDisplayName("Plugins.Payments.PayPalDirect.Fields.UseSandbox")]
         public bool UseSandbox { get; set; }
 
         public int TransactModeId { get; set; }
-        [DisplayNameAttribute("Transaction mode")]
+        [NopResourceDisplayName("Plugins.Payments.PayPalDirect.Fields.TransactMode")]
         public SelectList TransactModeValues { get; set; }
 
-        [DisplayName("API Account Name")]
+        [NopResourceDisplayName("Plugins.Payments.PayPalDirect.Fields.ApiAccountName")]
         public string ApiAccountName { get; set; }
 
-        [DisplayName("API Account Password")]
+        [NopResourceDisplayName("Plugins.Payments.PayPalDirect.Fields.ApiAccountPassword")]
         public string ApiAccountPassword { get; set; }
 
-        [DisplayName("Signature")]
+        [NopResourceDisplayName("Plugins.Payments.PayPalDirect.Fields.Signature")]
         public string Signature { get; set; }
 
-        [DisplayName("Additional fee")]
+        [NopResourceDisplayName("Plugins.Payments.PayPalDirect.Fields.AdditionalFee")]
         public decimal AdditionalFee { get; set; }
     }
 }

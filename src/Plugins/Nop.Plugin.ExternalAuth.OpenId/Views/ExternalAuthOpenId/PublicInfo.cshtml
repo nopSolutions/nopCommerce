@@ -12,22 +12,22 @@
 {
     <input type="hidden" name="action" value="verify" />
     <fieldset class="oauth-login-openid">
-        <legend>Login using OpenID account</legend>
+        <legend>@T("Plugins.ExternalAuth.OpenId.Login")</legend>
         <ol>
             <li>
                 <div id="openid_choice">
                     <p>
-                        Please click your account provider:</p>
+                        @T("Plugins.ExternalAuth.OpenId.YourAccount"):</p>
                     <div id="openid_btns">
                     </div>
                 </div>
             </li>
             <li>
                 <div id="openid_input_area">
-                    <label for="ExternalIdentifier">Enter manually your OpenID</label>
+                    <label for="ExternalIdentifier">@T("Plugins.ExternalAuth.OpenId.Manually")</label>
                     @Html.TextBox("ExternalIdentifier", "http://", new { id = "ExternalIdentifier", @class = "textMedium", autofocus = "autofocus" })
                     @Html.ValidationMessage("ExternalIdentifier")
-                    <button class="primaryAction" type="submit">Sign In</button>
+                    <button class="primaryAction" type="submit">@T("Plugins.ExternalAuth.OpenId.SignIn")</button>
                 </div>
             </li>
         </ol>
@@ -35,7 +35,7 @@
 }
 <script type="text/javascript">
     $(document).ready(function () {
-        openid.setSignInText('Sign In');
+        openid.setSignInText('@T("Plugins.ExternalAuth.OpenId.SignIn").Text');
         openid.init('ExternalIdentifier');
         //openid.setDemoMode(true); //Stops form submission for client javascript-only test purposes
     });

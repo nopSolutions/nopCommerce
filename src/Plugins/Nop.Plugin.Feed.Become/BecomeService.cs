@@ -212,12 +212,14 @@ namespace Nop.Plugin.Feed.Become
         /// </summary>
         public override void Install()
         {
+            //settings
             var settings = new BecomeSettings()
             {
                 ProductPictureSize = 125
             };
             _settingService.SaveSetting(settings);
 
+            //locales
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Become.ClickHere", "Click here");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Become.Currency", "Currency");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Become.Currency.Hint", "Select the default currency that will be used to generate the feed.");
@@ -227,6 +229,20 @@ namespace Nop.Plugin.Feed.Become
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Become.SuccessResult", "Become.com feed has been successfully generated. {0} to see generated feed");
 
             base.Install();
+        }
+        
+        public override void Uninstall()
+        {
+            //locales
+            this.DeletePluginLocaleResource("Plugins.Feed.Become.ClickHere");
+            this.DeletePluginLocaleResource("Plugins.Feed.Become.Currency");
+            this.DeletePluginLocaleResource("Plugins.Feed.Become.Currency.Hint");
+            this.DeletePluginLocaleResource("Plugins.Feed.Become.Generate");
+            this.DeletePluginLocaleResource("Plugins.Feed.Become.ProductPictureSize");
+            this.DeletePluginLocaleResource("Plugins.Feed.Become.ProductPictureSize.Hint");
+            this.DeletePluginLocaleResource("Plugins.Feed.Become.SuccessResult");
+
+            base.Uninstall();
         }
 
         #endregion

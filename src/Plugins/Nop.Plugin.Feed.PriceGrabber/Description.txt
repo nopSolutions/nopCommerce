@@ -1,7 +1,7 @@
 ﻿Group: Promotion feeds
 FriendlyName: PriceGrabber / Yahoo Shopping
 SystemName: PromotionFeed.PriceGrabber
-Version: 1.01
+Version: 1.02
 SupportedVersions: 2.30,2.40
 Author: nopCommerce team
 DisplayOrder: 1

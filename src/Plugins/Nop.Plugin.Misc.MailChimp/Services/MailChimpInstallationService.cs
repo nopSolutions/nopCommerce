@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Tasks;
 using Nop.Core.Plugins;
 using Nop.Plugin.Misc.MailChimp.Data;
@@ -11,13 +10,6 @@ namespace Nop.Plugin.Misc.MailChimp.Services
 {
     public class MailChimpInstallationService
     {
-        private const string API_KEY_NAME = "Plugin.Misc.MailChimp.ApiKey";
-        private const string DEFAULT_LIST_NAME = "Plugin.Misc.MailChimp.DefaultListId";
-        private const string AUTO_SYNC_NAME = "Plugin.Misc.MailChimp.AutoSync";
-        private const string AUTO_SYNC_PERIOD_NAME = "Plugin.Misc.MailChimp.AutoSyncEachMinutes";
-        private const string WEB_HOOK_KEY = "Plugin.Misc.MailChimp.WebHookKey";
-        private const string QUEUE_ALL = "Plugin.Misc.MailChimp.QueueAll";
-        private const string MANUAL_SYNC = "Plugin.Misc.MailChimp.ManualSync";
         private readonly MailChimpObjectContext _mailChimpObjectContext;
         private readonly IScheduleTaskService _scheduleTaskService;
 
@@ -62,14 +54,17 @@ namespace Nop.Plugin.Misc.MailChimp.Services
         /// <param name="plugin">The plugin.</param>
         public virtual void Install(BasePlugin plugin)
         {
-            //Install string resources
-            plugin.AddOrUpdatePluginLocaleResource(API_KEY_NAME, "MailChimp API Key");
-            plugin.AddOrUpdatePluginLocaleResource(DEFAULT_LIST_NAME, "Default MailChimp List");
-            plugin.AddOrUpdatePluginLocaleResource(AUTO_SYNC_NAME, "Use AutoSync task");
-            plugin.AddOrUpdatePluginLocaleResource(AUTO_SYNC_PERIOD_NAME, "AutoSync task period (minutes)");
-            plugin.AddOrUpdatePluginLocaleResource(WEB_HOOK_KEY, "WebHooks Key");
-            plugin.AddOrUpdatePluginLocaleResource(QUEUE_ALL, "Initial Queue");
-            plugin.AddOrUpdatePluginLocaleResource(MANUAL_SYNC, "Manual Sync");
+            //locales
+            plugin.AddOrUpdatePluginLocaleResource("Plugin.Misc.MailChimp.ApiKey", "MailChimp API Key");
+            plugin.AddOrUpdatePluginLocaleResource("Plugin.Misc.MailChimp.DefaultListId", "Default MailChimp List");
+            plugin.AddOrUpdatePluginLocaleResource("Plugin.Misc.MailChimp.AutoSync", "Use AutoSync task");
+            plugin.AddOrUpdatePluginLocaleResource("Plugin.Misc.MailChimp.AutoSyncEachMinutes", "AutoSync task period (minutes)");
+            plugin.AddOrUpdatePluginLocaleResource("Plugin.Misc.MailChimp.AutoSyncRestart", "If sync task period has been changed, please restart the application");
+            plugin.AddOrUpdatePluginLocaleResource("Plugin.Misc.MailChimp.WebHookKey", "WebHooks Key");
+            plugin.AddOrUpdatePluginLocaleResource("Plugin.Misc.MailChimp.QueueAll", "Initial Queue");
+            plugin.AddOrUpdatePluginLocaleResource("Plugin.Misc.MailChimp.QueueAll.Hint", "Queue existing newsletter subscribers (run only once)");
+            plugin.AddOrUpdatePluginLocaleResource("Plugin.Misc.MailChimp.ManualSync", "Manual Sync");
+            plugin.AddOrUpdatePluginLocaleResource("Plugin.Misc.MailChimp.ManualSync.Hint", "Manually synchronize nopCommerce newsletter subscribers with MailChimp database");
 
             //Install sync task
             InstallSyncTask();
@@ -84,14 +79,17 @@ namespace Nop.Plugin.Misc.MailChimp.Services
         /// <param name="plugin">The plugin.</param>
         public virtual void Uninstall(BasePlugin plugin)
         {
-            //Uninstall string resources
-            plugin.DeletePluginLocaleResource(API_KEY_NAME);
-            plugin.DeletePluginLocaleResource(DEFAULT_LIST_NAME);
-            plugin.DeletePluginLocaleResource(AUTO_SYNC_NAME);
-            plugin.DeletePluginLocaleResource(AUTO_SYNC_PERIOD_NAME);
-            plugin.DeletePluginLocaleResource(WEB_HOOK_KEY);
-            plugin.DeletePluginLocaleResource(QUEUE_ALL);
-            plugin.DeletePluginLocaleResource(MANUAL_SYNC);
+            //locales
+            plugin.DeletePluginLocaleResource("Plugin.Misc.MailChimp.ApiKey");
+            plugin.DeletePluginLocaleResource("Plugin.Misc.MailChimp.DefaultListId");
+            plugin.DeletePluginLocaleResource("Plugin.Misc.MailChimp.AutoSync");
+            plugin.DeletePluginLocaleResource("Plugin.Misc.MailChimp.AutoSyncEachMinutes");
+            plugin.DeletePluginLocaleResource("Plugin.Misc.MailChimp.AutoSyncRestart");
+            plugin.DeletePluginLocaleResource("Plugin.Misc.MailChimp.WebHookKey");
+            plugin.DeletePluginLocaleResource("Plugin.Misc.MailChimp.QueueAll");
+            plugin.DeletePluginLocaleResource("Plugin.Misc.MailChimp.QueueAll.Hint");
+            plugin.DeletePluginLocaleResource("Plugin.Misc.MailChimp.ManualSync");
+            plugin.DeletePluginLocaleResource("Plugin.Misc.MailChimp.ManualSync.Hint");
 
             //Remove scheduled task
             var task = FindScheduledTask();

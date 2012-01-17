@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel;
 using System.Web.Mvc;
-using Nop.Plugin.Shipping.UPS.Domain;
+using Nop.Web.Framework;
 
 namespace Nop.Plugin.Shipping.UPS.Models
 {
@@ -16,45 +15,46 @@ namespace Nop.Plugin.Shipping.UPS.Models
             AvailablePackagingTypes = new List<SelectListItem>();
             AvailableCountries = new List<SelectListItem>();
         }
-        [DisplayNameAttribute("URL")]
+        [NopResourceDisplayName("Plugins.Shipping.UPS.Fields.Url")]
         public string Url { get; set; }
 
-        [DisplayNameAttribute("Access Key")]
+        [NopResourceDisplayName("Plugins.Shipping.UPS.Fields.AccessKey")]
         public string AccessKey { get; set; }
 
-        [DisplayNameAttribute("Username")]
+        [NopResourceDisplayName("Plugins.Shipping.UPS.Fields.Username")]
         public string Username { get; set; }
 
-        [DisplayNameAttribute("Password")]
+        [NopResourceDisplayName("Plugins.Shipping.UPS.Fields.Password")]
         public string Password { get; set; }
 
-        [DisplayNameAttribute("Additional handling charge")]
+        [NopResourceDisplayName("Plugins.Shipping.UPS.Fields.AdditionalHandlingCharge")]
         public decimal AdditionalHandlingCharge { get; set; }
 
-        [DisplayNameAttribute("Insure package")]
+        [NopResourceDisplayName("Plugins.Shipping.UPS.Fields.InsurePackage")]
         public bool InsurePackage { get; set; }
 
-        [DisplayNameAttribute("UPS Customer Classification")]
+        [NopResourceDisplayName("Plugins.Shipping.UPS.Fields.CustomerClassification")]
         public string CustomerClassification { get; set; }
         public IList<SelectListItem> AvailableCustomerClassifications { get; set; }
 
-        [DisplayNameAttribute("UPS Pickup Type")]
+        [NopResourceDisplayName("Plugins.Shipping.UPS.Fields.PickupType")]
         public string PickupType { get; set; }
         public IList<SelectListItem> AvailablePickupTypes { get; set; }
 
-        [DisplayNameAttribute("UPS Packaging Type")]
+        [NopResourceDisplayName("Plugins.Shipping.UPS.Fields.PackagingType")]
         public string PackagingType { get; set; }
         public IList<SelectListItem> AvailablePackagingTypes { get; set; }
 
-        [DisplayNameAttribute("Shipped from country")]
+        [NopResourceDisplayName("Plugins.Shipping.UPS.Fields.DefaultShippedFromCountry")]
         public int DefaultShippedFromCountryId { get; set; }
         public IList<SelectListItem> AvailableCountries { get; set; }
 
-        [DisplayNameAttribute("Shipped from zip")]
+        [NopResourceDisplayName("Plugins.Shipping.UPS.Fields.DefaultShippedFromZipPostalCode")]
         public string DefaultShippedFromZipPostalCode { get; set; }
-        
+
 
         public IList<string> CarrierServicesOffered { get; set; }
+        [NopResourceDisplayName("Plugins.Shipping.UPS.Fields.AvailableCarrierServices")]
         public IList<string> AvailableCarrierServices { get; set; }
         public string[] CheckedCarrierServices { get; set; }
     }

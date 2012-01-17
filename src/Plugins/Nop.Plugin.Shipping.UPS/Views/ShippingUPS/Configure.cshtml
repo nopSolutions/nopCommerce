@@ -107,9 +107,7 @@
         </tr>
         <tr>
             <td class="adminTitle">
-                Carrier Services:
-            <br />
-            -select the services you want to offer to customers.
+                @Html.NopLabelFor(model => model.AvailableCarrierServices):
             </td>
             <td class="adminData">
                 <div style="height: 250px; width: 300px; overflow: auto; border: solid 1px #bbb;">
@@ -125,7 +123,7 @@
         <tr>
             <td colspan="2" width="100%">
                 <button type="submit" name="save" value="save" class="t-button">
-                    Save</button>
+                    @T("Admin.Common.Save")</button>
             </td>
         </tr>
     </table>    

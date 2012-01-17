@@ -1,21 +1,20 @@
-﻿using System.ComponentModel;
-using System.Web.Mvc;
+﻿using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
 
 namespace Nop.Plugin.Payments.GoogleCheckout.Models
 {
     public class ConfigurationModel : BaseNopModel
     {
-        [DisplayName("Use Sandbox")]
+        [NopResourceDisplayName("Plugins.Payments.GoogleCheckout.Fields.UseSandbox")]
         public bool UseSandbox { get; set; }
 
-        [DisplayName("Google Vendor ID")]
+        [NopResourceDisplayName("Plugins.Payments.GoogleCheckout.Fields.GoogleVendorId")]
         public string GoogleVendorId { get; set; }
 
-        [DisplayName("Google Merchant Key")]
+        [NopResourceDisplayName("Plugins.Payments.GoogleCheckout.Fields.GoogleMerchantKey")]
         public string GoogleMerchantKey { get; set; }
 
-        [DisplayName("Authenticate callback")]
+        [NopResourceDisplayName("Plugins.Payments.GoogleCheckout.Fields.AuthenticateCallback")]
         public bool AuthenticateCallback { get; set; }
     }
 }

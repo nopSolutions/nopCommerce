@@ -58,17 +58,21 @@ namespace Nop.Plugin.Sms.Verizon.Controllers
             try
             {
                 if (String.IsNullOrEmpty(model.TestMessage))
-                    throw new NopException("Enter test message");
-
-                var smsProvider = _smsService.LoadSmsProviderBySystemName("Mobile.SMS.Verizon");
-
-                if (!smsProvider.SendSms(model.TestMessage))
                 {
-                    model.TestSmsResult = _localizationService.GetResource("Plugins.Sms.Verizon.TestFailed");
+                    model.TestSmsResult = "Enter test message";
                 }
                 else
                 {
-                    model.TestSmsResult = _localizationService.GetResource("Plugins.Sms.Verizon.TestSuccess");
+                    var smsProvider = _smsService.LoadSmsProviderBySystemName("Mobile.SMS.Verizon");
+
+                    if (!smsProvider.SendSms(model.TestMessage))
+                    {
+                        model.TestSmsResult = _localizationService.GetResource("Plugins.Sms.Verizon.TestFailed");
+                    }
+                    else
+                    {
+                        model.TestSmsResult = _localizationService.GetResource("Plugins.Sms.Verizon.TestSuccess");
+                    }
                 }
             }
             catch(Exception exc)

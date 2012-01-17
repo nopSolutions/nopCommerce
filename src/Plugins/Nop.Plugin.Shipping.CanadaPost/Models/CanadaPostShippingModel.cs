@@ -1,16 +1,16 @@
-﻿using System.ComponentModel;
+﻿using Nop.Web.Framework;
 
 namespace Nop.Plugin.Shipping.CanadaPost.Models
 {
     public class CanadaPostShippingModel
     {
-        [DisplayName("Canada Post URL")]
+        [NopResourceDisplayName("Plugins.Shipping.CanadaPost.Fields.Url")]
         public string Url { get; set; }
 
-        [DisplayNameAttribute("Canada Post Port")]
+        [NopResourceDisplayName("Plugins.Shipping.CanadaPost.Fields.Port")]
         public int Port { get; set; }
 
-        [DisplayNameAttribute("Canada Post Customer ID")]
+        [NopResourceDisplayName("Plugins.Shipping.CanadaPost.Fields.CustomerId")]
         public string CustomerId { get; set; }
     }
 }

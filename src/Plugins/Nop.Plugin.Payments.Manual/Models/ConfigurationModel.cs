@@ -1,17 +1,16 @@
-﻿using System.ComponentModel;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
+using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
 
 namespace Nop.Plugin.Payments.Manual.Models
 {
     public class ConfigurationModel : BaseNopModel
     {
-        public int TransactModeId { get; set; }
-
-        [DisplayName("Additional fee")]
+        [NopResourceDisplayName("Plugins.Payments.Manual.Fields.AdditionalFee")]
         public decimal AdditionalFee { get; set; }
 
-        [DisplayNameAttribute("After checkout mark payment as")]
+        public int TransactModeId { get; set; }
+        [NopResourceDisplayName("Plugins.Payments.Manual.Fields.TransactMode")]
         public SelectList TransactModeValues { get; set; }
     }
 }
