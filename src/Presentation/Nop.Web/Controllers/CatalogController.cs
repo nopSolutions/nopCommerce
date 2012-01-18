@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel.Syndication;
+using System.Web;
 using System.Web.Mvc;
 using Nop.Core;
 using Nop.Core.Caching;
@@ -596,6 +597,7 @@ namespace Nop.Web.Controllers
                 model.AddToCart.DisableWishlistButton = true;
             }
 
+            //customer entered price
             model.AddToCart.CustomerEntersPrice = productVariant.CustomerEntersPrice;
             if (model.AddToCart.CustomerEntersPrice)
             {
@@ -1231,13 +1233,13 @@ namespace Nop.Web.Controllers
                 return RedirectToAction("Index", "Home");
 
             #region Customer entered price
+            decimal customerEnteredPrice = decimal.Zero;
             decimal customerEnteredPriceConverted = decimal.Zero;
             if (productVariant.CustomerEntersPrice)
             {
                 foreach (string formKey in form.AllKeys)
                     if (formKey.Equals(string.Format("price_{0}.CustomerEnteredPrice", productVariantId), StringComparison.InvariantCultureIgnoreCase))
                     {
-                        decimal customerEnteredPrice = decimal.Zero;
                         if (decimal.TryParse(form[formKey], out customerEnteredPrice))
                             customerEnteredPriceConverted = _currencyService.ConvertToPrimaryStoreCurrency(customerEnteredPrice, _workContext.WorkingCurrency);
                         break;
@@ -1356,13 +1358,13 @@ namespace Nop.Web.Controllers
 
             #region Gift cards
 
+            string recipientName = "";
+            string recipientEmail = "";
+            string senderName = "";
+            string senderEmail = "";
+            string giftCardMessage = "";
             if (productVariant.IsGiftCard)
             {
-                string recipientName = "";
-                string recipientEmail = "";
-                string senderName = "";
-                string senderEmail = "";
-                string giftCardMessage = "";
                 foreach (string formKey in form.AllKeys)
                 {
                     if (formKey.Equals(string.Format("giftcard_{0}.RecipientName", productVariantId), StringComparison.InvariantCultureIgnoreCase))
@@ -1401,6 +1403,144 @@ namespace Nop.Web.Controllers
             //save item
             var addToCartWarnings = _shoppingCartService.AddToCart(_workContext.CurrentCustomer,
                 productVariant, cartType, attributes, customerEnteredPriceConverted, quantity, true);
+
+            #region Set already entered values
+
+            //set already entered values (quantity, customer entered price, gift card attributes, product attributes
+            //we do it manually because views do not use HTML helpers for rendering controls
+            
+            Action<ProductModel> setEnteredValues = (productModel) =>
+                {
+                    //find product variant model
+                    var productVariantModel = productModel
+                        .ProductVariantModels
+                        .Where(x => x.Id == productVariant.Id)
+                        .FirstOrDefault();
+                    if (productVariantModel == null)
+                        return;
+
+                    #region 'Add to cart' model
+
+                    //entered quantity
+                    productVariantModel.AddToCart.EnteredQuantity = quantity;
+                    //customer entered price
+                    if (productVariantModel.AddToCart.CustomerEntersPrice)
+                    {
+                        productVariantModel.AddToCart.CustomerEnteredPrice = customerEnteredPrice;
+                    }
+
+                    #endregion
+
+                    #region Gift card attributes
+
+                    if (productVariant.IsGiftCard)
+                    {
+                        productVariantModel.GiftCard.RecipientName = recipientName;
+                        productVariantModel.GiftCard.RecipientEmail = recipientEmail;
+                        productVariantModel.GiftCard.SenderName = senderName;
+                        productVariantModel.GiftCard.SenderEmail = senderEmail;
+                        productVariantModel.GiftCard.Message = giftCardMessage;
+                    }
+
+                    #endregion
+
+                    #region Product attributes
+                    //clear pre-defined values)
+                    foreach (var pvaModel in productVariantModel.ProductVariantAttributes)
+                    {
+                        foreach (var pvavModel in pvaModel.Values)
+                            pvavModel.IsPreSelected = false;
+                    }
+                    //select the previously entered ones
+                    foreach (var attribute in productVariantAttributes)
+                    {
+                        string controlId = string.Format("product_attribute_{0}_{1}_{2}", attribute.ProductVariantId, attribute.ProductAttributeId, attribute.Id);
+                        switch (attribute.AttributeControlType)
+                        {
+                            case AttributeControlType.DropdownList:
+                                {
+                                    var ddlAttributes = form[controlId];
+                                    if (!String.IsNullOrEmpty(ddlAttributes))
+                                    {
+                                        int selectedAttributeId = int.Parse(ddlAttributes);
+                                        if (selectedAttributeId > 0)
+                                        {
+                                            var pvavModel = productVariantModel.ProductVariantAttributes
+                                                .SelectMany(x => x.Values)
+                                                .Where(y => y.Id == selectedAttributeId)
+                                                .FirstOrDefault();
+                                            if (pvavModel != null)
+                                                pvavModel.IsPreSelected = true;
+                                        }
+                                    }
+                                }
+                                break;
+                            case AttributeControlType.RadioList:
+                                {
+                                    var rblAttributes = form[controlId];
+                                    if (!String.IsNullOrEmpty(rblAttributes))
+                                    {
+                                        int selectedAttributeId = int.Parse(rblAttributes);
+                                        if (selectedAttributeId > 0)
+                                        {
+                                            var pvavModel = productVariantModel.ProductVariantAttributes
+                                                .SelectMany(x => x.Values)
+                                                .Where(y => y.Id == selectedAttributeId)
+                                                .FirstOrDefault();
+                                            if (pvavModel != null)
+                                                pvavModel.IsPreSelected = true;
+                                        }
+                                    }
+                                }
+                                break;
+                            case AttributeControlType.Checkboxes:
+                                {
+                                    var cblAttributes = form[controlId];
+                                    if (!String.IsNullOrEmpty(cblAttributes))
+                                    {
+                                        foreach (var item in cblAttributes.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                                        {
+                                            int selectedAttributeId = int.Parse(item);
+                                            if (selectedAttributeId > 0)
+                                            {
+                                                var pvavModel = productVariantModel.ProductVariantAttributes
+                                                   .SelectMany(x => x.Values)
+                                                   .Where(y => y.Id == selectedAttributeId)
+                                                   .FirstOrDefault();
+                                                if (pvavModel != null)
+                                                    pvavModel.IsPreSelected = true;
+                                            }
+                                        }
+                                    }
+                                }
+                                break;
+                            case AttributeControlType.TextBox:
+                                {
+                                    //TODO set datepicker values
+                                }
+                                break;
+                            case AttributeControlType.MultilineTextbox:
+                                {
+                                    //TODO set datepicker values
+                                }
+                                break;
+                            case AttributeControlType.Datepicker:
+                                {
+                                    //TODO set datepicker values
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+
+                    #endregion
+                };
+
+            #endregion
+
+            #region Return the view
+
             if (addToCartWarnings.Count == 0)
             {
                 switch (cartType)
@@ -1422,9 +1562,10 @@ namespace Nop.Web.Controllers
                             {
                                 //redisplay the page with "Product has been added to the cart notification message
 
-                                //TODO set already entered values (quantity, customer entered price, gift card attributes, product attributes
                                 var model = PrepareProductDetailsPageModel(product);
                                 model.DisplayProductAddedMessage = true;
+                                //set already entered values (quantity, customer entered price, gift card attributes, product attributes
+                                setEnteredValues(model);
                                 return View(model.ProductTemplateViewPath, model);
                             }
                         }
@@ -1437,10 +1578,13 @@ namespace Nop.Web.Controllers
                     ModelState.AddModelError("", error);
 
                 //If we got this far, something failed, redisplay form
-                //TODO set already entered values (quantity, customer entered price, gift card attributes, product attributes
                 var model = PrepareProductDetailsPageModel(product);
+                //set already entered values (quantity, customer entered price, gift card attributes, product attributes
+                setEnteredValues(model);
                 return View(model.ProductTemplateViewPath, model);
             }
+
+            #endregion
         }
 
         [ChildActionOnly]
