@@ -343,23 +343,23 @@ namespace Nop.Services.Orders
                     out giftCardSenderName, out giftCardSenderEmail, out giftCardMessage);
 
                 if (String.IsNullOrEmpty(giftCardRecipientName))
-                    warnings.Add(_localizationService.GetResource("ShoppingCartWarning.RecipientNameError"));
+                    warnings.Add(_localizationService.GetResource("ShoppingCart.RecipientNameError"));
 
                 if (productVariant.GiftCardType == GiftCardType.Virtual)
                 {
                     //validate for virtual gift cards only
                     if (String.IsNullOrEmpty(giftCardRecipientEmail) || !CommonHelper.IsValidEmail(giftCardRecipientEmail))
-                        warnings.Add(_localizationService.GetResource("ShoppingCartWarning.RecipientEmailError"));
+                        warnings.Add(_localizationService.GetResource("ShoppingCart.RecipientEmailError"));
                 }
 
                 if (String.IsNullOrEmpty(giftCardSenderName))
-                    warnings.Add(_localizationService.GetResource("ShoppingCartWarning.SenderNameError"));
+                    warnings.Add(_localizationService.GetResource("ShoppingCart.SenderNameError"));
 
                 if (productVariant.GiftCardType == GiftCardType.Virtual)
                 {
                     //validate for virtual gift cards only
                     if (String.IsNullOrEmpty(giftCardSenderEmail) || !CommonHelper.IsValidEmail(giftCardSenderEmail))
-                        warnings.Add(_localizationService.GetResource("ShoppingCartWarning.SenderEmailError"));
+                        warnings.Add(_localizationService.GetResource("ShoppingCart.SenderEmailError"));
                 }
             }
 
@@ -389,29 +389,29 @@ namespace Nop.Services.Orders
             var product = productVariant.Product;
             if (product == null)
             {
-                warnings.Add(string.Format("Product (Id={0}) can not be loaded", productVariant.ProductId));
+                warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.CannotLoadProduct"), productVariant.ProductId));
                 return warnings;
             }
 
             if (product.Deleted || productVariant.Deleted)
             {
-                warnings.Add("Product is deleted");
+                warnings.Add(_localizationService.GetResource("ShoppingCart.ProductDeleted"));
                 return warnings;
             }
 
             if (!product.Published || !productVariant.Published)
             {
-                warnings.Add("Product is not published");
+                warnings.Add(_localizationService.GetResource("ShoppingCart.ProductUnpublished"));
             }
 
             if (shoppingCartType == ShoppingCartType.ShoppingCart && productVariant.DisableBuyButton)
             {
-                warnings.Add("Buying is disabled for this product");
+                warnings.Add(_localizationService.GetResource("ShoppingCart.BuyingDisabled"));
             }
 
             if (shoppingCartType == ShoppingCartType.Wishlist && productVariant.DisableWishlistButton)
             {
-                warnings.Add("Wishlist is disabled for this product");
+                warnings.Add(_localizationService.GetResource("ShoppingCart.WishlistDisabled"));
             }
             
             if (shoppingCartType == ShoppingCartType.ShoppingCart &&
@@ -499,7 +499,7 @@ namespace Nop.Services.Orders
                 DateTime availableStartDateTime = DateTime.SpecifyKind(productVariant.AvailableStartDateTimeUtc.Value, DateTimeKind.Utc);
                 if (availableStartDateTime.CompareTo(now) > 0)
                 {
-                    warnings.Add("Product is not available");
+                    warnings.Add(_localizationService.GetResource("ShoppingCart.NotAvailable"));
                     availableStartDateError = true;
                 }
             }
@@ -509,7 +509,7 @@ namespace Nop.Services.Orders
                 DateTime availableEndDateTime = DateTime.SpecifyKind(productVariant.AvailableEndDateTimeUtc.Value, DateTimeKind.Utc);
                 if (availableEndDateTime.CompareTo(now) < 0)
                 {
-                    warnings.Add("Product is not available");
+                    warnings.Add(_localizationService.GetResource("ShoppingCart.NotAvailable"));
                 }
             }
 
@@ -545,7 +545,7 @@ namespace Nop.Services.Orders
                 var productVariant = sci.ProductVariant;
                 if (productVariant == null)
                 {
-                    warnings.Add(string.Format("Product variant (Id={0}) can not be loaded", sci.ProductVariantId));
+                    warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.CannotLoadProductVariant"), sci.ProductVariantId));
                     return warnings;
                 }
 

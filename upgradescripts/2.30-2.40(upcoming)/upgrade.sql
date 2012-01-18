@@ -686,23 +686,50 @@ set @resources='
   <LocaleResource Name="Plugins.Tax.StrikeIron.TestingCanada.ProvinceCode.Hint">
     <Value>Specify postal code for testing.</Value>
   </LocaleResource>
-  <LocaleResource Name="">
+  <LocaleResource Name="ShoppingCart.CannotLoadProduct">
+    <Value>Product (Id={0}) can not be loaded</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.ProductDeleted">
+    <Value>Product is deleted</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.ProductUnpublished">
+    <Value>Product is not published</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.BuyingDisabled">
+    <Value>Buying is disabled for this product</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.WishlistDisabled">
+    <Value>Wishlist is disabled for this product</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCartWarning.RecipientEmailError">
     <Value></Value>
   </LocaleResource>
-  <LocaleResource Name="">
+  <LocaleResource Name="ShoppingCartWarning.RecipientNameError">
     <Value></Value>
   </LocaleResource>
-  <LocaleResource Name="">
+  <LocaleResource Name="ShoppingCartWarning.SenderEmailError">
     <Value></Value>
   </LocaleResource>
-  <LocaleResource Name="">
+  <LocaleResource Name="ShoppingCartWarning.SenderNameError">
     <Value></Value>
   </LocaleResource>
-  <LocaleResource Name="">
-    <Value></Value>
+  <LocaleResource Name="ShoppingCart.RecipientEmailError">
+    <Value>Enter valid recipient email</Value>
   </LocaleResource>
-  <LocaleResource Name="">
-    <Value></Value>
+  <LocaleResource Name="ShoppingCart.RecipientNameError">
+    <Value>Enter valid recipient name</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.SenderEmailError">
+    <Value>Enter valid sender email</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.SenderNameError">
+    <Value>Enter valid sender name</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.CannotLoadProductVariant">
+    <Value>Product variant (Id={0}) can not be loaded</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.NotAvailable">
+    <Value>Product is not available</Value>
   </LocaleResource>
 </Language>
 '

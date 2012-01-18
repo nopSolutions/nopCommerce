@@ -3379,6 +3379,15 @@
 			<LocaleResource Name="AddToWishlist">
 				<Value>Add to wishlist</Value>
 			</LocaleResource>
+			<LocaleResource Name="BuyingDisabled">
+				<Value>Buying is disabled for this product</Value>
+			</LocaleResource>
+			<LocaleResource Name="CannotLoadProduct">
+				<Value>Product (Id={0}) can not be loaded</Value>
+			</LocaleResource>
+			<LocaleResource Name="CannotLoadProductVariant">
+				<Value>Product variant (Id={0}) can not be loaded</Value>
+			</LocaleResource>
 			<LocaleResource Name="CannotMixStandardAndAutoshipProducts">
 				<Value>Your cart has standard and auto-ship (recurring) items. Only one product type is allowed per order.</Value>
 			</LocaleResource>
@@ -3457,6 +3466,9 @@
 			<LocaleResource Name="ItemTotal">
 				<Value>Total</Value>
 			</LocaleResource>
+			<LocaleResource Name="ItemYouSave">
+				<Value>You save</Value>
+			</LocaleResource>
 			<LocaleResource Name="MaximumQuantity">
 				<Value>The maximum quantity allowed for purchase is {0}.</Value>
 			</LocaleResource>
@@ -3482,17 +3494,32 @@
 					</LocaleResource>
 				</Children>
 			</LocaleResource>
+			<LocaleResource Name="NotAvailable">
+				<Value>Product is not available</Value>
+			</LocaleResource>
 			<LocaleResource Name="OutOfStock">
 				<Value>Out of stock</Value>
 			</LocaleResource>
 			<LocaleResource Name="Product(s)">
 				<Value>Product(s)</Value>
 			</LocaleResource>
+			<LocaleResource Name="ProductDeleted">
+				<Value>Product is deleted</Value>
+			</LocaleResource>
+			<LocaleResource Name="ProductUnpublished">
+				<Value>Product is not published</Value>
+			</LocaleResource>
 			<LocaleResource Name="Quantity">
 				<Value>Qty.</Value>
 			</LocaleResource>
 			<LocaleResource Name="QuantityExceedsStock">
 				<Value>Your quantity exceeds stock on hand. The maximum quantity that can be added is {0}.</Value>
+			</LocaleResource>
+			<LocaleResource Name="RecipientEmailError">
+				<Value>Enter valid recipient email</Value>
+			</LocaleResource>
+			<LocaleResource Name="RecipientNameError">
+				<Value>Enter valid recipient name</Value>
 			</LocaleResource>
 			<LocaleResource Name="RecurringPeriod">
 				<Value>[Auto-ship, Every {0} {1}]</Value>
@@ -3505,6 +3532,12 @@
 			</LocaleResource>
 			<LocaleResource Name="SelectAttribute">
 				<Value>Please select {0}</Value>
+			</LocaleResource>
+			<LocaleResource Name="SenderEmailError">
+				<Value>Enter valid sender email</Value>
+			</LocaleResource>
+			<LocaleResource Name="SenderNameError">
+				<Value>Enter valid sender name</Value>
 			</LocaleResource>
 			<LocaleResource Name="SKU">
 				<Value>SKU</Value>
@@ -3563,25 +3596,13 @@
 			<LocaleResource Name="UpdateCart">
 				<Value>Update shopping cart</Value>
 			</LocaleResource>
-			<LocaleResource Name="ItemYouSave">
-				<Value>You save</Value>
+			<LocaleResource Name="WishlistDisabled">
+				<Value>Wishlist is disabled for this product</Value>
 			</LocaleResource>
 		</Children>
 	</LocaleResource>
 	<LocaleResource Name="ShoppingCartWarning">
 		<Children>
-			<LocaleResource Name="RecipientEmailError">
-				<Value>Enter valid recipient email</Value>
-			</LocaleResource>
-			<LocaleResource Name="RecipientNameError">
-				<Value>Enter valid recipient name</Value>
-			</LocaleResource>
-			<LocaleResource Name="SenderEmailError">
-				<Value>Enter valid sender email</Value>
-			</LocaleResource>
-			<LocaleResource Name="SenderNameError">
-				<Value>Enter valid sender name</Value>
-			</LocaleResource>
 		</Children>
 	</LocaleResource>
 	<LocaleResource Name="Sitemap">
