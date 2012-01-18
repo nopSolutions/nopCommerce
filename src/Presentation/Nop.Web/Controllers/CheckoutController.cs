@@ -703,7 +703,7 @@ namespace Nop.Web.Controllers
                 //get payment info
                 var paymentInfo = paymentController.GetPaymentInfo(form);
                 //session save
-                this.Session["OrderPaymentInfo"] = paymentInfo;
+                _httpContext.Session["OrderPaymentInfo"] = paymentInfo;
                 return RedirectToRoute("CheckoutConfirm");
             }
 
@@ -751,7 +751,7 @@ namespace Nop.Web.Controllers
             var model = new CheckoutConfirmModel();
             try
             {
-                var processPaymentRequest = this.Session["OrderPaymentInfo"] as ProcessPaymentRequest;
+                var processPaymentRequest = _httpContext.Session["OrderPaymentInfo"] as ProcessPaymentRequest;
                 if (processPaymentRequest == null)
                 {
                     //Check whether payment workflow is required
@@ -766,7 +766,7 @@ namespace Nop.Web.Controllers
                 var placeOrderResult = _orderProcessingService.PlaceOrder(processPaymentRequest);
                 if (placeOrderResult.Success)
                 {
-                    this.Session["OrderPaymentInfo"] = null;
+                    _httpContext.Session["OrderPaymentInfo"] = null;
                     var postProcessPaymentRequest = new PostProcessPaymentRequest()
                     {
                         Order = placeOrderResult.PlacedOrder
@@ -1270,7 +1270,7 @@ namespace Nop.Web.Controllers
                     //get payment info
                     var paymentInfo = paymentController.GetPaymentInfo(form);
                     //session save
-                    this.Session["OrderPaymentInfo"] = paymentInfo;
+                    _httpContext.Session["OrderPaymentInfo"] = paymentInfo;
 
                     var confirmOrderModel = PrepareConfirmOrderModel(cart);
                     return Json(new
@@ -1319,7 +1319,7 @@ namespace Nop.Web.Controllers
                     throw new Exception("Anonymous checkout is not allowed");
 
                 //place order
-                var processPaymentRequest = this.Session["OrderPaymentInfo"] as ProcessPaymentRequest;
+                var processPaymentRequest = _httpContext.Session["OrderPaymentInfo"] as ProcessPaymentRequest;
                 if (processPaymentRequest == null)
                 {
                     //Check whether payment workflow is required
@@ -1336,7 +1336,7 @@ namespace Nop.Web.Controllers
                 var placeOrderResult = _orderProcessingService.PlaceOrder(processPaymentRequest);
                 if (placeOrderResult.Success)
                 {
-                    this.Session["OrderPaymentInfo"] = null;
+                    _httpContext.Session["OrderPaymentInfo"] = null;
                     var postProcessPaymentRequest = new PostProcessPaymentRequest()
                     {
                         Order = placeOrderResult.PlacedOrder
