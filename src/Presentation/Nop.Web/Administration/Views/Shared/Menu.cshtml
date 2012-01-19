@@ -48,13 +48,17 @@
     {
         if (adminMenuPlugins.Count() > 0)
         {
-            x.Add().Text(T("Plugins").ToHtmlString()).Items(y =>
+            if (hideAdminMenuItemsBasedOnPermissions &&
+                permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
             {
-                foreach (var adminMenuPlugin in adminMenuPlugins)
+                x.Add().Text(T("Plugins").ToHtmlString()).Items(y =>
                 {
-                    adminMenuPlugin.BuildMenuItem(y.Add());
-                }
-            });
+                    foreach (var adminMenuPlugin in adminMenuPlugins)
+                    {
+                        adminMenuPlugin.BuildMenuItem(y.Add());
+                    }
+                });
+            }
         }
     })
     .OpenOnClick(false)
