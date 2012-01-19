@@ -593,6 +593,9 @@ namespace Nop.Services.Orders
                 if (shippingExclTax.HasValue && shippingInclTax.HasValue)
                 {
                     shippingTax = shippingInclTax.Value - shippingExclTax.Value;
+                    //ensure that tax is equal or greater than zero
+                    if (shippingTax < decimal.Zero)
+                        shippingTax = decimal.Zero;
 
                     //tax rates
                     if (taxRate > decimal.Zero && shippingTax > decimal.Zero)
@@ -614,8 +617,11 @@ namespace Nop.Services.Orders
                 decimal paymentMethodAdditionalFee = _paymentService.GetAdditionalHandlingFee(paymentMethodSystemName);
                 decimal paymentMethodAdditionalFeeExclTax = _taxService.GetPaymentMethodAdditionalFee(paymentMethodAdditionalFee, false, customer, out taxRate);
                 decimal paymentMethodAdditionalFeeInclTax = _taxService.GetPaymentMethodAdditionalFee(paymentMethodAdditionalFee, true, customer, out taxRate);
-                
+
                 paymentMethodAdditionalFeeTax = paymentMethodAdditionalFeeInclTax - paymentMethodAdditionalFeeExclTax;
+                //ensure that tax is equal or greater than zero
+                if (paymentMethodAdditionalFeeTax < decimal.Zero)
+                    paymentMethodAdditionalFeeTax = decimal.Zero;
 
                 //tax rates
                 if (taxRate > decimal.Zero && paymentMethodAdditionalFeeTax > decimal.Zero)
@@ -633,6 +639,10 @@ namespace Nop.Services.Orders
 
             //summarize taxes
             decimal taxTotal = subTotalTaxTotal + shippingTax + paymentMethodAdditionalFeeTax;
+            //ensure that tax is equal or greater than zero
+            if (taxTotal < decimal.Zero)
+                taxTotal = decimal.Zero;
+            //round tax
             if (_shoppingCartSettings.RoundPricesDuringCalculation) 
                 taxTotal = Math.Round(taxTotal, 2);
             return taxTotal;

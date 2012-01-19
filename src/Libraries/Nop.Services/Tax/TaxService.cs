@@ -242,7 +242,12 @@ namespace Nop.Services.Tax
             //get tax rate
             var calculateTaxResult = activeTaxProvider.GetTaxRate(calculateTaxRequest);
             if (calculateTaxResult.Success)
+            {
+                //ensure that tax is equal or greater than zero
+                if (calculateTaxResult.TaxRate < decimal.Zero)
+                    calculateTaxResult.TaxRate = decimal.Zero;
                 return calculateTaxResult.TaxRate;
+            }
             else
                 return decimal.Zero;
         }
