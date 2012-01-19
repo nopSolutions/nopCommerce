@@ -4691,6 +4691,9 @@ namespace Nop.Services.Installation
                 .SaveSettings(new ShippingSettings()
                 {
                     ActiveShippingRateComputationMethodSystemNames = new List<string>() { "Shipping.FixedRate" },
+                    FreeShippingOverXEnabled = false,
+                    FreeShippingOverXValue = decimal.Zero,
+                    FreeShippingOverXIncludingTax = false,
                     EstimateShippingEnabled = true,
                 });
 

@@ -26,6 +26,12 @@ namespace Nop.Core.Domain.Shipping
         public decimal FreeShippingOverXValue { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether 'Free shipping over X' option
+        /// should be evaluated over 'X' value including tax or not
+        /// </summary>
+        public bool FreeShippingOverXIncludingTax { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether 'Estimate shipping' option is enabled
         /// </summary>
         public bool EstimateShippingEnabled { get; set; }

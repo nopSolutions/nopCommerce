@@ -11,6 +11,9 @@ namespace Nop.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.FreeShippingOverXValue")]
         public decimal FreeShippingOverXValue { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.FreeShippingOverXIncludingTax")]
+        public bool FreeShippingOverXIncludingTax { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.EstimateShippingEnabled")]
         public bool EstimateShippingEnabled { get; set; }
 

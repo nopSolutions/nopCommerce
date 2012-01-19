@@ -731,6 +731,12 @@ set @resources='
   <LocaleResource Name="ShoppingCart.NotAvailable">
     <Value>Product is not available</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.FreeShippingOverXIncludingTax">
+    <Value>Calculate ''X'' including tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.FreeShippingOverXIncludingTax.Hint">
+    <Value>Check to calculate ''X'' value including tax; otherwise excluding tax.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1222,3 +1228,13 @@ BEGIN
 	INSERT [dbo].[PermissionRecord_Role_Mapping] ([PermissionRecord_Id], [CustomerRole_Id])
 	VALUES (@PermissionRecordId, @AdminCustomerRoleId)
 END
+GO
+
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'shippingsettings.freeshippingoverxincludingtax')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'shippingsettings.freeshippingoverxincludingtax', N'false')
+END
+GO

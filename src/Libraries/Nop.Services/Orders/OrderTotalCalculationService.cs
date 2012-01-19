@@ -408,7 +408,7 @@ namespace Nop.Services.Orders
                 Discount subTotalAppliedDiscount = null;
                 decimal subTotalWithoutDiscountBase = decimal.Zero;
                 decimal subTotalWithDiscountBase = decimal.Zero;
-                GetShoppingCartSubTotal(cart, includingTax, out subTotalDiscountAmount,
+                GetShoppingCartSubTotal(cart, _shippingSettings.FreeShippingOverXIncludingTax, out subTotalDiscountAmount,
                     out subTotalAppliedDiscount, out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
 
                 if (subTotalWithDiscountBase > _shippingSettings.FreeShippingOverXValue)

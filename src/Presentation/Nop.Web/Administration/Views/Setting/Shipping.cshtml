@@ -13,9 +13,11 @@
     function toggleFreeShippingOverX() {
         if (getE('@Html.FieldIdFor(model => model.FreeShippingOverXEnabled)').checked) {
             $('#pnlValueOfX').show();
+            $('#pnlValueOfXincltax').show();
         }
         else {
             $('#pnlValueOfX').hide();
+            $('#pnlValueOfXincltax').hide();
         }
     }
 
@@ -48,6 +50,15 @@
             <td class="adminData">
                 @Html.EditorFor(model => model.FreeShippingOverXValue)
                 @Html.ValidationMessageFor(model => model.FreeShippingOverXValue)
+            </td>
+        </tr>
+        <tr id="pnlValueOfXincltax">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.FreeShippingOverXIncludingTax):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.FreeShippingOverXIncludingTax)
+                @Html.ValidationMessageFor(model => model.FreeShippingOverXIncludingTax)
             </td>
         </tr>
         <tr>

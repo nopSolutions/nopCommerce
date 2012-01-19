@@ -4634,6 +4634,14 @@
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
+									<LocaleResource Name="FreeShippingOverXIncludingTax">
+										<Value>Calculate 'X' including tax</Value>
+										<Children>
+											<LocaleResource Name="Hint">
+												<Value>Check to calculate 'X' value including tax; otherwise excluding tax.</Value>
+											</LocaleResource>
+										</Children>
+									</LocaleResource>
 									<LocaleResource Name="EstimateShippingEnabled">
 										<Value>Estimate shipping enabled</Value>
 										<Children>
