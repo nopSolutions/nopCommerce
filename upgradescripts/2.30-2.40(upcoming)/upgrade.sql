@@ -737,6 +737,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.FreeShippingOverXIncludingTax.Hint">
     <Value>Check to calculate ''X'' value including tax; otherwise excluding tax.</Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.Fedex.Fields.PassDimensions">
+    <Value>Pass dimensions</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.Fedex.Fields.PassDimensions.Hint">
+    <Value>Check if you want ot pass package dimensions when requesting rates.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1236,5 +1242,14 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'shippingsettings.freeshi
 BEGIN
 	INSERT [Setting] ([Name], [Value])
 	VALUES (N'shippingsettings.freeshippingoverxincludingtax', N'false')
+END
+GO
+
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'fedexsettings.passdimensions')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'fedexsettings.passdimensions', N'false')
 END
 GO

@@ -37,6 +37,7 @@ namespace Nop.Plugin.Shipping.Fedex.Controllers
             model.StateOrProvinceCode = _fedexSettings.StateOrProvinceCode;
             model.PostalCode = _fedexSettings.PostalCode;
             model.CountryCode = _fedexSettings.CountryCode;
+            model.PassDimensions = _fedexSettings.PassDimensions;
 
 
             var services = new FedexServices();
@@ -82,6 +83,7 @@ namespace Nop.Plugin.Shipping.Fedex.Controllers
             _fedexSettings.StateOrProvinceCode = CommonHelper.EnsureMaximumLength(model.StateOrProvinceCode, 2);
             _fedexSettings.PostalCode = model.PostalCode;
             _fedexSettings.CountryCode = model.CountryCode;
+            _fedexSettings.PassDimensions = model.PassDimensions;
 
 
 

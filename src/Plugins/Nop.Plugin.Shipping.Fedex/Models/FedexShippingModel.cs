@@ -54,5 +54,8 @@ namespace Nop.Plugin.Shipping.Fedex.Models
 
         [NopResourceDisplayName("Plugins.Shipping.Fedex.Fields.CountryCode")]
         public string CountryCode { get; set; }
+
+        [NopResourceDisplayName("Plugins.Shipping.Fedex.Fields.PassDimensions")]
+        public bool PassDimensions { get; set; }
     }
 }

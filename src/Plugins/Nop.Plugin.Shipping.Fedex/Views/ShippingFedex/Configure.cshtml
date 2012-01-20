@@ -139,6 +139,15 @@
             </td>
         </tr>
         <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.PassDimensions):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.PassDimensions)
+                @Html.ValidationMessageFor(model => model.PassDimensions)
+            </td>
+        </tr>
+        <tr>
             <td colspan="2" width="100%">
                 <button type="submit" name="save" value="save" class="t-button">
                     @T("Admin.Common.Save")</button>

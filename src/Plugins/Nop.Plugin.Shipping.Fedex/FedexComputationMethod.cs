@@ -217,10 +217,9 @@ namespace Nop.Plugin.Shipping.Fedex
                 request.RequestedShipment.RequestedPackageLineItems[0].Weight.Value = weight;
                 request.RequestedShipment.RequestedPackageLineItems[0].Dimensions = new Dimensions(); // package dimensions
 
-                //it's better to don't pass dims now
-                request.RequestedShipment.RequestedPackageLineItems[0].Dimensions.Length = "0";
-                request.RequestedShipment.RequestedPackageLineItems[0].Dimensions.Width = "0";
-                request.RequestedShipment.RequestedPackageLineItems[0].Dimensions.Height = "0";
+                request.RequestedShipment.RequestedPackageLineItems[0].Dimensions.Length = _fedexSettings.PassDimensions ? length.ToString() : "0";
+                request.RequestedShipment.RequestedPackageLineItems[0].Dimensions.Width =_fedexSettings.PassDimensions ?  width.ToString() : "0";
+                request.RequestedShipment.RequestedPackageLineItems[0].Dimensions.Height = _fedexSettings.PassDimensions ? height.ToString() : "0";
                 request.RequestedShipment.RequestedPackageLineItems[0].Dimensions.Units = LinearUnits.IN;
                 request.RequestedShipment.RequestedPackageLineItems[0].InsuredValue = new Money(); // insured value
                 request.RequestedShipment.RequestedPackageLineItems[0].InsuredValue.Amount = orderSubTotal;
@@ -271,10 +270,9 @@ namespace Nop.Plugin.Shipping.Fedex
                     request.RequestedShipment.RequestedPackageLineItems[i].Weight.Value = (decimal)weight2;
                     request.RequestedShipment.RequestedPackageLineItems[i].Dimensions = new Dimensions(); // package dimensions
 
-                    //it's better to don't pass dims now
-                    request.RequestedShipment.RequestedPackageLineItems[i].Dimensions.Length = "0";
-                    request.RequestedShipment.RequestedPackageLineItems[i].Dimensions.Width = "0";
-                    request.RequestedShipment.RequestedPackageLineItems[i].Dimensions.Height = "0";
+                    request.RequestedShipment.RequestedPackageLineItems[i].Dimensions.Length =_fedexSettings.PassDimensions ? length2.ToString() : "0";
+                    request.RequestedShipment.RequestedPackageLineItems[i].Dimensions.Width = _fedexSettings.PassDimensions ? width2.ToString() : "0";
+                    request.RequestedShipment.RequestedPackageLineItems[i].Dimensions.Height = _fedexSettings.PassDimensions ? height2.ToString() : "0";
                     request.RequestedShipment.RequestedPackageLineItems[i].Dimensions.Units = LinearUnits.IN;
                     request.RequestedShipment.RequestedPackageLineItems[i].InsuredValue = new Money(); // insured value
                     request.RequestedShipment.RequestedPackageLineItems[i].InsuredValue.Amount = orderSubTotal2;
@@ -523,6 +521,8 @@ namespace Nop.Plugin.Shipping.Fedex
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.Fedex.Fields.PostalCode.Hint", "Specify origin zip code.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.Fedex.Fields.CountryCode", "Shipping origin. Country code");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.Fedex.Fields.CountryCode.Hint", "Specify origin country code.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.Fedex.Fields.PassDimensions", "Pass dimensions");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.Fedex.Fields.PassDimensions.Hint", "Check if you want ot pass package dimensions when requesting rates.");
             
             base.Install();
         }
@@ -561,6 +561,8 @@ namespace Nop.Plugin.Shipping.Fedex
             this.DeletePluginLocaleResource("Plugins.Shipping.Fedex.Fields.PostalCode.Hint");
             this.DeletePluginLocaleResource("Plugins.Shipping.Fedex.Fields.CountryCode");
             this.DeletePluginLocaleResource("Plugins.Shipping.Fedex.Fields.CountryCode.Hint");
+            this.DeletePluginLocaleResource("Plugins.Shipping.Fedex.Fields.PassDimensions");
+            this.DeletePluginLocaleResource("Plugins.Shipping.Fedex.Fields.PassDimensions.Hint");
             
             base.Uninstall();
         }
