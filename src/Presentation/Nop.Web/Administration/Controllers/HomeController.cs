@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.ServiceModel.Syndication;
 using System.Web.Mvc;
 using System.Xml;
@@ -50,7 +51,12 @@ namespace Nop.Admin.Controllers
                     _commonSettings.HideAdvertisementsOnAdminArea, 
                     _storeInformationSettings.StoreUrl);
                 //TODO cache results (based on feed URL)
-                using (var reader = XmlReader.Create(feedUrl))
+
+                //specify timeout (5 secs)
+                var request = WebRequest.Create(feedUrl);
+                request.Timeout = 5000;
+                using (WebResponse response = request.GetResponse())
+                using (var reader = XmlReader.Create(response.GetResponseStream()))
                 {
                     var rssData = SyndicationFeed.Load(reader);
                     return PartialView(rssData);
