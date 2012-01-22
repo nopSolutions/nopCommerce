@@ -38,6 +38,7 @@ namespace Nop.Services.Shipping
         private readonly ShippingSettings _shippingSettings;
         private readonly IPluginFinder _pluginFinder;
         private readonly IEventPublisher _eventPublisher;
+        private readonly ShoppingCartSettings _shoppingCartSettings;
 
         #endregion
 
@@ -53,7 +54,8 @@ namespace Nop.Services.Shipping
         /// <param name="checkoutAttributeParser">Checkout attribute parser</param>
         /// <param name="shippingSettings">Shipping settings</param>
         /// <param name="pluginFinder">Plugin finder</param>
-        /// <param name="eventPublisher"></param>
+        /// <param name="eventPublisher">Event published</param>
+        /// <param name="shoppingCartSettings">Shopping cart settings</param>
         public ShippingService(ICacheManager cacheManager, 
             IRepository<ShippingMethod> shippingMethodRepository,
             ILogger logger,
@@ -61,16 +63,18 @@ namespace Nop.Services.Shipping
             ICheckoutAttributeParser checkoutAttributeParser,
             ShippingSettings shippingSettings,
             IPluginFinder pluginFinder,
-            IEventPublisher eventPublisher)
+            IEventPublisher eventPublisher,
+            ShoppingCartSettings shoppingCartSettings)
         {
-            _cacheManager = cacheManager;
-            _shippingMethodRepository = shippingMethodRepository;
-            _logger = logger;
-            _productAttributeParser = productAttributeParser;
-            _checkoutAttributeParser = checkoutAttributeParser;
-            _shippingSettings = shippingSettings;
-            _pluginFinder = pluginFinder;
-            _eventPublisher = eventPublisher;
+            this._cacheManager = cacheManager;
+            this._shippingMethodRepository = shippingMethodRepository;
+            this._logger = logger;
+            this._productAttributeParser = productAttributeParser;
+            this._checkoutAttributeParser = checkoutAttributeParser;
+            this._shippingSettings = shippingSettings;
+            this._pluginFinder = pluginFinder;
+            this._eventPublisher = eventPublisher;
+            this._shoppingCartSettings = shoppingCartSettings;
         }
 
         #endregion
@@ -277,64 +281,6 @@ namespace Nop.Services.Shipping
         }
 
         /// <summary>
-        /// Gets shopping cart additional shipping charge
-        /// </summary>
-        /// <param name="cart">Cart</param>
-        /// <returns>Additional shipping charge</returns>
-        public virtual decimal GetShoppingCartAdditionalShippingCharge(IList<ShoppingCartItem> cart)
-        {
-            decimal additionalShippingCharge = decimal.Zero;
-            
-            bool isFreeShipping = IsFreeShipping(cart);
-            if (isFreeShipping)
-                return decimal.Zero;
-
-            foreach (var sci in cart)
-                if (sci.IsShipEnabled && !sci.IsFreeShipping)
-                    additionalShippingCharge += sci.AdditionalShippingCharge;
-
-            return additionalShippingCharge;
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether shipping is free
-        /// </summary>
-        /// <param name="cart">Cart</param>
-        /// <returns>A value indicating whether shipping is free</returns>
-        public virtual bool IsFreeShipping(IList<ShoppingCartItem> cart)
-        {
-            Customer customer = cart.GetCustomer();
-            if (customer != null)
-            {
-                //check whether customer is in a customer role with free shipping applied
-                var customerRoles = customer.CustomerRoles.Where(cr => cr.Active);
-                foreach (var customerRole in customerRoles)
-                    if (customerRole.FreeShipping)
-                        return true;
-            }
-
-            bool shoppingCartRequiresShipping = cart.RequiresShipping();
-            if (!shoppingCartRequiresShipping)
-                return true;
-
-            //check whether all shopping cart items are marked as free shipping
-            bool allItemsAreFreeShipping = true;
-            foreach (var sc in cart)
-            {
-                if (sc.IsShipEnabled && !sc.IsFreeShipping)
-                {
-                    allItemsAreFreeShipping = false;
-                    break;
-                }
-            }
-            if (allItemsAreFreeShipping)
-                return true;
-
-            //otherwise, return false
-            return false;
-        }
-
-        /// <summary>
         /// Create shipment package from shopping cart
         /// </summary>
         /// <param name="cart">Shopping cart</param>
@@ -373,8 +319,6 @@ namespace Nop.Services.Shipping
 
             var result = new GetShippingOptionResponse();
             
-            bool isFreeShipping = IsFreeShipping(cart);
-
             //create a package
             var getShippingOptionRequest = CreateShippingOptionRequest(cart, shippingAddress);
             var shippingRateComputationMethods = LoadActiveShippingRateComputationMethods();
@@ -391,7 +335,11 @@ namespace Nop.Services.Shipping
                 var getShippingOptionResponse = srcm.GetShippingOptions(getShippingOptionRequest);
                 foreach (var so2 in getShippingOptionResponse.ShippingOptions)
                 {
+                    //system name
                     so2.ShippingRateComputationMethodSystemName = srcm.PluginDescriptor.SystemName;
+                    //round
+                    if (_shoppingCartSettings.RoundPricesDuringCalculation)
+                        so2.Rate = Math.Round(so2.Rate, 2);
                     result.ShippingOptions.Add(so2);
                 }
 
@@ -410,18 +358,6 @@ namespace Nop.Services.Shipping
             //no shipping options loaded
             if (result.ShippingOptions.Count == 0 && result.Errors.Count == 0)
                 result.Errors.Add("Shipping options could not be loaded");
-
-            //additional shipping charges
-            decimal additionalShippingCharge = GetShoppingCartAdditionalShippingCharge(cart);
-            foreach (var so in result.ShippingOptions)
-            {
-                so.Rate += additionalShippingCharge;
-
-                //free shipping
-                if (isFreeShipping)
-                    so.Rate = decimal.Zero;
-
-            }
             
             return result;
         }

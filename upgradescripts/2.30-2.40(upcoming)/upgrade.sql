@@ -1267,3 +1267,8 @@ BEGIN
 	VALUES (N'Keep alive', 300, N'Nop.Services.Common.KeepAliveTask, Nop.Services', 1, 0)
 END
 GO
+
+--clear serialized shipping options
+DELETE FROM CustomerAttribute
+WHERE [Key] like N'LastShippingOption'
+GO

@@ -18,7 +18,7 @@ namespace Nop.Core.Domain.Shipping
         public virtual string ShippingRateComputationMethodSystemName { get; set; }
 
         /// <summary>
-        /// Gets or sets a shipping rate
+        /// Gets or sets a shipping rate (without discounts, additional shipping charges, etc)
         /// </summary>
         public virtual decimal Rate { get; set; }
 
@@ -76,7 +76,7 @@ namespace Nop.Core.Domain.Shipping
         {
             if (destinationType == typeof(string))
             {
-                ShippingOption shippingOption = value as ShippingOption;
+                var shippingOption = value as ShippingOption;
                 if (shippingOption != null)
                 {
                     var sb = new StringBuilder();

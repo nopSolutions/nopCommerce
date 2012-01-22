@@ -83,20 +83,6 @@ namespace Nop.Services.Shipping
         decimal GetShoppingCartTotalWeight(IList<ShoppingCartItem> cart);
         
         /// <summary>
-        /// Gets shopping cart additional shipping charge
-        /// </summary>
-        /// <param name="cart">Cart</param>
-        /// <returns>Additional shipping charge</returns>
-        decimal GetShoppingCartAdditionalShippingCharge(IList<ShoppingCartItem> cart);
-
-        /// <summary>
-        /// Gets a value indicating whether shipping is free
-        /// </summary>
-        /// <param name="cart">Cart</param>
-        /// <returns>A value indicating whether shipping is free</returns>
-        bool IsFreeShipping(IList<ShoppingCartItem> cart);
-
-        /// <summary>
         /// Create shipment package from shopping cart
         /// </summary>
         /// <param name="cart">Shopping cart</param>

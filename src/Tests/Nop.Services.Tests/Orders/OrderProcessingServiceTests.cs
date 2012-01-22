@@ -108,7 +108,8 @@ namespace Nop.Services.Tests.Orders
                 _logger,
                 _productAttributeParser,
                 _checkoutAttributeParser,
-                _shippingSettings, pluginFinder, _eventPublisher);
+                _shippingSettings, pluginFinder, 
+                _eventPublisher, _shoppingCartSettings);
             
 
             _paymentService = MockRepository.GenerateMock<IPaymentService>();

@@ -867,15 +867,10 @@ namespace Nop.Web.Controllers
                             };
                             //calculate discounted and taxed rate
                             Discount appliedDiscount = null;
-                            decimal shippingTotalWithoutDiscount = shippingOption.Rate;
-                            decimal discountAmount = _orderTotalCalculationService.GetShippingDiscount(_workContext.CurrentCustomer,
-                                shippingTotalWithoutDiscount, out appliedDiscount);
-                            decimal shippingTotalWithDiscount = shippingTotalWithoutDiscount - discountAmount;
-                            if (shippingTotalWithDiscount < decimal.Zero)
-                                shippingTotalWithDiscount = decimal.Zero;
-                            shippingTotalWithDiscount = Math.Round(shippingTotalWithDiscount, 2);
+                            decimal shippingTotal = _orderTotalCalculationService.AdjustShippingRate(shippingOption.Rate,
+                                cart, out appliedDiscount);
 
-                            decimal rateBase = _taxService.GetShippingPrice(shippingTotalWithDiscount, _workContext.CurrentCustomer);
+                            decimal rateBase = _taxService.GetShippingPrice(shippingTotal, _workContext.CurrentCustomer);
                             decimal rate = _currencyService.ConvertFromPrimaryStoreCurrency(rateBase, _workContext.WorkingCurrency);
                             soModel.Price = _priceFormatter.FormatShippingPrice(rate, true);
                             model.EstimateShipping.ShippingOptions.Add(soModel);

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -331,6 +332,121 @@ namespace Nop.Services.Orders
 
 
         /// <summary>
+        /// Gets shopping cart additional shipping charge
+        /// </summary>
+        /// <param name="cart">Cart</param>
+        /// <returns>Additional shipping charge</returns>
+        public virtual decimal GetShoppingCartAdditionalShippingCharge(IList<ShoppingCartItem> cart)
+        {
+            decimal additionalShippingCharge = decimal.Zero;
+
+            bool isFreeShipping = IsFreeShipping(cart);
+            if (isFreeShipping)
+                return decimal.Zero;
+
+            foreach (var sci in cart)
+                if (sci.IsShipEnabled && !sci.IsFreeShipping)
+                    additionalShippingCharge += sci.AdditionalShippingCharge;
+
+            return additionalShippingCharge;
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether shipping is free
+        /// </summary>
+        /// <param name="cart">Cart</param>
+        /// <returns>A value indicating whether shipping is free</returns>
+        public virtual bool IsFreeShipping(IList<ShoppingCartItem> cart)
+        {
+            Customer customer = cart.GetCustomer();
+            if (customer != null)
+            {
+                //check whether customer is in a customer role with free shipping applied
+                var customerRoles = customer.CustomerRoles.Where(cr => cr.Active);
+                foreach (var customerRole in customerRoles)
+                    if (customerRole.FreeShipping)
+                        return true;
+            }
+
+            bool shoppingCartRequiresShipping = cart.RequiresShipping();
+            if (!shoppingCartRequiresShipping)
+                return true;
+
+            //check whether all shopping cart items are marked as free shipping
+            bool allItemsAreFreeShipping = true;
+            foreach (var sc in cart)
+            {
+                if (sc.IsShipEnabled && !sc.IsFreeShipping)
+                {
+                    allItemsAreFreeShipping = false;
+                    break;
+                }
+            }
+            if (allItemsAreFreeShipping)
+                return true;
+
+            //free shipping over $X
+            if (_shippingSettings.FreeShippingOverXEnabled)
+            {
+                //check whether we have subtotal enough to have free shipping
+                decimal subTotalDiscountAmount = decimal.Zero;
+                Discount subTotalAppliedDiscount = null;
+                decimal subTotalWithoutDiscountBase = decimal.Zero;
+                decimal subTotalWithDiscountBase = decimal.Zero;
+                GetShoppingCartSubTotal(cart, _shippingSettings.FreeShippingOverXIncludingTax, out subTotalDiscountAmount,
+                    out subTotalAppliedDiscount, out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
+
+                if (subTotalWithDiscountBase > _shippingSettings.FreeShippingOverXValue)
+                    return true;
+            }
+
+            //otherwise, return false
+            return false;
+        }
+
+        /// <summary>
+        /// Adjust shipping rate (free shipping, additional charges, discounts)
+        /// </summary>
+        /// <param name="shippingRate">Shipping rate to adjust</param>
+        /// <param name="cart">Cart</param>
+        /// <param name="appliedDiscount">Applied discount</param>
+        /// <returns>Adjusted shipping rate</returns>
+        public virtual decimal AdjustShippingRate(decimal shippingRate,
+            IList<ShoppingCartItem> cart, out Discount appliedDiscount)
+        {
+            appliedDiscount = null;
+
+            //free shipping
+            bool isFreeShipping = IsFreeShipping(cart);
+
+
+            //additional shipping charges
+            decimal additionalShippingCharge = GetShoppingCartAdditionalShippingCharge(cart);
+            var adjustedRate = shippingRate + additionalShippingCharge;
+
+            //free shipping
+            if (isFreeShipping)
+            {
+                adjustedRate = decimal.Zero;
+            }
+            else
+            {
+                //discount
+                var customer = cart.GetCustomer();
+                decimal discountAmount = GetShippingDiscount(customer, adjustedRate, out appliedDiscount);
+                adjustedRate = adjustedRate - discountAmount;
+            }
+
+            if (adjustedRate < decimal.Zero)
+                adjustedRate = decimal.Zero;
+
+            if (_shoppingCartSettings.RoundPricesDuringCalculation)
+                adjustedRate = Math.Round(adjustedRate, 2);
+
+            return adjustedRate;
+        }
+
+        /// <summary>
         /// Gets shopping cart shipping total
         /// </summary>
         /// <param name="cart">Cart</param>
@@ -387,34 +503,16 @@ namespace Nop.Services.Orders
         public virtual decimal? GetShoppingCartShippingTotal(IList<ShoppingCartItem> cart, bool includingTax,
             out decimal taxRate, out Discount appliedDiscount)
         {
-            decimal? shippingTotalWithoutDiscount = null;
-            decimal? shippingTotalWithDiscount = null;
-            decimal? shippingTotalWithDiscountTaxed = null;
+            decimal? shippingTotal = null;
+            decimal? shippingTotalTaxed = null;
             appliedDiscount = null;
             taxRate = decimal.Zero;
 
             var customer = cart.GetCustomer();
 
-            bool isFreeShipping = _shippingService.IsFreeShipping(cart);
+            bool isFreeShipping = IsFreeShipping(cart);
             if (isFreeShipping)
                 return decimal.Zero;
-
-
-            //free shipping over $X
-            if (_shippingSettings.FreeShippingOverXEnabled)
-            {
-                //check whether we have subtotal enough to have free shipping
-                decimal subTotalDiscountAmount = decimal.Zero;
-                Discount subTotalAppliedDiscount = null;
-                decimal subTotalWithoutDiscountBase = decimal.Zero;
-                decimal subTotalWithDiscountBase = decimal.Zero;
-                GetShoppingCartSubTotal(cart, _shippingSettings.FreeShippingOverXIncludingTax, out subTotalDiscountAmount,
-                    out subTotalAppliedDiscount, out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
-
-                if (subTotalWithDiscountBase > _shippingSettings.FreeShippingOverXValue)
-                    return decimal.Zero;
-            }
-
 
             ShippingOption lastShippingOption = null;
             if (customer != null)
@@ -423,18 +521,9 @@ namespace Nop.Services.Orders
             if (lastShippingOption != null)
             {
                 //use last shipping option (get from cache)
-                //we have already discounted cache value
-                shippingTotalWithoutDiscount = lastShippingOption.Rate;
 
-                //discount
-                decimal discountAmount = GetShippingDiscount(customer,
-                    shippingTotalWithoutDiscount.Value, out appliedDiscount);
-                shippingTotalWithDiscount = shippingTotalWithoutDiscount - discountAmount;
-                if (shippingTotalWithDiscount < decimal.Zero)
-                    shippingTotalWithDiscount = decimal.Zero;
-                
-                if (_shoppingCartSettings.RoundPricesDuringCalculation)
-                    shippingTotalWithDiscount = Math.Round(shippingTotalWithDiscount.Value, 2);
+                //adjust shipping rate
+                shippingTotal = AdjustShippingRate(lastShippingOption.Rate, cart, out appliedDiscount);
             }
             else
             {
@@ -455,30 +544,32 @@ namespace Nop.Services.Orders
                     decimal? fixedRate = shippingRateComputationMethod.GetFixedRate(getShippingOptionRequest);
                     if (fixedRate.HasValue)
                     {
-                        decimal additionalShippingCharge = _shippingService.GetShoppingCartAdditionalShippingCharge(cart);
-                        shippingTotalWithoutDiscount = fixedRate.Value + additionalShippingCharge;
-                        if (_shoppingCartSettings.RoundPricesDuringCalculation) 
-                            shippingTotalWithoutDiscount = Math.Round(shippingTotalWithoutDiscount.Value, 2);
-                        decimal shippingTotalDiscount = GetShippingDiscount(customer, shippingTotalWithoutDiscount.Value, out appliedDiscount);
-                        shippingTotalWithDiscount = shippingTotalWithoutDiscount.Value - shippingTotalDiscount;
-                        if (shippingTotalWithDiscount.Value < decimal.Zero)
-                            shippingTotalWithDiscount = decimal.Zero;
+                        //adjust shipping rate
+                        shippingTotal = AdjustShippingRate(fixedRate.Value, cart, out appliedDiscount);
                     }
                 }
             }
 
-            if (shippingTotalWithDiscount.HasValue)
+            if (shippingTotal.HasValue)
             {
-                shippingTotalWithDiscountTaxed = _taxService.GetShippingPrice(shippingTotalWithDiscount.Value,
+                if (shippingTotal.Value < decimal.Zero)
+                    shippingTotal = decimal.Zero;
+
+                //round
+                if (_shoppingCartSettings.RoundPricesDuringCalculation)
+                    shippingTotal = Math.Round(shippingTotal.Value, 2);
+
+                shippingTotalTaxed = _taxService.GetShippingPrice(shippingTotal.Value,
                     includingTax,
                     customer,
                     out taxRate);
                 
+                //round
                 if (_shoppingCartSettings.RoundPricesDuringCalculation)
-                    shippingTotalWithDiscountTaxed = Math.Round(shippingTotalWithDiscountTaxed.Value, 2);
+                    shippingTotalTaxed = Math.Round(shippingTotalTaxed.Value, 2);
             }
 
-            return shippingTotalWithDiscountTaxed;
+            return shippingTotalTaxed;
         }
 
         /// <summary>

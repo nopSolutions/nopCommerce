@@ -83,7 +83,8 @@ namespace Nop.Services.Tests.Orders
                 _logger,
                 _productAttributeParser,
                 _checkoutAttributeParser,
-                _shippingSettings, pluginFinder, _eventPublisher);
+                _shippingSettings, pluginFinder, 
+                _eventPublisher, _shoppingCartSettings);
             
 
             _paymentService = MockRepository.GenerateMock<IPaymentService>();
@@ -415,6 +416,189 @@ namespace Nop.Services.Tests.Orders
             taxRates.Count.ShouldEqual(1);
             taxRates.ContainsKey(10).ShouldBeTrue();
             taxRates[10].ShouldEqual(8.639);
+        }
+
+
+
+        [Test]
+        public void Can_get_shoppingCartItem_additional_shippingCharge()
+        {
+            var sci1 = new ShoppingCartItem()
+            {
+                AttributesXml = "",
+                Quantity = 3,
+                ProductVariant = new ProductVariant()
+                {
+                    Weight = 1.5M,
+                    Height = 2.5M,
+                    Length = 3.5M,
+                    Width = 4.5M,
+                    AdditionalShippingCharge = 5.5M,
+                    IsShipEnabled = true,
+                }
+            };
+            var sci2 = new ShoppingCartItem()
+            {
+                AttributesXml = "",
+                Quantity = 4,
+                ProductVariant = new ProductVariant()
+                {
+                    Weight = 11.5M,
+                    Height = 12.5M,
+                    Length = 13.5M,
+                    Width = 14.5M,
+                    AdditionalShippingCharge = 6.5M,
+                    IsShipEnabled = true,
+                }
+            };
+
+            //sci3 is not shippable
+            var sci3 = new ShoppingCartItem()
+            {
+                AttributesXml = "",
+                Quantity = 5,
+                ProductVariant = new ProductVariant()
+                {
+                    Weight = 11.5M,
+                    Height = 12.5M,
+                    Length = 13.5M,
+                    Width = 14.5M,
+                    AdditionalShippingCharge = 7.5M,
+                    IsShipEnabled = false,
+                }
+            };
+
+            var cart = new List<ShoppingCartItem>() { sci1, sci2, sci3 };
+            _orderTotalCalcService.GetShoppingCartAdditionalShippingCharge(cart).ShouldEqual(42.5M);
+        }
+
+        [Test]
+        public void Shipping_should_be_free_when_all_shoppingCartItems_are_marked_as_freeShipping()
+        {
+            var sci1 = new ShoppingCartItem()
+            {
+                AttributesXml = "",
+                Quantity = 3,
+                ProductVariant = new ProductVariant()
+                {
+                    Weight = 1.5M,
+                    Height = 2.5M,
+                    Length = 3.5M,
+                    Width = 4.5M,
+                    IsFreeShipping = true,
+                    IsShipEnabled = true,
+                }
+            };
+            var sci2 = new ShoppingCartItem()
+            {
+                AttributesXml = "",
+                Quantity = 4,
+                ProductVariant = new ProductVariant()
+                {
+                    Weight = 11.5M,
+                    Height = 12.5M,
+                    Length = 13.5M,
+                    Width = 14.5M,
+                    IsFreeShipping = true,
+                    IsShipEnabled = true,
+                }
+            };
+            var cart = new List<ShoppingCartItem>() { sci1, sci2 };
+            var customer = new Customer();
+            cart.ForEach(sci => sci.Customer = customer);
+            cart.ForEach(sci => sci.CustomerId = customer.Id);
+
+            _orderTotalCalcService.IsFreeShipping(cart).ShouldEqual(true);
+        }
+
+        [Test]
+        public void Shipping_should_not_be_free_when_some_of_shoppingCartItems_are_not_marked_as_freeShipping()
+        {
+            var sci1 = new ShoppingCartItem()
+            {
+                AttributesXml = "",
+                Quantity = 3,
+                ProductVariant = new ProductVariant()
+                {
+                    Weight = 1.5M,
+                    Height = 2.5M,
+                    Length = 3.5M,
+                    Width = 4.5M,
+                    IsFreeShipping = true,
+                    IsShipEnabled = true,
+                }
+            };
+            var sci2 = new ShoppingCartItem()
+            {
+                AttributesXml = "",
+                Quantity = 4,
+                ProductVariant = new ProductVariant()
+                {
+                    Weight = 11.5M,
+                    Height = 12.5M,
+                    Length = 13.5M,
+                    Width = 14.5M,
+                    IsFreeShipping = false,
+                    IsShipEnabled = true,
+                }
+            };
+            var cart = new List<ShoppingCartItem>() { sci1, sci2 };
+            var customer = new Customer();
+            cart.ForEach(sci => sci.Customer = customer);
+            cart.ForEach(sci => sci.CustomerId = customer.Id);
+
+            _orderTotalCalcService.IsFreeShipping(cart).ShouldEqual(false);
+        }
+
+        [Test]
+        public void Shipping_should_be_free_when_customer_is_in_role_with_free_shipping()
+        {
+            var sci1 = new ShoppingCartItem()
+            {
+                AttributesXml = "",
+                Quantity = 3,
+                ProductVariant = new ProductVariant()
+                {
+                    Weight = 1.5M,
+                    Height = 2.5M,
+                    Length = 3.5M,
+                    Width = 4.5M,
+                    IsFreeShipping = false,
+                    IsShipEnabled = true,
+                }
+            };
+            var sci2 = new ShoppingCartItem()
+            {
+                AttributesXml = "",
+                Quantity = 4,
+                ProductVariant = new ProductVariant()
+                {
+                    Weight = 11.5M,
+                    Height = 12.5M,
+                    Length = 13.5M,
+                    Width = 14.5M,
+                    IsFreeShipping = false,
+                    IsShipEnabled = true,
+                }
+            };
+            var cart = new List<ShoppingCartItem>() { sci1, sci2 };
+            var customer = new Customer();
+            var customerRole1 = new CustomerRole()
+            {
+                Active = true,
+                FreeShipping = true,
+            };
+            var customerRole2 = new CustomerRole()
+            {
+                Active = true,
+                FreeShipping = false,
+            };
+            customer.CustomerRoles.Add(customerRole1);
+            customer.CustomerRoles.Add(customerRole2);
+            cart.ForEach(sci => sci.Customer = customer);
+            cart.ForEach(sci => sci.CustomerId = customer.Id);
+
+            _orderTotalCalcService.IsFreeShipping(cart).ShouldEqual(true);
         }
 
         [Test]

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Shipping;
 
 namespace Nop.Services.Orders
 {
@@ -65,6 +66,30 @@ namespace Nop.Services.Orders
 
 
 
+
+        /// <summary>
+        /// Adjust shipping rate (free shipping, additional charges, discounts)
+        /// </summary>
+        /// <param name="shippingRate">Shipping rate to adjust</param>
+        /// <param name="cart">Cart</param>
+        /// <param name="appliedDiscount">Applied discount</param>
+        /// <returns>Adjusted shipping rate</returns>
+        decimal AdjustShippingRate(decimal shippingRate,
+            IList<ShoppingCartItem> cart, out Discount appliedDiscount);
+        
+        /// <summary>
+        /// Gets shopping cart additional shipping charge
+        /// </summary>
+        /// <param name="cart">Cart</param>
+        /// <returns>Additional shipping charge</returns>
+        decimal GetShoppingCartAdditionalShippingCharge(IList<ShoppingCartItem> cart);
+
+        /// <summary>
+        /// Gets a value indicating whether shipping is free
+        /// </summary>
+        /// <param name="cart">Cart</param>
+        /// <returns>A value indicating whether shipping is free</returns>
+        bool IsFreeShipping(IList<ShoppingCartItem> cart);
 
         /// <summary>
         /// Gets shopping cart shipping total
