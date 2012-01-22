@@ -1516,17 +1516,17 @@ namespace Nop.Web.Controllers
                                 break;
                             case AttributeControlType.TextBox:
                                 {
-                                    //TODO set datepicker values
+                                    //TODO set value
                                 }
                                 break;
                             case AttributeControlType.MultilineTextbox:
                                 {
-                                    //TODO set datepicker values
+                                    //TODO set value
                                 }
                                 break;
                             case AttributeControlType.Datepicker:
                                 {
-                                    //TODO set datepicker values
+                                    //TODO set value
                                 }
                                 break;
                             default:

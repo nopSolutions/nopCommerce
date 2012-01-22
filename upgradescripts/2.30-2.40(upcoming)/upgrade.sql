@@ -1106,9 +1106,12 @@ SET [Key] = N'WorkingDesktopThemeName'
 WHERE [Key] = N'WorkingThemeName'
 GO
 
-UPDATE [Setting]
-SET [Name] = N'storeinformationsettings.defaultstorethemefordesktops'
-WHERE [Name] = N'storeinformationsettings.defaultstoretheme'
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'storeinformationsettings.defaultstorethemefordesktops')
+BEGIN
+	UPDATE [Setting]
+	SET [Name] = N'storeinformationsettings.defaultstorethemefordesktops'
+	WHERE [Name] = N'storeinformationsettings.defaultstoretheme'
+END
 GO
 
 --new setting

@@ -91,7 +91,7 @@ namespace Nop.Web.Framework.Localization
                     //It seems that IIS6 think we're process Blog.aspx page.
                     //So, I'll use RawUrl to re-create an AppRelativeCurrentExecutionFilePath like ASP.NET Development Server.
 
-                    //UNDONE should we do path rewrting here?
+                    //UNDONE should we do path rewriting right here?
                     string rawUrl = httpContext.Request.RawUrl;
                     var newVirtualPath = rawUrl.RemoveLocalizedPathFromRawUrl(applicationPath);
                     if (string.IsNullOrEmpty(newVirtualPath))

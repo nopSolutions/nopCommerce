@@ -21,7 +21,6 @@
                     <li class="@(category.IsActive ? "active" : "inactive")" 
                     @if (category.NumberOfParentCategories > 0)
                     {
-                        //TODO we hard-coded 'margin-left'. But we should set 'margin-right' for RTL languages
                         if (this.ShouldUseRtlTheme())
                         {
                         <text>style="margin-right: @(category.NumberOfParentCategories * categoryPadding)px"</text>

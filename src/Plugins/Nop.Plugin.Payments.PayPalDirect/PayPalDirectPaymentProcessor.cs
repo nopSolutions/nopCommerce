@@ -176,7 +176,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
             details.PaymentDetails.OrderTotal.currencyID = payPalCurrency;
             details.PaymentDetails.Custom = processPaymentRequest.OrderGuid.ToString();
             details.PaymentDetails.ButtonSource = "nopCommerceCart";
-            //UNDONE pass product names and totals to PayPal
+            //pass product names and totals to PayPal
             //if (_paypalDirectPaymentSettings.PassProductNamesAndTotals)
             //{
             //    //individual items
