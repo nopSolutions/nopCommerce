@@ -111,6 +111,7 @@
     <Compile Include="Common\AddressService.cs" />
     <Compile Include="Common\AddressExtentions.cs" />
     <Compile Include="Common\IMobileDeviceHelper.cs" />
+    <Compile Include="Common\KeepAliveTask.cs" />
     <Compile Include="Common\MobileDeviceHelper.cs" />
     <Compile Include="Common\IMiscPlugin.cs" />
     <Compile Include="Common\IPdfService.cs" />

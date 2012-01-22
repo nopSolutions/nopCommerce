@@ -166,35 +166,42 @@ namespace Nop.Web
 
         protected void SetWorkingCulture()
         {
-            if (DataSettingsHelper.DatabaseIsInstalled())
+            if (!DataSettingsHelper.DatabaseIsInstalled())
+                return;
+
+            var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+            if (webHelper.IsStaticResource(this.Request))
+                return;
+
+            //keep alive page requested (we ignore it to prevnt creating a guest customer records)
+            string keepAliveUrl = string.Format("{0}keepalive", webHelper.GetStoreLocation());
+            if (webHelper.GetThisPageUrl(false).StartsWith(keepAliveUrl, StringComparison.InvariantCultureIgnoreCase))
+                return;
+
+
+            if (webHelper.GetThisPageUrl(false).StartsWith(string.Format("{0}admin", webHelper.GetStoreLocation()),
+                StringComparison.InvariantCultureIgnoreCase))
             {
-                var webHelper = EngineContext.Current.Resolve<IWebHelper>();
-                if (!webHelper.IsStaticResource(this.Request))
+                //admin area
+
+
+                //always set culture to 'en-US'
+                //we set culture of admin area to 'en-US' because current implementation of Telerik grid 
+                //doesn't work well in other cultures
+                //e.g., editing decimal value in russian culture
+                var culture = new CultureInfo("en-US");
+                Thread.CurrentThread.CurrentCulture = culture;
+                Thread.CurrentThread.CurrentUICulture = culture;
+            }
+            else
+            {
+                //public store
+                var workContext = EngineContext.Current.Resolve<IWorkContext>();
+                if (workContext.CurrentCustomer != null && workContext.WorkingLanguage != null)
                 {
-                    if (webHelper.GetThisPageUrl(false).StartsWith(string.Format("{0}admin", webHelper.GetStoreLocation()), StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        //admin area
-
-
-                        //always set culture to 'en-US'
-                        //we set culture of admin area to 'en-US' because current implementation of Telerik grid 
-                        //doesn't work well in other cultures
-                        //e.g., editing decimal value in russian culture
-                        var culture = new CultureInfo("en-US");
-                        Thread.CurrentThread.CurrentCulture = culture;
-                        Thread.CurrentThread.CurrentUICulture = culture;
-                    }
-                    else
-                    {
-                        //public store
-                        var workContext = EngineContext.Current.Resolve<IWorkContext>();
-                        if (workContext.CurrentCustomer != null && workContext.WorkingLanguage != null)
-                        {
-                            var culture = new CultureInfo(workContext.WorkingLanguage.LanguageCulture);
-                            Thread.CurrentThread.CurrentCulture = culture;
-                            Thread.CurrentThread.CurrentUICulture = culture;
-                        }
-                    }
+                    var culture = new CultureInfo(workContext.WorkingLanguage.LanguageCulture);
+                    Thread.CurrentThread.CurrentCulture = culture;
+                    Thread.CurrentThread.CurrentUICulture = culture;
                 }
             }
         }

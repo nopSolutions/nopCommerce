@@ -1256,3 +1256,14 @@ BEGIN
 	VALUES (N'fedexsettings.passdimensions', N'false')
 END
 GO
+
+--'Keep alive' schedule task
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[ScheduleTask]
+		WHERE [Name] = N'Keep alive')
+BEGIN
+	INSERT [dbo].[ScheduleTask] ([Name], [Seconds], [Type], [Enabled], [StopOnError])
+	VALUES (N'Keep alive', 300, N'Nop.Services.Common.KeepAliveTask, Nop.Services', 1, 0)
+END
+GO

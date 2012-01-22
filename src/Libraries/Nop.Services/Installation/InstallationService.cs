@@ -9334,6 +9334,14 @@ namespace Nop.Services.Installation
                 },
                 new ScheduleTask()
                 {
+                    Name = "Keep alive",
+                    Seconds = 300,
+                    Type = "Nop.Services.Common.KeepAliveTask, Nop.Services",
+                    Enabled = true,
+                    StopOnError = false,
+                },
+                new ScheduleTask()
+                {
                     Name = "Delete guests",
                     Seconds = 600,
                     Type = "Nop.Services.Customers.DeleteGuestsTask, Nop.Services",
