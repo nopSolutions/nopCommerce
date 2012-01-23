@@ -86,8 +86,8 @@ function GetImages(node) {
 
                 HideOverlays();
 
-                $('#directory img').attr('src', '/Content/editors/tinymce/plugins/netadvimage/img/folder-horizontal.gif');
-                $(node).closest('.t-item').find('img:first').attr('src', '/Content/editors/tinymce/plugins/netadvimage/img/folder-horizontal-open.gif');
+                $('#directory img').attr('src', nop_store_directory_root + 'Content/editors/tinymce/plugins/netadvimage/img/folder-horizontal.gif');
+                $(node).closest('.t-item').find('img:first').attr('src', nop_store_directory_root + 'Content/editors/tinymce/plugins/netadvimage/img/folder-horizontal-open.gif');
 
                 $(result).each(function (index, image) {
                     $('#img-list').append('<li><a href="#" title="' + image.FileName + '"><span><img src="' + image.Path + '" alt="" /></span>' + image.FileName + '</a><input type="hidden" value="' + image.FileName + '" /></li>');
@@ -166,7 +166,7 @@ var ImageDialog = {
                 n = ed.selection.getNode(),
                 uploader = new qq.FileUploader({
                     element: document.getElementById('upload'),
-                    action: '/Content/editors/tinymce/plugins/netadvimage/index',
+                    action: nop_store_directory_root + 'Content/editors/tinymce/plugins/netadvimage/index',
                     params: {
                         path: null
                     },

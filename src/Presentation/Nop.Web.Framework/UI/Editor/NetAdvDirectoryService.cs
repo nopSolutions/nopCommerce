@@ -3,12 +3,19 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Web;
+using Nop.Core;
 using Telerik.Web.Mvc.UI;
 
 namespace Nop.Web.Framework.UI.Editor
 {
     public partial class NetAdvDirectoryService: INetAdvDirectoryService
     {
+        private readonly IWebHelper _webHelper;
+
+        public NetAdvDirectoryService(IWebHelper webHelper)
+        {
+            this._webHelper = webHelper;
+        }
         /// <summary>
         /// Gets the directory structure starting at the upload path
         /// </summary>
@@ -42,7 +49,7 @@ namespace Nop.Web.Framework.UI.Editor
             {
                 Text = directory.Name,
                 Value = path,
-                ImageUrl = "/Content/editors/tinymce/plugins/netadvimage/img/folder-horizontal.gif",
+                ImageUrl = _webHelper.GetStoreLocation() +  "Content/editors/tinymce/plugins/netadvimage/img/folder-horizontal.gif",
                 Enabled = true,
                 Expanded = parentItem == null ?
                     true : // Expand the root node

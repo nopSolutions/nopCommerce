@@ -1,6 +1,7 @@
 ﻿@using Telerik.Web.Mvc.UI
 @{
-    Layout = "";
+    Layout = ""; 
+    var storeLocation = EngineContext.Current.Resolve<Nop.Core.IWebHelper>().GetStoreLocation();    
 }
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -24,6 +25,11 @@
             .Add("telerik.vista.min.css")
             .Add("telerik.rtl.min.css")
             ))
+    @*Little hack here. Store URL js variable used by dialog.js file*@
+    @*TODO pass storeLocation value in ini method of ImageDialog*@
+    <script type="text/javascript">
+        var nop_store_directory_root = "@(storeLocation)";
+    </script>
 </head>
 <body id="netadvimage" style="display: none">
     <form id="mce" onsubmit="ImageDialog.insert();return false;" action="#">
