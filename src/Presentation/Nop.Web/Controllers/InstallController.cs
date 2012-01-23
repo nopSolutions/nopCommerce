@@ -337,6 +337,7 @@ namespace Nop.Web.Controllers
             dirsToCheck.Add(rootDir + "content");
             dirsToCheck.Add(rootDir + "content\\images");
             dirsToCheck.Add(rootDir + "content\\images\\thumbs");
+            dirsToCheck.Add(rootDir + "content\\images\\uploaded");
             dirsToCheck.Add(rootDir + "content\\files\\exportimport");
             dirsToCheck.Add(rootDir + "plugins");
             dirsToCheck.Add(rootDir + "plugins\\bin");

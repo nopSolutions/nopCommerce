@@ -1,0 +1,174 @@
+﻿//Contributor: http://aspnetadvimage.codeplex.com/
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Web;
+using System.Web.Mvc;
+using Nop.Services.Media;
+using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.UI.Editor;
+
+namespace Nop.Admin.Controllers
+{
+    /// <summary>
+    /// Controller used by netadvimage plugin (TimyMVC)
+    /// </summary>
+    [AdminAuthorize]
+    public class NetAdvImageController : BaseNopController
+    {
+        private readonly INetAdvImageService _imageService;
+        private readonly INetAdvDirectoryService _directoryService;
+        private readonly HttpContextBase _httpContext;
+        
+        public NetAdvImageController(INetAdvImageService imageService, 
+            INetAdvDirectoryService directoryService,
+            HttpContextBase httpContext)
+        {
+            this._imageService = imageService;
+            this._directoryService = directoryService;
+            this._httpContext = httpContext;
+        }
+
+        public ActionResult Index()
+        {
+            return View();
+        }
+
+
+        [HttpPost]
+        public JsonResult Index(string path)
+        {
+            string filePath = String.Empty;
+
+            try
+            {
+                // This works with Chrome/FF/Safari
+                // get the name from qqfile url parameter here
+                if (String.IsNullOrEmpty(Request["qqfile"]))
+                {
+                    // IE
+                    filePath = Path.Combine(path, Path.GetFileName(Request.Files[0].FileName));
+                }
+                else
+                {
+                    // Webkit, Mozilla
+                    filePath = Path.Combine(path, Request["qqfile"]);
+                }
+
+                try
+                {
+                    //this code doesn't work in IE 8
+                    int length = 4096;
+                    int bytesRead = 0;
+                    var buffer = new Byte[length];
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        do
+                        {
+                            bytesRead = Request.InputStream.Read(buffer, 0, length);
+                            fileStream.Write(buffer, 0, bytesRead);
+                        }
+                        while (bytesRead > 0);
+                    }
+                }
+                catch (UnauthorizedAccessException ex)
+                {
+                    // log error hinting to set the write permission of ASPNET or the identity accessing the code
+                    return Json(new { success = false, message = ex.Message }, "application/json");
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message }, "application/json");
+            }
+
+            return Json(new { success = true }, "application/json");
+        }
+
+        [HttpPost]
+        public JsonResult _GetImages(string path)
+        {
+            return new JsonResult { Data = _imageService.GetImages(path, HttpContext) };
+        }
+
+        [HttpPost]
+        public JsonResult _DeleteImage(string path, string name)
+        {
+            return new JsonResult { Data = _imageService.DeleteImage(path, name) };
+        }
+
+        [HttpPost]
+        public JsonResult _MoveDirectory(string path, string destinationPath)
+        {
+            return new JsonResult { Data = _directoryService.MoveDirectory(path, destinationPath) };
+        }
+
+        [HttpPost]
+        public JsonResult _DeleteDirectory(string path)
+        {
+            return new JsonResult { Data = _directoryService.DeleteDirectory(path, HttpContext) };
+        }
+
+        [HttpPost]
+        public JsonResult _AddDirectory(string path)
+        {
+            // If no destination folder was selected, add new folder to root upload path
+            if (String.IsNullOrEmpty(path))
+                path = Server.MapPath(NetAdvImageSettings.UploadPath);
+
+            _ExpandDirectoryState(path);
+            return new JsonResult { Data = _directoryService.AddDirectory(path) };
+        }
+
+        [HttpPost]
+        public JsonResult _GetDirectories()
+        {
+            // Ensure the upload directory exists
+            _directoryService.CreateUploadDirectory(HttpContext);
+
+            return new JsonResult { Data = _directoryService.GetDirectoryTree(HttpContext) };
+        }
+
+        [HttpPost]
+        public JsonResult _RenameDirectory(string path, string name)
+        {
+            return new JsonResult { Data = _directoryService.RenameDirectory(path, name, HttpContext) };
+        }
+
+        [HttpPost]
+        public ActionResult _ExpandDirectoryState(string value)
+        {
+            // Get or initalize list in session
+            if (_httpContext.Session[NetAdvImageSettings.TreeStateSessionKey] == null)
+                _httpContext.Session[NetAdvImageSettings.TreeStateSessionKey] = new List<string>();
+            var expandedNodes = _httpContext.Session[NetAdvImageSettings.TreeStateSessionKey] as List<string>;
+
+            // Persist the expanded state of the directory in session
+            if (!expandedNodes.Contains(value))
+            {
+                expandedNodes.Add(value);
+                _httpContext.Session[NetAdvImageSettings.TreeStateSessionKey] = expandedNodes;
+            }
+
+            return new EmptyResult();
+        }
+
+        [HttpPost]
+        public ActionResult _CollapseDirectoryState(string value)
+        {
+            // Get or initalize list in session
+            if (_httpContext.Session[NetAdvImageSettings.TreeStateSessionKey] == null)
+                _httpContext.Session[NetAdvImageSettings.TreeStateSessionKey] = new List<string>();
+            var expandedNodes = _httpContext.Session[NetAdvImageSettings.TreeStateSessionKey] as List<string>;
+
+            // Persist the collapsed state of the directory in session
+            if (expandedNodes.Contains(value))
+            {
+                expandedNodes.Remove(value);
+                _httpContext.Session[NetAdvImageSettings.TreeStateSessionKey] = expandedNodes;
+            }
+
+            return new EmptyResult();
+        }
+    }
+}

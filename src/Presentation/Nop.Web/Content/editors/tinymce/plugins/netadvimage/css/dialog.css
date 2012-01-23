@@ -1,0 +1,60 @@
+#src_list, #over_list, #out_list { width: 280px; }
+.mceActionPanel { margin-top: 7px; }
+.alignPreview { border: 1px solid #000; width: 140px; height: 140px; overflow: hidden; padding: 5px; }
+.checkbox { border: 0; }
+.panel_wrapper div.current { height: 305px; }
+#prev { margin: 0; border: 1px solid #000; width: 428px; height: 150px; overflow: auto; }
+#align, #classlist { width: 150px; }
+#width, #height { vertical-align: middle; width: 50px; text-align: center; }
+#vspace, #hspace, #border { vertical-align: middle; width: 30px; text-align: center; }
+#class_list { width: 180px; }
+input { width: 280px; }
+#constrain, #onmousemovecheck { width: auto; }
+#id, #dir, #lang, #usemap, #longdesc { width: 200px; }
+
+/* Dialog adjustments */
+.column1 { width: 140px; text-align: right; }
+.panel_wrapper { height: 420px; }
+fieldset { margin: 5px 5px 10px 5px; padding: 10px; }
+#prev { width: 632px; height: 250px; border: solid 1px #CCC; text-align: center; }
+
+/* Panels & layout */
+#upload_panel { margin-top: 5px; height: 413px; overflow: hidden; border: solid 1px #CCC; }
+#upload_panel a img { border: 0 none; }
+#upload_panel a { outline: 0 none; }
+.ui-layout-pane { overflow: auto; }
+.ui-layout-pane-west { background: #FAFAFA; }
+.ui-layout-resizer { background: #EEE; }
+.ui-layout-toggler { background: url(../img/splitter.gif) repeat-y center center; }
+
+/* Directory tree */
+#directory { height: 350px; margin: 10px; overflow: auto; }
+.t-treeview .t-state-selected { border-color: #8ea80e !important; }
+.t-state-selected { background-color: #eef2d9 !important; }
+.t-in { cursor: pointer !important; }
+.t-edit { background: none; border: 0 none; margin: 0; width: auto; }
+
+/* Image list */
+#img-list { margin: 10px; height: 350px; overflow: auto; padding: 0; }
+#img-list li { float: left; margin-right: 5px; height: 90px; overflow: hidden; }
+#img-list li a { position: relative; text-align: center; display: block; padding-top: 67px; width: 64px; overflow: hidden; font-size: 10px; }
+#img-list li a.selected span { background-color: #eef2d9; border: solid 1px #8ea80e; border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px; }
+#img-list li a span { position: absolute; top: 0; left: 0; padding: 5px; border: solid 1px transparent; }
+#img-list li a img { height: 50px; width: 50px; background-color: #FFF; box-shadow: 0px 7px 5px -5px #888; -moz-box-shadow: 0px 7px 5px -5px #888; -webkit-box-shadow: 0px 7px 5px -5px #888; border: solid 1px #888 !important; }
+
+/* Image upload */
+#mask { display: none; background-color: #CCC; height: 100%; left: 0; position: absolute; top: 0; width: 100%; z-index: 999; }
+#img-upload { position: absolute; top: 115px; width: 100%; display: none; z-index: 9999; }
+#img-upload p { text-align: center; }
+#img-upload a { padding: 0 !important; font-size: inherit !important; width: auto !important; display: inline !important; }
+
+/* 'Select a folder' prompt */
+#prompt { margin-top: 50px;  position: absolute; top: 0; left: 0; width: 100%; text-align: center; }
+#prompt p { font-size: 13px; font-style: italic; color: #AAA; }
+
+/* Directory & image options */
+.options { float: left; width: 100%; overflow: hidden; position: absolute; bottom: 10px; left: 0; }
+.options ul { clear: left; float: left; list-style: none; margin: 0; padding: 0; position: relative; left: 50%; text-align: center; }
+.options ul li { display: block; float: left; list-style: none; margin: 0; padding: 0; position: relative; right: 50%; }
+.options ul li a { display: block; padding: 3px; }
+
