@@ -257,10 +257,10 @@ var ImageDialog = {
         });
 
         // External link
-        $('.img-ext').live('click', function (e) {
-            mcTabs.displayTab('general_tab', 'general_panel');
-            $('#src').focus().select();
-        });
+        //$('.img-ext').live('click', function (e) {
+        //    mcTabs.displayTab('general_tab', 'general_panel');
+        //    $('#src').focus().select();
+        //});
 
         // Upload image
         $('.img-upload').click(function (e) {

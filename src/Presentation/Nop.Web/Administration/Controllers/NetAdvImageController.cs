@@ -38,16 +38,20 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public JsonResult Index(string path)
         {
-            string filePath = String.Empty;
+            string filePath = "";
 
             try
             {
-                // This works with Chrome/FF/Safari
                 // get the name from qqfile url parameter here
+                var stream = Request.InputStream;
                 if (String.IsNullOrEmpty(Request["qqfile"]))
                 {
+                    //IE hack here - http://stackoverflow.com/questions/4884920/mvc3-valums-ajax-file-upload
+                    HttpPostedFileBase postedFile = Request.Files[0];
+                    stream = postedFile.InputStream;
+
                     // IE
-                    filePath = Path.Combine(path, Path.GetFileName(Request.Files[0].FileName));
+                    filePath = Path.Combine(path, Path.GetFileName(postedFile.FileName));
                 }
                 else
                 {
@@ -65,7 +69,7 @@ namespace Nop.Admin.Controllers
                     {
                         do
                         {
-                            bytesRead = Request.InputStream.Read(buffer, 0, length);
+                            bytesRead = stream.Read(buffer, 0, length);
                             fileStream.Write(buffer, 0, bytesRead);
                         }
                         while (bytesRead > 0);
@@ -82,7 +86,9 @@ namespace Nop.Admin.Controllers
                 return Json(new { success = false, message = ex.Message }, "application/json");
             }
 
-            return Json(new { success = true }, "application/json");
+            //return Json(new { success = true }, "application/json");
+            //"application/json" content type won't work in IE
+            return Json(new { success = true }, "text/html");
         }
 
         [HttpPost]
