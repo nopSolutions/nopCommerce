@@ -2,7 +2,6 @@
 @using Nop.Core.Infrastructure
 @using Nop.Core.Infrastructure.DependencyManagement
 @{
-    var storeLocation = EngineContext.Current.Resolve<Nop.Core.IWebHelper>().GetStoreLocation();
     var displayMiniProfiler = EngineContext.Current.Resolve<Nop.Core.Domain.StoreInformationSettings>().DisplayMiniProfilerInPublicStore;
 }
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -11,10 +10,6 @@
     <title>@Html.NopTitle(true)</title>
     <meta name="description" content="@(Html.NopMetaDescription())" />
     <meta name="keywords" content="@(Html.NopMetaKeywords())" />
-    @*store URL js variable used by some JS files*@
-    <script type="text/javascript">
-        var nop_store_directory_root = "@(storeLocation)";
-    </script>
     @*This is used so that themes can inject content into the header*@
     @Html.Partial("Head")
     @Html.NopCssFiles()

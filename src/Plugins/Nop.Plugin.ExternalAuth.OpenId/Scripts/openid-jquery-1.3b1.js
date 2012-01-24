@@ -3,6 +3,7 @@
 	http://code.google.com/p/openid-selector/
 	
 	This code is licensed under the New BSD License.
+    Customized by nopCommerce team
 */
 
 var providers;
@@ -15,8 +16,8 @@ openid = {
 	cookie_expires : 6 * 30, // 6 months.
 	cookie_name : 'openid_provider',
 	cookie_path : '/',
-
-	img_path : nop_store_directory_root + 'Plugins/ExternalAuth.OpenId/Content/Images/openid-selector/images/',
+    
+	img_path : '',
 	locale : null, // is set in openid-<locale>.js
 	sprite : null, // usually equals to locale, is set in
 	// openid-<locale>.js
@@ -34,10 +35,11 @@ openid = {
 	 * 
 	 * @return {Void}
 	 */
-	init : function(input_id) {
+	init : function(input_id, store_root) {
 		providers = $.extend({}, providers_large, providers_small);
 		var openid_btns = $('#openid_btns');
 		this.input_id = input_id;
+		this.img_path = store_root + 'Plugins/ExternalAuth.OpenId/Content/Images/openid-selector/images/';
 		$('#openid_choice').show();
 		$('#openid_input_area').empty();
 		var i = 0;
@@ -64,7 +66,6 @@ openid = {
 	 * @return {String}
 	 */
 	getBoxHTML : function(box_id, provider, box_size, index) {
-    
 		if (this.no_sprite) {
 			var image_ext = box_size == 'small' ? '.ico.gif' : '.gif';
 			return '<a title="' + this.image_title.replace('{provider}', provider["name"]) + '" href="javascript:openid.signin(\'' + box_id + '\');"'
