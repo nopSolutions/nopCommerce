@@ -381,6 +381,8 @@
 /* FORUM PAGE */
 .forum{}
 .forum .forumheader{}
+.forum .forumheader .forumoptions,.forumfooter .forumoptions{}
+.forum .forumheader .forumoptions a,.forumfooter .forumoptions a{}
 .forum .top .foruminfo{}
 .forum .top .foruminfo .forumname{font-weight:700;font-size:1.2em;}
 .forum .top .foruminfo .forumdescription{color:#555;}

@@ -89,4 +89,37 @@
     <div class="pager">
         @pager
     </div>
+    <div class="forumfooter">
+        <div class="forumoptions">
+            @if (Model.IsCustomerAllowedToSubscribe)
+            {
+                <script type="text/javascript">
+                    $(function () {
+                        $('#watchforum').click(function () {
+                            //show progress
+                            $.mobile.showPageLoadingMsg();
+                            $.ajax({
+                                type: 'POST',
+                                url: '@Url.RouteUrl("ForumWatch", new { id = @Model.Id })',
+                                dataType: 'json',
+                                success: function (data) {
+                                    $('#watchforum').val(data.Text);
+                                    $('#watchforum').button("refresh");
+                                },
+                                complete: function (data) {
+                                    //hide progress
+                                    $.mobile.hidePageLoadingMsg();
+                                }
+                            });
+                            return false;
+                        });
+                    });
+                </script>
+                <input type="button" id="watchforum" value="@Model.WatchForumText" />
+        }
+        </div>
+        <div class="pager">
+            @pager
+        </div>
+    </div>
 </div>
