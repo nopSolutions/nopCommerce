@@ -19,6 +19,7 @@
 .changedevice a{text-decoration:none;}
 .currencyselector,.taxdisplaytypeselector,.languageselector{}
 .currencyselector .title,.taxdisplaytypeselector .title,.languageselector .title{font-weight:700;}
+.homepage-logo {}
 /* PAGER */
 .pager{text-align:center;}
 .pager a{font-size:1em;}
