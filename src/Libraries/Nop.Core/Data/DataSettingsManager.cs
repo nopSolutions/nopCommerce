@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Web.Hosting;
 
@@ -36,7 +37,16 @@ namespace Nop.Core.Data
             if (String.IsNullOrEmpty(text))
                 return shellSettings;
 
-            var settings = text.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+            //Old way of file reading. This leads to unexpected behavior when a user's FTP program transfers these files as ASCII (\r\n becomes \n).
+            //var settings = text.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+            var settings = new List<string>();
+            using (var reader = new StringReader(text))
+            {
+                string str;
+                while ((str = reader.ReadLine()) != null)
+                    settings.Add(str);
+            }
+
             foreach (var setting in settings)
             {
                 var separatorIndex = setting.IndexOf(separator);

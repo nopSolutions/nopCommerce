@@ -25,12 +25,17 @@ namespace Nop.Core.Plugins
     /// </summary>
     public class PluginManager
     {
+        #region Fields
+
         private static readonly ReaderWriterLockSlim Locker = new ReaderWriterLockSlim();
         private static DirectoryInfo _shadowCopyFolder;
         private static readonly string _installedPluginsFilePath = "~/App_Data/InstalledPlugins.txt";
         private static readonly string _pluginsPath = "~/Plugins";
         private static readonly string _shadowCopyPath = "~/Plugins/bin";
 
+        #endregion
+
+        #region methods
 
         /// <summary>
         /// Returns a collection of all referenced plugin assemblies that have been shadow copied
@@ -53,7 +58,7 @@ namespace Nop.Core.Plugins
 
                 try
                 {
-                    var installedPluginSystemNames = ParseInstalledPluginsFile();
+                    var installedPluginSystemNames = PluginFileParser.ParseInstalledPluginsFile(GetInstalledPluginsFilePath());
 
                     Debug.WriteLine("Creating shadow copy folder and querying for dlls");
                     //ensure folders are created
@@ -82,8 +87,8 @@ namespace Nop.Core.Plugins
                         try
                         {
                             //parse file
-                            var description = ParsePluginDescriptionFile(descriptionFile.FullName);
-
+                            var description = PluginFileParser.ParsePluginDescriptionFile(descriptionFile.FullName);
+                            
                             //ensure that version of plugin is valid
                             if (!description.SupportedVersions.Contains(NopVersion.CurrentVersion, StringComparer.InvariantCultureIgnoreCase))
                                 continue;
@@ -170,35 +175,6 @@ namespace Nop.Core.Plugins
             }
         }
 
-        private static bool IsAlreadyLoaded(FileInfo fileInfo)
-        {
-            //compare full assembly name
-            //var fileAssemblyName = AssemblyName.GetAssemblyName(fileInfo.FullName);
-            //foreach (var a in AppDomain.CurrentDomain.GetAssemblies())
-            //{
-            //    if (a.FullName.Equals(fileAssemblyName.FullName, StringComparison.InvariantCultureIgnoreCase))
-            //        return true;
-            //}
-            //return false;
-
-            //do not compare the full assembly name, just filename
-            try
-            {
-                string fileNameWithoutExt = Path.GetFileNameWithoutExtension(fileInfo.FullName);
-                foreach (var a in AppDomain.CurrentDomain.GetAssemblies())
-                {
-                    string assemblyName = a.FullName.Split(new[] {','}).FirstOrDefault();
-                    if (fileNameWithoutExt.Equals(assemblyName, StringComparison.InvariantCultureIgnoreCase))
-                        return true;
-                }
-            }
-            catch (Exception exc)
-            {
-                Debug.WriteLine("Cannot validate whether an assembly is already loaded. " + exc);
-            }
-            return false;
-        }
-
         /// <summary>
         /// Mark plugin as installed
         /// </summary>
@@ -216,15 +192,14 @@ namespace Nop.Core.Plugins
                 }
 
 
-            var installedPluginSystemNames = ParseInstalledPluginsFile();
+            var installedPluginSystemNames = PluginFileParser.ParseInstalledPluginsFile(GetInstalledPluginsFilePath());
             bool alreadyMarkedAsInstalled = installedPluginSystemNames
                                 .ToList()
                                 .Where(x => x.Equals(systemName, StringComparison.InvariantCultureIgnoreCase))
                                 .FirstOrDefault() != null;
             if (!alreadyMarkedAsInstalled)
                 installedPluginSystemNames.Add(systemName);
-            var text = ComposeInstalledPluginsFile(installedPluginSystemNames);
-            File.WriteAllText(filePath, text);
+            PluginFileParser.SaveInstalledPluginsFile(installedPluginSystemNames,filePath);
         }
 
         /// <summary>
@@ -244,15 +219,14 @@ namespace Nop.Core.Plugins
                 }
 
 
-            var installedPluginSystemNames = ParseInstalledPluginsFile();
+            var installedPluginSystemNames = PluginFileParser.ParseInstalledPluginsFile(GetInstalledPluginsFilePath());
             bool alreadyMarkedAsInstalled = installedPluginSystemNames
                                 .ToList()
                                 .Where(x => x.Equals(systemName, StringComparison.InvariantCultureIgnoreCase))
                                 .FirstOrDefault() != null;
             if (alreadyMarkedAsInstalled)
                 installedPluginSystemNames.Remove(systemName);
-            var text = ComposeInstalledPluginsFile(installedPluginSystemNames);
-            File.WriteAllText(filePath, text);
+            PluginFileParser.SaveInstalledPluginsFile(installedPluginSystemNames,filePath);
         }
 
         /// <summary>
@@ -263,6 +237,39 @@ namespace Nop.Core.Plugins
             var filePath = HostingEnvironment.MapPath(_installedPluginsFilePath);
             if (File.Exists(filePath))
                 File.Delete(filePath);
+        }
+
+        #endregion
+
+        #region Utilities
+
+        private static bool IsAlreadyLoaded(FileInfo fileInfo)
+        {
+            //compare full assembly name
+            //var fileAssemblyName = AssemblyName.GetAssemblyName(fileInfo.FullName);
+            //foreach (var a in AppDomain.CurrentDomain.GetAssemblies())
+            //{
+            //    if (a.FullName.Equals(fileAssemblyName.FullName, StringComparison.InvariantCultureIgnoreCase))
+            //        return true;
+            //}
+            //return false;
+
+            //do not compare the full assembly name, just filename
+            try
+            {
+                string fileNameWithoutExt = Path.GetFileNameWithoutExtension(fileInfo.FullName);
+                foreach (var a in AppDomain.CurrentDomain.GetAssemblies())
+                {
+                    string assemblyName = a.FullName.Split(new[] { ',' }).FirstOrDefault();
+                    if (fileNameWithoutExt.Equals(assemblyName, StringComparison.InvariantCultureIgnoreCase))
+                        return true;
+                }
+            }
+            catch (Exception exc)
+            {
+                Debug.WriteLine("Cannot validate whether an assembly is already loaded. " + exc);
+            }
+            return false;
         }
 
         /// <summary>
@@ -404,136 +411,17 @@ namespace Nop.Core.Plugins
             if (!folder.Parent.Name.Equals("Plugins", StringComparison.InvariantCultureIgnoreCase)) return false;
             return true;
         }
-        
-        private static IList<string> ParseInstalledPluginsFile()
-        {
+
+        /// <summary>
+        /// Gets the full path of InstalledPlugins.txt file
+        /// </summary>
+        /// <returns></returns>
+        private static string GetInstalledPluginsFilePath()
+        { 
             var filePath = HostingEnvironment.MapPath(_installedPluginsFilePath);
-            var systemNames = new List<string>();
-            if (File.Exists(filePath))
-            {
-                var text = File.ReadAllText(filePath);
-
-                if (String.IsNullOrEmpty(text))
-                    return new List<string>();
-
-                systemNames = new List<string>();
-                var lines = text.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-                foreach (var line in lines)
-                    systemNames.Add(line.Trim());
-            }
-
-            return systemNames;
+            return filePath;
         }
 
-        private static string ComposeInstalledPluginsFile(IList<String> pluginSystemNames)
-        {
-            if (pluginSystemNames == null || pluginSystemNames.Count == 0)
-                return "";
-
-            string result = "";
-            foreach (var sn in pluginSystemNames)
-                result += string.Format("{0}{1}", sn, Environment.NewLine);
-            return result;
-        }
-
-        private static PluginDescriptor ParsePluginDescriptionFile(string filePath)
-        {
-            var text = File.ReadAllText(filePath);
-
-            var descriptor = new PluginDescriptor();
-            if (String.IsNullOrEmpty(text))
-                return descriptor;
-
-            var settings = text.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
-            foreach (var setting in settings)
-            {
-                var separatorIndex = setting.IndexOf(':');
-                if (separatorIndex == -1)
-                {
-                    continue;
-                }
-                string key = setting.Substring(0, separatorIndex).Trim();
-                string value = setting.Substring(separatorIndex + 1).Trim();
-
-                switch (key)
-                {
-                    case "Group":
-                        descriptor.Group = value;
-                        break;
-                    case "FriendlyName":
-                        descriptor.FriendlyName = value;
-                        break;
-                    case "SystemName":
-                        descriptor.SystemName = value;
-                        break;
-                    case "Version":
-                        descriptor.Version = value;
-                        break;
-                    case "SupportedVersions":
-                        {
-                            //parse supported versions
-                            descriptor.SupportedVersions = value.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                                .Select(x => x.Trim())
-                                .ToList();
-                        }
-                        break;
-                    case "Author":
-                        descriptor.Author = value;
-                        break;
-                    case "DisplayOrder":
-                        {
-                            int displayOrder;
-                            int.TryParse(value, out displayOrder);
-                            descriptor.DisplayOrder = displayOrder;
-                        }
-                        break;
-                    case "FileName":
-                        descriptor.PluginFileName = value;
-                        break;
-                }
-            }
-
-            //nopCommerce 2.00 didn't have 'SupportedVersions' parameter
-            //so let's set it to "2.00"
-            if (descriptor.SupportedVersions.Count == 0)
-                descriptor.SupportedVersions.Add("2.00");
-
-            return descriptor;
-        }
-        
-        public static void SavePluginDescriptionFile(PluginDescriptor plugin)
-        {
-            if (plugin == null)
-                throw new ArgumentException("plugin");
-
-            //get the Description.txt file path
-            if (plugin.OriginalAssemblyFile == null)
-                throw new Exception(string.Format("Cannot load original assembly path for {0} plugin.", plugin.SystemName));
-            var filePath = Path.Combine(plugin.OriginalAssemblyFile.Directory.FullName, "Description.txt");
-            if (!File.Exists(filePath))
-                throw new Exception(string.Format("Description file for {0} plugin does not exist. {1}", plugin.SystemName, filePath));
-
-            var keyValues = new List<KeyValuePair<string, string>>();
-            keyValues.Add(new KeyValuePair<string, string>("Group", plugin.Group));
-            keyValues.Add(new KeyValuePair<string, string>("FriendlyName", plugin.FriendlyName));
-            keyValues.Add(new KeyValuePair<string, string>("SystemName", plugin.SystemName));
-            keyValues.Add(new KeyValuePair<string, string>("Version", plugin.Version));
-            keyValues.Add(new KeyValuePair<string, string>("SupportedVersions", string.Join(",", plugin.SupportedVersions)));
-            keyValues.Add(new KeyValuePair<string, string>("Author", plugin.Author));
-            keyValues.Add(new KeyValuePair<string, string>("DisplayOrder", plugin.DisplayOrder.ToString()));
-            keyValues.Add(new KeyValuePair<string, string>("FileName", plugin.PluginFileName));
-
-            var sb = new StringBuilder();
-            for (int i = 0; i < keyValues.Count; i++)
-            {
-                var key = keyValues[i].Key;
-                var value = keyValues[i].Value;
-                sb.AppendFormat("{0}: {1}", key, value);
-                if (i != keyValues.Count -1)
-                    sb.Append(Environment.NewLine);
-            }
-            //save the file
-            File.WriteAllText(filePath, sb.ToString());
-        }
+        #endregion
     }
 }

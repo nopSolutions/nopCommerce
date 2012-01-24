@@ -165,7 +165,7 @@ namespace Nop.Admin.Controllers
                         //we allow editing of 'friendly name' and 'display order'
                         pluginDescriptor.FriendlyName = pluginModel.FriendlyName;
                         pluginDescriptor.DisplayOrder = pluginModel.DisplayOrder;
-                        PluginManager.SavePluginDescriptionFile(pluginDescriptor);
+                        PluginFileParser.SavePluginDescriptionFile(pluginDescriptor);
                         //changed = true;
                     }
                 }
