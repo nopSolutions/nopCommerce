@@ -1401,7 +1401,28 @@
 						<Value>Footer</Value>
 					</LocaleResource>
 					<LocaleResource Name="BeforeBodyEndHtmlTag">
-						<Value><![CDATA[After <body> end HTML tag]]></Value>
+						<Value><![CDATA[Before <body> end HTML tag]]></Value>
+					</LocaleResource>
+					<LocaleResource Name="MobileHeadHtmlTag">
+						<Value>Mobile version. Head HTML tag</Value>
+					</LocaleResource>
+					<LocaleResource Name="MobileAfterBodyStartHtmlTag">
+						<Value><![CDATA[Mobile version. After <body> start HTML tag]]></Value>
+					</LocaleResource>
+					<LocaleResource Name="MobileHeaderLinks">
+						<Value>Mobile version. Header links</Value>
+					</LocaleResource>
+					<LocaleResource Name="MobileBeforeContent">
+						<Value>Mobile version. Before content</Value>
+					</LocaleResource>
+					<LocaleResource Name="MobileAfterContent">
+						<Value>Mobile version. After content</Value>
+					</LocaleResource>
+					<LocaleResource Name="MobileFooter">
+						<Value>Mobile version. Footer</Value>
+					</LocaleResource>
+					<LocaleResource Name="MobileBeforeBodyEndHtmlTag">
+						<Value><![CDATA[Mobile version. Before <body> end HTML tag]]></Value>
 					</LocaleResource>
 				</Children>
 			</LocaleResource>

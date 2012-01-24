@@ -23,10 +23,12 @@
           });
         </script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.mobile-1.0.min.js")"></script>
+    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.MobileHeadHtmlTag })
     <!--Powered by nopCommerce - http://www.nopCommerce.com-->
     <!--Copyright (c) 2008-2011-->
 </head>
 <body>
+    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.MobileAfterBodyStartHtmlTag })
     <div data-role="page" data-theme="b">
         <div data-role="header" data-position="inline">
             @*do not use @Html.Partial("Header")
@@ -61,9 +63,11 @@
                 @Html.Action("HeaderLinks", "Common")
             </div>
         }
+        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.MobileBeforeContent })
         <div data-role="content">
             @RenderBody()
         </div>
+        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.MobileAfterContent })
         @if (IsSectionDefined("footer"))
         {
             @RenderSection("footer")
@@ -75,5 +79,6 @@
             </div>
         }
     </div>
+    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.MobileBeforeBodyEndHtmlTag })
 </body>
 </html>

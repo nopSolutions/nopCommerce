@@ -6,6 +6,7 @@ namespace Nop.Core.Domain.Cms
     /// </summary>
     public enum WidgetZone : int
     {
+        //desktop version
         HeadHtmlTag = 10,
         AfterBodyStartHtmlTag = 20,
         HeaderLinks = 30,
@@ -21,5 +22,13 @@ namespace Nop.Core.Domain.Cms
         AfterContent = 130,
         Footer = 140,
         BeforeBodyEndHtmlTag = 150,
+        //mobile version
+        MobileHeadHtmlTag = 510,
+        MobileAfterBodyStartHtmlTag = 520,
+        MobileHeaderLinks = 530,
+        MobileBeforeContent = 540,
+        MobileAfterContent = 550,
+        MobileFooter = 560,
+        MobileBeforeBodyEndHtmlTag = 570,
     }
 }

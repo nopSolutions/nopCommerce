@@ -743,6 +743,30 @@ set @resources='
   <LocaleResource Name="Plugins.Shipping.Fedex.Fields.PassDimensions.Hint">
     <Value>Check if you want ot pass package dimensions when requesting rates.</Value>
   </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Cms.WidgetZone.MobileHeadHtmlTag">
+    <Value>Mobile version. Head HTML tag</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Cms.WidgetZone.MobileAfterBodyStartHtmlTag">
+    <Value><![CDATA[Mobile version. After <body> start HTML tag]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Cms.WidgetZone.MobileHeaderLinks">
+    <Value>Mobile version. Header links</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Cms.WidgetZone.MobileBeforeContent">
+    <Value>Mobile version. Before content</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Cms.WidgetZone.MobileAfterContent">
+    <Value>Mobile version. After content</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Cms.WidgetZone.MobileFooter">
+    <Value>Mobile version. Footer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Cms.WidgetZone.MobileBeforeBodyEndHtmlTag">
+    <Value><![CDATA[Mobile version. Before <body> end HTML tag]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Cms.WidgetZone.BeforeBodyEndHtmlTag">
+    <Value><![CDATA[Before <body> end HTML tag]]></Value>
+  </LocaleResource>
 </Language>
 '
 
