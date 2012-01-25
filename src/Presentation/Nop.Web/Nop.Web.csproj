@@ -1390,12 +1390,12 @@
     <Content Include="App_Data\Pdf\FreeSerif.ttf" />
     <Content Include="App_Data\51Degrees.mobi.config" />
     <Content Include="App_Data\wurfl.xml.gz" />
-    <Content Include="Views\Shared\_MobileRoot.cshtml" />
+    <Content Include="Views\Shared\_Root.Mobile.cshtml" />
     <Content Include="Views\Home\Index.Mobile.cshtml" />
     <Content Include="Themes\Mobile\theme.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Themes\Mobile\Views\Shared\MobileHead.Mobile.cshtml" />
+    <Content Include="Themes\Mobile\Views\Shared\Head.Mobile.cshtml" />
     <Content Include="Themes\Mobile\Views\Web.config" />
     <Content Include="Views\Common\StoreThemeSelector.cshtml" />
     <Content Include="Views\Catalog\CategoryNavigation.Mobile.cshtml" />
