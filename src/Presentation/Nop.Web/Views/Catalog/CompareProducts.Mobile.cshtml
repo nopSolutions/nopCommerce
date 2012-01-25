@@ -41,6 +41,7 @@
             <a href="@Url.RouteUrl("ClearCompareList")" data-role="button" data-ajax="false">@T("Products.Compare.Clear")</a>
 
             <br />
+@*Previous implementation. But it's now shown complete because in vertical format the page cannot scroll to the left and in horizontal format left scrolling is limited.
             <table cellpadding="0" cellspacing="0" border="0" class="compare-products-table">
                 <tbody>
                     <tr>
@@ -108,7 +109,49 @@
                     
                     }
                 </tbody>
-            </table>
+            </table>*@
+            <ul data-role="listview" data-inset="true" data-filter="false">
+                @foreach (var product in Model)
+                {
+                    <li>
+                    <div class="item">
+                        <div class="remove">
+                            <a href="@Url.RouteUrl("RemoveProductFromCompareList", new { productId = product.Id })" class="remove-button" data-role="button" data-ajax="false">@T("Common.Remove")</a>
+                        </div>
+                        <div class="product-picture">
+                            <img border="0" alt="@product.DefaultPictureModel.AlternateText" src="@product.DefaultPictureModel.ImageUrl" title="@product.DefaultPictureModel.Title" />
+                        </div>
+                        <div class="product-name">
+                            <a class="link" href="@Url.RouteUrl("Product", new { productId = product.Id, SeName = product.SeName })">@product.Name</a>
+                        </div>
+                        <div class="productPrice">
+                            @T("Products.Compare.Price"): @product.ProductPrice.Price
+                        </div>
+                        <div class="attributes">
+                            @foreach (var specificationAttribute in specificationAttributes)
+                            {
+                                <div class="attribute">
+                                    @specificationAttribute.SpecificationAttributeName:
+                                    @{
+                                        var foundProductSpec = product.SpecificationAttributeModels.Where(psa => psa.SpecificationAttributeId == specificationAttribute.SpecificationAttributeId).FirstOrDefault();
+                                        var specValue = foundProductSpec != null ? foundProductSpec.SpecificationAttributeOption : "";
+
+                                        if (!String.IsNullOrEmpty(specValue))
+                                        {
+                                        @specValue
+                                        }
+                                        else
+                                        {
+                                        <text>&nbsp;</text>
+                                        }
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    </li>
+                }
+            </ul>
         }
     </div>
 </div>
