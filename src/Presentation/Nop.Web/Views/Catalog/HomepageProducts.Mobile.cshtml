@@ -1,0 +1,23 @@
+﻿@model HomePageProductsModel
+@using Nop.Web.Framework.UI;
+@using Nop.Web.Models.Catalog;
+@if (Model.Products.Count > 0)
+{
+    <div class="home-page-product-grid">
+        <div class="title">
+            @T("HomePage.Products")
+        </div>
+        <div class="clear">
+        </div>
+        <div class="product-list">
+                <ul data-role="listview" data-inset="true" data-filter="false" data-theme="c">
+                    @foreach (var product in Model.Products)
+                    {
+                        <li>
+                            @Html.Partial("_ProductBox", product)
+                        </li>
+                    }
+                </ul>
+            </div>
+    </div>
+}

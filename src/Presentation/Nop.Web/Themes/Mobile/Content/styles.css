@@ -343,6 +343,7 @@
 .tier-prices .prices .item-table .item-price{color:Green;}
 .tier-prices .prices .header-table td{border-bottom:solid 3px #d7d7d7;padding-top:3px;padding-bottom:3px;font-weight:700;}
 .tier-prices .prices .prices-table .field-header{font-weight:700;text-align:center;}
+.home-page-product-grid .title{font-size:.9em;font-weight:700;text-transform:uppercase;padding:7px 10px;color:#333;}
 /* PRIVATE MESSAGES */
 .sendpmbox{}
 .sendpmbox .pmlinkbutton{}
