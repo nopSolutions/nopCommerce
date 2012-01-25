@@ -294,7 +294,7 @@
 						<Value>Last name</Value>
 						<Children>
 							<LocaleResource Name="Required">
-								<Value>Last is required.</Value>
+								<Value>Last name is required.</Value>
 							</LocaleResource>
 						</Children>
 					</LocaleResource>

@@ -770,6 +770,9 @@ set @resources='
   <LocaleResource Name="ShoppingCart.UpdateCartItem">
     <Value>Update qty</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.Fields.LastName.Required">
+    <Value>Last name is required.</Value>
+  </LocaleResource>
 </Language>
 '
 
