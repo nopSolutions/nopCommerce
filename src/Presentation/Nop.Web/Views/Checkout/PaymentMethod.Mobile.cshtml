@@ -38,16 +38,15 @@
                         @for (int i = 0; i < Model.PaymentMethods.Count; i++)
                         {
                             var paymentMethod = Model.PaymentMethods[i];
+                            var paymentMethodName = paymentMethod.Name;
+                            if (!String.IsNullOrEmpty(paymentMethod.Fee))
+                            {
+                                paymentMethodName = string.Format("{0} ({1})", paymentMethodName, paymentMethod.Fee);
+                            }
                             <div class="payment-method-item">
                                 <div class="option-name">
                                     <input id="paymentmethod_@(i)" type="radio" name="paymentmethod" value="@(paymentMethod.PaymentMethodSystemName)"  @(i == 0 ? Html.Raw(" checked=\"checked\"") : null) />
-                                    <label for="paymentmethod_@(i)">@paymentMethod.Name</label>
-                                    @if (!String.IsNullOrEmpty(paymentMethod.Fee))
-                                    {
-                                        <text>(</text>
-                                        @paymentMethod.Fee
-                                        <text>)</text>
-                                    }
+                                    <label for="paymentmethod_@(i)">@paymentMethodName</label>
                                 </div>
                             </div>
                         }
