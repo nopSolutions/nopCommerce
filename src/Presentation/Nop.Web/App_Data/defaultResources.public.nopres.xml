@@ -3617,6 +3617,9 @@
 			<LocaleResource Name="UpdateCart">
 				<Value>Update shopping cart</Value>
 			</LocaleResource>
+			<LocaleResource Name="UpdateCartItem">
+				<Value>Update qty</Value>
+			</LocaleResource>
 			<LocaleResource Name="WishlistDisabled">
 				<Value>Wishlist is disabled for this product</Value>
 			</LocaleResource>

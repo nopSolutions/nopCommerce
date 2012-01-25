@@ -88,12 +88,13 @@
                             </div>
                             @if (Model.IsEditable)
                             {
+                                <div class="updateitem">
+                                    <input type="submit" name="updatecartitem-@(item.Id)" value="@T("ShoppingCart.UpdateCartItem")" id="updatecartitem" />
+                                </div>
                                 <div class="remove">
-                                    <div>
-                                        <label for="removefromcart@(item.Id)">@T("ShoppingCart.Remove")</label>
-                                        <input id="removefromcart@(item.Id)" type="checkbox" name="removefromcart" value="@(item.Id)" />
-                                    </div>
-                                </div> }
+                                    <input type="submit" name="removefromcart-@(item.Id)" value="@T("ShoppingCart.Remove")" id="removefromcart" />
+                                </div> 
+                            }
                         </div>
                     </li>
                 }
@@ -113,7 +114,6 @@
             @if (Model.IsEditable)
             {
                 <div class="common-buttons">
-                    <input type="submit" name="updatecart" value="@T("ShoppingCart.UpdateCart")" id="updatecart" />
                     <input type="submit" name="continueshopping" value="@T("ShoppingCart.ContinueShopping")" id="continueshopping" />
                     <div style="display: none;">
                         <input type="submit" name="startcheckout" value="startcheckout" id="startcheckout" />

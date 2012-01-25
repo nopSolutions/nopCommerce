@@ -109,17 +109,14 @@
                                     </div>
                                     @if (Model.IsEditable)
                                     {
+                                        <div class="updateitem">
+                                            <input type="submit" name="updatecartitem-@(item.Id)" value="@T("ShoppingCart.UpdateCartItem")" id="updatecartitem" />
+                                        </div>
                                         <div class="remove">
-                                            <div>
-                                                <label for="removefromcart@(item.Id)">@T("ShoppingCart.Remove")</label>
-                                                <input id="removefromcart@(item.Id)" type="checkbox" name="removefromcart" value="@(item.Id)" />
-                                            </div>
+                                            <input type="submit" name="removefromcart-@(item.Id)" value="@T("ShoppingCart.Remove")" id="removefromcart" />
                                         </div>
                                         <div class="addtocart">
-                                            <div>
-                                                <label for="addtocart@(item.Id)">@T("ShoppingCart.AddToCart")</label>
-                                                <input id="addtocart@(item.Id)" type="checkbox" name="addtocart" value="@(item.Id)" />
-                                            </div>
+                                            <input type="submit" name="addtocart-@(item.Id)" value="@T("ShoppingCart.AddToCart")" id="addtocartbutton" />
                                         </div>
                                     }
                                 </div>
@@ -133,8 +130,6 @@
                     @if (Model.IsEditable)
                     {
                         <div class="common-buttons">
-                            <input type="submit" name="updatecart" value="@T("Wishlist.UpdateCart")" id="updatecart" />
-                            <input type="submit" name="addtocartbutton" value="@T("ShoppingCart.AddToCart")" id="addtocartbutton" />
                             @if (Model.EmailWishlistEnabled)
                             {
                                 <a href="@Url.RouteUrl("EmailWishlist")" data-role="button">@T("Wishlist.EmailAFriend")</a>

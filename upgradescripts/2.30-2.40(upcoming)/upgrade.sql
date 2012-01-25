@@ -767,6 +767,9 @@ set @resources='
   <LocaleResource Name="Enums.Nop.Core.Domain.Cms.WidgetZone.BeforeBodyEndHtmlTag">
     <Value><![CDATA[Before <body> end HTML tag]]></Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.UpdateCartItem">
+    <Value>Update qty</Value>
+  </LocaleResource>
 </Language>
 '
 
