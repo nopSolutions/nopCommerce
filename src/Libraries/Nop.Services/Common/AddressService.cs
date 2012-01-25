@@ -3,6 +3,7 @@ using System.Linq;
 using Nop.Core.Data;
 using Nop.Core.Domain.Common;
 using Nop.Core.Events;
+using Nop.Services.Directory;
 
 namespace Nop.Services.Common
 {
@@ -14,6 +15,8 @@ namespace Nop.Services.Common
         #region Fields
 
         private readonly IRepository<Address> _addressRepository;
+        private readonly ICountryService _countryService;
+        private readonly IStateProvinceService _stateProvinceService;
         private readonly IEventPublisher _eventPublisher;
 
         #endregion
@@ -24,12 +27,17 @@ namespace Nop.Services.Common
         /// Ctor
         /// </summary>
         /// <param name="addressRepository">Address repository</param>
-        /// <param name="eventPublisher"></param>
+        /// <param name="countryService">Country service</param>
+        /// <param name="stateProvinceService">State/province service</param>
+        /// <param name="eventPublisher">Event publisher</param>
         public AddressService(IRepository<Address> addressRepository,
+            ICountryService countryService, IStateProvinceService stateProvinceService, 
             IEventPublisher eventPublisher)
         {
-            _addressRepository = addressRepository;
-            _eventPublisher = eventPublisher;
+            this._addressRepository = addressRepository;
+            this._countryService = countryService;
+            this._stateProvinceService = stateProvinceService;
+            this._eventPublisher = eventPublisher;
         }
 
         #endregion
@@ -140,7 +148,59 @@ namespace Nop.Services.Common
             //event notification
             _eventPublisher.EntityUpdated(address);
         }
+        
+        /// <summary>
+        /// Gets a value indicating whether address is valid (can be saved)
+        /// </summary>
+        /// <param name="address">Address to validate</param>
+        /// <returns>Result</returns>
+        public virtual bool IsAddressValid(Address address)
+        {
+            if (address == null)
+                throw new ArgumentNullException("address");
 
+            if (String.IsNullOrWhiteSpace(address.FirstName))
+                return false;
+
+            if (String.IsNullOrWhiteSpace(address.LastName))
+                return false;
+
+            if (String.IsNullOrWhiteSpace(address.PhoneNumber))
+                return false;
+
+            if (String.IsNullOrWhiteSpace(address.Email))
+                return false;
+
+            if (String.IsNullOrWhiteSpace(address.Address1))
+                return false;
+
+            if (String.IsNullOrWhiteSpace(address.City))
+                return false;
+
+            if (String.IsNullOrWhiteSpace(address.ZipPostalCode))
+                return false;
+
+            if (address.CountryId == null || address.CountryId.Value == 0)
+                return false;
+
+            var country = _countryService.GetCountryById(address.CountryId.Value);
+            if (country == null)
+                return false;
+
+            var states = _stateProvinceService.GetStateProvincesByCountryId(country.Id);
+            if (states.Count > 0)
+            {
+                if (address.StateProvinceId == null || address.StateProvinceId.Value == 0)
+                    return false;
+
+                var state = _stateProvinceService.GetStateProvinceById(address.StateProvinceId.Value);
+                if (state == null)
+                    return false;
+            }
+
+            return true;
+        }
+        
         #endregion
     }
 }

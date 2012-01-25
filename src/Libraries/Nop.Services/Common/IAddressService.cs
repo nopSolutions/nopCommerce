@@ -47,5 +47,12 @@ namespace Nop.Services.Common
         /// </summary>
         /// <param name="address">Address</param>
         void UpdateAddress(Address address);
+
+        /// <summary>
+        /// Gets a value indicating whether address is valid (can be saved)
+        /// </summary>
+        /// <param name="address">Address to validate</param>
+        /// <returns>Result</returns>
+        bool IsAddressValid(Address address);
     }
 }

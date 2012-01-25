@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Nop.Core;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Forums;
@@ -397,6 +398,38 @@ namespace Nop.Web.Controllers
                     //associated with external account (if possible)
                     TryAssociateAccountWithExternalAccount(customer);
                     
+                    //insert default address (if possible)
+                    var defaultAddress = new Address()
+                    {
+                        FirstName = customer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName),
+                        LastName = customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName),
+                        Email = customer.Email,
+                        Company = customer.GetAttribute<string>(SystemCustomerAttributeNames.Company),
+                        CountryId = customer.GetAttribute<int>(SystemCustomerAttributeNames.CountryId) > 0 ? 
+                            (int?)customer.GetAttribute<int>(SystemCustomerAttributeNames.CountryId) : null,
+                        StateProvinceId = customer.GetAttribute<int>(SystemCustomerAttributeNames.StateProvinceId) > 0 ?
+                            (int?)customer.GetAttribute<int>(SystemCustomerAttributeNames.StateProvinceId) : null,
+                        City = customer.GetAttribute<string>(SystemCustomerAttributeNames.City),
+                        Address1 = customer.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress),
+                        Address2 = customer.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress2),
+                        ZipPostalCode = customer.GetAttribute<string>(SystemCustomerAttributeNames.ZipPostalCode),
+                        PhoneNumber = customer.GetAttribute<string>(SystemCustomerAttributeNames.Phone),
+                        FaxNumber = customer.GetAttribute<string>(SystemCustomerAttributeNames.Fax),
+                        CreatedOnUtc = customer.CreatedOnUtc
+                    };
+                    if (this._addressService.IsAddressValid(defaultAddress))
+                    {
+                        //some validation
+                        if (defaultAddress.CountryId == 0)
+                            defaultAddress.CountryId = null;
+                        if (defaultAddress.StateProvinceId == 0)
+                            defaultAddress.StateProvinceId = null;
+                        //set default address
+                        customer.AddAddress(defaultAddress);
+                        customer.SetBillingAddress(defaultAddress);
+                        customer.SetShippingAddress(defaultAddress);
+                        _customerService.UpdateCustomer(customer);
+                    }
 
                     //notifications
                     if (_customerSettings.NotifyNewCustomerRegistration)
