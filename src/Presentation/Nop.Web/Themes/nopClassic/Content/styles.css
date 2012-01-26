@@ -634,7 +634,6 @@ ul.languagelist li:hover{cursor:pointer;}
 .product-variant-line .stock,.product-variant-line .sku,.product-variant-line .manufacturerpartnumber,.product-variant-line .gtin{}
 .product-variant-line .giftCard{}
 .product-variant-line .giftCard dt{clear:left;float:left;width:150px;}
-.product-details-page .error{font-weight:700;color:Red;}
 .product-essential .price{margin-top:15px;margin-bottom:15px;}
 .product-essential .price .productPrice{color:green;}
 .product-essential .price .oldProductPrice{color:red;text-decoration:line-through;}
