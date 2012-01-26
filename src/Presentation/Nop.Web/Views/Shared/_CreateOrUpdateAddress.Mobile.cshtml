@@ -47,73 +47,97 @@
 @Html.HiddenFor(model => model.FaxNumberDisabled)
 @if (!Model.FirstNameDisabled)
 {
-    @Html.LabelFor(model => model.FirstName)
-    @Html.EditorFor(model => model.FirstName)
-    @Html.ValidationMessageFor(model => model.FirstName)
+    <div>
+        @Html.LabelFor(model => model.FirstName)
+        @Html.EditorFor(model => model.FirstName)
+        @Html.ValidationMessageFor(model => model.FirstName)
+    </div>
 }
 @if (!Model.LastNameDisabled)
 {
-    @Html.LabelFor(model => model.LastName)
-    @Html.EditorFor(model => model.LastName)
-    @Html.ValidationMessageFor(model => model.LastName)
+    <div>
+        @Html.LabelFor(model => model.LastName)
+        @Html.EditorFor(model => model.LastName)
+        @Html.ValidationMessageFor(model => model.LastName)
+    </div>
 }
 @if (!Model.EmailDisabled)
 {
-    @Html.LabelFor(model => model.Email)
-    @Html.EditorFor(model => model.Email)
-    @Html.ValidationMessageFor(model => model.Email)
+    <div>
+        @Html.LabelFor(model => model.Email)
+        @Html.EditorFor(model => model.Email)
+        @Html.ValidationMessageFor(model => model.Email)
+    </div>
 }
 @if (!Model.CompanyDisabled)
 {
-    @Html.LabelFor(model => model.Company)
-    @Html.EditorFor(model => model.Company)
-    @Html.ValidationMessageFor(model => model.Company)
+    <div>
+        @Html.LabelFor(model => model.Company)
+        @Html.EditorFor(model => model.Company)
+        @Html.ValidationMessageFor(model => model.Company)
+    </div>
 }
 @if (!Model.CountryDisabled)
 {
-    @Html.LabelFor(model => model.CountryId)
-    @Html.DropDownListFor(model => model.CountryId, Model.AvailableCountries)
-    @Html.ValidationMessageFor(model => model.CountryId)
+    <div>
+        @Html.LabelFor(model => model.CountryId)
+        @Html.DropDownListFor(model => model.CountryId, Model.AvailableCountries)
+        @Html.ValidationMessageFor(model => model.CountryId)
+    </div>
 }
 @if (!Model.StateProvinceDisabled)
 {
-    @Html.LabelFor(model => model.StateProvinceId)
-    @Html.DropDownListFor(model => model.StateProvinceId, Model.AvailableStates)
-    @Html.ValidationMessageFor(model => model.StateProvinceId)
+    <div>
+        @Html.LabelFor(model => model.StateProvinceId)
+        @Html.DropDownListFor(model => model.StateProvinceId, Model.AvailableStates)
+        @Html.ValidationMessageFor(model => model.StateProvinceId)
+    </div>
 }
 @if (!Model.CityDisabled)
 {
-    @Html.LabelFor(model => model.City)
-    @Html.EditorFor(model => model.City)
-    @Html.ValidationMessageFor(model => model.City)
+    <div>
+        @Html.LabelFor(model => model.City)
+        @Html.EditorFor(model => model.City)
+        @Html.ValidationMessageFor(model => model.City)
+    </div>
 }
 @if (!Model.Address1Disabled)
 {
-    @Html.LabelFor(model => model.Address1)
-    @Html.EditorFor(model => model.Address1)
-    @Html.ValidationMessageFor(model => model.Address1)
+    <div>
+        @Html.LabelFor(model => model.Address1)
+        @Html.EditorFor(model => model.Address1)
+        @Html.ValidationMessageFor(model => model.Address1)
+    </div>
 }
 @if (!Model.Address2Disabled)
 {
-    @Html.LabelFor(model => model.Address2)
-    @Html.EditorFor(model => model.Address2)
-    @Html.ValidationMessageFor(model => model.Address2)
+    <div>
+        @Html.LabelFor(model => model.Address2)
+        @Html.EditorFor(model => model.Address2)
+        @Html.ValidationMessageFor(model => model.Address2)
+    </div>
 }
 @if (!Model.ZipPostalCodeDisabled)
 {
-    @Html.LabelFor(model => model.ZipPostalCode)
-    @Html.EditorFor(model => model.ZipPostalCode)
-    @Html.ValidationMessageFor(model => model.ZipPostalCode)
+    <div>
+        @Html.LabelFor(model => model.ZipPostalCode)
+        @Html.EditorFor(model => model.ZipPostalCode)
+        @Html.ValidationMessageFor(model => model.ZipPostalCode)
+    </div>
 }
 @if (!Model.PhoneNumberDisabled)
 {
-    @Html.LabelFor(model => model.PhoneNumber)
-    @Html.EditorFor(model => model.PhoneNumber)
-    @Html.ValidationMessageFor(model => model.PhoneNumber)
+    <div>
+        @Html.LabelFor(model => model.PhoneNumber)
+        @Html.EditorFor(model => model.PhoneNumber)
+        @Html.ValidationMessageFor(model => model.PhoneNumber)
+    </div>
 }
 @if (!Model.FaxNumberDisabled)
 {
-    @Html.LabelFor(model => model.FaxNumber)
-    @Html.EditorFor(model => model.FaxNumber)
-    @Html.ValidationMessageFor(model => model.FaxNumber)
+    <div>
+        @Html.LabelFor(model => model.FaxNumber)
+        @Html.EditorFor(model => model.FaxNumber)
+        @Html.ValidationMessageFor(model => model.FaxNumber)
+    </div>
 }
