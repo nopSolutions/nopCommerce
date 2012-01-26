@@ -395,6 +395,7 @@
 .forum .top .actions .newtopic{}
 .forum .topics{}
 .forum .topics .topic {vertical-align:middle;padding-left:3px;min-height:40px;}
+.forum .topics .topic a{text-decoration:none;}
 .forum .topics .topic .topicname{font-weight:700;color:#555;float:left;margin:11px 0 0 7px;}
 .forum .topics .topic .replies{font-size:.8em;color:#555;float:right;margin:11px 0 0 7px;}
 .forum .topics .topic .post{float:left;width:36px;height:36px;background:url(images/ico-forum-post.gif) no-repeat 40% 40%;}
