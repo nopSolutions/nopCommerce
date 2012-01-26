@@ -14,7 +14,7 @@
         </div>
         <div class="wrapper">
             <div class="message-error">
-                @Html.ValidationSummary(false)
+                @Html.ValidationSummary(true)
             </div>
             @Html.HiddenFor(model => model.ToCustomerId)
             @Html.HiddenFor(model => model.ReplyToMessageId)

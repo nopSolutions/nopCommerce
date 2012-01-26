@@ -14,7 +14,7 @@
         </div>
         <div class="wrapper">
             <div class="message-error">
-                @Html.ValidationSummary(false)
+                @Html.ValidationSummary(true)
             </div>
             @Html.HiddenFor(model => model.ToCustomerId)
             @Html.HiddenFor(model => model.ReplyToMessageId)
@@ -27,10 +27,12 @@
                 <div>
                     @T("PrivateMessages.Send.Subject")
                     @Html.TextBoxFor(model => model.Subject, new { @class = "pmtitletext" })
+                        @Html.ValidationMessageFor(model => model.Subject)
                 </div>
                 <div>
                     @T("PrivateMessages.Send.Message")
                     @Html.TextAreaFor(model => model.Message)
+                    @Html.ValidationMessageFor(model => model.Message)
                 </div>
                 <div class="options">
                     <input type="submit" value="@T("PrivateMessages.Send.SendButton")" data-inline="true" />

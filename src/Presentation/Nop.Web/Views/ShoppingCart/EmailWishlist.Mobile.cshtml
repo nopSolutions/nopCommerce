@@ -21,7 +21,7 @@
             @using (Html.BeginForm())
             {
                 <div class="message-error">
-                    @Html.ValidationSummary(false)
+                    @Html.ValidationSummary(true)
                 </div>
                 <div>
                     @Html.LabelFor(model => model.FriendEmail)

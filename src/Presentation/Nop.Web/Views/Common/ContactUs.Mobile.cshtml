@@ -22,19 +22,22 @@
         {
         <div class="send-email">
             <div>
-                @Html.ValidationSummary(false)
+                @Html.ValidationSummary(true)
             </div>
             <div>
                 @Html.LabelFor(model => model.FullName)
                 @Html.TextBoxFor(model => model.FullName)
+                @Html.ValidationMessageFor(model => model.FullName)
             </div>
             <div>
                 @Html.LabelFor(model => model.Email)
                 @Html.TextBoxFor(model => model.Email)
+                @Html.ValidationMessageFor(model => model.Email)
             </div>
             <div>
                 @Html.LabelFor(model => model.Enquiry)
                 @Html.TextAreaFor(model => model.Enquiry)
+                @Html.ValidationMessageFor(model => model.Enquiry)
             </div>
             @if (Model.DisplayCaptcha)
             {
