@@ -39,7 +39,7 @@ set @resources='
     <Value>Product thumbnail image size (product page)</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Media.ProductThumbPictureSizeOnProductDetailsPage.Hint">
-    <Value>The default size (pixels) for product thumbnail images displayed on product details page when if you have more than one product image.</Value>
+    <Value>The default size (pixels) for product thumbnail images displayed on product details page when you have more than one product image.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Media.ProductThumbPictureSize">
     <Value>Product thumbnail image size (catalog)</Value>
@@ -147,7 +147,7 @@ set @resources='
     <Value>Show on registration page</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnRegistrationPage.Hint">
-    <Value>Check to show CAPTCHA registration page.</Value>
+    <Value>Check to show CAPTCHA on registration page.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnContactUsPage">
     <Value>Show on contact us page</Value>
@@ -162,13 +162,13 @@ set @resources='
     <Value>Display cart after adding product</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.DisplayCartAfterAddingProduct.Hint">
-    <Value>If checked a customer will be taken to the Shopping Cart page immediately after adding a product to their cart. If unchecked a customer will stay on the same page that they are adding the product to the cart from.</Value>
+    <Value>If checked, a customer will be taken to the Shopping Cart page immediately after adding a product to their cart. If unchecked, a customer will stay on the same page that they are adding the product to the cart from.</Value>
   </LocaleResource>
   <LocaleResource Name="Plugins.Shipping.ByWeight.Fields.CalculatePerWeightUnit">
     <Value>Calculate per weight unit</Value>
   </LocaleResource>
   <LocaleResource Name="Plugins.Shipping.ByWeight.Fields.CalculatePerWeightUnit.Hint">
-    <Value>If you check this option, then rates are multipied per weight unit (lb, kg, etc). This option is used for the fixed rates (without percents).</Value>
+    <Value>If you check this option, then rates are multiplied per weight unit (lb, kg, etc). This option is used for the fixed rates (without percents).</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.Discounts.Requirements.FailedToSave">
     <Value>Failed to save requirement</Value>
@@ -222,7 +222,7 @@ set @resources='
     <Value>For mex endpoint use {0}</Value>
   </LocaleResource>
   <LocaleResource Name="Plugins.Payments.AuthorizeNet.Notes">
-    <Value>If you''re using this gateway ensure that your primary store currency is supported by Authorize.NET.</Value>
+    <Value>If you''re using this gateway, ensure that your primary store currency is supported by Authorize.NET.</Value>
   </LocaleResource>
   <LocaleResource Name="Plugins.Payments.AuthorizeNet.Fields.UseSandbox">
     <Value>Use Sandbox</Value>
@@ -378,7 +378,7 @@ set @resources='
     <Value>Specify IPN Handler.</Value>
   </LocaleResource>
   <LocaleResource Name="Plugins.Payments.PayPalStandard.Fields.EnableIpn.Hint2">
-    <Value>Leave blank to use the default IPN handler url.</Value>
+    <Value>Leave blank to use the default IPN handler URL.</Value>
   </LocaleResource>
   <LocaleResource Name="Plugins.Shipping.AustraliaPost.Fields.GatewayUrl">
     <Value>Gateway URL</Value>
@@ -420,7 +420,7 @@ set @resources='
     <Value>Canada Post Customer ID</Value>
   </LocaleResource>
   <LocaleResource Name="Plugins.Shipping.CanadaPost.Fields.CustomerId.Hint">
-    <Value>Specify Canada Post customer identifer.</Value>
+    <Value>Specify Canada Post customer identifier.</Value>
   </LocaleResource>
   <LocaleResource Name="Plugins.Shipping.Fedex.Fields.Url">
     <Value>URL</Value>
@@ -654,7 +654,7 @@ set @resources='
     <Value>StrikeIron User ID</Value>
   </LocaleResource>
   <LocaleResource Name="Plugins.Tax.StrikeIron.UserId.Hint">
-    <Value>Specify StrikeIron user identifer.</Value>
+    <Value>Specify StrikeIron user identifier.</Value>
   </LocaleResource>
   <LocaleResource Name="Plugins.Tax.StrikeIron.Password">
     <Value>StrikeIron Password</Value>
@@ -687,7 +687,7 @@ set @resources='
     <Value>Specify postal code for testing.</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.CannotLoadProduct">
-    <Value>Product (Id={0}) can not be loaded</Value>
+    <Value>Product (Id={0}) cannot be loaded</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.ProductDeleted">
     <Value>Product is deleted</Value>
@@ -726,7 +726,7 @@ set @resources='
     <Value>Enter valid sender name</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.CannotLoadProductVariant">
-    <Value>Product variant (Id={0}) can not be loaded</Value>
+    <Value>Product variant (Id={0}) cannot be loaded</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.NotAvailable">
     <Value>Product is not available</Value>
@@ -741,7 +741,7 @@ set @resources='
     <Value>Pass dimensions</Value>
   </LocaleResource>
   <LocaleResource Name="Plugins.Shipping.Fedex.Fields.PassDimensions.Hint">
-    <Value>Check if you want ot pass package dimensions when requesting rates.</Value>
+    <Value>Check if you want to pass package dimensions when requesting rates.</Value>
   </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Cms.WidgetZone.MobileHeadHtmlTag">
     <Value>Mobile version. Head HTML tag</Value>
@@ -778,6 +778,159 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.Fields.Email.Required">
     <Value>Email is required.</Value>
+  </LocaleResource>  
+  <LocaleResource Name="BackInStockSubscriptions.Tooltip">
+    <Value>You''ll receive a onetime e-mail when this product is available for ordering again. We will not send you any other e-mails or add you to our newsletter; you will only be e-mailed about this product!</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.ProductQuantity">
+    <Value>Qty</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Fields.Name.Hint">
+    <Value>The name of the checkout attribute.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.CheckoutAttributes.Values.Fields.Name.Hint">
+    <Value>The name of the checkout value.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes.Fields.Name.Hint">
+    <Value>The name of the product attribute.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.ProductAttributes.Fields.Description.Hint">
+    <Value>The description of the product attribute.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.Fields.Name.Hint">
+    <Value>The name of the specification attribute.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.Fields.DisplayOrder.Hint">
+    <Value>The display order of the specification attribute.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.Name.Hint">
+    <Value>The name of the option.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Attributes.SpecificationAttributes.Options.Fields.DisplayOrder.Hint">
+    <Value>The display order of the option.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.Description.Hint">
+    <Value>The description of the category.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.CategoryTemplate.Hint">
+    <Value>Choose a category template. This template defines how this category (and its products) will be displayed.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.Description.Hint">
+    <Value>The description of the manufacturer.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.ManufacturerTemplate.Hint">
+    <Value>Choose a manufacturer template. This template defines how this manufacturer (and its products) will be displayed.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ShortDescription.Hint">
+    <Value>The short description of the product. This is the text that displays in product lists i.e. category / manufacturer pages</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.FullDescription.Hint">
+    <Value>The full description of the product.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ProductTemplate.Hint">
+    <Value>Choose a product template. This template defines how this product (and its variants) will be displayed.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.ProductTags.Hint">
+    <Value>Product tags are keywords that this product can also be identified by. Enter a comma separated list of the tags to be associated with this product. The more products associated with a particular tag, the larger it will show on the tag cloud.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Variants.Fields.AutomaticallyAddRequiredProductVariants.Hint">
+    <Value>Check to automatically add these product variants to the cart.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Variants.Fields.AvailableEndDateTime.Hint">
+    <Value>The end of the product''s availability in Coordinated Universal Time (UTC).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Variants.Fields.AvailableStartDateTime.Hint">
+    <Value>The start of the product''s availability in Coordinated Universal Time (UTC).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Variants.Fields.Description.Hint">
+    <Value>The description of the product variant.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Variants.Fields.HasUserAgreement.Hint">
+    <Value>Check if the product has a user agreement.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Variants.Fields.OrderMaximumQuantity.Hint">
+    <Value>Set the maximum quantity allowed in a customer''s shopping cart e.g. set to 5 to only allow customers to purchase 5 of this product.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Variants.Fields.OrderMinimumQuantity.Hint">
+    <Value>Set the minimum quantity allowed in a customer''s shopping cart e.g. set to 3 to only allow customers to purchase 3 or more of this product.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLog.Fields.ActivityLogType.Hint">
+    <Value>The Activity Log Type.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.Fields.UniqueSeoCode.Required">
+    <Value>Please provide a unique SEO code.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.RecentlyAddedProductsEnabled">
+    <Value>''Recently added products'' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.ShowCustomersLocation">
+    <Value>Show customers'' location</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.ShowCustomersLocation.Hint">
+    <Value>A value indicating whether customers'' location is shown.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.ShowCustomersJoinDate">
+    <Value>Show customers'' join date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.ShowCustomersJoinDate.Hint">
+    <Value>A value indicating whether to show customers'' join date.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AllowViewingProfiles">
+    <Value>Allow viewing of customer profiles</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AllowViewingProfiles.Hint">
+    <Value>A value indicating whether the viewing of customer profiles is allowed.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.UserRegistrationType.Hint">
+    <Value>Determines customer registration method. Standard - mode where visitors can register and no approval is required. Email Validation - mode where user must respond to validation email that is sent to them before they are activated. Admin Approval - mode where visitors can register but admin approval is required. Disabled - mode where registration is disabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.AdminAreaAllowedIpAddresses.Hint">
+    <Value>IP addresses allowed to access the Back End. Leave this field empty if you do not want to restrict access to the Back End. Use comma to separate them (e.g. 127.0.0.10,232.18.204.16)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.NumberOfDaysReturnRequestAvailable.Hint">
+    <Value>Set a certain number of days that the Return Request Link will be available in the customer area. For example, if the store owner allows returns within 30 days of purchase, they would set this to 30. Logged in customers, viewing orders in ''My Account'', would then not see Return Request buttons for orders completed more than thirty days ago.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Tax.DisplayTaxRates.Hint">
+    <Value>A value indicating whether each tax rate should be displayed on a separate line (shopping cart page).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Forums.ForumGroup.Fields.Description.Hint">
+    <Value>The description of the forum group. This is the description that the customer will see.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Forums.Forum.Fields.Description.Hint">
+    <Value>The description of the forum. This is the description that the customer will see.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.SystemKeyword.Hint">
+    <Value>The system keyword for this poll.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.AuthorizationTransactionID.Hint">
+    <Value>Authorization transaction identifier received from your payment gateway.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.CaptureTransactionID.Hint">
+    <Value>Capture transaction identifier received from your payment gateway.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.SubscriptionTransactionID.Hint">
+    <Value>Subscription transaction identifier received from your payment gateway.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Products.Download">
+    <Value>Downloadable product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.Name.Hint">
+    <Value>The name of the discount.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.RequiresCouponCode.Hint">
+    <Value>If checked, a customer must supply a valid coupon code for the discount to be applied.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.RecurringPayments.Updated">
+    <Value>The payment has been updated successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.DeleteGuests.OnlyWithoutShoppingCart.Hint">
+    <Value>A value indicating whether we need to find customers without shopping carts/wishlists. If unchecked, then all customers will be found.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.UTCTime">
+    <Value>Greenwich Mean Time (GMT/UTC)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.UTCTime.Hint">
+    <Value>Greenwich Mean Time (GMT/UTC)</Value>
   </LocaleResource>
 </Language>
 '

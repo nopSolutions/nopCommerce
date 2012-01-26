@@ -184,7 +184,7 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Gets a related product
         /// </summary>
-        /// <param name="relatedProductId">Related product identifer</param>
+        /// <param name="relatedProductId">Related product identifier</param>
         /// <returns>Related product</returns>
         RelatedProduct GetRelatedProductById(int relatedProductId);
 
@@ -221,7 +221,7 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Gets a cross-sell product
         /// </summary>
-        /// <param name="crossSellProductId">Cross-sell product identifer</param>
+        /// <param name="crossSellProductId">Cross-sell product identifier</param>
         /// <returns>Cross-sell product</returns>
         CrossSellProduct GetCrossSellProductById(int crossSellProductId);
 
@@ -301,7 +301,7 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Gets a product picture
         /// </summary>
-        /// <param name="productPictureId">Product picture identifer</param>
+        /// <param name="productPictureId">Product picture identifier</param>
         /// <returns>Product picture</returns>
         ProductPicture GetProductPictureById(int productPictureId);
 

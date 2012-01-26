@@ -1526,7 +1526,7 @@ namespace Nop.Services.Orders
                 throw new ArgumentNullException("order");
 
             if (!CanShip(order))
-                throw new NopException("Can not do shipment for order.");
+                throw new NopException("Cannot do shipment for order.");
 
             order.ShippedDateUtc = DateTime.UtcNow;
             order.ShippingStatusId = (int)ShippingStatus.Shipped;
@@ -1591,7 +1591,7 @@ namespace Nop.Services.Orders
                 throw new ArgumentNullException("order");
 
             if (!CanDeliver(order))
-                throw new NopException("Can not do delivery for order.");
+                throw new NopException("Cannot do delivery for order.");
 
             order.DeliveryDateUtc = DateTime.UtcNow;
             order.ShippingStatusId = (int)ShippingStatus.Delivered;
@@ -1655,7 +1655,7 @@ namespace Nop.Services.Orders
                 throw new ArgumentNullException("order");
 
             if (!CanCancelOrder(order))
-                throw new NopException("Can not do cancel for order.");
+                throw new NopException("Cannot do cancel for order.");
 
             //Cancel order
             SetOrderStatus(order, OrderStatus.Cancelled, notifyCustomer);
@@ -1761,7 +1761,7 @@ namespace Nop.Services.Orders
                 throw new ArgumentNullException("order");
 
             if (!CanCapture(order))
-                throw new NopException("Can not do capture for order.");
+                throw new NopException("Cannot do capture for order.");
 
             var request = new CapturePaymentRequest();
             CapturePaymentResult result = null;
@@ -1928,7 +1928,7 @@ namespace Nop.Services.Orders
                 throw new ArgumentNullException("order");
 
             if (!CanRefund(order))
-                throw new NopException("Can not do refund for order.");
+                throw new NopException("Cannot do refund for order.");
 
             var request = new RefundPaymentRequest();
             RefundPaymentResult result = null;
@@ -2097,7 +2097,7 @@ namespace Nop.Services.Orders
                 throw new ArgumentNullException("order");
 
             if (!CanPartiallyRefund(order, amountToRefund))
-                throw new NopException("Can not do partial refund for order.");
+                throw new NopException("Cannot do partial refund for order.");
 
             var request = new RefundPaymentRequest();
             RefundPaymentResult result = null;
@@ -2268,7 +2268,7 @@ namespace Nop.Services.Orders
                 throw new ArgumentNullException("order");
 
             if (!CanVoid(order))
-                throw new NopException("Can not do void for order.");
+                throw new NopException("Cannot do void for order.");
 
             var request = new VoidPaymentRequest();
             VoidPaymentResult result = null;

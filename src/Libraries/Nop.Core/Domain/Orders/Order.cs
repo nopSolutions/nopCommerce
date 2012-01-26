@@ -85,7 +85,7 @@ namespace Nop.Core.Domain.Orders
         public virtual int? ShippingAddressId { get; set; }
 
         /// <summary>
-        /// Gets or sets an order status identifer
+        /// Gets or sets an order status identifier
         /// </summary>
         public virtual int OrderStatusId { get; set; }
 

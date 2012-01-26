@@ -291,7 +291,7 @@
 														<Value>Please provide a name.</Value>
 													</LocaleResource>
 													<LocaleResource Name="Hint">
-														<Value>A name of the checkout attribute.</Value>
+														<Value>The name of the checkout attribute.</Value>
 													</LocaleResource>
 												</Children>
 											</LocaleResource>
@@ -371,7 +371,7 @@
 																<Value>Please provide a name.</Value>
 															</LocaleResource>
 															<LocaleResource Name="Hint">
-																<Value>A name of the checkout value.</Value>
+																<Value>The name of the checkout value.</Value>
 															</LocaleResource>
 														</Children>
 													</LocaleResource>
@@ -446,7 +446,7 @@
 														<Value>Please provide a name.</Value>
 													</LocaleResource>
 													<LocaleResource Name="Hint">
-														<Value>A name of the product attribute.</Value>
+														<Value>The name of the product attribute.</Value>
 													</LocaleResource>
 												</Children>
 											</LocaleResource>
@@ -454,7 +454,7 @@
 												<Value>Description</Value>
 												<Children>
 													<LocaleResource Name="Hint">
-														<Value>A description of the product attribute.</Value>
+														<Value>The description of the product attribute.</Value>
 													</LocaleResource>
 												</Children>
 											</LocaleResource>
@@ -495,7 +495,7 @@
 														<Value>Please provide a name.</Value>
 													</LocaleResource>
 													<LocaleResource Name="Hint">
-														<Value>A name of the specification attribute.</Value>
+														<Value>The name of the specification attribute.</Value>
 													</LocaleResource>
 												</Children>
 											</LocaleResource>
@@ -503,7 +503,7 @@
 												<Value>Display order</Value>
 												<Children>
 													<LocaleResource Name="Hint">
-														<Value>A display order of the specification attribute.</Value>
+														<Value>The display order of the specification attribute.</Value>
 													</LocaleResource>
 												</Children>
 											</LocaleResource>
@@ -527,7 +527,7 @@
 																<Value>Please provide a name.</Value>
 															</LocaleResource>
 															<LocaleResource Name="Hint">
-																<Value>A name of the option.</Value>
+																<Value>The name of the option.</Value>
 															</LocaleResource>
 														</Children>
 													</LocaleResource>
@@ -535,7 +535,7 @@
 														<Value>Display order</Value>
 														<Children>
 															<LocaleResource Name="Hint">
-																<Value>A display order of the option.</Value>
+																<Value>The display order of the option.</Value>
 															</LocaleResource>
 														</Children>
 													</LocaleResource>
@@ -663,7 +663,7 @@
 										<Value>Description</Value>
 										<Children>
 											<LocaleResource Name="Hint">
-												<Value>A description of the category.</Value>
+												<Value>The description of the category.</Value>
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
@@ -671,7 +671,7 @@
 										<Value>Category template</Value>
 										<Children>
 											<LocaleResource Name="Hint">
-												<Value>Choose a category template. This template defines how this category (and it's products) will be displayed.</Value>
+												<Value>Choose a category template. This template defines how this category (and its products) will be displayed.</Value>
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
@@ -862,7 +862,7 @@
 										<Value>Description</Value>
 										<Children>
 											<LocaleResource Name="Hint">
-												<Value>A description of the manufacturer.</Value>
+												<Value>The description of the manufacturer.</Value>
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
@@ -870,7 +870,7 @@
 										<Value>Manufacturer template</Value>
 										<Children>
 											<LocaleResource Name="Hint">
-												<Value>Choose a manufacturer template. This template defines how this manufacturer (and it's products) will be displayed.</Value>
+												<Value>Choose a manufacturer template. This template defines how this manufacturer (and its products) will be displayed.</Value>
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
@@ -1202,7 +1202,7 @@
 										<Value>Short description</Value>
 										<Children>
 											<LocaleResource Name="Hint">
-												<Value>A short description of the product. This is the text that displays in product lists i.e. category / manufacturer pages</Value>
+												<Value>The short description of the product. This is the text that displays in product lists i.e. category / manufacturer pages</Value>
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
@@ -1210,7 +1210,7 @@
 										<Value>Full description</Value>
 										<Children>
 											<LocaleResource Name="Hint">
-												<Value>A full description of the product.</Value>
+												<Value>The full description of the product.</Value>
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
@@ -1226,7 +1226,7 @@
 										<Value>Product template</Value>
 										<Children>
 											<LocaleResource Name="Hint">
-												<Value>Choose a product template. This template defines how this product (and it's variants) will be displayed.</Value>
+												<Value>Choose a product template. This template defines how this product (and its variants) will be displayed.</Value>
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
@@ -1282,7 +1282,7 @@
 										<Value>Product tags</Value>
 										<Children>
 											<LocaleResource Name="Hint">
-												<Value>Product tags are keywords that this product can also be identified by. Enter a comma separated list of the tags to be associated with this products. The more products associated with a particular tag, the larger it will show on the tag cloud.</Value>
+												<Value>Product tags are keywords that this product can also be identified by. Enter a comma separated list of the tags to be associated with this product. The more products associated with a particular tag, the larger it will show on the tag cloud.</Value>
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
@@ -1676,7 +1676,7 @@
 												<Value>Automatically add these product variants to the cart</Value>
 												<Children>
 													<LocaleResource Name="Hint">
-														<Value>Check to automatically add this product variants to the cart.</Value>
+														<Value>Check to automatically add these product variants to the cart.</Value>
 													</LocaleResource>
 												</Children>
 											</LocaleResource>
@@ -1684,7 +1684,7 @@
 												<Value>Available end date</Value>
 												<Children>
 													<LocaleResource Name="Hint">
-														<Value>The end of the product availability in Coordinated Universal Time (UTC).</Value>
+														<Value>The end of the product's availability in Coordinated Universal Time (UTC).</Value>
 													</LocaleResource>
 												</Children>
 											</LocaleResource>
@@ -1692,7 +1692,7 @@
 												<Value>Available start date</Value>
 												<Children>
 													<LocaleResource Name="Hint">
-														<Value>The start of the product availability in Coordinated Universal Time (UTC).</Value>
+														<Value>The start of the product's availability in Coordinated Universal Time (UTC).</Value>
 													</LocaleResource>
 												</Children>
 											</LocaleResource>
@@ -1724,7 +1724,7 @@
 												<Value>Description</Value>
 												<Children>
 													<LocaleResource Name="Hint">
-														<Value>A description of the product variant.</Value>
+														<Value>The description of the product variant.</Value>
 													</LocaleResource>
 												</Children>
 											</LocaleResource>
@@ -1820,7 +1820,7 @@
 												<Value>Has user agreement</Value>
 												<Children>
 													<LocaleResource Name="Hint">
-														<Value>Check if the product has an user agreement.</Value>
+														<Value>Check if the product has a user agreement.</Value>
 													</LocaleResource>
 												</Children>
 											</LocaleResource>
@@ -1980,7 +1980,7 @@
 												<Value>Maximum cart quantity</Value>
 												<Children>
 													<LocaleResource Name="Hint">
-														<Value>Set the maximum quantity allowed in a customers shopping cart e.g. set to 5 to only allow customers to purchase 5 of this product.</Value>
+														<Value>Set the maximum quantity allowed in a customer's shopping cart e.g. set to 5 to only allow customers to purchase 5 of this product.</Value>
 													</LocaleResource>
 												</Children>
 											</LocaleResource>
@@ -1988,7 +1988,7 @@
 												<Value>Minimum cart quantity</Value>
 												<Children>
 													<LocaleResource Name="Hint">
-														<Value>Set the minimum quantity allowed in a customers shopping cart e.g. set to 3 to only allow customers to purchase 3 or more of this product.</Value>
+														<Value>Set the minimum quantity allowed in a customer's shopping cart e.g. set to 3 to only allow customers to purchase 3 or more of this product.</Value>
 													</LocaleResource>
 												</Children>
 											</LocaleResource>
@@ -2404,7 +2404,7 @@
 												<Value>Activity Log Type</Value>
 												<Children>
 													<LocaleResource Name="Hint">
-														<Value>A customer Email.</Value>
+														<Value>The Activity Log Type.</Value>
 													</LocaleResource>
 												</Children>
 											</LocaleResource>
@@ -2993,7 +2993,7 @@
 												<Value>Two letter SEO code should be 2 characters long.</Value>
 											</LocaleResource>
 											<LocaleResource Name="Required">
-												<Value>Please provide an unique SEO code.</Value>
+												<Value>Please provide a unique SEO code.</Value>
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
@@ -3451,7 +3451,7 @@
 										</Children>
 									</LocaleResource>
 									<LocaleResource Name="RecentlyAddedProductsEnabled">
-										<Value>Recently added products' enabled</Value>
+										<Value>'Recently added products' enabled</Value>
 										<Children>
 											<LocaleResource Name="Hint">
 												<Value>Check to allow customers to use the 'Recently added products' feature in your store</Value>
@@ -3601,26 +3601,26 @@
 										</Children>
 									</LocaleResource>
 									<LocaleResource Name="ShowCustomersLocation">
-										<Value>Show customers location</Value>
+										<Value>Show customers' location</Value>
 										<Children>
 											<LocaleResource Name="Hint">
-												<Value>A value indicating whether customers location is shown.</Value>
+												<Value>A value indicating whether customers' location is shown.</Value>
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
 									<LocaleResource Name="ShowCustomersJoinDate">
-										<Value>Show customers join date</Value>
+										<Value>Show customers' join date</Value>
 										<Children>
 											<LocaleResource Name="Hint">
-												<Value>A value indicating whether to show customers join date.</Value>
+												<Value>A value indicating whether to show customers' join date.</Value>
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
 									<LocaleResource Name="AllowViewingProfiles">
-										<Value>Allow viewing customer profiles</Value>
+										<Value>Allow viewing of customer profiles</Value>
 										<Children>
 											<LocaleResource Name="Hint">
-												<Value>A value indicating whether to viewing profiles of customers are allowed.</Value>
+												<Value>A value indicating whether the viewing of customer profiles is allowed.</Value>
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
@@ -3796,7 +3796,7 @@
 										<Value>Registration method</Value>
 										<Children>
 											<LocaleResource Name="Hint">
-												<Value>Determines customer registration method. Standard - mode where vistors can register and no approval is required. Email Validation - mode where user must respond to validation email that is sent to them before they are activated. Admin Approval - mode where vistors can register but admin approval is required. Disabled - mode where registration is disabled</Value>
+												<Value>Determines customer registration method. Standard - mode where visitors can register and no approval is required. Email Validation - mode where user must respond to validation email that is sent to them before they are activated. Admin Approval - mode where visitors can register but admin approval is required. Disabled - mode where registration is disabled</Value>
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
@@ -4165,7 +4165,7 @@
 										<Value>Admin area allowed IP</Value>
 										<Children>
 											<LocaleResource Name="Hint">
-												<Value>IP addresses allowed to access the Back End. Leave this field empty, if you do not want to restict access to the Back End. Use comma to separate them (e.g. 127.0.0.10,232.18.204.16)</Value>
+												<Value>IP addresses allowed to access the Back End. Leave this field empty if you do not want to restrict access to the Back End. Use comma to separate them (e.g. 127.0.0.10,232.18.204.16)</Value>
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
@@ -4205,7 +4205,7 @@
 										<Value>Show on registration page</Value>
 										<Children>
 											<LocaleResource Name="Hint">
-												<Value>Check to show CAPTCHA registration page.</Value>
+												<Value>Check to show CAPTCHA on registration page.</Value>
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
@@ -4310,7 +4310,7 @@
 										<Value>Product thumbnail image size (product page)</Value>
 										<Children>
 											<LocaleResource Name="Hint">
-												<Value>The default size (pixels) for product thumbnail images displayed on product details page when if you have more than one product image.</Value>
+												<Value>The default size (pixels) for product thumbnail images displayed on product details page when you have more than one product image.</Value>
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
@@ -4508,7 +4508,7 @@
 										<Value>Number of days that the return request is available</Value>
 										<Children>
 											<LocaleResource Name="Hint">
-												<Value>Set a certain number of days that the Return Request Link will be available in the customer area. For example if the store owner allows returns within 30 days after purchase, then they would set this to 30. When the customer logs into the website and looks at "My Account" any orders completed more than 30 days ago would not show a Return Request button.</Value>
+												<Value>Set a certain number of days that the Return Request Link will be available in the customer area. For example, if the store owner allows returns within 30 days of purchase, they would set this to 30. Logged in customers, viewing orders in My Account, would then not see Return Request buttons for orders completed more than thirty days ago.</Value>
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
@@ -4667,7 +4667,7 @@
 										<Value>Display cart after adding product</Value>
 										<Children>
 											<LocaleResource Name="Hint">
-												<Value>If checked a customer will be taken to the Shopping Cart page immediately after adding a product to their cart. If unchecked a customer will stay on the same page that they are adding the product to the cart from.</Value>
+												<Value>If checked, a customer will be taken to the Shopping Cart page immediately after adding a product to their cart. If unchecked, a customer will stay on the same page that they are adding the product to the cart from.</Value>
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
@@ -4792,7 +4792,7 @@
 										<Value>Display all applied tax rates</Value>
 										<Children>
 											<LocaleResource Name="Hint">
-												<Value>A value indicating whether each tax rate should be displayed on separate line (shopping cart page).</Value>
+												<Value>A value indicating whether each tax rate should be displayed on a separate line (shopping cart page).</Value>
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
@@ -5225,7 +5225,7 @@
 												<Value>Description</Value>
 												<Children>
 													<LocaleResource Name="Hint">
-														<Value>A description of the forum group. This is the description that the customer will see.</Value>
+														<Value>The description of the forum group. This is the description that the customer will see.</Value>
 													</LocaleResource>
 												</Children>
 											</LocaleResource>
@@ -5293,7 +5293,7 @@
 												<Value>Description</Value>
 												<Children>
 													<LocaleResource Name="Hint">
-														<Value>A description of the forum. This is the description that the customer will see.</Value>
+														<Value>The description of the forum. This is the description that the customer will see.</Value>
 													</LocaleResource>
 												</Children>
 											</LocaleResource>
@@ -5600,7 +5600,7 @@
 										<Value>System keyword</Value>
 										<Children>
 											<LocaleResource Name="Hint">
-												<Value>A system keyword for this poll.</Value>
+												<Value>The system keyword for this poll.</Value>
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
@@ -6958,7 +6958,7 @@
 								<Value>Authorization transaction ID</Value>
 								<Children>
 									<LocaleResource Name="Hint">
-										<Value>Authorization transaction identifer received from your payment gateway.</Value>
+										<Value>Authorization transaction identifier received from your payment gateway.</Value>
 									</LocaleResource>
 								</Children>
 							</LocaleResource>
@@ -6983,7 +6983,7 @@
 								<Value>Capture transaction ID</Value>
 								<Children>
 									<LocaleResource Name="Hint">
-										<Value>Capture transaction identifer received from your payment gateway.</Value>
+										<Value>Capture transaction identifier received from your payment gateway.</Value>
 									</LocaleResource>
 								</Children>
 							</LocaleResource>
@@ -7409,7 +7409,7 @@
 								<Value>Subscription transaction ID</Value>
 								<Children>
 									<LocaleResource Name="Hint">
-										<Value>Subscription transaction identifer received from your payment gateway.</Value>
+										<Value>Subscription transaction identifier received from your payment gateway.</Value>
 									</LocaleResource>
 								</Children>
 							</LocaleResource>
@@ -7575,7 +7575,7 @@
 								<Value>[Auto-ship, Every {0} {1}]</Value>
 							</LocaleResource>
 							<LocaleResource Name="Download">
-								<Value>Downloable product</Value>
+								<Value>Downloadable product</Value>
 								<Children>
 									<LocaleResource Name="Activate">
 										<Value>Activate</Value>
@@ -7676,7 +7676,7 @@
 												<Value>Please provide a name.</Value>
 											</LocaleResource>
 											<LocaleResource Name="Hint">
-												<Value>A name of the discount.</Value>
+												<Value>The name of the discount.</Value>
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
@@ -7732,7 +7732,7 @@
 										<Value>Requires coupon code</Value>
 										<Children>
 											<LocaleResource Name="Hint">
-												<Value>If checked, a customer supply a valid coupon code for the discount to be applied.</Value>
+												<Value>If checked, a customer must supply a valid coupon code for the discount to be applied.</Value>
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
@@ -8083,7 +8083,7 @@
 						<Value>The payment has been processed successfully.</Value>
 					</LocaleResource>
 					<LocaleResource Name="Updated">
-						<Value>The paymentl has been updated successfully.</Value>
+						<Value>The payment has been updated successfully.</Value>
 					</LocaleResource>
 				</Children>
 			</LocaleResource>
@@ -8494,7 +8494,7 @@
 										<Value>Only without shopping cart</Value>
 										<Children>
 											<LocaleResource Name="Hint">
-												<Value>A value indicating whether we needto find customers without shopping cart/wishlist. If unchecked, then all customers will be found.</Value>
+												<Value>A value indicating whether we need to find customers without shopping carts/wishlists. If unchecked, then all customers will be found.</Value>
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
@@ -8772,10 +8772,10 @@
 								</Children>
 							</LocaleResource>
 							<LocaleResource Name="UTCTime">
-								<Value>Greenwich mean time (GMT/UTC)</Value>
+								<Value>Greenwich Mean Time (GMT/UTC)</Value>
 								<Children>
 									<LocaleResource Name="Hint">
-										<Value>Greenwich mean time (GMT/UTC)</Value>
+										<Value>Greenwich Mean Time (GMT/UTC)</Value>
 									</LocaleResource>
 								</Children>
 							</LocaleResource>

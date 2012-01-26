@@ -946,7 +946,7 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Gets a related product
         /// </summary>
-        /// <param name="relatedProductId">Related product identifer</param>
+        /// <param name="relatedProductId">Related product identifier</param>
         /// <returns>Related product</returns>
         public virtual RelatedProduct GetRelatedProductById(int relatedProductId)
         {
@@ -994,7 +994,7 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Deletes a cross-sell product
         /// </summary>
-        /// <param name="crossSellProduct">Cross-sell identifer</param>
+        /// <param name="crossSellProduct">Cross-sell identifier</param>
         public virtual void DeleteCrossSellProduct(CrossSellProduct crossSellProduct)
         {
             if (crossSellProduct == null)
@@ -1028,7 +1028,7 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Gets a cross-sell product
         /// </summary>
-        /// <param name="crossSellProductId">Cross-sell product identifer</param>
+        /// <param name="crossSellProductId">Cross-sell product identifier</param>
         /// <returns>Cross-sell product</returns>
         public virtual CrossSellProduct GetCrossSellProductById(int crossSellProductId)
         {
@@ -1250,7 +1250,7 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Gets a product picture
         /// </summary>
-        /// <param name="productPictureId">Product picture identifer</param>
+        /// <param name="productPictureId">Product picture identifier</param>
         /// <returns>Product picture</returns>
         public virtual ProductPicture GetProductPictureById(int productPictureId)
         {

@@ -813,7 +813,7 @@
 				<Value>You cannot subscribe. Maximum number of allowed subscriptions is {0}</Value>
 			</LocaleResource>
 			<LocaleResource Name="Tooltip">
-				<Value>You'll receive a one time e-mail when this product is available for ordering again. We will not send you any other e-mails or add you to our newsletter, you will only be e-mailed about this product!</Value>
+				<Value>You'll receive a onetime e-mail when this product is available for ordering again. We will not send you any other e-mails or add you to our newsletter; you will only be e-mailed about this product!</Value>
 			</LocaleResource>
 			<LocaleResource Name="Unsubscribe">
 				<Value>Unsubscribe</Value>
@@ -2657,7 +2657,7 @@
 				<Value>Price</Value>
 			</LocaleResource>
 			<LocaleResource Name="ProductQuantity">
-				<Value>Q-ty</Value>
+				<Value>Qty</Value>
 			</LocaleResource>
 			<LocaleResource Name="ProductTotal">
 				<Value>Total</Value>
@@ -3404,10 +3404,10 @@
 				<Value>Buying is disabled for this product</Value>
 			</LocaleResource>
 			<LocaleResource Name="CannotLoadProduct">
-				<Value>Product (Id={0}) can not be loaded</Value>
+				<Value>Product (Id={0}) cannot be loaded</Value>
 			</LocaleResource>
 			<LocaleResource Name="CannotLoadProductVariant">
-				<Value>Product variant (Id={0}) can not be loaded</Value>
+				<Value>Product variant (Id={0}) cannot be loaded</Value>
 			</LocaleResource>
 			<LocaleResource Name="CannotMixStandardAndAutoshipProducts">
 				<Value>Your cart has standard and auto-ship (recurring) items. Only one product type is allowed per order.</Value>

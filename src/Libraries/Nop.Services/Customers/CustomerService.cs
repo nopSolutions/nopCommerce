@@ -311,9 +311,9 @@ namespace Nop.Services.Customers
         }
 
         /// <summary>
-        /// Get customers by language identifer
+        /// Get customers by language identifier
         /// </summary>
-        /// <param name="languageId">Language identifer</param>
+        /// <param name="languageId">Language identifier</param>
         /// <returns>Customers</returns>
         public virtual IList<Customer> GetCustomersByLanguageId(int languageId)
         {
@@ -328,9 +328,9 @@ namespace Nop.Services.Customers
         }
 
         /// <summary>
-        /// Get customers by currency identifer
+        /// Get customers by currency identifier
         /// </summary>
-        /// <param name="currencyId">Currency identifer</param>
+        /// <param name="currencyId">Currency identifier</param>
         /// <returns>Customers</returns>
         public virtual IList<Customer> GetCustomersByCurrencyId(int currencyId)
         {

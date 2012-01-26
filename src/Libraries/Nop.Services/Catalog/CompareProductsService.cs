@@ -102,7 +102,7 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Removes a product from a "compare products" list
         /// </summary>
-        /// <param name="productId">Product identifer</param>
+        /// <param name="productId">Product identifier</param>
         public virtual void RemoveProductFromCompareList(int productId)
         {
             var oldProductIds = GetComparedProductIds();
@@ -123,7 +123,7 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Adds a product to a "compare products" list
         /// </summary>
-        /// <param name="productId">Product identifer</param>
+        /// <param name="productId">Product identifier</param>
         public virtual void AddProductToCompareList(int productId)
         {
             var oldProductIds = GetComparedProductIds();

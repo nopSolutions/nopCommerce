@@ -522,7 +522,7 @@ namespace Nop.Plugin.Shipping.Fedex
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.Fedex.Fields.CountryCode", "Shipping origin. Country code");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.Fedex.Fields.CountryCode.Hint", "Specify origin country code.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.Fedex.Fields.PassDimensions", "Pass dimensions");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.Fedex.Fields.PassDimensions.Hint", "Check if you want ot pass package dimensions when requesting rates.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.Fedex.Fields.PassDimensions.Hint", "Check if you want to pass package dimensions when requesting rates.");
             
             base.Install();
         }

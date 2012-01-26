@@ -88,7 +88,7 @@ namespace Nop.Services.Catalog
         IList<ProductCategory> GetProductCategoriesByProductId(int productId, bool showHidden = false);
 
         /// <summary>
-        /// Get a total number of featured products by category identifer
+        /// Get a total number of featured products by category identifier
         /// </summary>
         /// <param name="categoryId">Category identifier</param>
         /// <returns>Number of featured products</returns>

@@ -95,7 +95,7 @@ namespace Nop.Services.Configuration
         /// <summary>
         /// Gets a setting by identifier
         /// </summary>
-        /// <param name="settingId">Setting identifer</param>
+        /// <param name="settingId">Setting identifier</param>
         /// <returns>Setting</returns>
         public virtual Setting GetSettingById(int settingId)
         {

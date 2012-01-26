@@ -19,17 +19,16 @@ namespace Nop.Services.Catalog
         /// <returns>"Compare products" list</returns>
         IList<Product> GetComparedProducts();
 
-
         /// <summary>
         /// Removes a product from a "compare products" list
         /// </summary>
-        /// <param name="productId">Product identifer</param>
+        /// <param name="productId">Product identifier</param>
         void RemoveProductFromCompareList(int productId);
 
         /// <summary>
         /// Adds a product to a "compare products" list
         /// </summary>
-        /// <param name="productId">Product identifer</param>
+        /// <param name="productId">Product identifier</param>
         void AddProductToCompareList(int productId);
     }
 }

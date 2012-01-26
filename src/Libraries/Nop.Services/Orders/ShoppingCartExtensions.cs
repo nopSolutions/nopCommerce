@@ -81,7 +81,7 @@ namespace Nop.Services.Orders
                 var productVariant = sci.ProductVariant;
                 if (productVariant == null)
                 {
-                    throw new NopException(string.Format("Product variant (Id={0}) can not be loaded", sci.ProductVariantId));
+                    throw new NopException(string.Format("Product variant (Id={0}) cannot be loaded", sci.ProductVariantId));
                 }
 
                 string conflictError = "Your cart has auto-ship (recurring) items with conflicting shipment schedules. Only one auto-ship schedule is allowed per order.";

@@ -275,7 +275,7 @@ namespace Nop.Plugin.Tax.StrikeIron
         {
             //locales
             this.AddOrUpdatePluginLocaleResource("Plugins.Tax.StrikeIron.UserId", "StrikeIron User ID");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Tax.StrikeIron.UserId.Hint", "Specify StrikeIron user identifer.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Tax.StrikeIron.UserId.Hint", "Specify StrikeIron user identifier.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Tax.StrikeIron.Password", "StrikeIron Password");
             this.AddOrUpdatePluginLocaleResource("Plugins.Tax.StrikeIron.Password.Hint", "Specify StrikeIron password.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Tax.StrikeIron.TestingUsa.Button", "Test (USA)");

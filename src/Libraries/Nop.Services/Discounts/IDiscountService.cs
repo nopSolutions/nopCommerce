@@ -89,8 +89,8 @@ namespace Nop.Services.Discounts
         /// <summary>
         /// Gets all discount usage history records
         /// </summary>
-        /// <param name="discountId">Discount identifer</param>
-        /// <param name="customerId">Customer identifer</param>
+        /// <param name="discountId">Discount identifier</param>
+        /// <param name="customerId">Customer identifier</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Discount usage history records</returns>

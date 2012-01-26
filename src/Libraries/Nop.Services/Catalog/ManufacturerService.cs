@@ -234,7 +234,7 @@ namespace Nop.Services.Catalog
         }
         
         /// <summary>
-        /// Get a total number of featured products by manufacturer identifer
+        /// Get a total number of featured products by manufacturer identifier
         /// </summary>
         /// <param name="manufacturerId">Manufacturer identifier</param>
         /// <returns>Number of featured products</returns>

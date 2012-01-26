@@ -396,7 +396,7 @@ namespace Nop.Plugin.Shipping.CanadaPost
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.CanadaPost.Fields.Port", "Canada Post Port");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.CanadaPost.Fields.Port.Hint", "Specify Canada Post port.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.CanadaPost.Fields.CustomerId", "Canada Post Customer ID");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.CanadaPost.Fields.CustomerId.Hint", "Specify Canada Post customer identifer.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.CanadaPost.Fields.CustomerId.Hint", "Specify Canada Post customer identifier.");
             
             base.Install();
         }
