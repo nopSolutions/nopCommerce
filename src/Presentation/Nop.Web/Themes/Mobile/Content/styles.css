@@ -263,6 +263,7 @@
 .customer-orders .order-list .order-item{font-weight:normal}
 .customer-orders .order-list .order-item .buttons{}
 .customer-pass-recovery{padding:0px;background-color:inherit;}
+.customer-pass-recovery .result{font-family:Verdana, Arial, sans-serif;font-weight:700;color:red;}
 .customer-rewardpoints{margin:0;padding:0px;background-color:inherit;}
 .customer-rewardpoints .section-title{padding:10px;font-weight:700;clear:both;}
 .customer-rewardpoints .reward-points-overview{}

@@ -15,7 +15,9 @@
         <div class="returning-wrapper">
             <span class="login-title">@T("Account.Login.ReturningCustomer")</span>
             <div class="login-block">
-                @Html.ValidationSummary(true, T("Account.Login.Unsuccessful").Text)
+                <div class="message-error">
+                    @Html.ValidationSummary(true, T("Account.Login.Unsuccessful").Text)
+                </div>
                 @using (Html.BeginForm())
                 {
                     if (Model.UsernamesEnabled)

@@ -20,9 +20,9 @@
         </div>
         <div class="body">
             <div class="customer-avatar">
-                    <div class="message-error">
-                        @Html.ValidationSummary(true)
-                    </div>
+                <div class="message-error">
+                    @Html.ValidationSummary(true)
+                </div>
                 <div class="clear">
                 </div>
                 <div class="section-body">
@@ -39,7 +39,7 @@
                     <button type="submit" name="upload-avatar" value="upload-avatar" class="uploadavatarbutton">@T("Common.Upload")</button>
                     @if (!String.IsNullOrEmpty(Model.AvatarUrl))
                     {
-                    <button type="submit" name="remove-avatar" value="remove-avatar" class="removeavatarbutton">@T("Account.Avatar.RemoveAvatar")</button>
+                        <button type="submit" name="remove-avatar" value="remove-avatar" class="removeavatarbutton">@T("Account.Avatar.RemoveAvatar")</button>
                     }
                 </div>
                 <div class="clear">

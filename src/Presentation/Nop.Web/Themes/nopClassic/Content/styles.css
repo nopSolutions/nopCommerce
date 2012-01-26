@@ -575,6 +575,7 @@ ul.languagelist li:hover{cursor:pointer;}
 .customer-orders .order-list .order-item{text-align:left;margin-bottom:10px;padding:10px;border:1px solid #E8E6D2;height:auto;}
 .customer-orders .order-list .order-item .buttons{text-align:right;}
 .customer-pass-recovery{padding:5px;font-size:11px;color:#555;background-color:inherit;}
+.customer-pass-recovery .result{font-family:Verdana, Arial, sans-serif;font-size:10px;font-weight:700;color:red;}
 .customer-rewardpoints{margin:0;padding:5px;font-size:11px;color:#555;background-color:inherit;}
 .customer-rewardpoints .section-title{padding:10px 10px 5px 0;font-weight:700;clear:both;font-size:12px;}
 .customer-rewardpoints .reward-points-overview{padding:10px 10px 5px 0;width:100%;}

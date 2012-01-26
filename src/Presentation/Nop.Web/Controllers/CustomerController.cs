@@ -1632,7 +1632,7 @@ namespace Nop.Web.Controllers
 
         #endregion
 
-        #region Forum Subscriptions
+        #region Forum subscriptions
 
         public ActionResult ForumSubscriptions(int? page)
         {
