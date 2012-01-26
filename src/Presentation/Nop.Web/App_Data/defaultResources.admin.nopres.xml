@@ -6512,6 +6512,9 @@
 							</LocaleResource>
 						</Children>
 					</LocaleResource>
+					<LocaleResource Name="Guest">
+						<Value>Guest</Value>
+					</LocaleResource>
 					<LocaleResource Name="OnlineCustomers">
 						<Value>Online customers</Value>
 						<Children>

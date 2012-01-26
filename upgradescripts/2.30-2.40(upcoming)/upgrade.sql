@@ -773,6 +773,9 @@ set @resources='
   <LocaleResource Name="Account.Fields.LastName.Required">
     <Value>Last name is required.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Guest">
+    <Value>Guest</Value>
+  </LocaleResource>
 </Language>
 '
 

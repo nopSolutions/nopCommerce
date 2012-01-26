@@ -6,6 +6,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Helpers;
+using Nop.Services.Localization;
 using Nop.Services.Orders;
 using Nop.Services.Security;
 using Nop.Services.Tax;
@@ -25,6 +26,7 @@ namespace Nop.Admin.Controllers
         private readonly ITaxService _taxService;
         private readonly IPriceCalculationService _priceCalculationService;
         private readonly IPermissionService _permissionService;
+        private readonly ILocalizationService _localizationService;
         #endregion
 
         #region Constructors
@@ -32,7 +34,7 @@ namespace Nop.Admin.Controllers
         public ShoppingCartController(ICustomerService customerService,
             IDateTimeHelper dateTimeHelper, IPriceFormatter priceFormatter,
             ITaxService taxService, IPriceCalculationService priceCalculationService,
-            IPermissionService permissionService)
+            IPermissionService permissionService, ILocalizationService localizationService)
         {
             this._customerService = customerService;
             this._dateTimeHelper = dateTimeHelper;
@@ -40,6 +42,7 @@ namespace Nop.Admin.Controllers
             this._taxService = taxService;
             this._priceCalculationService = priceCalculationService;
             this._permissionService = permissionService;
+            this._localizationService = localizationService;
         }
 
         #endregion
@@ -73,7 +76,7 @@ namespace Nop.Admin.Controllers
                     {
                         CustomerId = x.Id,
                         CustomerName = x.IsGuest() ?
-                        "Guest" :
+                        _localizationService.GetResource("Admin.Customers.Guest") :
                         x.GetFullName(),
                         TotalItems = x.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList().GetTotalProducts()
                     };
@@ -152,7 +155,7 @@ namespace Nop.Admin.Controllers
                     {
                         CustomerId = x.Id,
                         CustomerName = x.IsGuest() ?
-                        "Guest" :
+                        _localizationService.GetResource("Admin.Customers.Guest") :
                         x.GetFullName(),
                         TotalItems = x.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist).ToList().GetTotalProducts()
                     };

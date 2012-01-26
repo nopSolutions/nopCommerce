@@ -197,7 +197,7 @@ namespace Nop.Admin.Controllers
             return new CustomerModel()
             {
                 Id = customer.Id,
-                Email = !String.IsNullOrEmpty(customer.Email) ? customer.Email : (customer.IsGuest() ? "Guest" : "Unknown"),
+                Email = !String.IsNullOrEmpty(customer.Email) ? customer.Email : (customer.IsGuest() ? _localizationService.GetResource("Admin.Customers.Guest") : "Unknown"),
                 Username = customer.Username,
                 FullName = customer.GetFullName(),
                 CustomerRoleNames = GetCustomerRolesNames(customer.CustomerRoles.ToList()),
@@ -1376,7 +1376,11 @@ namespace Nop.Admin.Controllers
                     };
                     var customer = _customerService.GetCustomerById(x.CustomerId);
                     if (customer != null)
-                        m.CustomerName = customer.IsGuest() ? "Guest" : customer.GetFullName();
+                    {
+                        m.CustomerName = customer.IsGuest()
+                                             ? _localizationService.GetResource("Admin.Customers.Guest")
+                                             : customer.GetFullName();
+                    }
                     return m;
                 }),
                 Total = items.Count
@@ -1414,7 +1418,11 @@ namespace Nop.Admin.Controllers
                     };
                     var customer = _customerService.GetCustomerById(x.CustomerId);
                     if (customer != null)
-                        m.CustomerName = customer.IsGuest() ? "Guest" : customer.GetFullName();
+                    {
+                        m.CustomerName = customer.IsGuest()
+                                             ? _localizationService.GetResource("Admin.Customers.Guest")
+                                             : customer.GetFullName();
+                    }
                     return m;
                 }),
                 Total = items.Count
