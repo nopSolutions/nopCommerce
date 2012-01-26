@@ -86,11 +86,6 @@ namespace Nop.Plugin.Shipping.FixedRateShipping.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult ShippingRateUpdate(FixedShippingRateModel model, GridCommand command)
         {
-            if (!ModelState.IsValid)
-            {
-                return new JsonResult { Data = "error" };
-            }
-
             int shippingMethodId = model.ShippingMethodId;
             decimal rate = model.Rate;
 

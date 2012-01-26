@@ -62,7 +62,8 @@
                             .Select("SubscriptionList", "NewsLetterSubscription")
                             .Update("SubscriptionUpdate", "NewsLetterSubscription")
                             .Delete("SubscriptionDelete", "NewsLetterSubscription"))
-                        .ClientEvents(events => events.OnDataBinding("onDataBinding"))
+                            .ClientEvents(events => events.OnDataBinding("onDataBinding"))
+                            .ClientEvents(x => x.OnError("grid_onError"))
                         .EnableCustomBinding(true))
             </td>
         </tr>
@@ -82,6 +83,11 @@
                 SearchEmail: $('#@Html.FieldIdFor(model => model.SearchEmail)').val()
             };
             e.data = searchModel;
+        }
+
+        function grid_onError(e) {
+            alert(e.XMLHttpRequest.responseText);
+            e.preventDefault();
         }
     </script>  
 

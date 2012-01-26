@@ -156,11 +156,6 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult RateUpdate(ShippingByWeightModel model, GridCommand command)
         {
-            if (!ModelState.IsValid)
-            {
-                return new JsonResult { Data = "error" };
-            }
-
             var sbw = _shippingByWeightService.GetById(model.Id);
             sbw.From = model.From;
             sbw.To = model.To;

@@ -153,6 +153,9 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var activityLog = _customerActivityService.GetActivityById(id);
+            if (activityLog == null)
+                throw new ArgumentException("No activity log found with the specified id");
+            
             _customerActivityService.DeleteActivity(activityLog);
 
             //TODO pass and return current ActivityLogSearchModel

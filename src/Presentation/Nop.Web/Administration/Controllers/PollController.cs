@@ -239,10 +239,12 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedView();
-
+            
             if (!ModelState.IsValid)
             {
-                return new JsonResult { Data = "error" };
+                //display the first model error
+                var modelStateErrors = this.ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage);
+                return Content(modelStateErrors.FirstOrDefault());
             }
 
             var pollAnswer = _pollService.GetPollAnswerById(model.Id);
@@ -261,10 +263,12 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePolls))
                 return AccessDeniedView();
-
+           
             if (!ModelState.IsValid)
             {
-                return new JsonResult { Data = "error" };
+                //display the first model error
+                var modelStateErrors = this.ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage);
+                return Content(modelStateErrors.FirstOrDefault());
             }
 
             var poll = _pollService.GetPollById(pollId);

@@ -86,11 +86,6 @@ namespace Nop.Plugin.Tax.FixedRate.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult TaxRateUpdate(FixedTaxRateModel model, GridCommand command)
         {
-            if (!ModelState.IsValid)
-            {
-                return new JsonResult { Data = "error" };
-            }
-
             int taxCategoryId = model.TaxCategoryId;
             decimal rate = model.Rate;
 

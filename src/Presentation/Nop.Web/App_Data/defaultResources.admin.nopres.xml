@@ -7846,6 +7846,11 @@
 								<Children>
 									<LocaleResource Name="Email">
 										<Value>Email</Value>
+										<Children>
+											<LocaleResource Name="Required">
+												<Value>Email is required.</Value>
+											</LocaleResource>
+										</Children>
 									</LocaleResource>
 									<LocaleResource Name="Active">
 										<Value>Active</Value>

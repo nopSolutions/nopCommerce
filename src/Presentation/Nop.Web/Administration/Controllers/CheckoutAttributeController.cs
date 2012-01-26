@@ -407,6 +407,8 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var cav = _checkoutAttributeService.GetCheckoutAttributeValueById(valueId);
+            if (cav == null)
+                throw new ArgumentException("No checkout attribute value found with the specified id");
             _checkoutAttributeService.DeleteCheckoutAttributeValue(cav);
 
             return ValueList(checkoutAttributeId, command);

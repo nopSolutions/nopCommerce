@@ -255,6 +255,9 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var comment = _customerContentService.GetCustomerContentById(id);
+            if (comment == null)
+                throw new ArgumentException("No comment found with the specified id");
+
             _customerContentService.DeleteCustomerContent(comment);
 
             return Comments(filterByBlogPostId, command);

@@ -349,11 +349,6 @@ namespace Nop.Admin.Controllers
             if (discount == null)
                 throw new ArgumentException("No discount found with the specified id");
             
-            if (!ModelState.IsValid)
-            {
-                return new JsonResult { Data = "error" };
-            }
-
             var duh = _discountService.GetDiscountUsageHistoryById(id);
             if (duh != null)
                 _discountService.DeleteDiscountUsageHistory(duh);

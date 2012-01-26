@@ -164,7 +164,9 @@ namespace Nop.Admin.Controllers
 
             if (!ModelState.IsValid)
             {
-                return RedirectToAction("Categories");
+                //display the first model error
+                var modelStateErrors = this.ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage);
+                return Content(modelStateErrors.FirstOrDefault());
             }
 
             var taxCategory = _taxCategoryService.GetTaxCategoryById(model.Id);
@@ -182,7 +184,9 @@ namespace Nop.Admin.Controllers
 
             if (!ModelState.IsValid)
             {
-                return new JsonResult { Data = "error" };
+                //display the first model error
+                var modelStateErrors = this.ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage);
+                return Content(modelStateErrors.FirstOrDefault());
             }
 
             var taxCategory = new TaxCategory();
@@ -199,6 +203,8 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var taxCategory = _taxCategoryService.GetTaxCategoryById(id);
+            if (taxCategory == null)
+                throw new ArgumentException("No tax category found with the specified id");
             _taxCategoryService.DeleteTaxCategory(taxCategory);
 
             return Categories(command);

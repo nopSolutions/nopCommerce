@@ -101,10 +101,12 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMeasures))
                 return AccessDeniedView();
-
+            
             if (!ModelState.IsValid)
             {
-                return new JsonResult { Data = "error" };
+                //display the first model error
+                var modelStateErrors = this.ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage);
+                return Content(modelStateErrors.FirstOrDefault());
             }
 
             var weight = _measureService.GetMeasureWeightById(model.Id);
@@ -122,7 +124,9 @@ namespace Nop.Admin.Controllers
 
             if (!ModelState.IsValid)
             {
-                return new JsonResult {Data = "error"};
+                //display the first model error
+                var modelStateErrors = this.ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage);
+                return Content(modelStateErrors.FirstOrDefault());
             }
 
             var weight = new MeasureWeight();
@@ -139,6 +143,8 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var weight = _measureService.GetMeasureWeightById(id);
+            if (weight == null)
+                throw new ArgumentException("No weight found with the specified id");
             _measureService.DeleteMeasureWeight(weight);
 
             return Weights(command);
@@ -210,7 +216,9 @@ namespace Nop.Admin.Controllers
 
             if (!ModelState.IsValid)
             {
-                return new JsonResult { Data = "error" };
+                //display the first model error
+                var modelStateErrors = this.ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage);
+                return Content(modelStateErrors.FirstOrDefault());
             }
 
             var dimension = _measureService.GetMeasureDimensionById(model.Id);
@@ -228,7 +236,9 @@ namespace Nop.Admin.Controllers
 
             if (!ModelState.IsValid)
             {
-                return new JsonResult { Data = "error" };
+                //display the first model error
+                var modelStateErrors = this.ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage);
+                return Content(modelStateErrors.FirstOrDefault());
             }
 
             var dimension = new MeasureDimension();
@@ -245,6 +255,8 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var dimension = _measureService.GetMeasureDimensionById(id);
+            if (dimension == null)
+                throw new ArgumentException("No dimension found with the specified id");
             _measureService.DeleteMeasureDimension(dimension);
 
             return Dimensions(command);

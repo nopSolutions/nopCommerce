@@ -346,6 +346,8 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var state = _stateProvinceService.GetStateProvinceById(id);
+            if (state == null)
+                throw new ArgumentException("No state found with the specified id");
 
             if (_addressService.GetAddressTotalByStateProvinceId(state.Id) > 0)
                 return Content("The state can't be deleted. It has associated addresses");

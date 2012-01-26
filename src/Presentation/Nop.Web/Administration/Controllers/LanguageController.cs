@@ -236,7 +236,9 @@ namespace Nop.Admin.Controllers
 
             if (!ModelState.IsValid)
             {
-                return new JsonResult { Data = "error" };
+                //display the first model error
+                var modelStateErrors = this.ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage);
+                return Content(modelStateErrors.FirstOrDefault());
             }
 
             var resource = _localizationService.GetLocaleStringResourceById(model.Id);
@@ -269,7 +271,9 @@ namespace Nop.Admin.Controllers
 
             if (!ModelState.IsValid)
             {
-                return new JsonResult { Data = "error" };
+                //display the first model error
+                var modelStateErrors = this.ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage);
+                return Content(modelStateErrors.FirstOrDefault());
             }
 
             var res = _localizationService.GetLocaleStringResourceByName(model.Name, model.LanguageId, false);
@@ -293,6 +297,8 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var resource = _localizationService.GetLocaleStringResourceById(id);
+            if (resource == null)
+                throw new ArgumentException("No resource found with the specified id");
             _localizationService.DeleteLocaleStringResource(resource);
             
             return Resources(languageId, command);

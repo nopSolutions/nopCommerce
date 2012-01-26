@@ -94,6 +94,13 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNewsletterSubscribers))
                 return AccessDeniedView();
             
+            if (!ModelState.IsValid)
+            {
+                //display the first model error
+                var modelStateErrors = this.ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage);
+                return Content(modelStateErrors.FirstOrDefault());
+            }
+
             var subscription = _newsLetterSubscriptionService.GetNewsLetterSubscriptionById(model.Id);
             subscription.Email = model.Email;
             subscription.Active = model.Active;
@@ -109,6 +116,8 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var subscription = _newsLetterSubscriptionService.GetNewsLetterSubscriptionById(id);
+            if (subscription == null)
+                throw new ArgumentException("No subscription found with the specified id");
             _newsLetterSubscriptionService.DeleteNewsLetterSubscription(subscription);
 
             return SubscriptionList(command, new NewsLetterSubscriptionListModel());

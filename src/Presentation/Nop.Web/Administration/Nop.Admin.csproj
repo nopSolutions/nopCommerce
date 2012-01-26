@@ -243,6 +243,7 @@
     <Compile Include="Validators\Catalog\CategoryValidator.cs" />
     <Compile Include="Validators\Catalog\ManufacturerValidator.cs" />
     <Compile Include="Validators\Common\AddressValidator.cs" />
+    <Compile Include="Validators\Messages\NewsLetterSubscriptionValidator.cs" />
     <Compile Include="Validators\Orders\CheckoutAttributeValueValidator.cs" />
     <Compile Include="Validators\Orders\CheckoutAttributeValidator.cs" />
     <Compile Include="Validators\Affiliates\AffiliateValidator.cs" />

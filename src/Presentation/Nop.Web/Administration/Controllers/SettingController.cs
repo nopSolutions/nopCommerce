@@ -1023,7 +1023,9 @@ namespace Nop.Admin.Controllers
 
             if (!ModelState.IsValid)
             {
-                return RedirectToAction("AllSettings");
+                //display the first model error
+                var modelStateErrors = this.ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage);
+                return Content(modelStateErrors.FirstOrDefault());
             }
 
             var setting = _settingService.GetSettingById(model.Id);
@@ -1050,7 +1052,9 @@ namespace Nop.Admin.Controllers
 
             if (!ModelState.IsValid)
             {
-                return new JsonResult { Data = "error" };
+                //display the first model error
+                var modelStateErrors = this.ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage);
+                return Content(modelStateErrors.FirstOrDefault());
             }
 
             _settingService.SetSetting(model.Name, model.Value);
@@ -1067,6 +1071,8 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var setting = _settingService.GetSettingById(id);
+            if (setting == null)
+                throw new ArgumentException("No setting found with the specified id");
             _settingService.DeleteSetting(setting);
 
             //activity log

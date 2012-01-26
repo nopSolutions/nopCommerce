@@ -125,7 +125,14 @@
                             .Delete("PollAnswerDelete", "Poll")
                             .Insert("PollAnswerAdd", "Poll", new { pollId = Model.Id });
                     })
+                    .ClientEvents(x => x.OnError("grid_onError"))
                     .EnableCustomBinding(true))
+                <script type="text/javascript">
+                    function grid_onError(e) {
+                        alert(e.XMLHttpRequest.responseText);
+                        e.preventDefault();
+                    }
+                </script>
             </td>
         </tr>
     </table>

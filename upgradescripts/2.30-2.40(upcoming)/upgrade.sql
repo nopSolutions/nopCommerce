@@ -776,6 +776,9 @@ set @resources='
   <LocaleResource Name="Admin.Customers.Guest">
     <Value>Guest</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.NewsLetterSubscriptions.Fields.Email.Required">
+    <Value>Email is required.</Value>
+  </LocaleResource>
 </Language>
 '
 

@@ -282,8 +282,7 @@ namespace Nop.Admin.Controllers
 
             var giftCard = _giftCardService.GetGiftCardById(giftCardId);
             if (giftCard == null)
-                //No gift card found with the specified id
-                return RedirectToAction("List");
+                throw new ArgumentException("No gift card found with the specified id");
 
             var usageHistoryModel = giftCard.GiftCardUsageHistory.OrderByDescending(gcuh => gcuh.CreatedOnUtc)
                 .Select(x =>

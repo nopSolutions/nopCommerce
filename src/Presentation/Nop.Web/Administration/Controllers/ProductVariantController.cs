@@ -836,6 +836,9 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var pvav = _productAttributeService.GetProductVariantAttributeValueById(pvavId);
+            if (pvav == null)
+                throw new ArgumentException("No product variant attribute value found with the specified id");
+
             _productAttributeService.DeleteProductVariantAttributeValue(pvav);
 
             return ProductAttributeValueList(productVariantAttributeId, command);

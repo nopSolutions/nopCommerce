@@ -79,12 +79,12 @@ namespace Nop.Web.Framework
                 //impersonate user if required (currently used for 'phone order' support)
                 if (customer != null && !customer.Deleted && customer.Active)
                 {
-                    //TODO validate that the current user has an appropriate permission
-                    //if (_permissionService.Authorize(StandardPermissionProvider.AllowCustomerImpersonation))
-                    //{
                         int? impersonatedCustomerId = customer.GetAttribute<int?>(SystemCustomerAttributeNames.ImpersonatedCustomerId);
                         if (impersonatedCustomerId.HasValue && impersonatedCustomerId.Value > 0)
                         {
+                            //TODO validate that the current user has an appropriate permission
+                            //if (_permissionService.Authorize(StandardPermissionProvider.AllowCustomerImpersonation))
+                            //{
                             var impersonatedCustomer = _customerService.GetCustomerById(impersonatedCustomerId.Value);
                             if (impersonatedCustomer != null && !impersonatedCustomer.Deleted && impersonatedCustomer.Active)
                             {
@@ -92,8 +92,8 @@ namespace Nop.Web.Framework
                                 _originalCustomerIfImpersonated = customer;
                                 customer = impersonatedCustomer;
                             }
+                            //}
                         }
-                    //}
                 }
 
                 //load guest customer

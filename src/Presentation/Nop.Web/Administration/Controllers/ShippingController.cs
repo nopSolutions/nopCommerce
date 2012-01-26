@@ -128,11 +128,6 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageShippingSettings))
                 return AccessDeniedView();
 
-            if (!ModelState.IsValid)
-            {
-                return RedirectToAction("Providers");
-            }
-
             var srcm = _shippingService.LoadShippingRateComputationMethodBySystemName(model.SystemName);
             if (srcm.IsShippingRateComputationMethodActive(_shippingSettings))
             {

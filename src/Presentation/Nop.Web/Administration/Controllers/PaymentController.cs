@@ -94,11 +94,6 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePaymentMethods))
                 return AccessDeniedView();
 
-            if (!ModelState.IsValid)
-            {
-                return RedirectToAction("Methods");
-            }
-            
             var pm = _paymentService.LoadPaymentMethodBySystemName(model.SystemName);
             if (pm.IsPaymentMethodActive(_paymentSettings))
             {

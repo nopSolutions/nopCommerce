@@ -1225,11 +1225,6 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
 
-            if (!ModelState.IsValid)
-            {
-                return new JsonResult { Data = "error" };
-            }
-
             var productPicture = _productService.GetProductPictureById(model.Id);
             if (productPicture == null)
                 throw new ArgumentException("No product picture found with the specified id");
@@ -1325,11 +1320,6 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
 
-            if (!ModelState.IsValid)
-            {
-                return new JsonResult { Data = "error" };
-            }
-
             var psa = _specificationAttributeService.GetProductSpecificationAttributeById(psaId);
             psa.AllowFiltering = model.AllowFiltering;
             psa.ShowOnProductPage = model.ShowOnProductPage;
@@ -1346,6 +1336,9 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var psa = _specificationAttributeService.GetProductSpecificationAttributeById(psaId);
+            if (psa == null)
+                throw new ArgumentException("No specification attribute found with the specified id");
+
             var productId = psa.ProductId;
             _specificationAttributeService.DeleteProductSpecificationAttribute(psa);
 
@@ -1414,6 +1407,8 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var tag = _productTagService.GetProductById(id);
+            if (tag == null)
+                throw new ArgumentException("No product tag found with the specified id");
             _productTagService.DeleteProductTag(tag);
 
             return ProductTags(command);

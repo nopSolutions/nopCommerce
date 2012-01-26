@@ -50,7 +50,14 @@
                             .Delete("DimensionDelete", "Measure")
                             .Insert("DimensionAdd", "Measure");
                     })
+                    .ClientEvents(x => x.OnError("grid_onError"))
                     .EnableCustomBinding(true))
+            <script type="text/javascript">
+                function grid_onError(e) {
+                    alert(e.XMLHttpRequest.responseText);
+                    e.preventDefault();
+                }
+            </script>
         </td>
     </tr>
 </table>

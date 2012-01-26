@@ -348,8 +348,7 @@ namespace Nop.Admin.Controllers
 
             var sao = _specificationAttributeService.GetSpecificationAttributeOptionById(optionId);
             if (sao == null)
-                //No specification attribute option found with the specified id
-                return RedirectToAction("List");
+                throw new ArgumentException("No specification attribute option found with the specified id");
 
             _specificationAttributeService.DeleteSpecificationAttributeOption(sao);
 
