@@ -89,18 +89,18 @@
 .checkout-data .shipping-options .shipping-option-item .option-name{}
 .checkout-data .shipping-options .shipping-option-item .option-description{padding:5px 0 5px 16px;}
 .checkout-data .shipping-options .select-button{text-align:left;}
-.checkout-data .shipping-options .error-block{text-align:left;}
+.checkout-data .shipping-options .message-error{text-align:left;}
 .checkout-data .userewardpoints{margin:0;padding:10px;background:#F7F5E8;border:dotted 1px #d3d3d3;}
 .checkout-data .payment-methods{text-align:left;height:auto;}
 .checkout-data .payment-methods .payment-method-item{text-align:left;vertical-align:text-top;}
 .checkout-data .payment-methods .select-button{text-align:left;}
-.checkout-data .payment-methods .error-block{text-align:left;}
+.checkout-data .payment-methods .message-error{text-align:left;}
 .checkout-data .payment-info{text-align:left;height:auto;}
 .checkout-data .payment-info .body{text-align:left;vertical-align:text-top;}
 .checkout-data .payment-info .select-button{text-align:left;}
 .checkout-data .confirm-order{text-align:left;height:auto;}
 .checkout-data .confirm-order .select-button{text-align:left;}
-.checkout-data .confirm-order .error-block{text-align:left;}
+.checkout-data .confirm-order .message-error{text-align:left;}
 .checkout-data .order-completed{text-align:left;height:auto;}
 .checkout-data .order-completed .body{text-align:left;vertical-align:text-top;}
 .checkout-data .order-completed .select-button{text-align:left;}

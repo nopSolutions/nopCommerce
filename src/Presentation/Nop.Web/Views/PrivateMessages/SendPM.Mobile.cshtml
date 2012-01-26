@@ -13,11 +13,9 @@
             <h1>@T("PrivateMessages.Send.PostMessage")</h1>
         </div>
         <div class="wrapper">
-            <div class="error-block">
                 <div class="message-error">
                     @Model.PostError
                 </div>
-            </div>
             @Html.ValidationSummary(false)
             @Html.HiddenFor(model => model.ToCustomerId)
             @Html.HiddenFor(model => model.ReplyToMessageId)

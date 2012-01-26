@@ -22,6 +22,11 @@
         {    
             <div class="send-email">
             <table class="table-container">
+                <tr>
+                    <td class="message-error" colspan="2">
+                        @Html.ValidationSummary(false)
+                    </td>
+                </tr>
                 <tr class="row">
                     <td class="item-name">
                         @Html.LabelFor(model => model.FullName):
@@ -57,11 +62,6 @@
                         </td>
                     </tr>
                 }
-                <tr>
-                    <td class="message-error" colspan="2">
-                        @Html.ValidationSummary(false)
-                    </td>
-                </tr>
                 <tr class="row">
                     <td class="item-name">
                     </td>
