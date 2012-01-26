@@ -24,7 +24,7 @@
                     <a href="@Url.RouteUrl("Product", new { productId = Model.ProductId, SeName = Model.ProductSeName })" class="product">@Model.ProductName</a></p>
                 <table>
                     <tr>
-                        <td style="width: 100px;">
+                        <td>
                             @Html.LabelFor(model => model.FriendEmail):
                         </td>
                         <td>
@@ -33,7 +33,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td style="width: 100px;">
+                        <td>
                             @Html.LabelFor(model => model.YourEmailAddress):
                         </td>
                         <td>
@@ -42,10 +42,11 @@
                         </td>
                     </tr>
                     <tr>
-                        <td style="width: 100px;">
+                        <td>
                             @Html.LabelFor(model => model.PersonalMessage):
                         </td>
-                        <td>@Html.TextAreaFor(model => model.PersonalMessage, new { style = "Width: 350px; Height: 150px;" })
+                        <td>
+                            @Html.TextAreaFor(model => model.PersonalMessage, new { style = "Width: 350px; Height: 150px;" })
                             @Html.ValidationMessageFor(model => model.PersonalMessage)
                         </td>
                     </tr>
