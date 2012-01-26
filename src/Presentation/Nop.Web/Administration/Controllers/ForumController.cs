@@ -96,7 +96,11 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var model = new ForumModel();
-            model.ForumGroups = _forumService.GetAllForumGroups().ToList();
+            foreach (var forumGroup in _forumService.GetAllForumGroups())
+            {
+                var forumGroupModel = forumGroup.ToModel();
+                model.ForumGroups.Add(forumGroupModel);
+            }
             model.DisplayOrder = 1;
             return View(model);
         }
@@ -119,7 +123,11 @@ namespace Nop.Admin.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            model.ForumGroups = _forumService.GetAllForumGroups().ToList();
+            foreach (var forumGroup in _forumService.GetAllForumGroups())
+            {
+                var forumGroupModel = forumGroup.ToModel();
+                model.ForumGroups.Add(forumGroupModel);
+            }
             return View(model);
         }
 
@@ -177,7 +185,11 @@ namespace Nop.Admin.Controllers
                 return RedirectToAction("List");
 
             var model = forum.ToModel();
-            model.ForumGroups = _forumService.GetAllForumGroups().ToList();
+            foreach (var forumGroup in _forumService.GetAllForumGroups())
+            {
+                var forumGroupModel = forumGroup.ToModel();
+                model.ForumGroups.Add(forumGroupModel);
+            }
             return View(model);
         }
 
@@ -203,7 +215,11 @@ namespace Nop.Admin.Controllers
             }
 
             //If we got this far, something failed, redisplay form
-            model.ForumGroups = _forumService.GetAllForumGroups().ToList();
+            foreach (var forumGroup in _forumService.GetAllForumGroups())
+            {
+                var forumGroupModel = forumGroup.ToModel();
+                model.ForumGroups.Add(forumGroupModel);
+            }
             return View(model);
         }
 
