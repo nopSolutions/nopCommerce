@@ -53,15 +53,17 @@
                             @T("Blog.Comments.LeaveYourComment")
                         </strong>
                     </div>
-                    @Html.LabelFor(model => model.AddNewComment.CommentText)
-                    @Html.TextAreaFor(model => model.AddNewComment.CommentText)
-                    @Html.ValidationMessageFor(model => model.AddNewComment.CommentText)
+                    <div>
+                        @Html.LabelFor(model => model.AddNewComment.CommentText)
+                        @Html.TextAreaFor(model => model.AddNewComment.CommentText)
+                        @Html.ValidationMessageFor(model => model.AddNewComment.CommentText)
+                    </div>
                     string result = TempData["nop.blog.addcomment.result"] as string;
                     if (!String.IsNullOrEmpty(result))
                     {
-                        <div class="result">
-                            @result
-                        </div>
+                    <div class="result">
+                        @result
+                    </div>
                     }
                     <div class="message-error">
                         @Html.ValidationSummary(false)

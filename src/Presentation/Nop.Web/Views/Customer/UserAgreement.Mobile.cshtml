@@ -46,12 +46,12 @@
     </div>
     <div class="page-body">
         @Html.Raw(Model.UserAgreementText)
-        <p>
+        <div>
             <input id="agreementagree" type="checkbox" name="agreementagree" value="@T("DownloadableProducts.IAgree")" />
             <label for="agreementagree">@T("DownloadableProducts.IAgree")</label>
-        </p>
-        <p>
+        </div>
+        <div>
             <a id="continuedownloading" data-ajax="false" data-role="button" href="@Url.Action("GetDownload", "Download", new { opvId = Model.OrderProductVariantGuid, agree = true })">@T("Common.Continue")</a>
-        </p>
+        </div>
     </div>
 </div>

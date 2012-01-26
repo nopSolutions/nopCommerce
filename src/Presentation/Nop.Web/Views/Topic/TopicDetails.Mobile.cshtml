@@ -53,14 +53,19 @@
     <div id="phPassword">
         @using (Html.BeginForm("Authenticate", "Topic"))
         {
-            <p>
+            <div>
                 @Html.HiddenFor(model => model.Id)
                 @T("Topic.EnterPassword")
-            </p>
-            @Html.Password("password", null, new { @class = "textBox" })
-            <input type="submit" id="btnPassword" value ="@T("Topic.Button")"/>            
-            <br />
-            <span id="passworderror"></span>
+            </div>
+            <div>
+                @Html.Password("password", null, new { @class = "textBox" })
+            </div>
+            <div>
+                <input type="submit" id="btnPassword" value ="@T("Topic.Button")"/>
+            </div>       
+            <div>
+                <span id="passworderror"></span>
+            </div>
         }
     </div>
 }

@@ -2,21 +2,31 @@
 @if (Model.IsGiftCard)
 {
     <div class="giftCard">
-        @Html.LabelFor(model => model.RecipientName)
-        @Html.TextBoxFor(model => model.RecipientName)
-        @if (Model.GiftCardType == Nop.Core.Domain.Catalog.GiftCardType.Virtual)
+        <div>
+            @Html.LabelFor(model => model.RecipientName)
+            @Html.TextBoxFor(model => model.RecipientName)
+        </div>
+        <div>
+            @if (Model.GiftCardType == Nop.Core.Domain.Catalog.GiftCardType.Virtual)
             {
                 @Html.LabelFor(model => model.RecipientEmail);
                 @Html.TextBoxFor(model => model.RecipientEmail);
             }
-        @Html.LabelFor(model => model.SenderName)
-        @Html.TextBoxFor(model => model.SenderName)
-        @if (Model.GiftCardType == Nop.Core.Domain.Catalog.GiftCardType.Virtual)
+        </div>
+        <div>
+            @Html.LabelFor(model => model.SenderName)
+            @Html.TextBoxFor(model => model.SenderName)
+        </div>
+        <div>
+            @if (Model.GiftCardType == Nop.Core.Domain.Catalog.GiftCardType.Virtual)
             {
                 @Html.LabelFor(model => model.SenderEmail);
                 @Html.TextBoxFor(model => model.SenderEmail);
             }
-        @Html.LabelFor(model => model.Message)
-        @Html.TextAreaFor(model => model.Message, new { style = "Width: 300px; Height: 100px;" })
+        </div>
+        <div>
+            @Html.LabelFor(model => model.Message)
+            @Html.TextAreaFor(model => model.Message, new { style = "Width: 300px; Height: 100px;" })
+        </div>
     </div>
 }

@@ -66,22 +66,28 @@
                     <div class="section-body">
                         @if (Model.GenderEnabled)
                         {
-                            @Html.LabelFor(model => model.Gender)
-                            <div data-role="fieldcontain">
-                                <fieldset data-role="controlgroup" data-type="horizontal">
-                                    <input type="radio" name="Gender" id="Gender_Male" value="M" @(Model.Gender == "M" ? Html.Raw(" checked=\"checked\"") : null)  />
-                                    <label for="Gender_Male">@T("Account.Fields.Gender.Male")</label>
-                                    <input type="radio" name="Gender" id="Gender_Female" value="F" @(Model.Gender == "F" ? Html.Raw(" checked=\"checked\"") : null) />
-                                    <label for="Gender_Female">@T("Account.Fields.Gender.Female")</label>
-                                </fieldset>
-                            </div>          
+                            <div>
+                                @Html.LabelFor(model => model.Gender)
+                                <div data-role="fieldcontain">
+                                    <fieldset data-role="controlgroup" data-type="horizontal">
+                                        <input type="radio" name="Gender" id="Gender_Male" value="M" @(Model.Gender == "M" ? Html.Raw(" checked=\"checked\"") : null)  />
+                                        <label for="Gender_Male">@T("Account.Fields.Gender.Male")</label>
+                                        <input type="radio" name="Gender" id="Gender_Female" value="F" @(Model.Gender == "F" ? Html.Raw(" checked=\"checked\"") : null) />
+                                        <label for="Gender_Female">@T("Account.Fields.Gender.Female")</label>
+                                    </fieldset>
+                                </div>
+                            </div>
                         }
-                        @Html.LabelFor(model => model.FirstName)
-                        @Html.EditorFor(model => model.FirstName)
-                        @Html.ValidationMessageFor(model => model.FirstName)
-                        @Html.LabelFor(model => model.LastName)
-                        @Html.EditorFor(model => model.LastName)
-                        @Html.ValidationMessageFor(model => model.LastName)
+                        <div>
+                            @Html.LabelFor(model => model.FirstName)
+                            @Html.EditorFor(model => model.FirstName)
+                            @Html.ValidationMessageFor(model => model.FirstName)
+                        </div>
+                        <div>
+                            @Html.LabelFor(model => model.LastName)
+                            @Html.EditorFor(model => model.LastName)
+                            @Html.ValidationMessageFor(model => model.LastName)
+                        </div>
                         @if (Model.DateOfBirthEnabled)
                         {
                             @Html.LabelFor(model => model.DateOfBirthDay)
@@ -101,21 +107,27 @@
                                 </fieldset>
                             </div>
                         }
-                        @Html.LabelFor(model => model.Email)
-                        @Html.EditorFor(model => model.Email)
-                        @Html.ValidationMessageFor(model => model.Email)
+                        <div>
+                            @Html.LabelFor(model => model.Email)
+                            @Html.EditorFor(model => model.Email)
+                            @Html.ValidationMessageFor(model => model.Email)
+                        </div>
                         @if (Model.UsernamesEnabled)
                         {
                             if (Model.AllowUsersToChangeUsernames)
                             {
-                            @Html.LabelFor(model => model.Username)
-                            @Html.EditorFor(model => model.Username)
-                            @Html.ValidationMessageFor(model => model.Username)
+                            <div>
+                                @Html.LabelFor(model => model.Username)
+                                @Html.EditorFor(model => model.Username)
+                                @Html.ValidationMessageFor(model => model.Username)
+                            </div>
                             }
                             else
                             {
-                            @Html.LabelFor(model => model.Username)
-                            @Model.Username
+                            <div>
+                                @Html.LabelFor(model => model.Username)
+                                @Model.Username
+                            </div>
                             }
                         }
                     </div>
@@ -131,19 +143,22 @@
                         <div class="section-body">
                             @if (Model.CompanyEnabled)
                             {
-                                @Html.LabelFor(model => model.Company)
-                                @Html.EditorFor(model => model.Company)
-                                @Html.ValidationMessageFor(model => model.Company)
+                                <div>
+                                    @Html.LabelFor(model => model.Company)
+                                    @Html.EditorFor(model => model.Company)
+                                    @Html.ValidationMessageFor(model => model.Company)
+                                </div>
                             }
                             @if (Model.DisplayVatNumber)
                             {
-                                @Html.LabelFor(model => model.VatNumber)
-                                @Html.EditorFor(model => model.VatNumber)
-                                <p>
-                                    @*TODO localize 'Status'*@
-                                   Status: @Model.VatNumberStatusNote
-                                </p>
-                                <i>@T("Account.Fields.VatNumber.Note")</i>
+                                <div>
+                                    @Html.LabelFor(model => model.VatNumber)
+                                    @Html.EditorFor(model => model.VatNumber)
+                                    <p>
+                                        @*TODO localize 'Status'*@ Status: @Model.VatNumberStatusNote
+                                    </p>
+                                    <i>@T("Account.Fields.VatNumber.Note")</i>
+                                </div>
                             }
                         </div>
                         <div class="clear">
@@ -163,37 +178,49 @@
                         <div class="section-body">
                             @if (Model.StreetAddressEnabled)
                             {
-                                @Html.LabelFor(model => model.StreetAddress)
-                                @Html.EditorFor(model => model.StreetAddress)
-                                @Html.ValidationMessageFor(model => model.StreetAddress)
+                                <div>
+                                    @Html.LabelFor(model => model.StreetAddress)
+                                    @Html.EditorFor(model => model.StreetAddress)
+                                    @Html.ValidationMessageFor(model => model.StreetAddress)
+                                </div>
                             }
                             @if (Model.StreetAddress2Enabled)
                             {
-                                @Html.LabelFor(model => model.StreetAddress2)
-                                @Html.EditorFor(model => model.StreetAddress2)
-                                @Html.ValidationMessageFor(model => model.StreetAddress2)
+                                <div>
+                                    @Html.LabelFor(model => model.StreetAddress2)
+                                    @Html.EditorFor(model => model.StreetAddress2)
+                                    @Html.ValidationMessageFor(model => model.StreetAddress2)
+                                </div>
                             }
                             @if (Model.ZipPostalCodeEnabled)
                             {
-                                @Html.LabelFor(model => model.ZipPostalCode)
-                                @Html.EditorFor(model => model.ZipPostalCode)
-                                @Html.ValidationMessageFor(model => model.ZipPostalCode)
+                                <div>
+                                    @Html.LabelFor(model => model.ZipPostalCode)
+                                    @Html.EditorFor(model => model.ZipPostalCode)
+                                    @Html.ValidationMessageFor(model => model.ZipPostalCode)
+                                </div>
                             }
                             @if (Model.CityEnabled)
                             {
-                                @Html.LabelFor(model => model.City)
-                                @Html.EditorFor(model => model.City)
-                                @Html.ValidationMessageFor(model => model.City)
+                                <div>
+                                    @Html.LabelFor(model => model.City)
+                                    @Html.EditorFor(model => model.City)
+                                    @Html.ValidationMessageFor(model => model.City)
+                                </div>
                             }
                             @if (Model.CountryEnabled)
                             {
-                                @Html.LabelFor(model => model.CountryId)
-                                @Html.DropDownList("CountryId", Model.AvailableCountries)
+                                <div>
+                                    @Html.LabelFor(model => model.CountryId)
+                                    @Html.DropDownList("CountryId", Model.AvailableCountries)
+                                </div>
                             }
                             @if (Model.CountryEnabled && Model.StateProvinceEnabled)
                             {
-                                @Html.LabelFor(model => model.StateProvinceId)
-                                @Html.DropDownList("StateProvinceId", Model.AvailableStates)
+                                <div>
+                                    @Html.LabelFor(model => model.StateProvinceId)
+                                    @Html.DropDownList("StateProvinceId", Model.AvailableStates)
+                                </div>
                             }
                         </div>
                         <div class="clear">
@@ -209,15 +236,19 @@
                         <div class="section-body">
                             @if (Model.PhoneEnabled)
                             {
-                                @Html.LabelFor(model => model.Phone)
-                                @Html.EditorFor(model => model.Phone)
-                                @Html.ValidationMessageFor(model => model.Phone)
+                                <div>
+                                    @Html.LabelFor(model => model.Phone)
+                                    @Html.EditorFor(model => model.Phone)
+                                    @Html.ValidationMessageFor(model => model.Phone)
+                                </div>
                             }
                             @if (Model.FaxEnabled)
                             {
-                                @Html.LabelFor(model => model.Fax)
-                                @Html.EditorFor(model => model.Fax)
-                                @Html.ValidationMessageFor(model => model.Fax)
+                                <div>
+                                    @Html.LabelFor(model => model.Fax)
+                                    @Html.EditorFor(model => model.Fax)
+                                    @Html.ValidationMessageFor(model => model.Fax)
+                                </div>
                             }
                         </div>
                         <div class="clear">
@@ -231,9 +262,11 @@
                         <div class="clear">
                         </div>
                         <div class="section-body">
-                            @Html.LabelFor(model => model.Newsletter)
-                            @Html.EditorFor(model => model.Newsletter)
-                            @Html.ValidationMessageFor(model => model.Newsletter)
+                            <div>
+                                @Html.LabelFor(model => model.Newsletter)
+                                @Html.EditorFor(model => model.Newsletter)
+                                @Html.ValidationMessageFor(model => model.Newsletter)
+                            </div>
                         </div>
                         <div class="clear">
                         </div>
@@ -248,14 +281,18 @@
                         <div class="section-body">
                             @if (Model.AllowCustomersToSetTimeZone)
                             {
-                                @Html.LabelFor(model => model.TimeZoneId)
-                                @Html.DropDownList("TimeZoneId", Model.AvailableTimeZones)
-                                @Html.ValidationMessageFor(model => model.TimeZoneId)
+                                <div>
+                                    @Html.LabelFor(model => model.TimeZoneId)
+                                    @Html.DropDownList("TimeZoneId", Model.AvailableTimeZones)
+                                    @Html.ValidationMessageFor(model => model.TimeZoneId)
+                                </div>
                             }
                             @if (Model.SignatureEnabled)
                             {
-                                @Html.LabelFor(model => model.Signature)
-                                @Html.TextAreaFor(model => model.Signature)
+                                <div>
+                                    @Html.LabelFor(model => model.Signature)
+                                    @Html.TextAreaFor(model => model.Signature)
+                                </div>
                             }
                         </div>
                         <div class="clear">

@@ -6,8 +6,7 @@
     {
         if (Model.Warnings.Count > 0)
         {
-        <div class="warning-box">
-            <div class="warning-text">
+        <div class="message-error">
                 @for (int i = 0; i < Model.Warnings.Count; i++)
                 {
                     @Model.Warnings[i]
@@ -16,7 +15,6 @@
                     <br />
                     }
                 }
-            </div>
         </div>
         }
 @*set "data-ajax" attribute to "false"*@
@@ -44,8 +42,7 @@
                                 }
                                 @if (item.Warnings.Count > 0)
                                 {
-                                    <div class="warning-box">
-                                        <div class="warning-text">
+                                    <div class="message-error">
                                             @for (int i = 0; i < item.Warnings.Count; i++)
                                             {
                                                 @item.Warnings[i]
@@ -54,7 +51,6 @@
                                                 <br />
                                                 }
                                             }
-                                        </div>
                                     </div>
                                 }
                             </div>
@@ -154,16 +150,14 @@
                                     <b>@T("ShoppingCart.DiscountCouponCode")</b></div>
                                 <div>@T("ShoppingCart.DiscountCouponCode.Tooltip")</div>
                                 <div>
-                                    <input name="discountcouponcode" type="text" id="discountcouponcode" />&nbsp;
+                                    <input name="discountcouponcode" type="text" id="discountcouponcode" />
                                     <input type="submit" name="applydiscountcouponcode" value="@T("ShoppingCart.DiscountCouponCode.Button")" id="applydiscountcouponcode" />
                                 </div>
                                 @if (!String.IsNullOrEmpty(Model.DiscountMessage))
                                 {
-                                    <div class="warning-box">
-                                        <div class="warning-text">
-                                            <br />
-                                            @Model.DiscountMessage
-                                        </div>
+                                    <div class="clear"></div>
+                                    <div class="message-error">
+                                        @Model.DiscountMessage
                                     </div>
                                 }
                                 @if (!String.IsNullOrEmpty(Model.CurrentDiscountCode))
@@ -186,15 +180,13 @@
                                 <div>
                                     <b>@T("ShoppingCart.GiftCardCouponCode")</b></div>
                                 <div>@T("ShoppingCart.GiftCardCouponCode.Tooltip")</div>
-                                <input name="giftcardcouponcode" type="text" id="giftcardcouponcode" />&nbsp;
+                                <input name="giftcardcouponcode" type="text" id="giftcardcouponcode" />
                                 <input type="submit" name="applygiftcardcouponcode" value="@T("ShoppingCart.GiftCardCouponCode.Button")" id="applygiftcardcouponcode" />
                                 @if (!String.IsNullOrEmpty(Model.GiftCardMessage))
                                 {
-                                    <div class="warning-box">
-                                        <div class="warning-text">
-                                            <br />
-                                            @Model.GiftCardMessage
-                                        </div>
+                                    <div class="clear"></div>
+                                    <div class="message-error">
+                                        @Model.GiftCardMessage
                                     </div>
                                 }
                             </div>

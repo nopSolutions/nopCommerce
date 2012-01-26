@@ -14,8 +14,10 @@
     }
     @if (!Model.DisableBuyButton || !Model.DisableWishlistButton)
     {
-        @Html.LabelFor(model => model.EnteredQuantity, new { @class = "qty-label" }) 
-        @Html.TextBoxFor(model => model.EnteredQuantity, new { @class = "qty-input" })
+        <div>
+            @Html.LabelFor(model => model.EnteredQuantity, new { @class = "qty-label" })
+            @Html.TextBoxFor(model => model.EnteredQuantity, new { @class = "qty-input" })
+        </div>
     }
     @if (!Model.DisableBuyButton)
     {

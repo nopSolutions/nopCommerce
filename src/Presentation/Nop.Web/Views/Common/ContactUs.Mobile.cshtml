@@ -21,13 +21,21 @@
         using (Html.BeginForm())
         {
         <div class="send-email">
-            @Html.ValidationSummary(false)
-            @Html.LabelFor(model => model.FullName)
-            @Html.TextBoxFor(model => model.FullName)
-            @Html.LabelFor(model => model.Email)
-            @Html.TextBoxFor(model => model.Email)
-            @Html.LabelFor(model => model.Enquiry)
-            @Html.TextAreaFor(model => model.Enquiry)
+            <div>
+                @Html.ValidationSummary(false)
+            </div>
+            <div>
+                @Html.LabelFor(model => model.FullName)
+                @Html.TextBoxFor(model => model.FullName)
+            </div>
+            <div>
+                @Html.LabelFor(model => model.Email)
+                @Html.TextBoxFor(model => model.Email)
+            </div>
+            <div>
+                @Html.LabelFor(model => model.Enquiry)
+                @Html.TextAreaFor(model => model.Enquiry)
+            </div>
             @if (Model.DisplayCaptcha)
             {
                 <div>

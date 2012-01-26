@@ -67,13 +67,21 @@
             <div class="clear">
             </div>
             <div class="why">
-                @Html.LabelFor(model => model.ReturnReason)
-                @Html.DropDownListFor(model => model.ReturnReason, Model.AvailableReturnReasons)
-                @Html.LabelFor(model => model.ReturnAction)
-                @Html.DropDownListFor(model => model.ReturnAction, Model.AvailableReturnActions)
-                @Html.LabelFor(model => model.Comments)
-                @Html.TextAreaFor(model => model.Comments)
-                @Html.ValidationMessageFor(model => model.Comments)
+                <div>
+                    @Html.LabelFor(model => model.ReturnReason)
+                    @Html.DropDownListFor(model => model.ReturnReason, Model.AvailableReturnReasons)
+                </div>
+                <div>
+                    @Html.LabelFor(model => model.ReturnAction)
+                    @Html.DropDownListFor(model => model.ReturnAction, Model.AvailableReturnActions)
+                </div>
+                <div>
+                    @Html.LabelFor(model => model.Comments)
+                    @Html.TextAreaFor(model => model.Comments)
+                </div>
+                <div>
+                    @Html.ValidationMessageFor(model => model.Comments)
+                </div>
                 <input type="submit" id="submit-return-request" name="submit-return-request" value="@T("ReturnRequests.Submit")" />
             </div>
             }

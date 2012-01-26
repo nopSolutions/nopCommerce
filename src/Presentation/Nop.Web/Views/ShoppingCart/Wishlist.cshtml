@@ -28,17 +28,15 @@
             {
                 if (Model.Warnings.Count > 0)
                 {
-                <div class="warning-box">
-                    <div class="warning-text">
+                <div class="message-error">
                         @for (int i = 0; i < Model.Warnings.Count; i++)
                         {
                             @Model.Warnings[i]
-                       if (i != Model.Warnings.Count - 1)
-                       {
-                            <br />
-                       }
+                           if (i != Model.Warnings.Count - 1)
+                           {
+                                <br />
+                           }
                         }
-                    </div>
                 </div>
                 }
                 using (Html.BeginRouteForm("Wishlist", FormMethod.Post))
@@ -138,17 +136,15 @@
                                     }
                                     @if (item.Warnings.Count > 0)
                                     {
-                                        <div class="warning-box">
-                                            <div class="warning-text">
+                                        <div class="message-error">
                                                 @for (int i = 0; i < item.Warnings.Count; i++)
                                                 {
                                                     @item.Warnings[i]
-                                               if (i != item.Warnings.Count - 1)
-                                               {
-                                                    <br />
-                                               }
+                                                   if (i != item.Warnings.Count - 1)
+                                                   {
+                                                        <br />
+                                                   }
                                                 }
-                                            </div>
                                         </div>
                                     }
                                 </td>

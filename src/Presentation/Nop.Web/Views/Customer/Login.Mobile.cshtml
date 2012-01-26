@@ -20,21 +20,29 @@
                 {
                     if (Model.UsernamesEnabled)
                     {
-                    @Html.LabelFor(m => m.Username)
-                    @Html.TextBoxFor(m => m.Username) 
-                    @Html.ValidationMessageFor(m => m.Username)
+                    <div>
+                        @Html.LabelFor(m => m.Username)
+                        @Html.TextBoxFor(m => m.Username)
+                        @Html.ValidationMessageFor(m => m.Username)
+                    </div>
                     }
                     else
                     {
-                    @Html.LabelFor(m => m.Email)
-                    @Html.TextBoxFor(m => m.Email)
-                    @Html.ValidationMessageFor(m => m.Email)
+                    <div>
+                        @Html.LabelFor(m => m.Email)
+                        @Html.TextBoxFor(m => m.Email)
+                        @Html.ValidationMessageFor(m => m.Email)
+                    </div>
                     }
-                    @Html.LabelFor(m => m.Password)
-                    @Html.PasswordFor(m => m.Password)
-                    @Html.ValidationMessageFor(m => m.Password)
-                    @Html.CheckBoxFor(m => m.RememberMe)
-                    @Html.LabelFor(m => m.RememberMe)
+                    <div>
+                        @Html.LabelFor(m => m.Password)
+                        @Html.PasswordFor(m => m.Password)
+                        @Html.ValidationMessageFor(m => m.Password)
+                    </div>
+                    <div>
+                        @Html.CheckBoxFor(m => m.RememberMe)
+                        @Html.LabelFor(m => m.RememberMe)
+                    </div>
                     <div class="buttons">
                         <button type="submit">@T("Account.Login.LoginButton")</button>
                     </div>
@@ -70,5 +78,4 @@
     </div>
     <div class="clear">
     </div>
-    @*TODO add Captcha support*@
 </div>

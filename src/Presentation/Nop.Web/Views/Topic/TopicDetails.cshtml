@@ -56,15 +56,19 @@
         }))
         {
             @Html.HiddenFor(model => model.Id)
-            @T("Topic.EnterPassword")
-            <br />
-            @Html.Password("password", null, new { @class = "textBox" })
-            <input type="submit" id="btnPassword" value = @T("Topic.Button") class="useragreementbutton"/>            
-            <span id="authenticate-progress" style="display: none;">@T("Common.Wait...")
-                <img src='@Url.Content("~/Content/Images/ajax_loader_small.gif")' alt="@T("Common.Wait...")" />
-            </span>
-            <br />
-            <span id="passworderror"></span>
+            <div>
+                @T("Topic.EnterPassword")
+            </div>
+            <div>
+                @Html.Password("password", null, new { @class = "textBox" })
+                <input type="submit" id="btnPassword" value = @T("Topic.Button") class="useragreementbutton"/>
+                <span id="authenticate-progress" style="display: none;">@T("Common.Wait...")
+                    <img src='@Url.Content("~/Content/Images/ajax_loader_small.gif")' alt="@T("Common.Wait...")" />
+                </span>
+            </div>
+            <div>
+                <span id="passworderror"></span>
+            </div>
         }
     </div>
 }

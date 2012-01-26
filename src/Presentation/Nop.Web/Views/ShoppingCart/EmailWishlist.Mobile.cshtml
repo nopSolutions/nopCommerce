@@ -23,15 +23,21 @@
                 <div class="message-error">
                     @Html.ValidationSummary(false)
                 </div>
-                @Html.LabelFor(model => model.FriendEmail)
-                @Html.TextBoxFor(model => model.FriendEmail)
-                @Html.ValidationMessageFor(model => model.FriendEmail)
-                @Html.LabelFor(model => model.YourEmailAddress)
-                @Html.TextBoxFor(model => model.YourEmailAddress)
-                @Html.ValidationMessageFor(model => model.YourEmailAddress)
-                @Html.LabelFor(model => model.PersonalMessage)
-                @Html.TextAreaFor(model => model.PersonalMessage)
-                @Html.ValidationMessageFor(model => model.PersonalMessage)
+                <div>
+                    @Html.LabelFor(model => model.FriendEmail)
+                    @Html.TextBoxFor(model => model.FriendEmail)
+                    @Html.ValidationMessageFor(model => model.FriendEmail)
+                </div>
+                <div>
+                    @Html.LabelFor(model => model.YourEmailAddress)
+                    @Html.TextBoxFor(model => model.YourEmailAddress)
+                    @Html.ValidationMessageFor(model => model.YourEmailAddress)
+                </div>
+                <div>
+                    @Html.LabelFor(model => model.PersonalMessage)
+                    @Html.TextAreaFor(model => model.PersonalMessage)
+                    @Html.ValidationMessageFor(model => model.PersonalMessage)
+                </div>
                 <input type="submit" id="send-email" name="send-email" value="@T("Wishlist.EmailAFriend.Button")" />
             }
         </div>

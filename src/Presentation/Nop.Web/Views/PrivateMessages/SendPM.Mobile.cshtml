@@ -13,9 +13,9 @@
             <h1>@T("PrivateMessages.Send.PostMessage")</h1>
         </div>
         <div class="wrapper">
-                <div class="message-error">
-                    @Model.PostError
-                </div>
+            <div class="message-error">
+                @Model.PostError
+            </div>
             @Html.ValidationSummary(false)
             @Html.HiddenFor(model => model.ToCustomerId)
             @Html.HiddenFor(model => model.ReplyToMessageId)
@@ -27,14 +27,10 @@
                 </div>
                 <div>
                     @T("PrivateMessages.Send.Subject")
-                </div>
-                <div>
                     @Html.TextBoxFor(model => model.Subject, new { @class = "pmtitletext" })
                 </div>
                 <div>
                     @T("PrivateMessages.Send.Message")
-                </div>
-                <div>
                     @Html.TextAreaFor(model => model.Message)
                 </div>
                 <div class="options">

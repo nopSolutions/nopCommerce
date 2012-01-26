@@ -53,7 +53,6 @@
 .order-summary-content .cart .cart-item-row .totalprice,.wishlist-content .cart .cart-item-row .totalprice{color:Green;}
 .order-summary-content .cart .cart-item-row .remove,.wishlist-content .cart .cart-item-row .remove{}
 .order-summary-content .cart .cart-item-row .shoppingcartquantitytext,.wishlist-content .cart .cart-item-row .shoppingcartquantitytext{width:100px;}
-.order-summary-content .warning-box .warning-text,.wishlist-content .warning-box .warning-text{color:Red;}
 .order-summary-content .cart-footer{}
 .order-summary-content .total-info{margin:0;}
 .cart_total_left{text-align:left;vertical-align:top;font-weight:700;color:#353434;}

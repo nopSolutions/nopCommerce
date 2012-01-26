@@ -203,7 +203,6 @@ ul.languagelist li:hover{cursor:pointer;}
 .order-summary-content .cart .cart-item-row td.product,.wishlist-content .cart .cart-item-row td.product{text-align:left;padding:0 10px;}
 .order-summary-content .cart .cart-item-row td.product a,.wishlist-content .cart .cart-item-row td.product a{font-weight:700;}
 .order-summary-content .cart .cart-item-row td.end,.wishlist-content .cart .cart-item-row td.end{text-align:right;font-weight:700;color:Green;padding-right:5px;}
-.order-summary-content .warning-box .warning-text,.wishlist-content .warning-box .warning-text{color:Red;}
 .order-summary-content .cart-footer{width:100%;background:url(images/cart-footer-bg.gif) repeat-x bottom;}
 .order-summary-content .total-info{margin:0;font-size:12px;}
 .cart_total_left{width:100%;text-align:right;vertical-align:middle;height:21px;font-weight:700;color:#353434;}

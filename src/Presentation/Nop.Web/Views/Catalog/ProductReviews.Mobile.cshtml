@@ -22,15 +22,16 @@
             @using (Html.BeginForm())
             {
                 <strong>@T("Reviews.Write")</strong>
-                @Html.LabelFor(model => model.AddProductReview.Title)
-                @Html.TextBoxFor(model => model.AddProductReview.Title, Model.AddProductReview.CanCurrentCustomerLeaveReview ? null : (object)(new { disabled = "disabled" }))
-                @Html.ValidationMessageFor(model => model.AddProductReview.Title)
-                        
-                @Html.LabelFor(model => model.AddProductReview.ReviewText)
-                       
-                @Html.TextAreaFor(model => model.AddProductReview.ReviewText, Model.AddProductReview.CanCurrentCustomerLeaveReview ? null : (object)(new { disabled = "disabled" }))
-                @Html.ValidationMessageFor(model => model.AddProductReview.ReviewText)
-                        
+                <div>
+                    @Html.LabelFor(model => model.AddProductReview.Title)
+                    @Html.TextBoxFor(model => model.AddProductReview.Title, Model.AddProductReview.CanCurrentCustomerLeaveReview ? null : (object)(new { disabled = "disabled" }))
+                    @Html.ValidationMessageFor(model => model.AddProductReview.Title)
+                </div>
+                <div>
+                    @Html.LabelFor(model => model.AddProductReview.ReviewText)
+                    @Html.TextAreaFor(model => model.AddProductReview.ReviewText, Model.AddProductReview.CanCurrentCustomerLeaveReview ? null : (object)(new { disabled = "disabled" }))
+                    @Html.ValidationMessageFor(model => model.AddProductReview.ReviewText)
+                </div>   
                 
                 <div data-role="fieldcontain">
                     <fieldset data-role="controlgroup" data-type="horizontal">

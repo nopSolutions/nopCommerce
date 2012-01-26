@@ -28,8 +28,7 @@
             {
                 if (Model.Warnings.Count > 0)
                 {
-                <div class="warning-box">
-                    <div class="warning-text">
+                <div class="message-error">
                         @for (int i = 0; i < Model.Warnings.Count; i++)
                         {
                             @Model.Warnings[i]
@@ -38,7 +37,6 @@
                             <br />
                             }
                         }
-                    </div>
                 </div>
                 }
 @*set "data-ajax" attribute to "false"*@
@@ -65,8 +63,7 @@
                                         }
                                         @if (item.Warnings.Count > 0)
                                         {
-                                            <div class="warning-box">
-                                                <div class="warning-text">
+                                            <div class="message-error">
                                                     @for (int i = 0; i < item.Warnings.Count; i++)
                                                     {
                                                         @item.Warnings[i]
@@ -75,7 +72,6 @@
                                                         <br />
                                                         }
                                                     }
-                                                </div>
                                             </div>
                                         }
                                     </div>

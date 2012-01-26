@@ -6,17 +6,15 @@
     {
         if (Model.Warnings.Count > 0)
         {
-        <div class="warning-box">
-            <div class="warning-text">
+        <div class="message-error">
                 @for (int i = 0; i < Model.Warnings.Count; i++)
                 {
                     @Model.Warnings[i]
-               if (i != Model.Warnings.Count - 1)
-               {
-                    <br />
-               }
+                   if (i != Model.Warnings.Count - 1)
+                   {
+                        <br />
+                   }
                 }
-            </div>
         </div>
         }
         using (Html.BeginRouteForm("ShoppingCart", FormMethod.Post))
@@ -107,17 +105,15 @@
                             }
                             @if (item.Warnings.Count > 0)
                             {
-                                <div class="warning-box">
-                                    <div class="warning-text">
+                                <div class="message-error">
                                         @for (int i = 0; i < item.Warnings.Count; i++)
                                         {
                                             @item.Warnings[i]
-                                       if (i != item.Warnings.Count - 1)
-                                       {
-                                            <br />
-                                       }
+                                           if (i != item.Warnings.Count - 1)
+                                           {
+                                                <br />
+                                           }
                                         }
-                                    </div>
                                 </div>
                             }
                         </td>
@@ -284,11 +280,9 @@
                                 <input type="submit" name="applydiscountcouponcode" value="@T("ShoppingCart.DiscountCouponCode.Button")" id="applydiscountcouponcode" class="applycouponcodebutton" />
                                 @if (!String.IsNullOrEmpty(Model.DiscountMessage))
                                 {
-                                    <div class="warning-box">
-                                        <div class="warning-text">
-                                            <br />
-                                            @Model.DiscountMessage
-                                        </div>
+                                    <div class="clear"></div>
+                                    <div class="message-error">
+                                        @Model.DiscountMessage
                                     </div>
                                 }
                                 @if (!String.IsNullOrEmpty(Model.CurrentDiscountCode))
@@ -316,11 +310,9 @@
                                 <input type="submit" name="applygiftcardcouponcode" value="@T("ShoppingCart.GiftCardCouponCode.Button")" id="applygiftcardcouponcode" class="applycouponcodebutton" />
                                 @if (!String.IsNullOrEmpty(Model.GiftCardMessage))
                                 {
-                                    <div class="warning-box">
-                                        <div class="warning-text">
-                                            <br />
-                                            @Model.GiftCardMessage
-                                        </div>
+                                    <div class="clear"></div>
+                                    <div class="message-error">
+                                        @Model.GiftCardMessage
                                     </div>
                                 }
                             </div>
