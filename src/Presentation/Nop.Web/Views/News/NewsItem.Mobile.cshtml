@@ -39,15 +39,14 @@
                     @Html.LabelFor(model => model.AddNewComment.CommentText)
                     @Html.TextAreaFor(model => model.AddNewComment.CommentText)
                     @Html.ValidationMessageFor(model => model.AddNewComment.CommentText)
-                    <div class="message-error">
-                        @{
                     string result = TempData["nop.news.addcomment.result"] as string;
-                        }
-                        @if (!String.IsNullOrEmpty(result))
-                        {
+                    if (!String.IsNullOrEmpty(result))
+                    {
+                        <div class="result">
                             @result
-                            <br />
-                        }
+                        </div>
+                    }
+                    <div class="message-error">
                         @Html.ValidationSummary(false)
                     </div>
                     <div class="button">

@@ -54,16 +54,19 @@
                                 @Html.ValidationMessageFor(model => model.AddNewComment.CommentText)
                             </td>
                         </tr>
+                        @{
+                            string result = TempData["nop.news.addcomment.result"] as string;
+                        }                        
+                        @if (!String.IsNullOrEmpty(result))
+                        {
+                            <tr>
+                                <td class="result" colspan="2">
+                                        @result
+                                </td>
+                            </tr>
+                        }
                         <tr>
                             <td class="message-error" colspan="2">
-                                @{
-                    string result = TempData["nop.news.addcomment.result"] as string;
-                                }
-                                @if (!String.IsNullOrEmpty(result))
-                                {
-                                    @result
-                                    <br />
-                                }
                                 @Html.ValidationSummary(false)
                             </td>
                         </tr>

@@ -477,6 +477,7 @@ ul.languagelist li:hover{cursor:pointer;}
 .newsitem .page-title{border-bottom:0 none;}
 .newsitem .newsdate{color:#9a9a9a;font-style:italic;}
 .newsitem .newsbody{margin:0;padding:0;}
+.newsitem .result{font-family:Verdana, Arial, sans-serif;font-size:10px;font-weight:700;color:red;}
 .newscomments{margin-bottom:15px;padding-bottom:5px;padding-left:0;}
 .newscomments .title{padding:10px 10px 10px 0;font-weight:700;text-transform:uppercase;}
 .newscomments .newcomment{margin:0;padding:0;}
@@ -512,6 +513,7 @@ ul.languagelist li:hover{cursor:pointer;}
 .blogpost .page-title{border-bottom:0 none;}
 .blogpost .postdate{color:#9a9a9a;font-style:italic;}
 .blogpost .postbody,.blogpost .tags{margin:0;padding:0;}
+.blogpost .result{font-family:Verdana, Arial, sans-serif;font-size:10px;font-weight:700;color:red;}
 .blogcomments{margin-bottom:15px;padding-bottom:5px;padding-left:0;}
 .blogcomments .title{padding:10px 10px 10px 0;font-weight:700;text-transform:uppercase;}
 .blogcomments .newcomment{margin:0;padding:0;}

@@ -492,6 +492,7 @@ ul.languagelist li:hover{cursor:pointer;}
 .newsitem .newsdate{color:#9a9a9a;font-style:italic;}
 .newsitem .newsbody{margin:0;padding:0;}
 .newsitem .newsbody a{color:#f93;text-decoration:underline;}
+.newsitem .result{font-family:Verdana, Arial, sans-serif;font-size:10px;font-weight:700;color:red;}
 .newscomments{margin-bottom:15px;padding-bottom:5px;padding-left:0;}
 .newscomments .title{padding:10px 10px 10px 0;font-weight:700;text-transform:uppercase;font-size:1.1em;color:#3a3a3a;}
 .newscomments .newcomment{margin:0;padding:0;}
@@ -529,6 +530,7 @@ ul.languagelist li:hover{cursor:pointer;}
 .blogpost .postdate{color:#9a9a9a;font-style:italic;}
 .blogpost .postbody,.blogpost .tags{margin:0;padding:0;}
 .blogpost .postbody a,.blogpost .tags a{color:#f93;text-decoration:underline;}
+.blogpost .result{font-family:Verdana, Arial, sans-serif;font-size:10px;font-weight:700;color:red;}
 .blogcomments{margin-bottom:15px;padding-bottom:5px;padding-left:0;}
 .blogcomments .title{padding:10px 10px 10px 0;font-weight:700;text-transform:uppercase;font-size:1.1em;color:#3a3a3a;}
 .blogcomments .newcomment{margin:0;padding:0;}
