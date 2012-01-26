@@ -336,63 +336,46 @@ namespace Nop.Web.Controllers
             }
             model.customerToName = toCustomer.FormatUserName();
 
-            try
+            if (ModelState.IsValid)
             {
-                string subject = model.Subject;
-                if (subject != null)
+                try
                 {
-                    subject = subject.Trim();
+                    string subject = model.Subject;
+                    var maxSubjectLength = _forumSettings.PMSubjectMaxLength;
+                    if (maxSubjectLength > 0 && subject.Length > maxSubjectLength)
+                    {
+                        subject = subject.Substring(0, maxSubjectLength);
+                    }
+
+                    var text = model.Message;
+                    var maxPostLength = _forumSettings.PMTextMaxLength;
+                    if (maxPostLength > 0 && text.Length > maxPostLength)
+                    {
+                        text = text.Substring(0, maxPostLength);
+                    }
+
+                    var nowUtc = DateTime.UtcNow;
+
+                    var privateMessage = new PrivateMessage
+                    {
+                        ToCustomerId = toCustomer.Id,
+                        FromCustomerId = _workContext.CurrentCustomer.Id,
+                        Subject = subject,
+                        Text = text,
+                        IsDeletedByAuthor = false,
+                        IsDeletedByRecipient = false,
+                        IsRead = false,
+                        CreatedOnUtc = nowUtc
+                    };
+
+                    _forumService.InsertPrivateMessage(privateMessage);
+
+                    return RedirectToAction("Index", new {tab = "sent"});
                 }
-
-                if (String.IsNullOrEmpty(subject))
+                catch (Exception ex)
                 {
-                    throw new NopException(_localizationService.GetResource("PrivateMessages.SubjectCannotBeEmpty"));
+                    ModelState.AddModelError("", ex.Message);
                 }
-
-                var maxSubjectLength = _forumSettings.PMSubjectMaxLength;
-                if (maxSubjectLength > 0 && subject.Length > maxSubjectLength)
-                {
-                    subject = subject.Substring(0, maxSubjectLength);
-                }
-
-                var text = model.Message;
-                if (text != null)
-                {
-                    text = text.Trim();
-                }
-
-                if (String.IsNullOrEmpty(text))
-                {
-                    throw new NopException(_localizationService.GetResource("PrivateMessages.MessageCannotBeEmpty"));
-                }
-
-                var maxPostLength = _forumSettings.PMTextMaxLength;
-                if (maxPostLength > 0 && text.Length > maxPostLength)
-                {
-                    text = text.Substring(0, maxPostLength);
-                }
-
-                var nowUtc = DateTime.UtcNow;
-
-                var privateMessage = new PrivateMessage
-                {
-                    ToCustomerId = toCustomer.Id,
-                    FromCustomerId = _workContext.CurrentCustomer.Id,
-                    Subject = subject,
-                    Text = text,
-                    IsDeletedByAuthor = false,
-                    IsDeletedByRecipient = false,
-                    IsRead = false,
-                    CreatedOnUtc = nowUtc
-                };
-
-                _forumService.InsertPrivateMessage(privateMessage);
-
-                return RedirectToAction("Index", new { tab = "sent" });
-            }
-            catch (Exception ex)
-            {
-                model.PostError = ex.Message;
             }
 
             return View(model);

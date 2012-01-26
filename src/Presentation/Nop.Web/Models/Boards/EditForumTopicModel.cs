@@ -29,8 +29,6 @@ namespace Nop.Web.Models.Boards
         [AllowHtml]
         public string Text { get; set; }
         
-        public string PostError { get; set; }
-
         public bool IsCustomerAllowedToSetTopicPriority { get; set; }
         public IEnumerable<SelectListItem> TopicPriorities { get; set; }
 

@@ -26,7 +26,5 @@ namespace Nop.Web.Models.PrivateMessages
         public DateTime CreatedOnUtc { get; set; }
 
         public bool IsRead { get; set; }
-
-        public string PostError { get; set; }
     }
 }
