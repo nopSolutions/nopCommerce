@@ -93,7 +93,7 @@ td.fieldname{font-size:12px;}
 .linkButton{color:#3664A5;background-color:inherit;text-decoration:underline;font-weight:700;}
 a.linkButton:hover{}
 .dropDownLists{height:17px;font-size:10px;padding-left:2px;font-family:Tahoma;}
-.textBox{margin:1px;border-right:#dfe5e7 1px solid;border-top:#a8bac2 1px solid;border-left:#a8bac2 1px solid;border-bottom:#dfe5e7 1px solid;background:url(Images/bgTextBox.gif) #FFF repeat-x left top;color:#11354A;font-family:verdana;font-size:8pt;padding:1px;height:15px;}
+.textBox{margin:1px;border-right:#dfe5e7 1px solid;border-top:#a8bac2 1px solid;border-left:#a8bac2 1px solid;border-bottom:#dfe5e7 1px solid;background:url(Images/bg_textbox.gif) #FFF repeat-x left top;color:#11354A;font-family:verdana;font-size:8pt;padding:1px;height:15px;}
 .message-error{font-family:Verdana, Arial, sans-serif;font-size:10px;font-weight:700;color:red;}
 .validation-summary-errors{font-family:Verdana, Arial, sans-serif;font-size:10px;font-weight:700;color:red;}
 .field-validation-error{font-family:Verdana, Arial, sans-serif;font-size:10px;font-weight:700;color:red;}
@@ -130,7 +130,7 @@ textarea{width:100%;font-family:Verdana, Arial, sans-serif;font-size:11px;}
 .bbeditortext{border:#cec6b5 1px solid;}
 .edittopiclinkbutton{padding-left:5px;padding-right:18px;background:url(images/ico-edit.gif) no-repeat right;}
 .deletetopiclinkbutton{padding-left:5px;padding-right:18px;background:url(images/ico-delete.gif) no-repeat right;}
-.movetopiclinkbutton{padding-left:5px;padding-right:18px;background:url(images/ico-moveTopic.gif) no-repeat right;}
+.movetopiclinkbutton{padding-left:5px;padding-right:18px;background:url(images/ico-move-topic.gif) no-repeat right;}
 .replytopiclinkbutton{padding-left:5px;padding-right:18px;padding-bottom:3px;background:url(images/ico-forum-post-add.gif) no-repeat right;}
 .watchtopiclinkbutton{padding-right:18px;background:url(images/ico-forum-watch.gif) no-repeat right;}
 .editpostlinkbutton{padding-left:5px;padding-right:18px;background:url(images/ico-edit.gif) no-repeat right;}
