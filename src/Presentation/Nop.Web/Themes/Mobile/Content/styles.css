@@ -237,9 +237,9 @@
 .blogcomment .commentcontent .commentbody{}
 .blogcomment .commentcontent .commentbody a{text-decoration:underline;}
 .blogcomment .commentcontent .commentbody .commenttext{}
-.emailafriend-box{margin:0;padding:0;}
-.emailafriend-box .send-email{}
-.emailafriend-box .send-email .product{font-weight:700;}
+.emailafriend-page{margin:0;padding:0;}
+.emailafriend-page .send-email{}
+.emailafriend-page .send-email .product{font-weight:700;}
 .recently-added-products{margin:0;padding:0;}
 .recently-viewed-products{margin:0;padding:0;}
 /* CUSTOMER ACCOUNT */
