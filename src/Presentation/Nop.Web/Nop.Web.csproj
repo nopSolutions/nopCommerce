@@ -1208,8 +1208,8 @@
     <Content Include="Scripts\jquery-1.7.1.js" />
     <Content Include="Scripts\jquery-1.7.1.min.js" />
     <Content Include="Scripts\jquery.fancybox-1.3.4.pack.js" />
-    <Content Include="Scripts\jquery.mobile-1.0.js" />
-    <Content Include="Scripts\jquery.mobile-1.0.min.js" />
+    <Content Include="Scripts\jquery.mobile-1.0.1.js" />
+    <Content Include="Scripts\jquery.mobile-1.0.1.min.js" />
     <Content Include="Scripts\onepagecheckout.js" />
     <Content Include="Scripts\public.js" />
     <Content Include="Scripts\slimbox2.js" />
@@ -1285,10 +1285,10 @@
     <Content Include="Themes\Mobile\Content\images\icons-36-white.png" />
     <Content Include="Themes\Mobile\Content\images\star_x_active.gif" />
     <Content Include="Themes\Mobile\Content\images\star_x_inactive.gif" />
-    <Content Include="Themes\Mobile\Content\jquery.mobile-1.0.css" />
-    <Content Include="Themes\Mobile\Content\jquery.mobile-1.0.min.css" />
-    <Content Include="Themes\Mobile\Content\jquery.mobile.structure-1.0.css" />
-    <Content Include="Themes\Mobile\Content\jquery.mobile.structure-1.0.min.css" />
+    <Content Include="Themes\Mobile\Content\jquery.mobile-1.0.1.css" />
+    <Content Include="Themes\Mobile\Content\jquery.mobile-1.0.1.min.css" />
+    <Content Include="Themes\Mobile\Content\jquery.mobile.structure-1.0.1.css" />
+    <Content Include="Themes\Mobile\Content\jquery.mobile.structure-1.0.1.min.css" />
     <Content Include="Themes\Mobile\Content\styles.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

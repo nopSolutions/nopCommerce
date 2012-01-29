@@ -1,8 +1,8 @@
 /*
-* jQuery Mobile Framework 1.0
+* jQuery Mobile Framework 1.0.1
 * http://jquerymobile.com
 *
-* Copyright 2011 (c) jQuery Project
+* Copyright 2011-2012 (c) jQuery Project
 * Dual licensed under the MIT or GPL Version 2 licenses.
 * http://jquery.org/license
 *
@@ -10,7 +10,7 @@
 /* some unsets - more probably needed */
 .ui-mobile, .ui-mobile body { height: 100%; }
 .ui-mobile fieldset, .ui-page { padding: 0; margin: 0; }
-.ui-mobile a img, .ui-mobile fieldset { border: 0; }
+.ui-mobile a img, .ui-mobile fieldset { border-width: 0; }
 
 /* responsive page widths */
 .ui-mobile-viewport {  margin: 0; overflow-x: visible; -webkit-text-size-adjust: none; -ms-text-size-adjust:none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); }
@@ -38,6 +38,8 @@ div.ui-mobile-viewport { overflow-x: hidden; }
 .ui-mobile-touch-overflow.ui-native-fixed .ui-content {
 	overflow: auto;
 	height: 100%;
+	left: 0;
+	right: 0;
 	-webkit-overflow-scrolling: touch;
 	-moz-overflow-scrolling: touch;
 	-o-overflow-scrolling: touch;
@@ -51,6 +53,22 @@ div.ui-mobile-viewport { overflow-x: hidden; }
 }
 .ui-page.ui-mobile-pre-transition {
 	display: block;
+}
+.ui-mobile-touch-overflow.ui-native-fixed .ui-content .ui-listview {
+	margin-top: 0;
+}
+.ui-mobile-touch-overflow.ui-native-fixed .ui-content .ui-listview-inset {
+	margin-top: 1em;
+}
+.ui-mobile-touch-overflow.ui-native-fixed .ui-content .ui-listview-filter {
+	margin-top: .2em;
+	margin-bottom: 0;
+}
+.ui-mobile-touch-overflow.ui-native-fixed .ui-content .ui-listview-filter-inset {
+	margin-bottom: -.9em;
+}
+.ui-mobile-touch-overflow.ui-native-fixed .ui-header .ui-btn { 
+	z-index: 10;
 }
 
 /* loading screen */
@@ -427,7 +445,7 @@ Built by David Kaneda and maintained by Jonathan Stark.
 .ui-navbar-collapsed ul { float: left; width: 75%; margin-right: -2px; }
 .ui-navbar-collapsed .ui-navbar-toggle { float: left; width: 25%; }
 .ui-navbar li.ui-navbar-truncate { position: absolute; left: -9999px; top: -9999px; }
-.ui-navbar li .ui-btn, .ui-navbar .ui-navbar-toggle .ui-btn { display: block; font-size: 12px; text-align: center; margin: 0; border-right-width: 0; }
+.ui-navbar li .ui-btn, .ui-navbar .ui-navbar-toggle .ui-btn { display: block; font-size: 12px; text-align: center; margin: 0; border-right-width: 0; max-width: 100%; }
 .ui-navbar li .ui-btn {  margin-right: -1px; }
 .ui-navbar li .ui-btn:last-child { margin-right: 0; }
 .ui-header .ui-navbar li .ui-btn, .ui-header .ui-navbar .ui-navbar-toggle .ui-btn,
@@ -570,10 +588,10 @@ Built by David Kaneda and maintained by Jonathan Stark.
 .ui-checkbox .ui-btn-icon-left .ui-icon, .ui-radio .ui-btn-icon-left .ui-icon {left: 15px; }
 .ui-checkbox .ui-btn-icon-right .ui-icon, .ui-radio .ui-btn-icon-right .ui-icon {right: 15px; }
 /* input, label positioning */
-.ui-checkbox input,.ui-radio input { position:absolute; left:20px; top:50%; width: 10px; height: 10px;  margin:-5px 0 0 0; outline: 0 !important; z-index: 1; }.ui-field-contain { padding: 1.5em 0; margin: 0; border-bottom-width: 1px; overflow: visible; }
+.ui-checkbox input,.ui-radio input { position:absolute; left:20px; top:50%; width: 10px; height: 10px;  margin:-5px 0 0 0; outline: 0 !important; z-index: 1; }.ui-field-contain, fieldset.ui-field-contain { padding: 1.5em 0; margin: 0; border-width: 0 0 1px 0; overflow: visible; }
 .ui-field-contain:first-child { border-top-width: 0; }
 @media all and (min-width: 450px){
-	.ui-field-contain { border-width: 0; padding: 0; margin: 1em 0; }
+	.ui-field-contain, .ui-mobile fieldset.ui-field-contain { border-width: 0; padding: 0; margin: 1em 0; }
 }	.ui-select { display: block; position: relative; }
 .ui-select select { position: absolute; left: -9999px; top: -9999px; }
 .ui-select .ui-btn { overflow: hidden; }
@@ -589,7 +607,7 @@ Built by David Kaneda and maintained by Jonathan Stark.
 @-moz-document url-prefix() {.ui-select .ui-btn select { opacity: 0.0001; }}
 .ui-select .ui-btn select.ui-select-nativeonly { opacity: 1; text-indent: 0; }
 
-.ui-select .ui-btn-icon-right .ui-btn-inner { padding-right: 45px; } 
+.ui-select .ui-btn-icon-right .ui-btn-inner { padding-right: 45px; }
 .ui-select .ui-btn-icon-right .ui-icon { right: 15px;  }
 
 /* labels */
@@ -609,13 +627,17 @@ label.ui-select { font-size: 16px; line-height: 1.4;  font-weight: normal; margi
 .ui-li.ui-selectmenu-placeholder { display: none; }
 .ui-selectmenu .ui-header .ui-title { margin: 0.6em 46px 0.8em; }
 
-@media all and (min-width: 450px){	
+@media all and (min-width: 450px){
 	.ui-field-contain label.ui-select { vertical-align: top;  display: inline-block;  width: 20%;  margin: 0 2% 0 0; }
 	.ui-field-contain .ui-select { width: 60%; display: inline-block; }
-}	
+}
 
 /* when no placeholder is defined in a multiple select, the header height doesn't even extend past the close button.  this shim's content in there */
-.ui-selectmenu .ui-header h1:after { content: '.'; visibility: hidden; }label.ui-input-text { font-size: 16px; line-height: 1.4; display: block; font-weight: normal; margin: 0 0 .3em; }
+.ui-selectmenu .ui-header h1:after { content: '.'; visibility: hidden; }
+
+/* TODO when the custom select css us moved out to it's own file this should be included */
+.ui-li-static .ui-select .ui-li-count { right: 38px; }
+label.ui-input-text { font-size: 16px; line-height: 1.4; display: block; font-weight: normal; margin: 0 0 .3em; }
 input.ui-input-text, textarea.ui-input-text { background-image: none; padding: .4em; line-height: 1.4; font-size: 16px; display: block; width: 97%; }
 input.ui-input-text { -webkit-appearance: none; }
 textarea.ui-input-text { height: 50px; -webkit-transition: height 200ms linear; -moz-transition: height 200ms linear; -o-transition: height 200ms linear; transition: height 200ms linear; }
@@ -701,7 +723,7 @@ a.ui-slider-handle .ui-btn-inner { padding-left: 0; padding-right: 0; }
 
 div.ui-slider-switch { height: 32px;  overflow: hidden; margin-left: 0; }
 div.ui-slider-inneroffset { margin-left: 50%; position: absolute; top: 1px; height: 100%; width: 50%; }
-a.ui-slider-handle-snapping { -webkit-transition: left 70ms linear; }
+a.ui-slider-handle-snapping { -webkit-transition: left 70ms linear; -moz-transition: left 70ms linear; }
 div.ui-slider-labelbg { position: absolute; top:0; margin: 0; border-width: 0; }
 div.ui-slider-switch div.ui-slider-labelbg-a { width: 60%; height: 100%; left: 0; }
 div.ui-slider-switch div.ui-slider-labelbg-b { width: 60%; height: 100%; right: 0; }
