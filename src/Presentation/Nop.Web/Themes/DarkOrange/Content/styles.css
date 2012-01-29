@@ -730,14 +730,12 @@ ul.languagelist li:hover{cursor:pointer;}
 .forumsmain .forumsmainheader{border-bottom:solid 1px #f3f3f3;height:35px;}
 .forumsmain .forumsmainheader .currenttime{padding-top:20px;font-size:.9em;color:#555;float:left;}
 .forumsmain .forumsmainheader .forumsearchbox{float:right;text-align:right;}
-.forumsmain .forumgroups{margin-top:10px;}
 .forumsmain .activediscussions{margin-top:50px;}
 .forumbreadcrumb{padding:0;margin-bottom:10px;font-weight:700;text-transform:uppercase;font-size:1.1em;}
 .forumbreadcrumb a{text-decoration:none;color:#3a3a3a;}
 .forumbreadcrumb a:hover{text-decoration:none;color:#f93;}
 .forumgrouppage .forumsearchbox{text-align:right;}
 .forumgroup{background:url(images/forum-footer-bg.gif) repeat-x bottom;}
-.forumgroups .forumgroup .grouptitle{font-size:1.1em;padding-bottom:5px;}
 .forumgroup .grouptitle a{font-weight:700;}
 .forumgroup table.groups{width:100%;border-collapse:collapse;text-align:center;vertical-align:middle;margin-top:10px;margin-bottom:15px;}
 .forumgroup table.groups td{padding:3px 0;}
