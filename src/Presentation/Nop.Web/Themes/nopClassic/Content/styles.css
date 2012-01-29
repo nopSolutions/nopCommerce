@@ -852,6 +852,7 @@ ul.languagelist li:hover{cursor:pointer;}
 .profile-page .title{background:#7692B9;color:#FFF;border:solid 1px #6a6a6a;height:28px;line-height:28px;font-weight:700;padding-left:3px;}
 .profile-page .body{margin-top:15px;}
 .profile-page .body .profileInfoBox{border-bottom:solid 1px #e3e3e3;}
+.profile-page .body .profileInfoBox, .profile-page .body .userLastPosts{font-size:12px;}
 .profile-page .body .profileInfoBox .title{}
 .profile-page .body .profileInfoBox .profileStat{font-weight:700;padding:2px;}
 .profile-page .body .profileInfoBox .profileStat .profileStatValue{font-weight:400;color:#555;}
