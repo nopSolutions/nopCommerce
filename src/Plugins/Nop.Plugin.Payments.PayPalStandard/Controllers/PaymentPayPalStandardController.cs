@@ -333,8 +333,6 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                                                 {
                                                     //next payments
                                                     _orderProcessingService.ProcessNextRecurringPayment(rp);
-                                                    //UNDONE change new order status according to newPaymentStatus
-                                                    //UNDONE refund/void is not supported
                                                 }
                                             }
                                             break;

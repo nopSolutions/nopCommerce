@@ -43,8 +43,7 @@ namespace Nop.Plugin.Tax.CountryStateZip.Data
         /// </summary>
         public void Install()
         {
-            //create all tables
-            //TODO don't create the table if it already exists
+            //create the table
             var dbScript = CreateDatabaseScript();
             Database.ExecuteSqlCommand(dbScript);
             SaveChanges();
@@ -55,7 +54,7 @@ namespace Nop.Plugin.Tax.CountryStateZip.Data
         /// </summary>
         public void Uninstall()
         {
-            //TODO don't drop the table if it does not exist
+            //drop the table
             var dbScript = "DROP TABLE TaxRate";
             Database.ExecuteSqlCommand(dbScript);
             SaveChanges();

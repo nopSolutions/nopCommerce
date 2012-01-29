@@ -316,7 +316,6 @@ namespace Nop.Plugin.Payments.PayPalStandard
             }
 
             //address
-            //TODO move this param [address_override] to settings (PayPal configuration page)
             builder.AppendFormat("&address_override=1");
             builder.AppendFormat("&first_name={0}", HttpUtility.UrlEncode(postProcessPaymentRequest.Order.BillingAddress.FirstName));
             builder.AppendFormat("&last_name={0}", HttpUtility.UrlEncode(postProcessPaymentRequest.Order.BillingAddress.LastName));

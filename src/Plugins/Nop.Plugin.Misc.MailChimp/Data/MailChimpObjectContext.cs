@@ -41,7 +41,7 @@ namespace Nop.Plugin.Misc.MailChimp.Data
         /// </summary>
         public void Install()
         {
-            //TODO: Verify database state before trying to create the table.
+            //create the table
             string dbScript = CreateDatabaseScript();
             Database.ExecuteSqlCommand(dbScript);
             SaveChanges();
@@ -52,7 +52,7 @@ namespace Nop.Plugin.Misc.MailChimp.Data
         /// </summary>
         public void Uninstall()
         {
-            //TODO: Verify database state before trying to delete the table.
+            //drop the table
             Database.ExecuteSqlCommand("DROP TABLE MailChimpEventQueueRecord");
             SaveChanges();
         }

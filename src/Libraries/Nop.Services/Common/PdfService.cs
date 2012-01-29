@@ -504,7 +504,6 @@ namespace Nop.Services.Common
                         displayTax = !displayTaxRates;
 
                         var orderTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderTax, order.CurrencyRate);
-                        //TODO pass languageId to _priceFormatter.FormatPrice
                         taxStr = _priceFormatter.FormatPrice(orderTaxInCustomerCurrency, true, order.CustomerCurrencyCode, false);
                     }
                 }
@@ -519,7 +518,6 @@ namespace Nop.Services.Common
                     foreach (var item in taxRates)
                     {
                         string taxRate = String.Format(_localizationService.GetResource("PDFInvoice.TaxRate"), _priceFormatter.FormatTaxRate(item.Key));
-                        //TODO pass languageId to _priceFormatter.FormatPrice
                         string taxValue = _priceFormatter.FormatPrice(_currencyService.ConvertCurrency(item.Value, order.CurrencyRate), true, false);
 
                         var p = new Paragraph(String.Format("{0} {1}", taxRate, taxValue), font);
@@ -563,7 +561,6 @@ namespace Nop.Services.Common
 
                 //order total
                 var orderTotalInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderTotal, order.CurrencyRate);
-                //TODO pass languageId to _priceFormatter.FormatPrice
                 string orderTotalStr = _priceFormatter.FormatPrice(orderTotalInCustomerCurrency, true, order.CustomerCurrencyCode, false);
 
 

@@ -704,7 +704,6 @@ namespace Nop.Services.Orders
                 {
                     orderTaxTotal = initialOrder.OrderTax;
                     //VAT number
-                    //TODO: Possible BUG: VAT number status may have changed since original order was placed, probably best to recalculate tax or do some checks?
                     vatNumber = initialOrder.VatNumber;
                 }
 
@@ -1236,14 +1235,6 @@ namespace Nop.Services.Orders
 
                         //uncomment this line to support transactions
                         //scope.Complete();
-
-
-                        //TODO raise event             
-                        //EventContext.Current.OnOrderPlaced(null, new OrderEventArgs() { Order = order });
-
-                        //TODO raise event         
-                        //if (order.PaymentStatus == PaymentStatus.Paid)
-                        //    EventContext.Current.OnOrderPaid(null, new OrderEventArgs() { Order = order });
 
                         #endregion
                     }
@@ -1793,13 +1784,6 @@ namespace Nop.Services.Orders
                     _orderService.UpdateOrder(order);
 
                     CheckOrderStatus(order);
-
-                    //TODO raise event         
-                    if (order.PaymentStatus == PaymentStatus.Paid)
-                    {
-                    //    EventContext.Current.OnOrderPaid(null,
-                    //        new OrderEventArgs() { Order = order });
-                    }
                 }
             }
             catch (Exception exc)
@@ -1883,13 +1867,6 @@ namespace Nop.Services.Orders
             _orderService.UpdateOrder(order);
 
             CheckOrderStatus(order);
-
-            //TODO raise event         
-            if (order.PaymentStatus == PaymentStatus.Paid)
-            {
-            //    EventContext.Current.OnOrderPaid(null,
-            //        new OrderEventArgs() { Order = order });
-            }
         }
 
 
@@ -2215,7 +2192,7 @@ namespace Nop.Services.Orders
 
             //update order info
             order.RefundedAmount = totalAmountRefunded;
-            //TODO if (order.OrderTotal == totalAmountRefunded), then set order.PaymentStatus = PaymentStatus.Refunded;
+            //if (order.OrderTotal == totalAmountRefunded), then set order.PaymentStatus = PaymentStatus.Refunded;
             order.PaymentStatus = PaymentStatus.PartiallyRefunded;
             _orderService.UpdateOrder(order);
 

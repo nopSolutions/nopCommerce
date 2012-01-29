@@ -296,7 +296,6 @@ namespace Nop.Services.Shipping
                 if (sc.IsShipEnabled)
                     request.Items.Add(sc);
             request.ShippingAddress = shippingAddress;
-            //TODO set values from warehouses or shipping origin
             request.CountryFrom = null;
             request.StateProvinceFrom = null;
             request.ZipPostalCodeFrom = string.Empty;

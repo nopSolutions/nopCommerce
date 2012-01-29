@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Globalization;
 using System.Reflection;
 using System.Security.Cryptography;
@@ -318,7 +319,14 @@ namespace Nop.Core
             return result;
         }
 
-        //TODO move this property to NopConfig
-        public static bool OneToManyCollectionWrapperEnabled { get; set; }
+        public static bool OneToManyCollectionWrapperEnabled
+        {
+            get
+            {
+                bool enabled = !String.IsNullOrEmpty(ConfigurationManager.AppSettings["OneToManyCollectionWrapperEnabled"]) &&
+                   Convert.ToBoolean(ConfigurationManager.AppSettings["OneToManyCollectionWrapperEnabled"]);
+                return enabled;
+            }
+        }
     }
 }

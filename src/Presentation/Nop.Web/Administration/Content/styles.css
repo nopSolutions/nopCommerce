@@ -131,7 +131,6 @@ table.order-edit td{padding:1px 5px;border:medium none;}
 body .t-content.t-state-active{padding:10px!important;}
 body .t-tabstrip{margin-bottom:10px!important;}
 body .t-button{font-weight:400;color:inherit!important;text-decoration:none;}
-/*TODO:make teleriks tab strip and nested tab strip not-so-ugly*/
 /* Telerik overrides */
 .form-actions{overflow:hidden;padding-top:1em;}
 .form-actions .t-button,.form-actions .t-button button{float:right;margin-left:10px;padding:2px 15px;}

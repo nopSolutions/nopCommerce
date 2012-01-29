@@ -15,7 +15,6 @@ namespace Nop.Core.Infrastructure.DependencyManagement
         /// </summary>
         public static class ConfigurationKeys
         {
-            //TODO do we need it?
             /// <summary>Key used to configure services intended for medium trust.</summary>
             public const string MediumTrust = "MediumTrust";
             /// <summary>Key used to configure services intended for full trust.</summary>

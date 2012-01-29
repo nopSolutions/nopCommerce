@@ -50,7 +50,6 @@ namespace Nop.Admin.Controllers
                     Request.Url.IsLoopback, 
                     _commonSettings.HideAdvertisementsOnAdminArea, 
                     _storeInformationSettings.StoreUrl);
-                //TODO cache results (based on feed URL)
 
                 //specify timeout (5 secs)
                 var request = WebRequest.Create(feedUrl);

@@ -60,8 +60,6 @@
                                                     @T("Forum.Search.SearchInForum")
                                                 </td>
                                                 <td class="data">
-                                                    @*TODO 'All forums' option should be selected after postback if no option is selected
-                                                    but now it selects the latest forum group option*@
                                                     @Html.DropDownList("forumId", new SelectList(Model.ForumList, "Value", "Text", Model.ForumIdSelected))
                                                 </td>
                                             </tr>

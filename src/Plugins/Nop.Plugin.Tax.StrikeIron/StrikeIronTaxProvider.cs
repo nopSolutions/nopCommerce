@@ -253,7 +253,6 @@ namespace Nop.Plugin.Tax.StrikeIron
         {
             get
             {
-                //TODO inject ICacheManager
                 return new MemoryCacheManager();
             }
         }

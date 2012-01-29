@@ -10,7 +10,6 @@ namespace Nop.Plugin.Feed.Froogle.Domain
         public virtual int ProductVariantId { get; set; }
         public virtual string Taxonomy { get; set; }
 
-        //TODO allow store owner to edit the following fields
         public virtual string Gender { get; set; }
         public virtual string AgeGroup { get; set; }
         public virtual string Color { get; set; }

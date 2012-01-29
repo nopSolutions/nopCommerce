@@ -13,14 +13,13 @@ namespace Nop.Web.Extensions
             var sb = new StringBuilder();
             
             var storeLocation = EngineContext.Current.Resolve<IWebHelper>().GetStoreLocation();
-            string BBEditorWebRoot = String.Format("{0}Content/", storeLocation);
+            string bbEditorWebRoot = String.Format("{0}Content/", storeLocation);
 
-            //TODO use Url.Content to resolve ~/Content/editors/BBEditor/ed.js
-            sb.Append("<script src=\"/Content/editors/BBEditor/ed.js\" type=\"text/javascript\"></script>");
+            sb.AppendFormat("<script src=\"{0}Content/editors/BBEditor/ed.js\" type=\"text/javascript\"></script>", storeLocation);
             sb.Append(Environment.NewLine);
             sb.Append("<script language=\"javascript\" type=\"text/javascript\">");
             sb.Append(Environment.NewLine);
-            sb.AppendFormat("    var webRoot = '{0}';", BBEditorWebRoot);
+            sb.AppendFormat("    var webRoot = '{0}';", bbEditorWebRoot);
             sb.Append(Environment.NewLine);
             sb.AppendFormat("    edToolbar('{0}');", name);
             sb.Append(Environment.NewLine);

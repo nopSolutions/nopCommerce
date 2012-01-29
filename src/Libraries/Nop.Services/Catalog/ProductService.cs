@@ -267,7 +267,6 @@ namespace Nop.Services.Catalog
                 //stored procedures are enabled and supported by the database. 
                 //It's much faster than the LINQ implementation below 
 
-                //TODO We should not reference SqlParameter here. DAL should do it.
                 var pTotalRecords = new SqlParameter { ParameterName = "TotalRecords", Direction = ParameterDirection.Output, SqlDbType = SqlDbType.Int };
 
                 string commaSeparatedSpecIds = "";
@@ -1099,9 +1098,6 @@ namespace Nop.Services.Catalog
                 var crossSells = GetCrossSellProductsByProductId1(sci.ProductVariant.ProductId);
                 foreach (var crossSell in crossSells)
                 {
-                    //TODO create a helper method to validate product availability (dates, quantity) etc
-
-
                     //validate that this product is not added to result yet
                     //validate that this product is not in the cart
                     if (result.Find(p => p.Id == crossSell.ProductId2) == null &&

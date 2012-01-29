@@ -155,7 +155,7 @@
                                     @Html.LabelFor(model => model.VatNumber)
                                     @Html.EditorFor(model => model.VatNumber)
                                     <p>
-                                        @*TODO localize 'Status'*@ Status: @Model.VatNumberStatusNote
+                                        @T("Account.Fields.VatNumber.Status"): @Model.VatNumberStatusNote
                                     </p>
                                     <i>@T("Account.Fields.VatNumber.Note")</i>
                                 </div>

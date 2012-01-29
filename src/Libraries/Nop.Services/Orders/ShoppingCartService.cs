@@ -907,8 +907,6 @@ namespace Nop.Services.Orders
                 var sci = fromCart[i];
                 DeleteShoppingCartItem(sci);
             }
-
-            //TODO apply current discount & gift card codes
         }
 
         #endregion

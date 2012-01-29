@@ -6894,7 +6894,6 @@ namespace Nop.Services.Installation
 
 
 
-            //TODO add attribute combinations for 'etnies Men's Digit Sneaker' and set 'ManageInventoryMethod.ManageStockByAttributes' (as it was in 1.X versions)
             var productEtnies = new Product()
             {
                 Name = "etnies Men's Digit Sneaker",

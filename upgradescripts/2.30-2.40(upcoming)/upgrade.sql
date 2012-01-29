@@ -932,6 +932,15 @@ set @resources='
   <LocaleResource Name="Admin.System.SystemInfo.UTCTime.Hint">
     <Value>Greenwich Mean Time (GMT/UTC)</Value>
   </LocaleResource>
+  <LocaleResource Name="Mobile.ViewMobileVersion">
+    <Value>View mobile version</Value>
+  </LocaleResource>
+  <LocaleResource Name="Mobile.ViewFullSite">
+    <Value>View Full Site</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Fields.VatNumber.Status">
+    <Value>Status</Value>
+  </LocaleResource>
 </Language>
 '
 

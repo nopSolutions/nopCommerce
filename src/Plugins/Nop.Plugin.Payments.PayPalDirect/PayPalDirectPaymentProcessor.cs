@@ -213,7 +213,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
             //        };
             //    };
             //    details.PaymentDetails.PaymentDetailsItem = cartItems;
-            //    //other totals (TODO)
+            //    //other totals (undone)
             //    details.PaymentDetails.ItemTotal = null;
             //    details.PaymentDetails.ShippingTotal = null;
             //    details.PaymentDetails.TaxTotal = null;

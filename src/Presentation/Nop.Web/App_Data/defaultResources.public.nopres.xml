@@ -342,6 +342,9 @@
 							<LocaleResource Name="Note">
 								<Value>NOTE: Enter VAT number with country code (e.g. GB 111 111 11)</Value>
 							</LocaleResource>
+							<LocaleResource Name="Status">
+								<Value>Status</Value>
+							</LocaleResource>
 						</Children>
 					</LocaleResource>
 					<LocaleResource Name="VatNumberStatus">
@@ -2194,6 +2197,16 @@
 						<Value>Discount:</Value>
 					</LocaleResource>
 				</Children>
+			</LocaleResource>
+		</Children>
+	</LocaleResource>
+	<LocaleResource Name="Mobile">
+		<Children>
+			<LocaleResource Name="ViewMobileVersion">
+				<Value>View mobile version</Value>
+			</LocaleResource>
+			<LocaleResource Name="ViewFullSite">
+				<Value>View Full Site</Value>
 			</LocaleResource>
 		</Children>
 	</LocaleResource>

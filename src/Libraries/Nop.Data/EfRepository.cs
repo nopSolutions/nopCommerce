@@ -119,6 +119,5 @@ namespace Nop.Data
                 return _entities;
             }
         }
-        //TODO implement IDisposable interface
     }
 }
