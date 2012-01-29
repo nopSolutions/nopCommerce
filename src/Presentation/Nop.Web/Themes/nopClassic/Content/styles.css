@@ -287,8 +287,7 @@ ul.languagelist li:hover{cursor:pointer;}
 .return-request .buttons{}
 .customer-return-request-list{margin:0;padding:5px;font-size:11px;color:#555;background-color:inherit;}
 .customer-return-request-list .section-title{padding:10px 10px 5px 0;font-weight:700;clear:both;font-size:12px;}
-.customer-return-request-list .request-list{}
-.customer-return-request-list .request-list .request-item{text-align:left;margin-bottom:10px;padding:10px;border:1px solid #E8E6D2;height:auto;}
+.customer-return-request-list .request-item{text-align:left;margin-bottom:10px;padding:10px;border:1px solid #E8E6D2;height:auto;}
 /* ONE PAGE CHECKOUT */
 .opc .buttons{margin-top:0;padding-top:2em;}
 .opc .buttons .back-link small{display:none;}
