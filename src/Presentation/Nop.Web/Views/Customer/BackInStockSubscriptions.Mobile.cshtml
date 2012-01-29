@@ -30,7 +30,7 @@
                                 <div>
                                     @Html.RouteLink(biss.ProductName, "Product", new { productId = biss.ProductId, SeName = biss.SeName })
                                 </div>
-                                <div class="button">
+                                <div class="buttons">
                                     <a href="@Url.RouteUrl("DeleteBackInStockSubscription", new { subscriptionId = @biss.Id })" data-role="button">@T("Common.Delete")</a>
                                 </div>
                             </div>

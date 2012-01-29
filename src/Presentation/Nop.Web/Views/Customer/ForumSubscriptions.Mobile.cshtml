@@ -37,7 +37,7 @@
                                         @Html.RouteLink(fs.Title, "ForumSlug", new { Id = fs.ForumId, slug = fs.Slug })
                                     }
                                 </div>
-                                <div class="button">
+                                <div class="buttons">
                                     <a href="@Url.RouteUrl("DeleteForumSubscription", new { subscriptionId = @fs.Id })" data-role="button">@T("Common.Delete")</a>
                                 </div>
                             </div>

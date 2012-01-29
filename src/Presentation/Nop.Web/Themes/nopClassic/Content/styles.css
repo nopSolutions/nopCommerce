@@ -234,7 +234,7 @@ ul.languagelist li:hover{cursor:pointer;}
 .checkout-data .enter-address-title{padding:10px 10px 5px 0;font-weight:700;clear:both;}
 .checkout-data .enter-address{text-align:center;margin:10px;border:1px solid #d7d7d7;height:auto;}
 .checkout-data .enter-address .enter-address-body{text-align:left;margin:10px;}
-.checkout-data .enter-address .button{margin:10px;text-align:left;}
+.checkout-data .enter-address .buttons{margin:10px;text-align:left;}
 .checkout-data .enter-address .the-same-address{text-align:left;margin:10px;}
 .checkout-data .shipping-options{text-align:left;margin:10px;border:1px solid #E8E6D2;height:auto;}
 .checkout-data .shipping-options .shipping-option-item{text-align:left;vertical-align:text-top;padding:5px 0 0 5px;}
@@ -430,7 +430,7 @@ ul.languagelist li:hover{cursor:pointer;}
 .registration-page .body{margin:0;padding:0;font-size:11px;color:#555;background-color:inherit;}
 .registration-page .section-title{padding:10px 10px 5px 0;font-weight:700;clear:both;font-size:12px;}
 .registration-page .section-body{text-align:left;padding:10px;border:1px solid #E8E6D2;height:auto;}
-.registration-page .button{float:right;margin-bottom:5px;margin-top:5px;text-align:center;clear:both;}
+.registration-page .buttons{float:right;margin-bottom:5px;margin-top:5px;text-align:center;clear:both;}
 .registration-page .required{color:red;}
 .availablestatus{color:green;padding-left:5px;}
 .notavailablestatus{color:red;padding-left:5px;}
@@ -438,7 +438,7 @@ ul.languagelist li:hover{cursor:pointer;}
 .password-recovery-page .page-title,newsletter-page .page-title{border-bottom:0 none;}
 .password-recovery-page .body,newsletter-page .body{margin:0;padding:0;font-size:11px;color:#555;background-color:inherit;}
 .customer-avatar{padding:10px;}
-.customer-avatar .button{margin:5px 0;}
+.customer-avatar .buttons{margin:5px 0;}
 .account-activation-page{margin-bottom:15px;padding-bottom:5px;padding-left:0;}
 .account-activation-page .page-title{border-bottom:0 none;}
 .account-activation-page .body{margin:0;padding:0;font-size:11px;color:#555;background-color:inherit;}
@@ -458,7 +458,7 @@ ul.languagelist li:hover{cursor:pointer;}
 .search-panel table.basic-search td.data,.search-panel table.adv-search td.data{padding:4px;text-align:left;vertical-align:middle;white-space:nowrap;}
 .search-input .warning{text-decoration:underline;}
 .contact-form{}
-.contact-form .button{text-align:right;}
+.contact-form .buttons{text-align:right;}
 .contact-form .send-email{}
 .breadcrumb{float:left;padding:0;margin:10px 0 0;font-weight:700;text-transform:uppercase;font-size:1em;margin-bottom:10px;}
 .breadcrumb a{text-decoration:none;color:#3A4045;}
@@ -483,7 +483,7 @@ ul.languagelist li:hover{cursor:pointer;}
 .newscomments .title{padding:10px 10px 10px 0;font-weight:700;text-transform:uppercase;}
 .newscomments .newcomment{margin:0;padding:0;}
 .newscomments .newcomment td.leavetitle{padding:0 10px 10px 0;font-weight:700;color:#3a3a3a;}
-.newscomments .newcomment td.button{text-align:right;}
+.newscomments .newcomment td.buttons{text-align:right;}
 .newscomments .commentlist{border-top:solid 1px #e3e3e3;margin-top:10px;}
 .newscomment{}
 .newscomment .commentinfo{width:170px;float:left;padding:5px;height:100%;border-right:solid 1px #F3F3F3;}
@@ -519,7 +519,7 @@ ul.languagelist li:hover{cursor:pointer;}
 .blogcomments .title{padding:10px 10px 10px 0;font-weight:700;text-transform:uppercase;}
 .blogcomments .newcomment{margin:0;padding:0;}
 .blogcomments .newcomment td.leavetitle{padding:0 10px 10px 0;font-weight:700;}
-.blogcomments .newcomment td.button{text-align:right;}
+.blogcomments .newcomment td.buttons{text-align:right;}
 .blogcomments .commentlist{margin:10px 0 0;padding:0;font-size:11px;color:#555D65;background-color:inherit;border-top:solid 1px #e3e3e3;margin-top:10px;}
 .blogcomment{}
 .blogcomment .commentinfo{width:170px;float:left;padding:5px;height:100%;border-right:solid 1px #F3F3F3;}
@@ -560,7 +560,7 @@ ul.languagelist li:hover{cursor:pointer;}
 .customer-info-box{margin:0;padding:5px;font-size:11px;color:#555;}
 .customer-info-box .section-title{padding:10px 10px 5px 0;font-weight:700;clear:both;font-size:12px;}
 .customer-info-box .section-body{text-align:left;padding:10px;border:1px solid #E8E6D2;height:auto;}
-.customer-info-box .button{margin-bottom:5px;margin-top:5px;text-align:center;}
+.customer-info-box .buttons{margin-bottom:5px;margin-top:5px;text-align:center;}
 .customer-addresses{margin:0;padding:5px;font-size:11px;color:#555;background-color:inherit;}
 .customer-addresses .section-title{padding:10px 10px 5px 0;font-weight:700;clear:both;font-size:12px;}
 .customer-addresses .address-list{}
@@ -583,7 +583,7 @@ ul.languagelist li:hover{cursor:pointer;}
 .backinstock-subscriptions-box{margin:0;padding:5px;font-size:11px;color:#555;}
 .backinstock-subscriptions-box .backinstock-subscriptions-grid{font-family:arial;font-size:11px;border:1px solid gray;background-color:#FFF;margin-left:0;width:100%;border-collapse:collapse;}
 .backinstock-subscriptions-box .backinstock-subscriptions-grid a{display:block;margin-left:5px;}
-.backinstock-subscriptions-box .button{margin-bottom:5px;margin-top:5px;text-align:left;}
+.backinstock-subscriptions-box .buttons{margin-bottom:5px;margin-top:5px;text-align:left;}
 .bissgridpagerstyle{padding:5px;background:#eee;vertical-align:middle;}
 .bissgridpagerstyle span{font-weight:700;font-size:1.1em;}
 /* PRODUCT DETAILS */
@@ -699,7 +699,7 @@ ul.languagelist li:hover{cursor:pointer;}
 .private-messages-page .body{margin:0;padding:0;font-size:11px;color:#555;}
 .private-messages-box{margin:0;padding:5px;font-size:11px;color:#555;}
 .private-messages-box .section-title{padding:10px 10px 5px 0;font-weight:700;clear:both;font-size:12px;}
-.private-messages-box .button{margin-bottom:5px;margin-top:5px;text-align:left;}
+.private-messages-box .buttons{margin-bottom:5px;margin-top:5px;text-align:left;}
 .pmgridtablestyle{font-family:arial;font-size:11px;border:1px solid gray;background-color:#FFF;margin-left:0;width:100%;}
 .pmgridtablestyle td a{text-decoration:none;display:block;}
 .pmgridaltrowstyle{background-color:#F4FAFF;}
@@ -738,7 +738,7 @@ ul.languagelist li:hover{cursor:pointer;}
 .forum-subscriptions-box{margin:0;padding:5px;font-size:11px;color:#555;}
 .forum-subscriptions-box .forum-subscriptions-grid{font-family:arial;font-size:11px;border:1px solid gray;background-color:#FFF;margin-left:0;width:100%;border-collapse:collapse;}
 .forum-subscriptions-box .forum-subscriptions-grid a{display:block;margin-left:5px;}
-.forum-subscriptions-box .button{margin-bottom:5px;margin-top:5px;text-align:left;}
+.forum-subscriptions-box .buttons{margin-bottom:5px;margin-top:5px;text-align:left;}
 /* FORUM PAGE */
 .forum{}
 .forum .forumheader{}

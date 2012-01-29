@@ -83,7 +83,7 @@
 .checkout-data .enter-address-title{font-weight:700;clear:both;}
 .checkout-data .enter-address{}
 .checkout-data .enter-address .enter-address-body{text-align:left;margin:10px;}
-.checkout-data .enter-address .button{margin:10px;text-align:left;}
+.checkout-data .enter-address .buttons{margin:10px;text-align:left;}
 .checkout-data .enter-address .the-same-address{text-align:left;margin:10px;}
 .checkout-data .shipping-options{text-align:left;height:auto;}
 .checkout-data .shipping-options .shipping-option-item{text-align:left;vertical-align:text-top;}
@@ -158,12 +158,12 @@
 .registration-page .body{margin:0;padding:0;background-color:inherit;}
 .registration-page .section-title{padding:10px;font-weight:700;clear:both;}
 .registration-page .section-body{text-align:left;padding:10px;border:1px solid #d7d7d7;height:auto;}
-.registration-page .button{float:right;margin-bottom:5px;margin-top:5px;text-align:center;clear:both;}
+.registration-page .buttons{float:right;margin-bottom:5px;margin-top:5px;text-align:center;clear:both;}
 .registration-page .required{color:red;}
 .password-recovery-page,newsletter-page{}
 .password-recovery-page .body,newsletter-page .body{margin:0;padding:0;background-color:inherit;}
 .customer-avatar{padding:10px;}
-.customer-avatar .button{margin:5px 0;}
+.customer-avatar .buttons{margin:5px 0;}
 .account-activation-page{}
 .account-activation-page .body{margin:0;padding:0;background-color:inherit;}
 .address-edit-page{}
@@ -174,7 +174,7 @@
 .search-panel .search-results .result{font-weight:700;}
 .search-panel .warning{text-decoration:underline;}
 .contact-form{}
-.contact-form .button{text-align:right;}
+.contact-form .buttons{text-align:right;}
 .contact-form .send-email{}
 .newslist{}
 .newslist .newsitems{margin:0 5px;padding:0;}
@@ -192,7 +192,7 @@
 .newscomments .title{padding:10px;font-weight:700;text-transform:uppercase;font-size:1.1em;color:#3a3a3a;}
 .newscomments .newcomment{margin:0;padding:0;}
 .newscomments .newcomment .leavetitle{padding:0 10px 10px 0;font-weight:700;font-size:1.1em;color:#3a3a3a;}
-.newscomments .newcomment .button{}
+.newscomments .newcomment .buttons{}
 .newscomments .commentlist{}
 .newscomment{font-weight:normal;}
 .newscomment .commentinfo{}
@@ -223,7 +223,7 @@
 .blogcomments .title{padding:10px;font-weight:700;text-transform:uppercase;font-size:1.1em;color:#3a3a3a;}
 .blogcomments .newcomment{margin:0;padding:0;}
 .blogcomments .newcomment .leavetitle{padding:0 10px 10px 0;font-weight:700;font-size:1.1em;color:#3a3a3a;}
-.blogcomments .newcomment .button{}
+.blogcomments .newcomment .buttons{}
 .blogcomments .commentlist{}
 .blogcomment{font-weight:normal;}
 .blogcomment .commentinfo{}
@@ -248,7 +248,7 @@
 .customer-info-box{margin:0;padding:0;}
 .customer-info-box .section-title{padding:10px;font-weight:700;clear:both;}
 .customer-info-box .section-body{text-align:left;padding:10px;border:1px solid #d7d7d7;height:auto;}
-.customer-info-box .button{margin-bottom:5px;margin-top:5px;text-align:center;}
+.customer-info-box .buttons{margin-bottom:5px;margin-top:5px;text-align:center;}
 .customer-addresses{margin:0;padding:0px;background-color:inherit;}
 .customer-addresses .section-title{padding:10px;font-weight:700;clear:both;}
 .customer-addresses .address-list{}
@@ -270,7 +270,7 @@
 .customer-rewardpoints .reward-points-history{}
 .customer-rewardpoints .reward-points-history .item{font-weight:normal;}
 .backinstock-subscriptions-box{margin:0;padding:0;}
-.backinstock-subscriptions-box .button{}
+.backinstock-subscriptions-box .buttons{}
 .bissgridpagerstyle{padding:5px;background:#eee;vertical-align:middle;}
 .bissgridpagerstyle span{font-weight:700;font-size:1.1em;}
 
@@ -403,7 +403,7 @@
 .forum .pager{padding:5px 3px 5px 0;}
 .forum-subscriptions-box{}
 .forum-subscriptions-box .item{font-weight:normal;}
-.forum-subscriptions-box .button{}
+.forum-subscriptions-box .buttons{}
 /* FORUM TOPIC EDIT */
 .postedit{}
 .postedit .wrapper{}
