@@ -599,16 +599,18 @@ namespace Nop.Web.Controllers
                     _shoppingCartService.DeleteShoppingCartItem(sci, true);
                 else
                 {
-                    int newQuantity = sci.Quantity;
                     foreach (string formKey in form.AllKeys)
                         if (formKey.Equals(string.Format("itemquantity{0}", sci.Id), StringComparison.InvariantCultureIgnoreCase))
                         {
-                            int.TryParse(form[formKey], out newQuantity);
+                            int newQuantity = sci.Quantity;
+                            if (int.TryParse(form[formKey], out newQuantity))
+                            {
+                                var currSciWarnings = _shoppingCartService.UpdateShoppingCartItem(_workContext.CurrentCustomer,
+                                    sci.Id, newQuantity, true);
+                                innerWarnings.Add(sci.Id, currSciWarnings);
+                            }
                             break;
                         }
-                    var currSciWarnings = _shoppingCartService.UpdateShoppingCartItem(_workContext.CurrentCustomer,
-                        sci.Id, newQuantity, true);
-                    innerWarnings.Add(sci.Id, currSciWarnings);
                 }
             }
 
@@ -655,15 +657,18 @@ namespace Nop.Web.Controllers
             }
 
             //update the cart item
-            int newQuantity = sci.Quantity;
+            var warnings = new List<string>();
             foreach (string formKey in form.AllKeys)
                 if (formKey.Equals(string.Format("itemquantity{0}", sci.Id), StringComparison.InvariantCultureIgnoreCase))
                 {
-                    int.TryParse(form[formKey], out newQuantity);
+                    int newQuantity = sci.Quantity;
+                    if (int.TryParse(form[formKey], out newQuantity))
+                    {
+                        warnings.AddRange(_shoppingCartService.UpdateShoppingCartItem(_workContext.CurrentCustomer,
+                            sci.Id, newQuantity, true));
+                    }
                     break;
                 }
-            var warnings = _shoppingCartService.UpdateShoppingCartItem(_workContext.CurrentCustomer,
-                sci.Id, newQuantity, true);
                 
 
             //updated cart
@@ -1258,16 +1263,18 @@ namespace Nop.Web.Controllers
                     _shoppingCartService.DeleteShoppingCartItem(sci, true);
                 else
                 {
-                    int newQuantity = sci.Quantity;
                     foreach (string formKey in form.AllKeys)
                         if (formKey.Equals(string.Format("itemquantity{0}", sci.Id), StringComparison.InvariantCultureIgnoreCase))
                         {
-                            int.TryParse(form[formKey], out newQuantity);
+                            int newQuantity = sci.Quantity;
+                            if (int.TryParse(form[formKey], out newQuantity))
+                            {
+                                var currSciWarnings = _shoppingCartService.UpdateShoppingCartItem(_workContext.CurrentCustomer,
+                                    sci.Id, newQuantity, true);
+                                innerWarnings.Add(sci.Id, currSciWarnings);
+                            }
                             break;
                         }
-                    var currSciWarnings = _shoppingCartService.UpdateShoppingCartItem(_workContext.CurrentCustomer,
-                        sci.Id, newQuantity, true);
-                    innerWarnings.Add(sci.Id, currSciWarnings);
                 }
             }
 
@@ -1314,15 +1321,18 @@ namespace Nop.Web.Controllers
             }
 
             //update the wishlist cart item
-            int newQuantity = sci.Quantity;
+            var warnings = new List<string>();
             foreach (string formKey in form.AllKeys)
                 if (formKey.Equals(string.Format("itemquantity{0}", sci.Id), StringComparison.InvariantCultureIgnoreCase))
                 {
-                    int.TryParse(form[formKey], out newQuantity);
+                    int newQuantity = sci.Quantity;
+                    if (int.TryParse(form[formKey], out newQuantity))
+                    {
+                        warnings.AddRange(_shoppingCartService.UpdateShoppingCartItem(_workContext.CurrentCustomer,
+                            sci.Id, newQuantity, true));
+                    }
                     break;
                 }
-            var warnings = _shoppingCartService.UpdateShoppingCartItem(_workContext.CurrentCustomer,
-                sci.Id, newQuantity, true);
 
 
             //updated wishlist
