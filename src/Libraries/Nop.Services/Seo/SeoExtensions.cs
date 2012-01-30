@@ -118,7 +118,7 @@ namespace Nop.Services.Seo
         public static string GetSeName(this ForumGroup forumGroup)
         {
             if (forumGroup == null)
-                throw new ArgumentNullException("newsItem");
+                throw new ArgumentNullException("forumGroup");
             string seName = GetSeName(forumGroup.Name);
             return seName;
         }
@@ -131,7 +131,7 @@ namespace Nop.Services.Seo
         public static string GetSeName(this Forum forum)
         {
             if (forum == null)
-                throw new ArgumentNullException("newsItem");
+                throw new ArgumentNullException("forum");
             string seName = GetSeName(forum.Name);
             return seName;
         }
@@ -144,7 +144,7 @@ namespace Nop.Services.Seo
         public static string GetSeName(this ForumTopic forumTopic)
         {
             if (forumTopic == null)
-                throw new ArgumentNullException("newsItem");
+                throw new ArgumentNullException("forumTopic");
             string seName = GetSeName(forumTopic.Subject);
 
             // Trim SE name to avoid URLs that are too long

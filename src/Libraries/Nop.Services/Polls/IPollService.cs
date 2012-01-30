@@ -9,10 +9,6 @@ namespace Nop.Services.Polls
     public partial interface IPollService
     {
         /// <summary>
-        /// Deletes a news
-        /// </summary>
-        /// <param name="newsItem">News item</param>
-        /// <summary>
         /// Gets a poll
         /// </summary>
         /// <param name="pollId">The poll identifier</param>

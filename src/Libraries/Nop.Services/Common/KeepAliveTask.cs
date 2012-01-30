@@ -20,7 +20,7 @@ namespace Nop.Services.Common
             string url = _storeInformationSettings.StoreUrl + "keepalive";
             using (var wc = new WebClient())
             {
-                string response = wc.DownloadString(url);
+                wc.DownloadString(url);
             }
         }
     }

@@ -51,14 +51,19 @@ namespace Nop.Services.Forums
         /// Ctor
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
-        /// <param name="forumGroupRepository">ForumGroup repository</param>
+        /// <param name="forumGroupRepository">Forum group repository</param>
         /// <param name="forumRepository">Forum repository</param>
-        /// <param name="forumTopicRepository">ForumTopic repository</param>
-        /// <param name="forumPostRepository">ForumPost repository</param>
-        /// <param name="forumPrivateMessageRepository">PrivateMessage repository</param>
-        /// <param name="forumSubscriptionRepository">ForumSubscription repository</param>
+        /// <param name="forumTopicRepository">Forum topic repository</param>
+        /// <param name="forumPostRepository">Forum post repository</param>
+        /// <param name="forumPrivateMessageRepository">Private message repository</param>
+        /// <param name="forumSubscriptionRepository">Forum subscription repository</param>
+        /// <param name="forumSettings">Forum settings</param>
         /// <param name="customerRepository">Customer repository</param>
-        /// <param name="eventPublisher"></param>
+        /// <param name="settingService">Setting service</param>
+        /// <param name="customerService">Customer service</param>
+        /// <param name="workContext">Work context</param>
+        /// <param name="workflowMessageService">Workflow message service</param>
+        /// <param name="eventPublisher">Event published</param>
         public ForumService(ICacheManager cacheManager,
             IRepository<ForumGroup> forumGroupRepository,
             IRepository<Forum> forumRepository,
@@ -70,7 +75,7 @@ namespace Nop.Services.Forums
             IRepository<Customer> customerRepository,
             ISettingService settingService,
             ICustomerService customerService,
-            IWorkContext workcContext,
+            IWorkContext workContext,
             IWorkflowMessageService workflowMessageService,
             IEventPublisher eventPublisher
             )
@@ -86,7 +91,7 @@ namespace Nop.Services.Forums
             this._customerRepository = customerRepository;
             this._settingService = settingService;
             this._customerService = customerService;
-            this._workContext = workcContext;
+            this._workContext = workContext;
             this._workflowMessageService = workflowMessageService;
             _eventPublisher = eventPublisher;
         }
@@ -294,10 +299,14 @@ namespace Nop.Services.Forums
         /// <returns>Forum groups</returns>
         public virtual IList<ForumGroup> GetAllForumGroups()
         {
-            var query = from fg in _forumGroupRepository.Table
-                        orderby fg.DisplayOrder
-                        select fg;
-            return query.ToList();
+            string key = string.Format(FORUMGROUP_ALL_KEY);
+            return _cacheManager.Get(key, () =>
+            {
+                var query = from fg in _forumGroupRepository.Table
+                            orderby fg.DisplayOrder
+                            select fg;
+                return query.ToList();
+            });
         }
 
         /// <summary>
@@ -414,12 +423,16 @@ namespace Nop.Services.Forums
         /// <returns>Forums</returns>
         public virtual IList<Forum> GetAllForumsByGroupId(int forumGroupId)
         {
-            var query = from f in _forumRepository.Table
-                        orderby f.DisplayOrder
-                        where f.ForumGroupId == forumGroupId
-                        select f;
-            var forums = query.ToList();
-            return forums;
+            string key = string.Format(FORUM_ALLBYFORUMGROUPID_KEY, forumGroupId);
+            return _cacheManager.Get(key, () =>
+            {
+                var query = from f in _forumRepository.Table
+                            orderby f.DisplayOrder
+                            where f.ForumGroupId == forumGroupId
+                            select f;
+                var forums = query.ToList();
+                return forums;
+            });
         }
 
         /// <summary>

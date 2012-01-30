@@ -97,7 +97,8 @@ namespace Nop.Services.Orders
         /// <param name="workContext">Work context</param>
         /// <param name="workflowMessageService">Workflow message service</param>
         /// <param name="smsService">SMS service</param>
-        /// <param name="customerActivityService">Customer activityservice</param>
+        /// <param name="customerActivityService">Customer activity service</param>
+        /// <param name="currencyService">Currency service</param>
         /// <param name="paymentSettings">Payment settings</param>
         /// <param name="rewardPointsSettings">Reward points settings</param>
         /// <param name="orderSettings">Order settings</param>
@@ -1664,6 +1665,7 @@ namespace Nop.Services.Orders
             var recurringPayments = _orderService.SearchRecurringPayments(0, order.Id, null);
             foreach (var rp in recurringPayments)
             {
+                //use errors?
                 var errors = CancelRecurringPayment(rp);
             }
 

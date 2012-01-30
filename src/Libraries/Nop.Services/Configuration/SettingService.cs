@@ -34,6 +34,7 @@ namespace Nop.Services.Configuration
         /// Ctor
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
+        /// <param name="eventPublisher">Event publisher</param>
         /// <param name="settingRepository">Setting repository</param>
         public SettingService(ICacheManager cacheManager, IEventPublisher eventPublisher,
             IRepository<Setting> settingRepository)

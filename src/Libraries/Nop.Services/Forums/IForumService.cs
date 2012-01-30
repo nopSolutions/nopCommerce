@@ -113,7 +113,7 @@ namespace Nop.Services.Forums
         /// Gets active forum topics
         /// </summary>
         /// <param name="forumId">The forum identifier</param>
-        /// <param name="count">Count of forum topics to return</param>
+        /// <param name="topicCount">Count of forum topics to return</param>
         /// <returns>Forum Topics</returns>
         IList<ForumTopic> GetActiveTopics(int forumId, int topicCount);
 

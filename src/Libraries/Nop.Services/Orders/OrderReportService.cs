@@ -39,6 +39,7 @@ namespace Nop.Services.Orders
         /// <param name="productRepository">Product repository</param>
         /// <param name="productVariantRepository">Product variant repository</param>
         /// <param name="dateTimeHelper">Datetime helper</param>
+        /// <param name="productService">Product service</param>
         public OrderReportService(IRepository<Order> orderRepository,
             IRepository<OrderProductVariant> opvRepository,
             IRepository<Product> productRepository,

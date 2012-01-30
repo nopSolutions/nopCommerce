@@ -31,6 +31,7 @@ namespace Nop.Web.Framework.UI.Editor
         /// </summary>
         /// <param name="directory"></param>
         /// <param name="parentItem"></param>
+        /// <param name="ctx"></param>
         /// <returns>A TreeViewItem structure</returns>
         public virtual TreeViewItemModel GetDirectoryRecursive(DirectoryInfo directory, TreeViewItemModel parentItem, HttpContextBase ctx)
         {

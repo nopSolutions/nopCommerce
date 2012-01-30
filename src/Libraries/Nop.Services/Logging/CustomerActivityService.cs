@@ -34,11 +34,10 @@ namespace Nop.Services.Logging
         /// <summary>
         /// Ctor
         /// </summary>
-        /// <param name="cacheManager"></param>
-        /// <param name="activityLogRepository"></param>
-        /// <param name="activityLogTypeRepository"></param>
-        /// <param name="customerRepository"></param>
-        /// <param name="workContext"></param>
+        /// <param name="cacheManager">Cache manager</param>
+        /// <param name="activityLogRepository">Activity log repository</param>
+        /// <param name="activityLogTypeRepository">Activity log type repository</param>
+        /// <param name="workContext">Work context</param>
         public CustomerActivityService(ICacheManager cacheManager,
             IRepository<ActivityLog> activityLogRepository,
             IRepository<ActivityLogType> activityLogTypeRepository,
@@ -99,7 +98,7 @@ namespace Nop.Services.Logging
         /// <returns>Activity log type collection</returns>
         public virtual IList<ActivityLogType> GetAllActivityTypes()
         {
-            string key = ACTIVITYTYPE_PATTERN_KEY;
+            string key = string.Format(ACTIVITYTYPE_ALL_KEY);
             return _cacheManager.Get(key, () =>
             {
                 var query = from alt in _activityLogTypeRepository.Table
@@ -212,11 +211,11 @@ namespace Nop.Services.Logging
             if (!String.IsNullOrEmpty(email))
             {
                 query = query.Where(c => c.Customer.Email.Contains(email));
-            };
+            }
             if (!String.IsNullOrEmpty(username))
             {
                 query = query.Where(c => c.Customer.Username.Contains(username));
-            };
+            }
 
             query = query.OrderByDescending(al => al.CreatedOnUtc);
 

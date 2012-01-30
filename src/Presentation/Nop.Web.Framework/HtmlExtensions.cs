@@ -89,7 +89,7 @@ namespace Nop.Web.Framework
 
             //there's an issue in Telerik (ScriptRegistrar.Current implemenation)
             //it's a little hack to ensure ScriptRegistrar.Current is loaded
-            var test = helper.Telerik();
+            helper.Telerik();
 
             #region Write click events for button, if supplied
 

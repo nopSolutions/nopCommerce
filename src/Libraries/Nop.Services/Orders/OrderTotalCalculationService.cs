@@ -57,6 +57,7 @@ namespace Nop.Services.Orders
         /// <param name="rewardPointsSettings">Reward points settings</param>
         /// <param name="shippingSettings">Shipping settings</param>
         /// <param name="shoppingCartSettings">Shopping cart settings</param>
+        /// <param name="catalogSettings">Catalog settings</param>
         public OrderTotalCalculationService(IWorkContext workContext,
             IPriceCalculationService priceCalculationService,
             ITaxService taxService,
