@@ -14,6 +14,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
+using Nop.Core.Events;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
@@ -59,7 +60,8 @@ namespace Nop.Services.Orders
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly ISmsService _smsService;
         private readonly ICustomerActivityService _customerActivityService;
-        private readonly ICurrencyService _currencyService;
+        private readonly ICurrencyService _currencyService; 
+        private readonly IEventPublisher _eventPublisher;
 
         private readonly PaymentSettings _paymentSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
@@ -99,6 +101,7 @@ namespace Nop.Services.Orders
         /// <param name="smsService">SMS service</param>
         /// <param name="customerActivityService">Customer activity service</param>
         /// <param name="currencyService">Currency service</param>
+        /// <param name="eventPublisher">Event published</param>
         /// <param name="paymentSettings">Payment settings</param>
         /// <param name="rewardPointsSettings">Reward points settings</param>
         /// <param name="orderSettings">Order settings</param>
@@ -129,6 +132,7 @@ namespace Nop.Services.Orders
             ISmsService smsService,
             ICustomerActivityService customerActivityService,
             ICurrencyService currencyService,
+            IEventPublisher eventPublisher,
             PaymentSettings paymentSettings,
             RewardPointsSettings rewardPointsSettings,
             OrderSettings orderSettings,
@@ -160,6 +164,7 @@ namespace Nop.Services.Orders
             this._smsService = smsService;
             this._customerActivityService = customerActivityService;
             this._currencyService = currencyService;
+            this._eventPublisher = eventPublisher;
             this._paymentSettings = paymentSettings;
             this._rewardPointsSettings = rewardPointsSettings;
             this._orderSettings = orderSettings;
@@ -1237,6 +1242,14 @@ namespace Nop.Services.Orders
                         //uncomment this line to support transactions
                         //scope.Complete();
 
+                        //raise event       
+                        _eventPublisher.PublishOrderPlaced(order);
+
+                        //raise event         
+                        if (order.PaymentStatus == PaymentStatus.Paid)
+                        {
+                            _eventPublisher.PublishOrderPaid(order);
+                        }
                         #endregion
                     }
                 }
@@ -1786,6 +1799,12 @@ namespace Nop.Services.Orders
                     _orderService.UpdateOrder(order);
 
                     CheckOrderStatus(order);
+
+                    //raise event         
+                    if (order.PaymentStatus == PaymentStatus.Paid)
+                    {
+                        _eventPublisher.PublishOrderPaid(order);
+                    }
                 }
             }
             catch (Exception exc)
@@ -1869,6 +1888,12 @@ namespace Nop.Services.Orders
             _orderService.UpdateOrder(order);
 
             CheckOrderStatus(order);
+
+            //raise event         
+            if (order.PaymentStatus == PaymentStatus.Paid)
+            {
+                _eventPublisher.PublishOrderPaid(order);
+            }
         }
 
 

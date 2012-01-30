@@ -75,7 +75,7 @@ namespace Nop.Services.Catalog
         /// <param name="dbContext">Database Context</param>
         /// <param name="localizationSettings">Localization settings</param>
         /// <param name="commonSettings">Common settings</param>
-        /// <param name="eventPublisher"></param>
+        /// <param name="eventPublisher">Event published</param>
         public ProductService(ICacheManager cacheManager,
             IRepository<Product> productRepository,
             IRepository<ProductVariant> productVariantRepository,

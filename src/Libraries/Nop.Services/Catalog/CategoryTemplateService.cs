@@ -35,7 +35,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="categoryTemplateRepository">Category template repository</param>
-        /// <param name="eventPublisher"></param>
+        /// <param name="eventPublisher">Event published</param>
         public CategoryTemplateService(ICacheManager cacheManager,
             IRepository<CategoryTemplate> categoryTemplateRepository, IEventPublisher eventPublisher)
         {

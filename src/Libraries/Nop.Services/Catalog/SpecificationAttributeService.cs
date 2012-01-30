@@ -47,7 +47,7 @@ namespace Nop.Services.Catalog
         /// <param name="productSpecificationAttributeRepository">Product specification attribute repository</param>
         /// <param name="productRepository">Product repository</param>
         /// <param name="catalogSettings">Catalog settings</param>
-        /// <param name="eventPublisher"></param>
+        /// <param name="eventPublisher">Event published</param>
         public SpecificationAttributeService(ICacheManager cacheManager,
             IRepository<SpecificationAttribute> specificationAttributeRepository,
             IRepository<SpecificationAttributeOption> specificationAttributeOptionRepository,

@@ -25,7 +25,7 @@ namespace Nop.Services.Affiliates
         /// Ctor
         /// </summary>
         /// <param name="affiliateRepository">Affiliate repository</param>
-        /// <param name="eventPublisher"></param>
+        /// <param name="eventPublisher">Event published</param>
         public AffiliateService(IRepository<Affiliate> affiliateRepository,
             IEventPublisher eventPublisher)
         {

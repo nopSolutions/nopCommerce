@@ -45,7 +45,7 @@ namespace Nop.Services.Customers
         /// <param name="customerRepository">Customer repository</param>
         /// <param name="customerRoleRepository">Customer role repository</param>
         /// <param name="customerAttributeRepository">Customer attribute repository</param>
-        /// <param name="eventPublisher"></param>
+        /// <param name="eventPublisher">Event published</param>
         public CustomerService(ICacheManager cacheManager,
             IRepository<Customer> customerRepository,
             IRepository<CustomerRole> customerRoleRepository,

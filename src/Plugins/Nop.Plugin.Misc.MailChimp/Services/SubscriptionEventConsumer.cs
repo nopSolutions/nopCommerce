@@ -1,11 +1,12 @@
 ﻿using System;
+using Nop.Core.Domain.Messages;
 using Nop.Core.Events;
 using Nop.Core.Plugins;
 using Nop.Plugin.Misc.MailChimp.Data;
 
 namespace Nop.Plugin.Misc.MailChimp.Services
 {
-    public class SubscriptionEventConsumer : IConsumer<EmailSubscribed>, IConsumer<EmailUnsubscribed>
+    public class SubscriptionEventConsumer : IConsumer<EmailSubscribedEvent>, IConsumer<EmailUnsubscribedEvent>
     {
         private readonly ISubscriptionEventQueueingService _service;
         private readonly IPluginFinder _pluginFinder;
@@ -21,7 +22,7 @@ namespace Nop.Plugin.Misc.MailChimp.Services
         /// Handles the event.
         /// </summary>
         /// <param name="eventMessage">The event message.</param>
-        public  void HandleEvent(EmailSubscribed eventMessage)
+        public  void HandleEvent(EmailSubscribedEvent eventMessage)
         {
             //is plugin installed?
             var pluginDescriptor = _pluginFinder.GetPluginDescriptorBySystemName("Misc.MailChimp");
@@ -35,7 +36,7 @@ namespace Nop.Plugin.Misc.MailChimp.Services
         /// Handles the event.
         /// </summary>
         /// <param name="eventMessage">The event message.</param>
-        public void HandleEvent(EmailUnsubscribed eventMessage)
+        public void HandleEvent(EmailUnsubscribedEvent eventMessage)
         {
             //is plugin installed?
             var pluginDescriptor = _pluginFinder.GetPluginDescriptorBySystemName("Misc.MailChimp");

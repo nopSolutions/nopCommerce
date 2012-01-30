@@ -35,7 +35,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="manufacturerTemplateRepository">Manufacturer template repository</param>
-        /// <param name="eventPublisher"></param>
+        /// <param name="eventPublisher">Event published</param>
         public ManufacturerTemplateService(ICacheManager cacheManager,
             IRepository<ManufacturerTemplate> manufacturerTemplateRepository,
             IEventPublisher eventPublisher)

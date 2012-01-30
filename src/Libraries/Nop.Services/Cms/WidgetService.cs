@@ -38,7 +38,7 @@ namespace Nop.Services.Cms
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="widgetRepository">Widget repository</param>
         /// <param name="pluginFinder">Plugin finder</param>
-        /// <param name="eventPublisher"></param>
+        /// <param name="eventPublisher">Event published</param>
         public WidgetService(ICacheManager cacheManager,
             IRepository<Widget> widgetRepository, 
             IPluginFinder pluginFinder,

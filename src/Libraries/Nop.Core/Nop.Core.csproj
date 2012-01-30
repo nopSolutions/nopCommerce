@@ -63,9 +63,9 @@
     <Compile Include="ComponentModel\WriteLockDisposable.cs" />
     <Compile Include="Domain\Catalog\BackInStockSubscription.cs" />
     <Compile Include="Domain\Common\PageTitleSeoAdjustment.cs" />
+    <Compile Include="Domain\Orders\Events.cs" />
     <Compile Include="Domain\Tasks\ScheduleTask.cs" />
-    <Compile Include="Events\EmailSubscribed.cs" />
-    <Compile Include="Events\EmailUnsubscribed.cs" />
+    <Compile Include="Domain\Messages\Events.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Data\BaseDataProviderManager.cs" />
     <Compile Include="Data\IDataProvider.cs" />

@@ -25,7 +25,7 @@ namespace Nop.Services.Tests.Messages {
             var service = new NewsLetterSubscriptionService(context, repo, eventPublisher);
             service.InsertNewsLetterSubscription(subscription, true);
 
-            eventPublisher.AssertWasCalled(x => x.Publish(new EmailSubscribed(subscription.Email)));
+            eventPublisher.AssertWasCalled(x => x.Publish(new EmailSubscribedEvent(subscription.Email)));
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace Nop.Services.Tests.Messages {
             var service = new NewsLetterSubscriptionService(context, repo, eventPublisher);
             service.DeleteNewsLetterSubscription(subscription, true);
 
-            eventPublisher.AssertWasCalled(x => x.Publish(new EmailUnsubscribed(subscription.Email)));
+            eventPublisher.AssertWasCalled(x => x.Publish(new EmailUnsubscribedEvent(subscription.Email)));
         }
 
         /// <summary>
@@ -66,8 +66,8 @@ namespace Nop.Services.Tests.Messages {
             var service = new NewsLetterSubscriptionService(context, repo, eventPublisher);
             service.UpdateNewsLetterSubscription(subscription, true);
 
-            eventPublisher.AssertWasCalled(x => x.Publish(new EmailUnsubscribed(originalSubscription.Email)));
-            eventPublisher.AssertWasCalled(x => x.Publish(new EmailSubscribed(subscription.Email)));
+            eventPublisher.AssertWasCalled(x => x.Publish(new EmailUnsubscribedEvent(originalSubscription.Email)));
+            eventPublisher.AssertWasCalled(x => x.Publish(new EmailSubscribedEvent(subscription.Email)));
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace Nop.Services.Tests.Messages {
             var service = new NewsLetterSubscriptionService(context, repo, eventPublisher);
             service.UpdateNewsLetterSubscription(subscription, true);
 
-            eventPublisher.AssertWasCalled(x => x.Publish(new EmailSubscribed(subscription.Email)));
+            eventPublisher.AssertWasCalled(x => x.Publish(new EmailSubscribedEvent(subscription.Email)));
         }
 
         /// <summary>

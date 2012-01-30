@@ -34,7 +34,7 @@ namespace Nop.Services.Tax
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="taxCategoryRepository">Tax category repository</param>
-        /// <param name="eventPublisher"></param>
+        /// <param name="eventPublisher">Event published</param>
         public TaxCategoryService(ICacheManager cacheManager,
             IRepository<TaxCategory> taxCategoryRepository,
             IEventPublisher eventPublisher)

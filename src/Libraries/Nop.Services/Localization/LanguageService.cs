@@ -42,7 +42,7 @@ namespace Nop.Services.Localization
         /// <param name="customerService">Customer service</param>
         /// <param name="settingService">Setting service</param>
         /// <param name="localizationSettings">Localization settings</param>
-        /// <param name="eventPublisher"></param>
+        /// <param name="eventPublisher">Event published</param>
         public LanguageService(ICacheManager cacheManager,
             IRepository<Language> languageRepository,
             ICustomerService customerService,

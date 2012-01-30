@@ -19,7 +19,7 @@ namespace Nop.Services.Messages
         /// </summary>
         /// <param name="emailAccountRepository">Email account repository</param>
         /// <param name="emailAccountSettings"></param>
-        /// <param name="eventPublisher"></param>
+        /// <param name="eventPublisher">Event published</param>
         public EmailAccountService(IRepository<EmailAccount> emailAccountRepository,
             EmailAccountSettings emailAccountSettings, IEventPublisher eventPublisher)
         {

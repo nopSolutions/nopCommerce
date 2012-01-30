@@ -36,7 +36,7 @@ namespace Nop.Services.Directory
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="countryRepository">Country repository</param>
-        /// <param name="eventPublisher"></param>
+        /// <param name="eventPublisher">Event published</param>
         public CountryService(ICacheManager cacheManager,
             IRepository<Country> countryRepository,
             IEventPublisher eventPublisher)

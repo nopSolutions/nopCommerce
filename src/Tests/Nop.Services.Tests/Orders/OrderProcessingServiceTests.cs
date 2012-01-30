@@ -115,10 +115,7 @@ namespace Nop.Services.Tests.Orders
             _paymentService = MockRepository.GenerateMock<IPaymentService>();
             _checkoutAttributeParser = MockRepository.GenerateMock<ICheckoutAttributeParser>();
             _giftCardService = MockRepository.GenerateMock<IGiftCardService>();
-
-            _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
-            _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
-
+            
             //tax
             _taxSettings = new TaxSettings();
             _taxSettings.ShippingIsTaxable = true;
@@ -126,7 +123,7 @@ namespace Nop.Services.Tests.Orders
             _taxSettings.DefaultTaxAddressId = 10;
             _addressService = MockRepository.GenerateMock<IAddressService>();
             _addressService.Expect(x => x.GetAddressById(_taxSettings.DefaultTaxAddressId)).Return(new Address() { Id = _taxSettings.DefaultTaxAddressId });
-            _taxService = new TaxService(_addressService, _workContext, _taxSettings, pluginFinder, _eventPublisher);
+            _taxService = new TaxService(_addressService, _workContext, _taxSettings, pluginFinder);
 
             _rewardPointsSettings = new RewardPointsSettings();
 
@@ -162,6 +159,9 @@ namespace Nop.Services.Tests.Orders
 
             _localizationSettings = new LocalizationSettings();
 
+            _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
+            _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
+
             _orderProcessingService = new OrderProcessingService(_orderService, _webHelper,
                 _localizationService, _languageService,
                 _productService, _paymentService, _logger,
@@ -172,7 +172,7 @@ namespace Nop.Services.Tests.Orders
                 _customerService, _discountService,
                 _encryptionService, _workContext, _workflowMessageService,
                 _smsService, _customerActivityService, _currencyService,
-                _paymentSettings, _rewardPointsSettings,
+                _eventPublisher, _paymentSettings, _rewardPointsSettings,
                 _orderSettings, _taxSettings, _localizationSettings);
         }
 

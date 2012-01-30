@@ -25,7 +25,6 @@ namespace Nop.Services.Tax
         private readonly IWorkContext _workContext;
         private readonly TaxSettings _taxSettings;
         private readonly IPluginFinder _pluginFinder;
-        private readonly IEventPublisher _eventPublisher;
 
         #endregion
 
@@ -38,18 +37,15 @@ namespace Nop.Services.Tax
         /// <param name="workContext">Work context</param>
         /// <param name="taxSettings">Tax settings</param>
         /// <param name="pluginFinder">Plugin finder</param>
-        /// <param name="eventPublisher"></param>
         public TaxService(IAddressService addressService,
             IWorkContext workContext,
             TaxSettings taxSettings,
-            IPluginFinder pluginFinder,
-            IEventPublisher eventPublisher)
+            IPluginFinder pluginFinder)
         {
             _addressService = addressService;
             _workContext = workContext;
             _taxSettings = taxSettings;
             _pluginFinder = pluginFinder;
-            _eventPublisher = eventPublisher;
         }
 
         #endregion

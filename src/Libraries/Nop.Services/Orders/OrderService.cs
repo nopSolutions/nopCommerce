@@ -24,7 +24,6 @@ namespace Nop.Services.Orders
         private readonly IRepository<OrderNote> _orderNoteRepository;
         private readonly IRepository<ProductVariant> _pvRepository;
         private readonly IRepository<RecurringPayment> _recurringPaymentRepository;
-        private readonly IRepository<RecurringPaymentHistory> _recurringPaymentHistoryRepository;
         private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<ReturnRequest> _returnRequestRepository;
         private readonly IEventPublisher _eventPublisher;
@@ -41,16 +40,14 @@ namespace Nop.Services.Orders
         /// <param name="orderNoteRepository">Order note repository</param>
         /// <param name="pvRepository">Product variant repository</param>
         /// <param name="recurringPaymentRepository">Recurring payment repository</param>
-        /// <param name="recurringPaymentHistoryRepository">Recurring payment history repository</param>
         /// <param name="customerRepository">Customer repository</param>
         /// <param name="returnRequestRepository">Return request repository</param>
-        /// <param name="eventPublisher"></param>
+        /// <param name="eventPublisher">Event published</param>
         public OrderService(IRepository<Order> orderRepository,
             IRepository<OrderProductVariant> opvRepository,
             IRepository<OrderNote> orderNoteRepository,
             IRepository<ProductVariant> pvRepository,
             IRepository<RecurringPayment> recurringPaymentRepository,
-            IRepository<RecurringPaymentHistory> recurringPaymentHistoryRepository,
             IRepository<Customer> customerRepository, 
             IRepository<ReturnRequest> returnRequestRepository,
             IEventPublisher eventPublisher)
@@ -60,7 +57,6 @@ namespace Nop.Services.Orders
             _orderNoteRepository = orderNoteRepository;
             _pvRepository = pvRepository;
             _recurringPaymentRepository = recurringPaymentRepository;
-            _recurringPaymentHistoryRepository = recurringPaymentHistoryRepository;
             _customerRepository = customerRepository;
             _returnRequestRepository = returnRequestRepository;
             _eventPublisher = eventPublisher;

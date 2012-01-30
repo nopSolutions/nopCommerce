@@ -44,7 +44,7 @@ namespace Nop.Services.Discounts
         /// <param name="discountRequirementRepository">Discount requirement repository</param>
         /// <param name="discountUsageHistoryRepository">Discount usage history repository</param>
         /// <param name="pluginFinder">Plugin finder</param>
-        /// <param name="eventPublisher"></param>
+        /// <param name="eventPublisher">Event published</param>
         public DiscountService(ICacheManager cacheManager,
             IRepository<Discount> discountRepository,
             IRepository<DiscountRequirement> discountRequirementRepository,

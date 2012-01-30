@@ -28,7 +28,7 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="contentRepository">Customer content repository</param>
-        /// <param name="eventPublisher"></param>
+        /// <param name="eventPublisher">Event published</param>
         public CustomerContentService(ICacheManager cacheManager,
             IRepository<CustomerContent> contentRepository,
             IEventPublisher eventPublisher)

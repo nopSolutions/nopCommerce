@@ -25,7 +25,7 @@ namespace Nop.Services.Messages
         /// <param name="messageTokenProvider">Message token provider</param>
         /// <param name="tokenizer">Tokenizer</param>
         /// <param name="queuedEmailService">Queued email service</param>
-        /// <param name="eventPublisher"></param>
+        /// <param name="eventPublisher">Event published</param>
         public CampaignService(IRepository<Campaign> campaignRepository,
             IEmailSender emailSender, IMessageTokenProvider messageTokenProvider,
             ITokenizer tokenizer, IQueuedEmailService queuedEmailService, IEventPublisher eventPublisher)

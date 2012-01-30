@@ -43,7 +43,7 @@ namespace Nop.Services.Directory
         /// <param name="customerService">Customer service</param>
         /// <param name="currencySettings">Currency settings</param>
         /// <param name="pluginFinder">Plugin finder</param>
-        /// <param name="eventPublisher"></param>
+        /// <param name="eventPublisher">Event published</param>
         public CurrencyService(ICacheManager cacheManager,
             IRepository<Currency> currencyRepository,
             ICustomerService customerService,

@@ -16,7 +16,7 @@ namespace Nop.Services.Messages
         /// Ctor
         /// </summary>
         /// <param name="queuedEmailRepository">Queued email repository</param>
-        /// <param name="eventPublisher"></param>
+        /// <param name="eventPublisher">Event published</param>
         public QueuedEmailService(IRepository<QueuedEmail> queuedEmailRepository, IEventPublisher eventPublisher)
         {
             _queuedEmailRepository = queuedEmailRepository;

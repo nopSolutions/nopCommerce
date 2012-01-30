@@ -41,7 +41,7 @@ namespace Nop.Services.Tests.Tax
             _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
             _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
 
-            _taxService = new TaxService(_addressService, _workContext, _taxSettings, pluginFinder, _eventPublisher);
+            _taxService = new TaxService(_addressService, _workContext, _taxSettings, pluginFinder);
         }
 
         [Test]
