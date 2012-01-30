@@ -82,6 +82,22 @@
 					<LocaleResource Name="Button">
 						<Value>Change password</Value>
 					</LocaleResource>
+					<LocaleResource Name="Errors">
+						<Children>
+							<LocaleResource Name="EmailIsNotProvided">
+								<Value>Email is not entered</Value>
+							</LocaleResource>
+							<LocaleResource Name="PasswordIsNotProvided">
+								<Value>Password is not entered</Value>
+							</LocaleResource>
+							<LocaleResource Name="EmailNotFound">
+								<Value>The specified email could not be found</Value>
+							</LocaleResource>
+							<LocaleResource Name="OldPasswordDoesntMatch">
+								<Value>Old password doesn't match</Value>
+							</LocaleResource>
+						</Children>
+					</LocaleResource>
 					<LocaleResource Name="Fields">
 						<Children>
 							<LocaleResource Name="OldPassword">
@@ -237,6 +253,25 @@
 			</LocaleResource>
 			<LocaleResource Name="DownloadableProducts">
 				<Value>Downloadable products</Value>
+			</LocaleResource>
+			<LocaleResource Name="EmailUsernameErrors">
+				<Children>
+					<LocaleResource Name="NewEmailIsNotValid">
+						<Value>New email is not valid</Value>
+					</LocaleResource>
+					<LocaleResource Name="EmailTooLong">
+						<Value>E-mail address is too long</Value>
+					</LocaleResource>
+					<LocaleResource Name="EmailAlreadyExists">
+						<Value>The e-mail address is already in use</Value>
+					</LocaleResource>
+					<LocaleResource Name="UsernameTooLong">
+						<Value>Username is too long</Value>
+					</LocaleResource>
+					<LocaleResource Name="UsernameAlreadyExists">
+						<Value>The username is already in use</Value>
+					</LocaleResource>
+				</Children>
 			</LocaleResource>
 			<LocaleResource Name="Fields">
 				<Children>
@@ -511,10 +546,28 @@
 			</LocaleResource>
 			<LocaleResource Name="Register">
 				<Value>Register</Value>
-
 				<Children>
 					<LocaleResource Name="Button">
 						<Value>Register</Value>
+					</LocaleResource>
+					<LocaleResource Name="Errors">
+						<Children>
+							<LocaleResource Name="EmailIsNotProvided">
+								<Value>Email is not provided</Value>
+							</LocaleResource>
+							<LocaleResource Name="PasswordIsNotProvided">
+								<Value>Password is not provided</Value>
+							</LocaleResource>
+							<LocaleResource Name="UsernameIsNotProvided">
+								<Value>Username is not provided</Value>
+							</LocaleResource>
+							<LocaleResource Name="EmailAlreadyExists">
+								<Value>The specified email already exists</Value>
+							</LocaleResource>
+							<LocaleResource Name="UsernameAlreadyExists">
+								<Value>The specified username already exists</Value>
+							</LocaleResource>
+						</Children>
 					</LocaleResource>
 					<LocaleResource Name="Result">
 						<Children>

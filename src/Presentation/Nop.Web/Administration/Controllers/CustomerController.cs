@@ -43,6 +43,7 @@ namespace Nop.Admin.Controllers
         #region Fields
 
         private readonly ICustomerService _customerService;
+        private readonly ICustomerRegistrationService _customerRegistrationService;
         private readonly ICustomerReportService _customerReportService;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ILocalizationService _localizationService;
@@ -74,6 +75,7 @@ namespace Nop.Admin.Controllers
         #region Constructors
 
         public CustomerController(ICustomerService customerService,
+            ICustomerRegistrationService customerRegistrationService,
             ICustomerReportService customerReportService, IDateTimeHelper dateTimeHelper,
             ILocalizationService localizationService, DateTimeSettings dateTimeSettings,
             TaxSettings taxSettings, RewardPointsSettings rewardPointsSettings,
@@ -90,6 +92,7 @@ namespace Nop.Admin.Controllers
             IForumService forumService, IOpenAuthenticationService openAuthenticationService)
         {
             this._customerService = customerService;
+            this._customerRegistrationService = customerRegistrationService;
             this._customerReportService = customerReportService;
             this._dateTimeHelper = dateTimeHelper;
             this._localizationService = localizationService;
@@ -468,7 +471,7 @@ namespace Nop.Admin.Controllers
                 if (!String.IsNullOrWhiteSpace(model.Password))
                 {
                     var changePassRequest = new ChangePasswordRequest(model.Email, false, PasswordFormat.Hashed, model.Password);
-                    var changePassResult = _customerService.ChangePassword(changePassRequest);
+                    var changePassResult = _customerRegistrationService.ChangePassword(changePassRequest);
                     if (!changePassResult.Success)
                     {
                         foreach (var changePassError in changePassResult.Errors)
@@ -668,7 +671,7 @@ namespace Nop.Admin.Controllers
                     //email
                     if (!String.IsNullOrWhiteSpace(model.Email))
                     {
-                        _customerService.SetEmail(customer, model.Email);
+                        _customerRegistrationService.SetEmail(customer, model.Email);
                     }
                     else
                     {
@@ -680,7 +683,7 @@ namespace Nop.Admin.Controllers
                     {
                         if (!String.IsNullOrWhiteSpace(model.Username))
                         {
-                            _customerService.SetUsername(customer, model.Username);
+                            _customerRegistrationService.SetUsername(customer, model.Username);
                         }
                         else
                         {
@@ -842,7 +845,7 @@ namespace Nop.Admin.Controllers
             {
                 var changePassRequest = new ChangePasswordRequest(model.Email,
                     false, PasswordFormat.Hashed, model.Password);
-                var changePassResult = _customerService.ChangePassword(changePassRequest);
+                var changePassResult = _customerRegistrationService.ChangePassword(changePassRequest);
                 if (changePassResult.Success)
                     SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.PasswordChanged"));
                 else

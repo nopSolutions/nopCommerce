@@ -46,6 +46,7 @@ namespace Nop.Web.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IWorkContext _workContext;
         private readonly ICustomerService _customerService;
+        private readonly ICustomerRegistrationService _customerRegistrationService;
         private readonly ITaxService _taxService;
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly CustomerSettings _customerSettings;
@@ -81,6 +82,7 @@ namespace Nop.Web.Controllers
             DateTimeSettings dateTimeSettings, TaxSettings taxSettings,
             ILocalizationService localizationService,
             IWorkContext workContext, ICustomerService customerService,
+            ICustomerRegistrationService customerRegistrationService,
             ITaxService taxService, RewardPointsSettings rewardPointsSettings,
             CustomerSettings customerSettings, ForumSettings forumSettings,
             OrderSettings orderSettings, IAddressService addressService,
@@ -102,6 +104,7 @@ namespace Nop.Web.Controllers
             this._localizationService = localizationService;
             this._workContext = workContext;
             this._customerService = customerService;
+            this._customerRegistrationService = customerRegistrationService;
             this._taxService = taxService;
             this._rewardPointsSettings = rewardPointsSettings;
             this._customerSettings = customerSettings;
@@ -188,7 +191,7 @@ namespace Nop.Web.Controllers
                     model.Username = model.Username.Trim();
                 }
 
-                if (_customerService.ValidateCustomer(_customerSettings.UsernamesEnabled ? model.Username : model.Email, model.Password))
+                if (_customerRegistrationService.ValidateCustomer(_customerSettings.UsernamesEnabled ? model.Username : model.Email, model.Password))
                 {
                     var customer = _customerSettings.UsernamesEnabled ? _customerService.GetCustomerByUsername(model.Username) : _customerService.GetCustomerByEmail(model.Email);
 
@@ -304,7 +307,7 @@ namespace Nop.Web.Controllers
                 bool isApproved = _customerSettings.UserRegistrationType == UserRegistrationType.Standard;
                 var registrationRequest = new CustomerRegistrationRequest(customer, model.Email,
                     _customerSettings.UsernamesEnabled ? model.Username : model.Email, model.Password, PasswordFormat.Hashed, isApproved);
-                var registrationResult = _customerService.RegisterCustomer(registrationRequest);
+                var registrationResult = _customerRegistrationService.RegisterCustomer(registrationRequest);
                 if (registrationResult.Success)
                 {
                     //properties
@@ -706,7 +709,7 @@ namespace Nop.Web.Controllers
                         if (!customer.Username.Equals(model.Username.Trim(), StringComparison.InvariantCultureIgnoreCase))
                         {
                             //change username
-                            _customerService.SetUsername(customer, model.Username.Trim());
+                            _customerRegistrationService.SetUsername(customer, model.Username.Trim());
                             //re-authenticate
                             _authenticationService.SignIn(customer, true);
                         }
@@ -715,7 +718,7 @@ namespace Nop.Web.Controllers
                     if (!customer.Email.Equals(model.Email.Trim(), StringComparison.InvariantCultureIgnoreCase))
                     {
                         //change email
-                        _customerService.SetEmail(customer, model.Email.Trim());
+                        _customerRegistrationService.SetEmail(customer, model.Email.Trim());
                         //re-authenticate (if usernames are disabled)
                         if (!_customerSettings.UsernamesEnabled)
                         {
@@ -1407,7 +1410,7 @@ namespace Nop.Web.Controllers
             {
                 var changePasswordRequest = new ChangePasswordRequest(customer.Email,
                     true, PasswordFormat.Hashed, model.NewPassword, model.OldPassword);
-                var changePasswordResult = _customerService.ChangePassword(changePasswordRequest);
+                var changePasswordResult = _customerRegistrationService.ChangePassword(changePasswordRequest);
                 if (changePasswordResult.Success)
                 {
                     model.Result = _localizationService.GetResource("Account.ChangePassword.Success");
@@ -1608,7 +1611,7 @@ namespace Nop.Web.Controllers
             
             if (ModelState.IsValid)
             {
-                var response = _customerService.ChangePassword(new ChangePasswordRequest(email, 
+                var response = _customerRegistrationService.ChangePassword(new ChangePasswordRequest(email, 
                     false, PasswordFormat.Hashed, model.NewPassword));
                 if (response.Success)
                 {

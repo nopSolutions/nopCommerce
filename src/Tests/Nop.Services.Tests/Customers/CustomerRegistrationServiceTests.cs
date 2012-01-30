@@ -6,6 +6,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Security;
 using Nop.Core.Events;
 using Nop.Services.Customers;
+using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Security;
 using Nop.Tests;
@@ -15,21 +16,23 @@ using Rhino.Mocks;
 namespace Nop.Services.Tests.Customers
 {
     [TestFixture]
-    public class CustomerServiceTests : ServiceTest
+    public class CustomerRegistrationServiceTests : ServiceTest
     {
         IRepository<Customer> _customerRepo;
         IRepository<CustomerRole> _customerRoleRepo;
         IRepository<CustomerAttribute> _customerAttributeRepo;
         IEncryptionService _encryptionService;
         ICustomerService _customerService;
+        ICustomerRegistrationService _customerRegistrationService;
+        ILocalizationService _localizationService;
         CustomerSettings _customerSettings;
-        INewsLetterSubscriptionService newsLetterSubscriptionService;
+        INewsLetterSubscriptionService _newsLetterSubscriptionService;
         IEventPublisher _eventPublisher;
         RewardPointsSettings _rewardPointsSettings;
         SecuritySettings _securitySettings;
 
         [SetUp]
-        public new void SetUp() 
+        public new void SetUp()
         {
             _customerSettings = new CustomerSettings();
             _securitySettings = new SecuritySettings()
@@ -38,12 +41,12 @@ namespace Nop.Services.Tests.Customers
             };
             _rewardPointsSettings = new RewardPointsSettings()
             {
-                 Enabled = false,
+                Enabled = false,
             };
 
             _encryptionService = new EncryptionService(_securitySettings);
             _customerRepo = MockRepository.GenerateMock<IRepository<Customer>>();
-            var customer1 = new Customer() 
+            var customer1 = new Customer()
             {
                 Username = "a@b.com",
                 Email = "a@b.com",
@@ -57,7 +60,7 @@ namespace Nop.Services.Tests.Customers
             customer1.Password = password;
             AddCustomerToRegisteredRole(customer1);
 
-            var customer2 = new Customer() 
+            var customer2 = new Customer()
             {
                 Username = "test@test.com",
                 Email = "test@test.com",
@@ -67,7 +70,7 @@ namespace Nop.Services.Tests.Customers
             };
             AddCustomerToRegisteredRole(customer2);
 
-            var customer3 = new Customer() 
+            var customer3 = new Customer()
             {
                 Username = "user@test.com",
                 Email = "user@test.com",
@@ -104,10 +107,14 @@ namespace Nop.Services.Tests.Customers
             _customerRoleRepo = MockRepository.GenerateMock<IRepository<CustomerRole>>();
             _customerAttributeRepo = MockRepository.GenerateMock<IRepository<CustomerAttribute>>();
             _customerAttributeRepo = MockRepository.GenerateMock<IRepository<CustomerAttribute>>();
-            newsLetterSubscriptionService = MockRepository.GenerateMock<INewsLetterSubscriptionService>();
+            _newsLetterSubscriptionService = MockRepository.GenerateMock<INewsLetterSubscriptionService>();
+            
+            _localizationService = MockRepository.GenerateMock<ILocalizationService>();
             _customerService = new CustomerService(new NopNullCache(), _customerRepo, _customerRoleRepo,
-                _customerAttributeRepo, _encryptionService, newsLetterSubscriptionService,
-                _rewardPointsSettings, _customerSettings, _eventPublisher);
+                _customerAttributeRepo, _eventPublisher);
+            _customerRegistrationService = new CustomerRegistrationService(_customerService,
+                _encryptionService, _newsLetterSubscriptionService, _localizationService,
+                _rewardPointsSettings, _customerSettings);
         }
 
         //[Test]
@@ -136,39 +143,39 @@ namespace Nop.Services.Tests.Customers
         [Test]
         public void Ensure_only_registered_customers_can_login()
         {
-            bool result = _customerService.ValidateCustomer("registered@test.com", "password");
+            bool result = _customerRegistrationService.ValidateCustomer("registered@test.com", "password");
             result.ShouldBeTrue();
 
-            result = _customerService.ValidateCustomer("notregistered@test.com", "password");
+            result = _customerRegistrationService.ValidateCustomer("notregistered@test.com", "password");
             result.ShouldBeFalse();
         }
 
         [Test]
         public void Can_validate_a_hashed_password() 
         {
-            bool result = _customerService.ValidateCustomer("a@b.com", "password");
+            bool result = _customerRegistrationService.ValidateCustomer("a@b.com", "password");
             result.ShouldBeTrue();
         }
 
         [Test]
         public void Can_validate_a_clear_password() 
         {
-            bool result = _customerService.ValidateCustomer("test@test.com", "password");
+            bool result = _customerRegistrationService.ValidateCustomer("test@test.com", "password");
             result.ShouldBeTrue();
         }
 
         [Test]
         public void Can_validate_an_encrypted_password() 
         {
-            bool result = _customerService.ValidateCustomer("user@test.com", "password");
+            bool result = _customerRegistrationService.ValidateCustomer("user@test.com", "password");
             result.ShouldBeTrue();
         }
 
-        private CustomerRegistrationRequest CreateCustomerRegistrationRequest(Customer customer) 
-        {
-            return new CustomerRegistrationRequest(customer, "test.user@domain.com", "test.user@domain.com", 
-                "password", PasswordFormat.Encrypted);
-        }
+        //private CustomerRegistrationRequest CreateCustomerRegistrationRequest(Customer customer) 
+        //{
+        //    return new CustomerRegistrationRequest(customer, "test.user@domain.com", "test.user@domain.com", 
+        //        "password", PasswordFormat.Encrypted);
+        //}
 
         private void AddCustomerToRegisteredRole(Customer customer)
         {

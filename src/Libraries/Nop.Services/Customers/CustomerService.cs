@@ -10,8 +10,6 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Events;
-using Nop.Services.Messages;
-using Nop.Services.Security;
 
 namespace Nop.Services.Customers
 {
@@ -33,11 +31,7 @@ namespace Nop.Services.Customers
         private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<CustomerRole> _customerRoleRepository;
         private readonly IRepository<CustomerAttribute> _customerAttributeRepository;
-        private readonly IEncryptionService _encryptionService;
         private readonly ICacheManager _cacheManager;
-        private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
-        private readonly RewardPointsSettings _rewardPointsSettings;
-        private readonly CustomerSettings _customerSettings;
         private readonly IEventPublisher _eventPublisher;
 
         #endregion
@@ -51,28 +45,18 @@ namespace Nop.Services.Customers
         /// <param name="customerRepository">Customer repository</param>
         /// <param name="customerRoleRepository">Customer role repository</param>
         /// <param name="customerAttributeRepository">Customer attribute repository</param>
-        /// <param name="encryptionService">Encryption service</param>
-        /// <param name="newsLetterSubscriptionService">Newsletter subscription service</param>
-        /// <param name="rewardPointsSettings">Reward points settings</param>
-        /// <param name="customerSettings">Customer settings</param>
         /// <param name="eventPublisher"></param>
         public CustomerService(ICacheManager cacheManager,
             IRepository<Customer> customerRepository,
             IRepository<CustomerRole> customerRoleRepository,
             IRepository<CustomerAttribute> customerAttributeRepository,
-            IEncryptionService encryptionService, INewsLetterSubscriptionService newsLetterSubscriptionService,
-            RewardPointsSettings rewardPointsSettings, CustomerSettings customerSettings,
             IEventPublisher eventPublisher)
         {
-            _cacheManager = cacheManager;
-            _customerRepository = customerRepository;
-            _customerRoleRepository = customerRoleRepository;
-            _customerAttributeRepository = customerAttributeRepository;
-            _encryptionService = encryptionService;
-            _newsLetterSubscriptionService = newsLetterSubscriptionService;
-            _rewardPointsSettings = rewardPointsSettings;
-            _customerSettings = customerSettings;
-            _eventPublisher = eventPublisher;
+            this._cacheManager = cacheManager;
+            this._customerRepository = customerRepository;
+            this._customerRoleRepository = customerRoleRepository;
+            this._customerAttributeRepository = customerAttributeRepository;
+            this._eventPublisher = eventPublisher;
         }
 
         #endregion
@@ -341,335 +325,6 @@ namespace Nop.Services.Customers
             query = query.OrderBy(c => c.Id);
             var customers = query.ToList();
             return customers;
-        }
-
-        /// <summary>
-        /// Validate customer
-        /// </summary>
-        /// <param name="usernameOrEmail">Username or email</param>
-        /// <param name="password">Password</param>
-        /// <returns>Result</returns>
-        public virtual bool ValidateCustomer(string usernameOrEmail, string password)
-        {
-            Customer customer = null;
-            if (_customerSettings.UsernamesEnabled)
-                customer = GetCustomerByUsername(usernameOrEmail);
-            else
-                customer = GetCustomerByEmail(usernameOrEmail);
-
-            if (customer == null || customer.Deleted || !customer.Active)
-                return false;
-
-            //only registered can login
-            if (!customer.IsRegistered())
-                return false;
-
-            string pwd = string.Empty;
-            switch (customer.PasswordFormat)
-            {
-                case PasswordFormat.Encrypted:
-                    pwd = _encryptionService.EncryptText(password);
-                    break;
-                case PasswordFormat.Hashed:
-                    pwd = _encryptionService.CreatePasswordHash(password, customer.PasswordSalt, _customerSettings.HashedPasswordFormat);
-                    break;
-                default:
-                    pwd = password;
-                    break;
-            }
-
-            bool isValid = pwd == customer.Password;
-
-            //save last login date
-            if (isValid)
-            {
-                customer.LastLoginDateUtc = DateTime.UtcNow;
-                UpdateCustomer(customer);
-            }
-            //else
-            //{
-            //    customer.FailedPasswordAttemptCount++;
-            //    UpdateCustomer(customer);
-            //}
-
-            return isValid;
-        }
-
-        /// <summary>
-        /// Register customer
-        /// </summary>
-        /// <param name="request">Request</param>
-        /// <returns>Result</returns>
-        public virtual CustomerRegistrationResult RegisterCustomer(CustomerRegistrationRequest request)
-        {
-            var result = new CustomerRegistrationResult();
-            //validation
-            if (request == null)
-            {
-                result.AddError("The registration request was not valid.");
-                return result;
-            }
-            if (request.Customer == null)
-            {
-                result.AddError("Can't load current customer");
-                return result;
-            }
-            if (request.Customer.IsSearchEngineAccount())
-            {
-                result.AddError("Search engine can't be registered");
-                return result;
-            }
-            if (request.Customer.IsRegistered())
-            {
-                result.AddError("Current customer is already registered");
-                return result;
-            }
-            if (String.IsNullOrEmpty(request.Email))
-            {
-                result.AddError("Email is not provided");
-                return result;
-            }
-            if (!CommonHelper.IsValidEmail(request.Email))
-            {
-                result.AddError("Invalid email");
-                return result;
-            }
-            if (String.IsNullOrWhiteSpace(request.Password))
-            {
-                result.AddError("Password is not provided");
-                return result;
-            }
-            if (_customerSettings.UsernamesEnabled)
-            {
-                if (String.IsNullOrEmpty(request.Username))
-                {
-                    result.AddError("Username is not provided");
-                    return result;
-                }
-            }
-
-            //validate unique user
-            if (GetCustomerByEmail(request.Email) != null)
-            {
-                result.AddError("The specified email already exists");
-                return result;
-            }
-            if (_customerSettings.UsernamesEnabled)
-            {
-                if (GetCustomerByUsername(request.Username) != null)
-                {
-                    result.AddError("The specified username already exists");
-                    return result;
-                }
-            }
-
-            //at this point request is valid
-            request.Customer.Username = request.Username;
-            request.Customer.Email = request.Email;
-            request.Customer.PasswordFormat = request.PasswordFormat;
-
-            switch (request.PasswordFormat)
-            {
-                case PasswordFormat.Clear:
-                    {
-                        request.Customer.Password = request.Password;
-                    }
-                    break;
-                case PasswordFormat.Encrypted:
-                    {
-                        request.Customer.Password = _encryptionService.EncryptText(request.Password);
-                    }
-                    break;
-                case PasswordFormat.Hashed:
-                    {
-                        string saltKey = _encryptionService.CreateSaltKey(5);
-                        request.Customer.PasswordSalt = saltKey;
-                        request.Customer.Password = _encryptionService.CreatePasswordHash(request.Password, saltKey, _customerSettings.HashedPasswordFormat);
-                    }
-                    break;
-                default:
-                    break;
-            }
-
-            request.Customer.Active = request.IsApproved;
-            
-            //add to 'Registered' role
-            var registeredRole = GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered);
-            if (registeredRole == null)
-                throw new NopException("'Registered' role could not be loaded");
-            request.Customer.CustomerRoles.Add(registeredRole);
-            //remove from 'Guests' role
-            var guestRole = request.Customer.CustomerRoles.FirstOrDefault(cr => cr.SystemName == SystemCustomerRoleNames.Guests);
-            if (guestRole != null)
-                request.Customer.CustomerRoles.Remove(guestRole);
-
-            //Add reward points for customer registration (if enabled)
-            if (_rewardPointsSettings.Enabled &&
-                _rewardPointsSettings.PointsForRegistration > 0)
-                request.Customer.AddRewardPointsHistoryEntry(_rewardPointsSettings.PointsForRegistration, "Registered as customer");
-
-            UpdateCustomer(request.Customer);
-            return result;
-        }
-        
-        /// <summary>
-        /// Change password
-        /// </summary>
-        /// <param name="request">Request</param>
-        /// <returns>Result</returns>
-        public virtual PasswordChangeResult ChangePassword(ChangePasswordRequest request)
-        {
-            var result = new PasswordChangeResult();
-            if (request == null)
-            {
-                result.AddError("The change password request was not valid.");
-                return result;
-            }
-            if (String.IsNullOrWhiteSpace(request.Email))
-            {
-                result.AddError("The email is not entered");
-                return result;
-            }
-            if (String.IsNullOrWhiteSpace(request.NewPassword))
-            {
-                result.AddError("The password is not entered");
-                return result;
-            }
-
-            var customer = GetCustomerByEmail(request.Email);
-            if (customer == null)
-            {
-                result.AddError("The specified email could not be found");
-                return result;
-            }
-
-
-            var requestIsValid = false;
-            if (request.ValidateRequest)
-            {
-                //password
-                string oldPwd = string.Empty;
-                switch (customer.PasswordFormat)
-                {
-                    case PasswordFormat.Encrypted:
-                        oldPwd = _encryptionService.EncryptText(request.OldPassword);
-                        break;
-                    case PasswordFormat.Hashed:
-                        oldPwd = _encryptionService.CreatePasswordHash(request.OldPassword, customer.PasswordSalt, _customerSettings.HashedPasswordFormat);
-                        break;
-                    default:
-                        oldPwd = request.OldPassword;
-                        break;
-                }
-
-                bool oldPasswordIsValid = oldPwd == customer.Password;
-                if (!oldPasswordIsValid)
-                    result.AddError("Old password doesn't match");
-
-                if (oldPasswordIsValid)
-                    requestIsValid = true;
-            }
-            else
-                requestIsValid = true;
-
-
-            //at this point request is valid
-            if (requestIsValid)
-            {
-                switch (request.NewPasswordFormat)
-                {
-                    case PasswordFormat.Clear:
-                        {
-                            customer.Password = request.NewPassword;
-                        }
-                        break;
-                    case PasswordFormat.Encrypted:
-                        {
-                            customer.Password = _encryptionService.EncryptText(request.NewPassword);
-                        }
-                        break;
-                    case PasswordFormat.Hashed:
-                        {
-                            string saltKey = _encryptionService.CreateSaltKey(5);
-                            customer.PasswordSalt = saltKey;
-                            customer.Password = _encryptionService.CreatePasswordHash(request.NewPassword, saltKey, _customerSettings.HashedPasswordFormat);
-                        }
-                        break;
-                    default:
-                        break;
-                }
-                customer.PasswordFormat = request.NewPasswordFormat;
-                UpdateCustomer(customer);
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// Sets a user email
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        /// <param name="newEmail">New email</param>
-        public virtual void SetEmail(Customer customer, string newEmail)
-        {
-            if (customer == null)
-                throw new ArgumentNullException("customer");
-
-            newEmail = newEmail.Trim();
-            string oldEmail = customer.Email;
-
-            if (!CommonHelper.IsValidEmail(newEmail))
-                throw new NopException("New email is not valid");
-
-            if (newEmail.Length > 100)
-                throw new NopException("E-mail address is too long.");
-
-            var customer2 = GetCustomerByEmail(newEmail);
-            if (customer2 != null && customer.Id != customer2.Id)
-                throw new NopException("The e-mail address is already in use.");
-
-            customer.Email = newEmail;
-            UpdateCustomer(customer);
-
-            //update newsletter subscription (if required)
-            if (!String.IsNullOrEmpty(oldEmail) && !oldEmail.Equals(newEmail, StringComparison.InvariantCultureIgnoreCase))
-            {
-                var subscriptionOld = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmail(oldEmail);
-                if (subscriptionOld != null)
-                {
-                    subscriptionOld.Email = newEmail;
-                    _newsLetterSubscriptionService.UpdateNewsLetterSubscription(subscriptionOld);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Sets a customer username
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        /// <param name="newUsername">New Username</param>
-        public virtual void SetUsername(Customer customer, string newUsername)
-        {
-            if (customer == null)
-                throw new ArgumentNullException("customer");
-
-            if (!_customerSettings.UsernamesEnabled)
-                throw new NopException("Usernames are disabled");
-
-            if (!_customerSettings.AllowUsersToChangeUsernames)
-                throw new NopException("Changing usernames is not allowed");
-
-            newUsername = newUsername.Trim();
-
-            if (newUsername.Length > 100)
-                throw new NopException("Username is too long.");
-
-            var user2 = GetCustomerByUsername(newUsername);
-            if (user2 != null && customer.Id != user2.Id)
-                throw new NopException("This username is already in use.");
-
-            customer.Username = newUsername;
-            UpdateCustomer(customer);
         }
 
         /// <summary>

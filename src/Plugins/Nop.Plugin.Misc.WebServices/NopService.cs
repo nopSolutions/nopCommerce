@@ -33,6 +33,7 @@ namespace Nop.Plugin.Misc.WebServices
         private readonly ICountryService _countryService;
         private readonly IStateProvinceService _stateProvinceService;
         private readonly ICustomerService _customerService;
+        private readonly ICustomerRegistrationService _customerRegistrationService;
         private readonly CustomerSettings _customerSettings;
         private readonly IPermissionService _permissionSettings;
         private readonly IOrderProcessingService _orderProcessingService;
@@ -51,6 +52,7 @@ namespace Nop.Plugin.Misc.WebServices
             _countryService = EngineContext.Current.Resolve<ICountryService>();
             _stateProvinceService = EngineContext.Current.Resolve<IStateProvinceService>();
             _customerService = EngineContext.Current.Resolve<ICustomerService>();
+            _customerRegistrationService = EngineContext.Current.Resolve<ICustomerRegistrationService>();
             _customerSettings = EngineContext.Current.Resolve<CustomerSettings>();
             _permissionSettings = EngineContext.Current.Resolve<IPermissionService>();
             _orderProcessingService = EngineContext.Current.Resolve<IOrderProcessingService>();
@@ -70,8 +72,8 @@ namespace Nop.Plugin.Misc.WebServices
             var pluginDescriptor = _pluginFinder.GetPluginDescriptorBySystemName("Misc.WebServices");
             if (pluginDescriptor == null || !pluginDescriptor.Installed)
                 throw new ApplicationException("Web services plugin cannot be loaded");
-            
-            if  (!_customerService.ValidateCustomer(usernameOrEmail, userPassword))
+
+            if (!_customerRegistrationService.ValidateCustomer(usernameOrEmail, userPassword))
                     throw new ApplicationException("Not allowed");
             
             var customer = _customerSettings.UsernamesEnabled ? _customerService.GetCustomerByUsername(usernameOrEmail) : _customerService.GetCustomerByEmail(usernameOrEmail);

@@ -4094,8 +4094,8 @@ namespace Nop.Services.Installation
 
         protected virtual void HashDefaultCustomerPassword(string defaultUserEmail, string defaultUserPassword)
         {
-            var customerService = EngineContext.Current.Resolve<ICustomerService>();
-            customerService.ChangePassword(new ChangePasswordRequest(defaultUserEmail, false,
+            var customerRegistrationService = EngineContext.Current.Resolve<ICustomerRegistrationService>();
+            customerRegistrationService.ChangePassword(new ChangePasswordRequest(defaultUserEmail, false,
                  PasswordFormat.Hashed, defaultUserPassword));
         }
 

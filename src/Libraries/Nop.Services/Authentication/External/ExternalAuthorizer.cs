@@ -17,6 +17,7 @@ namespace Nop.Services.Authentication.External
         private readonly IAuthenticationService _authenticationService;
         private readonly IOpenAuthenticationService _openAuthenticationService;
         private readonly ICustomerService _customerService;
+        private readonly ICustomerRegistrationService _customerRegistrationService;
         private readonly IWorkContext _workContext;
         private readonly CustomerSettings _customerSettings;
         private readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
@@ -29,8 +30,9 @@ namespace Nop.Services.Authentication.External
 
         public ExternalAuthorizer(IAuthenticationService authenticationService,
             IOpenAuthenticationService openAuthenticationService,
-            ICustomerService customerService, IWorkContext workContext,
-            CustomerSettings customerSettings,
+            ICustomerService customerService,
+            ICustomerRegistrationService customerRegistrationService, 
+            IWorkContext workContext, CustomerSettings customerSettings,
             ExternalAuthenticationSettings externalAuthenticationSettings,
             IShoppingCartService shoppingCartService,
             IWorkflowMessageService workflowMessageService, LocalizationSettings localizationSettings)
@@ -38,6 +40,7 @@ namespace Nop.Services.Authentication.External
             this._authenticationService = authenticationService;
             this._openAuthenticationService = openAuthenticationService;
             this._customerService = customerService;
+            this._customerRegistrationService = customerRegistrationService;
             this._workContext = workContext;
             this._customerSettings = customerSettings;
             this._externalAuthenticationSettings = externalAuthenticationSettings;
@@ -113,7 +116,7 @@ namespace Nop.Services.Authentication.External
                     bool isApproved = _customerSettings.UserRegistrationType == UserRegistrationType.Standard;
                     var registrationRequest = new CustomerRegistrationRequest(currentCustomer, details.EmailAddress,
                         _customerSettings.UsernamesEnabled ? details.UserName : details.EmailAddress, randomPassword, PasswordFormat.Clear, isApproved);
-                    var registrationResult = _customerService.RegisterCustomer(registrationRequest);
+                    var registrationResult = _customerRegistrationService.RegisterCustomer(registrationRequest);
                     if (registrationResult.Success)
                     {
                         //store other parameters (form fields)

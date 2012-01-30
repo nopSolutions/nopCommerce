@@ -941,6 +941,48 @@ set @resources='
   <LocaleResource Name="Account.Fields.VatNumber.Status">
     <Value>Status</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.Register.Errors.EmailIsNotProvided">
+    <Value>Email is not provided</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Register.Errors.PasswordIsNotProvided">
+    <Value>Password is not provided</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Register.Errors.UsernameIsNotProvided">
+    <Value>Username is not provided</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Register.Errors.EmailAlreadyExists">
+    <Value>The specified email already exists</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Register.Errors.UsernameAlreadyExists">
+    <Value>The specified username already exists</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.ChangePassword.Errors.EmailIsNotProvided">
+    <Value>Email is not entered</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.ChangePassword.Errors.PasswordIsNotProvided">
+    <Value>Password is not entered</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.ChangePassword.Errors.EmailNotFound">
+    <Value>The specified email could not be found</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.ChangePassword.Errors.OldPasswordDoesntMatch">
+    <Value>Old password doesn''t match</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.EmailUsernameErrors.NewEmailIsNotValid">
+    <Value>New email is not valid</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.EmailUsernameErrors.EmailTooLong">
+    <Value>E-mail address is too long</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.EmailUsernameErrors.EmailAlreadyExists">
+    <Value>The e-mail address is already in use</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.EmailUsernameErrors.UsernameTooLong">
+    <Value>Username is too long</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.EmailUsernameErrors.UsernameAlreadyExists">
+    <Value>The username is already in use</Value>
+  </LocaleResource>
 </Language>
 '
 
