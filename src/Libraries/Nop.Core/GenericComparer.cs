@@ -36,15 +36,15 @@ namespace Nop.Core
         /// <param name="sortingOrder">The direction of the sort</param>
         public GenericComparer(string sortColumn, SortOrder sortingOrder)
         {
-            this.sortColumn = sortColumn;
-            this.sortingOrder = sortingOrder;
+            this._sortColumn = sortColumn;
+            this._sortingOrder = sortingOrder;
         }
         #endregion
 
         #region Fields
 
-        private string sortColumn;
-        private SortOrder sortingOrder;
+        private readonly string _sortColumn;
+        private readonly SortOrder _sortingOrder;
 
         #endregion
 
@@ -55,7 +55,7 @@ namespace Nop.Core
         /// </summary>
         public string SortColumn
         {
-            get { return sortColumn; }
+            get { return _sortColumn; }
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace Nop.Core
         /// </summary>
         public SortOrder SortingOrder
         {
-            get { return sortingOrder; }
+            get { return _sortingOrder; }
         }
 
         #endregion
@@ -77,10 +77,10 @@ namespace Nop.Core
         /// <returns>int</returns>
         public int Compare(T x, T y)
         {
-            var propertyInfo = typeof(T).GetProperty(sortColumn);
+            var propertyInfo = typeof(T).GetProperty(_sortColumn);
             var obj1 = (IComparable)propertyInfo.GetValue(x, null);
             var obj2 = (IComparable)propertyInfo.GetValue(y, null);
-            if (sortingOrder == SortOrder.Ascending)
+            if (_sortingOrder == SortOrder.Ascending)
             {
                 return (obj1.CompareTo(obj2));
             }

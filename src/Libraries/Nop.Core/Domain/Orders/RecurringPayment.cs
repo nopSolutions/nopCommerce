@@ -71,56 +71,56 @@ namespace Nop.Core.Domain.Orders
                 }
 
                 //set another value to change calculation method
-                bool useLatestPayment = false;
-                if (useLatestPayment)
-                {
-                    //get latest payment
-                    RecurringPaymentHistory latestPayment = null;
-                    foreach (var historyRecord in historyCollection)
-                    {
-                        if (latestPayment != null)
-                        {
-                            if (historyRecord.CreatedOnUtc >= latestPayment.CreatedOnUtc)
-                            {
-                                latestPayment = historyRecord;
-                            }
-                        }
-                        else
-                        {
-                            latestPayment = historyRecord;
-                        }
-                    }
+                //bool useLatestPayment = false;
+                //if (useLatestPayment)
+                //{
+                //    //get latest payment
+                //    RecurringPaymentHistory latestPayment = null;
+                //    foreach (var historyRecord in historyCollection)
+                //    {
+                //        if (latestPayment != null)
+                //        {
+                //            if (historyRecord.CreatedOnUtc >= latestPayment.CreatedOnUtc)
+                //            {
+                //                latestPayment = historyRecord;
+                //            }
+                //        }
+                //        else
+                //        {
+                //            latestPayment = historyRecord;
+                //        }
+                //    }
 
 
-                    //calculate next payment date
-                    if (latestPayment != null)
-                    {
-                        switch (this.CyclePeriod)
-                        {
-                            case RecurringProductCyclePeriod.Days:
-                                result = latestPayment.CreatedOnUtc.AddDays((double)this.CycleLength);
-                                break;
-                            case RecurringProductCyclePeriod.Weeks:
-                                result = latestPayment.CreatedOnUtc.AddDays((double)(7 * this.CycleLength));
-                                break;
-                            case RecurringProductCyclePeriod.Months:
-                                result = latestPayment.CreatedOnUtc.AddMonths(this.CycleLength);
-                                break;
-                            case RecurringProductCyclePeriod.Years:
-                                result = latestPayment.CreatedOnUtc.AddYears(this.CycleLength);
-                                break;
-                            default:
-                                throw new NopException("Not supported cycle period");
-                        }
-                    }
-                    else
-                    {
-                        if (this.TotalCycles > 0)
-                            result = this.StartDateUtc;
-                    }
-                }
-                else
-                {
+                //    //calculate next payment date
+                //    if (latestPayment != null)
+                //    {
+                //        switch (this.CyclePeriod)
+                //        {
+                //            case RecurringProductCyclePeriod.Days:
+                //                result = latestPayment.CreatedOnUtc.AddDays((double)this.CycleLength);
+                //                break;
+                //            case RecurringProductCyclePeriod.Weeks:
+                //                result = latestPayment.CreatedOnUtc.AddDays((double)(7 * this.CycleLength));
+                //                break;
+                //            case RecurringProductCyclePeriod.Months:
+                //                result = latestPayment.CreatedOnUtc.AddMonths(this.CycleLength);
+                //                break;
+                //            case RecurringProductCyclePeriod.Years:
+                //                result = latestPayment.CreatedOnUtc.AddYears(this.CycleLength);
+                //                break;
+                //            default:
+                //                throw new NopException("Not supported cycle period");
+                //        }
+                //    }
+                //    else
+                //    {
+                //        if (this.TotalCycles > 0)
+                //            result = this.StartDateUtc;
+                //    }
+                //}
+                //else
+                //{
                     if (historyCollection.Count > 0)
                     {
                         switch (this.CyclePeriod)
@@ -146,7 +146,7 @@ namespace Nop.Core.Domain.Orders
                         if (this.TotalCycles > 0)
                             result = this.StartDateUtc;
                     }
-                }
+                //}
 
                 return result;
             }

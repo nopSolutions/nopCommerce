@@ -1,9 +1,8 @@
-
 using System;
 using System.Text;
+using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Payments;
 using Nop.Plugin.Payments.PayPalDirect.PayPalSvc;
-using Nop.Core.Domain.Directory;
 
 namespace Nop.Plugin.Payments.PayPalDirect
 {

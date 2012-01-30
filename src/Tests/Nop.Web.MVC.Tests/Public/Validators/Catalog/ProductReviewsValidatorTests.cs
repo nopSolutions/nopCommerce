@@ -1,8 +1,5 @@
-﻿using FluentValidation.TestHelper;
-using Nop.Web.Models.Catalog;
-using Nop.Web.Validators.Catalog;
+﻿using Nop.Web.Validators.Catalog;
 using NUnit.Framework;
-
 
 namespace Nop.Web.MVC.Tests.Public.Validators.Catalog
 {

@@ -5,7 +5,6 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Web;
 using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;

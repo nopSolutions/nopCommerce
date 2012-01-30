@@ -1,6 +1,4 @@
 ﻿using System.Web.Routing;
-using Nop.Core.Infrastructure;
-using Nop.Web.Framework.Mvc.Routes;
 using NUnit.Framework;
 
 namespace Nop.Web.MVC.Tests.Public.Infrastructure

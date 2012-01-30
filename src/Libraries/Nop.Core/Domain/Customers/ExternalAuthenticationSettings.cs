@@ -1,5 +1,4 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Nop.Core.Configuration;
 
 namespace Nop.Core.Domain.Customers

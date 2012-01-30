@@ -1,4 +1,5 @@
 ﻿using System.Web.Mvc;
+
 namespace Nop.Web.Controllers
 {
     public class KeepAliveController : Controller

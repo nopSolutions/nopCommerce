@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -10,7 +11,6 @@ using Nop.Core.Domain.Tax;
 using Nop.Core.Events;
 using Nop.Core.Plugins;
 using Nop.Services.Common;
-using System.Text.RegularExpressions;
 
 namespace Nop.Services.Tax
 {

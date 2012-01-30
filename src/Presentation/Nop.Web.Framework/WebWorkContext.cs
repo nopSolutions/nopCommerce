@@ -10,7 +10,6 @@ using Nop.Services.Authentication;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
-using Nop.Services.Security;
 using Nop.Web.Framework.Localization;
 
 namespace Nop.Web.Framework

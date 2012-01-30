@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Xml;
 using Nop.Core.Infrastructure;
 
 namespace Nop.Services.Tasks

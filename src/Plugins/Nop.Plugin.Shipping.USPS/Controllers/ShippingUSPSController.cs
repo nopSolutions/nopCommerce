@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Text;
 using System.Web.Mvc;
-using System.Web.UI.WebControls;
 using Nop.Plugin.Shipping.USPS.Domain;
 using Nop.Plugin.Shipping.USPS.Models;
 using Nop.Services.Configuration;

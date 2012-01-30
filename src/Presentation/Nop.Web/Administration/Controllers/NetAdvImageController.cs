@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Web;
 using System.Web.Mvc;
-using Nop.Services.Media;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.UI.Editor;
 

@@ -1,5 +1,4 @@
-﻿using Nop.Core.Data;
-using Nop.Core.Infrastructure;
+﻿using Nop.Core.Infrastructure;
 
 namespace Nop.Admin.Infrastructure
 {

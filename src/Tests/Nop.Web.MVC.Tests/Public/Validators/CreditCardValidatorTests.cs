@@ -1,8 +1,8 @@
 ﻿using System.Globalization;
 using System.Threading;
 using Nop.Tests;
-using NUnit.Framework;
 using Nop.Web.Framework.Validators;
+using NUnit.Framework;
 
 namespace Nop.Web.MVC.Tests.Public.Validators
 {

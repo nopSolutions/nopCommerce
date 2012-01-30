@@ -1,5 +1,4 @@
-﻿
-using Nop.Core.Configuration;
+﻿using Nop.Core.Configuration;
 using Nop.Plugin.Shipping.UPS.Domain;
 
 namespace Nop.Plugin.Shipping.UPS

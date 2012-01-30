@@ -1,5 +1,4 @@
-﻿
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 using System.Text;
 
 namespace Nop.Plugin.Shipping.CanadaPost.Domain

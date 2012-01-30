@@ -1,8 +1,4 @@
-﻿using FluentValidation;
-using FluentValidation.TestHelper;
-using Nop.Tests;
-using Nop.Web.Models.Blogs;
-using Nop.Web.Validators.Blogs;
+﻿using Nop.Web.Validators.Blogs;
 using NUnit.Framework;
 
 namespace Nop.Web.MVC.Tests.Public.Validators.Blogs

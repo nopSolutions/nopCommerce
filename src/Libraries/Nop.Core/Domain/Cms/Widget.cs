@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using Nop.Core.Domain.Discounts;
-using Nop.Core.Domain.Localization;
-using Nop.Core.Domain.Orders;
 
 namespace Nop.Core.Domain.Cms
 {

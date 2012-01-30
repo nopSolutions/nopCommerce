@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Web.Mvc;
-using Nop.Core;
-using Nop.Plugin.SMS.Verizon;
 using Nop.Plugin.Sms.Verizon.Models;
+using Nop.Plugin.SMS.Verizon;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Messages;

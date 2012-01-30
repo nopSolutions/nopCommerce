@@ -1,5 +1,4 @@
 ﻿using FluentValidation.TestHelper;
-using Nop.Web.Models.Boards;
 using Nop.Web.Models.Catalog;
 using Nop.Web.Validators.Catalog;
 using NUnit.Framework;

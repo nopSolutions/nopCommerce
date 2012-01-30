@@ -1,5 +1,4 @@
-﻿
-using Nop.Services.Seo;
+﻿using Nop.Services.Seo;
 using Nop.Tests;
 using NUnit.Framework;
 

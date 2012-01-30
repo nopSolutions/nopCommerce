@@ -2,8 +2,6 @@
 using System.Web;
 using System.Web.Mvc;
 using Nop.Core;
-using Nop.Core.Data;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Infrastructure;
 using Nop.Services.Affiliates;
 using Nop.Services.Customers;

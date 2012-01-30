@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Linq;
 using System.Text;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
-using Nop.Core;
-using Nop.Core.Domain.Forums;
 using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
-using Nop.Services.Seo;
 using Nop.Web.Framework.UI.Paging;
 using Nop.Web.Models.Boards;
 using Nop.Web.Models.Common;

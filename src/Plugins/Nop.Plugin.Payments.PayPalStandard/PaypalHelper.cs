@@ -1,5 +1,3 @@
-using System;
-using System.Text;
 using Nop.Core.Domain.Payments;
 
 namespace Nop.Plugin.Payments.PayPalStandard

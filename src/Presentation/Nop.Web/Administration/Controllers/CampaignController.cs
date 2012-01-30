@@ -8,9 +8,9 @@ using Nop.Core.Domain.Messages;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
+using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
-using Nop.Services.Security;
 
 namespace Nop.Admin.Controllers
 {

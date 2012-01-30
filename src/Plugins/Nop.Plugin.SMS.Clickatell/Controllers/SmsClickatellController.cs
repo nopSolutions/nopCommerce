@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Web.Mvc;
-using Nop.Core;
 using Nop.Plugin.SMS.Clickatell;
 using Nop.Plugin.Sms.Clickatell.Models;
 using Nop.Services.Configuration;

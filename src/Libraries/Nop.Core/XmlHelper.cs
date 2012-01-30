@@ -36,12 +36,11 @@ namespace Nop.Core
         {
             if (str == null)
                 return null;
-            using (StringWriter sw = new StringWriter())
-            using (XmlTextWriter xwr = new XmlTextWriter(sw))
+            using (var sw = new StringWriter())
+            using (var xwr = new XmlTextWriter(sw))
             {
                 xwr.WriteString(str);
-                String sTmp = sw.ToString();
-                return sTmp;
+                return sw.ToString();
             }
         }
 
@@ -88,7 +87,7 @@ namespace Nop.Core
         {
             var xmlS = new XmlSerializer(typeof(DateTime));
             var sb = new StringBuilder();
-            using (StringWriter sw = new StringWriter(sb))
+            using (var sw = new StringWriter(sb))
             {
                 xmlS.Serialize(sw, dateTime);
                 return sb.ToString();
@@ -103,7 +102,7 @@ namespace Nop.Core
         public static DateTime DeserializeDateTime(string dateTime)
         {
             var xmlS = new XmlSerializer(typeof(DateTime));
-            using (StringReader sr = new StringReader(dateTime))
+            using (var sr = new StringReader(dateTime))
             {
                 object test = xmlS.Deserialize(sr);
                 return (DateTime)test;

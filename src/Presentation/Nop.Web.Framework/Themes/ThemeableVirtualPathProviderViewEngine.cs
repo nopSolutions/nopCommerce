@@ -5,12 +5,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Nop.Core;
-using Nop.Core.Domain;
-using Nop.Core.Domain.Customers;
 using Nop.Core.Infrastructure;
 using Nop.Services.Common;
-using Nop.Services.Customers;
 
 namespace Nop.Web.Framework.Themes
 {

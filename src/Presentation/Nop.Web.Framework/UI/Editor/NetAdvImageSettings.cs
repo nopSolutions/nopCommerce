@@ -1,6 +1,4 @@
 ﻿//Contributor: http://aspnetadvimage.codeplex.com/
-using System;
-
 namespace Nop.Web.Framework.UI.Editor
 {
     public partial class NetAdvImageSettings

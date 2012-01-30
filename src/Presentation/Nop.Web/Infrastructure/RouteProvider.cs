@@ -1,7 +1,7 @@
 ﻿using System.Web.Mvc;
 using System.Web.Routing;
-using Nop.Web.Framework.Mvc.Routes;
 using Nop.Web.Framework.Localization;
+using Nop.Web.Framework.Mvc.Routes;
 
 namespace Nop.Web.Infrastructure
 {

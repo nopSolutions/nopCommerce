@@ -16,6 +16,7 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
+using Nop.Services.Directory;
 using Nop.Services.Discounts;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -24,7 +25,6 @@ using Nop.Services.Payments;
 using Nop.Services.Security;
 using Nop.Services.Shipping;
 using Nop.Services.Tax;
-using Nop.Services.Directory;
 
 namespace Nop.Services.Orders
 {

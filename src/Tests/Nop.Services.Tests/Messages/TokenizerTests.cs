@@ -1,22 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using Nop.Core;
-using Nop.Core.Caching;
-using Nop.Core.Data;
-using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Messages;
-using Nop.Core.Domain.Orders;
-using Nop.Core.Events;
-using Nop.Services.Catalog;
-using Nop.Services.Directory;
 using Nop.Services.Messages;
-using Nop.Services.Orders;
-using Nop.Services.Tax;
 using Nop.Tests;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace Nop.Services.Tests.Messages
 {

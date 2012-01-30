@@ -1,7 +1,6 @@
 ﻿using System;
 using FluentValidation;
 using FluentValidation.Attributes;
-using FluentValidation.Internal;
 using Nop.Core.Infrastructure;
 
 namespace Nop.Web.Framework

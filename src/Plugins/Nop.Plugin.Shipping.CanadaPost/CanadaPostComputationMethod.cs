@@ -1,17 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 using System.Web.Routing;
 using System.Xml;
 using System.Xml.Linq;
 using Nop.Core;
-using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Plugins;
 using Nop.Plugin.Shipping.CanadaPost.Domain;
@@ -19,7 +16,6 @@ using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Shipping;
-using System.Globalization;
 
 namespace Nop.Plugin.Shipping.CanadaPost
 {

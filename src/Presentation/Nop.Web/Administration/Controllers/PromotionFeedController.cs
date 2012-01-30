@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Nop.Admin.Models.PromotionFeeds;
 using Nop.Services.PromotionFeed;
+using Nop.Services.Security;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
-using Nop.Services.Security;
 
 namespace Nop.Admin.Controllers
 {

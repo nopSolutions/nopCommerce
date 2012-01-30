@@ -2,9 +2,7 @@
 using System.IO;
 using System.Web.Mvc;
 using System.Web.Security;
-using Nop.Core;
 using Nop.Core.Domain.Media;
-using Nop.Services;
 using Nop.Services.Authentication;
 using Nop.Services.Customers;
 using Nop.Services.Media;

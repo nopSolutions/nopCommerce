@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
-using Nop.Core;
-using Nop.Core.Domain.Catalog;
 
 namespace Nop.Data
 {

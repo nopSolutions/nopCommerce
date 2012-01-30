@@ -5,7 +5,6 @@ using System.IO;
 using System.Text;
 using System.Web.Routing;
 using Nop.Core;
-using Nop.Core.Domain;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Media;

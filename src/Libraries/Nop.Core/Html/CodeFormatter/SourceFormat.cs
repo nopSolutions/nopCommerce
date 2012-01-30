@@ -216,7 +216,6 @@ namespace Nop.Core.Html.CodeFormatter
                 var reader = new StringReader(source);
 				int i = 0;
 				string spaces = "    ";
-				int order;
 				string line;
 				while ((line = reader.ReadLine()) != null)
 				{
@@ -232,7 +231,7 @@ namespace Nop.Core.Html.CodeFormatter
 
 					if(lineNumbers)
 					{
-						order = (int)Math.Log10(i);
+						var order = (int)Math.Log10(i);
 						sb.Append("<span class=\"lnum\">" 
 							+ spaces.Substring(0, 3 - order) + i.ToString() 
 							+ ":  </span>");

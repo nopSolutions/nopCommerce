@@ -2,17 +2,14 @@
 //Contributor: Omar Al Zabir
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Web;
+using System.Collections;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
-using System.Collections;
-using System.Threading;
-using System.Web.Caching;
-using System.Diagnostics;
 using System.Net;
+using System.Threading;
+using System.Web;
+using System.Web.Caching;
 
 namespace Nop.Web.Framework
 {

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Globalization;
-using System.Threading;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Configuration;

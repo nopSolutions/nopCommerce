@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading;
 using System.Web;
 using System.Web.Compilation;
@@ -95,7 +94,7 @@ namespace Nop.Core.Plugins
 
                             //some validation
                             if (String.IsNullOrWhiteSpace(description.SystemName))
-                                throw new Exception(string.Format("A plugin has no system name. Try assigning the plugin a unique name and recompiling.", description.SystemName));
+                                throw new Exception(string.Format("A plugin '{0}' has no system name. Try assigning the plugin a unique name and recompiling.", descriptionFile.FullName));
                             if (referencedPlugins.Contains(description))
                                 throw new Exception(string.Format("A plugin with '{0}' system name is already defined", description.SystemName));
 

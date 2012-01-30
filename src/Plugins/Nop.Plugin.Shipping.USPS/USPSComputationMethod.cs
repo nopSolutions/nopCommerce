@@ -5,7 +5,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Globalization;
 using System.IO;
 using System.Net;
@@ -17,11 +16,11 @@ using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Plugins;
 using Nop.Plugin.Shipping.USPS.Domain;
+using Nop.Services.Catalog;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Shipping;
-using Nop.Services.Catalog;
 
 namespace Nop.Plugin.Shipping.USPS
 {

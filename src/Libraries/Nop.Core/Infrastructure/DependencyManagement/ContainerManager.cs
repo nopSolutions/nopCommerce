@@ -9,7 +9,7 @@ namespace Nop.Core.Infrastructure.DependencyManagement
 {
     public class ContainerManager
     {
-        private IContainer _container;
+        private readonly IContainer _container;
 
         public ContainerManager(IContainer container)
         {

@@ -5,8 +5,8 @@ using Nop.Admin.Models.Forums;
 using Nop.Services.Forums;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
-using Nop.Web.Framework.Controllers;
 using Nop.Services.Security;
+using Nop.Web.Framework.Controllers;
 
 namespace Nop.Admin.Controllers
 {

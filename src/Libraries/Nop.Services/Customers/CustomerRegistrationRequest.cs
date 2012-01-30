@@ -1,5 +1,4 @@
-﻿using Nop.Core;
-using Nop.Core.Domain.Customers;
+﻿using Nop.Core.Domain.Customers;
 
 namespace Nop.Services.Customers
 {

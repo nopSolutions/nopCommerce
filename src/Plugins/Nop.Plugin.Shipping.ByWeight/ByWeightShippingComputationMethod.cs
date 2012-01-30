@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Web.Routing;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Plugins;
 using Nop.Plugin.Shipping.ByWeight.Data;
-using Nop.Plugin.Shipping.ByWeight.Domain;
 using Nop.Plugin.Shipping.ByWeight.Services;
 using Nop.Services.Catalog;
-using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Shipping;
 

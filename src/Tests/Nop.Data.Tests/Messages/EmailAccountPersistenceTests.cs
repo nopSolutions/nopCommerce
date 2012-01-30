@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using Nop.Core.Domain.Messages;
+﻿using Nop.Core.Domain.Messages;
 using Nop.Tests;
 using NUnit.Framework;
 

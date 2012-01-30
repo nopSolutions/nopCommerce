@@ -23,7 +23,6 @@ using Nop.Services.Directory;
 using Nop.Services.Forums;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
-using Nop.Services.Media;
 using Nop.Services.Orders;
 using Nop.Services.Seo;
 

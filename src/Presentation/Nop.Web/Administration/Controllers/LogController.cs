@@ -9,10 +9,10 @@ using Nop.Services.Customers;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
+using Nop.Services.Security;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
-using Nop.Services.Security;
 
 namespace Nop.Admin.Controllers
 {

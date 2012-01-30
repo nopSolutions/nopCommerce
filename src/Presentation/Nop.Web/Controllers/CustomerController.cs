@@ -31,7 +31,6 @@ using Nop.Web.Extensions;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Security;
 using Nop.Web.Framework.UI.Captcha;
-using Nop.Web.Models;
 using Nop.Web.Models.Common;
 using Nop.Web.Models.Customer;
 

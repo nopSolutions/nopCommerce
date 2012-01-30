@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Security;
 using Nop.Tests;

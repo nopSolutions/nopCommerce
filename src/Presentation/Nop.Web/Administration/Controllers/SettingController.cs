@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Web.Configuration;
 using System.Web.Mvc;
@@ -37,7 +38,6 @@ using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Themes;
 using Nop.Web.Framework.UI.Captcha;
 using Telerik.Web.Mvc;
-using System.Configuration;
 
 namespace Nop.Admin.Controllers
 {

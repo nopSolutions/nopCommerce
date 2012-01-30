@@ -14,7 +14,7 @@ namespace Nop.Core
     /// </summary>
     public partial class WebHelper : IWebHelper
     {
-        private HttpContextBase _httpContext;
+        private readonly HttpContextBase _httpContext;
 
         /// <summary>
         /// Ctor

@@ -1,6 +1,5 @@
 ﻿using System;
 using Nop.Web.Controllers;
-using Nop.Web.Models.Blogs;
 using NUnit.Framework;
 
 namespace Nop.Web.MVC.Tests.Public.Infrastructure

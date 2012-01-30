@@ -8,7 +8,7 @@ namespace Nop.Plugin.Shipping.AustraliaPost.Models
         [NopResourceDisplayName("Plugins.Shipping.AustraliaPost.Fields.GatewayUrl")]
         public string GatewayUrl { get; set; }
 
-        [DisplayNameAttribute("Additional handling charge")]
+        [DisplayName("Additional handling charge")]
         [NopResourceDisplayName("Plugins.Shipping.AustraliaPost.Fields.AdditionalHandlingCharge")]
         public decimal AdditionalHandlingCharge { get; set; }
 

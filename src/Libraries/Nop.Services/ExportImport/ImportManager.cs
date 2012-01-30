@@ -1,15 +1,14 @@
 using System;
-using System.Data;
 using System.IO;
 using System.Linq;
 using System.Xml;
+using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Localization;
 using Nop.Services.Catalog;
 using Nop.Services.Localization;
 using Nop.Services.Media;
 using OfficeOpenXml;
-using Nop.Core;
 
 namespace Nop.Services.ExportImport
 {

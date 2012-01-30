@@ -1,7 +1,5 @@
 ﻿using System.IO;
 using System.Web;
-using Nop.Core.Domain.Media;
-using Nop.Core.Infrastructure;
 
 namespace Nop.Services.Media
 {
