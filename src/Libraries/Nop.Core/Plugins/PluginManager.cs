@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -31,10 +32,11 @@ namespace Nop.Core.Plugins
         private static readonly string _installedPluginsFilePath = "~/App_Data/InstalledPlugins.txt";
         private static readonly string _pluginsPath = "~/Plugins";
         private static readonly string _shadowCopyPath = "~/Plugins/bin";
+        private static bool _clearShadowDirectoryOnStartup;
 
         #endregion
 
-        #region methods
+        #region Methods
 
         /// <summary>
         /// Returns a collection of all referenced plugin assemblies that have been shadow copied
@@ -55,6 +57,9 @@ namespace Nop.Core.Plugins
 
                 var referencedPlugins = new List<PluginDescriptor>();
 
+                _clearShadowDirectoryOnStartup = !String.IsNullOrEmpty(ConfigurationManager.AppSettings["ClearPluginsShadowDirectoryOnStartup"]) &&
+                   Convert.ToBoolean(ConfigurationManager.AppSettings["ClearPluginsShadowDirectoryOnStartup"]);
+
                 try
                 {
                     var installedPluginSystemNames = PluginFileParser.ParseInstalledPluginsFile(GetInstalledPluginsFilePath());
@@ -66,17 +71,20 @@ namespace Nop.Core.Plugins
 
                     //get list of all files in bin
                     var binFiles = _shadowCopyFolder.GetFiles("*", SearchOption.AllDirectories);
-                    //clear out shadow copied plugins
-                    foreach (var f in binFiles)
+                    if (_clearShadowDirectoryOnStartup)
                     {
-                        Debug.WriteLine("Deleting " + f.Name);
-                        try
+                        //clear out shadow copied plugins
+                        foreach (var f in binFiles)
                         {
-                            File.Delete(f.FullName);
-                        }
-                        catch (Exception exc)
-                        {
-                            Debug.WriteLine("Error deleting file " + f.Name + ". Exception: " + exc);
+                            Debug.WriteLine("Deleting " + f.Name);
+                            try
+                            {
+                                File.Delete(f.FullName);
+                            }
+                            catch (Exception exc)
+                            {
+                                Debug.WriteLine("Error deleting file " + f.Name + ". Exception: " + exc);
+                            }
                         }
                     }
 
@@ -359,13 +367,24 @@ namespace Nop.Core.Plugins
             var shouldCopy = true;
             var shadowCopiedPlug = new FileInfo(Path.Combine(shadowCopyPlugFolder.FullName, plug.Name));
 
-            //check if a shadow copied file already exists and if it does, check if its updated, if not don't copy
+            //check if a shadow copied file already exists and if it does, check if it's updated, if not don't copy
             if (shadowCopiedPlug.Exists)
             {
-                if (shadowCopiedPlug.CreationTimeUtc.Ticks == plug.CreationTimeUtc.Ticks)
+                //it's better to use LastWriteTimeUTC, but not all file systems have this property
+                //maybe it is better to compare file hash?
+                var areFilesIdentical = shadowCopiedPlug.CreationTimeUtc.Ticks >= plug.CreationTimeUtc.Ticks;
+                if (areFilesIdentical)
                 {
                     Debug.WriteLine("Not copying; files appear identical: '{0}'", shadowCopiedPlug.Name);
                     shouldCopy = false;
+                }
+                else
+                {
+                    //delete an existing file
+
+                    //More info: http://www.nopcommerce.com/boards/t/11511/access-error-nopplugindiscountrulesbillingcountrydll.aspx?p=4#60838
+                    Debug.WriteLine("New plugin found; Deleting the old file: '{0}'", shadowCopiedPlug.Name);
+                    File.Delete(shadowCopiedPlug.FullName);
                 }
             }
 
