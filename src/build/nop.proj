@@ -36,6 +36,7 @@
         <RemoveDir Directories="$(DeployFolder)" />
         <MakeDir Directories="$(DeployFolder)" />
         <MakeDir Directories="$(DeployFolder)\$(DeployPrefix)" />
+	<MakeDir Directories="$(DeployFolder)\$(DeployPrefix)\Plugins\bin\" />
 
         <!--Lets publish Nop.Web-->
         <MSBuild Projects="$(RootFolder)\Presentation\Nop.Web\Nop.Web.csproj"
