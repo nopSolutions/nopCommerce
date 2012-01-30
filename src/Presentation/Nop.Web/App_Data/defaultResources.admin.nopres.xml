@@ -7652,6 +7652,9 @@
 					</LocaleResource>
 				</Children>
 			</LocaleResource>
+			<LocaleResource Name="Plugins">
+				<Value>Plugins</Value>
+			</LocaleResource>
 			<LocaleResource Name="Promotions">
 				<Value>Promotions</Value>
 				<Children>

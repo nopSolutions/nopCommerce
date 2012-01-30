@@ -983,6 +983,9 @@ set @resources='
   <LocaleResource Name="Account.EmailUsernameErrors.UsernameAlreadyExists">
     <Value>The username is already in use</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Plugins">
+    <Value>Plugins</Value>
+  </LocaleResource>
 </Language>
 '
 
