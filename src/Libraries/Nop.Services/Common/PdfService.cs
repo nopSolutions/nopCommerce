@@ -519,6 +519,7 @@ namespace Nop.Services.Common
                     {
                         string taxRate = String.Format(_localizationService.GetResource("PDFInvoice.TaxRate"), _priceFormatter.FormatTaxRate(item.Key));
                         string taxValue = _priceFormatter.FormatPrice(_currencyService.ConvertCurrency(item.Value, order.CurrencyRate), true, false);
+                        //string taxValue = _priceFormatter.FormatPrice(_currencyService.ConvertCurrency(item.Value, order.CurrencyRate), true, order.CustomerCurrencyCode, false);
 
                         var p = new Paragraph(String.Format("{0} {1}", taxRate, taxValue), font);
                         p.Alignment = Element.ALIGN_RIGHT;
