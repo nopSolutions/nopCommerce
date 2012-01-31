@@ -130,7 +130,7 @@ namespace Nop.Web.Controllers
         #region Utilities
 
         [NonAction]
-        private ShoppingCartModel PrepareShoppingCartModel(ShoppingCartModel model, 
+        protected ShoppingCartModel PrepareShoppingCartModel(ShoppingCartModel model, 
             IList<ShoppingCartItem> cart, bool isEditable, bool setEstimateShippingDefaultAddress = true)
         {
             if (cart == null)
@@ -409,7 +409,7 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        private WishlistModel PrepareWishlistModel(WishlistModel model, IList<ShoppingCartItem> cart, bool isEditable)
+        protected WishlistModel PrepareWishlistModel(WishlistModel model, IList<ShoppingCartItem> cart, bool isEditable)
         {
             if (cart == null)
                 throw new ArgumentNullException("cart");

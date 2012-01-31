@@ -92,7 +92,7 @@ namespace Nop.Web.Controllers
         #region Utilities
 
         [NonAction]
-        private OrderDetailsModel PrepareOrderDetailsModel(Order order)
+        protected OrderDetailsModel PrepareOrderDetailsModel(Order order)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -312,7 +312,7 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        private SubmitReturnRequestModel PrepareReturnRequestModel(SubmitReturnRequestModel model, Order order)
+        protected SubmitReturnRequestModel PrepareReturnRequestModel(SubmitReturnRequestModel model, Order order)
         {
             if (order == null)
                 throw new ArgumentNullException("order");

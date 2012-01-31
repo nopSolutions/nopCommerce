@@ -74,7 +74,7 @@ namespace Nop.Web.Controllers
         #region Utilities
 
         [NonAction]
-        private void PrepareBlogPostModel(BlogPostModel model, BlogPost blogPost, bool prepareComments)
+        protected void PrepareBlogPostModel(BlogPostModel model, BlogPost blogPost, bool prepareComments)
         {
             if (blogPost == null)
                 throw new ArgumentNullException("blogPost");

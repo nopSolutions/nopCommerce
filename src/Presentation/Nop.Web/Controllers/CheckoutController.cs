@@ -103,7 +103,7 @@ namespace Nop.Web.Controllers
         #region Utilities
 
         [NonAction]
-        private bool IsPaymentWorkflowRequired(IList<ShoppingCartItem> cart, bool ignoreRewardPoints = false)
+        protected bool IsPaymentWorkflowRequired(IList<ShoppingCartItem> cart, bool ignoreRewardPoints = false)
         {
             bool result = true;
 
@@ -115,7 +115,7 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        private CheckoutBillingAddressModel PrepareBillingAddressModel(int? selectedCountryId = null)
+        protected CheckoutBillingAddressModel PrepareBillingAddressModel(int? selectedCountryId = null)
         {
             var model = new CheckoutBillingAddressModel();
             //existing addresses
@@ -143,7 +143,7 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        private CheckoutShippingAddressModel PrepareShippingAddressModel(int? selectedCountryId = null)
+        protected CheckoutShippingAddressModel PrepareShippingAddressModel(int? selectedCountryId = null)
         {
             var model = new CheckoutShippingAddressModel();
             //existing addresses
@@ -171,7 +171,7 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        private CheckoutShippingMethodModel PrepareShippingMethodModel(IList<ShoppingCartItem> cart)
+        protected CheckoutShippingMethodModel PrepareShippingMethodModel(IList<ShoppingCartItem> cart)
         {
             var model = new CheckoutShippingMethodModel();
 
@@ -207,7 +207,7 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        private CheckoutPaymentMethodModel PreparePaymentMethodModel(IList<ShoppingCartItem> cart)
+        protected CheckoutPaymentMethodModel PreparePaymentMethodModel(IList<ShoppingCartItem> cart)
         {
             var model = new CheckoutPaymentMethodModel();
 
@@ -253,7 +253,7 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        private CheckoutPaymentInfoModel PreparePaymentInfoModel(IPaymentMethod paymentMethod)
+        protected CheckoutPaymentInfoModel PreparePaymentInfoModel(IPaymentMethod paymentMethod)
         {
             var model = new CheckoutPaymentInfoModel();
             string actionName;
@@ -268,7 +268,7 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        private CheckoutConfirmModel PrepareConfirmOrderModel(IList<ShoppingCartItem> cart)
+        protected CheckoutConfirmModel PrepareConfirmOrderModel(IList<ShoppingCartItem> cart)
         {
             var model = new CheckoutConfirmModel();
             //min order amount validation
@@ -282,7 +282,7 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        private bool UseOnePageCheckout()
+        protected bool UseOnePageCheckout()
         {
             bool useMobileDevice = _mobileDeviceHelper.IsMobileDevice(_httpContext)
                 && _mobileDeviceHelper.MobileDevicesSupported()

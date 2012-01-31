@@ -142,7 +142,7 @@ namespace Nop.Web.Controllers
         #region Utilities
 
         [NonAction]
-        private ProductVariant GetMinimalPriceProductVariant(IList<ProductVariant> variants)
+        protected ProductVariant GetMinimalPriceProductVariant(IList<ProductVariant> variants)
         {
             if (variants == null)
                 throw new ArgumentNullException("variants");
@@ -156,7 +156,7 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        private IList<Category> GetCategoryBreadCrumb(Category category)
+        protected IList<Category> GetCategoryBreadCrumb(Category category)
         {
             if (category == null)
                 throw new ArgumentNullException("category");
@@ -175,7 +175,7 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        private ProductModel.ProductPriceModel PrepareProductPriceModel(Product product)
+        protected ProductModel.ProductPriceModel PrepareProductPriceModel(Product product)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
@@ -304,7 +304,7 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        private ProductModel PrepareProductOverviewModel(Product product, bool preparePriceModel = true, bool preparePictureModel = true, int? productThumbPictureSize = null)
+        protected ProductModel PrepareProductOverviewModel(Product product, bool preparePriceModel = true, bool preparePictureModel = true, int? productThumbPictureSize = null)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
@@ -338,7 +338,7 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        private int GetNumberOfProducts(Category category, bool includeSubCategories)
+        protected int GetNumberOfProducts(Category category, bool includeSubCategories)
         {
             var products = _productService.SearchProducts(category.Id,
                         0, null, null, null, 0, string.Empty, false, 0, null,
@@ -356,7 +356,7 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        private IList<CategoryNavigationModel> GetChildCategoryNavigationModel(IList<Category> breadCrumb, int rootCategoryId, Category currentCategory, int level)
+        protected IList<CategoryNavigationModel> GetChildCategoryNavigationModel(IList<Category> breadCrumb, int rootCategoryId, Category currentCategory, int level)
         {
             var result = new List<CategoryNavigationModel>();
             foreach (var category in _categoryService.GetAllCategoriesByParentCategoryId(rootCategoryId))
@@ -386,7 +386,7 @@ namespace Nop.Web.Controllers
         }
         
         [NonAction]
-        private ProductModel PrepareProductDetailsPageModel(Product product)
+        protected ProductModel PrepareProductDetailsPageModel(Product product)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
@@ -451,7 +451,7 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        private void PrepareProductReviewsModel(ProductReviewsModel model, Product product)
+        protected void PrepareProductReviewsModel(ProductReviewsModel model, Product product)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
@@ -489,7 +489,7 @@ namespace Nop.Web.Controllers
         }
         
         [NonAction]
-        private ProductModel.ProductVariantModel PrepareProductVariantModel(ProductModel.ProductVariantModel model, ProductVariant productVariant)
+        protected ProductModel.ProductVariantModel PrepareProductVariantModel(ProductModel.ProductVariantModel model, ProductVariant productVariant)
         {
             if (productVariant == null)
                 throw new ArgumentNullException("productVariant");

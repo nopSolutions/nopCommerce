@@ -137,13 +137,13 @@ namespace Nop.Web.Controllers
         #region Utilities
 
         [NonAction]
-        private bool IsCurrentUserRegistered()
+        protected bool IsCurrentUserRegistered()
         {
             return _workContext.CurrentCustomer.IsRegistered();
         }
 
         [NonAction]
-        private CustomerNavigationModel GetCustomerNavigationModel(Customer customer)
+        protected CustomerNavigationModel GetCustomerNavigationModel(Customer customer)
         {
             var model = new CustomerNavigationModel();
             model.HideAvatar = !_customerSettings.AllowCustomersToUploadAvatars;
@@ -156,7 +156,7 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        private void TryAssociateAccountWithExternalAccount(Customer customer)
+        protected void TryAssociateAccountWithExternalAccount(Customer customer)
         {
             var parameters = ExternalAuthorizerHelper.RetrieveParametersFromRoundTrip(true);
             if (parameters == null)

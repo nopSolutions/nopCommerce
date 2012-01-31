@@ -36,7 +36,8 @@ namespace Nop.Web.Controllers
 
         #region Utilities
 
-        private TopicModel PrepareTopicModel(string systemName)
+        [NonAction]
+        protected TopicModel PrepareTopicModel(string systemName)
         {
             var topic = _topicService.GetTopicBySystemName(systemName);
             if (topic == null)

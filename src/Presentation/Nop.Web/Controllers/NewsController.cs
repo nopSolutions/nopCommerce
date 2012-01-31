@@ -74,7 +74,7 @@ namespace Nop.Web.Controllers
         #region Utilities
 
         [NonAction]
-        private void PrepareNewsItemModel(NewsItemModel model, NewsItem newsItem, bool prepareComments)
+        protected void PrepareNewsItemModel(NewsItemModel model, NewsItem newsItem, bool prepareComments)
         {
             if (newsItem == null)
                 throw new ArgumentNullException("newsItem");
