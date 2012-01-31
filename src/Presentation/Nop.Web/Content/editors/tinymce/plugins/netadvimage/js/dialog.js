@@ -124,13 +124,22 @@ function MoveDirectory(path, destinationPath) {
 }
 
 function HideOverlays() {
-    $('#mask, #img-upload').fadeTo(100, 0, function () {
+    //modified by nopCommerce team (IE8 fix)
+    //$('#mask, #img-upload').fadeTo(100, 0, function () {
+    //    $(this).hide();
+    //});
+    $('#img-upload').hide();
+    $('#mask').fadeTo(100, 0, function () {
         $(this).hide();
     });
 }
 
 function ShowOverlays() {
-    $('#img-upload').fadeTo(100, 1);
+    //modified by nopCommerce team (IE8 fix)
+    //$('#img-upload').fadeTo(100, 1);
+    //$('#mask').fadeTo(100, .9);
+    //$('.qq-upload-list').empty();
+    $('#img-upload').show();
     $('#mask').fadeTo(100, .9);
     $('.qq-upload-list').empty();
 }
