@@ -1092,9 +1092,8 @@ namespace Nop.Services.Catalog
                     cartProductIds.Add(prodId);
             }
 
-            for (int i = 0; i < cart.Count; i++)
+            foreach (var sci in cart)
             {
-                var sci = cart[i];
                 var crossSells = GetCrossSellProductsByProductId1(sci.ProductVariant.ProductId);
                 foreach (var crossSell in crossSells)
                 {
@@ -1104,6 +1103,14 @@ namespace Nop.Services.Catalog
                         !cartProductIds.Contains(crossSell.ProductId2))
                     {
                         var productToAdd = GetProductById(crossSell.ProductId2);
+                        //validate product
+                        if (productToAdd == null || productToAdd.Deleted || !productToAdd.Published)
+                            continue;
+                        //at least one variant should be valid and available
+                        if (GetProductVariantsByProductId(productToAdd.Id).Count == 0)
+                            continue;
+
+                        //add a product to result
                         result.Add(productToAdd);
                         if (result.Count >= numberOfProducts)
                             return result;
