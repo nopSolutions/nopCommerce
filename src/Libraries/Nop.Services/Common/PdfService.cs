@@ -504,7 +504,7 @@ namespace Nop.Services.Common
                         displayTax = !displayTaxRates;
 
                         var orderTaxInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderTax, order.CurrencyRate);
-                        taxStr = _priceFormatter.FormatPrice(orderTaxInCustomerCurrency, true, order.CustomerCurrencyCode, false);
+                        taxStr = _priceFormatter.FormatPrice(orderTaxInCustomerCurrency, true, order.CustomerCurrencyCode, false, lang);
                     }
                 }
                 if (displayTax)
@@ -518,7 +518,7 @@ namespace Nop.Services.Common
                     foreach (var item in taxRates)
                     {
                         string taxRate = String.Format(_localizationService.GetResource("PDFInvoice.TaxRate"), _priceFormatter.FormatTaxRate(item.Key));
-                        string taxValue = _priceFormatter.FormatPrice(_currencyService.ConvertCurrency(item.Value, order.CurrencyRate), true, order.CustomerCurrencyCode, false);
+                        string taxValue = _priceFormatter.FormatPrice(_currencyService.ConvertCurrency(item.Value, order.CurrencyRate), true, order.CustomerCurrencyCode, false, lang);
 
                         var p = new Paragraph(String.Format("{0} {1}", taxRate, taxValue), font);
                         p.Alignment = Element.ALIGN_RIGHT;
@@ -530,7 +530,7 @@ namespace Nop.Services.Common
                 if (order.OrderDiscount > decimal.Zero)
                 {
                     var orderDiscountInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderDiscount, order.CurrencyRate);
-                    string orderDiscountInCustomerCurrencyStr = _priceFormatter.FormatPrice(-orderDiscountInCustomerCurrency, true, order.CustomerCurrencyCode, false);
+                    string orderDiscountInCustomerCurrencyStr = _priceFormatter.FormatPrice(-orderDiscountInCustomerCurrency, true, order.CustomerCurrencyCode, false, lang);
 
                     var p = new Paragraph(String.Format("{0} {1}", _localizationService.GetResource("PDFInvoice.Discount", lang.Id), orderDiscountInCustomerCurrencyStr), font);
                     p.Alignment = Element.ALIGN_RIGHT;
@@ -541,7 +541,7 @@ namespace Nop.Services.Common
                 foreach (var gcuh in order.GiftCardUsageHistory)
                 {
                     string gcTitle = string.Format(_localizationService.GetResource("PDFInvoice.GiftCardInfo", lang.Id), gcuh.GiftCard.GiftCardCouponCode);
-                    string gcAmountStr = _priceFormatter.FormatPrice(-(_currencyService.ConvertCurrency(gcuh.UsedValue, order.CurrencyRate)), true, order.CustomerCurrencyCode, false);
+                    string gcAmountStr = _priceFormatter.FormatPrice(-(_currencyService.ConvertCurrency(gcuh.UsedValue, order.CurrencyRate)), true, order.CustomerCurrencyCode, false, lang);
 
                     var p = new Paragraph(String.Format("{0} {1}", gcTitle, gcAmountStr), font);
                     p.Alignment = Element.ALIGN_RIGHT;
@@ -552,7 +552,7 @@ namespace Nop.Services.Common
                 if (order.RedeemedRewardPointsEntry != null)
                 {
                     string rpTitle = string.Format(_localizationService.GetResource("PDFInvoice.RewardPoints", lang.Id), -order.RedeemedRewardPointsEntry.Points);
-                    string rpAmount = _priceFormatter.FormatPrice(-(_currencyService.ConvertCurrency(order.RedeemedRewardPointsEntry.UsedAmount, order.CurrencyRate)), true, order.CustomerCurrencyCode, false);
+                    string rpAmount = _priceFormatter.FormatPrice(-(_currencyService.ConvertCurrency(order.RedeemedRewardPointsEntry.UsedAmount, order.CurrencyRate)), true, order.CustomerCurrencyCode, false, lang);
 
                     var p = new Paragraph(String.Format("{0} {1}", rpTitle, rpAmount), font);
                     p.Alignment = Element.ALIGN_RIGHT;
@@ -561,7 +561,7 @@ namespace Nop.Services.Common
 
                 //order total
                 var orderTotalInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderTotal, order.CurrencyRate);
-                string orderTotalStr = _priceFormatter.FormatPrice(orderTotalInCustomerCurrency, true, order.CustomerCurrencyCode, false);
+                string orderTotalStr = _priceFormatter.FormatPrice(orderTotalInCustomerCurrency, true, order.CustomerCurrencyCode, false, lang);
 
 
                 var pTotal = new Paragraph(String.Format("{0} {1}", _localizationService.GetResource("PDFInvoice.OrderTotal", lang.Id), orderTotalStr), titleFont);

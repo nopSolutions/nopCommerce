@@ -40,9 +40,10 @@ namespace Nop.Services.Catalog
         /// <param name="showCurrency">A value indicating whether to show a currency</param>
         /// <param name="currencyCode">Currency code</param>
         /// <param name="showTax">A value indicating whether to show tax suffix</param>
+        /// <param name="language">Language</param>
         /// <returns>Price</returns>
         string FormatPrice(decimal price, bool showCurrency, 
-            string currencyCode, bool showTax);
+            string currencyCode, bool showTax, Language language);
 
         /// <summary>
         /// Formats the price

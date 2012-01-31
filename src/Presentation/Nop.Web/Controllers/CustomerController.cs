@@ -1206,7 +1206,7 @@ namespace Nop.Web.Controllers
                     IsReturnRequestAllowed = _orderProcessingService.IsReturnRequestAllowed(order)
                 };
                 var orderTotalInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderTotal, order.CurrencyRate);
-                orderModel.OrderTotal = _priceFormatter.FormatPrice(orderTotalInCustomerCurrency, true, order.CustomerCurrencyCode, false);
+                orderModel.OrderTotal = _priceFormatter.FormatPrice(orderTotalInCustomerCurrency, true, order.CustomerCurrencyCode, false, _workContext.WorkingLanguage);
 
                 model.Orders.Add(orderModel);
             }

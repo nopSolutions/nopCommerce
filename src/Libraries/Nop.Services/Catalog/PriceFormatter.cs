@@ -147,9 +147,10 @@ namespace Nop.Services.Catalog
         /// <param name="showCurrency">A value indicating whether to show a currency</param>
         /// <param name="currencyCode">Currency code</param>
         /// <param name="showTax">A value indicating whether to show tax suffix</param>
+        /// <param name="language">Language</param>
         /// <returns>Price</returns>
-        public string FormatPrice(decimal price, bool showCurrency, 
-            string currencyCode, bool showTax)
+        public string FormatPrice(decimal price, bool showCurrency,
+            string currencyCode, bool showTax, Language language)
         {
             var currency = _currencyService.GetCurrencyByCode(currencyCode);
             if (currency == null)
@@ -157,7 +158,6 @@ namespace Nop.Services.Catalog
                 currency = new Currency();
                 currency.CurrencyCode = currencyCode;
             }
-            var language = _workContext.WorkingLanguage;
             bool priceIncludesTax = false;
             switch (_workContext.TaxDisplayType)
             {
