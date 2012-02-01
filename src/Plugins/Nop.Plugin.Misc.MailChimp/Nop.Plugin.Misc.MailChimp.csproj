@@ -32,15 +32,19 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Autofac">
-      <HintPath>..\..\Presentation\Nop.Web\Administration\Bin\Autofac.dll</HintPath>
+      <HintPath>..\..\packages\Autofac.2.5.2.830\lib\NET40\Autofac.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Autofac.Integration.Mvc">
-      <HintPath>..\..\Presentation\Nop.Web\Administration\Bin\Autofac.Integration.Mvc.dll</HintPath>
+      <HintPath>..\..\packages\Autofac.Mvc3.2.5.2.830\lib\NET40\Autofac.Integration.Mvc.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="CookComputing.XmlRpcV2, Version=2.5.0.0, Culture=neutral, PublicKeyToken=a7d6e17aa302004d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\PerceptiveMCAPI\CookComputing.XmlRpcV2.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework">
-      <HintPath>..\..\Presentation\Nop.Web\Administration\Bin\EntityFramework.dll</HintPath>
+      <HintPath>..\..\packages\EntityFramework.4.2.0.0\lib\net40\EntityFramework.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="PerceptiveMCAPI">
@@ -87,6 +91,7 @@
     <Content Include="Notes.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="packages.config" />
     <None Include="web.config" />
   </ItemGroup>
   <ItemGroup>
