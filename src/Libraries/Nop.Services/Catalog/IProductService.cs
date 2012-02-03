@@ -263,13 +263,6 @@ namespace Nop.Services.Catalog
         TierPrice GetTierPriceById(int tierPriceId);
 
         /// <summary>
-        /// Gets tier prices by product variant identifier
-        /// </summary>
-        /// <param name="productVariantId">Product variant identifier</param>
-        /// <returns>Tier price collection</returns>
-        IList<TierPrice> GetTierPricesByProductVariantId(int productVariantId);
-        
-        /// <summary>
         /// Inserts a tier price
         /// </summary>
         /// <param name="tierPrice">Tier price</param>

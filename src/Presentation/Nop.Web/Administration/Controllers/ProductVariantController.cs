@@ -587,7 +587,11 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
 
-            var tierPrices = _productService.GetTierPricesByProductVariantId(productVariantId);
+            var productVariant = _productService.GetProductVariantById(productVariantId);
+            if (productVariant == null)
+                throw new ArgumentException("No product variant found with the specified id");
+
+            var tierPrices = productVariant.TierPrices;
             var tierPricesModel = tierPrices
                 .Select(x =>
                 {

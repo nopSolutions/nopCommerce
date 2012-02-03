@@ -1710,8 +1710,11 @@ namespace Nop.Web.Controllers
             if (variant == null)
                 throw new ArgumentException("No product variant found with the specified id");
 
-            var model = _productService.GetTierPricesByProductVariantId(productVariantId)
+            var model = variant.TierPrices
+                .OrderBy(x => x.Quantity)
+                .ToList()
                 .FilterForCustomer(_workContext.CurrentCustomer)
+                .RemoveDuplicatedQuantities()
                 .Select(tierPrice =>
                             {
                                 var m = new ProductModel.ProductVariantModel.TierPriceModel()

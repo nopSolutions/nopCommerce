@@ -111,7 +111,8 @@ namespace Nop.Services.Catalog
             var tierPrices = productVariant.TierPrices
                 .OrderBy(tp => tp.Quantity)
                 .ToList()
-                .FilterForCustomer(customer);
+                .FilterForCustomer(customer)
+                .RemoveDuplicatedQuantities();
 
             int previousQty = 1;
             decimal? previousPrice = null;

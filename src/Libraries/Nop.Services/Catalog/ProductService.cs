@@ -26,7 +26,6 @@ namespace Nop.Services.Catalog
         private const string PRODUCTS_BY_ID_KEY = "Nop.product.id-{0}";
         private const string PRODUCTVARIANTS_ALL_KEY = "Nop.productvariant.all-{0}-{1}";
         private const string PRODUCTVARIANTS_BY_ID_KEY = "Nop.productvariant.id-{0}";
-        private const string TIERPRICES_ALLBYPRODUCTVARIANTID_KEY = "Nop.tierprice.allbyproductvariantid-{0}";
         private const string PRODUCTS_PATTERN_KEY = "Nop.product.";
         private const string PRODUCTVARIANTS_PATTERN_KEY = "Nop.productvariant.";
         private const string TIERPRICES_PATTERN_KEY = "Nop.tierprice.";
@@ -1154,28 +1153,6 @@ namespace Nop.Services.Catalog
             
             var tierPrice = _tierPriceRepository.GetById(tierPriceId);
             return tierPrice;
-        }
-
-        /// <summary>
-        /// Gets tier prices by product variant identifier
-        /// </summary>
-        /// <param name="productVariantId">Product variant identifier</param>
-        /// <returns>Tier price collection</returns>
-        public virtual IList<TierPrice> GetTierPricesByProductVariantId(int productVariantId)
-        {
-            if (productVariantId == 0)
-                return new List<TierPrice>();
-
-            string key = string.Format(TIERPRICES_ALLBYPRODUCTVARIANTID_KEY, productVariantId);
-            return _cacheManager.Get(key, () =>
-            {
-                var query = from tp in _tierPriceRepository.Table
-                            orderby tp.Quantity
-                            where tp.ProductVariantId == productVariantId
-                            select tp;
-                var tierPrices = query.ToList();
-                return tierPrices;
-            });
         }
 
         /// <summary>
