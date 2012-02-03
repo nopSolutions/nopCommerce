@@ -48,7 +48,7 @@
     {
         if (adminMenuPlugins.Count() > 0)
         {
-            if (hideAdminMenuItemsBasedOnPermissions &&
+            if (!hideAdminMenuItemsBasedOnPermissions || 
                 permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
             {
                 x.Add().Text(T("Admin.Plugins").ToHtmlString()).Items(y =>
