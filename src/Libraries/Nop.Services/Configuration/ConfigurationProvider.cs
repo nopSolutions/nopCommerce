@@ -27,6 +27,7 @@ namespace Nop.Services.Configuration
                              let setting = _settingService.GetSettingByKey<string>(typeof(TSettings).Name + "." + prop.Name)
                              where setting != null
                              where CommonHelper.GetNopCustomTypeConverter(prop.PropertyType).CanConvertFrom(typeof(string))
+                             where CommonHelper.GetNopCustomTypeConverter(prop.PropertyType).IsValid(setting)
                              let value = CommonHelper.GetNopCustomTypeConverter(prop.PropertyType).ConvertFromInvariantString(setting)
                              select new { prop, value };
 
