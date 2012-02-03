@@ -7,6 +7,7 @@ using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Logging;
@@ -68,6 +69,7 @@ namespace Nop.Services.Orders
         private readonly OrderSettings _orderSettings;
         private readonly TaxSettings _taxSettings;
         private readonly LocalizationSettings _localizationSettings;
+        private readonly CurrencySettings _currencySettings;
 
         #endregion
 
@@ -107,6 +109,7 @@ namespace Nop.Services.Orders
         /// <param name="orderSettings">Order settings</param>
         /// <param name="taxSettings">Tax settings</param>
         /// <param name="localizationSettings">Localization settings</param>
+        /// <param name="currencySettings">Currency settings</param>
         public OrderProcessingService(IOrderService orderService,
             IWebHelper webHelper,
             ILocalizationService localizationService,
@@ -137,7 +140,8 @@ namespace Nop.Services.Orders
             RewardPointsSettings rewardPointsSettings,
             OrderSettings orderSettings,
             TaxSettings taxSettings,
-            LocalizationSettings localizationSettings)
+            LocalizationSettings localizationSettings,
+            CurrencySettings currencySettings)
         {
             this._orderService = orderService;
             this._webHelper = webHelper;
@@ -170,6 +174,7 @@ namespace Nop.Services.Orders
             this._orderSettings = orderSettings;
             this._taxSettings = taxSettings;
             this._localizationSettings = localizationSettings;
+            this._currencySettings = currencySettings;
         }
 
         #endregion
@@ -422,7 +427,8 @@ namespace Nop.Services.Orders
                 {
                     var customerCurrency = (customer.Currency != null && customer.Currency.Published) ? customer.Currency : _workContext.WorkingCurrency;
                     customerCurrencyCode = customerCurrency.CurrencyCode;
-                    customerCurrencyRate = customerCurrency.Rate;
+                    var primaryStoreCurrency = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
+                    customerCurrencyRate = customerCurrency.Rate / primaryStoreCurrency.Rate;
                 }
                 else
                 {

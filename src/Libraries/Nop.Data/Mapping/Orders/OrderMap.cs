@@ -9,7 +9,7 @@ namespace Nop.Data.Mapping.Orders
         {
             this.ToTable("Order");
             this.HasKey(o => o.Id);
-            this.Property(o => o.CurrencyRate).HasPrecision(18, 4);
+            this.Property(o => o.CurrencyRate).HasPrecision(18, 8);
             this.Property(o => o.OrderSubtotalInclTax).HasPrecision(18, 4);
             this.Property(o => o.OrderSubtotalExclTax).HasPrecision(18, 4);
             this.Property(o => o.OrderSubTotalDiscountInclTax).HasPrecision(18, 4);

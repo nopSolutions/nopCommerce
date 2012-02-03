@@ -6,6 +6,7 @@ using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
@@ -75,6 +76,7 @@ namespace Nop.Services.Tests.Orders
         CatalogSettings _catalogSettings;
         IOrderProcessingService _orderProcessingService;
         IEventPublisher _eventPublisher;
+        CurrencySettings _currencySettings;
 
         [SetUp]
         public new void SetUp()
@@ -162,6 +164,8 @@ namespace Nop.Services.Tests.Orders
             _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
             _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
 
+            _currencySettings = new CurrencySettings();
+
             _orderProcessingService = new OrderProcessingService(_orderService, _webHelper,
                 _localizationService, _languageService,
                 _productService, _paymentService, _logger,
@@ -173,7 +177,8 @@ namespace Nop.Services.Tests.Orders
                 _encryptionService, _workContext, _workflowMessageService,
                 _smsService, _customerActivityService, _currencyService,
                 _eventPublisher, _paymentSettings, _rewardPointsSettings,
-                _orderSettings, _taxSettings, _localizationSettings);
+                _orderSettings, _taxSettings, _localizationSettings,
+                _currencySettings);
         }
 
         [Test]
