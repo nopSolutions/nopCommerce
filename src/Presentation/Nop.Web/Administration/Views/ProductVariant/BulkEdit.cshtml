@@ -129,11 +129,11 @@
         }
     }
     function Grid_onSubmitChanges(e) {
-        //we can't pass search parameters in submit changes
-        //that's why let's just clear search params
-        //$('#@Html.FieldIdFor(model => model.SearchProductName)').val('');
-        //$('#SearchCategoryId').val('0');
-        //$('#SearchManufacturerId').val('0');
+        //Pass search parameters
+
+        e.values["SearchProductName"] = $('#@Html.FieldIdFor(model => model.SearchProductName)').val();
+        e.values["SearchCategoryId"] = $('#SearchCategoryId').val();
+        e.values["SearchManufacturerId"] = $('#SearchManufacturerId').val()
     }
 </script>
             </td>
