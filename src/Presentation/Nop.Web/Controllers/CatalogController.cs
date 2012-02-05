@@ -1514,12 +1514,34 @@ namespace Nop.Web.Controllers
                                 break;
                             case AttributeControlType.TextBox:
                                 {
-                                    //TODO set value
+                                    var txtAttribute = form[controlId];
+                                    if (!String.IsNullOrEmpty(txtAttribute))
+                                    {
+                                        var pvaModel = productVariantModel
+                                            .ProductVariantAttributes
+                                            .Select(x => x)
+                                            .Where(y => y.Id == attribute.Id)
+                                            .FirstOrDefault();
+                                        
+                                        if (pvaModel != null)
+                                            pvaModel.TextValue = txtAttribute;
+                                    }
                                 }
                                 break;
                             case AttributeControlType.MultilineTextbox:
                                 {
-                                    //TODO set value
+                                    var txtAttribute = form[controlId];
+                                    if (!String.IsNullOrEmpty(txtAttribute))
+                                    {
+                                        var pvaModel = productVariantModel
+                                            .ProductVariantAttributes
+                                            .Select(x => x)
+                                            .Where(y => y.Id == attribute.Id)
+                                            .FirstOrDefault();
+
+                                        if (pvaModel != null)
+                                            pvaModel.TextValue = txtAttribute;
+                                    }
                                 }
                                 break;
                             case AttributeControlType.Datepicker:

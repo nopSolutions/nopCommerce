@@ -202,6 +202,8 @@ namespace Nop.Web.Models.Catalog
 
                 public bool IsRequired { get; set; }
 
+                public string TextValue { get; set; }
+
                 public AttributeControlType AttributeControlType { get; set; }
 
                 public IList<ProductVariantAttributeValueModel> Values { get; set; }
