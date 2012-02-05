@@ -12,8 +12,8 @@ namespace Nop.Web.Framework.UI
         private readonly List<string> _titleParts;
         private readonly List<string> _metaDescriptionParts;
         private readonly List<string> _metaKeywordParts;
-        private readonly List<string> _scriptParts;
-        private readonly List<string> _cssParts;
+        private readonly Dictionary<ResourceLocation, List<string>> _scriptParts;
+        private readonly Dictionary<ResourceLocation, List<string>> _cssParts;
         private readonly List<string> _canonicalUrlParts;
 
         public PageTitleBuilder(SeoSettings seoSettings)
@@ -22,8 +22,8 @@ namespace Nop.Web.Framework.UI
             this._titleParts = new List<string>();
             this._metaDescriptionParts = new List<string>();
             this._metaKeywordParts = new List<string>();
-            this._scriptParts = new List<string>();
-            this._cssParts = new List<string>();
+            this._scriptParts = new Dictionary<ResourceLocation, List<string>>();
+            this._cssParts = new Dictionary<ResourceLocation, List<string>>();
             this._canonicalUrlParts = new List<string>();
         }
 
@@ -125,25 +125,34 @@ namespace Nop.Web.Framework.UI
         }
 
 
-        public void AddScriptParts(params string[] parts)
+        public void AddScriptParts(ResourceLocation location, params string[] parts)
         {
+            if (!_scriptParts.ContainsKey(location))
+                _scriptParts.Add(location, new List<string>());
+
             if (parts != null)
                 foreach (string part in parts)
                     if (!string.IsNullOrEmpty(part))
-                        _scriptParts.Add(part);
+                        _scriptParts[location].Add(part);
         }
-        public void AppendScriptParts(params string[] parts)
+        public void AppendScriptParts(ResourceLocation location, params string[] parts)
         {
+            if (!_scriptParts.ContainsKey(location))
+                _scriptParts.Add(location, new List<string>());
+
             if (parts != null)
                 foreach (string part in parts)
                     if (!string.IsNullOrEmpty(part))
-                        _scriptParts.Insert(0, part);
+                        _scriptParts[location].Insert(0, part);
         }
-        public string GenerateScripts()
+        public string GenerateScripts(ResourceLocation location)
         {
+            if (!_scriptParts.ContainsKey(location) || _scriptParts[location] == null)
+                return "";
+
             var result = new StringBuilder();
             //use only distinct rows
-            foreach (var scriptPath in _scriptParts.Distinct())
+            foreach (var scriptPath in _scriptParts[location].Distinct())
             {
                 result.AppendFormat("<script src=\"{0}\" type=\"text/javascript\"></script>", scriptPath);
                 result.Append(Environment.NewLine);
@@ -152,25 +161,34 @@ namespace Nop.Web.Framework.UI
         }
 
 
-        public void AddCssFileParts(params string[] parts)
+        public void AddCssFileParts(ResourceLocation location, params string[] parts)
         {
+            if (!_cssParts.ContainsKey(location))
+                _cssParts.Add(location, new List<string>());
+
             if (parts != null)
                 foreach (string part in parts)
                     if (!string.IsNullOrEmpty(part))
-                        _cssParts.Add(part);
+                        _cssParts[location].Add(part);
         }
-        public void AppendCssFileParts(params string[] parts)
+        public void AppendCssFileParts(ResourceLocation location, params string[] parts)
         {
+            if (!_cssParts.ContainsKey(location))
+                _cssParts.Add(location, new List<string>());
+
             if (parts != null)
                 foreach (string part in parts)
                     if (!string.IsNullOrEmpty(part))
-                        _cssParts.Insert(0, part);
+                        _cssParts[location].Insert(0, part);
         }
-        public string GenerateCssFiles()
+        public string GenerateCssFiles(ResourceLocation location)
         {
+            if (!_cssParts.ContainsKey(location) || _cssParts[location] == null)
+                return "";
+
             var result = new StringBuilder();
             //use only distinct rows
-            foreach (var cssPath in _cssParts.Distinct())
+            foreach (var cssPath in _cssParts[location].Distinct())
             {
                 result.AppendFormat("<link href=\"{0}\" rel=\"stylesheet\" type=\"text/css\" />", cssPath);
                 result.Append(Environment.NewLine);

@@ -14,13 +14,13 @@
         void AppendMetaKeywordParts(params string[] parts);
         string GenerateMetaKeywords();
 
-        void AddScriptParts(params string[] parts);
-        void AppendScriptParts(params string[] parts);
-        string GenerateScripts();
+        void AddScriptParts(ResourceLocation location, params string[] parts);
+        void AppendScriptParts(ResourceLocation location, params string[] parts);
+        string GenerateScripts(ResourceLocation location);
 
-        void AddCssFileParts(params string[] parts);
-        void AppendCssFileParts(params string[] parts);
-        string GenerateCssFiles();
+        void AddCssFileParts(ResourceLocation location, params string[] parts);
+        void AppendCssFileParts(ResourceLocation location, params string[] parts);
+        string GenerateCssFiles(ResourceLocation location);
 
 
         void AddCanonicalUrlParts(params string[] parts);

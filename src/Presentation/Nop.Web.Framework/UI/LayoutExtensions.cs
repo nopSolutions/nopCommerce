@@ -62,38 +62,54 @@ namespace Nop.Web.Framework.UI
 
         public static void AddScriptParts(this HtmlHelper html, params string[] parts)
         {
+            AddScriptParts(html, ResourceLocation.Head, parts);
+        }
+        public static void AddScriptParts(this HtmlHelper html, ResourceLocation location, params string[] parts)
+        {
             var pageTitleBuilder = EngineContext.Current.Resolve<IPageTitleBuilder>();
-            pageTitleBuilder.AddScriptParts(parts);
+            pageTitleBuilder.AddScriptParts(location, parts);
         }
         public static void AppendScriptParts(this HtmlHelper html, params string[] parts)
         {
-            var pageTitleBuilder = EngineContext.Current.Resolve<IPageTitleBuilder>();
-            pageTitleBuilder.AppendScriptParts(parts);
+            AppendScriptParts(html, ResourceLocation.Head, parts);
         }
-        public static MvcHtmlString NopScripts(this HtmlHelper html, params string[] parts)
+        public static void AppendScriptParts(this HtmlHelper html, ResourceLocation location, params string[] parts)
+        {
+            var pageTitleBuilder = EngineContext.Current.Resolve<IPageTitleBuilder>();
+            pageTitleBuilder.AppendScriptParts(location, parts);
+        }
+        public static MvcHtmlString NopScripts(this HtmlHelper html, ResourceLocation location, params string[] parts)
         {
             var pageTitleBuilder = EngineContext.Current.Resolve<IPageTitleBuilder>();
             html.AppendScriptParts(parts);
-            return MvcHtmlString.Create(pageTitleBuilder.GenerateScripts());
+            return MvcHtmlString.Create(pageTitleBuilder.GenerateScripts(location));
         }
 
 
 
         public static void AddCssFileParts(this HtmlHelper html, params string[] parts)
         {
+            AddCssFileParts(html, ResourceLocation.Head, parts);
+        }
+        public static void AddCssFileParts(this HtmlHelper html, ResourceLocation location, params string[] parts)
+        {
             var pageTitleBuilder = EngineContext.Current.Resolve<IPageTitleBuilder>();
-            pageTitleBuilder.AddCssFileParts(parts);
+            pageTitleBuilder.AddCssFileParts(location, parts);
         }
         public static void AppendCssFileParts(this HtmlHelper html, params string[] parts)
         {
-            var pageTitleBuilder = EngineContext.Current.Resolve<IPageTitleBuilder>();
-            pageTitleBuilder.AppendCssFileParts(parts);
+            AppendCssFileParts(html, ResourceLocation.Head, parts);
         }
-        public static MvcHtmlString NopCssFiles(this HtmlHelper html, params string[] parts)
+        public static void AppendCssFileParts(this HtmlHelper html, ResourceLocation location, params string[] parts)
+        {
+            var pageTitleBuilder = EngineContext.Current.Resolve<IPageTitleBuilder>();
+            pageTitleBuilder.AppendCssFileParts(location, parts);
+        }
+        public static MvcHtmlString NopCssFiles(this HtmlHelper html, ResourceLocation location, params string[] parts)
         {
             var pageTitleBuilder = EngineContext.Current.Resolve<IPageTitleBuilder>();
             html.AppendCssFileParts(parts);
-            return MvcHtmlString.Create(pageTitleBuilder.GenerateCssFiles());
+            return MvcHtmlString.Create(pageTitleBuilder.GenerateCssFiles(location));
         }
 
 

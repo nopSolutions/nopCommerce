@@ -22,5 +22,7 @@
     @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.AfterBodyStartHtmlTag })
     @RenderBody()
     @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.BeforeBodyEndHtmlTag })
+    @Html.NopCssFiles(ResourceLocation.Foot)
+    @Html.NopScripts(ResourceLocation.Foot)
 </body>
 </html>
