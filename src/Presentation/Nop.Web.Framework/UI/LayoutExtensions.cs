@@ -78,6 +78,10 @@ namespace Nop.Web.Framework.UI
             var pageTitleBuilder = EngineContext.Current.Resolve<IPageTitleBuilder>();
             pageTitleBuilder.AppendScriptParts(location, parts);
         }
+        public static MvcHtmlString NopScripts(this HtmlHelper html,  params string[] parts)
+        {
+            return NopScripts(html, ResourceLocation.Head, parts);
+        }
         public static MvcHtmlString NopScripts(this HtmlHelper html, ResourceLocation location, params string[] parts)
         {
             var pageTitleBuilder = EngineContext.Current.Resolve<IPageTitleBuilder>();
@@ -104,6 +108,10 @@ namespace Nop.Web.Framework.UI
         {
             var pageTitleBuilder = EngineContext.Current.Resolve<IPageTitleBuilder>();
             pageTitleBuilder.AppendCssFileParts(location, parts);
+        }
+        public static MvcHtmlString NopCssFiles(this HtmlHelper html, params string[] parts)
+        {
+            return NopCssFiles(html, ResourceLocation.Head, parts);
         }
         public static MvcHtmlString NopCssFiles(this HtmlHelper html, ResourceLocation location, params string[] parts)
         {
