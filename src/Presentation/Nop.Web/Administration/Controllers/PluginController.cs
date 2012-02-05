@@ -153,7 +153,6 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return AccessDeniedView();
 
-            //bool changed = false;
             if (updatedPlugins != null)
             {
                 foreach (var pluginModel in updatedPlugins)
@@ -166,14 +165,9 @@ namespace Nop.Admin.Controllers
                         pluginDescriptor.FriendlyName = pluginModel.FriendlyName;
                         pluginDescriptor.DisplayOrder = pluginModel.DisplayOrder;
                         PluginFileParser.SavePluginDescriptionFile(pluginDescriptor);
-                        //changed = true;
                     }
                 }
             }
-
-            //if (changed)
-                //restart application
-                //_webHelper.RestartAppDomain("~/Admin/Plugin/List");
 
             return BulkEditSelect(command);
         }
@@ -201,7 +195,7 @@ namespace Nop.Admin.Controllers
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Plugins.Installed"));
 
                 //restart application
-                _webHelper.RestartAppDomain("~/Admin/Plugin/List");
+                _webHelper.RestartAppDomain();
             }
             catch (Exception exc)
             {
@@ -234,7 +228,7 @@ namespace Nop.Admin.Controllers
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Plugins.Uninstalled"));
 
                 //restart application
-                _webHelper.RestartAppDomain("~/Admin/Plugin/List");
+                _webHelper.RestartAppDomain();
             }
             catch (Exception exc)
             {
@@ -250,7 +244,7 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             //restart application
-            _webHelper.RestartAppDomain("~/Admin/Plugin/List");
+            _webHelper.RestartAppDomain();
             return RedirectToAction("List");
         }
         

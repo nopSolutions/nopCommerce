@@ -455,7 +455,18 @@ namespace Nop.Web.Controllers
                 Order = order
             };
             _paymentService.PostProcessPayment(postProcessPaymentRequest);
-            return RedirectToRoute("OrderDetails", new {orderId = orderId});
+
+            if (this.Response.IsRequestBeingRedirected)
+            {
+                //redirection has been done in PostProcessPayment
+                return Content("Redirected");
+            }
+            else
+            {
+                //if no redirection has been done (to a third-party payment page)
+                //theoretically it's not possible
+                return RedirectToRoute("OrderDetails", new { orderId = orderId });
+            }
         }
 
         #endregion

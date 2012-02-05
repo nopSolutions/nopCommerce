@@ -123,12 +123,13 @@ namespace Nop.Core
         /// <param name="name">Parameter name</param>
         /// <returns>Query string value</returns>
         T QueryString<T>(string name);
-        
+
         /// <summary>
         /// Restart application domain
         /// </summary>
+        /// <param name="makeRedirect">A value indicating whether </param>
         /// <param name="redirectUrl">Redirect URL; empty string if you want to redirect to the current page URL</param>
-        void RestartAppDomain(string redirectUrl = "");
+        void RestartAppDomain(bool makeRedirect = false, string redirectUrl = "");
         
         /// <summary>
         /// Get a value indicating whether the request is made by search engine (web crawler)

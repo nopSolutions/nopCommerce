@@ -356,8 +356,7 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             //restart application
-            _webHelper.RestartAppDomain("~/Admin/");
-
+            _webHelper.RestartAppDomain();
             return RedirectToAction("Index", "Home");
         }
         #endregion

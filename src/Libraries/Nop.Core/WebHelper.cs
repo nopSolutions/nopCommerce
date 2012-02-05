@@ -486,8 +486,9 @@ namespace Nop.Core
         /// <summary>
         /// Restart application domain
         /// </summary>
+        /// <param name="makeRedirect">A value indicating whether </param>
         /// <param name="redirectUrl">Redirect URL; empty string if you want to redirect to the current page URL</param>
-        public virtual void RestartAppDomain(string redirectUrl = "")
+        public virtual void RestartAppDomain(bool makeRedirect = false, string redirectUrl = "")
         {
             if (CommonHelper.GetTrustLevel() > AspNetHostingPermissionLevel.Medium)
             {
@@ -521,12 +522,11 @@ namespace Nop.Core
             // If setting up extensions/modules requires an AppDomain restart, it's very unlikely the
             // current request can be processed correctly.  So, we redirect to the same URL, so that the
             // new request will come to the newly started AppDomain.
-            var httpContext = _httpContext;
-            if (httpContext != null)
+            if (_httpContext != null && makeRedirect)
             {
                 if (String.IsNullOrEmpty(redirectUrl))
                     redirectUrl = GetThisPageUrl(true);
-                httpContext.Response.Redirect(redirectUrl, true /*endResponse*/);
+                _httpContext.Response.Redirect(redirectUrl, true /*endResponse*/);
             }
         }
 

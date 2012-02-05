@@ -767,7 +767,17 @@ namespace Nop.Web.Controllers
                     };
                     _paymentService.PostProcessPayment(postProcessPaymentRequest);
 
-                    return RedirectToRoute("CheckoutCompleted");
+                    if (this.Response.IsRequestBeingRedirected)
+                    {
+                        //redirection has been done in PostProcessPayment
+                        return Content("Redirected");
+                    }
+                    else
+                    {
+                        //if no redirection has been done (to a third-party payment page)
+                        //theoretically it's not possible
+                        return RedirectToRoute("CheckoutCompleted");
+                    }
                 }
                 else
                 {
@@ -1423,9 +1433,20 @@ namespace Nop.Web.Controllers
                 {
                     Order = order
                 };
+
                 _paymentService.PostProcessPayment(postProcessPaymentRequest);
 
-                return RedirectToRoute("CheckoutCompleted");
+                if (this.Response.IsRequestBeingRedirected)
+                {
+                    //redirection has been done in PostProcessPayment
+                    return Content("Redirected");
+                }
+                else
+                {
+                    //if no redirection has been done (to a third-party payment page)
+                    //theoretically it's not possible
+                    return RedirectToRoute("CheckoutCompleted");
+                }
             }
             catch (Exception exc)
             {

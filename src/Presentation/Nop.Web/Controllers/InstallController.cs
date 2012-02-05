@@ -491,7 +491,7 @@ namespace Nop.Web.Controllers
             
             //restart application
             var webHelper = EngineContext.Current.Resolve<IWebHelper>();
-            webHelper.RestartAppDomain("~/Install/Index");
+            webHelper.RestartAppDomain();
 
             //Redirect to home page
             return RedirectToAction("Index", "Home");

@@ -871,7 +871,7 @@ namespace Nop.Admin.Controllers
             {
                 //MobileDevicesSupported setting has been changed
                 //restart application
-                _webHelper.RestartAppDomain("~/Admin/Setting/GeneralCommon");
+                _webHelper.RestartAppDomain();
             }
 
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Updated"));
