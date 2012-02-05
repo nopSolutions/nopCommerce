@@ -202,7 +202,22 @@ namespace Nop.Web.Models.Catalog
 
                 public bool IsRequired { get; set; }
 
+                /// <summary>
+                /// Selected value for textboxes
+                /// </summary>
                 public string TextValue { get; set; }
+                /// <summary>
+                /// Selected day value for datepicker
+                /// </summary>
+                public int? SelectedDay { get; set; }
+                /// <summary>
+                /// Selected month value for datepicker
+                /// </summary>
+                public int? SelectedMonth { get; set; }
+                /// <summary>
+                /// Selected year value for datepicker
+                /// </summary>
+                public int? SelectedYear { get; set; }
 
                 public AttributeControlType AttributeControlType { get; set; }
 

@@ -1330,13 +1330,13 @@ namespace Nop.Web.Controllers
                         break;
                     case AttributeControlType.Datepicker:
                         {
-                            var date = form[controlId + "_day"];
+                            var day = form[controlId + "_day"];
                             var month = form[controlId + "_month"];
                             var year = form[controlId + "_year"];
                             DateTime? selectedDate = null;
                             try
                             {
-                                selectedDate = new DateTime(Int32.Parse(year), Int32.Parse(month), Int32.Parse(date));
+                                selectedDate = new DateTime(Int32.Parse(year), Int32.Parse(month), Int32.Parse(day));
                             }
                             catch {}
                             if (selectedDate.HasValue)
@@ -1546,7 +1546,21 @@ namespace Nop.Web.Controllers
                                 break;
                             case AttributeControlType.Datepicker:
                                 {
-                                    //TODO set value
+                                    var pvaModel = productVariantModel
+                                        .ProductVariantAttributes
+                                        .Select(x => x)
+                                        .Where(y => y.Id == attribute.Id)
+                                        .FirstOrDefault();
+                                    if (pvaModel != null)
+                                    {
+                                        int day, month, year;
+                                        if (int.TryParse(form[controlId + "_day"], out day))
+                                            pvaModel.SelectedDay = day;
+                                        if (int.TryParse(form[controlId + "_month"], out month))
+                                            pvaModel.SelectedMonth = month;
+                                        if (int.TryParse(form[controlId + "_year"], out year))
+                                            pvaModel.SelectedYear = year;
+                                    }
                                 }
                                 break;
                             default:
