@@ -1,7 +1,12 @@
 ﻿@model Nop.Web.Models.Customer.CustomerNavigationModel
            
 @using Nop.Web.Models.Customer
-
+@*IE6 hack here. maybe move to a stylesheet file with IE6 hacks?*@
+<!--[if lt IE 7]>
+<STYLE type="text/css">
+   .block-account-navigation a{white-space:normal!important;}
+ </STYLE>
+<![endif]-->
 <div class="block block-account-navigation">
     <div class="title">
         @T("Account.Navigation")
