@@ -1,3 +1,5 @@
 ﻿@using Nop.Web.Framework;
-<link href="@Html.ResolveUrl("~/Themes/Mobile/Content/styles.css")" rel="stylesheet" type="text/css" />
-<link href="@Html.ResolveUrl("~/Themes/Mobile/Content/jquery.mobile-1.0.1.min.css")" rel="stylesheet" type="text/css" />
+@{
+    Html.AppendCssFileParts(Url.Content("~/Themes/Mobile/Content/jquery.mobile-1.0.1.min.css"));
+    Html.AppendCssFileParts(Url.Content("~/Themes/Mobile/Content/styles.css"));
+}

@@ -7,9 +7,9 @@
 @if (supportRtl)
 {
     //this theme supports RTL
-    <link href="@Html.ResolveUrl("~/Themes/DarkOrange/Content/styles.rtl.css")" rel="stylesheet" type="text/css" />
+    Html.AppendCssFileParts(Url.Content("~/Themes/DarkOrange/Content/styles.rtl.css"));
 }
 else
 {
-    <link href="@Html.ResolveUrl("~/Themes/DarkOrange/Content/styles.css")" rel="stylesheet" type="text/css" />
+    Html.AppendCssFileParts(Url.Content("~/Themes/DarkOrange/Content/styles.css"));
 }

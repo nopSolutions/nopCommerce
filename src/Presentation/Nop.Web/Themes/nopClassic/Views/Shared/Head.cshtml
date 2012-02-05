@@ -1,2 +1,4 @@
 ﻿@using Nop.Web.Framework;
-<link href="@Html.ResolveUrl("~/Themes/nopClassic/Content/styles.css")" rel="stylesheet" type="text/css" />
+@{
+    Html.AppendCssFileParts(Url.Content("~/Themes/nopClassic/Content/styles.css"));
+}

@@ -1,6 +1,14 @@
 ﻿@using Nop.Core
 @using Nop.Core.Infrastructure
 @using Nop.Core.Infrastructure.DependencyManagement
+@{
+    //resources
+    Html.AppendScriptParts(@Url.Content("~/Scripts/MicrosoftMvcAjax.js"));
+    Html.AppendScriptParts(@Url.Content("~/Scripts/MicrosoftAjax.js"));
+    Html.AppendScriptParts(@Url.Content("~/Scripts/jquery.unobtrusive-ajax.min.js"));
+    Html.AppendScriptParts(@Url.Content("~/Scripts/jquery-1.7.1.min.js"));
+    Html.AppendScriptParts(@Url.Content(""));
+}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html @Html.Partial("LanguageAttributes") xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -8,10 +16,6 @@
     <meta name="description" content="@(Html.NopMetaDescription())" />
     <meta name="keywords" content="@(Html.NopMetaKeywords())" />
     @Html.NopCssFiles(ResourceLocation.Head)
-    <script src="@Url.Content("~/Scripts/jquery-1.7.1.min.js")" type="text/javascript"></script>
-    <script src="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.min.js")" type="text/javascript"></script>
-    <script src="@Url.Content("~/Scripts/MicrosoftAjax.js")" type="text/javascript"></script>
-    <script src="@Url.Content("~/Scripts/MicrosoftMvcAjax.js")" type="text/javascript"></script>
     @Html.NopScripts(ResourceLocation.Head)
     @Html.NopCanonicalUrls()
     @*Favicon - upload upload favicon.ico file to the root directory*@
