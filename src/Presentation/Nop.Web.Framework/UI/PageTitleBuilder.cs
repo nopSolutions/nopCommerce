@@ -142,7 +142,8 @@ namespace Nop.Web.Framework.UI
         public string GenerateScripts()
         {
             var result = new StringBuilder();
-            foreach (var scriptPath in _scriptParts)
+            //use only distinct rows
+            foreach (var scriptPath in _scriptParts.Distinct())
             {
                 result.AppendFormat("<script src=\"{0}\" type=\"text/javascript\"></script>", scriptPath);
                 result.Append(Environment.NewLine);
@@ -168,7 +169,8 @@ namespace Nop.Web.Framework.UI
         public string GenerateCssFiles()
         {
             var result = new StringBuilder();
-            foreach (var cssPath in _cssParts)
+            //use only distinct rows
+            foreach (var cssPath in _cssParts.Distinct())
             {
                 result.AppendFormat("<link href=\"{0}\" rel=\"stylesheet\" type=\"text/css\" />", cssPath);
                 result.Append(Environment.NewLine);
