@@ -66,6 +66,7 @@ namespace Nop.Web.Controllers
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IOpenAuthenticationService _openAuthenticationService;
         private readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
+        private readonly IDownloadService _downloadService;
 
         private readonly MediaSettings _mediaSettings;
         private readonly IWorkflowMessageService _workflowMessageService;
@@ -93,7 +94,8 @@ namespace Nop.Web.Controllers
             IPictureService pictureService, INewsLetterSubscriptionService newsLetterSubscriptionService,
             IForumService forumService, IShoppingCartService shoppingCartService,
             IOpenAuthenticationService openAuthenticationService, 
-            IBackInStockSubscriptionService backInStockSubscriptionService, MediaSettings mediaSettings,
+            IBackInStockSubscriptionService backInStockSubscriptionService, 
+            IDownloadService downloadService, MediaSettings mediaSettings,
             IWorkflowMessageService workflowMessageService, LocalizationSettings localizationSettings,
             CaptchaSettings captchaSettings, ExternalAuthenticationSettings externalAuthenticationSettings)
         {
@@ -124,6 +126,7 @@ namespace Nop.Web.Controllers
             this._shoppingCartService = shoppingCartService;
             this._openAuthenticationService = openAuthenticationService;
             this._backInStockSubscriptionService = backInStockSubscriptionService;
+            this._downloadService = downloadService;
 
             this._mediaSettings = mediaSettings;
             this._workflowMessageService = workflowMessageService;
@@ -1312,10 +1315,10 @@ namespace Nop.Web.Controllers
                 else
                     itemModel.ProductName = item.ProductVariant.Product.GetLocalized(x => x.Name);
 
-                if (_orderProcessingService.IsDownloadAllowed(item))
+                if (_downloadService.IsDownloadAllowed(item))
                     itemModel.DownloadId = item.ProductVariant.DownloadId;
 
-                if (_orderProcessingService.IsLicenseDownloadAllowed(item))
+                if (_downloadService.IsLicenseDownloadAllowed(item))
                     itemModel.LicenseId = item.LicenseDownloadId.HasValue ? item.LicenseDownloadId.Value : 0;
             }
             

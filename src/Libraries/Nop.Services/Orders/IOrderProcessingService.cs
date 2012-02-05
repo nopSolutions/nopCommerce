@@ -227,28 +227,11 @@ namespace Nop.Services.Orders
 
 
         /// <summary>
-        /// Gets a value indicating whether download is allowed
-        /// </summary>
-        /// <param name="orderProductVariant">Order produvt variant to check</param>
-        /// <returns>True if download is allowed; otherwise, false.</returns>
-        bool IsDownloadAllowed(OrderProductVariant orderProductVariant);
-
-        /// <summary>
-        /// Gets a value indicating whether license download is allowed
-        /// </summary>
-        /// <param name="orderProductVariant">Order produvt variant to check</param>
-        /// <returns>True if license download is allowed; otherwise, false.</returns>
-        bool IsLicenseDownloadAllowed(OrderProductVariant orderProductVariant);
-
-        /// <summary>
         /// Place order items in current user shopping cart.
         /// </summary>
         /// <param name="order">The order</param>
         void ReOrder(Order order);
-
         
-
-
         /// <summary>
         /// Check whether return request is allowed
         /// </summary>

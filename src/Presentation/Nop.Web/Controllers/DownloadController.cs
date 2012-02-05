@@ -13,19 +13,16 @@ namespace Nop.Web.Controllers
         private readonly IDownloadService _downloadService;
         private readonly IProductService _productService;
         private readonly IOrderService _orderService;
-        private readonly IOrderProcessingService _orderProcessingService;
         private readonly IWorkContext _workContext;
 
         private readonly CustomerSettings _customerSettings;
 
         public DownloadController(IDownloadService downloadService, IProductService productService,
-            IOrderService orderService, IOrderProcessingService orderProcessingService,
-            IWorkContext workContext, CustomerSettings customerSettings)
+            IOrderService orderService, IWorkContext workContext, CustomerSettings customerSettings)
         {
             this._downloadService = downloadService;
             this._productService = productService;
             this._orderService = orderService;
-            this._orderProcessingService = orderProcessingService;
             this._workContext = workContext;
             this._customerSettings = customerSettings;
         }
@@ -65,7 +62,7 @@ namespace Nop.Web.Controllers
 
             var order = orderProductVariant.Order;
             var productVariant = orderProductVariant.ProductVariant;
-            if (!_orderProcessingService.IsDownloadAllowed(orderProductVariant))
+            if (!_downloadService.IsDownloadAllowed(orderProductVariant))
                 return Content("Downloads are not allowed");
 
             if (_customerSettings.DownloadableProductsValidateUser)
@@ -125,7 +122,7 @@ namespace Nop.Web.Controllers
 
             var order = orderProductVariant.Order;
             var productVariant = orderProductVariant.ProductVariant;
-            if (!_orderProcessingService.IsLicenseDownloadAllowed(orderProductVariant))
+            if (!_downloadService.IsLicenseDownloadAllowed(orderProductVariant))
                 return Content("Downloads are not allowed");
 
             if (_customerSettings.DownloadableProductsValidateUser)

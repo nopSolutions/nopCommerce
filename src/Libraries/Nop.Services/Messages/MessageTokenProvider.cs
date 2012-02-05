@@ -23,6 +23,7 @@ using Nop.Services.Directory;
 using Nop.Services.Forums;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
+using Nop.Services.Media;
 using Nop.Services.Orders;
 using Nop.Services.Seo;
 
@@ -40,6 +41,7 @@ namespace Nop.Services.Messages
         private readonly ICurrencyService _currencyService;
         private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
+        private readonly IDownloadService _downloadService;
 
         private readonly StoreInformationSettings _storeSettings;
         private readonly MessageTemplatesSettings _templatesSettings;
@@ -55,7 +57,7 @@ namespace Nop.Services.Messages
             ILocalizationService localizationService, IDateTimeHelper dateTimeHelper,
             IEmailAccountService emailAccountService,
             IPriceFormatter priceFormatter, ICurrencyService currencyService,IWebHelper webHelper,
-            IWorkContext workContext,
+            IWorkContext workContext, IDownloadService downloadService,
             StoreInformationSettings storeSettings, MessageTemplatesSettings templatesSettings,
             EmailAccountSettings emailAccountSettings, CatalogSettings catalogSettings,
             TaxSettings taxSettings)
@@ -68,6 +70,7 @@ namespace Nop.Services.Messages
             this._currencyService = currencyService;
             this._webHelper = webHelper;
             this._workContext = workContext;
+            this._downloadService = downloadService;
 
             this._storeSettings = storeSettings;
             this._templatesSettings = templatesSettings;
@@ -122,8 +125,7 @@ namespace Nop.Services.Messages
 
                 sb.AppendLine("<td style=\"padding: 0.6em 0.4em;text-align: left;\">" + HttpUtility.HtmlEncode(productName));
                 //add download link
-                var orderProcessingService = EngineContext.Current.Resolve<IOrderProcessingService>();
-                if (orderProcessingService.IsDownloadAllowed(opv))
+                if (_downloadService.IsDownloadAllowed(opv))
                 {
                     //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
                     string downloadUrl = string.Format("{0}download/getdownload?opvId={1}", _webHelper.GetStoreLocation(false), opv.OrderProductVariantGuid);
