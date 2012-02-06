@@ -5,8 +5,26 @@ declare @resources xml
 --a resource will be delete if its value is empty
 set @resources='
 <Language>
-  <LocaleResource Name="">
-    <Value></Value>
+  <LocaleResource Name="Enums.Nop.Plugin.Shipping.Fedex.PackByDimensions">
+    <Value>Pack by dimensions</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Plugin.Shipping.Fedex.PackByOneItemPerPackage">
+    <Value>Pack by one item per package</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Plugin.Shipping.Fedex.PackByVolume">
+    <Value>Pack by volume</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.Fedex.Fields.PackingType">
+    <Value>Packing type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.Fedex.Fields.PackingType.Hint">
+    <Value>Choose preferred packing type.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.Fedex.Fields.PackingPackageVolume">
+    <Value>Package volume</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.Fedex.Fields.PackingPackageVolume.Hint">
+    <Value>Enter your package volume.</Value>
   </LocaleResource>
 </Language>
 '
@@ -92,5 +110,12 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.displayt
 BEGIN
 	INSERT [Setting] ([Name], [Value])
 	VALUES (N'catalogsettings.displaytierpriceswithdiscounts', N'true')
+END
+GO
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'fedexsettings.packingpackagevolume')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'fedexsettings.packingpackagevolume', N'5184')
 END
 GO

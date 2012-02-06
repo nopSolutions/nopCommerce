@@ -34,5 +34,9 @@ namespace Nop.Plugin.Shipping.Fedex
         public string CountryCode { get; set; }
 
         public bool PassDimensions { get; set; }
+
+        public int PackingPackageVolume { get; set; }
+
+        public PackingType PackingType { get; set; }
     }
 }

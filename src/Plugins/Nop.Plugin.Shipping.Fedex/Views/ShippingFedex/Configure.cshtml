@@ -3,8 +3,35 @@
 }
 @model Nop.Plugin.Shipping.Fedex.Models.FedexShippingModel
 @using Nop.Web.Framework;
+@using Nop.Plugin.Shipping.Fedex;
 @using (Html.BeginForm())
 {
+    
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#PackingType").change(togglePackingType);
+        
+        togglePackingType();
+    });
+
+    function togglePackingType() {
+        var selectedPackingType = document.getElementById('PackingType');
+        var selectedPackingTypeId = selectedPackingType.options[selectedPackingType.selectedIndex].value;
+        if (selectedPackingTypeId == @(((int)PackingType.PackByDimensions).ToString())) {
+            $('#pnlPassDimensions').show();
+            $('#pnlPackingPackageVolume').hide();
+        }
+        else if (selectedPackingTypeId == @(((int)PackingType.PackByOneItemPerPackage).ToString())) {
+            $('#pnlPassDimensions').hide();
+            $('#pnlPackingPackageVolume').hide();
+        }
+        else if (selectedPackingTypeId == @(((int)PackingType.PackByVolume).ToString())) {
+            $('#pnlPassDimensions').hide();
+            $('#pnlPackingPackageVolume').show();
+        }
+    }
+</script>
     <table class="adminContent">
         <tr>
             <td class="adminTitle">
@@ -140,11 +167,28 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.NopLabelFor(model => model.PackingTypeValues):
+            </td>
+            <td class="adminData">
+                @Html.DropDownList("PackingType", Model.PackingTypeValues)
+            </td>
+        </tr>
+        <tr id="pnlPassDimensions">
+            <td class="adminTitle">
                 @Html.NopLabelFor(model => model.PassDimensions):
             </td>
             <td class="adminData">
                 @Html.EditorFor(model => model.PassDimensions)
                 @Html.ValidationMessageFor(model => model.PassDimensions)
+            </td>
+        </tr>
+        <tr id="pnlPackingPackageVolume">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.PackingPackageVolume):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.PackingPackageVolume)
+                @Html.ValidationMessageFor(model => model.PackingPackageVolume)
             </td>
         </tr>
         <tr>
