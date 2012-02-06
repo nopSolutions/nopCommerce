@@ -1758,10 +1758,10 @@ namespace Nop.Web.Controllers
                                     Quantity = tierPrice.Quantity,
                                 };
                                 decimal taxRate = decimal.Zero;
-                                decimal priceBase = _taxService.GetProductPrice(variant, tierPrice.Price, out taxRate);
-                                decimal price = _currencyService.ConvertFromPrimaryStoreCurrency(priceBase,_workContext.WorkingCurrency);
+                                decimal priceBase = _taxService.GetProductPrice(variant, _priceCalculationService.GetFinalPrice(variant, _workContext.CurrentCustomer, decimal.Zero, _catalogSettings.DisplayTierPricesWithDiscounts, tierPrice.Quantity), out taxRate);
+                                    //_taxService.GetProductPrice(variant, tierPrice.Price, out taxRate);
+                                decimal price = _currencyService.ConvertFromPrimaryStoreCurrency(priceBase, _workContext.WorkingCurrency);
                                 m.Price = _priceFormatter.FormatPrice(price, false, false);
-
                                 return m;
                             })
                 .ToList();

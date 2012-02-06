@@ -85,3 +85,12 @@ GO
 --Customer currency rate issue fix
 ALTER TABLE [dbo].[Order] ALTER COLUMN [CurrencyRate] decimal(18, 8) NOT NULL
 GO
+
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.displaytierpriceswithdiscounts')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'catalogsettings.displaytierpriceswithdiscounts', N'true')
+END
+GO

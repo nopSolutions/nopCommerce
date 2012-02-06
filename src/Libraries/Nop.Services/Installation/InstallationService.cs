@@ -4520,6 +4520,7 @@ namespace Nop.Services.Installation
                     ProductsByTagPageSize = 4,
                     UseSmallProductBoxOnHomePage =  true,
                     IncludeFeaturedProductsInNormalLists = false,
+                    DisplayTierPricesWithDiscounts = true,
                     IgnoreTierPrices = false,
                     IgnoreDiscounts = false,
                     IgnoreFeaturedProducts = false,

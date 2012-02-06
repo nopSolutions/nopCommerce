@@ -178,6 +178,11 @@ namespace Nop.Core.Domain.Catalog
         /// An option indicating whether products on category and manufacturer pages should include featured products as well
         /// </summary>
         public bool IncludeFeaturedProductsInNormalLists { get; set; }
+        
+        /// <summary>
+        /// Gets or sets a value indicating whether tier prices should be displayed with applied discounts (if available)
+        /// </summary>
+        public bool DisplayTierPricesWithDiscounts { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to ignore tier prices (side-wide)
