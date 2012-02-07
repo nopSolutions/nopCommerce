@@ -44,6 +44,18 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.ProductReviews.DisapproveSelected">
     <Value>Disapprove selected</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Common.ExportToXml.All">
+    <Value>Export to XML (all)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.ExportToXml.Selected">
+    <Value>Export to XML (selected)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.ExportToExcel.All">
+    <Value>Export to Excel (all)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.ExportToExcel.Selected">
+    <Value>Export to Excel (selected)</Value>
+  </LocaleResource>
 </Language>
 '
 

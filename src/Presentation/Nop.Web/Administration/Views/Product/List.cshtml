@@ -11,9 +11,12 @@
             @T("Admin.Catalog.Products.Manage")
         </div>
         <div class="options">
-            <a href="@Url.Action("Create")" class="t-button">@T("Admin.Common.AddNew")</a> <a href="@Url.Action("DownloadCatalogAsPdf")" class="t-button">@T("Admin.Catalog.Products.List.DownloadPDF")</a>
-            <a href="@Url.Action("ExportXml")" class="t-button">@T("Admin.Common.ExportToXml")</a>
-            <a href="@Url.Action("ExportExcel")" class="t-button">@T("Admin.Common.ExportToExcel")</a>
+            <a href="@Url.Action("Create")" class="t-button">@T("Admin.Common.AddNew")</a>
+            <a href="@Url.Action("DownloadCatalogAsPdf")" class="t-button">@T("Admin.Catalog.Products.List.DownloadPDF")</a>
+            <a href="@Url.Action("ExportXmlAll")" class="t-button">@T("Admin.Common.ExportToXml.All")</a>
+            <button type="submit" id="exportxml-selected" class="t-button">@T("Admin.Common.ExportToXml.Selected")</button>
+            <a href="@Url.Action("ExportExcelAll")" class="t-button">@T("Admin.Common.ExportToExcel.All")</a>
+            <button type="submit" id="exportexcel-selected" class="t-button">@T("Admin.Common.ExportToExcel.Selected")</button>
             <button type="submit" id="importexcel" name="importexcel" value="importexcel" class="t-button">@T("Admin.Common.ImportFromExcel")</button>
         </div>
     </div>
@@ -67,6 +70,15 @@
                     .Name("products-grid")
                     .Columns(columns =>
                     {
+                        columns.Bound(x => x.Id)
+                        .Filterable(false)
+                        .Template(x => string.Format("<input type='checkbox' name='checkedRecords' value='{0}' class='checkboxGroups'/>", x.Id))
+                        .ClientTemplate("<input type='checkbox' name='checkedRecords' value='<#= Id #>' class='checkboxGroups'/>")
+                        .Title("<input id='mastercheckbox' type='checkbox'/>")
+                        .Width(50)
+                        .HtmlAttributes(new { style = "text-align:center" })
+                        .HeaderHtmlAttributes(new { style = "text-align:center" });
+
                         if (Model.DisplayProductPictures)
                         {
                             columns.Bound(x => x.PictureThumbnailUrl)
@@ -140,31 +152,84 @@
                                             )
                                             .Pageable(settings => settings.Total(Model.Products.Total).PageSize(gridPageSize).Position(GridPagerPosition.Both))
                                             .DataBinding(dataBinding => dataBinding.Ajax().Select("ProductList", "Product"))
-                                            .ClientEvents(events => events.OnDataBinding("onDataBinding"))
+                                            .ClientEvents(events => events.OnDataBinding("onDataBinding").OnDataBound("onDataBound"))
                                             .EnableCustomBinding(true))
             </td>
         </tr>
     </table>
     
     <script type="text/javascript">
+
+        var selectedIds = [];
+
         $(document).ready(function () {
+
+            //search button
             $('#search-products').click(function () {
+                //search
                 var grid = $('#products-grid').data('tGrid');
                 grid.currentPage = 1; //new search. Set page size to 1
                 grid.ajaxRequest();
+                //clear selected checkboxes
+                $('.checkboxGroups').attr('checked', '').change();
+                selectedIds = [];
                 return false;
             });
+
             $("#SearchProductName").keydown(function (event) {
                 if (event.keyCode == 13) {
                     $("#search-products").click();
                     return false;
                 }
             });
+
             $("#GoDirectlyToSku").keydown(function (event) {
                 if (event.keyCode == 13) {
                     $("#go-to-product-by-sku").click();
                     return false;
                 }
+            });
+
+            //"Export Excel selected" button
+            $('#exportexcel-selected').click(function (e) {
+                e.preventDefault();
+                //redirect to required URL
+                setLocation('@(Url.Action("ExportExcelSelected", "Product"))?selectedIds=' + selectedIds.join(","));
+                return false;
+            });
+
+            //"Export XML selected" button
+            $('#exportxml-selected').click(function (e) {
+                e.preventDefault();
+                //redirect to required URL
+                setLocation('@(Url.Action("ExportXmlSelected", "Product"))?selectedIds=' + selectedIds.join(","));
+                return false;
+            });
+
+            $('#mastercheckbox').click(function () {
+                $('.checkboxGroups').attr('checked', $(this).is(':checked') ? 'checked' : '').change();
+            });
+
+            //wire up checkboxes. 
+            $('#products-grid input[type=checkbox][id!=mastercheckbox]').live('change', function (e) {
+                var $check = $(this);
+                if ($check.attr("checked") == true) {
+                    var checked = jQuery.inArray($check.val(), selectedIds);
+                    if (checked == -1) {
+                        //add id to selectedIds.  
+                        selectedIds.push($check.val());
+                    }
+                }
+                else {
+                    var checked = jQuery.inArray($check.val(), selectedIds);
+                    if (checked > -1) {
+                        //remove id from selectedIds.  
+                        selectedIds = $.grep(selectedIds, function (item, index) {
+                            return item != $check.val();
+                        });
+                    }
+                }
+                updateMasterCheckbox();
             });
         });
 
@@ -175,6 +240,29 @@
                 SearchManufacturerId: $('#SearchManufacturerId').val()
             };
             e.data = searchModel;
+        }
+    
+        function onDataBound(e) {
+            $('#products-grid input[type=checkbox][id!=mastercheckbox]').each(function () {
+                var currentId = $(this).val();
+                var checked = jQuery.inArray(currentId, selectedIds);
+                //set checked based on if current checkbox's value is in selectedIds.  
+                $(this).attr('checked', checked > -1);
+            });
+
+            updateMasterCheckbox();
+        }
+
+        function updateMasterCheckbox() {
+            var numChkBoxes = $('#products-grid input[type=checkbox][id!=mastercheckbox]').length;
+            var numChkBoxesChecked = $('#products-grid input[type=checkbox][checked][id!=mastercheckbox]').length;
+            if (numChkBoxes == numChkBoxesChecked && numChkBoxes > 0) {
+                $('#mastercheckbox').attr('checked', 'checked');
+            }
+            else {
+                $('#mastercheckbox').attr('checked', '');
+            }
+
         }
     </script>  
 }

@@ -1440,7 +1440,7 @@ namespace Nop.Admin.Controllers
             }
         }
 
-        public ActionResult ExportXml()
+        public ActionResult ExportXmlAll()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
@@ -1462,7 +1462,30 @@ namespace Nop.Admin.Controllers
             }
         }
 
-        public ActionResult ExportExcel()
+        public ActionResult ExportXmlSelected(string selectedIds)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
+            var products = new List<Product>();
+            if (selectedIds != null)
+            {
+                foreach (var id in selectedIds
+                    .Split(new char[] {','}, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(x => Convert.ToInt32(x)))
+                {
+                    var product = _productService.GetProductById(id);
+                    if (product != null)
+                        products.Add(product);
+                }
+            }
+
+            var fileName = string.Format("products_{0}.xml", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
+            var xml = _exportManager.ExportProductsToXml(products);
+            return new XmlDownloadResult(xml, fileName);
+        }
+
+        public ActionResult ExportExcelAll()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
@@ -1486,6 +1509,33 @@ namespace Nop.Admin.Controllers
                 ErrorNotification(exc);
                 return RedirectToAction("List");
             }
+        }
+
+        public ActionResult ExportExcelSelected(string selectedIds)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
+            var products = new List<Product>();
+            if (selectedIds != null)
+            {
+                foreach (var id in selectedIds
+                    .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(x => Convert.ToInt32(x)))
+                {
+                    var product = _productService.GetProductById(id);
+                    if (product != null)
+                        products.Add(product);
+                }
+            }
+
+            string fileName = string.Format("products_{0}_{1}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
+            string filePath = string.Format("{0}content\\files\\ExportImport\\{1}", Request.PhysicalApplicationPath, fileName);
+
+            _exportManager.ExportProductsToXlsx(filePath, products);
+
+            var bytes = System.IO.File.ReadAllBytes(filePath);
+            return File(bytes, "text/xls", fileName);
         }
 
         [HttpPost]

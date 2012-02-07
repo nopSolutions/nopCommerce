@@ -451,7 +451,7 @@ namespace Nop.Admin.Controllers
 
         #region Export / Import
 
-        public ActionResult ExportXml()
+        public ActionResult ExportXmlAll()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -472,7 +472,29 @@ namespace Nop.Admin.Controllers
             }
         }
 
-        public ActionResult ExportExcel()
+        public ActionResult ExportXmlSelected(string selectedIds)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
+            var orders = new List<Order>();
+            if (selectedIds != null)
+            {
+                foreach (var id in selectedIds
+                    .Split(new char[] {','}, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(x => Convert.ToInt32(x)))
+                {
+                    var order = _orderService.GetOrderById(id);
+                    if (order != null)
+                        orders.Add(order);
+                }
+            }
+            var fileName = string.Format("orders_{0}.xml", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
+            var xml = _exportManager.ExportOrdersToXml(orders);
+            return new XmlDownloadResult(xml, fileName);
+        }
+
+	    public ActionResult ExportExcelAll()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -495,6 +517,32 @@ namespace Nop.Admin.Controllers
                 ErrorNotification(exc);
                 return RedirectToAction("List");
             }
+        }
+
+        public ActionResult ExportExcelSelected(string selectedIds)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
+            var orders = new List<Order>();
+            if (selectedIds != null)
+            {
+                foreach (var id in selectedIds
+                    .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(x => Convert.ToInt32(x)))
+                {
+                    var order = _orderService.GetOrderById(id);
+                    if (order != null)
+                        orders.Add(order);
+                }
+            }
+            string fileName = string.Format("orders_{0}_{1}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
+            string filePath = string.Format("{0}content\\files\\ExportImport\\{1}", Request.PhysicalApplicationPath, fileName);
+
+            _exportManager.ExportOrdersToXlsx(filePath, orders);
+
+            var bytes = System.IO.File.ReadAllBytes(filePath);
+            return File(bytes, "text/xls", fileName);
         }
 
         #endregion

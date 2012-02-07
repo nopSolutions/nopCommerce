@@ -2299,9 +2299,25 @@
 					</LocaleResource>
 					<LocaleResource Name="ExportToExcel">
 						<Value>Export to Excel</Value>
+						<Children>
+							<LocaleResource Name="All">
+								<Value>Export to Excel (all)</Value>
+							</LocaleResource>
+							<LocaleResource Name="Selected">
+								<Value>Export to Excel (selected)</Value>
+							</LocaleResource>
+						</Children>
 					</LocaleResource>
 					<LocaleResource Name="ExportToXml">
 						<Value>Export to XML</Value>
+						<Children>
+							<LocaleResource Name="All">
+								<Value>Export to XML (all)</Value>
+							</LocaleResource>
+							<LocaleResource Name="Selected">
+								<Value>Export to XML (selected)</Value>
+							</LocaleResource>
+						</Children>
 					</LocaleResource>
 					<LocaleResource Name="ExportToCsv">
 						<Value>Export to CSV</Value>
