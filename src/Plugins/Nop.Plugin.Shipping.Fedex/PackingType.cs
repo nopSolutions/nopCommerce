@@ -8,14 +8,14 @@ namespace Nop.Plugin.Shipping.Fedex
         /// <summary>
         /// Pack by dimensions
         /// </summary>
-        PackByDimensions = 1,
+        PackByDimensions = 0,
         /// <summary>
         /// Pack by one item per package
         /// </summary>
-        PackByOneItemPerPackage = 2,
+        PackByOneItemPerPackage = 1,
         /// <summary>
         /// Pack by volume
         /// </summary>
-        PackByVolume = 3
+        PackByVolume = 2
     }
 }
