@@ -14,7 +14,7 @@
             @T("Admin.System.QueuedEmails")
         </div>
         <div class="options">
-            <button type="submit" name="delete-selected" value="delete_selected" class="t-button">@T("Admin.System.QueuedEmails.DeleteSelected")</button>
+            <button type="submit" id="delete-selected" name="delete-selected" value="delete_selected" class="t-button">@T("Admin.System.QueuedEmails.DeleteSelected")</button>
         </div>
     </div>
     <table width="100%">
@@ -125,10 +125,38 @@
 
         $(document).ready(function () {
 
+            //search button
             $('#btnSearch').click(function () {
                 var grid = $('#queuedEmails-grid').data('tGrid');
                 grid.currentPage = 1; //new search. Set page size to 1
                 grid.ajaxRequest();
+                return false;
+            });
+            
+            //"delete selected" button
+            $('#delete-selected').click(function (e) {
+                e.preventDefault();
+
+                var postData = {
+                    selectedIds: selectedIds
+                };
+
+                $.ajax({
+                    cache:false,
+                    type: "POST",
+                    url: "@(Url.Action("DeleteSelected", "QueuedEmail"))",
+                    data: postData,
+                    complete: function (data) {
+                        //reload grid
+                        var grid = $('#queuedEmails-grid').data('tGrid');
+                        grid.currentPage = 1; //new search. Set page size to 1
+                        grid.ajaxRequest();
+                    },
+                    error:function (xhr, ajaxOptions, thrownError){
+                        alert(thrownError);
+                    },
+                    traditional: true
+                });
                 return false;
             });
 
