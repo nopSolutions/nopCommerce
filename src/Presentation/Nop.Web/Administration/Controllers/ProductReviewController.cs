@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Nop.Admin.Models.Catalog;
+using Nop.Admin.Models.Logging;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
@@ -87,17 +89,24 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
 
-            var gridModel = new GridModel<ProductReviewModel>();
-            return View(gridModel);
+            var model = new ProductReviewListModel();
+            return View(model);
         }
 
         [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult List(GridCommand command)
+        public ActionResult List(GridCommand command, ProductReviewListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
 
-            var productReviews = _customerContentService.GetAllCustomerContent<ProductReview>(0, null);
+            DateTime? createdOnFromValue = (model.CreatedOnFrom == null) ? null
+                            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.CreatedOnFrom.Value, _dateTimeHelper.CurrentTimeZone);
+
+            DateTime? createdToFromValue = (model.CreatedOnTo == null) ? null
+                            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.CreatedOnTo.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
+
+            var productReviews = _customerContentService.GetAllCustomerContent<ProductReview>(0, null,
+                createdOnFromValue, createdToFromValue);
             var gridModel = new GridModel<ProductReviewModel>
             {
                 Data = productReviews.PagedForCommand(command).Select(x =>
@@ -161,7 +170,7 @@ namespace Nop.Admin.Controllers
             PrepareProductReviewModel(model, productReview, true, false);
             return View(model);
         }
-
+        
         //delete
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)

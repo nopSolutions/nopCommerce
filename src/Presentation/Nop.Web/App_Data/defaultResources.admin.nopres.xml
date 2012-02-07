@@ -1088,6 +1088,26 @@
 									</LocaleResource>
 								</Children>
 							</LocaleResource>
+							<LocaleResource Name="List">
+								<Children>
+									<LocaleResource Name="CreatedOnFrom">
+										<Value>Created from</Value>
+										<Children>
+											<LocaleResource Name="Hint">
+												<Value>The creation from date for the search.</Value>
+											</LocaleResource>
+										</Children>
+									</LocaleResource>
+									<LocaleResource Name="CreatedOnTo">
+										<Value>Created to</Value>
+										<Children>
+											<LocaleResource Name="Hint">
+												<Value>The creation to date for the search.</Value>
+											</LocaleResource>
+										</Children>
+									</LocaleResource>
+								</Children>
+							</LocaleResource>
 							<LocaleResource Name="Deleted">
 								<Value>The product review has been deleted successfully.</Value>
 							</LocaleResource>

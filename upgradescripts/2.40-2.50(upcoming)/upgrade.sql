@@ -26,6 +26,18 @@ set @resources='
   <LocaleResource Name="Plugins.Shipping.Fedex.Fields.PackingPackageVolume.Hint">
     <Value>Enter your package volume.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviews.List.CreatedOnFrom">
+    <Value>Created from</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviews.List.CreatedOnFrom.Hint">
+    <Value>The creation from date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviews.List.CreatedOnTo">
+    <Value>Created to</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviews.List.CreatedOnTo.Hint">
+    <Value>The creation to date for the search.</Value>
+  </LocaleResource>
 </Language>
 '
 
