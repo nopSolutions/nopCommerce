@@ -97,9 +97,13 @@
         
             //search button
             $('#btnSearch').click(function () {
+                //search
                 var grid = $('#productreviews-grid').data('tGrid');
                 grid.currentPage = 1; //new search. Set page size to 1
                 grid.ajaxRequest();
+                //clear selected checkboxes
+                $('.checkboxGroups').attr('checked', '').change();
+                selectedIds = [];
                 return false;
             });
             
