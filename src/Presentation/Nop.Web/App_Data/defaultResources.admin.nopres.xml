@@ -1008,8 +1008,14 @@
 					<LocaleResource Name="ProductReviews">
 						<Value>Product reviews</Value>
 						<Children>
+							<LocaleResource Name="ApproveSelected">
+								<Value>Approve selected</Value>
+							</LocaleResource>
 							<LocaleResource Name="BackToList">
 								<Value>back to product review list</Value>
+							</LocaleResource>
+							<LocaleResource Name="DisapproveSelected">
+								<Value>Disapprove selected</Value>
 							</LocaleResource>
 							<LocaleResource Name="EditProductReviewDetails">
 								<Value>Edit product review details</Value>

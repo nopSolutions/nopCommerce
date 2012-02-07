@@ -38,6 +38,12 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.ProductReviews.List.CreatedOnTo.Hint">
     <Value>The creation to date for the search.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviews.ApproveSelected">
+    <Value>Approve selected</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductReviews.DisapproveSelected">
+    <Value>Disapprove selected</Value>
+  </LocaleResource>
 </Language>
 '
 

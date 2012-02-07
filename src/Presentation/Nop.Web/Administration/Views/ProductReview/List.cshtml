@@ -9,6 +9,8 @@
         @T("Admin.Catalog.ProductReviews")
     </div>
     <div class="options">
+    <button type="submit" id="approve-selected" class="t-button">@T("Admin.Catalog.ProductReviews.ApproveSelected")</button>
+    <button type="submit" id="disapprove-selected" class="t-button">@T("Admin.Catalog.ProductReviews.DisapproveSelected")</button>
     </div>
 </div>
     <table width="100%">
@@ -39,11 +41,16 @@
         <td>
             @(Html.Telerik().Grid<ProductReviewModel>()
                     .Name("productreviews-grid")
-                    .ClientEvents(events => events.OnDataBinding("onDataBinding"))
+                            .ClientEvents(events => events.OnDataBinding("onDataBinding").OnDataBound("onDataBound"))
                     .Columns(columns =>
                     {
                         columns.Bound(x => x.Id)
-                            .Width(50);
+                        .ClientTemplate("<input type='checkbox' name='checkedRecords' value='<#= Id #>' class='checkboxGroups'/>")
+                        .Title("<input id='mastercheckbox' type='checkbox'/>")
+                        .Width(50)
+                        .HtmlAttributes(new { style = "text-align:center" })
+                        .HeaderHtmlAttributes(new { style = "text-align:center" });
+
                         columns.Bound(x => x.ProductName)
                             .Width(200)
                             .Template(x => Html.ActionLink(x.ProductName, "Edit", "Product", new { id = x.ProductId }, new { }))
@@ -84,13 +91,97 @@
 
     <script type="text/javascript">
 
-        $(document).ready(function () {
+        var selectedIds = [];
 
+        $(document).ready(function () {
+        
+            //search button
             $('#btnSearch').click(function () {
                 var grid = $('#productreviews-grid').data('tGrid');
                 grid.currentPage = 1; //new search. Set page size to 1
                 grid.ajaxRequest();
                 return false;
+            });
+            
+            //"approve selected" button
+            $('#approve-selected').click(function (e) {
+                e.preventDefault();
+
+                var postData = {
+                    selectedIds: selectedIds
+                };
+
+                $.ajax({
+                    cache:false,
+                    type: "POST",
+                    url: "@(Url.Action("ApproveSelected", "ProductReview"))",
+                    data: postData,
+                    complete: function (data) {
+                        //reload grid
+                        var grid = $('#productreviews-grid').data('tGrid');
+                        //grid.currentPage = 1; //new search. Set page size to 1
+                        grid.ajaxRequest();
+                    },
+                    error:function (xhr, ajaxOptions, thrownError){
+                        alert(thrownError);
+                    },
+                    traditional: true
+                });
+                return false;
+            });
+            
+            //"disapprove selected" button
+            $('#disapprove-selected').click(function (e) {
+                e.preventDefault();
+
+                var postData = {
+                    selectedIds: selectedIds
+                };
+
+                $.ajax({
+                    cache:false,
+                    type: "POST",
+                    url: "@(Url.Action("DisapproveSelected", "ProductReview"))",
+                    data: postData,
+                    complete: function (data) {
+                        //reload grid
+                        var grid = $('#productreviews-grid').data('tGrid');
+                        //grid.currentPage = 1; //new search. Set page size to 1
+                        grid.ajaxRequest();
+                    },
+                    error:function (xhr, ajaxOptions, thrownError){
+                        alert(thrownError);
+                    },
+                    traditional: true
+                });
+                return false;
+            });
+
+
+            $('#mastercheckbox').click(function () {
+                $('.checkboxGroups').attr('checked', $(this).is(':checked') ? 'checked' : '').change();
+            });
+
+            //wire up checkboxes. 
+            $('#productreviews-grid input[type=checkbox][id!=mastercheckbox]').live('change', function (e) {
+                var $check = $(this);
+                if ($check.attr("checked") == true) {
+                    var checked = jQuery.inArray($check.val(), selectedIds);
+                    if (checked == -1) {
+                        //add id to selectedIds.  
+                        selectedIds.push($check.val());
+                    }
+                }
+                else {
+                    var checked = jQuery.inArray($check.val(), selectedIds);
+                    if (checked > -1) {
+                        //remove id from selectedIds.  
+                        selectedIds = $.grep(selectedIds, function (item, index) {
+                            return item != $check.val();
+                        });
+                    }
+                }
+                updateMasterCheckbox();
             });
         });
 
@@ -100,6 +191,30 @@
                 CreatedOnTo: $('#@Html.FieldIdFor(model => model.CreatedOnTo)').val()
             };
             e.data = searchModel;
+        }
+
+        function onDataBound(e) {
+
+            $('#productreviews-grid input[type=checkbox][id!=mastercheckbox]').each(function () {
+                var currentId = $(this).val();
+                var checked = jQuery.inArray(currentId, selectedIds);
+                //set checked based on if current checkbox's value is in selectedIds.  
+                $(this).attr('checked', checked > -1);
+            });
+
+            updateMasterCheckbox();
+        }
+
+        function updateMasterCheckbox() {
+            var numChkBoxes = $('#productreviews-grid input[type=checkbox][id!=mastercheckbox]').length;
+            var numChkBoxesChecked = $('#productreviews-grid input[type=checkbox][checked][id!=mastercheckbox]').length;
+            if (numChkBoxes == numChkBoxesChecked && numChkBoxes > 0) {
+                $('#mastercheckbox').attr('checked', 'checked');
+            }
+            else {
+                $('#mastercheckbox').attr('checked', '');
+            }
+
         }
 
     </script>

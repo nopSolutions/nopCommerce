@@ -192,6 +192,57 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("List");
         }
 
+        [HttpPost]
+        public ActionResult ApproveSelected(ICollection<int> selectedIds)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
+            if (selectedIds != null)
+            {
+                foreach (var id in selectedIds)
+                {
+                    var productReview = _customerContentService.GetCustomerContentById(id) as ProductReview;
+                    if (productReview != null)
+                    {
+                        productReview.IsApproved = true;
+                        _customerContentService.UpdateCustomerContent(productReview);
+                        //update product totals
+                        _productService.UpdateProductReviewTotals(productReview.Product);
+                    }
+                }
+            }
+
+            return Json(new { Result = true });
+        }
+
+        [HttpPost]
+        public ActionResult DisapproveSelected(ICollection<int> selectedIds)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
+            if (selectedIds != null)
+            {
+                foreach (var id in selectedIds)
+                {
+                    var productReview = _customerContentService.GetCustomerContentById(id) as ProductReview;
+                    if (productReview != null)
+                    {
+                        productReview.IsApproved = false;
+                        _customerContentService.UpdateCustomerContent(productReview);
+                        //update product totals
+                        _productService.UpdateProductReviewTotals(productReview.Product);
+                    }
+                }
+            }
+
+            return Json(new { Result = true });
+        }
+
+
+
+
         #endregion
     }
 }
