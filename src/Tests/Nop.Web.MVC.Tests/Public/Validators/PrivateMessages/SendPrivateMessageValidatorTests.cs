@@ -6,20 +6,20 @@ using NUnit.Framework;
 namespace Nop.Web.MVC.Tests.Public.Validators.PrivateMessages
 {
     [TestFixture]
-    public class PrivateMessageValidatorTests : BaseValidatorTests
+    public class SendPrivateMessageValidatorTests : BaseValidatorTests
     {
-        private PrivateMessageValidator _validator;
+        private SendPrivateMessageValidator _validator;
         
         [SetUp]
         public new void Setup()
         {
-            _validator = new PrivateMessageValidator(_localizationService);
+            _validator = new SendPrivateMessageValidator(_localizationService);
         }
 
         [Test]
         public void Should_have_error_when_subject_is_null_or_empty()
         {
-            var model = new PrivateMessageModel();
+            var model = new SendPrivateMessageModel();
             model.Subject = null;
             _validator.ShouldHaveValidationErrorFor(x => x.Subject, model);
             model.Subject = "";
@@ -29,7 +29,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.PrivateMessages
         [Test]
         public void Should_not_have_error_when_subject_is_specified()
         {
-            var model = new PrivateMessageModel();
+            var model = new SendPrivateMessageModel();
             model.Subject = "some comment";
             _validator.ShouldNotHaveValidationErrorFor(x => x.Subject, model);
         }
@@ -37,7 +37,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.PrivateMessages
         [Test]
         public void Should_have_error_when_message_is_null_or_empty()
         {
-            var model = new PrivateMessageModel();
+            var model = new SendPrivateMessageModel();
             model.Message = null;
             _validator.ShouldHaveValidationErrorFor(x => x.Message, model);
             model.Message = "";
@@ -47,7 +47,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.PrivateMessages
         [Test]
         public void Should_not_have_error_when_message_is_specified()
         {
-            var model = new PrivateMessageModel();
+            var model = new SendPrivateMessageModel();
             model.Message = "some comment";
             _validator.ShouldNotHaveValidationErrorFor(x => x.Message, model);
         }

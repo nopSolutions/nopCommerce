@@ -265,6 +265,7 @@
     <Compile Include="Models\Order\SubmitReturnRequestModel.cs" />
     <Compile Include="Models\Order\OrderDetailsModel.cs" />
     <Compile Include="Models\Polls\PollModel.cs" />
+    <Compile Include="Models\PrivateMessages\SendPrivateMessageModel.cs" />
     <Compile Include="Models\PrivateMessages\PrivateMessageIndexModel.cs" />
     <Compile Include="Models\PrivateMessages\PrivateMessageListModel.cs" />
     <Compile Include="Models\PrivateMessages\PrivateMessageModel.cs" />
@@ -291,7 +292,7 @@
     <Compile Include="Validators\Newsletter\NewsletterBoxValidator.cs" />
     <Compile Include="Validators\Customer\PasswordRecoveryConfirmValidator.cs" />
     <Compile Include="Validators\Customer\PasswordRecoveryValidator.cs" />
-    <Compile Include="Validators\PrivateMessages\PrivateMessageValidator.cs" />
+    <Compile Include="Validators\PrivateMessages\SendPrivateMessageValidator.cs" />
     <Compile Include="Validators\ShoppingCart\WishlistEmailAFriendValidator.cs" />
     <Compile Include="Validators\Customer\ChangePasswordValidator.cs" />
     <Compile Include="Validators\Customer\RegisterValidator.cs" />

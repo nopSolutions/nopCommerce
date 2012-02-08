@@ -25,7 +25,12 @@
                .Encode(false)
                .Attributes(style => "width:5%;", align => "center")
                .Header("<th><span class=\"cbHeaderPMInbox\"><input type=\"checkbox\" id=\"selectall\" /></span></th>");
-           column.For(pm => pm.customerFromName).Named(@T("PrivateMessages.Inbox.FromColumn").Text)
+           column.For(pm => @pm.AllowViewingFromProfile ?
+                    @Html.RouteLink(pm.CustomerFromName, "CustomerProfile", new { Id = pm.FromCustomerId }).ToString() :
+                    @Html.Encode(pm.CustomerFromName)
+               )
+               .Encode(false)
+               .Named(@T("PrivateMessages.Inbox.FromColumn").Text)
                .Attributes(style => "width:20%;");
            column.For(pm => @Html.RouteLink(pm.Subject, "ViewPM", new { privateMessageId = pm.Id }, new { @class = (pm.IsRead) ? "pmread" : "pmunread" }))
                .Encode(false)

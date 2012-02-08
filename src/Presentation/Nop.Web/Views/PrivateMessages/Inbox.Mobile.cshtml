@@ -19,7 +19,15 @@
                             @T("PrivateMessages.Inbox.SubjectColumn"): @Html.RouteLink(pm.Subject, "ViewPM", new { privateMessageId = pm.Id }, new { @class = (pm.IsRead) ? "pmread" : "pmunread" })
                         </div>
                         <div>
-                            @T("PrivateMessages.Inbox.FromColumn"): @pm.customerFromName
+                            @T("PrivateMessages.Inbox.FromColumn"):
+                            @if (pm.AllowViewingFromProfile)
+                           {
+                                <a href="@Url.RouteUrl("CustomerProfile", new { id = pm.FromCustomerId })">@(pm.CustomerFromName)</a>
+                           }
+                           else
+                           {
+                               @pm.CustomerFromName
+                           }
                         </div>
                         <div>
                             @T("PrivateMessages.Inbox.DateColumn"): @dateTimeHelper.ConvertToUserTime(pm.CreatedOnUtc)

@@ -100,7 +100,7 @@
     <Compile Include="Public\Validators\Install\InstallValidatorTests.cs" />
     <Compile Include="Public\Validators\Newsletter\NewsletterBoxValidatorTests.cs" />
     <Compile Include="Public\Validators\Person.cs" />
-    <Compile Include="Public\Validators\PrivateMessages\PrivateMessageValidatorTests.cs" />
+    <Compile Include="Public\Validators\PrivateMessages\SendPrivateMessageValidatorTests.cs" />
     <Compile Include="Public\Validators\ShoppingCart\WishlistEmailAFriendValidatorTests.cs" />
     <Compile Include="Public\Validators\TestValidator.cs" />
     <Compile Include="Public\Validators\CreditCardValidatorTests.cs" />

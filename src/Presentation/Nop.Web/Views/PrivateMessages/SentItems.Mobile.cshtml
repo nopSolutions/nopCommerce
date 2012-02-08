@@ -16,10 +16,18 @@
                 <li>
                     <div class="item">
                         <div>
-                            @T("PrivateMessages.Inbox.SubjectColumn"): @Html.RouteLink(pm.Subject, "ViewPM", new { privateMessageId = pm.Id }, new { @class = (pm.IsRead) ? "pmread" : "pmunread" })
+                            @T("PrivateMessages.Inbox.SubjectColumn"): @Html.RouteLink(pm.Subject, "ViewPM", new { privateMessageId = pm.Id }, new { @class = "pmread" })
                         </div>
                         <div>
-                            @T("PrivateMessages.Inbox.ToColumn"): @pm.customerToName
+                            @T("PrivateMessages.Inbox.ToColumn"): 
+                            @if (pm.AllowViewingToProfile)
+                           {
+                                <a href="@Url.RouteUrl("CustomerProfile", new { id = pm.ToCustomerId })">@(pm.CustomerToName)</a>
+                           }
+                           else
+                           {
+                               @pm.CustomerToName
+                           }
                         </div>
                         <div>
                             @T("PrivateMessages.Inbox.DateColumn"): @dateTimeHelper.ConvertToUserTime(pm.CreatedOnUtc)

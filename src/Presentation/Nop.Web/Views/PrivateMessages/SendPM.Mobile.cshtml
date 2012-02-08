@@ -1,4 +1,4 @@
-﻿@model Nop.Web.Models.PrivateMessages.PrivateMessageModel
+﻿@model Nop.Web.Models.PrivateMessages.SendPrivateMessageModel
 @using Nop.Web;
 @using Nop.Web.Extensions;
 @{    
@@ -22,7 +22,15 @@
             </div>
             <div class="postmessage">
                 <div>
-                    @T("PrivateMessages.Send.To") @Model.customerToName
+                    @T("PrivateMessages.Send.To") 
+                    @if (Model.AllowViewingToProfile)
+                           {
+                                <a href="@Url.RouteUrl("CustomerProfile", new { id = Model.ToCustomerId })">@(Model.CustomerToName)</a>
+                           }
+                           else
+                           {
+                               @Model.CustomerToName
+                           }
                 </div>
                 <div>
                     @T("PrivateMessages.Send.Subject")

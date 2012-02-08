@@ -17,21 +17,20 @@ namespace Nop.Web.Controllers
     {
         private readonly IForumService _forumService;
         private readonly ICustomerService _customerService;
-        private readonly ILocalizationService _localizationService;
         private readonly IWorkContext _workContext;
         private readonly ForumSettings _forumSettings;
+        private readonly CustomerSettings _customerSettings;
 
         public PrivateMessagesController(IForumService forumService,
             ICustomerService customerService,
-            ILocalizationService localizationService,
             IWorkContext workContext,
-            ForumSettings forumSettings)
+            ForumSettings forumSettings, CustomerSettings customerSettings)
         {
             this._forumService = forumService;
             this._customerService = customerService;
-            this._localizationService = localizationService;
             this._workContext = workContext;
             this._forumSettings = forumSettings;
+            this._customerSettings = customerSettings;
         }
 
         [NonAction]
@@ -104,12 +103,16 @@ namespace Nop.Web.Controllers
             {
                 inbox.Add(new PrivateMessageModel()
                 {
-                    customerFromName = pm.FromCustomer.FormatUserName(),
-                    customerToName = pm.ToCustomer.FormatUserName(),
+                    Id = pm.Id,
+                    FromCustomerId = pm.FromCustomer.Id,
+                    CustomerFromName = pm.FromCustomer.FormatUserName(),
+                    AllowViewingFromProfile = _customerSettings.AllowViewingProfiles && pm.FromCustomer != null && !pm.FromCustomer.IsGuest(),
+                    ToCustomerId = pm.ToCustomer.Id,
+                    CustomerToName = pm.ToCustomer.FormatUserName(),
+                    AllowViewingToProfile = _customerSettings.AllowViewingProfiles && pm.ToCustomer != null && !pm.ToCustomer.IsGuest(),
                     Subject = pm.Subject,
                     Message = pm.Text,
                     CreatedOnUtc = pm.CreatedOnUtc,
-                    Id = pm.Id,
                     IsRead = pm.IsRead,
                 });
             }
@@ -153,12 +156,16 @@ namespace Nop.Web.Controllers
             {
                 sentItems.Add(new PrivateMessageModel()
                 {
-                    customerFromName = pm.FromCustomer.FormatUserName(),
-                    customerToName = pm.ToCustomer.FormatUserName(),
+                    Id = pm.Id,
+                    FromCustomerId = pm.FromCustomer.Id,
+                    CustomerFromName = pm.FromCustomer.FormatUserName(),
+                    AllowViewingFromProfile = _customerSettings.AllowViewingProfiles && pm.FromCustomer != null && !pm.FromCustomer.IsGuest(),
+                    ToCustomerId = pm.ToCustomer.Id,
+                    CustomerToName = pm.ToCustomer.FormatUserName(),
+                    AllowViewingToProfile = _customerSettings.AllowViewingProfiles && pm.ToCustomer != null && !pm.ToCustomer.IsGuest(),
                     Subject = pm.Subject,
                     Message = pm.Text,
                     CreatedOnUtc = pm.CreatedOnUtc,
-                    Id = pm.Id,
                     IsRead = pm.IsRead,
                 });
             }
@@ -269,14 +276,15 @@ namespace Nop.Web.Controllers
 
             var customerTo = _customerService.GetCustomerById(toCustomerId);
 
-            if (customerTo == null)
+            if (customerTo == null || customerTo.IsGuest())
             {
                 return RedirectToAction("Index");
             }
 
-            var model = new PrivateMessageModel();
-            model.ToCustomerId = toCustomerId;
-            model.customerToName = customerTo.FormatUserName();
+            var model = new SendPrivateMessageModel();
+            model.ToCustomerId = customerTo.Id;
+            model.CustomerToName = customerTo.FormatUserName();
+            model.AllowViewingToProfile = _customerSettings.AllowViewingProfiles && !customerTo.IsGuest();
 
             if (replyToMessageId.HasValue)
             {
@@ -300,7 +308,7 @@ namespace Nop.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult SendPM(PrivateMessageModel model)
+        public ActionResult SendPM(SendPrivateMessageModel model)
         {
             if (!AllowPrivateMessages())
             {
@@ -334,24 +342,24 @@ namespace Nop.Web.Controllers
             {
                 return RedirectToAction("Index");
             }
-            model.customerToName = toCustomer.FormatUserName();
+            model.ToCustomerId = toCustomer.Id;
+            model.CustomerToName = toCustomer.FormatUserName();
+            model.AllowViewingToProfile = _customerSettings.AllowViewingProfiles && !toCustomer.IsGuest();
 
             if (ModelState.IsValid)
             {
                 try
                 {
                     string subject = model.Subject;
-                    var maxSubjectLength = _forumSettings.PMSubjectMaxLength;
-                    if (maxSubjectLength > 0 && subject.Length > maxSubjectLength)
+                    if (_forumSettings.PMSubjectMaxLength > 0 && subject.Length > _forumSettings.PMSubjectMaxLength)
                     {
-                        subject = subject.Substring(0, maxSubjectLength);
+                        subject = subject.Substring(0, _forumSettings.PMSubjectMaxLength);
                     }
 
                     var text = model.Message;
-                    var maxPostLength = _forumSettings.PMTextMaxLength;
-                    if (maxPostLength > 0 && text.Length > maxPostLength)
+                    if (_forumSettings.PMTextMaxLength > 0 && text.Length > _forumSettings.PMTextMaxLength)
                     {
-                        text = text.Substring(0, maxPostLength);
+                        text = text.Substring(0, _forumSettings.PMTextMaxLength);
                     }
 
                     var nowUtc = DateTime.UtcNow;
@@ -414,12 +422,17 @@ namespace Nop.Web.Controllers
 
             var model = new PrivateMessageModel()
             {
-                customerFromName = pm.FromCustomer.FormatUserName(),
-                customerToName = pm.ToCustomer.FormatUserName(),
+                Id = pm.Id,
+                FromCustomerId = pm.FromCustomer.Id,
+                CustomerFromName = pm.FromCustomer.FormatUserName(),
+                AllowViewingFromProfile = _customerSettings.AllowViewingProfiles && pm.FromCustomer != null && !pm.FromCustomer.IsGuest(),
+                ToCustomerId = pm.ToCustomer.Id,
+                CustomerToName = pm.ToCustomer.FormatUserName(),
+                AllowViewingToProfile = _customerSettings.AllowViewingProfiles && pm.ToCustomer != null && !pm.ToCustomer.IsGuest(),
                 Subject = pm.Subject,
                 Message = pm.FormatPrivateMessageText(),
-                ToCustomerId = pm.FromCustomerId,
-                Id = pm.Id,
+                CreatedOnUtc = pm.CreatedOnUtc,
+                IsRead = pm.IsRead,
             };
 
             return View(model);

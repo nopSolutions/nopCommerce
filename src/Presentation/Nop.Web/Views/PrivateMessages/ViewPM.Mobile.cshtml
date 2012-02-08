@@ -11,10 +11,10 @@
     <div class="wrapper">
         <div class="viewmessage">
             <div>
-                @T("PrivateMessages.View.From") @Model.customerFromName
+                @T("PrivateMessages.View.From") @Model.CustomerFromName
             </div>
             <div>
-                @T("PrivateMessages.View.To") @Model.customerToName
+                @T("PrivateMessages.View.To") @Model.CustomerToName
             </div>
             <div class="subject-label">
                 @T("PrivateMessages.View.Subject")
@@ -30,7 +30,7 @@
             </div>
             <div>
                 <div class="options">
-                    <a href="@Url.RouteUrl("SendPMReply", new { toCustomerId = @Model.ToCustomerId, replyToMessageId = @Model.Id })" data-role="button" data-inline="true">@T("PrivateMessages.View.ReplyButton")</a>
+                    <a href="@Url.RouteUrl("SendPMReply", new { toCustomerId = @Model.FromCustomerId, replyToMessageId = @Model.Id })" data-role="button" data-inline="true">@T("PrivateMessages.View.ReplyButton")</a>
                     <a href="@Url.RouteUrl("DeletePM", new { privateMessageId = @Model.Id })" data-role="button" data-inline="true">@T("PrivateMessages.View.DeleteButton")</a>
                     <a href="@Url.RouteUrl("PrivateMessages")" data-role="button" data-inline="true">@T("PrivateMessages.View.BackButton")</a>
                 </div>

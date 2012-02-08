@@ -15,7 +15,7 @@
                     @T("PrivateMessages.View.From")
                 </td>
                 <td>
-                    @Model.customerFromName
+                    @Model.CustomerFromName
                 </td>
             </tr>
             <tr>
@@ -23,7 +23,7 @@
                     @T("PrivateMessages.View.To")
                 </td>
                 <td>
-                    @Model.customerToName
+                    @Model.CustomerToName
                 </td>
             </tr>
             <tr>
@@ -45,7 +45,7 @@
             <tr>
                 <td colspan="2" class="options">
                     <input type="button" class="replypmbutton" value="@T("PrivateMessages.View.ReplyButton")" 
-                        onclick="setLocation('@Url.RouteUrl("SendPMReply", new { toCustomerId = @Model.ToCustomerId, replyToMessageId = @Model.Id })')" />
+                        onclick="setLocation('@Url.RouteUrl("SendPMReply", new { toCustomerId = @Model.FromCustomerId, replyToMessageId = @Model.Id })')" />
                     <input type="button" class="deletepmbutton" value="@T("PrivateMessages.View.DeleteButton")" 
                         onclick="setLocation('@Url.RouteUrl("DeletePM", new { privateMessageId = @Model.Id })')" />
                     <input type="button" class="backpmbutton" value="@T("PrivateMessages.View.BackButton")" 
