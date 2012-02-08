@@ -18,17 +18,13 @@
         }
         @if (@Model.CustomerId > 0)
         {
-            var authorText = @T("Forum.By");
-            var authorName = Html.Encode(@Model.CustomerName);
             if (Model.AllowViewingProfiles && !Model.IsCustomerGuest)
             {
-                var output = String.Format("{0}: <a href=\"{2}\">{1}</a>", authorText, authorName, @Url.RouteUrl("CustomerProfile", new { id = Model.CustomerId }));
-                @Html.Raw(output)
+                @T("Forum.By")<text>:</text> @Html.RouteLink(Model.CustomerName, "CustomerProfile", new { Id = Model.CustomerId })
             }
             else
             {
-                var output = String.Format("{0}: {1}", authorText, authorName);
-                @output
+                @T("Forum.By")<text>:</text> @Model.CustomerName
             }
         }
     </div>

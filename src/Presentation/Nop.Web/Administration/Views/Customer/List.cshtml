@@ -100,7 +100,7 @@
         }
         <tr>
             <td colspan="2">
-                <button type="submit" name="search-customers" value="search-customers" class="t-button">@T("Admin.Common.Search")</button>
+                <button type="submit" id="search-customers" name="search-customers" value="search-customers" class="t-button">@T("Admin.Common.Search")</button>
             </td>
         </tr>
     </table>
@@ -243,7 +243,26 @@
         var selectedIds = [];
 
         $(document).ready(function () {
-        
+
+            $("#@Html.FieldIdFor(model => model.SearchEmail)").keydown(function (event) {
+                if (event.keyCode == 13) {
+                    $("#search-customers").click();
+                    return false;
+                }
+            });
+            $("#@Html.FieldIdFor(model => model.SearchFirstName)").keydown(function (event) {
+                if (event.keyCode == 13) {
+                    $("#search-customers").click();
+                    return false;
+                }
+            });
+            $("#@Html.FieldIdFor(model => model.SearchLastName)").keydown(function (event) {
+                if (event.keyCode == 13) {
+                    $("#search-customers").click();
+                    return false;
+                }
+            });
+
             //"Export Excel selected" button
             $('#exportexcel-selected').click(function (e) {
                 e.preventDefault();                

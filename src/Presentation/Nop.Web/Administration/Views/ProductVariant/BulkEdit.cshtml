@@ -88,7 +88,8 @@
             grid.ajaxRequest();
             return false;
         });
-        $("#SearchProductName").keydown(function (event) {
+        
+        $("#@Html.FieldIdFor(model => model.SearchProductName)").keydown(function (event) {
             if (event.keyCode == 13) {
                 $("#search-products").click();
                 return false;
