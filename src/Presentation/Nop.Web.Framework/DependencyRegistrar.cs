@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Web;
+using System.Web.Mvc;
 using Autofac;
 using Autofac.Builder;
 using Autofac.Core;
@@ -84,7 +85,10 @@ namespace Nop.Web.Framework
             builder.RegisterType<WebHelper>().As<IWebHelper>().InstancePerHttpRequest();
 
             //controllers
-            builder.RegisterControllers(typeFinder.GetAssemblies().ToArray());
+            builder.RegisterControllers(typeFinder.GetAssemblies().ToArray()).InjectActionInvoker();
+
+            //filters
+            builder.RegisterType<ExtensibleActionInvoker>().As<IActionInvoker>();
 
             //data layer
             var dataSettingsManager = new DataSettingsManager();
