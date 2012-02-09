@@ -56,7 +56,7 @@ CREATE PROCEDURE [dbo].[ProductLoadAllPaged]
 	@SearchDescriptions bit = 0,
 	@FilteredSpecs		nvarchar(300) = null,	--filter by attributes (comma-separated list). e.g. 14,15,16
 	@LanguageId			int = 0,
-	@OrderBy			int = 0, --0 position, 5 - Name, 10 - Price, 15 - creation date
+	@OrderBy			int = 0, --0 position, 5 - Name: A to Z, 6 - Name: Z to A, 10 - Price: Low to High, 11 - Price: High to Low, 15 - creation date
 	@PageIndex			int = 0, 
 	@PageSize			int = 2147483644,
 	@ShowHidden			bit = 0,
@@ -219,17 +219,28 @@ BEGIN
 			)
 		)
 	ORDER BY 
+		--category position
 		CASE WHEN @OrderBy = 0 AND @CategoryId IS NOT NULL AND @CategoryId > 0
 		THEN pcm.DisplayOrder END ASC,
+		--manufacturer position
 		CASE WHEN @OrderBy = 0 AND @ManufacturerId IS NOT NULL AND @ManufacturerId > 0
 		THEN pmm.DisplayOrder END ASC,
+		--sort by name (there's no any position if category or manufactur is not specified)
 		CASE WHEN @OrderBy = 0
 		THEN p.[Name] END ASC,
+		--Name: A to Z
 		CASE WHEN @OrderBy = 5
-		--THEN dbo.[nop_getnotnullnotempty](pl.[Name],p.[Name]) END ASC,
-		THEN p.[Name] END ASC,
+		THEN p.[Name] END ASC, --THEN dbo.[nop_getnotnullnotempty](pl.[Name],p.[Name]) END ASC,
+		--Name: Z to A
+		CASE WHEN @OrderBy = 6
+		THEN p.[Name] END DESC, --THEN dbo.[nop_getnotnullnotempty](pl.[Name],p.[Name]) END DESC,
+		--Price: Low to High
 		CASE WHEN @OrderBy = 10
 		THEN pv.Price END ASC,
+		--Price: High to Low
+		CASE WHEN @OrderBy = 11
+		THEN pv.Price END DESC,
+		--Created on
 		CASE WHEN @OrderBy = 15
 		THEN p.CreatedOnUtc END DESC
 

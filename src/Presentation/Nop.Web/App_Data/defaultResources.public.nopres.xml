@@ -1385,11 +1385,17 @@
 					<LocaleResource Name="Position">
 						<Value>Position</Value>
 					</LocaleResource>
-					<LocaleResource Name="Name">
-						<Value>Name</Value>
+					<LocaleResource Name="NameAsc">
+						<Value>Name: A to Z</Value>
 					</LocaleResource>
-					<LocaleResource Name="Price">
-						<Value>Price</Value>
+					<LocaleResource Name="NameDesc">
+						<Value>Name: Z to A</Value>
+					</LocaleResource>
+					<LocaleResource Name="PriceAsc">
+						<Value>Price: Low to High</Value>
+					</LocaleResource>
+					<LocaleResource Name="PriceDesc">
+						<Value>Price: High to Low</Value>
 					</LocaleResource>
 					<LocaleResource Name="CreatedOn">
 						<Value>Created on</Value>

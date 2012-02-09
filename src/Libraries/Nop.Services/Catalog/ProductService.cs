@@ -535,20 +535,39 @@ namespace Nop.Services.Catalog
                 //}
                 else if (orderBy == ProductSortingEnum.Position)
                 {
+                    //sort by name (there's no any position if category or manufactur is not specified)
                     query = query.OrderBy(p => p.Name);
                 }
-                else if (orderBy == ProductSortingEnum.Name)
+                else if (orderBy == ProductSortingEnum.NameAsc)
                 {
+                    //Name: A to Z
                     query = query.OrderBy(p => p.Name);
                 }
-                else if (orderBy == ProductSortingEnum.Price)
+                else if (orderBy == ProductSortingEnum.NameDesc)
                 {
+                    //Name: Z to A
+                    query = query.OrderByDescending(p => p.Name);
+                }
+                else if (orderBy == ProductSortingEnum.PriceAsc)
+                {
+                    //Price: Low to High
                     query = query.OrderBy(p => p.ProductVariants.FirstOrDefault().Price);
                 }
+                else if (orderBy == ProductSortingEnum.PriceDesc)
+                {
+                    //Price: High to Low
+                    query = query.OrderByDescending(p => p.ProductVariants.FirstOrDefault().Price);
+                }
                 else if (orderBy == ProductSortingEnum.CreatedOn)
+                {
+                    //creation date
                     query = query.OrderByDescending(p => p.CreatedOnUtc);
+                }
                 else
+                {
+                    //actually this code is not reachable
                     query = query.OrderBy(p => p.Name);
+                }
 
                 var products = new PagedList<Product>(query, pageIndex, pageSize);
                 return products;

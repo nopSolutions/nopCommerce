@@ -182,6 +182,24 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnEmailProductToFriendPage.Hint">
     <Value>Check to show CAPTCHA on ''email product to a friend'' page.</Value>
   </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.ProductSortingEnum.Name">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.ProductSortingEnum.Price">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.ProductSortingEnum.NameAsc">
+    <Value>Name: A to Z</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.ProductSortingEnum.NameDesc">
+    <Value>Name: Z to A</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.ProductSortingEnum.PriceAsc">
+    <Value>Price: Low to High</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.ProductSortingEnum.PriceDesc">
+    <Value>Price: High to Low</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -273,5 +291,250 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'fedexsettings.packingpac
 BEGIN
 	INSERT [Setting] ([Name], [Value])
 	VALUES (N'fedexsettings.packingpackagevolume', N'5184')
+END
+GO
+
+
+--Update stored procedure according to the sort options
+IF EXISTS (
+		SELECT *
+		FROM dbo.sysobjects
+		WHERE id = OBJECT_ID(N'[dbo].[ProductLoadAllPaged]') AND OBJECTPROPERTY(id,N'IsProcedure') = 1)
+DROP PROCEDURE [dbo].[ProductLoadAllPaged]
+GO
+CREATE PROCEDURE [dbo].[ProductLoadAllPaged]
+(
+	@CategoryId			int = 0,
+	@ManufacturerId		int = 0,
+	@ProductTagId		int = 0,
+	@FeaturedProducts	bit = null,	--0 featured only , 1 not featured only, null - load all products
+	@PriceMin			decimal(18, 4) = null,
+	@PriceMax			decimal(18, 4) = null,
+	@Keywords			nvarchar(MAX) = null,
+	@SearchDescriptions bit = 0,
+	@FilteredSpecs		nvarchar(300) = null,	--filter by attributes (comma-separated list). e.g. 14,15,16
+	@LanguageId			int = 0,
+	@OrderBy			int = 0, --0 position, 5 - Name: A to Z, 6 - Name: Z to A, 10 - Price: Low to High, 11 - Price: High to Low, 15 - creation date
+	@PageIndex			int = 0, 
+	@PageSize			int = 2147483644,
+	@ShowHidden			bit = 0,
+	@TotalRecords		int = null OUTPUT
+)
+AS
+BEGIN
+	
+	--init
+	DECLARE @SearchKeywords bit
+	SET @SearchKeywords = 1
+	IF (@Keywords IS NULL OR @Keywords = N'')
+		SET @SearchKeywords = 0
+
+	SET @Keywords = isnull(@Keywords, '')
+	SET @Keywords = '%' + rtrim(ltrim(@Keywords)) + '%'
+
+	--filter by attributes
+	SET @FilteredSpecs = isnull(@FilteredSpecs, '')
+	CREATE TABLE #FilteredSpecs
+	(
+		SpecificationAttributeOptionId int not null
+	)
+	INSERT INTO #FilteredSpecs (SpecificationAttributeOptionId)
+	SELECT CAST(data as int) FROM dbo.[nop_splitstring_to_table](@FilteredSpecs, ',');
+	
+	DECLARE @SpecAttributesCount int	
+	SELECT @SpecAttributesCount = COUNT(1) FROM #FilteredSpecs
+
+	--paging
+	DECLARE @PageLowerBound int
+	DECLARE @PageUpperBound int
+	DECLARE @RowsToReturn int
+	
+	SET @RowsToReturn = @PageSize * (@PageIndex + 1)	
+	SET @PageLowerBound = @PageSize * @PageIndex
+	SET @PageUpperBound = @PageLowerBound + @PageSize + 1
+	
+	CREATE TABLE #DisplayOrderTmp 
+	(
+		[Id] int IDENTITY (1, 1) NOT NULL,
+		[ProductId] int NOT NULL
+	)
+
+	INSERT INTO #DisplayOrderTmp ([ProductId])
+	SELECT p.Id
+	FROM Product p with (NOLOCK) 
+	LEFT OUTER JOIN Product_Category_Mapping pcm with (NOLOCK) ON p.Id=pcm.ProductId
+	LEFT OUTER JOIN Product_Manufacturer_Mapping pmm with (NOLOCK) ON p.Id=pmm.ProductId
+	LEFT OUTER JOIN Product_ProductTag_Mapping pptm with (NOLOCK) ON p.Id=pptm.Product_Id
+	LEFT OUTER JOIN ProductVariant pv with (NOLOCK) ON p.Id = pv.ProductId
+	--searching of the localized values
+	--comment the line below if you don't use it. It'll improve the performance
+	LEFT OUTER JOIN LocalizedProperty lp with (NOLOCK) ON p.Id = lp.EntityId AND lp.LanguageId = @LanguageId AND lp.LocaleKeyGroup = N'Product'
+	WHERE 
+		(
+		   (
+				@CategoryId IS NULL OR @CategoryId=0
+				OR (pcm.CategoryId=@CategoryId AND (@FeaturedProducts IS NULL OR pcm.IsFeaturedProduct=@FeaturedProducts))
+			)
+		AND (
+				@ManufacturerId IS NULL OR @ManufacturerId=0
+				OR (pmm.ManufacturerId=@ManufacturerId AND (@FeaturedProducts IS NULL OR pmm.IsFeaturedProduct=@FeaturedProducts))
+			)
+		AND (
+				@ProductTagId IS NULL OR @ProductTagId=0
+				OR pptm.ProductTag_Id=@ProductTagId
+			)
+		AND	(
+				@ShowHidden = 1 OR p.Published = 1
+			)
+		AND 
+			(
+				p.Deleted=0
+			)
+		AND 
+			(
+				@ShowHidden = 1 OR pv.Published = 1
+			)
+		AND 
+			(
+				@ShowHidden = 1 OR pv.Deleted = 0
+			)
+		AND (
+				--min price
+				(@PriceMin IS NULL OR @PriceMin=0)
+				OR 
+				(
+					--special price (specified price and valid date range)
+					(pv.SpecialPrice IS NOT NULL AND (getutcdate() BETWEEN isnull(pv.SpecialPriceStartDateTimeUtc, '1/1/1900') AND isnull(pv.SpecialPriceEndDateTimeUtc, '1/1/2999')))
+					AND
+					(pv.SpecialPrice >= @PriceMin)
+				)
+				OR 
+				(
+					--regular price (price isn't specified or date range isn't valid)
+					(pv.SpecialPrice IS NULL OR (getutcdate() NOT BETWEEN isnull(pv.SpecialPriceStartDateTimeUtc, '1/1/1900') AND isnull(pv.SpecialPriceEndDateTimeUtc, '1/1/2999')))
+					AND
+					(pv.Price >= @PriceMin)
+				)
+			)
+		AND (
+				--max price
+				(@PriceMax IS NULL OR @PriceMax=2147483644) -- max value
+				OR 
+				(
+					--special price (specified price and valid date range)
+					(pv.SpecialPrice IS NOT NULL AND (getutcdate() BETWEEN isnull(pv.SpecialPriceStartDateTimeUtc, '1/1/1900') AND isnull(pv.SpecialPriceEndDateTimeUtc, '1/1/2999')))
+					AND
+					(pv.SpecialPrice <= @PriceMax)
+				)
+				OR 
+				(
+					--regular price (price isn't specified or date range isn't valid)
+					(pv.SpecialPrice IS NULL OR (getutcdate() NOT BETWEEN isnull(pv.SpecialPriceStartDateTimeUtc, '1/1/1900') AND isnull(pv.SpecialPriceEndDateTimeUtc, '1/1/2999')))
+					AND
+					(pv.Price <= @PriceMax)
+				)
+			)
+		AND	(
+				@SearchKeywords = 0 or 
+				(
+					-- search standard content
+					patindex(@Keywords, p.name) > 0
+					or patindex(@Keywords, pv.name) > 0
+					or patindex(@Keywords, pv.sku) > 0
+					or (@SearchDescriptions = 1 and patindex(@Keywords, p.ShortDescription) > 0)
+					or (@SearchDescriptions = 1 and patindex(@Keywords, p.FullDescription) > 0)
+					or (@SearchDescriptions = 1 and patindex(@Keywords, pv.Description) > 0)					
+					--searching of the localized values
+					--comment the lines below if you don't use it. It'll improve the performance
+					or (lp.LocaleKey = N'Name' and patindex(@Keywords, lp.LocaleValue) > 0)
+					or (@SearchDescriptions = 1 and lp.LocaleKey = N'ShortDescription' and patindex(@Keywords, lp.LocaleValue) > 0)
+					or (@SearchDescriptions = 1 and lp.LocaleKey = N'FullDescription' and patindex(@Keywords, lp.LocaleValue) > 0)
+				)
+			)
+		AND
+			(
+				@ShowHidden = 1
+				OR
+				(getutcdate() between isnull(pv.AvailableStartDateTimeUtc, '1/1/1900') and isnull(pv.AvailableEndDateTimeUtc, '1/1/2999'))
+			)
+		AND
+			(
+				--filter by specs
+				@SpecAttributesCount = 0
+				OR
+				(
+					NOT EXISTS(
+						SELECT 1 
+						FROM #FilteredSpecs [fs]
+						WHERE [fs].SpecificationAttributeOptionId NOT IN (
+							SELECT psam.SpecificationAttributeOptionId
+							FROM dbo.Product_SpecificationAttribute_Mapping psam
+							WHERE psam.AllowFiltering = 1 AND psam.ProductId = p.Id
+							)
+						)
+					
+				)
+			)
+		)
+	ORDER BY 
+		--category position
+		CASE WHEN @OrderBy = 0 AND @CategoryId IS NOT NULL AND @CategoryId > 0
+		THEN pcm.DisplayOrder END ASC,
+		--manufacturer position
+		CASE WHEN @OrderBy = 0 AND @ManufacturerId IS NOT NULL AND @ManufacturerId > 0
+		THEN pmm.DisplayOrder END ASC,
+		--sort by name (there's no any position if category or manufactur is not specified)
+		CASE WHEN @OrderBy = 0
+		THEN p.[Name] END ASC,
+		--Name: A to Z
+		CASE WHEN @OrderBy = 5
+		THEN p.[Name] END ASC, --THEN dbo.[nop_getnotnullnotempty](pl.[Name],p.[Name]) END ASC,
+		--Name: Z to A
+		CASE WHEN @OrderBy = 6
+		THEN p.[Name] END DESC, --THEN dbo.[nop_getnotnullnotempty](pl.[Name],p.[Name]) END DESC,
+		--Price: Low to High
+		CASE WHEN @OrderBy = 10
+		THEN pv.Price END ASC,
+		--Price: High to Low
+		CASE WHEN @OrderBy = 11
+		THEN pv.Price END DESC,
+		--Created on
+		CASE WHEN @OrderBy = 15
+		THEN p.CreatedOnUtc END DESC
+
+	DROP TABLE #FilteredSpecs
+
+	CREATE TABLE #PageIndex 
+	(
+		[IndexId] int IDENTITY (1, 1) NOT NULL,
+		[ProductId] int NOT NULL
+	)
+	INSERT INTO #PageIndex ([ProductId])
+	SELECT ProductId
+	FROM #DisplayOrderTmp with (NOLOCK)
+	GROUP BY ProductId
+	ORDER BY min([Id])
+
+	--total records
+	SET @TotalRecords = @@rowcount
+	SET ROWCOUNT @RowsToReturn
+	
+	DROP TABLE #DisplayOrderTmp
+
+	--return products (returned properties should be synchronized with 'Product' entity)
+	SELECT  
+		p.*
+	FROM
+		#PageIndex [pi]
+		INNER JOIN Product p with (NOLOCK) on p.Id = [pi].[ProductId]
+	WHERE
+		[pi].IndexId > @PageLowerBound AND 
+		[pi].IndexId < @PageUpperBound
+	ORDER BY
+		IndexId
+	
+	SET ROWCOUNT 0
+
+	DROP TABLE #PageIndex
 END
 GO

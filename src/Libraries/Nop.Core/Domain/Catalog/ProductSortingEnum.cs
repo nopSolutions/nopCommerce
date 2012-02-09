@@ -10,17 +10,24 @@
         /// </summary>
         Position = 0,
         /// <summary>
-        /// Name
+        /// Name: A to Z
         /// </summary>
-        Name = 5,
+        NameAsc = 5,
         /// <summary>
-        /// Price
+        /// Name: Z to A
         /// </summary>
-        Price = 10,
+        NameDesc = 6,
+        /// <summary>
+        /// Price: Low to High
+        /// </summary>
+        PriceAsc = 10,
+        /// <summary>
+        /// Price: High to Low
+        /// </summary>
+        PriceDesc = 11,
         /// <summary>
         /// Product creation date
         /// </summary>
         CreatedOn = 15,
-
     }
 }
