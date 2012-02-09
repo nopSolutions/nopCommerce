@@ -145,6 +145,10 @@ namespace Nop.Admin.Controllers
             var weight = _measureService.GetMeasureWeightById(id);
             if (weight == null)
                 throw new ArgumentException("No weight found with the specified id");
+
+            if (weight.Id == _measureSettings.BaseWeightId)
+                return Content("The primary weight can't be deleted.");
+
             _measureService.DeleteMeasureWeight(weight);
 
             return Weights(command);
@@ -257,6 +261,10 @@ namespace Nop.Admin.Controllers
             var dimension = _measureService.GetMeasureDimensionById(id);
             if (dimension == null)
                 throw new ArgumentException("No dimension found with the specified id");
+
+            if (dimension.Id == _measureSettings.BaseDimensionId)
+                return Content("The primary dimension can't be deleted.");
+
             _measureService.DeleteMeasureDimension(dimension);
 
             return Dimensions(command);
