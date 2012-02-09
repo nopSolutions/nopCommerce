@@ -46,7 +46,7 @@
                             .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
                             .Width(50)
                             .Centered()
-                            .HeaderTemplate("Edit");
+                            .HeaderTemplate(T("Admin.Common.Edit").Text);
                     })
                     .Pageable(settings => settings.Total(Model.Total).PageSize(gridPageSize).Position(GridPagerPosition.Both))
                     .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "Poll"))

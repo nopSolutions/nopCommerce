@@ -12,21 +12,20 @@
 <table class="adminContent">
     <tr>
         <td>
-            <h4>Manual plugin installation:</h4>
+            <h4>@T("Admin.Configuration.Plugins.Description"):</h4>
             <ol>
-                <li>Upload the plugin to the /plugins folder in your nopCommerce directory. </li>
-                <li>Restart your application (or click 'Reload list of plugins' button). </li>
-                <li>Scroll down through the list of plugins to find the newly installed plugin.
-                </li>
-                <li>Click on the 'Install' link to install the plugin. </li>
-                <li>Note: If you're running nopCommerce in medium trust, then it's recommended to clear your \Plugins\bin\ directory</li>
+                <li>@T("Admin.Configuration.Plugins.Description.Step1")</li>
+                <li>@T("Admin.Configuration.Plugins.Description.Step2")</li>
+                <li>@T("Admin.Configuration.Plugins.Description.Step3")</li>
+                <li>@T("Admin.Configuration.Plugins.Description.Step4")</li>
+                <li>@T("Admin.Configuration.Plugins.Description.Step5")</li>
             </ol>
         </td>
     </tr>
     <tr>
         <td>
-            <h4>Editing</h4>
-            This grid allows the bulk editing of the 'Friendly name' and 'Display order' fields. To enter edit mode just click a cell.
+            <h4>@T("Admin.Configuration.Plugins.Editing")</h4>
+            @T("Admin.Configuration.Plugins.Editing.Hint")
         </td>
     </tr>
     @*TODO display pop-up "waiting..." window (similar to installation wizard) when clicking on "install" or "uninstall"*@
@@ -83,7 +82,7 @@
                             .ClientTemplate("<# if (Installed)  { #> <a href=\"" + @Url.Content("~/Admin/Plugin/Uninstall/") + "?systemName=<#= SystemName #>\">" + T("Admin.Configuration.Plugins.Fields.Uninstall").Text + "</a> <# } else { #> <a href=\"" + @Url.Content("~/Admin/Plugin/Install/") + "?systemName=<#= SystemName #>\">" + T("Admin.Configuration.Plugins.Fields.Install").Text + "</a> <# } #>")
                             .Width(50)
                             .Centered()
-                            .HeaderTemplate("Installation");
+                            .HeaderTemplate(T("Admin.Configuration.Plugins.Fields.Installation").Text);
                     })
                     .ToolBar(commands =>
                     {

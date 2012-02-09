@@ -2285,6 +2285,9 @@
 					<LocaleResource Name="ConfigurationNotRequired">
 						<Value>Configuration is not required</Value>
 					</LocaleResource>
+					<LocaleResource Name="CsvFile">
+						<Value>CSV file</Value>
+					</LocaleResource>
 					<LocaleResource Name="DeleteConfirmationParam">
 						<Value>Are you sure you want to delete "{0}"?</Value>
 					</LocaleResource>
@@ -2296,6 +2299,9 @@
 					</LocaleResource>
 					<LocaleResource Name="Edit">
 						<Value>Edit</Value>
+					</LocaleResource>
+					<LocaleResource Name="ExcelFile">
+						<Value>Excel file</Value>
 					</LocaleResource>
 					<LocaleResource Name="ExportToExcel">
 						<Value>Export to Excel</Value>
@@ -2333,6 +2339,9 @@
 					</LocaleResource>
 					<LocaleResource Name="List">
 						<Value>List</Value>
+					</LocaleResource>
+					<LocaleResource Name="LoseUnsavedChanges">
+						<Value>You are going to lose any unsaved changes. Are you sure?</Value>
 					</LocaleResource>
 					<LocaleResource Name="No">
 						<Value>No</Value>
@@ -2591,6 +2600,9 @@
 									<LocaleResource Name="AddNew">
 										<Value>Add a new state/province</Value>
 									</LocaleResource>
+									<LocaleResource Name="CantDeleteWithAddresses">
+										<Value>The state can't be deleted. It has associated addresses.</Value>
+									</LocaleResource>
 									<LocaleResource Name="EditStateDetails">
 										<Value>Edit state/province</Value>
 									</LocaleResource>
@@ -2663,6 +2675,12 @@
 							</LocaleResource>
 							<LocaleResource Name="BackToList">
 								<Value>back to currency list</Value>
+							</LocaleResource>
+							<LocaleResource Name="CantDeleteExchange">
+								<Value>The primary exchange rate currency can't be deleted.</Value>
+							</LocaleResource>
+							<LocaleResource Name="CantDeletePrimary">
+								<Value>The primary store currency can't be deleted.</Value>
 							</LocaleResource>
 							<LocaleResource Name="EditCurrencyDetails">
 								<Value>Edit currency details</Value>
@@ -3073,6 +3091,17 @@
 									</LocaleResource>
 								</Children>
 							</LocaleResource>
+							<LocaleResource Name="XmlFile">
+								<Value>Xml file</Value>
+								<Children>
+									<LocaleResource Name="Note1">
+										<Value>NOTE: It can take up to several minutes.</Value>
+									</LocaleResource>
+									<LocaleResource Name="Note2">
+										<Value>NOTE: DO NOT click twice.</Value>
+									</LocaleResource>
+								</Children>
+							</LocaleResource>
 							<LocaleResource Name="Added">
 								<Value>The new language has been added successfully.</Value>
 							</LocaleResource>
@@ -3093,6 +3122,9 @@
 							<LocaleResource Name="Weights">
 								<Value>Weights</Value>
 								<Children>
+									<LocaleResource Name="CantDeletePrimary">
+										<Value>The primary weight can't be deleted.</Value>
+									</LocaleResource>
 									<LocaleResource Name="Description">
 										<Value>NOTE: if you change your primary weight, then do not forget to update the appropriate ratios of the units</Value>
 									</LocaleResource>
@@ -3133,6 +3165,9 @@
 							<LocaleResource Name="Dimensions">
 								<Value>Dimensions</Value>
 								<Children>
+									<LocaleResource Name="CantDeletePrimary">
+										<Value>The primary dimension can't be deleted.</Value>
+									</LocaleResource>
 									<LocaleResource Name="Description">
 										<Value>NOTE: if you change your primary dimension, then do not forget to update the appropriate ratios of the units</Value>
 									</LocaleResource>
@@ -3222,6 +3257,34 @@
 					<LocaleResource Name="Plugins">
 						<Value>Plugins</Value>
 						<Children>
+							<LocaleResource Name="Description">
+								<Value>Manual plugin installation</Value>
+								<Children>
+									<LocaleResource Name="Step1">
+										<Value>Upload the plugin to the /plugins folder in your nopCommerce directory.</Value>
+									</LocaleResource>
+									<LocaleResource Name="Step2">
+										<Value>Restart your application (or click 'Reload list of plugins' button).</Value>
+									</LocaleResource>
+									<LocaleResource Name="Step3">
+										<Value>Scroll down through the list of plugins to find the newly installed plugin.</Value>
+									</LocaleResource>
+									<LocaleResource Name="Step4">
+										<Value>Click on the 'Install' link to install the plugin.</Value>
+									</LocaleResource>
+									<LocaleResource Name="Step5">
+										<Value>Note: If you're running nopCommerce in medium trust, then it's recommended to clear your \Plugins\bin\ directory</Value>
+									</LocaleResource>
+								</Children>
+							</LocaleResource>
+							<LocaleResource Name="Editing">
+								<Value>Editing</Value>
+								<Children>
+									<LocaleResource Name="Hint">
+										<Value>This grid allows the bulk editing of the 'Friendly name' and 'Display order' fields. To enter edit mode just click a cell.</Value>
+									</LocaleResource>
+								</Children>
+							</LocaleResource>
 							<LocaleResource Name="Fields">
 								<Children>
 									<LocaleResource Name="Group">
@@ -3247,6 +3310,9 @@
 									</LocaleResource>
 									<LocaleResource Name="Install">
 										<Value>Install</Value>
+									</LocaleResource>
+									<LocaleResource Name="Installation">
+										<Value>Installation</Value>
 									</LocaleResource>
 									<LocaleResource Name="Installed">
 										<Value>Installed</Value>
@@ -8828,6 +8894,84 @@
 					</LocaleResource>
 					<LocaleResource Name="Warnings">
 						<Value>Warnings</Value>
+						<Children>
+							<LocaleResource Name="URL">
+								<Children>
+									<LocaleResource Name="Match">
+										<Value>Specified store URL matches this store URL</Value>
+									</LocaleResource>
+									<LocaleResource Name="NoMatch">
+										<Value>Specified store URL ({0}) doesn't match this store URL ({1})</Value>
+									</LocaleResource>
+								</Children>
+							</LocaleResource>
+							<LocaleResource Name="ExchangeCurrency">
+								<Children>
+									<LocaleResource Name="Set">
+										<Value>Primary exchange rate currency is set</Value>
+									</LocaleResource>
+									<LocaleResource Name="Rate1">
+										<Value>Primary exchange rate currency. The rate should be set to 1.</Value>
+									</LocaleResource>
+									<LocaleResource Name="NotSet">
+										<Value>Primary exchange rate currency is not set</Value>
+									</LocaleResource>
+								</Children>
+							</LocaleResource>
+							<LocaleResource Name="PrimaryCurrency">
+								<Children>
+									<LocaleResource Name="Set">
+										<Value>Primary store currency is set</Value>
+									</LocaleResource>
+									<LocaleResource Name="NotSet">
+										<Value>Primary store currency is not set</Value>
+									</LocaleResource>
+								</Children>
+							</LocaleResource>
+							<LocaleResource Name="DefaultWeight">
+								<Children>
+									<LocaleResource Name="Set">
+										<Value>Default weight is set</Value>
+									</LocaleResource>
+									<LocaleResource Name="Ratio1">
+										<Value>Default weight. The ratio should be set to 1.</Value>
+									</LocaleResource>
+									<LocaleResource Name="NotSet">
+										<Value>Default weight is not set</Value>
+									</LocaleResource>
+								</Children>
+							</LocaleResource>
+							<LocaleResource Name="DefaultDimension">
+								<Children>
+									<LocaleResource Name="Set">
+										<Value>Default dimension is set</Value>
+									</LocaleResource>
+									<LocaleResource Name="Ratio1">
+										<Value>Default dimension. The ratio should be set to 1.</Value>
+									</LocaleResource>
+									<LocaleResource Name="NotSet">
+										<Value>Default dimension is not set</Value>
+									</LocaleResource>
+								</Children>
+							</LocaleResource>
+							<LocaleResource Name="Shipping">
+								<Children>
+									<LocaleResource Name="OnlyOneOffline">
+										<Value>Only one offline shipping rate computation method is recommended to use</Value>
+									</LocaleResource>
+								</Children>
+							</LocaleResource>
+							<LocaleResource Name="PaymentMethods">
+								<Children>
+									<LocaleResource Name="OK">
+										<Value>Payment methods are OK</Value>
+									</LocaleResource>
+									<LocaleResource Name="NoActive">
+										<Value>You don't have active payment methods</Value>
+									</LocaleResource>
+								</Children>
+							</LocaleResource>
+						</Children>
 					</LocaleResource>
 				</Children>
 			</LocaleResource>

@@ -115,7 +115,7 @@
         var loadData = true;
         var grid = $(this).data('tGrid');
         if (grid.hasChanges()) {
-            if (!confirm('You are going to lose any unsaved changes. Are you sure?')) {
+            if (!confirm('@T("Admin.Common.LoseUnsavedChanges")')) {
                 e.preventDefault();
                 loadData = false;
             }

@@ -41,7 +41,7 @@
                             .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
                             .Width(50)
                             .Centered()
-                            .HeaderTemplate("Edit")
+                            .HeaderTemplate(T("Admin.Common.Edit").Text)
                             .Filterable(false);
                     })
                     .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "Language"))

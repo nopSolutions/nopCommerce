@@ -5,6 +5,7 @@ using Nop.Admin.Models.Directory;
 using Nop.Core.Domain.Directory;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
+using Nop.Services.Localization;
 using Nop.Services.Security;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
@@ -21,6 +22,7 @@ namespace Nop.Admin.Controllers
         private readonly MeasureSettings _measureSettings;
         private readonly ISettingService _settingService;
         private readonly IPermissionService _permissionService;
+        private readonly ILocalizationService _localizationService;
 
 		#endregion
 
@@ -28,12 +30,13 @@ namespace Nop.Admin.Controllers
 
         public MeasureController(IMeasureService measureService,
             MeasureSettings measureSettings, ISettingService settingService,
-            IPermissionService permissionService)
+            IPermissionService permissionService, ILocalizationService localizationService)
 		{
             this._measureService = measureService;
             this._measureSettings = measureSettings;
             this._settingService = settingService;
             this._permissionService = permissionService;
+            this._localizationService = localizationService;
 		}
 
 		#endregion 
@@ -147,7 +150,7 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentException("No weight found with the specified id");
 
             if (weight.Id == _measureSettings.BaseWeightId)
-                return Content("The primary weight can't be deleted.");
+                return Content(_localizationService.GetResource("Admin.Configuration.Measures.Weights.CantDeletePrimary"));
 
             _measureService.DeleteMeasureWeight(weight);
 
@@ -263,7 +266,7 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentException("No dimension found with the specified id");
 
             if (dimension.Id == _measureSettings.BaseDimensionId)
-                return Content("The primary dimension can't be deleted.");
+                return Content(_localizationService.GetResource("Admin.Configuration.Measures.Dimensions.CantDeletePrimary"));
 
             _measureService.DeleteMeasureDimension(dimension);
 

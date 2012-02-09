@@ -38,6 +38,7 @@ namespace Nop.Admin.Controllers
         private readonly ILanguageService _languageService;
         private readonly IWorkContext _workContext;
         private readonly IPermissionService _permissionService;
+        private readonly ILocalizationService _localizationService;
 
         #endregion
 
@@ -49,7 +50,7 @@ namespace Nop.Admin.Controllers
             StoreInformationSettings storeInformationSettings, CurrencySettings currencySettings,
             MeasureSettings measureSettings, IDateTimeHelper dateTimeHelper,
             ILanguageService languageService, IWorkContext workContext,
-            IPermissionService permissionService)
+            IPermissionService permissionService, ILocalizationService localizationService)
         {
             this._paymentService = paymentService;
             this._shippingService = shippingService;
@@ -64,6 +65,7 @@ namespace Nop.Admin.Controllers
             this._languageService = languageService;
             this._workContext = workContext;
             this._permissionService = permissionService;
+            this._localizationService = localizationService;
         }
 
         #endregion
@@ -106,13 +108,13 @@ namespace Nop.Admin.Controllers
                 model.Add(new SystemWarningModel()
                     {
                         Level = SystemWarningLevel.Pass,
-                        Text = "Specified store URL matches this store URL",
+                        Text = _localizationService.GetResource("Admin.System.Warnings.URL.Match")
                     });
             else
                 model.Add(new SystemWarningModel()
                 {
                     Level = SystemWarningLevel.Warning,
-                    Text = string.Format("Specified store URL ({0}) doesn't match this store URL ({1})", _storeInformationSettings.StoreUrl, _webHelper.GetStoreLocation(false))
+                    Text = string.Format(_localizationService.GetResource("Admin.System.Warnings.URL.NoMatch"), _storeInformationSettings.StoreUrl, _webHelper.GetStoreLocation(false))
                 });
 
 
@@ -123,14 +125,14 @@ namespace Nop.Admin.Controllers
                 model.Add(new SystemWarningModel()
                 {
                     Level = SystemWarningLevel.Pass,
-                    Text = "Primary exchange rate currency is set",
+                    Text = _localizationService.GetResource("Admin.System.Warnings.ExchangeCurrency.Set"),
                 });
                 if (perCurrency.Rate != 1)
                 {
                     model.Add(new SystemWarningModel()
                     {
                         Level = SystemWarningLevel.Fail,
-                        Text = "Primary exchange rate currency. The rate should be set to 1."
+                        Text = _localizationService.GetResource("Admin.System.Warnings.ExchangeCurrency.Rate1")
                     });
                 }
             }
@@ -139,7 +141,7 @@ namespace Nop.Admin.Controllers
                 model.Add(new SystemWarningModel()
                 {
                     Level = SystemWarningLevel.Fail,
-                    Text = "Primary exchange rate currency is not set"
+                    Text = _localizationService.GetResource("Admin.System.Warnings.ExchangeCurrency.NotSet")
                 });
             }
 
@@ -150,7 +152,7 @@ namespace Nop.Admin.Controllers
                 model.Add(new SystemWarningModel()
                 {
                     Level = SystemWarningLevel.Pass,
-                    Text = "Primary store currency is set",
+                    Text = _localizationService.GetResource("Admin.System.Warnings.PrimaryCurrency.Set"),
                 });
             }
             else
@@ -158,7 +160,7 @@ namespace Nop.Admin.Controllers
                 model.Add(new SystemWarningModel()
                 {
                     Level = SystemWarningLevel.Fail,
-                    Text = "Primary store currency is not set"
+                    Text = _localizationService.GetResource("Admin.System.Warnings.PrimaryCurrency.NotSet")
                 });
             }
 
@@ -170,7 +172,7 @@ namespace Nop.Admin.Controllers
                 model.Add(new SystemWarningModel()
                 {
                     Level = SystemWarningLevel.Pass,
-                    Text = "Default weight is set",
+                    Text = _localizationService.GetResource("Admin.System.Warnings.DefaultWeight.Set"),
                 });
 
                 if (bWeight.Ratio != 1)
@@ -178,7 +180,7 @@ namespace Nop.Admin.Controllers
                     model.Add(new SystemWarningModel()
                     {
                         Level = SystemWarningLevel.Fail,
-                        Text = "Default weight. The ratio should be set to 1."
+                        Text = _localizationService.GetResource("Admin.System.Warnings.DefaultWeight.Ratio1")
                     });
                 }
             }
@@ -187,7 +189,7 @@ namespace Nop.Admin.Controllers
                 model.Add(new SystemWarningModel()
                 {
                     Level = SystemWarningLevel.Fail,
-                    Text = "Default weight is not set"
+                    Text = _localizationService.GetResource("Admin.System.Warnings.DefaultWeight.NotSet")
                 });
             }
 
@@ -199,7 +201,7 @@ namespace Nop.Admin.Controllers
                 model.Add(new SystemWarningModel()
                 {
                     Level = SystemWarningLevel.Pass,
-                    Text = "Default dimension is set",
+                    Text = _localizationService.GetResource("Admin.System.Warnings.DefaultDimension.Set"),
                 });
 
                 if (bDimension.Ratio != 1)
@@ -207,7 +209,7 @@ namespace Nop.Admin.Controllers
                     model.Add(new SystemWarningModel()
                     {
                         Level = SystemWarningLevel.Fail,
-                        Text = "Default dimension. The ratio should be set to 1."
+                        Text = _localizationService.GetResource("Admin.System.Warnings.DefaultDimension.Ratio1")
                     });
                 }
             }
@@ -216,7 +218,7 @@ namespace Nop.Admin.Controllers
                 model.Add(new SystemWarningModel()
                 {
                     Level = SystemWarningLevel.Fail,
-                    Text = "Default dimension is not set"
+                    Text = _localizationService.GetResource("Admin.System.Warnings.DefaultDimension.NotSet")
                 });
             }
 
@@ -227,7 +229,7 @@ namespace Nop.Admin.Controllers
                 model.Add(new SystemWarningModel()
                 {
                     Level = SystemWarningLevel.Warning,
-                    Text = "Only one offline shipping rate computation method is recommended to use"
+                    Text = _localizationService.GetResource("Admin.System.Warnings.Shipping.OnlyOneOffline")
                 });
 
             //payment methods
@@ -236,13 +238,13 @@ namespace Nop.Admin.Controllers
                 model.Add(new SystemWarningModel()
                 {
                     Level = SystemWarningLevel.Pass,
-                    Text = "Payment methods are OK"
+                    Text = _localizationService.GetResource("Admin.System.Warnings.PaymentMethods.OK")
                 });
             else
                 model.Add(new SystemWarningModel()
                 {
                     Level = SystemWarningLevel.Fail,
-                    Text = "You don't have active payment methods"
+                    Text = _localizationService.GetResource("Admin.System.Warnings.PaymentMethods.NoActive")
                 });
             
             return View(model);

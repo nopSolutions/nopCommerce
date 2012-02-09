@@ -350,7 +350,7 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentException("No state found with the specified id");
 
             if (_addressService.GetAddressTotalByStateProvinceId(state.Id) > 0)
-                return Content("The state can't be deleted. It has associated addresses");
+                return Content(_localizationService.GetResource("Admin.Configuration.Countries.States.CantDeleteWithAddresses"));
 
             int countryId = state.CountryId;
             _stateProvinceService.DeleteStateProvince(state);

@@ -287,10 +287,10 @@ namespace Nop.Admin.Controllers
             try
             {
                 if (currency.Id == _currencySettings.PrimaryStoreCurrencyId)
-                    throw new NopException("The primary store currency can't be deleted.");
+                    throw new NopException(_localizationService.GetResource("Admin.Configuration.Currencies.CantDeletePrimary"));
 
                 if (currency.Id == _currencySettings.PrimaryExchangeRateCurrencyId)
-                    throw new NopException("The primary exchange rate currency can't be deleted.");
+                    throw new NopException(_localizationService.GetResource("Admin.Configuration.Currencies.CantDeleteExchange"));
 
                 _currencyService.DeleteCurrency(currency);
 

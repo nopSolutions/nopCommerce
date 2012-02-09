@@ -29,7 +29,7 @@
                             .ClientTemplate("<a href=\"EditMethod/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
                             .Width(50)
                             .Centered()
-                            .HeaderTemplate("Edit");
+                            .HeaderTemplate(T("Admin.Common.Edit").Text);
                     })
                     .DataBinding(dataBinding => dataBinding.Ajax().Select("Methods", "Shipping"))
                     .EnableCustomBinding(true))

@@ -60,7 +60,7 @@
                                 .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
                                 .Width(50)
                                 .Centered()
-                                .HeaderTemplate("Edit")
+                                .HeaderTemplate(T("Admin.Common.Edit").Text)
                                 .Filterable(false);
                         })
                         .Pageable(settings => settings.PageSize(gridPageSize).Position(GridPagerPosition.Both))
