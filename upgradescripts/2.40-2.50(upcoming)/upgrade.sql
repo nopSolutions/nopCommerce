@@ -200,6 +200,15 @@ set @resources='
   <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.ProductSortingEnum.PriceDesc">
     <Value>Price: High to Low</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.DisplayWishlistAfterAddingProduct">
+    <Value>Display wishlist after adding product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.DisplayWishlistAfterAddingProduct.Hint">
+    <Value>If checked, a customer will be taken to the Wishlist page immediately after adding a product to their wishlist. If unchecked, a customer will stay on the same page that they are adding the product to the wishlist from.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.ProductHasBeenAddedToTheWishlist">
+    <Value>The product has been added to the wishlist</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -536,5 +545,13 @@ BEGIN
 	SET ROWCOUNT 0
 
 	DROP TABLE #PageIndex
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'shoppingcartsettings.displaywishlistafteraddingproduct')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'shoppingcartsettings.displaywishlistafteraddingproduct', N'true')
 END
 GO

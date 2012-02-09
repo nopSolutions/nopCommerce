@@ -4803,6 +4803,14 @@
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
+									<LocaleResource Name="DisplayWishlistAfterAddingProduct">
+										<Value>Display wishlist after adding product</Value>
+										<Children>
+											<LocaleResource Name="Hint">
+												<Value>If checked, a customer will be taken to the Wishlist page immediately after adding a product to their wishlist. If unchecked, a customer will stay on the same page that they are adding the product to the wishlist from.</Value>
+											</LocaleResource>
+										</Children>
+									</LocaleResource>
 									<LocaleResource Name="MaximumShoppingCartItems">
 										<Value>Maximum shopping cart items</Value>
 										<Children>

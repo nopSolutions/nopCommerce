@@ -11,6 +11,11 @@ namespace Nop.Core.Domain.Orders
         public bool DisplayCartAfterAddingProduct { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether a custoemr should be redirected to the shopping cart page after adding a product to the cart/wishlist
+        /// </summary>
+        public bool DisplayWishlistAfterAddingProduct { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating maximum number of items in the shopping cart
         /// </summary>
         public int MaximumShoppingCartItems { get; set; }

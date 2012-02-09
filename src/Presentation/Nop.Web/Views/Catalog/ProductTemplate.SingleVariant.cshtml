@@ -52,12 +52,21 @@
         });
     </script>
 }
-@if (Model.DisplayProductAddedMessage)
+@if (Model.DisplayProductAddedToCartMessage)
 {
     //display notification   
     <script type="text/javascript">
         $(document).ready(function () {
             alert('@T("Products.ProductHasBeenAddedToTheCart").Text');
+        });
+    </script>
+}
+@if (Model.DisplayProductAddedToWishlistMessage)
+{
+    //display notification   
+    <script type="text/javascript">
+        $(document).ready(function () {
+            alert('@T("Products.ProductHasBeenAddedToTheWishlist").Text');
         });
     </script>
 }

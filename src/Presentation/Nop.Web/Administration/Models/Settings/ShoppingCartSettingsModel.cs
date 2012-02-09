@@ -7,6 +7,9 @@ namespace Nop.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.ShoppingCart.DisplayCartAfterAddingProduct")]
         public bool DisplayCartAfterAddingProduct { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.ShoppingCart.DisplayWishlistAfterAddingProduct")]
+        public bool DisplayWishlistAfterAddingProduct { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.ShoppingCart.MaximumShoppingCartItems")]
         public int MaximumShoppingCartItems { get; set; }
 

@@ -4653,6 +4653,7 @@ namespace Nop.Services.Installation
                 .SaveSettings(new ShoppingCartSettings()
                 {
                     DisplayCartAfterAddingProduct = true,
+                    DisplayWishlistAfterAddingProduct = true,
                     MaximumShoppingCartItems = 1000,
                     MaximumWishlistItems = 1000,
                     ShowProductImagesOnShoppingCart = true,

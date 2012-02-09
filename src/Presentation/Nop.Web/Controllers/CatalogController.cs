@@ -1586,8 +1586,21 @@ namespace Nop.Web.Controllers
                 {
                     case ShoppingCartType.Wishlist:
                         {
-                            //redirect to the wishlist page
-                            return RedirectToRoute("Wishlist");
+                            if (_shoppingCartSettings.DisplayWishlistAfterAddingProduct)
+                            {
+                                //redirect to the wishlist page
+                                return RedirectToRoute("Wishlist");
+                            }
+                            else
+                            {
+                                //redisplay the page with "Product has been added to the cart notification message
+
+                                var model = PrepareProductDetailsPageModel(product);
+                                model.DisplayProductAddedToWishlistMessage = true;
+                                //set already entered values (quantity, customer entered price, gift card attributes, product attributes)
+                                setEnteredValues(model);
+                                return View(model.ProductTemplateViewPath, model);
+                            }
                         }
                     case ShoppingCartType.ShoppingCart:
                     default:
@@ -1602,8 +1615,8 @@ namespace Nop.Web.Controllers
                                 //redisplay the page with "Product has been added to the cart notification message
 
                                 var model = PrepareProductDetailsPageModel(product);
-                                model.DisplayProductAddedMessage = true;
-                                //set already entered values (quantity, customer entered price, gift card attributes, product attributes
+                                model.DisplayProductAddedToCartMessage = true;
+                                //set already entered values (quantity, customer entered price, gift card attributes, product attributes)
                                 setEnteredValues(model);
                                 return View(model.ProductTemplateViewPath, model);
                             }

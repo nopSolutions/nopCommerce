@@ -45,7 +45,8 @@ namespace Nop.Web.Models.Catalog
         public IList<ProductVariantModel> ProductVariantModels { get; set; }
         public IList<ProductSpecificationModel> SpecificationAttributeModels { get; set; }
 
-        public bool DisplayProductAddedMessage { get; set; }
+        public bool DisplayProductAddedToCartMessage { get; set; }
+        public bool DisplayProductAddedToWishlistMessage { get; set; }
 
 		#region Nested Classes
 

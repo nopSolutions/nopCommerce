@@ -3144,6 +3144,9 @@
 			<LocaleResource Name="ProductHasBeenAddedToTheCart">
 				<Value>The product has been added to the cart</Value>
 			</LocaleResource>
+			<LocaleResource Name="ProductHasBeenAddedToTheWishlist">
+				<Value>The product has been added to the wishlist</Value>
+			</LocaleResource>
 			<LocaleResource Name="Qty">
 				<Value>Qty</Value>
 			</LocaleResource>
