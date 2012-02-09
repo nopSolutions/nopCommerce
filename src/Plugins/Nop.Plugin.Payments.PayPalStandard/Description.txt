@@ -2,7 +2,7 @@
 FriendlyName: PayPal Standard
 SystemName: Payments.PayPalStandard
 Version: 1.05
-SupportedVersions: 2.30,2.40
+SupportedVersions: 2.50
 Author: nopCommerce team
 DisplayOrder: 1
 FileName: Nop.Plugin.Payments.PayPalStandard.dll

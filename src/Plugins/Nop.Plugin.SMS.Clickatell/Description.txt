@@ -2,7 +2,7 @@
 FriendlyName: Clickatell SMS Provider
 SystemName: Mobile.SMS.Clickatell
 Version: 1.02
-SupportedVersions: 2.30,2.40
+SupportedVersions: 2.50
 Author: nopCommerce team
 DisplayOrder: 1
 FileName: Nop.Plugin.SMS.Clickatell.dll

@@ -2,7 +2,7 @@
 FriendlyName: Customer had previously purchased all of these product variants
 SystemName: DiscountRequirement.PurchasedAllProducts
 Version: 1.02
-SupportedVersions: 2.40
+SupportedVersions: 2.50
 Author: nopCommerce team
 DisplayOrder: 1
 FileName: Nop.Plugin.DiscountRules.PurchasedAllProducts.dll
