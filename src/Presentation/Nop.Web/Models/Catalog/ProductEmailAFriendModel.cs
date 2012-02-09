@@ -29,5 +29,7 @@ namespace Nop.Web.Models.Catalog
 
         public bool SuccessfullySent { get; set; }
         public string Result { get; set; }
+
+        public bool DisplayCaptcha { get; set; }
     }
 }

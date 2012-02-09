@@ -49,14 +49,20 @@
     
     function toggleReCaptcha() {
         if (getE('@Html.FieldIdFor(model => model.SecuritySettings.CaptchaEnabled)').checked) {
+            $('#ssCaptchaShowOnLoginPagepnl').show();
             $('#ssCaptchaShowOnRegistrationPagepnl').show();
             $('#ssCaptchaShowOnContactUsPagepnl').show();
+            $('#ssCaptchaShowOnEmailWishlistToFriendPagepnl').show();
+            $('#ssCaptchaShowOnEmailProductToFriendPagepnl').show();
             $('#ssReCaptchaPublicKeypnl').show();
             $('#ssReCaptchaPrivateKeypnl').show();
         }
         else {
+            $('#ssCaptchaShowOnLoginPagepnl').hide();
             $('#ssCaptchaShowOnRegistrationPagepnl').hide();
             $('#ssCaptchaShowOnContactUsPagepnl').hide();
+            $('#ssCaptchaShowOnEmailWishlistToFriendPagepnl').hide();
+            $('#ssCaptchaShowOnEmailProductToFriendPagepnl').hide();
             $('#ssReCaptchaPublicKeypnl').hide();
             $('#ssReCaptchaPrivateKeypnl').hide();
         }
@@ -283,6 +289,15 @@
                 @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaEnabled)
             </td>
         </tr>
+        <tr id="ssCaptchaShowOnLoginPagepnl">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SecuritySettings.CaptchaShowOnLoginPage):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SecuritySettings.CaptchaShowOnLoginPage)
+                @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaShowOnLoginPage)
+            </td>
+        </tr>
         <tr id="ssCaptchaShowOnRegistrationPagepnl">
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.SecuritySettings.CaptchaShowOnRegistrationPage):
@@ -299,6 +314,24 @@
             <td class="adminData">
                 @Html.EditorFor(model => model.SecuritySettings.CaptchaShowOnContactUsPage)
                 @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaShowOnContactUsPage)
+            </td>
+        </tr>
+        <tr id="ssCaptchaShowOnEmailWishlistToFriendPagepnl">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SecuritySettings.CaptchaShowOnEmailWishlistToFriendPage):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SecuritySettings.CaptchaShowOnEmailWishlistToFriendPage)
+                @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaShowOnEmailWishlistToFriendPage)
+            </td>
+        </tr>
+        <tr id="ssCaptchaShowOnEmailProductToFriendPagepnl">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SecuritySettings.CaptchaShowOnEmailProductToFriendPage):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SecuritySettings.CaptchaShowOnEmailProductToFriendPage)
+                @Html.ValidationMessageFor(model => model.SecuritySettings.CaptchaShowOnEmailProductToFriendPage)
             </td>
         </tr>
         <tr id="ssReCaptchaPublicKeypnl">

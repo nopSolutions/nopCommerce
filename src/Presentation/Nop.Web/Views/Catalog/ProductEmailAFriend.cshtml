@@ -1,4 +1,5 @@
 ﻿@model Nop.Web.Models.Catalog.ProductEmailAFriendModel
+@using Nop.Web.Framework.UI.Captcha;
 @{
     Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
 
@@ -55,6 +56,17 @@
                             @Html.ValidationSummary(true)
                         </td>
                     </tr>
+                    @if (Model.DisplayCaptcha)
+                    {
+                        <tr class="row">
+                            <td class="item-name">
+                                &nbsp;
+                            </td>
+                            <td class="item-value">
+                                @Html.Raw(Html.GenerateCaptcha())
+                            </td>
+                        </tr>
+                    }
                     <tr>
                         <td>
                             &nbsp;

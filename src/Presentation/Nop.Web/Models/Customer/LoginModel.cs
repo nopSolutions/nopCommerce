@@ -21,5 +21,7 @@ namespace Nop.Web.Models.Customer
 
         [NopResourceDisplayName("Account.Login.Fields.RememberMe")]
         public bool RememberMe { get; set; }
+
+        public bool DisplayCaptcha { get; set; }
     }
 }

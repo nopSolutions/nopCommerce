@@ -25,6 +25,7 @@ using Nop.Services.Tax;
 using Nop.Web.Extensions;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.UI.Captcha;
 using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Catalog;
 using Nop.Web.Models.Media;
@@ -71,6 +72,7 @@ namespace Nop.Web.Controllers
         private readonly LocalizationSettings _localizationSettings;
         private readonly CustomerSettings _customerSettings;
         private readonly ICacheManager _cacheManager;
+        private readonly CaptchaSettings _captchaSettings;
         
         #endregion
 
@@ -95,7 +97,9 @@ namespace Nop.Web.Controllers
             IPermissionService permissionService,
             MediaSettings mediaSetting, CatalogSettings catalogSettings,
             ShoppingCartSettings shoppingCartSettings, StoreInformationSettings storeInformationSettings,
-            LocalizationSettings localizationSettings, CustomerSettings customerSettings, ICacheManager cacheManager)
+            LocalizationSettings localizationSettings, CustomerSettings customerSettings, 
+            CaptchaSettings captchaSettings,
+            ICacheManager cacheManager)
         {
             this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
@@ -133,6 +137,7 @@ namespace Nop.Web.Controllers
             this._storeInformationSettings = storeInformationSettings;
             this._localizationSettings = localizationSettings;
             this._customerSettings = customerSettings;
+            this._captchaSettings = captchaSettings;
 
             this._cacheManager = cacheManager;
         }
@@ -2402,16 +2407,24 @@ namespace Nop.Web.Controllers
             model.ProductName = product.GetLocalized(x => x.Name);
             model.ProductSeName = product.GetSeName();
             model.YourEmailAddress = _workContext.CurrentCustomer.Email;
+            model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnEmailProductToFriendPage;
             return View(model);
         }
 
         [HttpPost, ActionName("ProductEmailAFriend")]
         [FormValueRequired("send-email")]
-        public ActionResult ProductEmailAFriendSend(int productId, ProductEmailAFriendModel model)
+        [CaptchaValidator]
+        public ActionResult ProductEmailAFriendSend(ProductEmailAFriendModel model, bool captchaValid)
         {
-            var product = _productService.GetProductById(productId);
+            var product = _productService.GetProductById(model.ProductId);
             if (product == null || product.Deleted || !product.Published || !_catalogSettings.EmailAFriendEnabled)
                 return RedirectToAction("Index", "Home");
+
+            //validate CAPTCHA
+            if (_captchaSettings.Enabled && _captchaSettings.ShowOnEmailProductToFriendPage && !captchaValid)
+            {
+                ModelState.AddModelError("", _localizationService.GetResource("Common.WrongCaptcha"));
+            }
 
             if (ModelState.IsValid)
             {
@@ -2441,6 +2454,7 @@ namespace Nop.Web.Controllers
             model.ProductId = product.Id;
             model.ProductName = product.GetLocalized(x => x.Name);
             model.ProductSeName = product.GetSeName();
+            model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnEmailProductToFriendPage;
             return View(model);
         }
 

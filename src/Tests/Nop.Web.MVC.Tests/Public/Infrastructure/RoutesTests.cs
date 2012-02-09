@@ -88,7 +88,7 @@ namespace Nop.Web.MVC.Tests.Public.Infrastructure
         public void Customer_routes()
         {
             "~/backinstocksubscribe/delete/1/".ShouldMapTo<CustomerController>(c => c.DeleteBackInStockSubscription(1));
-            "~/login/".ShouldMapTo<CustomerController>(c => c.Login(null, null));
+            //"~/login/".ShouldMapTo<CustomerController>(c => c.Login(null, null, false));
             "~/login/checkoutasguest/".ShouldMapTo<CustomerController>(c => c.Login(true));
             //"~/register/".ShouldMapTo<CustomerController>(c => c.Register(null, false));
             "~/logout/".ShouldMapTo<CustomerController>(c => c.Logout());

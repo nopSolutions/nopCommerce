@@ -28,6 +28,7 @@ using Nop.Services.Shipping;
 using Nop.Services.Tax;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Security;
+using Nop.Web.Framework.UI.Captcha;
 using Nop.Web.Models.Media;
 using Nop.Web.Models.ShoppingCart;
 
@@ -69,6 +70,7 @@ namespace Nop.Web.Controllers
         private readonly OrderSettings _orderSettings;
         private readonly ShippingSettings _shippingSettings;
         private readonly TaxSettings _taxSettings;
+        private readonly CaptchaSettings _captchaSettings;
 
         #endregion
 
@@ -90,7 +92,8 @@ namespace Nop.Web.Controllers
             IPermissionService permissionService,
             MediaSettings mediaSetting, ShoppingCartSettings shoppingCartSettings,
             CatalogSettings catalogSettings, OrderSettings orderSettings,
-            ShippingSettings shippingSettings,TaxSettings taxSettings)
+            ShippingSettings shippingSettings, TaxSettings taxSettings,
+            CaptchaSettings captchaSettings)
         {
             this._productService = productService;
             this._workContext = workContext;
@@ -123,6 +126,7 @@ namespace Nop.Web.Controllers
             this._orderSettings = orderSettings;
             this._shippingSettings = shippingSettings;
             this._taxSettings = taxSettings;
+            this._captchaSettings = captchaSettings;
         }
 
         #endregion
@@ -1461,18 +1465,26 @@ namespace Nop.Web.Controllers
 
             var model = new WishlistEmailAFriendModel()
             {
-                YourEmailAddress = _workContext.CurrentCustomer.Email
+                YourEmailAddress = _workContext.CurrentCustomer.Email,
+                DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnEmailWishlistToFriendPage
             };
             return View(model);
         }
 
         [HttpPost, ActionName("EmailWishlist")]
         [FormValueRequired("send-email")]
-        public ActionResult EmailWishlistSend(WishlistEmailAFriendModel model)
+        [CaptchaValidator]
+        public ActionResult EmailWishlistSend(WishlistEmailAFriendModel model, bool captchaValid)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableWishlist) || !_shoppingCartSettings.EmailWishlistEnabled)
                 return RedirectToAction("Index", "Home");
-            
+
+            //validate CAPTCHA
+            if (_captchaSettings.Enabled && _captchaSettings.ShowOnEmailWishlistToFriendPage && !captchaValid)
+            {
+                ModelState.AddModelError("", _localizationService.GetResource("Common.WrongCaptcha"));
+            }
+
             var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist).ToList();
 
             if (cart.Count == 0)
@@ -1499,6 +1511,7 @@ namespace Nop.Web.Controllers
             }
 
             //If we got this far, something failed, redisplay form
+            model.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnEmailWishlistToFriendPage;
             return View(model);
         }
 

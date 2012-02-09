@@ -1,4 +1,5 @@
 ﻿@model Nop.Web.Models.Customer.LoginModel
+@using Nop.Web.Framework.UI.Captcha;
 @{
     Layout = "~/Views/Shared/_Root.cshtml";
 
@@ -45,6 +46,12 @@
                         @Html.CheckBoxFor(m => m.RememberMe)
                         @Html.LabelFor(m => m.RememberMe)
                     </div>
+                    if (Model.DisplayCaptcha)
+                    {
+                        <div>
+                            @Html.Raw(Html.GenerateCaptcha())
+                        </div>
+                    }
                     <div class="buttons">
                         <button type="submit">@T("Account.Login.LoginButton")</button>
                     </div>

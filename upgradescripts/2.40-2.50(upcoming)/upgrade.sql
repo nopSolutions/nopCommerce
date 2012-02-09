@@ -164,6 +164,24 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Plugins.Fields.Installation">
     <Value>Installation</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnLoginPage">
+    <Value>Show on login page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnLoginPage.Hint">
+    <Value>Check to show CAPTCHA on login page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnEmailWishlistToFriendPage">
+    <Value>Show on ''email wishlist to a friend'' page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnEmailWishlistToFriendPage.Hint">
+    <Value>Check to show CAPTCHA on ''email wishlist to a friend'' page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnEmailProductToFriendPage">
+    <Value>Show on ''email product to a friend'' page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnEmailProductToFriendPage.Hint">
+    <Value>Check to show CAPTCHA on ''email product to a friend'' page.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -251,6 +269,13 @@ BEGIN
 END
 GO
 --new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'fedexsettings.packingpackagevolume')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'fedexsettings.packingpackagevolume', N'5184')
+END
+GO
+--new CAPTCHA setting
 IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'fedexsettings.packingpackagevolume')
 BEGIN
 	INSERT [Setting] ([Name], [Value])

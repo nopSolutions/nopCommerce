@@ -4309,6 +4309,14 @@
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
+									<LocaleResource Name="CaptchaShowOnLoginPage">
+										<Value>Show on login page</Value>
+										<Children>
+											<LocaleResource Name="Hint">
+												<Value>Check to show CAPTCHA on login page.</Value>
+											</LocaleResource>
+										</Children>
+									</LocaleResource>
 									<LocaleResource Name="CaptchaShowOnRegistrationPage">
 										<Value>Show on registration page</Value>
 										<Children>
@@ -4322,6 +4330,22 @@
 										<Children>
 											<LocaleResource Name="Hint">
 												<Value>Check to show CAPTCHA on contact us page.</Value>
+											</LocaleResource>
+										</Children>
+									</LocaleResource>
+									<LocaleResource Name="CaptchaShowOnEmailWishlistToFriendPage">
+										<Value>Show on 'email wishlist to a friend' page</Value>
+										<Children>
+											<LocaleResource Name="Hint">
+												<Value>Check to show CAPTCHA on 'email wishlist to a friend' page.</Value>
+											</LocaleResource>
+										</Children>
+									</LocaleResource>
+									<LocaleResource Name="CaptchaShowOnEmailProductToFriendPage">
+										<Value>Show on 'email product to a friend' page</Value>
+										<Children>
+											<LocaleResource Name="Hint">
+												<Value>Check to show CAPTCHA on 'email product to a friend' page.</Value>
 											</LocaleResource>
 										</Children>
 									</LocaleResource>

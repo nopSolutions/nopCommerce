@@ -1,4 +1,5 @@
 ﻿@model Nop.Web.Models.Catalog.ProductEmailAFriendModel
+@using Nop.Web.Framework.UI.Captcha;
 @{
     Layout = "~/Views/Shared/_Root.cshtml";
 
@@ -36,6 +37,12 @@
                     @Html.TextAreaFor(model => model.PersonalMessage)
                     @Html.ValidationMessageFor(model => model.PersonalMessage)
                 </div>
+                if (Model.DisplayCaptcha)
+                {
+                    <div>
+                        @Html.Raw(Html.GenerateCaptcha())
+                    </div>
+                }
                 <input type="submit" id="send-email" name="send-email" value="@T("Products.EmailAFriend.Button")" />
             }
         </div>
