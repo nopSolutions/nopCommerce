@@ -275,10 +275,3 @@ BEGIN
 	VALUES (N'fedexsettings.packingpackagevolume', N'5184')
 END
 GO
---new CAPTCHA setting
-IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'fedexsettings.packingpackagevolume')
-BEGIN
-	INSERT [Setting] ([Name], [Value])
-	VALUES (N'fedexsettings.packingpackagevolume', N'5184')
-END
-GO
