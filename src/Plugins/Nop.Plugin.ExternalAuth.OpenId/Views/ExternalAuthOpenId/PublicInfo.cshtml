@@ -13,7 +13,7 @@
     var storeLocation = EngineContext.Current.Resolve<Nop.Core.IWebHelper>().GetStoreLocation();
 }
 
-@using (Html.BeginRouteForm("Plugin.ExternalAuth.OpenId.Login", new { ReturnUrl = Request.QueryString["ReturnUrl"] }, FormMethod.Post, new { id = "openid_form" }))
+@using (Html.BeginRouteForm("Plugin.ExternalAuth.OpenId.Login", new { ReturnUrl = HttpContext.Current.Request.QueryString["ReturnUrl"] }, FormMethod.Post, new { id = "openid_form" }))
 {
     <input type="hidden" name="action" value="verify" />
     <fieldset class="oauth-login-openid">
