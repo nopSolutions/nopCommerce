@@ -554,12 +554,40 @@ namespace Nop.Web.Controllers
                     productVariant, ShoppingCartType.ShoppingCart,
                     string.Empty, decimal.Zero, 1, true);
                 if (addToCartWarnings.Count == 0)
-                    return RedirectToRoute("ShoppingCart");
+                {
+                    //added to the cart
+                    if (_shoppingCartSettings.DisplayCartAfterAddingProduct)
+                    {
+                        //redirect to the shopping cart page
+                        return RedirectToRoute("ShoppingCart");
+                    }
+                    else
+                    {
+                        //TODO: URL referrer is null in IE 8. Fix it
+                        if (HttpContext.Request.UrlReferrer != null)
+                        {
+                            //redisplay the page with "Product has been added to the cart" notification message
+                            this.SuccessNotification(_localizationService.GetResource("Products.ProductHasBeenAddedToTheCart"), true);
+                            return Redirect(HttpContext.Request.UrlReferrer.PathAndQuery);
+                        }
+                        else
+                        {
+                            //redirect to the shopping cart page
+                            return RedirectToRoute("ShoppingCart");
+                        }       
+                    }
+                }
                 else
-                    return RedirectToRoute("Product", new { productId = product.Id, SeName = product.GetSeName() });
+                {
+                    //cannot be added to the cart
+                    return RedirectToRoute("Product", new {productId = product.Id, SeName = product.GetSeName()});
+                }
             }
             else
-                return RedirectToRoute("Product", new { productId = product.Id, SeName = product.GetSeName() });
+            {
+                //cannot be added to the cart
+                return RedirectToRoute("Product", new {productId = product.Id, SeName = product.GetSeName()});
+            }
         }
 
         [NopHttpsRequirement(SslRequirement.Yes)]
