@@ -51,7 +51,7 @@
             </div>
             <div class="product-list">
                 <ul data-role="listview" data-inset="true" data-filter="false" data-theme="c">
-                    @foreach (var product in Model.Products)
+                    @foreach (var product in Model.FeaturedProducts)
                     {
                         <li>
                             @Html.Partial("_ProductBox", product)
