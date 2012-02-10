@@ -40,6 +40,7 @@
     @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.AfterBodyStartHtmlTag })
     <div class="master-wrapper-page">
         <div class="master-wrapper-content">
+            @Html.Partial("_Notifications")
             @Html.Partial("Header")
             @Html.Partial("HeaderMenu")
             @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.BeforeContent })

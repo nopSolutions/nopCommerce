@@ -22,22 +22,6 @@
         }
     }
 }
-@if (Model.DisplayProductAddedToCartMessage)
-{
-    <script type="text/javascript">
-        $(document).ready(function () {
-            alert('@T("Products.ProductHasBeenAddedToTheCart").Text');
-        });
-    </script>
-}
-@if (Model.DisplayProductAddedToWishlistMessage)
-{
-    <script type="text/javascript">
-        $(document).ready(function () {
-            alert('@T("Products.ProductHasBeenAddedToTheWishlist").Text');
-        });
-    </script>
-}
 <div class="product-details-page">
     @using (Html.BeginRouteForm("Product", new { productId = Model.Id, SeName = Model.SeName }, FormMethod.Post))
     {

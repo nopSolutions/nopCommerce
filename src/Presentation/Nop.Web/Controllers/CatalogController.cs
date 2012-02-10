@@ -1594,9 +1594,8 @@ namespace Nop.Web.Controllers
                             else
                             {
                                 //redisplay the page with "Product has been added to the cart notification message
-
                                 var model = PrepareProductDetailsPageModel(product);
-                                model.DisplayProductAddedToWishlistMessage = true;
+                                this.SuccessNotification(_localizationService.GetResource("Products.ProductHasBeenAddedToTheWishlist"), false);
                                 //set already entered values (quantity, customer entered price, gift card attributes, product attributes)
                                 setEnteredValues(model);
                                 return View(model.ProductTemplateViewPath, model);
@@ -1613,9 +1612,8 @@ namespace Nop.Web.Controllers
                             else
                             {
                                 //redisplay the page with "Product has been added to the cart notification message
-
                                 var model = PrepareProductDetailsPageModel(product);
-                                model.DisplayProductAddedToCartMessage = true;
+                                this.SuccessNotification(_localizationService.GetResource("Products.ProductHasBeenAddedToTheCart"), false);
                                 //set already entered values (quantity, customer entered price, gift card attributes, product attributes)
                                 setEnteredValues(model);
                                 return View(model.ProductTemplateViewPath, model);

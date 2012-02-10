@@ -68,6 +68,7 @@
         }
         @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.MobileBeforeContent })
         <div data-role="content">
+            @Html.Partial("_Notifications")
             @RenderBody()
         </div>
         @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.MobileAfterContent })
