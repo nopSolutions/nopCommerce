@@ -2563,6 +2563,9 @@ namespace Nop.Web.Controllers
             if (model == null)
                 model = new SearchModel();
 
+            //'Continue shopping' URL
+            _customerService.SaveCustomerAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.LastContinueShoppingPage, _webHelper.GetThisPageUrl(false));
+
             if (command.PageSize <= 0) command.PageSize = _catalogSettings.SearchPageProductsPerPage;
             if (command.PageNumber <= 0) command.PageNumber = 1;
             if (model.Q == null)
