@@ -555,3 +555,61 @@ BEGIN
 	VALUES (N'shoppingcartsettings.displaywishlistafteraddingproduct', N'true')
 END
 GO
+
+--more SQL indexes
+IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_Product_Deleted_and_Published' and id=object_id(N'[dbo].[Product]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_Product_Deleted_and_Published] ON [dbo].[Product] 
+	(
+		[Published] ASC,
+		[Deleted] ASC
+	)
+END
+GO
+
+IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_Product_Published' and id=object_id(N'[dbo].[Product]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_Product_Published] ON [dbo].[Product] 
+	(
+		[Published] ASC
+	)
+END
+GO
+
+IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_Product_ShowOnHomepage' and id=object_id(N'[dbo].[Product]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_Product_ShowOnHomepage] ON [dbo].[Product] 
+	(
+		[ShowOnHomepage] ASC
+	)
+END
+GO
+
+IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_ProductVariant_ProductId_2' and id=object_id(N'[dbo].[ProductVariant]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_ProductVariant_ProductId_2] ON [dbo].[ProductVariant] 
+	(
+		[ProductId] ASC
+	)
+END
+GO
+
+IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_PCM_Product_and_Category' and id=object_id(N'[dbo].[Product_Category_Mapping]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_PCM_Product_and_Category] ON [dbo].[Product_Category_Mapping] 
+	(
+		[CategoryId] ASC,
+		[ProductId] ASC
+	)
+END
+GO
+
+IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_PMM_Product_and_Manufacturer' and id=object_id(N'[dbo].[Product_Manufacturer_Mapping]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_PMM_Product_and_Manufacturer] ON [dbo].[Product_Manufacturer_Mapping] 
+	(
+		[ManufacturerId] ASC,
+		[ProductId] ASC
+	)
+END
+GO
