@@ -85,10 +85,7 @@ namespace Nop.Web.Framework
             builder.RegisterType<WebHelper>().As<IWebHelper>().InstancePerHttpRequest();
 
             //controllers
-            builder.RegisterControllers(typeFinder.GetAssemblies().ToArray()).InjectActionInvoker();
-
-            //filters
-            builder.RegisterType<ExtensibleActionInvoker>().As<IActionInvoker>();
+            builder.RegisterControllers(typeFinder.GetAssemblies().ToArray());
 
             //data layer
             var dataSettingsManager = new DataSettingsManager();
