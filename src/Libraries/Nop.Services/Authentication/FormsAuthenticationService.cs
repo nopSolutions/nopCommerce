@@ -51,7 +51,10 @@ namespace Nop.Services.Authentication
 
             var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket);
             cookie.HttpOnly = true;
-            cookie.Expires = now.Add(_expirationTimeSpan);
+            if (ticket.IsPersistent)
+            {
+                cookie.Expires = ticket.Expiration;
+            }
             cookie.Secure = FormsAuthentication.RequireSSL;
             cookie.Path = FormsAuthentication.FormsCookiePath;
             if (FormsAuthentication.CookieDomain != null)
