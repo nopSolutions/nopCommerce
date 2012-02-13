@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
@@ -10,6 +11,17 @@ namespace Nop.Services.Catalog
     /// </summary>
     public partial interface IPriceCalculationService
     {
+        /// <summary>
+        /// Gets a product variant with minimal price
+        /// </summary>
+        /// <param name="variants">Product variants</param>
+        /// <param name="customer">The customer</param>
+        /// <param name="includeDiscounts">A value indicating whether include discounts or not for final price computation</param>
+        /// <param name="quantity">Shopping cart item quantity</param>
+        /// <returns>A product variant with minimal price</returns>
+        ProductVariant GetMinimalPriceProductVariant(IList<ProductVariant> variants,
+            Customer customer, bool includeDiscounts, int quantity);
+        
         /// <summary>
         /// Get product variant special price (is valid)
         /// </summary>

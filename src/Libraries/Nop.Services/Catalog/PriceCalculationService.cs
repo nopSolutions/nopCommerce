@@ -137,6 +137,41 @@ namespace Nop.Services.Catalog
         #region Methods
 
         /// <summary>
+        /// Gets a product variant with minimal price
+        /// </summary>
+        /// <param name="variants">Product variants</param>
+        /// <param name="customer">The customer</param>
+        /// <param name="includeDiscounts">A value indicating whether include discounts or not for final price computation</param>
+        /// <param name="quantity">Shopping cart item quantity</param>
+        /// <returns>A product variant with minimal price</returns>
+        public virtual ProductVariant GetMinimalPriceProductVariant(IList<ProductVariant> variants,
+            Customer customer, bool includeDiscounts, int quantity)
+        {
+            if (variants == null)
+                throw new ArgumentNullException("variants");
+
+            if (variants.Count == 0)
+                return null;
+
+            ProductVariant minPriceVariant = null;
+            decimal? minPrice = null;
+            foreach (var variant in variants)
+            {
+                var finalPrice = GetFinalPrice(variant, customer, decimal.Zero, includeDiscounts, quantity);
+                if (!minPrice.HasValue || finalPrice < minPrice.Value)
+                {
+                    minPriceVariant = variant;
+                    minPrice = finalPrice;
+                }
+            }
+            return minPriceVariant;
+            //previous implementation (compares only Price property but much faster)
+            //var tmp1 = variants.ToList();
+            //tmp1.Sort(new GenericComparer<ProductVariant>("Price", GenericComparer<ProductVariant>.SortOrder.Ascending));
+            //return tmp1.Count > 0 ? tmp1[0] : null;
+        }
+
+        /// <summary>
         /// Get product variant special price (is valid)
         /// </summary>
         /// <param name="productVariant">Product variant</param>

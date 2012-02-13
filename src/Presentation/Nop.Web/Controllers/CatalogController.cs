@@ -145,21 +145,7 @@ namespace Nop.Web.Controllers
         #endregion
 
         #region Utilities
-
-        [NonAction]
-        protected ProductVariant GetMinimalPriceProductVariant(IList<ProductVariant> variants)
-        {
-            if (variants == null)
-                throw new ArgumentNullException("variants");
-
-            if (variants.Count == 0)
-                return null;
-
-            var tmp1 = variants.ToList();
-            tmp1.Sort(new GenericComparer<ProductVariant>("Price", GenericComparer<ProductVariant>.SortOrder.Ascending));
-            return tmp1.Count > 0 ? tmp1[0] : null;
-        }
-
+        
         [NonAction]
         protected IList<Category> GetCategoryBreadCrumb(Category category)
         {
@@ -199,11 +185,11 @@ namespace Nop.Web.Controllers
                     break;
                 case 1:
                     {
-                        //only one variant
-                        var productVariant = productVariants[0];
-
                         if (_permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
                         {
+                            //only one variant
+                            var productVariant = productVariants[0];
+
                             if (!productVariant.CustomerEntersPrice)
                             {
                                 if (productVariant.CallForPrice)
@@ -242,11 +228,11 @@ namespace Nop.Web.Controllers
                     break;
                 default:
                     {
-                        //multiple variants
-                        var productVariant = GetMinimalPriceProductVariant(productVariants);
-                        if (productVariant != null)
+                        if (_permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
                         {
-                            if (_permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
+                            //multiple variants
+                            var productVariant = _priceCalculationService.GetMinimalPriceProductVariant(productVariants, _workContext.CurrentCustomer, true, 1);
+                            if (productVariant != null)
                             {
                                 if (!productVariant.CustomerEntersPrice)
                                 {
@@ -258,7 +244,7 @@ namespace Nop.Web.Controllers
                                     else
                                     {
                                         decimal taxRate = decimal.Zero;
-                                        decimal fromPriceBase = _taxService.GetProductPrice(productVariant, _priceCalculationService.GetFinalPrice(productVariant, false), out taxRate);
+                                        decimal fromPriceBase = _taxService.GetProductPrice(productVariant, _priceCalculationService.GetFinalPrice(productVariant, true), out taxRate);
                                         decimal fromPrice = _currencyService.ConvertFromPrimaryStoreCurrency(fromPriceBase, _workContext.WorkingCurrency);
 
                                         model.OldPrice = null;
