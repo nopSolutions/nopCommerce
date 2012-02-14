@@ -59,7 +59,7 @@ namespace Nop.Admin.Controllers
 
             var queuedEmails = _queuedEmailService.SearchEmails(model.SearchFromEmail, model.SearchToEmail, 
                 startDateValue, endDateValue, 
-                model.SearchLoadNotSent, model.SearchMaxSentTries, 
+                model.SearchLoadNotSent, model.SearchMaxSentTries, true,
                 command.Page - 1, command.PageSize);
             var gridModel = new GridModel<QueuedEmailModel>
             {

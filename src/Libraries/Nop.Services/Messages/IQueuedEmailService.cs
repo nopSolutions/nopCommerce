@@ -40,11 +40,13 @@ namespace Nop.Services.Messages
         /// <param name="endTime">The end time</param>
         /// <param name="loadNotSentItemsOnly">A value indicating whether to load only not sent emails</param>
         /// <param name="maxSendTries">Maximum send tries</param>
+        /// <param name="loadNewest">A value indicating whether we should sort queued email descending; otherwise, ascending.</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Email item collection</returns>
         IPagedList<QueuedEmail> SearchEmails(string fromEmail,
             string toEmail, DateTime? startTime, DateTime? endTime,
-            bool loadNotSentItemsOnly, int maxSendTries, int pageIndex, int pageSize);
+            bool loadNotSentItemsOnly, int maxSendTries,
+            bool loadNewest, int pageIndex, int pageSize);
     }
 }
