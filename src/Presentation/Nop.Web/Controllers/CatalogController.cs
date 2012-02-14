@@ -29,6 +29,7 @@ using Nop.Web.Framework.UI.Captcha;
 using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Catalog;
 using Nop.Web.Models.Media;
+using System.Diagnostics;
 
 namespace Nop.Web.Controllers
 {
@@ -183,12 +184,14 @@ namespace Nop.Web.Controllers
                         model.Price = null;
                     }
                     break;
-                case 1:
+                default:
                     {
+                        
                         if (_permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
                         {
-                            //only one variant
-                            var productVariant = productVariants[0];
+                            //calculate for the maximum quantity (in case if we have tier prices)
+                            decimal? minimalPrice = null;
+                            var productVariant = _priceCalculationService.GetProductVariantWithMinimalPrice(productVariants, _workContext.CurrentCustomer, true, int.MaxValue, out minimalPrice);
 
                             if (!productVariant.CustomerEntersPrice)
                             {
@@ -197,66 +200,55 @@ namespace Nop.Web.Controllers
                                     model.OldPrice = null;
                                     model.Price = _localizationService.GetResource("Products.CallForPrice");
                                 }
-                                else
+                                else if (minimalPrice.HasValue)
                                 {
+                                    //calculate prices
                                     decimal taxRate = decimal.Zero;
                                     decimal oldPriceBase = _taxService.GetProductPrice(productVariant, productVariant.OldPrice, out taxRate);
-                                    decimal finalPriceBase = _taxService.GetProductPrice(productVariant, _priceCalculationService.GetFinalPrice(productVariant, true), out taxRate);
+                                    decimal finalPriceBase = _taxService.GetProductPrice(productVariant, minimalPrice.Value, out taxRate);
 
                                     decimal oldPrice = _currencyService.ConvertFromPrimaryStoreCurrency(oldPriceBase, _workContext.WorkingCurrency);
                                     decimal finalPrice = _currencyService.ConvertFromPrimaryStoreCurrency(finalPriceBase, _workContext.WorkingCurrency);
 
-                                    if (finalPriceBase != oldPriceBase && oldPriceBase != decimal.Zero)
+                                    //do we have tier prices configured?
+                                    var tierPrices = productVariant.TierPrices
+                                        .OrderBy(tp => tp.Quantity)
+                                        .ToList()
+                                        .FilterForCustomer(_workContext.CurrentCustomer)
+                                        .RemoveDuplicatedQuantities();
+                                    if (tierPrices.Count > 0 && !(tierPrices.Count == 1 && tierPrices[0].Quantity <= 1))
                                     {
-                                        model.OldPrice = _priceFormatter.FormatPrice(oldPrice);
-                                        model.Price = _priceFormatter.FormatPrice(finalPrice);
+                                        //When there is just one tier (with  qty 1), there are no actual savings in the list.
+                                        model.OldPrice = null;
+                                        model.Price = String.Format(_localizationService.GetResource("Products.PriceRangeFrom"), _priceFormatter.FormatPrice(minimalPrice.Value));
                                     }
                                     else
                                     {
-                                        model.OldPrice = null;
-                                        model.Price = _priceFormatter.FormatPrice(finalPrice);
+                                        if (finalPriceBase != oldPriceBase && oldPriceBase != decimal.Zero)
+                                        {
+                                            model.OldPrice = _priceFormatter.FormatPrice(oldPrice);
+                                            model.Price = _priceFormatter.FormatPrice(finalPrice);
+                                        }
+                                        else
+                                        {
+                                            model.OldPrice = null;
+                                            model.Price = _priceFormatter.FormatPrice(finalPrice);
+                                        }
                                     }
+                                }
+                                else
+                                {
+                                    //Actually it's not possible (we presume that minimalPrice always has a value)
+                                    //We never should get here
+                                    Debug.WriteLine(string.Format("PrepareProductPriceModel with minPrice not set. Variant ID = {0}", productVariant.Id));
                                 }
                             }
                         }
                         else
                         {
+                            //hide prices
                             model.OldPrice = null;
                             model.Price = null;
-                        }
-                    }
-                    break;
-                default:
-                    {
-                        if (_permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
-                        {
-                            //multiple variants
-                            var productVariant = _priceCalculationService.GetMinimalPriceProductVariant(productVariants, _workContext.CurrentCustomer, true, 1);
-                            if (productVariant != null)
-                            {
-                                if (!productVariant.CustomerEntersPrice)
-                                {
-                                    if (productVariant.CallForPrice)
-                                    {
-                                        model.OldPrice = null;
-                                        model.Price = _localizationService.GetResource("Products.CallForPrice");
-                                    }
-                                    else
-                                    {
-                                        decimal taxRate = decimal.Zero;
-                                        decimal fromPriceBase = _taxService.GetProductPrice(productVariant, _priceCalculationService.GetFinalPrice(productVariant, true), out taxRate);
-                                        decimal fromPrice = _currencyService.ConvertFromPrimaryStoreCurrency(fromPriceBase, _workContext.WorkingCurrency);
-
-                                        model.OldPrice = null;
-                                        model.Price = String.Format(_localizationService.GetResource("Products.PriceRangeFrom"), _priceFormatter.FormatPrice(fromPrice));
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                model.OldPrice = null;
-                                model.Price = null;
-                            }
                         }
                     }
                     break;

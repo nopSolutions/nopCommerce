@@ -4,15 +4,10 @@
 @using MvcContrib.UI.Grid
 @{
     var displayTierPrices = false;
-    if (Model.Count > 0)
+    if (Model.Count > 0 && !(Model.Count == 1 && Model[0].Quantity <= 1))
     {
+        //When there is just one tier (with  qty 1), there are no actual savings in the list.
         displayTierPrices = true;
-        //When there is just one tier (with min qty 1), the "buy more and save" table shouldn't be shown up.
-        //Since it only has one tier, with the price for unit 1+, there are no actual savings in the list.
-        if (Model.Count == 1 && Model[0].Quantity <= 1)
-        {
-            displayTierPrices = false;
-        }
     }
 }
 @if (displayTierPrices)

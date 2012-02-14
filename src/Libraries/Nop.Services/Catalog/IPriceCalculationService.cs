@@ -17,10 +17,11 @@ namespace Nop.Services.Catalog
         /// <param name="variants">Product variants</param>
         /// <param name="customer">The customer</param>
         /// <param name="includeDiscounts">A value indicating whether include discounts or not for final price computation</param>
-        /// <param name="quantity">Shopping cart item quantity</param>
+        /// <param name="quantity">Quantity</param>
+        /// <param name="minPrice">Calcualted minimal price</param>
         /// <returns>A product variant with minimal price</returns>
-        ProductVariant GetMinimalPriceProductVariant(IList<ProductVariant> variants,
-            Customer customer, bool includeDiscounts, int quantity);
+        ProductVariant GetProductVariantWithMinimalPrice(IList<ProductVariant> variants,
+            Customer customer, bool includeDiscounts, int quantity, out decimal? minPrice);
         
         /// <summary>
         /// Get product variant special price (is valid)

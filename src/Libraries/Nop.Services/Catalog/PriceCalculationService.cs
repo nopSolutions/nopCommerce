@@ -142,11 +142,13 @@ namespace Nop.Services.Catalog
         /// <param name="variants">Product variants</param>
         /// <param name="customer">The customer</param>
         /// <param name="includeDiscounts">A value indicating whether include discounts or not for final price computation</param>
-        /// <param name="quantity">Shopping cart item quantity</param>
+        /// <param name="quantity">Quantity</param>
+        /// <param name="minPrice">Calcualted minimal price</param>
         /// <returns>A product variant with minimal price</returns>
-        public virtual ProductVariant GetMinimalPriceProductVariant(IList<ProductVariant> variants,
-            Customer customer, bool includeDiscounts, int quantity)
+        public virtual ProductVariant GetProductVariantWithMinimalPrice(IList<ProductVariant> variants,
+            Customer customer, bool includeDiscounts, int quantity, out decimal? minPrice)
         {
+            minPrice = null;
             if (variants == null)
                 throw new ArgumentNullException("variants");
 
@@ -154,7 +156,6 @@ namespace Nop.Services.Catalog
                 return null;
 
             ProductVariant minPriceVariant = null;
-            decimal? minPrice = null;
             foreach (var variant in variants)
             {
                 var finalPrice = GetFinalPrice(variant, customer, decimal.Zero, includeDiscounts, quantity);
