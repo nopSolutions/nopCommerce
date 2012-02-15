@@ -65,32 +65,103 @@ CREATE PROCEDURE [dbo].[ProductLoadAllPaged]
 AS
 BEGIN
 	
-	--init
-	DECLARE @SearchKeywords bit
-	SET @SearchKeywords = 1
-	IF (@Keywords IS NULL OR @Keywords = N'')
-		SET @SearchKeywords = 0
+	/* Products that filtered by keywords */
+	CREATE TABLE #KeywordProducts
+	(
+		[ProductId] int NOT NULL
+	)
 
-	SET @Keywords = isnull(@Keywords, '')
-	SET @Keywords = '%' + rtrim(ltrim(@Keywords)) + '%'
+	DECLARE
+		@SearchKeywords bit,
+		@sql nvarchar(max),
+		@sql_orderby nvarchar(max)
+
+	SET NOCOUNT ON
+	
+	--filter by keywords
+	IF ISNULL(@Keywords, '') != ''
+	BEGIN
+		SET @SearchKeywords = 1
+		
+		SET @Keywords = isnull(@Keywords, '')
+		SET @Keywords = '%' + rtrim(ltrim(@Keywords)) + '%'
+		
+		SET @sql = '
+		INSERT INTO #KeywordProducts ([ProductId])
+		SELECT p.Id
+		FROM Product p with (NOLOCK)
+		WHERE PATINDEX(@Keywords, p.name) > 0
+		UNION
+		SELECT pv.ProductId
+		FROM ProductVariant pv with (NOLOCK)
+		WHERE PATINDEX(@Keywords, pv.name) > 0
+		UNION
+		SELECT pv.ProductId
+		FROM ProductVariant pv with (NOLOCK)
+		WHERE PATINDEX(@Keywords, pv.sku) > 0
+		UNION
+		SELECT lp.EntityId
+		FROM LocalizedProperty lp with (NOLOCK)
+		WHERE
+			lp.LocaleKeyGroup = N''Product''
+			AND lp.LanguageId = ' + ISNULL(CAST(@LanguageId AS nvarchar(max)), '0') + '
+			AND lp.LocaleKey = N''Name''
+			AND PATINDEX(@Keywords, lp.LocaleValue) > 0'
+			
+		IF @SearchDescriptions = 1 SET @sql = @sql + '
+		UNION
+		SELECT p.Id
+		FROM Product p with (NOLOCK)
+		WHERE PATINDEX(@Keywords, p.ShortDescription) > 0
+		UNION
+		SELECT p.Id
+		FROM Product p with (NOLOCK)
+		WHERE PATINDEX(@Keywords, p.FullDescription) > 0
+		UNION
+		SELECT pv.ProductId
+		FROM ProductVariant pv with (NOLOCK)
+		WHERE PATINDEX(@Keywords, pv.Description) > 0
+		UNION
+		SELECT lp.EntityId
+		FROM LocalizedProperty lp with (NOLOCK)
+		WHERE
+			lp.LocaleKeyGroup = N''Product''
+			AND lp.LanguageId = ' + ISNULL(CAST(@LanguageId AS nvarchar(max)), '0') + '
+			AND lp.LocaleKey = N''ShortDescription''
+			AND PATINDEX(@Keywords, lp.LocaleValue) > 0
+		UNION
+		SELECT lp.EntityId
+		FROM LocalizedProperty lp with (NOLOCK)
+		WHERE
+			lp.LocaleKeyGroup = N''Product''
+			AND lp.LanguageId = ' + ISNULL(CAST(@LanguageId AS nvarchar(max)), '0') + '
+			AND lp.LocaleKey = N''FullDescription''
+			AND PATINDEX(@Keywords, lp.LocaleValue) > 0'
+		
+		--PRINT (@sql)
+		EXEC sp_executesql @sql, N'@Keywords nvarchar(MAX)', @Keywords
+
+	END
+	ELSE
+	BEGIN
+		SET @SearchKeywords = 0
+	END
 
 	--filter by attributes
-	SET @FilteredSpecs = isnull(@FilteredSpecs, '')
+	SET @FilteredSpecs = isnull(@FilteredSpecs, '')	
 	CREATE TABLE #FilteredSpecs
 	(
 		SpecificationAttributeOptionId int not null
 	)
 	INSERT INTO #FilteredSpecs (SpecificationAttributeOptionId)
-	SELECT CAST(data as int) FROM dbo.[nop_splitstring_to_table](@FilteredSpecs, ',');
-	
+	SELECT CAST(data as int) FROM dbo.[nop_splitstring_to_table](@FilteredSpecs, ',')	
 	DECLARE @SpecAttributesCount int	
-	SELECT @SpecAttributesCount = COUNT(1) FROM #FilteredSpecs
+	SET @SpecAttributesCount = (SELECT COUNT(1) FROM #FilteredSpecs)
 
 	--paging
 	DECLARE @PageLowerBound int
 	DECLARE @PageUpperBound int
 	DECLARE @RowsToReturn int
-	
 	SET @RowsToReturn = @PageSize * (@PageIndex + 1)	
 	SET @PageLowerBound = @PageSize * @PageIndex
 	SET @PageUpperBound = @PageLowerBound + @PageSize + 1
@@ -100,149 +171,191 @@ BEGIN
 		[Id] int IDENTITY (1, 1) NOT NULL,
 		[ProductId] int NOT NULL
 	)
-
+	SET @sql = '
 	INSERT INTO #DisplayOrderTmp ([ProductId])
 	SELECT p.Id
-	FROM Product p with (NOLOCK) 
-	LEFT OUTER JOIN Product_Category_Mapping pcm with (NOLOCK) ON p.Id=pcm.ProductId
-	LEFT OUTER JOIN Product_Manufacturer_Mapping pmm with (NOLOCK) ON p.Id=pmm.ProductId
-	LEFT OUTER JOIN Product_ProductTag_Mapping pptm with (NOLOCK) ON p.Id=pptm.Product_Id
-	LEFT OUTER JOIN ProductVariant pv with (NOLOCK) ON p.Id = pv.ProductId
-	--searching of the localized values
-	--comment the line below if you don't use it. It'll improve the performance
-	LEFT OUTER JOIN LocalizedProperty lp with (NOLOCK) ON p.Id = lp.EntityId AND lp.LanguageId = @LanguageId AND lp.LocaleKeyGroup = N'Product'
-	WHERE 
-		(
-		   (
-				@CategoryId IS NULL OR @CategoryId=0
-				OR (pcm.CategoryId=@CategoryId AND (@FeaturedProducts IS NULL OR pcm.IsFeaturedProduct=@FeaturedProducts))
-			)
+	FROM
+		Product p with (NOLOCK)'
+	
+	IF @CategoryId > 0
+	BEGIN
+		SET @sql = @sql + '
+		LEFT JOIN Product_Category_Mapping pcm with (NOLOCK)
+			ON p.Id = pcm.ProductId'
+	END
+	
+	IF @ManufacturerId > 0
+	BEGIN
+		SET @sql = @sql + '
+		LEFT JOIN Product_Manufacturer_Mapping pmm with (NOLOCK)
+			ON p.Id = pmm.ProductId'
+	END
+	
+	IF ISNULL(@ProductTagId, 0) != 0
+	BEGIN
+		SET @sql = @sql + '
+		LEFT JOIN Product_ProductTag_Mapping pptm with (NOLOCK)
+			ON p.Id = pptm.Product_Id'
+	END
+	
+	IF @ShowHidden = 0
+	OR @PriceMin > 0
+	OR @PriceMax > 0
+	OR @OrderBy = 10 /* Price: Low to High */
+	OR @OrderBy = 11 /* Price: High to Low */
+	BEGIN
+		SET @sql = @sql + '
+		LEFT JOIN ProductVariant pv with (NOLOCK)
+			ON p.Id = pv.ProductId'
+	END
+	
+	--searching by keywords
+	IF @SearchKeywords = 1
+	BEGIN
+		SET @sql = @sql + '
+		JOIN #KeywordProducts kp
+			ON  p.Id = kp.ProductId'
+	END
+	
+	SET @sql = @sql + '
+	WHERE
+		p.Deleted = 0'
+	
+	--filter by category
+	IF @CategoryId > 0
+	BEGIN
+		SET @sql = @sql + '
+		AND pcm.CategoryId = ' + CAST(@CategoryId AS nvarchar(max))
+		
+		IF @FeaturedProducts IS NOT NULL
+		BEGIN
+			SET @sql = @sql + '
+		AND pcm.IsFeaturedProduct = ' + CAST(@FeaturedProducts AS nvarchar(max))
+		END
+	END
+	
+	--filter by manufacturer
+	IF @ManufacturerId > 0
+	BEGIN
+		SET @sql = @sql + '
+		AND pmm.ManufacturerId = ' + CAST(@ManufacturerId AS nvarchar(max))
+		
+		IF @FeaturedProducts IS NOT NULL
+		BEGIN
+			SET @sql = @sql + '
+		AND pmm.IsFeaturedProduct = ' + CAST(@FeaturedProducts AS nvarchar(max))
+		END
+	END
+	
+	--filter by product tag
+	IF ISNULL(@ProductTagId, 0) != 0
+	BEGIN
+		SET @sql = @sql + '
+		AND pptm.ProductTag_Id = ' + CAST(@ProductTagId AS nvarchar(max))
+	END
+	
+	IF @ShowHidden = 0
+	BEGIN
+		SET @sql = @sql + '
+		AND p.Published = 1
+		AND pv.Published = 1
+		AND pv.Deleted = 0
+		AND (getutcdate() BETWEEN ISNULL(pv.AvailableStartDateTimeUtc, ''1/1/1900'') and ISNULL(pv.AvailableEndDateTimeUtc, ''1/1/2999''))'
+	END
+	
+	--min price
+	IF @PriceMin > 0
+	BEGIN
+		SET @sql = @sql + '
 		AND (
-				@ManufacturerId IS NULL OR @ManufacturerId=0
-				OR (pmm.ManufacturerId=@ManufacturerId AND (@FeaturedProducts IS NULL OR pmm.IsFeaturedProduct=@FeaturedProducts))
-			)
-		AND (
-				@ProductTagId IS NULL OR @ProductTagId=0
-				OR pptm.ProductTag_Id=@ProductTagId
-			)
-		AND	(
-				@ShowHidden = 1 OR p.Published = 1
-			)
-		AND 
-			(
-				p.Deleted=0
-			)
-		AND 
-			(
-				@ShowHidden = 1 OR pv.Published = 1
-			)
-		AND 
-			(
-				@ShowHidden = 1 OR pv.Deleted = 0
-			)
-		AND (
-				--min price
-				(@PriceMin IS NULL OR @PriceMin=0)
-				OR 
 				(
 					--special price (specified price and valid date range)
-					(pv.SpecialPrice IS NOT NULL AND (getutcdate() BETWEEN isnull(pv.SpecialPriceStartDateTimeUtc, '1/1/1900') AND isnull(pv.SpecialPriceEndDateTimeUtc, '1/1/2999')))
+					(pv.SpecialPrice IS NOT NULL AND (getutcdate() BETWEEN isnull(pv.SpecialPriceStartDateTimeUtc, ''1/1/1900'') AND isnull(pv.SpecialPriceEndDateTimeUtc, ''1/1/2999'')))
 					AND
-					(pv.SpecialPrice >= @PriceMin)
+					(pv.SpecialPrice >= ' + CAST(@PriceMin AS nvarchar(max)) + ')
 				)
 				OR 
 				(
-					--regular price (price isn't specified or date range isn't valid)
-					(pv.SpecialPrice IS NULL OR (getutcdate() NOT BETWEEN isnull(pv.SpecialPriceStartDateTimeUtc, '1/1/1900') AND isnull(pv.SpecialPriceEndDateTimeUtc, '1/1/2999')))
+					--regular price (price isnt specified or date range isnt valid)
+					(pv.SpecialPrice IS NULL OR (getutcdate() NOT BETWEEN isnull(pv.SpecialPriceStartDateTimeUtc, ''1/1/1900'') AND isnull(pv.SpecialPriceEndDateTimeUtc, ''1/1/2999'')))
 					AND
-					(pv.Price >= @PriceMin)
+					(pv.Price >= ' + CAST(@PriceMin AS nvarchar(max)) + ')
 				)
-			)
+			)'
+	END
+	
+	--max price
+	IF @PriceMax > 0
+	BEGIN
+		SET @sql = @sql + '
 		AND (
-				--max price
-				(@PriceMax IS NULL OR @PriceMax=2147483644) -- max value
-				OR 
 				(
 					--special price (specified price and valid date range)
-					(pv.SpecialPrice IS NOT NULL AND (getutcdate() BETWEEN isnull(pv.SpecialPriceStartDateTimeUtc, '1/1/1900') AND isnull(pv.SpecialPriceEndDateTimeUtc, '1/1/2999')))
+					(pv.SpecialPrice IS NOT NULL AND (getutcdate() BETWEEN isnull(pv.SpecialPriceStartDateTimeUtc, ''1/1/1900'') AND isnull(pv.SpecialPriceEndDateTimeUtc, ''1/1/2999'')))
 					AND
-					(pv.SpecialPrice <= @PriceMax)
+					(pv.SpecialPrice <= ' + CAST(@PriceMax AS nvarchar(max)) + ')
 				)
 				OR 
 				(
-					--regular price (price isn't specified or date range isn't valid)
-					(pv.SpecialPrice IS NULL OR (getutcdate() NOT BETWEEN isnull(pv.SpecialPriceStartDateTimeUtc, '1/1/1900') AND isnull(pv.SpecialPriceEndDateTimeUtc, '1/1/2999')))
+					--regular price (price isnt specified or date range isnt valid)
+					(pv.SpecialPrice IS NULL OR (getutcdate() NOT BETWEEN isnull(pv.SpecialPriceStartDateTimeUtc, ''1/1/1900'') AND isnull(pv.SpecialPriceEndDateTimeUtc, ''1/1/2999'')))
 					AND
-					(pv.Price <= @PriceMax)
+					(pv.Price <= ' + CAST(@PriceMax AS nvarchar(max)) + ')
 				)
-			)
-		AND	(
-				@SearchKeywords = 0 or 
-				(
-					-- search standard content
-					patindex(@Keywords, p.name) > 0
-					or patindex(@Keywords, pv.name) > 0
-					or patindex(@Keywords, pv.sku) > 0
-					or (@SearchDescriptions = 1 and patindex(@Keywords, p.ShortDescription) > 0)
-					or (@SearchDescriptions = 1 and patindex(@Keywords, p.FullDescription) > 0)
-					or (@SearchDescriptions = 1 and patindex(@Keywords, pv.Description) > 0)					
-					--searching of the localized values
-					--comment the lines below if you don't use it. It'll improve the performance
-					or (lp.LocaleKey = N'Name' and patindex(@Keywords, lp.LocaleValue) > 0)
-					or (@SearchDescriptions = 1 and lp.LocaleKey = N'ShortDescription' and patindex(@Keywords, lp.LocaleValue) > 0)
-					or (@SearchDescriptions = 1 and lp.LocaleKey = N'FullDescription' and patindex(@Keywords, lp.LocaleValue) > 0)
+			)'
+	END
+	
+	--filter by specs
+	IF @SpecAttributesCount > 0
+	BEGIN
+		SET @sql = @sql + '
+		AND NOT EXISTS (
+			SELECT 1 
+			FROM
+				#FilteredSpecs [fs]
+			WHERE
+				[fs].SpecificationAttributeOptionId NOT IN (
+					SELECT psam.SpecificationAttributeOptionId
+					FROM dbo.Product_SpecificationAttribute_Mapping psam
+					WHERE psam.AllowFiltering = 1 AND psam.ProductId = p.Id
 				)
-			)
-		AND
-			(
-				@ShowHidden = 1
-				OR
-				(getutcdate() between isnull(pv.AvailableStartDateTimeUtc, '1/1/1900') and isnull(pv.AvailableEndDateTimeUtc, '1/1/2999'))
-			)
-		AND
-			(
-				--filter by specs
-				@SpecAttributesCount = 0
-				OR
-				(
-					NOT EXISTS(
-						SELECT 1 
-						FROM #FilteredSpecs [fs]
-						WHERE [fs].SpecificationAttributeOptionId NOT IN (
-							SELECT psam.SpecificationAttributeOptionId
-							FROM dbo.Product_SpecificationAttribute_Mapping psam
-							WHERE psam.AllowFiltering = 1 AND psam.ProductId = p.Id
-							)
-						)
-					
-				)
-			)
-		)
-	ORDER BY 
-		--category position
-		CASE WHEN @OrderBy = 0 AND @CategoryId IS NOT NULL AND @CategoryId > 0
-		THEN pcm.DisplayOrder END ASC,
-		--manufacturer position
-		CASE WHEN @OrderBy = 0 AND @ManufacturerId IS NOT NULL AND @ManufacturerId > 0
-		THEN pmm.DisplayOrder END ASC,
-		--sort by name (there's no any position if category or manufactur is not specified)
-		CASE WHEN @OrderBy = 0
-		THEN p.[Name] END ASC,
-		--Name: A to Z
-		CASE WHEN @OrderBy = 5
-		THEN p.[Name] END ASC, --THEN dbo.[nop_getnotnullnotempty](pl.[Name],p.[Name]) END ASC,
-		--Name: Z to A
-		CASE WHEN @OrderBy = 6
-		THEN p.[Name] END DESC, --THEN dbo.[nop_getnotnullnotempty](pl.[Name],p.[Name]) END DESC,
-		--Price: Low to High
-		CASE WHEN @OrderBy = 10
-		THEN pv.Price END ASC,
-		--Price: High to Low
-		CASE WHEN @OrderBy = 11
-		THEN pv.Price END DESC,
-		--Created on
-		CASE WHEN @OrderBy = 15
-		THEN p.CreatedOnUtc END DESC
+			)'
+	END
+	
+	--sorting
+	SET @sql_orderby = ''	
+	IF @OrderBy = 5 /* Name: A to Z */
+		SET @sql_orderby = ' p.[Name] ASC'
+	ELSE IF @OrderBy = 6 /* Name: Z to A */
+		SET @sql_orderby = ' p.[Name] DESC'
+	ELSE IF @OrderBy = 10 /* Price: Low to High */
+		SET @sql_orderby = ' pv.[Price] ASC'
+	ELSE IF @OrderBy = 11 /* Price: High to Low */
+		SET @sql_orderby = ' pv.[Price] DESC'
+	ELSE IF @OrderBy = 15 /* creation date */
+		SET @sql_orderby = ' p.[CreatedOnUtc] DESC'
+	ELSE /* default sorting, 0 (position) */
+	BEGIN
+		--category position (display order)
+		IF @CategoryId > 0 SET @sql_orderby = ' pcm.DisplayOrder ASC'
+		
+		--manufacturer position (display order)
+		IF @ManufacturerId > 0
+		BEGIN
+			IF LEN(@sql_orderby) > 0 SET @sql_orderby = @sql_orderby + ', '
+			SET @sql_orderby = @sql_orderby + ' pmm.DisplayOrder ASC'
+		END
+		
+		--name
+		IF LEN(@sql_orderby) > 0 SET @sql_orderby = @sql_orderby + ', '
+		SET @sql_orderby = @sql_orderby + ' p.[Name] ASC'
+	END
+	
+	SET @sql = @sql + '
+	ORDER BY' + @sql_orderby
+	
+	PRINT (@sql)
+	EXEC sp_executesql @sql
 
 	DROP TABLE #FilteredSpecs
 
@@ -253,30 +366,27 @@ BEGIN
 	)
 	INSERT INTO #PageIndex ([ProductId])
 	SELECT ProductId
-	FROM #DisplayOrderTmp with (NOLOCK)
+	FROM #DisplayOrderTmp
 	GROUP BY ProductId
 	ORDER BY min([Id])
 
 	--total records
 	SET @TotalRecords = @@rowcount
-	SET ROWCOUNT @RowsToReturn
 	
 	DROP TABLE #DisplayOrderTmp
 
-	--return products (returned properties should be synchronized with 'Product' entity)
-	SELECT  
+	--return products
+	SELECT TOP (@RowsToReturn)
 		p.*
 	FROM
 		#PageIndex [pi]
-		INNER JOIN Product p with (NOLOCK) on p.Id = [pi].[ProductId]
+		INNER JOIN Product p on p.Id = [pi].[ProductId]
 	WHERE
 		[pi].IndexId > @PageLowerBound AND 
 		[pi].IndexId < @PageUpperBound
 	ORDER BY
-		IndexId
+		[pi].IndexId
 	
-	SET ROWCOUNT 0
-
 	DROP TABLE #PageIndex
 END
 GO
