@@ -216,11 +216,16 @@ namespace Nop.Web.Controllers
                                         .ToList()
                                         .FilterForCustomer(_workContext.CurrentCustomer)
                                         .RemoveDuplicatedQuantities();
-                                    if (tierPrices.Count > 0 && !(tierPrices.Count == 1 && tierPrices[0].Quantity <= 1))
-                                    {
+                                    bool displayFromMessage =
                                         //When there is just one tier (with  qty 1), there are no actual savings in the list.
+                                        (tierPrices.Count > 0 && !(tierPrices.Count == 1 && tierPrices[0].Quantity <= 1)) ||
+                                        //we have more than one variant
+                                        (productVariants.Count > 1);
+                                    if (displayFromMessage)
+                                    {
+                                        
                                         model.OldPrice = null;
-                                        model.Price = String.Format(_localizationService.GetResource("Products.PriceRangeFrom"), _priceFormatter.FormatPrice(minimalPrice.Value));
+                                        model.Price = String.Format(_localizationService.GetResource("Products.PriceRangeFrom"), _priceFormatter.FormatPrice(finalPrice));
                                     }
                                     else
                                     {
