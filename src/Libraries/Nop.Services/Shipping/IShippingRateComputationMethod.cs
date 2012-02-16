@@ -1,5 +1,6 @@
 using System.Web.Routing;
 using Nop.Core.Plugins;
+using Nop.Services.Shipping.Tracking;
 
 namespace Nop.Services.Shipping
 {
@@ -26,6 +27,11 @@ namespace Nop.Services.Shipping
         /// <param name="getShippingOptionRequest">A request for getting shipping options</param>
         /// <returns>Fixed shipping rate; or null in case there's no fixed shipping rate</returns>
         decimal? GetFixedRate(GetShippingOptionRequest getShippingOptionRequest);
+
+        /// <summary>
+        /// Gets a shipment tracker
+        /// </summary>
+        IShipmentTracker ShipmentTracker { get; }
 
         /// <summary>
         /// Gets a route for provider configuration

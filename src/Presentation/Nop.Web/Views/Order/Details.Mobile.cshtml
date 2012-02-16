@@ -148,7 +148,14 @@
                                 @T("Order.TrackingNumber")</b>
                         </div>
                         <div>
-                            @Model.TrackingNumber
+                            @if (!string.IsNullOrEmpty(Model.TrackingNumberUrl))
+                            {
+                                <a href="@Model.TrackingNumberUrl" class="trackingurl">@Model.TrackingNumber</a>
+                            }
+                            else
+                            {
+                                @Model.TrackingNumber
+                            }
                         </div>
                     }
                     <div>
@@ -408,6 +415,27 @@
                             <div class="ordernotes-box">
                                 <div>@T("Order.Notes.CreatedOn"): @item.CreatedOn.ToString()</div>
                                 <div>@T("Order.Notes.Note"): @Html.Raw(item.Note)</div>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            }
+            <div class="clear">
+            </div>
+            @if (Model.ShipmentStatusEvents.Count > 0)
+            {
+                <div class="section-title">
+                    @T("Order.ShipmentStatusEvents")
+                </div>                
+                <ul data-role="listview" data-inset="true" data-filter="false">
+                    @foreach (var item in Model.ShipmentStatusEvents)
+                    {      
+                        <li>
+                            <div class="shipmentstatusevents-box">
+                                <div>@T("Order.ShipmentStatusEvents.Event"): @item.EventName</div>
+                                <div>@T("Order.ShipmentStatusEvents.Location"): @item.Location</div>
+                                <div>@T("Order.ShipmentStatusEvents.Country"): @item.Country</div>
+                                <div>@T("Order.ShipmentStatusEvents.Date"): @item.Date.ToShortDateString()</div>
                             </div>
                         </li>
                     }

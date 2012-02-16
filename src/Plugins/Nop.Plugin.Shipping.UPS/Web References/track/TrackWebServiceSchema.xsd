@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns:ups="http://www.ups.com/XMLSchema" xmlns:common="http://www.ups.com/XMLSchema/XOLTWS/Common/v1.0" xmlns:trk="http://www.ups.com/XMLSchema/XOLTWS/Track/v2.0" elementFormDefault="qualified" targetNamespace="http://www.ups.com/XMLSchema/XOLTWS/Track/v2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:import schemaLocation="common.xsd" namespace="http://www.ups.com/XMLSchema/XOLTWS/Common/v1.0" />
+  <xsd:element name="TrackRequest">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="common:Request" />
+        <xsd:element minOccurs="0" name="InquiryNumber" type="xsd:string" />
+        <xsd:element minOccurs="0" name="TrackingOption" type="xsd:string" />
+        <xsd:element minOccurs="0" name="CandidateBookmark" type="xsd:string" />
+        <xsd:group minOccurs="0" ref="trk:ReferenceNumberGroup" />
+        <xsd:element minOccurs="0" name="ShipperAccountInfo" type="trk:ShipperAccountInfoType" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:group name="ReferenceNumberGroup">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" name="ReferenceNumber" type="trk:ReferenceNumberType" />
+      <xsd:element minOccurs="0" name="PickupDateRange" type="trk:PickupDateRangeType" />
+      <xsd:element minOccurs="0" name="ShipperNumber" type="xsd:string" />
+      <xsd:element minOccurs="0" name="ShipFrom" type="trk:ShipFromRequestType" />
+      <xsd:element minOccurs="0" name="ShipTo" type="trk:ShipToRequestType" />
+      <xsd:element minOccurs="0" name="ShipmentType" type="trk:RefShipmentType" />
+    </xsd:sequence>
+  </xsd:group>
+  <xsd:complexType name="AddressRequestType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" name="PostalCode" type="xsd:string" />
+      <xsd:element minOccurs="0" name="CountryCode" type="xsd:string" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="RefShipmentType">
+    <xsd:sequence>
+      <xsd:element name="Code" type="xsd:string" />
+      <xsd:element minOccurs="0" name="Description" type="xsd:string" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="PickupDateRangeType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" name="BeginDate" type="xsd:string" />
+      <xsd:element minOccurs="0" name="EndDate" type="xsd:string" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ReferenceNumberType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" name="Code" type="xsd:string" />
+      <xsd:element name="Value" type="xsd:string" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="RequestTransactionReferenceType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" name="CustomerContext" type="xsd:string" />
+      <xsd:element minOccurs="0" name="TransactionIdentifierPlayback" type="xsd:string" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ShipToRequestType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" name="Address" type="trk:AddressRequestType" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ShipFromRequestType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" name="Address" type="trk:AddressRequestType" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:element name="TrackResponse">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="common:Response" />
+        <xsd:element maxOccurs="unbounded" name="Shipment" type="trk:ShipmentType" />
+        <xsd:element minOccurs="0" maxOccurs="unbounded" name="Disclaimer" type="xsd:string" />
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:complexType name="ActivityLocationType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" name="Address" type="trk:AddressType" />
+      <xsd:element minOccurs="0" name="TransportFacility" type="trk:TransportFacilityType" />
+      <xsd:element minOccurs="0" name="Code" type="xsd:string" />
+      <xsd:element minOccurs="0" name="Description" type="xsd:string" />
+      <xsd:element minOccurs="0" name="SignedForByName" type="xsd:string" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="TransportFacilityType">
+    <xsd:sequence>
+      <xsd:element name="Type" type="xsd:string" />
+      <xsd:element minOccurs="0" name="Code" type="xsd:string" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ActivityType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="AlternateTrackingInfo" type="trk:AlternateTrackingInfoType" />
+      <xsd:element minOccurs="0" name="ActivityLocation" type="trk:ActivityLocationType" />
+      <xsd:element minOccurs="0" name="Status" type="trk:StatusType" />
+      <xsd:element minOccurs="0" name="Date" type="xsd:string" />
+      <xsd:element minOccurs="0" name="Time" type="xsd:string" />
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="Document" type="trk:DocumentType" />
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="AdditionalAttribute" type="trk:AdditionalCodeDescriptionValueType" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="AddressType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" maxOccurs="3" name="AddressLine" type="xsd:string" />
+      <xsd:element minOccurs="0" name="City" type="xsd:string" />
+      <xsd:element minOccurs="0" name="StateProvinceCode" type="xsd:string" />
+      <xsd:element minOccurs="0" name="PostalCode" type="xsd:string" />
+      <xsd:element minOccurs="0" name="CountryCode" type="xsd:string" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="AmountType">
+    <xsd:sequence>
+      <xsd:element name="CurrencyCode" type="xsd:string" />
+      <xsd:element name="MonetaryValue" type="xsd:string" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="CommonCodeDescriptionType">
+    <xsd:sequence>
+      <xsd:element name="Code" type="xsd:string" />
+      <xsd:element minOccurs="0" name="Description" type="xsd:string" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="CODType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" name="Amount" type="trk:AmountType" />
+      <xsd:element minOccurs="0" name="Status" type="trk:CODStatusType" />
+      <xsd:element minOccurs="0" name="ControlNumber" type="xsd:string" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="CODStatusType">
+    <xsd:sequence>
+      <xsd:element name="Code" type="xsd:string" />
+      <xsd:element minOccurs="0" name="Description" type="xsd:string" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="DeliveryDetailType">
+    <xsd:sequence>
+      <xsd:element name="Type" type="trk:CommonCodeDescriptionType" />
+      <xsd:element name="Date" type="xsd:string" />
+      <xsd:element minOccurs="0" name="Time" type="xsd:string" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ImageFormatType">
+    <xsd:sequence>
+      <xsd:element name="Code" type="xsd:string" />
+      <xsd:element minOccurs="0" name="Description" type="xsd:string" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="MessageType">
+    <xsd:sequence>
+      <xsd:element name="Code" type="xsd:string" />
+      <xsd:element minOccurs="0" name="Description" type="xsd:string" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="NumberOfPackagingUnitType">
+    <xsd:sequence>
+      <xsd:element name="Type" type="trk:CommonCodeDescriptionType" />
+      <xsd:element name="Value" type="xsd:string" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="PackageType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" name="TrackingNumber" type="xsd:string" />
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="DeliveryDetail" type="trk:DeliveryDetailType" />
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="PackageAddress" type="trk:PackageAddressType" />
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="PackageServiceOption" type="trk:ServiceOptionType" />
+      <xsd:element minOccurs="0" name="COD" type="trk:CODType" />
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="Activity" type="trk:ActivityType" />
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="Message" type="trk:MessageType" />
+      <xsd:element minOccurs="0" name="PackageWeight" type="trk:WeightType" />
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="ReferenceNumber" type="trk:ReferenceNumberType" />
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="AlternateTrackingNumber" type="xsd:string" />
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="AlternateTrackingInfo" type="trk:AlternateTrackingInfoType" />
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="Document" type="trk:DocumentType" />
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="AdditionalAttribute" type="trk:AdditionalCodeDescriptionValueType" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="PackageAddressType">
+    <xsd:sequence>
+      <xsd:element name="Type" type="trk:CommonCodeDescriptionType" />
+      <xsd:element minOccurs="0" name="Address" type="trk:AddressType" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ProductCodeDescriptionType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" name="Code" type="xsd:string" />
+      <xsd:element name="Description" type="xsd:string" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="PODLetterType">
+    <xsd:sequence>
+      <xsd:element name="HTMLImage" type="xsd:string" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ResponseTransactionReferenceType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" name="CustomerContext" type="xsd:string" />
+      <xsd:element minOccurs="0" name="TransactionIdentifier" type="xsd:string" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ServiceType">
+    <xsd:sequence>
+      <xsd:element name="Code" type="xsd:string" />
+      <xsd:element minOccurs="0" name="Description" type="xsd:string" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ShipmentReferenceNumberType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" name="Code" type="xsd:string" />
+      <xsd:element minOccurs="0" name="Description" type="xsd:string" />
+      <xsd:element name="Value" type="xsd:string" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ShipmentType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" name="InquiryNumber" type="trk:CodeDescriptionValueType" />
+      <xsd:element minOccurs="0" name="ShipmentType" type="trk:RefShipmentType" />
+      <xsd:element minOccurs="0" name="CandidateBookmark" type="xsd:string" />
+      <xsd:element minOccurs="0" name="ShipperNumber" type="xsd:string" />
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="ShipmentAddress" type="trk:ShipmentAddressType" />
+      <xsd:element minOccurs="0" name="ShipmentWeight" type="trk:WeightType" />
+      <xsd:element minOccurs="0" name="Service" type="trk:ServiceType" />
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="ReferenceNumber" type="trk:ShipmentReferenceNumberType" />
+      <xsd:element minOccurs="0" name="CurrentStatus" type="trk:CommonCodeDescriptionType" />
+      <xsd:element minOccurs="0" name="PickupDate" type="xsd:string" />
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="ServiceCenter" type="trk:ServiceCenterType" />
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="DeliveryDetail" type="trk:DeliveryDetailType" />
+      <xsd:element minOccurs="0" name="Volume" type="trk:VolumeType" />
+      <xsd:element minOccurs="0" name="BillToName" type="xsd:string" />
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="NumberOfPackagingUnit" type="trk:NumberOfPackagingUnitType" />
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="ShipmentServiceOption" type="trk:ServiceOptionType" />
+      <xsd:element minOccurs="0" name="COD" type="trk:CODType" />
+      <xsd:element minOccurs="0" name="SignedForByName" type="xsd:string" />
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="Activity" type="trk:ShipmentActivityType" />
+      <xsd:element minOccurs="0" name="OriginPortDetail" type="trk:OriginPortDetailType" />
+      <xsd:element minOccurs="0" name="DestinationPortDetail" type="trk:DestinationPortDetailType" />
+      <xsd:element minOccurs="0" name="DescriptionOfGoods" type="xsd:string" />
+      <xsd:element minOccurs="0" name="CargoReady" type="trk:DateTimeType" />
+      <xsd:element minOccurs="0" name="Manifest" type="trk:DateTimeType" />
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="CarrierActivityInformation" type="trk:CarrierActivityInformationType" />
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="Document" type="trk:DocumentType" />
+      <xsd:element minOccurs="0" name="FileNumber" type="xsd:string" />
+      <xsd:element minOccurs="0" name="Appointment" type="trk:AppointmentType" />
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="Package" type="trk:PackageType" />
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="AdditionalAttribute" type="trk:AdditionalCodeDescriptionValueType" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ShipmentAddressType">
+    <xsd:sequence>
+      <xsd:element name="Type" type="trk:CommonCodeDescriptionType" />
+      <xsd:element name="Address" type="trk:AddressType" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="AppointmentType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" name="Made" type="trk:DateTimeType" />
+      <xsd:element minOccurs="0" name="Requested" type="trk:DateTimeType" />
+      <xsd:element minOccurs="0" name="BeginTime" type="xsd:string" />
+      <xsd:element minOccurs="0" name="EndTime" type="xsd:string" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="CodeDescriptionValueType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" name="Code" type="xsd:string" />
+      <xsd:element minOccurs="0" name="Description" type="xsd:string" />
+      <xsd:element name="Value" type="xsd:string" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="AdditionalCodeDescriptionValueType">
+    <xsd:sequence>
+      <xsd:element name="Code" type="xsd:string" />
+      <xsd:element minOccurs="0" name="Description" type="xsd:string" />
+      <xsd:element minOccurs="0" name="Value" type="xsd:string" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="SignatureImageType">
+    <xsd:sequence>
+      <xsd:element name="GraphicImage" type="xsd:string" />
+      <xsd:element name="ImageFormat" type="trk:ImageFormatType" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="StatusType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" name="Type" type="xsd:string" />
+      <xsd:element minOccurs="0" name="Description" type="xsd:string" />
+      <xsd:element minOccurs="0" name="Code" type="xsd:string" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="UnitOfMeasurementType">
+    <xsd:sequence>
+      <xsd:element name="Code" type="xsd:string" />
+      <xsd:element minOccurs="0" name="Description" type="xsd:string" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="VolumeType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" name="UnitOfMeasurement" type="trk:UnitOfMeasurementType" />
+      <xsd:element name="Value" type="xsd:string" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="WeightType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" name="UnitOfMeasurement" type="trk:UnitOfMeasurementType" />
+      <xsd:element name="Weight" type="xsd:string" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="DateTimeType">
+    <xsd:sequence>
+      <xsd:element name="Date" type="xsd:string" />
+      <xsd:element minOccurs="0" name="Time" type="xsd:string" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ServiceCenterType">
+    <xsd:sequence>
+      <xsd:element name="Type" type="trk:CommonCodeDescriptionType" />
+      <xsd:element minOccurs="0" name="Name" type="xsd:string" />
+      <xsd:element name="Address" type="trk:AddressType" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ServiceOptionType">
+    <xsd:sequence>
+      <xsd:element name="Type" type="trk:CommonCodeDescriptionType" />
+      <xsd:element minOccurs="0" name="Value" type="xsd:string" />
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="AdditionalAttribute" type="trk:AdditionalCodeDescriptionValueType" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="DocumentType">
+    <xsd:sequence>
+      <xsd:element name="Type" type="trk:CommonCodeDescriptionType" />
+      <xsd:element minOccurs="0" name="Content" type="xsd:string" />
+      <xsd:element minOccurs="0" name="Format" type="trk:CommonCodeDescriptionType" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ShipmentActivityType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" name="ActivityLocation" type="trk:AddressType" />
+      <xsd:element minOccurs="0" name="Code" type="xsd:string" />
+      <xsd:element minOccurs="0" name="Description" type="xsd:string" />
+      <xsd:element minOccurs="0" name="Date" type="xsd:string" />
+      <xsd:element minOccurs="0" name="Time" type="xsd:string" />
+      <xsd:element minOccurs="0" name="Trailer" type="xsd:string" />
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="Document" type="trk:DocumentType" />
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="AdditionalAttribute" type="trk:AdditionalCodeDescriptionValueType" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="OriginPortDetailType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" name="OriginPort" type="xsd:string" />
+      <xsd:element minOccurs="0" name="EstimatedDeparture" type="trk:DateTimeType" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="DestinationPortDetailType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" name="DestinationPort" type="xsd:string" />
+      <xsd:element minOccurs="0" name="EstimatedArrival" type="trk:DateTimeType" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="CarrierActivityInformationType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" name="CarrierId" type="xsd:string" />
+      <xsd:element minOccurs="0" name="Description" type="xsd:string" />
+      <xsd:element minOccurs="0" name="Status" type="xsd:string" />
+      <xsd:element minOccurs="0" name="Arrival" type="trk:DateTimeType" />
+      <xsd:element minOccurs="0" name="Departure" type="trk:DateTimeType" />
+      <xsd:element minOccurs="0" name="OriginPort" type="xsd:string" />
+      <xsd:element minOccurs="0" name="DestinationPort" type="xsd:string" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ShipperAccountInfoType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" name="PostalCode" type="xsd:string" />
+      <xsd:element name="CountryCode" type="xsd:string" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="AlternateTrackingInfoType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" name="Type" type="xsd:string" />
+      <xsd:element minOccurs="0" name="Description" type="xsd:string" />
+      <xsd:element name="Value" type="xsd:string" />
+    </xsd:sequence>
+  </xsd:complexType>
+</xsd:schema>

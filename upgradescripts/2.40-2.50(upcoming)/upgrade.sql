@@ -209,6 +209,48 @@ set @resources='
   <LocaleResource Name="Products.ProductHasBeenAddedToTheWishlist">
     <Value>The product has been added to the wishlist</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.DisplayShipmentEventsToCustomers">
+    <Value>Display shipment events</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Shipping.DisplayShipmentEventsToCustomers.Hint">
+    <Value>Check if you want your customers to see shipment events on their order details pages (if supported by your shipping rate computation method).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.ShipmentStatusEvents">
+    <Value>Shipment status events</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.ShipmentStatusEvents.Event">
+    <Value>Event</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.ShipmentStatusEvents.Location">
+    <Value>Location</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.ShipmentStatusEvents.Country">
+    <Value>Country</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.ShipmentStatusEvents.Date">
+    <Value>Date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Tracker.Departed.Departed">
+    <Value>Departed</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Tracker.Departed.ExportScanned">
+    <Value>Export scanned</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Tracker.Departed.OriginScanned">
+    <Value>Origin scanned</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Tracker.Departed.Arrived">
+    <Value>Arrived</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Tracker.Departed.NotDelivered">
+    <Value>Not delivered</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Tracker.Departed.Booked">
+    <Value>Booked</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.UPS.Tracker.Departed.Delivered">
+    <Value>Delivered</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -967,5 +1009,19 @@ BEGIN
 		[pi].IndexId
 	
 	DROP TABLE #PageIndex
+END
+GO
+
+--new shipping setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'shippingsettings.displaytrackingurltocustomers')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'shippingsettings.displaytrackingurltocustomers', N'false')
+END
+GO
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'shippingsettings.displayshipmenteventstocustomers')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'shippingsettings.displayshipmenteventstocustomers', N'false')
 END
 GO

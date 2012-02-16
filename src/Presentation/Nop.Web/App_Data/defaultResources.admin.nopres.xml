@@ -4750,6 +4750,14 @@
 							<LocaleResource Name="Shipping">
 								<Value>Shipping settings</Value>
 								<Children>
+									<LocaleResource Name="DisplayShipmentEventsToCustomers">
+										<Value>Display shipment events</Value>
+										<Children>
+											<LocaleResource Name="Hint">
+												<Value>Check if you want your customers to see shipment events on their order details pages (if supported by your shipping rate computation method).</Value>
+											</LocaleResource>
+										</Children>
+									</LocaleResource>
 									<LocaleResource Name="FreeShippingOverXEnabled">
 										<Value>Free shipping over 'X'</Value>
 										<Children>

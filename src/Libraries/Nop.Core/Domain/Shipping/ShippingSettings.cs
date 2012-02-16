@@ -37,6 +37,11 @@ namespace Nop.Core.Domain.Shipping
         public bool EstimateShippingEnabled { get; set; }
 
         /// <summary>
+        /// A value indicating whether customers should see shipment events on their order details pages
+        /// </summary>
+        public bool DisplayShipmentEventsToCustomers { get; set; }
+
+        /// <summary>
         /// Gets or sets shipping origin address
         /// </summary>
         public int ShippingOriginAddressId { get; set; }

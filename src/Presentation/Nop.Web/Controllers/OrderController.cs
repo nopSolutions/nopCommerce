@@ -24,6 +24,7 @@ using Nop.Web.Extensions;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Security;
 using Nop.Web.Models.Order;
+using Nop.Services.Shipping;
 
 namespace Nop.Web.Controllers
 {
@@ -43,6 +44,8 @@ namespace Nop.Web.Controllers
         private readonly IPdfService _pdfService;
         private readonly ICustomerService _customerService;
         private readonly IWorkflowMessageService _workflowMessageService;
+        private readonly IShippingService _shippingService;
+        private readonly ICountryService _countryService;
 
         private readonly LocalizationSettings _localizationSettings;
         private readonly MeasureSettings _measureSettings;
@@ -50,6 +53,7 @@ namespace Nop.Web.Controllers
         private readonly TaxSettings _taxSettings;
         private readonly CatalogSettings _catalogSettings;
         private readonly PdfSettings _pdfSettings;
+        private readonly ShippingSettings _shippingSettings;
 
         #endregion
 
@@ -61,10 +65,11 @@ namespace Nop.Web.Controllers
             IDateTimeHelper dateTimeHelper, IMeasureService measureService,
             IPaymentService paymentService, ILocalizationService localizationService,
             IPdfService pdfService, ICustomerService customerService,
-            IWorkflowMessageService workflowMessageService, 
-            LocalizationSettings localizationSettings,
+            IWorkflowMessageService workflowMessageService, IShippingService shippingService,
+            ICountryService countryService, LocalizationSettings localizationSettings,
             MeasureSettings measureSettings, CatalogSettings catalogSettings,
-            OrderSettings orderSettings, TaxSettings taxSettings, PdfSettings pdfSettings)
+            OrderSettings orderSettings, TaxSettings taxSettings, PdfSettings pdfSettings,
+            ShippingSettings shippingSettings)
         {
             this._orderService = orderService;
             this._workContext = workContext;
@@ -78,6 +83,8 @@ namespace Nop.Web.Controllers
             this._pdfService = pdfService;
             this._customerService = customerService;
             this._workflowMessageService = workflowMessageService;
+            this._shippingService = shippingService;
+            this._countryService = countryService;
 
             this._localizationSettings = localizationSettings;
             this._measureSettings = measureSettings;
@@ -85,6 +92,7 @@ namespace Nop.Web.Controllers
             this._orderSettings = orderSettings;
             this._taxSettings = taxSettings;
             this._pdfSettings = pdfSettings;
+            this._shippingSettings = shippingSettings;
         }
 
         #endregion
@@ -123,7 +131,36 @@ namespace Nop.Web.Controllers
                 if (order.DeliveryDateUtc.HasValue)
                     model.DeliveryDate = _dateTimeHelper.ConvertToUserTime(order.DeliveryDateUtc.Value, DateTimeKind.Utc).ToString("D");
 
+                //tracking number and shipment information
                 model.TrackingNumber = order.TrackingNumber;
+                var srcm = _shippingService.LoadShippingRateComputationMethodBySystemName(order.ShippingRateComputationMethodSystemName);
+                if (srcm != null &&
+                    srcm.PluginDescriptor.Installed &&
+                    srcm.IsShippingRateComputationMethodActive(_shippingSettings))
+                {
+                    var shipmentTracker = srcm.ShipmentTracker;
+                    if (shipmentTracker != null)
+                    {
+                        model.TrackingNumberUrl = shipmentTracker.GetUrl(order.TrackingNumber);
+                        if (_shippingSettings.DisplayShipmentEventsToCustomers)
+                        {
+                            var shipmentEvents = shipmentTracker.GetShipmentEvents(order.TrackingNumber);
+                            if (shipmentEvents!= null)
+                                foreach (var shipmentEvent in shipmentEvents)
+                                {
+                                    var shipmentStatusEventModel = new OrderDetailsModel.ShipmentStatusEventModel();
+                                    var shipmentEventCountry = _countryService.GetCountryByTwoLetterIsoCode(shipmentEvent.CountryCode);
+                                    shipmentStatusEventModel.Country = shipmentEventCountry != null
+                                                                           ? shipmentEventCountry.GetLocalized(x => x.Name)
+                                                                           : shipmentEvent.CountryCode;
+                                    shipmentStatusEventModel.Date = shipmentEvent.Date;
+                                    shipmentStatusEventModel.EventName = shipmentEvent.EventName;
+                                    shipmentStatusEventModel.Location = shipmentEvent.Location;
+                                    model.ShipmentStatusEvents.Add(shipmentStatusEventModel);
+                                }
+                        }
+                    }
+                }
             }
 
 

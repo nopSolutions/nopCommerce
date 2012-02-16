@@ -179,7 +179,14 @@
                                     <b>
                                         @T("Order.TrackingNumber")</b> 
                                     <br />
-                                    @Model.TrackingNumber
+                                    if (!string.IsNullOrEmpty(Model.TrackingNumberUrl))
+                                    {
+                                        <a href="@Model.TrackingNumberUrl" target="_blank" class="trackingurl">@Model.TrackingNumber</a>
+                                    }
+                                    else
+                                    {
+                                       @Model.TrackingNumber
+                                    }
                                 }
                                 <br />
                                 @if (!Model.PrintMode)
@@ -524,8 +531,70 @@
                         </tbody>
                     </table>
                 </div>
+                }
             }
-        }
+            <div class="clear">
+            </div>
+            @if (!Model.PrintMode)
+            {
+                if (Model.ShipmentStatusEvents.Count > 0)
+                {
+                <div class="section-title">
+                    @T("Order.ShipmentStatusEvents")
+                </div>
+                <div class="clear">
+                </div>
+                <div class="shipmentstatusevents-box">
+                    <table border="1" cellspacing="0" style="width: 100%; border-collapse: collapse;">
+                        <col />
+                        <col />
+                        <thead>
+                            <tr>
+                                <th align="center">
+                                    @T("Order.ShipmentStatusEvents.Event")
+                                </th>
+                                <th align="center">
+                                    @T("Order.ShipmentStatusEvents.Location")
+                                </th>
+                                <th align="center">
+                                    @T("Order.ShipmentStatusEvents.Country")
+                                </th>
+                                <th align="center">
+                                    @T("Order.ShipmentStatusEvents.Date")
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.ShipmentStatusEvents)
+                            {
+                                <tr>
+                                    <td>
+                                        <div style="padding: 0px 10px;">
+                                            @item.EventName
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div style="padding: 0px 10px;">
+                                            @item.Location
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div style="padding: 0px 10px;">
+                                            @item.Country
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div style="padding: 0px 10px;">
+                                            @item.Date.ToShortDateString()
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                }
+            }
         </div>
 </div>
 </div>

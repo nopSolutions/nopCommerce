@@ -3,6 +3,7 @@ using System.Web.Routing;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Plugins;
 using Nop.Services.Shipping;
+using Nop.Services.Shipping.Tracking;
 
 namespace Nop.Services.Tests.Shipping
 {
@@ -81,6 +82,13 @@ namespace Nop.Services.Tests.Shipping
             routeValues = null;
         }
 
+        /// <summary>
+        /// Gets a shipment tracker
+        /// </summary>
+        public IShipmentTracker ShipmentTracker
+        {
+            get { return null; }
+        }
         #endregion
     }
 }

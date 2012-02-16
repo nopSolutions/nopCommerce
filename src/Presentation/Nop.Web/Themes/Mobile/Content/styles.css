@@ -111,7 +111,7 @@
 .order-details .order-overview{text-align:left;padding-bottom:10px;}
 .order-details .order-overview .order-total-top{}
 .order-details .order-details-box{text-align:left;padding:10px;border:1px solid #d7d7d7;height:auto;}
-.order-details .products-box,.order-details .ordernotes-box{font-weight:normal;}
+.order-details .products-box,.order-details .ordernotes-box,.order-details .shipmentstatusevents-box{font-weight:normal;}
 .order-details .checkout-attributes{padding:10px;height:auto;}
 .order-details .products-box .product{}
 .order-details .products-box .sku{}

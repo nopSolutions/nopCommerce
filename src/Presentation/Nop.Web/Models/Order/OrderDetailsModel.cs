@@ -13,6 +13,7 @@ namespace Nop.Web.Models.Order
             GiftCards = new List<GiftCard>();
             Items = new List<OrderProductVariantModel>();
             OrderNotes = new List<OrderNote>();
+            ShipmentStatusEvents = new List<ShipmentStatusEventModel>();
         }
 
         public bool PrintMode { get; set; }
@@ -35,6 +36,8 @@ namespace Nop.Web.Models.Order
         public string ShippedDate { get; set; }
         public string DeliveryDate { get; set; }
         public string TrackingNumber { get; set; }
+        public string TrackingNumberUrl { get; set; }
+        public IList<ShipmentStatusEventModel> ShipmentStatusEvents { get; set; }
 
         public AddressModel BillingAddress { get; set; }
 
@@ -101,6 +104,14 @@ namespace Nop.Web.Models.Order
         {
             public string Note { get; set; }
             public DateTime CreatedOn { get; set; }
+        }
+
+        public class ShipmentStatusEventModel : BaseNopModel
+        {
+            public string EventName { get; set; }
+            public string Location { get; set; }
+            public string Country { get; set; }
+            public DateTime Date { get; set; }
         }
 		#endregion
     }

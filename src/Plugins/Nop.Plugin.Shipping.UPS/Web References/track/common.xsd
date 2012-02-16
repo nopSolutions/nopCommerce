@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns:ups="http://www.ups.com/XMLSchema" xmlns:common="http://www.ups.com/XMLSchema/XOLTWS/Common/v1.0" elementFormDefault="qualified" targetNamespace="http://www.ups.com/XMLSchema/XOLTWS/Common/v1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:element name="Request" type="common:RequestType" />
+  <xsd:element name="Response" type="common:ResponseType" />
+  <xsd:element name="ClientInformation" type="common:ClientInformationType" />
+  <xsd:complexType name="ClientInformationType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="Property">
+        <xsd:complexType>
+          <xsd:simpleContent>
+            <xsd:extension base="xsd:string">
+              <xsd:attribute name="Key" type="xsd:string" use="required" />
+            </xsd:extension>
+          </xsd:simpleContent>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="RequestType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="RequestOption" type="xsd:string" />
+      <xsd:element minOccurs="0" name="TransactionReference" type="common:TransactionReferenceType" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="TransactionReferenceType">
+    <xsd:sequence>
+      <xsd:element minOccurs="0" name="CustomerContext" type="xsd:string" />
+      <xsd:element ups:usage="notused" minOccurs="0" name="TransactionIdentifier" type="xsd:string" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ResponseType">
+    <xsd:sequence>
+      <xsd:element name="ResponseStatus" type="common:CodeDescriptionType" />
+      <xsd:element minOccurs="0" maxOccurs="unbounded" name="Alert" type="common:CodeDescriptionType" />
+      <xsd:element minOccurs="0" name="TransactionReference" type="common:TransactionReferenceType" />
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="CodeDescriptionType">
+    <xsd:sequence>
+      <xsd:element name="Code" type="xsd:string" />
+      <xsd:element name="Description" type="xsd:string" />
+    </xsd:sequence>
+  </xsd:complexType>
+</xsd:schema>

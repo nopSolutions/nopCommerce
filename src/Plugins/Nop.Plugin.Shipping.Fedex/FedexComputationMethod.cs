@@ -19,6 +19,7 @@ using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
 using Nop.Services.Shipping;
+using Nop.Services.Shipping.Tracking;
 
 namespace Nop.Plugin.Shipping.Fedex
 {
@@ -818,6 +819,14 @@ namespace Nop.Plugin.Shipping.Fedex
             {
                 return ShippingRateComputationMethodType.Realtime;
             }
+        }
+        
+        /// <summary>
+        /// Gets a shipment tracker
+        /// </summary>
+        public IShipmentTracker ShipmentTracker
+        {
+            get { return null; }
         }
 
         #endregion

@@ -2473,6 +2473,23 @@
 			<LocaleResource Name="Reorder">
 				<Value>Re-order</Value>
 			</LocaleResource>
+			<LocaleResource Name="ShipmentStatusEvents">
+				<Value>Shipment status events</Value>
+				<Children>
+					<LocaleResource Name="Event">
+						<Value>Event</Value>
+					</LocaleResource>
+					<LocaleResource Name="Location">
+						<Value>Location</Value>
+					</LocaleResource>
+					<LocaleResource Name="Country">
+						<Value>Country</Value>
+					</LocaleResource>
+					<LocaleResource Name="Date">
+						<Value>Date</Value>
+					</LocaleResource>
+				</Children>
+			</LocaleResource>
 			<LocaleResource Name="Shipping">
 				<Value>Shipping</Value>
 			</LocaleResource>

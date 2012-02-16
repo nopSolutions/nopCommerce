@@ -20,8 +20,10 @@ using Nop.Plugin.Shipping.UPS.Domain;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
+using Nop.Services.Logging;
 using Nop.Services.Orders;
 using Nop.Services.Shipping;
+using Nop.Services.Shipping.Tracking;
 
 namespace Nop.Plugin.Shipping.UPS
 {
@@ -49,6 +51,8 @@ namespace Nop.Plugin.Shipping.UPS
         private readonly ICurrencyService _currencyService;
         private readonly CurrencySettings _currencySettings;
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
+        private readonly ILogger _logger;
+        private readonly ILocalizationService _localizationService;
 
         #endregion
 
@@ -57,7 +61,8 @@ namespace Nop.Plugin.Shipping.UPS
             IShippingService shippingService, ISettingService settingService,
             UPSSettings upsSettings, ICountryService countryService,
             ICurrencyService currencyService, CurrencySettings currencySettings,
-            IOrderTotalCalculationService orderTotalCalculationService)
+            IOrderTotalCalculationService orderTotalCalculationService, ILogger logger,
+            ILocalizationService localizationService)
         {
             this._measureService = measureService;
             this._shippingService = shippingService;
@@ -67,6 +72,8 @@ namespace Nop.Plugin.Shipping.UPS
             this._currencyService = currencyService;
             this._currencySettings = currencySettings;
             this._orderTotalCalculationService = orderTotalCalculationService;
+            this._logger = logger;
+            this._localizationService = localizationService;
         }
         #endregion
 
@@ -628,6 +635,14 @@ namespace Nop.Plugin.Shipping.UPS
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.DefaultShippedFromZipPostalCode.Hint", "Specify origin zip code.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.AvailableCarrierServices", "Carrier Services");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Fields.AvailableCarrierServices.Hint", "Select the services you want to offer to customers.");
+            //tracker events
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Tracker.Departed", "Departed");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Tracker.ExportScanned", "Export scanned");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Tracker.OriginScanned", "Origin scanned");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Tracker.Arrived", "Arrived");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Tracker.NotDelivered", "Not delivered");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Tracker.Booked", "Booked");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.UPS.Tracker.Delivered", "Delivered");
 
             base.Install();
         }
@@ -662,6 +677,14 @@ namespace Nop.Plugin.Shipping.UPS
             this.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.DefaultShippedFromZipPostalCode.Hint");
             this.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.AvailableCarrierServices");
             this.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.AvailableCarrierServices.Hint");
+            //tracker events
+            this.DeletePluginLocaleResource("Plugins.Shipping.UPS.Tracker.Departed");
+            this.DeletePluginLocaleResource("Plugins.Shipping.UPS.Tracker.ExportScanned");
+            this.DeletePluginLocaleResource("Plugins.Shipping.UPS.Tracker.OriginScanned");
+            this.DeletePluginLocaleResource("Plugins.Shipping.UPS.Tracker.Arrived");
+            this.DeletePluginLocaleResource("Plugins.Shipping.UPS.Tracker.NotDelivered");
+            this.DeletePluginLocaleResource("Plugins.Shipping.UPS.Tracker.Booked");
+            this.DeletePluginLocaleResource("Plugins.Shipping.UPS.Tracker.Delivered");
 
             base.Uninstall();
         }
@@ -679,6 +702,14 @@ namespace Nop.Plugin.Shipping.UPS
             {
                 return ShippingRateComputationMethodType.Realtime;
             }
+        }
+
+        /// <summary>
+        /// Gets a shipment tracker
+        /// </summary>
+        public IShipmentTracker ShipmentTracker
+        {
+            get { return new UPSShipmentTracker(_logger, _localizationService, _upsSettings); }
         }
 
         #endregion

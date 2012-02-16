@@ -71,6 +71,15 @@
             </td>
         </tr>
         <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.DisplayShipmentEventsToCustomers):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.DisplayShipmentEventsToCustomers)
+                @Html.ValidationMessageFor(model => model.DisplayShipmentEventsToCustomers)
+            </td>
+        </tr>
+        <tr>
             <td class="adminTitle" colspan="2">
                 <b>@Html.LabelFor(model => model.ShippingOriginAddress):</b>
             </td>

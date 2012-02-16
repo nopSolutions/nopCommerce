@@ -12,6 +12,7 @@ using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Shipping;
+using Nop.Services.Shipping.Tracking;
 
 namespace Nop.Plugin.Shipping.AustraliaPost
 {
@@ -347,6 +348,14 @@ namespace Nop.Plugin.Shipping.AustraliaPost
             {
                 return ShippingRateComputationMethodType.Realtime;
             }
+        }
+
+        /// <summary>
+        /// Gets a shipment tracker
+        /// </summary>
+        public IShipmentTracker ShipmentTracker 
+        { 
+            get { return null; }
         }
 
         #endregion

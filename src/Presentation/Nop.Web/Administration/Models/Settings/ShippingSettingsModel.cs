@@ -17,6 +17,9 @@ namespace Nop.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.EstimateShippingEnabled")]
         public bool EstimateShippingEnabled { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.DisplayShipmentEventsToCustomers")]
+        public bool DisplayShipmentEventsToCustomers { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.ShippingOriginAddress")]
         public AddressModel ShippingOriginAddress { get; set; }
     }

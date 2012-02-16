@@ -7,6 +7,7 @@ using Nop.Plugin.Shipping.ByWeight.Services;
 using Nop.Services.Catalog;
 using Nop.Services.Localization;
 using Nop.Services.Shipping;
+using Nop.Services.Shipping.Tracking;
 
 namespace Nop.Plugin.Shipping.ByWeight
 {
@@ -226,6 +227,20 @@ namespace Nop.Plugin.Shipping.ByWeight
             get
             {
                 return ShippingRateComputationMethodType.Offline;
+            }
+        }
+
+
+        /// <summary>
+        /// Gets a shipment tracker
+        /// </summary>
+        public IShipmentTracker ShipmentTracker
+        {
+            get
+            {
+                //uncomment a line below to return a general shipment tracker (finds an appropriate tracker by tracking number)
+                //return new GeneralShipmentTracker(EngineContext.Current.Resolve<ITypeFinder>());
+                return null; 
             }
         }
 
