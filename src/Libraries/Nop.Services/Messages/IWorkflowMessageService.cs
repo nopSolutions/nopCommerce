@@ -96,6 +96,14 @@ namespace Nop.Services.Messages
         /// <returns>Queued email identifier</returns>
         int SendOrderCancelledCustomerNotification(Order order, int languageId);
 
+        /// <summary>
+        /// Sends a new order note added notification to a customer
+        /// </summary>
+        /// <param name="orderNote">Order note</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        int SendNewOrderNoteAddedCustomerNotification(OrderNote orderNote, int languageId);
+
         #endregion
 
         #region Newsletter workflow

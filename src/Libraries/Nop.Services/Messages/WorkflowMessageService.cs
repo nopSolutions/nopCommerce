@@ -24,7 +24,6 @@ namespace Nop.Services.Messages
         private readonly ITokenizer _tokenizer;
         private readonly IEmailAccountService _emailAccountService;
         private readonly IMessageTokenProvider _messageTokenProvider;
-        private readonly IWebHelper _webHelper;
 
         private readonly EmailAccountSettings _emailAccountSettings;
 
@@ -35,7 +34,7 @@ namespace Nop.Services.Messages
         public WorkflowMessageService(IMessageTemplateService messageTemplateService,
             IQueuedEmailService queuedEmailService, ILanguageService languageService,
             ITokenizer tokenizer, IEmailAccountService emailAccountService,
-            IMessageTokenProvider messageTokenProvider, IWebHelper webHelper,
+            IMessageTokenProvider messageTokenProvider,
             EmailAccountSettings emailAccountSettings)
         {
             this._messageTemplateService = messageTemplateService;
@@ -44,7 +43,6 @@ namespace Nop.Services.Messages
             this._tokenizer = tokenizer;
             this._emailAccountService = emailAccountService;
             this._messageTokenProvider = messageTokenProvider;
-            this._webHelper = webHelper;
 
             this._emailAccountSettings = emailAccountSettings;
         }
@@ -111,6 +109,16 @@ namespace Nop.Services.Messages
             _messageTokenProvider.AddStoreTokens(tokens);
             _messageTokenProvider.AddOrderTokens(tokens, order, languageId);
             _messageTokenProvider.AddCustomerTokens(tokens, order.Customer);
+
+            return tokens;
+        }
+        private IList<Token> GenerateTokens(OrderNote orderNote, int languageId)
+        {
+            var tokens = new List<Token>();
+            _messageTokenProvider.AddStoreTokens(tokens);
+            _messageTokenProvider.AddOrderNoteTokens(tokens, orderNote);
+            _messageTokenProvider.AddOrderTokens(tokens, orderNote.Order, languageId);
+            _messageTokenProvider.AddCustomerTokens(tokens, orderNote.Order.Customer);
 
             return tokens;
         }
@@ -205,13 +213,13 @@ namespace Nop.Services.Messages
             return tokens;
         }
 
-        private IList<Token> GenerateTokens(Forum forum)
-        {
-            var tokens = new List<Token>();
-            _messageTokenProvider.AddStoreTokens(tokens);
-            _messageTokenProvider.AddForumTokens(tokens, forum);
-            return tokens;
-        }
+        //private IList<Token> GenerateTokens(Forum forum)
+        //{
+        //    var tokens = new List<Token>();
+        //    _messageTokenProvider.AddStoreTokens(tokens);
+        //    _messageTokenProvider.AddForumTokens(tokens, forum);
+        //    return tokens;
+        //}
 
         private IList<Token> GenerateTokens(PrivateMessage privateMessage)
         {
@@ -535,6 +543,35 @@ namespace Nop.Services.Messages
                 return 0;
 
             var orderTokens = GenerateTokens(order, languageId);
+
+            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+            var toEmail = order.BillingAddress.Email;
+            var toName = string.Format("{0} {1}", order.BillingAddress.FirstName, order.BillingAddress.LastName);
+            return SendNotification(messageTemplate, emailAccount,
+                languageId, orderTokens,
+                toEmail, toName);
+        }
+
+        /// <summary>
+        /// Sends a new order note added notification to a customer
+        /// </summary>
+        /// <param name="orderNote">Order note</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        public virtual int SendNewOrderNoteAddedCustomerNotification(OrderNote orderNote, int languageId)
+        {
+            if (orderNote == null)
+                throw new ArgumentNullException("orderNote");
+           
+            var order = orderNote.Order;
+
+            languageId = EnsureLanguageIsActive(languageId);
+
+            var messageTemplate = GetLocalizedActiveMessageTemplate("Customer.NewOrderNote", languageId);
+            if (messageTemplate == null)
+                return 0;
+
+            var orderTokens = GenerateTokens(orderNote, languageId);
 
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
             var toEmail = order.BillingAddress.Email;

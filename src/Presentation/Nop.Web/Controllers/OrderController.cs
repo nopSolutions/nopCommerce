@@ -293,7 +293,7 @@ namespace Nop.Web.Controllers
             {
                 model.OrderNotes.Add(new OrderDetailsModel.OrderNote()
                 {
-                    Note = Nop.Core.Html.HtmlHelper.FormatText(orderNote.Note, false, true, false, false, false, false),
+                    Note = orderNote.FormatOrderNoteText(),
                     CreatedOn = _dateTimeHelper.ConvertToUserTime(orderNote.CreatedOnUtc, DateTimeKind.Utc)
                 });
             }

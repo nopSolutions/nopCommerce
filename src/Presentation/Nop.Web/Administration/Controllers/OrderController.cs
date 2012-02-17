@@ -16,6 +16,7 @@ using Nop.Services.Directory;
 using Nop.Services.ExportImport;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
+using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Security;
@@ -49,6 +50,7 @@ namespace Nop.Admin.Controllers
         private readonly IProductService _productService;
         private readonly IExportManager _exportManager;
         private readonly IPermissionService _permissionService;
+	    private readonly IWorkflowMessageService _workflowMessageService;
 
         private readonly CurrencySettings _currencySettings;
         private readonly TaxSettings _taxSettings;
@@ -68,6 +70,7 @@ namespace Nop.Admin.Controllers
             IAddressService addressService, ICountryService countryService,
             IStateProvinceService stateProvinceService, IProductService productService,
             IExportManager exportManager, IPermissionService permissionService,
+            IWorkflowMessageService workflowMessageService,
             CurrencySettings currencySettings, TaxSettings taxSettings,
             MeasureSettings measureSettings, PdfSettings pdfSettings)
 		{
@@ -89,6 +92,7 @@ namespace Nop.Admin.Controllers
             this._productService = productService;
             this._exportManager = exportManager;
             this._permissionService = permissionService;
+            this._workflowMessageService = workflowMessageService;
 
             this._currencySettings = currencySettings;
             this._taxSettings = taxSettings;
@@ -1387,7 +1391,7 @@ namespace Nop.Admin.Controllers
                     Id = orderNote.Id,
                     OrderId = orderNote.OrderId,
                     DisplayToCustomer = orderNote.DisplayToCustomer,
-                    Note = Core.Html.HtmlHelper.FormatText(orderNote.Note, false, true, false, false, false, false),
+                    Note = orderNote.FormatOrderNoteText(),
                     CreatedOn = _dateTimeHelper.ConvertToUserTime(orderNote.CreatedOnUtc, DateTimeKind.Utc)
                 });
             }
@@ -1414,13 +1418,23 @@ namespace Nop.Admin.Controllers
             if (order == null)
                 return Json(new { Result = false }, JsonRequestBehavior.AllowGet);
 
-            order.OrderNotes.Add(new OrderNote()
+            var orderNote = new OrderNote()
             {
                 DisplayToCustomer = displayToCustomer,
                 Note = message,
                 CreatedOnUtc = DateTime.UtcNow,
-            });
+            };
+            order.OrderNotes.Add(orderNote);
             _orderService.UpdateOrder(order);
+
+            //new order notification
+            if (displayToCustomer)
+            {
+                //email
+                _workflowMessageService.SendNewOrderNoteAddedCustomerNotification(
+                    orderNote, _workContext.WorkingLanguage.Id);
+
+            }
 
             return Json(new { Result = true }, JsonRequestBehavior.AllowGet);
         }

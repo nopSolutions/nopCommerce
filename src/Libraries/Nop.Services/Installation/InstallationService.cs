@@ -4356,6 +4356,14 @@ namespace Nop.Services.Installation
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
+                                   new MessageTemplate
+                                       {
+                                           Name = "Customer.NewOrderNote",
+                                           Subject = "%Store.Name%. New order note has been added",
+                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />Hello %Customer.FullName%, <br />New order note has been added to your account:<br />\"%Order.NewNoteText%\".<br /><a target=\"_blank\" href=\"%Order.OrderURLForCustomer%\">%Order.OrderURLForCustomer%</a></p>",
+                                           IsActive = true,
+                                           EmailAccountId = eaGeneral.Id,
+                                       },
                                };
             messageTemplates.ForEach(mt => _messageTemplateRepository.Insert(mt));
 

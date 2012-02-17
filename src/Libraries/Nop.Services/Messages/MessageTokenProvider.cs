@@ -457,6 +457,11 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Order.OrderURLForCustomer", string.Format("{0}orderdetails/{1}", _webHelper.GetStoreLocation(false), order.Id), true));
         }
 
+        public virtual void AddOrderNoteTokens(IList<Token> tokens, OrderNote orderNote)
+        {
+            tokens.Add(new Token("Order.NewNoteText", orderNote.FormatOrderNoteText(), true));
+        }
+
         public virtual void AddReturnRequestTokens(IList<Token> tokens, ReturnRequest returnRequest, OrderProductVariant opv)
         {
             tokens.Add(new Token("ReturnRequest.ID", returnRequest.Id.ToString()));
@@ -645,6 +650,7 @@ namespace Nop.Services.Messages
                 "%Order.Product(s)%",
                 "%Order.CreatedOn%",
                 "%Order.OrderURLForCustomer%",
+                "%Order.NewNoteText%",
                 "%ReturnRequest.ID%", 
                 "%ReturnRequest.Product.Quantity%",
                 "%ReturnRequest.Product.Name%", 

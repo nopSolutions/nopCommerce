@@ -1025,3 +1025,14 @@ BEGIN
 	VALUES (N'shippingsettings.displayshipmenteventstocustomers', N'false')
 END
 GO
+
+--'New order note' message template
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[MessageTemplate]
+		WHERE [Name] = N'Customer.NewOrderNote')
+BEGIN
+	INSERT [dbo].[MessageTemplate] ([Name], [BccEmailAddresses], [Subject], [Body], [IsActive], [EmailAccountId])
+	VALUES (N'Customer.NewOrderNote', null, N'%Store.Name%. New order note has been added', N'<p><a href="%Store.URL%">%Store.Name%</a> <br /><br />Hello %Customer.FullName%, <br />New order note has been added to your account:<br />"%Order.NewNoteText%".<br /><a target="_blank" href="%Order.OrderURLForCustomer%">%Order.OrderURLForCustomer%</a></p>', 1, 0)
+END
+GO

@@ -608,7 +608,7 @@ namespace Nop.Services.Common
                             notesTable.AddCell(cell);
 
                             cell = new PdfPCell();
-                            cell.AddElement(new Paragraph(HtmlHelper.ConvertHtmlToPlainText(HtmlHelper.FormatText(orderNote.Note, false, true, false, false, false, false), true), font));
+                            cell.AddElement(new Paragraph(HtmlHelper.ConvertHtmlToPlainText(orderNote.FormatOrderNoteText(), true), font));
                             cell.HorizontalAlignment = Element.ALIGN_LEFT;
                             notesTable.AddCell(cell);
                         }
