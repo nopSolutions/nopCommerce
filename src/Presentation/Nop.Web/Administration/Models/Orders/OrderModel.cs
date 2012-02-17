@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
+using Nop.Admin.Models.Catalog;
 using Nop.Admin.Models.Common;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Tax;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
+using Telerik.Web.Mvc;
 
 namespace Nop.Admin.Models.Orders
 {
@@ -286,6 +288,97 @@ namespace Nop.Admin.Models.Orders
 
         }
 
+        public class AddOrderProductModel : BaseNopModel
+        {
+            public AddOrderProductModel()
+            {
+                AvailableCategories = new List<SelectListItem>();
+                AvailableManufacturers = new List<SelectListItem>();
+            }
+            public GridModel<ProductVariantModel> ProductVariants { get; set; }
+
+            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchProductName")]
+            [AllowHtml]
+            public string SearchProductName { get; set; }
+            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchCategory")]
+            public int SearchCategoryId { get; set; }
+            [NopResourceDisplayName("Admin.Catalog.Products.List.SearchManufacturer")]
+            public int SearchManufacturerId { get; set; }
+
+            public IList<SelectListItem> AvailableCategories { get; set; }
+            public IList<SelectListItem> AvailableManufacturers { get; set; }
+
+            public int OrderId { get; set; }
+
+            #region Nested classes
+            
+            public class ProductVariantLineModel : BaseNopEntityModel
+            {
+                [NopResourceDisplayName("Admin.Orders.Products.AddNew.Name")]
+                [AllowHtml]
+                public string Name { get; set; }
+
+                [NopResourceDisplayName("Admin.Orders.Products.AddNew.SKU")]
+                [AllowHtml]
+                public string Sku { get; set; }
+            }
+
+            public class ProductDetailsModel : BaseNopModel
+            {
+                public ProductDetailsModel()
+                {
+                    ProductVariantAttributes = new List<ProductVariantAttributeModel>();
+                }
+
+                public int ProductVariantId { get; set; }
+
+                public string Name { get; set; }
+
+                [NopResourceDisplayName("Admin.Orders.Products.AddNew.UnitPriceInclTax")]
+                public decimal UnitPriceInclTax { get; set; }
+                [NopResourceDisplayName("Admin.Orders.Products.AddNew.UnitPriceExclTax")]
+                public decimal UnitPriceExclTax { get; set; }
+
+                [NopResourceDisplayName("Admin.Orders.Products.AddNew.Quantity")]
+                public int Quantity { get; set; }
+
+                [NopResourceDisplayName("Admin.Orders.Products.AddNew.SubTotalInclTax")]
+                public decimal SubTotalInclTax { get; set; }
+                [NopResourceDisplayName("Admin.Orders.Products.AddNew.SubTotalExclTax")]
+                public decimal SubTotalExclTax { get; set; }
+
+                public IList<ProductVariantAttributeModel> ProductVariantAttributes { get; set; }
+
+            }
+
+            public class ProductVariantAttributeModel : BaseNopEntityModel
+            {
+                public ProductVariantAttributeModel()
+                {
+                    Values = new List<ProductVariantAttributeValueModel>();
+                }
+
+                public int ProductAttributeId { get; set; }
+
+                public string Name { get; set; }
+
+                public string TextPrompt { get; set; }
+
+                public bool IsRequired { get; set; }
+
+                public AttributeControlType AttributeControlType { get; set; }
+
+                public IList<ProductVariantAttributeValueModel> Values { get; set; }
+            }
+
+            public class ProductVariantAttributeValueModel : BaseNopEntityModel
+            {
+                public string Name { get; set; }
+
+                public bool IsPreSelected { get; set; }
+            }
+            #endregion
+        }
 
         #endregion
     }

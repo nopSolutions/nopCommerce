@@ -7716,6 +7716,63 @@
 					<LocaleResource Name="Products">
 						<Value>Products</Value>
 						<Children>
+							<LocaleResource Name="AddNew">
+								<Value>Add product</Value>
+								<Children>
+									<LocaleResource Name="Note1">
+										<Value>Click on interested product variant</Value>
+									</LocaleResource>
+									<LocaleResource Name="Note2">
+										<Value>Do not to forget to update order totals after adding this product.</Value>
+									</LocaleResource>
+									<LocaleResource Name="Name">
+										<Value>Name</Value>
+									</LocaleResource>
+									<LocaleResource Name="SKU">
+										<Value>SKU</Value>
+									</LocaleResource>
+									<LocaleResource Name="UnitPriceInclTax">
+										<Value>Price (incl tax)</Value>
+										<Children>
+											<LocaleResource Name="Hint">
+												<Value>Enter product price (incl tax).</Value>
+											</LocaleResource>
+										</Children>
+									</LocaleResource>
+									<LocaleResource Name="UnitPriceExclTax">
+										<Value>Price (excl tax)</Value>
+										<Children>
+											<LocaleResource Name="Hint">
+												<Value>Enter product price (excl tax).</Value>
+											</LocaleResource>
+										</Children>
+									</LocaleResource>
+									<LocaleResource Name="Quantity">
+										<Value>Quantity</Value>
+										<Children>
+											<LocaleResource Name="Hint">
+												<Value>Enter quantity.</Value>
+											</LocaleResource>
+										</Children>
+									</LocaleResource>
+									<LocaleResource Name="SubTotalInclTax">
+										<Value>Total (incl tax)</Value>
+										<Children>
+											<LocaleResource Name="Hint">
+												<Value>Enter total (incl tax).</Value>
+											</LocaleResource>
+										</Children>
+									</LocaleResource>
+									<LocaleResource Name="SubTotalExclTax">
+										<Value>Total (excl tax)</Value>
+										<Children>
+											<LocaleResource Name="Hint">
+												<Value>Enter total (excl tax).</Value>
+											</LocaleResource>
+										</Children>
+									</LocaleResource>
+								</Children>
+							</LocaleResource>
 							<LocaleResource Name="ProductName">
 								<Value>Product name</Value>
 							</LocaleResource>
@@ -7780,7 +7837,6 @@
 							<LocaleResource Name="ReturnRequests">
 								<Value>Return request(s): </Value>
 							</LocaleResource>
-
 						</Children>
 					</LocaleResource>
 					<LocaleResource Name="ShippingInfo">

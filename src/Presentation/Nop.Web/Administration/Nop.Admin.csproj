@@ -993,6 +993,15 @@
   <ItemGroup>
     <Content Include="Views\NetAdvImage\Index.cshtml" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Order\ProductAddPopup.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Order\ProductAddDetails.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Order\_ProductAddAttributes.cshtml" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

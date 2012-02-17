@@ -251,6 +251,51 @@ set @resources='
   <LocaleResource Name="Plugins.Shipping.UPS.Tracker.Departed.Delivered">
     <Value>Delivered</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Products.AddNew">
+    <Value>Add product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Products.AddNew.Note1">
+    <Value>Click on interested product variant</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Products.AddNew.Note2">
+    <Value>Do not to forget to update order totals after adding this product.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Products.AddNew.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Products.AddNew.SKU">
+    <Value>SKU</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Products.AddNew.UnitPriceInclTax">
+    <Value>Price (incl tax)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Products.AddNew.UnitPriceInclTax.Hint">
+    <Value>Enter product price (incl tax).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Products.AddNew.UnitPriceExclTax">
+    <Value>Price (excl tax)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Products.AddNew.UnitPriceExclTax.Hint">
+    <Value>Enter product price (excl tax).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Products.AddNew.Quantity">
+    <Value>Quantity</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Products.AddNew.Quantity.Hint">
+    <Value>Enter quantity</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Products.AddNew.SubTotalInclTax">
+    <Value>Total (incl tax)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Products.AddNew.SubTotalInclTax.Hint">
+    <Value>Enter total (incl tax).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Products.AddNew.SubTotalExclTax">
+    <Value>Total (excl tax)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Products.AddNew.SubTotalExclTax.Hint">
+    <Value>Enter total (excl tax).</Value>
+  </LocaleResource>
 </Language>
 '
 
