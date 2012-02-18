@@ -330,6 +330,7 @@ namespace Nop.Admin.Models.Orders
                 public ProductDetailsModel()
                 {
                     ProductVariantAttributes = new List<ProductVariantAttributeModel>();
+                    GiftCard = new GiftCardModel();
                 }
 
                 public int ProductVariantId { get; set; }
@@ -349,7 +350,10 @@ namespace Nop.Admin.Models.Orders
                 [NopResourceDisplayName("Admin.Orders.Products.AddNew.SubTotalExclTax")]
                 public decimal SubTotalExclTax { get; set; }
 
+                //product attrbiutes
                 public IList<ProductVariantAttributeModel> ProductVariantAttributes { get; set; }
+                //gift card info
+                public GiftCardModel GiftCard { get; set; }
 
             }
 
@@ -378,6 +382,30 @@ namespace Nop.Admin.Models.Orders
                 public string Name { get; set; }
 
                 public bool IsPreSelected { get; set; }
+            }
+
+
+            public class GiftCardModel : BaseNopModel
+            {
+                public bool IsGiftCard { get; set; }
+
+                [NopResourceDisplayName("Products.GiftCard.RecipientName")]
+                [AllowHtml]
+                public string RecipientName { get; set; }
+                [NopResourceDisplayName("Products.GiftCard.RecipientEmail")]
+                [AllowHtml]
+                public string RecipientEmail { get; set; }
+                [NopResourceDisplayName("Products.GiftCard.SenderName")]
+                [AllowHtml]
+                public string SenderName { get; set; }
+                [NopResourceDisplayName("Products.GiftCard.SenderEmail")]
+                [AllowHtml]
+                public string SenderEmail { get; set; }
+                [NopResourceDisplayName("Products.GiftCard.Message")]
+                [AllowHtml]
+                public string Message { get; set; }
+
+                public GiftCardType GiftCardType { get; set; }
             }
             #endregion
         }

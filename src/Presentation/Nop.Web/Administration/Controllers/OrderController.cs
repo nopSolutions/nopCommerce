@@ -13,6 +13,7 @@ using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
+using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.ExportImport;
 using Nop.Services.Helpers;
@@ -1414,7 +1415,13 @@ namespace Nop.Admin.Controllers
 
                 model.ProductVariantAttributes.Add(pvaModel);
             }
-            
+            //gift card
+            model.GiftCard.IsGiftCard = productVariant.IsGiftCard;
+            if (model.GiftCard.IsGiftCard)
+            {
+                model.GiftCard.GiftCardType = productVariant.GiftCardType;
+            }
+
             return Json(new { html = RenderPartialViewToString("ProductAddDetails", model) }, JsonRequestBehavior.AllowGet);
         }
 
@@ -1540,15 +1547,61 @@ namespace Nop.Admin.Controllers
 
                 #endregion
 
-                //save item
-                var addToCartWarnings = _shoppingCartService.GetShoppingCartItemAttributeWarnings(
-                    ShoppingCartType.ShoppingCart, productVariant, attributes);
-                if (addToCartWarnings.Count > 0)
-                    throw new Exception(addToCartWarnings.FirstOrDefault());
+                #region Gift cards
+
+                string recipientName = "";
+                string recipientEmail = "";
+                string senderName = "";
+                string senderEmail = "";
+                string giftCardMessage = "";
+                if (productVariant.IsGiftCard)
+                {
+                    foreach (string formKey in form.AllKeys)
+                    {
+                        if (formKey.Equals("giftcard.RecipientName", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            recipientName = form[formKey];
+                            continue;
+                        }
+                        if (formKey.Equals("giftcard.RecipientEmail", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            recipientEmail = form[formKey];
+                            continue;
+                        }
+                        if (formKey.Equals("giftcard.SenderName", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            senderName = form[formKey];
+                            continue;
+                        }
+                        if (formKey.Equals("giftcard.SenderEmail", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            senderEmail = form[formKey];
+                            continue;
+                        }
+                        if (formKey.Equals("giftcard.Message", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            giftCardMessage = form[formKey];
+                            continue;
+                        }
+                    }
+
+                    attributes = _productAttributeParser.AddGiftCardAttribute(attributes,
+                        recipientName, recipientEmail, senderName, senderEmail, giftCardMessage);
+                }
+
+                #endregion
+                
+                //warnings
+                var warnings = new List<string>();
+                warnings.AddRange(_shoppingCartService.GetShoppingCartItemAttributeWarnings(ShoppingCartType.ShoppingCart, productVariant, attributes));
+                warnings.AddRange(_shoppingCartService.GetShoppingCartItemGiftCardWarnings(ShoppingCartType.ShoppingCart, productVariant, attributes));
+                if (warnings.Count > 0)
+                    throw new Exception(warnings.FirstOrDefault());
 
                 //attributes
                 string attributeDescription = _productAttributeFormatter.FormatAttributes(productVariant, attributes, order.Customer);
 
+                //save item
                 var opv = new OrderProductVariant()
                 {
                     OrderProductVariantGuid = Guid.NewGuid(),
@@ -1569,6 +1622,31 @@ namespace Nop.Admin.Controllers
                 };
                 order.OrderProductVariants.Add(opv);
                 _orderService.UpdateOrder(order);
+                
+                //gift cards
+                if (productVariant.IsGiftCard)
+                {
+                    for (int i = 0; i < opv.Quantity; i++)
+                    {
+                        var gc = new GiftCard()
+                        {
+                            GiftCardType = productVariant.GiftCardType,
+                            PurchasedWithOrderProductVariant = opv,
+                            Amount = unitPriceExclTax,
+                            IsGiftCardActivated = false,
+                            GiftCardCouponCode = _giftCardService.GenerateGiftCardCode(),
+                            RecipientName = recipientName,
+                            RecipientEmail = recipientEmail,
+                            SenderName = senderName,
+                            SenderEmail = senderEmail,
+                            Message = giftCardMessage,
+                            IsRecipientNotified = false,
+                            CreatedOnUtc = DateTime.UtcNow
+                        };
+                        _giftCardService.InsertGiftCard(gc);
+                    }
+                }
+
 
                 return Json(new {success = true, error = ""});
             }

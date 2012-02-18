@@ -1,6 +1,6 @@
 ﻿@model OrderModel.AddOrderProductModel.ProductDetailsModel
 <p>
-   <strong>@Model.Name</strong>
+    <strong>@Model.Name</strong>
 </p>
 @Html.HiddenFor(model => Model.ProductVariantId)
 <table>
@@ -45,11 +45,22 @@
         </td>
     </tr>
 </table>
+<div class="clear">
+</div>
+<div>
+    @Html.Partial("_ProductAddAttributes", Model.ProductVariantAttributes)
+</div>
+<div class="clear">
+</div>
+@{
+    var dataDictGiftCard = new ViewDataDictionary();
+    dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = "giftcard";
+    @Html.Partial("_ProductAddGiftCardInfo", Model.GiftCard, dataDictGiftCard)
+}
+<div class="clear">
+</div>
 <p>
-@Html.Partial("_ProductAddAttributes", Model.ProductVariantAttributes)
-</p>
-<p>
-<strong>@T("Admin.Orders.Products.AddNew.Note2")</strong>
+    <strong>@T("Admin.Orders.Products.AddNew.Note2")</strong>
 </p>
 <button id="addtoorder" name="addtoorder">@T("Admin.Orders.Products.AddNew")</button>
 <script type="text/javascript">
