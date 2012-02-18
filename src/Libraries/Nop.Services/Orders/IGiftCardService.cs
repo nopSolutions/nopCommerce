@@ -47,7 +47,13 @@ namespace Nop.Services.Orders
         /// <param name="giftCard">Gift card</param>
         void UpdateGiftCard(GiftCard giftCard);
 
-
+        /// <summary>
+        /// Gets gift cards by 'PurchasedWithOrderProductVariantId'
+        /// </summary>
+        /// <param name="purchasedWithOrderProductVariantId">Purchased with order product variant identifier</param>
+        /// <returns>Gift card entries</returns>
+        IList<GiftCard> GetGiftCardsByPurchasedWithOrderProductVariantId(int purchasedWithOrderProductVariantId);
+        
         /// <summary>
         /// Get active gift cards that are applied by a customer
         /// </summary>

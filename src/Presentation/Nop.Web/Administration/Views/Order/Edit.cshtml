@@ -193,7 +193,7 @@
             @Html.NopLabelFor(model => model.AffiliateId):
         </td>
         <td class="adminData">
-            <a href="@Url.Action("Edit", "Affiliate", new { id = @Model.AffiliateId.Value})">@Model.AffiliateId.Value - @T("Admin.Common.View")</a>
+            <a href="@Url.Action("Edit", "Affiliate", new { id = @Model.AffiliateId.Value })">@Model.AffiliateId.Value - @T("Admin.Common.View")</a>
         </td>
     </tr>
     }
@@ -1055,14 +1055,29 @@
                                             <br />
                                             <hr />
                                             @T("Admin.Orders.Products.ReturnRequests")<text>:</text>
-                                       for (int i = 0; i < item.ReturnRequestIds.Count; i++)
-                                       {
-                                            <a href="@Url.Action("Edit", "ReturnRequest", new { id = item.ReturnRequestIds[i] })">@item.ReturnRequestIds[i]</a>
-                                                                                                                             if (i != item.ReturnRequestIds.Count - 1)
-                                                                                                                             {
-                                            <text>,</text>
-                                                                                                                             }
-                                       }
+                                            for (int i = 0; i < item.ReturnRequestIds.Count; i++)
+                                            {
+                                                <a href="@Url.Action("Edit", "ReturnRequest", new { id = item.ReturnRequestIds[i] })">@item.ReturnRequestIds[i]</a>
+                                                if (i != item.ReturnRequestIds.Count - 1)
+                                                {
+                                                    <text>,</text>
+                                                }
+                                            }
+                                        }
+                                        @if (item.PurchasedGiftCardIds.Count > 0)
+                                        {
+                                            <br />
+                                            <br />
+                                            <hr />
+                                            @T("Admin.Orders.Products.GiftCards")<text>:</text>
+                                            for (int i = 0; i < item.PurchasedGiftCardIds.Count; i++)
+                                            {
+                                                <a href="@Url.Action("Edit", "GiftCard", new { id = item.PurchasedGiftCardIds[i] })">@item.PurchasedGiftCardIds[i]</a>
+                                                if (i != item.PurchasedGiftCardIds.Count - 1)
+                                                {
+                                                    <text>,</text>
+                                                }
+                                            }
                                         }
                                     </div>
                                 </td>

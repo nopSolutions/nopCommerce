@@ -220,6 +220,7 @@ namespace Nop.Admin.Models.Orders
             public OrderProductVariantModel()
             {
                 ReturnRequestIds = new List<int>();
+                PurchasedGiftCardIds = new List<int>();
             }
             public int ProductVariantId { get; set; }
 
@@ -245,6 +246,7 @@ namespace Nop.Admin.Models.Orders
             public string AttributeInfo { get; set; }
             public string RecurringInfo { get; set; }
             public IList<int> ReturnRequestIds { get; set; }
+            public IList<int> PurchasedGiftCardIds { get; set; }
 
             public bool IsDownload { get; set; }
             public int DownloadCount { get; set; }

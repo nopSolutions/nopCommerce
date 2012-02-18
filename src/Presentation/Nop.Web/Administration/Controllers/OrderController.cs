@@ -57,7 +57,8 @@ namespace Nop.Admin.Controllers
 	    private readonly IProductAttributeService _productAttributeService;
 	    private readonly IProductAttributeParser _productAttributeParser;
 	    private readonly IProductAttributeFormatter _productAttributeFormatter;
-	    private readonly IShoppingCartService _shoppingCartService;
+        private readonly IShoppingCartService _shoppingCartService;
+        private readonly IGiftCardService _giftCardService;
 
         private readonly CurrencySettings _currencySettings;
         private readonly TaxSettings _taxSettings;
@@ -81,6 +82,7 @@ namespace Nop.Admin.Controllers
             ICategoryService categoryService, IManufacturerService manufacturerService,
             IProductAttributeService productAttributeService, IProductAttributeParser productAttributeParser,
             IProductAttributeFormatter productAttributeFormatter, IShoppingCartService shoppingCartService,
+            IGiftCardService giftCardService,
             CurrencySettings currencySettings, TaxSettings taxSettings,
             MeasureSettings measureSettings, PdfSettings pdfSettings)
 		{
@@ -109,6 +111,7 @@ namespace Nop.Admin.Controllers
             this._productAttributeParser = productAttributeParser;
             this._productAttributeFormatter = productAttributeFormatter;
             this._shoppingCartService = shoppingCartService;
+            this._giftCardService = giftCardService;
 
             this._currencySettings = currencySettings;
             this._taxSettings = taxSettings;
@@ -380,6 +383,9 @@ namespace Nop.Admin.Controllers
                 //return requests
                 opvModel.ReturnRequestIds = _orderService.SearchReturnRequests(0, opv.Id, null)
                     .Select(rr=> rr.Id).ToList();
+                //gift cards
+                opvModel.PurchasedGiftCardIds = _giftCardService.GetGiftCardsByPurchasedWithOrderProductVariantId(opv.Id)
+                    .Select(gc => gc.Id).ToList();
 
                 model.Items.Add(opvModel);
             }

@@ -126,6 +126,23 @@ namespace Nop.Services.Orders
             _eventPublisher.EntityUpdated(giftCard);
         }
 
+        /// <summary>
+        /// Gets gift cards by 'PurchasedWithOrderProductVariantId'
+        /// </summary>
+        /// <param name="purchasedWithOrderProductVariantId">Purchased with order product variant identifier</param>
+        /// <returns>Gift card entries</returns>
+        public virtual IList<GiftCard> GetGiftCardsByPurchasedWithOrderProductVariantId(int purchasedWithOrderProductVariantId)
+        {
+            if (purchasedWithOrderProductVariantId == 0)
+                return new List<GiftCard>();
+
+            var query = _giftCardRepository.Table;
+            query = query.Where(gc => gc.PurchasedWithOrderProductVariantId.HasValue && gc.PurchasedWithOrderProductVariantId.Value == purchasedWithOrderProductVariantId);
+            query = query.OrderBy(gc => gc.Id);
+
+            var giftCards = query.ToList();
+            return giftCards;
+        }
 
         /// <summary>
         /// Get active gift cards that are applied by a customer

@@ -7835,7 +7835,10 @@
 								</Children>
 							</LocaleResource>
 							<LocaleResource Name="ReturnRequests">
-								<Value>Return request(s): </Value>
+								<Value>Return request(s)</Value>
+							</LocaleResource>
+							<LocaleResource Name="GiftCards">
+								<Value>Gift cards(s)</Value>
 							</LocaleResource>
 						</Children>
 					</LocaleResource>

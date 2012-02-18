@@ -296,6 +296,12 @@ set @resources='
   <LocaleResource Name="Admin.Orders.Products.AddNew.SubTotalExclTax.Hint">
     <Value>Enter total (excl tax).</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Products.ReturnRequests">
+    <Value>Return request(s)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Products.GiftCards">
+    <Value>Gift cards(s)</Value>
+  </LocaleResource>
 </Language>
 '
 
