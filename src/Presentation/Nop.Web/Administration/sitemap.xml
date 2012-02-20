@@ -29,6 +29,7 @@
           <siteMapNode title="Current shopping carts" nopResource="Admin.CurrentCarts" PermissionNames="ManageOrders" controller="ShoppingCart" action="CurrentCarts" />
 		  <siteMapNode title="Current wishlists" nopResource="Admin.CurrentWishlists" PermissionNames="ManageOrders" controller="ShoppingCart" action="CurrentWishlists" />
           <siteMapNode title="Bestsellers" nopResource="Admin.SalesReport.Bestsellers" PermissionNames="ManageOrders" controller="Order" action="BestsellersReport" />
+		  <siteMapNode title="Products never purchased" nopResource="Admin.SalesReport.NeverSold" PermissionNames="ManageOrders" controller="Order" action="NeverSoldReport" />
         </siteMapNode>
         <siteMapNode title="Customers" nopResource="Admin.Customers" PermissionNames="ManageCustomers, ManageCustomerRoles" ImageUrl="~/Administration/Content/images/ico-customers.png" >
           <siteMapNode title="Customers" nopResource="Admin.Customers.Customers" PermissionNames="ManageCustomers" controller="Customer" action="List" />

@@ -1949,6 +1949,40 @@ namespace Nop.Admin.Controllers
         }
 
 
+
+        public ActionResult NeverSoldReport()
+        {
+            var model = new NeverSoldReportModel();
+            return View(model);
+        }
+        [GridAction(EnableCustomBinding = true)]
+        public ActionResult NeverSoldReportList(GridCommand command, NeverSoldReportModel model)
+        {
+            DateTime? startDateValue = (model.StartDate == null) ? null
+                            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
+
+            DateTime? endDateValue = (model.EndDate == null) ? null
+                            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
+            
+            var items = _orderReportService.ProductsNeverSold(startDateValue, endDateValue,
+                command.Page - 1, command.PageSize, true);
+            var gridModel = new GridModel<NeverSoldReportLineModel>
+            {
+                Data = items.Select(x =>
+                    new NeverSoldReportLineModel()
+                    {
+                        ProductVariantId = x.Id,
+                        ProductVariantFullName = x.Product.Name + " " + x.Name,
+                    }),
+                Total = items.TotalCount
+            };
+            return new JsonResult
+            {
+                Data = gridModel
+            };
+        }
+
+
         [NonAction]
         protected virtual IList<OrderAverageReportLineSummaryModel> GetOrderAverageReportModel()
         {

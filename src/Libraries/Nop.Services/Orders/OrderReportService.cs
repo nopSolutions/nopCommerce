@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
@@ -308,6 +309,50 @@ namespace Nop.Services.Orders
                 products.Add(_productService.GetProductById(reportLine.ProductId));
 
             return products;
+        }
+
+        /// <summary>
+        /// Gets a list of product variants that were never sold
+        /// </summary>
+        /// <param name="startTime">Order start time; null to load all</param>
+        /// <param name="endTime">Order end time; null to load all</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <returns>Product variants</returns>
+        public virtual IPagedList<ProductVariant> ProductsNeverSold(DateTime? startTime,
+            DateTime? endTime, int pageIndex, int pageSize, bool showHidden = false)
+        {
+            //this inner query should retrieve all purchased order product varint identifiers
+            var query1 = (from opv in _opvRepository.Table
+                          join o in _orderRepository.Table on opv.OrderId equals o.Id
+                          where (!startTime.HasValue || startTime.Value <= o.CreatedOnUtc) &&
+                                (!endTime.HasValue || endTime.Value >= o.CreatedOnUtc) &&
+                                (!o.Deleted)
+                          select opv.ProductVariantId).Distinct();
+
+            var query2 = from pv in _productVariantRepository.Table
+                         join p in _productRepository.Table on pv.ProductId equals p.Id
+                         where (!query1.Contains(pv.Id)) &&
+                               (!p.Deleted) &&
+                               (!pv.Deleted) &&
+                               (showHidden || p.Published) &&
+                               (showHidden || pv.Published)
+                         select pv;
+
+            //only distinct products (group by ID)
+            //if we use standard Distinct() method, then all fields will be compared (low performance)
+            //it'll not work in SQL Server Compact when searching products by a keyword)
+            var query3 = from pv in query2
+                         group pv by pv.Id
+                         into pvGroup
+                         orderby pvGroup.Key
+                         select pvGroup.FirstOrDefault();
+
+            query3 = query3.OrderBy(x => x.Id);
+
+            var productVariants = new PagedList<ProductVariant>(query3, pageIndex, pageSize);
+            return productVariants;
         }
 
         #endregion

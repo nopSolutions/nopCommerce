@@ -302,6 +302,27 @@ set @resources='
   <LocaleResource Name="Admin.Orders.Products.GiftCards">
     <Value>Gift cards(s)</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.NeverSold">
+    <Value>Products never purchased</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.NeverSold.RunReport">
+    <Value>Run report</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.NeverSold.StartDate">
+    <Value>Start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.NeverSold.StartDate.Hint">
+    <Value>The start date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.NeverSold.EndDate">
+    <Value>End date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.NeverSold.EndDate.Hint">
+    <Value>The end date for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.NeverSold.Fields.Name">
+    <Value>Name</Value>
+  </LocaleResource>
 </Language>
 '
 

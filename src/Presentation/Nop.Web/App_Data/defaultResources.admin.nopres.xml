@@ -8522,6 +8522,37 @@
 							</LocaleResource>
 						</Children>
 					</LocaleResource>
+					<LocaleResource Name="NeverSold">
+						<Value>Products never purchased</Value>
+						<Children>
+							<LocaleResource Name="RunReport">
+								<Value>Run report</Value>
+							</LocaleResource>
+							<LocaleResource Name="StartDate">
+								<Value>Start date</Value>
+								<Children>
+									<LocaleResource Name="Hint">
+										<Value>The start date for the search.</Value>
+									</LocaleResource>
+								</Children>
+							</LocaleResource>
+							<LocaleResource Name="EndDate">
+								<Value>End date</Value>
+								<Children>
+									<LocaleResource Name="Hint">
+										<Value>The end date for the search.</Value>
+									</LocaleResource>
+								</Children>
+							</LocaleResource>
+							<LocaleResource Name="Fields">
+								<Children>
+									<LocaleResource Name="Name">
+										<Value>Name</Value>
+									</LocaleResource>
+								</Children>
+							</LocaleResource>
+						</Children>
+					</LocaleResource>
 				</Children>
 			</LocaleResource>
 			<LocaleResource Name="System">
