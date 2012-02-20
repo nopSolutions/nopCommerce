@@ -67,11 +67,12 @@ namespace Nop.Services.Orders
         /// <param name="ss">Shipping status</param>
         /// <param name="startTimeUtc">Start date</param>
         /// <param name="endTimeUtc">End date</param>
+        /// <param name="billingEmail">Billing email. Leave empty to load all records.</param>
         /// <param name="ignoreCancelledOrders">A value indicating whether to ignore cancelled orders</param>
         /// <returns>Result</returns>
         public virtual OrderAverageReportLine GetOrderAverageReportLine(OrderStatus? os,
             PaymentStatus? ps, ShippingStatus? ss, DateTime? startTimeUtc, DateTime? endTimeUtc,
-            bool ignoreCancelledOrders = false)
+            string billingEmail, bool ignoreCancelledOrders = false)
         {
             int? orderStatusId = null;
             if (os.HasValue)
@@ -102,8 +103,11 @@ namespace Nop.Services.Orders
                 query = query.Where(o => startTimeUtc.Value <= o.CreatedOnUtc);
             if (endTimeUtc.HasValue)
                 query = query.Where(o => endTimeUtc.Value >= o.CreatedOnUtc);
-
+            if (!String.IsNullOrEmpty(billingEmail))
+                query = query.Where(o => o.BillingAddress != null && !String.IsNullOrEmpty(o.BillingAddress.Email) && o.BillingAddress.Email.Contains(billingEmail));
+            
             var item = new OrderAverageReportLine();
+            item.SumTax = Convert.ToDecimal(query.Sum(o => (decimal?)o.OrderTax));
             item.SumOrders = Convert.ToDecimal(query.Sum(o => (decimal?)o.OrderTotal));
             item.CountOrders = query.Count();
             return item;
@@ -128,7 +132,7 @@ namespace Nop.Services.Orders
             {
                 DateTime? startTime1 = _dateTimeHelper.ConvertToUtcTime(t1, timeZone);
                 DateTime? endTime1 = null;
-                var todayResult = GetOrderAverageReportLine(os, null,null, startTime1, endTime1);
+                var todayResult = GetOrderAverageReportLine(os, null,null, startTime1, endTime1, null);
                 item.SumTodayOrders = todayResult.SumOrders;
                 item.CountTodayOrders = todayResult.CountOrders;
             }
@@ -140,7 +144,7 @@ namespace Nop.Services.Orders
             {
                 DateTime? startTime2 = _dateTimeHelper.ConvertToUtcTime(t2, timeZone);
                 DateTime? endTime2 = null;
-                var weekResult = GetOrderAverageReportLine(os, null, null, startTime2, endTime2);
+                var weekResult = GetOrderAverageReportLine(os, null, null, startTime2, endTime2, null);
                 item.SumThisWeekOrders = weekResult.SumOrders;
                 item.CountThisWeekOrders = weekResult.CountOrders;
             }
@@ -150,7 +154,7 @@ namespace Nop.Services.Orders
             {
                 DateTime? startTime3 = _dateTimeHelper.ConvertToUtcTime(t3, timeZone);
                 DateTime? endTime3 = null;
-                var monthResult = GetOrderAverageReportLine(os, null, null, startTime3, endTime3);
+                var monthResult = GetOrderAverageReportLine(os, null, null, startTime3, endTime3, null);
                 item.SumThisMonthOrders = monthResult.SumOrders;
                 item.CountThisMonthOrders = monthResult.CountOrders;
             }
@@ -160,14 +164,14 @@ namespace Nop.Services.Orders
             {
                 DateTime? startTime4 = _dateTimeHelper.ConvertToUtcTime(t4, timeZone);
                 DateTime? endTime4 = null;
-                var yearResult = GetOrderAverageReportLine(os, null, null, startTime4, endTime4);
+                var yearResult = GetOrderAverageReportLine(os, null, null, startTime4, endTime4, null);
                 item.SumThisYearOrders = yearResult.SumOrders;
                 item.CountThisYearOrders = yearResult.CountOrders;
             }
             //all time
             DateTime? startTime5 = null;
             DateTime? endTime5 = null;
-            var allTimeResult = GetOrderAverageReportLine(os, null, null, startTime5, endTime5);
+            var allTimeResult = GetOrderAverageReportLine(os, null, null, startTime5, endTime5, null);
             item.SumAllTimeOrders = allTimeResult.SumOrders;
             item.CountAllTimeOrders = allTimeResult.CountOrders;
 

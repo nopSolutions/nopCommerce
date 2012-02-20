@@ -437,7 +437,7 @@ namespace Nop.Admin.Controllers
             PaymentStatus? paymentStatus = model.PaymentStatusId > 0 ? (PaymentStatus?)(model.PaymentStatusId) : null;
             ShippingStatus? shippingStatus = model.ShippingStatusId > 0 ? (ShippingStatus?)(model.ShippingStatusId) : null;
 
-
+            //load orders
             var orders = _orderService.SearchOrders(startDateValue, endDateValue, orderStatus,
                 paymentStatus, shippingStatus, model.CustomerEmail, model.OrderGuid, command.Page - 1, command.PageSize);
             var gridModel = new GridModel<OrderModel>
@@ -457,6 +457,18 @@ namespace Nop.Admin.Controllers
                 }),
                 Total = orders.TotalCount
             };
+
+            //summary report
+            //implemented as a workaround described here: http://www.telerik.com/community/forums/aspnet-mvc/grid/gridmodel-aggregates-how-to-use.aspx
+		    var reportSummary = _orderReportService.GetOrderAverageReportLine
+		        (orderStatus, paymentStatus, shippingStatus, startDateValue, endDateValue, model.CustomerEmail);
+            
+		    var aggregator = new OrderModel()
+		    {
+                aggregatortax = _priceFormatter.FormatPrice(reportSummary.SumTax, true, false),
+		        aggregatortotal = _priceFormatter.FormatPrice(reportSummary.SumOrders, true, false)
+		    };
+		    gridModel.Aggregates = aggregator;
 			return new JsonResult
 			{
 				Data = gridModel
@@ -2032,7 +2044,7 @@ namespace Nop.Admin.Controllers
         {
             var model = new List<OrderIncompleteReportLineModel>();
             //not paid
-            var psPending = _orderReportService.GetOrderAverageReportLine(null, PaymentStatus.Pending, null, null, null, true);
+            var psPending = _orderReportService.GetOrderAverageReportLine(null, PaymentStatus.Pending, null, null, null, null, true);
             model.Add(new OrderIncompleteReportLineModel()
             {
                 Item = _localizationService.GetResource("Admin.SalesReport.Incomplete.TotalUnpaidOrders"),
@@ -2040,7 +2052,7 @@ namespace Nop.Admin.Controllers
                 Total = _priceFormatter.FormatPrice(psPending.SumOrders, true, false)
             });
             //not shipped
-            var ssPending = _orderReportService.GetOrderAverageReportLine(null, null, ShippingStatus.NotYetShipped, null, null, true);
+            var ssPending = _orderReportService.GetOrderAverageReportLine(null, null, ShippingStatus.NotYetShipped, null, null, null, true);
             model.Add(new OrderIncompleteReportLineModel()
             {
                 Item = _localizationService.GetResource("Admin.SalesReport.Incomplete.TotalNotShippedOrders"),
@@ -2048,7 +2060,7 @@ namespace Nop.Admin.Controllers
                 Total = _priceFormatter.FormatPrice(ssPending.SumOrders, true, false)
             });
             //pending
-            var osPending = _orderReportService.GetOrderAverageReportLine(OrderStatus.Pending, null, null, null, null, true);
+            var osPending = _orderReportService.GetOrderAverageReportLine(OrderStatus.Pending, null, null, null, null, null, true);
             model.Add(new OrderIncompleteReportLineModel()
             {
                 Item = _localizationService.GetResource("Admin.SalesReport.Incomplete.TotalIncompleteOrders"),

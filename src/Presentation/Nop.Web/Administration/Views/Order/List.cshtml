@@ -99,7 +99,10 @@
             <td>
                 @(Html.Telerik().Grid<OrderModel>()
                         .Name("orders-grid")
-                        .ClientEvents(events => events.OnDataBinding("onDataBinding").OnDataBound("onDataBound"))
+                        .ClientEvents(events => events
+                            .OnDataBinding("onDataBinding")
+                            .OnDataBound("onDataBound")
+                            .OnComplete("onComplete"))
                         .Columns(columns =>
                         {
                             columns.Bound(x => x.Id)
@@ -110,12 +113,17 @@
                             .HeaderHtmlAttributes(new { style = "text-align:center" });
 
                             columns.Bound(x => x.Id);
-                            columns.Bound(x => x.OrderTotal);
                             columns.Bound(x => x.OrderStatus);
                             columns.Bound(x => x.PaymentStatus);
                             columns.Bound(x => x.ShippingStatus);
                             columns.Bound(x => x.CustomerEmail);
                             columns.Bound(x => x.CreatedOn);
+                            columns.Bound(x => x.OrderTotal)
+                                 .FooterTemplate(
+                                 "<div><b>" + @T("Admin.Orders.Report.Summary").Text + ":</b></div>" +
+                                 "<div>" + @T("Admin.Orders.Report.Tax").Text + ": <span id=\"aggregator-tax-block\"></span></div>" +
+                                 "<div>" + @T("Admin.Orders.Report.Total").Text + ": <span id=\"aggregator-total-block\"></span></div>" 
+                                 );
                             columns.Bound(x => x.Id)
                                 .Template(x => Html.ActionLink(T("Admin.Common.View").Text, "Edit", new { id = x.Id }))
                                 .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.View").Text + "</a>")
@@ -133,6 +141,7 @@
     <script type="text/javascript">
 
         var selectedIds = [];
+        var reportAggregates = "";
 
         $(document).ready(function () {
 
@@ -216,6 +225,27 @@
             });
 
             updateMasterCheckbox();
+
+            reportLoaded(e);
+        }
+
+        function onComplete(e) {
+            var result = e.response;
+            if (result) {
+                reportAggregates = e.response["aggregates"];
+            }
+        }
+
+        function reportLoaded(e) {
+            if (reportAggregates != "") {
+                updateAggregates(reportAggregates);
+            }
+        }
+        function updateAggregates(aggs) {
+            for (var key in aggs) {
+                $('#aggregator-tax-block').text(aggs['aggregatortax']);
+                $('#aggregator-total-block').text(aggs['aggregatortotal']);
+            }
         }
 
         function updateMasterCheckbox() {

@@ -6,7 +6,12 @@ namespace Nop.Core.Domain.Orders
     public partial class OrderAverageReportLine
     {
         /// <summary>
-        /// Gets or sets the sum total
+        /// Gets or sets the tax summary
+        /// </summary>
+        public decimal SumTax { get; set; }
+
+        /// <summary>
+        /// Gets or sets the order total summary
         /// </summary>
         public decimal SumOrders { get; set; }
 

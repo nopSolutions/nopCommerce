@@ -323,6 +323,15 @@ set @resources='
   <LocaleResource Name="Admin.SalesReport.NeverSold.Fields.Name">
     <Value>Name</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Report.Summary">
+    <Value>Summary</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Report.Tax">
+    <Value>Tax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Report.Total">
+    <Value>Total</Value>
+  </LocaleResource>
 </Language>
 '
 

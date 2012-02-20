@@ -7842,6 +7842,19 @@
 							</LocaleResource>
 						</Children>
 					</LocaleResource>
+					<LocaleResource Name="Report">
+						<Children>
+							<LocaleResource Name="Summary">
+								<Value>Summary</Value>
+							</LocaleResource>
+							<LocaleResource Name="Tax">
+								<Value>Tax</Value>
+							</LocaleResource>
+							<LocaleResource Name="Total">
+								<Value>Total</Value>
+							</LocaleResource>
+						</Children>
+					</LocaleResource>
 					<LocaleResource Name="ShippingInfo">
 						<Value>Shipping info</Value>
 						<Children>

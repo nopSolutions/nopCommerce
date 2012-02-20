@@ -213,6 +213,11 @@ namespace Nop.Admin.Models.Orders
         public bool CanShip { get; set; }
         public bool CanDeliver { get; set; }
 
+
+        //aggergator proeprties
+        public string aggregatortax { get; set; }
+        public string aggregatortotal { get; set; }
+
         #region Nested Classes
 
         public class OrderProductVariantModel : BaseNopEntityModel

@@ -21,11 +21,13 @@ namespace Nop.Services.Orders
         /// <param name="ss">Shipping status</param>
         /// <param name="startTimeUtc">Start date</param>
         /// <param name="endTimeUtc">End date</param>
+        /// <param name="billingEmail">Billing email. Leave empty to load all records.</param>
         /// <param name="ignoreCancelledOrders">A value indicating whether to ignore cancelled orders</param>
         /// <returns>Result</returns>
         OrderAverageReportLine GetOrderAverageReportLine(OrderStatus? os,
-            PaymentStatus? ps, ShippingStatus? ss, DateTime? startTimeUtc, DateTime? endTimeUtc,
-            bool ignoreCancelledOrders = false);
+                                                         PaymentStatus? ps, ShippingStatus? ss, DateTime? startTimeUtc,
+                                                         DateTime? endTimeUtc,
+                                                         string billingEmail, bool ignoreCancelledOrders = false);
         
         /// <summary>
         /// Get order average report
