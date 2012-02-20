@@ -10,6 +10,7 @@ using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Services.Catalog;
 using Nop.Services.Helpers;
+using Nop.Core.Domain.Tax;
 
 namespace Nop.Services.Orders
 {
@@ -357,6 +358,54 @@ namespace Nop.Services.Orders
 
             var productVariants = new PagedList<ProductVariant>(query3, pageIndex, pageSize);
             return productVariants;
+        }
+
+        /// <summary>
+        /// Get profit report
+        /// </summary>
+        /// <param name="startTimeUtc">Start date</param>
+        /// <param name="endTimeUtc">End date</param>
+        /// <param name="os">Order status; null to load all records</param>
+        /// <param name="ps">Order payment status; null to load all records</param>
+        /// <param name="ss">Shipping status; null to load all records</param>
+        /// <param name="billingEmail">Billing email. Leave empty to load all records.</param>
+        /// <returns>Result</returns>
+        public virtual decimal ProfitReport(OrderStatus? os,
+            PaymentStatus? ps, ShippingStatus? ss, DateTime? startTimeUtc, DateTime? endTimeUtc,
+            string billingEmail)
+        {
+            int? orderStatusId = null;
+            if (os.HasValue)
+                orderStatusId = (int)os.Value;
+
+            int? paymentStatusId = null;
+            if (ps.HasValue)
+                paymentStatusId = (int)ps.Value;
+
+            int? shippingStatusId = null;
+            if (ss.HasValue)
+                shippingStatusId = (int)ss.Value;
+            //We cannot use String.IsNullOrEmpty(billingEmail) in SQL Compact
+            bool dontSearchEmail = String.IsNullOrEmpty(billingEmail);
+            var query = from opv in _opvRepository.Table
+                        join o in _orderRepository.Table on opv.OrderId equals o.Id
+                        join pv in _productVariantRepository.Table on opv.ProductVariantId equals pv.Id
+                        join p in _productRepository.Table on pv.ProductId equals p.Id
+                        where (!startTimeUtc.HasValue || startTimeUtc.Value <= o.CreatedOnUtc) &&
+                              (!endTimeUtc.HasValue || endTimeUtc.Value >= o.CreatedOnUtc) &&
+                              (!orderStatusId.HasValue || orderStatusId == o.OrderStatusId) &&
+                              (!paymentStatusId.HasValue || paymentStatusId == o.PaymentStatusId) &&
+                              (!shippingStatusId.HasValue || shippingStatusId == o.ShippingStatusId) &&
+                              (!o.Deleted) &&
+                              (!p.Deleted) &&
+                              (!pv.Deleted) &&
+                              (dontSearchEmail || (o.BillingAddress != null && !String.IsNullOrEmpty(o.BillingAddress.Email) && o.BillingAddress.Email.Contains(billingEmail)))
+                        select new { opv, pv };
+            
+            var opvPrices = Convert.ToDecimal(query.Sum(o => (decimal?)o.opv.PriceExclTax));
+            var productCost = Convert.ToDecimal(query.Sum(o => (decimal?) o.pv.ProductCost * o.opv.Quantity));
+            var profit = opvPrices - productCost;
+            return profit;
         }
 
         #endregion

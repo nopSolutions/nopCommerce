@@ -73,5 +73,18 @@ namespace Nop.Services.Orders
         /// <returns>Product variants</returns>
         IPagedList<ProductVariant> ProductsNeverSold(DateTime? startTime,
             DateTime? endTime, int pageIndex, int pageSize, bool showHidden = false);
+
+        /// <summary>
+        /// Get profit report
+        /// </summary>
+        /// <param name="startTimeUtc">Start date</param>
+        /// <param name="endTimeUtc">End date</param>
+        /// <param name="os">Order status; null to load all records</param>
+        /// <param name="ps">Order payment status; null to load all records</param>
+        /// <param name="ss">Shipping status; null to load all records</param>
+        /// <param name="billingEmail">Billing email. Leave empty to load all records.</param>
+        /// <returns>Result</returns>
+        decimal ProfitReport(OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss, 
+            DateTime? startTimeUtc, DateTime? endTimeUtc, string billingEmail);
     }
 }

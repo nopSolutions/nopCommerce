@@ -462,9 +462,11 @@ namespace Nop.Admin.Controllers
             //implemented as a workaround described here: http://www.telerik.com/community/forums/aspnet-mvc/grid/gridmodel-aggregates-how-to-use.aspx
 		    var reportSummary = _orderReportService.GetOrderAverageReportLine
 		        (orderStatus, paymentStatus, shippingStatus, startDateValue, endDateValue, model.CustomerEmail);
-            
+		    var profit = _orderReportService.ProfitReport
+                (orderStatus, paymentStatus, shippingStatus, startDateValue, endDateValue, model.CustomerEmail);
 		    var aggregator = new OrderModel()
 		    {
+                aggregatorprofit = _priceFormatter.FormatPrice(profit, true, false),
                 aggregatortax = _priceFormatter.FormatPrice(reportSummary.SumTax, true, false),
 		        aggregatortotal = _priceFormatter.FormatPrice(reportSummary.SumOrders, true, false)
 		    };

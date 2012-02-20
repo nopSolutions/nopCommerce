@@ -332,6 +332,9 @@ set @resources='
   <LocaleResource Name="Admin.Orders.Report.Total">
     <Value>Total</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Report.Profit">
+    <Value>Profit</Value>
+  </LocaleResource>
 </Language>
 '
 

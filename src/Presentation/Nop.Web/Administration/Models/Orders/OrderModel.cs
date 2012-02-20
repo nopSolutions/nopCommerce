@@ -215,6 +215,7 @@ namespace Nop.Admin.Models.Orders
 
 
         //aggergator proeprties
+        public string aggregatorprofit { get; set; }
         public string aggregatortax { get; set; }
         public string aggregatortotal { get; set; }
 

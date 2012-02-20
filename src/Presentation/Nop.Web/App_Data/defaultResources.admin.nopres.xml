@@ -7844,6 +7844,9 @@
 					</LocaleResource>
 					<LocaleResource Name="Report">
 						<Children>
+							<LocaleResource Name="Profit">
+								<Value>Profit</Value>
+							</LocaleResource>
 							<LocaleResource Name="Summary">
 								<Value>Summary</Value>
 							</LocaleResource>

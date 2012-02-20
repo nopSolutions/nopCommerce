@@ -121,6 +121,7 @@
                             columns.Bound(x => x.OrderTotal)
                                  .FooterTemplate(
                                  "<div><b>" + @T("Admin.Orders.Report.Summary").Text + ":</b></div>" +
+                                 "<div>" + @T("Admin.Orders.Report.Profit").Text + ": <span id=\"aggregator-profit-block\"></span></div>" +
                                  "<div>" + @T("Admin.Orders.Report.Tax").Text + ": <span id=\"aggregator-tax-block\"></span></div>" +
                                  "<div>" + @T("Admin.Orders.Report.Total").Text + ": <span id=\"aggregator-total-block\"></span></div>" 
                                  );
@@ -243,6 +244,8 @@
         }
         function updateAggregates(aggs) {
             for (var key in aggs) {
+
+                $('#aggregator-profit-block').text(aggs['aggregatorprofit']);
                 $('#aggregator-tax-block').text(aggs['aggregatortax']);
                 $('#aggregator-total-block').text(aggs['aggregatortotal']);
             }
