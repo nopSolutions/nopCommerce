@@ -5,6 +5,7 @@ using Nop.Core;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
+using Nop.Services.Payments;
 
 namespace Nop.Services.Localization
 {
@@ -267,5 +268,38 @@ namespace Nop.Services.Localization
         }
 
 
+
+        /// <summary>
+        /// Get localized friendly name of a plugin
+        /// </summary>
+        /// <typeparam name="T">Plugin</typeparam>
+        /// <param name="plugin">Plugin</param>
+        /// <param name="localizationService">Localization service</param>
+        /// <param name="languageId">Language identifier</param>
+        /// <returns>Localized value</returns>
+        public static string GetLocalizedFriendlyName<T>(this T plugin, ILocalizationService localizationService, int languageId)
+            where T : IPlugin
+        {   
+            if (localizationService == null)
+                throw new ArgumentNullException("localizationService");
+
+            if (plugin == null)
+                throw new ArgumentNullException("plugin");
+
+            if (plugin.PluginDescriptor == null)
+                throw new ArgumentException("Plugin descriptor cannot be loaded");
+
+            string systemName = plugin.PluginDescriptor.SystemName;
+            //localized value
+            string resourceName = string.Format("Plugins.FriendlyName.{0}",
+                systemName);
+            string result = localizationService.GetResource(resourceName, languageId, false, "", true);
+
+            //set default value if required
+            if (String.IsNullOrEmpty(result))
+                result = plugin.PluginDescriptor.FriendlyName;
+
+            return result;
+        }
     }
 }

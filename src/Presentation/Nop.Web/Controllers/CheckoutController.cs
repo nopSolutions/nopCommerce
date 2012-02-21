@@ -236,7 +236,7 @@ namespace Nop.Web.Controllers
 
                 var pmModel = new CheckoutPaymentMethodModel.PaymentMethodModel()
                 {
-                    Name = pm.PluginDescriptor.FriendlyName,
+                    Name = pm.GetLocalizedFriendlyName(_localizationService, _workContext.WorkingLanguage.Id),
                     PaymentMethodSystemName = pm.PluginDescriptor.SystemName,
                 };
                 //payment method additional fee
