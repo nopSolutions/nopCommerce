@@ -129,7 +129,7 @@ namespace Nop.Services.Messages
                 {
                     //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
                     string downloadUrl = string.Format("{0}download/getdownload?opvId={1}", _webHelper.GetStoreLocation(false), opv.OrderProductVariantGuid);
-                    string downloadLink = string.Format("<a class=\"link\" href=\"{0}\">{1}</a>", downloadUrl, _localizationService.GetResource("Messages.Order.Products(s).Download", languageId));
+                    string downloadLink = string.Format("<a class=\"link\" href=\"{0}\">{1}</a>", downloadUrl, _localizationService.GetResource("Messages.Order.Product(s).Download", languageId));
                     sb.AppendLine("&nbsp;&nbsp;(");
                     sb.AppendLine(downloadLink);
                     sb.AppendLine(")");
