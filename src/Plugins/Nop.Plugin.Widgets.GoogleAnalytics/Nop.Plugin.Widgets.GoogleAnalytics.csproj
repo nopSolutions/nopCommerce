@@ -48,7 +48,6 @@
     <Compile Include="Controllers\WidgetsGoogleAnalyticsController.cs" />
     <Compile Include="GoogleAnalyticPlugin.cs" />
     <Compile Include="Models\ConfigurationModel.cs" />
-    <Compile Include="Models\PublicInfoModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RouteProvider.cs" />
     <Compile Include="GoogleAnalyticsSettings.cs" />
@@ -72,7 +71,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Views\WidgetsGoogleAnalytics\Configure.cshtml" />
-    <EmbeddedResource Include="Views\WidgetsGoogleAnalytics\PublicInfo.cshtml" />
     <None Include="web.config" />
   </ItemGroup>
   <ItemGroup>

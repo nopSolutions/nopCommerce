@@ -10,8 +10,18 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Models
         [AllowHtml]
         public string GoogleId { get; set; }
 
-        [NopResourceDisplayName("Plugins.Widgets.GoogleAnalytics.JavaScript")]
+        [NopResourceDisplayName("Plugins.Widgets.GoogleAnalytics.TrackingScript")]
         [AllowHtml]
-        public string JavaScript { get; set; }
+        //tracking code
+        public string TrackingScript { get; set; }
+
+        [NopResourceDisplayName("Plugins.Widgets.GoogleAnalytics.EcommerceScript")]
+        [AllowHtml]
+        public string EcommerceScript { get; set; }
+
+        [NopResourceDisplayName("Plugins.Widgets.GoogleAnalytics.EcommerceDetailScript")]
+        [AllowHtml]
+        public string EcommerceDetailScript { get; set; }
+
     }
 }

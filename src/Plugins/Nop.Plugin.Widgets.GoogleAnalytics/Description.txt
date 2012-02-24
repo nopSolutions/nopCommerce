@@ -1,8 +1,8 @@
 ﻿Group: Widgets
 FriendlyName: Google Analytics
 SystemName: Widgets.GoogleAnalytics
-Version: 1.02
+Version: 1.03
 SupportedVersions: 2.50
-Author: nopCommerce team
+Author: nopCommerce team, Nicolas Muniere
 DisplayOrder: 1
 FileName: Nop.Plugin.Widgets.GoogleAnalytics.dll

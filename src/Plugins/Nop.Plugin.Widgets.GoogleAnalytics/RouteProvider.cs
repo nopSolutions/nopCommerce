@@ -14,11 +14,11 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
                  new[] { "Nop.Plugin.Widgets.GoogleAnalytics.Controllers" }
             );
 
-            routes.MapRoute("Plugin.Widgets.GoogleAnalytics.PublicInfo",
-                 "Plugins/WidgetsGoogleAnalytics/PublicInfo",
-                 new { controller = "WidgetsGoogleAnalytics", action = "PublicInfo" },
-                 new[] { "Nop.Plugin.Widgets.GoogleAnalytics.Controllers" }
-            );
+            //routes.MapRoute("Plugin.Widgets.GoogleAnalytics.PublicInfo",
+            //     "Plugins/WidgetsGoogleAnalytics/PublicInfo",
+            //     new { controller = "WidgetsGoogleAnalytics", action = "PublicInfo" },
+            //     new[] { "Nop.Plugin.Widgets.GoogleAnalytics.Controllers" }
+            //);
         }
         public int Priority
         {

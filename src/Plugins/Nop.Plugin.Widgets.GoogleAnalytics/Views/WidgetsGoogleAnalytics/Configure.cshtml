@@ -32,11 +32,29 @@
     </tr>
     <tr>
         <td class="adminTitle">
-            @Html.NopLabelFor(model => model.JavaScript):
+            @Html.NopLabelFor(model => model.TrackingScript):
         </td>
         <td class="adminData">
-            @Html.TextAreaFor(model => model.JavaScript, new { style = "Width: 300px; Height: 100px;" })
-            @Html.ValidationMessageFor(model => model.JavaScript)
+            @Html.TextAreaFor(model => model.TrackingScript, new { style = "Width: 600px; Height: 200px;" })
+            @Html.ValidationMessageFor(model => model.TrackingScript)
         </td>
     </tr>
+	<tr>
+		<td class="adminTitle">
+			@Html.NopLabelFor(model => model.EcommerceScript):
+		</td>
+		<td class="adminData">
+			@Html.TextAreaFor(model => model.EcommerceScript, new { style = "Width: 600px; Height: 50px;" })
+			@Html.ValidationMessageFor(model => model.EcommerceScript)
+		</td>
+	</tr>
+	<tr>
+		<td class="adminTitle">
+			@Html.NopLabelFor(model => model.EcommerceDetailScript):
+		</td>
+		<td class="adminData">
+			@Html.TextAreaFor(model => model.EcommerceDetailScript, new { style = "Width: 600px; Height: 50px;" })
+			@Html.ValidationMessageFor(model => model.EcommerceDetailScript)
+		</td>
+	</tr>
 </table>
