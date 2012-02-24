@@ -46,7 +46,7 @@ GO
 
 CREATE PROCEDURE [dbo].[ProductLoadAllPaged]
 (
-	@CategoryId			int = 0,
+	@CategoryIds		nvarchar(300) = null,	--a list of category IDs (comma-separated list). e.g. 1,2,3
 	@ManufacturerId		int = 0,
 	@ProductTagId		int = 0,
 	@FeaturedProducts	bit = null,	--0 featured only , 1 not featured only, null - load all products
@@ -147,6 +147,17 @@ BEGIN
 		SET @SearchKeywords = 0
 	END
 
+	--filter by category IDs
+	SET @CategoryIds = isnull(@CategoryIds, '')	
+	CREATE TABLE #FilteredCategoryIds
+	(
+		CategoryId int not null
+	)
+	INSERT INTO #FilteredCategoryIds (CategoryId)
+	SELECT CAST(data as int) FROM dbo.[nop_splitstring_to_table](@CategoryIds, ',')	
+	DECLARE @CategoryIdsCount int	
+	SET @CategoryIdsCount = (SELECT COUNT(1) FROM #FilteredCategoryIds)
+
 	--filter by attributes
 	SET @FilteredSpecs = isnull(@FilteredSpecs, '')	
 	CREATE TABLE #FilteredSpecs
@@ -171,13 +182,14 @@ BEGIN
 		[Id] int IDENTITY (1, 1) NOT NULL,
 		[ProductId] int NOT NULL
 	)
+
 	SET @sql = '
 	INSERT INTO #DisplayOrderTmp ([ProductId])
 	SELECT p.Id
 	FROM
 		Product p with (NOLOCK)'
 	
-	IF @CategoryId > 0
+	IF @CategoryIdsCount > 0
 	BEGIN
 		SET @sql = @sql + '
 		LEFT JOIN Product_Category_Mapping pcm with (NOLOCK)
@@ -222,10 +234,10 @@ BEGIN
 		p.Deleted = 0'
 	
 	--filter by category
-	IF @CategoryId > 0
+	IF @CategoryIdsCount > 0
 	BEGIN
 		SET @sql = @sql + '
-		AND pcm.CategoryId = ' + CAST(@CategoryId AS nvarchar(max))
+		AND pcm.CategoryId IN (SELECT CategoryId FROM #FilteredCategoryIds)'
 		
 		IF @FeaturedProducts IS NOT NULL
 		BEGIN
@@ -337,7 +349,7 @@ BEGIN
 	ELSE /* default sorting, 0 (position) */
 	BEGIN
 		--category position (display order)
-		IF @CategoryId > 0 SET @sql_orderby = ' pcm.DisplayOrder ASC'
+		IF @CategoryIdsCount > 0 SET @sql_orderby = ' pcm.DisplayOrder ASC'
 		
 		--manufacturer position (display order)
 		IF @ManufacturerId > 0
@@ -354,9 +366,10 @@ BEGIN
 	SET @sql = @sql + '
 	ORDER BY' + @sql_orderby
 	
-	PRINT (@sql)
+	--PRINT (@sql)
 	EXEC sp_executesql @sql
 
+	DROP TABLE #FilteredCategoryIds
 	DROP TABLE #FilteredSpecs
 
 	CREATE TABLE #PageIndex 

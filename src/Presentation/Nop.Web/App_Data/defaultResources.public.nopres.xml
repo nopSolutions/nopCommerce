@@ -3458,6 +3458,9 @@
 			<LocaleResource Name="Category">
 				<Value>Category</Value>
 			</LocaleResource>
+			<LocaleResource Name="IncludeSubCategories">
+				<Value>Automatically search sub categories</Value>
+			</LocaleResource>
 			<LocaleResource Name="Manufacturer">
 				<Value>Manufacturer</Value>
 			</LocaleResource>

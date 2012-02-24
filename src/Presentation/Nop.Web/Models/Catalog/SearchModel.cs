@@ -31,6 +31,8 @@ namespace Nop.Web.Models.Catalog
         /// </summary>
         [NopResourceDisplayName("Search.Category")]
         public int Cid { get; set; }
+        [NopResourceDisplayName("Search.IncludeSubCategories")]
+        public bool Isc { get; set; }
         /// <summary>
         /// Manufacturer ID
         /// </summary>

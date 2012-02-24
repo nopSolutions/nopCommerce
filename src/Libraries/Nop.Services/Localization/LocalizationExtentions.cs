@@ -5,7 +5,6 @@ using Nop.Core;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
-using Nop.Services.Payments;
 
 namespace Nop.Services.Localization
 {

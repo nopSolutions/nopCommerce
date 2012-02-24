@@ -146,6 +146,19 @@ namespace Nop.Web.Controllers
         #endregion
 
         #region Utilities
+
+        [NonAction]
+        protected List<int> GetChildCategoryIds(int parentCategoryId, bool showHidden = false)
+        {
+            var categoriesIds = new List<int>();
+            var categories = _categoryService.GetAllCategoriesByParentCategoryId(parentCategoryId, showHidden);
+            foreach (var category in categories)
+            {
+                categoriesIds.Add(category.Id);
+                categoriesIds.AddRange(GetChildCategoryIds(category.Id, showHidden));
+            }
+            return categoriesIds;
+        }
         
         [NonAction]
         protected IList<Category> GetCategoryBreadCrumb(Category category)
@@ -324,25 +337,7 @@ namespace Nop.Web.Controllers
             }
             return model;
         }
-
-        [NonAction]
-        protected int GetNumberOfProducts(Category category, bool includeSubCategories)
-        {
-            var products = _productService.SearchProducts(category.Id,
-                        0, null, null, null, 0, string.Empty, false, 0, null,
-                        ProductSortingEnum.Position, 0, 1);
-
-            var numberOfProducts = products.TotalCount;
-
-            if (includeSubCategories)
-            {
-                var subCategories = _categoryService.GetAllCategoriesByParentCategoryId(category.Id);
-                foreach (var subCategory in subCategories)
-                    numberOfProducts += GetNumberOfProducts(subCategory, includeSubCategories);
-            }
-            return numberOfProducts;
-        }
-
+        
         [NonAction]
         protected IList<CategoryNavigationModel> GetChildCategoryNavigationModel(IList<Category> breadCrumb, int rootCategoryId, Category currentCategory, int level)
         {
@@ -361,7 +356,16 @@ namespace Nop.Web.Controllers
                 if (_catalogSettings.ShowCategoryProductNumber)
                 {
                     model.DisplayNumberOfProducts = true;
-                    model.NumberOfProducts = GetNumberOfProducts(category, _catalogSettings.ShowCategoryProductNumberIncludingSubcategories);
+                    var categoryIds = new List<int>();
+                    if (_catalogSettings.ShowCategoryProductNumberIncludingSubcategories)
+                    {
+                        //include subcategories
+                        categoryIds = GetChildCategoryIds(category.Id, false);
+                    }
+                    categoryIds.Insert(0, category.Id);
+                    model.NumberOfProducts = _productService.SearchProducts(categoryIds,
+                        0, null, null, null, 0, string.Empty, false, 0, null,
+                        ProductSortingEnum.Position, 0, 1).TotalCount;
                 }
                 result.Add(model);
 
@@ -2597,7 +2601,7 @@ namespace Nop.Web.Controllers
                 }
                 else
                 {
-                    int categoryId = 0;
+                    var categoryIds = new List<int>();
                     int manufacturerId = 0;
                     decimal? minPriceConverted = null;
                     decimal? maxPriceConverted = null;
@@ -2605,7 +2609,18 @@ namespace Nop.Web.Controllers
                     if (model.As)
                     {
                         //advanced search
-                        categoryId = model.Cid;
+                        var categoryId = model.Cid;
+                        if (model.Isc)
+                        {
+                            //include subcategories
+                            categoryIds = GetChildCategoryIds(categoryId, false);
+                        }
+                        if (categoryId > 0)
+                        {
+                            categoryIds.Insert(0, categoryId);
+                        }
+
+
                         manufacturerId = model.Mid;
 
                         //min price
@@ -2627,7 +2642,7 @@ namespace Nop.Web.Controllers
                     }
 
                     //products
-                    products = _productService.SearchProducts(categoryId, manufacturerId, null,
+                    products = _productService.SearchProducts(categoryIds, manufacturerId, null,
                         minPriceConverted, maxPriceConverted, 0,
                         model.Q, searchInDescriptions, _workContext.WorkingLanguage.Id, null,
                     ProductSortingEnum.Position, command.PageNumber - 1, command.PageSize);
@@ -2646,6 +2661,7 @@ namespace Nop.Web.Controllers
         {
             return PartialView();
         }
+
         #endregion
     }
 }

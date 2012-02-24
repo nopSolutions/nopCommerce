@@ -70,6 +70,12 @@
                                             @Html.DropDownListFor(model => model.Cid, Model.AvailableCategories)
                                         </td>
                                     </tr>
+                                    <tr>
+                                        <td class="data" colspan="2">
+                                            @Html.CheckBoxFor(model => model.Isc)
+                                            @Html.LabelFor(model => model.Isc)
+                                        </td>
+                                    </tr>
                                 }
                                 @if (Model.AvailableManufacturers.Count > 0)
                                 {
@@ -144,7 +150,7 @@
         <div class="clear">
         </div>
         <div class="pager">
-            @Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber").BooleanParameterName("as").BooleanParameterName("sid")
+            @Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber").BooleanParameterName("as").BooleanParameterName("isc").BooleanParameterName("sid")
         </div>
     </div>
 }

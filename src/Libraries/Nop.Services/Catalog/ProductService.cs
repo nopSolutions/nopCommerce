@@ -220,7 +220,7 @@ namespace Nop.Services.Catalog
             //event notification
             _eventPublisher.EntityUpdated(product);
         }
-         
+
         /// <summary>
         /// Search products
         /// </summary>
@@ -245,6 +245,40 @@ namespace Nop.Services.Catalog
             IList<int> filteredSpecs, ProductSortingEnum orderBy,
             int pageIndex, int pageSize, bool showHidden = false)
         {
+            var categoryIds = new List<int>();
+            if (categoryId > 0)
+                categoryIds.Add(categoryId);
+            return SearchProducts(categoryIds, manufacturerId, featuredProducts,
+                priceMin, priceMax, productTagId, keywords, searchDescriptions, languageId,
+                filteredSpecs, orderBy,
+                pageIndex, pageSize, showHidden);
+        }
+
+        /// <summary>
+        /// Search products
+        /// </summary>
+        /// <param name="categoryIds">Category identifiers</param>
+        /// <param name="manufacturerId">Manufacturer identifier; 0 to load all records</param>
+        /// <param name="featuredProducts">A value indicating whether loaded products are marked as featured (relates only to categories and manufacturers). 0 to load featured products only, 1 to load not featured products only, null to load all products</param>
+        /// <param name="priceMin">Minimum price; null to load all records</param>
+        /// <param name="priceMax">Maximum price; null to load all records</param>
+        /// <param name="productTagId">Product tag identifier; 0 to load all records</param>
+        /// <param name="keywords">Keywords</param>
+        /// <param name="searchDescriptions">A value indicating whether to search in descriptions</param>
+        /// <param name="languageId">Language identifier</param>
+        /// <param name="filteredSpecs">Filtered product specification identifiers</param>
+        /// <param name="orderBy">Order by</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <returns>Product collection</returns>
+        public virtual IPagedList<Product> SearchProducts(IList<int> categoryIds, 
+            int manufacturerId, bool? featuredProducts,
+            decimal? priceMin, decimal? priceMax, int productTagId,
+            string keywords, bool searchDescriptions, int languageId,
+            IList<int> filteredSpecs, ProductSortingEnum orderBy,
+            int pageIndex, int pageSize, bool showHidden = false)
+        {
             bool searchLocalizedValue = false;
             if (languageId > 0)
             {
@@ -260,6 +294,8 @@ namespace Nop.Services.Catalog
                 }
             }
 
+
+
             if (_commonSettings.UseStoredProceduresIfSupported && _dataProvider.StoredProceduredSupported)
             {
                 //stored procedures are enabled and supported by the database. 
@@ -271,6 +307,20 @@ namespace Nop.Services.Catalog
                 pTotalRecords.ParameterName = "TotalRecords";
                 pTotalRecords.Direction = ParameterDirection.Output;
                 pTotalRecords.DbType = DbType.Int32;
+                
+                //pass categry identifiers as comma-delimited string
+                string commaSeparatedCategoryIds = "";
+                if (categoryIds != null)
+                {
+                    for (int i = 0; i < categoryIds.Count; i++)
+                    {
+                        commaSeparatedCategoryIds += categoryIds[i].ToString();
+                        if (i != categoryIds.Count - 1)
+                        {
+                            commaSeparatedCategoryIds += ",";
+                        }
+                    }
+                }
 
                 //pass specification identifiers as comma-delimited string
                 string commaSeparatedSpecIds = "";
@@ -292,11 +342,11 @@ namespace Nop.Services.Catalog
                     pageSize = int.MaxValue - 1;
                 
                 //prepare parameters
-                var pCategoryId = _dataProvider.GetParameter();
-                pCategoryId.ParameterName = "CategoryId";
-                pCategoryId.Value = categoryId;
-                pCategoryId.DbType = DbType.Int32;
-
+                var pCategoryIds = _dataProvider.GetParameter();
+                pCategoryIds.ParameterName = "CategoryIds";
+                pCategoryIds.Value = commaSeparatedCategoryIds != null ? (object)commaSeparatedCategoryIds : DBNull.Value;
+                pCategoryIds.DbType = DbType.String;
+                
                 var pManufacturerId = _dataProvider.GetParameter();
                 pManufacturerId.ParameterName = "ManufacturerId";
                 pManufacturerId.Value = manufacturerId;
@@ -366,7 +416,7 @@ namespace Nop.Services.Catalog
                 var products = _dbContext.ExecuteStoredProcedureList<Product>(
                     //"EXEC [ProductLoadAllPaged] @CategoryId, @ManufacturerId, @ProductTagId, @FeaturedProducts, @PriceMin, @PriceMax, @Keywords, @SearchDescriptions, @FilteredSpecs, @LanguageId, @OrderBy, @PageIndex, @PageSize, @ShowHidden, @TotalRecords",
                     "ProductLoadAllPaged",
-                    pCategoryId,
+                    pCategoryIds,
                     pManufacturerId,
                     pProductTagId,
                     pFeaturedProducts,
@@ -469,10 +519,11 @@ namespace Nop.Services.Catalog
                 }
 
                 //category filtering
-                if (categoryId > 0)
+                if (categoryIds != null && categoryIds.Count > 0)
                 {
+                    //search in subcategories
                     query = from p in query
-                            from pc in p.ProductCategories.Where(pc => pc.CategoryId == categoryId)
+                            from pc in p.ProductCategories.Where(pc => categoryIds.Contains(pc.CategoryId))
                             where (!featuredProducts.HasValue || featuredProducts.Value == pc.IsFeaturedProduct)
                             select p;
                 }
@@ -513,10 +564,11 @@ namespace Nop.Services.Catalog
                         select pGroup.FirstOrDefault();
 
                 //sort products
-                if (orderBy == ProductSortingEnum.Position && categoryId > 0)
+                if (orderBy == ProductSortingEnum.Position && categoryIds != null && categoryIds.Count > 0)
                 {
                     //category position
-                    query = query.OrderBy(p => p.ProductCategories.Where(pc => pc.CategoryId == categoryId).FirstOrDefault().DisplayOrder);
+                    var firstCategoryId = categoryIds[0];
+                    query = query.OrderBy(p => p.ProductCategories.Where(pc => pc.CategoryId == firstCategoryId).FirstOrDefault().DisplayOrder);
                 }
                 else if (orderBy == ProductSortingEnum.Position && manufacturerId > 0)
                 {
