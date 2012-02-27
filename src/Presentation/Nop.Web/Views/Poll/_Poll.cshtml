@@ -38,7 +38,7 @@
             $('#vote-poll-@(Model.Id)').click(function () {
                 var pollAnswerId = $("input:radio[name=pollanswers-@(Model.Id)]:checked").val();
                 if(typeof pollAnswerId == 'undefined'){
-                    alert('Please select an answer');
+                    alert('@T("Polls.SelectAnswer")');
                 }
                 else {
                     var voteProgress = $("#poll-voting-progress-@(Model.Id)");

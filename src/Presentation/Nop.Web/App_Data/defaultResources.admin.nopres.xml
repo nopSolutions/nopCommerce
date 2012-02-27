@@ -2376,6 +2376,9 @@
 					<LocaleResource Name="Update">
 						<Value>Update</Value>
 					</LocaleResource>
+          <LocaleResource Name="UploadFile">
+            <Value>Please upload a file</Value>
+          </LocaleResource>
 					<LocaleResource Name="WrongEmail">
 						<Value>Wrong email</Value>
 					</LocaleResource>

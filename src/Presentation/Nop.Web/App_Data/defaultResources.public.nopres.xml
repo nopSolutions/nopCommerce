@@ -2816,6 +2816,9 @@
 			<LocaleResource Name="OnlyRegisteredUsersVote">
 				<Value>Only registered users can vote.</Value>
 			</LocaleResource>
+      <LocaleResource Name="SelectAnswer">
+        <Value>Please select an answer</Value>
+      </LocaleResource>
 			<LocaleResource Name="Title">
 				<Value>Community poll</Value>
 			</LocaleResource>

@@ -1560,7 +1560,7 @@ namespace Nop.Admin.Controllers
                 }
                 else
                 {
-                    ErrorNotification("Please upload a file");
+                    ErrorNotification(_localizationService.GetResource("Admin.Common.UploadFile"));
                     return RedirectToAction("List");
                 }
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Products.Imported"));

@@ -194,15 +194,11 @@ namespace Nop.Admin.Controllers
 								count++;
 							}
 						}
-						SuccessNotification(
-							String.Format(
-								_localizationService.GetResource(
-                                    "Admin.Promotions.NewsLetterSubscriptions.ImportEmailsSuccess"), count))
-									;
+						SuccessNotification(String.Format(_localizationService.GetResource("Admin.Promotions.NewsLetterSubscriptions.ImportEmailsSuccess"), count));
 						return RedirectToAction("List");
 					}
-				}
-				ErrorNotification("Please upload a file");
+                }
+                ErrorNotification(_localizationService.GetResource("Admin.Common.UploadFile"));
 				return RedirectToAction("List");
 			}
 			catch (Exception exc)
