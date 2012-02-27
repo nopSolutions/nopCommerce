@@ -1531,15 +1531,13 @@ namespace Nop.Admin.Controllers
             var customers = new List<Customer>();
             if (selectedIds != null)
             {
-                foreach (var id in selectedIds
-                    .Split(new char[] {','}, StringSplitOptions.RemoveEmptyEntries)
-                    .Select(x => Convert.ToInt32(x)))
-                {
-                    var customer = _customerService.GetCustomerById(id);
-                    if (customer != null)
-                        customers.Add(customer);
-                }
+                var ids = selectedIds
+                    .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(x => Convert.ToInt32(x))
+                    .ToArray();
+                customers.AddRange(_customerService.GetCustomersByIds(ids));
             }
+
             string fileName = string.Format("customers_{0}_{1}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
             string filePath = string.Format("{0}content\\files\\ExportImport\\{1}", Request.PhysicalApplicationPath, fileName);
 
@@ -1578,15 +1576,13 @@ namespace Nop.Admin.Controllers
             var customers = new List<Customer>();
             if (selectedIds != null)
             {
-                foreach (var id in selectedIds
+                var ids = selectedIds
                     .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                    .Select(x => Convert.ToInt32(x)))
-                {
-                    var customer = _customerService.GetCustomerById(id);
-                    if (customer != null)
-                        customers.Add(customer);
-                }
+                    .Select(x => Convert.ToInt32(x))
+                    .ToArray();
+                customers.AddRange(_customerService.GetCustomersByIds(ids));
             }
+
             var fileName = string.Format("customers_{0}.xml", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
             var xml = _exportManager.ExportCustomersToXml(customers);
             return new XmlDownloadResult(xml, fileName);

@@ -521,15 +521,13 @@ namespace Nop.Admin.Controllers
             var orders = new List<Order>();
             if (selectedIds != null)
             {
-                foreach (var id in selectedIds
-                    .Split(new char[] {','}, StringSplitOptions.RemoveEmptyEntries)
-                    .Select(x => Convert.ToInt32(x)))
-                {
-                    var order = _orderService.GetOrderById(id);
-                    if (order != null)
-                        orders.Add(order);
-                }
+                var ids = selectedIds
+                    .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(x => Convert.ToInt32(x))
+                    .ToArray();
+                orders.AddRange(_orderService.GetOrdersByIds(ids));
             }
+
             var fileName = string.Format("orders_{0}.xml", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
             var xml = _exportManager.ExportOrdersToXml(orders);
             return new XmlDownloadResult(xml, fileName);
@@ -568,15 +566,13 @@ namespace Nop.Admin.Controllers
             var orders = new List<Order>();
             if (selectedIds != null)
             {
-                foreach (var id in selectedIds
+                var ids = selectedIds
                     .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                    .Select(x => Convert.ToInt32(x)))
-                {
-                    var order = _orderService.GetOrderById(id);
-                    if (order != null)
-                        orders.Add(order);
-                }
+                    .Select(x => Convert.ToInt32(x))
+                    .ToArray();
+                orders.AddRange(_orderService.GetOrdersByIds(ids));
             }
+
             string fileName = string.Format("orders_{0}_{1}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
             string filePath = string.Format("{0}content\\files\\ExportImport\\{1}", Request.PhysicalApplicationPath, fileName);
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Nop.Core;
 using Nop.Core.Domain.Messages;
 
@@ -30,6 +31,13 @@ namespace Nop.Services.Messages
         /// <param name="queuedEmailId">Queued email identifier</param>
         /// <returns>Queued email</returns>
         QueuedEmail GetQueuedEmailById(int queuedEmailId);
+
+        /// <summary>
+        /// Get queued emails by identifiers
+        /// </summary>
+        /// <param name="queuedEmailIds">queued email identifiers</param>
+        /// <returns>Queued emails</returns>
+        IList<QueuedEmail> GetQueuedEmailsByIds(int[] queuedEmailIds);
 
         /// <summary>
         /// Search queued emails

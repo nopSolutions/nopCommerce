@@ -162,12 +162,9 @@ namespace Nop.Admin.Controllers
 
             if (selectedIds != null)
             {
-                foreach (var logId in selectedIds)
-                {
-                    var logRecord = _logger.GetLogById(logId);
-                    if (logRecord != null)
-                        _logger.DeleteLog(logRecord);
-                }
+                var logItems = _logger.GetLogByIds(selectedIds.ToArray());
+                foreach (var logItem in logItems)
+                    _logger.DeleteLog(logItem);
             }
 
             return Json(new { Result = true});

@@ -49,7 +49,7 @@ namespace Nop.Services.Logging
         public IPagedList<Log> GetAllLogs(DateTime? fromUtc, DateTime? toUtc,
             string message, LogLevel? logLevel, int pageIndex, int pageSize)
         {
-            return new PagedList<Log>(new List<Log> (), pageIndex, pageSize);
+            return new PagedList<Log>(new List<Log>(), pageIndex, pageSize);
         }
 
         /// <summary>
@@ -61,7 +61,17 @@ namespace Nop.Services.Logging
         {
             return null;
         }
-        
+
+        /// <summary>
+        /// Get log items by identifiers
+        /// </summary>
+        /// <param name="logIds">Log item identifiers</param>
+        /// <returns>Log items</returns>
+        public virtual IList<Log> GetLogByIds(int[] logIds)
+        {
+            return new List<Log>();
+        }
+
         /// <summary>
         /// Inserts a log item
         /// </summary>

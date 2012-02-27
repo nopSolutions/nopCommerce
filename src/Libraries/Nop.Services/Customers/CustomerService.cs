@@ -222,6 +222,31 @@ namespace Nop.Services.Customers
         }
 
         /// <summary>
+        /// Get customers by identifiers
+        /// </summary>
+        /// <param name="customerIds">Customer identifiers</param>
+        /// <returns>Customers</returns>
+        public virtual IList<Customer> GetCustomersByIds(int[] customerIds)
+        {
+            if (customerIds == null || customerIds.Length == 0)
+                return new List<Customer>();
+
+            var query = from c in _customerRepository.Table
+                        where customerIds.Contains(c.Id)
+                        select c;
+            var customers = query.ToList();
+            //sort by passed identifiers
+            var sortedCustomers = new List<Customer>();
+            foreach (int id in customerIds)
+            {
+                var customer = customers.Find(x => x.Id == id);
+                if (customer != null)
+                    sortedCustomers.Add(customer);
+            }
+            return sortedCustomers;
+        }
+
+        /// <summary>
         /// Gets a customer by GUID
         /// </summary>
         /// <param name="customerGuid">Customer GUID</param>

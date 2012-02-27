@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Data;
@@ -7,7 +8,7 @@ using Nop.Core.Events;
 
 namespace Nop.Services.Messages
 {
-    public partial class QueuedEmailService:IQueuedEmailService
+    public partial class QueuedEmailService : IQueuedEmailService
     {
         private readonly IRepository<QueuedEmail> _queuedEmailRepository;
         private readonly IEventPublisher _eventPublisher;
@@ -81,6 +82,31 @@ namespace Nop.Services.Messages
             var queuedEmail = _queuedEmailRepository.GetById(queuedEmailId);
             return queuedEmail;
 
+        }
+
+        /// <summary>
+        /// Get queued emails by identifiers
+        /// </summary>
+        /// <param name="queuedEmailIds">queued email identifiers</param>
+        /// <returns>Queued emails</returns>
+        public virtual IList<QueuedEmail> GetQueuedEmailsByIds(int[] queuedEmailIds)
+        {
+            if (queuedEmailIds == null || queuedEmailIds.Length == 0)
+                return new List<QueuedEmail>();
+
+            var query = from qe in _queuedEmailRepository.Table
+                        where queuedEmailIds.Contains(qe.Id)
+                        select qe;
+            var queuedEmails = query.ToList();
+            //sort by passed identifiers
+            var sortedQueuedEmails = new List<QueuedEmail>();
+            foreach (int id in queuedEmailIds)
+            {
+                var queuedEmail = queuedEmails.Find(x => x.Id == id);
+                if (queuedEmail != null)
+                    sortedQueuedEmails.Add(queuedEmail);
+            }
+            return sortedQueuedEmails;
         }
 
         /// <summary>

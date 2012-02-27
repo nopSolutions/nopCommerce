@@ -82,6 +82,31 @@ namespace Nop.Services.Orders
         }
 
         /// <summary>
+        /// Get orders by identifiers
+        /// </summary>
+        /// <param name="orderIds">Order identifiers</param>
+        /// <returns>Order</returns>
+        public virtual IList<Order> GetOrdersByIds(int[] orderIds)
+        {
+            if (orderIds == null || orderIds.Length == 0)
+                return new List<Order>();
+
+            var query = from o in _orderRepository.Table
+                        where orderIds.Contains(o.Id)
+                        select o;
+            var orders = query.ToList();
+            //sort by passed identifiers
+            var sortedOrders = new List<Order>();
+            foreach (int id in orderIds)
+            {
+                var order = orders.Find(x => x.Id == id);
+                if (order != null)
+                    sortedOrders.Add(order);
+            }
+            return sortedOrders;
+        }
+
+        /// <summary>
         /// Gets an order
         /// </summary>
         /// <param name="orderGuid">The order identifier</param>

@@ -37,7 +37,14 @@ namespace Nop.Services.Catalog
         /// <param name="productId">Product identifier</param>
         /// <returns>Product</returns>
         Product GetProductById(int productId);
-        
+
+        /// <summary>
+        /// Gets products by identifier
+        /// </summary>
+        /// <param name="productIds">Product identifiers</param>
+        /// <returns>Products</returns>
+        IList<Product> GetProductsByIds(int[] productIds);
+
         /// <summary>
         /// Inserts a product
         /// </summary>

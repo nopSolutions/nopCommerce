@@ -1470,14 +1470,11 @@ namespace Nop.Admin.Controllers
             var products = new List<Product>();
             if (selectedIds != null)
             {
-                foreach (var id in selectedIds
+                var ids = selectedIds
                     .Split(new char[] {','}, StringSplitOptions.RemoveEmptyEntries)
-                    .Select(x => Convert.ToInt32(x)))
-                {
-                    var product = _productService.GetProductById(id);
-                    if (product != null)
-                        products.Add(product);
-                }
+                    .Select(x => Convert.ToInt32(x))
+                    .ToArray();
+                products.AddRange(_productService.GetProductsByIds(ids));
             }
 
             var fileName = string.Format("products_{0}.xml", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
@@ -1519,14 +1516,11 @@ namespace Nop.Admin.Controllers
             var products = new List<Product>();
             if (selectedIds != null)
             {
-                foreach (var id in selectedIds
+                var ids = selectedIds
                     .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                    .Select(x => Convert.ToInt32(x)))
-                {
-                    var product = _productService.GetProductById(id);
-                    if (product != null)
-                        products.Add(product);
-                }
+                    .Select(x => Convert.ToInt32(x))
+                    .ToArray();
+                products.AddRange(_productService.GetProductsByIds(ids));
             }
 
             string fileName = string.Format("products_{0}_{1}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));

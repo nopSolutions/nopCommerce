@@ -68,6 +68,13 @@ namespace Nop.Services.Customers
         Customer GetCustomerById(int customerId);
 
         /// <summary>
+        /// Get customers by identifiers
+        /// </summary>
+        /// <param name="customerIds">Customer identifiers</param>
+        /// <returns>Customers</returns>
+        IList<Customer> GetCustomersByIds(int[] customerIds);
+
+        /// <summary>
         /// Gets a customer by GUID
         /// </summary>
         /// <param name="customerGuid">Customer GUID</param>

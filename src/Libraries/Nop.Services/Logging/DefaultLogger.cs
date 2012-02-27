@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Data;
@@ -118,7 +119,32 @@ namespace Nop.Services.Logging
             var log = _logRepository.GetById(logId);
             return log;
         }
-        
+
+        /// <summary>
+        /// Get log items by identifiers
+        /// </summary>
+        /// <param name="logIds">Log item identifiers</param>
+        /// <returns>Log items</returns>
+        public virtual IList<Log> GetLogByIds(int[] logIds)
+        {
+            if (logIds == null || logIds.Length == 0)
+                return new List<Log>();
+
+            var query = from l in _logRepository.Table
+                        where logIds.Contains(l.Id)
+                        select l;
+            var logItems = query.ToList();
+            //sort by passed identifiers
+            var sortedLogItems = new List<Log>();
+            foreach (int id in logIds)
+            {
+                var log = logItems.Find(x => x.Id == id);
+                if (log != null)
+                    sortedLogItems.Add(log);
+            }
+            return sortedLogItems;
+        }
+
         /// <summary>
         /// Inserts a log item
         /// </summary>

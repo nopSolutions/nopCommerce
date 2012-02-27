@@ -22,6 +22,13 @@ namespace Nop.Services.Orders
         Order GetOrderById(int orderId);
 
         /// <summary>
+        /// Get orders by identifiers
+        /// </summary>
+        /// <param name="orderIds">Order identifiers</param>
+        /// <returns>Order</returns>
+        IList<Order> GetOrdersByIds(int[] orderIds);
+
+        /// <summary>
         /// Gets an order
         /// </summary>
         /// <param name="orderGuid">The order identifier</param>
