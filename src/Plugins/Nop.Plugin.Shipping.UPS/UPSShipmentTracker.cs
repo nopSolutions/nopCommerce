@@ -50,7 +50,7 @@ namespace Nop.Plugin.Shipping.UPS
         /// <returns>A url to a tracking page.</returns>
         public virtual string GetUrl(string trackingNumber)
         {
-            string url = "http://wwwapps.ups.com/WebTracking/track?trackNums={0}";
+            string url = "http://wwwapps.ups.com/WebTracking/track?trackNums={0}&track.x=Track";
             url = string.Format(url, trackingNumber);
             return url;
         }
