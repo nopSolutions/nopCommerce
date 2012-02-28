@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Nop.Admin.Models.Orders;
@@ -59,7 +60,7 @@ namespace Nop.Admin.Controllers
         #region Utilities
 
         [NonAction]
-        private void PrepareReturnRequestModel(ReturnRequestModel model,
+        private bool PrepareReturnRequestModel(ReturnRequestModel model,
             ReturnRequest returnRequest, bool excludeProperties)
         {
             if (model == null)
@@ -69,6 +70,9 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentNullException("returnRequest");
 
             var opv = _orderService.GetOrderProductVariantById(returnRequest.OrderProductVariantId);
+            if (opv == null)
+                return false;
+
             model.Id = returnRequest.Id;
             model.ProductVariantId = opv.ProductVariantId;
             //product name
@@ -89,6 +93,8 @@ namespace Nop.Admin.Controllers
                 model.StaffNotes = returnRequest.StaffNotes;
                 model.ReturnRequestStatusId = returnRequest.ReturnRequestStatusId;
             }
+            //model is successfully prepared
+            return true;
         }
 
         #endregion
@@ -116,15 +122,16 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageReturnRequests))
                 return AccessDeniedView();
 
-            var returnRequests = _orderService.SearchReturnRequests(0, 0, null);
+            var returnRequests = new List<ReturnRequestModel>();
+            foreach (var rr in _orderService.SearchReturnRequests(0, 0, null).PagedForCommand(command))
+            {
+                var m = new ReturnRequestModel();
+                if (PrepareReturnRequestModel(m, rr, false))
+                    returnRequests.Add(m);
+            }
             var gridModel = new GridModel<ReturnRequestModel>
             {
-                Data = returnRequests.PagedForCommand(command).Select(x =>
-                {
-                    var m = new ReturnRequestModel();
-                    PrepareReturnRequestModel(m, x, false);
-                    return m;
-                }),
+                Data = returnRequests,
                 Total = returnRequests.Count,
             };
             return new JsonResult

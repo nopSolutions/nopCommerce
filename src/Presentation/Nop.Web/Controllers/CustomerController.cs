@@ -1263,26 +1263,29 @@ namespace Nop.Web.Controllers
             foreach (var returnRequest in returnRequests)
             {
                 var opv = _orderService.GetOrderProductVariantById(returnRequest.OrderProductVariantId);
-                var pv = opv.ProductVariant;
-
-                var itemModel = new CustomeReturnRequestsModel.ReturnRequestModel()
+                if (opv != null)
                 {
-                    Id = returnRequest.Id,
-                    ReturnRequestStatus = returnRequest.ReturnRequestStatus.GetLocalizedEnum(_localizationService, _workContext),
-                    ProductId = pv.ProductId,
-                    ProductSeName = pv.Product.GetSeName(),
-                    Quantity = returnRequest.Quantity,
-                    ReturnAction = returnRequest.RequestedAction,
-                    ReturnReason = returnRequest.ReasonForReturn,
-                    Comments = returnRequest.CustomerComments,
-                    CreatedOn = _dateTimeHelper.ConvertToUserTime(returnRequest.CreatedOnUtc, DateTimeKind.Utc),
-                };
-                model.Items.Add(itemModel);
+                    var pv = opv.ProductVariant;
 
-                if (!String.IsNullOrEmpty(pv.GetLocalized(x => x.Name)))
-                    itemModel.ProductName = string.Format("{0} ({1})", pv.Product.GetLocalized(x => x.Name), pv.GetLocalized(x => x.Name));
-                else
-                    itemModel.ProductName = pv.Product.GetLocalized(x => x.Name);
+                    var itemModel = new CustomeReturnRequestsModel.ReturnRequestModel()
+                    {
+                        Id = returnRequest.Id,
+                        ReturnRequestStatus = returnRequest.ReturnRequestStatus.GetLocalizedEnum(_localizationService, _workContext),
+                        ProductId = pv.ProductId,
+                        ProductSeName = pv.Product.GetSeName(),
+                        Quantity = returnRequest.Quantity,
+                        ReturnAction = returnRequest.RequestedAction,
+                        ReturnReason = returnRequest.ReasonForReturn,
+                        Comments = returnRequest.CustomerComments,
+                        CreatedOn = _dateTimeHelper.ConvertToUserTime(returnRequest.CreatedOnUtc, DateTimeKind.Utc),
+                    };
+                    model.Items.Add(itemModel);
+
+                    if (!String.IsNullOrEmpty(pv.GetLocalized(x => x.Name)))
+                        itemModel.ProductName = string.Format("{0} ({1})", pv.Product.GetLocalized(x => x.Name), pv.GetLocalized(x => x.Name));
+                    else
+                        itemModel.ProductName = pv.Product.GetLocalized(x => x.Name);
+                }
             }
 
             return View(model);
