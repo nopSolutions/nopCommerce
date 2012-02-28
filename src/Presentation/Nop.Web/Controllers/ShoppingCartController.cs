@@ -1518,24 +1518,22 @@ namespace Nop.Web.Controllers
             if (cart.Count == 0)
                 return RedirectToAction("Index", "Home");
 
+            if (_workContext.CurrentCustomer.IsGuest())
+            {
+                ModelState.AddModelError("", _localizationService.GetResource("Wishlist.EmailAFriend.OnlyRegisteredUsers"));
+            }
+
             if (ModelState.IsValid)
             {
-                if (_workContext.CurrentCustomer.IsGuest())
-                {
-                    ModelState.AddModelError("", _localizationService.GetResource("Wishlist.EmailAFriend.OnlyRegisteredUsers"));
-                }
-                else
-                {
-                    //email
-                    _workflowMessageService.SendWishlistEmailAFriendMessage(_workContext.CurrentCustomer,
-                            _workContext.WorkingLanguage.Id, model.YourEmailAddress,
-                            model.FriendEmail, Core.Html.HtmlHelper.FormatText(model.PersonalMessage, false, true, false, false, false, false));
+                //email
+                _workflowMessageService.SendWishlistEmailAFriendMessage(_workContext.CurrentCustomer,
+                        _workContext.WorkingLanguage.Id, model.YourEmailAddress,
+                        model.FriendEmail, Core.Html.HtmlHelper.FormatText(model.PersonalMessage, false, true, false, false, false, false));
 
-                    model.SuccessfullySent = true;
-                    model.Result = _localizationService.GetResource("Wishlist.EmailAFriend.SuccessfullySent");
+                model.SuccessfullySent = true;
+                model.Result = _localizationService.GetResource("Wishlist.EmailAFriend.SuccessfullySent");
 
-                    return View(model);
-                }
+                return View(model);
             }
 
             //If we got this far, something failed, redisplay form

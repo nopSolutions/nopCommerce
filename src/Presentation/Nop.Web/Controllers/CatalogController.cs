@@ -2262,56 +2262,54 @@ namespace Nop.Web.Controllers
             if (product == null || product.Deleted || !product.Published || !product.AllowCustomerReviews)
                 return RedirectToAction("Index", "Home");
 
+            if (_workContext.CurrentCustomer.IsGuest() && !_catalogSettings.AllowAnonymousUsersToReviewProduct)
+            {
+                ModelState.AddModelError("", _localizationService.GetResource("Reviews.OnlyRegisteredUsersCanWriteReviews"));
+            }
+
             if (ModelState.IsValid)
             {
-                if (_workContext.CurrentCustomer.IsGuest() && !_catalogSettings.AllowAnonymousUsersToReviewProduct)
+                //save review
+                int rating = model.AddProductReview.Rating;
+                if (rating < 1 || rating > 5)
+                    rating = _catalogSettings.DefaultProductRatingValue;
+                bool isApproved = !_catalogSettings.ProductReviewsMustBeApproved;
+
+                var productReview = new ProductReview()
                 {
-                    ModelState.AddModelError("", _localizationService.GetResource("Reviews.OnlyRegisteredUsersCanWriteReviews"));
-                }
+                    ProductId = product.Id,
+                    CustomerId = _workContext.CurrentCustomer.Id,
+                    IpAddress = _webHelper.GetCurrentIpAddress(),
+                    Title = model.AddProductReview.Title,
+                    ReviewText = model.AddProductReview.ReviewText,
+                    Rating = rating,
+                    HelpfulYesTotal = 0,
+                    HelpfulNoTotal = 0,
+                    IsApproved = isApproved,
+                    CreatedOnUtc = DateTime.UtcNow,
+                    UpdatedOnUtc = DateTime.UtcNow,
+                };
+                _customerContentService.InsertCustomerContent(productReview);
+
+                //update product totals
+                _productService.UpdateProductReviewTotals(product);
+
+                //notify store owner
+                if (_catalogSettings.NotifyStoreOwnerAboutNewProductReviews)
+                    _workflowMessageService.SendProductReviewNotificationMessage(productReview, _localizationSettings.DefaultAdminLanguageId);
+
+
+                PrepareProductReviewsModel(model, product);
+                model.AddProductReview.Title = null;
+                model.AddProductReview.ReviewText = null;
+
+                model.AddProductReview.SuccessfullyAdded = true;
+                if (!isApproved)
+                    model.AddProductReview.Result = _localizationService.GetResource("Reviews.SeeAfterApproving");
                 else
-                {
-                    //save review
-                    int rating = model.AddProductReview.Rating;
-                    if (rating < 1 || rating > 5)
-                        rating = _catalogSettings.DefaultProductRatingValue;
-                    bool isApproved = !_catalogSettings.ProductReviewsMustBeApproved;
+                    model.AddProductReview.Result = _localizationService.GetResource("Reviews.SuccessfullyAdded");
 
-                    var productReview = new ProductReview()
-                    {
-                        ProductId = product.Id,
-                        CustomerId = _workContext.CurrentCustomer.Id,
-                        IpAddress = _webHelper.GetCurrentIpAddress(),
-                        Title = model.AddProductReview.Title,
-                        ReviewText = model.AddProductReview.ReviewText,
-                        Rating = rating,
-                        HelpfulYesTotal = 0,
-                        HelpfulNoTotal = 0,
-                        IsApproved = isApproved,
-                        CreatedOnUtc = DateTime.UtcNow,
-                        UpdatedOnUtc = DateTime.UtcNow,
-                    };
-                    _customerContentService.InsertCustomerContent(productReview);
-
-                    //update product totals
-                    _productService.UpdateProductReviewTotals(product);
-
-                    //notify store owner
-                    if (_catalogSettings.NotifyStoreOwnerAboutNewProductReviews)
-                        _workflowMessageService.SendProductReviewNotificationMessage(productReview, _localizationSettings.DefaultAdminLanguageId);
-
-
-                    PrepareProductReviewsModel(model, product);
-                    model.AddProductReview.Title = null;
-                    model.AddProductReview.ReviewText = null;
-
-                    model.AddProductReview.SuccessfullyAdded = true;
-                    if (!isApproved)
-                        model.AddProductReview.Result = _localizationService.GetResource("Reviews.SeeAfterApproving");
-                    else
-                        model.AddProductReview.Result = _localizationService.GetResource("Reviews.SuccessfullyAdded");
-
-                    return View(model);
-                }
+                return View(model);
             }
 
             //If we got this far, something failed, redisplay form
@@ -2424,28 +2422,27 @@ namespace Nop.Web.Controllers
                 ModelState.AddModelError("", _localizationService.GetResource("Common.WrongCaptcha"));
             }
 
+            if (_workContext.CurrentCustomer.IsGuest() && !_catalogSettings.AllowAnonymousUsersToEmailAFriend)
+            {
+                ModelState.AddModelError("", _localizationService.GetResource("Products.EmailAFriend.OnlyRegisteredUsers"));
+            }
+
             if (ModelState.IsValid)
             {
-                if (_workContext.CurrentCustomer.IsGuest() && !_catalogSettings.AllowAnonymousUsersToEmailAFriend)
-                {
-                    ModelState.AddModelError("", _localizationService.GetResource("Products.EmailAFriend.OnlyRegisteredUsers"));
-                }
-                else
-                {
-                    //email
-                    _workflowMessageService.SendProductEmailAFriendMessage(_workContext.CurrentCustomer,
-                            _workContext.WorkingLanguage.Id, product,
-                            model.YourEmailAddress, model.FriendEmail, Core.Html.HtmlHelper.FormatText(model.PersonalMessage, false, true, false, false, false, false));
+                //email
+                _workflowMessageService.SendProductEmailAFriendMessage(_workContext.CurrentCustomer,
+                        _workContext.WorkingLanguage.Id, product,
+                        model.YourEmailAddress, model.FriendEmail, 
+                        Core.Html.HtmlHelper.FormatText(model.PersonalMessage, false, true, false, false, false, false));
 
-                    model.ProductId = product.Id;
-                    model.ProductName = product.GetLocalized(x => x.Name);
-                    model.ProductSeName = product.GetSeName();
+                model.ProductId = product.Id;
+                model.ProductName = product.GetLocalized(x => x.Name);
+                model.ProductSeName = product.GetSeName();
 
-                    model.SuccessfullySent = true;
-                    model.Result = _localizationService.GetResource("Products.EmailAFriend.SuccessfullySent");
+                model.SuccessfullySent = true;
+                model.Result = _localizationService.GetResource("Products.EmailAFriend.SuccessfullySent");
 
-                    return View(model);
-                }
+                return View(model);
             }
 
             //If we got this far, something failed, redisplay form

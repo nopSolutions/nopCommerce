@@ -222,37 +222,36 @@ namespace Nop.Web.Controllers
             if (newsItem == null || !newsItem.Published || !newsItem.AllowComments)
                 return RedirectToAction("Index", "Home");
 
+            if (_workContext.CurrentCustomer.IsGuest() && !_newsSettings.AllowNotRegisteredUsersToLeaveComments)
+            {
+                ModelState.AddModelError("", _localizationService.GetResource("News.Comments.OnlyRegisteredUsersLeaveComments"));
+            }
+
             if (ModelState.IsValid)
             {
-                if (_workContext.CurrentCustomer.IsGuest() && !_newsSettings.AllowNotRegisteredUsersToLeaveComments)
+                var comment = new NewsComment()
                 {
-                    ModelState.AddModelError("", _localizationService.GetResource("News.Comments.OnlyRegisteredUsersLeaveComments"));
-                }
-                else
-                {
-                    var comment = new NewsComment()
-                    {
-                        NewsItemId = newsItem.Id,
-                        CustomerId = _workContext.CurrentCustomer.Id,
-                        IpAddress = _webHelper.GetCurrentIpAddress(),
-                        CommentTitle = model.AddNewComment.CommentTitle,
-                        CommentText = model.AddNewComment.CommentText,
-                        IsApproved = true,
-                        CreatedOnUtc = DateTime.UtcNow,
-                        UpdatedOnUtc = DateTime.UtcNow,
-                    };
-                    _customerContentService.InsertCustomerContent(comment);
+                    NewsItemId = newsItem.Id,
+                    CustomerId = _workContext.CurrentCustomer.Id,
+                    IpAddress = _webHelper.GetCurrentIpAddress(),
+                    CommentTitle = model.AddNewComment.CommentTitle,
+                    CommentText = model.AddNewComment.CommentText,
+                    IsApproved = true,
+                    CreatedOnUtc = DateTime.UtcNow,
+                    UpdatedOnUtc = DateTime.UtcNow,
+                };
+                _customerContentService.InsertCustomerContent(comment);
 
-                    //notify store owner
-                    if (_newsSettings.NotifyAboutNewNewsComments)
-                        _workflowMessageService.SendNewsCommentNotificationMessage(comment, _localizationSettings.DefaultAdminLanguageId);
-                    
-                    //The text boxes should be cleared after a comment has been posted
-                    //That' why we reload the page
-                    TempData["nop.news.addcomment.result"] = _localizationService.GetResource("News.Comments.SuccessfullyAdded");
-                    return RedirectToRoute("NewsItem", new { newsItemId = newsItem.Id, SeName = newsItem.GetSeName() });
-                }
+                //notify store owner
+                if (_newsSettings.NotifyAboutNewNewsComments)
+                    _workflowMessageService.SendNewsCommentNotificationMessage(comment, _localizationSettings.DefaultAdminLanguageId);
+
+                //The text boxes should be cleared after a comment has been posted
+                //That' why we reload the page
+                TempData["nop.news.addcomment.result"] = _localizationService.GetResource("News.Comments.SuccessfullyAdded");
+                return RedirectToRoute("NewsItem", new { newsItemId = newsItem.Id, SeName = newsItem.GetSeName() });
             }
+
 
             //If we got this far, something failed, redisplay form
             PrepareNewsItemModel(model, newsItem, true);
