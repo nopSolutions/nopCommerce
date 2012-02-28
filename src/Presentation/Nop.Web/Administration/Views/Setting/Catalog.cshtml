@@ -147,6 +147,15 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ShowProductsFromSubcategories):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ShowProductsFromSubcategories)
+                @Html.ValidationMessageFor(model => model.ShowProductsFromSubcategories)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.NopLabelFor(model => model.ShowCategoryProductNumber):
             </td>
             <td class="adminData">

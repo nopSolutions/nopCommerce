@@ -35,6 +35,11 @@ namespace Nop.Core.Domain.Catalog
         public string DefaultViewMode { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether a category details page should include products from subcategories
+        /// </summary>
+        public bool ShowProductsFromSubcategories { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether number of products should be displayed beside each category
         /// </summary>
         public bool ShowCategoryProductNumber { get; set; }

@@ -19,6 +19,9 @@ namespace Nop.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.AllowProductViewModeChanging")]
         public bool AllowProductViewModeChanging { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ShowProductsFromSubcategories")]
+        public bool ShowProductsFromSubcategories { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ShowCategoryProductNumber")]
         public bool ShowCategoryProductNumber { get; set; }
 

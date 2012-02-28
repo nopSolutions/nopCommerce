@@ -3465,6 +3465,14 @@
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
+                  <LocaleResource Name="ShowProductsFromSubcategories">
+                    <Value>Include products from subcategories</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Check if you want a category details page to include products from subcategories.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
 									<LocaleResource Name="ShowCategoryProductNumber">
 										<Value>Show the number of distinct products besides each category</Value>
 										<Children>

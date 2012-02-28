@@ -357,12 +357,12 @@ namespace Nop.Web.Controllers
                 {
                     model.DisplayNumberOfProducts = true;
                     var categoryIds = new List<int>();
+                    categoryIds.Add(category.Id);
                     if (_catalogSettings.ShowCategoryProductNumberIncludingSubcategories)
                     {
                         //include subcategories
-                        categoryIds = GetChildCategoryIds(category.Id, false);
+                        categoryIds.AddRange(GetChildCategoryIds(category.Id));
                     }
-                    categoryIds.Insert(0, category.Id);
                     model.NumberOfProducts = _productService.SearchProducts(categoryIds,
                         0, null, null, null, 0, string.Empty, false, 0, null,
                         ProductSortingEnum.Position, 0, 1).TotalCount;
@@ -862,6 +862,7 @@ namespace Nop.Web.Controllers
 
 
             //featured products
+            //Question: should we use '_catalogSettings.ShowProductsFromSubcategories' setting for displaying featured products?
             if (!_catalogSettings.IgnoreFeaturedProducts && _categoryService.GetTotalNumberOfFeaturedProducts(categoryId) > 0)
             {
                 //We use the fast GetTotalNumberOfFeaturedProducts before invoking of the slow SearchProducts
@@ -874,9 +875,15 @@ namespace Nop.Web.Controllers
             }
 
 
-
+            var categoryIds = new List<int>();
+            categoryIds.Add(category.Id);
+            if (_catalogSettings.ShowProductsFromSubcategories)
+            {
+                //include subcategories
+                categoryIds.AddRange(GetChildCategoryIds(category.Id));
+            }
             //products
-            var products = _productService.SearchProducts(category.Id, 0, 
+            var products = _productService.SearchProducts(categoryIds, 0, 
                 _catalogSettings.IncludeFeaturedProductsInNormalLists ? null : (bool?)false, 
                 minPriceConverted, maxPriceConverted,
                 0, string.Empty, false, _workContext.WorkingLanguage.Id, selectedSpecs,
@@ -2607,14 +2614,14 @@ namespace Nop.Web.Controllers
                     {
                         //advanced search
                         var categoryId = model.Cid;
-                        if (model.Isc)
-                        {
-                            //include subcategories
-                            categoryIds = GetChildCategoryIds(categoryId, false);
-                        }
                         if (categoryId > 0)
                         {
-                            categoryIds.Insert(0, categoryId);
+                            categoryIds.Add(categoryId);
+                            if (model.Isc)
+                            {
+                                //include subcategories
+                                categoryIds.AddRange(GetChildCategoryIds(categoryId));
+                            }
                         }
 
 

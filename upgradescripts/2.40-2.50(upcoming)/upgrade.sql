@@ -374,6 +374,12 @@ set @resources='
   <LocaleResource Name="Polls.SelectAnswer">
     <Value>Please select an answer</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowProductsFromSubcategories">
+    <Value>Include products from subcategories</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowProductsFromSubcategories.Hint">
+    <Value>Check if you want a category details page to include products from subcategories.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1561,5 +1567,13 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'googleanalyticssettings.
 BEGIN
 	INSERT [Setting] ([Name], [Value])
 	VALUES (N'googleanalyticssettings.ecommercedetailscript', N'_gaq.push([''_addItem'', ''{ORDERID}'', ''{PRODUCTSKU}'', ''{PRODUCTNAME}'', ''{CATEGORYNAME}'', ''{UNITPRICE}'', ''{QUANTITY}'' ]); ')
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.showproductsfromsubcategories')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'catalogsettings.showproductsfromsubcategories', N'false')
 END
 GO
