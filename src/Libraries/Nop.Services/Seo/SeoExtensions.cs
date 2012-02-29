@@ -9,6 +9,7 @@ using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.News;
 using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
+using Nop.Core;
 
 namespace Nop.Services.Seo
 {
@@ -30,11 +31,23 @@ namespace Nop.Services.Seo
         /// <returns>Category SE (search engine) name</returns>
         public static string GetSeName(this Category category)
         {
+            var workContext = EngineContext.Current.Resolve<IWorkContext>();
+            return GetSeName(category, workContext.WorkingLanguage.Id);
+        }
+
+        /// <summary>
+        /// Gets category SE (search engine) name
+        /// </summary>
+        /// <param name="category">Category</param>
+        /// <param name="languageId">Language identifier</param>
+        /// <returns>Category SE (search engine) name</returns>
+        public static string GetSeName(this Category category, int languageId)
+        {
             if (category == null)
                 throw new ArgumentNullException("category");
-            string seName = GetSeName(category.GetLocalized(x => x.SeName));
+            string seName = GetSeName(category.GetLocalized(x => x.SeName, languageId));
             if (String.IsNullOrEmpty(seName))
-                seName = GetSeName(category.GetLocalized(x => x.Name));
+                seName = GetSeName(category.GetLocalized(x => x.Name, languageId));
             return seName;
         }
 
@@ -49,11 +62,23 @@ namespace Nop.Services.Seo
         /// <returns>Manufacturer SE (search engine) name</returns>
         public static string GetSeName(this Manufacturer manufacturer)
         {
+            var workContext = EngineContext.Current.Resolve<IWorkContext>();
+            return GetSeName(manufacturer, workContext.WorkingLanguage.Id);
+        }
+
+        /// <summary>
+        /// Gets manufacturer SE (search engine) name
+        /// </summary>
+        /// <param name="manufacturer">Manufacturer</param>
+        /// <param name="languageId">Language identifier</param>
+        /// <returns>Manufacturer SE (search engine) name</returns>
+        public static string GetSeName(this Manufacturer manufacturer, int languageId)
+        {
             if (manufacturer == null)
                 throw new ArgumentNullException("manufacturer");
-            string seName = GetSeName(manufacturer.GetLocalized(x => x.SeName));
+            string seName = GetSeName(manufacturer.GetLocalized(x => x.SeName, languageId));
             if (String.IsNullOrEmpty(seName))
-                seName = GetSeName(manufacturer.GetLocalized(x => x.Name));
+                seName = GetSeName(manufacturer.GetLocalized(x => x.Name, languageId));
             return seName;
         }
 
@@ -68,11 +93,23 @@ namespace Nop.Services.Seo
         /// <returns>Product SE (search engine) name</returns>
         public static string GetSeName(this Product product)
         {
+            var workContext = EngineContext.Current.Resolve<IWorkContext>();
+            return GetSeName(product, workContext.WorkingLanguage.Id);
+        }
+
+        /// <summary>
+        /// Gets product SE (search engine) name
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="languageId">Language identifier</param>
+        /// <returns>Product SE (search engine) name</returns>
+        public static string GetSeName(this Product product, int languageId)
+        {
             if (product == null)
                 throw new ArgumentNullException("product");
-            string seName = GetSeName(product.GetLocalized(x => x.SeName));
+            string seName = GetSeName(product.GetLocalized(x => x.SeName, languageId));
             if (String.IsNullOrEmpty(seName))
-                seName = GetSeName(product.GetLocalized(x => x.Name));
+                seName = GetSeName(product.GetLocalized(x => x.Name, languageId));
             return seName;
         }
 

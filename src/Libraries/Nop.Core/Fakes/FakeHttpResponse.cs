@@ -5,6 +5,11 @@ namespace Nop.Core.Fakes
 {
     public class FakeHttpResponse : HttpResponseBase
     {
+        private readonly HttpCookieCollection _cookies;
+        public FakeHttpResponse()
+        {
+            this._cookies = new HttpCookieCollection();
+        }
         private readonly StringBuilder _outputString = new StringBuilder();
 
         public string ResponseOutput
@@ -24,6 +29,14 @@ namespace Nop.Core.Fakes
         public override string ApplyAppPathModifier(string virtualPath)
         {
             return virtualPath;
+        }
+
+        public override HttpCookieCollection Cookies
+        {
+            get
+            {
+                return _cookies;
+            }
         }
     }
 }

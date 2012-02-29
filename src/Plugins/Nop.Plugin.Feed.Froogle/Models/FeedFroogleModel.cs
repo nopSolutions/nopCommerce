@@ -34,7 +34,16 @@ namespace Nop.Plugin.Feed.Froogle.Models
         public string FtpPassword { get; set; }
 
         public string GenerateFeedResult { get; set; }
+        public string SaveResult { get; set; }
 
+
+
+        [NopResourceDisplayName("Plugins.Feed.Froogle.TaskEnabled")]
+        public bool TaskEnabled { get; set; }
+        [NopResourceDisplayName("Plugins.Feed.Froogle.GenerateStaticFileEachMinutes")]
+        public int GenerateStaticFileEachMinutes { get; set; }
+        [NopResourceDisplayName("Plugins.Feed.Froogle.StaticFilePath")]
+        public string StaticFilePath { get; set; }
 
         public class GoogleProductModel : BaseNopModel
         {

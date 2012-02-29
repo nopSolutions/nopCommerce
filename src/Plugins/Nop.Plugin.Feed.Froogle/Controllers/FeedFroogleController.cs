@@ -2,8 +2,10 @@
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Web;
 using System.Web.Mvc;
 using Nop.Core;
+using Nop.Core.Domain.Tasks;
 using Nop.Plugin.Feed.Froogle.Domain;
 using Nop.Plugin.Feed.Froogle.Models;
 using Nop.Plugin.Feed.Froogle.Services;
@@ -14,6 +16,7 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.PromotionFeed;
 using Nop.Services.Security;
+using Nop.Services.Tasks;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
 
@@ -29,6 +32,7 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
         private readonly IPromotionFeedService _promotionFeedService;
         private readonly ILogger _logger;
         private readonly IWebHelper _webHelper;
+        private readonly IScheduleTaskService _scheduleTaskService;
         private readonly FroogleSettings _froogleSettings;
         private readonly ISettingService _settingService;
         private readonly IPermissionService _permissionService;
@@ -36,7 +40,7 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
         public FeedFroogleController(IGoogleService googleService, 
             IProductService productService, ICurrencyService currencyService,
             ILocalizationService localizationService, IPromotionFeedService promotionFeedService, 
-            ILogger logger, IWebHelper webHelper,
+            ILogger logger, IWebHelper webHelper, IScheduleTaskService scheduleTaskService, 
             FroogleSettings froogleSettings, ISettingService settingService,
             IPermissionService permissionService)
         {
@@ -47,11 +51,18 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
             this._promotionFeedService = promotionFeedService;
             this._logger = logger;
             this._webHelper = webHelper;
+            this._scheduleTaskService = scheduleTaskService;
             this._froogleSettings = froogleSettings;
             this._settingService = settingService;
             this._permissionService = permissionService;
         }
 
+        [NonAction]
+        private ScheduleTask FindScheduledTask()
+        {
+            return _scheduleTaskService.GetAllTasks().Where(x => x.Type.Equals("Nop.Plugin.Feed.Froogle.StaticFileGenerationTask, Nop.Plugin.Feed.Froogle", StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+        }
+        
         public ActionResult Configure()
         {
             var model = new FeedFroogleModel();
@@ -87,6 +98,17 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
             model.FtpFilename = _froogleSettings.FtpFilename;
             model.FtpUsername = _froogleSettings.FtpUsername;
             model.FtpPassword = _froogleSettings.FtpPassword;
+            
+            //task
+            ScheduleTask task = FindScheduledTask();
+            if (task != null)
+            {
+                model.GenerateStaticFileEachMinutes = task.Seconds / 60;
+                model.TaskEnabled = task.Enabled;
+            }
+            //file path
+            if (System.IO.File.Exists(string.Format("{0}content\\files\\exportimport\\{1}", HttpRuntime.AppDomainAppPath, _froogleSettings.StaticFileName)))
+                model.StaticFilePath = string.Format("{0}content/files/exportimport/{1}", _webHelper.GetStoreLocation(false), _froogleSettings.StaticFileName);
 
             return View("Nop.Plugin.Feed.Froogle.Views.FeedFroogle.Configure", model);
         }
@@ -99,7 +121,8 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
             {
                 return Configure();
             }
-            
+
+            string saveResult = "";
             //save settings
             _froogleSettings.ProductPictureSize = model.ProductPictureSize;
             _froogleSettings.CurrencyId = model.CurrencyId;
@@ -109,6 +132,16 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
             _froogleSettings.FtpUsername = model.FtpUsername;
             _froogleSettings.FtpPassword = model.FtpPassword;
             _settingService.SaveSetting(_froogleSettings);
+
+            // Update the task
+            var task = FindScheduledTask();
+            if (task != null)
+            {
+                task.Enabled = model.TaskEnabled;
+                task.Seconds = model.GenerateStaticFileEachMinutes * 60;
+                _scheduleTaskService.UpdateTask(task);
+                saveResult = _localizationService.GetResource("Plugins.Feed.Froogle.TaskRestart");
+            }
 
             //redisplay the form
             foreach (var c in _currencyService.GetAllCurrencies(false))
@@ -132,6 +165,12 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
                     Value = gc
                 });
             }
+            //file path
+            if (System.IO.File.Exists(string.Format("{0}content\\files\\exportimport\\{1}", HttpRuntime.AppDomainAppPath, _froogleSettings.StaticFileName)))
+                model.StaticFilePath = string.Format("{0}content/files/exportimport/{1}", _webHelper.GetStoreLocation(false), _froogleSettings.StaticFileName);
+
+            //set result text
+            model.SaveResult = saveResult;
             return View("Nop.Plugin.Feed.Froogle.Views.FeedFroogle.Configure", model);
         }
 
@@ -147,15 +186,10 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
 
             try
             {
-                string fileName = string.Format("froogle_{0}_{1}.xml", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
-                string filePath = string.Format("{0}content\\files\\exportimport\\{1}", Request.PhysicalApplicationPath, fileName);
-                using (var fs = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite))
-                {
-                    var feed = _promotionFeedService.LoadPromotionFeedBySystemName("PromotionFeed.Froogle");
-                    feed.GenerateFeed(fs);
-                }
+                var feed = _promotionFeedService.LoadPromotionFeedBySystemName("PromotionFeed.Froogle") as FroogleService;
+                feed.GenerateStaticFile();
 
-                string clickhereStr = string.Format("<a href=\"{0}content/files/exportimport/{1}\" target=\"_blank\">{2}</a>", _webHelper.GetStoreLocation(false), fileName, _localizationService.GetResource("Plugins.Feed.Froogle.ClickHere"));
+                string clickhereStr = string.Format("<a href=\"{0}content/files/exportimport/{1}\" target=\"_blank\">{2}</a>", _webHelper.GetStoreLocation(false), _froogleSettings.StaticFileName, _localizationService.GetResource("Plugins.Feed.Froogle.ClickHere"));
                 string result = string.Format(_localizationService.GetResource("Plugins.Feed.Froogle.SuccessResult"), clickhereStr);
                 model.GenerateFeedResult = result;
             }
@@ -187,6 +221,19 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
                     Value = gc
                 });
             }
+
+            //task
+            ScheduleTask task = FindScheduledTask();
+            if (task != null)
+            {
+                model.GenerateStaticFileEachMinutes = task.Seconds / 60;
+                model.TaskEnabled = task.Enabled;
+            }
+
+            //file path
+            if (System.IO.File.Exists(string.Format("{0}content\\files\\exportimport\\{1}", HttpRuntime.AppDomainAppPath, _froogleSettings.StaticFileName)))
+                model.StaticFilePath = string.Format("{0}content/files/exportimport/{1}", _webHelper.GetStoreLocation(false), _froogleSettings.StaticFileName);
+
             return View("Nop.Plugin.Feed.Froogle.Views.FeedFroogle.Configure", model);
         }
 
@@ -202,7 +249,7 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
             try
             {
                 string uri = String.Format("{0}/{1}", _froogleSettings.FtpHostname, _froogleSettings.FtpFilename);
-                FtpWebRequest req = WebRequest.Create(uri) as FtpWebRequest;
+                var req = WebRequest.Create(uri) as FtpWebRequest;
                 req.Credentials = new NetworkCredential(_froogleSettings.FtpUsername, _froogleSettings.FtpPassword);
                 req.KeepAlive = true;
                 req.UseBinary = true;
@@ -245,6 +292,20 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
                     Value = gc
                 });
             }
+
+            //task
+            ScheduleTask task = FindScheduledTask();
+            if (task != null)
+            {
+                model.GenerateStaticFileEachMinutes = task.Seconds / 60;
+                model.TaskEnabled = task.Enabled;
+            }
+
+            //file path
+            if (System.IO.File.Exists(string.Format("{0}content\\files\\exportimport\\{1}", HttpRuntime.AppDomainAppPath, _froogleSettings.StaticFileName)))
+                model.StaticFilePath = string.Format("{0}content/files/exportimport/{1}", _webHelper.GetStoreLocation(false), _froogleSettings.StaticFileName);
+
+
             return View("Nop.Plugin.Feed.Froogle.Views.FeedFroogle.Configure", model);
         }
 

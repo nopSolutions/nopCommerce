@@ -380,6 +380,27 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowProductsFromSubcategories.Hint">
     <Value>Check if you want a category details page to include products from subcategories.</Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Feed.Froogle.TaskEnabled">
+    <Value>Automatically generate a file</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Feed.Froogle.TaskEnabled.Hint">
+    <Value>Check if you want a file to be automatically generated.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Feed.Froogle.GenerateStaticFileEachMinutes">
+    <Value>A task period (minutes)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Feed.Froogle.GenerateStaticFileEachMinutes.Hint">
+    <Value>Specify a task period in minutes (generation of a new Froogle file).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Feed.Froogle.TaskRestart">
+    <Value>If a task settings (''Automatically generate a file'') have been changed, please restart the application</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Feed.Froogle.StaticFilePath">
+    <Value>Generated file path</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Feed.Froogle.StaticFilePath.Hint">
+    <Value>A file path of the generated Froogle file.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1575,5 +1596,23 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.showprod
 BEGIN
 	INSERT [Setting] ([Name], [Value])
 	VALUES (N'catalogsettings.showproductsfromsubcategories', N'false')
+END
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'frooglesettings.staticfilename')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'frooglesettings.staticfilename', N'froogle_' + CAST(CAST(RAND() * 1000000000 AS INT) AS NVARCHAR) + N'.xml')
+END
+GO
+--'Froogle static file generation' schedule task (disabled by default)
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[ScheduleTask]
+		WHERE [Name] = N'Froogle static file generation')
+BEGIN
+	INSERT [dbo].[ScheduleTask] ([Name], [Seconds], [Type], [Enabled], [StopOnError])
+	VALUES (N'Froogle static file generation', 3600, N'Nop.Plugin.Feed.Froogle.StaticFileGenerationTask, Nop.Plugin.Feed.Froogle', 0, 0)
 END
 GO

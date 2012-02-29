@@ -1,4 +1,5 @@
 ﻿
+using System;
 using Nop.Core.Configuration;
 
 namespace Nop.Plugin.Feed.Froogle
@@ -15,5 +16,10 @@ namespace Nop.Plugin.Feed.Froogle
         public string FtpFilename { get; set; }
         public string FtpUsername { get; set; }
         public string FtpPassword { get; set; }
+
+        /// <summary>
+        /// Static Froogle file name
+        /// </summary>
+        public string StaticFileName { get; set; }
     }
 }

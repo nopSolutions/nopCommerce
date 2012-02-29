@@ -12,6 +12,7 @@ using Nop.Core.Domain;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Media;
+using Nop.Core.Domain.Tasks;
 using Nop.Core.Plugins;
 using Nop.Plugin.Feed.Froogle.Data;
 using Nop.Plugin.Feed.Froogle.Services;
@@ -22,6 +23,7 @@ using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.PromotionFeed;
 using Nop.Services.Seo;
+using Nop.Services.Tasks;
 
 namespace Nop.Plugin.Feed.Froogle
 {
@@ -29,6 +31,7 @@ namespace Nop.Plugin.Feed.Froogle
     {
         #region Fields
 
+        private readonly IScheduleTaskService _scheduleTaskService;
         private readonly IGoogleService _googleService;
         private readonly IProductService _productService;
         private readonly ICategoryService _categoryService;
@@ -37,6 +40,7 @@ namespace Nop.Plugin.Feed.Froogle
         private readonly ICurrencyService _currencyService;
         private readonly IWebHelper _webHelper;
         private readonly ISettingService _settingService;
+        private readonly IWorkContext _workContext;
         private readonly StoreInformationSettings _storeInformationSettings;
         private readonly FroogleSettings _froogleSettings;
         private readonly CurrencySettings _currencySettings;
@@ -45,18 +49,22 @@ namespace Nop.Plugin.Feed.Froogle
         #endregion
 
         #region Ctor
-        public FroogleService(IGoogleService googleService,
+        public FroogleService(IScheduleTaskService scheduleTaskService,
+            IGoogleService googleService,
             IProductService productService,
             ICategoryService categoryService,
             IManufacturerService manufacturerService,
             IPictureService pictureService,
             ICurrencyService currencyService,
-            IWebHelper webHelper, ISettingService settingService,
+            IWebHelper webHelper,
+            ISettingService settingService,
+            IWorkContext workContext,
             StoreInformationSettings storeInformationSettings,
             FroogleSettings froogleSettings,
             CurrencySettings currencySettings,
             GoogleProductObjectContext objectContext)
         {
+            this._scheduleTaskService = scheduleTaskService;
             this._googleService = googleService;
             this._productService = productService;
             this._categoryService = categoryService;
@@ -65,6 +73,7 @@ namespace Nop.Plugin.Feed.Froogle
             this._currencyService = currencyService;
             this._webHelper = webHelper;
             this._settingService = settingService;
+            this._workContext = workContext;
             this._storeInformationSettings = storeInformationSettings;
             this._froogleSettings = froogleSettings;
             this._currencySettings = currencySettings;
@@ -99,6 +108,11 @@ namespace Nop.Plugin.Feed.Froogle
             }
             breadCrumb.Reverse();
             return breadCrumb;
+        }
+
+        private ScheduleTask FindScheduledTask()
+        {
+            return _scheduleTaskService.GetAllTasks().Where(x => x.Type.Equals("Nop.Plugin.Feed.Froogle.StaticFileGenerationTask, Nop.Plugin.Feed.Froogle", StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
         }
 
         #endregion
@@ -217,7 +231,7 @@ namespace Nop.Plugin.Feed.Froogle
 
                         //link [link] - URL directly linking to your item's page on your website
                         var productUrl = string.Format("{0}p/{1}/{2}", _webHelper.GetStoreLocation(false), product.Id,
-                                                       product.GetSeName());
+                                                       product.GetSeName(_workContext.WorkingLanguage.Id));
                         writer.WriteElementString("link", productUrl);
 
                         //image link [image_link] - URL of an image of the item
@@ -348,7 +362,8 @@ namespace Nop.Plugin.Feed.Froogle
             var settings = new FroogleSettings()
             {
                 ProductPictureSize = 125,
-                FtpHostname = "ftp://uploads.google.com"
+                FtpHostname = "ftp://uploads.google.com",
+                StaticFileName = string.Format("froogle_{0}.xml", CommonHelper.GenerateRandomDigitCode(10)),
             };
             _settingService.SaveSetting(settings);
             
@@ -379,6 +394,29 @@ namespace Nop.Plugin.Feed.Froogle
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Products.GoogleCategory", "Google Category");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.SuccessResult", "Froogle feed has been successfully generated. {0} to see generated feed");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Upload", "Upload feed to Google FTP server");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.TaskEnabled", "Automatically generate a file");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.TaskEnabled.Hint", "Check if you want a file to be automatically generated.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.GenerateStaticFileEachMinutes", "A task period (minutes)");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.GenerateStaticFileEachMinutes.Hint", "Specify a task period in minutes (generation of a new Froogle file).");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.TaskRestart", "If a task settings ('Automatically generate a file') have been changed, please restart the application");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.StaticFilePath", "Generated file path");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.StaticFilePath.Hint", "A file path of the generated Froogle file.");
+
+            //install a schedule task
+            var task = FindScheduledTask();
+            if (task == null)
+            {
+                task = new ScheduleTask
+                {
+                    Name = "Froogle static file generation",
+                    //each 60 minutes
+                    Seconds = 3600,
+                    Type = "Nop.Plugin.Feed.Froogle.StaticFileGenerationTask, Nop.Plugin.Feed.Froogle",
+                    Enabled = false,
+                    StopOnError = false,
+                };
+                _scheduleTaskService.InsertTask(task);
+            }
 
             base.Install();
         }
@@ -415,8 +453,33 @@ namespace Nop.Plugin.Feed.Froogle
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Products.GoogleCategory");
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.SuccessResult");
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Upload");
+            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.TaskEnabled");
+            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.TaskEnabled.Hint");
+            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.GenerateStaticFileEachMinutes");
+            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.GenerateStaticFileEachMinutes.Hint");
+            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.TaskRestart");
+            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.StaticFilePath");
+            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.StaticFilePath.Hint");
+
+
+            //Remove scheduled task
+            var task = FindScheduledTask();
+            if (task != null)
+                _scheduleTaskService.DeleteTask(task);
 
             base.Uninstall();
+        }
+        
+        /// <summary>
+        /// Generate a static file for froogle
+        /// </summary>
+        public virtual void GenerateStaticFile()
+        {
+            string filePath = string.Format("{0}content\\files\\exportimport\\{1}", HttpRuntime.AppDomainAppPath, _froogleSettings.StaticFileName);
+            using (var fs = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite))
+            {
+                GenerateFeed(fs);
+            }
         }
 
         #endregion

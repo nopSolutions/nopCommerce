@@ -133,5 +133,13 @@ namespace Nop.Core.Fakes
         {
             get { return false; }
         }
+
+        public override bool IsAuthenticated
+        {
+            get
+            {
+                return false;
+            }
+        }
     }
 }
