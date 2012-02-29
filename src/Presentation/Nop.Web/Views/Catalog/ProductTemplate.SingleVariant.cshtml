@@ -150,7 +150,7 @@
                 </div>
                 @{
                     var dataDictGiftCard = new ViewDataDictionary();
-                    dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = string.Format("giftcard_{0}", Model.Id);
+                    dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = string.Format("giftcard_{0}", defaultProductVariant.Id);
                     @Html.Partial("_GiftCardInfo", defaultProductVariant.GiftCard, dataDictGiftCard)
                 }
             </div>
