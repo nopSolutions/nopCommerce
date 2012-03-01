@@ -4,12 +4,14 @@ using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Catalog;
 using Nop.Services.Localization;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.UI.Paging;
+using Nop.Web.Infrastructure.Cache;
 
 namespace Nop.Web.Models.Catalog
 {
@@ -289,25 +291,31 @@ namespace Nop.Web.Models.Catalog
                 return result;
             }
 
-            protected virtual IList<SpecificationAttributeOptionFilter> GetNotFilteredSpecs(int categoryId, 
-                ISpecificationAttributeService specificationAttributeService, IWebHelper webHelper, IWorkContext workContext)
+            protected virtual IList<SpecificationAttributeOptionFilter> GetNotFilteredSpecs(int categoryId,
+                IList<SpecificationAttributeOptionFilter> alreadyFilteredOptions,
+                ISpecificationAttributeService specificationAttributeService,
+                IWebHelper webHelper,
+                IWorkContext workContext,
+                ICacheManager cacheManager)
             {
-                //get all
-                var result = specificationAttributeService.GetSpecificationAttributeOptionFilter(categoryId, workContext);
-
-                //remove already filtered
-                var alreadyFilteredOptions = GetAlreadyFilteredSpecs(specificationAttributeService, webHelper, workContext);
-                foreach (var saof1 in alreadyFilteredOptions)
+                //get all specification filters 
+                //and cache them
+                var filterCacheKey = string.Format(ModelCacheEventConsumer.SPEC_ATTR_OPTION_FILTERS_KEY, categoryId, workContext.WorkingLanguage.Id);
+                var allFilters = cacheManager.Get(filterCacheKey, () => specificationAttributeService.GetSpecificationAttributeOptionFilter(categoryId, workContext));
+                
+                var notFilteredSpecs = new List<SpecificationAttributeOptionFilter>();
+                foreach (var saof in allFilters)
                 {
-                    var query = from s in result
-                                where s.SpecificationAttributeId == saof1.SpecificationAttributeId
-                                select s;
+                    //do not add already filtered specification options
+                    if (alreadyFilteredOptions
+                        .Where(x => x.SpecificationAttributeId == saof.SpecificationAttributeId)
+                        .FirstOrDefault() != null)
+                        continue;
 
-                    var toRemove = query.ToList();
-                    foreach (var saof2 in toRemove)
-                        result.Remove(saof2);
+                    //else add it
+                    notFilteredSpecs.Add(saof);
                 }
-                return result;
+                return notFilteredSpecs;
             }
 
             protected virtual string GenerateFilteredSpecQueryParam(IList<int> optionIds)
@@ -349,15 +357,17 @@ namespace Nop.Web.Models.Catalog
             }
 
             public virtual void LoadSpecsFilters(Category category, 
-                ISpecificationAttributeService specificationAttributeService, IWebHelper webHelper, 
-                IWorkContext workContext)
+                ISpecificationAttributeService specificationAttributeService, 
+                IWebHelper webHelper,
+                IWorkContext workContext,
+                ICacheManager cacheManager)
             {
                 if (category == null)
                     throw new ArgumentNullException("category");
 
                 var alreadyFilteredOptions = GetAlreadyFilteredSpecs(specificationAttributeService, webHelper, workContext);
-                var notFilteredOptions = GetNotFilteredSpecs(category.Id, 
-                    specificationAttributeService, webHelper, workContext);
+                var notFilteredOptions = GetNotFilteredSpecs(category.Id, alreadyFilteredOptions,
+                    specificationAttributeService, webHelper, workContext, cacheManager);
 
                 if (alreadyFilteredOptions.Count > 0 || notFilteredOptions.Count > 0)
                 {

@@ -172,13 +172,23 @@ namespace Nop.Web.Infrastructure.Cache
         public const string MANUFACTURER_TEMPLATE_PATTERN_KEY = "nop.pres.manufacturertemplate";
 
         /// <summary>
-        /// Key for MProductTemplate caching
+        /// Key for ProductTemplate caching
         /// </summary>
         /// <remarks>
         /// {0} : product template id
         /// </remarks>
         public const string PRODUCT_TEMPLATE_MODEL_KEY = "nop.pres.producttemplate-{0}";
         public const string PRODUCT_TEMPLATE_PATTERN_KEY = "nop.pres.producttemplate";
+
+        /// <summary>
+        /// Key for SpecificationAttributeOptionFilter caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : category id
+        /// {1} : language id
+        /// </remarks>
+        public const string SPEC_ATTR_OPTION_FILTERS_KEY = "nop.pres.specattributeoptionfilters-{0}-{1}";
+        public const string SPEC_ATTR_OPTION_FILTERS_PATTERN_KEY = "nop.pres.specattributeoptionfilters";
 
         private readonly ICacheManager _cacheManager;
         
@@ -288,44 +298,53 @@ namespace Nop.Web.Infrastructure.Cache
         {
             _cacheManager.RemoveByPattern(PRODUCT_BREADCRUMB_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_NAVIGATION_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(SPEC_ATTR_OPTION_FILTERS_PATTERN_KEY);
         }
         public void HandleEvent(EntityUpdated<ProductCategory> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_BREADCRUMB_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_NAVIGATION_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(SPEC_ATTR_OPTION_FILTERS_PATTERN_KEY);
         }
         public void HandleEvent(EntityDeleted<ProductCategory> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_BREADCRUMB_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_NAVIGATION_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(SPEC_ATTR_OPTION_FILTERS_PATTERN_KEY);
         }
 
         //products
         public void HandleEvent(EntityInserted<Product> eventMessage)
         {
             _cacheManager.RemoveByPattern(CATEGORY_NAVIGATION_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(SPEC_ATTR_OPTION_FILTERS_PATTERN_KEY);
         }
         public void HandleEvent(EntityUpdated<Product> eventMessage)
         {
             _cacheManager.RemoveByPattern(CATEGORY_NAVIGATION_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(SPEC_ATTR_OPTION_FILTERS_PATTERN_KEY);
         }
         public void HandleEvent(EntityDeleted<Product> eventMessage)
         {
             _cacheManager.RemoveByPattern(CATEGORY_NAVIGATION_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(SPEC_ATTR_OPTION_FILTERS_PATTERN_KEY);
         }
 
         //product variants
         public void HandleEvent(EntityInserted<ProductVariant> eventMessage)
         {
             _cacheManager.RemoveByPattern(CATEGORY_NAVIGATION_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(SPEC_ATTR_OPTION_FILTERS_PATTERN_KEY);
         }
         public void HandleEvent(EntityUpdated<ProductVariant> eventMessage)
         {
             _cacheManager.RemoveByPattern(CATEGORY_NAVIGATION_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(SPEC_ATTR_OPTION_FILTERS_PATTERN_KEY);
         }
         public void HandleEvent(EntityDeleted<ProductVariant> eventMessage)
         {
             _cacheManager.RemoveByPattern(CATEGORY_NAVIGATION_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(SPEC_ATTR_OPTION_FILTERS_PATTERN_KEY);
         }
 
         //product tags
@@ -352,10 +371,12 @@ namespace Nop.Web.Infrastructure.Cache
         public void HandleEvent(EntityUpdated<SpecificationAttribute> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_SPECS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(SPEC_ATTR_OPTION_FILTERS_PATTERN_KEY);
         }
         public void HandleEvent(EntityDeleted<SpecificationAttribute> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_SPECS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(SPEC_ATTR_OPTION_FILTERS_PATTERN_KEY);
         }
         
         //specification attribute options
@@ -365,24 +386,29 @@ namespace Nop.Web.Infrastructure.Cache
         public void HandleEvent(EntityUpdated<SpecificationAttributeOption> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_SPECS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(SPEC_ATTR_OPTION_FILTERS_PATTERN_KEY);
         }
         public void HandleEvent(EntityDeleted<SpecificationAttributeOption> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_SPECS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(SPEC_ATTR_OPTION_FILTERS_PATTERN_KEY);
         }
         
         //Product specification attribute
         public void HandleEvent(EntityInserted<ProductSpecificationAttribute> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_SPECS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(SPEC_ATTR_OPTION_FILTERS_PATTERN_KEY);
         }
         public void HandleEvent(EntityUpdated<ProductSpecificationAttribute> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_SPECS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(SPEC_ATTR_OPTION_FILTERS_PATTERN_KEY);
         }
         public void HandleEvent(EntityDeleted<ProductSpecificationAttribute> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_SPECS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(SPEC_ATTR_OPTION_FILTERS_PATTERN_KEY);
         }
 
         //Topics
