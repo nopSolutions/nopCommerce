@@ -396,10 +396,10 @@ set @resources='
     <Value>If a task settings (''Automatically generate a file'') have been changed, please restart the application</Value>
   </LocaleResource>
   <LocaleResource Name="Plugins.Feed.Froogle.StaticFilePath">
-    <Value>Generated file path</Value>
+    <Value>Generated file path (static)</Value>
   </LocaleResource>
   <LocaleResource Name="Plugins.Feed.Froogle.StaticFilePath.Hint">
-    <Value>A file path of the generated Froogle file.</Value>
+    <Value>A file path of the generated Froogle file. It''s static for your store and can be shared with the Froogle service.</Value>
   </LocaleResource>
 </Language>
 '
