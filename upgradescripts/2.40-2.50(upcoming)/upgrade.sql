@@ -1616,3 +1616,26 @@ BEGIN
 	VALUES (N'Froogle static file generation', 3600, N'Nop.Plugin.Feed.Froogle.StaticFileGenerationTask, Nop.Plugin.Feed.Froogle', 0, 0)
 END
 GO
+
+
+--more SQL indexes
+IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_PSAM_AllowFiltering' and id=object_id(N'[dbo].[Product_SpecificationAttribute_Mapping]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_PSAM_AllowFiltering] ON [dbo].[Product_SpecificationAttribute_Mapping] 
+	(
+		[AllowFiltering] ASC
+	)
+	INCLUDE ([ProductId],[SpecificationAttributeOptionId])
+END
+GO
+
+IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_PSAM_SpecificationAttributeOptionId_AllowFiltering' and id=object_id(N'[dbo].[Product_SpecificationAttribute_Mapping]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_PSAM_SpecificationAttributeOptionId_AllowFiltering] ON [dbo].[Product_SpecificationAttribute_Mapping] 
+	(
+		[SpecificationAttributeOptionId] ASC,
+		[AllowFiltering] ASC
+	)
+	INCLUDE ([ProductId])
+END
+GO
