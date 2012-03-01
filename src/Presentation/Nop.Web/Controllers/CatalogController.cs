@@ -850,10 +850,22 @@ namespace Nop.Web.Controllers
                         Name = subCatName,
                         SeName = x.GetSeName(),
                     };
-                    subCatModel.PictureModel.FullSizeImageUrl = _pictureService.GetPictureUrl(x.PictureId);
-                    subCatModel.PictureModel.ImageUrl = _pictureService.GetPictureUrl(x.PictureId, _mediaSetting.CategoryThumbPictureSize, true);
-                    subCatModel.PictureModel.Title = string.Format(_localizationService.GetResource("Media.Category.ImageLinkTitleFormat"), subCatName);
-                    subCatModel.PictureModel.AlternateText = string.Format(_localizationService.GetResource("Media.Category.ImageAlternateTextFormat"), subCatName);
+
+                    //prepare picture model
+                    int pictureSize = _mediaSetting.CategoryThumbPictureSize;
+                    var categoryPictureCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_PICTURE_MODEL_KEY, x.Id, pictureSize, true, _workContext.WorkingLanguage.Id);
+                    subCatModel.PictureModel = _cacheManager.Get(categoryPictureCacheKey, () =>
+                    {
+                        var pictureModel = new PictureModel()
+                        {
+                            FullSizeImageUrl = _pictureService.GetPictureUrl(x.PictureId),
+                            ImageUrl = _pictureService.GetPictureUrl(x.PictureId, pictureSize),
+                            Title = string.Format(_localizationService.GetResource("Media.Category.ImageLinkTitleFormat"), subCatName),
+                            AlternateText = string.Format(_localizationService.GetResource("Media.Category.ImageAlternateTextFormat"), subCatName)
+                        };
+                        return pictureModel;
+                    });
+
                     return subCatModel;
                 })
                 .ToList();
@@ -937,9 +949,22 @@ namespace Nop.Web.Controllers
                 .Select(x =>
                 {
                     var catModel = x.ToModel();
-                    catModel.PictureModel.ImageUrl = _pictureService.GetPictureUrl(x.PictureId, _mediaSetting.CategoryThumbPictureSize, true);
-                    catModel.PictureModel.Title = string.Format(_localizationService.GetResource("Media.Category.ImageLinkTitleFormat"), catModel.Name);
-                    catModel.PictureModel.AlternateText = string.Format(_localizationService.GetResource("Media.Category.ImageAlternateTextFormat"), catModel.Name);
+
+                    //prepare picture model
+                    int pictureSize = _mediaSetting.CategoryThumbPictureSize;
+                    var categoryPictureCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_PICTURE_MODEL_KEY, x.Id, pictureSize, true, _workContext.WorkingLanguage.Id);
+                    catModel.PictureModel = _cacheManager.Get(categoryPictureCacheKey, () =>
+                    {
+                        var pictureModel = new PictureModel()
+                        {
+                            FullSizeImageUrl = _pictureService.GetPictureUrl(x.PictureId),
+                            ImageUrl = _pictureService.GetPictureUrl(x.PictureId, pictureSize),
+                            Title = string.Format(_localizationService.GetResource("Media.Category.ImageLinkTitleFormat"), catModel.Name),
+                            AlternateText = string.Format(_localizationService.GetResource("Media.Category.ImageAlternateTextFormat"), catModel.Name)
+                        };
+                        return pictureModel;
+                    });
+
                     return catModel;
                 })
                 .ToList();
@@ -1139,10 +1164,21 @@ namespace Nop.Web.Controllers
             foreach (var manufacturer in manufacturers)
             {
                 var modelMan = manufacturer.ToModel();
-                modelMan.PictureModel.FullSizeImageUrl = _pictureService.GetPictureUrl(manufacturer.PictureId);
-                modelMan.PictureModel.ImageUrl = _pictureService.GetPictureUrl(manufacturer.PictureId, _mediaSetting.ManufacturerThumbPictureSize, true);
-                modelMan.PictureModel.Title = string.Format(_localizationService.GetResource("Media.Manufacturer.ImageLinkTitleFormat"), modelMan.Name);
-                modelMan.PictureModel.AlternateText = string.Format(_localizationService.GetResource("Media.Manufacturer.ImageAlternateTextFormat"), modelMan.Name);
+                
+                //prepare picture model
+                int pictureSize = _mediaSetting.ManufacturerThumbPictureSize;
+                var manufacturerPictureCacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURER_PICTURE_MODEL_KEY, manufacturer.Id, pictureSize, true, _workContext.WorkingLanguage.Id);
+                modelMan.PictureModel = _cacheManager.Get(manufacturerPictureCacheKey, () =>
+                {
+                    var pictureModel = new PictureModel()
+                    {
+                        FullSizeImageUrl = _pictureService.GetPictureUrl(manufacturer.PictureId),
+                        ImageUrl = _pictureService.GetPictureUrl(manufacturer.PictureId, pictureSize),
+                        Title = string.Format(_localizationService.GetResource("Media.Manufacturer.ImageLinkTitleFormat"), modelMan.Name),
+                        AlternateText = string.Format(_localizationService.GetResource("Media.Manufacturer.ImageAlternateTextFormat"), modelMan.Name)
+                    };
+                    return pictureModel;
+                });
                 model.Add(modelMan);
             }
 
@@ -1685,10 +1721,6 @@ namespace Nop.Web.Controllers
                     .Select(x =>
                     {
                         var m = x.Manufacturer.ToModel();
-                        //UNCOMMENT if you need picture model in ProductManufacturers method
-                        //m.PictureModel.ImageUrl = _pictureService.GetPictureUrl(x.Manufacturer.PictureId, _mediaSetting.ManufacturerThumbPictureSize, true);
-                        //m.PictureModel.Title = string.Format(_localizationService.GetResource("Media.Manufacturer.ImageLinkTitleFormat"), m.Name);
-                        //m.PictureModel.AlternateText = string.Format(_localizationService.GetResource("Media.Manufacturer.ImageAlternateTextFormat"), m.Name);
                         return m;
                     })
                     .ToList();
