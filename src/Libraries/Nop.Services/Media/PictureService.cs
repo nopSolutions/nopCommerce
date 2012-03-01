@@ -9,6 +9,7 @@ using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Media;
+using Nop.Core.Events;
 using Nop.Services.Configuration;
 
 namespace Nop.Services.Media
@@ -26,6 +27,7 @@ namespace Nop.Services.Media
         private readonly IRepository<ProductPicture> _productPictureRepository;
         private readonly ISettingService _settingService;
         private readonly IWebHelper _webHelper;
+        private readonly IEventPublisher _eventPublisher;
         private readonly MediaSettings _mediaSettings;
 
         #endregion
@@ -39,16 +41,19 @@ namespace Nop.Services.Media
         /// <param name="productPictureRepository">Product picture repository</param>
         /// <param name="settingService">Setting service</param>
         /// <param name="webHelper">Web helper</param>
+        /// <param name="eventPublisher">Event publisher</param>
         /// <param name="mediaSettings">Media settings</param>
         public PictureService(IRepository<Picture> pictureRepository,
             IRepository<ProductPicture> productPictureRepository,
             ISettingService settingService, IWebHelper webHelper,
+            IEventPublisher eventPublisher,
             MediaSettings mediaSettings)
         {
             this._pictureRepository = pictureRepository;
             this._productPictureRepository = productPictureRepository;
             this._settingService = settingService;
             this._webHelper = webHelper;
+            this._eventPublisher = eventPublisher;
             this._mediaSettings = mediaSettings;
         }
 
@@ -482,6 +487,9 @@ namespace Nop.Services.Media
 
             //delete from database
             _pictureRepository.Delete(picture);
+
+            //event notification
+            _eventPublisher.EntityDeleted(picture);
         }
 
         /// <summary>
@@ -606,6 +614,10 @@ namespace Nop.Services.Media
 
             if(!this.StoreInDb)
                 SavePictureInFile(picture.Id, pictureBinary, mimeType);
+            
+            //event notification
+            _eventPublisher.EntityInserted(picture);
+
             return picture;
         }
 
@@ -644,6 +656,10 @@ namespace Nop.Services.Media
 
             if(!this.StoreInDb)
                 SavePictureInFile(picture.Id, pictureBinary, mimeType);
+
+            //event notification
+            _eventPublisher.EntityUpdated(picture);
+
             return picture;
         }
 

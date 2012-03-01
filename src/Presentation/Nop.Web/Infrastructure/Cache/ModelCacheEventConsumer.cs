@@ -5,6 +5,7 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Topics;
 using Nop.Core.Events;
 using Nop.Core.Infrastructure;
+using Nop.Core.Domain.Media;
 
 namespace Nop.Web.Infrastructure.Cache
 {
@@ -75,7 +76,15 @@ namespace Nop.Web.Infrastructure.Cache
         //Product templates
         IConsumer<EntityInserted<ProductTemplate>>,
         IConsumer<EntityUpdated<ProductTemplate>>,
-        IConsumer<EntityDeleted<ProductTemplate>>
+        IConsumer<EntityDeleted<ProductTemplate>>,
+        //Pictures
+        IConsumer<EntityInserted<Picture>>,
+        IConsumer<EntityUpdated<Picture>>,
+        IConsumer<EntityDeleted<Picture>>,
+        //Product picture mapping
+        IConsumer<EntityInserted<ProductPicture>>,
+        IConsumer<EntityUpdated<ProductPicture>>,
+        IConsumer<EntityDeleted<ProductPicture>>
     {
         /// <summary>
         /// Key for ManufacturerNavigationModel caching
@@ -189,6 +198,18 @@ namespace Nop.Web.Infrastructure.Cache
         /// </remarks>
         public const string SPEC_ATTR_OPTION_FILTERS_KEY = "nop.pres.specattributeoptionfilters-{0}-{1}";
         public const string SPEC_ATTR_OPTION_FILTERS_PATTERN_KEY = "nop.pres.specattributeoptionfilters";
+
+        /// <summary>
+        /// Key for DefaultProductPicture caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : product id
+        /// {1} : picture size
+        /// {2} : value indicating whether a default picture is displayed in case if no real picture exists
+        /// {3} : language ID ("alt" and "title" can depend on localized product name)
+        /// </remarks>
+        public const string PRODUCT_DEFAULTPICTURE_MODEL_KEY = "nop.pres.product.picture-{0}-{1}-{2}-{3}";
+        public const string PRODUCT_DEFAULTPICTURE_PATTERN_KEY = "nop.pres.product.picture";
 
         private readonly ICacheManager _cacheManager;
         
@@ -323,11 +344,13 @@ namespace Nop.Web.Infrastructure.Cache
         {
             _cacheManager.RemoveByPattern(CATEGORY_NAVIGATION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SPEC_ATTR_OPTION_FILTERS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(PRODUCT_DEFAULTPICTURE_PATTERN_KEY);
         }
         public void HandleEvent(EntityDeleted<Product> eventMessage)
         {
             _cacheManager.RemoveByPattern(CATEGORY_NAVIGATION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(SPEC_ATTR_OPTION_FILTERS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(PRODUCT_DEFAULTPICTURE_PATTERN_KEY);
         }
 
         //product variants
@@ -464,6 +487,34 @@ namespace Nop.Web.Infrastructure.Cache
         public void HandleEvent(EntityDeleted<ProductTemplate> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_TEMPLATE_PATTERN_KEY);
+        }
+
+        //Pictures
+        public void HandleEvent(EntityInserted<Picture> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(PRODUCT_DEFAULTPICTURE_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityUpdated<Picture> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(PRODUCT_DEFAULTPICTURE_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityDeleted<Picture> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(PRODUCT_DEFAULTPICTURE_PATTERN_KEY);
+        }
+
+        //Product picture mappings
+        public void HandleEvent(EntityInserted<ProductPicture> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(PRODUCT_DEFAULTPICTURE_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityUpdated<ProductPicture> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(PRODUCT_DEFAULTPICTURE_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityDeleted<ProductPicture> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(PRODUCT_DEFAULTPICTURE_PATTERN_KEY);
         }
     }
 }

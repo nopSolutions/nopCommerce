@@ -321,19 +321,20 @@ namespace Nop.Web.Controllers
             {
                 //If a size has been set in the view, we use it in priority
                 int pictureSize = productThumbPictureSize.HasValue ? productThumbPictureSize.Value : _mediaSetting.ProductThumbPictureSize;
-                var picture = product.GetDefaultProductPicture(_pictureService);
-                if (picture != null)
+                //prepare picture model
+                var defaultProductPictureCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_DEFAULTPICTURE_MODEL_KEY, product.Id, pictureSize, true, _workContext.WorkingLanguage.Id);
+                model.DefaultPictureModel = _cacheManager.Get(defaultProductPictureCacheKey, () =>
                 {
-                    model.DefaultPictureModel.ImageUrl = _pictureService.GetPictureUrl(picture, pictureSize, true);
-                    model.DefaultPictureModel.FullSizeImageUrl = _pictureService.GetPictureUrl(picture);
-                }
-                else
-                {
-                    model.DefaultPictureModel.ImageUrl = _pictureService.GetDefaultPictureUrl(pictureSize);
-                    model.DefaultPictureModel.FullSizeImageUrl = _pictureService.GetDefaultPictureUrl();
-                }
-                model.DefaultPictureModel.Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), model.Name);
-                model.DefaultPictureModel.AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), model.Name);
+                    var picture = product.GetDefaultProductPicture(_pictureService);
+                    var pictureModel = new PictureModel()
+                    {
+                        ImageUrl = _pictureService.GetPictureUrl(picture, pictureSize),
+                        FullSizeImageUrl = _pictureService.GetPictureUrl(picture),
+                        Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), model.Name),
+                        AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), model.Name)
+                    };
+                    return pictureModel;
+                });
             }
             return model;
         }
@@ -418,7 +419,6 @@ namespace Nop.Web.Controllers
                         FullSizeImageUrl = _pictureService.GetPictureUrl(picture),
                         Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), model.Name),
                         AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), model.Name),
-
                     });
                 }
             }
