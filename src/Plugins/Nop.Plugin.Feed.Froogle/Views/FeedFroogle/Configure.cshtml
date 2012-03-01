@@ -158,8 +158,7 @@
                     @Html.NopLabelFor(m => m.StaticFilePath):
                 </td>
                 <td class="adminData">
-                    @Html.EditorFor(m => m.StaticFilePath)
-                    @Html.ValidationMessageFor(m => m.StaticFilePath)
+                    <a href="@Model.StaticFilePath" target="_blank">@Model.StaticFilePath</a>
                 </td>
             </tr>
         }
