@@ -39,7 +39,7 @@ namespace Nop.Data
             customCommands.AddRange(ParseCommands(HostingEnvironment.MapPath("~/App_Data/SqlServer.StoredProcedures.sql"), false));
             
             var initializer = new CreateTablesIfNotExist<NopObjectContext>(tablesToValidate, customCommands.ToArray());
-            Database.SetInitializer<NopObjectContext>(initializer);
+            Database.SetInitializer(initializer);
         }
 
         protected virtual string[] ParseCommands(string filePath, bool throwExceptionIfNonExists)

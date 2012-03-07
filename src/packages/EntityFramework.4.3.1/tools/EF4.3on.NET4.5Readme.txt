@@ -1,0 +1,52 @@
+-----------------------------------------------------------------------------------------
+             Entity Framework 5 Recommended for .NET Framework 4.5 Projects            
+-----------------------------------------------------------------------------------------
+
+
+You have installed EF 4.3 in a project that targets .NET Framework 4.5.
+
+There are some known issues using EF 4.x in a .NET 4.5 project.
+
+
+We recommend installing a pre-release version of EF 5, which is designed to work with .NET 4.5
+
+1) Open package manager console
+    Tools -> Library Package Manager -> Package Manager Console
+
+2) Use the following command to install the latest pre-release package
+    Install-Package EntityFramework -IncludePreRelease
+
+
+
+-----------------------------------------------------------------------------------------
+              Known Issues with Entity Framework 4.x and .NET Framework 4.5            
+-----------------------------------------------------------------------------------------
+
+Entity Framework 4.1 thru 4.3 included additional data annotations in the
+System.ComponentModel.DataAnnotations namespace in the EntityFramework assembly.
+In .NET 4.5 these annotations were moved to be part of the .NET Framework in the 
+System.ComponentModel.DataAnnotations.Schema namespace of the 
+System.ComponentModel.DataAnnotations.dll assembly. If you are using EF 4.x and targeting
+.NET 4.5 this results in two data annotations with the same name in different assemblies.
+Because the annotations in the .NET Framework are in a different namespace we were not
+able to use type forwarding to avoid this conflict.
+
+It is possible to use EF 4.x on .NET 4.5 but we recommend using the latest pre-release
+version of EF 5. If you are not using the affected data annotations there is no impact
+on your code. If you are using the data annotations in a C# project you can use the extern
+modifier to ensure your code uses the annotations from EntityFramework.dll
+(http://msdn.microsoft.com/en-us/library/e59b22c5(v=VS.80).aspx). If you use the new
+annotations from the System.ComponentModel.DataAnnotations.dll assembly in .NET 4.5
+they will not be processed by Code First.
+
+The affected annotations are:
+- Column
+- ComplexType
+- DatabaseGenerated
+- DatabaseGeneratedOption
+- ForeignKey
+- InverseProperty
+- MaxLength
+- MinLength
+- NotMapped
+- Table

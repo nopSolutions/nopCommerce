@@ -44,7 +44,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="EntityFramework">
-      <HintPath>..\..\packages\EntityFramework.4.2.0.0\lib\net40\EntityFramework.dll</HintPath>
+      <HintPath>..\..\packages\EntityFramework.4.3.1\lib\net40\EntityFramework.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
@@ -68,6 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\FeedFroogleController.cs" />
+    <Compile Include="Data\EfStartUpTask.cs" />
     <Compile Include="Data\GoogleProductObjectContext.cs" />
     <Compile Include="Data\GoogleProductRecordMap.cs" />
     <Compile Include="DependencyRegistrar.cs" />

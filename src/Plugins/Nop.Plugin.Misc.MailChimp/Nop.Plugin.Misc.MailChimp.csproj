@@ -48,7 +48,7 @@
       <HintPath>..\..\packages\PerceptiveMCAPI\CookComputing.XmlRpcV2.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework">
-      <HintPath>..\..\packages\EntityFramework.4.2.0.0\lib\net40\EntityFramework.dll</HintPath>
+      <HintPath>..\..\packages\EntityFramework.4.3.1\lib\net40\EntityFramework.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="PerceptiveMCAPI">
@@ -56,6 +56,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Web" />
@@ -72,6 +73,7 @@
   <ItemGroup>
     <Compile Include="Controllers\SettingsController.cs" />
     <Compile Include="Controllers\WebHooksController.cs" />
+    <Compile Include="Data\EfStartUpTask.cs" />
     <Compile Include="Data\MailChimpEventQueueRecord.cs" />
     <Compile Include="Data\MailChimpEventQueueRecordMap.cs" />
     <Compile Include="Data\MailChimpObjectContext.cs" />

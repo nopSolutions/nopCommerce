@@ -20,7 +20,7 @@ namespace Nop.Data.Initializers
         {
             if (context.Database.Connection is SqlCeConnection)
             {
-                SqlCeConnectionStringBuilder builder = new SqlCeConnectionStringBuilder(context.Database.Connection.ConnectionString);
+                var builder = new SqlCeConnectionStringBuilder(context.Database.Connection.ConnectionString);
                 if (!String.IsNullOrWhiteSpace(builder.DataSource))
                 {
                     builder.DataSource = ReplaceDataDirectory(builder.DataSource);

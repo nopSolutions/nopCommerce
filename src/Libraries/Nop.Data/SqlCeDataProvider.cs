@@ -24,7 +24,7 @@ namespace Nop.Data
         {
             //var initializer = new CreateDatabaseIfNotExists<NopObjectContext>();
             var initializer = new CreateCeDatabaseIfNotExists<NopObjectContext>();
-            Database.SetInitializer<NopObjectContext>(initializer);
+            Database.SetInitializer(initializer);
         }
 
         /// <summary>

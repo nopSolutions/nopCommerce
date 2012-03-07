@@ -23,7 +23,7 @@ namespace Nop.Plugin.Misc.MailChimp.Data
             modelBuilder.Configurations.Add(new MailChimpEventQueueRecordMap());
 
             //disable EdmMetadata generation
-            modelBuilder.Conventions.Remove<IncludeMetadataConvention>();
+            //modelBuilder.Conventions.Remove<IncludeMetadataConvention>();
             base.OnModelCreating(modelBuilder);
         }
 
@@ -41,8 +41,12 @@ namespace Nop.Plugin.Misc.MailChimp.Data
         /// </summary>
         public void Install()
         {
+            //It's required to set initializer to null (for SQL Server Compact).
+            //otherwise, you'll get something like "The model backing the 'your context name' context has changed since the database was created. Consider using Code First Migrations to update the database"
+            Database.SetInitializer<MailChimpObjectContext>(null);
+
             //create the table
-            string dbScript = CreateDatabaseScript();
+            var dbScript = CreateDatabaseScript();
             Database.ExecuteSqlCommand(dbScript);
             SaveChanges();
         }
