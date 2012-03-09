@@ -401,6 +401,12 @@ set @resources='
   <LocaleResource Name="Plugins.Feed.Froogle.StaticFilePath.Hint">
     <Value>A file path of the generated Froogle file. It''s static for your store and can be shared with the Froogle service.</Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.DiscountRules.HasAllProducts.Fields.ProductVariants.Hint">
+    <Value>The comma-separated list of product variant identifiers (e.g. 77, 123, 156). You can find a product variant ID on its details page. You can also specify the comma-separated list of product variant identifiers with quantities ({Product variant ID}:{Quantity}. for example, 77:1, 123:2, 156:3). And you can also specify the comma-separated list of product variant identifiers with quantity range ({Product variant ID}:{Min quantity}-{Max quantity}. for example, 77:1-3, 123:2-5, 156:3-8).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.DiscountRules.HasOneProduct.Fields.ProductVariants.Hint">
+    <Value>The comma-separated list of product variant identifiers (e.g. 77, 123, 156). You can find a product variant ID on its details page. You can also specify the comma-separated list of product variant identifiers with quantities ({Product variant ID}:{Quantity}. for example, 77:1, 123:2, 156:3). And you can also specify the comma-separated list of product variant identifiers with quantity range ({Product variant ID}:{Min quantity}-{Max quantity}. for example, 77:1-3, 123:2-5, 156:3-8).</Value>
+  </LocaleResource>
 </Language>
 '
 

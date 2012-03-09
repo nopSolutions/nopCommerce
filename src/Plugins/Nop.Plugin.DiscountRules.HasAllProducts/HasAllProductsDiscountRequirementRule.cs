@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Orders;
@@ -30,35 +29,85 @@ namespace Nop.Plugin.DiscountRules.HasAllProducts
             if (request.Customer == null)
                 return false;
 
-            var restrictedProductVariantIds = new List<int>();
-            try
-            {
-                restrictedProductVariantIds = request.DiscountRequirement.RestrictedProductVariantIds
-                    .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
-                    .Select(x => Convert.ToInt32(x))
-                    .ToList();
-            }
-            catch
-            {
-                //error parsing
-                return false;
-            }
-            if (restrictedProductVariantIds.Count == 0)
+            //we support three ways of specifying product variants:
+            //1. The comma-separated list of product variant identifiers (e.g. 77, 123, 156).
+            //2. The comma-separated list of product variant identifiers with quantities.
+            //      {Product variant ID}:{Quantity}. For example, 77:1, 123:2, 156:3
+            //3. The comma-separated list of product variant identifiers with quantity range.
+            //      {Product variant ID}:{Min quantity}-{Max quantity}. For example, 77:1-3, 123:2-5, 156:3-8
+            var restrictedProductVariants = request.DiscountRequirement.RestrictedProductVariantIds
+                .Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries)
+                .Select(x => x.Trim())
+                .ToList();
+            if (restrictedProductVariants.Count == 0)
                 return false;
 
             //cart
             var cart = request.Customer.ShoppingCartItems.Where(x => x.ShoppingCartType == ShoppingCartType.ShoppingCart);
             
             bool allFound = true;
-            foreach (var restrictedPvId in restrictedProductVariantIds)
+            foreach (var restrictedPv in restrictedProductVariants)
             {
+                if (String.IsNullOrWhiteSpace(restrictedPv))
+                    continue;
+
                 bool found1 = false;
                 foreach (var sci in cart)
                 {
-                    if (restrictedPvId == sci.ProductVariantId)
+                    if (restrictedPv.Contains(":"))
                     {
-                        found1 = true;
-                        break;
+                         if (restrictedPv.Contains("-"))
+                         {
+                             //the third way (the quantity rage specified)
+                             //{Product variant ID}:{Min quantity}-{Max quantity}. For example, 77:1-3, 123:2-5, 156:3-8
+                             int restrictedPvId = 0;
+                             if (!int.TryParse(restrictedPv.Split(new[] { ':' })[0], out restrictedPvId))
+                                 //parsing error; exit;
+                                 return false;
+                             int quantityMin = 0;
+                             if (!int.TryParse(restrictedPv.Split(new[] { ':' })[1].Split(new[] { '-' })[0], out quantityMin))
+                                 //parsing error; exit;
+                                 return false;
+                             int quantityMax = 0;
+                             if (!int.TryParse(restrictedPv.Split(new[] { ':' })[1].Split(new[] { '-' })[1], out quantityMax))
+                                 //parsing error; exit;
+                                 return false;
+
+                             if (sci.ProductVariantId == restrictedPvId && quantityMin <= sci.Quantity && sci.Quantity <=quantityMax)
+                             {
+                                 found1 = true;
+                                 break;
+                             }
+                         }
+                         else
+                         {
+                             //the second way (the quantity specified)
+                             //{Product variant ID}:{Quantity}. For example, 77:1, 123:2, 156:3
+                             int restrictedPvId = 0;
+                             if (!int.TryParse(restrictedPv.Split(new[] { ':' })[0], out restrictedPvId))
+                                 //parsing error; exit;
+                                 return false;
+                             int quantity = 0;
+                             if (!int.TryParse(restrictedPv.Split(new[] { ':' })[1], out quantity))
+                                 //parsing error; exit;
+                                 return false;
+
+                             if (sci.ProductVariantId == restrictedPvId && sci.Quantity == quantity)
+                             {
+                                 found1 = true;
+                                 break;
+                             }
+                         }
+                    }
+                    else
+                    {
+                        //the first way (the quantity is not specified)
+                        int restrictedPvId = int.Parse(restrictedPv);
+                        if (sci.ProductVariantId == restrictedPvId)
+                        {
+                            found1 = true;
+                            break;
+                        }
                     }
                 }
 
@@ -94,7 +143,7 @@ namespace Nop.Plugin.DiscountRules.HasAllProducts
         {
             //locales
             this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRules.HasAllProducts.Fields.ProductVariants", "Restricted product variants");
-            this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRules.HasAllProducts.Fields.ProductVariants.Hint", "The comma-separated list of product variant identifiers (e.g. 77, 123, 156). You can find a product variant ID on its details page.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.DiscountRules.HasAllProducts.Fields.ProductVariants.Hint", "The comma-separated list of product variant identifiers (e.g. 77, 123, 156). You can find a product variant ID on its details page. You can also specify the comma-separated list of product variant identifiers with quantities ({Product variant ID}:{Quantity}. for example, 77:1, 123:2, 156:3). And you can also specify the comma-separated list of product variant identifiers with quantity range ({Product variant ID}:{Min quantity}-{Max quantity}. for example, 77:1-3, 123:2-5, 156:3-8).");
             base.Install();
         }
 
