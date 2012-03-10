@@ -40,33 +40,17 @@
         </tr>
     </table>
     <script type="text/javascript">
-        var selectedIds = [];
 
         $(document).ready(function () {
 
+            updateMasterCheckbox();
+
             $('#mastercheckbox').click(function () {
-                $('.checkboxGroups').attr('checked', $(this).is(':checked') ? 'checked' : '').change();
+                $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
             });
 
             //wire up checkboxes. 
             $('#activityLogType-grid input[type=checkbox][id!=mastercheckbox]').live('change', function (e) {
-                var $check = $(this);
-                if ($check.attr("checked") == true) {
-                    var checked = jQuery.inArray($check.val(), selectedIds);
-                    if (checked == -1) {
-                        //add id to selectedIds.  
-                        selectedIds.push($check.val());
-                    }
-                }
-                else {
-                    var checked = jQuery.inArray($check.val(), selectedIds);
-                    if (checked > -1) {
-                        //remove id from selectedIds.  
-                        selectedIds = $.grep(selectedIds, function (item, index) {
-                            return item != $check.val();
-                        });
-                    }
-                }
                 updateMasterCheckbox();
             });
         });
@@ -74,13 +58,7 @@
         function updateMasterCheckbox() {
             var numChkBoxes = $('#activityLogType-grid input[type=checkbox][id!=mastercheckbox]').length;
             var numChkBoxesChecked = $('#activityLogType-grid input[type=checkbox][checked][id!=mastercheckbox]').length;
-            if (numChkBoxes == numChkBoxesChecked && numChkBoxes > 0) {
-                $('#mastercheckbox').attr('checked', 'checked');
-            }
-            else {
-                $('#mastercheckbox').attr('checked', '');
-            }
-
+            $('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
         }
    </script>    
 }

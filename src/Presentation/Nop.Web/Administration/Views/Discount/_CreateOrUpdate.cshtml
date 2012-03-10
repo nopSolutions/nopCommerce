@@ -228,7 +228,7 @@
             //load HTML for adding requirement
             function loadNewRequirementBox() {
                 //load URL
-                var ruleSystemName = $(this).val();
+                var ruleSystemName = $("#@Html.FieldIdFor(model => model.AddDiscountRequirement)").val();
                 var discountId = @Model.Id;
                 if (ruleSystemName != '') {
                     $.ajax({
@@ -285,7 +285,7 @@
                     url: "@(Url.Action("DeleteDiscountRequirement", "Discount"))",
                     data: "discountId=" + discountId +"&discountRequirementId=" + discountRequirementId,
                     success: function (data) {
-                        removeByElement(discountRequirements, discountRequirementId)
+                        removeRequirementByElement(discountRequirements, discountRequirementId)
                         loadExistingRequirements();
                     },
                     error:function (xhr, ajaxOptions, thrownError){
@@ -294,7 +294,7 @@
                 });
 
                 
-            function removeByElement(arrayName,discountRequirementId) {
+            function removeRequirementByElement(arrayName,discountRequirementId) {
                 for(var i=0; i<arrayName.length; i++) {
                     if(arrayName[i].discountRequirementId==discountRequirementId) {
                         arrayName.splice(i,1);

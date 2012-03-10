@@ -102,7 +102,7 @@
                 grid.currentPage = 1; //new search. Set page size to 1
                 grid.ajaxRequest();
                 //clear selected checkboxes
-                $('.checkboxGroups').attr('checked', '').change();
+                $('.checkboxGroups').attr('checked', false).change();
                 selectedIds = [];
                 return false;
             });
@@ -161,15 +161,15 @@
                 return false;
             });
 
-
+            
             $('#mastercheckbox').click(function () {
-                $('.checkboxGroups').attr('checked', $(this).is(':checked') ? 'checked' : '').change();
+                $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
             });
 
             //wire up checkboxes. 
             $('#productreviews-grid input[type=checkbox][id!=mastercheckbox]').live('change', function (e) {
                 var $check = $(this);
-                if ($check.attr("checked") == true) {
+                if ($check.is(":checked") == true) {
                     var checked = jQuery.inArray($check.val(), selectedIds);
                     if (checked == -1) {
                         //add id to selectedIds.  
@@ -208,17 +208,11 @@
 
             updateMasterCheckbox();
         }
-
+        
         function updateMasterCheckbox() {
             var numChkBoxes = $('#productreviews-grid input[type=checkbox][id!=mastercheckbox]').length;
             var numChkBoxesChecked = $('#productreviews-grid input[type=checkbox][checked][id!=mastercheckbox]').length;
-            if (numChkBoxes == numChkBoxesChecked && numChkBoxes > 0) {
-                $('#mastercheckbox').attr('checked', 'checked');
-            }
-            else {
-                $('#mastercheckbox').attr('checked', '');
-            }
-
+            $('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
         }
 
     </script>
