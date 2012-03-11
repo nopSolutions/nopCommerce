@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Media;
@@ -50,6 +51,23 @@ namespace Nop.Services.Media
             
             var download = _downloadRepository.GetById(downloadId);
             return download;
+        }
+
+        /// <summary>
+        /// Gets a download by GUID
+        /// </summary>
+        /// <param name="downloadGuid">Download GUID</param>
+        /// <returns>Download</returns>
+        public virtual Download GetDownloadByGuid(Guid downloadGuid)
+        {
+            if (downloadGuid == Guid.Empty)
+                return null;
+
+            var query = from o in _downloadRepository.Table
+                        where o.DownloadGuid == downloadGuid
+                        select o;
+            var order = query.FirstOrDefault();
+            return order;
         }
 
         /// <summary>

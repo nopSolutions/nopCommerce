@@ -20,14 +20,12 @@ namespace Nop.Services.Orders
 
             if (checkoutAttribute.AttributeControlType == AttributeControlType.TextBox ||
                 checkoutAttribute.AttributeControlType == AttributeControlType.MultilineTextbox ||
-                checkoutAttribute.AttributeControlType == AttributeControlType.Datepicker)
-            {
+                checkoutAttribute.AttributeControlType == AttributeControlType.Datepicker ||
+                checkoutAttribute.AttributeControlType == AttributeControlType.FileUpload)
                 return false;
-            }
-            else
-            {
-                return true;
-            }
+            
+            //other attribute controle types support values
+            return true;
         }
     }
 }

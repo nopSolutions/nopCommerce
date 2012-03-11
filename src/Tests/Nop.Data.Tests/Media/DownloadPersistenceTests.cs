@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Media;
+﻿using System;
+using Nop.Core.Domain.Media;
 using Nop.Tests;
 using NUnit.Framework;
 
@@ -10,9 +11,11 @@ namespace Nop.Data.Tests.Media
         [Test]
         public void Can_save_and_load_download()
         {
+            var guid = Guid.NewGuid();
             var download = new Download
             {
-                UseDownloadUrl= true,
+                DownloadGuid = guid,
+                UseDownloadUrl = true,
                 DownloadUrl = "http://www.someUrl.com/file.zip",
                 DownloadBinary = new byte[] { 1, 2, 3 },
                 ContentType = "application/x-zip-co",
@@ -23,6 +26,7 @@ namespace Nop.Data.Tests.Media
 
             var fromDb = SaveAndLoadEntity(download);
             fromDb.ShouldNotBeNull();
+            fromDb.DownloadGuid.ShouldEqual(guid);
             fromDb.UseDownloadUrl.ShouldEqual(true);
             fromDb.DownloadUrl.ShouldEqual("http://www.someUrl.com/file.zip");
             fromDb.DownloadBinary.ShouldEqual(new byte[] { 1, 2, 3 });

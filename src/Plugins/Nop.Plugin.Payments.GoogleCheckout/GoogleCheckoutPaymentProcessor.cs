@@ -567,7 +567,9 @@ namespace Nop.Plugin.Payments.GoogleCheckout
                 if (productVariant != null)
                 {
                     decimal taxRate = decimal.Zero;
-                    string description = _productAttributeFormatter.FormatAttributes(productVariant, sci.AttributesXml, _workContext.CurrentCustomer, ", ", false);
+                    string description = _productAttributeFormatter.FormatAttributes(productVariant, 
+                        sci.AttributesXml, _workContext.CurrentCustomer,
+                        ", ", false, true, true, true, false);
                     string fullName = "";
                     if (!String.IsNullOrEmpty(sci.ProductVariant.GetLocalized(x => x.Name)))
                         fullName = string.Format("{0} ({1})", sci.ProductVariant.Product.GetLocalized(x => x.Name), sci.ProductVariant.GetLocalized(x => x.Name));

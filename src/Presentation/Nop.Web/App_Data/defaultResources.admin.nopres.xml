@@ -7730,6 +7730,18 @@
 							<LocaleResource Name="AddNew">
 								<Value>Add product</Value>
 								<Children>
+                  <LocaleResource Name="BackToList">
+                    <Value>back to product list</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="BackToOrder">
+                    <Value>back to order details</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Title1">
+                    <Value>Add a new product to order #{0}</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Title2">
+                    <Value>Add product '{0}' to order #{1}</Value>
+                  </LocaleResource>
 									<LocaleResource Name="Note1">
 										<Value>Click on interested product variant</Value>
 									</LocaleResource>

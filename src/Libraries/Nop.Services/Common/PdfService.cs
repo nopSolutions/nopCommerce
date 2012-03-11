@@ -300,7 +300,7 @@ namespace Nop.Services.Common
                     cell = new PdfPCell();
                     cell.AddElement(new Paragraph(name, font));
                     cell.HorizontalAlignment = Element.ALIGN_LEFT;
-                    var attributesParagraph = new Paragraph(HtmlHelper.ConvertHtmlToPlainText(orderProductVariant.AttributeDescription, true), attributesFont);
+                    var attributesParagraph = new Paragraph(HtmlHelper.ConvertHtmlToPlainText(orderProductVariant.AttributeDescription, true, true), attributesFont);
                     cell.AddElement(attributesParagraph);
                     productsTable.AddCell(cell);
 
@@ -360,7 +360,7 @@ namespace Nop.Services.Common
                 if (!String.IsNullOrEmpty(order.CheckoutAttributeDescription))
                 {
                     doc.Add(new Paragraph(" "));
-                    string attributes = HtmlHelper.ConvertHtmlToPlainText(order.CheckoutAttributeDescription, true);
+                    string attributes = HtmlHelper.ConvertHtmlToPlainText(order.CheckoutAttributeDescription, true, true);
                     var pCheckoutAttributes = new Paragraph(attributes, font);
                     pCheckoutAttributes.Alignment = Element.ALIGN_RIGHT;
                     doc.Add(pCheckoutAttributes);
@@ -608,7 +608,7 @@ namespace Nop.Services.Common
                             notesTable.AddCell(cell);
 
                             cell = new PdfPCell();
-                            cell.AddElement(new Paragraph(HtmlHelper.ConvertHtmlToPlainText(orderNote.FormatOrderNoteText(), true), font));
+                            cell.AddElement(new Paragraph(HtmlHelper.ConvertHtmlToPlainText(orderNote.FormatOrderNoteText(), true, true), font));
                             cell.HorizontalAlignment = Element.ALIGN_LEFT;
                             notesTable.AddCell(cell);
                         }
@@ -720,7 +720,7 @@ namespace Nop.Services.Common
                         cell = new PdfPCell();
                         cell.AddElement(new Paragraph(name, font));
                         cell.HorizontalAlignment = Element.ALIGN_LEFT;
-                        var attributesParagraph = new Paragraph(HtmlHelper.ConvertHtmlToPlainText(orderProductVariant.AttributeDescription, true), attributesFont);
+                        var attributesParagraph = new Paragraph(HtmlHelper.ConvertHtmlToPlainText(orderProductVariant.AttributeDescription, true, true), attributesFont);
                         cell.AddElement(attributesParagraph);
                         productsTable.AddCell(cell);
 

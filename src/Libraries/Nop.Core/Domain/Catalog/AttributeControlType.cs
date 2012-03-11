@@ -29,5 +29,9 @@ namespace Nop.Core.Domain.Catalog
         /// Datepicker
         /// </summary>
         Datepicker = 20,
+        /// <summary>
+        /// File upload control
+        /// </summary>
+        FileUpload = 30,
     }
 }

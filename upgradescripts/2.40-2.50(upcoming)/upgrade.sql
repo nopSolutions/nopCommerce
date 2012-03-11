@@ -407,6 +407,24 @@ set @resources='
   <LocaleResource Name="Plugins.DiscountRules.HasOneProduct.Fields.ProductVariants.Hint">
     <Value>The comma-separated list of product variant identifiers (e.g. 77, 123, 156). You can find a product variant ID on its details page. You can also specify the comma-separated list of product variant identifiers with quantities ({Product variant ID}:{Quantity}. for example, 77:1, 123:2, 156:3). And you can also specify the comma-separated list of product variant identifiers with quantity range ({Product variant ID}:{Min quantity}-{Max quantity}. for example, 77:1-3, 123:2-5, 156:3-8).</Value>
   </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Catalog.AttributeControlType.FileUpload">
+    <Value>File upload</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.MaximumUploadedFileSize">
+    <Value>Maximum file size is {0} KB</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Products.AddNew.Title1">
+    <Value>Add a new product to order #{0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Products.AddNew.Title2">
+    <Value>Add product ''{0}'' to order #{1}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Products.AddNew.BackToList">
+    <Value>back to product list</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Products.AddNew.BackToOrder">
+    <Value>back to order details</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1643,5 +1661,32 @@ BEGIN
 		[AllowFiltering] ASC
 	)
 	INCLUDE ([ProductId])
+END
+GO
+
+
+
+
+--Add 'Guid' column to [Download] table
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Download]') and NAME='DownloadGuid')
+BEGIN
+	ALTER TABLE [dbo].[Download]
+	ADD [DownloadGuid] uniqueidentifier NULL
+END
+GO
+
+UPDATE [dbo].[Download]
+SET [DownloadGuid] = NEWID()
+WHERE [DownloadGuid] IS NULL
+GO
+
+ALTER TABLE [dbo].[Download] ALTER COLUMN [DownloadGuid] uniqueidentifier NOT NULL
+GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.fileuploadmaximumsizebytes')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'catalogsettings.fileuploadmaximumsizebytes', N'204800')
 END
 GO

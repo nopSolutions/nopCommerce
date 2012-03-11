@@ -23,6 +23,8 @@ namespace Nop.Admin.Models.Catalog
 
         public IList<string> Warnings { get; set; }
 
+        public int ProductVariantId { get; set; }
+
         #region Nested classes
 
         public class ProductVariantAttributeModel : BaseNopEntityModel

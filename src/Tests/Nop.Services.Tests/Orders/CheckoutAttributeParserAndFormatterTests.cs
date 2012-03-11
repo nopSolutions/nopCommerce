@@ -10,6 +10,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Events;
 using Nop.Services.Catalog;
 using Nop.Services.Directory;
+using Nop.Services.Media;
 using Nop.Services.Orders;
 using Nop.Services.Tax;
 using Nop.Tests;
@@ -31,6 +32,8 @@ namespace Nop.Services.Tests.Orders
         ICurrencyService _currencyService;
         ITaxService _taxService;
         IPriceFormatter _priceFormatter;
+        IDownloadService _downloadService;
+        IWebHelper _webHelper;
         ICheckoutAttributeFormatter _checkoutAttributeFormatter;
 
         CheckoutAttribute ca1, ca2, ca3;
@@ -146,13 +149,17 @@ namespace Nop.Services.Tests.Orders
             _currencyService = MockRepository.GenerateMock<ICurrencyService>();
             _taxService = MockRepository.GenerateMock<ITaxService>();
             _priceFormatter = MockRepository.GenerateMock<IPriceFormatter>();
+            _downloadService = MockRepository.GenerateMock<IDownloadService>();
+            _webHelper = MockRepository.GenerateMock<IWebHelper>();
 
             _checkoutAttributeFormatter = new CheckoutAttributeFormatter(_workContext,
                 _checkoutAttributeService,
                 _checkoutAttributeParser,
                 _currencyService,
                 _taxService,
-                _priceFormatter);
+                _priceFormatter,
+                _downloadService,
+                _webHelper);
         }
         
         [Test]

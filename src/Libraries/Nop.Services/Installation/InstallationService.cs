@@ -4538,6 +4538,7 @@ namespace Nop.Services.Installation
                     ProductsByTagAllowCustomersToSelectPageSize = true,
                     ProductsByTagPageSizeOptions = "4, 2, 8, 12",
                     MaximumBackInStockSubscriptions = 200,
+                    FileUploadMaximumSizeBytes = 1024 * 200, //200KB
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<LocalizationSettings>>()
@@ -8287,6 +8288,7 @@ namespace Nop.Services.Installation
             };
             var downloadPokerFace1 = new Download()
             {
+                DownloadGuid = Guid.NewGuid(),
                 ContentType = "application/x-zip-co",
                 DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_PokerFace_1.zip"),
                 Extension = ".zip",
@@ -8296,6 +8298,7 @@ namespace Nop.Services.Installation
             downloadService.InsertDownload(downloadPokerFace1);
             var downloadPokerFace2 = new Download()
             {
+                DownloadGuid = Guid.NewGuid(),
                 ContentType = "text/plain",
                 DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_PokerFace_2.txt"),
                 Extension = ".txt",
@@ -8358,6 +8361,7 @@ namespace Nop.Services.Installation
             };
             var downloadSingleLadies1 = new Download()
             {
+                DownloadGuid = Guid.NewGuid(),
                 ContentType = "application/x-zip-co",
                 DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_SingleLadies_1.zip"),
                 Extension = ".zip",
@@ -8367,6 +8371,7 @@ namespace Nop.Services.Installation
             downloadService.InsertDownload(downloadSingleLadies1);
             var downloadSingleLadies2 = new Download()
             {
+                DownloadGuid = Guid.NewGuid(),
                 ContentType = "text/plain",
                 DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_SingleLadies_2.txt"),
                 Extension = ".txt",
@@ -8429,6 +8434,7 @@ namespace Nop.Services.Installation
             };
             var downloadBattleOfLa = new Download()
             {
+                DownloadGuid = Guid.NewGuid(),
                 ContentType = "application/x-zip-co",
                 DownloadBinary = File.ReadAllBytes(sampleDownloadsPath + "product_BattleOfLa_1.zip"),
                 Extension = ".zip",

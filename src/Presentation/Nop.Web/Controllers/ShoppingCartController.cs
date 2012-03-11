@@ -62,7 +62,7 @@ namespace Nop.Web.Controllers
         private readonly IPaymentService _paymentService;
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IPermissionService _permissionService;
-        
+        private readonly IDownloadService _downloadService;
 
         private readonly MediaSettings _mediaSetting;
         private readonly ShoppingCartSettings _shoppingCartSettings;
@@ -89,7 +89,8 @@ namespace Nop.Web.Controllers
             IOrderTotalCalculationService orderTotalCalculationService,
             ICheckoutAttributeService checkoutAttributeService, IPaymentService paymentService,
             IWorkflowMessageService workflowMessageService,
-            IPermissionService permissionService,
+            IPermissionService permissionService, 
+            IDownloadService downloadService,
             MediaSettings mediaSetting, ShoppingCartSettings shoppingCartSettings,
             CatalogSettings catalogSettings, OrderSettings orderSettings,
             ShippingSettings shippingSettings, TaxSettings taxSettings,
@@ -119,6 +120,7 @@ namespace Nop.Web.Controllers
             this._paymentService = paymentService;
             this._workflowMessageService = workflowMessageService;
             this._permissionService = permissionService;
+            this._downloadService = downloadService;
 
             this._mediaSetting = mediaSetting;
             this._shoppingCartSettings = shoppingCartSettings;
@@ -857,6 +859,39 @@ namespace Nop.Web.Controllers
                             {
                                 selectedAttributes = _checkoutAttributeParser.AddCheckoutAttribute(selectedAttributes,
                                     attribute, selectedDate.Value.ToString("D"));
+                            }
+                        }
+                        break;
+                    case AttributeControlType.FileUpload:
+                        {
+                            var httpPostedFile = this.Request.Files[controlId];
+                            if ((httpPostedFile != null) && (!String.IsNullOrEmpty(httpPostedFile.FileName)))
+                            {
+                                int fileMaxSize = _catalogSettings.FileUploadMaximumSizeBytes;
+                                if (httpPostedFile.ContentLength > fileMaxSize)
+                                {
+                                    //TODO display warning
+                                    //warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.MaximumUploadedFileSize"), (int)(fileMaxSize / 1024)));
+                                }
+                                else
+                                {
+                                    //save an uploaded file
+                                    var download = new Download()
+                                    {
+                                        DownloadGuid = Guid.NewGuid(),
+                                        UseDownloadUrl = false,
+                                        DownloadUrl = "",
+                                        DownloadBinary = httpPostedFile.GetDownloadBits(),
+                                        ContentType = httpPostedFile.ContentType,
+                                        Filename = System.IO.Path.GetFileNameWithoutExtension(httpPostedFile.FileName),
+                                        Extension = System.IO.Path.GetExtension(httpPostedFile.FileName),
+                                        IsNew = true
+                                    };
+                                    _downloadService.InsertDownload(download);
+                                    //save attribute
+                                    selectedAttributes = _checkoutAttributeParser.AddCheckoutAttribute(selectedAttributes,
+                                        attribute, download.DownloadGuid.ToString());
+                                }
                             }
                         }
                         break;

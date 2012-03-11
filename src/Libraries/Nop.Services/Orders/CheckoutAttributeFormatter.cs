@@ -8,6 +8,7 @@ using Nop.Core.Html;
 using Nop.Services.Catalog;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
+using Nop.Services.Media;
 using Nop.Services.Tax;
 
 namespace Nop.Services.Orders
@@ -23,13 +24,17 @@ namespace Nop.Services.Orders
         private readonly ICurrencyService _currencyService;
         private readonly ITaxService _taxService;
         private readonly IPriceFormatter _priceFormatter;
+        private readonly IDownloadService _downloadService;
+        private readonly IWebHelper _webHelper;
 
         public CheckoutAttributeFormatter(IWorkContext workContext,
             ICheckoutAttributeService checkoutAttributeService,
             ICheckoutAttributeParser checkoutAttributeParser,
             ICurrencyService currencyService,
             ITaxService taxService,
-            IPriceFormatter priceFormatter)
+            IPriceFormatter priceFormatter,
+            IDownloadService downloadService,
+            IWebHelper webHelper)
         {
             this._workContext = workContext;
             this._checkoutAttributeService = checkoutAttributeService;
@@ -37,6 +42,8 @@ namespace Nop.Services.Orders
             this._currencyService = currencyService;
             this._taxService = taxService;
             this._priceFormatter = priceFormatter;
+            this._downloadService = downloadService;
+            this._webHelper = webHelper;
         }
 
         /// <summary>
@@ -58,12 +65,14 @@ namespace Nop.Services.Orders
         /// <param name="serapator">Serapator</param>
         /// <param name="htmlEncode">A value indicating whether to encode (HTML) values</param>
         /// <param name="renderPrices">A value indicating whether to render prices</param>
+        /// <param name="allowHyperlinks">A value indicating whether to HTML hyperink tags could be rendered (if required)</param>
         /// <returns>Attributes</returns>
         public string FormatAttributes(string attributes,
             Customer customer, 
             string serapator = "<br />", 
             bool htmlEncode = true, 
-            bool renderPrices = true)
+            bool renderPrices = true,
+            bool allowHyperlinks = true)
         {
             var result = new StringBuilder();
 
@@ -75,16 +84,59 @@ namespace Nop.Services.Orders
                 for (int j = 0; j < valuesStr.Count; j++)
                 {
                     string valueStr = valuesStr[j];
-                    string caAttribute = string.Empty;
+                    string caAttribute = "";
                     if (!ca.ShouldHaveValues())
                     {
+                        //no values
                         if (ca.AttributeControlType == AttributeControlType.MultilineTextbox)
                         {
-                            caAttribute = string.Format("{0}: {1}", ca.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), HtmlHelper.FormatText(valueStr, false, true, true, false, false, false));
+                            //multiline textbox
+                            var attributeName = ca.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id);
+                            //encode (if required)
+                            if (htmlEncode)
+                                attributeName = HttpUtility.HtmlEncode(attributeName);
+                            caAttribute = string.Format("{0}: {1}", attributeName, HtmlHelper.FormatText(valueStr, false, true, true, false, false, false));
+                            //we never encode multiline textbox input
+                        }
+                        else if (ca.AttributeControlType == AttributeControlType.FileUpload)
+                        {
+                            //file upload
+                            var download = _downloadService.GetDownloadByGuid(Guid.Parse(valueStr));
+                            if (download != null)
+                            {
+                                //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
+                                string attributeText = "";
+                                var fileName = string.Format("{0}{1}",
+                                    download.Filename ?? download.DownloadGuid.ToString(),
+                                    download.Extension);
+                                //encode (if required)
+                                if (htmlEncode)
+                                    fileName = HttpUtility.HtmlEncode(fileName);
+                                if (allowHyperlinks)
+                                {
+                                    //hyperlinks are allowed
+                                    var downloadLink = string.Format("{0}download/getfileupload/?downloadId={1}", _webHelper.GetStoreLocation(false), download.DownloadGuid);
+                                    attributeText = string.Format("<a href=\"{0}\" class=\"fileuploadattribute\">{1}</a>", downloadLink, fileName);
+                                }
+                                else
+                                {
+                                    //hyperlinks aren't allowed
+                                    attributeText = fileName;
+                                }
+                                var attributeName = ca.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id);
+                                //encode (if required)
+                                if (htmlEncode)
+                                    attributeName = HttpUtility.HtmlEncode(attributeName);
+                                caAttribute = string.Format("{0}: {1}", attributeName, attributeText);
+                            }
                         }
                         else
                         {
+                            //other attributes (textbox, datepicker)
                             caAttribute = string.Format("{0}: {1}", ca.GetLocalized(a => a.Name, _workContext.WorkingLanguage.Id), valueStr);
+                            //encode (if required)
+                            if (htmlEncode)
+                                caAttribute = HttpUtility.HtmlEncode(caAttribute);
                         }
                     }
                     else
@@ -107,26 +159,17 @@ namespace Nop.Services.Orders
                                     }
                                 }
                             }
+                            //encode (if required)
+                            if (htmlEncode)
+                                caAttribute = HttpUtility.HtmlEncode(caAttribute);
                         }
                     }
 
                     if (!String.IsNullOrEmpty(caAttribute))
                     {
                         if (i != 0 || j != 0)
-                        {
                             result.Append(serapator);
-                        }
-                        
-                        //we don't encode multiline textbox input
-                        if (htmlEncode &&
-                            ca.AttributeControlType != AttributeControlType.MultilineTextbox)
-                        {
-                            result.Append(HttpUtility.HtmlEncode(caAttribute));
-                        }
-                        else
-                        {
-                            result.Append(caAttribute);
-                        }
+                        result.Append(caAttribute);
                     }
                 }
             }

@@ -337,9 +337,12 @@ namespace Nop.Admin.Models.Orders
                 {
                     ProductVariantAttributes = new List<ProductVariantAttributeModel>();
                     GiftCard = new GiftCardModel();
+                    Warnings = new List<string>();
                 }
 
                 public int ProductVariantId { get; set; }
+
+                public int OrderId { get; set; }
 
                 public string Name { get; set; }
 
@@ -360,6 +363,8 @@ namespace Nop.Admin.Models.Orders
                 public IList<ProductVariantAttributeModel> ProductVariantAttributes { get; set; }
                 //gift card info
                 public GiftCardModel GiftCard { get; set; }
+
+                public List<string> Warnings { get; set; }
 
             }
 

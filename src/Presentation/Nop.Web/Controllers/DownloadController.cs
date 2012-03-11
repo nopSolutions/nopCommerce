@@ -154,5 +154,29 @@ namespace Nop.Web.Controllers
                 return new FileContentResult(download.DownloadBinary, download.ContentType) { FileDownloadName = fileName + download.Extension };
             }
         }
+
+        public ActionResult GetFileUpload(Guid downloadId)
+        {
+            var download = _downloadService.GetDownloadByGuid(downloadId);
+            if (download == null)
+                return Content("Download is not available any more.");
+
+            if (download.UseDownloadUrl)
+            {
+                //return result
+                return new RedirectResult(download.DownloadUrl);
+            }
+            else
+            {
+                if (download.DownloadBinary == null)
+                    return Content("Download data is not available any more.");
+
+                string fileName = download.Filename ?? downloadId.ToString();
+                
+                //return result
+                return new FileContentResult(download.DownloadBinary, download.ContentType) { FileDownloadName = fileName + download.Extension };
+            }
+        }
+
     }
 }

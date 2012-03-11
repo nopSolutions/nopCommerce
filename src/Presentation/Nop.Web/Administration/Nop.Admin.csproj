@@ -996,10 +996,10 @@
     <Content Include="Views\NetAdvImage\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Order\ProductAddPopup.cshtml" />
+    <Content Include="Views\Order\AddProductToOrder.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Order\ProductAddDetails.cshtml" />
+    <Content Include="Views\Order\AddProductToOrderDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Order\_ProductAddAttributes.cshtml" />

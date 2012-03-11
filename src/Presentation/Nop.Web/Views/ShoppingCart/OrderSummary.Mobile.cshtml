@@ -17,9 +17,10 @@
                 }
         </div>
         }
-@*set "data-ajax" attribute to "false"*@
+        @*set "data-ajax" attribute to "false"*@
+        @*we add enctype = "multipart/form-data" because "File upload" attribute control type requries it*@
         using (Html.BeginRouteForm("ShoppingCart", FormMethod.Post,
-            new Dictionary<string, Object> { { "data-ajax", "false" } }))
+            new Dictionary<string, Object> { { "data-ajax", "false" }, { "enctype", "multipart/form-data" } }))
         {
             
         <div class="cart">

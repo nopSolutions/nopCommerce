@@ -223,5 +223,10 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating maximum number of 'back in stock' subscription
         /// </summary>
         public int MaximumBackInStockSubscriptions { get; set; }
+
+        /// <summary>
+        /// Gets or sets a maximum file upload size in bytes for product attributes ('File Upload' type)
+        /// </summary>
+        public int FileUploadMaximumSizeBytes { get; set; }
     }
 }

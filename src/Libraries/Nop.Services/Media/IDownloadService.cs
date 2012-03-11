@@ -1,3 +1,4 @@
+using System;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
 
@@ -14,6 +15,13 @@ namespace Nop.Services.Media
         /// <param name="downloadId">Download identifier</param>
         /// <returns>Download</returns>
         Download GetDownloadById(int downloadId);
+
+        /// <summary>
+        /// Gets a download by GUID
+        /// </summary>
+        /// <param name="downloadGuid">Download GUID</param>
+        /// <returns>Download</returns>
+        Download GetDownloadByGuid(Guid downloadGuid);
 
         /// <summary>
         /// Deletes a download

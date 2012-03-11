@@ -17,7 +17,8 @@
                 }
         </div>
         }
-        using (Html.BeginRouteForm("ShoppingCart", FormMethod.Post))
+        @*we add enctype = "multipart/form-data" because "File upload" attribute control type requries it*@
+        using (Html.BeginRouteForm("ShoppingCart", FormMethod.Post, new { enctype = "multipart/form-data" }))
         {
         <table class="cart">
             @if (Model.IsEditable)
@@ -109,10 +110,10 @@
                                         @for (int i = 0; i < item.Warnings.Count; i++)
                                         {
                                             @item.Warnings[i]
-                                           if (i != item.Warnings.Count - 1)
-                                           {
+                                            if (i != item.Warnings.Count - 1)
+                                            {
                                                 <br />
-                                           }
+                                            }
                                         }
                                 </div>
                             }

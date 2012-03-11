@@ -20,14 +20,12 @@ namespace Nop.Services.Catalog
 
             if (productVariantAttribute.AttributeControlType == AttributeControlType.TextBox ||
                 productVariantAttribute.AttributeControlType == AttributeControlType.MultilineTextbox ||
-                productVariantAttribute.AttributeControlType == AttributeControlType.Datepicker)
-            {
+                productVariantAttribute.AttributeControlType == AttributeControlType.Datepicker || 
+                productVariantAttribute.AttributeControlType == AttributeControlType.FileUpload)
                 return false;
-            }
-            else
-            {
-                return true;
-            }
+
+            //other attribute controle types support values
+            return true;
         }
     }
 }

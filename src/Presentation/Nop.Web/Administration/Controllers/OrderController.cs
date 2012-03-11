@@ -26,6 +26,8 @@ using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
 using Telerik.Web.Mvc;
+using Nop.Core.Domain.Media;
+using Nop.Services.Media;
 
 namespace Nop.Admin.Controllers
 {
@@ -60,7 +62,9 @@ namespace Nop.Admin.Controllers
 	    private readonly IProductAttributeFormatter _productAttributeFormatter;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IGiftCardService _giftCardService;
+        private readonly IDownloadService _downloadService;
 
+        private readonly CatalogSettings _catalogSettings;
         private readonly CurrencySettings _currencySettings;
         private readonly TaxSettings _taxSettings;
         private readonly MeasureSettings _measureSettings;
@@ -83,8 +87,8 @@ namespace Nop.Admin.Controllers
             ICategoryService categoryService, IManufacturerService manufacturerService,
             IProductAttributeService productAttributeService, IProductAttributeParser productAttributeParser,
             IProductAttributeFormatter productAttributeFormatter, IShoppingCartService shoppingCartService,
-            IGiftCardService giftCardService,
-            CurrencySettings currencySettings, TaxSettings taxSettings,
+            IGiftCardService giftCardService, IDownloadService downloadService,
+            CatalogSettings catalogSettings, CurrencySettings currencySettings, TaxSettings taxSettings,
             MeasureSettings measureSettings, PdfSettings pdfSettings)
 		{
             this._orderService = orderService;
@@ -113,7 +117,9 @@ namespace Nop.Admin.Controllers
             this._productAttributeFormatter = productAttributeFormatter;
             this._shoppingCartService = shoppingCartService;
             this._giftCardService = giftCardService;
+            this._downloadService = downloadService;
 
+            this._catalogSettings = catalogSettings;
             this._currencySettings = currencySettings;
             this._taxSettings = taxSettings;
             this._measureSettings = measureSettings;
@@ -392,6 +398,63 @@ namespace Nop.Admin.Controllers
             }
             model.HasDownloadableProducts = hasDownloadableItems;
             #endregion
+        }
+
+        private OrderModel.AddOrderProductModel.ProductDetailsModel PrepareAddProductToOrderModel(int orderId, int productVariantId)
+        {
+
+            var productVariant = _productService.GetProductVariantById(productVariantId);
+            var model = new OrderModel.AddOrderProductModel.ProductDetailsModel()
+            {
+                ProductVariantId = productVariantId,
+                OrderId = orderId,
+                Name = productVariant.FullProductName,
+                UnitPriceExclTax = decimal.Zero,
+                UnitPriceInclTax = decimal.Zero,
+                Quantity = 1,
+                SubTotalExclTax = decimal.Zero,
+                SubTotalInclTax = decimal.Zero
+            };
+
+            //attributes
+            var productVariantAttributes = _productAttributeService.GetProductVariantAttributesByProductVariantId(productVariant.Id);
+            foreach (var attribute in productVariantAttributes)
+            {
+                var pvaModel = new OrderModel.AddOrderProductModel.ProductVariantAttributeModel()
+                {
+                    Id = attribute.Id,
+                    ProductAttributeId = attribute.ProductAttributeId,
+                    Name = attribute.ProductAttribute.Name,
+                    TextPrompt = attribute.TextPrompt,
+                    IsRequired = attribute.IsRequired,
+                    AttributeControlType = attribute.AttributeControlType
+                };
+
+                if (attribute.ShouldHaveValues())
+                {
+                    //values
+                    var pvaValues = _productAttributeService.GetProductVariantAttributeValues(attribute.Id);
+                    foreach (var pvaValue in pvaValues)
+                    {
+                        var pvaValueModel = new OrderModel.AddOrderProductModel.ProductVariantAttributeValueModel()
+                        {
+                            Id = pvaValue.Id,
+                            Name = pvaValue.Name,
+                            IsPreSelected = pvaValue.IsPreSelected
+                        };
+                        pvaModel.Values.Add(pvaValueModel);
+                    }
+                }
+
+                model.ProductVariantAttributes.Add(pvaModel);
+            }
+            //gift card
+            model.GiftCard.IsGiftCard = productVariant.IsGiftCard;
+            if (model.GiftCard.IsGiftCard)
+            {
+                model.GiftCard.GiftCardType = productVariant.GiftCardType;
+            }
+            return model;
         }
 
         #endregion
@@ -1326,12 +1389,13 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        public ActionResult ProductAddPopup(int orderId, string btnId, string formId)
+        public ActionResult AddProductToOrder(int orderId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
             var model = new OrderModel.AddOrderProductModel();
+            model.OrderId = orderId;
             //categories
             model.AvailableCategories.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var c in _categoryService.GetAllCategories(true))
@@ -1341,15 +1405,12 @@ namespace Nop.Admin.Controllers
             model.AvailableManufacturers.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
             foreach (var m in _manufacturerService.GetAllManufacturers(true))
                 model.AvailableManufacturers.Add(new SelectListItem() { Text = m.Name, Value = m.Id.ToString() });
-
-            ViewBag.btnId = btnId;
-            ViewBag.formId = formId;
-
+            
             return View(model);
         }
 
         [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult ProductAddPopupList(GridCommand command, OrderModel.AddOrderProductModel model)
+        public ActionResult AddProductToOrder(GridCommand command, OrderModel.AddOrderProductModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
@@ -1376,237 +1437,219 @@ namespace Nop.Admin.Controllers
             };
         }
 
-        public ActionResult ProductAddDetails(int productVariantId)
+        public ActionResult AddProductToOrderDetails(int orderId, int productVariantId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
-            var productVariant = _productService.GetProductVariantById(productVariantId);
-            var model = new OrderModel.AddOrderProductModel.ProductDetailsModel()
-            {
-                ProductVariantId = productVariantId,
-                Name = productVariant.FullProductName,
-                UnitPriceExclTax = decimal.Zero,
-                UnitPriceInclTax = decimal.Zero,
-                Quantity = 1,
-                SubTotalExclTax = decimal.Zero,
-                SubTotalInclTax = decimal.Zero
-            };
-
-            //attributes
-            var productVariantAttributes = _productAttributeService.GetProductVariantAttributesByProductVariantId(productVariant.Id);
-            foreach (var attribute in productVariantAttributes)
-            {
-                var pvaModel = new OrderModel.AddOrderProductModel.ProductVariantAttributeModel()
-                {
-                    Id = attribute.Id,
-                    ProductAttributeId = attribute.ProductAttributeId,
-                    Name = attribute.ProductAttribute.Name,
-                    TextPrompt = attribute.TextPrompt,
-                    IsRequired = attribute.IsRequired,
-                    AttributeControlType = attribute.AttributeControlType
-                };
-
-                if (attribute.ShouldHaveValues())
-                {
-                    //values
-                    var pvaValues = _productAttributeService.GetProductVariantAttributeValues(attribute.Id);
-                    foreach (var pvaValue in pvaValues)
-                    {
-                        var pvaValueModel = new OrderModel.AddOrderProductModel.ProductVariantAttributeValueModel()
-                        {
-                            Id = pvaValue.Id,
-                            Name = pvaValue.Name,
-                            IsPreSelected = pvaValue.IsPreSelected
-                        };
-                        pvaModel.Values.Add(pvaValueModel);
-                    }
-                }
-
-                model.ProductVariantAttributes.Add(pvaModel);
-            }
-            //gift card
-            model.GiftCard.IsGiftCard = productVariant.IsGiftCard;
-            if (model.GiftCard.IsGiftCard)
-            {
-                model.GiftCard.GiftCardType = productVariant.GiftCardType;
-            }
-
-            return Json(new { html = RenderPartialViewToString("ProductAddDetails", model) }, JsonRequestBehavior.AllowGet);
+            var model = PrepareAddProductToOrderModel(orderId, productVariantId);
+            return View(model);
         }
 
         [HttpPost]
-        public ActionResult ProductAddDetailsPOST(FormCollection form)
+        public ActionResult AddProductToOrderDetails(int orderId, int productVariantId, FormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
                 return AccessDeniedView();
 
-            try
+            var order = _orderService.GetOrderById(orderId);
+            var productVariant = _productService.GetProductVariantById(productVariantId);
+            //save order item
+
+            //basic properties
+            var unitPriceInclTax = decimal.Zero;
+            decimal.TryParse(form["UnitPriceInclTax"], out unitPriceInclTax);
+            var unitPriceExclTax = decimal.Zero;
+            decimal.TryParse(form["UnitPriceExclTax"], out unitPriceExclTax);
+            var quantity = 1;
+            int.TryParse(form["Quantity"], out quantity);
+            var priceInclTax = decimal.Zero;
+            decimal.TryParse(form["SubTotalInclTax"], out priceInclTax);
+            var priceExclTax = decimal.Zero;
+            decimal.TryParse(form["SubTotalExclTax"], out priceExclTax);
+
+            //attributes
+            //warnings
+            var warnings = new List<string>();
+            string attributes = "";
+
+            #region Product attributes
+            string selectedAttributes = string.Empty;
+            var productVariantAttributes = _productAttributeService.GetProductVariantAttributesByProductVariantId(productVariant.Id);
+            foreach (var attribute in productVariantAttributes)
             {
-                var order = _orderService.GetOrderById(int.Parse(form["orderId"]));
-                var productVariant = _productService.GetProductVariantById(int.Parse(form["productVariantId"]));
-                //save order item
-
-                //basic properties
-                var unitPriceInclTax = decimal.Zero;
-                decimal.TryParse(form["UnitPriceInclTax"], out unitPriceInclTax);
-                var unitPriceExclTax = decimal.Zero;
-                decimal.TryParse(form["UnitPriceExclTax"], out unitPriceExclTax);
-                var quantity = 1;
-                int.TryParse(form["Quantity"], out quantity);
-                var priceInclTax = decimal.Zero;
-                decimal.TryParse(form["SubTotalInclTax"], out priceInclTax);
-                var priceExclTax = decimal.Zero;
-                decimal.TryParse(form["SubTotalExclTax"], out priceExclTax);
-                //attributes
-
-                string attributes = "";
-
-                #region Product attributes
-                string selectedAttributes = string.Empty;
-                var productVariantAttributes = _productAttributeService.GetProductVariantAttributesByProductVariantId(productVariant.Id);
-                foreach (var attribute in productVariantAttributes)
+                string controlId = string.Format("product_attribute_{0}_{1}", attribute.ProductAttributeId, attribute.Id);
+                switch (attribute.AttributeControlType)
                 {
-                    string controlId = string.Format("product_attribute_{0}_{1}", attribute.ProductAttributeId, attribute.Id);
-                    switch (attribute.AttributeControlType)
-                    {
-                        case AttributeControlType.DropdownList:
+                    case AttributeControlType.DropdownList:
+                        {
+                            var ddlAttributes = form[controlId];
+                            if (!String.IsNullOrEmpty(ddlAttributes))
                             {
-                                var ddlAttributes = form[controlId];
-                                if (!String.IsNullOrEmpty(ddlAttributes))
+                                int selectedAttributeId = int.Parse(ddlAttributes);
+                                if (selectedAttributeId > 0)
+                                    selectedAttributes = _productAttributeParser.AddProductAttribute(selectedAttributes,
+                                        attribute, selectedAttributeId.ToString());
+                            }
+                        }
+                        break;
+                    case AttributeControlType.RadioList:
+                        {
+                            var rblAttributes = form[controlId];
+                            if (!String.IsNullOrEmpty(rblAttributes))
+                            {
+                                int selectedAttributeId = int.Parse(rblAttributes);
+                                if (selectedAttributeId > 0)
+                                    selectedAttributes = _productAttributeParser.AddProductAttribute(selectedAttributes,
+                                        attribute, selectedAttributeId.ToString());
+                            }
+                        }
+                        break;
+                    case AttributeControlType.Checkboxes:
+                        {
+                            var cblAttributes = form[controlId];
+                            if (!String.IsNullOrEmpty(cblAttributes))
+                            {
+                                foreach (var item in cblAttributes.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                                 {
-                                    int selectedAttributeId = int.Parse(ddlAttributes);
+                                    int selectedAttributeId = int.Parse(item);
                                     if (selectedAttributeId > 0)
                                         selectedAttributes = _productAttributeParser.AddProductAttribute(selectedAttributes,
                                             attribute, selectedAttributeId.ToString());
                                 }
                             }
-                            break;
-                        case AttributeControlType.RadioList:
+                        }
+                        break;
+                    case AttributeControlType.TextBox:
+                        {
+                            var txtAttribute = form[controlId];
+                            if (!String.IsNullOrEmpty(txtAttribute))
                             {
-                                var rblAttributes = form[controlId];
-                                if (!String.IsNullOrEmpty(rblAttributes))
-                                {
-                                    int selectedAttributeId = int.Parse(rblAttributes);
-                                    if (selectedAttributeId > 0)
-                                        selectedAttributes = _productAttributeParser.AddProductAttribute(selectedAttributes,
-                                            attribute, selectedAttributeId.ToString());
-                                }
+                                string enteredText = txtAttribute.Trim();
+                                selectedAttributes = _productAttributeParser.AddProductAttribute(selectedAttributes,
+                                    attribute, enteredText);
                             }
-                            break;
-                        case AttributeControlType.Checkboxes:
+                        }
+                        break;
+                    case AttributeControlType.MultilineTextbox:
+                        {
+                            var txtAttribute = form[controlId];
+                            if (!String.IsNullOrEmpty(txtAttribute))
                             {
-                                var cblAttributes = form[controlId];
-                                if (!String.IsNullOrEmpty(cblAttributes))
+                                string enteredText = txtAttribute.Trim();
+                                selectedAttributes = _productAttributeParser.AddProductAttribute(selectedAttributes,
+                                    attribute, enteredText);
+                            }
+                        }
+                        break;
+                    case AttributeControlType.Datepicker:
+                        {
+                            var day = form[controlId + "_day"];
+                            var month = form[controlId + "_month"];
+                            var year = form[controlId + "_year"];
+                            DateTime? selectedDate = null;
+                            try
+                            {
+                                selectedDate = new DateTime(Int32.Parse(year), Int32.Parse(month), Int32.Parse(day));
+                            }
+                            catch { }
+                            if (selectedDate.HasValue)
+                            {
+                                selectedAttributes = _productAttributeParser.AddProductAttribute(selectedAttributes,
+                                    attribute, selectedDate.Value.ToString("D"));
+                            }
+                        }
+                        break;
+                    case AttributeControlType.FileUpload:
+                        {
+                            var httpPostedFile = this.Request.Files[controlId];
+                            if ((httpPostedFile != null) && (!String.IsNullOrEmpty(httpPostedFile.FileName)))
+                            {
+                                int fileMaxSize = _catalogSettings.FileUploadMaximumSizeBytes;
+                                if (httpPostedFile.ContentLength > fileMaxSize)
                                 {
-                                    foreach (var item in cblAttributes.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                                    warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.MaximumUploadedFileSize"), (int)(fileMaxSize / 1024)));
+                                }
+                                else
+                                {
+                                    //save an uploaded file
+                                    var download = new Download()
                                     {
-                                        int selectedAttributeId = int.Parse(item);
-                                        if (selectedAttributeId > 0)
-                                            selectedAttributes = _productAttributeParser.AddProductAttribute(selectedAttributes,
-                                                attribute, selectedAttributeId.ToString());
-                                    }
-                                }
-                            }
-                            break;
-                        case AttributeControlType.TextBox:
-                            {
-                                var txtAttribute = form[controlId];
-                                if (!String.IsNullOrEmpty(txtAttribute))
-                                {
-                                    string enteredText = txtAttribute.Trim();
+                                        DownloadGuid = Guid.NewGuid(),
+                                        UseDownloadUrl = false,
+                                        DownloadUrl = "",
+                                        DownloadBinary = httpPostedFile.GetDownloadBits(),
+                                        ContentType = httpPostedFile.ContentType,
+                                        Filename = System.IO.Path.GetFileNameWithoutExtension(httpPostedFile.FileName),
+                                        Extension = System.IO.Path.GetExtension(httpPostedFile.FileName),
+                                        IsNew = true
+                                    };
+                                    _downloadService.InsertDownload(download);
+                                    //save attribute
                                     selectedAttributes = _productAttributeParser.AddProductAttribute(selectedAttributes,
-                                        attribute, enteredText);
+                                        attribute, download.DownloadGuid.ToString());
                                 }
                             }
-                            break;
-                        case AttributeControlType.MultilineTextbox:
-                            {
-                                var txtAttribute = form[controlId];
-                                if (!String.IsNullOrEmpty(txtAttribute))
-                                {
-                                    string enteredText = txtAttribute.Trim();
-                                    selectedAttributes = _productAttributeParser.AddProductAttribute(selectedAttributes,
-                                        attribute, enteredText);
-                                }
-                            }
-                            break;
-                        case AttributeControlType.Datepicker:
-                            {
-                                var day = form[controlId + "_day"];
-                                var month = form[controlId + "_month"];
-                                var year = form[controlId + "_year"];
-                                DateTime? selectedDate = null;
-                                try
-                                {
-                                    selectedDate = new DateTime(Int32.Parse(year), Int32.Parse(month), Int32.Parse(day));
-                                }
-                                catch { }
-                                if (selectedDate.HasValue)
-                                {
-                                    selectedAttributes = _productAttributeParser.AddProductAttribute(selectedAttributes,
-                                        attribute, selectedDate.Value.ToString("D"));
-                                }
-                            }
-                            break;
-                        default:
-                            break;
-                    }
+                        }
+                        break;
+                    default:
+                        break;
                 }
-                attributes = selectedAttributes;
+            }
+            attributes = selectedAttributes;
 
-                #endregion
+            #endregion
 
-                #region Gift cards
+            #region Gift cards
 
-                string recipientName = "";
-                string recipientEmail = "";
-                string senderName = "";
-                string senderEmail = "";
-                string giftCardMessage = "";
-                if (productVariant.IsGiftCard)
+            string recipientName = "";
+            string recipientEmail = "";
+            string senderName = "";
+            string senderEmail = "";
+            string giftCardMessage = "";
+            if (productVariant.IsGiftCard)
+            {
+                foreach (string formKey in form.AllKeys)
                 {
-                    foreach (string formKey in form.AllKeys)
+                    if (formKey.Equals("giftcard.RecipientName", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        if (formKey.Equals("giftcard.RecipientName", StringComparison.InvariantCultureIgnoreCase))
-                        {
-                            recipientName = form[formKey];
-                            continue;
-                        }
-                        if (formKey.Equals("giftcard.RecipientEmail", StringComparison.InvariantCultureIgnoreCase))
-                        {
-                            recipientEmail = form[formKey];
-                            continue;
-                        }
-                        if (formKey.Equals("giftcard.SenderName", StringComparison.InvariantCultureIgnoreCase))
-                        {
-                            senderName = form[formKey];
-                            continue;
-                        }
-                        if (formKey.Equals("giftcard.SenderEmail", StringComparison.InvariantCultureIgnoreCase))
-                        {
-                            senderEmail = form[formKey];
-                            continue;
-                        }
-                        if (formKey.Equals("giftcard.Message", StringComparison.InvariantCultureIgnoreCase))
-                        {
-                            giftCardMessage = form[formKey];
-                            continue;
-                        }
+                        recipientName = form[formKey];
+                        continue;
                     }
-
-                    attributes = _productAttributeParser.AddGiftCardAttribute(attributes,
-                        recipientName, recipientEmail, senderName, senderEmail, giftCardMessage);
+                    if (formKey.Equals("giftcard.RecipientEmail", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        recipientEmail = form[formKey];
+                        continue;
+                    }
+                    if (formKey.Equals("giftcard.SenderName", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        senderName = form[formKey];
+                        continue;
+                    }
+                    if (formKey.Equals("giftcard.SenderEmail", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        senderEmail = form[formKey];
+                        continue;
+                    }
+                    if (formKey.Equals("giftcard.Message", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        giftCardMessage = form[formKey];
+                        continue;
+                    }
                 }
 
-                #endregion
-                
-                //warnings
-                var warnings = new List<string>();
-                warnings.AddRange(_shoppingCartService.GetShoppingCartItemAttributeWarnings(ShoppingCartType.ShoppingCart, productVariant, attributes));
-                warnings.AddRange(_shoppingCartService.GetShoppingCartItemGiftCardWarnings(ShoppingCartType.ShoppingCart, productVariant, attributes));
-                if (warnings.Count > 0)
-                    throw new Exception(warnings.FirstOrDefault());
+                attributes = _productAttributeParser.AddGiftCardAttribute(attributes,
+                    recipientName, recipientEmail, senderName, senderEmail, giftCardMessage);
+            }
+
+            #endregion
+
+            //warnings
+            warnings.AddRange(_shoppingCartService.GetShoppingCartItemAttributeWarnings(ShoppingCartType.ShoppingCart, productVariant, attributes));
+            warnings.AddRange(_shoppingCartService.GetShoppingCartItemGiftCardWarnings(ShoppingCartType.ShoppingCart, productVariant, attributes));
+            if (warnings.Count == 0)
+            {
+                //no errors
 
                 //attributes
                 string attributeDescription = _productAttributeFormatter.FormatAttributes(productVariant, attributes, order.Customer);
@@ -1632,7 +1675,7 @@ namespace Nop.Admin.Controllers
                 };
                 order.OrderProductVariants.Add(opv);
                 _orderService.UpdateOrder(order);
-                
+
                 //gift cards
                 if (productVariant.IsGiftCard)
                 {
@@ -1657,12 +1700,15 @@ namespace Nop.Admin.Controllers
                     }
                 }
 
-
-                return Json(new {success = true, error = ""});
+                //redirect to order details page
+                return RedirectToAction("Edit", "Order", new { id = order.Id });
             }
-            catch (Exception exc)
+            else
             {
-                return Json(new { success = false, error = exc.Message });
+                //errors
+                var model = PrepareAddProductToOrderModel(order.Id, productVariant.Id);
+                model.Warnings.AddRange(warnings);
+                return View(model);
             }
         }
 

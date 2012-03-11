@@ -2,7 +2,11 @@
 @{
     Layout = "~/Administration/Views/Shared/_AdminPopupLayout.cshtml";
 }
-@using (Html.BeginForm())
+@*we add enctype = "multipart/form-data" because "File upload" attribute control type requries it*@
+@using (Html.BeginForm("AddAttributeCombinationPopup", "ProductVariant",
+    new RouteValueDictionary(new { productVariantId = Model.ProductVariantId, btnId = ViewBag.btnId, formId = ViewBag.formId }),
+    FormMethod.Post,
+    new Dictionary<string, Object> { { "enctype", "multipart/form-data" } }))
 {
     @Html.ValidationSummary(false)
     <div class="section-header">

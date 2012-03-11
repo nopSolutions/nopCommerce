@@ -1,3 +1,5 @@
+using System;
+
 namespace Nop.Core.Domain.Media
 {
     /// <summary>
@@ -5,6 +7,11 @@ namespace Nop.Core.Domain.Media
     /// </summary>
     public partial class Download : BaseEntity
     {
+        /// <summary>
+        /// Gets a sets a GUID
+        /// </summary>
+        public virtual Guid DownloadGuid { get; set; }
+
         /// <summary>
         /// Gets a sets a value indicating whether DownloadUrl property should be used
         /// </summary>

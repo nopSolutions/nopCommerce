@@ -144,6 +144,20 @@ namespace Nop.Core.Html
         }
 
         /// <summary>
+        /// replace anchor text (remove a tag from the following url <a href="http://example.com">Name</a> and output only the string "Name")
+        /// </summary>
+        /// <param name="text">Text</param>
+        /// <returns>Text</returns>
+        public static string ReplaceAnchorTags(string text)
+        {
+            if (String.IsNullOrEmpty(text))
+                return string.Empty;
+
+            text = Regex.Replace(text, @"<a\b[^>]+>([^<]*(?:(?!</a)<[^<]*)*)</a>", "$1", RegexOptions.IgnoreCase);
+            return text;
+        }
+
+        /// <summary>
         /// Converts plain text to HTML
         /// </summary>
         /// <param name="text">Text</param>
@@ -167,8 +181,10 @@ namespace Nop.Core.Html
         /// </summary>
         /// <param name="text">Text</param>
         /// <param name="decode">A value indicating whether to decode text</param>
+        /// <param name="replaceAnchorTags">A value indicating whether to replace anchor text (remove a tag from the following url <a href="http://example.com">Name</a> and output only the string "Name")</param>
         /// <returns>Formatted text</returns>
-        public static string ConvertHtmlToPlainText(string text, bool decode = false)
+        public static string ConvertHtmlToPlainText(string text,
+            bool decode = false, bool replaceAnchorTags = false)
         {
             if (String.IsNullOrEmpty(text))
                 return string.Empty;
@@ -181,6 +197,9 @@ namespace Nop.Core.Html
             text = text.Replace("<br />", "\n");
             text = text.Replace("&nbsp;&nbsp;", "\t");
             text = text.Replace("&nbsp;&nbsp;", "  ");
+
+            if (replaceAnchorTags)
+                text = ReplaceAnchorTags(text);
 
             return text;
         }

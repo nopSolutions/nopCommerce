@@ -65,6 +65,7 @@ namespace Nop.Web.Controllers
         private readonly ICustomerService _customerService;
         private readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
         private readonly IPermissionService _permissionService;
+        private readonly IDownloadService _downloadService;
 
         private readonly MediaSettings _mediaSetting;
         private readonly CatalogSettings _catalogSettings;
@@ -95,7 +96,7 @@ namespace Nop.Web.Controllers
             IWorkflowMessageService workflowMessageService, IProductTagService productTagService,
             IOrderReportService orderReportService, ICustomerService customerService,
             IBackInStockSubscriptionService backInStockSubscriptionService,
-            IPermissionService permissionService,
+            IPermissionService permissionService, IDownloadService downloadService,
             MediaSettings mediaSetting, CatalogSettings catalogSettings,
             ShoppingCartSettings shoppingCartSettings, StoreInformationSettings storeInformationSettings,
             LocalizationSettings localizationSettings, CustomerSettings customerSettings, 
@@ -130,6 +131,7 @@ namespace Nop.Web.Controllers
             this._customerService = customerService;
             this._backInStockSubscriptionService = backInStockSubscriptionService;
             this._permissionService = permissionService;
+            this._downloadService = downloadService;
 
 
             this._mediaSetting = mediaSetting;
@@ -1291,7 +1293,8 @@ namespace Nop.Web.Controllers
                 }
 
             #endregion
-            
+
+            var addToCartWarnings = new List<string>();
             string attributes = "";
 
             #region Product attributes
@@ -1381,6 +1384,38 @@ namespace Nop.Web.Controllers
                             }
                         }
                         break;
+                    case AttributeControlType.FileUpload:
+                        {
+                            var httpPostedFile = this.Request.Files[controlId];
+                            if ((httpPostedFile != null) && (!String.IsNullOrEmpty(httpPostedFile.FileName)))
+                            {
+                                int fileMaxSize = _catalogSettings.FileUploadMaximumSizeBytes;
+                                if (httpPostedFile.ContentLength > fileMaxSize)
+                                {
+                                    addToCartWarnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.MaximumUploadedFileSize"), (int)(fileMaxSize / 1024)));
+                                }
+                                else
+                                {
+                                    //save an uploaded file
+                                    var download = new Download()
+                                    {
+                                        DownloadGuid = Guid.NewGuid(),
+                                        UseDownloadUrl = false,
+                                        DownloadUrl = "",
+                                        DownloadBinary = httpPostedFile.GetDownloadBits(),
+                                        ContentType = httpPostedFile.ContentType,
+                                        Filename = System.IO.Path.GetFileNameWithoutExtension(httpPostedFile.FileName),
+                                        Extension = System.IO.Path.GetExtension(httpPostedFile.FileName),
+                                        IsNew = true
+                                    };
+                                    _downloadService.InsertDownload(download);
+                                    //save attribute
+                                    selectedAttributes = _productAttributeParser.AddProductAttribute(selectedAttributes,
+                                        attribute, download.DownloadGuid.ToString());
+                                }
+                            }
+                        }
+                        break;
                     default:
                         break;
                 }
@@ -1434,8 +1469,8 @@ namespace Nop.Web.Controllers
             #endregion
 
             //save item
-            var addToCartWarnings = _shoppingCartService.AddToCart(_workContext.CurrentCustomer,
-                productVariant, cartType, attributes, customerEnteredPriceConverted, quantity, true);
+            addToCartWarnings.AddRange(_shoppingCartService.AddToCart(_workContext.CurrentCustomer,
+                productVariant, cartType, attributes, customerEnteredPriceConverted, quantity, true));
 
             #region Set already entered values
 

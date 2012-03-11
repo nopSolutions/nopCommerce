@@ -8,6 +8,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
+using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
@@ -49,6 +50,9 @@ namespace Nop.Admin.Controllers
         private readonly IManufacturerService _manufacturerService;
         private readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
         private readonly ICurrencyService _currencyService;
+        private readonly IDownloadService _downloadService;
+
+        private readonly CatalogSettings _catalogSettings;
         private readonly CurrencySettings _currencySettings;
         private readonly IMeasureService _measureService;
         private readonly MeasureSettings _measureSettings;
@@ -67,7 +71,8 @@ namespace Nop.Admin.Controllers
             IPermissionService permissionService, 
             ICategoryService categoryService, IManufacturerService manufacturerService,
             IBackInStockSubscriptionService backInStockSubscriptionService,
-            ICurrencyService currencyService, CurrencySettings currencySettings,
+            ICurrencyService currencyService, IDownloadService downloadService, 
+            CatalogSettings catalogSettings, CurrencySettings currencySettings,
             IMeasureService measureService, MeasureSettings measureSettings,
             AdminAreaSettings adminAreaSettings)
         {
@@ -90,6 +95,9 @@ namespace Nop.Admin.Controllers
             this._manufacturerService = manufacturerService;
             this._backInStockSubscriptionService = backInStockSubscriptionService;
             this._currencyService = currencyService;
+            this._downloadService = downloadService;
+
+            this._catalogSettings = catalogSettings;
             this._currencySettings = currencySettings;
             this._measureService = measureService;
             this._measureSettings = measureSettings;
@@ -208,42 +216,42 @@ namespace Nop.Admin.Controllers
         {
             if (model == null)
                 throw new ArgumentNullException("model");
+            if (variant == null)
+                throw new ArgumentNullException("variant");
 
+            model.ProductVariantId = variant.Id;
             model.StockQuantity = 10000;
 
-            if (variant != null)
+            var productVariantAttributes = _productAttributeService.GetProductVariantAttributesByProductVariantId(variant.Id);
+            foreach (var attribute in productVariantAttributes)
             {
-                var productVariantAttributes = _productAttributeService.GetProductVariantAttributesByProductVariantId(variant.Id);
-                foreach (var attribute in productVariantAttributes)
+                var pvaModel = new AddProductVariantAttributeCombinationModel.ProductVariantAttributeModel()
                 {
-                    var pvaModel = new AddProductVariantAttributeCombinationModel.ProductVariantAttributeModel()
-                    {
-                        Id = attribute.Id,
-                        ProductAttributeId = attribute.ProductAttributeId,
-                        Name = attribute.ProductAttribute.Name,
-                        TextPrompt = attribute.TextPrompt,
-                        IsRequired = attribute.IsRequired,
-                        AttributeControlType = attribute.AttributeControlType
-                    };
+                    Id = attribute.Id,
+                    ProductAttributeId = attribute.ProductAttributeId,
+                    Name = attribute.ProductAttribute.Name,
+                    TextPrompt = attribute.TextPrompt,
+                    IsRequired = attribute.IsRequired,
+                    AttributeControlType = attribute.AttributeControlType
+                };
 
-                    if (attribute.ShouldHaveValues())
+                if (attribute.ShouldHaveValues())
+                {
+                    //values
+                    var pvaValues = _productAttributeService.GetProductVariantAttributeValues(attribute.Id);
+                    foreach (var pvaValue in pvaValues)
                     {
-                        //values
-                        var pvaValues = _productAttributeService.GetProductVariantAttributeValues(attribute.Id);
-                        foreach (var pvaValue in pvaValues)
+                        var pvaValueModel = new AddProductVariantAttributeCombinationModel.ProductVariantAttributeValueModel()
                         {
-                            var pvaValueModel = new AddProductVariantAttributeCombinationModel.ProductVariantAttributeValueModel()
-                            {
-                                Id = pvaValue.Id,
-                                Name = pvaValue.Name,
-                                IsPreSelected = pvaValue.IsPreSelected
-                            };
-                            pvaModel.Values.Add(pvaValueModel);
-                        }
+                            Id = pvaValue.Id,
+                            Name = pvaValue.Name,
+                            IsPreSelected = pvaValue.IsPreSelected
+                        };
+                        pvaModel.Values.Add(pvaValueModel);
                     }
-
-                    model.ProductVariantAttributes.Add(pvaModel);
                 }
+
+                model.ProductVariantAttributes.Add(pvaModel);
             }
         }
         
@@ -1045,7 +1053,7 @@ namespace Nop.Admin.Controllers
         
         
         //edit
-        public ActionResult AddAttributeCombinationPopup(int productVariantId)
+        public ActionResult AddAttributeCombinationPopup(string btnId, string formId, int productVariantId)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
@@ -1055,6 +1063,8 @@ namespace Nop.Admin.Controllers
                 //No product variant found with the specified id
                 return RedirectToAction("List", "Product");
 
+            ViewBag.btnId = btnId;
+            ViewBag.formId = formId;
             var model = new AddProductVariantAttributeCombinationModel();
             PrepareAddProductAttributeCombinationModel(model, variant);
             return View(model);
@@ -1073,10 +1083,15 @@ namespace Nop.Admin.Controllers
                 //No product variant found with the specified id
                 return RedirectToAction("List", "Product");
 
+            ViewBag.btnId = btnId;
+            ViewBag.formId = formId;
 
             int stockQuantity = model.StockQuantity;
             bool allowOutOfStockOrders = model.AllowOutOfStockOrders;
+
+            //attributes
             string attributes = "";
+            var warnings = new List<string>();
 
             #region Product attributes
             string selectedAttributes = string.Empty;
@@ -1165,6 +1180,38 @@ namespace Nop.Admin.Controllers
                             }
                         }
                         break;
+                    case AttributeControlType.FileUpload:
+                        {
+                            var httpPostedFile = this.Request.Files[controlId];
+                            if ((httpPostedFile != null) && (!String.IsNullOrEmpty(httpPostedFile.FileName)))
+                            {
+                                int fileMaxSize = _catalogSettings.FileUploadMaximumSizeBytes;
+                                if (httpPostedFile.ContentLength > fileMaxSize)
+                                {
+                                    warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.MaximumUploadedFileSize"), (int)(fileMaxSize / 1024)));
+                                }
+                                else
+                                {
+                                    //save an uploaded file
+                                    var download = new Download()
+                                    {
+                                        DownloadGuid = Guid.NewGuid(),
+                                        UseDownloadUrl = false,
+                                        DownloadUrl = "",
+                                        DownloadBinary = httpPostedFile.GetDownloadBits(),
+                                        ContentType = httpPostedFile.ContentType,
+                                        Filename = System.IO.Path.GetFileNameWithoutExtension(httpPostedFile.FileName),
+                                        Extension = System.IO.Path.GetExtension(httpPostedFile.FileName),
+                                        IsNew = true
+                                    };
+                                    _downloadService.InsertDownload(download);
+                                    //save attribute
+                                    selectedAttributes = _productAttributeParser.AddProductAttribute(selectedAttributes,
+                                        attribute, download.DownloadGuid.ToString());
+                                }
+                            }
+                        }
+                        break;
                     default:
                         break;
                 }
@@ -1173,8 +1220,8 @@ namespace Nop.Admin.Controllers
 
             #endregion
 
-            var warnings = _shoppingCartService.GetShoppingCartItemAttributeWarnings(ShoppingCartType.ShoppingCart,
-                variant, attributes);
+            warnings.AddRange(_shoppingCartService.GetShoppingCartItemAttributeWarnings(ShoppingCartType.ShoppingCart,
+                variant, attributes));
             if (warnings.Count == 0)
             {
                 //save combination
@@ -1188,8 +1235,6 @@ namespace Nop.Admin.Controllers
                 _productAttributeService.InsertProductVariantAttributeCombination(combination);
 
                 ViewBag.RefreshPage = true;
-                ViewBag.btnId = btnId;
-                ViewBag.formId = formId;
                 return View(model);
             }
             else

@@ -20,7 +20,8 @@
                 {
                     <span style="font-weight: bold">@attribute.Name</span>
                 }
-                @if (attribute.AttributeControlType == AttributeControlType.TextBox)
+                @if (attribute.AttributeControlType == AttributeControlType.TextBox ||
+                    attribute.AttributeControlType == AttributeControlType.FileUpload)
                 {
                     <text>&nbsp;&nbsp;&nbsp;</text>
                 }
@@ -77,6 +78,11 @@
                     case AttributeControlType.Datepicker:
                         {
                             @Html.DatePickerDropDowns(controlId + "_day", controlId + "_month", controlId + "_year", DateTime.Now.Year, DateTime.Now.Year + 1)
+                        }
+                        break;
+                    case AttributeControlType.FileUpload:
+                        {
+                    <input type="file" id="@(controlId)" name="@(controlId)"></input>
                         }
                         break;
                 }

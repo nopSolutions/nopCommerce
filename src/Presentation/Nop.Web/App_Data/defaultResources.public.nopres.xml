@@ -1319,6 +1319,9 @@
 					<LocaleResource Name="Datepicker">
 						<Value>Date picker</Value>
 					</LocaleResource>
+          <LocaleResource Name="FileUpload">
+            <Value>File upload</Value>
+          </LocaleResource>
 				</Children>
 			</LocaleResource>
 			<LocaleResource Name="Nop.Core.Domain.Catalog.BackorderMode">
@@ -3588,6 +3591,9 @@
 			<LocaleResource Name="ItemYouSave">
 				<Value>You save</Value>
 			</LocaleResource>
+      <LocaleResource Name="MaximumUploadedFileSize">
+        <Value>Maximum file size is {0} KB</Value>
+      </LocaleResource>
 			<LocaleResource Name="MaximumQuantity">
 				<Value>The maximum quantity allowed for purchase is {0}.</Value>
 			</LocaleResource>
@@ -3721,10 +3727,6 @@
 			<LocaleResource Name="WishlistDisabled">
 				<Value>Wishlist is disabled for this product</Value>
 			</LocaleResource>
-		</Children>
-	</LocaleResource>
-	<LocaleResource Name="ShoppingCartWarning">
-		<Children>
 		</Children>
 	</LocaleResource>
 	<LocaleResource Name="Sitemap">

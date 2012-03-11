@@ -57,10 +57,11 @@ namespace Nop.Admin.Controllers
         {
             //insert
             var download = new Download()
-              {
-                  UseDownloadUrl = true,
-                  DownloadUrl = downloadUrl,
-                  IsNew = true
+            {
+                DownloadGuid = Guid.NewGuid(),
+                UseDownloadUrl = true,
+                DownloadUrl = downloadUrl,
+                IsNew = true
               };
             _downloadService.InsertDownload(download);
 
@@ -92,6 +93,7 @@ namespace Nop.Admin.Controllers
 
             var download = new Download()
             {
+                DownloadGuid = Guid.NewGuid(),
                 UseDownloadUrl = false,
                 DownloadUrl = "",
                 DownloadBinary = httpPostedFile.GetDownloadBits(),
