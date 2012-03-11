@@ -65,7 +65,7 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var customers = _customerService.GetAllCustomers(null, null, null, null, null,
-                null, null, 0, 0, true, ShoppingCartType.ShoppingCart,
+                null, null, 0, 0, null, null, null, true, ShoppingCartType.ShoppingCart,
                 command.Page - 1, command.PageSize);
 
             var gridModel = new GridModel<ShoppingCartModel>
@@ -145,7 +145,8 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var customers = _customerService.GetAllCustomers(null, null, null, null, null,
-                null, null, 0, 0, true, ShoppingCartType.Wishlist, command.Page - 1, command.PageSize);
+                null, null, 0, 0, null, null, null, 
+                true, ShoppingCartType.Wishlist, command.Page - 1, command.PageSize);
 
             var gridModel = new GridModel<ShoppingCartModel>
             {

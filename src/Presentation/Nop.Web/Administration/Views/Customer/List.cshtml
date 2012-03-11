@@ -98,6 +98,40 @@
                 </td>
             </tr>
         }
+        
+        @if (Model.CompanyEnabled)
+        {
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.SearchCompany):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(model => Model.SearchCompany)
+                </td>
+            </tr>
+        }        
+        @if (Model.PhoneEnabled)
+        {
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.SearchPhone):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(model => Model.SearchPhone)
+                </td>
+            </tr>
+        }
+        @if (Model.ZipPostalCodeEnabled)
+        {
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.SearchZipPostalCode):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(model => Model.SearchZipPostalCode)
+                </td>
+            </tr>
+        } 
         <tr>
             <td colspan="2">
                 <button type="submit" id="search-customers" name="search-customers" value="search-customers" class="t-button">@T("Admin.Common.Search")</button>
@@ -174,6 +208,18 @@
                             .Width(5)
                             .Filterable(false)
                             .Hidden(true);
+                        columns.Bound(x => x.SearchCustomerCompany)
+                            .Width(5)
+                            .Filterable(false)
+                            .Hidden(true);
+                        columns.Bound(x => x.SearchCustomerPhone)
+                            .Width(5)
+                            .Filterable(false)
+                            .Hidden(true);
+                        columns.Bound(x => x.SearchCustomerZipPostalCode)
+                            .Width(5)
+                            .Filterable(false)
+                            .Hidden(true);
                         columns.Bound(x => x.Active)
                              .Width(100)
                              .Template(x => x.Active.ToString().ToLower())
@@ -232,6 +278,21 @@
                         {
                             filters.Add(x => x.SearchCustomerMonthOfBirth).Contains((string)ViewData["searchCustomerMonthOfBirth"]);
                         }
+                        //customer company
+                        if (!String.IsNullOrEmpty(ViewData["searchCustomerCompany"] as string))
+                        {
+                            filters.Add(x => x.SearchCustomerCompany).Contains((string)ViewData["searchCustomerCompany"]);
+                        }
+                        //customer phone
+                        if (!String.IsNullOrEmpty(ViewData["searchCustomerPhone"] as string))
+                        {
+                            filters.Add(x => x.SearchCustomerPhone).Contains((string)ViewData["searchCustomerPhone"]);
+                        }
+                        //customer zip
+                        if (!String.IsNullOrEmpty(ViewData["searchCustomerZipPostalCode"] as string))
+                        {
+                            filters.Add(x => x.SearchCustomerZipPostalCode).Contains((string)ViewData["searchCustomerZipPostalCode"]);
+                        }
                     }))
                     .EnableCustomBinding(true))
             </td>
@@ -262,15 +323,33 @@
                     return false;
                 }
             });
+            $("#@Html.FieldIdFor(model => model.SearchCompany)").keydown(function (event) {
+                if (event.keyCode == 13) {
+                    $("#search-customers").click();
+                    return false;
+                }
+            });
+            $("#@Html.FieldIdFor(model => model.SearchPhone)").keydown(function (event) {
+                if (event.keyCode == 13) {
+                    $("#search-customers").click();
+                    return false;
+                }
+            });
+            $("#@Html.FieldIdFor(model => model.SearchZipPostalCode)").keydown(function (event) {
+                if (event.keyCode == 13) {
+                    $("#search-customers").click();
+                    return false;
+                }
+            });
 
             //"Export Excel selected" button
             $('#exportexcel-selected').click(function (e) {
-                e.preventDefault();                
+                e.preventDefault();
                 //redirect to required URL
                 setLocation('@(Url.Action("ExportExcelSelected", "Customer"))?selectedIds=' + selectedIds.join(","));
                 return false;
             });
-            
+
             //"Export XML selected" button
             $('#exportxml-selected').click(function (e) {
                 e.preventDefault();

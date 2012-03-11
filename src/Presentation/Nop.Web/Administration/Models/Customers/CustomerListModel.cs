@@ -42,5 +42,22 @@ namespace Nop.Admin.Models.Customers
         [AllowHtml]
         public string SearchMonthOfBirth { get; set; }
         public bool DateOfBirthEnabled { get; set; }
+
+
+
+        [NopResourceDisplayName("Admin.Customers.Customers.List.SearchCompany")]
+        [AllowHtml]
+        public string SearchCompany { get; set; }
+        public bool CompanyEnabled { get; set; }
+
+        [NopResourceDisplayName("Admin.Customers.Customers.List.SearchPhone")]
+        [AllowHtml]
+        public string SearchPhone { get; set; }
+        public bool PhoneEnabled { get; set; }
+
+        [NopResourceDisplayName("Admin.Customers.Customers.List.SearchZipCode")]
+        [AllowHtml]
+        public string SearchZipPostalCode { get; set; }
+        public bool ZipPostalCodeEnabled { get; set; }
     }
 }

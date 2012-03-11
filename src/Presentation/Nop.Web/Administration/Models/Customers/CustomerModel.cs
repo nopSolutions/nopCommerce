@@ -199,6 +199,9 @@ namespace Nop.Admin.Models.Customers
         public string SearchCustomerLastName { get; set; }
         public string SearchCustomerDayOfBirth { get; set; }
         public string SearchCustomerMonthOfBirth { get; set; }
+        public string SearchCustomerCompany { get; set; }
+        public string SearchCustomerPhone { get; set; }
+        public string SearchCustomerZipPostalCode { get; set; }
         
         //send email model
         public SendEmailModel SendEmail { get; set; }

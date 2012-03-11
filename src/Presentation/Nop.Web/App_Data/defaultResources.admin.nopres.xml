@@ -6541,7 +6541,31 @@
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
-								</Children>
+                  <LocaleResource Name="SearchCompany">
+                    <Value>Company</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Search by company.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="SearchPhone">
+                    <Value>Phone</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Search by a phone number.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="SearchZipCode">
+                    <Value>Zip code</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Search by zip code.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                </Children>
 							</LocaleResource>
 							<LocaleResource Name="Orders">
 								<Value>Orders</Value>

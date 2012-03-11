@@ -425,6 +425,24 @@ set @resources='
   <LocaleResource Name="Admin.Orders.Products.AddNew.BackToOrder">
     <Value>back to order details</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.List.SearchCompany">
+    <Value>Company</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.List.SearchCompany.Hint">
+    <Value>Search by company.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.List.SearchPhone">
+    <Value>Phone</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.List.SearchPhone.Hint">
+    <Value>Search by a phone number.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.List.SearchZipCode">
+    <Value>Zip code</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.List.SearchZipCode.Hint">
+    <Value>Search by zip code.</Value>
+  </LocaleResource>
 </Language>
 '
 
