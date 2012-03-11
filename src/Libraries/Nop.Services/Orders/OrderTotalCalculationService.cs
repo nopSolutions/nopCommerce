@@ -418,25 +418,17 @@ namespace Nop.Services.Orders
             appliedDiscount = null;
 
             //free shipping
-            bool isFreeShipping = IsFreeShipping(cart);
-
-
+            if (IsFreeShipping(cart))
+                return decimal.Zero;
+            
             //additional shipping charges
             decimal additionalShippingCharge = GetShoppingCartAdditionalShippingCharge(cart);
             var adjustedRate = shippingRate + additionalShippingCharge;
 
-            //free shipping
-            if (isFreeShipping)
-            {
-                adjustedRate = decimal.Zero;
-            }
-            else
-            {
-                //discount
-                var customer = cart.GetCustomer();
-                decimal discountAmount = GetShippingDiscount(customer, adjustedRate, out appliedDiscount);
-                adjustedRate = adjustedRate - discountAmount;
-            }
+            //discount
+            var customer = cart.GetCustomer();
+            decimal discountAmount = GetShippingDiscount(customer, adjustedRate, out appliedDiscount);
+            adjustedRate = adjustedRate - discountAmount;
 
             if (adjustedRate < decimal.Zero)
                 adjustedRate = decimal.Zero;
