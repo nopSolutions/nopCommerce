@@ -16,11 +16,13 @@
         Selected = Model.CurrentTaxType == TaxDisplayType.ExcludingTax
     });
     
-    @Html.DropDownList("customerTaxType",
-        taxTypes,
-        new { onChange = "onTaxTypeChanged();" })
+    @Html.DropDownList("customerTaxType", taxTypes)
     
     <script type="text/javascript">
+        $(document).ready(function () {
+            $("#customerTaxType").change(onTaxTypeChanged);
+        });
+
         function onTaxTypeChanged() {
             var selectedTaxType = document.getElementById('customerTaxType');
             var selectedTaxTypeId = selectedTaxType.options[selectedTaxType.selectedIndex].value;

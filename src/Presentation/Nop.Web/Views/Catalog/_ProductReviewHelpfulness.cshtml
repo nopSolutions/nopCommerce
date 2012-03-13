@@ -21,7 +21,7 @@
                     cache:false,
                     type: "POST",
                     url: "@(Url.Action("SetProductReviewHelpfulness", "Catalog"))",
-                    data: "productReviewId=" + @(Model.ProductReviewId) + "&washelpful=" + wasHelpful,
+                    data: { "productReviewId": @(Model.ProductReviewId), "washelpful": wasHelpful },
                     success: function (data) {
                          $("#helpfulness-vote-yes-@(Model.ProductReviewId)").html(data.TotalYes);
                          $("#helpfulness-vote-no-@(Model.ProductReviewId)").html(data.TotalNo);

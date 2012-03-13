@@ -52,7 +52,7 @@
                     cache:false,
                     type: "GET",
                     url: "@(Url.Action("GetStatesByCountryId", "Country", new RouteValueDictionary() { { "area", "Admin" } }))",
-                    data: "countryId=" + selectedItem + "&addAsterisk=true",
+                    data: { "countryId": selectedItem, "addAsterisk": "true" },
                     success: function (data) {
                         ddlStates.html('');
                         $.each(data, function(id, option) {

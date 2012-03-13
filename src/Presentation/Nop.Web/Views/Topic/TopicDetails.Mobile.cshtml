@@ -21,7 +21,7 @@
                 $.ajax({
                     type: 'POST',
                     url: '@Url.Action("Authenticate", "Topic")',
-                    data: "id=" + topicId + "&password=" + password,
+                    data: { "id": topicId, "password": password },
                     dataType: 'json',
                     success: function (data) {
                         if (data.Authenticated) {

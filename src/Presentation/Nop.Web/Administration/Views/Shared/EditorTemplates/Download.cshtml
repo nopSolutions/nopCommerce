@@ -26,7 +26,7 @@
                     cache:false,
                     type: "POST",
                     url: "@(Url.Action("SaveDownloadUrl", "Download"))",
-                    data: "downloadUrl=" + downloadUrl,
+                    data: { "downloadUrl": downloadUrl },
                     success: function (data) {
                          $('#pnlDownloadURLResult@(randomNumber)').fadeIn("slow").delay(1000).fadeOut("slow");
                          $("#@(clientId + "value") input").val(data.downloadId);

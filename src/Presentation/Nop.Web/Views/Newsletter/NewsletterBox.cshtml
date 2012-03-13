@@ -51,7 +51,7 @@
                     cache:false,
                     type: "POST",
                     url: "@(Url.Action("SubscribeNewsletter", "Newsletter"))",
-                    data: "subscribe=" + subscribe + "&email=" +email ,
+                    data: { "subscribe": subscribe, "email": email },
                     success: function (data) {
                         subscribeProgress.hide();
                         $("#pnl-newsletter-result").html(data.Result);

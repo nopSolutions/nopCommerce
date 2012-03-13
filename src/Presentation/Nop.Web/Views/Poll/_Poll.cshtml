@@ -47,7 +47,7 @@
                         cache:false,
                         type: "POST",
                         url: "@(Url.Action("Vote", "Poll"))",
-                        data: "pollAnswerId=" + pollAnswerId,
+                        data: { "pollAnswerId": pollAnswerId },
                         success: function (data) {
                             voteProgress.hide();
                             $("#pnl-poll-vote-result-@(Model.Id)").html(data.Result);

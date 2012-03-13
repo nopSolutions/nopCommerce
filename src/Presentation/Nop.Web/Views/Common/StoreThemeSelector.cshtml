@@ -8,9 +8,13 @@
         Selected = x.Name.Equals(Model.CurrentStoreTheme.Name, StringComparison.InvariantCultureIgnoreCase)
     });
     
-    @T("StoreTheme")<text>:</text> @Html.DropDownList("themeName", themes, new { onChange = "onStoreThemeChanged();", @class = "storethemelist" })
+    @T("StoreTheme")<text>:</text> @Html.DropDownList("themeName", themes, new { @class = "storethemelist" })
 }
 <script type="text/javascript">
+    $(document).ready(function () {
+        $("#themeName").change(onStoreThemeChanged);
+    });
+
     function onStoreThemeChanged() {
         $("#form-storethemeselector").submit();
     }

@@ -196,7 +196,7 @@
                         cache:false,
                         type: "POST",
                         url: "@(Url.Action("GetDiscountRequirementMetaInfo", "Discount"))",
-                        data: "discountRequirementId=" + newRequirementId + "&discountId=" + discountId ,
+                        data: { "discountRequirementId": newRequirementId, "discountId": discountId },
                         success: function (result) {                            
                             discountRequirements.push({ discountRequirementId: newRequirementId, ruleName : result.ruleName, url : result.url });
                             loadExistingRequirements();
@@ -234,7 +234,7 @@
                     $.ajax({
                         cache:false,
                         url: "@(Url.Action("GetDiscountRequirementConfigurationUrl", "Discount"))",
-                        data: "systemName=" + ruleSystemName + "&discountId=" + discountId,
+                        data: { "systemName": ruleSystemName, "discountId": discountId },
                         success: function (result) {
                                 var configureRuleUrl = result.url;
                                 //now load the content
@@ -283,7 +283,7 @@
                     cache:false,
                     type: "POST",
                     url: "@(Url.Action("DeleteDiscountRequirement", "Discount"))",
-                    data: "discountId=" + discountId +"&discountRequirementId=" + discountRequirementId,
+                    data: { "discountId": discountId, "discountRequirementId": discountRequirementId },
                     success: function (data) {
                         removeRequirementByElement(discountRequirements, discountRequirementId)
                         loadExistingRequirements();

@@ -23,11 +23,13 @@
             Selected = x.Id.Equals(Model.CurrentLanguage.Id)
         });
     
-    @Html.DropDownList("customerlanguage",
-            languages,
-            new { onChange = "onLanguageChanged();" })
+    @Html.DropDownList("customerlanguage", languages)
             
     <script type="text/javascript">
+        $(document).ready(function () {
+            $("#customerlanguage").change(onLanguageChanged);
+        });
+
         function onLanguageChanged() {
             var selectedCustomerLanguage = document.getElementById('customerlanguage');
             var selectedLanguageId = selectedCustomerLanguage.options[selectedCustomerLanguage.selectedIndex].value;

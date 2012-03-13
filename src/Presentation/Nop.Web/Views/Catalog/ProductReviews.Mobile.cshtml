@@ -86,7 +86,7 @@
                             </div>
                             <div class="review-info">
                                 <div>
-                                    @T("Reviews.From")<text>:</text>
+                                    @T("Reviews.From"):
                                     @if (review.AllowViewingProfiles)
                                     {
                                         <a href="@Url.RouteUrl("CustomerProfile", new { id = review.CustomerId })">@(review.CustomerName)</a>
@@ -97,7 +97,7 @@
                                     }
                                 </div>
                                 <div>
-                                    @T("Reviews.Date")<text>:</text>
+                                    @T("Reviews.Date"):
                                     @review.WrittenOnStr
                                 </div>
                             </div>

@@ -14,7 +14,7 @@
                     cache:false,
                     type: "POST",
                     url: "@(Url.Action("Configure", "DiscountRulesBillingCountry"))",
-                    data: "discountId=" + discountId +"&discountRequirementId=" + requirementId + "&countryId=" + countryId,
+                    data: { "discountId": discountId, "discountRequirementId": requirementId, "countryId": countryId },
                     success: function (data) {
                          $('#pnl-save-requirement-result@(Model.RequirementId)').fadeIn("slow").delay(1000).fadeOut("slow");
                          //notify parent if it's a new requirement

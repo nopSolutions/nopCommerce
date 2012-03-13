@@ -8,11 +8,13 @@
         Selected = x.Id.Equals(Model.CurrentCurrency.Id)
     });
     
-    @Html.DropDownList("customerCurrency",
-                 currencies,
-                 new { onChange = "onCurrencyChanged();" })
+    @Html.DropDownList("customerCurrency", currencies)
     
     <script type="text/javascript">
+        $(document).ready(function () {
+            $("#customerCurrency").change(onCurrencyChanged);
+        });
+
         function onCurrencyChanged() {
             var selectedCurrency = document.getElementById('customerCurrency');
             var selectedCurrencyId = selectedCurrency.options[selectedCurrency.selectedIndex].value;

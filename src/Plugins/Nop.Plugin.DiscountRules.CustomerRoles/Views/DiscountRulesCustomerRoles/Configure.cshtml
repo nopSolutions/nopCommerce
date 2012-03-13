@@ -14,7 +14,7 @@
                     cache:false,
                     type: "POST",
                     url: "@(Url.Action("Configure", "DiscountRulesCustomerRoles"))",
-                    data: "discountId=" + discountId +"&discountRequirementId=" + requirementId + "&customerRoleId=" + customerRoleId,
+                    data: { "discountId": discountId, "discountRequirementId": requirementId, "customerRoleId": customerRoleId },
                     success: function (data) {
                          $('#pnl-save-requirement-result@(Model.RequirementId)').fadeIn("slow").delay(1000).fadeOut("slow");
                          //notify parent if it's a new requirement

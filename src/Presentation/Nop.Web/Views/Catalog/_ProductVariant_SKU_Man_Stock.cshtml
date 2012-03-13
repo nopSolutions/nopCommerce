@@ -3,8 +3,7 @@
 @if (!String.IsNullOrWhiteSpace(Model.Sku) && Model.ShowSku)
 {
     <div class="sku">
-        @T("Products.Sku")<text>:</text>
-        @Model.Sku
+        @T("Products.Sku"): @Model.Sku
     </div>
     <div class="clear">
     </div>
@@ -13,8 +12,7 @@
 @if (!String.IsNullOrWhiteSpace(Model.ManufacturerPartNumber) && Model.ShowManufacturerPartNumber)
 {
     <div class="manufacturerpartnumber">
-        @T("Products.ManufacturerPartNumber")<text>:</text>
-        @Model.ManufacturerPartNumber
+        @T("Products.ManufacturerPartNumber"): @Model.ManufacturerPartNumber
     </div>
     <div class="clear">
     </div>
@@ -23,8 +21,7 @@
 @if (!String.IsNullOrWhiteSpace(Model.Gtin) && Model.ShowGtin)
 {
     <div class="gtin">
-        @T("Products.GTIN")<text>:</text>
-        @Model.Gtin
+        @T("Products.GTIN"): @Model.Gtin
     </div>
     <div class="clear">
     </div>
@@ -33,7 +30,6 @@
 @if (!String.IsNullOrWhiteSpace(Model.StockAvailablity))
 {
     <div class="stock">
-        @T("Products.Availability")<text>:</text>
-        @Model.StockAvailablity
+        @T("Products.Availability"): @Model.StockAvailablity
     </div>
 }

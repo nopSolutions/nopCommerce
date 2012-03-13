@@ -1371,7 +1371,7 @@
                     cache:false,
                     type: "POST",
                     url: "@(Url.Action("OrderNoteAdd", "Order"))",
-                    data: "DisplayToCustomer=" + orderNoteDisplayToCustomer + "&message=" + orderNoteMessage + "&orderId=" + @Model.Id,
+                    data: { "DisplayToCustomer": orderNoteDisplayToCustomer, "message": orderNoteMessage, "orderId": @Model.Id },
                     success: function (data) {
                          var ordernotesGrid = $("#ordernotes-grid");
                          ordernotesGrid.data('tGrid').ajaxRequest();

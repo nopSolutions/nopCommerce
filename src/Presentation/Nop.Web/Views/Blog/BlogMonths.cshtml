@@ -13,7 +13,7 @@
                 @foreach (var yearItem in Model)
                 {
                     <li class="year">@(yearItem.Year)
-                        <ul id="@(yearItem.Year)">
+                        <ul id="year@(yearItem.Year)">
                             @foreach (var monthItem in yearItem.Months)
                             {
                                 <li><a href="@Url.RouteUrl("BlogByMonth", new { month = yearItem.Year + "-" + monthItem.Month })">@(new DateTime(yearItem.Year, monthItem.Month, 1).ToString("MMMM"))

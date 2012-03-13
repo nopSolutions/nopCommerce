@@ -563,7 +563,7 @@
                     cache:false,
                     type: "POST",
                     url: "@(Url.Action("ProductPictureAdd", "Product"))",
-                    data: "pictureId=" + pictureId + "&displayOrder=" + displayOrder + "&productId=" + @Model.Id,
+                    data: { "pictureId": pictureId, "displayOrder": displayOrder, "productId": @Model.Id },
                     success: function (data) {
                          var productpicturesGrid = $("#productpictures-grid");
                          productpicturesGrid.data('tGrid').ajaxRequest();
@@ -663,7 +663,7 @@
                     cache:false,
                     type: "GET",
                     url: "@(Url.Action("GetOptionsByAttributeId", "SpecificationAttribute"))",
-                    data: "attributeId=" + selectedItem,
+                    data: { "attributeId": selectedItem },
                     success: function (data) {
                         ddlSpecOptions.html('');
                         $.each(data, function(id, option) {
@@ -689,7 +689,7 @@
                     cache:false,
                     type: "POST",
                     url: "@(Url.Action("ProductSpecificationAttributeAdd", "Product"))",
-                    data: "specificationAttributeOptionId=" + specificationAttributeOptionId + "&allowFiltering=" + allowFiltering + "&showOnProductPage=" + showOnProductPage + "&displayOrder=" + displayOrder + "&productId=" + @Model.Id,
+                    data: { "specificationAttributeOptionId": specificationAttributeOptionId, "allowFiltering": allowFiltering, "showOnProductPage": showOnProductPage, "displayOrder": displayOrder, "productId": @Model.Id },
                     success: function (data) {
                          var specificationAttributesGrid = $("#specificationattributes-grid");
                          specificationAttributesGrid.data('tGrid').ajaxRequest();

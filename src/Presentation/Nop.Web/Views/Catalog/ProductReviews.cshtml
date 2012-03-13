@@ -115,7 +115,7 @@
                     <div class="clear">
                     </div>
                     <div class="review-info">
-                        @T("Reviews.From")<text>:</text>
+                        @T("Reviews.From"):
                         @if (review.AllowViewingProfiles)
                         {
                             <a href="@Url.RouteUrl("CustomerProfile", new { id = review.CustomerId })">@(review.CustomerName)</a>
@@ -125,7 +125,7 @@
                             @review.CustomerName
                         }
                         <span class="separator">|</span>
-                        @T("Reviews.Date")<text>:</text>
+                        @T("Reviews.Date"):
                         @review.WrittenOnStr
                     </div>
                     @Html.Partial("_ProductReviewHelpfulness", review.Helpfulness, new ViewDataDictionary())
