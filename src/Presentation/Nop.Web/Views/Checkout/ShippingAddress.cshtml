@@ -32,7 +32,7 @@
                     @<div class="item-box">
                         <div class="address-item">
                             <div class="select-button">
-                                <input type="button" name="selectShippingAddress" value="@T("Checkout.ShipToThisAddress")" id="selectShippingAddress" class="selectshippingaddressbutton"  onclick="setLocation('@Url.RouteUrl("CheckoutSelectShippingAddress", new { addressId = @item.Id })')" />
+                                <input type="button" name="selectShippingAddress" value="@T("Checkout.ShipToThisAddress")" class="selectshippingaddressbutton"  onclick="setLocation('@Url.RouteUrl("CheckoutSelectShippingAddress", new { addressId = @item.Id })')" />
                             </div>
                             <div class="address-box">
                                 <table width="100%" cellspacing="0" cellpadding="2" border="0">

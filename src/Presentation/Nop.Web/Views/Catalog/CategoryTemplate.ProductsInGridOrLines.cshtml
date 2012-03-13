@@ -16,6 +16,7 @@
 @using Nop.Core.Domain.Common;
 @using Nop.Core.Infrastructure;
 @using Nop.Web;
+@using Nop.Web.Framework;
 @using Nop.Web.Framework.UI;
 @using Nop.Web.Models.Catalog;
 @using Nop.Web.Extensions;
@@ -104,8 +105,8 @@
     @if (Model.PagingFilteringContext.AllowProductViewModeChanging && Model.Products.Count > 0)
     {
         <div class="product-viewmode">
-            @Html.LabelFor(model => model.PagingFilteringContext.ViewMode)
-            @Html.DropDownList("products-viewmode", Model.PagingFilteringContext.AvailableViewModes, new { onchange = "setLocation(this.value);" })
+            <span>@T("Categories.ViewMode")</span>
+            @Html.DropDownList("products-viewmode", Model.PagingFilteringContext.AvailableViewModes, new { onchange = "setLocation(this.value);"})
         </div>
     }   
     
@@ -114,7 +115,7 @@
     @if (Model.PagingFilteringContext.AllowProductSorting && Model.Products.Count > 0)
     {
         <div class="product-sorting">
-            @Html.LabelFor(model => model.PagingFilteringContext.OrderBy)
+            <span>@T("Categories.OrderBy")</span>
             @Html.DropDownList("products-orderby", Model.PagingFilteringContext.AvailableSortOptions, new { onchange = "setLocation(this.value);" })
         </div>
     }
