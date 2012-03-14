@@ -5,7 +5,6 @@ namespace Nop.Core.Domain.Catalog
     /// <summary>
     /// Represents a specification attribute option filter
     /// </summary>
-    [Serializable]
     public class SpecificationAttributeOptionFilter
     {
         /// <summary>

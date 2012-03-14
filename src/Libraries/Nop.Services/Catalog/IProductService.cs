@@ -73,13 +73,17 @@ namespace Nop.Services.Catalog
         /// <param name="orderBy">Order by</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
+        /// <param name="loadFilterableSpecificationAttributeOptionIds">A value indicating whether we should load the specification attribute option identifiers applied to loaded products (all pages)</param>
+        /// <param name="filterableSpecificationAttributeOptionIds">The specification attribute option identifiers applied to loaded products (all pages)</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product collection</returns>
         IPagedList<Product> SearchProducts(int categoryId, int manufacturerId, bool? featuredProducts,
             decimal? priceMin, decimal? priceMax, int productTagId,
             string keywords, bool searchDescriptions, int languageId,
             IList<int> filteredSpecs, ProductSortingEnum orderBy,
-            int pageIndex, int pageSize, bool showHidden = false);
+            int pageIndex, int pageSize,
+            bool loadFilterableSpecificationAttributeOptionIds, out IList<int> filterableSpecificationAttributeOptionIds,
+            bool showHidden = false);
 
         /// <summary>
         /// Search products
@@ -97,13 +101,17 @@ namespace Nop.Services.Catalog
         /// <param name="orderBy">Order by</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
+        /// <param name="loadFilterableSpecificationAttributeOptionIds">A value indicating whether we should load the specification attribute option identifiers applied to loaded products (all pages)</param>
+        /// <param name="filterableSpecificationAttributeOptionIds">The specification attribute option identifiers applied to loaded products (all pages)</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product collection</returns>
         IPagedList<Product> SearchProducts(IList<int> categoryIds, int manufacturerId, bool? featuredProducts,
             decimal? priceMin, decimal? priceMax, int productTagId,
             string keywords, bool searchDescriptions, int languageId,
             IList<int> filteredSpecs, ProductSortingEnum orderBy,
-            int pageIndex, int pageSize, bool showHidden = false);
+            int pageIndex, int pageSize,
+            bool loadFilterableSpecificationAttributeOptionIds, out IList<int> filterableSpecificationAttributeOptionIds,
+            bool showHidden = false);
 
         /// <summary>
         /// Update product review totals

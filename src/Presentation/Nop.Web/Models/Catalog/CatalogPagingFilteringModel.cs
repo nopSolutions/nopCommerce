@@ -261,63 +261,7 @@ namespace Nop.Web.Models.Catalog
 
                 return url;
             }
-
-            protected virtual IList<SpecificationAttributeOptionFilter> GetAlreadyFilteredSpecs(ISpecificationAttributeService specificationAttributeService, 
-                IWebHelper webHelper, IWorkContext workContext)
-            {
-                var result = new List<SpecificationAttributeOptionFilter>();
-
-                var optionIds = GetAlreadyFilteredSpecOptionIds(webHelper);
-                foreach (var id in optionIds)
-                {
-                    var sao = specificationAttributeService.GetSpecificationAttributeOptionById(id);
-                    if (sao != null)
-                    {
-                        var sa = sao.SpecificationAttribute;
-                        if (sa != null)
-                        {
-                            result.Add(new SpecificationAttributeOptionFilter
-                            {
-                                SpecificationAttributeId = sa.Id,
-                                SpecificationAttributeName = sa.GetLocalized(x => x.Name),
-                                DisplayOrder = sa.DisplayOrder,
-                                SpecificationAttributeOptionId = sao.Id,
-                                SpecificationAttributeOptionName = sao.GetLocalized(x => x.Name)
-                            });
-                        }
-                    }
-                }
-
-                return result;
-            }
-
-            protected virtual IList<SpecificationAttributeOptionFilter> GetNotFilteredSpecs(int categoryId,
-                IList<SpecificationAttributeOptionFilter> alreadyFilteredOptions,
-                ISpecificationAttributeService specificationAttributeService,
-                IWebHelper webHelper,
-                IWorkContext workContext,
-                ICacheManager cacheManager)
-            {
-                //get all specification filters 
-                //and cache them
-                var filterCacheKey = string.Format(ModelCacheEventConsumer.SPEC_ATTR_OPTION_FILTERS_KEY, categoryId, workContext.WorkingLanguage.Id);
-                var allFilters = cacheManager.Get(filterCacheKey, () => specificationAttributeService.GetSpecificationAttributeOptionFilter(categoryId, workContext));
-                
-                var notFilteredSpecs = new List<SpecificationAttributeOptionFilter>();
-                foreach (var saof in allFilters)
-                {
-                    //do not add already filtered specification options
-                    if (alreadyFilteredOptions
-                        .Where(x => x.SpecificationAttributeId == saof.SpecificationAttributeId)
-                        .FirstOrDefault() != null)
-                        continue;
-
-                    //else add it
-                    notFilteredSpecs.Add(saof);
-                }
-                return notFilteredSpecs;
-            }
-
+            
             protected virtual string GenerateFilteredSpecQueryParam(IList<int> optionIds)
             {
                 string result = "";
@@ -356,19 +300,60 @@ namespace Nop.Web.Models.Catalog
                 return result;
             }
 
-            public virtual void LoadSpecsFilters(Category category, 
+            public virtual void PrepareSpecsFilters(IList<int> alreadyFilteredSpecOptionIds,
+                IList<int> filterableSpecificationAttributeOptionIds,
                 ISpecificationAttributeService specificationAttributeService, 
                 IWebHelper webHelper,
-                IWorkContext workContext,
-                ICacheManager cacheManager)
+                IWorkContext workContext)
             {
-                if (category == null)
-                    throw new ArgumentNullException("category");
+                var allFilters = new List<SpecificationAttributeOptionFilter>();
+                if (filterableSpecificationAttributeOptionIds != null)
+                    foreach (var saoId in filterableSpecificationAttributeOptionIds)
+                    {
+                        var sao = specificationAttributeService.GetSpecificationAttributeOptionById(saoId);
+                        if (sao != null)
+                        {
+                            var sa = sao.SpecificationAttribute;
+                            if (sa != null)
+                            {
+                                allFilters.Add(new SpecificationAttributeOptionFilter
+                                {
+                                    SpecificationAttributeId = sa.Id,
+                                    SpecificationAttributeName = sa.GetLocalized(x => x.Name, workContext.WorkingLanguage.Id),
+                                    DisplayOrder = sa.DisplayOrder,
+                                    SpecificationAttributeOptionId = sao.Id,
+                                    SpecificationAttributeOptionName = sao.GetLocalized(x => x.Name, workContext.WorkingLanguage.Id)
+                                });
+                            }
+                        }
+                    }
 
-                var alreadyFilteredOptions = GetAlreadyFilteredSpecs(specificationAttributeService, webHelper, workContext);
-                var notFilteredOptions = GetNotFilteredSpecs(category.Id, alreadyFilteredOptions,
-                    specificationAttributeService, webHelper, workContext, cacheManager);
+                //sort loaded options
+                allFilters = allFilters.OrderBy(saof => saof.DisplayOrder)
+                    .ThenBy(saof => saof.SpecificationAttributeName)
+                    .ThenBy(saof => saof.SpecificationAttributeOptionName).ToList();
+                
+                //get already filtered specification options
+                var alreadyFilteredOptions = allFilters
+                    .Where(x => alreadyFilteredSpecOptionIds.Contains(x.SpecificationAttributeOptionId))
+                    .Select(x => x)
+                    .ToList();
 
+                //get not filtered specification options
+                var notFilteredOptions = new List<SpecificationAttributeOptionFilter>();
+                foreach (var saof in allFilters)
+                {
+                    //do not add already filtered specification options
+                    if (alreadyFilteredOptions
+                        .Where(x => x.SpecificationAttributeId == saof.SpecificationAttributeId)
+                        .FirstOrDefault() != null)
+                        continue;
+
+                    //else add it
+                    notFilteredOptions.Add(saof);
+                }
+
+                //prepare the model properties
                 if (alreadyFilteredOptions.Count > 0 || notFilteredOptions.Count > 0)
                 {
                     this.Enabled = true;
@@ -396,8 +381,7 @@ namespace Nop.Web.Models.Catalog
                         string filterUrl = webHelper.ModifyQueryString(webHelper.GetThisPageUrl(true), QUERYSTRINGPARAM + "=" + newQueryParam, null);
                         filterUrl = ExcludeQueryStringParams(filterUrl, webHelper);
                         item.FilterUrl = filterUrl;
-
-
+                        
                         return item;
                     }).ToList();
 

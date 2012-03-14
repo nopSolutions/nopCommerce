@@ -409,9 +409,11 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
 
+            IList<int> filterableSpecificationAttributeOptionIds = null;
             var products = _productService.SearchProducts(0, 0, null, null, null, 0, string.Empty, false,
                 _workContext.WorkingLanguage.Id, new List<int>(),
-                ProductSortingEnum.Position, 0, _adminAreaSettings.GridPageSize, true);
+                ProductSortingEnum.Position, 0, _adminAreaSettings.GridPageSize,
+                false, out filterableSpecificationAttributeOptionIds, true);
 
             var model = new ManufacturerModel.AddManufacturerProductModel();
             model.Products = new GridModel<ProductModel>
@@ -439,10 +441,12 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var gridModel = new GridModel();
+            IList<int> filterableSpecificationAttributeOptionIds = null;
             var products = _productService.SearchProducts(model.SearchCategoryId,
                 model.SearchManufacturerId, null, null, null, 0, model.SearchProductName, false,
                 _workContext.WorkingLanguage.Id, new List<int>(),
-                ProductSortingEnum.Position, command.Page - 1, command.PageSize, true);
+                ProductSortingEnum.Position, command.Page - 1, command.PageSize,
+                false, out filterableSpecificationAttributeOptionIds, true);
             gridModel.Data = products.Select(x => x.ToModel());
             gridModel.Total = products.TotalCount;
             return new JsonResult

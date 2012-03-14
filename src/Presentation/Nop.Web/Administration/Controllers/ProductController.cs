@@ -414,9 +414,11 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
 
+            IList<int> filterableSpecificationAttributeOptionIds = null;
             var products = _productService.SearchProducts(0, 0, null, null, null, 0, string.Empty, false,
                 _workContext.WorkingLanguage.Id, new List<int>(),
-                ProductSortingEnum.Position, 0, _adminAreaSettings.GridPageSize, true);
+                ProductSortingEnum.Position, 0, _adminAreaSettings.GridPageSize,
+                false, out filterableSpecificationAttributeOptionIds, true);
 
             var model = new ProductListModel();
             model.DisplayProductPictures = _adminAreaSettings.DisplayProductPictures;
@@ -451,10 +453,12 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var gridModel = new GridModel();
+            IList<int> filterableSpecificationAttributeOptionIds = null;
             var products = _productService.SearchProducts(model.SearchCategoryId,
                 model.SearchManufacturerId, null, null, null, 0, model.SearchProductName, false,
                 _workContext.WorkingLanguage.Id, new List<int>(),
-                ProductSortingEnum.Position, command.Page - 1, command.PageSize, true);
+                ProductSortingEnum.Position, command.Page - 1, command.PageSize,
+                false, out filterableSpecificationAttributeOptionIds, true);
             gridModel.Data = products.Select(x =>
                                                  {
                                                      var productModel = x.ToModel();
@@ -945,9 +949,11 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
 
+            IList<int> filterableSpecificationAttributeOptionIds = null;
             var products = _productService.SearchProducts(0, 0, null, null, null, 0, string.Empty, false,
                 _workContext.WorkingLanguage.Id, new List<int>(),
-                ProductSortingEnum.Position, 0, _adminAreaSettings.GridPageSize, true);
+                ProductSortingEnum.Position, 0, _adminAreaSettings.GridPageSize,
+                false, out filterableSpecificationAttributeOptionIds, true);
 
             var model = new ProductModel.AddRelatedProductModel();
             model.Products = new GridModel<ProductModel>
@@ -975,10 +981,12 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var gridModel = new GridModel();
+            IList<int> filterableSpecificationAttributeOptionIds = null;
             var products = _productService.SearchProducts(model.SearchCategoryId, model.SearchManufacturerId, 
                 null, null, null, 0, model.SearchProductName, false,
                 _workContext.WorkingLanguage.Id, new List<int>(),
-                ProductSortingEnum.Position, command.Page - 1, command.PageSize, true);
+                ProductSortingEnum.Position, command.Page - 1, command.PageSize,
+                false, out filterableSpecificationAttributeOptionIds, true);
             gridModel.Data = products.Select(x => x.ToModel());
             gridModel.Total = products.TotalCount;
             return new JsonResult
@@ -1080,9 +1088,11 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
 
+            IList<int> filterableSpecificationAttributeOptionIds = null;
             var products = _productService.SearchProducts(0, 0, null, null, null, 0, string.Empty, false,
                 _workContext.WorkingLanguage.Id, new List<int>(),
-                ProductSortingEnum.Position, 0, _adminAreaSettings.GridPageSize, true);
+                ProductSortingEnum.Position, 0, _adminAreaSettings.GridPageSize,
+                false, out filterableSpecificationAttributeOptionIds, true);
 
             var model = new ProductModel.AddCrossSellProductModel();
             model.Products = new GridModel<ProductModel>
@@ -1110,10 +1120,12 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var gridModel = new GridModel();
+            IList<int> filterableSpecificationAttributeOptionIds = null;
             var products = _productService.SearchProducts(model.SearchCategoryId,
                 model.SearchManufacturerId, null, null, null, 0, model.SearchProductName, false,
                 _workContext.WorkingLanguage.Id, new List<int>(),
-                ProductSortingEnum.Position, command.Page - 1, command.PageSize, true);
+                ProductSortingEnum.Position, command.Page - 1, command.PageSize,
+                false, out filterableSpecificationAttributeOptionIds, true);
             gridModel.Data = products.Select(x => x.ToModel());
             gridModel.Total = products.TotalCount;
             return new JsonResult
@@ -1424,9 +1436,11 @@ namespace Nop.Admin.Controllers
 
             try
             {
+                IList<int> filterableSpecificationAttributeOptionIds = null;
                 var products = _productService.SearchProducts(0, 0, null, null, null, 0, string.Empty, false,
                     _workContext.WorkingLanguage.Id, new List<int>(),
-                    ProductSortingEnum.Position, 0, int.MaxValue, true);
+                    ProductSortingEnum.Position, 0, int.MaxValue,
+                    false, out filterableSpecificationAttributeOptionIds, true);
                 string fileName = string.Format("pdfcatalog_{0}_{1}.pdf", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
                 string filePath = string.Format("{0}content\\files\\ExportImport\\{1}", this.Request.PhysicalApplicationPath, fileName);
                 _pdfService.PrintProductsToPdf(products, _workContext.WorkingLanguage, filePath);
@@ -1447,9 +1461,11 @@ namespace Nop.Admin.Controllers
 
             try
             {
+                IList<int> filterableSpecificationAttributeOptionIds = null;
                 var products = _productService.SearchProducts(0, 0, null, null, null, 0, string.Empty, false,
                     _workContext.WorkingLanguage.Id, new List<int>(),
-                    ProductSortingEnum.Position, 0, int.MaxValue, true);
+                    ProductSortingEnum.Position, 0, int.MaxValue,
+                    false, out filterableSpecificationAttributeOptionIds, true);
 
                 var fileName = string.Format("products_{0}.xml", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
                 var xml = _exportManager.ExportProductsToXml(products);
@@ -1489,9 +1505,11 @@ namespace Nop.Admin.Controllers
 
             try
             {
+                IList<int> filterableSpecificationAttributeOptionIds = null;
                 var products = _productService.SearchProducts(0, 0, null, null, null, 0, string.Empty, false,
                     _workContext.WorkingLanguage.Id, new List<int>(),
-                    ProductSortingEnum.Position, 0, int.MaxValue, true);
+                    ProductSortingEnum.Position, 0, int.MaxValue,
+                    false, out filterableSpecificationAttributeOptionIds, true);
 
                 string fileName = string.Format("products_{0}_{1}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
                 string filePath = string.Format("{0}content\\files\\ExportImport\\{1}", Request.PhysicalApplicationPath, fileName);

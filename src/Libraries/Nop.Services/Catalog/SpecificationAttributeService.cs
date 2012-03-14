@@ -29,9 +29,7 @@ namespace Nop.Services.Catalog
         private readonly IRepository<SpecificationAttribute> _specificationAttributeRepository;
         private readonly IRepository<SpecificationAttributeOption> _specificationAttributeOptionRepository;
         private readonly IRepository<ProductSpecificationAttribute> _productSpecificationAttributeRepository;
-        private readonly IRepository<Product> _productRepository;
         private readonly ICacheManager _cacheManager;
-        private readonly CatalogSettings _catalogSettings;
         private readonly IEventPublisher _eventPublisher;
 
         #endregion
@@ -45,22 +43,17 @@ namespace Nop.Services.Catalog
         /// <param name="specificationAttributeRepository">Specification attribute repository</param>
         /// <param name="specificationAttributeOptionRepository">Specification attribute option repository</param>
         /// <param name="productSpecificationAttributeRepository">Product specification attribute repository</param>
-        /// <param name="productRepository">Product repository</param>
-        /// <param name="catalogSettings">Catalog settings</param>
         /// <param name="eventPublisher">Event published</param>
         public SpecificationAttributeService(ICacheManager cacheManager,
             IRepository<SpecificationAttribute> specificationAttributeRepository,
             IRepository<SpecificationAttributeOption> specificationAttributeOptionRepository,
             IRepository<ProductSpecificationAttribute> productSpecificationAttributeRepository,
-            IRepository<Product> productRepository, CatalogSettings catalogSettings,
             IEventPublisher eventPublisher)
         {
             _cacheManager = cacheManager;
             _specificationAttributeRepository = specificationAttributeRepository;
             _specificationAttributeOptionRepository = specificationAttributeOptionRepository;
             _productSpecificationAttributeRepository = productSpecificationAttributeRepository;
-            _productRepository = productRepository;
-            _catalogSettings = catalogSettings;
             _eventPublisher = eventPublisher;
         }
 
@@ -368,74 +361,6 @@ namespace Nop.Services.Catalog
 
             //event notification
             _eventPublisher.EntityUpdated(productSpecificationAttribute);
-        }
-
-        #endregion
-
-        #region Specification attribute option filter
-        
-        /// <summary>
-        /// Gets a filtered product specification attribute mapping collection by category id
-        /// </summary>
-        /// <param name="categoryId">Category identifier</param>
-        /// <param name="workContext">Work context</param>
-        /// <returns>Product specification attribute mapping collection</returns>
-        public virtual IList<SpecificationAttributeOptionFilter> GetSpecificationAttributeOptionFilter(int categoryId, IWorkContext workContext)
-        {
-            if (categoryId == 0)
-                throw new ArgumentException("Category identifier could not be null", "categoryId");
-
-            if (_catalogSettings.EnsureWeHaveFilterableSpecAttributes)
-            {
-                //The implementation below is quite slow. 
-                //So let's ensure that we have at least one filterable product specification attribute mapping before invoking it
-                //More info: http://www.nopcommerce.com/boards/t/10624/20-speedperformance-concerns.aspx?p=16#46160
-                if (_productSpecificationAttributeRepository.Table
-                        .Where(psa => psa.AllowFiltering)
-                        .Count() == 0)
-                {
-                    //no product specification attributes. we can exit
-                    return new List<SpecificationAttributeOptionFilter>();
-                }
-            }
-
-            //The function 'CurrentUtcDateTime' is not supported by SQL Server Compact. 
-            //That's why we pass the date value
-            var nowUtc = DateTime.UtcNow;
-
-            var query = from p in _productRepository.Table
-                        from pv in p.ProductVariants.DefaultIfEmpty()
-                        from pc in p.ProductCategories.Where(pc => pc.CategoryId == categoryId)
-                        join psa in _productSpecificationAttributeRepository.Table on p.Id equals psa.ProductId
-                        join sao in _specificationAttributeOptionRepository.Table on psa.SpecificationAttributeOptionId equals sao.Id
-                        join sa in _specificationAttributeRepository.Table on sao.SpecificationAttributeId equals sa.Id
-                        where p.Published && pv.Published && !p.Deleted && psa.AllowFiltering &&
-                        (!pv.AvailableStartDateTimeUtc.HasValue || pv.AvailableStartDateTimeUtc.Value < nowUtc) &&
-                        (!pv.AvailableEndDateTimeUtc.HasValue || pv.AvailableEndDateTimeUtc.Value > nowUtc)
-                        select new {sa, sao};
-            
-            //only distinct attributes (group by ID)
-            query = from x in query
-                    group x by x.sao.Id into xGroup
-                    orderby xGroup.Key
-                    select xGroup.FirstOrDefault();
-
-            var result = new List<SpecificationAttributeOptionFilter>();
-            var items = query.ToList();
-            foreach (var item in items)
-                result.Add(new SpecificationAttributeOptionFilter()
-                {
-                    SpecificationAttributeId = item.sa.Id,
-                    SpecificationAttributeName = item.sa.GetLocalized(sa => sa.Name, workContext.WorkingLanguage.Id),
-                    DisplayOrder = item.sa.DisplayOrder,
-                    SpecificationAttributeOptionId = item.sao.Id,
-                    SpecificationAttributeOptionName = item.sao.GetLocalized(sao => sao.Name, workContext.WorkingLanguage.Id)
-                });
-            result = result.OrderBy(saof => saof.DisplayOrder)
-                .ThenBy(saof => saof.SpecificationAttributeName)
-                .ThenBy(saof => saof.SpecificationAttributeOptionName).ToList();
-
-            return result;
         }
 
         #endregion

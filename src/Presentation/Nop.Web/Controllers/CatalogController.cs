@@ -366,9 +366,11 @@ namespace Nop.Web.Controllers
                         //include subcategories
                         categoryIds.AddRange(GetChildCategoryIds(category.Id));
                     }
+                    IList<int> filterableSpecificationAttributeOptionIds = null;
                     model.NumberOfProducts = _productService.SearchProducts(categoryIds,
                         0, null, null, null, 0, string.Empty, false, 0, null,
-                        ProductSortingEnum.Position, 0, 1).TotalCount;
+                        ProductSortingEnum.Position, 0, 1,
+                        false, out filterableSpecificationAttributeOptionIds).TotalCount;
                 }
                 result.Add(model);
 
@@ -815,12 +817,6 @@ namespace Nop.Web.Controllers
 
 
 
-            //specs
-            model.PagingFilteringContext.SpecificationFilter.LoadSpecsFilters(category, _specificationAttributeService, _webHelper, _workContext, _cacheManager);
-            IList<int> selectedSpecs = model.PagingFilteringContext.SpecificationFilter.GetAlreadyFilteredSpecOptionIds(_webHelper);
-            
-
-
 
             //category breadcrumb
             model.DisplayCategoryBreadcrumb = _catalogSettings.CategoryBreadcrumbEnabled;
@@ -881,10 +877,12 @@ namespace Nop.Web.Controllers
             {
                 //We use the fast GetTotalNumberOfFeaturedProducts before invoking of the slow SearchProducts
                 //to ensure that we have at least one featured product
+                IList<int> filterableSpecificationAttributeOptionIdsFeatured = null;
                 var featuredProducts = _productService.SearchProducts(category.Id,
                     0, true, null, null, 0, null, false,
                     _workContext.WorkingLanguage.Id, null,
-                    ProductSortingEnum.Position, 0, int.MaxValue);
+                    ProductSortingEnum.Position, 0, int.MaxValue,
+                    false, out filterableSpecificationAttributeOptionIdsFeatured);
                 model.FeaturedProducts = featuredProducts.Select(x => PrepareProductOverviewModel(x)).ToList();
             }
 
@@ -897,16 +895,24 @@ namespace Nop.Web.Controllers
                 categoryIds.AddRange(GetChildCategoryIds(category.Id));
             }
             //products
+            IList<int> alreadyFilteredSpecOptionIds = model.PagingFilteringContext.SpecificationFilter.GetAlreadyFilteredSpecOptionIds(_webHelper);
+            IList<int> filterableSpecificationAttributeOptionIds = null;
             var products = _productService.SearchProducts(categoryIds, 0, 
                 _catalogSettings.IncludeFeaturedProductsInNormalLists ? null : (bool?)false, 
                 minPriceConverted, maxPriceConverted,
-                0, string.Empty, false, _workContext.WorkingLanguage.Id, selectedSpecs,
-                (ProductSortingEnum)command.OrderBy, command.PageNumber - 1, command.PageSize);
+                0, string.Empty, false, _workContext.WorkingLanguage.Id, alreadyFilteredSpecOptionIds,
+                (ProductSortingEnum)command.OrderBy, command.PageNumber - 1, command.PageSize,
+                true, out filterableSpecificationAttributeOptionIds);
             model.Products = products.Select(x => PrepareProductOverviewModel(x)).ToList();
 
             model.PagingFilteringContext.LoadPagedList(products);
             model.PagingFilteringContext.ViewMode = viewMode;
 
+            //specs
+            model.PagingFilteringContext.SpecificationFilter.PrepareSpecsFilters(alreadyFilteredSpecOptionIds,
+                filterableSpecificationAttributeOptionIds, 
+                _specificationAttributeService, _webHelper, _workContext);
+            
 
             //template
             var templateCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_TEMPLATE_MODEL_KEY, category.CategoryTemplateId);
@@ -1125,21 +1131,25 @@ namespace Nop.Web.Controllers
             {
                 //We use the fast GetTotalNumberOfFeaturedProducts before invoking of the slow SearchProducts
                 //to ensure that we have at least one featured product
+                IList<int> filterableSpecificationAttributeOptionIdsFeatured = null;
                 var featuredProducts = _productService.SearchProducts(0,
                     manufacturer.Id, true, null, null, 0, null,
                     false, _workContext.WorkingLanguage.Id, null,
-                    ProductSortingEnum.Position, 0, int.MaxValue);
+                    ProductSortingEnum.Position, 0, int.MaxValue,
+                    false, out filterableSpecificationAttributeOptionIdsFeatured);
                 model.FeaturedProducts = featuredProducts.Select(x => PrepareProductOverviewModel(x)).ToList();
             }
 
 
 
             //products
+            IList<int> filterableSpecificationAttributeOptionIds = null;
             var products = _productService.SearchProducts(0, manufacturer.Id, 
                 _catalogSettings.IncludeFeaturedProductsInNormalLists ? null : (bool?)false, 
                 minPriceConverted, maxPriceConverted,
                 0, string.Empty, false, _workContext.WorkingLanguage.Id, null,
-                (ProductSortingEnum)command.OrderBy, command.PageNumber - 1, command.PageSize);
+                (ProductSortingEnum)command.OrderBy, command.PageNumber - 1, command.PageSize,
+                false, out filterableSpecificationAttributeOptionIds);
             model.Products = products.Select(x => PrepareProductOverviewModel(x)).ToList();
 
             model.PagingFilteringContext.LoadPagedList(products);
@@ -1943,9 +1953,11 @@ namespace Nop.Web.Controllers
             var model = new List<ProductModel>();
             if (_catalogSettings.RecentlyAddedProductsEnabled)
             {
+                IList<int> filterableSpecificationAttributeOptionIds = null;
                 var products = _productService.SearchProducts(0, 0, null, null,
                     null, 0, null, false, _workContext.WorkingLanguage.Id,
-                    null, ProductSortingEnum.CreatedOn, 0, _catalogSettings.RecentlyAddedProductsNumber);
+                    null, ProductSortingEnum.CreatedOn, 0, _catalogSettings.RecentlyAddedProductsNumber,
+                    false, out filterableSpecificationAttributeOptionIds);
                 foreach (var product in products)
                     model.Add(PrepareProductOverviewModel(product));
             }
@@ -1963,11 +1975,13 @@ namespace Nop.Web.Controllers
 
             if (!_catalogSettings.RecentlyAddedProductsEnabled)
                 return new RssActionResult() { Feed = feed };
-            
+
             var items = new List<SyndicationItem>();
+            IList<int> filterableSpecificationAttributeOptionIds = null;
             var products = _productService.SearchProducts(0, 0, null, null,
                 null, 0, null, false, _workContext.WorkingLanguage.Id,
-                null, ProductSortingEnum.CreatedOn, 0, _catalogSettings.RecentlyAddedProductsNumber);
+                null, ProductSortingEnum.CreatedOn, 0, _catalogSettings.RecentlyAddedProductsNumber,
+                false, out filterableSpecificationAttributeOptionIds);
             foreach (var product in products)
             {
                 string productUrl = Url.RouteUrl("Product", new { productId = product.Id, SeName = product.GetSeName() }, "http");
@@ -2296,9 +2310,11 @@ namespace Nop.Web.Controllers
             if (command.PageSize <= 0) command.PageSize = _catalogSettings.ProductsByTagPageSize;
 
             //products
+            IList<int> filterableSpecificationAttributeOptionIds = null;
             var products = _productService.SearchProducts(0, 0, false, null, null,
                 productTag.Id, string.Empty, false, _workContext.WorkingLanguage.Id, null,
-                (ProductSortingEnum)command.OrderBy, command.PageNumber - 1, command.PageSize);
+                (ProductSortingEnum)command.OrderBy, command.PageNumber - 1, command.PageSize,
+                false, out filterableSpecificationAttributeOptionIds);
             model.Products = products.Select(x => PrepareProductOverviewModel(x)).ToList();
 
             model.PagingFilteringContext.LoadPagedList(products);
@@ -2713,10 +2729,12 @@ namespace Nop.Web.Controllers
                     }
 
                     //products
+                    IList<int> filterableSpecificationAttributeOptionIds = null;
                     products = _productService.SearchProducts(categoryIds, manufacturerId, null,
                         minPriceConverted, maxPriceConverted, 0,
                         model.Q, searchInDescriptions, _workContext.WorkingLanguage.Id, null,
-                    ProductSortingEnum.Position, command.PageNumber - 1, command.PageSize);
+                        ProductSortingEnum.Position, command.PageNumber - 1, command.PageSize,
+                        false, out filterableSpecificationAttributeOptionIds);
                     model.Products = products.Select(x => PrepareProductOverviewModel(x)).ToList();
 
                     model.NoResults = !model.Products.Any();                    

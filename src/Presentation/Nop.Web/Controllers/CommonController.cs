@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -454,8 +455,10 @@ namespace Nop.Web.Controllers
             if (_commonSettings.SitemapIncludeProducts)
             {
                 //limit product to 200 until paging is supported on this page
+                IList<int> filterableSpecificationAttributeOptionIds = null;
                 var products = _productService.SearchProducts(0, 0, null, null, null, 0, null, false, 0, null,
-                     ProductSortingEnum.Position, 0, 200);
+                     ProductSortingEnum.Position, 0, 200,
+                     false, out filterableSpecificationAttributeOptionIds);
                 model.Products = products.Select(x => x.ToModel()).ToList();
             }
             if (_commonSettings.SitemapIncludeTopics)

@@ -37,8 +37,9 @@ namespace Nop.Services.Catalog
         private readonly IRepository<RelatedProduct> _relatedProductRepository;
         private readonly IRepository<CrossSellProduct> _crossSellProductRepository;
         private readonly IRepository<TierPrice> _tierPriceRepository;
-        private readonly IRepository<ProductPicture> _productPictureRepository;
         private readonly IRepository<LocalizedProperty> _localizedPropertyRepository;
+        private readonly IRepository<ProductPicture> _productPictureRepository;
+        private readonly IRepository<ProductSpecificationAttribute> _productSpecificationAttributeRepository;
         private readonly IProductAttributeService _productAttributeService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly ILanguageService _languageService;
@@ -65,6 +66,7 @@ namespace Nop.Services.Catalog
         /// <param name="tierPriceRepository">Tier price repository</param>
         /// <param name="localizedPropertyRepository">Localized property repository</param>
         /// <param name="productPictureRepository">Product picture repository</param>
+        /// <param name="productSpecificationAttributeRepository">Product specification attribute repository</param>
         /// <param name="productAttributeService">Product attribute service</param>
         /// <param name="productAttributeParser">Product attribute parser service</param>
         /// <param name="languageService">Language service</param>
@@ -82,6 +84,7 @@ namespace Nop.Services.Catalog
             IRepository<TierPrice> tierPriceRepository,
             IRepository<ProductPicture> productPictureRepository,
             IRepository<LocalizedProperty> localizedPropertyRepository,
+            IRepository<ProductSpecificationAttribute> productSpecificationAttributeRepository,
             IProductAttributeService productAttributeService,
             IProductAttributeParser productAttributeParser,
             ILanguageService languageService,
@@ -90,23 +93,24 @@ namespace Nop.Services.Catalog
             LocalizationSettings localizationSettings, CommonSettings commonSettings,
             IEventPublisher eventPublisher)
         {
-            _cacheManager = cacheManager;
-            _productRepository = productRepository;
-            _productVariantRepository = productVariantRepository;
-            _relatedProductRepository = relatedProductRepository;
-            _crossSellProductRepository = crossSellProductRepository;
-            _tierPriceRepository = tierPriceRepository;
-            _productPictureRepository = productPictureRepository;
-            _localizedPropertyRepository = localizedPropertyRepository;
-            _productAttributeService = productAttributeService;
-            _productAttributeParser = productAttributeParser;
-            _languageService = languageService;
-            _workflowMessageService = workflowMessageService;
-            _dataProvider = dataProvider;
-            _dbContext = dbContext;
-            _localizationSettings = localizationSettings;
-            _commonSettings = commonSettings;
-            _eventPublisher = eventPublisher;
+            this._cacheManager = cacheManager;
+            this._productRepository = productRepository;
+            this._productVariantRepository = productVariantRepository;
+            this._relatedProductRepository = relatedProductRepository;
+            this._crossSellProductRepository = crossSellProductRepository;
+            this._tierPriceRepository = tierPriceRepository;
+            this._productPictureRepository = productPictureRepository;
+            this._localizedPropertyRepository = localizedPropertyRepository;
+            this._productSpecificationAttributeRepository = productSpecificationAttributeRepository;
+            this._productAttributeService = productAttributeService;
+            this._productAttributeParser = productAttributeParser;
+            this._languageService = languageService;
+            this._workflowMessageService = workflowMessageService;
+            this._dataProvider = dataProvider;
+            this._dbContext = dbContext;
+            this._localizationSettings = localizationSettings;
+            this._commonSettings = commonSettings;
+            this._eventPublisher = eventPublisher;
         }
 
         #endregion
@@ -262,13 +266,17 @@ namespace Nop.Services.Catalog
         /// <param name="orderBy">Order by</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
+        /// <param name="loadFilterableSpecificationAttributeOptionIds">A value indicating whether we should load the specification attribute option identifiers applied to loaded products (all pages)</param>
+        /// <param name="filterableSpecificationAttributeOptionIds">The specification attribute option identifiers applied to loaded products (all pages)</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product collection</returns>
         public virtual IPagedList<Product> SearchProducts(int categoryId, int manufacturerId, bool? featuredProducts,
             decimal? priceMin, decimal? priceMax, int productTagId,
             string keywords, bool searchDescriptions, int languageId,
             IList<int> filteredSpecs, ProductSortingEnum orderBy,
-            int pageIndex, int pageSize, bool showHidden = false)
+            int pageIndex, int pageSize,
+            bool loadFilterableSpecificationAttributeOptionIds, out IList<int> filterableSpecificationAttributeOptionIds,
+            bool showHidden = false)
         {
             var categoryIds = new List<int>();
             if (categoryId > 0)
@@ -276,7 +284,9 @@ namespace Nop.Services.Catalog
             return SearchProducts(categoryIds, manufacturerId, featuredProducts,
                 priceMin, priceMax, productTagId, keywords, searchDescriptions, languageId,
                 filteredSpecs, orderBy,
-                pageIndex, pageSize, showHidden);
+                pageIndex, pageSize,
+                loadFilterableSpecificationAttributeOptionIds, out filterableSpecificationAttributeOptionIds, 
+                showHidden);
         }
 
         /// <summary>
@@ -295,6 +305,8 @@ namespace Nop.Services.Catalog
         /// <param name="orderBy">Order by</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
+        /// <param name="loadFilterableSpecificationAttributeOptionIds">A value indicating whether we should load the specification attribute option identifiers applied to loaded products (all pages)</param>
+        /// <param name="filterableSpecificationAttributeOptionIds">The specification attribute option identifiers applied to loaded products (all pages)</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product collection</returns>
         public virtual IPagedList<Product> SearchProducts(IList<int> categoryIds, 
@@ -302,8 +314,11 @@ namespace Nop.Services.Catalog
             decimal? priceMin, decimal? priceMax, int productTagId,
             string keywords, bool searchDescriptions, int languageId,
             IList<int> filteredSpecs, ProductSortingEnum orderBy,
-            int pageIndex, int pageSize, bool showHidden = false)
+            int pageIndex, int pageSize,
+            bool loadFilterableSpecificationAttributeOptionIds, out IList<int> filterableSpecificationAttributeOptionIds,
+            bool showHidden = false)
         {
+            filterableSpecificationAttributeOptionIds = new List<int>();
             bool searchLocalizedValue = false;
             if (languageId > 0)
             {
@@ -327,11 +342,6 @@ namespace Nop.Services.Catalog
                 //It's much faster than the LINQ implementation below 
 
                 #region Use stored procedure
-                
-                var pTotalRecords = _dataProvider.GetParameter();
-                pTotalRecords.ParameterName = "TotalRecords";
-                pTotalRecords.Direction = ParameterDirection.Output;
-                pTotalRecords.DbType = DbType.Int32;
                 
                 //pass categry identifiers as comma-delimited string
                 string commaSeparatedCategoryIds = "";
@@ -436,6 +446,22 @@ namespace Nop.Services.Catalog
                 pShowHidden.ParameterName = "ShowHidden";
                 pShowHidden.Value = showHidden;
                 pShowHidden.DbType = DbType.Boolean;
+                
+                var pLoadFilterableSpecificationAttributeOptionIds = _dataProvider.GetParameter();
+                pLoadFilterableSpecificationAttributeOptionIds.ParameterName = "LoadFilterableSpecificationAttributeOptionIds";
+                pLoadFilterableSpecificationAttributeOptionIds.Value = loadFilterableSpecificationAttributeOptionIds;
+                pLoadFilterableSpecificationAttributeOptionIds.DbType = DbType.Boolean;
+                
+                var pFilterableSpecificationAttributeOptionIds = _dataProvider.GetParameter();
+                pFilterableSpecificationAttributeOptionIds.ParameterName = "FilterableSpecificationAttributeOptionIds";
+                pFilterableSpecificationAttributeOptionIds.Direction = ParameterDirection.Output;
+                pFilterableSpecificationAttributeOptionIds.Size = 100;
+                pFilterableSpecificationAttributeOptionIds.DbType = DbType.String;
+
+                var pTotalRecords = _dataProvider.GetParameter();
+                pTotalRecords.ParameterName = "TotalRecords";
+                pTotalRecords.Direction = ParameterDirection.Output;
+                pTotalRecords.DbType = DbType.Int32;
 
                 //invoke stored procedure
                 var products = _dbContext.ExecuteStoredProcedureList<Product>(
@@ -455,7 +481,20 @@ namespace Nop.Services.Catalog
                     pPageIndex,
                     pPageSize,
                     pShowHidden,
+                    pLoadFilterableSpecificationAttributeOptionIds,
+                    pFilterableSpecificationAttributeOptionIds,
                     pTotalRecords);
+                //get filterable specification attribute option identifier
+                string filterableSpecificationAttributeOptionIdsStr = (pFilterableSpecificationAttributeOptionIds.Value != DBNull.Value) ? (string)pFilterableSpecificationAttributeOptionIds.Value : "";
+                if (loadFilterableSpecificationAttributeOptionIds &&
+                    !string.IsNullOrWhiteSpace(filterableSpecificationAttributeOptionIdsStr))
+                {
+                     filterableSpecificationAttributeOptionIds = filterableSpecificationAttributeOptionIdsStr
+                        .Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries)
+                        .Select(x => Convert.ToInt32(x.Trim()))
+                        .ToList();
+                }
+                //return products
                 int totalRecords = (pTotalRecords.Value != DBNull.Value) ? Convert.ToInt32(pTotalRecords.Value) : 0;
                 return new PagedList<Product>(products, pageIndex, pageSize, totalRecords);
 
@@ -647,6 +686,21 @@ namespace Nop.Services.Catalog
                 }
 
                 var products = new PagedList<Product>(query, pageIndex, pageSize);
+
+                //get filterable specification attribute option identifier
+                if (loadFilterableSpecificationAttributeOptionIds)
+                {
+                    var querySpecs = from p in query
+                                     join psa in _productSpecificationAttributeRepository.Table on p.Id equals psa.ProductId
+                                     where psa.AllowFiltering
+                                     select psa.SpecificationAttributeOptionId;
+                    //only distinct attributes
+                    filterableSpecificationAttributeOptionIds = querySpecs
+                        .Distinct()
+                        .ToList();
+                }
+
+                //return products
                 return products;
 
                 #endregion

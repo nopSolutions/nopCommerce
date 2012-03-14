@@ -125,17 +125,5 @@ namespace Nop.Services.Catalog
         void UpdateProductSpecificationAttribute(ProductSpecificationAttribute productSpecificationAttribute);
 
         #endregion
-        
-        #region Specification attribute option filter
-
-        /// <summary>
-        /// Gets a filtered product specification attribute mapping collection by category id
-        /// </summary>
-        /// <param name="categoryId">Category identifier</param>
-        /// <param name="workContext">Work context</param>
-        /// <returns>Product specification attribute mapping collection</returns>
-        IList<SpecificationAttributeOptionFilter> GetSpecificationAttributeOptionFilter(int categoryId, IWorkContext workContext);
-        
-        #endregion
     }
 }
