@@ -152,14 +152,19 @@ namespace Nop.Web.Controllers
         [NonAction]
         protected List<int> GetChildCategoryIds(int parentCategoryId, bool showHidden = false)
         {
-            var categoriesIds = new List<int>();
-            var categories = _categoryService.GetAllCategoriesByParentCategoryId(parentCategoryId, showHidden);
-            foreach (var category in categories)
+            string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_CHILD_IDENTIFIERS_MODEL_KEY, parentCategoryId, showHidden);
+            var cacheModel = _cacheManager.Get(cacheKey, () =>
             {
-                categoriesIds.Add(category.Id);
-                categoriesIds.AddRange(GetChildCategoryIds(category.Id, showHidden));
-            }
-            return categoriesIds;
+                var categoriesIds = new List<int>();
+                var categories = _categoryService.GetAllCategoriesByParentCategoryId(parentCategoryId, showHidden);
+                foreach (var category in categories)
+                {
+                    categoriesIds.Add(category.Id);
+                    categoriesIds.AddRange(GetChildCategoryIds(category.Id, showHidden));
+                }
+                return categoriesIds;
+            });
+            return cacheModel;
         }
         
         [NonAction]

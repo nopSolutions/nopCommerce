@@ -16,6 +16,7 @@ namespace Nop.Services.Catalog
     {
         #region Constants
         private const string CATEGORIES_BY_ID_KEY = "Nop.category.id-{0}";
+        private const string CATEGORIES_BY_PARENT_CATEGORY_ID_KEY = "Nop.category.byparent-{0}-{1}";
         private const string PRODUCTCATEGORIES_ALLBYCATEGORYID_KEY = "Nop.productcategory.allbycategoryid-{0}-{1}";
         private const string PRODUCTCATEGORIES_ALLBYPRODUCTID_KEY = "Nop.productcategory.allbyproductid-{0}-{1}";
         private const string PRODUCTCATEGORIES_BY_ID_KEY = "Nop.productcategory.id-{0}";
@@ -87,11 +88,6 @@ namespace Nop.Services.Catalog
                         !c.Deleted
                         select c;
 
-            //filter by access control list (public store)
-            //if (!showHidden)
-            //{
-            //    query = query.WhereAclPerObjectNotDenied(_categoryRepository);
-            //}
             var unsortedCategories = query.ToList();
 
             //sort categories
@@ -121,22 +117,20 @@ namespace Nop.Services.Catalog
         public IList<Category> GetAllCategoriesByParentCategoryId(int parentCategoryId,
             bool showHidden = false)
         {
-            
-            var query = from c in _categoryRepository.Table
-                        orderby c.DisplayOrder
-                        where (showHidden || c.Published) && 
-                        !c.Deleted && 
-                        c.ParentCategoryId == parentCategoryId
-                        select c;
+            string key = string.Format(CATEGORIES_BY_PARENT_CATEGORY_ID_KEY, parentCategoryId, showHidden);
+            return _cacheManager.Get(key, () =>
+            {
+                var query = from c in _categoryRepository.Table
+                            orderby c.DisplayOrder
+                            where (showHidden || c.Published) &&
+                            !c.Deleted &&
+                            c.ParentCategoryId == parentCategoryId
+                            select c;
 
-            //filter by access control list (public store)
-            //if (!showHidden)
-            //{
-            //    query = query.WhereAclPerObjectNotDenied(_categoryRepository);
-            //}
+                var categories = query.ToList();
+                return categories;
+            });
 
-            var categories = query.ToList();
-            return categories;
         }
         
         /// <summary>
@@ -151,12 +145,6 @@ namespace Nop.Services.Catalog
                         !c.Deleted && 
                         c.ShowOnHomePage
                         select c;
-
-            //filter by access control list (public store)
-            //if (!showHidden)
-            //{
-            //    query = query.WhereAclPerObjectNotDenied(_context);
-            //}
 
             var categories = query.ToList();
             return categories;
@@ -176,11 +164,6 @@ namespace Nop.Services.Catalog
             return _cacheManager.Get(key, () =>
             {
                 var category = _categoryRepository.GetById(categoryId);
-                //filter by access control list (public store)
-                //if (category != null && !showHidden && IsCategoryAccessDenied(category))
-                //{
-                //    category = null;
-                //}
                 return category;
             });
         }

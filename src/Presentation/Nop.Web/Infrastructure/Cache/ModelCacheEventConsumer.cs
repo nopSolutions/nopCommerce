@@ -108,6 +108,15 @@ namespace Nop.Web.Infrastructure.Cache
         public const string CATEGORY_NAVIGATION_PATTERN_KEY = "nop.pres.category.navigation";
 
         /// <summary>
+        /// Key for GetChildCategoryIds method results caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : parent category id
+        /// </remarks>
+        public const string CATEGORY_CHILD_IDENTIFIERS_MODEL_KEY = "nop.pres.category.childidentifiers-{0}-{1}";
+        public const string CATEGORY_CHILD_IDENTIFIERS_PATTERN_KEY = "nop.pres.category.childidentifiers";
+
+        /// <summary>
         /// Key for ProductTagModel caching
         /// </summary>
         /// <remarks>
@@ -318,18 +327,21 @@ namespace Nop.Web.Infrastructure.Cache
         public void HandleEvent(EntityInserted<Category> eventMessage)
         {
             _cacheManager.RemoveByPattern(CATEGORY_NAVIGATION_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(CATEGORY_CHILD_IDENTIFIERS_PATTERN_KEY);
         }
         public void HandleEvent(EntityUpdated<Category> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_BREADCRUMB_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_NAVIGATION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_PICTURE_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(CATEGORY_CHILD_IDENTIFIERS_PATTERN_KEY);
         }
         public void HandleEvent(EntityDeleted<Category> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_BREADCRUMB_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_NAVIGATION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_PICTURE_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(CATEGORY_CHILD_IDENTIFIERS_PATTERN_KEY);
         }
 
         //product categories
