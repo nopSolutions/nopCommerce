@@ -54,6 +54,24 @@ namespace Nop.Services.Tasks
         }
 
         /// <summary>
+        /// Gets a task by its type
+        /// </summary>
+        /// <param name="type">Task type</param>
+        /// <returns>Task</returns>
+        public virtual ScheduleTask GetTaskByType(string type)
+        {
+            if (String.IsNullOrWhiteSpace(type))
+                return null;
+
+            var query = _taskRepository.Table;
+            query = query.Where(st => st.Type == type);
+            query = query.OrderByDescending(t => t.Id);
+
+            var task = query.FirstOrDefault();
+            return task;
+        }
+
+        /// <summary>
         /// Gets all tasks
         /// </summary>
         /// <returns>Tasks</returns>

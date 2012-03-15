@@ -7,16 +7,15 @@ namespace Nop.Plugin.Misc.MailChimp
 {
     public class MailChimpSynchronizationTask : ITask
     {
-        private readonly IMailChimpApiService _mailChimpApiService = EngineContext.Current.Resolve<IMailChimpApiService>();
-        private readonly IPluginFinder _pluginFinder = EngineContext.Current.Resolve<IPluginFinder>();
-
         /// <summary>
         /// Execute task
         /// </summary>
         public void Execute()
         {
+            var pluginFinder = EngineContext.Current.Resolve<IPluginFinder>();
+
             //is plugin installed?
-            var pluginDescriptor = _pluginFinder.GetPluginDescriptorBySystemName("Misc.MailChimp");
+            var pluginDescriptor = pluginFinder.GetPluginDescriptorBySystemName("Misc.MailChimp");
             if (pluginDescriptor == null || !pluginDescriptor.Installed)
                 return;
 
@@ -25,7 +24,8 @@ namespace Nop.Plugin.Misc.MailChimp
             if (plugin == null || !plugin.IsConfigured())
                 return;
 
-            _mailChimpApiService.Synchronize();
+            var mailChimpApiService = EngineContext.Current.Resolve<IMailChimpApiService>();
+            mailChimpApiService.Synchronize();
         }
     }
 }

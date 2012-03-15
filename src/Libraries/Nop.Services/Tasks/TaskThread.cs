@@ -13,12 +13,12 @@ namespace Nop.Services.Tasks
     {
         private Timer _timer;
         private bool _disposed;
-        private DateTime _started;
+        private DateTime _startedUtc;
         private bool _isRunning;
         private readonly Dictionary<string, Task> _tasks;
-        private readonly int _seconds;
+        private int _seconds;
 
-        private TaskThread()
+        internal TaskThread()
         {
             this._tasks = new Dictionary<string, Task>();
             this._seconds = 10 * 60;
@@ -36,7 +36,7 @@ namespace Nop.Services.Tasks
             if (_seconds <=0)
                 return;
 
-            this._started = DateTime.Now;
+            this._startedUtc = DateTime.UtcNow;
             this._isRunning = true;
             foreach (Task task in this._tasks.Values)
             {
@@ -93,13 +93,17 @@ namespace Nop.Services.Tasks
 
 
         /// <summary>
-        /// Gets the interval in seconds at which to run the tasks
+        /// Gets or sets the interval in seconds at which to run the tasks
         /// </summary>
         public int Seconds
         {
             get
             {
                 return this._seconds;
+            }
+            internal set
+            {
+                this._seconds = value;
             }
         }
 
@@ -110,7 +114,7 @@ namespace Nop.Services.Tasks
         {
             get
             {
-                return this._started;
+                return this._startedUtc;
             }
         }
 

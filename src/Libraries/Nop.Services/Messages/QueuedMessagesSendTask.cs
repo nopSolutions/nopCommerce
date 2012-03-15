@@ -10,17 +10,17 @@ namespace Nop.Services.Messages
     /// </summary>
     public partial class QueuedMessagesSendTask : ITask
     {
-        private readonly IQueuedEmailService _queuedEmailService = EngineContext.Current.Resolve<IQueuedEmailService>();
-        private readonly IEmailSender _emailSender = EngineContext.Current.Resolve<IEmailSender>();
-        private readonly ILogger _logger = EngineContext.Current.Resolve<ILogger>();
 
         /// <summary>
         /// Executes a task
         /// </summary>
         public void Execute()
         {
+            var queuedEmailService = EngineContext.Current.Resolve<IQueuedEmailService>();
+            var emailSender = EngineContext.Current.Resolve<IEmailSender>();
+
             var maxTries = 3;
-            var queuedEmails = _queuedEmailService.SearchEmails(null, null, null, null,
+            var queuedEmails = queuedEmailService.SearchEmails(null, null, null, null,
                 true, maxTries, false, 0, 10000);
             foreach (var queuedEmail in queuedEmails)
             {
@@ -33,19 +33,20 @@ namespace Nop.Services.Messages
 
                 try
                 {
-                    _emailSender.SendEmail(queuedEmail.EmailAccount, queuedEmail.Subject, queuedEmail.Body,
+                    emailSender.SendEmail(queuedEmail.EmailAccount, queuedEmail.Subject, queuedEmail.Body,
                        queuedEmail.From, queuedEmail.FromName, queuedEmail.To, queuedEmail.ToName, bcc, cc);
 
                     queuedEmail.SentOnUtc = DateTime.UtcNow;
                 }
                 catch (Exception exc)
                 {
-                    _logger.Error(string.Format("Error sending e-mail. {0}", exc.Message), exc);
+                    var logger = EngineContext.Current.Resolve<ILogger>();
+                    logger.Error(string.Format("Error sending e-mail. {0}", exc.Message), exc);
                 }
                 finally
                 {
                     queuedEmail.SentTries = queuedEmail.SentTries + 1;
-                    _queuedEmailService.UpdateQueuedEmail(queuedEmail);
+                    queuedEmailService.UpdateQueuedEmail(queuedEmail);
                 }
             }
         }

@@ -10,14 +10,13 @@ namespace Nop.Services.Common
     /// </summary>
     public partial class KeepAliveTask : ITask
     {
-        private readonly StoreInformationSettings _storeInformationSettings = EngineContext.Current.Resolve<StoreInformationSettings>();
-
         /// <summary>
         /// Executes a task
         /// </summary>
         public void Execute()
         {
-            string url = _storeInformationSettings.StoreUrl + "keepalive";
+            var storeInformationSettings = EngineContext.Current.Resolve<StoreInformationSettings>();
+            string url = storeInformationSettings.StoreUrl + "keepalive";
             using (var wc = new WebClient())
             {
                 wc.DownloadString(url);

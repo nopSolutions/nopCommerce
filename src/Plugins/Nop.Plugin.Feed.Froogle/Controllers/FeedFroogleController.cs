@@ -60,7 +60,7 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
         [NonAction]
         private ScheduleTask FindScheduledTask()
         {
-            return _scheduleTaskService.GetAllTasks().Where(x => x.Type.Equals("Nop.Plugin.Feed.Froogle.StaticFileGenerationTask, Nop.Plugin.Feed.Froogle", StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+            return _scheduleTaskService.GetTaskByType("Nop.Plugin.Feed.Froogle.StaticFileGenerationTask, Nop.Plugin.Feed.Froogle");
         }
         
         public ActionResult Configure()

@@ -45,7 +45,7 @@ namespace Nop.Plugin.Misc.MailChimp.Services
 
         private ScheduleTask FindScheduledTask()
         {
-            return _scheduleTaskService.GetAllTasks().Where(x => x.Type.Equals("Nop.Plugin.Misc.MailChimp.MailChimpSynchronizationTask, Nop.Plugin.Misc.MailChimp", StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+            return _scheduleTaskService.GetTaskByType("Nop.Plugin.Misc.MailChimp.MailChimpSynchronizationTask, Nop.Plugin.Misc.MailChimp");
         }
 
         /// <summary>

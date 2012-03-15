@@ -22,6 +22,13 @@ namespace Nop.Services.Tasks
         ScheduleTask GetTaskById(int taskId);
 
         /// <summary>
+        /// Gets a task by its type
+        /// </summary>
+        /// <param name="type">Task type</param>
+        /// <returns>Task</returns>
+        ScheduleTask GetTaskByType(string type);
+
+        /// <summary>
         /// Gets all tasks
         /// </summary>
         /// <returns>Tasks</returns>

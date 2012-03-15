@@ -57,12 +57,6 @@ namespace Nop.Web
             EngineContext.Initialize(false);
 
             bool databaseInstalled = DataSettingsHelper.DatabaseIsInstalled();
-            //start scheduled tasks
-            if (databaseInstalled)
-            {
-                TaskManager.Instance.Initialize();
-                TaskManager.Instance.Start();
-            }
 
             //set dependency resolver
             var dependencyResolver = new NopDependencyResolver();
@@ -101,6 +95,7 @@ namespace Nop.Web
             var embeddedProvider = new EmbeddedViewVirtualPathProvider(embeddedViewResolver.GetEmbeddedViews());
             HostingEnvironment.RegisterVirtualPathProvider(embeddedProvider);
 
+            //mobile device support
             if (databaseInstalled)
             {
                 if (EngineContext.Current.Resolve<StoreInformationSettings>().MobileDevicesSupported)
@@ -114,6 +109,13 @@ namespace Nop.Web
                     //it'll allow us to use default browserCaps.config file
                     HttpCapabilitiesBase.BrowserCapabilitiesProvider = null;
                 }
+            }
+
+            //start scheduled tasks
+            if (databaseInstalled)
+            {
+                TaskManager.Instance.Initialize();
+                TaskManager.Instance.Start();
             }
         }
 

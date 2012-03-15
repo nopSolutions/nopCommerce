@@ -17,18 +17,7 @@ namespace Nop.Services.Tasks
         private TaskManager()
         {
         }
-
-        internal void ProcessException(Task task, Exception exception)
-        {
-            try
-            {
-                //process exception code here
-            }
-            catch
-            {
-            }
-        }
-
+        
         /// <summary>
         /// Initializes the task manager with the property values specified in the configuration file.
         /// </summary>
@@ -38,14 +27,30 @@ namespace Nop.Services.Tasks
 
             var taskService = EngineContext.Current.Resolve<IScheduleTaskService>();
             var scheduleTasks = taskService.GetAllTasks().ToList().OrderBy(x => x.Seconds);
-            foreach (var scheduleTask in scheduleTasks)
+
+            //group by threads with the same seconds
+            foreach (var scheduleTaskGrouped in scheduleTasks.GroupBy(x => x.Seconds))
             {
-                //one thread, one task
-                var taskThread = new TaskThread(scheduleTask);
+                //create a thread
+                var taskThread = new TaskThread();
+                taskThread.Seconds = scheduleTaskGrouped.Key;
                 this._taskThreads.Add(taskThread);
-                var task = new Task(scheduleTask);
-                taskThread.AddTask(task);
+                foreach (var scheduleTask in scheduleTaskGrouped)
+                {
+                    var task = new Task(scheduleTask);
+                    taskThread.AddTask(task);
+                }
             }
+
+
+            //one thread, one task
+            //foreach (var scheduleTask in scheduleTasks)
+            //{
+            //    var taskThread = new TaskThread(scheduleTask);
+            //    this._taskThreads.Add(taskThread);
+            //    var task = new Task(scheduleTask);
+            //    taskThread.AddTask(task);
+            //}
         }
 
         /// <summary>

@@ -2106,3 +2106,24 @@ BEGIN
 	DROP TABLE #PageIndex
 END
 GO
+
+
+--Add new columns to [ScheduleTask] table
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[ScheduleTask]') and NAME='LastStartUtc')
+BEGIN
+	ALTER TABLE [dbo].[ScheduleTask]
+	ADD [LastStartUtc] datetime NULL
+END
+GO
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[ScheduleTask]') and NAME='LastEndUtc')
+BEGIN
+	ALTER TABLE [dbo].[ScheduleTask]
+	ADD [LastEndUtc] datetime NULL
+END
+GO
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[ScheduleTask]') and NAME='LastSuccessUtc')
+BEGIN
+	ALTER TABLE [dbo].[ScheduleTask]
+	ADD [LastSuccessUtc] datetime NULL
+END
+GO

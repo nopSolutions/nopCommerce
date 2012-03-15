@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Diagnostics;
 using Nop.Core.Domain.Tasks;
+using Nop.Core.Infrastructure;
+using Nop.Services.Logging;
 
 namespace Nop.Services.Tasks
 {
@@ -8,14 +11,13 @@ namespace Nop.Services.Tasks
     /// </summary>
     public partial class Task
     {
-        private ITask _task;
         private bool _enabled;
-        private readonly Type _taskType;
+        private readonly string _type;
         private readonly string _name;
         private readonly bool _stopOnError;
-        private DateTime _lastStarted;
-        private DateTime _lastSuccess;
-        private DateTime _lastEnd;
+        private DateTime? _lastStartUtc;
+        private DateTime? _lastSuccessUtc;
+        private DateTime? _lastEndUtc;
         private bool _isRunning;
 
         /// <summary>
@@ -32,7 +34,7 @@ namespace Nop.Services.Tasks
         /// <param name="task">Task </param>
         public Task(ScheduleTask task)
         {
-            this._taskType = Type.GetType(task.Type);
+            this._type = task.Type;
             this._enabled = task.Enabled;
             this._stopOnError = task.StopOnError;
             this._name = task.Name;
@@ -40,17 +42,19 @@ namespace Nop.Services.Tasks
 
         private ITask CreateTask()
         {
-            if (this.Enabled && (this._task == null))
+            ITask task = null;
+            if (this.Enabled)
             {
-                if (this._taskType != null)
+                var type2 = System.Type.GetType(this._type);
+                if (type2 != null)
                 {
-                    this._task = Activator.CreateInstance(this._taskType) as ITask;
+                    task = Activator.CreateInstance(type2) as ITask;
                 }
-                this._enabled = this._task != null;
+                //this._enabled = task != null;
             }
-            return this._task;
+            return task;
         }
-
+        
         /// <summary>
         /// Executes the task
         /// </summary>
@@ -62,16 +66,37 @@ namespace Nop.Services.Tasks
                 var task = this.CreateTask();
                 if (task != null)
                 {
-                    this._lastStarted = DateTime.Now;
+                    this._lastStartUtc = DateTime.UtcNow;
                     task.Execute();
-                    this._lastEnd = this._lastSuccess = DateTime.Now;
+                    this._lastEndUtc = this._lastSuccessUtc = DateTime.UtcNow;
                 }
             }
-            catch (Exception exception)
+            catch (Exception exc)
             {
                 this._enabled = !this.StopOnError;
-                this._lastEnd = DateTime.Now;
-                TaskManager.Instance.ProcessException(this, exception);
+                this._lastEndUtc = DateTime.UtcNow;
+                
+                //log error
+                var logger = EngineContext.Current.Resolve<ILogger>();
+                logger.Error(string.Format("Error while running the '{0}' schedule task. {1}", this._name, exc.Message), exc);
+            }
+            
+            try
+            {
+                //find current schedule task
+                var scheduleTaskService = EngineContext.Current.Resolve<IScheduleTaskService>();
+                var scheduleTask = scheduleTaskService.GetTaskByType(this._type);
+                if (scheduleTask != null)
+                {
+                    scheduleTask.LastStartUtc = this.LastStartUtc;
+                    scheduleTask.LastEndUtc = this.LastEndUtc;
+                    scheduleTask.LastSuccessUtc = this.LastSuccessUtc;
+                    scheduleTaskService.UpdateTask(scheduleTask);
+                }
+            }
+            catch (Exception exc)
+            {
+                Debug.WriteLine(string.Format("Error saving schedule task datetimes. Exception: {0}", exc));
             }
             this._isRunning = false;
         }
@@ -90,44 +115,44 @@ namespace Nop.Services.Tasks
         /// <summary>
         /// Datetime of the last start
         /// </summary>
-        public DateTime LastStarted
+        public DateTime? LastStartUtc
         {
             get
             {
-                return this._lastStarted;
+                return this._lastStartUtc;
             }
         }
 
         /// <summary>
         /// Datetime of the last end
         /// </summary>
-        public DateTime LastEnd
+        public DateTime? LastEndUtc
         {
             get
             {
-                return this._lastEnd;
+                return this._lastEndUtc;
             }
         }
 
         /// <summary>
         /// Datetime of the last success
         /// </summary>
-        public DateTime LastSuccess
+        public DateTime? LastSuccessUtc
         {
             get
             {
-                return this._lastSuccess;
+                return this._lastSuccessUtc;
             }
         }
 
         /// <summary>
         /// A value indicating type of the task
         /// </summary>
-        public Type TaskType
+        public string Type
         {
             get
             {
-                return this._taskType;
+                return this._type;
             }
         }
 

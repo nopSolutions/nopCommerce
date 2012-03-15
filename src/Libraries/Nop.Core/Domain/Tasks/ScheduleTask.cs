@@ -1,4 +1,6 @@
 ﻿
+using System;
+
 namespace Nop.Core.Domain.Tasks
 {
     public class ScheduleTask : BaseEntity
@@ -27,5 +29,11 @@ namespace Nop.Core.Domain.Tasks
         /// Gets or sets the value indicating whether a task should be stopped on some error
         /// </summary>
         public virtual bool StopOnError { get; set; }
+
+        public virtual DateTime? LastStartUtc { get; set; }
+
+        public virtual DateTime? LastEndUtc { get; set; }
+
+        public virtual DateTime? LastSuccessUtc { get; set; }
     }
 }

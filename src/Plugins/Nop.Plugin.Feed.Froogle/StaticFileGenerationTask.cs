@@ -8,15 +8,15 @@ namespace Nop.Plugin.Feed.Froogle
 {
     public class StaticFileGenerationTask : ITask
     {
-        private readonly IPluginFinder _pluginFinder = EngineContext.Current.Resolve<IPluginFinder>();
-        private readonly ILogger _logger = EngineContext.Current.Resolve<ILogger>();
         /// <summary>
         /// Execute task
         /// </summary>
         public void Execute()
         {
+            var pluginFinder = EngineContext.Current.Resolve<IPluginFinder>();
+
             //is plugin installed?
-            var pluginDescriptor = _pluginFinder.GetPluginDescriptorBySystemName("PromotionFeed.Froogle");
+            var pluginDescriptor = pluginFinder.GetPluginDescriptorBySystemName("PromotionFeed.Froogle");
             if (pluginDescriptor == null || !pluginDescriptor.Installed)
                 return;
 
@@ -25,14 +25,7 @@ namespace Nop.Plugin.Feed.Froogle
             if (plugin == null)
                 return;
 
-            try
-            {
-                plugin.GenerateStaticFile();
-            }
-            catch (Exception exc)
-            {
-                _logger.Error(exc.Message, exc);
-            }
+            plugin.GenerateStaticFile();
         }
     }
 }

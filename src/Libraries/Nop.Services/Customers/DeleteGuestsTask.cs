@@ -9,16 +9,15 @@ namespace Nop.Services.Customers
     /// </summary>
     public partial class DeleteGuestsTask : ITask
     {
-        private readonly ICustomerService _customerService = EngineContext.Current.Resolve<ICustomerService>();
-
         /// <summary>
         /// Executes a task
         /// </summary>
         public void Execute()
         {
+            var customerService = EngineContext.Current.Resolve<ICustomerService>();
             //60*24 = 1 day
             var olderThanMinutes = 1440; //TODO move to settings
-            _customerService.DeleteGuestCustomers(null, DateTime.UtcNow.AddMinutes(-olderThanMinutes), true);
+            customerService.DeleteGuestCustomers(null, DateTime.UtcNow.AddMinutes(-olderThanMinutes), true);
         }
     }
 }

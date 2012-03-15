@@ -1,4 +1,5 @@
-﻿using Nop.Core.Domain.Tasks;
+﻿using System;
+using Nop.Core.Domain.Tasks;
 using Nop.Tests;
 using NUnit.Framework;
 
@@ -16,7 +17,10 @@ namespace Nop.Data.Tests.Tasks
                                    Seconds = 1,
                                    Type = "some type 1",
                                    Enabled = true,
-                                   StopOnError = true
+                                   StopOnError = true,
+                                   LastStartUtc = new DateTime(2010, 01, 01),
+                                   LastEndUtc = new DateTime(2010, 01, 02),
+                                   LastSuccessUtc= new DateTime(2010, 01, 03),
                                };
 
             var fromDb = SaveAndLoadEntity(scheduleTask);
@@ -26,6 +30,9 @@ namespace Nop.Data.Tests.Tasks
             fromDb.Type.ShouldEqual("some type 1");
             fromDb.Enabled.ShouldEqual(true);
             fromDb.StopOnError.ShouldEqual(true);
+            fromDb.LastStartUtc.ShouldEqual(new DateTime(2010, 01, 01));
+            fromDb.LastEndUtc.ShouldEqual(new DateTime(2010, 01, 02));
+            fromDb.LastSuccessUtc.ShouldEqual(new DateTime(2010, 01, 03));
         }
     }
 }
