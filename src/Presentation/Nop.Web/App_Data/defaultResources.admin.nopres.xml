@@ -2691,6 +2691,9 @@
 							<LocaleResource Name="GetLiveRates">
 								<Value>Get live rates</Value>
 							</LocaleResource>
+              <LocaleResource Name="LiveRates">
+                <Value>Live currency rates</Value>
+              </LocaleResource>
 							<LocaleResource Name="ApplyRate">
 								<Value>Apply rate</Value>
 							</LocaleResource>

@@ -443,6 +443,9 @@ set @resources='
   <LocaleResource Name="Admin.Customers.Customers.List.SearchZipCode.Hint">
     <Value>Search by zip code.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Currencies.LiveRates">
+    <Value>Live currency rates</Value>
+  </LocaleResource>
 </Language>
 '
 
