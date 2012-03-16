@@ -64,37 +64,37 @@ namespace Nop.Admin.Controllers
                 if (pluginInstance is IPaymentMethod)
                 {
                     //payment plugin
-                    configurationUrl = Url.Action("ConfigureMethod", "Payment", new { systemName = pluginDescriptor.SystemName }, "http");
+                    configurationUrl = Url.Action("ConfigureMethod", "Payment", new { systemName = pluginDescriptor.SystemName });
                 }
                 else if (pluginInstance is IShippingRateComputationMethod)
                 {
                     //shipping rate computation method
-                    configurationUrl = Url.Action("ConfigureProvider", "Shipping", new { systemName = pluginDescriptor.SystemName }, "http");
+                    configurationUrl = Url.Action("ConfigureProvider", "Shipping", new { systemName = pluginDescriptor.SystemName });
                 }
                 else if (pluginInstance is ITaxProvider)
                 {
                     //tax provider
-                    configurationUrl = Url.Action("ConfigureProvider", "Tax", new { systemName = pluginDescriptor.SystemName }, "http");
+                    configurationUrl = Url.Action("ConfigureProvider", "Tax", new { systemName = pluginDescriptor.SystemName });
                 }
                 else if (pluginInstance is IExternalAuthenticationMethod)
                 {
                     //external auth method
-                    configurationUrl = Url.Action("ConfigureMethod", "ExternalAuthentication", new { systemName = pluginDescriptor.SystemName }, "http");
+                    configurationUrl = Url.Action("ConfigureMethod", "ExternalAuthentication", new { systemName = pluginDescriptor.SystemName });
                 }
                 else if (pluginInstance is ISmsProvider)
                 {
                     //SMS provider
-                    configurationUrl = Url.Action("ConfigureProvider", "Sms", new { systemName = pluginDescriptor.SystemName }, "http");
+                    configurationUrl = Url.Action("ConfigureProvider", "Sms", new { systemName = pluginDescriptor.SystemName });
                 }
                 else if (pluginInstance is IPromotionFeed)
                 {
                     //promotion feed
-                    configurationUrl = Url.Action("ConfigureMethod", "PromotionFeed", new { systemName = pluginDescriptor.SystemName }, "http");
+                    configurationUrl = Url.Action("ConfigureMethod", "PromotionFeed", new { systemName = pluginDescriptor.SystemName });
                 }
                 else if (pluginInstance is IMiscPlugin)
                 {
                     //Misc plugins
-                    configurationUrl = Url.Action("ConfigureMiscPlugin", "Plugin", new { systemName = pluginDescriptor.SystemName }, "http");
+                    configurationUrl = Url.Action("ConfigureMiscPlugin", "Plugin", new { systemName = pluginDescriptor.SystemName });
                 }
                 pluginModel.ConfigurationUrl = configurationUrl;
             }
