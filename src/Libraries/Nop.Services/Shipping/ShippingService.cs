@@ -320,17 +320,17 @@ namespace Nop.Services.Shipping
             
             //create a package
             var getShippingOptionRequest = CreateShippingOptionRequest(cart, shippingAddress);
-            var shippingRateComputationMethods = LoadActiveShippingRateComputationMethods();
+            var shippingRateComputationMethods = LoadActiveShippingRateComputationMethods()
+                .Where(srcm => 
+                    String.IsNullOrWhiteSpace(allowedShippingRateComputationMethodSystemName) || 
+                    allowedShippingRateComputationMethodSystemName.Equals(srcm.PluginDescriptor.SystemName, StringComparison.InvariantCultureIgnoreCase))
+                .ToList();
             if (shippingRateComputationMethods.Count == 0)
                 throw new NopException("Shipping rate computation method could not be loaded");
 
             //get shipping options
             foreach (var srcm in shippingRateComputationMethods)
             {
-                if (!String.IsNullOrWhiteSpace(allowedShippingRateComputationMethodSystemName) &&
-                   !allowedShippingRateComputationMethodSystemName.Equals(srcm.PluginDescriptor.SystemName, StringComparison.InvariantCultureIgnoreCase))
-                    continue;
-
                 var getShippingOptionResponse = srcm.GetShippingOptions(getShippingOptionRequest);
                 foreach (var so2 in getShippingOptionResponse.ShippingOptions)
                 {
@@ -353,7 +353,13 @@ namespace Nop.Services.Shipping
                 }
             }
 
-
+            if (_shippingSettings.ReturnValidOptionsIfThereAreAny)
+            {
+                //return valid options if there are any (no matter of errors returned by other shipping rate compuation methods).
+                if (result.ShippingOptions.Count > 0 && result.Errors.Count > 0)
+                    result.Errors.Clear();
+            }
+            
             //no shipping options loaded
             if (result.ShippingOptions.Count == 0 && result.Errors.Count == 0)
                 result.Errors.Add("Shipping options could not be loaded");

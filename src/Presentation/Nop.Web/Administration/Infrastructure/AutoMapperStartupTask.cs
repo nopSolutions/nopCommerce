@@ -456,7 +456,8 @@ namespace Nop.Admin.Infrastructure
             Mapper.CreateMap<ShippingSettings, ShippingSettingsModel>()
                 .ForMember(dest => dest.ShippingOriginAddress, mo => mo.Ignore());
             Mapper.CreateMap<ShippingSettingsModel, ShippingSettings>()
-                .ForMember(dest => dest.ActiveShippingRateComputationMethodSystemNames, mo => mo.Ignore());
+                .ForMember(dest => dest.ActiveShippingRateComputationMethodSystemNames, mo => mo.Ignore())
+                .ForMember(dest => dest.ReturnValidOptionsIfThereAreAny, mo => mo.Ignore());
             Mapper.CreateMap<CatalogSettings, CatalogSettingsModel>();
             Mapper.CreateMap<CatalogSettingsModel, CatalogSettings>()
                 .ForMember(dest => dest.DefaultViewMode, mo => mo.Ignore())

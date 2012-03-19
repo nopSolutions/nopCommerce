@@ -2162,3 +2162,11 @@ BEGIN
 	VALUES (N'fedexsettings.dropofftype', N'0')
 END
 GO
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'shippingsettings.returnvalidoptionsifthereareany')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'shippingsettings.returnvalidoptionsifthereareany', N'true')
+END
+GO

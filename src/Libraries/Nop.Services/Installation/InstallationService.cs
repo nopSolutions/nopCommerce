@@ -4708,6 +4708,7 @@ namespace Nop.Services.Installation
                     FreeShippingOverXIncludingTax = false,
                     EstimateShippingEnabled = true,
                     DisplayShipmentEventsToCustomers = false,
+                    ReturnValidOptionsIfThereAreAny = true,
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<PaymentSettings>>()
