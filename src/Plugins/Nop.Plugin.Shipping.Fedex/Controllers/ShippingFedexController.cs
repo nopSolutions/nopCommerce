@@ -30,6 +30,8 @@ namespace Nop.Plugin.Shipping.Fedex.Controllers
             model.Password = _fedexSettings.Password;
             model.AccountNumber = _fedexSettings.AccountNumber;
             model.MeterNumber = _fedexSettings.MeterNumber;
+            model.DropoffType = Convert.ToInt32(_fedexSettings.DropoffType);
+            model.AvailableDropOffTypes = _fedexSettings.DropoffType.ToSelectList();
             model.UseResidentialRates = _fedexSettings.UseResidentialRates;
             model.ApplyDiscounts = _fedexSettings.ApplyDiscounts;
             model.AdditionalHandlingCharge = _fedexSettings.AdditionalHandlingCharge;
@@ -61,7 +63,6 @@ namespace Nop.Plugin.Shipping.Fedex.Controllers
                     }
                 }
 
-
             return View("Nop.Plugin.Shipping.Fedex.Views.ShippingFedex.Configure", model);
         }
 
@@ -79,6 +80,7 @@ namespace Nop.Plugin.Shipping.Fedex.Controllers
             _fedexSettings.Password = model.Password;
             _fedexSettings.AccountNumber = model.AccountNumber;
             _fedexSettings.MeterNumber = model.MeterNumber;
+            _fedexSettings.DropoffType = (DropoffType)model.DropoffType;
             _fedexSettings.UseResidentialRates = model.UseResidentialRates;
             _fedexSettings.ApplyDiscounts = model.ApplyDiscounts;
             _fedexSettings.AdditionalHandlingCharge = model.AdditionalHandlingCharge;

@@ -80,6 +80,14 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AvailableDropOffTypes):
+            </td>
+            <td class="adminData">
+                @Html.DropDownList("DropoffType", Model.AvailableDropOffTypes)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.NopLabelFor(model => model.UseResidentialRates):
             </td>
             <td class="adminData">

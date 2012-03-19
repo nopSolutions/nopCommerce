@@ -15,6 +15,8 @@ namespace Nop.Plugin.Shipping.Fedex
 
         public string MeterNumber { get; set; }
 
+        public DropoffType DropoffType { get; set; }
+
         public bool UseResidentialRates { get; set; }
 
         public bool ApplyDiscounts { get; set; }

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Web.Mvc;
 using Nop.Web.Framework;
+using System.Web.Mvc;
 
 namespace Nop.Plugin.Shipping.Fedex.Models
 {
@@ -65,5 +65,9 @@ namespace Nop.Plugin.Shipping.Fedex.Models
         public int PackingType { get; set; }
         [NopResourceDisplayName("Plugins.Shipping.Fedex.Fields.PackingType")]
         public SelectList PackingTypeValues { get; set; }
+
+        public int DropoffType { get; set; }
+        [NopResourceDisplayName("Plugins.Shipping.Fedex.Fields.DropoffType")]
+        public SelectList AvailableDropOffTypes { get; set; }
     }
 }

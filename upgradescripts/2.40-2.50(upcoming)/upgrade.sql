@@ -5,13 +5,13 @@ declare @resources xml
 --a resource will be delete if its value is empty
 set @resources='
 <Language>
-  <LocaleResource Name="Enums.Nop.Plugin.Shipping.Fedex.PackByDimensions">
+  <LocaleResource Name="Enums.Nop.Plugin.Shipping.Fedex.PackingType.PackByDimensions">
     <Value>Pack by dimensions</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Nop.Plugin.Shipping.Fedex.PackByOneItemPerPackage">
+  <LocaleResource Name="Enums.Nop.Plugin.Shipping.Fedex.PackingType.PackByOneItemPerPackage">
     <Value>Pack by one item per package</Value>
   </LocaleResource>
-  <LocaleResource Name="Enums.Nop.Plugin.Shipping.Fedex.PackByVolume">
+  <LocaleResource Name="Enums.Nop.Plugin.Shipping.Fedex.PackingType.PackByVolume">
     <Value>Pack by volume</Value>
   </LocaleResource>
   <LocaleResource Name="Plugins.Shipping.Fedex.Fields.PackingType">
@@ -445,6 +445,27 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Currencies.LiveRates">
     <Value>Live currency rates</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.Fedex.Fields.DropoffType">
+    <Value>Dropoff Type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.Fedex.Fields.DropoffType.Hint">
+    <Value>Choose preferred dropoff type.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Plugin.Shipping.Fedex.DropoffType.BusinessServiceCenter">
+    <Value>Business service center</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Plugin.Shipping.Fedex.DropoffType.DropBox">
+    <Value>Drop box</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Plugin.Shipping.Fedex.DropoffType.RegularPickup">
+    <Value>Regular pickup</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Plugin.Shipping.Fedex.DropoffType.RequestCourier">
+    <Value>Request courier</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Plugin.Shipping.Fedex.DropoffType.Station">
+    <Value>Station</Value>
   </LocaleResource>
 </Language>
 '
@@ -2128,5 +2149,13 @@ IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[ScheduleTask]
 BEGIN
 	ALTER TABLE [dbo].[ScheduleTask]
 	ADD [LastSuccessUtc] datetime NULL
+END
+GO
+
+--new 'FedEx' plugin setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'fedexsettings.dropofftype')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'fedexsettings.dropofftype', N'0')
 END
 GO
