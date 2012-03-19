@@ -467,6 +467,9 @@ set @resources='
   <LocaleResource Name="Enums.Nop.Plugin.Shipping.Fedex.DropoffType.Station">
     <Value>Station</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.Avatar.MaximumUploadedFileSize">
+    <Value>Maximum avatar size is {0} bytes</Value>
+  </LocaleResource>
 </Language>
 '
 

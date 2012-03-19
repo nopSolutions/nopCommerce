@@ -1493,7 +1493,7 @@ namespace Nop.Web.Controllers
                     {
                         int avatarMaxSize = _customerSettings.AvatarMaximumSizeBytes;
                         if (uploadedFile.ContentLength > avatarMaxSize)
-                            throw new NopException(string.Format("Maximum avatar size is {0} bytes", avatarMaxSize));
+                            throw new NopException(string.Format(_localizationService.GetResource("Account.Avatar.MaximumUploadedFileSize"), avatarMaxSize));
 
                         byte[] customerPictureBinary = uploadedFile.GetPictureBits();
                         if (customerAvatar != null)

@@ -51,6 +51,9 @@
 			<LocaleResource Name="Avatar">
 				<Value>Avatar</Value>
 				<Children>
+          <LocaleResource Name="MaximumUploadedFileSize">
+            <Value>Maximum avatar size is {0} bytes</Value>
+          </LocaleResource>
 					<LocaleResource Name="RemoveAvatar">
 						<Value>Remove avatar</Value>
 					</LocaleResource>
