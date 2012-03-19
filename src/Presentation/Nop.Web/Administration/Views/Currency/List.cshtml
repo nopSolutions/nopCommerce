@@ -99,9 +99,11 @@
                         .Columns(columns =>
                         {
                             columns.Bound(x => x.CurrencyCode)
-                                .Centered();
+                                .Centered()
+                                .HeaderTemplate(T("Admin.Configuration.Currencies.Fields.CurrencyCode").Text);
                             columns.Bound(x => x.Rate)
-                                .Centered();
+                                .Centered()
+                                .HeaderTemplate(T("Admin.Configuration.Currencies.Fields.Rate").Text);
                             columns.Bound(x => x)
                                 .Template(x => Html.ActionLink(T("Admin.Configuration.Currencies.ApplyRate").Text, "ApplyRate", new { rate = x.Rate, currencyCode = x.CurrencyCode }))
                                 .Centered()
