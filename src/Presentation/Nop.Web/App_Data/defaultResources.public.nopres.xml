@@ -1090,6 +1090,9 @@
 			<LocaleResource Name="ShippingMethod">
 				<Value>Shipping method</Value>
 			</LocaleResource>
+      <LocaleResource Name="ShippingOptionCouldNotBeLoaded">
+        <Value>Shipping options could not be loaded</Value>
+      </LocaleResource>
 			<LocaleResource Name="ShipToThisAddress">
 				<Value>Ship to this address</Value>
 			</LocaleResource>

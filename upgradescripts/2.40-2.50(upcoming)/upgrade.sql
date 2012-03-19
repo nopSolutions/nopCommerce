@@ -470,6 +470,9 @@ set @resources='
   <LocaleResource Name="Account.Avatar.MaximumUploadedFileSize">
     <Value>Maximum avatar size is {0} bytes</Value>
   </LocaleResource>
+  <LocaleResource Name="Checkout.ShippingOptionCouldNotBeLoaded">
+    <Value>Shipping options could not be loaded</Value>
+  </LocaleResource>
 </Language>
 '
 

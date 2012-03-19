@@ -15,6 +15,7 @@ using Nop.Core.Plugins;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
 using Nop.Services.Discounts;
+using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
@@ -44,6 +45,7 @@ namespace Nop.Services.Tests.Orders
         IOrderTotalCalculationService _orderTotalCalcService;
         IAddressService _addressService;
         ShippingSettings _shippingSettings;
+        ILocalizationService _localizationService;
         ILogger _logger;
         IRepository<ShippingMethod> _shippingMethodRepository;
         ShoppingCartSettings _shoppingCartSettings;
@@ -72,6 +74,8 @@ namespace Nop.Services.Tests.Orders
             _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
             _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
 
+            _localizationService = MockRepository.GenerateMock<ILocalizationService>();
+
             //shipping
             _shippingSettings = new ShippingSettings();
             _shippingSettings.ActiveShippingRateComputationMethodSystemNames = new List<string>();
@@ -83,6 +87,7 @@ namespace Nop.Services.Tests.Orders
                 _logger,
                 _productAttributeParser,
                 _checkoutAttributeParser,
+                _localizationService,
                 _shippingSettings, pluginFinder, 
                 _eventPublisher, _shoppingCartSettings);
             
