@@ -28,6 +28,11 @@ namespace Nop.Web.Framework
         public string FormName { get; set; }
 
         /// <summary>
+        /// Gets or sets a form character-sets the server can handle for form-data.
+        /// </summary>
+        public string AcceptCharset { get; set; }
+
+        /// <summary>
         /// A value indicating whether we should create a new "input" HTML element for each value (in case if there are more than one) for the same "name" attributes.
         /// </summary>
         public bool NewInputForEachValue { get; set; }
@@ -44,13 +49,22 @@ namespace Nop.Web.Framework
         /// Creates a new instance of the RemotePost class
         /// </summary>
         public RemotePost()
+            : this(EngineContext.Current.Resolve<HttpContextBase>())
         {
-            _inputValues = new NameValueCollection();
-            Url = "http://www.someurl.com";
-            Method = "post";
-            FormName = "formName";
-            //TODO inject 
-            _httpContext = EngineContext.Current.Resolve<HttpContextBase>();
+        }
+
+        /// <summary>
+        /// Creates a new instance of the RemotePost class
+        /// </summary>
+        /// <param name="httpContext">HTTP Context</param>
+        public RemotePost(HttpContextBase httpContext)
+        {
+            this._inputValues = new NameValueCollection();
+            this.Url = "http://www.someurl.com";
+            this.Method = "post";
+            this.FormName = "formName";
+
+            this._httpContext = httpContext;
         }
 
         /// <summary>
@@ -71,13 +85,28 @@ namespace Nop.Web.Framework
             _httpContext.Response.Clear();
             _httpContext.Response.Write("<html><head>");
             _httpContext.Response.Write(string.Format("</head><body onload=\"document.{0}.submit()\">", FormName));
-            _httpContext.Response.Write(string.Format("<form name=\"{0}\" method=\"{1}\" action=\"{2}\" >", FormName, Method, Url));
+            if (!string.IsNullOrEmpty(AcceptCharset))
+            {
+                //AcceptCharset specified
+                _httpContext.Response.Write(string.Format("<form name=\"{0}\" method=\"{1}\" action=\"{2}\" accept-charset=\"{3}\">", FormName, Method, Url, AcceptCharset));
+            }
+            else
+            {
+                //no AcceptCharset specified
+                _httpContext.Response.Write(string.Format("<form name=\"{0}\" method=\"{1}\" action=\"{2}\" >", FormName, Method, Url));
+            }
             if (NewInputForEachValue)
             {
                 foreach (string key in _inputValues.Keys)
                 {
-                    foreach (string value in _inputValues[key].Split(new char[] { ',' }))
-                        _httpContext.Response.Write(string.Format("<input name=\"{0}\" type=\"hidden\" value=\"{1}\">", HttpUtility.HtmlEncode(key), HttpUtility.HtmlEncode(value)));
+                    string[] values = _inputValues.GetValues(key);
+                    if (values != null)
+                    {
+                        foreach (string value in values)
+                        {
+                            _httpContext.Response.Write(string.Format("<input name=\"{0}\" type=\"hidden\" value=\"{1}\">", HttpUtility.HtmlEncode(key), HttpUtility.HtmlEncode(value)));
+                        }
+                    }
                 }
             }
             else
