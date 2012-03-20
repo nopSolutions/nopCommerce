@@ -27,6 +27,11 @@ namespace Nop.Web.Framework
         /// </summary>
         public string FormName { get; set; }
 
+        /// <summary>
+        /// A value indicating whether we should create a new "input" HTML element for each value (in case if there are more than one) for the same "name" attributes.
+        /// </summary>
+        public bool NewInputForEachValue { get; set; }
+
         public NameValueCollection Params
         {
             get
@@ -67,8 +72,19 @@ namespace Nop.Web.Framework
             _httpContext.Response.Write("<html><head>");
             _httpContext.Response.Write(string.Format("</head><body onload=\"document.{0}.submit()\">", FormName));
             _httpContext.Response.Write(string.Format("<form name=\"{0}\" method=\"{1}\" action=\"{2}\" >", FormName, Method, Url));
-            for (int i = 0; i < _inputValues.Keys.Count; i++)
-                _httpContext.Response.Write(string.Format("<input name=\"{0}\" type=\"hidden\" value=\"{1}\">", HttpUtility.HtmlEncode(_inputValues.Keys[i]), HttpUtility.HtmlEncode(_inputValues[_inputValues.Keys[i]])));
+            if (NewInputForEachValue)
+            {
+                foreach (string key in _inputValues.Keys)
+                {
+                    foreach (string value in _inputValues[key].Split(new char[] { ',' }))
+                        _httpContext.Response.Write(string.Format("<input name=\"{0}\" type=\"hidden\" value=\"{1}\">", HttpUtility.HtmlEncode(key), HttpUtility.HtmlEncode(value)));
+                }
+            }
+            else
+            {
+                for (int i = 0; i < _inputValues.Keys.Count; i++)
+                    _httpContext.Response.Write(string.Format("<input name=\"{0}\" type=\"hidden\" value=\"{1}\">", HttpUtility.HtmlEncode(_inputValues.Keys[i]), HttpUtility.HtmlEncode(_inputValues[_inputValues.Keys[i]])));
+            }
             _httpContext.Response.Write("</form>");
             _httpContext.Response.Write("</body></html>");
             _httpContext.Response.End();
