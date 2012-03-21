@@ -40,15 +40,7 @@ namespace Nop.Services.Logging
         /// <param name="activityLogTypeId">Activity log type identifier</param>
         /// <returns>Activity log type item</returns>
         ActivityLogType GetActivityTypeById(int activityLogTypeId);
-
-        /// <summary>
-        /// Inserts an activity log item
-        /// </summary>
-        /// <param name="systemKeyword">The system keyword</param>
-        /// <param name="comment">The activity comment</param>
-        /// <returns>Activity log item</returns>
-        ActivityLog InsertActivity(string systemKeyword, string comment);
-
+        
         /// <summary>
         /// Inserts an activity log item
         /// </summary>

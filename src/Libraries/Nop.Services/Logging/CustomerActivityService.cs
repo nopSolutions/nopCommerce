@@ -131,17 +131,6 @@ namespace Nop.Services.Logging
         /// </summary>
         /// <param name="systemKeyword">The system keyword</param>
         /// <param name="comment">The activity comment</param>
-        /// <returns>Activity log item</returns>
-        public virtual ActivityLog InsertActivity(string systemKeyword, string comment)
-        {
-            return InsertActivity(systemKeyword, comment, new object[0]);
-        }
-
-        /// <summary>
-        /// Inserts an activity log item
-        /// </summary>
-        /// <param name="systemKeyword">The system keyword</param>
-        /// <param name="comment">The activity comment</param>
         /// <param name="commentParams">The activity comment parameters for string.Format() function.</param>
         /// <returns>Activity log item</returns>
         public virtual ActivityLog InsertActivity(string systemKeyword, 
