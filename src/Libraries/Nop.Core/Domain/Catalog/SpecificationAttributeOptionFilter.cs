@@ -1,5 +1,4 @@
-﻿using System;
-
+﻿
 namespace Nop.Core.Domain.Catalog
 {
     /// <summary>
@@ -13,14 +12,14 @@ namespace Nop.Core.Domain.Catalog
         public virtual int SpecificationAttributeId { get; set; }
 
         /// <summary>
-        /// Gets or sets the SpecificationAttributeName
+        /// Gets or sets the specification attribute name
         /// </summary>
         public virtual string SpecificationAttributeName { get; set; }
 
         /// <summary>
-        /// Gets or sets the DisplayOrder
+        /// Gets or sets the specification attribute display order
         /// </summary>
-        public virtual int DisplayOrder { get; set; }
+        public virtual int SpecificationAttributeDisplayOrder { get; set; }
 
         /// <summary>
         /// Gets or sets the specification attribute option identifier
@@ -28,8 +27,13 @@ namespace Nop.Core.Domain.Catalog
         public virtual int SpecificationAttributeOptionId { get; set; }
 
         /// <summary>
-        /// Gets or sets the SpecificationAttributeOptionName
+        /// Gets or sets the specification attribute option name
         /// </summary>
         public virtual string SpecificationAttributeOptionName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the specification attribute option display order
+        /// </summary>
+        public virtual int SpecificationAttributeOptionDisplayOrder { get; set; }
     }
 }

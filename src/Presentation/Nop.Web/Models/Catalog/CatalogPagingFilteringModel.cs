@@ -320,16 +320,18 @@ namespace Nop.Web.Models.Catalog
                                 {
                                     SpecificationAttributeId = sa.Id,
                                     SpecificationAttributeName = sa.GetLocalized(x => x.Name, workContext.WorkingLanguage.Id),
-                                    DisplayOrder = sa.DisplayOrder,
+                                    SpecificationAttributeDisplayOrder = sa.DisplayOrder,
                                     SpecificationAttributeOptionId = sao.Id,
-                                    SpecificationAttributeOptionName = sao.GetLocalized(x => x.Name, workContext.WorkingLanguage.Id)
+                                    SpecificationAttributeOptionName = sao.GetLocalized(x => x.Name, workContext.WorkingLanguage.Id),
+                                    SpecificationAttributeOptionDisplayOrder = sao.DisplayOrder
                                 });
                             }
                         }
                     }
 
                 //sort loaded options
-                allFilters = allFilters.OrderBy(saof => saof.DisplayOrder)
+                allFilters = allFilters.OrderBy(saof => saof.SpecificationAttributeDisplayOrder)
+                    .ThenBy(saof => saof.SpecificationAttributeOptionDisplayOrder)
                     .ThenBy(saof => saof.SpecificationAttributeName)
                     .ThenBy(saof => saof.SpecificationAttributeOptionName).ToList();
                 
