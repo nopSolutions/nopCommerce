@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Shipping;
 
 namespace Nop.Services.Common
 {
@@ -21,9 +22,9 @@ namespace Nop.Services.Common
         /// <summary>
         /// Print packaging slips to PDF
         /// </summary>
-        /// <param name="orders">Orders</param>
+        /// <param name="shipments">Shipmentss</param>
         /// <param name="filePath">File path</param>
-        void PrintPackagingSlipsToPdf(IList<Order> orders, string filePath);
+        void PrintPackagingSlipsToPdf(IList<Shipment> shipments, string filePath);
 
         
         /// <summary>

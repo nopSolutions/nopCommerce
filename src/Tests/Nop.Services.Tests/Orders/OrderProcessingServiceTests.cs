@@ -40,6 +40,7 @@ namespace Nop.Services.Tests.Orders
         IWorkContext _workContext;
         ITaxService _taxService;
         IShippingService _shippingService;
+        IShipmentService _shipmentService;
         IPaymentService _paymentService;
         ICheckoutAttributeParser _checkoutAttributeParser;
         IDiscountService _discountService;
@@ -115,6 +116,7 @@ namespace Nop.Services.Tests.Orders
                 _localizationService,
                 _shippingSettings, pluginFinder, 
                 _eventPublisher, _shoppingCartSettings);
+            _shipmentService = MockRepository.GenerateMock<IShipmentService>();
             
 
             _paymentService = MockRepository.GenerateMock<IPaymentService>();
@@ -174,7 +176,7 @@ namespace Nop.Services.Tests.Orders
                 _orderTotalCalcService, _priceCalcService, _priceFormatter,
                 _productAttributeParser, _productAttributeFormatter,
                 _giftCardService, _shoppingCartService, _checkoutAttributeFormatter,
-                _shippingService, _taxService,
+                _shippingService, _shipmentService, _taxService,
                 _customerService, _discountService,
                 _encryptionService, _workContext, _workflowMessageService,
                 _smsService, _customerActivityService, _currencyService,
@@ -182,43 +184,7 @@ namespace Nop.Services.Tests.Orders
                 _orderSettings, _taxSettings, _localizationSettings,
                 _currencySettings);
         }
-
-        [Test]
-        public void Ensure_order_can_only_be_shipped_when_orderStatus_is_not_cancelled_and_its_not_shipped_yet()
-        {
-            var order = new Order();
-            foreach (OrderStatus os in Enum.GetValues(typeof(OrderStatus)))
-                foreach (PaymentStatus ps in Enum.GetValues(typeof(PaymentStatus)))
-                    foreach (ShippingStatus ss in Enum.GetValues(typeof(ShippingStatus)))
-                    {
-                        order.OrderStatus = os;
-                        order.PaymentStatus = ps;
-                        order.ShippingStatus = ss;
-                        if (os != OrderStatus.Cancelled && ss == ShippingStatus.NotYetShipped)
-                            _orderProcessingService.CanShip(order).ShouldBeTrue();
-                        else
-                            _orderProcessingService.CanShip(order).ShouldBeFalse();
-                    }
-        }
-
-        [Test]
-        public void Ensure_order_can_only_be_delivered_when_orderStatus_is_not_cancelled_and_its_already_shipped()
-        {
-            var order = new Order();
-            foreach (OrderStatus os in Enum.GetValues(typeof(OrderStatus)))
-                foreach (PaymentStatus ps in Enum.GetValues(typeof(PaymentStatus)))
-                    foreach (ShippingStatus ss in Enum.GetValues(typeof(ShippingStatus)))
-                    {
-                        order.OrderStatus = os;
-                        order.PaymentStatus = ps;
-                        order.ShippingStatus = ss;
-                        if (os != OrderStatus.Cancelled && ss == ShippingStatus.Shipped)
-                            _orderProcessingService.CanDeliver(order).ShouldBeTrue();
-                        else
-                            _orderProcessingService.CanDeliver(order).ShouldBeFalse();
-                    }
-        }
-
+        
         [Test]
         public void Ensure_order_can_only_be_cancelled_when_orderStatus_is_not_cancelled_yet()
         {

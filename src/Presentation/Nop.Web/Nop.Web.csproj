@@ -272,6 +272,7 @@
     <Compile Include="Models\Common\StoreThemeSelectorModel.cs" />
     <Compile Include="Models\Catalog\CatalogPagingFilteringModel.cs" />
     <Compile Include="Models\Media\PictureModel.cs" />
+    <Compile Include="Models\Order\ShipmentDetailsModel.cs" />
     <Compile Include="Models\Order\SubmitReturnRequestModel.cs" />
     <Compile Include="Models\Order\OrderDetailsModel.cs" />
     <Compile Include="Models\Polls\PollModel.cs" />
@@ -1738,6 +1739,8 @@
     <Content Include="Views\Profile\Posts.cshtml" />
     <Content Include="Views\Common\Favicon.cshtml" />
     <Content Include="Views\Customer\ForumSubscriptions.cshtml" />
+    <Content Include="Views\Order\ShipmentDetails.cshtml" />
+    <Content Include="Views\Order\ShipmentDetails.Mobile.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
@@ -1756,7 +1759,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>7725</DevelopmentServerPort>
+          <DevelopmentServerPort>2640</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost:2451/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>

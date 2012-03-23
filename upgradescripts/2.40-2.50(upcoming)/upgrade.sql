@@ -213,7 +213,7 @@ set @resources='
     <Value>Display shipment events</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Shipping.DisplayShipmentEventsToCustomers.Hint">
-    <Value>Check if you want your customers to see shipment events on their order details pages (if supported by your shipping rate computation method).</Value>
+    <Value>Check if you want your customers to see shipment events on their shipment details pages (if supported by your shipping rate computation method).</Value>
   </LocaleResource>
   <LocaleResource Name="Order.ShipmentStatusEvents">
     <Value>Shipment status events</Value>
@@ -472,6 +472,195 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Checkout.ShippingOptionCouldNotBeLoaded">
     <Value>Shipping options could not be loaded</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments">
+    <Value>Shipments</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.ID">
+    <Value>Shipment #</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.TrackingNumber">
+    <Value>Tracking number</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.ShippedDate">
+    <Value>Date shipped</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.DeliveryDate">
+    <Value>Date delivered</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.DeliveryDate.NotYet">
+    <Value>Not yet</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.ViewDetails">
+    <Value>View shipment details</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.BackToOrder">
+    <Value>back to order details</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.TrackingNumber.Hint">
+    <Value>Set a tracking number of the current shipment.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.TrackingNumber.Button">
+    <Value>Set tracking number</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.ShippedDate.Hint">
+    <Value>The date this shipment was shipped.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.DeliveryDate.Hint">
+    <Value>The date this shipment was delivered.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.DeliveryDate.Button">
+    <Value>Set as delivered</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.Products">
+    <Value>Products shipped</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.Products.ProductName">
+    <Value>Product</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.Products.QtyOrdered">
+    <Value>Qty ordered</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.Products.QtyShipped">
+    <Value>Qty shipped</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.Products.QtyToShip">
+    <Value>Qty to ship</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.AddNew">
+    <Value>Add shipment</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.AddNew.Title">
+    <Value>Add a new shipment to order #{0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.Added">
+    <Value>The new shipment has been added successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.NoProductsSelected">
+    <Value>No products selected</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.Deleted">
+    <Value>The shipment has been deleted successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Shipping.ShippingStatus.PartiallyShipped">
+    <Value>Partially shipped</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.ShippedDate">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.ShippedDate.Button">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.ShippedDate.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.ShippedDate.NotYet">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.DeliveryDate">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.DeliveryDate.Button">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.DeliveryDate.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.DeliveryDate.NotYet">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.TrackingNumber">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.TrackingNumber.Button">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.TrackingNumber.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.ShippedOn">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.NotYetShipped">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.DeliveredOn">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.NotYetDelivered">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.Shipments">
+    <Value>Shipments</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.Shipments.ID">
+    <Value>Shipment #</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.Shipments.TrackingNumber">
+    <Value>Tracking number</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.Shipments.ShippedDate">
+    <Value>Date shipped</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.Shipments.DeliveryDate">
+    <Value>Date delivered</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.Shipments.DeliveryDate.NotYet">
+    <Value>Not yet</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.Shipments.ViewDetails">
+    <Value>View details</Value>
+  </LocaleResource>
+  <LocaleResource Name="PageTitle.ShipmentDetails">
+    <Value>Shipment details</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.TrackingNumber">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.Shipments.Information">
+    <Value>Shipment #{0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.Shipments.Order#">
+    <Value>Order #</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.Shipments.ShippingMethod">
+    <Value>Shipping Method</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.Shipments.ShippingAddress">
+    <Value>Shipping Address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.Shipments.Email">
+    <Value>Email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.Shipments.Phone">
+    <Value>Phone</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.Shipments.Fax">
+    <Value>Fax</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.Shipments.Product(s)">
+    <Value>Shipped product(s)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.Shipments.Product(s).SKU">
+    <Value>SKU</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.Shipments.Product(s).Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Order.Shipments.Product(s).Quantity">
+    <Value>Qty shipped</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.PrintPackagingSlip">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.PrintPackagingSlip">
+    <Value>Print packaging slip</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFPackagingSlip.Shipment">
+    <Value>Shipment #{0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFPackagingSlip.Order">
+    <Value>Order #{0}</Value>
   </LocaleResource>
 </Language>
 '
@@ -2171,5 +2360,193 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'shippingsettings.returnv
 BEGIN
 	INSERT [Setting] ([Name], [Value])
 	VALUES (N'shippingsettings.returnvalidoptionsifthereareany', N'true')
+END
+GO
+
+
+--new shipment functionality
+IF NOT EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[dbo].[Shipment]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+BEGIN
+CREATE TABLE [dbo].[Shipment](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[OrderId] int NOT NULL,
+	[TrackingNumber] [nvarchar](max) NULL,
+	[ShippedDateUtc] [datetime] NOT NULL,
+	[DeliveryDateUtc] [datetime] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+END
+GO
+
+IF EXISTS (SELECT 1
+           FROM   sysobjects
+           WHERE  name = 'Shipment_Order'
+           AND parent_obj = Object_id('Shipment')
+           AND Objectproperty(id,N'IsForeignKey') = 1)
+ALTER TABLE dbo.Shipment
+DROP CONSTRAINT Shipment_Order
+GO
+ALTER TABLE [dbo].[Shipment]  WITH CHECK ADD  CONSTRAINT [Shipment_Order] FOREIGN KEY([OrderId])
+REFERENCES [dbo].[Order] ([Id])
+ON DELETE CASCADE
+GO
+
+IF NOT EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[dbo].[Shipment_OrderProductVariant]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+BEGIN
+CREATE TABLE [dbo].[Shipment_OrderProductVariant](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[ShipmentId] int NOT NULL,
+	[OrderProductVariantId] int NOT NULL,
+	[Quantity] int NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+END
+GO
+
+IF EXISTS (SELECT 1
+           FROM   sysobjects
+           WHERE  name = 'ShipmentOrderProductVariant_Shipment'
+           AND parent_obj = Object_id('Shipment_OrderProductVariant')
+           AND Objectproperty(id,N'IsForeignKey') = 1)
+ALTER TABLE dbo.Shipment_OrderProductVariant
+DROP CONSTRAINT ShipmentOrderProductVariant_Shipment
+GO
+ALTER TABLE [dbo].[Shipment_OrderProductVariant]  WITH CHECK ADD  CONSTRAINT [ShipmentOrderProductVariant_Shipment] FOREIGN KEY([ShipmentId])
+REFERENCES [dbo].[Shipment] ([Id])
+ON DELETE CASCADE
+GO
+
+--new message template
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[MessageTemplate]
+		WHERE [Name] = N'ShipmentSent.CustomerNotification')
+BEGIN
+	INSERT [dbo].[MessageTemplate] ([Name], [BccEmailAddresses], [Subject], [Body], [IsActive], [EmailAccountId])
+	VALUES (N'ShipmentSent.CustomerNotification', null, N'Your order from %Store.Name% has been shipped.', N'<p><a href="%Store.URL%"> %Store.Name%</a> <br /><br />Hello %Order.CustomerFullName%!, <br />Good news! You order has been shipped. <br />Order Number: %Order.OrderNumber%<br />Order Details: <a href="%Order.OrderURLForCustomer%" target="_blank">%Order.OrderURLForCustomer%</a><br />Date Ordered: %Order.CreatedOn%<br /><br /><br /><br />Billing Address<br />%Order.BillingFirstName% %Order.BillingLastName%<br />%Order.BillingAddress1%<br />%Order.BillingCity% %Order.BillingZipPostalCode%<br />%Order.BillingStateProvince% %Order.BillingCountry%<br /><br /><br /><br />Shipping Address<br />%Order.ShippingFirstName% %Order.ShippingLastName%<br />%Order.ShippingAddress1%<br />%Order.ShippingCity% %Order.ShippingZipPostalCode%<br />%Order.ShippingStateProvince% %Order.ShippingCountry%<br /><br />Shipping Method: %Order.ShippingMethod% <br /> <br /> Shipped Products: <br /> <br /> %Shipment.Product(s)%</p>', 1, 0)
+END
+GO
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[MessageTemplate]
+		WHERE [Name] = N'ShipmentDelivered.CustomerNotification')
+BEGIN
+	INSERT [dbo].[MessageTemplate] ([Name], [BccEmailAddresses], [Subject], [Body], [IsActive], [EmailAccountId])
+	VALUES (N'ShipmentDelivered.CustomerNotification', null, N'Your order from %Store.Name% has been delivered.', N'<p><a href="%Store.URL%"> %Store.Name%</a> <br /> <br /> Hello %Order.CustomerFullName%, <br /> Good news! You order has been delivered. <br /> Order Number: %Order.OrderNumber%<br /> Order Details: <a href="%Order.OrderURLForCustomer%" target="_blank">%Order.OrderURLForCustomer%</a><br /> Date Ordered: %Order.CreatedOn%<br /> <br /> <br /> <br /> Billing Address<br /> %Order.BillingFirstName% %Order.BillingLastName%<br /> %Order.BillingAddress1%<br /> %Order.BillingCity% %Order.BillingZipPostalCode%<br /> %Order.BillingStateProvince% %Order.BillingCountry%<br /> <br /> <br /> <br /> Shipping Address<br /> %Order.ShippingFirstName% %Order.ShippingLastName%<br /> %Order.ShippingAddress1%<br /> %Order.ShippingCity% %Order.ShippingZipPostalCode%<br /> %Order.ShippingStateProvince% %Order.ShippingCountry%<br /> <br /> Shipping Method: %Order.ShippingMethod% <br /> <br /> Delivered Products: <br /> <br /> %Shipment.Product(s)%</p>', 1, 0)
+END
+GO
+--delete old shipping message templates
+DELETE FROM [MessageTemplate] 
+WHERE [Name] = N'OrderShipped.CustomerNotification'
+GO
+DELETE FROM [MessageTemplate] 
+WHERE [Name] = N'OrderDelivered.CustomerNotification'
+GO
+
+--create shipments for the previous orders
+IF (EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Order]') and NAME='ShippedDateUtc')
+AND EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Order]') and NAME='DeliveryDateUtc')
+AND EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Order]') and NAME='TrackingNumber'))
+BEGIN
+	PRINT 'create shipments for the previous orders'
+	DECLARE @OrderId int
+	DECLARE cur_order CURSOR FOR
+	SELECT [Id]
+	FROM [Order]
+	ORDER BY [Id]
+	OPEN cur_order
+	FETCH NEXT FROM cur_order INTO @OrderId
+	WHILE @@FETCH_STATUS = 0
+	BEGIN	
+		PRINT 'procesing order. ID ' + cast(@OrderId as nvarchar(10))
+
+		--shipping status
+		DECLARE @ShippingStatusId int
+		SET @ShippingStatusId = null -- clear cache (variable scope)
+		SELECT @ShippingStatusId = [ShippingStatusId] FROM [Order] WHERE [Id]=@OrderId
+		--is order already shipped or delivered?
+		IF (@ShippingStatusId = 30 OR @ShippingStatusId = 40)
+		BEGIN
+			--select shippable order product variant identifiers
+			CREATE TABLE #OrderedProductVariants 
+			(
+				[Id] int NOT NULL,
+				[Quantity] int NOT NULL
+			)
+			INSERT INTO #OrderedProductVariants ([Id], [Quantity])
+			SELECT opv.[Id], opv.[Quantity] FROM [Order] o
+				JOIN [OrderProductVariant] opv ON o.[Id] = opv.[OrderId]
+				JOIN [ProductVariant] pv ON opv.[ProductVariantId] = pv.[Id]
+			WHERE o.[Id] = @OrderID AND pv.[IsShipEnabled] = 1
+
+			
+			DECLARE @HasShippableProducts bit
+			SET @HasShippableProducts = null -- clear cache (variable scope)
+			SELECT @HasShippableProducts = COUNT(1) FROM #OrderedProductVariants
+			IF @HasShippableProducts = 1
+			BEGIN
+				--tracking number
+				DECLARE @TrackingNumber nvarchar(MAX)
+				SET @TrackingNumber = null -- clear cache (variable scope)
+				SELECT @TrackingNumber = [TrackingNumber] FROM [Order] WHERE [Id]=@OrderId
+				--shipped date
+				DECLARE @ShippedDateUtc datetime
+				SET @ShippedDateUtc = null -- clear cache (variable scope)
+				SELECT @ShippedDateUtc = [ShippedDateUtc] FROM [Order] WHERE [Id]=@OrderId
+				IF (@ShippedDateUtc is null)
+				BEGIN
+					SELECT @ShippedDateUtc = [CreatedOnUtc] FROM [Order] WHERE [Id]=@OrderId
+				END
+				--delivery date
+				DECLARE @DeliveryDateUtc datetime
+				SET @DeliveryDateUtc = null -- clear cache (variable scope)
+				SELECT @DeliveryDateUtc = [DeliveryDateUtc] FROM [Order] WHERE [Id]=@OrderId
+
+				--insert shipment
+				DECLARE @ShipmentId int
+				SET @ShipmentId = null -- clear cache (variable scope)
+				INSERT INTO [Shipment] ([OrderId], [TrackingNumber], [ShippedDateUtc], [DeliveryDateUtc])
+				VALUES (@OrderId, @TrackingNumber, @ShippedDateUtc, @DeliveryDateUtc)
+				SET @ShipmentId = @@IDENTITY
+
+				--now insert shipment order product variants
+				INSERT INTO [Shipment_OrderProductVariant] ([ShipmentId], [OrderProductVariantId], [Quantity])
+				SELECT @ShipmentId, [Id], [Quantity]
+				FROM #OrderedProductVariants
+			END
+
+			DROP TABLE #OrderedProductVariants
+		END
+	
+		--fetch next identifier
+		FETCH NEXT FROM cur_order INTO @OrderId
+	END
+	CLOSE cur_order
+	DEALLOCATE cur_order
+END
+GO
+
+--drop old column
+IF EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Order]') and NAME='ShippedDateUtc')
+BEGIN
+	ALTER TABLE [dbo].[Order] DROP COLUMN [ShippedDateUtc]
+END
+GO
+
+IF EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Order]') and NAME='DeliveryDateUtc')
+BEGIN
+	ALTER TABLE [dbo].[Order] DROP COLUMN [DeliveryDateUtc]
+END
+GO
+
+IF EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Order]') and NAME='TrackingNumber')
+BEGIN
+	ALTER TABLE [dbo].[Order] DROP COLUMN [TrackingNumber]
 END
 GO

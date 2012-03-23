@@ -19,7 +19,6 @@ namespace Nop.Admin.Models.Orders
             TaxRates = new List<TaxRate>();
             GiftCards = new List<GiftCard>();
             Items = new List<OrderProductVariantModel>();
-            OrderNotes = new List<OrderNote>();
         }
 
         //identifiers
@@ -100,7 +99,7 @@ namespace Nop.Admin.Models.Orders
         [NopResourceDisplayName("Admin.Orders.Fields.Edit.OrderTotal")]
         public decimal OrderTotalValue { get; set; }
 
-        //orderstatus
+        //order status
         [NopResourceDisplayName("Admin.Orders.Fields.OrderStatus")]
         public string OrderStatus { get; set; }
 
@@ -153,13 +152,8 @@ namespace Nop.Admin.Models.Orders
         public string BaseWeightIn { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.ShippingMethod")]
         public string ShippingMethod { get; set; }
-        [NopResourceDisplayName("Admin.Orders.Fields.ShippedDate")]
-        public string ShippedDate { get; set; }
-        [NopResourceDisplayName("Admin.Orders.Fields.DeliveryDate")]
-        public string DeliveryDate { get; set; }
-        [NopResourceDisplayName("Admin.Orders.Fields.TrackingNumber")]
-        public string TrackingNumber { get; set; }
         public string ShippingAddressGoogleMapsUrl { get; set; }
+        public bool CanAddNewShipments { get; set; }
 
         //billing info
         [NopResourceDisplayName("Admin.Orders.Fields.BillingAddress")]
@@ -183,7 +177,6 @@ namespace Nop.Admin.Models.Orders
 
 
         //order notes
-        public IList<OrderNote> OrderNotes { get; set; }
         [NopResourceDisplayName("Admin.Orders.OrderNotes.Fields.AddOrderNoteDisplayToCustomer")]
         public bool AddOrderNoteDisplayToCustomer { get; set; }
         [NopResourceDisplayName("Admin.Orders.OrderNotes.Fields.AddOrderNoteMessage")]
@@ -191,7 +184,6 @@ namespace Nop.Admin.Models.Orders
         public string AddOrderNoteMessage { get; set; }
 
         public bool DisplayPdfInvoice { get; set; }
-        public bool DisplayPdfPackagingSlip { get; set; }
 
 
         //refund info
@@ -210,10 +202,7 @@ namespace Nop.Admin.Models.Orders
         public bool CanPartiallyRefundOffline { get; set; }
         public bool CanVoid { get; set; }
         public bool CanVoidOffline { get; set; }
-        public bool CanShip { get; set; }
-        public bool CanDeliver { get; set; }
-
-
+        
         //aggergator proeprties
         public string aggregatorprofit { get; set; }
         public string aggregatortax { get; set; }

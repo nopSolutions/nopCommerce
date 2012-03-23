@@ -190,6 +190,10 @@ namespace Nop.Web.Infrastructure
                             new { controller = "Order", action = "Details" },
                             new { orderId = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
+            routes.MapLocalizedRoute("ShipmentDetails",
+                            "orderdetails/shipment/{shipmentId}",
+                            new { controller = "Order", action = "ShipmentDetails" },
+                            new[] { "Nop.Web.Controllers" });
             routes.MapLocalizedRoute("ReturnRequest",
                             "returnrequest/{orderId}",
                             new { controller = "Order", action = "ReturnRequest" },

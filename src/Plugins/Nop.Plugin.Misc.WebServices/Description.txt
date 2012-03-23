@@ -1,7 +1,7 @@
 ﻿Group: Misc
 FriendlyName: Web Services
 SystemName: Misc.WebServices
-Version: 1.13
+Version: 1.14
 SupportedVersions: 2.50
 Author: Nicolas Muniere, nopCommerce team
 DisplayOrder: 1

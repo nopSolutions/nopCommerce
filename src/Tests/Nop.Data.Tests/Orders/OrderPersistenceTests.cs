@@ -71,10 +71,7 @@ namespace Nop.Data.Tests.Orders
                 ShippingAddress = null,
                 ShippingMethod = "ShippingMethod1",
                 ShippingRateComputationMethodSystemName="ShippingRateComputationMethodSystemName1",
-                ShippedDateUtc = new DateTime(2010, 01, 02),
-                DeliveryDateUtc = new DateTime(2010, 01, 03),
                 OrderWeight = 16.1M,
-                TrackingNumber="TrackingNumber1",
                 Deleted = false,
                 CreatedOnUtc = new DateTime(2010, 01, 04)
             };
@@ -129,10 +126,7 @@ namespace Nop.Data.Tests.Orders
             fromDb.ShippingAddress.ShouldBeNull();
             fromDb.ShippingMethod.ShouldEqual("ShippingMethod1");
             fromDb.ShippingRateComputationMethodSystemName.ShouldEqual("ShippingRateComputationMethodSystemName1");
-            fromDb.ShippedDateUtc.ShouldEqual(new DateTime(2010, 01, 02));
-            fromDb.DeliveryDateUtc.ShouldEqual(new DateTime(2010, 01, 03));
             fromDb.OrderWeight.ShouldEqual(16.1M);
-            fromDb.TrackingNumber.ShouldEqual("TrackingNumber1");
             fromDb.Deleted.ShouldEqual(false);
             fromDb.CreatedOnUtc.ShouldEqual(new DateTime(2010, 01, 04));
         }
@@ -309,6 +303,32 @@ namespace Nop.Data.Tests.Orders
 
             fromDb.Affiliate.ShouldNotBeNull();
             fromDb.Affiliate.Active.ShouldEqual(true);
+        }
+        [Test]
+        public void Can_save_and_load_order_with_shipments()
+        {
+            var order = new Order
+            {
+                OrderGuid = Guid.NewGuid(),
+                Customer = GetTestCustomer(),
+                BillingAddress = GetTestBillingAddress(),
+                CreatedOnUtc = new DateTime(2010, 01, 01)
+            };
+            order.Shipments.Add
+                (
+                    new Shipment()
+                    {
+                        TrackingNumber = "TrackingNumber 1",
+                        ShippedDateUtc = new DateTime(2010, 01, 01),
+                        DeliveryDateUtc = new DateTime(2010, 01, 02),
+                    }
+                );
+            var fromDb = SaveAndLoadEntity(order);
+            fromDb.ShouldNotBeNull();
+
+            fromDb.Shipments.ShouldNotBeNull();
+            fromDb.Shipments.Count.ShouldEqual(1);
+            fromDb.Shipments.First().TrackingNumber.ShouldEqual("TrackingNumber 1");
         }
 
         protected ProductVariant GetTestProductVariant()

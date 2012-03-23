@@ -6,6 +6,7 @@ using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Shipping;
 
 namespace Nop.Services.Messages
 {
@@ -14,6 +15,8 @@ namespace Nop.Services.Messages
         void AddStoreTokens(IList<Token> tokens);
 
         void AddOrderTokens(IList<Token> tokens, Order order, int languageId);
+
+        void AddShipmentTokens(IList<Token> tokens, Shipment shipment, int languageId);
 
         void AddOrderNoteTokens(IList<Token> tokens, OrderNote orderNote);
 

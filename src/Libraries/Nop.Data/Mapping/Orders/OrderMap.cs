@@ -32,7 +32,6 @@ namespace Nop.Data.Mapping.Orders
             this.Property(o => o.CaptureTransactionResult).IsMaxLength();
             this.Property(o => o.SubscriptionTransactionId).IsMaxLength();
             this.Property(o => o.PurchaseOrderNumber).IsMaxLength();
-            this.Property(o => o.TrackingNumber).IsMaxLength();
 
             this.Ignore(o => o.OrderStatus);
             this.Ignore(o => o.PaymentStatus);

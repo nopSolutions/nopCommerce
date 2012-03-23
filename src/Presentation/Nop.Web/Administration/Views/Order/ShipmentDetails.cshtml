@@ -1,0 +1,99 @@
+﻿@model ShipmentModel
+@using Telerik.Web.Mvc.UI;
+@using Nop.Core.Domain.Tax;
+@using Nop.Core.Domain.Catalog;
+@using (Html.BeginForm())
+{
+
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-sales.png")" alt="" />
+            @T("Admin.Orders.Shipments.ViewDetails") - @Model.Id @Html.ActionLink("(" + T("Admin.Orders.Shipments.BackToOrder") + ")", "Edit", new { id = @Model.OrderId })
+        </div>
+        <div class="options">
+            @if (Model.DisplayPdfPackagingSlip)
+            {
+                <a href="@Url.Action("PdfPackagingSlip", new { shipmentId = Model.Id })" class="t-button">@T("Admin.Orders.Shipments.PrintPackagingSlip")</a>
+            }
+            <span id="shipment-delete" class="t-button">@T("Admin.Common.Delete")</span>
+        </div>
+    </div>    
+    @Html.ValidationSummary(false)
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.TrackingNumber):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.TrackingNumber)
+                <input type="submit" name="settrackingnumber" value="@T("Admin.Orders.Shipments.TrackingNumber.Button")" id="settrackingnumber" class="adminButton" />
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ShippedDate):
+            </td>
+            <td class="adminData">
+                @Model.ShippedDate
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.DeliveryDate):
+            </td>
+            <td class="adminData">
+                @Model.DeliveryDate
+                @if (Model.CanDeliver)
+                {
+                    <input type="submit" name="setasdelivered" value="@T("Admin.Orders.Shipments.DeliveryDate.Button")" id="setasdelivered" class="adminButton" />
+                }
+            </td>
+        </tr>
+    </table>
+    <table class="adminContent">
+        <tr>
+            <td class="adminData">
+                <strong>@T("Admin.Orders.Shipments.Products")</strong>
+            </td>
+        </tr>
+        <tr>
+            <td class="adminData">
+                <table class="tablestyle" border="1" cellspacing="0" style="width: 100%; border-collapse: collapse;">
+                    <col />
+                    <col />
+                    <thead>
+                        <tr class="headerstyle">
+                            <th align="center">
+                                @T("Admin.Orders.Shipments.Products.ProductName")
+                            </th>
+                            <th align="center">
+                                @T("Admin.Orders.Shipments.Products.QtyShipped")
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Products)
+                        {
+                            <tr>
+                                <td style="width: 80%;">
+                                    <div style="padding-left: 10px; padding-right: 10px; text-align: left;">
+                                        <em><a href="@Url.Action("Edit", "ProductVariant", new { id = @item.ProductVariantId })">@item.FullProductName</a></em>
+                                        @if (!String.IsNullOrEmpty(item.AttributeInfo))
+                                        {
+                                            <br />
+                                            @Html.Raw(item.AttributeInfo)
+                                        }
+                                    </div>
+                                </td>
+                                <td align="center" style="width: 20%;">
+                                    @item.QuantityShipped
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </table>
+}
+@Html.DeleteConfirmation("DeleteShipment", "shipment-delete")

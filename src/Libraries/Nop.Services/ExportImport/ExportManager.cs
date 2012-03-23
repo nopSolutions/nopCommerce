@@ -872,8 +872,6 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteElementString("ShippingStatusId", null, order.ShippingStatusId.ToString());
                 xmlWriter.WriteElementString("ShippingMethod", null, order.ShippingMethod);
                 xmlWriter.WriteElementString("ShippingRateComputationMethodSystemName", null, order.ShippingRateComputationMethodSystemName);
-                xmlWriter.WriteElementString("ShippedDateUtc", null, (order.ShippedDateUtc == null) ? string.Empty : order.ShippedDateUtc.Value.ToString());
-                xmlWriter.WriteElementString("TrackingNumber", null, order.TrackingNumber);
                 xmlWriter.WriteElementString("VatNumber", null, order.VatNumber);
                 xmlWriter.WriteElementString("Deleted", null, order.Deleted.ToString());
                 xmlWriter.WriteElementString("CreatedOnUtc", null, order.CreatedOnUtc.ToString());

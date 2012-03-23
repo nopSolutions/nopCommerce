@@ -262,6 +262,8 @@
     <Compile Include="Seo\ISitemapGenerator.cs" />
     <Compile Include="Seo\SitemapGenerator.cs" />
     <Compile Include="Seo\UpdateFrequency.cs" />
+    <Compile Include="Shipping\IShipmentService.cs" />
+    <Compile Include="Shipping\ShipmentService.cs" />
     <Compile Include="Shipping\ShippingExtentions.cs" />
     <Compile Include="Shipping\IShippingService.cs" />
     <Compile Include="Shipping\GetShippingOptionRequest.cs" />

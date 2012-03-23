@@ -5,6 +5,7 @@ using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Shipping;
 
 namespace Nop.Services.Messages
 {
@@ -65,20 +66,20 @@ namespace Nop.Services.Messages
         int SendOrderPlacedCustomerNotification(Order order, int languageId);
 
         /// <summary>
-        /// Sends an order shipped notification to a customer
+        /// Sends a shipment sent notification to a customer
         /// </summary>
-        /// <param name="order">Order instance</param>
+        /// <param name="shipment">Shipment</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendOrderShippedCustomerNotification(Order order, int languageId);
+        int SendShipmentSentCustomerNotification(Shipment shipment, int languageId);
 
         /// <summary>
-        /// Sends an order delivered notification to a customer
+        /// Sends a shipment delivered notification to a customer
         /// </summary>
-        /// <param name="order">Order instance</param>
+        /// <param name="shipment">Shipment</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        int SendOrderDeliveredCustomerNotification(Order order, int languageId);
+        int SendShipmentDeliveredCustomerNotification(Shipment shipment, int languageId);
 
         /// <summary>
         /// Sends an order completed notification to a customer

@@ -16,10 +16,6 @@
             {
                 <a href="@Url.Action("PdfInvoice", new { orderId = Model.Id })" class="t-button">@T("Admin.Orders.PdfInvoice")</a>
             }
-            @if (Model.DisplayPdfPackagingSlip)
-            {
-                <a href="@Url.Action("PdfPackagingSlip", new { orderId = Model.Id })" class="t-button">@T("Admin.Orders.PrintPackagingSlip")</a>
-            }
             <span id="order-delete" class="t-button">@T("Admin.Common.Delete")</span>
             <input type="submit" id="btnRefreshPage" name="btnRefreshPage" style="display: none" />
         </div>
@@ -892,53 +888,49 @@
                 @Model.ShippingMethod
             </td>
         </tr>
+    </table>
+        
+    <div class="clear">
+    </div>    
+    <p>
+        <strong>
+            @T("Admin.Orders.Shipments")
+        </strong>
+    </p>
+    <div class="clear">
+    </div>  
+        <table class="adminContent">
         <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.TrackingNumber):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.TrackingNumber)
-                <input type="submit" name="settrackingnumber" value="@T("Admin.Orders.Fields.TrackingNumber.Button")" id="settrackingnumber" class="adminButton" />
+            <td>
+                @(Html.Telerik().Grid<ShipmentModel>().Name("shipments-grid")
+                .DataBinding(binding =>
+                {
+                    binding.Ajax().Select("ShipmentsSelect", "Order", new { orderId = Model.Id });
+                })
+                .Columns(columns =>
+                {
+                    columns.Bound(x => x.Id).Width(50);
+                    columns.Bound(x => x.TrackingNumber);
+                    columns.Bound(x => x.ShippedDate);
+                    columns.Bound(x => x.DeliveryDate);
+                    columns.Bound(x => x.Id)
+                        .Template(x => Html.ActionLink(T("Admin.Common.View").Text, "ShipmentDetails", "Order", new { id = x.Id }, new { }))
+                        .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/Order/ShipmentDetails/") + "<#= Id #>\">" + T("Admin.Common.View").Text + "</a>")
+                        .Width(50)
+                        .Centered()
+                        .HeaderTemplate(T("Admin.Common.View").Text);
+                })
+                .EnableCustomBinding(true))
             </td>
         </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.ShippedDate):
-            </td>
-            <td class="adminData">
-                @if (!String.IsNullOrEmpty(Model.ShippedDate))
-                {
-                    @Model.ShippedDate
-                }
-                else
-                {
-                    @T("Admin.Orders.Fields.ShippedDate.NotYet")
-                }
-                @if (Model.CanShip)
-                {
-                    <input type="submit" name="setasshipped" value="@T("Admin.Orders.Fields.ShippedDate.Button")" id="setasshipped" class="adminButton" />
-                }
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.DeliveryDate):
-            </td>
-            <td class="adminData">
-                @if (!String.IsNullOrEmpty(Model.DeliveryDate))
-                {
-                    @Model.DeliveryDate
-                }
-                else
-                {
-                    @T("Admin.Orders.Fields.DeliveryDate.NotYet")
-                }
-                @if (Model.CanDeliver)
-                {
-                    <input type="submit" name="setasdelivered" value="@T("Admin.Orders.Fields.DeliveryDate.Button")" id="setasdelivered" class="adminButton" />
-                }
-            </td>
-        </tr>
+        @if (Model.CanAddNewShipments)
+        {
+            <tr>
+                <td class="adminData">
+                    <input type="submit" id="btnAddNewShipment" name="btnAddNewShipment" value="@T("Admin.Orders.Shipments.AddNew")" onclick="javascript:setLocation('@(Url.Action("AddShipment", "Order", new { orderId = Model.Id }))'); return false;" class="t-button" />
+                </td>
+            </tr>
+        }
     </table>
         }
         else

@@ -42,7 +42,5 @@ namespace Nop.Plugin.Misc.WebServices
 
         [OperationContract]
         List<OrderError> SetOrdersStatusCanceled(int[] ordersId, string usernameOrEmail, string userPassword);
-        [OperationContract]
-        List<OrderError> SetOrdersShippingShipped(int[] ordersId, string usernameOrEmail, string userPassword);
     }
 }

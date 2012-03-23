@@ -4768,7 +4768,7 @@
 										<Value>Display shipment events</Value>
 										<Children>
 											<LocaleResource Name="Hint">
-												<Value>Check if you want your customers to see shipment events on their order details pages (if supported by your shipping rate computation method).</Value>
+												<Value>Check if you want your customers to see shipment events on their shipment details pages (if supported by your shipping rate computation method).</Value>
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
@@ -7252,21 +7252,7 @@
 										<Value>Customer IP address from where order has been placed.</Value>
 									</LocaleResource>
 								</Children>
-							</LocaleResource>
-							<LocaleResource Name="DeliveryDate">
-								<Value>Delivery date</Value>
-								<Children>
-									<LocaleResource Name="Button">
-										<Value>Set as delivered</Value>
-									</LocaleResource>
-									<LocaleResource Name="Hint">
-										<Value>The date this order was delivered.</Value>
-									</LocaleResource>
-									<LocaleResource Name="NotYet">
-										<Value>Not yet</Value>
-									</LocaleResource>
-								</Children>
-							</LocaleResource>
+							</LocaleResource>							
 							<LocaleResource Name="Edit">
 								<Children>
 									<LocaleResource Name="InclTax">
@@ -7549,21 +7535,7 @@
 							</LocaleResource>
 							<LocaleResource Name="SaveOrderTotals">
 								<Value>Save order totals</Value>
-							</LocaleResource>
-							<LocaleResource Name="ShippedDate">
-								<Value>Shipped date</Value>
-								<Children>
-									<LocaleResource Name="Button">
-										<Value>Set as shipped</Value>
-									</LocaleResource>
-									<LocaleResource Name="Hint">
-										<Value>The date this order was shipped.</Value>
-									</LocaleResource>
-									<LocaleResource Name="NotYet">
-										<Value>Not yet</Value>
-									</LocaleResource>
-								</Children>
-							</LocaleResource>
+							</LocaleResource>							
 							<LocaleResource Name="ShippingAddress">
 								<Value>Shipping address</Value>
 								<Children>
@@ -7604,17 +7576,6 @@
 								<Children>
 									<LocaleResource Name="Hint">
 										<Value>Total tax applied to this order. Manage your tax settings from Configuration : Tax</Value>
-									</LocaleResource>
-								</Children>
-							</LocaleResource>
-							<LocaleResource Name="TrackingNumber">
-								<Value>Tracking number</Value>
-								<Children>
-									<LocaleResource Name="Button">
-										<Value>Set tracking number</Value>
-									</LocaleResource>
-									<LocaleResource Name="Hint">
-										<Value>Set a tracking number of the current order.</Value>
 									</LocaleResource>
 								</Children>
 							</LocaleResource>
@@ -7747,10 +7708,7 @@
 					</LocaleResource>
 					<LocaleResource Name="PdfInvoice">
 						<Value>Invoice (PDF)</Value>
-					</LocaleResource>
-					<LocaleResource Name="PrintPackagingSlip">
-						<Value>Print packaging slip</Value>
-					</LocaleResource>
+					</LocaleResource>					
 					<LocaleResource Name="Products">
 						<Value>Products</Value>
 						<Children>
@@ -7908,6 +7866,90 @@
 							</LocaleResource>
 						</Children>
 					</LocaleResource>
+          <LocaleResource Name="Shipments">
+            <Value>Shipments</Value>
+            <Children>
+              <LocaleResource Name="Added">
+                <Value>The new shipment has been added successfully.</Value>
+              </LocaleResource>
+              <LocaleResource Name="AddNew">
+                <Value>Add shipment</Value>
+                <Children>
+                  <LocaleResource Name="Title">
+                    <Value>Add a new shipment to order #{0}</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+              <LocaleResource Name="BackToOrder">
+                <Value>back to order details</Value>
+              </LocaleResource>
+              <LocaleResource Name="Deleted">
+                <Value>The shipment has been deleted successfully.</Value>
+              </LocaleResource>
+              <LocaleResource Name="DeliveryDate">
+                <Value>Date delivered</Value>
+                <Children>
+                  <LocaleResource Name="Button">
+                    <Value>Set as delivered</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Hint">
+                    <Value>The date this shipment was delivered.</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="NotYet">
+                    <Value>Not yet</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+              <LocaleResource Name="ID">
+                <Value>Shipment #</Value>
+              </LocaleResource>
+              <LocaleResource Name="NoProductsSelected">
+                <Value>No products selected</Value>
+              </LocaleResource>
+              <LocaleResource Name="PrintPackagingSlip">
+                <Value>Print packaging slip</Value>
+              </LocaleResource>
+              <LocaleResource Name="Products">
+                <Value>Products shipped</Value>
+                <Children>
+                  <LocaleResource Name="ProductName">
+                    <Value>Product</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="QtyOrdered">
+                    <Value>Qty ordered</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="QtyShipped">
+                    <Value>Qty shipped</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="QtyToShip">
+                    <Value>Qty to ship</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+              <LocaleResource Name="ShippedDate">
+                <Value>Date shipped</Value>
+                <Children>
+                  <LocaleResource Name="Hint">
+                    <Value>The date this shipment was shipped.</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+              <LocaleResource Name="TrackingNumber">
+                <Value>Tracking number</Value>
+                <Children>
+                  <LocaleResource Name="Hint">
+                    <Value>Set a tracking number of the current shipment.</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Button">
+                    <Value>Set tracking number</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+              <LocaleResource Name="ViewDetails">
+                <Value>View shipment details</Value>
+              </LocaleResource>
+            </Children>
+          </LocaleResource>
 					<LocaleResource Name="ShippingInfo">
 						<Value>Shipping info</Value>
 						<Children>

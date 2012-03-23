@@ -1,0 +1,154 @@
+﻿@model ShipmentDetailsModel
+@using Nop.Core.Domain.Orders
+@using Nop.Web.Models.Order
+@using Nop.Services.Localization
+@{
+    Layout = "~/Views/Shared/_Root.cshtml";
+    //title
+    Html.AddTitleParts(T("PageTitle.ShipmentDetails").Text);
+}
+<div class="shipment-details">
+    <div class="page-title">
+        <h1>@string.Format(T("Order.Shipments.Information").Text, Model.Id)</h1>
+    </div>
+    <div class="clear">
+    </div>
+    <div class="info">
+        <div class="overview">
+            <div>
+                <b>@T("Order.Shipments.Order#")@Model.Order.Id</b>
+            </div>
+            <div>
+                @T("Order.Shipments.ShippingMethod"): @Model.Order.ShippingMethod
+            </div>
+            <div>
+                @T("Order.Shipments.ShippedDate"): @Model.ShippedDate.ToString("D")
+            </div>
+            <div>
+                @T("Order.Shipments.DeliveryDate"):
+                @if (Model.DeliveryDate.HasValue)
+                {
+                    @Model.DeliveryDate.Value.ToString("D")
+                }
+                else
+                {
+                    @T("Order.Shipments.DeliveryDate.NotYet")
+                }
+            </div>
+            <div>
+                @T("Order.Shipments.ShippingMethod"): @Model.Order.ShippingMethod
+            </div>
+            @if (!String.IsNullOrEmpty(Model.TrackingNumber))
+            {
+                <div>
+                    @T("Order.Shipments.TrackingNumber"):
+                    @if (!string.IsNullOrEmpty(Model.TrackingNumberUrl))
+                    {
+                        <a href="@Model.TrackingNumberUrl" class="trackingurl">@Model.TrackingNumber</a>
+                    }
+                    else
+                    {
+                        @Model.TrackingNumber
+                    }
+                </div>
+            }
+            <div>
+            <div class="section-title">
+                @T("Order.Shipments.ShippingAddress")
+            </div>
+                <div>
+                    @Model.Order.ShippingAddress.FirstName @Model.Order.ShippingAddress.LastName
+                </div>
+                <div>
+                    @T("Order.Shipments.Email"): @Model.Order.ShippingAddress.Email</div>
+                <div>
+                    @T("Order.Shipments.Phone"): @Model.Order.ShippingAddress.PhoneNumber</div>
+                <div>
+                    @T("Order.Shipments.Fax"): @Model.Order.ShippingAddress.FaxNumber</div>
+                @if (!String.IsNullOrEmpty(Model.Order.ShippingAddress.Company))
+                {
+                    <div>
+                        @Model.Order.ShippingAddress.Company
+                    </div>
+                }
+                <div>
+                    @Model.Order.ShippingAddress.Address1</div>
+                @if (!String.IsNullOrEmpty(Model.Order.ShippingAddress.Address2))
+                {
+                    <div>
+                        @Model.Order.ShippingAddress.Address2
+                    </div>
+                }
+                <div>
+                    @Model.Order.ShippingAddress.City, @Model.Order.ShippingAddress.StateProvinceName
+                    @Model.Order.ShippingAddress.ZipPostalCode</div>
+                @if (!String.IsNullOrEmpty(Model.Order.ShippingAddress.CountryName))
+                {
+                    <div>
+                        @Model.Order.ShippingAddress.CountryName
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="clear">
+        </div>
+        @if (Model.Items.Count > 0)
+        {
+            <div class="section-title">
+                @T("Order.Shipments.Product(s)")
+            </div>
+            <div class="clear">
+            </div>
+            
+            <ul data-role="listview" data-inset="true" data-filter="false">
+                @foreach (var item in Model.Items)
+                {
+                    <li>
+                        <div class="products-box">
+                            <div class="product">
+                                <b><a href="@Url.RouteUrl("Product", new { productId = item.ProductId, SeName = item.ProductSeName })" title="View details">@item.ProductName</a></b>
+                                @if (!String.IsNullOrEmpty(item.AttributeInfo))
+                                {
+                                    <br />
+                                    @Html.Raw(item.AttributeInfo)
+                                }
+                            </div>
+                            @if (Model.ShowSku && !string.IsNullOrEmpty(item.Sku))
+                            {
+                                <div class="sku">
+                                    @T("Order.Shipments.Product(s).SKU"): @item.Sku
+                                </div>
+                            }
+                            <div class="qty">
+                                @T("Order.Shipments.Product(s).Quantity"): @item.QuantityShipped
+                            </div>
+                        </div>
+                    </li>
+                }
+            </ul>
+            <div class="clear">
+            </div>
+        }
+        <div class="clear">
+        </div>
+        @if (Model.ShipmentStatusEvents.Count > 0)
+        {
+            <div class="section-title">
+                @T("Order.ShipmentStatusEvents")
+            </div>                
+            <ul data-role="listview" data-inset="true" data-filter="false">
+                @foreach (var item in Model.ShipmentStatusEvents)
+                {      
+                    <li>
+                        <div class="shipmentstatusevents-box">
+                            <div>@T("Order.ShipmentStatusEvents.Event"): @item.EventName</div>
+                            <div>@T("Order.ShipmentStatusEvents.Location"): @item.Location</div>
+                            <div>@T("Order.ShipmentStatusEvents.Country"): @item.Country</div>
+                            <div>@T("Order.ShipmentStatusEvents.Date"): @item.Date.ToString("D")</div>
+                        </div>
+                    </li>
+                }
+            </ul>
+        }
+    </div>
+</div>

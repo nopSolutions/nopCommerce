@@ -1,0 +1,86 @@
+﻿@model ShipmentModel
+@using Nop.Core.Domain.Tax;
+@using Nop.Core.Domain.Catalog;
+@using (Html.BeginForm())
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-sales.png")" alt="" />
+            @string.Format(T("Admin.Orders.Shipments.AddNew.Title").Text, Model.OrderId) @Html.ActionLink("(" + T("Admin.Orders.Shipments.BackToOrder") + ")", "Edit", new { id = @Model.OrderId })
+        </div>
+        <div class="options">
+            <button type="submit" name="save" value="save" class="t-button">@T("Admin.Common.Save")</button>
+            <button type="submit" name="save" value="save-continue" class="t-button">@T("Admin.Common.SaveContinue")</button>          
+        </div>
+    </div>    
+    @Html.ValidationSummary(false)
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.TrackingNumber):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.TrackingNumber)
+            </td>
+        </tr>
+    </table>
+    <table class="adminContent">
+        <tr>
+            <td class="adminData">
+                <strong>@T("Admin.Orders.Shipments.Products")</strong>
+            </td>
+        </tr>
+        <tr>
+            <td class="adminData">
+                <table class="tablestyle" border="1" cellspacing="0" style="width: 100%; border-collapse: collapse;">
+                    <col />
+                    <col />
+                    <col />
+                    <col />
+                    <thead>
+                        <tr class="headerstyle">
+                            <th align="center">
+                                @T("Admin.Orders.Shipments.Products.ProductName")
+                            </th>
+                            <th align="center">
+                                @T("Admin.Orders.Shipments.Products.QtyOrdered")
+                            </th>
+                            <th align="center">
+                                @T("Admin.Orders.Shipments.Products.QtyShipped")
+                            </th>
+                            <th align="center">
+                                @T("Admin.Orders.Shipments.Products.QtyToShip")
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Products)
+                        {
+                            <tr>
+                                <td style="width: 60%;">
+                                    <div style="padding-left: 10px; padding-right: 10px; text-align: left;">
+                                        <em><a href="@Url.Action("Edit", "ProductVariant", new { id = @item.ProductVariantId })">@item.FullProductName</a></em>
+                                        @if (!String.IsNullOrEmpty(item.AttributeInfo))
+                                        {
+                                            <br />
+                                            @Html.Raw(item.AttributeInfo)
+                                        }
+                                    </div>
+                                </td>
+                                <td align="center" style="width: 10%;">
+                                    @item.QuantityOrdered
+                                </td>
+                                <td align="center" style="width: 10%;">
+                                    @item.QuantityShippedTotal
+                                </td>
+                                <td align="center" style="width: 20%;">
+                                     <input name="qtyToShip@(item.OrderProductVariantId)" type="text" value="@item.QuantityToShip" id="qtyToShip@(item.OrderProductVariantId)" class="adminInput" style="width:100px;" />
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </table>
+}

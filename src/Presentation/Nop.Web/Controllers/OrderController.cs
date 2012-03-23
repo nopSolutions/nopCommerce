@@ -33,6 +33,7 @@ namespace Nop.Web.Controllers
 		#region Fields
 
         private readonly IOrderService _orderService;
+        private readonly IShipmentService _shipmentService;
         private readonly IWorkContext _workContext;
         private readonly ICurrencyService _currencyService;
         private readonly IPriceFormatter _priceFormatter;
@@ -59,7 +60,8 @@ namespace Nop.Web.Controllers
 
 		#region Constructors
 
-        public OrderController(IOrderService orderService, IWorkContext workContext,
+        public OrderController(IOrderService orderService, 
+            IShipmentService shipmentService, IWorkContext workContext,
             ICurrencyService currencyService, IPriceFormatter priceFormatter,
             IOrderProcessingService orderProcessingService,
             IDateTimeHelper dateTimeHelper, IMeasureService measureService,
@@ -72,6 +74,7 @@ namespace Nop.Web.Controllers
             ShippingSettings shippingSettings)
         {
             this._orderService = orderService;
+            this._shipmentService = shipmentService;
             this._workContext = workContext;
             this._currencyService = currencyService;
             this._priceFormatter = priceFormatter;
@@ -125,41 +128,19 @@ namespace Nop.Web.Controllers
                 if (baseWeight != null)
                     model.BaseWeightIn = baseWeight.Name;
 
-                if (order.ShippedDateUtc.HasValue)
-                    model.ShippedDate = _dateTimeHelper.ConvertToUserTime(order.ShippedDateUtc.Value, DateTimeKind.Utc).ToString("D");
-
-                if (order.DeliveryDateUtc.HasValue)
-                    model.DeliveryDate = _dateTimeHelper.ConvertToUserTime(order.DeliveryDateUtc.Value, DateTimeKind.Utc).ToString("D");
-
-                //tracking number and shipment information
-                model.TrackingNumber = order.TrackingNumber;
-                var srcm = _shippingService.LoadShippingRateComputationMethodBySystemName(order.ShippingRateComputationMethodSystemName);
-                if (srcm != null &&
-                    srcm.PluginDescriptor.Installed &&
-                    srcm.IsShippingRateComputationMethodActive(_shippingSettings))
+                //shipments
+                var shipments = order.Shipments.OrderBy(x => x.ShippedDateUtc).ToList();
+                foreach (var shipment in shipments)
                 {
-                    var shipmentTracker = srcm.ShipmentTracker;
-                    if (shipmentTracker != null)
+                    var shipmentModel = new OrderDetailsModel.ShipmentBriefModel()
                     {
-                        model.TrackingNumberUrl = shipmentTracker.GetUrl(order.TrackingNumber);
-                        if (_shippingSettings.DisplayShipmentEventsToCustomers)
-                        {
-                            var shipmentEvents = shipmentTracker.GetShipmentEvents(order.TrackingNumber);
-                            if (shipmentEvents!= null)
-                                foreach (var shipmentEvent in shipmentEvents)
-                                {
-                                    var shipmentStatusEventModel = new OrderDetailsModel.ShipmentStatusEventModel();
-                                    var shipmentEventCountry = _countryService.GetCountryByTwoLetterIsoCode(shipmentEvent.CountryCode);
-                                    shipmentStatusEventModel.Country = shipmentEventCountry != null
-                                                                           ? shipmentEventCountry.GetLocalized(x => x.Name)
-                                                                           : shipmentEvent.CountryCode;
-                                    shipmentStatusEventModel.Date = shipmentEvent.Date;
-                                    shipmentStatusEventModel.EventName = shipmentEvent.EventName;
-                                    shipmentStatusEventModel.Location = shipmentEvent.Location;
-                                    model.ShipmentStatusEvents.Add(shipmentStatusEventModel);
-                                }
-                        }
-                    }
+                        Id = shipment.Id,
+                        TrackingNumber = shipment.TrackingNumber,
+                        ShippedDate = _dateTimeHelper.ConvertToUserTime(shipment.ShippedDateUtc, DateTimeKind.Utc),
+                    };
+                    if (shipment.DeliveryDateUtc.HasValue)
+                        shipmentModel.DeliveryDate = _dateTimeHelper.ConvertToUserTime(shipment.DeliveryDateUtc.Value, DateTimeKind.Utc);
+                    model.Shipments.Add(shipmentModel);
                 }
             }
 
@@ -349,6 +330,86 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
+        protected ShipmentDetailsModel PrepareShipmentDetailsModel(Shipment shipment)
+        {
+            if (shipment == null)
+                throw new ArgumentNullException("shipment");
+
+            var order = shipment.Order;
+            if (order == null)
+                throw new Exception("order cannot be loaded");
+            var model = new ShipmentDetailsModel();
+            
+            model.Id = shipment.Id;
+            model.ShippedDate = _dateTimeHelper.ConvertToUserTime(shipment.ShippedDateUtc, DateTimeKind.Utc);
+            if (shipment.DeliveryDateUtc.HasValue)
+                model.DeliveryDate = _dateTimeHelper.ConvertToUserTime(shipment.DeliveryDateUtc.Value, DateTimeKind.Utc);
+            
+            //tracking number and shipment information
+            model.TrackingNumber = shipment.TrackingNumber;
+            var srcm = _shippingService.LoadShippingRateComputationMethodBySystemName(order.ShippingRateComputationMethodSystemName);
+            if (srcm != null &&
+                srcm.PluginDescriptor.Installed &&
+                srcm.IsShippingRateComputationMethodActive(_shippingSettings))
+            {
+                var shipmentTracker = srcm.ShipmentTracker;
+                if (shipmentTracker != null)
+                {
+                    model.TrackingNumberUrl = shipmentTracker.GetUrl(shipment.TrackingNumber);
+                    if (_shippingSettings.DisplayShipmentEventsToCustomers)
+                    {
+                        var shipmentEvents = shipmentTracker.GetShipmentEvents(shipment.TrackingNumber);
+                        if (shipmentEvents != null)
+                            foreach (var shipmentEvent in shipmentEvents)
+                            {
+                                var shipmentStatusEventModel = new ShipmentDetailsModel.ShipmentStatusEventModel();
+                                var shipmentEventCountry = _countryService.GetCountryByTwoLetterIsoCode(shipmentEvent.CountryCode);
+                                shipmentStatusEventModel.Country = shipmentEventCountry != null
+                                                                       ? shipmentEventCountry.GetLocalized(x => x.Name)
+                                                                       : shipmentEvent.CountryCode;
+                                shipmentStatusEventModel.Date = shipmentEvent.Date;
+                                shipmentStatusEventModel.EventName = shipmentEvent.EventName;
+                                shipmentStatusEventModel.Location = shipmentEvent.Location;
+                                model.ShipmentStatusEvents.Add(shipmentStatusEventModel);
+                            }
+                    }
+                }
+            }
+            
+            //products in this shipment
+            model.ShowSku = _catalogSettings.ShowProductSku;
+            foreach (var sopv in shipment.ShipmentOrderProductVariants)
+            {
+                var opv = _orderService.GetOrderProductVariantById(sopv.OrderProductVariantId);
+                if (opv == null)
+                    continue;
+
+                var sopvModel = new ShipmentDetailsModel.ShipmentOrderProductVariantModel()
+                {
+                    Id = sopv.Id,
+                    Sku = opv.ProductVariant.Sku,
+                    ProductId = opv.ProductVariant.ProductId,
+                    ProductSeName = opv.ProductVariant.Product.GetSeName(),
+                    AttributeInfo = opv.AttributeDescription,
+                    QuantityOrdered = opv.Quantity,
+                    QuantityShipped = sopv.Quantity,
+                };
+
+                //product name//product name
+                if (!String.IsNullOrEmpty(opv.ProductVariant.GetLocalized(x => x.Name)))
+                    sopvModel.ProductName = string.Format("{0} ({1})", opv.ProductVariant.Product.GetLocalized(x => x.Name), opv.ProductVariant.GetLocalized(x => x.Name));
+                else
+                    sopvModel.ProductName = opv.ProductVariant.Product.GetLocalized(x => x.Name);
+                model.Items.Add(sopvModel);
+            }
+
+            //order details model
+            model.Order = PrepareOrderDetailsModel(order);
+            
+            return model;
+        }
+
+        [NonAction]
         protected SubmitReturnRequestModel PrepareReturnRequestModel(SubmitReturnRequestModel model, Order order)
         {
             if (order == null)
@@ -506,6 +567,21 @@ namespace Nop.Web.Controllers
             }
         }
 
+        [NopHttpsRequirement(SslRequirement.Yes)]
+        public ActionResult ShipmentDetails(int shipmentId)
+        {
+            var shipment = _shipmentService.GetShipmentById(shipmentId);
+            if (shipment == null)
+                return new HttpUnauthorizedResult();
+
+            var order = shipment.Order;
+            if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
+                return new HttpUnauthorizedResult();
+
+            var model = PrepareShipmentDetailsModel(shipment);
+
+            return View(model);
+        }
         #endregion
 
         #region Return requests

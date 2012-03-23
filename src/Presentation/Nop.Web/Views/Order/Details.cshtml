@@ -121,13 +121,13 @@
                                 
                                 if (!Model.PrintMode && Model.CanRePostProcessPayment)
                                 {
-                                    @*Completing payment support (for redirection payment methods*@
-                                    <br />
+@*Completing payment support (for redirection payment methods*@
+                                <br />
                                     using (Html.BeginForm("Details", "Order", FormMethod.Post))
                                     {
-                                            <input type="submit" name="repost-payment" value="@T("Order.CompletePayment")" id="repost-payment" class="reorderbutton" />
-                                            <br />
-                                            <i>@T("Order.CompletePayment.Hint")</i>
+                                <input type="submit" name="repost-payment" value="@T("Order.CompletePayment")" id="repost-payment" class="reorderbutton" />
+                                <br />
+                                <i>@T("Order.CompletePayment.Hint")</i>
                                     }
                                 }
                             }
@@ -173,50 +173,7 @@
                                     @T("Order.ShippingMethod")</b>
                                 <br />
                                 @Model.ShippingMethod
-                                @if (!String.IsNullOrEmpty(Model.TrackingNumber))
-                                {
-                                    <br />
-                                    <b>
-                                        @T("Order.TrackingNumber")</b> 
-                                    <br />
-                                    if (!string.IsNullOrEmpty(Model.TrackingNumberUrl))
-                                    {
-                                        <a href="@Model.TrackingNumberUrl" target="_blank" class="trackingurl">@Model.TrackingNumber</a>
-                                    }
-                                    else
-                                    {
-                                       @Model.TrackingNumber
-                                    }
-                                }
                                 <br />
-                                @if (!Model.PrintMode)
-                                {
-                                    <br />
-                                    <b>
-                                        @T("Order.ShippedOn")</b>
-                                    <br />
-                                    if (!String.IsNullOrEmpty(Model.ShippedDate))
-                                    {
-                                        @Model.ShippedDate
-                                    }
-                                    else
-                                    {
-                                        @T("Order.NotYetShipped")
-                                    }
-                                    <br />
-                                    <b>
-                                        @T("Order.DeliveredOn")</b>
-                                    <br />
-                                    if (!String.IsNullOrEmpty(Model.DeliveryDate))
-                                    {
-                                        @Model.DeliveryDate
-                                    }
-                                    else
-                                    {
-                                        @T("Order.NotYetDelivered")
-                                    }
-                                    <br />
-                                }
                                 <b>
                                     @T("Order.Weight")</b>
                                 <br />
@@ -328,15 +285,15 @@
                 @if (!Model.PrintMode)
                 {
                     <br />
-                    @*Reorder support*@
+@*Reorder support*@
                     if (Model.IsReOrderAllowed)
                     {
-                        <input type="button" name="reorder" value="@T("Order.Reorder")" id="reorder" class="reorderbutton" onclick="setLocation('@Url.RouteUrl("ReOrder", new { orderId = @Model.Id })')" />
+                    <input type="button" name="reorder" value="@T("Order.Reorder")" id="reorder" class="reorderbutton" onclick="setLocation('@Url.RouteUrl("ReOrder", new { orderId = @Model.Id })')" />
                     }
                     if (Model.IsReturnRequestAllowed)
                     {
-                        <text>&nbsp; &nbsp; &nbsp;</text>
-                        <input type="button" name="returnitems" value="@T("Order.ReturnItems")" id="returnitems" class="returnitemsbutton" onclick="setLocation('@Url.RouteUrl("ReturnRequest", new { orderId = @Model.Id })')" />
+                    <text>&nbsp; &nbsp; &nbsp;</text>
+                    <input type="button" name="returnitems" value="@T("Order.ReturnItems")" id="returnitems" class="returnitemsbutton" onclick="setLocation('@Url.RouteUrl("ReturnRequest", new { orderId = @Model.Id })')" />
                     }
                 }
             </div>
@@ -487,114 +444,127 @@
                     </tr>
                 </tbody>
             </table>
-            <div class="clear">
-            </div>
-            @if (!Model.PrintMode)
-            {
-                if (Model.OrderNotes.Count > 0)
-                {
-                <div class="section-title">
-                    @T("Order.Notes")
-                </div>
-                <div class="clear">
-                </div>
-                <div class="ordernotes-box">
-                    <table border="1" cellspacing="0" style="width: 100%; border-collapse: collapse;">
-                        <col />
-                        <col />
-                        <thead>
-                            <tr>
-                                <th align="center">
-                                    @T("Order.Notes.CreatedOn")
-                                </th>
-                                <th align="center">
-                                    @T("Order.Notes.Note")
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model.OrderNotes)
-                            {
-                                <tr>
-                                    <td style="width: 20%;">
-                                        <div style="padding: 0px 10px;">
-                                            @item.CreatedOn.ToString()
-                                        </div>
-                                    </td>
-                                    <td style="width: 80%;">
-                                        <div style="padding: 0px 10px;">
-                                            @Html.Raw(item.Note)
-                                        </div>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-                }
-            }
-            <div class="clear">
-            </div>
-            @if (!Model.PrintMode)
-            {
-                if (Model.ShipmentStatusEvents.Count > 0)
-                {
-                <div class="section-title">
-                    @T("Order.ShipmentStatusEvents")
-                </div>
-                <div class="clear">
-                </div>
-                <div class="shipmentstatusevents-box">
-                    <table border="1" cellspacing="0" style="width: 100%; border-collapse: collapse;">
-                        <col />
-                        <col />
-                        <thead>
-                            <tr>
-                                <th align="center">
-                                    @T("Order.ShipmentStatusEvents.Event")
-                                </th>
-                                <th align="center">
-                                    @T("Order.ShipmentStatusEvents.Location")
-                                </th>
-                                <th align="center">
-                                    @T("Order.ShipmentStatusEvents.Country")
-                                </th>
-                                <th align="center">
-                                    @T("Order.ShipmentStatusEvents.Date")
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model.ShipmentStatusEvents)
-                            {
-                                <tr>
-                                    <td>
-                                        <div style="padding: 0px 10px;">
-                                            @item.EventName
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div style="padding: 0px 10px;">
-                                            @item.Location
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div style="padding: 0px 10px;">
-                                            @item.Country
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div style="padding: 0px 10px;">
-                                            @item.Date.ToShortDateString()
-                                        </div>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-                }
-            }
         </div>
-</div>
+        <div class="clear">
+        </div>
+        @if (!Model.PrintMode)
+        {
+            if (Model.Shipments.Count > 0)
+            {
+            <div class="section-title">
+                @T("Order.Shipments")
+            </div>
+            <div class="clear">
+            </div>
+            <div class="shipments-box">
+                <table border="1" cellspacing="0" style="width: 100%; border-collapse: collapse;">
+                    <col />
+                    <col />
+                    <thead>
+                        <tr>
+                            <th align="center">
+                                @T("Order.Shipments.ID")
+                            </th>
+                            <th align="center">
+                                @T("Order.Shipments.TrackingNumber")
+                            </th>
+                            <th align="center">
+                                @T("Order.Shipments.ShippedDate")
+                            </th>
+                            <th align="center">
+                                @T("Order.Shipments.DeliveryDate")
+                            </th>
+                            <th align="center">
+                                @T("Order.Shipments.ViewDetails")
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Shipments)
+                        {
+                            <tr>
+                                <td style="width: 15%;">
+                                    <div style="padding: 0px 10px;">
+                                        @item.Id.ToString()
+                                    </div>
+                                </td>
+                                <td style="width: 25%;">
+                                    <div style="padding: 0px 10px;">
+                                        @item.TrackingNumber
+                                    </div>
+                                </td>
+                                <td style="width: 20%;">
+                                    <div style="padding: 0px 10px;">
+                                        @item.ShippedDate.ToString("D")
+                                    </div>
+                                </td>
+                                <td style="width: 20%;">
+                                    <div style="padding: 0px 10px;">
+                                        @if (item.DeliveryDate.HasValue)
+                                        {
+                                            @item.DeliveryDate.Value.ToString("D")
+                                        }
+                                        else
+                                        {
+                                            @T("Order.Shipments.DeliveryDate.NotYet")
+                                        }
+                                    </div>
+                                </td>
+                                <td style="width: 20%; text-align: center;">
+                                    <a href="@Url.RouteUrl("ShipmentDetails", new { shipmentId = item.Id })" title="@T("Order.Shipments.ViewDetails")">@T("Order.Shipments.ViewDetails")</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            }
+        }
+        <div class="clear">
+        </div>
+        @if (!Model.PrintMode)
+        {
+            if (Model.OrderNotes.Count > 0)
+            {
+            <div class="section-title">
+                @T("Order.Notes")
+            </div>
+            <div class="clear">
+            </div>
+            <div class="ordernotes-box">
+                <table border="1" cellspacing="0" style="width: 100%; border-collapse: collapse;">
+                    <col />
+                    <col />
+                    <thead>
+                        <tr>
+                            <th align="center">
+                                @T("Order.Notes.CreatedOn")
+                            </th>
+                            <th align="center">
+                                @T("Order.Notes.Note")
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.OrderNotes)
+                        {
+                            <tr>
+                                <td style="width: 20%;">
+                                    <div style="padding: 0px 10px;">
+                                        @item.CreatedOn.ToString()
+                                    </div>
+                                </td>
+                                <td style="width: 80%;">
+                                    <div style="padding: 0px 10px;">
+                                        @Html.Raw(item.Note)
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            }
+        }
+    </div>
 </div>

@@ -22,7 +22,7 @@
             <div>
                 @T("Order.OrderDate"): @Model.CreatedOn.ToString("D")
             </div>
-            <div class="order-total-top">
+            <div>
                 @T("Order.OrderTotal"): @Model.OrderTotal
             </div>
             <div>
@@ -140,51 +140,6 @@
                     </div>
                     <div>
                         @Model.ShippingMethod
-                    </div>
-                    @if (!String.IsNullOrEmpty(Model.TrackingNumber))
-                    {
-                        <div>
-                            <b>
-                                @T("Order.TrackingNumber")</b>
-                        </div>
-                        <div>
-                            @if (!string.IsNullOrEmpty(Model.TrackingNumberUrl))
-                            {
-                                <a href="@Model.TrackingNumberUrl" class="trackingurl">@Model.TrackingNumber</a>
-                            }
-                            else
-                            {
-                                @Model.TrackingNumber
-                            }
-                        </div>
-                    }
-                    <div>
-                        <b>
-                            @T("Order.ShippedOn")</b>
-                    </div>
-                    <div>
-                        @if (!String.IsNullOrEmpty(Model.ShippedDate))
-                        {
-                            @Model.ShippedDate
-                        }
-                        else
-                        {
-                            @T("Order.NotYetShipped")
-                        }
-                    </div>
-                    <div>
-                        <b>
-                            @T("Order.DeliveredOn")</b>
-                    </div>
-                    <div>
-                        @if (!String.IsNullOrEmpty(Model.DeliveryDate))
-                        {
-                            @Model.DeliveryDate
-                        }
-                        else
-                        {
-                            @T("Order.NotYetDelivered")
-                        }
                     </div>
                     <div>
                         <b>
@@ -401,46 +356,57 @@
                     </tr>
                 </tbody>
             </table>
-            <div class="clear">
-            </div>
-            @if (Model.OrderNotes.Count > 0)
-            {
-                <div class="section-title">
-                    @T("Order.Notes")
-                </div>                
-                <ul data-role="listview" data-inset="true" data-filter="false">
-                    @foreach (var item in Model.OrderNotes)
-                    {      
-                        <li>
-                            <div class="ordernotes-box">
-                                <div>@T("Order.Notes.CreatedOn"): @item.CreatedOn.ToString()</div>
-                                <div>@T("Order.Notes.Note"): @Html.Raw(item.Note)</div>
-                            </div>
-                        </li>
-                    }
-                </ul>
-            }
-            <div class="clear">
-            </div>
-            @if (Model.ShipmentStatusEvents.Count > 0)
-            {
-                <div class="section-title">
-                    @T("Order.ShipmentStatusEvents")
-                </div>                
-                <ul data-role="listview" data-inset="true" data-filter="false">
-                    @foreach (var item in Model.ShipmentStatusEvents)
-                    {      
-                        <li>
-                            <div class="shipmentstatusevents-box">
-                                <div>@T("Order.ShipmentStatusEvents.Event"): @item.EventName</div>
-                                <div>@T("Order.ShipmentStatusEvents.Location"): @item.Location</div>
-                                <div>@T("Order.ShipmentStatusEvents.Country"): @item.Country</div>
-                                <div>@T("Order.ShipmentStatusEvents.Date"): @item.Date.ToShortDateString()</div>
-                            </div>
-                        </li>
-                    }
-                </ul>
-            }
         </div>
+        <div class="clear">
+        </div>
+        @if (Model.Shipments.Count > 0)
+        {
+            <div class="section-title">
+                @T("Order.Shipments")
+            </div>                
+            <ul data-role="listview" data-inset="true" data-filter="false">
+                @foreach (var item in Model.Shipments)
+                {      
+                    <li>
+                        <div class="shipments-box">
+                            <div>@T("Order.Shipments.ID"): @item.Id.ToString()</div>
+                            <div>@T("Order.Shipments.TrackingNumber"): @item.TrackingNumber</div>
+                            <div>@T("Order.Shipments.ShippedDate"): @item.ShippedDate.ToString("D")</div>
+                            <div>@T("Order.Shipments.DeliveryDate"):
+                                @if (item.DeliveryDate.HasValue)
+                                {
+                                    @item.DeliveryDate.Value.ToString("D")
+                                }
+                                else
+                                {
+                                    @T("Order.Shipments.DeliveryDate.NotYet")
+                                }
+                            </div>
+                            <div>
+                                <a href="@Url.RouteUrl("ShipmentDetails", new { shipmentId = item.Id })">@T("Order.Shipments.ViewDetails")</a></div>
+                        </div>
+                    </li>
+                }
+            </ul>
+        }
+        <div class="clear">
+        </div>
+        @if (Model.OrderNotes.Count > 0)
+        {
+            <div class="section-title">
+                @T("Order.Notes")
+            </div>                
+            <ul data-role="listview" data-inset="true" data-filter="false">
+                @foreach (var item in Model.OrderNotes)
+                {      
+                    <li>
+                        <div class="ordernotes-box">
+                            <div>@T("Order.Notes.CreatedOn"): @item.CreatedOn.ToString()</div>
+                            <div>@T("Order.Notes.Note"): @Html.Raw(item.Note)</div>
+                        </div>
+                    </li>
+                }
+            </ul>
+        }
     </div>
 </div>

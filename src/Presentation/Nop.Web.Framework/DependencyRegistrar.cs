@@ -212,7 +212,8 @@ namespace Nop.Web.Framework
 
             builder.RegisterType<EncryptionService>().As<IEncryptionService>().InstancePerHttpRequest();
             builder.RegisterType<FormsAuthenticationService>().As<IAuthenticationService>().InstancePerHttpRequest();
-            
+
+            builder.RegisterType<ShipmentService>().As<IShipmentService>().InstancePerHttpRequest();
             builder.RegisterType<ShippingService>().As<IShippingService>().InstancePerHttpRequest();
 
             builder.RegisterType<TaxCategoryService>().As<ITaxCategoryService>().InstancePerHttpRequest();

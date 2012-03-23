@@ -1333,8 +1333,7 @@ namespace Nop.Admin.Controllers
                 Data = model
             };
         }
-
-
+        
         #endregion
 
         #region Reports

@@ -424,27 +424,6 @@ namespace Nop.Plugin.Misc.WebServices
             return errors;
         }
         
-        public List<OrderError> SetOrdersShippingShipped(int[] ordersId, string usernameOrEmail, string userPassword)
-        {
-            CheckAccess(usernameOrEmail, userPassword);
-            if (!_permissionSettings.Authorize(StandardPermissionProvider.ManageOrders))
-                throw new ApplicationException("Not allowed to manage orders");
-
-            var errors = new List<OrderError>();
-            foreach (var order in GetOrderCollection(ordersId))
-            {
-                try
-                {
-                    _orderProcessingService.Ship(order, false);
-                }
-                catch (Exception ex)
-                {
-                    errors.Add(new OrderError() { OrderId = order.Id, ErrorMessage = ex.Message });
-                }
-            }
-            return errors;
-        }
-        
         #endregion
     }
 }

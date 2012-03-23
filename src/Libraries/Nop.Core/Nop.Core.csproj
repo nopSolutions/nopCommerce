@@ -64,6 +64,8 @@
     <Compile Include="Domain\Catalog\BackInStockSubscription.cs" />
     <Compile Include="Domain\Common\PageTitleSeoAdjustment.cs" />
     <Compile Include="Domain\Orders\Events.cs" />
+    <Compile Include="Domain\Shipping\ShipmentOrderProductVariant.cs" />
+    <Compile Include="Domain\Shipping\Shipment.cs" />
     <Compile Include="Domain\Tasks\ScheduleTask.cs" />
     <Compile Include="Domain\Messages\Events.cs" />
     <Compile Include="Extensions.cs" />

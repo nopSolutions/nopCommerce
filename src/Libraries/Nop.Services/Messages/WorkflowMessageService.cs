@@ -9,6 +9,7 @@ using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Shipping;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
 
@@ -122,6 +123,17 @@ namespace Nop.Services.Messages
 
             return tokens;
         }
+        private IList<Token> GenerateTokens(Shipment shipment, int languageId)
+        {
+            var tokens = new List<Token>();
+
+            _messageTokenProvider.AddStoreTokens(tokens);
+            _messageTokenProvider.AddShipmentTokens(tokens, shipment, languageId);
+            _messageTokenProvider.AddOrderTokens(tokens, shipment.Order, languageId);
+            _messageTokenProvider.AddCustomerTokens(tokens, shipment.Order.Customer);
+
+            return tokens;
+        }
 
         private IList<Token> GenerateTokens(ReturnRequest returnRequest,  OrderProductVariant opv)
         {
@@ -212,15 +224,7 @@ namespace Nop.Services.Messages
 
             return tokens;
         }
-
-        //private IList<Token> GenerateTokens(Forum forum)
-        //{
-        //    var tokens = new List<Token>();
-        //    _messageTokenProvider.AddStoreTokens(tokens);
-        //    _messageTokenProvider.AddForumTokens(tokens, forum);
-        //    return tokens;
-        //}
-
+        
         private IList<Token> GenerateTokens(PrivateMessage privateMessage)
         {
             var tokens = new List<Token>();
@@ -445,56 +449,62 @@ namespace Nop.Services.Messages
         }
 
         /// <summary>
-        /// Sends an order shipped notification to a customer
+        /// Sends a shipment sent notification to a customer
         /// </summary>
-        /// <param name="order">Order instance</param>
+        /// <param name="shipment">Shipment</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendOrderShippedCustomerNotification(Order order, int languageId)
+        public virtual int SendShipmentSentCustomerNotification(Shipment shipment, int languageId)
         {
+            if (shipment == null)
+                throw new ArgumentNullException("shipment");
+
+            var order = shipment.Order;
             if (order == null)
-                throw new ArgumentNullException("order");
+                throw new Exception("Order cannot be loaded");
 
             languageId = EnsureLanguageIsActive(languageId);
-
-            var messageTemplate = GetLocalizedActiveMessageTemplate("OrderShipped.CustomerNotification", languageId);
+            var messageTemplate = GetLocalizedActiveMessageTemplate("ShipmentSent.CustomerNotification", languageId);
             if (messageTemplate == null)
                 return 0;
 
-            var orderTokens = GenerateTokens(order, languageId);
+            var shipmentTokens = GenerateTokens(shipment, languageId);
 
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
             var toEmail = order.BillingAddress.Email;
             var toName = string.Format("{0} {1}", order.BillingAddress.FirstName, order.BillingAddress.LastName);
             return SendNotification(messageTemplate, emailAccount,
-                languageId, orderTokens,
+                languageId, shipmentTokens,
                 toEmail, toName);
         }
 
         /// <summary>
-        /// Sends an order delivered notification to a customer
+        /// Sends a shipment delivered notification to a customer
         /// </summary>
-        /// <param name="order">Order instance</param>
+        /// <param name="shipment">Shipment</param>
         /// <param name="languageId">Message language identifier</param>
         /// <returns>Queued email identifier</returns>
-        public virtual int SendOrderDeliveredCustomerNotification(Order order, int languageId)
+        public virtual int SendShipmentDeliveredCustomerNotification(Shipment shipment, int languageId)
         {
+            if (shipment == null)
+                throw new ArgumentNullException("shipment");
+
+            var order = shipment.Order;
             if (order == null)
-                throw new ArgumentNullException("order");
+                throw new Exception("Order cannot be loaded");
 
             languageId = EnsureLanguageIsActive(languageId);
-
-            var messageTemplate = GetLocalizedActiveMessageTemplate("OrderDelivered.CustomerNotification", languageId);
+            var messageTemplate = GetLocalizedActiveMessageTemplate("ShipmentDelivered.CustomerNotification", languageId);
             if (messageTemplate == null)
                 return 0;
 
-            var orderTokens = GenerateTokens(order, languageId);
+            var shipmentTokens = GenerateTokens(shipment, languageId);
 
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
             var toEmail = order.BillingAddress.Email;
             var toName = string.Format("{0} {1}", order.BillingAddress.FirstName, order.BillingAddress.LastName);
             return SendNotification(messageTemplate, emailAccount,
-                languageId, orderTokens,
+                languageId, shipmentTokens,
                 toEmail, toName);
         }
 
