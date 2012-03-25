@@ -1,7 +1,5 @@
-﻿using System;
-using Nop.Core.Infrastructure;
+﻿using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
-using Nop.Services.Logging;
 using Nop.Services.Tasks;
 
 namespace Nop.Plugin.Feed.Froogle
