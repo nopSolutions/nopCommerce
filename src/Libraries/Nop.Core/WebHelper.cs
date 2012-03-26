@@ -285,6 +285,8 @@ namespace Nop.Core
                 case ".bmp":
                 case ".css":
                 case ".gif":
+                case ".htm":
+                case ".html":
                 case ".ico":
                 case ".jpeg":
                 case ".jpg":
