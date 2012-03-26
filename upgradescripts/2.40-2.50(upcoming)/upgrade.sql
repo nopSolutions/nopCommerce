@@ -2463,7 +2463,7 @@ IF (EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Order]') and NAM
 AND EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Order]') and NAME='DeliveryDateUtc')
 AND EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Order]') and NAME='TrackingNumber'))
 BEGIN
-	PRINT 'create shipments for the previous orders'
+	EXEC('
 	DECLARE @OrderId int
 	DECLARE cur_order CURSOR FOR
 	SELECT [Id]
@@ -2472,9 +2472,7 @@ BEGIN
 	OPEN cur_order
 	FETCH NEXT FROM cur_order INTO @OrderId
 	WHILE @@FETCH_STATUS = 0
-	BEGIN	
-		PRINT 'procesing order. ID ' + cast(@OrderId as nvarchar(10))
-
+	BEGIN
 		--shipping status
 		DECLARE @ShippingStatusId int
 		SET @ShippingStatusId = null -- clear cache (variable scope)
@@ -2538,6 +2536,7 @@ BEGIN
 	END
 	CLOSE cur_order
 	DEALLOCATE cur_order
+	')
 END
 GO
 
