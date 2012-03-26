@@ -662,6 +662,15 @@ set @resources='
   <LocaleResource Name="PDFPackagingSlip.Order">
     <Value>Order #{0}</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Variants.Fields.AvailableForPreOrder">
+    <Value>Available for pre-order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Variants.Fields.AvailableForPreOrder.Hint">
+    <Value>Check if this item is available for Pre-Order. It also sisplays "Pre-order" button instead of "Add to cart".</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.PreOrder">
+    <Value>Pre-order</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -2549,4 +2558,21 @@ IF EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Order]') and NAME
 BEGIN
 	ALTER TABLE [dbo].[Order] DROP COLUMN [TrackingNumber]
 END
+GO
+
+
+--"pre-order" support
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[ProductVariant]') and NAME='AvailableForPreOrder')
+BEGIN
+	ALTER TABLE [dbo].[ProductVariant]
+	ADD [AvailableForPreOrder] bit NULL
+END
+GO
+
+UPDATE [dbo].[ProductVariant]
+SET [AvailableForPreOrder] = 0
+WHERE [AvailableForPreOrder] IS NULL
+GO
+
+ALTER TABLE [dbo].[ProductVariant] ALTER COLUMN [AvailableForPreOrder] bit NOT NULL
 GO

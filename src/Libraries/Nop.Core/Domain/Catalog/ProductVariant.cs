@@ -237,6 +237,11 @@ namespace Nop.Core.Domain.Catalog
         public virtual bool DisableWishlistButton { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether this item is available for Pre-Order
+        /// </summary>
+        public virtual bool AvailableForPreOrder { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether to show "Call for Pricing" or "Call for quote" instead of price
         /// </summary>
         public virtual bool CallForPrice { get; set; }

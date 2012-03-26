@@ -3685,6 +3685,9 @@
 			<LocaleResource Name="OutOfStock">
 				<Value>Out of stock</Value>
 			</LocaleResource>
+      <LocaleResource Name="PreOrder">
+        <Value>Pre-order</Value>
+      </LocaleResource>
 			<LocaleResource Name="Product(s)">
 				<Value>Product(s)</Value>
 			</LocaleResource>

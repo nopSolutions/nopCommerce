@@ -1714,6 +1714,14 @@
 													</LocaleResource>
 												</Children>
 											</LocaleResource>
+                      <LocaleResource Name="AvailableForPreOrder">
+                        <Value>Available for pre-order</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Check if this item is available for Pre-Order. It also sisplays "Pre-order" button instead of "Add to cart".</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
 											<LocaleResource Name="AvailableStartDateTime">
 												<Value>Available start date</Value>
 												<Children>

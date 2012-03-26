@@ -54,6 +54,7 @@ namespace Nop.Data.Tests.Catalog
                                          OrderMaximumQuantity = 19,
                                          DisableBuyButton = true,
                                          DisableWishlistButton = true,
+                                         AvailableForPreOrder = true,
                                          CallForPrice = true,
                                          Price = 21.1M,
                                          OldPrice = 22.1M,
@@ -131,6 +132,7 @@ namespace Nop.Data.Tests.Catalog
             fromDb.OrderMaximumQuantity.ShouldEqual(19);
             fromDb.DisableBuyButton.ShouldEqual(true);
             fromDb.DisableWishlistButton.ShouldEqual(true);
+            fromDb.AvailableForPreOrder.ShouldEqual(true);
             fromDb.CallForPrice.ShouldEqual(true);
             fromDb.Price.ShouldEqual(21.1M);
             fromDb.OldPrice.ShouldEqual(22.1M);

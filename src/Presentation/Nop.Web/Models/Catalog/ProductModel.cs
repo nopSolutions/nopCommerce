@@ -54,6 +54,8 @@ namespace Nop.Web.Models.Catalog
             public string Price {get;set;}
 
             public bool DisableBuyButton { get; set; }
+
+            public bool AvailableForPreOrder { get; set; }
         }
 
         public class ProductBreadcrumbModel : BaseNopModel
@@ -128,6 +130,7 @@ namespace Nop.Web.Models.Catalog
                 
                 public bool DisableBuyButton { get; set; }
                 public bool DisableWishlistButton { get; set; }
+                public bool AvailableForPreOrder { get; set; }
             }
 
             public class ProductVariantPriceModel : BaseNopModel

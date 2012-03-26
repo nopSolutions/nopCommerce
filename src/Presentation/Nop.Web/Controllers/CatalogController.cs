@@ -286,6 +286,7 @@ namespace Nop.Web.Controllers
                     {
                         // no variants
                         model.DisableBuyButton = true;
+                        model.AvailableForPreOrder = false;
                     }
                     break;
                 case 1:
@@ -298,12 +299,14 @@ namespace Nop.Web.Controllers
                         {
                             model.DisableBuyButton = true;
                         }
+                        model.AvailableForPreOrder = productVariant.AvailableForPreOrder;
                     }
                     break;
                 default:
                     {
                         //multiple variants
                         model.DisableBuyButton = true;
+                        model.AvailableForPreOrder = false;
                     }
                     break;
             }
@@ -595,6 +598,8 @@ namespace Nop.Web.Controllers
                 model.AddToCart.DisableBuyButton = true;
                 model.AddToCart.DisableWishlistButton = true;
             }
+            //pre-order
+            model.AddToCart.AvailableForPreOrder = productVariant.AvailableForPreOrder;
 
             //customer entered price
             model.AddToCart.CustomerEntersPrice = productVariant.CustomerEntersPrice;

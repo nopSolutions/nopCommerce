@@ -166,6 +166,9 @@ namespace Nop.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.DisableWishlistButton")]
         public bool DisableWishlistButton { get; set; }
 
+        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.AvailableForPreOrder")]
+        public bool AvailableForPreOrder { get; set; }
+
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.CallForPrice")]
         public bool CallForPrice { get; set; }
 

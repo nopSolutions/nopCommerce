@@ -387,6 +387,15 @@
     </tr>
     <tr>
         <td class="adminTitle">
+            @Html.NopLabelFor(model => model.AvailableForPreOrder):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.AvailableForPreOrder)
+            @Html.ValidationMessageFor(model => model.AvailableForPreOrder)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
             @Html.NopLabelFor(model => model.CallForPrice):
         </td>
         <td class="adminData">
