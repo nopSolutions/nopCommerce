@@ -671,6 +671,12 @@ set @resources='
   <LocaleResource Name="ShoppingCart.PreOrder">
     <Value>Pre-order</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.BulkEdit.Fields.ManageInventoryMethod">
+    <Value>Manage inventory</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.BulkEdit.Fields.StockQuantity">
+    <Value>Stock qty</Value>
+  </LocaleResource>
 </Language>
 '
 

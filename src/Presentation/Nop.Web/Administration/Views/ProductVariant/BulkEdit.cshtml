@@ -67,11 +67,13 @@
         )
         .Columns(columns =>
         {
-            columns.Bound(pv => pv.Name).ReadOnly().Width(400);
+            columns.Bound(pv => pv.Name).ReadOnly().Width(300);
             columns.Bound(pv => pv.Sku).Width(100);
-            columns.Bound(pv => pv.Price).Width(150);
-            columns.Bound(pv => pv.OldPrice).Width(150);
-            columns.Bound(pv => pv.Published).Width(150);
+            columns.Bound(pv => pv.Price).Width(100);
+            columns.Bound(pv => pv.OldPrice).Width(100);
+            columns.Bound(pv => pv.ManageInventoryMethod).ReadOnly().Width(150);
+            columns.Bound(pv => pv.StockQuantity).Width(100);
+            columns.Bound(pv => pv.Published).Width(100);
             columns.Command(commands => commands.Delete()).Width(180);
         })
         .ClientEvents(events => events.OnDataBinding("Grid_onDataBinding").OnError("Grid_onError").OnSubmitChanges("Grid_onSubmitChanges"))

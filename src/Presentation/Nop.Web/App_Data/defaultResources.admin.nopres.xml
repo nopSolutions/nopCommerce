@@ -576,6 +576,12 @@
 									<LocaleResource Name="OldPrice">
 										<Value>Old price</Value>
 									</LocaleResource>
+                  <LocaleResource Name="ManageInventoryMethod">
+                    <Value>Manage inventory</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="StockQuantity">
+                    <Value>Stock qty</Value>
+                  </LocaleResource>
 									<LocaleResource Name="Published">
 										<Value>Published</Value>
 									</LocaleResource>

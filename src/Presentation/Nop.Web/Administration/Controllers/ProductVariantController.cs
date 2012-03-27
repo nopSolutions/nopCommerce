@@ -536,6 +536,8 @@ namespace Nop.Admin.Controllers
                     Sku = x.Sku,
                     OldPrice = x.OldPrice,
                     Price = x.Price,
+                    ManageInventoryMethod = x.ManageInventoryMethod.GetLocalizedEnum(_localizationService, _workContext.WorkingLanguage.Id),
+                    StockQuantity = x.StockQuantity,
                     Published = x.Published
                 };
 
@@ -568,6 +570,7 @@ namespace Nop.Admin.Controllers
                         pv.Sku = pvModel.Sku;
                         pv.Price = pvModel.Price;
                         pv.OldPrice = pvModel.OldPrice;
+                        pv.StockQuantity = pvModel.StockQuantity;
                         pv.Published = pvModel.Published;
                         _productService.UpdateProductVariant(pv);
                     }
