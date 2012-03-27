@@ -5,6 +5,7 @@ using System.Net.Mail;
 using Nop.Core.Data;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Events;
+using Nop.Services.Customers;
 
 namespace Nop.Services.Messages
 {
@@ -15,6 +16,7 @@ namespace Nop.Services.Messages
         private readonly IMessageTokenProvider _messageTokenProvider;
         private readonly ITokenizer _tokenizer;
         private readonly IQueuedEmailService _queuedEmailService;
+        private readonly ICustomerService _customerService;
         private readonly IEventPublisher _eventPublisher;
 
         /// <summary>
@@ -25,17 +27,20 @@ namespace Nop.Services.Messages
         /// <param name="messageTokenProvider">Message token provider</param>
         /// <param name="tokenizer">Tokenizer</param>
         /// <param name="queuedEmailService">Queued email service</param>
+        /// <param name="customerService">Customer service</param>
         /// <param name="eventPublisher">Event published</param>
         public CampaignService(IRepository<Campaign> campaignRepository,
             IEmailSender emailSender, IMessageTokenProvider messageTokenProvider,
-            ITokenizer tokenizer, IQueuedEmailService queuedEmailService, IEventPublisher eventPublisher)
+            ITokenizer tokenizer, IQueuedEmailService queuedEmailService,
+            ICustomerService customerService, IEventPublisher eventPublisher)
         {
-            _campaignRepository = campaignRepository;
-            _emailSender = emailSender;
-            _messageTokenProvider = messageTokenProvider;
-            _tokenizer = tokenizer;
-            _queuedEmailService = queuedEmailService;
-            _eventPublisher = eventPublisher;
+            this._campaignRepository = campaignRepository;
+            this._emailSender = emailSender;
+            this._messageTokenProvider = messageTokenProvider;
+            this._tokenizer = tokenizer;
+            this._queuedEmailService = queuedEmailService;
+            this._customerService = customerService;
+            this._eventPublisher = eventPublisher;
         }
 
         /// <summary>
@@ -136,6 +141,9 @@ namespace Nop.Services.Messages
                 var tokens = new List<Token>();
                 _messageTokenProvider.AddStoreTokens(tokens);
                 _messageTokenProvider.AddNewsLetterSubscriptionTokens(tokens, subscription);
+                var customer = _customerService.GetCustomerByEmail(subscription.Email);
+                if (customer != null)
+                    _messageTokenProvider.AddCustomerTokens(tokens, customer);
 
                 string subject = _tokenizer.Replace(campaign.Subject, tokens, false);
                 string body = _tokenizer.Replace(campaign.Body, tokens, true);
@@ -171,8 +179,14 @@ namespace Nop.Services.Messages
             if (emailAccount == null)
                 throw new ArgumentNullException("emailAccount");
 
-            string subject = campaign.Subject;
-            string body = campaign.Body;
+            var tokens = new List<Token>();
+            _messageTokenProvider.AddStoreTokens(tokens);
+            var customer = _customerService.GetCustomerByEmail(email);
+            if (customer != null)
+                _messageTokenProvider.AddCustomerTokens(tokens, customer);
+            
+            string subject = _tokenizer.Replace(campaign.Subject, tokens, false);
+            string body = _tokenizer.Replace(campaign.Body, tokens, true);
 
             var from = new MailAddress(emailAccount.Email, emailAccount.DisplayName);
             var to = new MailAddress(email);

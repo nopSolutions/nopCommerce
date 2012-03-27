@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
@@ -197,7 +198,22 @@ namespace Nop.Admin.Controllers
                 var emailAccount = _emailAccountService.GetEmailAccountById(_emailAccountSettings.DefaultEmailAccountId);
                 if (emailAccount == null)
                     throw new NopException("Email account could not be loaded");
-                _campaignService.SendCampaign(campaign, emailAccount, model.TestEmail);
+
+
+                var subscription = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmail(model.TestEmail);
+                if (subscription != null)
+                {
+                    //there's a subscription. let's use it
+                    var subscriptions = new List<NewsLetterSubscription>();
+                    subscriptions.Add(subscription);
+                    _campaignService.SendCampaign(campaign, emailAccount, subscriptions);
+                }
+                else
+                {
+                    //no subscription found
+                    _campaignService.SendCampaign(campaign, emailAccount, model.TestEmail);
+                }
+
                 SuccessNotification(_localizationService.GetResource("Admin.Promotions.Campaigns.TestEmailSentToCustomers"), false);
                 return View(model);
             }
