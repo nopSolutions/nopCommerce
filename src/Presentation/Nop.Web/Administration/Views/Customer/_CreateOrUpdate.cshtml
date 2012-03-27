@@ -576,15 +576,8 @@
         columns.Bound(x => x.Email);
         columns.Bound(x => x.PhoneNumber);
         columns.Bound(x => x.FaxNumber);
-        columns.Bound(x => x.Id)
-            .ClientTemplate("<div>"
-                    + "<#= Company #><br />"
-                    + "<#= Address1 #><br />"
-                    + "<#= Address2 #><br />"
-                    + "<#= City #>, <#= StateProvinceName #>, <#= ZipPostalCode #><br />"
-                    + "<#= CountryName #><br />"
-                    + "</div>")
-            .Title(T("Admin.Address").Text);
+        columns.Bound(x => x.AddressHtml)
+            .Encoded(false);
         columns.Bound(x => x.Id)
             .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/Customer/AddressEdit?customerId=") + @Model.Id + "&addressid=<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
             .Title(T("Admin.Common.Edit").Text);

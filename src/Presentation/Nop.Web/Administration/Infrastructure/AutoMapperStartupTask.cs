@@ -210,7 +210,7 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.Deleted, mo => mo.Ignore());
             //logs
             Mapper.CreateMap<Log, LogModel>()
-                .ForMember(dest => dest.CustomerName, mo => mo.Ignore())
+                .ForMember(dest => dest.CustomerEmail, mo => mo.Ignore())
                 .ForMember(dest => dest.CreatedOn, mo => mo.Ignore());
             Mapper.CreateMap<LogModel, Log>()
                 .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
@@ -223,7 +223,7 @@ namespace Nop.Admin.Infrastructure
             Mapper.CreateMap<ActivityLogType, ActivityLogTypeModel>();
             Mapper.CreateMap<ActivityLog, ActivityLogModel>()
                 .ForMember(dest => dest.ActivityLogTypeName, mo => mo.MapFrom(src => src.ActivityLogType.Name))
-                .ForMember(dest => dest.CustomerName, mo => mo.MapFrom(src => src.Customer.Email))
+                .ForMember(dest => dest.CustomerEmail, mo => mo.MapFrom(src => src.Customer.Email))
                 .ForMember(dest => dest.CreatedOn, mo => mo.Ignore());
             //currencies
             Mapper.CreateMap<Currency, CurrencyModel>()

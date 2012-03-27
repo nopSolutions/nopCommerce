@@ -70,6 +70,9 @@ namespace Nop.Admin.Models.Common
         [AllowHtml]
         public string FaxNumber { get; set; }
 
+        [NopResourceDisplayName("Admin.Address")]
+        public string AddressHtml { get; set; }
+
 
 
         public IList<SelectListItem> AvailableCountries { get; set; }

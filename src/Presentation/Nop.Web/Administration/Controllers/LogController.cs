@@ -82,7 +82,7 @@ namespace Nop.Admin.Controllers
                         FullMessage = x.FullMessage,
                         IpAddress = x.IpAddress,
                         CustomerId = x.CustomerId,
-                        CustomerName = x.Customer!= null ? x.Customer.GetFullName() : null,
+                        CustomerEmail = x.Customer != null ? x.Customer.Email : null,
                         PageUrl = x.PageUrl,
                         ReferrerUrl = x.ReferrerUrl,
                         CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc)
@@ -127,7 +127,7 @@ namespace Nop.Admin.Controllers
                 FullMessage = log.FullMessage,
                 IpAddress = log.IpAddress,
                 CustomerId = log.CustomerId,
-                CustomerName = log.Customer != null ? log.Customer.GetFullName() : null,
+                CustomerEmail = log.Customer != null ? log.Customer.Email : null,
                 PageUrl = log.PageUrl,
                 ReferrerUrl = log.ReferrerUrl,
                 CreatedOn = _dateTimeHelper.ConvertToUserTime(log.CreatedOnUtc, DateTimeKind.Utc)

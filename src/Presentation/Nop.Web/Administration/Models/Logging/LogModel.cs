@@ -25,8 +25,7 @@ namespace Nop.Admin.Models.Logging
         [NopResourceDisplayName("Admin.System.Log.Fields.Customer")]
         public int? CustomerId { get; set; }
         [NopResourceDisplayName("Admin.System.Log.Fields.Customer")]
-        [AllowHtml]
-        public string CustomerName { get; set; }
+        public string CustomerEmail { get; set; }
 
         [NopResourceDisplayName("Admin.System.Log.Fields.PageURL")]
         [AllowHtml]

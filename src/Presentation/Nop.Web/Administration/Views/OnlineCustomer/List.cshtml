@@ -21,8 +21,8 @@
                     .Columns(columns =>
                     {
                         columns.Bound(x => x.CustomerInfo)
-                            .Template(x => Html.ActionLink(x.CustomerInfo + " (" + T("Admin.Common.View").Text + ")", "Edit", "Customer", new { id = x.Id }, new { }))
-                            .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/Customer/Edit/") + "<#= Id #>\"><#= CustomerInfo #> (" + T("Admin.Common.View").Text + ")</a>");
+                            .Template(x => Html.ActionLink(x.CustomerInfo, "Edit", "Customer", new { id = x.Id }, new { }))
+                            .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/Customer/Edit/") + "<#= Id #>\"><#= CustomerInfo #></a>");
                         columns.Bound(x => x.LastIpAddress);
                         columns.Bound(x => x.Location)
                             .Width(150);

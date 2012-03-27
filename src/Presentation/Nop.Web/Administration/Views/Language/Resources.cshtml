@@ -42,8 +42,10 @@
                     })
                     .Columns(columns =>
                     {
-                        columns.Bound(x => x.LanguageName).ClientTemplate("<#= LanguageName #>")
-                            .Width(100).ReadOnly().Filterable(false);
+                        columns.Bound(x => x.LanguageName)
+                            .Width(100)
+                            .ReadOnly()
+                            .Filterable(false);
                         columns.Bound(x => x.Name).EditorTemplateName("String").Width(300);
                         columns.Bound(x => x.Value).EditorTemplateName("String");
                         columns.Command(commands =>

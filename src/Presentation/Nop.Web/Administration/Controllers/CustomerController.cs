@@ -1123,6 +1123,14 @@ namespace Nop.Admin.Controllers
                         model.CountryName = x.Country.Name;
                     if (x.StateProvince != null)
                         model.StateProvinceName = x.StateProvince.Name;
+                    model.AddressHtml = string.Format("<div>{0}<br />{1}<br />{2}<br />{3}, {4}, {5}<br />{6}<br /></div>", 
+                        Server.HtmlEncode(model.Company),
+                        Server.HtmlEncode(model.Address1),
+                        Server.HtmlEncode(model.Address2),
+                        Server.HtmlEncode(model.City),
+                        Server.HtmlEncode(model.StateProvinceName),
+                        Server.HtmlEncode(model.ZipPostalCode),
+                        Server.HtmlEncode(model.CountryName));
                     return model;
                 }),
                 Total = addresses.Count
@@ -1396,7 +1404,7 @@ namespace Nop.Admin.Controllers
                     {
                         m.CustomerName = customer.IsGuest()
                                              ? _localizationService.GetResource("Admin.Customers.Guest")
-                                             : customer.GetFullName();
+                                             : customer.Email;
                     }
                     return m;
                 }),
@@ -1438,7 +1446,7 @@ namespace Nop.Admin.Controllers
                     {
                         m.CustomerName = customer.IsGuest()
                                              ? _localizationService.GetResource("Admin.Customers.Guest")
-                                             : customer.GetFullName();
+                                             : customer.Email;
                     }
                     return m;
                 }),

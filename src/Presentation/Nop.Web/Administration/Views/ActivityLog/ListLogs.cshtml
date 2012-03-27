@@ -71,8 +71,8 @@
                             columns.Bound(x => x.ActivityLogTypeName)
                                 .Centered();
                             columns.Bound(x => x.CustomerId)
-                                .Template(x => Html.ActionLink(x.CustomerName + " (" + T("Admin.Common.View").Text + ")", "Edit", "Customer", new { id = x.CustomerId }, new { }))
-                                .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/Customer/Edit/") + "<#= CustomerId #>\"><#= CustomerName #> (" + T("Admin.Common.View").Text + ")</a>");
+                                .Template(x => Html.ActionLink(x.CustomerEmail, "Edit", "Customer", new { id = x.CustomerId }, new { }))
+                                .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/Customer/Edit/") + "<#= CustomerId #>\"><#= CustomerEmail #></a>");
                             columns.Bound(x => x.Comment)
                                 .Centered();                        
                             columns.Bound(x => x.CreatedOn)

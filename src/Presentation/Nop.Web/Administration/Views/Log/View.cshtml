@@ -52,7 +52,7 @@
             <td class="adminData">
                 @if (Model.CustomerId.HasValue)
                 {
-                    @Html.ActionLink(Model.CustomerName + " (" + T("Admin.Common.View").Text + ")", "Edit", "Customer", new { id = Model.CustomerId }, new { })
+                    @Html.ActionLink(Model.CustomerEmail, "Edit", "Customer", new { id = Model.CustomerId }, new { })
                 }
             </td>
         </tr>

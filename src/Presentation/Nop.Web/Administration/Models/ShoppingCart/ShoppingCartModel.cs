@@ -8,7 +8,7 @@ namespace Nop.Admin.Models.ShoppingCart
         [NopResourceDisplayName("Admin.CurrentCarts.Customer")]
         public int CustomerId { get; set; }
         [NopResourceDisplayName("Admin.CurrentCarts.Customer")]
-        public string CustomerName { get; set; }
+        public string CustomerEmail { get; set; }
 
         [NopResourceDisplayName("Admin.CurrentCarts.TotalItems")]
         public int TotalItems { get; set; }

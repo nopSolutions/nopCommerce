@@ -245,9 +245,11 @@ namespace Nop.Admin.Models.Customers
         public class SendEmailModel : BaseNopModel
         {
             [NopResourceDisplayName("Admin.Customers.Customers.SendEmail.Subject")]
+            [AllowHtml]
             public string Subject { get; set; }
 
             [NopResourceDisplayName("Admin.Customers.Customers.SendEmail.Body")]
+            [AllowHtml]
             public string Body { get; set; }
         }
 

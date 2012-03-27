@@ -299,7 +299,7 @@ namespace Nop.Admin.Controllers
                     {
                         var customerModel = new AffiliateModel.AffiliatedCustomerModel();
                         customerModel.Id = customer.Id;
-                        customerModel.Name = customer.GetFullName();
+                        customerModel.Name = customer.Email;
                         return customerModel;
                     }),
                 Total = customers.Count
