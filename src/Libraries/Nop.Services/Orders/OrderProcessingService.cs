@@ -1269,7 +1269,8 @@ namespace Nop.Services.Orders
             }
             catch (Exception exc)
             {
-                result.AddError(string.Format("Error: {0}. Full exception: {1}", exc.Message, exc.ToString()));
+                _logger.Error(exc.Message, exc);
+                result.AddError(exc.Message);
             }
 
             #region Process errors
@@ -1277,7 +1278,7 @@ namespace Nop.Services.Orders
             string error = "";
             for (int i = 0; i < result.Errors.Count; i++)
             {
-                error += string.Format("Error {0}: {1}", i, result.Errors[i]);
+                error += string.Format("Error {0}: {1}", i + 1, result.Errors[i]);
                 if (i != result.Errors.Count - 1)
                     error += ". ";
             }
