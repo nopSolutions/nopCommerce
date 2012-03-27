@@ -42,16 +42,16 @@
                 @Html.TextBox("searchterms", null, new { @class = "forumsearchtext" })
                 <input type="submit" class="forumsearchbutton" value="@T("Forum.SearchButton")" />
                 <br />
-                <table width="100%">
+                <table style="width: 100%;">
                     <tbody>
                         <tr>
-                            <td class="title" colspan="2">
+                            <td class="title">
                                 @Html.CheckBox("adv", @Model.ShowAdvancedSearch)
                                 @Html.Label("adv", @T("Forum.Search.AdvancedSearch").Text)
                             </td>
                         </tr>
                         <tr>
-                            <td class="title" colspan="2">
+                            <td class="title">
                                 <div id="pnlAdvancedSearch" style="display: none;">
                                     <table class="adv-search">
                                         <tbody>

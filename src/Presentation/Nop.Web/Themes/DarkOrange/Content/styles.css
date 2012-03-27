@@ -270,7 +270,8 @@ ul.languagelist li:hover{cursor:pointer;}
 .checkout-data .order-completed .select-button{margin:10px;text-align:left;}
 .order-details{}
 .order-details .page-title{border-bottom:0 none;text-align:left;}
-.order-details .print-buttons{text-align:right;}
+.order-details .page-title .title{text-align:left;}
+.order-details .page-title .print-buttons{text-align:right;}
 .order-details .info{border:1px solid #d7d7d7;padding:10px;}
 .order-details .section-title{padding:10px 10px 5px 0;font-weight:700;clear:both;}
 .order-details .order-overview{text-align:left;padding-bottom:10px;}
