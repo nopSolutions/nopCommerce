@@ -484,7 +484,8 @@ namespace Nop.Admin.Infrastructure
             Mapper.CreateMap<OrderSettingsModel, OrderSettings>()
                 .ForMember(dest => dest.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab, mo => mo.Ignore())
                 .ForMember(dest => dest.ReturnRequestReasons, mo => mo.Ignore())
-                .ForMember(dest => dest.ReturnRequestActions, mo => mo.Ignore());
+                .ForMember(dest => dest.ReturnRequestActions, mo => mo.Ignore())
+                .ForMember(dest => dest.MinimumOrderPlacementInterval, mo => mo.Ignore());
             Mapper.CreateMap<ShoppingCartSettings, ShoppingCartSettingsModel>();
             Mapper.CreateMap<ShoppingCartSettingsModel, ShoppingCartSettings>()
                 .ForMember(dest => dest.RoundPricesDuringCalculation, mo => mo.Ignore());

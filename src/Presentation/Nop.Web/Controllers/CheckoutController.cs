@@ -296,6 +296,22 @@ namespace Nop.Web.Controllers
             return _orderSettings.OnePageCheckoutEnabled;
         }
 
+        [NonAction]
+        protected bool IsMinimumOrderPlacementIntervalValid(Customer customer)
+        {
+            //prevent 2 orders being placed within an X seconds time frame
+            if (_orderSettings.MinimumOrderPlacementInterval == 0)
+                return true;
+
+            var lastOrderPlaced = _orderService.GetOrdersByCustomerId(_workContext.CurrentCustomer.Id)
+                .FirstOrDefault();
+            if (lastOrderPlaced == null)
+                return true;
+            
+            var interval = DateTime.UtcNow - lastOrderPlaced.CreatedOnUtc;
+            return interval.TotalSeconds > _orderSettings.MinimumOrderPlacementInterval;
+        }
+
         #endregion
 
         #region Methods (multistep checkout)
@@ -754,7 +770,12 @@ namespace Nop.Web.Controllers
                     else
                         processPaymentRequest = new ProcessPaymentRequest();
                 }
+                
+                //prevent 2 orders being placed within an X seconds time frame
+                if (!IsMinimumOrderPlacementIntervalValid(_workContext.CurrentCustomer))
+                    throw new Exception(_localizationService.GetResource("Checkout.MinOrderPlacementInterval"));
 
+                //place order
                 processPaymentRequest.CustomerId = _workContext.CurrentCustomer.Id;
                 processPaymentRequest.PaymentMethodSystemName = _workContext.CurrentCustomer.SelectedPaymentMethodSystemName;
                 var placeOrderResult = _orderProcessingService.PlaceOrder(processPaymentRequest);
@@ -1321,6 +1342,10 @@ namespace Nop.Web.Controllers
 
                 if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
                     throw new Exception("Anonymous checkout is not allowed");
+
+                //prevent 2 orders being placed within an X seconds time frame
+                if (!IsMinimumOrderPlacementIntervalValid(_workContext.CurrentCustomer))
+                    throw new Exception(_localizationService.GetResource("Checkout.MinOrderPlacementInterval"));
 
                 //place order
                 var processPaymentRequest = _httpContext.Session["OrderPaymentInfo"] as ProcessPaymentRequest;

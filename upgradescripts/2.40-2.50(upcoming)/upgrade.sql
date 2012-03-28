@@ -677,6 +677,9 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.BulkEdit.Fields.StockQuantity">
     <Value>Stock qty</Value>
   </LocaleResource>
+  <LocaleResource Name="Checkout.MinOrderPlacementInterval">
+    <Value>Please wait several seconds before placing a new order (already placed another order several seconds ago).</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -2580,4 +2583,13 @@ WHERE [AvailableForPreOrder] IS NULL
 GO
 
 ALTER TABLE [dbo].[ProductVariant] ALTER COLUMN [AvailableForPreOrder] bit NOT NULL
+GO
+
+
+--new setting
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'ordersettings.minimumorderplacementinterval')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'ordersettings.minimumorderplacementinterval', N'30')
+END
 GO

@@ -1014,6 +1014,9 @@
 			<LocaleResource Name="MinOrderTotalAmount">
 				<Value>Minimum order total amount is {0}</Value>
 			</LocaleResource>
+      <LocaleResource Name="MinOrderPlacementInterval">
+        <Value>Please wait several seconds before placing a new order (already placed another order several seconds ago).</Value>
+      </LocaleResource>
 			<LocaleResource Name="NewAddress">
 				<Value>New Address</Value>
 			</LocaleResource>

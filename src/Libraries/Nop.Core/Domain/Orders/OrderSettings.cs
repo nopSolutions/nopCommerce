@@ -70,5 +70,10 @@ namespace Nop.Core.Domain.Orders
         /// </summary>
         public int GiftCards_Deactivated_OrderStatusId { get; set; }
 
+        /// <summary>
+        /// Gets or sets an order placement interval in seconds (prevent 2 orders being placed within an X seconds time frame).
+        /// </summary>
+        public int MinimumOrderPlacementInterval { get; set; }
+
     }
 }
