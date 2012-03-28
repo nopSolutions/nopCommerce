@@ -13,16 +13,13 @@
         <h1>Welcome to the Mobile Home Page</h1>
         <p>Here's some information about the requesting device:</p>
         <ul>
-            <li>Manufacturer: <% =Request.Browser.MobileDeviceManufacturer %></li>
-            <li>Model: <% =Request.Browser.MobileDeviceModel %></li>
             <li>Screen Width: <% =Request.Browser.ScreenPixelsWidth %></li>
             <li>Screen Height: <% =Request.Browser.ScreenPixelsHeight %></li>
-            <li>Tablet Device: <% =Request.Browser["is_tablet"] %></li>
-            <li>Pointing Method: <% =Request.Browser["pointing_method"] %></li>
+            <li>LayoutEngine: <% =Request.Browser["LayoutEngine"] %></li>
         </ul>
         <p>See <a href="http://msdn.microsoft.com/en-us/library/system.web.httpbrowsercapabilities_properties.aspx" title="MSDN HttpBrowserCapabilities Documentation">MSDN</a> for details of Request.Browser properties.</p>
-        <p>See <a href="http://wurfl.sourceforge.net/help_doc.php" title="WURFL Capabilities Documentation">WURFL</a> for details of other WURFL capabilities.</p>
         <p>See <a href="http://51degrees.codeplex.com/documentation" title="51Degrees.mobi Documentation">51Degrees.mobi</a> for user guide.</p>
+		<p>See <a href="http://51degrees.mobi/Products/DeviceData.aspx" title="51Degrees.mobi Device Data">51Degrees.mobi Device Data</a> for details of other data properties and to get weekly data updates.</p>
         <hr />
         <% if (Request.Browser.IsMobileDevice == false) { %>
             <p>The requesting device isn't a mobile. The page must have been requested directly.</p>
