@@ -126,8 +126,8 @@
 .shipment-details .products-box .product{}
 .shipment-details .products-box .sku{}
 .shipment-details .products-box .qty{}
-.downloable-products{}
-.downloable-products .item{font-weight:normal;}
+.downloadable-products{}
+.downloadable-products .item{font-weight:normal;}
 .return-request{}
 .return-request .section-addinfo{padding:10px;font-weight:700;}
 .return-request .products-box{font-weight:normal;}

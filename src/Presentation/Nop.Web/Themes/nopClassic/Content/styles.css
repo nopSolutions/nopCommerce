@@ -283,8 +283,8 @@ ul.languagelist li:hover{cursor:pointer;}
 .shipment-details .products-box .sku{}
 .shipment-details .products-box .product{}
 .shipment-details .products-box .qty{text-align:center;}
-.downloable-products{margin:0;padding:5px;font-size:11px;color:#555;background-color:inherit;}
-.downloable-products .info{padding:10px;}
+.downloadable-products{margin:0;padding:5px;font-size:11px;color:#555;background-color:inherit;}
+.downloadable-products .info{padding:10px;}
 .order-progress{height:40px;margin:0 auto;text-align:center;border-bottom:solid 2px #f3f3f3;}
 .order-progress ul{padding:0;margin:0;}
 .order-progress ul li{list-style:none;display:inline;padding:5px 20px 0;}
