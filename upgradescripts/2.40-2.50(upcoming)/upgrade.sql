@@ -666,7 +666,7 @@ set @resources='
     <Value>Available for pre-order</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Catalog.Products.Variants.Fields.AvailableForPreOrder.Hint">
-    <Value>Check if this item is available for Pre-Order. It also sisplays "Pre-order" button instead of "Add to cart".</Value>
+    <Value>Check if this item is available for Pre-Order. It also displays "Pre-order" button instead of "Add to cart".</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.PreOrder">
     <Value>Pre-order</Value>
