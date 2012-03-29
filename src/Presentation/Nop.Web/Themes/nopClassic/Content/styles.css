@@ -8,6 +8,8 @@ a:hover{color:#3664A5;text-decoration:underline;}
 img{border:0;}
 h1,h2,h3,h4,h5,h6{font-family:Tahoma, Verdana, Arial, Helvetica, sans-serif;}
 h2,h3{font-size:16px;}
+.nobr{white-space:nowrap!important;}
+.wrap{ white-space:normal!important;}
 /* MASTER PAGE WRAPPERS */
 .master-wrapper-page{margin:0 auto;width:960px;}
 .master-wrapper-content{float:left;width:960px;margin:15px 0 0;text-align:left;background:#FFF;}
@@ -81,7 +83,6 @@ td.fieldname{font-size:12px;}
 .user-agreement-page .page-title{}
 .user-agreement-page .page-body{}
 .clear{border:medium none;clear:both;float:none;font-size:0;height:0;line-height:0;}
-.nobr{white-space:nowrap!important;}
 .linkButton{color:#3664A5;background-color:inherit;text-decoration:underline;font-weight:700;}
 a.linkButton:hover{}
 .dropDownLists{height:17px;font-size:10px;padding-left:2px;font-family:Tahoma;}

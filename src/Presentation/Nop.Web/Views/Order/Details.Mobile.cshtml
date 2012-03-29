@@ -221,7 +221,7 @@
                                 @T("Order.SubTotal"):</b>
                         </td>
                         <td class="cart_total_right">
-                            <span style="white-space: nowrap;">
+                            <span class="nobr">
                                 @Model.OrderSubtotal
                             </span>
                         </td>
@@ -234,7 +234,7 @@
                                     @T("Order.SubTotalDiscount"):</b>
                             </td>
                             <td class="cart_total_right">
-                                <span style="white-space: nowrap;">
+                                <span class="nobr">
                                     @Model.OrderSubTotalDiscount
                                 </span>
                             </td>
@@ -248,7 +248,7 @@
                                     @T("Order.Shipping"):</b>
                             </td>
                             <td class="cart_total_right">
-                                <span style="white-space: nowrap;">
+                                <span class="nobr">
                                     @Model.OrderShipping
                                 </span>
                             </td>
@@ -262,7 +262,7 @@
                                     @T("Order.PaymentMethodAdditionalFee"):</b>
                             </td>
                             <td class="cart_total_right">
-                                <span style="white-space: nowrap;">
+                                <span class="nobr">
                                     @Model.PaymentMethodAdditionalFee
                                 </span>
                             </td>
@@ -278,7 +278,7 @@
                                     @string.Format(T("Order.TaxRateLine").Text, taxRate.Rate):</b>
                             </td>
                             <td class="cart_total_right">
-                                <span style="white-space: nowrap;">
+                                <span class="nobr">
                                     @taxRate.Value
                                 </span>
                             </td>
@@ -293,7 +293,7 @@
                                     @T("Order.Tax"):</b>
                             </td>
                             <td class="cart_total_right">
-                                <span style="white-space: nowrap;">
+                                <span class="nobr">
                                     @Model.Tax
                                 </span>
                             </td>
@@ -307,7 +307,7 @@
                                     @T("Order.TotalDiscount"):</b>
                             </td>
                             <td class="cart_total_right">
-                                <span style="white-space: nowrap;">
+                                <span class="nobr">
                                     @Model.OrderTotalDiscount
                                 </span>
                             </td>
@@ -323,7 +323,7 @@
                                     @string.Format(T("Order.GiftCardInfo").Text, gc.CouponCode):</b>
                             </td>
                             <td class="cart_total_right">
-                                <span style="white-space: nowrap;">
+                                <span class="nobr">
                                     @gc.Amount
                                 </span>
                             </td>
@@ -337,7 +337,7 @@
                                 <b>@string.Format(T("Order.RewardPoints").Text, Model.RedeemedRewardPoints):</b>
                             </td>
                             <td class="cart_total_right">
-                                <span style="white-space: nowrap;">
+                                <span class="nobr">
                                     @Model.RedeemedRewardPointsAmount
                                 </span>
                             </td>
@@ -349,7 +349,7 @@
                                 @T("Order.OrderTotal"):</b>
                         </td>
                         <td class="cart_total_right">
-                            <b><span style="white-space: nowrap;">
+                            <b><span class="nobr">
                                 @Model.OrderTotal
                             </span></b>
                         </td>

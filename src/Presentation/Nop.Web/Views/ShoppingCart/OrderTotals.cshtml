@@ -7,10 +7,10 @@
         <tbody>
             <tr>
                 <td class="cart_total_left">
-                    <strong><span style="white-space: nowrap;">@T("ShoppingCart.Totals.SubTotal"):</span></strong>
+                    <strong><span class="nobr">@T("ShoppingCart.Totals.SubTotal"):</span></strong>
                 </td>
                 <td class="cart_total_right">
-                    <span style="white-space: nowrap;"><span class="productPrice">@Model.SubTotal</span>
+                    <span class="nobr"><span class="productPrice">@Model.SubTotal</span>
                     </span>
                 </td>
             </tr>
@@ -20,7 +20,7 @@
                     <td class="cart_total_left">
                         @using (Html.BeginRouteForm("ShoppingCart", FormMethod.Post))
                         {
-                            <strong><span style="white-space: nowrap;">
+                            <strong><span class="nobr">
                                 @T("ShoppingCart.Totals.SubTotalDiscount")
                                 @if (Model.AllowRemovingSubTotalDiscount)
                                 {
@@ -32,14 +32,14 @@
                         }
                     </td>
                     <td class="cart_total_right">
-                        <span style="white-space: nowrap;"><span class="productPrice">@Model.SubTotalDiscount</span>
+                        <span class="nobr"><span class="productPrice">@Model.SubTotalDiscount</span>
                         </span>
                     </td>
                 </tr>
             }
             <tr>
                 <td class="cart_total_left">
-                    <strong><span style="white-space: nowrap;">
+                    <strong><span class="nobr">
                         @T("ShoppingCart.Totals.Shipping")
                         @if (Model.RequiresShipping && !String.IsNullOrEmpty(Model.SelectedShippingMethod))
                         {
@@ -48,7 +48,7 @@
                         : </span></strong>
                 </td>
                 <td class="cart_total_right">
-                    <span style="white-space: nowrap;">
+                    <span class="nobr">
                         @if (Model.RequiresShipping)
                         {
                             if (!String.IsNullOrEmpty(Model.Shipping))
@@ -72,11 +72,11 @@
             {
                 <tr>
                     <td class="cart_total_left">
-                        <strong><span style="white-space: nowrap;">@T("ShoppingCart.Totals.PaymentMethodAdditionalFee"):</span>
+                        <strong><span class="nobr">@T("ShoppingCart.Totals.PaymentMethodAdditionalFee"):</span>
                         </strong>
                     </td>
                     <td class="cart_total_right">
-                        <span style="white-space: nowrap;"><span class="productPrice">@Model.PaymentMethodAdditionalFee</span>
+                        <span class="nobr"><span class="productPrice">@Model.PaymentMethodAdditionalFee</span>
                         </span>
                     </td>
                 </tr>
@@ -87,12 +87,12 @@
                 {
                 <tr>
                     <td class="cart_total_left">
-                        <strong><span style="white-space: nowrap;">
+                        <strong><span class="nobr">
                             @string.Format(T("ShoppingCart.Totals.TaxRateLine").Text, taxRate.Rate)
                             :</span></strong>
                     </td>
                     <td class="cart_total_right">
-                        <span style="white-space: nowrap;">
+                        <span class="nobr">
                             @taxRate.Value
                         </span>
                     </td>
@@ -103,11 +103,11 @@
             {
                 <tr>
                     <td class="cart_total_left">
-                        <strong><span style="white-space: nowrap;">@T("ShoppingCart.Totals.Tax"): </span>
+                        <strong><span class="nobr">@T("ShoppingCart.Totals.Tax"): </span>
                         </strong>
                     </td>
                     <td class="cart_total_right">
-                        <span style="white-space: nowrap;"><span class="productPrice">@Model.Tax</span>
+                        <span class="nobr"><span class="productPrice">@Model.Tax</span>
                         </span>
                     </td>
                 </tr>
@@ -118,7 +118,7 @@
                     <td class="cart_total_left">
                         @using (Html.BeginRouteForm("ShoppingCart", FormMethod.Post))
                         {
-                            <strong><span style="white-space: nowrap;">
+                            <strong><span class="nobr">
                                 @T("ShoppingCart.Totals.OrderTotalDiscount")
                                 @if (Model.AllowRemovingOrderTotalDiscount)
                                 {
@@ -130,7 +130,7 @@
                         }
                     </td>
                     <td class="cart_total_right">
-                        <span style="white-space: nowrap;"><span class="productPrice">@Model.OrderTotalDiscount</span>
+                        <span class="nobr"><span class="productPrice">@Model.OrderTotalDiscount</span>
                         </span>
                     </td>
                 </tr>
@@ -143,7 +143,7 @@
                     <td class="cart_total_left">
                     @using (Html.BeginRouteForm("ShoppingCart", FormMethod.Post))
                         {
-                        <strong><span style="white-space: nowrap;">
+                        <strong><span class="nobr">
                             @string.Format(T("ShoppingCart.Totals.GiftCardInfo").Text, gc.CouponCode)
                             @if (Model.IsEditable)
                             {
@@ -157,13 +157,13 @@
                         }
                     </td>
                     <td class="cart_total_right">
-                        <span style="white-space: nowrap;"><span class="productPrice">@gc.Amount</span>
+                        <span class="nobr"><span class="productPrice">@gc.Amount</span>
                         </span>
                     </td>
                 </tr>
                 <tr>
                     <td class="cart_total_left_below">
-                        <span style="white-space: nowrap;"><span>
+                        <span class="nobr"><span>
                             @string.Format(T("ShoppingCart.Totals.GiftCardInfo.Remaining").Text, gc.Remaining)
                         </span></span>
                     </td>
@@ -176,22 +176,22 @@
             {
                 <tr>
                     <td class="cart_total_left">
-                        <strong><span style="white-space: nowrap;">
+                        <strong><span class="nobr">
                             @string.Format(T("ShoppingCart.Totals.RewardPoints").Text, Model.RedeemedRewardPoints):</span></strong>
                     </td>
                     <td class="cart_total_right">
-                        <span style="white-space: nowrap;"><span class="productPrice">@Model.RedeemedRewardPointsAmount</span>
+                        <span class="nobr"><span class="productPrice">@Model.RedeemedRewardPointsAmount</span>
                         </span>
                     </td>
                 </tr>
             }
             <tr>
                 <td class="cart_total_left">
-                    <strong><span style="white-space: nowrap;">
+                    <strong><span class="nobr">
                         @T("ShoppingCart.Totals.OrderTotal"):</span></strong>
                 </td>
                 <td class="cart_total_right">
-                    <span style="white-space: nowrap;">
+                    <span class="nobr">
                         @if (!String.IsNullOrEmpty(Model.OrderTotal))
                         {
                             <span class="productPrice">@Model.OrderTotal</span>

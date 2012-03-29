@@ -1,5 +1,7 @@
 ﻿.foo{}
 /* MISC. CLASSES */
+.nobr{white-space:nowrap!important;}
+.wrap{ white-space:normal!important;}
 .searchbox{margin: 0 0 15px 0px;}
 .htmlcontent{padding-bottom:5px;}
 .htmlcontent-title{padding:0 0 5px;clear:both;}
@@ -13,7 +15,6 @@
 .user-agreement-page{}
 .user-agreement-page .page-body{}
 .clear{border:medium none;clear:both;float:none;font-size:0;height:0;line-height:0;}
-.nobr{white-space:nowrap!important;}
 .message-error{font-family:Verdana, Arial, sans-serif;font-weight:700;color:red;}
 .validation-summary-errors{font-family:Verdana, Arial, sans-serif;font-weight:700;color:red;}
 .field-validation-error{font-family:Verdana, Arial, sans-serif;font-weight:700;color:red;}
