@@ -27,19 +27,19 @@
             using (Html.BeginForm())
             {
             <div class="products-box">
-                <table border="1" cellspacing="0" style="width: 100%; border-collapse: collapse;">
+                <table class="data-table">
                     <col />
                     <col />
-                    <col />
+                    <col width="1" />
                     <thead>
                         <tr>
-                            <th align="center">
+                            <th class="a-center">
                                 @T("ReturnRequests.Products.Name")
                             </th>
-                            <th align="center">
+                            <th class="a-center">
                                 @T("ReturnRequests.Products.Price")
                             </th>
-                            <th align="center">
+                            <th class="a-center">
                                 @T("ReturnRequests.Products.Quantity")
                             </th>
                         </tr>
@@ -48,30 +48,24 @@
                         @foreach (var item in Model.Items)
                         {   
                             <tr>
-                                <td>
-                                    <div style="padding-left: 10px; padding-right: 10px;">
-                                        <a href="@Url.RouteUrl("Product", new { productId = item.ProductId, SeName = item.ProductSeName })" title="View details">@item.ProductName</a>
-                                        @if (!String.IsNullOrEmpty(item.AttributeInfo))
+                                <td class="a-left">
+                                    <a href="@Url.RouteUrl("Product", new { productId = item.ProductId, SeName = item.ProductSeName })" title="View details">@item.ProductName</a>
+                                    @if (!String.IsNullOrEmpty(item.AttributeInfo))
+                                    {
+                                        <br />
+                                        @Html.Raw(item.AttributeInfo)
+                                    }
+                                </td>
+                                <td class="a-left">
+                                    @item.UnitPrice
+                                </td>
+                                <td class="a-left">
+                                    <select name="quantity@(item.Id)" id="quantity@(item.Id)">
+                                        @for (int i = 0; i <= item.Quantity; i++)
                                         {
-                                            <br />
-                                            @Html.Raw(item.AttributeInfo)
+                                            <option value="@(i)">@(i)</option>
                                         }
-                                    </div>
-                                </td>
-                                <td>
-                                    <div style="padding-left: 10px; padding-right: 10px;">
-                                        @item.UnitPrice
-                                    </div>
-                                </td>
-                                <td>
-                                    <div style="padding-left: 10px; padding-right: 10px;">
-                                        <select name="quantity@(item.Id)" id="quantity@(item.Id)">
-                                            @for (int i = 0; i <= item.Quantity; i++)
-                                            {
-                                                <option value="@(i)">@(i)</option>
-                                            }
-                                        </select>
-                                    </div>
+                                    </select>
                                 </td>
                             </tr>
                         }

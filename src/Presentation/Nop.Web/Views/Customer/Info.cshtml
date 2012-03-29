@@ -171,18 +171,19 @@
                                             @Html.LabelFor(model => model.AssociatedExternalAuthRecords):
                                         </td>
                                         <td class="item-value">
-                                            <table border="1" cellspacing="0" style="width: 100%; border-collapse: collapse;">
+                                            <table class="data-table">
+                                                <col />
                                                 <col />
                                                 <col />
                                                 <thead>
                                                     <tr>
-                                                        <th align="center">
+                                                        <th class="a-center">
                                                             @T("Account.AssociatedExternalAuth.AuthMethodName")
                                                         </th>
-                                                        <th align="center">
+                                                        <th class="a-center">
                                                             @T("Account.AssociatedExternalAuth.Email")
                                                         </th>
-                                                        <th align="center">
+                                                        <th class="a-center">
                                                             @T("Account.AssociatedExternalAuth.ExternalIdentifier")
                                                         </th>
                                                     </tr>
@@ -191,20 +192,14 @@
                                                     @foreach (var item in Model.AssociatedExternalAuthRecords)
                                                     {
                                                         <tr>
-                                                            <td style="width: 20%;">
-                                                                <div style="padding: 0px 10px;">
-                                                                    @item.AuthMethodName
-                                                                </div>
+                                                            <td class="a-left">
+                                                                @item.AuthMethodName
                                                             </td>
-                                                            <td style="width: 20%;">
-                                                                <div style="padding: 0px 10px;">
-                                                                    @item.Email
-                                                                </div>
+                                                            <td class="a-left">
+                                                                @item.Email
                                                             </td>
-                                                            <td style="width: 60%;">
-                                                                <div style="padding: 0px 10px;">
-                                                                    @item.ExternalIdentifier
-                                                                </div>
+                                                            <td class="a-left">
+                                                                @item.ExternalIdentifier
                                                             </td>
                                                         </tr>
                                                     }

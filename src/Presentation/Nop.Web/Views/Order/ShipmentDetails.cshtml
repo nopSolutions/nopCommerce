@@ -93,7 +93,7 @@
             <div class="clear">
             </div>
             <div class="products-box">
-                <table border="1" cellspacing="0" style="width: 100%; border-collapse: collapse;">
+                    <table class="data-table">
                     @if (Model.ShowSku)
                     {
                         <col width="1" />
@@ -104,14 +104,14 @@
                         <tr>
                             @if (Model.ShowSku)
                             {
-                                <th align="center">
+                                <th class="a-center">
                                     @T("Order.Shipments.Product(s).SKU")
                                 </th>
                             }
-                            <th align="center">
+                            <th class="a-center">
                                 @T("Order.Shipments.Product(s).Name")
                             </th>
-                            <th align="center">
+                            <th class="a-center">
                                 @T("Order.Shipments.Product(s).Quantity")
                             </th>
                         </tr>
@@ -122,13 +122,13 @@
                             <tr>
                                 @if (Model.ShowSku)
                                 {
-                                    <td class="sku">
+                                    <td class="a-left">
                                         <div style="padding: 0px 10px;">
                                             @item.Sku
                                         </div>
                                     </td>
                                 }
-                                <td class="product">
+                                <td class="a-left">
                                     <div style="padding: 0px 10px;">
                                         <em><a href="@Url.RouteUrl("Product", new { productId = item.ProductId, SeName = item.ProductSeName })" title="View details">@item.ProductName</a></em>
                                         @if (!String.IsNullOrEmpty(item.AttributeInfo))
@@ -138,7 +138,7 @@
                                         }
                                     </div>
                                 </td>
-                                <td class="qty">
+                                <td class="a-center">
                                     <div style="padding: 0px 10px;">
                                         @item.QuantityShipped
                                     </div>
@@ -162,21 +162,23 @@
             <div class="clear">
             </div>
             <div class="shipmentstatusevents-box">
-                <table border="1" cellspacing="0" style="width: 100%; border-collapse: collapse;">
+                <table class="data-table">
+                    <col />
+                    <col />
                     <col />
                     <col />
                     <thead>
                         <tr>
-                            <th align="center">
+                            <th class="a-center">
                                 @T("Order.ShipmentStatusEvents.Event")
                             </th>
-                            <th align="center">
+                            <th class="a-center">
                                 @T("Order.ShipmentStatusEvents.Location")
                             </th>
-                            <th align="center">
+                            <th class="a-center">
                                 @T("Order.ShipmentStatusEvents.Country")
                             </th>
-                            <th align="center">
+                            <th class="a-center">
                                 @T("Order.ShipmentStatusEvents.Date")
                             </th>
                         </tr>
@@ -185,25 +187,17 @@
                         @foreach (var item in Model.ShipmentStatusEvents)
                         {
                             <tr>
-                                <td>
-                                    <div style="padding: 0px 10px;">
-                                        @item.EventName
-                                    </div>
+                                <td class="a-left">
+                                    @item.EventName
                                 </td>
-                                <td>
-                                    <div style="padding: 0px 10px;">
-                                        @item.Location
-                                    </div>
+                                <td class="a-left">
+                                    @item.Location
                                 </td>
-                                <td>
-                                    <div style="padding: 0px 10px;">
-                                        @item.Country
-                                    </div>
+                                <td class="a-left">
+                                    @item.Country
                                 </td>
-                                <td>
-                                    <div style="padding: 0px 10px;">
-                                        @item.Date.ToString("D")
-                                    </div>
+                                <td class="a-left">
+                                    @item.Date.ToString("D")
                                 </td>
                             </tr>
                         }

@@ -21,24 +21,23 @@
             <div class="info">
                 @if (Model.Items.Count > 0)
                 {
-                    
-                    <table border="1" cellspacing="0" style="width: 100%; border-collapse: collapse;">
+                    <table class="data-table">
+                        <col width="1" />
+                        <col width="1" />
                         <col />
-                        <col />
-                        <col />
-                        <col />
+                        <col width="1" />
                         <thead>
                             <tr>
-                                <th align="center">
+                                <th class="a-center">
                                     @T("DownloadableProducts.Fields.Order")
                                 </th>
-                                <th align="center">
+                                <th class="a-center">
                                     @T("DownloadableProducts.Fields.Date")
                                 </th>
-                                <th align="center">
+                                <th class="a-center">
                                     @T("DownloadableProducts.Fields.Product")
                                 </th>
-                                <th align="center">
+                                <th class="a-center">
                                     @T("DownloadableProducts.Fields.Download")
                                 </th>
                             </tr>
@@ -47,17 +46,13 @@
                             @foreach (var item in Model.Items)
                             {
                                 <tr>
-                                    <td style="width: 15%; text-align: center;">
-                                        <div style="padding-left: 10px; padding-right: 10px;">
-                                            <a class="link" href="@Url.RouteUrl("OrderDetails", new { orderId = @item.OrderId })">@item.OrderId</a>
-                                        </div>
+                                    <td class="a-center">
+                                        <a class="link" href="@Url.RouteUrl("OrderDetails", new { orderId = @item.OrderId })">@item.OrderId</a>
                                     </td>
-                                    <td style="width: 15%; text-align: center;">
-                                        <div style="padding-left: 10px; padding-right: 10px;">
-                                            @item.CreatedOn.ToString("d")
-                                        </div>
+                                    <td class="a-center">
+                                    @item.CreatedOn.ToString("d")
                                     </td>
-                                    <td style="width: 45%; text-align: center;">
+                                    <td class="a-center">
                                         <a href="@Url.RouteUrl("Product", new { productId = item.ProductId, SeName = item.ProductSeName })" title="View details">@item.ProductName</a>
                                         @if (!String.IsNullOrEmpty(item.ProductAttributes))
                                         {
@@ -65,20 +60,22 @@
                                             @Html.Raw(item.ProductAttributes)
                                         }
                                     </td>
-                                    <td style="width: 25%; text-align: center;">
-                                        <div style="padding-left: 10px; padding-right: 10px;">
+                                    <td class="a-center">
                                             @if (item.DownloadId > 0)
                                             {
-                                                <a class="link" href="@Url.Action("GetDownload", "Download", new { opvId = item.OrderProductVariantGuid })">@T("DownloadableProducts.Fields.Download")</a>
+                                                <div>
+                                                    <a class="link" href="@Url.Action("GetDownload", "Download", new { opvId = item.OrderProductVariantGuid })">@T("DownloadableProducts.Fields.Download")</a>
+                                                </div>
                                             }
                                             else
                                             {
-                                                @T("DownloadableProducts.Fields.Download.NA")
+                                                <div>
+                                                    @T("DownloadableProducts.Fields.Download.NA")
+                                                </div>
                                             }
-                                        </div>
                                         @if (item.LicenseId > 0)
                                         {
-                                            <div style="padding-left: 10px; padding-right: 10px;">
+                                            <div>
                                                 <a class="link" href="@Url.Action("GetLicense", "Download", new { opvId = item.OrderProductVariantGuid })">@T("DownloadableProducts.Fields.DownloadLicense")</a>
                                             </div>
                                         }

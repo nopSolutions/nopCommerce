@@ -3,6 +3,17 @@
 body,h1,h2,h3,h4,h5,h6,address,blockquote,dd,dl,hr,form,input{margin:0;padding:0;}
 body{font-family:arial, verdana, helvetica, sans-serif;font-size:12px;text-align:center;}
 
+.nobr{white-space:nowrap!important;}
+.wrap{ white-space:normal!important;}
+.a-left{text-align:left!important;}
+.a-center{text-align:center!important;}
+.a-right{text-align:right!important;}
+/* data table */
+.data-table{width:100%;border:1px solid;border-collapse:collapse;border-spacing:0;empty-cells:show;}
+.data-table th{font-weight:bold;padding:3px 8px;white-space:nowrap;vertical-align:middle;}
+.data-table td{padding:3px 8px;}
+.data-table th,.data-table td{border-bottom:1px solid;border-right:1px solid;}
+
 .cart_total_left{width:100%;text-align:right;vertical-align:middle;height:21px;font-weight:700;color:#353434;}
 .cart_total_left_below{width:100%;text-align:right;vertical-align:top;height:30px;}
 .cart_total_right{text-align:right;vertical-align:middle;padding-left:5px;}
@@ -16,8 +27,3 @@ body{font-family:arial, verdana, helvetica, sans-serif;font-size:12px;text-align
 .order-details .products-box,.order-details .ordernotes-box{text-align:left;padding:10px;border:1px solid #d7d7d7;height:auto;}
 .order-details .checkout-attributes{text-align:right;vertical-align:middle;padding:10px;height:auto;}
 .order-details .cart_total_left{color:#000;}
-.order-details .products-box .sku{}
-.order-details .products-box .product{}
-.order-details .products-box .unitprice{text-align:right;}
-.order-details .products-box .qty{text-align:center;}
-.order-details .products-box .subtotal{text-align:right;}

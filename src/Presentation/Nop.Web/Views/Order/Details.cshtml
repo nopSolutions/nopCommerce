@@ -190,7 +190,7 @@
             <div class="clear">
             </div>
             <div class="products-box">
-                <table border="1" cellspacing="0" style="width: 100%; border-collapse: collapse;">
+                <table class="data-table">
                     @if (Model.ShowSku)
                     {
                         <col width="1" />
@@ -203,20 +203,20 @@
                         <tr>
                             @if (Model.ShowSku)
                             {
-                                <th align="center">
+                                <th class="a-center">
                                     @T("Order.Product(s).SKU")
                                 </th>
                             }
-                            <th align="center">
+                            <th class="a-center">
                                 @T("Order.Product(s).Name")
                             </th>
-                            <th align="center">
+                            <th class="a-center">
                                 @T("Order.Product(s).Price")
                             </th>
-                            <th align="center">
+                            <th class="a-center">
                                 @T("Order.Product(s).Quantity")
                             </th>
-                            <th align="center">
+                            <th class="a-center">
                                 @T("Order.Product(s).Total")
                             </th>
                         </tr>
@@ -227,43 +227,33 @@
                             <tr>
                                 @if (Model.ShowSku)
                                 {
-                                    <td class="sku">
-                                        <div style="padding: 0px 10px;">
-                                            @item.Sku
-                                        </div>
+                                    <td class="a-left">
+                                        @item.Sku
                                     </td>
                                 }
-                                <td class="product">
-                                    <div style="padding: 0px 10px;">
-                                        @if (!Model.PrintMode)
-                                        {
-                                            <em><a href="@Url.RouteUrl("Product", new { productId = item.ProductId, SeName = item.ProductSeName })" title="View details">@item.ProductName</a></em>
-                                        }
-                                        else
-                                        {
-                                            @item.ProductName
-                                        }
-                                        @if (!String.IsNullOrEmpty(item.AttributeInfo))
-                                        {
-                                            <br />
-                                            @Html.Raw(item.AttributeInfo)
-                                        }
-                                    </div>
+                                <td class="a-left">
+                                    @if (!Model.PrintMode)
+                                    {
+                                        <em><a href="@Url.RouteUrl("Product", new { productId = item.ProductId, SeName = item.ProductSeName })" title="View details">@item.ProductName</a></em>
+                                    }
+                                    else
+                                    {
+                                        @item.ProductName
+                                    }
+                                    @if (!String.IsNullOrEmpty(item.AttributeInfo))
+                                    {
+                                        <br />
+                                        @Html.Raw(item.AttributeInfo)
+                                    }
                                 </td>
-                                <td class="unitprice">
-                                    <div style="padding: 0px 10px;">
-                                        @item.UnitPrice
-                                    </div>
+                                <td class="a-right">
+                                    @item.UnitPrice
                                 </td>
-                                <td class="qty">
-                                    <div style="padding: 0px 10px;">
-                                        @item.Quantity
-                                    </div>
+                                <td class="a-center">
+                                    @item.Quantity
                                 </td>
-                                <td class="subtotal">
-                                    <div style="padding: 0px 10px;">
-                                        @item.SubTotal
-                                    </div>
+                                <td class="a-right">
+                                    @item.SubTotal
                                 </td>
                             </tr>
                         }
@@ -454,24 +444,27 @@
             <div class="clear">
             </div>
             <div class="shipments-box">
-                <table border="1" cellspacing="0" style="width: 100%; border-collapse: collapse;">
+                <table class="data-table">
+                    <col width="1" />
+                    <col />
+                    <col />
                     <col />
                     <col />
                     <thead>
                         <tr>
-                            <th align="center">
+                            <th class="a-center">
                                 @T("Order.Shipments.ID")
                             </th>
-                            <th align="center">
+                            <th class="a-center">
                                 @T("Order.Shipments.TrackingNumber")
                             </th>
-                            <th align="center">
+                            <th class="a-center">
                                 @T("Order.Shipments.ShippedDate")
                             </th>
-                            <th align="center">
+                            <th class="a-center">
                                 @T("Order.Shipments.DeliveryDate")
                             </th>
-                            <th align="center">
+                            <th class="a-center">
                                 @T("Order.Shipments.ViewDetails")
                             </th>
                         </tr>
@@ -480,34 +473,26 @@
                         @foreach (var item in Model.Shipments)
                         {
                             <tr>
-                                <td style="width: 15%;">
-                                    <div style="padding: 0px 10px;">
-                                        @item.Id.ToString()
-                                    </div>
+                                <td class="a-left">
+                                    @item.Id.ToString()
                                 </td>
-                                <td style="width: 25%;">
-                                    <div style="padding: 0px 10px;">
-                                        @item.TrackingNumber
-                                    </div>
+                                <td class="a-left">
+                                    @item.TrackingNumber
                                 </td>
-                                <td style="width: 20%;">
-                                    <div style="padding: 0px 10px;">
-                                        @item.ShippedDate.ToString("D")
-                                    </div>
+                                <td class="a-left">
+                                    @item.ShippedDate.ToString("D")
                                 </td>
-                                <td style="width: 20%;">
-                                    <div style="padding: 0px 10px;">
-                                        @if (item.DeliveryDate.HasValue)
-                                        {
-                                            @item.DeliveryDate.Value.ToString("D")
-                                        }
-                                        else
-                                        {
-                                            @T("Order.Shipments.DeliveryDate.NotYet")
-                                        }
-                                    </div>
+                                <td class="a-left">
+                                    @if (item.DeliveryDate.HasValue)
+                                    {
+                                        @item.DeliveryDate.Value.ToString("D")
+                                    }
+                                    else
+                                    {
+                                        @T("Order.Shipments.DeliveryDate.NotYet")
+                                    }
                                 </td>
-                                <td style="width: 20%; text-align: center;">
+                                <td class="a-center">
                                     <a href="@Url.RouteUrl("ShipmentDetails", new { shipmentId = item.Id })" title="@T("Order.Shipments.ViewDetails")">@T("Order.Shipments.ViewDetails")</a>
                                 </td>
                             </tr>
@@ -529,15 +514,15 @@
             <div class="clear">
             </div>
             <div class="ordernotes-box">
-                <table border="1" cellspacing="0" style="width: 100%; border-collapse: collapse;">
+                    <table class="data-table">
                     <col />
                     <col />
                     <thead>
                         <tr>
-                            <th align="center">
+                            <th class="a-center">
                                 @T("Order.Notes.CreatedOn")
                             </th>
-                            <th align="center">
+                            <th class="a-center">
                                 @T("Order.Notes.Note")
                             </th>
                         </tr>
@@ -546,15 +531,11 @@
                         @foreach (var item in Model.OrderNotes)
                         {
                             <tr>
-                                <td style="width: 20%;">
-                                    <div style="padding: 0px 10px;">
-                                        @item.CreatedOn.ToString()
-                                    </div>
+                                <td class="a-left">
+                                    @item.CreatedOn.ToString()
                                 </td>
-                                <td style="width: 80%;">
-                                    <div style="padding: 0px 10px;">
-                                        @Html.Raw(item.Note)
-                                    </div>
+                                <td class="a-left">
+                                    @Html.Raw(item.Note)
                                 </td>
                             </tr>
                         }
