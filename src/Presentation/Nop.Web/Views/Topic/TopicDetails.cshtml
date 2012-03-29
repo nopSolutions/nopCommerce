@@ -60,7 +60,7 @@
                 @T("Topic.EnterPassword")
             </div>
             <div>
-                @Html.Password("password", null, new { @class = "textBox" })
+                @Html.Password("password")
                 <input type="submit" id="btnPassword" value = @T("Topic.Button") class="useragreementbutton"/>
                 <span id="authenticate-progress" style="display: none;">@T("Common.Wait...")
                     <img src='@Url.Content("~/Content/Images/ajax_loader_small.gif")' alt="@T("Common.Wait...")" />

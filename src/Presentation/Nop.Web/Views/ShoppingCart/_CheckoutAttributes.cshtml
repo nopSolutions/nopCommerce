@@ -67,7 +67,7 @@
                         break;
                     case AttributeControlType.TextBox:
                         {
-                    <input name="@(controlId)" type="text" id="@(controlId)" class="textBox" style="width:300px;" @(!String.IsNullOrWhiteSpace(attribute.DefaultValue) ? " value=" + attribute.DefaultValue : null) />
+                    <input name="@(controlId)" type="text" id="@(controlId)" style="width:300px;" @(!String.IsNullOrWhiteSpace(attribute.DefaultValue) ? " value=" + attribute.DefaultValue : null) />
                         }
                         break;
                     case AttributeControlType.MultilineTextbox:

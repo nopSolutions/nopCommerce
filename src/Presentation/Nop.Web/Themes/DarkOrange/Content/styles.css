@@ -8,6 +8,14 @@ a:hover{color:#f93;text-decoration:none;}
 img{border:0;}
 h1,h2,h3,h4,h5,h6{font-family:arial, helvetica, sans-serif;}
 h2,h3{font-size:16px;}
+textarea{width:100%;font-family:Verdana, Arial, sans-serif;font-size:11px;}
+checkbox,input,radio,select,button{font-size:11px;}
+/* fix ie button padding bug  - apply to all button classes
+input
+{
+	width: auto;
+	overflow: visible;
+}*/
 /* MASTER PAGE WRAPPERS */
 .master-wrapper-page{margin:10px auto;width:960px;}
 .master-wrapper-content{float:left;width:960px;margin:15px 0 0;text-align:left;background:#555 url(images/bg_container.gif) repeat-x;}
@@ -97,10 +105,6 @@ td.fieldname{font-size:12px;}
 .user-agreement-page .page-title{}
 .user-agreement-page .page-body{}
 .clear{border:medium none;clear:both;float:none;font-size:0;height:0;line-height:0;}
-.linkButton{color:#3664A5;background-color:inherit;text-decoration:underline;font-weight:700;}
-a.linkButton:hover{}
-.dropDownLists{height:17px;font-size:10px;padding-left:2px;font-family:Tahoma;}
-.textBox{margin:1px;border-right:#dfe5e7 1px solid;border-top:#a8bac2 1px solid;border-left:#a8bac2 1px solid;border-bottom:#dfe5e7 1px solid;background:url(Images/bg_textbox.gif) #FFF repeat-x left top;color:#11354A;font-family:verdana;font-size:8pt;padding:1px;height:15px;}
 .message-error{font-family:Verdana, Arial, sans-serif;font-size:10px;font-weight:700;color:red;}
 .validation-summary-errors{font-family:Verdana, Arial, sans-serif;font-size:10px;font-weight:700;color:red;}
 .field-validation-error{font-family:Verdana, Arial, sans-serif;font-size:10px;font-weight:700;color:red;}
@@ -111,15 +115,6 @@ a.linkButton:hover{}
 .sitemap-page .entity{margin:5px 0 30px;}
 .sitemap-page .topic-box,.sitemap-page .manufacturer-box,.sitemap-page .category-box,.sitemap-page .product-box{text-align:center;vertical-align:bottom;}
 .sitemap-page .topic-box .item,.sitemap-page .manufacturer-box .item,.sitemap-page .category-box .item,.sitemap-page .product-box .item{text-align:left;margin:3px 10px;width:150px;border-bottom:1px dotted #ADACAC;}
-checkbox,input,radio,select,button{font-size:11px;}
-/* fix ie button padding bug  - apply to all button classes
-input
-{
-	width: auto;
-	overflow: visible;
-}*/
-textarea{width:100%;font-family:Verdana, Arial, sans-serif;font-size:11px;}
-.textbox{}
 .searchtext{border:solid 1px #d3d3d3;vertical-align:top;font-size:12px;width:100%;}
 .searchboxtext{background:#e3e3e3;width:110px;border:solid 1px #E3E3E3;vertical-align:top;font-size:12px;}
 .newsaddcommenttitletext{width:500px;border:solid 1px #E3E3E3;vertical-align:top;font-size:12px;}
