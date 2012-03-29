@@ -208,9 +208,8 @@ namespace Nop.Web.Framework
         public static string RelativeFormat(this DateTime source,
             bool convertToUserTime, string defaultFormat)
         {
-            string result = string.Empty;
+            string result = "";
 
-            //TODO localize hard-coded strings
             var ts = new TimeSpan(DateTime.UtcNow.Ticks - source.Ticks);
             double delta = ts.TotalSeconds;
 
