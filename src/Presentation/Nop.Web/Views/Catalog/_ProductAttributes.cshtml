@@ -130,11 +130,11 @@
                 }
                 @if (!string.IsNullOrEmpty(attribute.TextPrompt))
                 {
-                    <span style="font-weight: bold">@attribute.TextPrompt</span>
+                    <span class="textprompt">@attribute.TextPrompt</span>
                 }
                 else
                 {
-                    <span style="font-weight: bold">@attribute.Name</span>
+                    <span class="textprompt">@attribute.Name</span>
                 }
                 @if (!string.IsNullOrEmpty(attribute.Description))
                 {

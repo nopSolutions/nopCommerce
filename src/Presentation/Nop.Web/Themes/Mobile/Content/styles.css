@@ -64,6 +64,7 @@
 .order-summary-content .removegiftcardbutton{}
 .order-summary-content .selected-checkout-attributes{margin:0;padding:0;width:100%;text-align:right;vertical-align:middle;color:#353434;}
 .order-summary-content .checkout-attributes{margin:10px 0;padding:10px 20px;background:none repeat scroll 0 0 #F7F5E8;border:1px dotted #D3D3D3;}
+.order-summary-content .checkout-attributes .textprompt{font-weight:bold;}
 .order-summary-content .min-amount-warning{margin:0;padding:10px 0 10px 10px;}
 .order-summary-content .terms-of-service{margin:0;padding:0;}
 .order-summary-content .terms-of-service .read{text-decoration:underline;}
@@ -331,6 +332,7 @@
 .product-variant-line .add-info .qty-label{display:inline-block;margin-right:10px;}
 .product-variant-line .add-info .qty-input{display:inline-block;width:40px;}
 .product-variant-line .attributes{}
+.product-variant-line .attributes .textprompt{font-weight:bold;}
 .product-variant-line .stock,.product-variant-line .sku,.product-variant-line .manufacturerpartnumber,.product-variant-line .gtin{}
 .product-variant-line .giftCard{}
 .product-essential .price{margin-top:15px;margin-bottom:15px;}
