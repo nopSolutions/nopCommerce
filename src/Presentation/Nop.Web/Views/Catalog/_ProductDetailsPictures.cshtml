@@ -6,12 +6,12 @@
     @if (Model.DefaultPictureZoomEnabled)
     {
         <a href="@Model.DefaultPictureModel.FullSizeImageUrl" rel="lightbox-pd" title="@Model.Name">
-            <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" style="border-width: 0px;" />
+            <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" />
         </a>
     }
     else
     {
-        <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" style="border-width: 0px;" />
+        <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" />
     }
     @if (Model.PictureModels.Count > 1)
     {

@@ -19,7 +19,7 @@
         @if (Model.ActiveDiscussionsFeedEnabled == true)
         {
             <a href="@Url.RouteUrl("ActiveDiscussionsRSS")" class="rss">
-                <img title="@T("Forum.ActiveDiscussionsRSSLinkTitle")" src="@Url.Content("~/content/images/icon_rss.gif")" alt="@T("Forum.RSS")" style="border-width:0px;" /></a> 
+                <img title="@T("Forum.ActiveDiscussionsRSSLinkTitle")" src="@Url.Content("~/content/images/icon_rss.gif")" alt="@T("Forum.RSS")" /></a> 
         }
         @if (Model.ViewAllLinkEnabled == false)
         {        

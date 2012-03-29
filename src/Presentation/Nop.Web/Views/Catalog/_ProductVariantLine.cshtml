@@ -3,7 +3,7 @@
     @if (!String.IsNullOrWhiteSpace(Model.PictureModel.ImageUrl))
     {
         <div class="picture">
-            <img style="border-width: 0px;" alt="@Model.PictureModel.AlternateText" src="@Model.PictureModel.ImageUrl"
+            <img alt="@Model.PictureModel.AlternateText" src="@Model.PictureModel.ImageUrl"
                                     title="@Model.PictureModel.Title" />
         </div>
     }
