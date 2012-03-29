@@ -292,6 +292,7 @@
 .product-details-info .defaultpicture img{max-width:100%;}
 .product-details-info .picture{margin:5px;display:inline !important;}
 .product-details-info .picture img{max-width:100%;}
+.product-details-info .picturethumbs{}
 .product-details-info .overview{margin-right:15px;margin-top:25px;padding:5px;}
 .product-details-info .overview .productname{color:#f93;font-size:1.3em;margin-bottom:.3em;}
 .product-details-info .overview .shortdescription,.product-details-info .overview .manufacturers,.product-details-info .overview .sku,.product-details-info .overview .manufacturerpartnumber,.product-details-info .overview .stock,.product-details-info .overview .gtin{margin-bottom:.3em;font-size:1.1em;}

@@ -618,6 +618,7 @@ ul.languagelist li:hover{cursor:pointer;}
 .product-essential{}
 .product-details-info{}
 .product-details-info .picture{float:left;width:300px;margin-top:25px;margin-bottom:15px;}
+.product-details-info .picture .picturethumbs{margin-top:10px;}
 .product-details-info .overview{float:right;width:230px;margin-right:15px;margin-top:25px;padding:5px;border:dashed 1px #d3d3d3;}
 .product-details-info .overview .productname{color:#f93;font-size:1.3em;margin-bottom:.3em;}
 .product-details-info .overview .shortdescription,.product-details-info .overview .manufacturers,.product-details-info .overview .sku,.product-details-info .overview .manufacturerpartnumber,.product-details-info .overview .stock,.product-details-info .overview .gtin{color:#555;margin-bottom:.3em;font-size:1.1em;}
