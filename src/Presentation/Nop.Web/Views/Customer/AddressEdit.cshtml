@@ -27,15 +27,11 @@
                 dataDictAddress.TemplateInfo.HtmlFieldPrefix = "Address";
                 @Html.Partial("_CreateOrUpdateAddress", Model.Address, dataDictAddress)          
             }
-            <table width="100%" cellspacing="0" cellpadding="2" border="0">
-                <tbody>
-                    <tr>
-                        <td align="left">
-                            <input type="submit" class="saveaddressbutton" value="@T("Common.Save")" />
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="clear">
+            </div>
+            <div class="save-button">
+                <input type="submit" class="saveaddressbutton" value="@T("Common.Save")" />                       
+            </div>
         </div>
     </div>
 }

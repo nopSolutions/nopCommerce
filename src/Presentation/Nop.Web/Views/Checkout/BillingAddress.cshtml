@@ -35,45 +35,36 @@
                                 <input type="button" name="selectBillingAddress" value="@T("Checkout.BillToThisAddress")" class="selectbillingaddressbutton"  onclick="setLocation('@Url.RouteUrl("CheckoutSelectBillingAddress", new { addressId = @item.Id })')" />                            
                             </div>
                             <div class="address-box">
-                                <table width="100%" cellspacing="0" cellpadding="2" border="0">
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                <div>
-                                                    <b>@item.FirstName @item.LastName</b></div>
-                                                <div>@T("Address.Fields.Email"): @item.Email</div>
-                                                <div>
-                                                    @T("Address.Fields.PhoneNumber"):
-                                                    @item.PhoneNumber</div>
-                                                <div>
-                                                    @T("Address.Fields.FaxNumber"):
-                                                    @item.FaxNumber</div>
-                                                @if (!String.IsNullOrEmpty(item.Company))
-                                                {
-                                                    <div>
-                                                        @item.Company
-                                                    </div>
-                                                }
-                                                <div>
-                                                    @item.Address1</div>
-                                                @if (!String.IsNullOrEmpty(item.Address2))
-                                                {
-                                                    <div>
-                                                        @item.Address2
-                                                    </div>
-                                                }
-                                                <div>
-                                                    @item.City, @item.StateProvinceName @item.ZipPostalCode</div>
-                                                @if (!String.IsNullOrEmpty(item.CountryName))
-                                                {
-                                                    <div>
-                                                        @item.CountryName
-                                                    </div>
-                                                }
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                <div><b>@item.FirstName @item.LastName</b></div>
+                                <div>@T("Address.Fields.Email"): @item.Email</div>
+                                <div>
+                                    @T("Address.Fields.PhoneNumber"):
+                                    @item.PhoneNumber</div>
+                                <div>
+                                    @T("Address.Fields.FaxNumber"):
+                                    @item.FaxNumber</div>
+                                @if (!String.IsNullOrEmpty(item.Company))
+                                {
+                                    <div>
+                                        @item.Company
+                                    </div>
+                                }
+                                <div>
+                                    @item.Address1</div>
+                                @if (!String.IsNullOrEmpty(item.Address2))
+                                {
+                                    <div>
+                                        @item.Address2
+                                    </div>
+                                }
+                                <div>
+                                    @item.City, @item.StateProvinceName @item.ZipPostalCode</div>
+                                @if (!String.IsNullOrEmpty(item.CountryName))
+                                {
+                                    <div>
+                                        @item.CountryName
+                                    </div>
+                                }
                             </div>
                         </div>
                     </div>
