@@ -123,25 +123,19 @@
                                 @if (Model.ShowSku)
                                 {
                                     <td class="a-left">
-                                        <div style="padding: 0px 10px;">
-                                            @item.Sku
-                                        </div>
+                                        @item.Sku
                                     </td>
                                 }
                                 <td class="a-left">
-                                    <div style="padding: 0px 10px;">
-                                        <em><a href="@Url.RouteUrl("Product", new { productId = item.ProductId, SeName = item.ProductSeName })" title="View details">@item.ProductName</a></em>
-                                        @if (!String.IsNullOrEmpty(item.AttributeInfo))
-                                        {
-                                            <br />
-                                            @Html.Raw(item.AttributeInfo)
-                                        }
-                                    </div>
+                                    <em><a href="@Url.RouteUrl("Product", new { productId = item.ProductId, SeName = item.ProductSeName })" title="View details">@item.ProductName</a></em>
+                                    @if (!String.IsNullOrEmpty(item.AttributeInfo))
+                                    {
+                                        <br />
+                                        @Html.Raw(item.AttributeInfo)
+                                    }
                                 </td>
                                 <td class="a-center">
-                                    <div style="padding: 0px 10px;">
-                                        @item.QuantityShipped
-                                    </div>
+                                    @item.QuantityShipped
                                 </td>
                             </tr>
                         }

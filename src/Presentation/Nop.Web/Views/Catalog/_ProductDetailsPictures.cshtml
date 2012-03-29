@@ -19,7 +19,7 @@
             <tr>
                 @foreach (var picture in Model.PictureModels)
                 {
-                    <td align="left">
+                    <td class="a-left">
                         <a href="@picture.FullSizeImageUrl" rel="lightbox-p" title="@Model.Name">
                             <img src="@picture.ImageUrl" alt="@picture.AlternateText" title="@picture.Title" />
                         </a>

@@ -49,13 +49,13 @@
                         </td>
                         @foreach (var product in Model)
                         {
-                            <td style="width: @columnWidth; text-align: center;">
+                            <td style="width: @columnWidth;" class="a-center">
                                 <div>
-                                    <p align="center">
+                                    <p class="a-center">
                                         <input type="submit" value="@T("Common.Remove")" title="@T("Common.Remove")" class="remove-button" onclick="setLocation('@Url.RouteUrl("RemoveProductFromCompareList", new { productId = product.Id })')" />
                                         <br />
                                         <br />
-                                        <img border="0" alt="@product.DefaultPictureModel.AlternateText" src="@product.DefaultPictureModel.ImageUrl" title="@product.DefaultPictureModel.Title" />
+                                        <img alt="@product.DefaultPictureModel.AlternateText" src="@product.DefaultPictureModel.ImageUrl" title="@product.DefaultPictureModel.Title" />
                                     </p>
                                 </div>
                             </td>
@@ -67,7 +67,7 @@
                         </td>
                         @foreach (var product in Model)
                         {
-                            <td align="center" style="width: @columnWidth; text-align: center;">
+                            <td style="width: @columnWidth;" class="a-center">
                                 <a class="link" href="@Url.RouteUrl("Product", new { productId = product.Id, SeName = product.SeName })">@product.Name</a>
                             </td>
                         }
@@ -78,7 +78,7 @@
                         </td>
                         @foreach (var product in Model)
                         {
-                            <td align="center" style="width: @columnWidth; text-align: center;">
+                            <td style="width: @columnWidth;" class="a-center">
                                 @product.ProductPrice.Price
                             </td>
                         }
@@ -93,7 +93,7 @@
                                 var foundProductSpec = product.SpecificationAttributeModels.Where(psa => psa.SpecificationAttributeId == specificationAttribute.SpecificationAttributeId).FirstOrDefault();
                                 var specValue = foundProductSpec != null ? foundProductSpec.SpecificationAttributeOption : "";
                                                                 
-                                <td align="center" valign="top" style="width: @columnWidth; text-align: center;">
+                                <td style="width: @columnWidth;" class="a-center">
                                     @if (!String.IsNullOrEmpty(specValue))
                                     {
                                         @specValue

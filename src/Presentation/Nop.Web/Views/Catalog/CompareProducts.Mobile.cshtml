@@ -50,7 +50,7 @@
                             <a href="@Url.RouteUrl("RemoveProductFromCompareList", new { productId = product.Id })" class="remove-button" data-role="button" data-ajax="false">@T("Common.Remove")</a>
                         </div>
                         <div class="product-picture">
-                            <img border="0" alt="@product.DefaultPictureModel.AlternateText" src="@product.DefaultPictureModel.ImageUrl" title="@product.DefaultPictureModel.Title" />
+                            <img alt="@product.DefaultPictureModel.AlternateText" src="@product.DefaultPictureModel.ImageUrl" title="@product.DefaultPictureModel.Title" />
                         </div>
                         <div class="product-name">
                             <a class="link" href="@Url.RouteUrl("Product", new { productId = product.Id, SeName = product.SeName })">@product.Name</a>
