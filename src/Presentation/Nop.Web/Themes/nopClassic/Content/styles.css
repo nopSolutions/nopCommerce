@@ -115,7 +115,6 @@ td.fieldname{font-size:12px;}
 .newsaddcommentcommenttext{height:150px;width:500px;border:solid 1px #E3E3E3;vertical-align:top;font-size:12px;}
 .blogaddcommentcommenttext{height:150px;width:500px;border:solid 1px #E3E3E3;vertical-align:top;font-size:12px;}
 .accountsignaturetext{height:100px;width:500px;border:solid 1px #E3E3E3;vertical-align:top;}
-.numerictextboxtext{border:solid 1px #E3E3E3;vertical-align:top;font-size:12px;}
 .forumtopictitletext,.pmtitletext{width:500px;border:1px solid #acacac;vertical-align:top;font-size:12px;}
 .forumposttext,.bbeditortext{width:100%;height:300px;}
 .privatemessagesubjecttext{width:500px;border:1px solid #acacac;vertical-align:top;font-size:12px;}
@@ -185,6 +184,7 @@ ul.languagelist li:hover{cursor:pointer;}
 .order-summary-content .coupon-box,.order-summary-content .giftcard-box{padding:10px;font-size:11px;color:#555;background:#F7F5E8;margin:0 0 10px;border:dotted 1px #d3d3d3;}
 .order-summary-content .coupon-box .current-code{}
 .order-summary-content .giftcard-box{position:relative;z-index:1;}
+.order-summary-content .coupon-box .discountcouponcode, .order-summary-content .giftcard-box .giftcardcouponcode{width:125px;}
 .order-summary-content .cart,.wishlist-content .cart{width:100%;border-collapse:collapse;text-align:center;vertical-align:middle;}
 .wishlist-content .cart{margin-bottom:25px;}
 .order-summary-content .cart td,.wishlist-content .cart td{padding:10px;}
@@ -206,6 +206,8 @@ ul.languagelist li:hover{cursor:pointer;}
 .order-summary-content .selected-checkout-attributes{margin:0;padding:10px 0;width:100%;text-align:right;vertical-align:middle;color:#353434;}
 .order-summary-content .checkout-attributes{margin:10px 0;padding:10px 20px;background:none repeat scroll 0 0 #F7F5E8;border:1px dotted #D3D3D3;}
 .order-summary-content .checkout-attributes .textprompt{font-weight:bold;}
+.order-summary-content .checkout-attributes .textbox{width:300px;}
+.order-summary-content .checkout-attributes textarea{width:300px;height:150px;}
 .order-summary-content .min-amount-warning{margin:0;padding:10px 0 10px 10px;}
 .order-summary-content .terms-of-service{margin:0;padding:10px 0 10px 10px;}
 .order-summary-content .terms-of-service .read{text-decoration:underline;}
@@ -642,6 +644,8 @@ ul.languagelist li:hover{cursor:pointer;}
 .product-variant-line .add-info{padding:10px;background:#F7F5E8;min-height:17px;}
 .product-variant-line .attributes{}
 .product-variant-line .attributes .textprompt{font-weight:bold;}
+.product-variant-line .attributes .textbox{width:300px;}
+.product-variant-line .attributes textarea{width:300px;height:150px;}
 .product-variant-line .stock,.product-variant-line .sku,.product-variant-line .manufacturerpartnumber,.product-variant-line .gtin{}
 .product-variant-line .giftCard{}
 .product-variant-line .giftCard dt{clear:left;float:left;width:150px;}

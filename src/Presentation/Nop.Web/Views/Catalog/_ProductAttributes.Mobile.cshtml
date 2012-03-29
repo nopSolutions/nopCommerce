@@ -82,12 +82,12 @@
                         break;
                     case AttributeControlType.TextBox:
                         {
-                    <input name="@(controlId)" type="text" id="@(controlId)" value="@attribute.TextValue" style="width:300px;" />
+                    <input name="@(controlId)" type="text" class="textbox" id="@(controlId)" value="@attribute.TextValue" />
                         }
                         break;
                     case AttributeControlType.MultilineTextbox:
                         {
-                    <textarea cols="20" id="@(controlId)" name="@(controlId)" rows="2" style="Width: 300px; Height: 150px;">@attribute.TextValue</textarea>
+                    <textarea id="@(controlId)" name="@(controlId)">@attribute.TextValue</textarea>
                         }
                         break;
                     case AttributeControlType.Datepicker:

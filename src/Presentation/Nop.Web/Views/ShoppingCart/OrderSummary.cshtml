@@ -277,7 +277,7 @@
                             <div class="coupon-box">
                                 <b>@T("ShoppingCart.DiscountCouponCode")</b>
                                 <br />@T("ShoppingCart.DiscountCouponCode.Tooltip")<br />
-                                <input name="discountcouponcode" type="text" id="discountcouponcode" style="width: 125px;" />&nbsp;
+                                <input name="discountcouponcode" type="text" id="discountcouponcode" class="discountcouponcode" />&nbsp;
                                 <input type="submit" name="applydiscountcouponcode" value="@T("ShoppingCart.DiscountCouponCode.Button")" id="applydiscountcouponcode" class="applycouponcodebutton" />
                                 @if (!String.IsNullOrEmpty(Model.DiscountMessage))
                                 {
@@ -307,7 +307,7 @@
                             <div class="giftcard-box">
                                 <b>@T("ShoppingCart.GiftCardCouponCode")</b>
                                 <br />@T("ShoppingCart.GiftCardCouponCode.Tooltip")<br />
-                                <input name="giftcardcouponcode" type="text" id="giftcardcouponcode" style="width: 125px;" />&nbsp;
+                                <input name="giftcardcouponcode" type="text" id="giftcardcouponcode" class="giftcardcouponcode" />&nbsp;
                                 <input type="submit" name="applygiftcardcouponcode" value="@T("ShoppingCart.GiftCardCouponCode.Button")" id="applygiftcardcouponcode" class="applycouponcodebutton" />
                                 @if (!String.IsNullOrEmpty(Model.GiftCardMessage))
                                 {

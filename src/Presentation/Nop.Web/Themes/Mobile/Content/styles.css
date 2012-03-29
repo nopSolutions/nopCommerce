@@ -53,6 +53,7 @@
 .order-summary-content .coupon-box,.order-summary-content .giftcard-box{padding:10px;background:#F7F5E8;margin:0 0 10px;border:dotted 1px #d3d3d3;}
 .order-summary-content .coupon-box .current-code{}
 .order-summary-content .giftcard-box{}
+.order-summary-content .coupon-box .discountcouponcode, .order-summary-content .giftcard-box .giftcardcouponcode{}
 .order-summary-content .cart,.wishlist-content .cart{}
 .wishlist-content .cart{margin-bottom:10px;}
 .order-summary-content .cart .cart-item-row,.wishlist-content .cart .cart-item-row{font-weight:normal;}
@@ -74,6 +75,8 @@
 .order-summary-content .selected-checkout-attributes{margin:0;padding:0;width:100%;text-align:right;vertical-align:middle;color:#353434;}
 .order-summary-content .checkout-attributes{margin:10px 0;padding:10px 20px;background:none repeat scroll 0 0 #F7F5E8;border:1px dotted #D3D3D3;}
 .order-summary-content .checkout-attributes .textprompt{font-weight:bold;}
+.order-summary-content .checkout-attributes .textbox{width:300px;}
+.order-summary-content .checkout-attributes textarea{width:300px;height:150px;}
 .order-summary-content .min-amount-warning{margin:0;padding:10px 0 10px 10px;}
 .order-summary-content .terms-of-service{margin:0;padding:0;}
 .order-summary-content .terms-of-service .read{text-decoration:underline;}
@@ -343,6 +346,8 @@
 .product-variant-line .add-info .qty-input{display:inline-block;width:40px;}
 .product-variant-line .attributes{}
 .product-variant-line .attributes .textprompt{font-weight:bold;}
+.product-variant-line .attributes .textbox{width:300px;}
+.product-variant-line .attributes textarea{width:300px;height:150px;}
 .product-variant-line .stock,.product-variant-line .sku,.product-variant-line .manufacturerpartnumber,.product-variant-line .gtin{}
 .product-variant-line .giftCard{}
 .product-essential .price{margin-top:15px;margin-bottom:15px;}
