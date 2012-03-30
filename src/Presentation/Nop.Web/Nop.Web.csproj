@@ -1606,7 +1606,6 @@
     <Content Include="Content\samples\product_PokerFace_1.zip" />
     <Content Include="Content\samples\product_SingleLadies_1.zip" />
     <Content Include="App_Data\GeoIP.dat" />
-    <Content Include="51Degrees.mobi.config" />
     <None Include="App_Data\51Degrees.mobi-Lite-2012.03.28.dat" />
     <None Include="App_Data\Resources.xsd">
       <SubType>Designer</SubType>
