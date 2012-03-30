@@ -907,11 +907,11 @@ namespace Nop.Web.Controllers
             {
                 if (_orderSettings.AnonymousCheckoutAllowed)
                 {
-                    return RedirectToRoute("LoginCheckoutAsGuest");
+                    return RedirectToRoute("LoginCheckoutAsGuest", new {returnUrl = Url.RouteUrl("ShoppingCart")});
                 }
                 else
                 {
-                    return RedirectToRoute("Login");
+                    return new HttpUnauthorizedResult();
                 }
             }
             else
