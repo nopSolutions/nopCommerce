@@ -84,7 +84,7 @@
                                 @Html.LabelFor(model => model.ReturnReason):
                             </td>
                             <td class="item-value">
-                                @Html.DropDownListFor(model => model.ReturnReason, Model.AvailableReturnReasons)
+                                @Html.DropDownListFor(model => model.ReturnReason, Model.AvailableReturnReasons, new { @class="return-reasons" })
                             </td>
                         </tr>
                         <tr class="row">
@@ -92,7 +92,7 @@
                                 @Html.LabelFor(model => model.ReturnAction):
                             </td>
                             <td class="item-value">
-                                @Html.DropDownListFor(model => model.ReturnAction, Model.AvailableReturnActions)
+                                @Html.DropDownListFor(model => model.ReturnAction, Model.AvailableReturnActions, new { @class = "return-actions" })
                             </td>
                         </tr>
                         <tr class="row">
@@ -100,7 +100,7 @@
                                 @Html.LabelFor(model => model.Comments):
                             </td>
                             <td class="item-value">
-                                @Html.TextAreaFor(model => model.Comments, new { style = "Width: 350px; Height: 150px;" })
+                                @Html.TextAreaFor(model => model.Comments, new { @class = "comment" })
                                 @Html.ValidationMessageFor(model => model.Comments)
                             </td>
                         </tr>

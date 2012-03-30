@@ -24,17 +24,17 @@
                 </div>
                 <div>
                     @Html.LabelFor(model => model.FriendEmail)
-                    @Html.TextBoxFor(model => model.FriendEmail)
+                    @Html.TextBoxFor(model => model.FriendEmail, new { @class = "friendemail" })
                     @Html.ValidationMessageFor(model => model.FriendEmail)
                 </div>
                 <div>
                     @Html.LabelFor(model => model.YourEmailAddress)
-                    @Html.TextBoxFor(model => model.YourEmailAddress)
+                    @Html.TextBoxFor(model => model.YourEmailAddress, new { @class = "youremail" })
                     @Html.ValidationMessageFor(model => model.YourEmailAddress)
                 </div>
                 <div>
                     @Html.LabelFor(model => model.PersonalMessage)
-                    @Html.TextAreaFor(model => model.PersonalMessage)
+                    @Html.TextAreaFor(model => model.PersonalMessage, new { @class = "personalmessage" })
                     @Html.ValidationMessageFor(model => model.PersonalMessage)
                 </div>
                 if (Model.DisplayCaptcha)

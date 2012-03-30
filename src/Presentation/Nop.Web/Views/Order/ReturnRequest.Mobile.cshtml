@@ -69,15 +69,15 @@
             <div class="why">
                 <div>
                     @Html.LabelFor(model => model.ReturnReason)
-                    @Html.DropDownListFor(model => model.ReturnReason, Model.AvailableReturnReasons)
+                    @Html.DropDownListFor(model => model.ReturnReason, Model.AvailableReturnReasons, new { @class = "return-reasons" })
                 </div>
                 <div>
                     @Html.LabelFor(model => model.ReturnAction)
-                    @Html.DropDownListFor(model => model.ReturnAction, Model.AvailableReturnActions)
+                    @Html.DropDownListFor(model => model.ReturnAction, Model.AvailableReturnActions, new { @class = "return-actions" })
                 </div>
                 <div>
                     @Html.LabelFor(model => model.Comments)
-                    @Html.TextAreaFor(model => model.Comments)
+                    @Html.TextAreaFor(model => model.Comments, new { @class = "comment" })
                 </div>
                 <div>
                     @Html.ValidationMessageFor(model => model.Comments)

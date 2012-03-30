@@ -4,29 +4,29 @@
     <div class="giftCard">
         <div>
             @Html.LabelFor(model => model.RecipientName)
-            @Html.TextBoxFor(model => model.RecipientName)
+            @Html.TextBoxFor(model => model.RecipientName, new { @class = "recipientname" })
         </div>
         <div>
             @if (Model.GiftCardType == Nop.Core.Domain.Catalog.GiftCardType.Virtual)
             {
                 @Html.LabelFor(model => model.RecipientEmail);
-                @Html.TextBoxFor(model => model.RecipientEmail);
+                @Html.TextBoxFor(model => model.RecipientEmail, new { @class = "recipientemail" });
             }
         </div>
         <div>
             @Html.LabelFor(model => model.SenderName)
-            @Html.TextBoxFor(model => model.SenderName)
+            @Html.TextBoxFor(model => model.SenderName, new { @class = "sendername" })
         </div>
         <div>
             @if (Model.GiftCardType == Nop.Core.Domain.Catalog.GiftCardType.Virtual)
             {
                 @Html.LabelFor(model => model.SenderEmail);
-                @Html.TextBoxFor(model => model.SenderEmail);
+                @Html.TextBoxFor(model => model.SenderEmail, new { @class = "senderemail" });
             }
         </div>
         <div>
             @Html.LabelFor(model => model.Message)
-            @Html.TextAreaFor(model => model.Message, new { style = "Width: 300px; Height: 100px;" })
+            @Html.TextAreaFor(model => model.Message, new { @class = "message" })
         </div>
     </div>
 }

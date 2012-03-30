@@ -5,30 +5,30 @@
         <dl>
             <dt>@Html.LabelFor(model => model.RecipientName):</dt>
             <dd>
-                @Html.TextBoxFor(model => model.RecipientName)
+                @Html.TextBoxFor(model => model.RecipientName, new { @class = "recipientname" })
             </dd>
             @if (Model.GiftCardType == Nop.Core.Domain.Catalog.GiftCardType.Virtual)
             {
             <dt>@Html.LabelFor(model => model.RecipientEmail): </dt>
             <dd>
-                @Html.TextBoxFor(model => model.RecipientEmail)
+                @Html.TextBoxFor(model => model.RecipientEmail, new { @class = "recipientemail" })
             </dd>
             }
             <dt>
                 @Html.LabelFor(model => model.SenderName): </dt>
             <dd>
-                @Html.TextBoxFor(model => model.SenderName)
+                @Html.TextBoxFor(model => model.SenderName, new { @class = "sendername" })
             </dd>
             @if (Model.GiftCardType == Nop.Core.Domain.Catalog.GiftCardType.Virtual)
             {
             <dt>@Html.LabelFor(model => model.SenderEmail):</dt>
             <dd>
-                @Html.TextBoxFor(model => model.SenderEmail)</dd>
+                @Html.TextBoxFor(model => model.SenderEmail, new { @class = "senderemail" })</dd>
             }
             <dt>
                 @Html.LabelFor(model => model.Message): </dt>
             <dd>
-                @Html.TextAreaFor(model => model.Message, new { style = "Width: 300px; Height: 100px;" })
+                @Html.TextAreaFor(model => model.Message, new { @class = "message" })
             </dd>
         </dl>
     </div>

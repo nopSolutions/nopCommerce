@@ -35,12 +35,12 @@
                     </div>
                     <div>
                         @Html.LabelFor(model => model.AddNewComment.CommentTitle)
-                        @Html.TextBoxFor(model => model.AddNewComment.CommentTitle)
+                        @Html.TextBoxFor(model => model.AddNewComment.CommentTitle, new { @class = "commenttitle" })
                         @Html.ValidationMessageFor(model => model.AddNewComment.CommentTitle)
                     </div>
                     <div>
                         @Html.LabelFor(model => model.AddNewComment.CommentText)
-                        @Html.TextAreaFor(model => model.AddNewComment.CommentText)
+                        @Html.TextAreaFor(model => model.AddNewComment.CommentText, new { @class = "commenttext" })
                         @Html.ValidationMessageFor(model => model.AddNewComment.CommentText)
                     </div>
                     string result = TempData["nop.news.addcomment.result"] as string;

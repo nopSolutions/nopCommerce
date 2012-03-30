@@ -26,17 +26,17 @@
             </div>
             <div>
                 @Html.LabelFor(model => model.FullName)
-                @Html.TextBoxFor(model => model.FullName)
+                @Html.TextBoxFor(model => model.FullName, new { @class = "fullname" })
                 @Html.ValidationMessageFor(model => model.FullName)
             </div>
             <div>
                 @Html.LabelFor(model => model.Email)
-                @Html.TextBoxFor(model => model.Email)
+                @Html.TextBoxFor(model => model.Email, new { @class = "email" })
                 @Html.ValidationMessageFor(model => model.Email)
             </div>
             <div>
                 @Html.LabelFor(model => model.Enquiry)
-                @Html.TextAreaFor(model => model.Enquiry)
+                @Html.TextAreaFor(model => model.Enquiry, new { @class = "enquiry" })
                 @Html.ValidationMessageFor(model => model.Enquiry)
             </div>
             @if (Model.DisplayCaptcha)

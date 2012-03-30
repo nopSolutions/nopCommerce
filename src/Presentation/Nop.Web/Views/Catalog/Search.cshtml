@@ -94,9 +94,9 @@
                                     </td>
                                     <td class="data">
                                         @T("Search.PriceRange.From")
-                                        @Html.TextBoxFor(model => model.Pf, new { style = "width: 100px" })
+                                        @Html.TextBoxFor(model => model.Pf, new { @class = "price-from" })
                                         @T("Search.PriceRange.To")
-                                        @Html.TextBoxFor(model => model.Pt, new { style = "width: 100px" })
+                                        @Html.TextBoxFor(model => model.Pt, new { @class = "price-to" })
                                     </td>
                                 </tr>
                                 <tr>

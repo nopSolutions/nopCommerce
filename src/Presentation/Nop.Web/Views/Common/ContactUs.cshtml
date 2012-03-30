@@ -32,7 +32,7 @@
                         @Html.LabelFor(model => model.FullName):
                     </td>
                     <td class="item-value">
-                        @Html.TextBoxFor(model => model.FullName, new { style = "Width: 250px;" })
+                        @Html.TextBoxFor(model => model.FullName, new { @class = "fullname" })
                         @Html.ValidationMessageFor(model => model.FullName)
                     </td>
                 </tr>
@@ -41,7 +41,7 @@
                         @Html.LabelFor(model => model.Email):
                     </td>
                     <td class="item-value">
-                        @Html.TextBoxFor(model => model.Email, new { style = "Width: 250px;" })
+                        @Html.TextBoxFor(model => model.Email, new { @class = "email" })
                         @Html.ValidationMessageFor(model => model.Email)
                     </td>
                 </tr>
@@ -50,7 +50,7 @@
                         @Html.LabelFor(model => model.Enquiry):
                     </td>
                     <td class="item-value">
-                        @Html.TextAreaFor(model => model.Enquiry, new { style = "Width: 350px; Height: 150px;" })
+                        @Html.TextAreaFor(model => model.Enquiry, new { @class = "enquiry" })
                         @Html.ValidationMessageFor(model => model.Enquiry)
                     </td>
                 </tr>

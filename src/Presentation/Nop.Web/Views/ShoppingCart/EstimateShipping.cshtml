@@ -46,7 +46,7 @@
                                     @Html.LabelFor(model => model.CountryId):
                                 </td>
                                 <td>
-                                    @Html.DropDownListFor(model => model.CountryId, Model.AvailableCountries, new { style = "width:137px;" })
+                                    @Html.DropDownListFor(model => model.CountryId, Model.AvailableCountries, new { @class = "country-input" })
                                     @Html.ValidationMessageFor(model => model.CountryId)
                                 </td>
                             </tr>
@@ -55,7 +55,7 @@
                                     @Html.LabelFor(model => model.StateProvinceId):
                                 </td>
                                 <td>
-                                    @Html.DropDownListFor(model => model.StateProvinceId, Model.AvailableStates, new { style = "width:137px;" })
+                                    @Html.DropDownListFor(model => model.StateProvinceId, Model.AvailableStates, new { @class = "state-input" })
                                     <span id="estimate-shipping-loading-progress" style="display: none;">
                                         <img src='@Url.Content("~/Content/Images/ajax_loader_small.gif")' alt="@T("Common.Wait...")" />
                                     </span>
@@ -67,7 +67,7 @@
                                     @Html.LabelFor(model => model.ZipPostalCode):
                                 </td>
                                 <td>
-                                    @Html.EditorFor(model => model.ZipPostalCode)
+                                    @Html.TextBoxFor(model => model.ZipPostalCode, new { @class="zip-input" })
                                     @Html.ValidationMessageFor(model => model.ZipPostalCode)
                                 </td>
                             </tr>

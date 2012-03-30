@@ -1,18 +1,19 @@
 ﻿@model Nop.Web.Models.Catalog.ProductModel.ProductVariantModel.AddToCartModel
+@using Nop.Web.Framework;
 <div class="add-info">
     @if (Model.CustomerEntersPrice)
     {
-        @Html.LabelFor(model => model.CustomerEnteredPrice)<text>:</text>
+        @Html.LabelFor(model => model.CustomerEnteredPrice, new { @class = "enter-price-label" })<text>:</text>
         //round price
-        @Html.TextBox("CustomerEnteredPrice", Convert.ToInt32(Math.Ceiling(Model.CustomerEnteredPrice)), new { style = "Width: 60px;" })
+        @Html.TextBox("CustomerEnteredPrice", Convert.ToInt32(Math.Ceiling(Model.CustomerEnteredPrice)), new { @class = "enter-price-input" })
         <br />
         @Model.CustomerEnteredPriceRange
         <br />
     }
     @if (!Model.DisableBuyButton || !Model.DisableWishlistButton)
     {
-        @Html.LabelFor(model => model.EnteredQuantity)<text>:</text> 
-        @Html.TextBoxFor(model => model.EnteredQuantity, new { style = "Width: 40px;" })
+        @Html.LabelFor(model => model.EnteredQuantity, new { @class = "qty-label" })<text>:</text> 
+        @Html.TextBoxFor(model => model.EnteredQuantity, new { @class = "qty-input" })
     }
     @if (!Model.DisableBuyButton)
     {

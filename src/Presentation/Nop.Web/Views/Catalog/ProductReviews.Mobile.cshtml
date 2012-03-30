@@ -24,12 +24,12 @@
                 <strong>@T("Reviews.Write")</strong>
                 <div>
                     @Html.LabelFor(model => model.AddProductReview.Title)
-                    @Html.TextBoxFor(model => model.AddProductReview.Title)
+                    @Html.TextBoxFor(model => model.AddProductReview.Title, new { @class = "review-title" })
                     @Html.ValidationMessageFor(model => model.AddProductReview.Title)
                 </div>
                 <div>
                     @Html.LabelFor(model => model.AddProductReview.ReviewText)
-                    @Html.TextAreaFor(model => model.AddProductReview.ReviewText)
+                    @Html.TextAreaFor(model => model.AddProductReview.ReviewText, new { @class = "review-text" })
                     @Html.ValidationMessageFor(model => model.AddProductReview.ReviewText)
                 </div>   
                 

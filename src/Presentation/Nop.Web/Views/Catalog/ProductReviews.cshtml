@@ -31,7 +31,7 @@
                             @Html.LabelFor(model => model.AddProductReview.Title):
                         </td>
                         <td>
-                            @Html.TextBoxFor(model => model.AddProductReview.Title, Model.AddProductReview.CanCurrentCustomerLeaveReview ? (object)(new { style = "Width: 350px;" }) : (object)(new { style = "Width: 350px;", disabled = "disabled" }))
+                            @Html.TextBoxFor(model => model.AddProductReview.Title, Model.AddProductReview.CanCurrentCustomerLeaveReview ? (object)(new { @class = "review-title" }) : (object)(new { @class = "review-title", disabled = "disabled" }))
                             @Html.ValidationMessageFor(model => model.AddProductReview.Title)
                         </td>
                     </tr>
@@ -40,7 +40,7 @@
                             @Html.LabelFor(model => model.AddProductReview.ReviewText):
                         </td>
                         <td>
-                            @Html.TextAreaFor(model => model.AddProductReview.ReviewText, Model.AddProductReview.CanCurrentCustomerLeaveReview ? (object)(new { style = "width: 350px; height: 150px;" }) : (object)(new { style = "width: 350px; height: 150px;", disabled = "disabled" }))
+                            @Html.TextAreaFor(model => model.AddProductReview.ReviewText, Model.AddProductReview.CanCurrentCustomerLeaveReview ? (object)(new { @class = "review-text" }) : (object)(new { @class = "review-text", disabled = "disabled" }))
                             @Html.ValidationMessageFor(model => model.AddProductReview.ReviewText)
                         </td>
                     </tr>

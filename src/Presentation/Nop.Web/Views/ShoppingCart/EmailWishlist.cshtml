@@ -27,7 +27,7 @@
                             @Html.LabelFor(model => model.FriendEmail):
                         </td>
                         <td>
-                            @Html.TextBoxFor(model => model.FriendEmail, new { style = "Width: 350px;" })
+                            @Html.TextBoxFor(model => model.FriendEmail, new { @class = "friendemail" })
                             @Html.ValidationMessageFor(model => model.FriendEmail)
                         </td>
                     </tr>
@@ -36,7 +36,7 @@
                             @Html.LabelFor(model => model.YourEmailAddress):
                         </td>
                         <td>
-                            @Html.TextBoxFor(model => model.YourEmailAddress, new { style = "Width: 350px;" })
+                            @Html.TextBoxFor(model => model.YourEmailAddress, new { @class = "youremail" })
                             @Html.ValidationMessageFor(model => model.YourEmailAddress)
                         </td>
                     </tr>
@@ -44,7 +44,7 @@
                         <td>
                             @Html.LabelFor(model => model.PersonalMessage):
                         </td>
-                        <td>@Html.TextAreaFor(model => model.PersonalMessage, new { style = "Width: 350px; Height: 150px;" })
+                        <td>@Html.TextAreaFor(model => model.PersonalMessage, new { @class = "personalmessage" })
                             @Html.ValidationMessageFor(model => model.PersonalMessage)
                         </td>
                     </tr>

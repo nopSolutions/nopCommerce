@@ -67,7 +67,7 @@
                                 @Html.LabelFor(model => model.AddNewComment.CommentText):
                             </td>
                             <td>
-                                @Html.TextAreaFor(model => model.AddNewComment.CommentText, new { style = "Width: 350px; Height: 150px;" })
+                                @Html.TextAreaFor(model => model.AddNewComment.CommentText, new { @class = "commenttext" })
                                 @Html.ValidationMessageFor(model => model.AddNewComment.CommentText)
                             </td>
                         </tr>

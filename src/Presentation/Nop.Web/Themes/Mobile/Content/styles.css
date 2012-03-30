@@ -64,7 +64,7 @@
 .order-summary-content .cart .cart-item-row .unitprice,.wishlist-content .cart .cart-item-row .unitprice{color:Green;}
 .order-summary-content .cart .cart-item-row .totalprice,.wishlist-content .cart .cart-item-row .totalprice{color:Green;}
 .order-summary-content .cart .cart-item-row .remove,.wishlist-content .cart .cart-item-row .remove{}
-.order-summary-content .cart .cart-item-row .shoppingcartquantitytext,.wishlist-content .cart .cart-item-row .shoppingcartquantitytext{width:100px;}
+.order-summary-content .cart .cart-item-row .qty-input,.wishlist-content .cart .cart-item-row .qty-input{width:100px;}
 .order-summary-content .cart-footer{}
 .order-summary-content .total-info{margin:0;}
 .cart_total_left{text-align:left;vertical-align:top;font-weight:700;color:#353434;}
@@ -145,6 +145,9 @@
 .return-request .section-addinfo{padding:10px;font-weight:700;}
 .return-request .products-box{font-weight:normal;}
 .return-request .why{}
+.return-request .why .return-reasons{}
+.return-request .why .return-actions{}
+.return-request .why .comment{}
 .return-request .buttons{}
 .customer-return-request-list{}
 .customer-return-request-list .section-title{padding:10px;font-weight:700;clear:both;}
@@ -183,6 +186,7 @@
 .registration-page .required{color:red;}
 .password-recovery-page,newsletter-page{}
 .password-recovery-page .body,newsletter-page .body{margin:0;padding:0;background-color:inherit;}
+.password-recovery-page .email{}
 .customer-avatar{padding:10px;}
 .customer-avatar .buttons{margin:5px 0;}
 .account-activation-page{}
@@ -197,6 +201,9 @@
 .contact-form{}
 .contact-form .buttons{text-align:right;}
 .contact-form .send-email{}
+.contact-form .send-email .fullname{}
+.contact-form .send-email .email{}
+.contact-form .send-email .enquiry{}
 .newslist{}
 .newslist .newsitems{margin:0 5px;padding:0;}
 .newslist .newsitems .item{border-bottom:dashed 1px #9a9a9a;margin-bottom:10px;padding-bottom:10px;}
@@ -214,6 +221,8 @@
 .newscomments .newcomment{margin:0;padding:0;}
 .newscomments .newcomment .leavetitle{padding:0 10px 10px 0;font-weight:700;font-size:1.1em;color:#3a3a3a;}
 .newscomments .newcomment .buttons{}
+.newscomments .newcomment .commenttitle{}
+.newscomments .newcomment .commenttext{}
 .newscomments .commentlist{}
 .newscomment{font-weight:normal;}
 .newscomment .commentinfo{}
@@ -261,6 +270,9 @@
 .emailafriend-page{margin:0;padding:0;}
 .emailafriend-page .send-email{}
 .emailafriend-page .send-email .product{font-weight:700;}
+.emailafriend-page .send-email .friendemail{}
+.emailafriend-page .send-email .youremail{}
+.emailafriend-page .send-email .personalmessage{}
 .recently-added-products{margin:0;padding:0;}
 .recently-viewed-products{margin:0;padding:0;}
 /* CUSTOMER ACCOUNT */
@@ -318,7 +330,9 @@
 .product-no-reviews{margin-top:20px;margin-bottom:20px;}
 .product-reviews-page{}
 .product-reviews-page .page-title a{text-decoration:underline;}
-.write-review{}
+.product-reviews-page .write-review{}
+.product-reviews-page .write-review .review-title{}
+.product-reviews-page .write-review .review-text{}
 .product-review-list{margin:30px 0 0;}
 .product-review-list .product-review-item{font-weight:normal;}
 .product-review-list .product-review-item .review-title{font-weight:700;float:left;margin-bottom:5px;}
@@ -337,8 +351,9 @@
 .product-details-page .downloadsample{clear:both;margin-top:15px;margin-bottom:15px;}
 .product-details-page .downloadsample .downloadsamplebutton{}
 .product-variant-line .price{padding-top:10px;margin-right:30px;}
-.product-variant-line .price .productPrice{color:green;}
-.product-variant-line .price .oldProductPrice{color:red;text-decoration:line-through;}
+.product-essential .price{margin-top:15px;margin-bottom:15px;}
+.product-variant-line .price .productPrice,.product-essential .price .productPrice{color:green;}
+.product-variant-line .price .oldProductPrice,.product-essential .price .oldProductPrice{color:red;text-decoration:line-through;}
 .product-variant-line .add-info{padding-top:10px;width:100%;}
 .product-variant-line .add-info .enter-price-label{display:inline-block;margin-right:10px;}
 .product-variant-line .add-info .enter-price-input{display:inline-block;width:60px;}
@@ -350,9 +365,11 @@
 .product-variant-line .attributes textarea{width:300px;height:150px;}
 .product-variant-line .stock,.product-variant-line .sku,.product-variant-line .manufacturerpartnumber,.product-variant-line .gtin{}
 .product-variant-line .giftCard{}
-.product-essential .price{margin-top:15px;margin-bottom:15px;}
-.product-essential .price .productPrice{color:green;}
-.product-essential .price .oldProductPrice{color:red;text-decoration:line-through;}
+.product-variant-line .giftCard .recipientname{}
+.product-variant-line .giftCard .recipientemail{}
+.product-variant-line .giftCard .sendername{}
+.product-variant-line .giftCard .senderemail{}
+.product-variant-line .giftCard .message{}
 .related-products-grid,.also-purchased-products-grid{margin:5px 0}
 .related-products-grid .title,.also-purchased-products-grid .title{font-weight:700;font-size:1.1em;}
 .productspec-box{margin:5px 0}

@@ -41,7 +41,7 @@
                                 @Html.LabelFor(model => model.AddNewComment.CommentTitle):
                             </td>
                             <td>
-                                @Html.TextBoxFor(model => model.AddNewComment.CommentTitle, new { style = "Width: 350px;" })
+                                @Html.TextBoxFor(model => model.AddNewComment.CommentTitle, new { @class = "commenttitle" })
                                 @Html.ValidationMessageFor(model => model.AddNewComment.CommentTitle)
                             </td>
                         </tr>
@@ -50,7 +50,7 @@
                                 @Html.LabelFor(model => model.AddNewComment.CommentText):
                             </td>
                             <td>
-                                @Html.TextAreaFor(model => model.AddNewComment.CommentText, new { style = "Width: 350px; Height: 150px;" })
+                                @Html.TextAreaFor(model => model.AddNewComment.CommentText, new { @class = "commenttext" })
                                 @Html.ValidationMessageFor(model => model.AddNewComment.CommentText)
                             </td>
                         </tr>
