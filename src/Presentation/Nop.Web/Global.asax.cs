@@ -149,7 +149,6 @@ namespace Nop.Web
         protected void Application_Error(Object sender, EventArgs e)
         {
             //disable compression (if enabled). More info - http://stackoverflow.com/questions/3960707/asp-net-mvc-weird-characters-in-error-page
-            CompressAttribute.DisableCompression(HttpContext.Current);
             //log error
             LogException(Server.GetLastError());
         }

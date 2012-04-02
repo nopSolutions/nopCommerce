@@ -10,7 +10,6 @@ using Nop.Web.Framework.UI;
 
 namespace Nop.Web.Controllers
 {
-    [Compress]
     [StoreLastVisitedPage]
     [CheckAffiliate]
     [StoreClosedAttribute]

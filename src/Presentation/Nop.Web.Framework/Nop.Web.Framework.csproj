@@ -86,7 +86,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CompressAttribute.cs" />
     <Compile Include="CheckAffiliateAttribute.cs" />
     <Compile Include="Mvc\Routes\GuidConstraint.cs" />
     <Compile Include="StoreClosedAttribute.cs" />

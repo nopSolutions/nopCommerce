@@ -2593,3 +2593,8 @@ BEGIN
 	VALUES (N'ordersettings.minimumorderplacementinterval', N'30')
 END
 GO
+
+--delete setting
+DELETE FROM [Setting]
+WHERE [Name] = N'commonsettings.enablehttpcompression'
+GO
