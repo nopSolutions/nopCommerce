@@ -876,6 +876,7 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteElementString("Deleted", null, order.Deleted.ToString());
                 xmlWriter.WriteElementString("CreatedOnUtc", null, order.CreatedOnUtc.ToString());
 
+                //products
                 var orderProductVariants = order.OrderProductVariants;
                 if (orderProductVariants.Count > 0)
                 {
@@ -908,6 +909,24 @@ namespace Nop.Services.ExportImport
                     xmlWriter.WriteEndElement();
                 }
 
+                //shipments
+                var shipments = order.Shipments.OrderBy(x => x.ShippedDateUtc).ToList();
+                if (shipments.Count > 0)
+                {
+                    xmlWriter.WriteStartElement("Shipments");
+                    foreach (var shipment in shipments)
+                    {
+                        xmlWriter.WriteStartElement("Shipment");
+                        xmlWriter.WriteElementString("ShipmentId", null, shipment.Id.ToString());
+                        xmlWriter.WriteElementString("TrackingNumber", null, shipment.TrackingNumber);
+
+                        xmlWriter.WriteElementString("ShippedDateUtc", null, shipment.ShippedDateUtc.ToString());
+                        xmlWriter.WriteElementString("DeliveryDateUtc", null, shipment.DeliveryDateUtc.HasValue ? 
+                            shipment.DeliveryDateUtc.Value.ToString() : "");
+                        xmlWriter.WriteEndElement();
+                    }
+                    xmlWriter.WriteEndElement();
+                }
                 xmlWriter.WriteEndElement();
             }
 
@@ -1087,6 +1106,9 @@ namespace Nop.Services.ExportImport
                         col++;
 
                         worksheet.Cells[row, col].Value = order.ShippingRateComputationMethodSystemName;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = order.VatNumber;
                         col++;
 
                         worksheet.Cells[row, col].Value = order.CreatedOnUtc.ToOADate();
