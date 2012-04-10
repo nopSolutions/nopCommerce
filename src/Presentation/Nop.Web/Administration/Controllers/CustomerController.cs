@@ -209,6 +209,31 @@ namespace Nop.Admin.Controllers
                 LastActivityDate = _dateTimeHelper.ConvertToUserTime(customer.LastActivityDateUtc, DateTimeKind.Utc),
             };
         }
+
+        [NonAction]
+        private string ValidateCustomerRoles(IList<CustomerRole> customerRoles)
+        {
+            if (customerRoles == null)
+                throw new ArgumentNullException("customerRoles");
+
+            //ensure a customer is not added to both 'Guests' and 'Registered' customer roles
+            //ensure that a customer is in at least one required role ('Guests' and 'Registered')
+            bool isInGuestsRole = customerRoles
+                .Where(cr => cr.SystemName == SystemCustomerRoleNames.Guests)
+                .FirstOrDefault() != null;
+            bool isInRegisteredRole =
+                customerRoles
+                .Where(cr => cr.SystemName == SystemCustomerRoleNames.Registered)
+                .FirstOrDefault() != null;
+            if (isInGuestsRole && isInRegisteredRole)
+                return "The customer cannot be in both 'Guests' and 'Registered' customer roles";
+            if (!isInGuestsRole && !isInRegisteredRole)
+                return "Add the customer to 'Guests' or 'Registered' customer role";
+
+            //no errors
+            return "";
+        }
+
         #endregion
 
         #region Customers
@@ -439,6 +464,17 @@ namespace Nop.Admin.Controllers
                 if (cust2 != null)
                     ModelState.AddModelError("", "Username is already registered");
             }
+
+            //validate customer roles
+            var allCustomerRoles = _customerService.GetAllCustomerRoles(true);
+            var newCustomerRoles = new List<CustomerRole>();
+            foreach (var customerRole in allCustomerRoles)
+                if (model.SelectedCustomerRoleIds != null && model.SelectedCustomerRoleIds.Contains(customerRole.Id))
+                    newCustomerRoles.Add(customerRole);
+            var customerRolesError = ValidateCustomerRoles(newCustomerRoles);
+            if (!String.IsNullOrEmpty(customerRolesError))
+                ModelState.AddModelError("", customerRolesError);
+            
             if (ModelState.IsValid)
             {
                 var customer = new Customer()
@@ -495,12 +531,8 @@ namespace Nop.Admin.Controllers
                 }
 
                 //customer roles
-                var allCustomerRoles = _customerService.GetAllCustomerRoles(true);
-                foreach (var customerRole in allCustomerRoles)
-                {
-                    if (model.SelectedCustomerRoleIds != null && model.SelectedCustomerRoleIds.Contains(customerRole.Id))
-                        customer.CustomerRoles.Add(customerRole);
-                }
+                foreach (var customerRole in newCustomerRoles)
+                    customer.CustomerRoles.Add(customerRole);
                 _customerService.UpdateCustomer(customer);
 
                 //activity log
@@ -673,6 +705,16 @@ namespace Nop.Admin.Controllers
                 //No customer found with the specified id
                 return RedirectToAction("List");
 
+            //validate customer roles
+            var allCustomerRoles = _customerService.GetAllCustomerRoles(true);
+            var newCustomerRoles = new List<CustomerRole>();
+            foreach (var customerRole in allCustomerRoles)
+                if (model.SelectedCustomerRoleIds != null && model.SelectedCustomerRoleIds.Contains(customerRole.Id))
+                    newCustomerRoles.Add(customerRole);
+            var customerRolesError = ValidateCustomerRoles(newCustomerRoles);
+            if (!String.IsNullOrEmpty(customerRolesError))
+                ModelState.AddModelError("", customerRolesError);
+
             if (ModelState.IsValid)
             {
                 try
@@ -749,7 +791,6 @@ namespace Nop.Admin.Controllers
 
 
                     //customer roles
-                    var allCustomerRoles = _customerService.GetAllCustomerRoles(true);
                     foreach (var customerRole in allCustomerRoles)
                     {
                         if (model.SelectedCustomerRoleIds != null && model.SelectedCustomerRoleIds.Contains(customerRole.Id))
