@@ -267,11 +267,19 @@ namespace Nop.Admin.Controllers
 
             if (ModelState.IsValid)
             {
+                int prevPictureId = manufacturer.PictureId;
                 manufacturer = model.ToEntity(manufacturer);
                 manufacturer.UpdatedOnUtc = DateTime.UtcNow;
                 _manufacturerService.UpdateManufacturer(manufacturer);
                 //locales
                 UpdateLocales(manufacturer, model);
+                //delete an old picture (if deleted or updated)
+                if (prevPictureId > 0 && prevPictureId != manufacturer.PictureId)
+                {
+                    var prevPicture = _pictureService.GetPictureById(prevPictureId);
+                    if (prevPicture != null)
+                        _pictureService.DeletePicture(prevPicture);
+                }
                 //update picture seo file name
                 UpdatePictureSeoNames(manufacturer);
 

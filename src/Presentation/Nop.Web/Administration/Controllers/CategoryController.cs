@@ -391,6 +391,7 @@ namespace Nop.Admin.Controllers
 
             if (ModelState.IsValid)
             {
+                int prevPictureId = category.PictureId;
                 category = model.ToEntity(category);
                 category.UpdatedOnUtc = DateTime.UtcNow;
                 _categoryService.UpdateCategory(category);
@@ -414,6 +415,13 @@ namespace Nop.Admin.Controllers
                     }
                 }
                 _categoryService.UpdateCategory(category);
+                //delete an old picture (if deleted or updated)
+                if (prevPictureId > 0 && prevPictureId != category.PictureId)
+                {
+                    var prevPicture = _pictureService.GetPictureById(prevPictureId);
+                    if (prevPicture != null)
+                        _pictureService.DeletePicture(prevPicture);
+                }
                 //update picture seo file name
                 UpdatePictureSeoNames(category);
 

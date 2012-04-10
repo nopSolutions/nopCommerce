@@ -373,6 +373,7 @@ namespace Nop.Admin.Controllers
 
             if (ModelState.IsValid)
             {
+                int prevPictureId = variant.PictureId;
                 var prevStockQuantity = variant.StockQuantity;
                 variant = model.ToEntity(variant);
                 variant.UpdatedOnUtc = DateTime.UtcNow;
@@ -398,6 +399,13 @@ namespace Nop.Admin.Controllers
                     }
                 }
                 _productService.UpdateProductVariant(variant);
+                //delete an old picture (if deleted or updated)
+                if (prevPictureId > 0 && prevPictureId != variant.PictureId)
+                {
+                    var prevPicture = _pictureService.GetPictureById(prevPictureId);
+                    if (prevPicture != null)
+                        _pictureService.DeletePicture(prevPicture);
+                }
                 //update picture seo file name
                 UpdatePictureSeoNames(variant);
                 //back in stock notifications
