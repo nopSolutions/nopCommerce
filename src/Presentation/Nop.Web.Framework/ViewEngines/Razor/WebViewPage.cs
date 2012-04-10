@@ -103,7 +103,7 @@ namespace Nop.Web.Framework.ViewEngines.Razor
                     var filename = System.IO.Path.GetFileNameWithoutExtension(layout);
                     ViewEngineResult viewResult = System.Web.Mvc.ViewEngines.Engines.FindView(ViewContext.Controller.ControllerContext, filename, "");
 
-                    if (viewResult.View != null)
+                    if (viewResult.View != null && viewResult.View is RazorView)
                     {
                         layout = (viewResult.View as RazorView).ViewPath;
                     }
