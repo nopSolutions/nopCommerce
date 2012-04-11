@@ -139,7 +139,7 @@ namespace Nop.Admin.Controllers
 			{
 				var subscription = newsLetterSubscriptions[i];
 				sb.Append(subscription.Email);
-                sb.Append("\t");
+                sb.Append(",");
                 sb.Append(subscription.Active);
                 sb.Append(Environment.NewLine);  //new line
 			}
@@ -148,64 +148,78 @@ namespace Nop.Admin.Controllers
 			return File(Encoding.UTF8.GetBytes(result), "text/csv", fileName);
 		}
 
-		[HttpPost]
-		public ActionResult ImportCsv(FormCollection form)
+        [HttpPost]
+        public ActionResult ImportCsv(FormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNewsletterSubscribers))
                 return AccessDeniedView();
 
-			try
-			{
-				var file = Request.Files["importcsvfile"];
-				if (file != null && file.ContentLength > 0)
-				{
-					int count = 0;
+            try
+            {
+                var file = Request.Files["importcsvfile"];
+                if (file != null && file.ContentLength > 0)
+                {
+                    int count = 0;
 
-					using (var reader = new StreamReader(file.InputStream))
-					{
-						while (!reader.EndOfStream)
-						{
-							string line = reader.ReadLine();
-							string[] tmp = line.Split('\t');
+                    using (var reader = new StreamReader(file.InputStream))
+                    {
+                        while (!reader.EndOfStream)
+                        {
+                            string line = reader.ReadLine();
+                            if (String.IsNullOrWhiteSpace(line))
+                                continue;
+                            string[] tmp = line.Split(',');
 
-							if (tmp.Length == 2)
-							{
-								string email = tmp[0].Trim();
-								bool isActive = Boolean.Parse(tmp[1]);
+                            var email = "";
+                            bool isActive = true;
+                            //parse
+                            if (tmp.Length == 1)
+                            {
+                                //"email" only
+                                email = tmp[0].Trim();
+                            }
+                            else if (tmp.Length == 2)
+                            {
+                                //"email" and "active" fields specified
+                                email = tmp[0].Trim();
+                                isActive = Boolean.Parse(tmp[1].Trim());
+                            }
+                            else
+                                throw new NopException("Wrong file format");
 
-								var subscription = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmail(email);
-								if (subscription != null)
-								{
-									subscription.Email = email;
-									subscription.Active = isActive;
-									_newsLetterSubscriptionService.UpdateNewsLetterSubscription(subscription);
-								}
-								else
-								{
-									subscription = new NewsLetterSubscription()
-													   {
-														   Active = isActive,
-														   CreatedOnUtc = DateTime.UtcNow,
-														   Email = email,
-														   NewsLetterSubscriptionGuid = Guid.NewGuid()
-													   };
-									_newsLetterSubscriptionService.InsertNewsLetterSubscription(subscription);
-								}
-								count++;
-							}
-						}
-						SuccessNotification(String.Format(_localizationService.GetResource("Admin.Promotions.NewsLetterSubscriptions.ImportEmailsSuccess"), count));
-						return RedirectToAction("List");
-					}
+                            //import
+                            var subscription = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmail(email);
+                            if (subscription != null)
+                            {
+                                subscription.Email = email;
+                                subscription.Active = isActive;
+                                _newsLetterSubscriptionService.UpdateNewsLetterSubscription(subscription);
+                            }
+                            else
+                            {
+                                subscription = new NewsLetterSubscription()
+                                {
+                                    Active = isActive,
+                                    CreatedOnUtc = DateTime.UtcNow,
+                                    Email = email,
+                                    NewsLetterSubscriptionGuid = Guid.NewGuid()
+                                };
+                                _newsLetterSubscriptionService.InsertNewsLetterSubscription(subscription);
+                            }
+                            count++;
+                        }
+                        SuccessNotification(String.Format(_localizationService.GetResource("Admin.Promotions.NewsLetterSubscriptions.ImportEmailsSuccess"), count));
+                        return RedirectToAction("List");
+                    }
                 }
                 ErrorNotification(_localizationService.GetResource("Admin.Common.UploadFile"));
-				return RedirectToAction("List");
-			}
-			catch (Exception exc)
-			{
-				ErrorNotification(exc);
-				return RedirectToAction("List");
-			}
-		}
+                return RedirectToAction("List");
+            }
+            catch (Exception exc)
+            {
+                ErrorNotification(exc);
+                return RedirectToAction("List");
+            }
+        }
 	}
 }
