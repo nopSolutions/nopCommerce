@@ -104,6 +104,7 @@ td.fieldname{font-size:12px;}
 .field-validation-error{font-family:Verdana, Arial, sans-serif;font-size:10px;font-weight:700;color:red;}
 .copyright{float:right;padding-right:10px;font-family:Tahoma, Verdana, Arial, Helvetica, sans-serif;font-size:10px;}
 .copyright a{color:#3664A5;background-color:inherit;}
+.captcha-box{}
 /* sitemap */
 .sitemap-page{margin-left:auto;margin-right:auto;width:100%;}
 .sitemap-page .entity{margin:5px 0 30px;}
@@ -417,17 +418,16 @@ ul.languagelist li:hover{cursor:pointer;}
 .compare-products-table td{border-width:1px;border-color:#BFBFBF;border-style:solid;padding:3px;}
 .login-page{}
 .login-page .page-title{border-bottom:0 none;}
-.login-page .wrapper{width:600px;margin-top:10px;padding-left:5px;font-size:11px;color:#555;}
+.login-page .wrapper{width:720px;margin-top:10px;padding-left:5px;font-size:11px;color:#555;}
 .login-page .wrapper .new-wrapper{float:left;width:50%;}
 .login-page .wrapper .new-wrapper .register-title{text-align:center;margin:0 10px;font-weight:700;}
 .login-page .wrapper .new-wrapper .register-block{text-align:center;margin:10px;padding:15px 5px 5px;border:1px solid #E8E6D2;min-height:240px;vertical-align:top;}
 .login-page .wrapper .new-wrapper .checkout-as-guest-or-register-block{text-align:left;margin:10px;padding:15px 5px 5px;border:1px solid #E8E6D2;min-height:240px;vertical-align:top;}
 .login-page .wrapper .new-wrapper .buttons{padding-right:20px;padding-top:20px;text-align:right;}
-.captcha-enabled{height:310px!important;}
 .login-page .wrapper .returning-wrapper{float:right;width:50%;}
 .login-page .wrapper .returning-wrapper .login-title{text-align:center;margin:0 10px;font-weight:700;}
-.login-page .wrapper .returning-wrapper .login-block{text-align:left;margin:10px;padding:15px 5px 5px;border:1px solid #E8E6D2;min-height:240px;}
 .login-page .wrapper .returning-wrapper .buttons{float:right;margin-bottom:5px;margin-top:5px;text-align:center;clear:both;}
+.login-page .wrapper .returning-wrapper .login-block{text-align:left;margin:10px;padding:15px 5px 5px;border:1px solid #E8E6D2;min-height:240px;}
 .login-table-container{vertical-align:middle;}
 .login-table-container .row{}
 .login-table-container .row .item-name{padding:10px 10px 10px 0;display:block;white-space:nowrap;padding-right:10px;vertical-align:middle;font-weight:700;}

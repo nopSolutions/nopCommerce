@@ -803,6 +803,12 @@ namespace Nop.Admin.Controllers
             _captchaSettings.ReCaptchaPublicKey = model.SecuritySettings.ReCaptchaPublicKey;
             _captchaSettings.ReCaptchaPrivateKey = model.SecuritySettings.ReCaptchaPrivateKey;
             _settingService.SaveSetting(_captchaSettings);
+            if (_captchaSettings.Enabled &&
+                (String.IsNullOrWhiteSpace(_captchaSettings.ReCaptchaPublicKey) || String.IsNullOrWhiteSpace(_captchaSettings.ReCaptchaPrivateKey)))
+            {
+                //captcha is enabled but the keys are not entered
+                ErrorNotification("Captcha is enabled but the appropriate keys are not entered");
+            }
             //save SSL settings
             try
             {

@@ -31,6 +31,7 @@
 .currencyselector,.taxdisplaytypeselector,.languageselector{}
 .currencyselector .title,.taxdisplaytypeselector .title,.languageselector .title{font-weight:700;}
 .homepage-logo {}
+.captcha-box{}
 /* PAGER */
 .pager{text-align:center;}
 .pager a{font-size:1em;}
@@ -175,7 +176,6 @@
 .login-page .wrapper .returning-wrapper{}
 .login-page .wrapper .returning-wrapper .login-title{margin:0 10px;font-weight:700;}
 .login-page .wrapper .returning-wrapper .buttons{}
-.captcha-enabled{height:310px!important;}
 .login-page .wrapper .returning-wrapper .login-block{text-align:left;margin:10px;padding:15px 5px 5px;border:solid 1px #d3d3d3;}
 .login-page .forgot-password{}
 .registration-page{}
