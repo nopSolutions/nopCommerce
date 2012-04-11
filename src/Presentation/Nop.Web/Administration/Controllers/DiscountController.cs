@@ -206,8 +206,25 @@ namespace Nop.Admin.Controllers
 
             if (ModelState.IsValid)
             {
+                var prevDiscountType = discount.DiscountType;
                 discount = model.ToEntity(discount);
                 _discountService.UpdateDiscount(discount);
+
+                //clean up old references (if changed)
+                if (prevDiscountType == DiscountType.AssignedToCategories 
+                    && discount.DiscountType != DiscountType.AssignedToCategories)
+                {
+                    //applied to categories
+                    discount.AppliedToCategories.Clear();
+                    _discountService.UpdateDiscount(discount);
+                }
+                if (prevDiscountType == DiscountType.AssignedToSkus
+                    && discount.DiscountType != DiscountType.AssignedToSkus)
+                {
+                    //applied to categories
+                    discount.AppliedToProductVariants.Clear();
+                    _discountService.UpdateDiscount(discount);
+                }
 
                 //activity log
                 _customerActivityService.InsertActivity("EditDiscount", _localizationService.GetResource("ActivityLog.EditDiscount"), discount.Name);
