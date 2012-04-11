@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using Nop.Admin.Models.Orders;
 using Nop.Core;
 using Nop.Core.Domain.Orders;
+using Nop.Services.Customers;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
@@ -70,6 +71,9 @@ namespace Nop.Admin.Controllers
             model.NextPaymentDate = recurringPayment.NextPaymentDate.HasValue ? _dateTimeHelper.ConvertToUserTime(recurringPayment.NextPaymentDate.Value, DateTimeKind.Utc).ToString() : "";
             model.CyclesRemaining = recurringPayment.CyclesRemaining;
             model.InitialOrderId = recurringPayment.InitialOrder.Id;
+            var customer = recurringPayment.InitialOrder.Customer;
+            model.CustomerId = customer.Id;
+            model.CustomerEmail = customer.IsGuest() ? _localizationService.GetResource("Admin.Customers.Guest") : customer.Email;
             model.PaymentType = _paymentService.GetRecurringPaymentType(recurringPayment.InitialOrder.PaymentMethodSystemName).GetLocalizedEnum(_localizationService, _workContext);
             model.CanCancelRecurringPayment = _orderProcessingService.CanCancelRecurringPayment(_workContext.CurrentCustomer, recurringPayment);
                     

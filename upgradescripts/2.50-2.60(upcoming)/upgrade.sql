@@ -5,8 +5,11 @@ declare @resources xml
 --a resource will be delete if its value is empty
 set @resources='
 <Language>
-  <LocaleResource Name="">
-    <Value></Value>
+  <LocaleResource Name="Admin.RecurringPayments.Fields.Customer">
+    <Value>Customer</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.RecurringPayments.Fields.Customer.Hint">
+    <Value>Customer</Value>
   </LocaleResource>
 </Language>
 '

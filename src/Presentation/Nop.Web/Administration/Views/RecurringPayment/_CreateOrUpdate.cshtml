@@ -38,6 +38,14 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CustomerEmail):
+            </td>
+            <td class="adminData">
+                @Html.ActionLink(Model.CustomerEmail, "Edit", "Customer", new { id = Model.CustomerId }, new { })
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.NopLabelFor(model => model.CycleLength):
             </td>
             <td class="adminData">

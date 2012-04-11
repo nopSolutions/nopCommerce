@@ -8304,6 +8304,14 @@
 					</LocaleResource>
 					<LocaleResource Name="Fields">
 						<Children>
+              <LocaleResource Name="Customer">
+                <Value>Customer</Value>
+                <Children>
+                  <LocaleResource Name="Hint">
+                    <Value>Customer</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
 							<LocaleResource Name="InitialOrder">
 								<Value>Initial order</Value>
 								<Children>

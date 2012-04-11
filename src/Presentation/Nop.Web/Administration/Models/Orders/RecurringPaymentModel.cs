@@ -42,6 +42,11 @@ namespace Nop.Admin.Models.Orders
         [NopResourceDisplayName("Admin.RecurringPayments.Fields.InitialOrder")]
         public int InitialOrderId { get; set; }
 
+        [NopResourceDisplayName("Admin.RecurringPayments.Fields.Customer")]
+        public int CustomerId { get; set; }
+        [NopResourceDisplayName("Admin.RecurringPayments.Fields.Customer")]
+        public string CustomerEmail { get; set; }
+
         [NopResourceDisplayName("Admin.RecurringPayments.Fields.PaymentType")]
         public string PaymentType { get; set; }
         
