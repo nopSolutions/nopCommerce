@@ -120,6 +120,8 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
         {
             var model = new RegisterModel();
             model.ConfirmPassword = "some password";
+            //we know that new password should equal confirmation password
+            model.Password = model.ConfirmPassword;
             _validator.ShouldNotHaveValidationErrorFor(x => x.ConfirmPassword, model);
         }
 
@@ -129,7 +131,7 @@ namespace Nop.Web.MVC.Tests.Public.Validators.Customer
             var model = new RegisterModel();
             model.Password = "some password";
             model.ConfirmPassword = "another password";
-            _validator.ShouldHaveValidationErrorFor(x => x.Password, model);
+            _validator.ShouldHaveValidationErrorFor(x => x.ConfirmPassword, model);
         }
 
         [Test]
