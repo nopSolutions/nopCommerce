@@ -68,7 +68,7 @@
                         {
                             <tr class="row">
                                 <td class="item-name">
-                                    @Html.LabelFor(model => model.Gender):
+                                    <label>@T("Account.Fields.Gender"):</label>
                                 </td>
                                 <td class="item-value">
                                     @Html.RadioButton("Gender", "M", (Model.Gender == "M"), new { id = "Gender_Male" })
@@ -102,7 +102,7 @@
                         {
                             <tr class="row">
                                 <td class="item-name">
-                                    @Html.LabelFor(model => model.DateOfBirthDay):
+                                    <label>@T("Account.Fields.DateOfBirth"):</label>
                                 </td>
                                 <td class="item-value">
                                     @Html.DatePickerDropDowns(Html.FieldNameFor(x => x.DateOfBirthDay),

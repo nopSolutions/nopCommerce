@@ -12,7 +12,7 @@
         {
             <div id="pnl-newsletter-subscribe">
                 @T("Newsletter.Email"):
-                @Html.TextBoxFor(x => x.Email)
+                @Html.TextBoxFor(x => x.Email, new { id = "newsletteremail" })
                 @Html.ValidationMessageFor(x => x.Email)
                 <div class="options">
                     <input id="newsletter-subscribe" type="radio" name="newsletter-subscribe" value="newsletter-subscribe"
@@ -44,7 +44,7 @@
                 if($('#newsletter-unsubscribe').is(':checked')) { 
                     subscribe = 'false';
                 }
-                var email = $("#@Html.FieldIdFor(model => model.Email)").val();
+                var email = $("#newsletteremail").val();
                 var subscribeProgress = $("#subscribe-loading-progress");
                 subscribeProgress.show();
                 $.ajax({

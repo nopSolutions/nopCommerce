@@ -41,7 +41,7 @@
                         @Html.LabelFor(model => model.Email):
                     </td>
                     <td class="item-value">
-                        @Html.TextBoxFor(model => model.Email, new { @class = "email" })
+                        @Html.TextBoxFor(model => model.Email, new { @class = "email", id = "contactusemail" })
                         @Html.ValidationMessageFor(model => model.Email)
                     </td>
                 </tr>
