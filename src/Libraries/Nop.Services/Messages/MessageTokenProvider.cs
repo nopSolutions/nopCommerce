@@ -534,6 +534,7 @@ namespace Nop.Services.Messages
         public virtual void AddShipmentTokens(IList<Token> tokens, Shipment shipment, int languageId)
         {
             tokens.Add(new Token("Shipment.ShipmentNumber", shipment.Id.ToString()));
+            tokens.Add(new Token("Shipment.TrackingNumber", shipment.TrackingNumber));
             tokens.Add(new Token("Shipment.Product(s)", ProductListToHtmlTable(shipment, languageId), true));
             tokens.Add(new Token("Shipment.URLForCustomer", string.Format("{0}orderdetails/shipment/{1}", _webHelper.GetStoreLocation(false), shipment.Id), true));
         }
@@ -732,6 +733,7 @@ namespace Nop.Services.Messages
                 "%Order.OrderURLForCustomer%",
                 "%Order.NewNoteText%",
                 "%Shipment.ShipmentNumber%",
+                "%Shipment.TrackingNumber%",
                 "%Shipment.Product(s)%",
                 "%Shipment.URLForCustomer%",
                 "%ReturnRequest.ID%", 
