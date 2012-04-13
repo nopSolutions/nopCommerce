@@ -206,8 +206,9 @@ namespace Nop.Web.Infrastructure.Cache
         /// {1} : picture size
         /// {2} : value indicating whether a default picture is displayed in case if no real picture exists
         /// {3} : language ID ("alt" and "title" can depend on localized product name)
+        /// {4} : is connection SSL secured?
         /// </remarks>
-        public const string PRODUCT_DEFAULTPICTURE_MODEL_KEY = "nop.pres.product.picture-{0}-{1}-{2}-{3}";
+        public const string PRODUCT_DEFAULTPICTURE_MODEL_KEY = "nop.pres.product.picture-{0}-{1}-{2}-{3}-{4}";
         public const string PRODUCT_DEFAULTPICTURE_PATTERN_KEY = "nop.pres.product.picture";
 
         /// <summary>
@@ -218,8 +219,9 @@ namespace Nop.Web.Infrastructure.Cache
         /// {1} : picture size
         /// {2} : value indicating whether a default picture is displayed in case if no real picture exists
         /// {3} : language ID ("alt" and "title" can depend on localized category name)
+        /// {4} : is connection SSL secured?
         /// </remarks>
-        public const string CATEGORY_PICTURE_MODEL_KEY = "nop.pres.category.picture-{0}-{1}-{2}-{3}";
+        public const string CATEGORY_PICTURE_MODEL_KEY = "nop.pres.category.picture-{0}-{1}-{2}-{3}-{4}";
         public const string CATEGORY_PICTURE_PATTERN_KEY = "nop.pres.category.picture";
 
         /// <summary>
@@ -230,8 +232,9 @@ namespace Nop.Web.Infrastructure.Cache
         /// {1} : picture size
         /// {2} : value indicating whether a default picture is displayed in case if no real picture exists
         /// {3} : language ID ("alt" and "title" can depend on localized manufacturer name)
+        /// {4} : is connection SSL secured?
         /// </remarks>
-        public const string MANUFACTURER_PICTURE_MODEL_KEY = "nop.pres.manufacturer.picture-{0}-{1}-{2}-{3}";
+        public const string MANUFACTURER_PICTURE_MODEL_KEY = "nop.pres.manufacturer.picture-{0}-{1}-{2}-{3}-{4}";
         public const string MANUFACTURER_PICTURE_PATTERN_KEY = "nop.pres.manufacturer.picture";
 
         private readonly ICacheManager _cacheManager;

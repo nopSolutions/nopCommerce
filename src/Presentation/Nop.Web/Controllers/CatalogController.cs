@@ -332,7 +332,7 @@ namespace Nop.Web.Controllers
                 //If a size has been set in the view, we use it in priority
                 int pictureSize = productThumbPictureSize.HasValue ? productThumbPictureSize.Value : _mediaSetting.ProductThumbPictureSize;
                 //prepare picture model
-                var defaultProductPictureCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_DEFAULTPICTURE_MODEL_KEY, product.Id, pictureSize, true, _workContext.WorkingLanguage.Id);
+                var defaultProductPictureCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_DEFAULTPICTURE_MODEL_KEY, product.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured());
                 model.DefaultPictureModel = _cacheManager.Get(defaultProductPictureCacheKey, () =>
                 {
                     var picture = product.GetDefaultProductPicture(_pictureService);
@@ -861,7 +861,7 @@ namespace Nop.Web.Controllers
 
                     //prepare picture model
                     int pictureSize = _mediaSetting.CategoryThumbPictureSize;
-                    var categoryPictureCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_PICTURE_MODEL_KEY, x.Id, pictureSize, true, _workContext.WorkingLanguage.Id);
+                    var categoryPictureCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_PICTURE_MODEL_KEY, x.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured());
                     subCatModel.PictureModel = _cacheManager.Get(categoryPictureCacheKey, () =>
                     {
                         var pictureModel = new PictureModel()
@@ -970,7 +970,7 @@ namespace Nop.Web.Controllers
 
                     //prepare picture model
                     int pictureSize = _mediaSetting.CategoryThumbPictureSize;
-                    var categoryPictureCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_PICTURE_MODEL_KEY, x.Id, pictureSize, true, _workContext.WorkingLanguage.Id);
+                    var categoryPictureCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_PICTURE_MODEL_KEY, x.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured());
                     catModel.PictureModel = _cacheManager.Get(categoryPictureCacheKey, () =>
                     {
                         var pictureModel = new PictureModel()
@@ -1189,7 +1189,7 @@ namespace Nop.Web.Controllers
                 
                 //prepare picture model
                 int pictureSize = _mediaSetting.ManufacturerThumbPictureSize;
-                var manufacturerPictureCacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURER_PICTURE_MODEL_KEY, manufacturer.Id, pictureSize, true, _workContext.WorkingLanguage.Id);
+                var manufacturerPictureCacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURER_PICTURE_MODEL_KEY, manufacturer.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured());
                 modelMan.PictureModel = _cacheManager.Get(manufacturerPictureCacheKey, () =>
                 {
                     var pictureModel = new PictureModel()
