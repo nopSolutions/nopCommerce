@@ -5,7 +5,7 @@
 <div class="picture">
     @if (Model.DefaultPictureZoomEnabled)
     {
-        <a href="@Model.DefaultPictureModel.FullSizeImageUrl" rel="lightbox-pd" title="@Model.Name">
+        <a href="@Model.DefaultPictureModel.FullSizeImageUrl" data-gallery="lightbox-pd" title="@Model.Name">
             <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" />
         </a>
     }
@@ -20,7 +20,7 @@
                 @foreach (var picture in Model.PictureModels)
                 {
                     <td class="a-left">
-                        <a href="@picture.FullSizeImageUrl" rel="lightbox-p" title="@Model.Name">
+                        <a href="@picture.FullSizeImageUrl" data-gallery="lightbox-p" title="@Model.Name">
                             <img src="@picture.ImageUrl" alt="@picture.AlternateText" title="@picture.Title" />
                         </a>
                     </td>
