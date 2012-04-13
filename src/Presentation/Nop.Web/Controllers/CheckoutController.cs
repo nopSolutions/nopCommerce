@@ -788,9 +788,9 @@ namespace Nop.Web.Controllers
                     };
                     _paymentService.PostProcessPayment(postProcessPaymentRequest);
 
-                    if (this.Response.IsRequestBeingRedirected)
+                    if (_webHelper.IsRequestBeingRedirected || _webHelper.IsPostBeingDone)
                     {
-                        //redirection has been done in PostProcessPayment
+                        //redirection or POST has been done in PostProcessPayment
                         return Content("Redirected");
                     }
                     else
@@ -1461,9 +1461,9 @@ namespace Nop.Web.Controllers
 
                 _paymentService.PostProcessPayment(postProcessPaymentRequest);
 
-                if (this.Response.IsRequestBeingRedirected)
+                if (_webHelper.IsRequestBeingRedirected || _webHelper.IsPostBeingDone)
                 {
-                    //redirection has been done in PostProcessPayment
+                    //redirection or POST has been done in PostProcessPayment
                     return Content("Redirected");
                 }
                 else

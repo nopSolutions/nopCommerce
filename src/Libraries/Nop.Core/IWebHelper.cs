@@ -137,5 +137,15 @@ namespace Nop.Core
         /// <param name="request">HTTP Request</param>
         /// <returns>Result</returns>
         bool IsSearchEngine(HttpRequestBase request);
+
+        /// <summary>
+        /// Gets a value that indicates whether the client is being redirected to a new location
+        /// </summary>
+        bool IsRequestBeingRedirected { get; }
+
+        /// <summary>
+        /// Gets or sets a value that indicates whether the client is being redirected to a new location using POST
+        /// </summary>
+        bool IsPostBeingDone { get; set; }
     }
 }

@@ -47,6 +47,7 @@ namespace Nop.Web.Controllers
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IShippingService _shippingService;
         private readonly ICountryService _countryService;
+        private readonly IWebHelper _webHelper;
 
         private readonly LocalizationSettings _localizationSettings;
         private readonly MeasureSettings _measureSettings;
@@ -68,7 +69,8 @@ namespace Nop.Web.Controllers
             IPaymentService paymentService, ILocalizationService localizationService,
             IPdfService pdfService, ICustomerService customerService,
             IWorkflowMessageService workflowMessageService, IShippingService shippingService,
-            ICountryService countryService, LocalizationSettings localizationSettings,
+            ICountryService countryService, IWebHelper webHelper, 
+            LocalizationSettings localizationSettings,
             MeasureSettings measureSettings, CatalogSettings catalogSettings,
             OrderSettings orderSettings, TaxSettings taxSettings, PdfSettings pdfSettings,
             ShippingSettings shippingSettings)
@@ -88,6 +90,7 @@ namespace Nop.Web.Controllers
             this._workflowMessageService = workflowMessageService;
             this._shippingService = shippingService;
             this._countryService = countryService;
+            this._webHelper = webHelper;
 
             this._localizationSettings = localizationSettings;
             this._measureSettings = measureSettings;
@@ -554,9 +557,9 @@ namespace Nop.Web.Controllers
             };
             _paymentService.PostProcessPayment(postProcessPaymentRequest);
 
-            if (this.Response.IsRequestBeingRedirected)
+            if (_webHelper.IsRequestBeingRedirected || _webHelper.IsPostBeingDone)
             {
-                //redirection has been done in PostProcessPayment
+                //redirection or POST has been done in PostProcessPayment
                 return Content("Redirected");
             }
             else

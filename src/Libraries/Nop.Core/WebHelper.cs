@@ -611,5 +611,34 @@ namespace Nop.Core
             }
             return result;
         }
+
+        /// <summary>
+        /// Gets a value that indicates whether the client is being redirected to a new location
+        /// </summary>
+        public virtual bool IsRequestBeingRedirected
+        {
+            get
+            {
+                var response = _httpContext.Response;
+                return response.IsRequestBeingRedirected;   
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value that indicates whether the client is being redirected to a new location using POST
+        /// </summary>
+        public virtual bool IsPostBeingDone
+        {
+            get
+            {
+                if (_httpContext.Items["nop.IsPOSTBeingDone"] == null)
+                    return false;
+                return Convert.ToBoolean(_httpContext.Items["nop.IsPOSTBeingDone"]);
+            }
+            set
+            {
+                _httpContext.Items["nop.IsPOSTBeingDone"] = value;
+            }
+        }
     }
 }

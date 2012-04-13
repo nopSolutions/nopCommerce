@@ -1,5 +1,6 @@
 ﻿using System.Collections.Specialized;
 using System.Web;
+using Nop.Core;
 using Nop.Core.Infrastructure;
 
 namespace Nop.Web.Framework
@@ -10,6 +11,7 @@ namespace Nop.Web.Framework
     public partial class RemotePost
     {
         private readonly HttpContextBase _httpContext;
+        private readonly IWebHelper _webHelper;
         private readonly NameValueCollection _inputValues;
 
         /// <summary>
@@ -49,7 +51,7 @@ namespace Nop.Web.Framework
         /// Creates a new instance of the RemotePost class
         /// </summary>
         public RemotePost()
-            : this(EngineContext.Current.Resolve<HttpContextBase>())
+            : this(EngineContext.Current.Resolve<HttpContextBase>(), EngineContext.Current.Resolve<IWebHelper>())
         {
         }
 
@@ -57,7 +59,8 @@ namespace Nop.Web.Framework
         /// Creates a new instance of the RemotePost class
         /// </summary>
         /// <param name="httpContext">HTTP Context</param>
-        public RemotePost(HttpContextBase httpContext)
+        /// <param name="webHelper">Web helper</param>
+        public RemotePost(HttpContextBase httpContext, IWebHelper webHelper)
         {
             this._inputValues = new NameValueCollection();
             this.Url = "http://www.someurl.com";
@@ -65,6 +68,7 @@ namespace Nop.Web.Framework
             this.FormName = "formName";
 
             this._httpContext = httpContext;
+            this._webHelper = webHelper;
         }
 
         /// <summary>
@@ -117,6 +121,8 @@ namespace Nop.Web.Framework
             _httpContext.Response.Write("</form>");
             _httpContext.Response.Write("</body></html>");
             _httpContext.Response.End();
+            //store a value indicating whether POST has been done
+            _webHelper.IsPostBeingDone = true;
         }
     }
 }
