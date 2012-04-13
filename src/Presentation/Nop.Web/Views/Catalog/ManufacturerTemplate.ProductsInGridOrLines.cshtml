@@ -26,11 +26,14 @@
     <div class="clear">
     </div>
     @*description*@
-    <div class="manufacturer-description">
-        @Html.Raw(Model.Description)
-    </div>
-    <div class="clear">
-    </div>
+    @if (!String.IsNullOrWhiteSpace(Model.Description))
+    {
+        <div class="manufacturer-description">
+            @Html.Raw(Model.Description)
+        </div>
+        <div class="clear">
+        </div>
+    }
 
 
     

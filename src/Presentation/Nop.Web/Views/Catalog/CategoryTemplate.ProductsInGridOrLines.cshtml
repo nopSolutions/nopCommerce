@@ -45,11 +45,14 @@
 
 
     @*description*@
-    <div class="category-description">
-        @Html.Raw(Model.Description)
-    </div>
-    <div class="clear">
-    </div>
+    @if (!String.IsNullOrWhiteSpace(Model.Description))
+    {
+        <div class="category-description">
+            @Html.Raw(Model.Description)
+        </div>
+        <div class="clear">
+        </div>
+    }
 
 
     
@@ -140,12 +143,18 @@
             <div class="filter-title">
                 <span>@T("Filtering.FilterResults")</span>
             </div>
+            @if (Model.PagingFilteringContext.PriceRangeFilter.Enabled)
+            {
             <div class="filter-item">
                 @Html.Partial("_FilterPriceBox", Model.PagingFilteringContext.PriceRangeFilter, new ViewDataDictionary())
             </div>
+            }
+            @if (Model.PagingFilteringContext.SpecificationFilter.Enabled)
+            {
             <div class="filter-item">
                 @Html.Partial("_FilterSpecsBox", Model.PagingFilteringContext.SpecificationFilter, new ViewDataDictionary())
             </div>
+            }
         </div>
         <div class="clear">
         </div>
