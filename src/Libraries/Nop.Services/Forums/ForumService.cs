@@ -363,10 +363,11 @@ namespace Nop.Services.Forums
             }
 
             //delete forum subscriptions (topics)
+            var queryTopicIds = from ft in _forumTopicRepository.Table
+                           where ft.ForumId == forum.Id
+                           select ft.Id;
             var queryFs1 = from fs in _forumSubscriptionRepository.Table
-                           where (from ft in _forumTopicRepository.Table
-                                  where ft.ForumId == forum.Id
-                                  select ft.Id).Contains(fs.TopicId)
+                           where queryTopicIds.Contains(fs.TopicId)
                            select fs;
             foreach (var fs in queryFs1.ToList())
             {
