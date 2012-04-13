@@ -1572,7 +1572,7 @@ namespace Nop.Web.Controllers
             if (ModelState.IsValid)
             {
                 var customer = _customerService.GetCustomerByEmail(model.Email);
-                if (customer != null)
+                if (customer != null && customer.Active && !customer.Deleted)
                 {
                     var passwordRecoveryToken = Guid.NewGuid();
                     _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.PasswordRecoveryToken, passwordRecoveryToken.ToString());
