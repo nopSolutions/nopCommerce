@@ -1,10 +1,10 @@
 ﻿CREATE FUNCTION [dbo].[nop_splitstring_to_table]
 (
-    @string NVARCHAR(1000),
+    @string NVARCHAR(MAX),
     @delimiter CHAR(1)
 )
 RETURNS @output TABLE(
-    data NVARCHAR(256)
+    data NVARCHAR(MAX)
 )
 BEGIN
     DECLARE @start INT, @end INT
@@ -46,7 +46,7 @@ GO
 
 CREATE PROCEDURE [dbo].[ProductLoadAllPaged]
 (
-	@CategoryIds		nvarchar(300) = null,	--a list of category IDs (comma-separated list). e.g. 1,2,3
+	@CategoryIds		nvarchar(MAX) = null,	--a list of category IDs (comma-separated list). e.g. 1,2,3
 	@ManufacturerId		int = 0,
 	@ProductTagId		int = 0,
 	@FeaturedProducts	bit = null,	--0 featured only , 1 not featured only, null - load all products
@@ -54,14 +54,14 @@ CREATE PROCEDURE [dbo].[ProductLoadAllPaged]
 	@PriceMax			decimal(18, 4) = null,
 	@Keywords			nvarchar(MAX) = null,
 	@SearchDescriptions bit = 0,
-	@FilteredSpecs		nvarchar(300) = null,	--filter by attributes (comma-separated list). e.g. 14,15,16
+	@FilteredSpecs		nvarchar(MAX) = null,	--filter by attributes (comma-separated list). e.g. 14,15,16
 	@LanguageId			int = 0,
 	@OrderBy			int = 0, --0 position, 5 - Name: A to Z, 6 - Name: Z to A, 10 - Price: Low to High, 11 - Price: High to Low, 15 - creation date
 	@PageIndex			int = 0, 
 	@PageSize			int = 2147483644,
 	@ShowHidden			bit = 0,
 	@LoadFilterableSpecificationAttributeOptionIds bit = 0, --a value indicating whether we should load the specification attribute option identifiers applied to loaded products (all pages)
-	@FilterableSpecificationAttributeOptionIds nvarchar(100) = null OUTPUT, --the specification attribute option identifiers applied to loaded products (all pages). returned as a comma separated list of identifiers
+	@FilterableSpecificationAttributeOptionIds nvarchar(MAX) = null OUTPUT, --the specification attribute option identifiers applied to loaded products (all pages). returned as a comma separated list of identifiers
 	@TotalRecords		int = null OUTPUT
 )
 AS

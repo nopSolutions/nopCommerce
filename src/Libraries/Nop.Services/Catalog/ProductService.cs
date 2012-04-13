@@ -455,7 +455,7 @@ namespace Nop.Services.Catalog
                 var pFilterableSpecificationAttributeOptionIds = _dataProvider.GetParameter();
                 pFilterableSpecificationAttributeOptionIds.ParameterName = "FilterableSpecificationAttributeOptionIds";
                 pFilterableSpecificationAttributeOptionIds.Direction = ParameterDirection.Output;
-                pFilterableSpecificationAttributeOptionIds.Size = 100;
+                pFilterableSpecificationAttributeOptionIds.Size = int.MaxValue-1;
                 pFilterableSpecificationAttributeOptionIds.DbType = DbType.String;
 
                 var pTotalRecords = _dataProvider.GetParameter();
