@@ -16,7 +16,10 @@ namespace Nop.Web.Framework.Security
         {
             if (filterContext == null)
                 throw new ArgumentNullException("filterContext");
-            
+
+            //don't apply filter to child methods
+            if (filterContext.IsChildAction)
+                return;
             
             // only redirect for GET requests, 
             // otherwise the browser might not propagate the verb and request body correctly.
@@ -54,6 +57,11 @@ namespace Nop.Web.Framework.Security
                             string url = webHelper.GetThisPageUrl(true, false);
                             filterContext.Result = new RedirectResult(url);
                         }
+                    }
+                    break;
+                case SslRequirement.NoMatter:
+                    {
+                        //do nothing
                     }
                     break;
                 default:

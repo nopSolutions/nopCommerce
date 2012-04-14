@@ -30,6 +30,7 @@ using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Catalog;
 using Nop.Web.Models.Media;
 using System.Diagnostics;
+using Nop.Web.Framework.Security;
 
 namespace Nop.Web.Controllers
 {
@@ -686,7 +687,8 @@ namespace Nop.Web.Controllers
         #endregion
 
         #region Categories
-
+        
+        [NopHttpsRequirement(SslRequirement.No)]
         public ActionResult Category(int categoryId, CatalogPagingFilteringModel command)
         {
             var category = _categoryService.GetCategoryById(categoryId);
@@ -994,6 +996,7 @@ namespace Nop.Web.Controllers
 
         #region Manufacturers
 
+        [NopHttpsRequirement(SslRequirement.No)]
         public ActionResult Manufacturer(int manufacturerId, CatalogPagingFilteringModel command)
         {
             var manufacturer = _manufacturerService.GetManufacturerById(manufacturerId);
@@ -1179,6 +1182,7 @@ namespace Nop.Web.Controllers
             return View(templateViewPath, model);
         }
 
+        [NopHttpsRequirement(SslRequirement.No)]
         public ActionResult ManufacturerAll()
         {
             var model = new List<ManufacturerModel>();
@@ -1239,6 +1243,7 @@ namespace Nop.Web.Controllers
         #region Products
 
         //product details page
+        [NopHttpsRequirement(SslRequirement.No)]
         public ActionResult Product(int productId)
         {
             var product = _productService.GetProductById(productId);
@@ -1932,6 +1937,7 @@ namespace Nop.Web.Controllers
         }
 
         //recently viewed products
+        [NopHttpsRequirement(SslRequirement.No)]
         public ActionResult RecentlyViewedProducts()
         {
             var model = new List<ProductModel>();
@@ -1958,6 +1964,7 @@ namespace Nop.Web.Controllers
         }
 
         //recently added products
+        [NopHttpsRequirement(SslRequirement.No)]
         public ActionResult RecentlyAddedProducts()
         {
             var model = new List<ProductModel>();
@@ -2200,6 +2207,7 @@ namespace Nop.Web.Controllers
             return PartialView(cacheModel);
         }
 
+        [NopHttpsRequirement(SslRequirement.No)]
         public ActionResult ProductsByTag(int productTagId, CatalogPagingFilteringModel command)
         {
             var productTag = _productTagService.GetProductById(productTagId);
@@ -2338,6 +2346,7 @@ namespace Nop.Web.Controllers
         #region Product reviews
 
         //products reviews
+        [NopHttpsRequirement(SslRequirement.No)]
         public ActionResult ProductReviews(int productId)
         {
             var product = _productService.GetProductById(productId);
@@ -2492,6 +2501,7 @@ namespace Nop.Web.Controllers
             return PartialView("ProductEmailAFriendButton", model);
         }
 
+        [NopHttpsRequirement(SslRequirement.No)]
         public ActionResult ProductEmailAFriend(int productId)
         {
             var product = _productService.GetProductById(productId);
@@ -2586,6 +2596,7 @@ namespace Nop.Web.Controllers
             return RedirectToRoute("CompareProducts");
         }
 
+        [NopHttpsRequirement(SslRequirement.No)]
         public ActionResult CompareProducts()
         {
             if (!_catalogSettings.CompareProductsEnabled)
@@ -2640,6 +2651,7 @@ namespace Nop.Web.Controllers
 
         #region Searching
 
+        [NopHttpsRequirement(SslRequirement.No)]
         public ActionResult Search(SearchModel model, SearchPagingFilteringModel command)
         {
             if (model == null)

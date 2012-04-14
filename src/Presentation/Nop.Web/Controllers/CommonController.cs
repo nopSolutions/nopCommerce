@@ -27,6 +27,7 @@ using Nop.Services.Seo;
 using Nop.Services.Topics;
 using Nop.Web.Extensions;
 using Nop.Web.Framework.Localization;
+using Nop.Web.Framework.Security;
 using Nop.Web.Framework.Themes;
 using Nop.Web.Framework.UI.Captcha;
 using Nop.Web.Models.Common;
@@ -367,6 +368,7 @@ namespace Nop.Web.Controllers
         }
 
         //contact us page
+        [NopHttpsRequirement(SslRequirement.No)]
         public ActionResult ContactUs()
         {
             var model = new ContactUsModel()
@@ -436,6 +438,7 @@ namespace Nop.Web.Controllers
         }
 
         //sitemap page
+        [NopHttpsRequirement(SslRequirement.No)]
         public ActionResult Sitemap()
         {
             if (!_commonSettings.SitemapEnabled)
@@ -470,6 +473,7 @@ namespace Nop.Web.Controllers
         }
 
         //SEO sitemap page
+        [NopHttpsRequirement(SslRequirement.No)]
         public ActionResult SitemapSeo()
         {
             if (!_commonSettings.SitemapEnabled)

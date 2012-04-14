@@ -6,13 +6,14 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
 using Nop.Services.Customers;
 using Nop.Services.Forums;
-using Nop.Services.Localization;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Security;
 using Nop.Web.Models.Common;
 using Nop.Web.Models.PrivateMessages;
 
 namespace Nop.Web.Controllers
 {
+    [NopHttpsRequirement(SslRequirement.Yes)]
     public class PrivateMessagesController : BaseNopController
     {
         private readonly IForumService _forumService;

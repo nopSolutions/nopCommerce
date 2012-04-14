@@ -18,10 +18,12 @@ using Nop.Services.Messages;
 using Nop.Services.Seo;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Security;
 using Nop.Web.Models.Blogs;
 
 namespace Nop.Web.Controllers
 {
+    [NopHttpsRequirement(SslRequirement.No)]
     public class BlogController : BaseNopController
     {
 		#region Fields

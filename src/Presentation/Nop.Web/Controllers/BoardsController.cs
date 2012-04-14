@@ -17,10 +17,12 @@ using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Seo;
 using Nop.Web.Framework;
+using Nop.Web.Framework.Security;
 using Nop.Web.Models.Boards;
 
 namespace Nop.Web.Controllers
 {
+    [NopHttpsRequirement(SslRequirement.No)]
     public class BoardsController : BaseNopController
     {
         private readonly IForumService _forumService;

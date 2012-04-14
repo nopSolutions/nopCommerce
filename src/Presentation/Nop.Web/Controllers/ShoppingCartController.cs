@@ -1516,6 +1516,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
+        [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult EmailWishlist()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableWishlist) || !_shoppingCartSettings.EmailWishlistEnabled)

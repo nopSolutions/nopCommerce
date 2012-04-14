@@ -18,6 +18,7 @@ using Nop.Web.Models.Profile;
 
 namespace Nop.Web.Controllers
 {
+    [NopHttpsRequirement(SslRequirement.No)]
     public class ProfileController : BaseNopController
     {
         private readonly IForumService _forumService;
@@ -51,7 +52,6 @@ namespace Nop.Web.Controllers
             this._mediaSettings = mediaSettings;
         }
 
-        [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult Index(int? id, int? page)
         {
             var customerId = 0;
