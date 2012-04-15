@@ -9,6 +9,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Directory;
+using Nop.Core.Plugins;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Helpers;
@@ -246,6 +247,15 @@ namespace Nop.Admin.Controllers
                     Level = SystemWarningLevel.Fail,
                     Text = _localizationService.GetResource("Admin.System.Warnings.PaymentMethods.NoActive")
                 });
+
+            //incompatible plugins
+            if (PluginManager.IncompatiblePlugins != null)
+                foreach (var pluginName in PluginManager.IncompatiblePlugins)
+                    model.Add(new SystemWarningModel()
+                    {
+                        Level = SystemWarningLevel.Warning,
+                        Text = string.Format(_localizationService.GetResource("Admin.System.Warnings.IncompatiblePlugin"), pluginName )
+                    });
             
             return View(model);
         }

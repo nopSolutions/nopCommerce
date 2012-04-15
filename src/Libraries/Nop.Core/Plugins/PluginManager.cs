@@ -44,6 +44,11 @@ namespace Nop.Core.Plugins
         public static IEnumerable<PluginDescriptor> ReferencedPlugins { get; set; }
 
         /// <summary>
+        /// Returns a collection of all plugin which are not compatible with the current version
+        /// </summary>
+        public static IEnumerable<string> IncompatiblePlugins { get; set; }
+
+        /// <summary>
         /// Initialize
         /// </summary>
         public static void Initialize()
@@ -56,6 +61,7 @@ namespace Nop.Core.Plugins
                 _shadowCopyFolder = new DirectoryInfo(HostingEnvironment.MapPath(_shadowCopyPath));
 
                 var referencedPlugins = new List<PluginDescriptor>();
+                var incompatiblePlugins = new List<string>();
 
                 _clearShadowDirectoryOnStartup = !String.IsNullOrEmpty(ConfigurationManager.AppSettings["ClearPluginsShadowDirectoryOnStartup"]) &&
                    Convert.ToBoolean(ConfigurationManager.AppSettings["ClearPluginsShadowDirectoryOnStartup"]);
@@ -98,7 +104,10 @@ namespace Nop.Core.Plugins
                             
                             //ensure that version of plugin is valid
                             if (!description.SupportedVersions.Contains(NopVersion.CurrentVersion, StringComparer.InvariantCultureIgnoreCase))
+                            {
+                                incompatiblePlugins.Add(description.SystemName);
                                 continue;
+                            }
 
                             //some validation
                             if (String.IsNullOrWhiteSpace(description.SystemName))
@@ -178,6 +187,7 @@ namespace Nop.Core.Plugins
 
 
                 ReferencedPlugins = referencedPlugins;
+                IncompatiblePlugins = incompatiblePlugins;
 
             }
         }

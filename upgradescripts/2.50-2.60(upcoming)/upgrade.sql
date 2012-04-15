@@ -29,6 +29,9 @@ set @resources='
   <LocaleResource Name="Admin.Promotions.Discounts.Fields.AppliedToProductVariants.NoRecords">
     <Value>No products selected</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.Warnings.IncompatiblePlugin">
+    <Value>''{0}'' plugin is incompatible with your nopCommerce version. Delete it or update to the latest version.</Value>
+  </LocaleResource>
 </Language>
 '
 

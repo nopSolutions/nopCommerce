@@ -9253,6 +9253,9 @@
 									</LocaleResource>
 								</Children>
 							</LocaleResource>
+              <LocaleResource Name="IncompatiblePlugin">
+                <Value>'{0}' plugin is incompatible with your nopCommerce version. Delete it or update to the latest version.</Value>
+              </LocaleResource>
 						</Children>
 					</LocaleResource>
 				</Children>
