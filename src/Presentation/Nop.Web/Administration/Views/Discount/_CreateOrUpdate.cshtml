@@ -23,15 +23,32 @@
         
     <script type="text/javascript">
             $(document).ready(function () {
+                $("#@Html.FieldIdFor(model => model.DiscountTypeId)").change(toggleDiscountType);
                 $("#@Html.FieldIdFor(model => model.UsePercentage)").click(toggleUsePercentage);
                 $("#@Html.FieldIdFor(model => model.RequiresCouponCode)").click(toggleRequiresCouponCode);
                 $("#@Html.FieldIdFor(model => model.DiscountLimitationId)").change(toggleLimitation);
 
+                toggleDiscountType();
                 toggleLimitation();
                 toggleUsePercentage();
                 toggleRequiresCouponCode();
             });
-
+            
+            function toggleDiscountType() {
+                var selectedDiscountTypeId = $("#@Html.FieldIdFor(model => model.DiscountTypeId)").val();
+                if (selectedDiscountTypeId == @(((int)DiscountType.AssignedToCategories).ToString())) {
+                    $('#pnlAppliedToCategories').show();
+                    $('#pnlAppliedToProductVariants').hide();
+                }
+                else if (selectedDiscountTypeId == @(((int)DiscountType.AssignedToSkus).ToString())) {
+                    $('#pnlAppliedToCategories').hide();
+                    $('#pnlAppliedToProductVariants').show();
+                }
+                else {
+                    $('#pnlAppliedToCategories').hide();
+                    $('#pnlAppliedToProductVariants').hide();
+                }
+            }
 
             function toggleLimitation() {
                 var selectedDiscountLimitation = document.getElementById('@Html.FieldIdFor(model => model.DiscountLimitationId)');
@@ -86,6 +103,54 @@
             <td class="adminData">
                 @Html.DropDownListFor(model => model.DiscountTypeId, ((DiscountType)Model.DiscountTypeId).ToSelectList())
                 @Html.ValidationMessageFor(model => model.DiscountTypeId)
+            </td>
+        </tr>
+        <tr id="pnlAppliedToCategories">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AppliedToCategoryModels):
+            </td>
+            <td class="adminData">
+                @if (Model.AppliedToCategoryModels.Count > 0)
+                {
+                    for (int i = 0; i < Model.AppliedToCategoryModels.Count; i++)
+                    {
+                        var categoryId = Model.AppliedToCategoryModels[i].CategoryId;
+                        var categoryName = Model.AppliedToCategoryModels[i].Name;
+                        <a href="@Url.Action("Edit", "Category", new { id = categoryId })">@categoryName</a>
+                        if (i != Model.AppliedToCategoryModels.Count - 1)
+                        {
+                            <text>, </text>
+                        }
+                    }
+                }
+                else
+                {
+                    @T("Admin.Promotions.Discounts.Fields.AppliedToCategories.NoRecords")
+                }
+            </td>
+        </tr>
+        <tr id="pnlAppliedToProductVariants">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AppliedToProductVariantModels):
+            </td>
+            <td class="adminData">
+                @if (Model.AppliedToProductVariantModels.Count > 0)
+                {
+                    for (int i = 0; i < Model.AppliedToProductVariantModels.Count; i++)
+                    {
+                        var productVariantId = Model.AppliedToProductVariantModels[i].ProductVariantId;
+                        var fullProductName = Model.AppliedToProductVariantModels[i].FullProductName;
+                        <a href="@Url.Action("Edit", "ProductVariant", new { id = productVariantId })">@fullProductName</a>
+                        if (i != Model.AppliedToProductVariantModels.Count - 1)
+                        {
+                            <text>, </text>
+                        }
+                    }
+                }
+                else
+                {
+                    @T("Admin.Promotions.Discounts.Fields.AppliedToProductVariants.NoRecords")
+                }
             </td>
         </tr>
         <tr>

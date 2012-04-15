@@ -11,6 +11,24 @@ set @resources='
   <LocaleResource Name="Admin.RecurringPayments.Fields.Customer.Hint">
     <Value>Customer</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.AppliedToCategories">
+    <Value>Assigned to categories</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.AppliedToCategories.Hint">
+    <Value>A list of categories to which the discount is to be applied. You can assign this discount on a category details page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.AppliedToCategories.NoRecords">
+    <Value>No categories selected</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.AppliedToProductVariants">
+    <Value>Assigned to product variants</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.AppliedToProductVariants.Hint">
+    <Value>A list of product variants to which the discount is to be applied. You can assign this discount on a product variant details page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Fields.AppliedToProductVariants.NoRecords">
+    <Value>No products selected</Value>
+  </LocaleResource>
 </Language>
 '
 

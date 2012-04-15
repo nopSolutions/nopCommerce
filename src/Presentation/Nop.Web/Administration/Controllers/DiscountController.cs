@@ -81,6 +81,38 @@ namespace Nop.Admin.Controllers
 
             if (discount != null)
             {
+                //applied to categories
+                foreach (var category in discount.AppliedToCategories)
+                {
+                    if (category != null && !category.Deleted)
+                    {
+                        model.AppliedToCategoryModels.Add(new DiscountModel.AppliedToCategoryModel()
+                        {
+                            CategoryId = category.Id,
+                            Name = category.Name
+                        });
+                    }
+                }
+
+                //applied to product variants
+                foreach (var pv in discount.AppliedToProductVariants)
+                {
+                    if (pv != null && !pv.Deleted)
+                    {
+                        var appliedToProductVariantModel = new DiscountModel.AppliedToProductVariantModel()
+                        {
+                            ProductVariantId = pv.Id,
+                        };
+                        //full product name
+                        if (!String.IsNullOrEmpty(pv.Name))
+                            appliedToProductVariantModel.FullProductName = string.Format("{0} ({1})", pv.Product.Name, pv.Name);
+                        else
+                            appliedToProductVariantModel.FullProductName = pv.Product.Name;
+
+                        model.AppliedToProductVariantModels.Add(appliedToProductVariantModel);
+                    }
+                }
+
                 //requirements
                 foreach (var dr in discount.DiscountRequirements.OrderBy(dr=>dr.Id))
                 {
@@ -95,7 +127,6 @@ namespace Nop.Admin.Controllers
                         });
                     }
                 }
-
             }
         }
 

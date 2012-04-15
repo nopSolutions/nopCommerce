@@ -14,6 +14,8 @@ namespace Nop.Admin.Models.Discounts
     {
         public DiscountModel()
         {
+            AppliedToCategoryModels = new List<AppliedToCategoryModel>();
+            AppliedToProductVariantModels = new List<AppliedToProductVariantModel>();
             AvailableDiscountRequirementRules = new List<SelectListItem>();
             DiscountRequirementMetaInfos = new List<DiscountRequirementMetaInfo>();
         }
@@ -57,6 +59,12 @@ namespace Nop.Admin.Models.Discounts
         public int LimitationTimes { get; set; }
 
 
+        [NopResourceDisplayName("Admin.Promotions.Discounts.Fields.AppliedToCategories")]
+        public IList<AppliedToCategoryModel> AppliedToCategoryModels { get; set; }
+
+        [NopResourceDisplayName("Admin.Promotions.Discounts.Fields.AppliedToProductVariants")]
+        public IList<AppliedToProductVariantModel> AppliedToProductVariantModels { get; set; }
+
 
         [NopResourceDisplayName("Admin.Promotions.Discounts.Requirements.DiscountRequirementType")]
         public string AddDiscountRequirement { get; set; }
@@ -86,6 +94,19 @@ namespace Nop.Admin.Models.Discounts
             public DateTime CreatedOn { get; set; }
         }
 
+        public class AppliedToCategoryModel : BaseNopModel
+        {
+            public int CategoryId { get; set; }
+
+            public string Name { get; set; }
+        }
+
+        public class AppliedToProductVariantModel : BaseNopModel
+        {
+            public int ProductVariantId { get; set; }
+
+            public string FullProductName { get; set; }
+        }
         #endregion
     }
 }

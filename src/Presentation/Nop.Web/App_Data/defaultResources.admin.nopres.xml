@@ -8020,6 +8020,28 @@
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
+                  <LocaleResource Name="AppliedToCategories">
+                    <Value>Assigned to categories</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>A list of categories to which the discount is to be applied. You can assign this discount on a category details page.</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="NoRecords">
+                        <Value>No categories selected</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="AppliedToProductVariants">
+                    <Value>Assigned to product variants</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>A list of product variants to which the discount is to be applied. You can assign this discount on a product variant details page.</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="NoRecords">
+                        <Value>No products selected</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
 									<LocaleResource Name="UsePercentage">
 										<Value>Use percentage</Value>
 										<Children>
