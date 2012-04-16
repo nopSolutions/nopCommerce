@@ -8153,6 +8153,9 @@
 									<LocaleResource Name="FailedToSave">
 										<Value>Failed to save requirement</Value>
 									</LocaleResource>
+                  <LocaleResource Name="Remove">
+                    <Value>Remove requirement</Value>
+                  </LocaleResource>
 									<LocaleResource Name="SaveBeforeEdit">
 										<Value>You need to save the discount before you can add requirements for this discount page.</Value>
 									</LocaleResource>

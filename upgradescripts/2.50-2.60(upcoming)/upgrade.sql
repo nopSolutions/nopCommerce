@@ -32,6 +32,9 @@ set @resources='
   <LocaleResource Name="Admin.System.Warnings.IncompatiblePlugin">
     <Value>''{0}'' plugin is incompatible with your nopCommerce version. Delete it or update to the latest version.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Discounts.Requirements.Remove">
+    <Value>Remove requirement</Value>
+  </LocaleResource>
 </Language>
 '
 

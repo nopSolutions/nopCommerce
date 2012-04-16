@@ -376,10 +376,10 @@
     <!-- Discount requirement template -->
     <script id="discountRequirementTemplate" type="text/html">
             <div id="editrequirement{{= discountRequirementId }}">
-                <div>Discount requirement type: <b>{{= ruleName }}</b></div>
+                <div>@T("Admin.Promotions.Discounts.Requirements.DiscountRequirementType"): <b>{{= ruleName }}</b></div>
                 <div id="editrequirementplaceholder{{= discountRequirementId }}" style="float:left;"></div>
                 <div style="float:right;">
-                    <button type="button" name="deleterequirement{{= discountRequirementId }}" id="deleterequirement{{= discountRequirementId }}" onclick="deleteRequirement({{= discountRequirementId }})" class="t-button">Remove requirement</button>
+                    <button type="button" name="deleterequirement{{= discountRequirementId }}" id="deleterequirement{{= discountRequirementId }}" onclick="deleteRequirement({{= discountRequirementId }})" class="t-button">@T("Admin.Promotions.Discounts.Requirements.Remove")</button>
                 </div>
                 <table class="adminContent">
                     <tr class="adminSeparator">
