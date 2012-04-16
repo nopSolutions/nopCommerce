@@ -32,7 +32,7 @@
     @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.HeadHtmlTag })
     @if (displayMiniProfiler)
     {
-        @MvcMiniProfiler.MiniProfiler.RenderIncludes();
+        @StackExchange.Profiling.MiniProfiler.RenderIncludes();
     }
     <!--Powered by nopCommerce - http://www.nopCommerce.com-->
     <!--Copyright (c) 2008-2012-->

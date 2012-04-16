@@ -403,7 +403,9 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.PrimaryStoreCurrencyCode, mo => mo.Ignore())
                 .ForMember(dest => dest.AddDiscountRequirement, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableDiscountRequirementRules, mo => mo.Ignore())
-                .ForMember(dest => dest.DiscountRequirementMetaInfos, mo => mo.Ignore());
+                .ForMember(dest => dest.DiscountRequirementMetaInfos, mo => mo.Ignore())
+                .ForMember(dest => dest.AppliedToCategoryModels, mo => mo.Ignore())
+                .ForMember(dest => dest.AppliedToProductVariantModels, mo => mo.Ignore());
             Mapper.CreateMap<DiscountModel, Discount>()
                 .ForMember(dest => dest.DiscountType, mo => mo.Ignore())
                 .ForMember(dest => dest.DiscountLimitation, mo => mo.Ignore())

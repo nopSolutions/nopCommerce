@@ -7,8 +7,6 @@ using System.Web.Hosting;
 using System.Web.Mvc;
 using System.Web.Routing;
 using FluentValidation.Mvc;
-using MvcMiniProfiler;
-using MvcMiniProfiler.MVCHelpers;
 using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain;
@@ -20,6 +18,8 @@ using Nop.Web.Framework.EmbeddedViews;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.Mvc.Routes;
 using Nop.Web.Framework.Themes;
+using StackExchange.Profiling;
+using StackExchange.Profiling.MVCHelpers;
 
 namespace Nop.Web
 {
