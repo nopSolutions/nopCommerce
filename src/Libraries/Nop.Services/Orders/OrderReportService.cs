@@ -106,11 +106,13 @@ namespace Nop.Services.Orders
                 query = query.Where(o => endTimeUtc.Value >= o.CreatedOnUtc);
             if (!String.IsNullOrEmpty(billingEmail))
                 query = query.Where(o => o.BillingAddress != null && !String.IsNullOrEmpty(o.BillingAddress.Email) && o.BillingAddress.Email.Contains(billingEmail));
-            
-            var item = new OrderAverageReportLine();
-            item.SumTax = Convert.ToDecimal(query.Sum(o => (decimal?)o.OrderTax));
-            item.SumOrders = Convert.ToDecimal(query.Sum(o => (decimal?)o.OrderTotal));
-            item.CountOrders = query.Count();
+
+			var item = (from oq in query
+						group oq by 1 into result
+						select new { OrderCount = result.Count(), OrderTaxSum = result.Sum(o => o.OrderTax), OrderTotalSum = result.Sum(o => o.OrderTotal) }
+					   ).Select(r => new OrderAverageReportLine(){ SumTax = r.OrderTaxSum, CountOrders=r.OrderCount, SumOrders = r.OrderTotalSum}).FirstOrDefault();
+
+			item = item ?? new OrderAverageReportLine() { CountOrders = 0, SumOrders = decimal.Zero, SumTax = decimal.Zero };
             return item;
         }
 
