@@ -101,6 +101,7 @@
                                     @review.WrittenOnStr
                                 </div>
                             </div>
+                            @Html.Partial("_ProductReviewHelpfulness", review.Helpfulness, new ViewDataDictionary())
                         </div>
                     </li>
                 }

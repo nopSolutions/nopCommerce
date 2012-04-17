@@ -1,10 +1,11 @@
 ﻿@model Nop.Web.Models.Catalog.ProductReviewHelpfulnessModel
 <div class="product-review-helpfulness">
     @T("Reviews.Helpfulness.WasHelpful?")
-    <span id="vote-yes-@(Model.ProductReviewId)" class="vote">@T("Common.Yes")</span>&nbsp;<span id="vote-no-@(Model.ProductReviewId)" class="vote">@T("Common.No")</span>
-    (<span id="helpfulness-vote-yes-@(Model.ProductReviewId)">@(Model.HelpfulYesTotal)</span>/<span id="helpfulness-vote-no-@(Model.ProductReviewId)">@(Model.HelpfulNoTotal)</span>)
-    <div id="helpfulness-vote-result-@(Model.ProductReviewId)"></div>
-
+    <div>
+        <button id="vote-yes-@(Model.ProductReviewId)" class="vote" data-mini="true" data-inline="true">@T("Common.Yes")</button>&nbsp;<button id="vote-no-@(Model.ProductReviewId)" class="vote" data-mini="true" data-inline="true">@T("Common.No")</button>
+        (<span id="helpfulness-vote-yes-@(Model.ProductReviewId)">@(Model.HelpfulYesTotal)</span>/<span id="helpfulness-vote-no-@(Model.ProductReviewId)">@(Model.HelpfulNoTotal)</span>)
+        <div id="helpfulness-vote-result-@(Model.ProductReviewId)"></div>
+    </div>
     
     <script type="text/javascript">
         $(document).ready(function () {
@@ -17,12 +18,16 @@
         });
 
         function setProductReviewHelpfulness@(Model.ProductReviewId)(wasHelpful){
+                //show progress
+                $.mobile.showPageLoadingMsg();
                 $.ajax({
                     cache:false,
                     type: "POST",
                     url: "@(Url.Action("SetProductReviewHelpfulness", "Catalog"))",
                     data: { "productReviewId": @(Model.ProductReviewId), "washelpful": wasHelpful },
                     success: function (data) {
+                        //hide progress
+                        $.mobile.hidePageLoadingMsg();
                          $("#helpfulness-vote-yes-@(Model.ProductReviewId)").html(data.TotalYes);
                          $("#helpfulness-vote-no-@(Model.ProductReviewId)").html(data.TotalNo);
                          $("#helpfulness-vote-result-@(Model.ProductReviewId)").html(data.Result);
@@ -30,6 +35,9 @@
                          $('#helpfulness-vote-result-@(Model.ProductReviewId)').fadeIn("slow").delay(1000).fadeOut("slow");
                     },
                     error:function (xhr, ajaxOptions, thrownError){
+                        //hide progress
+                        $.mobile.hidePageLoadingMsg();
+
                         alert('Failed to vote. Please refresh the page and try one more time.');
                     }  
                 });
