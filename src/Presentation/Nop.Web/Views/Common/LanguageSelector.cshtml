@@ -31,8 +31,7 @@
         });
 
         function onLanguageChanged() {
-            var selectedCustomerLanguage = document.getElementById('customerlanguage');
-            var selectedLanguageId = selectedCustomerLanguage.options[selectedCustomerLanguage.selectedIndex].value;
+            var selectedLanguageId = $("#customerlanguage").val();
             var changeLanguageActionUrl = '@Url.Action("SetLanguage", "Common", new { langid = "languageplaceholder" })';
             changeLanguageActionUrl = changeLanguageActionUrl.replace("languageplaceholder", selectedLanguageId);
             setLocation(changeLanguageActionUrl);

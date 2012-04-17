@@ -22,7 +22,7 @@
 
     function toggleAdvancedSearch() {
 
-        if (getE('@Html.FieldIdFor(model => model.As)').checked) {
+        if ($('#@Html.FieldIdFor(model => model.As)').is(':checked')) {
             $('#pnl-advanced-search').show();
         }
         else {

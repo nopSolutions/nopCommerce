@@ -30,7 +30,7 @@
     });
 
     function toggleStoreClosed() {
-        if (getE('@Html.FieldIdFor(model => model.StoreInformationSettings.StoreClosed)').checked) {
+        if ($('#@Html.FieldIdFor(model => model.StoreInformationSettings.StoreClosed)').is(':checked')) {
             $('#pnlStoreClosedAllowForAdmins').show();
         }
         else {
@@ -39,7 +39,7 @@
     }
 
     function toggleMobileDevicesSupported() {
-        if (getE('@Html.FieldIdFor(model => model.StoreInformationSettings.MobileDevicesSupported)').checked) {
+        if ($('#@Html.FieldIdFor(model => model.StoreInformationSettings.MobileDevicesSupported)').is(':checked')) {
             $('#pnlDefaultStoreThemeForMobileDevices').show();
         }
         else {
@@ -48,7 +48,7 @@
     }
     
     function toggleReCaptcha() {
-        if (getE('@Html.FieldIdFor(model => model.SecuritySettings.CaptchaEnabled)').checked) {
+        if ($('#@Html.FieldIdFor(model => model.SecuritySettings.CaptchaEnabled)').is(':checked')) {
             $('#ssCaptchaShowOnLoginPagepnl').show();
             $('#ssCaptchaShowOnRegistrationPagepnl').show();
             $('#ssCaptchaShowOnContactUsPagepnl').show();
@@ -69,7 +69,7 @@
     }
 
     function toggleSSL() {
-        if (getE('@Html.FieldIdFor(model => model.SecuritySettings.UseSsl)').checked) {
+        if ($('#@Html.FieldIdFor(model => model.SecuritySettings.UseSsl)').is(':checked')) {
             $('#ssSharedSslUrlpnl').show();
             $('#ssNonSharedSslUrlpnl').show();
         }

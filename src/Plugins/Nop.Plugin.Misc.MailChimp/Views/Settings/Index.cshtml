@@ -17,7 +17,7 @@
             });
 
             function toggleAutoSync() {
-                if (getE('@Html.FieldIdFor(model => model.AutoSync)').checked) {
+                if ($('#@Html.FieldIdFor(model => model.AutoSync)').is(':checked')) {
                     $('#pnlAutoSyncEachMinutes').show();
                 }
                 else {

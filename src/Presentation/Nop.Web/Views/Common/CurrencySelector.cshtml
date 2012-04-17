@@ -16,8 +16,7 @@
         });
 
         function onCurrencyChanged() {
-            var selectedCurrency = document.getElementById('customerCurrency');
-            var selectedCurrencyId = selectedCurrency.options[selectedCurrency.selectedIndex].value;
+            var selectedCurrencyId = $("#customerCurrency").val();
             var changeCurrencyActionUrl = '@Url.Action("CurrencySelected", "Common", new { customerCurrency = "currencyplaceholder" })';
             changeCurrencyActionUrl = changeCurrencyActionUrl.replace("currencyplaceholder", selectedCurrencyId);
             setLocation(changeCurrencyActionUrl);

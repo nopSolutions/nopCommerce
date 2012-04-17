@@ -16,8 +16,7 @@
     });
 
     function togglePackingType() {
-        var selectedPackingType = document.getElementById('PackingType');
-        var selectedPackingTypeId = selectedPackingType.options[selectedPackingType.selectedIndex].value;
+        var selectedPackingTypeId = $("#PackingType").val();
         if (selectedPackingTypeId == @(((int)PackingType.PackByDimensions).ToString())) {
             $('#pnlPassDimensions').show();
             $('#pnlPackingPackageVolume').hide();

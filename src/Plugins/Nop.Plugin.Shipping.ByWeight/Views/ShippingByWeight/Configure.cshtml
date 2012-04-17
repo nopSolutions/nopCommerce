@@ -58,7 +58,7 @@
         });
 
         function toggleAddUsePercentage() {
-            if (getE('@Html.FieldIdFor(model => model.AddUsePercentage)').checked) {
+            if ($('#@Html.FieldIdFor(model => model.AddUsePercentage)').is(':checked')) {
                 $('#pnlAddShippingChargePercentage').show();
                 $('#pnlAddShippingChargeAmount').hide();
             }

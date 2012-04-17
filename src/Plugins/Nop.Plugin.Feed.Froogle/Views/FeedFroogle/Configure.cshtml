@@ -26,7 +26,7 @@
             });
 
             function toggleTaskEnabled() {
-                if (getE('@Html.FieldIdFor(model => model.TaskEnabled)').checked) {
+                if ($('#@Html.FieldIdFor(model => model.TaskEnabled)').is(':checked')) {
                     $('#pnlGenerateStaticFileEachMinutes').show();
                 }
                 else {

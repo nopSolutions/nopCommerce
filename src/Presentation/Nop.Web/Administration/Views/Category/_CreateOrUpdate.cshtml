@@ -339,7 +339,7 @@
     });
 
     function togglePageSize() {
-        if (getE('@Html.FieldIdFor(model => model.AllowCustomersToSelectPageSize)').checked) {
+        if ($('#@Html.FieldIdFor(model => model.AllowCustomersToSelectPageSize)').is(':checked')) {
             $('#pnlPageSize').hide();
             $('#pnlPageSizeOptions').show();
         } else {

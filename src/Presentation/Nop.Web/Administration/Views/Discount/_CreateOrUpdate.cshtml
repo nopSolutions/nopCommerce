@@ -51,8 +51,7 @@
             }
 
             function toggleLimitation() {
-                var selectedDiscountLimitation = document.getElementById('@Html.FieldIdFor(model => model.DiscountLimitationId)');
-                var selectedDiscountLimitationId = selectedDiscountLimitation.options[selectedDiscountLimitation.selectedIndex].value;
+                var selectedDiscountLimitationId = $("#@Html.FieldIdFor(model => model.DiscountLimitationId)").val();
                 if (selectedDiscountLimitationId == @(((int)DiscountLimitationType.NTimesOnly).ToString()) || selectedDiscountLimitationId == @(((int)DiscountLimitationType.NTimesPerCustomer).ToString())) {
                     //'N Times Only' or 'N Times Per Customer'
                     $('#pnlLimitationTimes').show();
@@ -64,7 +63,7 @@
             }
 
             function toggleUsePercentage() {
-                if (getE('@Html.FieldIdFor(model => model.UsePercentage)').checked) {
+                if ($('#@Html.FieldIdFor(model => model.UsePercentage)').is(':checked')) {
                     $('#pnlDiscountPercentage').show();
                     $('#pnlDiscountAmount').hide();
                 }
@@ -75,7 +74,7 @@
             }
 
             function toggleRequiresCouponCode() {
-                if (getE('@Html.FieldIdFor(model => model.RequiresCouponCode)').checked) {
+                if ($('#@Html.FieldIdFor(model => model.RequiresCouponCode)').is(':checked')) {
                     $('#pnlCouponCode').show();
                 }
                 else {

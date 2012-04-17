@@ -15,7 +15,7 @@
 
 
 	function toggleEnableIpn() {
-		if (getE('@Html.FieldIdFor(model => model.EnableIpn)').checked) {
+	    if ($('#@Html.FieldIdFor(model => model.EnableIpn)').is(':checked')) {
 			$('#pnlIpnUrl').show();
 		}
 		else {

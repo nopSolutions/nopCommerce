@@ -22,7 +22,7 @@
         });
 
         function toggleMiniShoppingCartDisplayProducts() {
-            if (getE('@Html.FieldIdFor(model => model.MiniShoppingCartEnabled)').checked) {
+            if ($('#@Html.FieldIdFor(model => model.MiniShoppingCartEnabled)').is(':checked')) {
                 $('#pnlMiniShoppingCartDisplayProducts').show();
             }
             else {

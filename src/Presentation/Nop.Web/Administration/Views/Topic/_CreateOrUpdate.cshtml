@@ -10,7 +10,7 @@
         togglePassword();
     });
     function togglePassword() {
-        if (getE('@Html.FieldIdFor(model => model.IsPasswordProtected)').checked) {
+        if ($('#@Html.FieldIdFor(model => model.IsPasswordProtected)').is(':checked')) {
             $('#pnlPasswordEnabled').show();
         }
         else {

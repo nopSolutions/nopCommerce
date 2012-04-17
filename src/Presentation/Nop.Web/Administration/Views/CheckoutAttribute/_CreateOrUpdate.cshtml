@@ -23,7 +23,7 @@
             });
 
             function toggleTax() {
-                if (getE('@Html.FieldIdFor(model => model.IsTaxExempt)').checked) {
+                if ($('#@Html.FieldIdFor(model => model.IsTaxExempt)').is(':checked')) {
                     $('#pnlTaxCategory').hide();
                 }
                 else {

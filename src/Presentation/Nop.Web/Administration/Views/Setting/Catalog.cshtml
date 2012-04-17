@@ -34,7 +34,7 @@
         });
 
         function toggleShowCategoryProductNumberIncludingSubcategories() {
-            if (getE('@Html.FieldIdFor(model => model.ShowCategoryProductNumber)').checked) {
+            if ($('#@Html.FieldIdFor(model => model.ShowCategoryProductNumber)').is(':checked')) {
                 $('#pnlShowCategoryProductNumberIncludingSubcategories').show();
             }
             else {
@@ -43,7 +43,7 @@
         }
 
         function toggleEmailAFriend() {
-            if (getE('@Html.FieldIdFor(model => model.EmailAFriendEnabled)').checked) {
+            if ($('#@Html.FieldIdFor(model => model.EmailAFriendEnabled)').is(':checked')) {
                 $('#pnlAllowAnonymousUsersToEmailAFriend').show();
             }
             else {
@@ -52,7 +52,7 @@
         }
 
         function toggleRecentlyViewedProducts() {
-            if (getE('@Html.FieldIdFor(model => model.RecentlyViewedProductsEnabled)').checked) {
+            if ($('#@Html.FieldIdFor(model => model.RecentlyViewedProductsEnabled)').is(':checked')) {
                 $('#pnlRecentlyViewedProductsNumber').show();
             }
             else {
@@ -61,7 +61,7 @@
         }
 
         function toggleRecentlyAddedProducts() {
-            if (getE('@Html.FieldIdFor(model => model.RecentlyAddedProductsEnabled)').checked) {
+            if ($('#@Html.FieldIdFor(model => model.RecentlyAddedProductsEnabled)').is(':checked')) {
                 $('#pnlRecentlyAddedProductsNumber').show();
             }
             else {
@@ -70,7 +70,7 @@
         }
 
         function toggleBestsellersOnHomepage() {
-            if (getE('@Html.FieldIdFor(model => model.ShowBestsellersOnHomepage)').checked) {
+            if ($('#@Html.FieldIdFor(model => model.ShowBestsellersOnHomepage)').is(':checked')) {
                 $('#pnlNumberOfBestsellersOnHomepage').show();
             }
             else {
@@ -79,7 +79,7 @@
         }
 
         function toggleProductsAlsoPurchasedNumber() {
-            if (getE('@Html.FieldIdFor(model => model.ProductsAlsoPurchasedEnabled)').checked) {
+            if ($('#@Html.FieldIdFor(model => model.ProductsAlsoPurchasedEnabled)').is(':checked')) {
                 $('#pnlProductsAlsoPurchasedNumber').show();
             }
             else {
@@ -88,7 +88,7 @@
         }
 
         function togglePageSize() {
-            if (getE('@Html.FieldIdFor(model => model.ProductsByTagAllowCustomersToSelectPageSize)').checked) {
+            if ($('#@Html.FieldIdFor(model => model.ProductsByTagAllowCustomersToSelectPageSize)').is(':checked')) {
                 $('#pnlPageSize').hide();
                 $('#pnlPageSizeOptions').show();
             } else {

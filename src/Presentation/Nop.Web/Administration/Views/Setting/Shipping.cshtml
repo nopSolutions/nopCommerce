@@ -11,7 +11,7 @@
     });
 
     function toggleFreeShippingOverX() {
-        if (getE('@Html.FieldIdFor(model => model.FreeShippingOverXEnabled)').checked) {
+        if ($('#@Html.FieldIdFor(model => model.FreeShippingOverXEnabled)').is(':checked')) {
             $('#pnlValueOfX').show();
             $('#pnlValueOfXincltax').show();
         }

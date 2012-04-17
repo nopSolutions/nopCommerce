@@ -44,7 +44,7 @@
     });
 
     function toggleDownloadRecordType@(randomNumber)() {
-        if (getE('cbUseDownloadURL@(randomNumber)').checked) {
+        if ($('#cbUseDownloadURL@(randomNumber)').is(':checked')) {
                 $('#pnlDownloadURL@(randomNumber)').show();
                 $('#pnlDownloadFile@(randomNumber)').hide();
             }

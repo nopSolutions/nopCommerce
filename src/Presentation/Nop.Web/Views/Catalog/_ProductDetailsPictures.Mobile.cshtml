@@ -13,8 +13,7 @@
         function UpdateMainImage(url) {
             //show progress
             $.mobile.showPageLoadingMsg();
-            var imgMain = document.getElementById('defaultimage');
-            imgMain.src = url;
+            $('#defaultimage').attr("src", url);
             //hide progress
             $.mobile.hidePageLoadingMsg();
         }

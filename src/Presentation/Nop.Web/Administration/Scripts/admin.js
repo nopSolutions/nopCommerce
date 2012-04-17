@@ -13,6 +13,7 @@ function setLocation(url) {
 }
 
 function getE(name) {
+    //Obsolete since nopCommerce 2.60. But still here for backwards compatibility (in case of some plugin developers used it in their plugins or customized solutions)
     if (document.getElementById)
         var elem = document.getElementById(name);
     else if (document.all)

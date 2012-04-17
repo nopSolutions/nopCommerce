@@ -24,8 +24,7 @@
         });
 
         function onTaxTypeChanged() {
-            var selectedTaxType = document.getElementById('customerTaxType');
-            var selectedTaxTypeId = selectedTaxType.options[selectedTaxType.selectedIndex].value;
+            var selectedTaxTypeId = $("#customerTaxType").val();
             var changeTaxTypeActionUrl = '@Url.Action("TaxTypeSelected", "Common", new { customerTaxType = "taxtypeplaceholder" })';
             changeTaxTypeActionUrl = changeTaxTypeActionUrl.replace("taxtypeplaceholder", selectedTaxTypeId);
             setLocation(changeTaxTypeActionUrl);
