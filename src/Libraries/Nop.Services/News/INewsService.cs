@@ -26,14 +26,12 @@ namespace Nop.Services.News
         /// Gets all news
         /// </summary>
         /// <param name="languageId">Language identifier; 0 if you want to get all records</param>
-        /// <param name="dateFrom">Filter by created date; null if you want to get all records</param>
-        /// <param name="dateTo">Filter by created date; null if you want to get all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>News items</returns>
         IPagedList<NewsItem> GetAllNews(int languageId,
-            DateTime? dateFrom, DateTime? dateTo, int pageIndex, int pageSize, bool showHidden = false);
+            int pageIndex, int pageSize, bool showHidden = false);
 
         /// <summary>
         /// Inserts a news item

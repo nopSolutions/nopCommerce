@@ -132,8 +132,7 @@ namespace Nop.Web.Controllers
             var model = new NewsItemListModel();
             model.WorkingLanguageId = _workContext.WorkingLanguage.Id;
 
-            var newsItems = _newsService.GetAllNews(_workContext.WorkingLanguage.Id,
-                    null, null, 0, _newsSettings.MainPageNewsCount);
+            var newsItems = _newsService.GetAllNews(_workContext.WorkingLanguage.Id, 0, _newsSettings.MainPageNewsCount);
 
             model.NewsItems = newsItems
                 .Select(x =>
@@ -159,7 +158,7 @@ namespace Nop.Web.Controllers
             if (command.PageNumber <= 0) command.PageNumber = 1;
 
             var newsItems = _newsService.GetAllNews(_workContext.WorkingLanguage.Id,
-                    null, null, command.PageNumber - 1, command.PageSize);
+                command.PageNumber - 1, command.PageSize);
             model.PagingFilteringContext.LoadPagedList(newsItems);
 
             model.NewsItems = newsItems
@@ -187,8 +186,7 @@ namespace Nop.Web.Controllers
                 return new RssActionResult() { Feed = feed };
 
             var items = new List<SyndicationItem>();
-            var newsItems = _newsService.GetAllNews(languageId,
-                null, null, 0, int.MaxValue);
+            var newsItems = _newsService.GetAllNews(languageId, 0, int.MaxValue);
             foreach (var n in newsItems)
             {
                 string newsUrl = Url.RouteUrl("NewsItem", new { newsItemId = n.Id, SeName = n.GetSeName() }, "http");
@@ -204,7 +202,10 @@ namespace Nop.Web.Controllers
                 return RedirectToAction("Index", "Home");
 
             var newsItem = _newsService.GetNewsById(newsItemId);
-            if (newsItem == null || !newsItem.Published)
+            if (newsItem == null || 
+                !newsItem.Published ||
+                (newsItem.StartDateUtc.HasValue && newsItem.StartDateUtc.Value >= DateTime.UtcNow) ||
+                (newsItem.EndDateUtc.HasValue && newsItem.EndDateUtc.Value <= DateTime.UtcNow))
                 return RedirectToAction("Index", "Home");
 
             var model = new NewsItemModel();

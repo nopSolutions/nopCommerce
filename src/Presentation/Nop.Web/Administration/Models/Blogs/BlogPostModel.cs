@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using FluentValidation.Attributes;
 using Nop.Admin.Validators.Blogs;
@@ -34,6 +35,14 @@ namespace Nop.Admin.Models.Blogs
 
         [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.Comments")]
         public int Comments { get; set; }
+
+        [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.StartDate")]
+        [UIHint("DateNullable")]
+        public DateTime? StartDate { get; set; }
+
+        [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.EndDate")]
+        [UIHint("DateNullable")]
+        public DateTime? EndDate { get; set; }
 
         [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.CreatedOn")]
         public DateTime CreatedOn { get; set; }

@@ -21,10 +21,9 @@
                     .BindTo(Model.Data)
                     .Columns(columns =>
                     {
-                        columns.Bound(x => x.Title).Width(150);
-                        columns.Bound(x => x.LanguageName).Width(150);
+                        columns.Bound(x => x.Title);
+                        columns.Bound(x => x.LanguageName);
                         columns.Bound(x => x.Comments)
-                            .Width(150)
                             .Centered()
                             .Template(
                             @<div>
@@ -32,12 +31,14 @@
                                 </div>
                             )
                             .ClientTemplate("<div><a href=\"Comments?filterByNewsItemId=<#= Id #>\">" + T("Admin.ContentManagement.News.NewsItems.Fields.Comments").Text + " - <#= Comments #>" + "</a></div>");
+                        columns.Bound(x => x.StartDate)
+                            .Centered();
+                        columns.Bound(x => x.EndDate)
+                            .Centered();
                         columns.Bound(x => x.Published)
-                            .Width(100)
                             .Template(x => x.Published.ToString().ToLower())
                             .Centered();
                         columns.Bound(x => x.CreatedOn)
-                            .Width(150)
                             .Centered();
                         columns.Bound(x => x.Id)
                             .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "Edit", new { id = x.Id }))

@@ -61,12 +61,16 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
                 return AccessDeniedView();
 
-            var blogPosts = _blogService.GetAllBlogPosts(0, null, null, 0, _adminAreaSettings.GridPageSize);
+            var blogPosts = _blogService.GetAllBlogPosts(0, null, null, 0, _adminAreaSettings.GridPageSize, true);
             var gridModel = new GridModel<BlogPostModel>
             {
                 Data = blogPosts.Select(x =>
                 {
                     var m = x.ToModel();
+                    if (x.StartDateUtc.HasValue)
+                        m.StartDate = _dateTimeHelper.ConvertToUserTime(x.StartDateUtc.Value, DateTimeKind.Utc);
+                    if (x.EndDateUtc.HasValue)
+                        m.EndDate = _dateTimeHelper.ConvertToUserTime(x.EndDateUtc.Value, DateTimeKind.Utc);
                     m.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
                     m.LanguageName = x.Language.Name;
                     m.Comments = x.BlogComments.Count;
@@ -83,12 +87,16 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
                 return AccessDeniedView();
 
-            var blogPosts = _blogService.GetAllBlogPosts(0, null, null, command.Page - 1, command.PageSize);
+            var blogPosts = _blogService.GetAllBlogPosts(0, null, null, command.Page - 1, command.PageSize, true);
             var gridModel = new GridModel<BlogPostModel>
             {
                 Data = blogPosts.Select(x =>
                 {
                     var m = x.ToModel();
+                    if (x.StartDateUtc.HasValue)
+                        m.StartDate = _dateTimeHelper.ConvertToUserTime(x.StartDateUtc.Value, DateTimeKind.Utc);
+                    if (x.EndDateUtc.HasValue)
+                        m.EndDate = _dateTimeHelper.ConvertToUserTime(x.EndDateUtc.Value, DateTimeKind.Utc);
                     m.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
                     m.LanguageName = x.Language.Name;
                     m.Comments = x.BlogComments.Count;
@@ -123,6 +131,8 @@ namespace Nop.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var blogPost = model.ToEntity();
+                blogPost.StartDateUtc = model.StartDate;
+                blogPost.EndDateUtc = model.EndDate;
                 blogPost.CreatedOnUtc = DateTime.UtcNow;
                 _blogService.InsertBlogPost(blogPost);
 
@@ -147,6 +157,8 @@ namespace Nop.Admin.Controllers
 
             ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
             var model = blogPost.ToModel();
+            model.StartDate = blogPost.StartDateUtc;
+            model.EndDate = blogPost.EndDateUtc;
             return View(model);
 		}
         
@@ -164,6 +176,8 @@ namespace Nop.Admin.Controllers
             if (ModelState.IsValid)
             {
                 blogPost = model.ToEntity(blogPost);
+                blogPost.StartDateUtc = model.StartDate;
+                blogPost.EndDateUtc = model.EndDate;
                 _blogService.UpdateBlogPost(blogPost);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.Blog.BlogPosts.Updated"));

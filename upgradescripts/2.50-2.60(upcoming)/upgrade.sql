@@ -32,8 +32,29 @@ set @resources='
   <LocaleResource Name="Admin.System.Warnings.IncompatiblePlugin">
     <Value>''{0}'' plugin is incompatible with your nopCommerce version. Delete it or update to the latest version.</Value>
   </LocaleResource>
-  <LocaleResource Name="Admin.Promotions.Discounts.Requirements.Remove">
-    <Value>Remove requirement</Value>
+  <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Fields.StartDate">
+    <Value>Start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Fields.StartDate.Hint">
+    <Value>Set the news item start date or leave empty.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Fields.EndDate">
+    <Value>End date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.News.NewsItems.Fields.EndDate.Hint">
+    <Value>Set the news item end date or leave empty.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.StartDate">
+    <Value>Start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.StartDate.Hint">
+    <Value>Set the blog post start date or leave empty.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.EndDate">
+    <Value>End date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.EndDate.Hint">
+    <Value>Set the blog post end date or leave empty.</Value>
   </LocaleResource>
 </Language>
 '
@@ -528,5 +549,33 @@ BEGIN
         SET @end = CHARINDEX(@delimiter, @string, @start)
     END
     RETURN
+END
+GO
+
+
+--Add 'StartDateUtc' and 'EndDateUtc' columns to [News] table
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[News]') and NAME='StartDateUtc')
+BEGIN
+	ALTER TABLE [dbo].[News]
+	ADD [StartDateUtc] datetime NULL
+END
+GO
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[News]') and NAME='EndDateUtc')
+BEGIN
+	ALTER TABLE [dbo].[News]
+	ADD [EndDateUtc] datetime NULL
+END
+GO
+--Add 'StartDateUtc' and 'EndDateUtc' columns to [BlogPost] table
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[BlogPost]') and NAME='StartDateUtc')
+BEGIN
+	ALTER TABLE [dbo].[BlogPost]
+	ADD [StartDateUtc] datetime NULL
+END
+GO
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[BlogPost]') and NAME='EndDateUtc')
+BEGIN
+	ALTER TABLE [dbo].[BlogPost]
+	ADD [EndDateUtc] datetime NULL
 END
 GO

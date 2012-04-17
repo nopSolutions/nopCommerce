@@ -5333,6 +5333,22 @@
 													</LocaleResource>
 												</Children>
 											</LocaleResource>
+                      <LocaleResource Name="StartDate">
+                        <Value>Start date</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Set the blog post start date or leave empty.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="EndDate">
+                        <Value>End date</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Set the blog post end date or leave empty.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
 											<LocaleResource Name="CreatedOn">
 												<Value>Created on</Value>
 											</LocaleResource>
@@ -5692,6 +5708,22 @@
 													</LocaleResource>
 												</Children>
 											</LocaleResource>
+                      <LocaleResource Name="StartDate">
+                        <Value>Start date</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Set the news item start date or leave empty.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
+                      <LocaleResource Name="EndDate">
+                        <Value>End date</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Set the news item end date or leave empty.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
 											<LocaleResource Name="CreatedOn">
 												<Value>Created on</Value>
 											</LocaleResource>

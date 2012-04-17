@@ -83,9 +83,10 @@ namespace Nop.Services.Blogs
         /// <param name="dateTo">Filter by created date; null if you want to get all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Blog posts</returns>
         public virtual IPagedList<BlogPost> GetAllBlogPosts(int languageId,
-            DateTime? dateFrom, DateTime? dateTo, int pageIndex, int pageSize)
+            DateTime? dateFrom, DateTime? dateTo, int pageIndex, int pageSize, bool showHidden = false)
         {
             var query = _blogPostRepository.Table;
             if (dateFrom.HasValue)
@@ -94,6 +95,12 @@ namespace Nop.Services.Blogs
                 query = query.Where(b => dateTo.Value >= b.CreatedOnUtc);
             if (languageId > 0)
                 query = query.Where(b => languageId == b.LanguageId);
+            if (!showHidden)
+            {
+                var utcNow = DateTime.UtcNow;
+                query = query.Where(b => !b.StartDateUtc.HasValue || b.StartDateUtc <= utcNow);
+                query = query.Where(b => !b.EndDateUtc.HasValue || b.EndDateUtc >= utcNow);
+            }
             query = query.OrderByDescending(b => b.CreatedOnUtc);
             
             var blogPosts = new PagedList<BlogPost>(query, pageIndex, pageSize);
@@ -105,12 +112,13 @@ namespace Nop.Services.Blogs
         /// </summary>
         /// <param name="languageId">Language identifier. 0 if you want to get all news</param>
         /// <param name="tag">Tag</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Blog posts</returns>
-        public virtual IList<BlogPost> GetAllBlogPostsByTag(int languageId, string tag)
+        public virtual IList<BlogPost> GetAllBlogPostsByTag(int languageId, string tag, bool showHidden = false)
         {
             tag = tag.Trim();
 
-            var blogPostsAll = GetAllBlogPosts(languageId, null, null, 0, int.MaxValue);
+            var blogPostsAll = GetAllBlogPosts(languageId, null, null, 0, int.MaxValue, showHidden);
             var blogPosts = new List<BlogPost>();
             foreach (var blogPost in blogPostsAll)
             {
@@ -126,12 +134,13 @@ namespace Nop.Services.Blogs
         /// Gets all blog post tags
         /// </summary>
         /// <param name="languageId">Language identifier. 0 if you want to get all news</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Blog post tags</returns>
-        public virtual IList<BlogPostTag> GetAllBlogPostTags(int languageId)
+        public virtual IList<BlogPostTag> GetAllBlogPostTags(int languageId, bool showHidden = false)
         {
             var blogPostTags = new List<BlogPostTag>();
 
-            var blogPosts = GetAllBlogPosts(languageId, null, null, 0, int.MaxValue);
+            var blogPosts = GetAllBlogPosts(languageId, null, null, 0, int.MaxValue, showHidden);
             foreach (var blogPost in blogPosts)
             {
                 var tags = blogPost.ParseTags();

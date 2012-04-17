@@ -37,6 +37,16 @@ namespace Nop.Core.Domain.Blogs
         public virtual string Tags { get; set; }
 
         /// <summary>
+        /// Gets or sets the blog post start date and time
+        /// </summary>
+        public virtual DateTime? StartDateUtc { get; set; }
+
+        /// <summary>
+        /// Gets or sets the blog post end date and time
+        /// </summary>
+        public virtual DateTime? EndDateUtc { get; set; }
+
+        /// <summary>
         /// Gets or sets the date and time of entity creation
         /// </summary>
         public virtual DateTime CreatedOnUtc { get; set; }

@@ -61,12 +61,16 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNews))
                 return AccessDeniedView();
 
-            var news = _newsService.GetAllNews(0, null, null, 0, _adminAreaSettings.GridPageSize, true);
+            var news = _newsService.GetAllNews(0, 0, _adminAreaSettings.GridPageSize, true);
             var gridModel = new GridModel<NewsItemModel>
             {
                 Data = news.Select(x =>
                 {
                     var m = x.ToModel();
+                    if (x.StartDateUtc.HasValue)
+                        m.StartDate = _dateTimeHelper.ConvertToUserTime(x.StartDateUtc.Value, DateTimeKind.Utc);
+                    if (x.EndDateUtc.HasValue)
+                        m.EndDate = _dateTimeHelper.ConvertToUserTime(x.EndDateUtc.Value, DateTimeKind.Utc);
                     m.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
                     m.LanguageName = x.Language.Name;
                     m.Comments = x.NewsComments.Count;
@@ -83,12 +87,16 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNews))
                 return AccessDeniedView();
 
-            var news = _newsService.GetAllNews(0, null, null, command.Page - 1, command.PageSize, true);
+            var news = _newsService.GetAllNews(0, command.Page - 1, command.PageSize, true);
             var gridModel = new GridModel<NewsItemModel>
             {
                 Data = news.Select(x =>
                 {
                     var m = x.ToModel();
+                    if (x.StartDateUtc.HasValue)
+                        m.StartDate = _dateTimeHelper.ConvertToUserTime(x.StartDateUtc.Value, DateTimeKind.Utc);
+                    if (x.EndDateUtc.HasValue)
+                        m.EndDate = _dateTimeHelper.ConvertToUserTime(x.EndDateUtc.Value, DateTimeKind.Utc);
                     m.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
                     m.LanguageName = x.Language.Name;
                     m.Comments = x.NewsComments.Count;
@@ -124,6 +132,8 @@ namespace Nop.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var newsItem = model.ToEntity();
+                newsItem.StartDateUtc = model.StartDate;
+                newsItem.EndDateUtc = model.EndDate;
                 newsItem.CreatedOnUtc = DateTime.UtcNow;
                 _newsService.InsertNews(newsItem);
 
@@ -148,6 +158,8 @@ namespace Nop.Admin.Controllers
 
             ViewBag.AllLanguages = _languageService.GetAllLanguages(true);
             var model = newsItem.ToModel();
+            model.StartDate = newsItem.StartDateUtc;
+            model.EndDate = newsItem.EndDateUtc;
             return View(model);
         }
 
@@ -165,6 +177,8 @@ namespace Nop.Admin.Controllers
             if (ModelState.IsValid)
             {
                 newsItem = model.ToEntity(newsItem);
+                newsItem.StartDateUtc = model.StartDate;
+                newsItem.EndDateUtc = model.EndDate;
                 _newsService.UpdateNews(newsItem);
 
                 SuccessNotification(_localizationService.GetResource("Admin.ContentManagement.News.NewsItems.Updated"));

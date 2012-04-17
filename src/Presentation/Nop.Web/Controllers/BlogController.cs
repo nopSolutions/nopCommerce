@@ -193,7 +193,9 @@ namespace Nop.Web.Controllers
                 return RedirectToAction("Index", "Home");
 
             var blogPost = _blogService.GetBlogPostById(blogPostId);
-            if (blogPost == null)
+            if (blogPost == null ||
+                (blogPost.StartDateUtc.HasValue && blogPost.StartDateUtc.Value >= DateTime.UtcNow) ||
+                (blogPost.EndDateUtc.HasValue && blogPost.EndDateUtc.Value <= DateTime.UtcNow))
                 return RedirectToAction("Index", "Home");
 
             var model = new BlogPostModel();
