@@ -80,6 +80,15 @@ set @resources='
   <LocaleResource Name="Admin.Orders.Shipments.PrintPackagingSlip.Selected">
     <Value>Print packaging slips (selected)</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Methods.Fields.Name.Hint">
+    <Value>Enter shipping method name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Methods.Fields.DisplayOrder.Hint">
+    <Value>The display order of this shipping method. 1 represents the top of the list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Shipping.Methods.Fields.Description.Hint">
+    <Value>Enter shipping method description.</Value>
+  </LocaleResource>
 </Language>
 '
 

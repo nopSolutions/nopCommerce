@@ -5116,6 +5116,9 @@
 											<LocaleResource Name="Name">
 												<Value>Name</Value>
 												<Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Enter shipping method name.</Value>
+                          </LocaleResource>
 													<LocaleResource Name="Required">
 														<Value>Please provide a name.</Value>
 													</LocaleResource>
@@ -5123,9 +5126,19 @@
 											</LocaleResource>
 											<LocaleResource Name="Description">
 												<Value>Description</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Enter shipping method description.</Value>
+                          </LocaleResource>
+                        </Children>
 											</LocaleResource>
 											<LocaleResource Name="DisplayOrder">
 												<Value>Display order</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>The display order of this shipping method. 1 represents the top of the list.</Value>
+                          </LocaleResource>
+                        </Children>
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
