@@ -1700,6 +1700,54 @@ namespace Nop.Admin.Controllers
         
         #region Shipments
 
+
+        public ActionResult ShipmentList()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
+            var model = new ShipmentListModel();
+            model.DisplayPdfPackagingSlip = _pdfSettings.Enabled;
+            return View(model);
+		}
+
+		[GridAction(EnableCustomBinding = true)]
+        public ActionResult ShipmentListSelect(GridCommand command, ShipmentListModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
+            DateTime? startDateValue = (model.StartDate == null) ? null
+                            : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.StartDate.Value, _dateTimeHelper.CurrentTimeZone);
+
+            DateTime? endDateValue = (model.EndDate == null) ? null 
+                            :(DateTime?)_dateTimeHelper.ConvertToUtcTime(model.EndDate.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
+
+            //load shipments
+            var shipments = _shipmentService.GetAllShipments(startDateValue, endDateValue, 
+                command.Page - 1, command.PageSize);
+            var gridModel = new GridModel<ShipmentModel>
+            {
+                Data = shipments.Select(shipment =>
+                {
+                    return new ShipmentModel()
+                    {
+                        Id = shipment.Id,
+                        OrderId = shipment.OrderId,
+                        TrackingNumber = shipment.TrackingNumber,
+                        ShippedDate = _dateTimeHelper.ConvertToUserTime(shipment.ShippedDateUtc, DateTimeKind.Utc).ToString(),
+                        DeliveryDate = shipment.DeliveryDateUtc.HasValue ? _dateTimeHelper.ConvertToUserTime(shipment.DeliveryDateUtc.Value, DateTimeKind.Utc).ToString() : _localizationService.GetResource("Admin.Orders.Shipments.DeliveryDate.NotYet"),
+                        CanDeliver = !shipment.DeliveryDateUtc.HasValue,
+                    };
+                }),
+                Total = shipments.TotalCount
+            };
+			return new JsonResult
+			{
+				Data = gridModel
+			};
+		}
+        
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult ShipmentsSelect(int orderId, GridCommand command)
         {
@@ -2012,6 +2060,42 @@ namespace Nop.Admin.Controllers
             var bytes = System.IO.File.ReadAllBytes(filePath);
             return File(bytes, "application/pdf", fileName);
         }
+
+        public ActionResult PdfPackagingSlipAll()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
+            var shipments = _shipmentService.GetAllShipments(null, null, 0, int.MaxValue);
+            string fileName = string.Format("packagingslips_{0}.pdf", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
+            string filePath = string.Format("{0}content\\files\\ExportImport\\{1}", this.Request.PhysicalApplicationPath, fileName);
+            _pdfService.PrintPackagingSlipsToPdf(shipments, filePath);
+            var bytes = System.IO.File.ReadAllBytes(filePath);
+            return File(bytes, "application/pdf", fileName);
+        }
+
+        public ActionResult PdfPackagingSlipSelected(string selectedIds)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
+            var shipments = new List<Shipment>();
+            if (selectedIds != null)
+            {
+                var ids = selectedIds
+                    .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(x => Convert.ToInt32(x))
+                    .ToArray();
+                shipments.AddRange(_shipmentService.GetShipmentsByIds(ids));
+            }
+
+            string fileName = string.Format("packagingslips_{0}.pdf", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
+            string filePath = string.Format("{0}content\\files\\ExportImport\\{1}", this.Request.PhysicalApplicationPath, fileName);
+            _pdfService.PrintPackagingSlipsToPdf(shipments, filePath);
+            var bytes = System.IO.File.ReadAllBytes(filePath);
+            return File(bytes, "application/pdf", fileName);
+        }
+
         #endregion
 
         #region Order notes

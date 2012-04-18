@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Data;
@@ -23,12 +24,18 @@ namespace Nop.Services.Shipping
         /// </summary>
         /// <param name="shippedFrom">Date shipped from; null to load all records</param>
         /// <param name="shippedTo">Date shipped to; null to load all records</param>
-        /// <param name="orderId">Order identifier; 0 to load all customers</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Customer collection</returns>
-        IPagedList<Shipment> GetAllShipments(DateTime? shippedFrom,
-            DateTime? shippedTo, int orderId, int pageIndex, int pageSize);
+        IPagedList<Shipment> GetAllShipments(DateTime? shippedFrom, DateTime? shippedTo, 
+            int pageIndex, int pageSize);
+        
+        /// <summary>
+        /// Get shipment by identifiers
+        /// </summary>
+        /// <param name="shipmentIds">Shipment identifiers</param>
+        /// <returns>Shipments</returns>
+        IList<Shipment> GetShipmentsByIds(int[] shipmentIds);
 
         /// <summary>
         /// Gets a shipment

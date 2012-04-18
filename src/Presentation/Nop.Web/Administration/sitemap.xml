@@ -23,6 +23,7 @@
         </siteMapNode>
         <siteMapNode title="Sales" nopResource="Admin.Sales" PermissionNames="ManageOrders, ManageReturnRequests, ManageGiftCards" ImageUrl="~/Administration/Content/images/ico-sales.png">
           <siteMapNode title="Orders" nopResource="Admin.Orders" PermissionNames="ManageOrders" controller="Order" action="List" />
+          <siteMapNode title="Shipments" nopResource="Admin.Orders.Shipments.List" PermissionNames="ManageOrders" controller="Order" action="ShipmentList" />
           <siteMapNode title="Recurring payments" nopResource="Admin.RecurringPayments" PermissionNames="ManageOrders" controller="RecurringPayment" action="List" />
           <siteMapNode title="Return requests" nopResource="Admin.ReturnRequests" PermissionNames="ManageReturnRequests" controller="ReturnRequest" action="List" />
           <siteMapNode title="Gift cards" nopResource="Admin.GiftCards" PermissionNames="ManageGiftCards" controller="GiftCard" action="List" />

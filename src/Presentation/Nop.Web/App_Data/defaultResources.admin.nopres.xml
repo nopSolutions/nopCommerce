@@ -7949,11 +7949,43 @@
               <LocaleResource Name="ID">
                 <Value>Shipment #</Value>
               </LocaleResource>
+              <LocaleResource Name="List">
+                <Value>Shipments</Value>
+                <Children>
+                  <LocaleResource Name="StartDate">
+                    <Value>Start date</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>The start date (shipped on) for the search</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="EndDate">
+                    <Value>End date</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>The end date (shipped on) for the search.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
               <LocaleResource Name="NoProductsSelected">
                 <Value>No products selected</Value>
               </LocaleResource>
+              <LocaleResource Name="OrderID">
+                <Value>Order #</Value>
+              </LocaleResource>
               <LocaleResource Name="PrintPackagingSlip">
                 <Value>Print packaging slip</Value>
+                <Children>
+                  <LocaleResource Name="All">
+                    <Value>Print packaging slips (all)</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Selected">
+                    <Value>Print packaging slips (selected)</Value>
+                  </LocaleResource>
+                </Children>
               </LocaleResource>
               <LocaleResource Name="Products">
                 <Value>Products shipped</Value>

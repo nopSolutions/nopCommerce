@@ -56,6 +56,30 @@ set @resources='
   <LocaleResource Name="Admin.ContentManagement.Blog.BlogPosts.Fields.EndDate.Hint">
     <Value>Set the blog post end date or leave empty.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.List">
+    <Value>Shipments</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.List.StartDate">
+    <Value>Start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.List.StartDate.Hint">
+    <Value>The start date (shipped on) for the search</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.List.EndDate">
+    <Value>End date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.List.EndDate.Hint">
+    <Value>The end date (shipped on) for the search.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.OrderID">
+    <Value>Order #</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.PrintPackagingSlip.All">
+    <Value>Print packaging slips (all)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.PrintPackagingSlip.Selected">
+    <Value>Print packaging slips (selected)</Value>
+  </LocaleResource>
 </Language>
 '
 

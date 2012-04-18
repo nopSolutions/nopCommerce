@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Data;
+using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Events;
 
@@ -16,6 +18,7 @@ namespace Nop.Services.Shipping
 
         private readonly IRepository<Shipment> _shipmentRepository;
         private readonly IRepository<ShipmentOrderProductVariant> _sopvRepository;
+        private readonly IRepository<Order> _orderRepository;
         private readonly IEventPublisher _eventPublisher;
         
         #endregion
@@ -27,13 +30,16 @@ namespace Nop.Services.Shipping
         /// </summary>
         /// <param name="shipmentRepository">Shipment repository</param>
         /// <param name="sopvRepository">Shipment order product variant repository</param>
+        /// <param name="orderRepository">Order repository</param>
         /// <param name="eventPublisher">Event published</param>
         public ShipmentService(IRepository<Shipment> shipmentRepository,
             IRepository<ShipmentOrderProductVariant> sopvRepository,
+            IRepository<Order> orderRepository,
             IEventPublisher eventPublisher)
         {
             this._shipmentRepository = shipmentRepository;
             this._sopvRepository = sopvRepository;
+            this._orderRepository = orderRepository;
             _eventPublisher = eventPublisher;
         }
 
@@ -61,27 +67,49 @@ namespace Nop.Services.Shipping
         /// </summary>
         /// <param name="shippedFrom">Date shipped from; null to load all records</param>
         /// <param name="shippedTo">Date shipped to; null to load all records</param>
-        /// <param name="orderId">Order identifier; 0 to load all customers</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Customer collection</returns>
         public virtual IPagedList<Shipment> GetAllShipments(DateTime? shippedFrom,
-            DateTime? shippedTo, int orderId, int pageIndex, int pageSize)
+            DateTime? shippedTo, int pageIndex, int pageSize)
         {
             var query = _shipmentRepository.Table;
             if (shippedFrom.HasValue)
                 query = query.Where(s => shippedFrom.Value <= s.ShippedDateUtc);
             if (shippedTo.HasValue)
                 query = query.Where(s => shippedTo.Value >= s.ShippedDateUtc);
-            if (orderId > 0)
-                query = query.Where(s => s.OrderId == orderId);
-
-            query = query.OrderBy(s => s.ShippedDateUtc);
+            query = query.Where(s => s.Order != null && !s.Order.Deleted);
+            query = query.OrderByDescending(s => s.ShippedDateUtc);
 
             var shipments = new PagedList<Shipment>(query, pageIndex, pageSize);
             return shipments;
         }
-        
+
+        /// <summary>
+        /// Get shipment by identifiers
+        /// </summary>
+        /// <param name="shipmentIds">Shipment identifiers</param>
+        /// <returns>Shipments</returns>
+        public virtual IList<Shipment> GetShipmentsByIds(int[] shipmentIds)
+        {
+            if (shipmentIds == null || shipmentIds.Length == 0)
+                return new List<Shipment>();
+
+            var query = from o in _shipmentRepository.Table
+                        where shipmentIds.Contains(o.Id)
+                        select o;
+            var shipments = query.ToList();
+            //sort by passed identifiers
+            var sortedOrders = new List<Shipment>();
+            foreach (int id in shipmentIds)
+            {
+                var shipment = shipments.Find(x => x.Id == id);
+                if (shipment != null)
+                    sortedOrders.Add(shipment);
+            }
+            return sortedOrders;
+        }
+
         /// <summary>
         /// Gets a shipment
         /// </summary>
