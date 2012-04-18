@@ -1,8 +1,11 @@
+using System;
+
 namespace Nop.Core.Domain.Orders
 {
     /// <summary>
     /// Represents a best sellers report line
     /// </summary>
+    [Serializable]
     public partial class BestsellersReportLine
     {
         /// <summary>

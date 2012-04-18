@@ -2014,9 +2014,10 @@ namespace Nop.Web.Controllers
             if (!_catalogSettings.ShowBestsellersOnHomepage || _catalogSettings.NumberOfBestsellersOnHomepage == 0)
                 return Content("");
 
+            //load and cache report
+            var report = _cacheManager.Get(ModelCacheEventConsumer.HOMEPAGE_BESTSELLERS_IDS_KEY, 
+                () => _orderReportService.BestSellersReport(null, null, null, null, null, _catalogSettings.NumberOfBestsellersOnHomepage));
             var products = new List<Product>();
-            var report = _orderReportService.BestSellersReport(null, null, null, null, null,
-                _catalogSettings.NumberOfBestsellersOnHomepage);
             foreach (var line in report)
             {
                 var productVariant = _productService.GetProductVariantById(line.ProductVariantId);

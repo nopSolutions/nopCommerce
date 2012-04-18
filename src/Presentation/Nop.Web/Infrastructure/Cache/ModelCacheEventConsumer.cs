@@ -2,6 +2,7 @@
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Topics;
 using Nop.Core.Events;
 using Nop.Core.Infrastructure;
@@ -77,6 +78,14 @@ namespace Nop.Web.Infrastructure.Cache
         IConsumer<EntityInserted<ProductTemplate>>,
         IConsumer<EntityUpdated<ProductTemplate>>,
         IConsumer<EntityDeleted<ProductTemplate>>,
+        //Orders
+        IConsumer<EntityInserted<Order>>,
+        IConsumer<EntityUpdated<Order>>,
+        IConsumer<EntityDeleted<Order>>,
+        //Order product variants
+        IConsumer<EntityInserted<OrderProductVariant>>,
+        IConsumer<EntityUpdated<OrderProductVariant>>,
+        IConsumer<EntityDeleted<OrderProductVariant>>,
         //Pictures
         IConsumer<EntityInserted<Picture>>,
         IConsumer<EntityUpdated<Picture>>,
@@ -199,6 +208,12 @@ namespace Nop.Web.Infrastructure.Cache
         public const string PRODUCT_TEMPLATE_PATTERN_KEY = "nop.pres.producttemplate";
 
         /// <summary>
+        /// Key for bestsellers identifiers displayed on the home page
+        /// </summary>
+        public const string HOMEPAGE_BESTSELLERS_IDS_KEY = "nop.pres.bestsellers.homepage";
+        public const string HOMEPAGE_BESTSELLERS_IDS_PATTERN_KEY = "nop.pres.bestsellers.homepage";
+
+        /// <summary>
         /// Key for default product picture caching
         /// </summary>
         /// <remarks>
@@ -286,11 +301,13 @@ namespace Nop.Web.Infrastructure.Cache
         {
             //clear models which depend on settings
             _cacheManager.RemoveByPattern(CATEGORY_NAVIGATION_PATTERN_KEY); //depends on CatalogSettings.ShowCategoryProductNumber and CatalogSettings.ShowCategoryProductNumberIncludingSubcategories
+            _cacheManager.RemoveByPattern(HOMEPAGE_BESTSELLERS_IDS_PATTERN_KEY); //depends on CatalogSettings.NumberOfBestsellersOnHomepage
         }
         public void HandleEvent(EntityDeleted<Setting> eventMessage)
         {
             //clear models which depend on settings
             _cacheManager.RemoveByPattern(CATEGORY_NAVIGATION_PATTERN_KEY); //depends on CatalogSettings.ShowCategoryProductNumber and CatalogSettings.ShowCategoryProductNumberIncludingSubcategories
+            _cacheManager.RemoveByPattern(HOMEPAGE_BESTSELLERS_IDS_PATTERN_KEY); //depends on CatalogSettings.NumberOfBestsellersOnHomepage
         }
         
         //manufacturers
@@ -504,6 +521,34 @@ namespace Nop.Web.Infrastructure.Cache
         public void HandleEvent(EntityDeleted<ProductTemplate> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_TEMPLATE_PATTERN_KEY);
+        }
+
+
+        //Orders
+        public void HandleEvent(EntityInserted<Order> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(HOMEPAGE_BESTSELLERS_IDS_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityUpdated<Order> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(HOMEPAGE_BESTSELLERS_IDS_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityDeleted<Order> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(HOMEPAGE_BESTSELLERS_IDS_PATTERN_KEY);
+        }
+        //Order product variants
+        public void HandleEvent(EntityInserted<OrderProductVariant> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(HOMEPAGE_BESTSELLERS_IDS_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityUpdated<OrderProductVariant> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(HOMEPAGE_BESTSELLERS_IDS_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityDeleted<OrderProductVariant> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(HOMEPAGE_BESTSELLERS_IDS_PATTERN_KEY);
         }
 
         //Pictures
