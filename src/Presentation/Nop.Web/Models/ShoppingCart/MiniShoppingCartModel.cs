@@ -14,6 +14,7 @@ namespace Nop.Web.Models.ShoppingCart
         public int TotalProducts { get; set; }
         public string SubTotal { get; set; }
         public bool DisplayProducts { get; set; }
+        public bool RedirectToShoppingCartPage { get; set; }
 
 
         #region Nested Classes

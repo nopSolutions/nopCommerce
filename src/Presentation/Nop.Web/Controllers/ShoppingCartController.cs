@@ -1254,7 +1254,10 @@ namespace Nop.Web.Controllers
 
             var model = new MiniShoppingCartModel()
             {
-                DisplayProducts = _shoppingCartSettings.MiniShoppingCartDisplayProducts
+                DisplayProducts = _shoppingCartSettings.MiniShoppingCartDisplayProducts,
+                //if "terms of services" are enabled, then redirect a customer to the shopping cart page
+                //because he should check an appropriate checkbox first.
+                RedirectToShoppingCartPage = _orderSettings.TermsOfServiceEnabled,
             };
 
             var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();

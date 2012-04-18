@@ -24,7 +24,7 @@
             <br />
             <span class="subtotal">@T("ShoppingCart.Totals.SubTotal"): @Model.SubTotal</span>
             <div class="buttons">
-                <input type="submit" value="@T("Checkout")" class="minicartcheckoutbutton" onclick="setLocation('@Url.RouteUrl("Checkout")')" />
+                <input type="submit" value="@T("Checkout")" class="minicartcheckoutbutton" onclick="setLocation('@(Model.RedirectToShoppingCartPage ? @Url.RouteUrl("ShoppingCart") : @Url.RouteUrl("Checkout"))')" />
             </div>
              if (Model.DisplayProducts)
              {
