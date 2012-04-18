@@ -343,18 +343,26 @@ namespace Nop.Admin.Infrastructure
             //blogs
             Mapper.CreateMap<BlogPost, BlogPostModel>()
                 .ForMember(dest => dest.Comments, mo => mo.Ignore())
+                .ForMember(dest => dest.StartDate, mo => mo.Ignore())
+                .ForMember(dest => dest.EndDate, mo => mo.Ignore())
                 .ForMember(dest => dest.CreatedOn, mo => mo.Ignore());
             Mapper.CreateMap<BlogPostModel, BlogPost>()
                 .ForMember(dest => dest.BlogComments, mo => mo.Ignore())
                 .ForMember(dest => dest.Language, mo => mo.Ignore())
+                .ForMember(dest => dest.StartDateUtc, mo => mo.Ignore())
+                .ForMember(dest => dest.EndDateUtc, mo => mo.Ignore())
                 .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore());
             //news
             Mapper.CreateMap<NewsItem, NewsItemModel>()
                 .ForMember(dest => dest.Comments, mo => mo.Ignore())
+                .ForMember(dest => dest.StartDate, mo => mo.Ignore())
+                .ForMember(dest => dest.EndDate, mo => mo.Ignore())
                 .ForMember(dest => dest.CreatedOn, mo => mo.Ignore());
             Mapper.CreateMap<NewsItemModel, NewsItem>()
                 .ForMember(dest => dest.NewsComments, mo => mo.Ignore())
                 .ForMember(dest => dest.Language, mo => mo.Ignore())
+                .ForMember(dest => dest.StartDateUtc, mo => mo.Ignore())
+                .ForMember(dest => dest.EndDateUtc, mo => mo.Ignore())
                 .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore());
             //news
             Mapper.CreateMap<Poll, PollModel>()
