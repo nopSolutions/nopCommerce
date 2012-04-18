@@ -28,8 +28,9 @@ namespace Nop.Admin.Models.Catalog
         [NopResourceDisplayName("Admin.Catalog.Products.List.GoDirectlyToSku")]
         [AllowHtml]
         public string GoDirectlyToSku { get; set; }
-        
+
         public bool DisplayProductPictures { get; set; }
+        public bool DisplayPdfDownloadCatalog { get; set; }
 
 
 

@@ -45,6 +45,7 @@ namespace Nop.Admin.Controllers
         private readonly IImportManager _importManager;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IPermissionService _permissionService;
+        private readonly PdfSettings _pdfSettings;
         private readonly AdminAreaSettings _adminAreaSettings;
 
         #endregion
@@ -61,7 +62,8 @@ namespace Nop.Admin.Controllers
             ICopyProductService copyProductService, IPdfService pdfService,
             IExportManager exportManager, IImportManager importManager,
             ICustomerActivityService customerActivityService,
-            IPermissionService permissionService, AdminAreaSettings adminAreaSettings)
+            IPermissionService permissionService, 
+            PdfSettings pdfSettings, AdminAreaSettings adminAreaSettings)
         {
             this._productService = productService;
             this._productTemplateService = productTemplateService;
@@ -81,6 +83,7 @@ namespace Nop.Admin.Controllers
             this._importManager = importManager;
             this._customerActivityService = customerActivityService;
             this._permissionService = permissionService;
+            this._pdfSettings = pdfSettings;
             this._adminAreaSettings = adminAreaSettings;
         }
 
@@ -422,6 +425,7 @@ namespace Nop.Admin.Controllers
 
             var model = new ProductListModel();
             model.DisplayProductPictures = _adminAreaSettings.DisplayProductPictures;
+            model.DisplayPdfDownloadCatalog = _pdfSettings.Enabled;
             model.Products = new GridModel<ProductModel>
             {
                 Data = products.Select(x =>
