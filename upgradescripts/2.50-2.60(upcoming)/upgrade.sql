@@ -89,6 +89,15 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Shipping.Methods.Fields.Description.Hint">
     <Value>Enter shipping method description.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Fields.Install.Progress">
+    <Value>Installing plugin...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Fields.Uninstall.Progress">
+    <Value>Uninstalling plugin...</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Header.RestartApplication.Progress">
+    <Value>Restarting the application...</Value>
+  </LocaleResource>
 </Language>
 '
 

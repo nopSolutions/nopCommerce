@@ -63,7 +63,7 @@
         (function () {
             function show() {
                 window.setTimeout(function () {
-                    document.getElementById("throbber").style.display = "block";
+                    $(".throbber").show();
                 }, 1000);
             }
 
@@ -328,12 +328,12 @@
             All rights reserved
         </div>
     </div>
-    <div id="throbber">
+    <div class="throbber">
         <div class="curtain">
         </div>
         <div class="curtain-content">
             <div>
-                <h1 id="setUpHeader">
+                <h1 class="throbber-header">
                     Installing nopCommerce...</h1>
                 <p>
                     <img src="@Url.Content("~/content/images/install-synchronizing.gif")" alt="" />

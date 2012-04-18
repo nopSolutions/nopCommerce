@@ -9,6 +9,17 @@
         <a href="@Url.Action("ReloadList")" class="t-button">@T("Admin.Configuration.Plugins.ReloadList")</a>
     </div>
 </div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#plugins-grid a.install").click(function (e) {
+            showThrobber('@T("Admin.Configuration.Plugins.Fields.Install.Progress")');
+        });
+
+        $("#plugins-grid a.uninstall").click(function (e) {
+            showThrobber('@T("Admin.Configuration.Plugins.Fields.Uninstall.Progress")');
+        });
+    });
+</script>    
 <table class="adminContent">
     <tr>
         <td>
@@ -77,8 +88,8 @@
                             .ReadOnly()
                             .Template(x =>
                                 Html.ActionLink(x.Installed ? T("Admin.Configuration.Plugins.Fields.Uninstall").Text : T("Admin.Configuration.Plugins.Fields.Install").Text,
-                                x.Installed ? "Uninstall" : "Install", new { systemName = x.SystemName }))
-                            .ClientTemplate("<# if (Installed)  { #> <a href=\"" + @Url.Content("~/Admin/Plugin/Uninstall/") + "?systemName=<#= SystemName #>\">" + T("Admin.Configuration.Plugins.Fields.Uninstall").Text + "</a> <# } else { #> <a href=\"" + @Url.Content("~/Admin/Plugin/Install/") + "?systemName=<#= SystemName #>\">" + T("Admin.Configuration.Plugins.Fields.Install").Text + "</a> <# } #>")
+                                x.Installed ? "Uninstall" : "Install", new { systemName = x.SystemName }, new { @class = x.Installed ? "uninstall" : "install" }))
+                            .ClientTemplate("<# if (Installed)  { #> <a href=\"" + @Url.Content("~/Admin/Plugin/Uninstall/") + "?systemName=<#= SystemName #>\" class=\"uninstall\">" + T("Admin.Configuration.Plugins.Fields.Uninstall").Text + "</a> <# } else { #> <a href=\"" + @Url.Content("~/Admin/Plugin/Install/") + "?systemName=<#= SystemName #>\" class=\"install\">" + T("Admin.Configuration.Plugins.Fields.Install").Text + "</a> <# } #>")
                             .Width(50)
                             .Centered()
                             .HeaderTemplate(T("Admin.Configuration.Plugins.Fields.Installation").Text);

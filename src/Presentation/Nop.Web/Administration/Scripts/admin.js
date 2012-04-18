@@ -32,6 +32,13 @@ function OpenWindow(query, w, h, scroll) {
     var f = window.open(query, "_blank", winprops);
 }
 
+function showThrobber(message) {
+    $('.throbber-header').html(message);
+    window.setTimeout(function () {
+        $(".throbber").show();
+    }, 1000);
+}
+
 $(document).ready(function () {
     //Setup the ajax indicator
     //TODO We'll not be able to load ajax-loading.gif when site is run in virtual directory. Fix it 

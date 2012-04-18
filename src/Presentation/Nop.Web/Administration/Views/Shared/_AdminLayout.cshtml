@@ -35,6 +35,13 @@
             }
             else
             {
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $("#restart-application").click(function (e) {
+                            showThrobber('@T("Admin.Header.RestartApplication.Progress")');
+                        });
+                    });
+                </script>
                 <div class="header">
                     <div class="logo">
                     </div>
@@ -46,7 +53,7 @@
                         <span class="separator">|</span>                        
                         @Html.ActionLink(T("Admin.Header.ClearCache").Text, "ClearCache", "Common")
                         <span class="separator">|</span>                        
-                        @Html.ActionLink(T("Admin.Header.RestartApplication").Text, "RestartApplication", "Common")
+                        @Html.ActionLink(T("Admin.Header.RestartApplication").Text, "RestartApplication", "Common", null, new { id = "restart-application" })
                     </div>
                     <div class="login-info">
                         @if (currentCustomer != null && currentCustomer.IsRegistered())
@@ -93,6 +100,18 @@
                 @Html.Partial("_Notifications")
                 <div class="cph">
                     @RenderBody()
+                </div>
+            </div>
+            <div class="throbber">
+                <div class="curtain">
+                </div>
+                <div class="curtain-content">
+                    <div>
+                        <h1 class="throbber-header">Wait...</h1>
+                        <p>
+                            <img src="@Url.Content("~/administration/content/images/throbber-synchronizing.gif")" alt="" />
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>

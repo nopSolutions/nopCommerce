@@ -3330,6 +3330,11 @@
 									</LocaleResource>
 									<LocaleResource Name="Install">
 										<Value>Install</Value>
+                    <Children>
+                      <LocaleResource Name="Progress">
+                        <Value>Installing plugin...</Value>
+                      </LocaleResource>
+                    </Children>
 									</LocaleResource>
 									<LocaleResource Name="Installation">
 										<Value>Installation</Value>
@@ -3339,6 +3344,11 @@
 									</LocaleResource>
 									<LocaleResource Name="Uninstall">
 										<Value>Uninstall</Value>
+                    <Children>
+                      <LocaleResource Name="Progress">
+                        <Value>Uninstalling plugin...</Value>
+                      </LocaleResource>
+                    </Children>
 									</LocaleResource>
 								</Children>
 							</LocaleResource>
@@ -7109,6 +7119,11 @@
 					</LocaleResource>
 					<LocaleResource Name="RestartApplication">
 						<Value>Restart application</Value>
+            <Children>
+              <LocaleResource Name="Progress">
+                <Value>Restarting the application...</Value>
+              </LocaleResource>
+            </Children>
 					</LocaleResource>
 				</Children>
 			</LocaleResource>
