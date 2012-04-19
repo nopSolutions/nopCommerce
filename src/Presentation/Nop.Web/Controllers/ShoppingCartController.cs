@@ -426,6 +426,7 @@ namespace Nop.Web.Controllers
 
             model.EmailWishlistEnabled = _shoppingCartSettings.EmailWishlistEnabled;
             model.IsEditable = isEditable;
+            model.DisplayAddToCart = _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart);
 
             if (cart.Count == 0)
                 return model;

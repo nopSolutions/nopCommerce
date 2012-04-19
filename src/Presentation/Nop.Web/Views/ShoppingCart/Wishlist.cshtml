@@ -45,7 +45,10 @@
                     @if (Model.IsEditable)
                     {
                         <col width="1" />
+                        if (Model.DisplayAddToCart)
+                        {
                         <col width="1" />
+                        }
                     }
                     @if (Model.ShowSku)
                     {
@@ -65,12 +68,15 @@
                             {
                                 <th>
                                     @T("ShoppingCart.Remove")
-                                </th>                         
+                                </th>
+                                if (Model.DisplayAddToCart)
+                                {
                                 <th>
                                     <span class="nobr">
                                         @T("ShoppingCart.AddToCart")
                                     </span>
                                 </th>
+                                }
                             }
                             @if (Model.ShowSku)
                             {
@@ -106,9 +112,12 @@
                                     <td>
                                         <input id="removefromcart" type="checkbox" name="removefromcart" value="@(item.Id)" />
                                     </td>
+                                    if (Model.DisplayAddToCart)
+                                    {
                                     <td>
                                         <input id="addtocart" type="checkbox" name="addtocart" value="@(item.Id)" />
                                     </td>
+                                    }
                                 }
                                 @if (Model.ShowSku)
                                 {
@@ -181,10 +190,13 @@
                     {
                         <div class="common-buttons">
                             <input type="submit" name="updatecart" value="@T("Wishlist.UpdateCart")" id="updatecart" class="updatewishlistbutton" />
+                            @if (Model.DisplayAddToCart)
+                            {
                             <input type="submit" name="addtocartbutton" value="@T("ShoppingCart.AddToCart")" id="addtocartbutton" class="updatewishlistbutton" />
+                            }
                             @if (Model.EmailWishlistEnabled)
                             {
-                                <input type="button" name="emailafriend" value="@T("Wishlist.EmailAFriend")" id="emailafriend"  class="updatewishlistbutton" onclick="setLocation('@Url.RouteUrl("EmailWishlist")')" />
+                            <input type="button" name="emailafriend" value="@T("Wishlist.EmailAFriend")" id="emailafriend"  class="updatewishlistbutton" onclick="setLocation('@Url.RouteUrl("EmailWishlist")')" />
                             }
                         </div>
                     }

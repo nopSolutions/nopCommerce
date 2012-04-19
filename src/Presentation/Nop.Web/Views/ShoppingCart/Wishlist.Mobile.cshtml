@@ -111,9 +111,12 @@
                                         <div class="remove">
                                             <input type="submit" name="removefromcart-@(item.Id)" value="@T("ShoppingCart.Remove")" id="removefromcart" />
                                         </div>
+                                        if (Model.DisplayAddToCart)
+                                        {
                                         <div class="addtocart">
                                             <input type="submit" name="addtocart-@(item.Id)" value="@T("ShoppingCart.AddToCart")" id="addtocartbutton" />
                                         </div>
+                                        }
                                     }
                                 </div>
                             </li>
