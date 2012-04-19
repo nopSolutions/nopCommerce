@@ -130,7 +130,7 @@
                     @Model.OrderStatus</b>&nbsp;
                 @if (Model.CanCancelOrder)
                 {
-                    <input type="submit" name="cancelorder" value="@T("Admin.Orders.Fields.OrderStatus.Cancel")" id="cancelorder" class="adminButton" />
+                    <input type="submit" name="cancelorder" value="@T("Admin.Orders.Fields.OrderStatus.Cancel")" id="cancelorder" class="adminButton" onclick="return confirm('@T("Admin.Common.AreYouSure")');"  />
                 }
             </td>
         </tr>
@@ -449,7 +449,7 @@
         <tr>
             <td>
                 <input type="submit" name="btnEditOrderTotals" value="@T("Admin.Orders.Fields.EditOrderTotals")" onclick="toggleOrderTotals(true);return false;" id="btnEditOrderTotals" class="adminButton" />
-                <input type="submit" name="btnSaveOrderTotals" value="@T("Admin.Orders.Fields.SaveOrderTotals")" id="btnSaveOrderTotals" class="adminButton" />
+                <input type="submit" name="btnSaveOrderTotals" value="@T("Admin.Orders.Fields.SaveOrderTotals")" id="btnSaveOrderTotals" class="adminButton" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
             </td>
             <td>
                 <input type="submit" name="btnCancelOrderTotals" value="@T("Admin.Orders.Fields.CancelOrderTotals")" onclick="toggleOrderTotals(false);return false;" id="btnCancelOrderTotals" class="adminButton" />
@@ -537,7 +537,7 @@
             <tr>
                 <td>
                     <input type="submit" name="btnEditCC" value="@T("Admin.Orders.Fields.EditCC")" onclick="toggleCC(true);return false;" id="btnEditCC" class="adminButton" />
-                    <input type="submit" name="btnSaveCC" value="@T("Admin.Orders.Fields.SaveCC")" id="btnSaveCC" class="adminButton" />
+                    <input type="submit" name="btnSaveCC" value="@T("Admin.Orders.Fields.SaveCC")" id="btnSaveCC" class="adminButton" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
                 </td>
                 <td>
                     <input type="submit" name="btnCancelCC" value="@T("Admin.Orders.Fields.CancelCC")" onclick="toggleCC(false);return false;" id="btnCancelCC" class="adminButton" />
@@ -604,19 +604,19 @@
                 @Model.PaymentStatus &nbsp;
                 @if (Model.CanCapture)
                 {
-                    <input type="submit" name="captureorder" value="@T("Admin.Orders.Fields.Capture")" id="captureorder" class="adminButton" /><text>&nbsp;</text>
+                    <input type="submit" name="captureorder" value="@T("Admin.Orders.Fields.Capture")" id="captureorder" class="adminButton" onclick="return confirm('@T("Admin.Common.AreYouSure")');" /><text>&nbsp;</text>
                 }
                 @if (Model.CanMarkOrderAsPaid)
                 {
-                    <input type="submit" name="markorderaspaid" value="@T("Admin.Orders.Fields.MarkAsPaid")" id="markorderaspaid" class="adminButton" /><text>&nbsp;</text>
+                    <input type="submit" name="markorderaspaid" value="@T("Admin.Orders.Fields.MarkAsPaid")" id="markorderaspaid" class="adminButton" onclick="return confirm('@T("Admin.Common.AreYouSure")');" /><text>&nbsp;</text>
                 }
                 @if (Model.CanRefund)
                 {
-                    <input type="submit" name="refundorder" value="@T("Admin.Orders.Fields.Refund")" id="refundorder" class="adminButton" /><text>&nbsp;</text>
+                    <input type="submit" name="refundorder" value="@T("Admin.Orders.Fields.Refund")" id="refundorder" class="adminButton" onclick="return confirm('@T("Admin.Common.AreYouSure")');" /><text>&nbsp;</text>
                 }
                 @if (Model.CanRefundOffline)
                 {
-                    <input type="submit" name="refundorderoffline" value="@T("Admin.Orders.Fields.RefundOffline")" id="refundorderoffline" class="adminButton" /><text>&nbsp;</text>
+                    <input type="submit" name="refundorderoffline" value="@T("Admin.Orders.Fields.RefundOffline")" id="refundorderoffline" class="adminButton" onclick="return confirm('@T("Admin.Common.AreYouSure")');" /><text>&nbsp;</text>
                 }
                 @if (Model.CanPartiallyRefund)
                 {
@@ -628,11 +628,11 @@
                 }
                 @if (Model.CanVoid)
                 {
-                    <input type="submit" name="voidorder" value="@T("Admin.Orders.Fields.Void")" id="voidorder" class="adminButton" /><text>&nbsp;</text>
+                    <input type="submit" name="voidorder" value="@T("Admin.Orders.Fields.Void")" id="voidorder" class="adminButton" onclick="return confirm('@T("Admin.Common.AreYouSure")');" /><text>&nbsp;</text>
                 }
                 @if (Model.CanVoidOffline)
                 {
-                    <input type="submit" name="voidorderoffline" value="@T("Admin.Orders.Fields.VoidOffline")" id="voidorderoffline" class="adminButton" /><text>&nbsp;</text>
+                    <input type="submit" name="voidorderoffline" value="@T("Admin.Orders.Fields.VoidOffline")" id="voidorderoffline" class="adminButton" onclick="return confirm('@T("Admin.Common.AreYouSure")');" /><text>&nbsp;</text>
                 }
                 <script type="text/javascript">
                     $(document).ready(function () {
@@ -1264,8 +1264,8 @@
                                 </td>
                                 <td align="center" style="width: 15%;">
                                     <input type="submit" name="btnEditOpv@(item.Id)" value="@T("Admin.Common.Edit")" onclick="toggleOpvEdit@(item.Id)(true);return false;" id="btnEditOpv@(item.Id)" class="adminButton" />
-                                    <input type="submit" name="btnDeleteOpv@(item.Id)" value="@T("Admin.Common.Delete")" id="btnDeleteOpv@(item.Id)" class="adminButton" />
-                                    <input type="submit" name="btnSaveOpv@(item.Id)" value="@T("Admin.Common.Save")" id="btnSaveOpv@(item.Id)" class="adminButton" style="display: none;" />
+                                    <input type="submit" name="btnDeleteOpv@(item.Id)" value="@T("Admin.Common.Delete")" id="btnDeleteOpv@(item.Id)" class="adminButton" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
+                                    <input type="submit" name="btnSaveOpv@(item.Id)" value="@T("Admin.Common.Save")" id="btnSaveOpv@(item.Id)" class="adminButton" style="display: none;" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
                                     <input type="submit" name="btnCancelOpv@(item.Id)" value="@T("Admin.Common.Cancel")" onclick="toggleOpvEdit@(item.Id)(false);return false;" id="btnCancelOpv@(item.Id)" class="adminButton" style="display: none;" />
                                 </td>
                             </tr>

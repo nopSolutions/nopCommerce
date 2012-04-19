@@ -2396,6 +2396,9 @@
 					<LocaleResource Name="WrongEmail">
 						<Value>Wrong email</Value>
 					</LocaleResource>
+          <LocaleResource Name="Yes">
+            <Value>Yes</Value>
+          </LocaleResource>
 				</Children>
 			</LocaleResource>
 			<LocaleResource Name="Configuration">

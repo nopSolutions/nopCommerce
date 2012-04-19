@@ -98,6 +98,9 @@ set @resources='
   <LocaleResource Name="Admin.Header.RestartApplication.Progress">
     <Value>Restarting the application...</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Common.Yes">
+    <Value>Yes</Value>
+  </LocaleResource>
 </Language>
 '
 
