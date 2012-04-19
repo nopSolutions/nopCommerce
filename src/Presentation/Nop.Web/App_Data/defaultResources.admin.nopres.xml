@@ -643,6 +643,18 @@
 							<LocaleResource Name="EditCategoryDetails">
 								<Value>Edit category details</Value>
 							</LocaleResource>
+              <LocaleResource Name="List">
+                <Children>
+                  <LocaleResource Name="SearchCategoryName">
+                    <Value>Category name</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>A category name.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
 							<LocaleResource Name="Manage">
 								<Value>Manage Categories</Value>
 							</LocaleResource>
@@ -976,6 +988,18 @@
 									</LocaleResource>
 								</Children>
 							</LocaleResource>
+              <LocaleResource Name="List">
+                <Children>
+                  <LocaleResource Name="SearchManufacturerName">
+                    <Value>Manufacturer name</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>A manufacturer name.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
 							<LocaleResource Name="Products">
 								<Value>Products</Value>
 								<Children>

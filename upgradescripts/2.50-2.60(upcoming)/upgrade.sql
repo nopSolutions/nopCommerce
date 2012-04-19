@@ -101,6 +101,18 @@ set @resources='
   <LocaleResource Name="Admin.Common.Yes">
     <Value>Yes</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.List.SearchCategoryName">
+    <Value>Category name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.List.SearchCategoryName.Hint">
+    <Value>A category name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.List.SearchManufacturerName">
+    <Value>Manufacturer name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.List.SearchManufacturerName.Hint">
+    <Value>A manufacturer name.</Value>
+  </LocaleResource>
 </Language>
 '
 

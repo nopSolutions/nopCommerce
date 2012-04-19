@@ -152,34 +152,36 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
 
-            var categories = _categoryService.GetAllCategories(0, _adminAreaSettings.GridPageSize, true);
-            var gridModel = new GridModel<CategoryModel>
+            var model = new CategoryListModel();
+            var categories = _categoryService.GetAllCategories(null, 0, _adminAreaSettings.GridPageSize, true);
+            model.Categories = new GridModel<CategoryModel>
             {
                 Data = categories.Select(x =>
                 {
-                    var model = x.ToModel();
-                    model.Breadcrumb = x.GetCategoryBreadCrumb(_categoryService);
-                    return model;
+                    var categoryModel = x.ToModel();
+                    categoryModel.Breadcrumb = x.GetCategoryBreadCrumb(_categoryService);
+                    return categoryModel;
                 }),
                 Total = categories.TotalCount
             };
-            return View(gridModel);
+            return View(model);
         }
 
         [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult List(GridCommand command)
+        public ActionResult List(GridCommand command, CategoryListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
 
-            var categories = _categoryService.GetAllCategories(command.Page - 1, command.PageSize, true);
+            var categories = _categoryService.GetAllCategories(model.SearchCategoryName, 
+                command.Page - 1, command.PageSize, true);
             var gridModel = new GridModel<CategoryModel>
             {
                 Data = categories.Select(x =>
                 {
-                    var model = x.ToModel();
-                    model.Breadcrumb = x.GetCategoryBreadCrumb(_categoryService);
-                    return model;
+                    var categoryModel = x.ToModel();
+                    categoryModel.Breadcrumb = x.GetCategoryBreadCrumb(_categoryService);
+                    return categoryModel;
                 }),
                 Total = categories.TotalCount
             };

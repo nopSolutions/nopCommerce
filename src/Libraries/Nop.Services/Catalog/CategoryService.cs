@@ -82,29 +82,44 @@ namespace Nop.Services.Catalog
         /// <returns>Categories</returns>
         public virtual IList<Category> GetAllCategories(bool showHidden = false)
         {
-            var query = from c in _categoryRepository.Table
-                        orderby c.ParentCategoryId, c.DisplayOrder
-                        where (showHidden || c.Published) &&
-                        !c.Deleted
-                        select c;
-
-            var unsortedCategories = query.ToList();
-
-            //sort categories
-            var sortedCategories = unsortedCategories.SortCategoriesForTree(0);
-            return sortedCategories;
+            return GetAllCategories(null, showHidden);
         }
 
         /// <summary>
         /// Gets all categories
         /// </summary>
+        /// <param name="categoryName">Category name</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <returns>Categories</returns>
+        public virtual IList<Category> GetAllCategories(string categoryName, bool showHidden = false)
+        {
+            var query = _categoryRepository.Table;
+            if (!showHidden)
+                query = query.Where(c => c.Published);
+            if (!String.IsNullOrWhiteSpace(categoryName))
+                query = query.Where(c => c.Name.Contains(categoryName));
+            query = query.Where(c => !c.Deleted);
+            query = query.OrderBy(c => c.ParentCategoryId).ThenBy(c => c.DisplayOrder);
+            var unsortedCategories = query.ToList();
+
+            //sort categories
+            var sortedCategories = unsortedCategories.SortCategoriesForTree();
+            return sortedCategories;
+        }
+        
+        /// <summary>
+        /// Gets all categories
+        /// </summary>
+        /// <param name="categoryName">Category name</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Categories</returns>
-        public virtual IPagedList<Category> GetAllCategories(int pageIndex, int pageSize, bool showHidden = false)
+        public virtual IPagedList<Category> GetAllCategories(string categoryName, 
+            int pageIndex, int pageSize, bool showHidden = false)
         {
-            var categories = GetAllCategories(showHidden);
+            var categories = GetAllCategories(categoryName, showHidden);
+            //filter
             return new PagedList<Category>(categories, pageIndex, pageSize);
         }
 
@@ -120,13 +135,13 @@ namespace Nop.Services.Catalog
             string key = string.Format(CATEGORIES_BY_PARENT_CATEGORY_ID_KEY, parentCategoryId, showHidden);
             return _cacheManager.Get(key, () =>
             {
-                var query = from c in _categoryRepository.Table
-                            orderby c.DisplayOrder
-                            where (showHidden || c.Published) &&
-                            !c.Deleted &&
-                            c.ParentCategoryId == parentCategoryId
-                            select c;
-
+                var query = _categoryRepository.Table;
+                if (!showHidden)
+                    query = query.Where(c => c.Published);
+                query = query.Where(c => c.ParentCategoryId == parentCategoryId);
+                query = query.Where(c => !c.Deleted);
+                query = query.OrderBy(c => c.DisplayOrder);
+                
                 var categories = query.ToList();
                 return categories;
             });

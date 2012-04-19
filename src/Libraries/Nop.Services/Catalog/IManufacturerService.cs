@@ -21,15 +21,25 @@ namespace Nop.Services.Catalog
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Manufacturer collection</returns>
         IList<Manufacturer> GetAllManufacturers(bool showHidden = false);
+
+        /// <summary>
+        /// Gets all manufacturers
+        /// </summary>
+        /// <param name="manufacturerName">Manufacturer name</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <returns>Manufacturer collection</returns>
+        IList<Manufacturer> GetAllManufacturers(string manufacturerName, bool showHidden = false);
         
         /// <summary>
         /// Gets all manufacturers
         /// </summary>
+        /// <param name="manufacturerName">Manufacturer name</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Manufacturers</returns>
-        IPagedList<Manufacturer> GetAllManufacturers(int pageIndex, int pageSize, bool showHidden = false);
+        IPagedList<Manufacturer> GetAllManufacturers(string manufacturerName,
+            int pageIndex, int pageSize, bool showHidden = false);
 
         /// <summary>
         /// Gets a manufacturer

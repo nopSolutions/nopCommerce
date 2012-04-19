@@ -1,4 +1,4 @@
-﻿@model Telerik.Web.Mvc.GridModel<ManufacturerModel>
+﻿@model ManufacturerListModel
 @using Telerik.Web.Mvc.UI
 
 @{
@@ -14,11 +14,29 @@
         <a href="@Url.Action("ExportXml")" class="t-button">@T("Admin.Common.ExportToXml")</a>
     </div>
 </div>
+<table width="100%">
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.SearchManufacturerName):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => Model.SearchManufacturerName)
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <button type="submit" id="btnSearch" class="t-button">@T("Admin.Common.Search")</button>
+        </td>
+    </tr>
+</table>
+<p></p>
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid<ManufacturerModel>(Model.Data)
+            @(Html.Telerik().Grid<ManufacturerModel>(Model.Manufacturers.Data)
                     .Name("manufacturers-grid")
+                    .ClientEvents(events => events
+                        .OnDataBinding("onDataBinding"))
                     .Columns(columns =>
                     {
                         columns.Bound(x => x.Name).Width(300);
@@ -36,9 +54,35 @@
                             .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
                             .Title(T("Admin.Common.Edit").Text);
                     })
-                    .Pageable(settings => settings.Total(Model.Total).PageSize(gridPageSize).Position(GridPagerPosition.Both))
+                    .Pageable(settings => settings.Total(Model.Manufacturers.Total).PageSize(gridPageSize).Position(GridPagerPosition.Both))
                     .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "Manufacturer"))
                     .EnableCustomBinding(true))
         </td>
     </tr>
 </table>
+<script type="text/javascript">
+    $(document).ready(function () {
+        //search button
+        $('#btnSearch').click(function () {
+            //search
+            var grid = $('#manufacturers-grid').data('tGrid');
+            grid.currentPage = 1; //new search. Set page size to 1
+            grid.ajaxRequest();
+            return false;
+        });
+
+        $("#@Html.FieldIdFor(model => model.SearchManufacturerName)").keydown(function (event) {
+            if (event.keyCode == 13) {
+                $("#btnSearch").click();
+                return false;
+            }
+        });
+    });
+
+    function onDataBinding(e) {
+        var searchModel = {
+            SearchManufacturerName: $('#@Html.FieldIdFor(model => model.SearchManufacturerName)').val()
+        };
+        e.data = searchModel;
+    }
+</script>

@@ -15,7 +15,6 @@ namespace Nop.Services.Catalog
     public partial class ManufacturerService : IManufacturerService
     {
         #region Constants
-        private const string MANUFACTURERS_ALL_KEY = "Nop.manufacturer.all-{0}";
         private const string MANUFACTURERS_BY_ID_KEY = "Nop.manufacturer.id-{0}";
         private const string PRODUCTMANUFACTURERS_ALLBYMANUFACTURERID_KEY = "Nop.productmanufacturer.allbymanufacturerid-{0}-{1}";
         private const string PRODUCTMANUFACTURERS_ALLBYPRODUCTID_KEY = "Nop.productmanufacturer.allbyproductid-{0}-{1}";
@@ -79,29 +78,41 @@ namespace Nop.Services.Catalog
         /// <returns>Manufacturer collection</returns>
         public virtual IList<Manufacturer> GetAllManufacturers(bool showHidden = false)
         {
-            string key = string.Format(MANUFACTURERS_ALL_KEY, showHidden);
-            return _cacheManager.Get(key, () =>
-            {
-                var query = from m in _manufacturerRepository.Table
-                            orderby m.DisplayOrder
-                            where (showHidden || m.Published) &&
-                            !m.Deleted
-                            select m;
-                var manufacturers = query.ToList();
-                return manufacturers;
-            });
+            return GetAllManufacturers(null, showHidden);
         }
 
         /// <summary>
         /// Gets all manufacturers
         /// </summary>
+        /// <param name="manufacturerName">Manufacturer name</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <returns>Manufacturer collection</returns>
+        public virtual IList<Manufacturer> GetAllManufacturers(string manufacturerName, bool showHidden = false)
+        {
+            var query = _manufacturerRepository.Table;
+            if (!showHidden)
+                query = query.Where(m => m.Published);
+            if (!String.IsNullOrWhiteSpace(manufacturerName))
+                query = query.Where(m => m.Name.Contains(manufacturerName));
+            query = query.Where(m => !m.Deleted);
+            query = query.OrderBy(m => m.DisplayOrder);
+
+            var manufacturers = query.ToList();
+            return manufacturers;
+        }
+        
+        /// <summary>
+        /// Gets all manufacturers
+        /// </summary>
+        /// <param name="manufacturerName">Manufacturer name</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Manufacturers</returns>
-        public virtual IPagedList<Manufacturer> GetAllManufacturers(int pageIndex, int pageSize, bool showHidden = false)
+        public virtual IPagedList<Manufacturer> GetAllManufacturers(string manufacturerName,
+            int pageIndex, int pageSize, bool showHidden = false)
         {
-            var manufacturers = GetAllManufacturers(showHidden);
+            var manufacturers = GetAllManufacturers(manufacturerName, showHidden);
             return new PagedList<Manufacturer>(manufacturers, pageIndex, pageSize);
         }
 
