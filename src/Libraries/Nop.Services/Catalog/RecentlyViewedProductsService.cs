@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web;
 using Nop.Core.Domain.Catalog;
 
@@ -90,12 +91,9 @@ namespace Nop.Services.Catalog
         {
             var products = new List<Product>();
             var productIds = GetRecentlyViewedProductsIds(number);
-            foreach (int productId in productIds)
-            {
-                var product = _productService.GetProductById(productId);
-                if (product != null && product.Published && !product.Deleted)
+            foreach (var product in _productService.GetProductsByIds(productIds.ToArray()))
+                if (product.Published && !product.Deleted)
                     products.Add(product);
-            }
             return products;
         }
 
