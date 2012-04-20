@@ -43,6 +43,9 @@
                                 @T("Admin.Orders.Shipments.Products.ProductName")
                             </th>
                             <th align="center">
+                                @T("Admin.Orders.Shipments.Products.SKU")
+                            </th>
+                            <th align="center">
                                 @T("Admin.Orders.Shipments.Products.QtyOrdered")
                             </th>
                             <th align="center">
@@ -57,7 +60,7 @@
                         @foreach (var item in Model.Products)
                         {
                             <tr>
-                                <td style="width: 60%;">
+                                <td style="width: 50%;">
                                     <div style="padding-left: 10px; padding-right: 10px; text-align: left;">
                                         <em><a href="@Url.Action("Edit", "ProductVariant", new { id = @item.ProductVariantId })">@item.FullProductName</a></em>
                                         @if (!String.IsNullOrEmpty(item.AttributeInfo))
@@ -65,6 +68,11 @@
                                             <br />
                                             @Html.Raw(item.AttributeInfo)
                                         }
+                                    </div>
+                                </td>
+                                <td style="width: 10%;">
+                                    <div style="padding-left: 10px; padding-right: 10px; text-align: left;">
+                                        @item.Sku
                                     </div>
                                 </td>
                                 <td align="center" style="width: 10%;">

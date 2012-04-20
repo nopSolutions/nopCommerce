@@ -1822,6 +1822,7 @@ namespace Nop.Admin.Controllers
                 {
                     OrderProductVariantId = opv.Id,
                     ProductVariantId = opv.ProductVariantId,
+                    Sku = opv.ProductVariant.Sku,
                     AttributeInfo = opv.AttributeDescription,
                     QuantityOrdered = qtyOrdered,
                     QuantityShippedTotal = qtyShippedTotal,
@@ -1961,6 +1962,7 @@ namespace Nop.Admin.Controllers
                     Id = sopv.Id,
                     OrderProductVariantId = opv.Id,
                     ProductVariantId = opv.ProductVariantId,
+                    Sku = opv.ProductVariant.Sku,
                     AttributeInfo = opv.AttributeDescription,
                     QuantityOrdered = qtyOrdered,
                     QuantityShipped = qtyShipped,

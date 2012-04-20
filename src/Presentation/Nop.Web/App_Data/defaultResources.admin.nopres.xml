@@ -8048,6 +8048,9 @@
                   <LocaleResource Name="ProductName">
                     <Value>Product</Value>
                   </LocaleResource>
+                  <LocaleResource Name="SKU">
+                    <Value>SKU</Value>
+                  </LocaleResource>
                   <LocaleResource Name="QtyOrdered">
                     <Value>Qty ordered</Value>
                   </LocaleResource>

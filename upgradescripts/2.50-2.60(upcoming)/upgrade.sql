@@ -113,6 +113,9 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Manufacturers.List.SearchManufacturerName.Hint">
     <Value>A manufacturer name.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.Products.SKU">
+    <Value>SKU</Value>
+  </LocaleResource>
 </Language>
 '
 
