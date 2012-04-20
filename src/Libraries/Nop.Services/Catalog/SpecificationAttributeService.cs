@@ -298,7 +298,7 @@ namespace Nop.Services.Catalog
             
             return _cacheManager.Get(key, () =>
             {
-                var query = (IQueryable<ProductSpecificationAttribute>)_productSpecificationAttributeRepository.Table;
+                var query = _productSpecificationAttributeRepository.Table;
                 query = query.Where(psa => psa.ProductId == productId);
                 if (allowFiltering.HasValue)
                     query = query.Where(psa => psa.AllowFiltering == allowFiltering.Value);

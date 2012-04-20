@@ -834,7 +834,43 @@ namespace Nop.Services.Catalog
                 return pv;
             });
         }
+        
+        /// <summary>
+        /// Get product variants by product identifiers
+        /// </summary>
+        /// <param name="productIds">Product identifiers</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <returns>Product variants</returns>
+        public virtual IList<ProductVariant> GetProductVariantsByProductIds(int[] productIds, bool showHidden = false)
+        {
+            if (productIds == null || productIds.Length == 0)
+                return new List<ProductVariant>();
 
+            var query = _productVariantRepository.Table;
+            if (!showHidden)
+            {
+                query = query.Where(pv => pv.Published);
+            }
+            if (!showHidden)
+            {
+                //The function 'CurrentUtcDateTime' is not supported by SQL Server Compact. 
+                //That's why we pass the date value
+                var nowUtc = DateTime.UtcNow;
+                query = query.Where(pv =>
+                        !pv.AvailableStartDateTimeUtc.HasValue ||
+                        pv.AvailableStartDateTimeUtc <= nowUtc);
+                query = query.Where(pv =>
+                        !pv.AvailableEndDateTimeUtc.HasValue ||
+                        pv.AvailableEndDateTimeUtc >= nowUtc);
+            }
+            query = query.Where(pv => !pv.Deleted);
+            query = query.Where(pv => productIds.Contains(pv.ProductId));
+            query = query.OrderBy(pv => pv.DisplayOrder);
+
+            var productVariants = query.ToList();
+            return productVariants;
+        }
+        
         /// <summary>
         /// Gets a product variant by SKU
         /// </summary>
@@ -905,7 +941,7 @@ namespace Nop.Services.Catalog
             string key = string.Format(PRODUCTVARIANTS_ALL_KEY, showHidden, productId);
             return _cacheManager.Get(key, () =>
             {
-                var query = (IQueryable<ProductVariant>)_productVariantRepository.Table;
+                var query = _productVariantRepository.Table;
                 if (!showHidden)
                 {
                     query = query.Where(pv => pv.Published);

@@ -146,6 +146,14 @@ namespace Nop.Services.Catalog
         ProductVariant GetProductVariantById(int productVariantId);
 
         /// <summary>
+        /// Get product variants by product identifiers
+        /// </summary>
+        /// <param name="productIds">Product identifiers</param>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <returns>Product variants</returns>
+        IList<ProductVariant> GetProductVariantsByProductIds(int[] productIds, bool showHidden = false);
+
+        /// <summary>
         /// Gets a product variant by SKU
         /// </summary>
         /// <param name="sku">SKU</param>
