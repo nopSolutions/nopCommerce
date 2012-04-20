@@ -33,7 +33,7 @@ namespace Nop.Web.Controllers
             var model = new PollModel()
             {
                 Id = poll.Id,
-                AlreadyVoted = poll.AlreadyVoted(_workContext.CurrentCustomer),
+                AlreadyVoted = _pollService.AlreadyVoted(poll.Id, _workContext.CurrentCustomer.Id),
                 Name = poll.Name
             };
             var answers = poll.PollAnswers.OrderBy(x => x.DisplayOrder);
@@ -87,7 +87,7 @@ namespace Nop.Web.Controllers
             {
                 var poll = pollAnswer.Poll;
 
-                bool alreadyVoted = poll.AlreadyVoted(_workContext.CurrentCustomer);
+                bool alreadyVoted = _pollService.AlreadyVoted(poll.Id, _workContext.CurrentCustomer.Id);
                 if (!alreadyVoted)
                 {
                     //vote

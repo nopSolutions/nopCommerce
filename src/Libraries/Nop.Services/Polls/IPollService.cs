@@ -1,4 +1,5 @@
 using Nop.Core;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Polls;
 
 namespace Nop.Services.Polls
@@ -65,5 +66,12 @@ namespace Nop.Services.Polls
         /// <param name="pollAnswer">Poll answer</param>
         void DeletePollAnswer(PollAnswer pollAnswer);
 
+        /// <summary>
+        /// Gets a value indicating whether customer already vited for this poll
+        /// </summary>
+        /// <param name="pollId">Poll identifier</param>
+        /// <param name="customerId">Customer identifier</param>
+        /// <returns>Result</returns>
+        bool AlreadyVoted(int pollId, int customerId);
     }
 }

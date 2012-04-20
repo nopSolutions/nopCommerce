@@ -3,6 +3,7 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Polls;
 using Nop.Core.Events;
 
@@ -22,6 +23,7 @@ namespace Nop.Services.Polls
 
         private readonly IRepository<Poll> _pollRepository;
         private readonly IRepository<PollAnswer> _pollAnswerRepository;
+        private readonly IRepository<PollVotingRecord> _pollVotingRecords;
         private readonly ICacheManager _cacheManager;
         private readonly IEventPublisher _eventPublisher;
 
@@ -31,12 +33,14 @@ namespace Nop.Services.Polls
 
         public PollService(IRepository<Poll> pollRepository, 
             IRepository<PollAnswer> pollAnswerRepository,
+            IRepository<PollVotingRecord> pollVotingRecords,
             ICacheManager cacheManager, IEventPublisher eventPublisher)
         {
-            _pollRepository = pollRepository;
-            _pollAnswerRepository = pollAnswerRepository;
-            _cacheManager = cacheManager;
-            _eventPublisher = eventPublisher;
+            this._pollRepository = pollRepository;
+            this._pollAnswerRepository = pollAnswerRepository;
+            this._pollVotingRecords = pollVotingRecords;
+            this._cacheManager = cacheManager;
+            this._eventPublisher = eventPublisher;
         }
 
         #endregion
@@ -195,6 +199,24 @@ namespace Nop.Services.Polls
 
             //event notification
             _eventPublisher.EntityDeleted(pollAnswer);
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether customer already vited for this poll
+        /// </summary>
+        /// <param name="pollId">Poll identifier</param>
+        /// <param name="customerId">Customer identifier</param>
+        /// <returns>Result</returns>
+        public virtual bool AlreadyVoted(int pollId, int customerId)
+        {
+            if (pollId == 0 || customerId == 0)
+                return false;
+
+            var result = (from pa in _pollAnswerRepository.Table
+                          join pvr in _pollVotingRecords.Table on pa.Id equals pvr.PollAnswerId
+                          where pa.PollId == pollId && pvr.CustomerId == customerId
+                          select pvr).Count() > 0;
+            return result;
         }
 
         #endregion

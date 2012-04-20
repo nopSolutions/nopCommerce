@@ -235,7 +235,6 @@
     <Compile Include="Payments\PaymentService.cs" />
     <Compile Include="Payments\ProcessPaymentResult.cs" />
     <Compile Include="Payments\RecurringPaymentType.cs" />
-    <Compile Include="Polls\PollExtentions.cs" />
     <Compile Include="Polls\IPollService.cs" />
     <Compile Include="Polls\PollService.cs" />
     <Compile Include="PromotionFeed\IPromotionFeed.cs" />
