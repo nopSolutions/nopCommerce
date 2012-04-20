@@ -2826,6 +2826,9 @@
 			<LocaleResource Name="ShippingMethod">
 				<Value>Shipping method: {0}</Value>
 			</LocaleResource>
+      <LocaleResource Name="SKU">
+        <Value>SKU</Value>
+      </LocaleResource>
 			<LocaleResource Name="Sub-Total">
 				<Value>Sub-total:</Value>
 			</LocaleResource>

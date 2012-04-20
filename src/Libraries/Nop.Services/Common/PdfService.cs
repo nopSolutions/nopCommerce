@@ -42,6 +42,7 @@ namespace Nop.Services.Common
         private readonly IProductService _productService;
         private readonly IWebHelper _webHelper;
 
+        private readonly CatalogSettings _catalogSettings;
         private readonly CurrencySettings _currencySettings;
         private readonly MeasureSettings _measureSettings;
         private readonly PdfSettings _pdfSettings;
@@ -57,7 +58,8 @@ namespace Nop.Services.Common
             IDateTimeHelper dateTimeHelper, IPriceFormatter priceFormatter,
             ICurrencyService currencyService, IMeasureService measureService,
             IPictureService pictureService, IProductService productService, 
-            IWebHelper webHelper, CurrencySettings currencySettings,
+            IWebHelper webHelper, 
+            CatalogSettings catalogSettings, CurrencySettings currencySettings,
             MeasureSettings measureSettings, PdfSettings pdfSettings, TaxSettings taxSettings,
             StoreInformationSettings storeInformationSettings)
         {
@@ -72,6 +74,7 @@ namespace Nop.Services.Common
             this._productService = productService;
             this._webHelper = webHelper;
             this._currencySettings = currencySettings;
+            this._catalogSettings = catalogSettings;
             this._measureSettings = measureSettings;
             this._pdfSettings = pdfSettings;
             this._taxSettings = taxSettings;
@@ -258,15 +261,24 @@ namespace Nop.Services.Common
 
                 var orderProductVariants = _orderService.GetAllOrderProductVariants(order.Id, null, null, null, null, null, null);
 
-                var productsTable = new PdfPTable(4);
+                var productsTable = new PdfPTable(_catalogSettings.ShowProductSku ? 5 : 4);
                 productsTable.WidthPercentage = 100f;
-                productsTable.SetWidths(new[] { 40, 20, 20, 20 });
+                productsTable.SetWidths(_catalogSettings.ShowProductSku ? new[] { 40, 15, 15, 15, 15 } : new[] { 40, 20, 20, 20 });
 
                 //product name
                 cell = new PdfPCell(new Phrase(_localizationService.GetResource("PDFInvoice.ProductName", lang.Id), font));
                 cell.BackgroundColor = BaseColor.LIGHT_GRAY;
                 cell.HorizontalAlignment = Element.ALIGN_CENTER;
                 productsTable.AddCell(cell);
+
+                //SKU
+                if (_catalogSettings.ShowProductSku)
+                {
+                    cell = new PdfPCell(new Phrase(_localizationService.GetResource("PDFInvoice.SKU"), font));
+                    cell.BackgroundColor = BaseColor.LIGHT_GRAY;
+                    cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                    productsTable.AddCell(cell);
+                }
 
                 //price
                 cell = new PdfPCell(new Phrase(_localizationService.GetResource("PDFInvoice.ProductPrice", lang.Id), font));
@@ -303,6 +315,14 @@ namespace Nop.Services.Common
                     var attributesParagraph = new Paragraph(HtmlHelper.ConvertHtmlToPlainText(orderProductVariant.AttributeDescription, true, true), attributesFont);
                     cell.AddElement(attributesParagraph);
                     productsTable.AddCell(cell);
+
+                    //SKU
+                    if (_catalogSettings.ShowProductSku)
+                    {
+                        cell = new PdfPCell(new Phrase(pv.Sku ?? String.Empty, font));
+                        cell.HorizontalAlignment = Element.ALIGN_CENTER;
+                        productsTable.AddCell(cell);
+                    }
 
                     //price
                     string unitPrice = string.Empty;
@@ -698,14 +718,14 @@ namespace Nop.Services.Common
                     cell.HorizontalAlignment = Element.ALIGN_CENTER;
                     productsTable.AddCell(cell);
 
-                    //qty
-                    cell = new PdfPCell(new Phrase(_localizationService.GetResource("PDFPackagingSlip.QTY"), font));
+                    //SKU
+                    cell = new PdfPCell(new Phrase(_localizationService.GetResource("PDFPackagingSlip.SKU"), font));
                     cell.BackgroundColor = BaseColor.LIGHT_GRAY;
                     cell.HorizontalAlignment = Element.ALIGN_CENTER;
                     productsTable.AddCell(cell);
 
-                    //SKU
-                    cell = new PdfPCell(new Phrase(_localizationService.GetResource("PDFPackagingSlip.SKU"), font));
+                    //qty
+                    cell = new PdfPCell(new Phrase(_localizationService.GetResource("PDFPackagingSlip.QTY"), font));
                     cell.BackgroundColor = BaseColor.LIGHT_GRAY;
                     cell.HorizontalAlignment = Element.ALIGN_CENTER;
                     productsTable.AddCell(cell);
@@ -730,14 +750,13 @@ namespace Nop.Services.Common
                         cell.AddElement(attributesParagraph);
                         productsTable.AddCell(cell);
 
-
-                        //qty
-                        cell = new PdfPCell(new Phrase(sopv.Quantity.ToString(), font));
+                        //SKU
+                        cell = new PdfPCell(new Phrase(pv.Sku ?? String.Empty, font));
                         cell.HorizontalAlignment = Element.ALIGN_CENTER;
                         productsTable.AddCell(cell);
 
-                        //SKU
-                        cell = new PdfPCell(new Phrase(pv.Sku ?? String.Empty, font));
+                        //qty
+                        cell = new PdfPCell(new Phrase(sopv.Quantity.ToString(), font));
                         cell.HorizontalAlignment = Element.ALIGN_CENTER;
                         productsTable.AddCell(cell);
                     }
