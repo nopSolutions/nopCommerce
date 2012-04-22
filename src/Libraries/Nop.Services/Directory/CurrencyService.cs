@@ -136,10 +136,10 @@ namespace Nop.Services.Directory
             string key = string.Format(CURRENCIES_ALL_KEY, showHidden);
             return _cacheManager.Get(key, () =>
             {
-                var query = from c in _currencyRepository.Table
-                            orderby c.DisplayOrder
-                            where showHidden || c.Published
-                            select c;
+                var query = _currencyRepository.Table;
+                if (!showHidden)
+                    query = query.Where(c => c.Published);
+                query = query.OrderBy(c => c.DisplayOrder);
                 var currencies = query.ToList();
                 return currencies;
             });

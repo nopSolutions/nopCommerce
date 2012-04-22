@@ -70,12 +70,12 @@ namespace Nop.Services.Affiliates
         /// <returns>Affiliate collection</returns>
         public virtual IList<Affiliate> GetAllAffiliates(bool showHidden = false)
         {
-            var query = from a in _affiliateRepository.Table
-                        orderby a.Id
-                        where (showHidden || a.Active) && !a.Deleted
-                        select a;
+            var query = _affiliateRepository.Table;
+            if (!showHidden)
+                query = query.Where(a => a.Active);
+            query = query.Where(a => !a.Deleted);
+            query = query.OrderBy(a => a.Id);
             var affiliates = query.ToList();
-
             return affiliates;
         }
 

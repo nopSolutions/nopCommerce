@@ -113,10 +113,10 @@ namespace Nop.Services.Localization
             string key = string.Format(LANGUAGES_ALL_KEY, showHidden);
             return _cacheManager.Get(key, () =>
             {
-                var query = from l in _languageRepository.Table
-                            orderby l.DisplayOrder
-                            where showHidden || l.Published
-                            select l;
+                var query = _languageRepository.Table;
+                if (!showHidden)
+                    query = query.Where(l => l.Published);
+                query = query.OrderBy(l => l.DisplayOrder);
                 var languages = query.ToList();
                 return languages;
             });
