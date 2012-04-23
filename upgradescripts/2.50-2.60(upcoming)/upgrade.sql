@@ -173,6 +173,9 @@ set @resources='
   <LocaleResource Name="Admin.System.Warnings.FilePermission.Wrong">
     <Value>The ''{0}'' account is not granted with Modify permission on file ''{1}''. Please configure these permissions.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.Warnings.FilePermission.Wrong">
+    <Value>The ''{0}'' account is not granted with Modify permission on file ''{1}''. Please configure these permissions.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -701,5 +704,12 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'customersettings.default
 BEGIN
 	INSERT [Setting] ([Name], [Value])
 	VALUES (N'customersettings.defaultpasswordformat', N'Hashed')
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'commonsettings.displayjavascriptdisabledwarning')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'commonsettings.displayjavascriptdisabledwarning', N'false')
 END
 GO

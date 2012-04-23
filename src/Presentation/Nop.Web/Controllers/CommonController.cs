@@ -264,6 +264,16 @@ namespace Nop.Web.Controllers
         {
             return View();
         }
+        
+        //footer
+        [ChildActionOnly]
+        public ActionResult JavaScriptDisabledWarning()
+        {
+            if (!_commonSettings.DisplayJavaScriptDisabledWarning)
+                return Content("");
+
+            return PartialView();
+        }
 
         //header links
         [ChildActionOnly]

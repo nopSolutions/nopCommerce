@@ -4471,6 +4471,7 @@ namespace Nop.Services.Installation
                     SitemapIncludeManufacturers = true,
                     SitemapIncludeProducts = false,
                     SitemapIncludeTopics = true,
+                    DisplayJavaScriptDisabledWarning = false,
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<SeoSettings>>()

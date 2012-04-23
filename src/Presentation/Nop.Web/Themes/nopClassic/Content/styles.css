@@ -140,6 +140,7 @@ ul.languagelist li:hover{cursor:pointer;}
 .storethemelist{border:solid 1px #E3E3E3;}
 .forumtopicoptionscheck{}
 .forumtopicoptionscheck label{color:#555;font-size:.9em;padding-left:5px;vertical-align:top;}
+.noscript{border:1px solid #ddd;border-width:0 0 1px;background:#ffff90;font-size:12px;line-height:1.25;text-align:center;color:#2f2f2f;}
 /* PAGER */
 .pager{text-align:center;}
 .pager a{font-size:1em;color:#555;}
