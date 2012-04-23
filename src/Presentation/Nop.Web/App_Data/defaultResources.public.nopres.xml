@@ -1510,7 +1510,7 @@
 					</LocaleResource>
 				</Children>
 			</LocaleResource>
-			<LocaleResource Name="Nop.Core.Domain.Customers.ShowEmails">
+			<LocaleResource Name="Nop.Core.Domain.Customers.CustomerNameFormat">
 				<Children>
 					<LocaleResource Name="ShowEmails">
 						<Value>Show emails</Value>
@@ -1520,6 +1520,19 @@
 					</LocaleResource>
 					<LocaleResource Name="ShowFullNames">
 						<Value>Show full names</Value>
+					</LocaleResource>
+				</Children>
+			</LocaleResource>
+			<LocaleResource Name="Nop.Core.Domain.Customers.PasswordFormat">
+				<Children>
+					<LocaleResource Name="Clear">
+						<Value>Clear</Value>
+					</LocaleResource>
+					<LocaleResource Name="Hashed">
+						<Value>Hashed</Value>
+					</LocaleResource>
+					<LocaleResource Name="Encrypted">
+						<Value>Encrypted</Value>
 					</LocaleResource>
 				</Children>
 			</LocaleResource>

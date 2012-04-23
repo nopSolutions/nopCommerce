@@ -59,6 +59,9 @@ namespace Nop.Admin.Models.Settings
             [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.CustomerNameFormat")]
             public int CustomerNameFormat { get; set; }
 
+            [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.DefaultPasswordFormat")]
+            public int DefaultPasswordFormat { get; set; }
+
             [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.GenderEnabled")]
             public bool GenderEnabled { get; set; }
 

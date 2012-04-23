@@ -188,6 +188,15 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CustomerSettings.DefaultPasswordFormat):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.CustomerSettings.DefaultPasswordFormat, ((PasswordFormat)Model.CustomerSettings.DefaultPasswordFormat).ToSelectList())
+                @Html.ValidationMessageFor(model => model.CustomerSettings.DefaultPasswordFormat)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.NopLabelFor(model => model.CustomerSettings.HideNewsletterBlock):
             </td>
             <td class="adminData">

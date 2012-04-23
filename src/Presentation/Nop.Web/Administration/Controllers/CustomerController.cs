@@ -521,7 +521,7 @@ namespace Nop.Admin.Controllers
                 //password
                 if (!String.IsNullOrWhiteSpace(model.Password))
                 {
-                    var changePassRequest = new ChangePasswordRequest(model.Email, false, PasswordFormat.Hashed, model.Password);
+                    var changePassRequest = new ChangePasswordRequest(model.Email, false, _customerSettings.DefaultPasswordFormat, model.Password);
                     var changePassResult = _customerRegistrationService.ChangePassword(changePassRequest);
                     if (!changePassResult.Success)
                     {
@@ -900,7 +900,7 @@ namespace Nop.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var changePassRequest = new ChangePasswordRequest(model.Email,
-                    false, PasswordFormat.Hashed, model.Password);
+                    false, _customerSettings.DefaultPasswordFormat, model.Password);
                 var changePassResult = _customerRegistrationService.ChangePassword(changePassRequest);
                 if (changePassResult.Success)
                     SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.PasswordChanged"));

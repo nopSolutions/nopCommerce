@@ -3829,6 +3829,14 @@
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
+                  <LocaleResource Name="DefaultPasswordFormat">
+                    <Value>Default password format</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Choose default password format. Please keep in mind that this setting will be applied only to the newly registered customers.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
 									<LocaleResource Name="GenderEnabled">
 										<Value>'Gender' enabled</Value>
 										<Children>

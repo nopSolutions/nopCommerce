@@ -163,6 +163,22 @@ namespace Nop.Services.Customers
         }
 
         /// <summary>
+        /// Gets all customers by customer format (including deleted ones)
+        /// </summary>
+        /// <param name="passwordFormat">Password format</param>
+        /// <returns>Customers</returns>
+        public virtual IList<Customer> GetAllCustomersByPasswordFormat(PasswordFormat passwordFormat)
+        {
+            int passwordFormatId = (int)passwordFormat;
+
+            var query = _customerRepository.Table;
+            query = query.Where(c => c.PasswordFormatId == passwordFormatId);
+            query = query.OrderByDescending(c => c.CreatedOnUtc);
+            var customers = query.ToList();
+            return customers;
+        }
+
+        /// <summary>
         /// Gets online customers
         /// </summary>
         /// <param name="lastActivityFromUtc">Customer last activity date (from)</param>

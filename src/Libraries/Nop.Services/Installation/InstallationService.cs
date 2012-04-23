@@ -4553,6 +4553,7 @@ namespace Nop.Services.Installation
                     UsernamesEnabled = false,
                     CheckUsernameAvailabilityEnabled = false,
                     AllowUsersToChangeUsernames = false,
+                    DefaultPasswordFormat = PasswordFormat.Hashed,
                     HashedPasswordFormat = "SHA1",
                     PasswordMinLength = 6,
                     UserRegistrationType = UserRegistrationType.Standard,

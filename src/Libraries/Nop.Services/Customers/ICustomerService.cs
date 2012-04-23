@@ -40,6 +40,13 @@ namespace Nop.Services.Customers
            bool loadOnlyWithShoppingCart, ShoppingCartType? sct, int pageIndex, int pageSize);
 
         /// <summary>
+        /// Gets all customers by customer format (including deleted ones)
+        /// </summary>
+        /// <param name="passwordFormat">Password format</param>
+        /// <returns>Customers</returns>
+        IList<Customer> GetAllCustomersByPasswordFormat(PasswordFormat passwordFormat);
+
+        /// <summary>
         /// Gets online customers
         /// </summary>
         /// <param name="lastActivityFromUtc">Customer last activity date (from)</param>

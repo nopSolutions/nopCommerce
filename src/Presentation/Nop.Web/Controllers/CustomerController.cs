@@ -318,7 +318,7 @@ namespace Nop.Web.Controllers
 
                 bool isApproved = _customerSettings.UserRegistrationType == UserRegistrationType.Standard;
                 var registrationRequest = new CustomerRegistrationRequest(customer, model.Email,
-                    _customerSettings.UsernamesEnabled ? model.Username : model.Email, model.Password, PasswordFormat.Hashed, isApproved);
+                    _customerSettings.UsernamesEnabled ? model.Username : model.Email, model.Password, _customerSettings.DefaultPasswordFormat, isApproved);
                 var registrationResult = _customerRegistrationService.RegisterCustomer(registrationRequest);
                 if (registrationResult.Success)
                 {
@@ -1424,7 +1424,7 @@ namespace Nop.Web.Controllers
             if (ModelState.IsValid)
             {
                 var changePasswordRequest = new ChangePasswordRequest(customer.Email,
-                    true, PasswordFormat.Hashed, model.NewPassword, model.OldPassword);
+                    true, _customerSettings.DefaultPasswordFormat, model.NewPassword, model.OldPassword);
                 var changePasswordResult = _customerRegistrationService.ChangePassword(changePasswordRequest);
                 if (changePasswordResult.Success)
                 {
@@ -1626,8 +1626,8 @@ namespace Nop.Web.Controllers
             
             if (ModelState.IsValid)
             {
-                var response = _customerRegistrationService.ChangePassword(new ChangePasswordRequest(email, 
-                    false, PasswordFormat.Hashed, model.NewPassword));
+                var response = _customerRegistrationService.ChangePassword(new ChangePasswordRequest(email,
+                    false, _customerSettings.DefaultPasswordFormat, model.NewPassword));
                 if (response.Success)
                 {
                     _customerService.SaveCustomerAttribute(customer, SystemCustomerAttributeNames.PasswordRecoveryToken, "");

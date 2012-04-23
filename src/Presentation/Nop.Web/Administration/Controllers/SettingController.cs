@@ -945,11 +945,8 @@ namespace Nop.Admin.Controllers
                 }
 
                 //update user information
-                //TODO optimization - load only users with PasswordFormat.Encrypted (don't filter them here)
-                var customers = _customerService.GetAllCustomers(null, null, null,
-                    null, null, null, null, 0, 0, null, null, null, 
-                    false, null, 0, int.MaxValue)
-                    .Where(u => u.PasswordFormat == PasswordFormat.Encrypted);
+                //optimization - load only users with PasswordFormat.Encrypted
+                var customers = _customerService.GetAllCustomersByPasswordFormat(PasswordFormat.Encrypted);
                 foreach (var customer in customers)
                 {
                     string decryptedPassword = _encryptionService.DecryptText(customer.Password, oldEncryptionPrivateKey);

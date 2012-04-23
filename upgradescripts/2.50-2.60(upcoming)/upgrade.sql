@@ -116,8 +116,38 @@ set @resources='
   <LocaleResource Name="Admin.Orders.Shipments.Products.SKU">
     <Value>SKU</Value>
   </LocaleResource>
-  <LocaleResource Name="PDFInvoice.SKU">
-    <Value>SKU</Value>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Customers.ShowEmails.ShowEmails">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Customers.ShowEmails.ShowUsernames">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Customers.ShowEmails.ShowFullNames">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Customers.CustomerNameFormat.ShowEmails">
+    <Value>Show emails</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Customers.CustomerNameFormat.ShowUsernames">
+    <Value>Show usernames</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Customers.CustomerNameFormat.ShowFullNames">
+    <Value>Show full names</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.DefaultPasswordFormat">
+    <Value>Default password format</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.DefaultPasswordFormat.Hint">
+    <Value>Choose default password format. Please keep in mind that this setting will be applied only to the newly registered customers.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Customers.PasswordFormat.Clear">
+    <Value>Clear</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Customers.PasswordFormat.Hashed">
+    <Value>Hashed</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Customers.PasswordFormat.Encrypted">
+    <Value>Encrypted</Value>
   </LocaleResource>
 </Language>
 '
@@ -640,5 +670,12 @@ IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[BlogPost]') a
 BEGIN
 	ALTER TABLE [dbo].[BlogPost]
 	ADD [EndDateUtc] datetime NULL
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'customersettings.defaultpasswordformat')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'customersettings.defaultpasswordformat', N'Hashed')
 END
 GO
