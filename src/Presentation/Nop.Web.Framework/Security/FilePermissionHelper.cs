@@ -1,0 +1,186 @@
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Security.AccessControl;
+using System.Security.Principal;
+using Nop.Core;
+
+namespace Nop.Web.Framework.Security
+{
+    /// <summary>
+    /// File permission helper
+    /// </summary>
+    public static class FilePermissionHelper
+    {
+        /// <summary>
+        /// Check permissions
+        /// </summary>
+        /// <param name="path">Path</param>
+        /// <param name="checkRead">Check read</param>
+        /// <param name="checkWrite">Check write</param>
+        /// <param name="checkModify">Check modify</param>
+        /// <param name="checkDelete">Check delete</param>
+        /// <returns>Result</returns>
+        public static bool CheckPermissions(string path, bool checkRead, bool checkWrite, bool checkModify, bool checkDelete)
+        {
+            bool flag = false;
+            bool flag2 = false;
+            bool flag3 = false;
+            bool flag4 = false;
+            bool flag5 = false;
+            bool flag6 = false;
+            bool flag7 = false;
+            bool flag8 = false;
+            WindowsIdentity current = WindowsIdentity.GetCurrent();
+            System.Security.AccessControl.AuthorizationRuleCollection rules = null;
+            try
+            {
+                rules = Directory.GetAccessControl(path).GetAccessRules(true, true, typeof(SecurityIdentifier));
+            }
+            catch
+            {
+                return true;
+            }
+            try
+            {
+                foreach (FileSystemAccessRule rule in rules)
+                {
+                    if (!current.User.Equals(rule.IdentityReference))
+                    {
+                        continue;
+                    }
+                    if (AccessControlType.Deny.Equals(rule.AccessControlType))
+                    {
+                        if ((FileSystemRights.Delete & rule.FileSystemRights) == FileSystemRights.Delete)
+                            flag4 = true;
+                        if ((FileSystemRights.Modify & rule.FileSystemRights) == FileSystemRights.Modify)
+                            flag3 = true;
+
+                        if ((FileSystemRights.Read & rule.FileSystemRights) == FileSystemRights.Read)
+                            flag = true;
+
+                        if ((FileSystemRights.Write & rule.FileSystemRights) == FileSystemRights.Write)
+                            flag2 = true;
+
+                        continue;
+                    }
+                    if (AccessControlType.Allow.Equals(rule.AccessControlType))
+                    {
+                        if ((FileSystemRights.Delete & rule.FileSystemRights) == FileSystemRights.Delete)
+                        {
+                            flag8 = true;
+                        }
+                        if ((FileSystemRights.Modify & rule.FileSystemRights) == FileSystemRights.Modify)
+                        {
+                            flag7 = true;
+                        }
+                        if ((FileSystemRights.Read & rule.FileSystemRights) == FileSystemRights.Read)
+                        {
+                            flag5 = true;
+                        }
+                        if ((FileSystemRights.Write & rule.FileSystemRights) == FileSystemRights.Write)
+                        {
+                            flag6 = true;
+                        }
+                    }
+                }
+                foreach (IdentityReference reference in current.Groups)
+                {
+                    foreach (FileSystemAccessRule rule2 in rules)
+                    {
+                        if (!reference.Equals(rule2.IdentityReference))
+                        {
+                            continue;
+                        }
+                        if (AccessControlType.Deny.Equals(rule2.AccessControlType))
+                        {
+                            if ((FileSystemRights.Delete & rule2.FileSystemRights) == FileSystemRights.Delete)
+                                flag4 = true;
+                            if ((FileSystemRights.Modify & rule2.FileSystemRights) == FileSystemRights.Modify)
+                                flag3 = true;
+                            if ((FileSystemRights.Read & rule2.FileSystemRights) == FileSystemRights.Read)
+                                flag = true;
+                            if ((FileSystemRights.Write & rule2.FileSystemRights) == FileSystemRights.Write)
+                                flag2 = true;
+                            continue;
+                        }
+                        if (AccessControlType.Allow.Equals(rule2.AccessControlType))
+                        {
+                            if ((FileSystemRights.Delete & rule2.FileSystemRights) == FileSystemRights.Delete)
+                                flag8 = true;
+                            if ((FileSystemRights.Modify & rule2.FileSystemRights) == FileSystemRights.Modify)
+                                flag7 = true;
+                            if ((FileSystemRights.Read & rule2.FileSystemRights) == FileSystemRights.Read)
+                                flag5 = true;
+                            if ((FileSystemRights.Write & rule2.FileSystemRights) == FileSystemRights.Write)
+                                flag6 = true;
+                        }
+                    }
+                }
+                bool flag9 = !flag4 && flag8;
+                bool flag10 = !flag3 && flag7;
+                bool flag11 = !flag && flag5;
+                bool flag12 = !flag2 && flag6;
+                bool flag13 = true;
+                if (checkRead)
+                {
+                    flag13 = flag13 && flag11;
+                }
+                if (checkWrite)
+                {
+                    flag13 = flag13 && flag12;
+                }
+                if (checkModify)
+                {
+                    flag13 = flag13 && flag10;
+                }
+                if (checkDelete)
+                {
+                    flag13 = flag13 && flag9;
+                }
+                return flag13;
+            }
+            catch (IOException)
+            {
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Gets a list of directories (physical paths) which require write permission
+        /// </summary>
+        /// <param name="webHelper">Web helper</param>
+        /// <returns>Result</returns>
+        public static IEnumerable<string> GetDirectoriesWrite(IWebHelper webHelper)
+        {
+            string rootDir = webHelper.MapPath("~/");
+            var dirsToCheck = new List<string>();
+            //dirsToCheck.Add(rootDir);
+            dirsToCheck.Add(rootDir + "App_Data");
+            dirsToCheck.Add(rootDir + "bin");
+            dirsToCheck.Add(rootDir + "content");
+            dirsToCheck.Add(rootDir + "content\\images");
+            dirsToCheck.Add(rootDir + "content\\images\\thumbs");
+            dirsToCheck.Add(rootDir + "content\\images\\uploaded");
+            dirsToCheck.Add(rootDir + "content\\files\\exportimport");
+            dirsToCheck.Add(rootDir + "plugins");
+            dirsToCheck.Add(rootDir + "plugins\\bin");
+            return dirsToCheck;
+        }
+
+        /// <summary>
+        /// Gets a list of files (physical paths) which require write permission
+        /// </summary>
+        /// <param name="webHelper">Web helper</param>
+        /// <returns>Result</returns>
+        public static IEnumerable<string> GetFilesWrite(IWebHelper webHelper)
+        {
+            string rootDir = webHelper.MapPath("~/");
+            var filesToCheck = new List<string>();
+            filesToCheck.Add(rootDir + "Global.asax");
+            filesToCheck.Add(rootDir + "web.config");
+            filesToCheck.Add(rootDir + "App_Data\\InstalledPlugins.txt");
+            filesToCheck.Add(rootDir + "App_Data\\Settings.txt");
+            return filesToCheck;
+        }
+    }
+}

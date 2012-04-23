@@ -15,6 +15,7 @@ using Nop.Core.Plugins;
 using Nop.Services.Installation;
 using Nop.Services.Security;
 using Nop.Web.Models.Install;
+using Nop.Web.Framework.Security;
 
 namespace Nop.Web.Controllers
 {
@@ -77,141 +78,7 @@ namespace Nop.Web.Controllers
                 return string.Format("An error occured when creating database: {0}", ex.Message);
             }
         }
-
-        /// <summary>
-        /// Check permissions
-        /// </summary>
-        /// <param name="path">Path</param>
-        /// <param name="checkRead">Check read</param>
-        /// <param name="checkWrite">Check write</param>
-        /// <param name="checkModify">Check modify</param>
-        /// <param name="checkDelete">Check delete</param>
-        /// <returns>Resulr</returns>
-        private bool checkPermissions(string path, bool checkRead, bool checkWrite, bool checkModify, bool checkDelete)
-        {
-            bool flag = false;
-            bool flag2 = false;
-            bool flag3 = false;
-            bool flag4 = false;
-            bool flag5 = false;
-            bool flag6 = false;
-            bool flag7 = false;
-            bool flag8 = false;
-            WindowsIdentity current = WindowsIdentity.GetCurrent();
-            System.Security.AccessControl.AuthorizationRuleCollection rules = null;
-            try
-            {
-                rules = Directory.GetAccessControl(path).GetAccessRules(true, true, typeof(SecurityIdentifier));
-            }
-            catch
-            {
-                return true;
-            }
-            try
-            {
-                foreach (FileSystemAccessRule rule in rules)
-                {
-                    if (!current.User.Equals(rule.IdentityReference))
-                    {
-                        continue;
-                    }
-                    if (AccessControlType.Deny.Equals(rule.AccessControlType))
-                    {
-                        if ((FileSystemRights.Delete & rule.FileSystemRights) == FileSystemRights.Delete)
-                            flag4 = true;
-                        if ((FileSystemRights.Modify & rule.FileSystemRights) == FileSystemRights.Modify)
-                            flag3 = true;
-
-                        if ((FileSystemRights.Read & rule.FileSystemRights) == FileSystemRights.Read)
-                            flag = true;
-
-                        if ((FileSystemRights.Write & rule.FileSystemRights) == FileSystemRights.Write)
-                            flag2 = true;
-
-                        continue;
-                    }
-                    if (AccessControlType.Allow.Equals(rule.AccessControlType))
-                    {
-                        if ((FileSystemRights.Delete & rule.FileSystemRights) == FileSystemRights.Delete)
-                        {
-                            flag8 = true;
-                        }
-                        if ((FileSystemRights.Modify & rule.FileSystemRights) == FileSystemRights.Modify)
-                        {
-                            flag7 = true;
-                        }
-                        if ((FileSystemRights.Read & rule.FileSystemRights) == FileSystemRights.Read)
-                        {
-                            flag5 = true;
-                        }
-                        if ((FileSystemRights.Write & rule.FileSystemRights) == FileSystemRights.Write)
-                        {
-                            flag6 = true;
-                        }
-                    }
-                }
-                foreach (IdentityReference reference in current.Groups)
-                {
-                    foreach (FileSystemAccessRule rule2 in rules)
-                    {
-                        if (!reference.Equals(rule2.IdentityReference))
-                        {
-                            continue;
-                        }
-                        if (AccessControlType.Deny.Equals(rule2.AccessControlType))
-                        {
-                            if ((FileSystemRights.Delete & rule2.FileSystemRights) == FileSystemRights.Delete)
-                                flag4 = true;
-                            if ((FileSystemRights.Modify & rule2.FileSystemRights) == FileSystemRights.Modify)
-                                flag3 = true;
-                            if ((FileSystemRights.Read & rule2.FileSystemRights) == FileSystemRights.Read)
-                                flag = true;
-                            if ((FileSystemRights.Write & rule2.FileSystemRights) == FileSystemRights.Write)
-                                flag2 = true;
-                            continue;
-                        }
-                        if (AccessControlType.Allow.Equals(rule2.AccessControlType))
-                        {
-                            if ((FileSystemRights.Delete & rule2.FileSystemRights) == FileSystemRights.Delete)
-                                flag8 = true;
-                            if ((FileSystemRights.Modify & rule2.FileSystemRights) == FileSystemRights.Modify)
-                                flag7 = true;
-                            if ((FileSystemRights.Read & rule2.FileSystemRights) == FileSystemRights.Read)
-                                flag5 = true;
-                            if ((FileSystemRights.Write & rule2.FileSystemRights) == FileSystemRights.Write)
-                                flag6 = true;
-                        }
-                    }
-                }
-                bool flag9 = !flag4 && flag8;
-                bool flag10 = !flag3 && flag7;
-                bool flag11 = !flag && flag5;
-                bool flag12 = !flag2 && flag6;
-                bool flag13 = true;
-                if (checkRead)
-                {
-                    flag13 = flag13 && flag11;
-                }
-                if (checkWrite)
-                {
-                    flag13 = flag13 && flag12;
-                }
-                if (checkModify)
-                {
-                    flag13 = flag13 && flag10;
-                }
-                if (checkDelete)
-                {
-                    flag13 = flag13 && flag9;
-                }
-                return flag13;
-            }
-            catch (IOException)
-            {
-            }
-            return false;
-        }
-
+        
         /// <summary>
         /// Create contents of connection strings used by the SqlConnection class
         /// </summary>
@@ -327,31 +194,16 @@ namespace Nop.Web.Controllers
             //and the configured application pool identity on IIS 7.5) that is used if the application is not impersonating.
             //If the application is impersonating via <identity impersonate="true"/>, 
             //the identity will be the anonymous user (typically IUSR_MACHINENAME) or the authenticated request user.
-
+            var webHelper = EngineContext.Current.Resolve<IWebHelper>();
             //validate permissions
-            string rootDir = Server.MapPath("~/");
-            var dirsToCheck = new List<string>();
-            //dirsToCheck.Add(rootDir);
-            dirsToCheck.Add(rootDir + "App_Data");
-            dirsToCheck.Add(rootDir + "bin");
-            dirsToCheck.Add(rootDir + "content");
-            dirsToCheck.Add(rootDir + "content\\images");
-            dirsToCheck.Add(rootDir + "content\\images\\thumbs");
-            dirsToCheck.Add(rootDir + "content\\images\\uploaded");
-            dirsToCheck.Add(rootDir + "content\\files\\exportimport");
-            dirsToCheck.Add(rootDir + "plugins");
-            dirsToCheck.Add(rootDir + "plugins\\bin");
+            var dirsToCheck = FilePermissionHelper.GetDirectoriesWrite(webHelper);
             foreach (string dir in dirsToCheck)
-                if (!checkPermissions(dir, false, true, true, true))
+                if (!FilePermissionHelper.CheckPermissions(dir, false, true, true, false))
                     ModelState.AddModelError("", string.Format("The '{0}' account is not granted with Modify permission on folder '{1}'. Please configure these permissions.", WindowsIdentity.GetCurrent().Name, dir));
 
-            var filesToCheck = new List<string>();
-            filesToCheck.Add(rootDir + "Global.asax");
-            filesToCheck.Add(rootDir + "web.config");
-            filesToCheck.Add(rootDir + "App_Data\\InstalledPlugins.txt");
-            filesToCheck.Add(rootDir + "App_Data\\Settings.txt");
+            var filesToCheck = FilePermissionHelper.GetFilesWrite(webHelper);
             foreach (string file in filesToCheck)
-                if (!checkPermissions(file, false, true, true, true))
+                if (!FilePermissionHelper.CheckPermissions(file, false, true, true, true))
                     ModelState.AddModelError("", string.Format("The '{0}' account is not granted with Modify permission on file '{1}'. Please configure these permissions.", WindowsIdentity.GetCurrent().Name, file));
             
             if (ModelState.IsValid)
@@ -460,7 +312,6 @@ namespace Nop.Web.Controllers
                     }
 
                     //restart application
-                    var webHelper = EngineContext.Current.Resolve<IWebHelper>();
                     webHelper.RestartAppDomain();
 
                     //Redirect to home page

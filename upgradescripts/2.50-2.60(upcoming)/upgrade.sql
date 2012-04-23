@@ -161,6 +161,18 @@ set @resources='
   <LocaleResource Name="Admin.Common.Show">
     <Value>Show</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.Warnings.DirectoryPermission.OK">
+    <Value>All directory permissions are OK</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Warnings.DirectoryPermission.Wrong">
+    <Value>The ''{0}'' account is not granted with Modify permission on folder ''{1}''. Please configure these permissions.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Warnings.FilePermission.OK">
+    <Value>All file permissions are OK</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Warnings.FilePermission.Wrong">
+    <Value>The ''{0}'' account is not granted with Modify permission on file ''{1}''. Please configure these permissions.</Value>
+  </LocaleResource>
 </Language>
 '
 

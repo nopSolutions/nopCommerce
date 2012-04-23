@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Security.Principal;
 using System.Web.Mvc;
 using Nop.Admin.Models.Common;
 using Nop.Core;
@@ -18,6 +19,7 @@ using Nop.Services.Payments;
 using Nop.Services.Security;
 using Nop.Services.Shipping;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.Security;
 
 namespace Nop.Admin.Controllers
 {
@@ -265,6 +267,46 @@ namespace Nop.Admin.Controllers
                         Level = SystemWarningLevel.Warning,
                         Text = string.Format(_localizationService.GetResource("Admin.System.Warnings.IncompatiblePlugin"), pluginName )
                     });
+
+            //validate write permissions (the same procedure like during installation)
+            var dirPermissionsOk = true;
+            var dirsToCheck = FilePermissionHelper.GetDirectoriesWrite(_webHelper);
+            foreach (string dir in dirsToCheck)
+                if (!FilePermissionHelper.CheckPermissions(dir, false, true, true, false))
+                {
+                    model.Add(new SystemWarningModel()
+                    {
+                        Level = SystemWarningLevel.Warning,
+                        Text = string.Format(_localizationService.GetResource("Admin.System.Warnings.DirectoryPermission.Wrong"), WindowsIdentity.GetCurrent().Name, dir)
+                    });
+                    dirPermissionsOk = false;
+                }
+            if (dirPermissionsOk)
+                model.Add(new SystemWarningModel()
+                {
+                    Level = SystemWarningLevel.Pass,
+                    Text = _localizationService.GetResource("Admin.System.Warnings.DirectoryPermission.OK")
+                });
+
+            var filePermissionsOk = true;
+            var filesToCheck = FilePermissionHelper.GetFilesWrite(_webHelper);
+            foreach (string file in filesToCheck)
+                if (!FilePermissionHelper.CheckPermissions(file, false, true, true, true))
+                {
+                    model.Add(new SystemWarningModel()
+                    {
+                        Level = SystemWarningLevel.Warning,
+                        Text = string.Format(_localizationService.GetResource("Admin.System.Warnings.FilePermission.Wrong"), WindowsIdentity.GetCurrent().Name, file)
+                    });
+                    filePermissionsOk = false;
+                }
+            if (filePermissionsOk)
+                model.Add(new SystemWarningModel()
+                {
+                    Level = SystemWarningLevel.Pass,
+                    Text = _localizationService.GetResource("Admin.System.Warnings.FilePermission.OK")
+                });
+            
             
             return View(model);
         }

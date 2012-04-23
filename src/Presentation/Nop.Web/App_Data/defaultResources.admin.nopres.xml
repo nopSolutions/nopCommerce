@@ -9403,6 +9403,26 @@
               <LocaleResource Name="IncompatiblePlugin">
                 <Value>'{0}' plugin is incompatible with your nopCommerce version. Delete it or update to the latest version.</Value>
               </LocaleResource>
+              <LocaleResource Name="DirectoryPermission">
+                <Children>
+                  <LocaleResource Name="OK">
+                    <Value>All directory permissions are OK</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Wrong">
+                    <Value>The '{0}' account is not granted with Modify permission on folder '{1}'. Please configure these permissions.</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+              <LocaleResource Name="FilePermission">
+                <Children>
+                  <LocaleResource Name="OK">
+                    <Value>All file permissions are OK</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Wrong">
+                    <Value>The '{0}' account is not granted with Modify permission on file '{1}'. Please configure these permissions.</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
 						</Children>
 					</LocaleResource>
 				</Children>
