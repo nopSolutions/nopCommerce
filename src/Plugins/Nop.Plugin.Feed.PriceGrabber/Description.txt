@@ -2,7 +2,7 @@
 FriendlyName: PriceGrabber / Yahoo Shopping
 SystemName: PromotionFeed.PriceGrabber
 Version: 1.02
-SupportedVersions: 2.50
+SupportedVersions: 2.60
 Author: nopCommerce team
 DisplayOrder: 1
 FileName: Nop.Plugin.Feed.PriceGrabber.dll

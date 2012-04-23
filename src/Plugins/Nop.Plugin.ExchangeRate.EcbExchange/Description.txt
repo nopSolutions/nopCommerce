@@ -2,7 +2,7 @@
 FriendlyName: ECB exchange rate provider
 SystemName: CurrencyExchange.ECB
 Version: 1.01
-SupportedVersions: 2.50
+SupportedVersions: 2.60
 Author: nopCommerce team
 DisplayOrder: 1
 FileName: Nop.Plugin.ExchangeRate.EcbExchange.dll

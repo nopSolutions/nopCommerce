@@ -2,7 +2,7 @@
 FriendlyName: Shipping by weight
 SystemName: Shipping.ByWeight
 Version: 1.13
-SupportedVersions: 2.50
+SupportedVersions: 2.60
 Author: nopCommerce team
 DisplayOrder: 1
 FileName: Nop.Plugin.Shipping.ByWeight.dll

@@ -2,7 +2,7 @@
 FriendlyName: Customer has one of these product variants in the cart
 SystemName: DiscountRequirement.HasOneProduct
 Version: 1.04
-SupportedVersions: 2.50
+SupportedVersions: 2.60
 Author: nopCommerce team
 DisplayOrder: 1
 FileName: Nop.Plugin.DiscountRules.HasOneProduct.dll

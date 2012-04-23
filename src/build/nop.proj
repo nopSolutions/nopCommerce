@@ -9,7 +9,7 @@
 
 	<PropertyGroup>
 		<RootFolder>$(MSBuildProjectDirectory)\..</RootFolder>
-		<Version Condition="'$(Version)' == ''">2.50</Version>
+		<Version Condition="'$(Version)' == ''">2.60</Version>
 		<DeployPrefix>nop_$(Version)</DeployPrefix>
 		<DeployFolder>$(RootFolder)\Deployable</DeployFolder>
         	<PluginsFolder>$(RootFolder)\Plugins</PluginsFolder>

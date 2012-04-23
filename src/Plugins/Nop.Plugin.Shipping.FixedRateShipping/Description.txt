@@ -2,7 +2,7 @@
 FriendlyName: Fixed Rate Shipping
 SystemName: Shipping.FixedRate
 Version: 1.06
-SupportedVersions: 2.50
+SupportedVersions: 2.60
 Author: nopCommerce team
 DisplayOrder: 1
 FileName: Nop.Plugin.Shipping.FixedRateShipping.dll
