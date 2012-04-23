@@ -96,6 +96,15 @@ namespace Nop.Admin.Controllers
             model.ServerLocalTime = DateTime.Now;
             model.UtcTime = DateTime.UtcNow;
             //Environment.GetEnvironmentVariable("USERNAME");
+            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                model.LoadedAssemblies.Add(new SystemInfoModel.LoadedAssembly()
+                {
+                    FullName =  assembly.FullName,
+                    //we cannot use Location property in medium trust
+                    //Location = assembly.Location
+                });
+            }
             return View(model);
         }
 

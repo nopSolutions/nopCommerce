@@ -5,6 +5,18 @@
         @T("Admin.System.SystemInfo")
     </div>
 </div>
+
+<script type="text/javascript">
+    function toggleAndChangeText() {
+        $('#pnlLoadedAssemblies').toggle();
+        if ($('#pnlLoadedAssemblies').css('display') == 'none') {
+            $('#loadedAssembliesTag').html('@T("Admin.Common.Show")');
+        }
+        else {
+            $('#loadedAssembliesTag').html('@T("Admin.Common.Hide")');
+        }
+    }
+</script>
 <table class="adminContent">
     <tr>
         <td class="adminTitle">
@@ -60,6 +72,26 @@
         </td>
         <td class="adminData">
             @Model.UtcTime.ToString("F")
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.LoadedAssemblies):
+        </td>
+        <td class="adminData">
+            <a id="loadedAssembliesTag" href="javascript:toggleAndChangeText();">@T("Admin.Common.Show")</a>
+            <div id="pnlLoadedAssemblies" style="display:none">
+                @foreach (var assembly in Model.LoadedAssemblies)
+                {
+                    @assembly.FullName
+                    if (!String.IsNullOrEmpty(assembly.Location))
+                    {
+                        <br />
+                        <i>@assembly.Location</i>
+                    }
+                    <br />
+                }
+            </div>
         </td>
     </tr>
 </table>

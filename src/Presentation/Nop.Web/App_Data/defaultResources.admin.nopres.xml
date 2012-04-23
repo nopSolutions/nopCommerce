@@ -2369,6 +2369,9 @@
 					<LocaleResource Name="Go">
 						<Value>Go</Value>
 					</LocaleResource>
+          <LocaleResource Name="Hide">
+            <Value>Hide</Value>
+          </LocaleResource>
 					<LocaleResource Name="ImportFromCsv">
 						<Value>Import from CSV</Value>
 					</LocaleResource>
@@ -2399,9 +2402,9 @@
 					<LocaleResource Name="SEO">
 						<Value>SEO</Value>
 					</LocaleResource>
-					<LocaleResource Name="View">
-						<Value>View</Value>
-					</LocaleResource>
+          <LocaleResource Name="Show">
+            <Value>Show</Value>
+          </LocaleResource>
 					<LocaleResource Name="Standard">
 						<Value>Standard</Value>
 					</LocaleResource>
@@ -2416,6 +2419,9 @@
 					</LocaleResource>
           <LocaleResource Name="UploadFile">
             <Value>Please upload a file</Value>
+          </LocaleResource>
+          <LocaleResource Name="View">
+            <Value>View</Value>
           </LocaleResource>
 					<LocaleResource Name="WrongEmail">
 						<Value>Wrong email</Value>
@@ -9305,6 +9311,14 @@
 									</LocaleResource>
 								</Children>
 							</LocaleResource>
+              <LocaleResource Name="LoadedAssemblies">
+                <Value>Loaded assemblies</Value>
+                <Children>
+                  <LocaleResource Name="Hint">
+                    <Value>A list of loaded assemblies</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
 						</Children>
 					</LocaleResource>
 					<LocaleResource Name="Warnings">

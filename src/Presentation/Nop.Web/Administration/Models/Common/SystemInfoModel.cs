@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
 
@@ -6,6 +7,11 @@ namespace Nop.Admin.Models.Common
 {
     public class SystemInfoModel : BaseNopModel
     {
+        public SystemInfoModel()
+        {
+            this.LoadedAssemblies = new List<LoadedAssembly>();
+        }
+
         [NopResourceDisplayName("Admin.System.SystemInfo.ASPNETInfo")]
         public string AspNetInfo { get; set; }
 
@@ -26,6 +32,15 @@ namespace Nop.Admin.Models.Common
 
         [NopResourceDisplayName("Admin.System.SystemInfo.UTCTime")]
         public DateTime UtcTime { get; set; }
+
+        [NopResourceDisplayName("Admin.System.SystemInfo.LoadedAssemblies")]
+        public IList<LoadedAssembly> LoadedAssemblies { get; set; }
+
+        public class LoadedAssembly : BaseNopModel
+        {
+            public string FullName { get; set; }
+            public string Location { get; set; }
+        }
 
     }
 }

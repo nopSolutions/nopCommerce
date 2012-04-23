@@ -149,6 +149,18 @@ set @resources='
   <LocaleResource Name="Enums.Nop.Core.Domain.Customers.PasswordFormat.Encrypted">
     <Value>Encrypted</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.LoadedAssemblies">
+    <Value>Loaded assemblies</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.SystemInfo.LoadedAssemblies.Hint">
+    <Value>A list of loaded assemblies</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.Hide">
+    <Value>Hide</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.Show">
+    <Value>Show</Value>
+  </LocaleResource>
 </Language>
 '
 
