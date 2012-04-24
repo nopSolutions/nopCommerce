@@ -109,6 +109,7 @@ td.fieldname{font-size:12px;}
 .message-error{font-family:Verdana, Arial, sans-serif;font-size:10px;font-weight:700;color:red;}
 .validation-summary-errors{font-family:Verdana, Arial, sans-serif;font-size:10px;font-weight:700;color:red;}
 .field-validation-error{font-family:Verdana, Arial, sans-serif;font-size:10px;font-weight:700;color:red;}
+.required{color:red;}
 .copyright{float:right;padding-right:10px;font-family:Verdana, Arial, Helvetica, sans-serif;font-size:10px;}
 .copyright a{color:#3664A5;background-color:inherit;}
 .captcha-box{direction:ltr;text-align:left;}
@@ -456,7 +457,6 @@ ul.languagelist li:hover{cursor:pointer;}
 .registration-page .section-title{padding:10px 10px 5px 0;font-weight:700;clear:both;font-size:12px;}
 .registration-page .section-body{text-align:right;padding:10px;border:1px solid #d7d7d7;height:auto;}
 .registration-page .buttons{float:left;margin-bottom:5px;margin-top:5px;text-align:center;clear:both;}
-.registration-page .required{color:red;}
 .availablestatus{color:green;padding-left:5px;}
 .notavailablestatus{color:red;padding-left:5px;}
 .password-recovery-page,newsletter-page{direction:rtl;text-align:right;}

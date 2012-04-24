@@ -26,6 +26,7 @@
 .message-error{font-family:Verdana, Arial, sans-serif;font-weight:700;color:red;}
 .validation-summary-errors{font-family:Verdana, Arial, sans-serif;font-weight:700;color:red;}
 .field-validation-error{font-family:Verdana, Arial, sans-serif;font-weight:700;color:red;}
+.required{color:red;}
 .changedevice{text-align:center;}
 .changedevice a{text-decoration:none;}
 .currencyselector,.taxdisplaytypeselector,.languageselector{}
@@ -183,7 +184,6 @@
 .registration-page .section-title{padding:10px;font-weight:700;clear:both;}
 .registration-page .section-body{text-align:left;padding:10px;border:1px solid #d7d7d7;height:auto;}
 .registration-page .buttons{float:right;margin-bottom:5px;margin-top:5px;text-align:center;clear:both;}
-.registration-page .required{color:red;}
 .password-recovery-page,newsletter-page{}
 .password-recovery-page .body,newsletter-page .body{margin:0;padding:0;background-color:inherit;}
 .password-recovery-page .email{}

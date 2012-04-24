@@ -50,6 +50,7 @@
             </td>
             <td>
                 @Html.EditorFor(model => model.FirstName)
+                @Html.RequiredHint()
                 @Html.ValidationMessageFor(model => model.FirstName)
             </td>
         </tr>
@@ -62,6 +63,7 @@
             </td>
             <td>
                 @Html.EditorFor(model => model.LastName)
+                @Html.RequiredHint()
                 @Html.ValidationMessageFor(model => model.LastName)
             </td>
         </tr>
@@ -74,6 +76,7 @@
             </td>
             <td>
                 @Html.EditorFor(model => model.Email)
+                @Html.RequiredHint()
                 @Html.ValidationMessageFor(model => model.Email)
             </td>
         </tr>
@@ -86,6 +89,7 @@
             </td>
             <td>
                 @Html.EditorFor(model => model.Company)
+                @Html.RequiredHint()
                 @Html.ValidationMessageFor(model => model.Company)
             </td>
         </tr>
@@ -98,6 +102,7 @@
             </td>
             <td>
                 @Html.DropDownListFor(model => model.CountryId, Model.AvailableCountries)
+                @Html.RequiredHint()
                 @Html.ValidationMessageFor(model => model.CountryId)
             </td>
         </tr>
@@ -125,6 +130,7 @@
             </td>
             <td>
                 @Html.EditorFor(model => model.City)
+                @Html.RequiredHint()
                 @Html.ValidationMessageFor(model => model.City)
             </td>
         </tr>
@@ -137,6 +143,7 @@
             </td>
             <td>
                 @Html.EditorFor(model => model.Address1)
+                @Html.RequiredHint()
                 @Html.ValidationMessageFor(model => model.Address1)
             </td>
         </tr>
@@ -161,6 +168,7 @@
             </td>
             <td>
                 @Html.EditorFor(model => model.ZipPostalCode)
+                @Html.RequiredHint()
                 @Html.ValidationMessageFor(model => model.ZipPostalCode)
             </td>
         </tr>
@@ -173,6 +181,7 @@
             </td>
             <td>
                 @Html.EditorFor(model => model.PhoneNumber)
+                @Html.RequiredHint()
                 @Html.ValidationMessageFor(model => model.PhoneNumber)
             </td>
         </tr>
