@@ -18,10 +18,12 @@
             $('input:radio[name=DataProvider]').click(toggleProvider);
             $('input:radio[name=SqlConnectionInfo]').click(toggleSqlConnectionInfo);
             $('input:radio[name=SqlAuthenticationType]').click(toggleSqlAuthenticationType);
+            $("input:checkbox[name=UseCustomCollation]").click(toggleCollation);
 
             toggleProvider();
             toggleSqlConnectionInfo();
             toggleSqlAuthenticationType();
+            toggleCollation();
         });
 
 
@@ -59,6 +61,15 @@
             }
         }
 
+
+        function toggleCollation() {
+            if ($('#UseCustomCollation').is(':checked')) {
+                $('#Collation').show();
+            }
+            else {
+                $('#Collation').hide();
+            }
+        }
 
         (function () {
             function show() {
@@ -270,6 +281,20 @@
                                                             <br />
                                                             Find more info <a href="http://www.connectionstrings.com/" target="_blank">here</a>
                                                         </span>
+                                                    </div>
+                                                    <div>
+                                                        <table>
+                                                            <tr>
+                                                                <td nowrap="nowrap" align="left">
+                                                                    <label for="UseCustomCollation">
+                                                                        Specify custom SQL Server collation:</label>
+                                                                </td>
+                                                                <td width="100%">
+                                                                    @Html.CheckBoxFor(x => x.UseCustomCollation)
+                                                                    @Html.TextBoxFor(x => x.Collation)
+                                                                </td>
+                                                            </tr>
+                                                        </table>
                                                     </div>
                                                 </div>
                                             </td>

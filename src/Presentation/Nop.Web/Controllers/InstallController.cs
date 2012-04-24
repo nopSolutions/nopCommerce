@@ -49,8 +49,9 @@ namespace Nop.Web.Controllers
         /// Creates a database on the server.
         /// </summary>
         /// <param name="connectionString">Connection string</param>
+        /// <param name="collation">Server collation; the default one will be used if not specified</param>
         /// <returns>Error</returns>
-        private string createDatabase(string connectionString)
+        private string createDatabase(string connectionString, string collation)
         {
             try
             {
@@ -60,8 +61,9 @@ namespace Nop.Web.Controllers
                 //now create connection string to 'master' dabatase. It always exists.
                 builder.InitialCatalog = "master";
                 var masterCatalogConnectionString = builder.ToString();
-                string query = string.Format("CREATE DATABASE [{0}] COLLATE SQL_Latin1_General_CP1_CI_AS", databaseName);
-
+                string query = string.Format("CREATE DATABASE [{0}]", databaseName);
+                if (!String.IsNullOrWhiteSpace(collation))
+                    query = string.Format("{0} COLLATE {1}", query, collation);
                 using (var conn = new SqlConnection(masterCatalogConnectionString))
                 {
                     conn.Open();
@@ -132,6 +134,8 @@ namespace Nop.Web.Controllers
                 SqlAuthenticationType = "sqlauthentication",
                 SqlConnectionInfo = "sqlconnectioninfo_values",
                 SqlServerCreateDatabase = false,
+                UseCustomCollation = false,
+                Collation = "SQL_Latin1_General_CP1_CI_AS"
             };
             return View(model);
         }
@@ -239,7 +243,8 @@ namespace Nop.Web.Controllers
                             if (!sqlServerDatabaseExists(connectionString))
                             {
                                 //create database
-                                var errorCreatingDatabase = createDatabase(connectionString);
+                                var collation = model.UseCustomCollation ? model.Collation : "";
+                                var errorCreatingDatabase = createDatabase(connectionString, collation);
                                 if (!String.IsNullOrEmpty(errorCreatingDatabase))
                                     throw new Exception(errorCreatingDatabase);
                                 else
@@ -334,7 +339,7 @@ namespace Nop.Web.Controllers
                         DataConnectionString = null
                     });
                     
-                    ModelState.AddModelError("", "Setup failed: " + exception);
+                    ModelState.AddModelError("", "Setup failed: " + exception.Message);
                 }
             }
             return View(model);
