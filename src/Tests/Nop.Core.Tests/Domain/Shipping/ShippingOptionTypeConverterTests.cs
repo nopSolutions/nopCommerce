@@ -16,7 +16,7 @@ namespace Nop.Core.Tests.Domain.Shipping
         }
 
         [Test]
-        public void Can_get_int_list_type_converter()
+        public void Can_get_type_converter()
         {
             var converter = TypeDescriptor.GetConverter(typeof(ShippingOption));
             converter.GetType().ShouldEqual(typeof(ShippingOptionTypeConverter));

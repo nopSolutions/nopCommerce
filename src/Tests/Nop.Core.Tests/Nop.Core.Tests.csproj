@@ -61,6 +61,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Domain\Shipping\ShippingOptionListTypeConverterTests.cs" />
     <Compile Include="Infrastructure\DependencyManagement\AutofacTests.cs" />
     <Compile Include="WebHelperTests.cs" />
     <Compile Include="ComponentModel\GenericListTypeConverterTests.cs" />

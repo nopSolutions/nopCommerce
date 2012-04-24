@@ -248,6 +248,8 @@ namespace Nop.Core
                 return new GenericListTypeConverter<string>();
             if (type == typeof(ShippingOption))
                 return new ShippingOptionTypeConverter();
+            if (type == typeof(List<ShippingOption>) || type == typeof(IList<ShippingOption>))
+                return new ShippingOptionListTypeConverter();
 
             return TypeDescriptor.GetConverter(type);
         }

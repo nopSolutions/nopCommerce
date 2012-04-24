@@ -451,6 +451,7 @@ namespace Nop.Services.Customers
 
             //clear selected shipping and payment methods
             SaveCustomerAttribute<ShippingOption>(customer, SystemCustomerAttributeNames.LastShippingOption, null);
+            SaveCustomerAttribute<ShippingOption>(customer, SystemCustomerAttributeNames.OfferedShippingOptions, null);
             customer.SelectedPaymentMethodSystemName = "";
 
             //clear entered coupon codes
