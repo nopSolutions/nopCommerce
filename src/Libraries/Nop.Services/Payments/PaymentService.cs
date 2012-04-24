@@ -94,6 +94,12 @@ namespace Nop.Services.Payments
             }
             else
             {
+                //We should strip out any white space or dash in the CC number entered.
+                if (!String.IsNullOrWhiteSpace(processPaymentRequest.CreditCardNumber))
+                {
+                    processPaymentRequest.CreditCardNumber = processPaymentRequest.CreditCardNumber.Replace(" ", "");
+                    processPaymentRequest.CreditCardNumber = processPaymentRequest.CreditCardNumber.Replace("-", "");
+                }
                 var paymentMethod = LoadPaymentMethodBySystemName(processPaymentRequest.PaymentMethodSystemName);
                 if (paymentMethod == null)
                     throw new NopException("Payment method couldn't be loaded");

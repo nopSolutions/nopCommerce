@@ -36,6 +36,9 @@ namespace Nop.Web.MVC.Tests.Public.Validators
             // Good checksum, with dashes
             _validator.Validate(new Person { CreditCard = "1234-5678-9012-3452" }).IsValid.ShouldBeTrue();
 
+            // Good checksum, with spaces
+            _validator.Validate(new Person { CreditCard = "1234 5678 9012 3452" }).IsValid.ShouldBeTrue();
+
             // Bad checksum
             _validator.Validate(new Person { CreditCard = "0000000000000001" }).IsValid.ShouldBeFalse();
 

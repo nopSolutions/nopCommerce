@@ -18,6 +18,7 @@ namespace Nop.Web.Framework.Validators
             if (String.IsNullOrWhiteSpace(ccValue))
                 return false;
 
+            ccValue = ccValue.Replace(" ", "");
             ccValue = ccValue.Replace("-", "");
 
             int checksum = 0;
