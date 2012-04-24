@@ -219,7 +219,12 @@ namespace Nop.Web.Controllers
                         if (model.SqlConnectionInfo.Equals("sqlconnectioninfo_raw", StringComparison.InvariantCultureIgnoreCase))
                         {
                             //raw connection string
-                            connectionString = model.DatabaseConnectionString;
+
+                            //we know that MARS option is required when using Entity Framework
+                            //let's ensure that it's specified
+                            var sqlCsb = new SqlConnectionStringBuilder(model.DatabaseConnectionString);
+                            sqlCsb.MultipleActiveResultSets = true;
+                            connectionString = sqlCsb.ToString();
                         }
                         else
                         {
