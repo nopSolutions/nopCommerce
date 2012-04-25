@@ -164,7 +164,7 @@ namespace Nop.Core
                 //HTTP_HOST variable is not available.
                 //It's possible only when HttpContext is not available (for example, running in a schedule task)
                 //so let's resolve StoreInformationSettings here.
-                //Do not inject it via contructor because it'll break the instllation (settings are not available at that moment)
+                //Do not inject it via contructor because it'll break the installation (settings are not available at that moment)
                 var storeSettings = EngineContext.Current.Resolve<StoreInformationSettings>();
                 result = storeSettings.StoreUrl;
             }

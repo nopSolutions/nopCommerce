@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using Autofac;
 using Nop.Core.Domain.Tasks;
 using Nop.Core.Infrastructure;
 using Nop.Services.Logging;
@@ -48,9 +49,21 @@ namespace Nop.Services.Tasks
                 var type2 = System.Type.GetType(this._type);
                 if (type2 != null)
                 {
-                    task = Activator.CreateInstance(type2) as ITask;
+                    object instance;
+                    if (!EngineContext.Current.ContainerManager.Scope().TryResolve(type2, out instance))
+                    {
+                        //not resolved
+                        try
+                        {
+                            instance = Activator.CreateInstance(type2);
+                        }
+                        catch (MissingMethodException)
+                        {
+                            instance = EngineContext.Current.ContainerManager.ResolveUnregistered(type2);
+                        }
+                    }
+                    task = instance as ITask;
                 }
-                //this._enabled = task != null;
             }
             return task;
         }

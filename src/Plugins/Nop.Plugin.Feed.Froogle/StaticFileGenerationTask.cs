@@ -1,20 +1,24 @@
-﻿using Nop.Core.Infrastructure;
-using Nop.Core.Plugins;
+﻿using Nop.Core.Plugins;
 using Nop.Services.Tasks;
 
 namespace Nop.Plugin.Feed.Froogle
 {
     public class StaticFileGenerationTask : ITask
     {
+        private readonly IPluginFinder _pluginFinder;
+
+        public StaticFileGenerationTask(IPluginFinder pluginFinder)
+        {
+            this._pluginFinder = pluginFinder;
+        }
+
         /// <summary>
         /// Execute task
         /// </summary>
         public void Execute()
         {
-            var pluginFinder = EngineContext.Current.Resolve<IPluginFinder>();
-
             //is plugin installed?
-            var pluginDescriptor = pluginFinder.GetPluginDescriptorBySystemName("PromotionFeed.Froogle");
+            var pluginDescriptor = _pluginFinder.GetPluginDescriptorBySystemName("PromotionFeed.Froogle");
             if (pluginDescriptor == null || !pluginDescriptor.Installed)
                 return;
 
