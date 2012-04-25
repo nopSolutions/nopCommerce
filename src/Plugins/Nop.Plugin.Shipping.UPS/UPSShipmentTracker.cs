@@ -8,7 +8,6 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Web.Services.Protocols;
-using Nop.Core.Domain.Localization;
 using Nop.Plugin.Shipping.UPS.track;
 using Nop.Services.Localization;
 using Nop.Services.Logging;

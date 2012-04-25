@@ -191,7 +191,10 @@
                                     @item.Country
                                 </td>
                                 <td class="a-left">
-                                    @item.Date.ToString("D")
+                                @if (item.Date.HasValue)
+                                {
+                                    @item.Date.Value.ToString("D")
+                                }
                                 </td>
                             </tr>
                         }

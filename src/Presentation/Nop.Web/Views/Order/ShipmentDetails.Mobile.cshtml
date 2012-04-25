@@ -144,7 +144,10 @@
                             <div>@T("Order.ShipmentStatusEvents.Event"): @item.EventName</div>
                             <div>@T("Order.ShipmentStatusEvents.Location"): @item.Location</div>
                             <div>@T("Order.ShipmentStatusEvents.Country"): @item.Country</div>
-                            <div>@T("Order.ShipmentStatusEvents.Date"): @item.Date.ToString("D")</div>
+                            @if (item.Date.HasValue)
+                            {
+                                <div>@T("Order.ShipmentStatusEvents.Date"): @item.Date.Value.ToString("D")</div>
+                            }
                         </div>
                     </li>
                 }

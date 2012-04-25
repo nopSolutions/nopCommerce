@@ -61,6 +61,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="RouteProvider.cs" />
+    <Compile Include="TrackService.cs" />
+    <Compile Include="FedexShipmentTracker.cs" />
     <Compile Include="Web References\RateServiceWebReference\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

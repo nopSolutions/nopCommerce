@@ -26,6 +26,6 @@ namespace Nop.Services.Shipping.Tracking
         /// <summary>
         /// Date
         /// </summary>
-        public DateTime Date { get; set; }
+        public DateTime? Date { get; set; }
     }
 }

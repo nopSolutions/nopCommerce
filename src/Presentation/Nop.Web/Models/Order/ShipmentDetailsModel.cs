@@ -41,7 +41,7 @@ namespace Nop.Web.Models.Order
             public string EventName { get; set; }
             public string Location { get; set; }
             public string Country { get; set; }
-            public DateTime Date { get; set; }
+            public DateTime? Date { get; set; }
         }
 
 		#endregion
