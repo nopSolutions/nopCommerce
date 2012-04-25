@@ -23,6 +23,7 @@ namespace Nop.Data.Tests.Shipping
                 TrackingNumber = "TrackingNumber 1",
                 ShippedDateUtc = new DateTime(2010, 01, 01),
                 DeliveryDateUtc = new DateTime(2010, 01, 02),
+                CreatedOnUtc = new DateTime(2010, 01, 03),
             };
 
             var fromDb = SaveAndLoadEntity(shipment);
@@ -30,6 +31,7 @@ namespace Nop.Data.Tests.Shipping
             fromDb.TrackingNumber.ShouldEqual("TrackingNumber 1");
             fromDb.ShippedDateUtc.ShouldEqual(new DateTime(2010, 01, 01));
             fromDb.DeliveryDateUtc.ShouldEqual(new DateTime(2010, 01, 02));
+            fromDb.CreatedOnUtc.ShouldEqual(new DateTime(2010, 01, 03));
         }
 
         [Test]
@@ -41,6 +43,7 @@ namespace Nop.Data.Tests.Shipping
                 TrackingNumber = "TrackingNumber 1",
                 ShippedDateUtc = new DateTime(2010, 01, 01),
                 DeliveryDateUtc = new DateTime(2010, 01, 02),
+                CreatedOnUtc = new DateTime(2010, 01, 03),
             };
             shipment.ShipmentOrderProductVariants.Add(new ShipmentOrderProductVariant()
             {

@@ -2534,6 +2534,11 @@
           </LocaleResource>
           <LocaleResource Name="ShippedDate">
             <Value>Date shipped</Value>
+            <Children>
+              <LocaleResource Name="NotYet">
+                <Value>Not yet</Value>
+              </LocaleResource>
+            </Children>
           </LocaleResource>
           <LocaleResource Name="ShippingAddress">
             <Value>Shipping Address</Value>

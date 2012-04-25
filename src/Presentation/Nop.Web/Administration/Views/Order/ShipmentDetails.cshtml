@@ -35,6 +35,10 @@
             </td>
             <td class="adminData">
                 @Model.ShippedDate
+                @if (Model.CanShip)
+                {
+                    <input type="submit" name="setasshipped" value="@T("Admin.Orders.Shipments.ShippedDate.Button")" id="setasshipped" class="adminButton" />
+                }
             </td>
         </tr>
         <tr>
@@ -94,7 +98,7 @@
                                     </div>
                                 </td>
                                 <td align="center" style="width: 15%;">
-                                    @item.QuantityShipped
+                                    @item.QuantityInThisShipment
                                 </td>
                             </tr>
                         }

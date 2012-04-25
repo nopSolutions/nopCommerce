@@ -8049,7 +8049,7 @@
                     <Value>Start date</Value>
                     <Children>
                       <LocaleResource Name="Hint">
-                        <Value>The start date (shipped on) for the search</Value>
+                        <Value>The start date (shipment creation date) for the search</Value>
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
@@ -8057,7 +8057,7 @@
                     <Value>End date</Value>
                     <Children>
                       <LocaleResource Name="Hint">
-                        <Value>The end date (shipped on) for the search.</Value>
+                        <Value>The end date (shipment creation date) for the search.</Value>
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
@@ -8103,8 +8103,14 @@
               <LocaleResource Name="ShippedDate">
                 <Value>Date shipped</Value>
                 <Children>
+                  <LocaleResource Name="Button">
+                    <Value>Set as shipped</Value>
+                  </LocaleResource>
                   <LocaleResource Name="Hint">
                     <Value>The date this shipment was shipped.</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="NotYet">
+                    <Value>Not yet</Value>
                   </LocaleResource>
                 </Children>
               </LocaleResource>

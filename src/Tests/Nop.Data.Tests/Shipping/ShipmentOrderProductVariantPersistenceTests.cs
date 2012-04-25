@@ -39,6 +39,7 @@ namespace Nop.Data.Tests.Shipping
                 TrackingNumber = "TrackingNumber 1",
                 ShippedDateUtc = new DateTime(2010, 01, 01),
                 DeliveryDateUtc = new DateTime(2010, 01, 02),
+                CreatedOnUtc = new DateTime(2010, 01, 03),
             };
         }
 

@@ -194,6 +194,24 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnProductReviewPage.Hint">
     <Value>Check to show CAPTCHA on product reviews page when writing a review.</Value>
   </LocaleResource>
+  <LocaleResource Name="Order.Shipments.ShippedDate.NotYet">
+    <Value>Not yet</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.ShippedDate.NotYet">
+    <Value>Not yet</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.ShippedDate.Button">
+    <Value>Set as shipped</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.Products">
+    <Value>Products in shipment</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.List.StartDate.Hint">
+    <Value>The start date (shipment creation date) for the search</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.List.EndDate.Hint">
+    <Value>The end date (shipment creation date) for the search.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -751,4 +769,21 @@ BEGIN
 	INSERT [Setting] ([Name], [Value])
 	VALUES (N'captchasettings.showonproductreviewpage', N'false')
 END
+GO
+
+--Add 'CreatedOnUtc' column to [Shipment] table
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Shipment]') and NAME='CreatedOnUtc')
+BEGIN
+	ALTER TABLE [dbo].[Shipment]
+	ADD [CreatedOnUtc] datetime NULL
+
+	exec('UPDATE [dbo].[Shipment] SET [CreatedOnUtc] = [ShippedDateUtc]')
+END
+GO
+
+ALTER TABLE [dbo].[Shipment] ALTER COLUMN [CreatedOnUtc] datetime NOT NULL
+GO
+
+--Created shipments should not be immediately shipped
+ALTER TABLE [dbo].[Shipment] ALTER COLUMN [ShippedDateUtc] datetime NULL
 GO

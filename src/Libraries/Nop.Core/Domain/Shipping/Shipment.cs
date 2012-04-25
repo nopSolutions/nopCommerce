@@ -24,12 +24,17 @@ namespace Nop.Core.Domain.Shipping
         /// <summary>
         /// Gets or sets the shipped date and time
         /// </summary>
-        public virtual DateTime ShippedDateUtc { get; set; }
+        public virtual DateTime? ShippedDateUtc { get; set; }
 
         /// <summary>
         /// Gets or sets the delivery date and time
         /// </summary>
         public virtual DateTime? DeliveryDateUtc { get; set; }
+
+        /// <summary>
+        /// Gets or sets the entity creation date
+        /// </summary>
+        public virtual DateTime CreatedOnUtc { get; set; }
 
         /// <summary>
         /// Gets the order

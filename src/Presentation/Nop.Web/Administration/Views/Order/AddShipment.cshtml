@@ -79,10 +79,10 @@
                                     @item.QuantityOrdered
                                 </td>
                                 <td align="center" style="width: 10%;">
-                                    @item.QuantityShippedTotal
+                                    @item.QuantityInAllShipments
                                 </td>
                                 <td align="center" style="width: 20%;">
-                                     <input name="qtyToShip@(item.OrderProductVariantId)" type="text" value="@item.QuantityToShip" id="qtyToShip@(item.OrderProductVariantId)" class="adminInput" style="width:100px;" />
+                                     <input name="qtyToAdd@(item.OrderProductVariantId)" type="text" value="@item.QuantityToAdd" id="qtyToAdd@(item.OrderProductVariantId)" class="adminInput" style="width:100px;" />
                                 </td>
                             </tr>
                         }

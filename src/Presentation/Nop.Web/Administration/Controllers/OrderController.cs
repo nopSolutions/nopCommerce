@@ -330,7 +330,7 @@ namespace Nop.Admin.Controllers
                 if (baseWeight != null)
                     model.BaseWeightIn = baseWeight.Name;
                 model.ShippingAddressGoogleMapsUrl = string.Format("http://maps.google.com/maps?f=q&hl=en&ie=UTF8&oe=UTF8&geocode=&q={0}", Server.UrlEncode(order.ShippingAddress.Address1 + " " + order.ShippingAddress.ZipPostalCode + " " + order.ShippingAddress.City + " " + (order.ShippingAddress.Country != null ? order.ShippingAddress.Country.Name : "")));
-                model.CanAddNewShipments = _orderProcessingService.OrderHasItemsToShip(order);
+                model.CanAddNewShipments = order.HasItemsToAddToShipment();
             }
 
             #endregion
@@ -1735,9 +1735,10 @@ namespace Nop.Admin.Controllers
                         Id = shipment.Id,
                         OrderId = shipment.OrderId,
                         TrackingNumber = shipment.TrackingNumber,
-                        ShippedDate = _dateTimeHelper.ConvertToUserTime(shipment.ShippedDateUtc, DateTimeKind.Utc).ToString(),
+                        ShippedDate = shipment.ShippedDateUtc.HasValue ? _dateTimeHelper.ConvertToUserTime(shipment.ShippedDateUtc.Value, DateTimeKind.Utc).ToString() : _localizationService.GetResource("Admin.Orders.Shipments.ShippedDate.NotYet"),
+                        CanShip = !shipment.ShippedDateUtc.HasValue,
                         DeliveryDate = shipment.DeliveryDateUtc.HasValue ? _dateTimeHelper.ConvertToUserTime(shipment.DeliveryDateUtc.Value, DateTimeKind.Utc).ToString() : _localizationService.GetResource("Admin.Orders.Shipments.DeliveryDate.NotYet"),
-                        CanDeliver = !shipment.DeliveryDateUtc.HasValue,
+                        CanDeliver = shipment.ShippedDateUtc.HasValue && !shipment.DeliveryDateUtc.HasValue,
                     };
                 }),
                 Total = shipments.TotalCount
@@ -1760,7 +1761,7 @@ namespace Nop.Admin.Controllers
 
             //shipments
             var shipmentModels = new List<ShipmentModel>();
-            var shipments = order.Shipments.OrderBy(s => s.ShippedDateUtc).ToList();
+            var shipments = order.Shipments.OrderBy(s => s.CreatedOnUtc).ToList();
             foreach (var shipment in shipments)
             {
                 shipmentModels.Add(new ShipmentModel()
@@ -1768,9 +1769,10 @@ namespace Nop.Admin.Controllers
                     Id = shipment.Id,
                     OrderId = shipment.OrderId,
                     TrackingNumber = shipment.TrackingNumber,
-                    ShippedDate = _dateTimeHelper.ConvertToUserTime(shipment.ShippedDateUtc, DateTimeKind.Utc).ToString(),
+                    ShippedDate = shipment.ShippedDateUtc.HasValue ? _dateTimeHelper.ConvertToUserTime(shipment.ShippedDateUtc.Value, DateTimeKind.Utc).ToString() : _localizationService.GetResource("Admin.Orders.Shipments.ShippedDate.NotYet"),
+                    CanShip = !shipment.ShippedDateUtc.HasValue,
                     DeliveryDate = shipment.DeliveryDateUtc.HasValue ? _dateTimeHelper.ConvertToUserTime(shipment.DeliveryDateUtc.Value, DateTimeKind.Utc).ToString() : _localizationService.GetResource("Admin.Orders.Shipments.DeliveryDate.NotYet"),
-                    CanDeliver = !shipment.DeliveryDateUtc.HasValue,
+                    CanDeliver = shipment.ShippedDateUtc.HasValue && !shipment.DeliveryDateUtc.HasValue,
                 });
             }
 
@@ -1808,14 +1810,13 @@ namespace Nop.Admin.Controllers
                     continue;
 
                 //quantities
-                var qtyShippedTotal = opv.GetTotalNumberOfShippedItems();
+                var qtyInThisShipment = 0;
+                var maxQtyToAdd = opv.GetTotalNumberOfItemsCanBeAddedToShipment();
                 var qtyOrdered = opv.Quantity;
-                var maxQtyToShip = qtyOrdered - qtyShippedTotal;
-                if (maxQtyToShip < 0)
-                    maxQtyToShip = 0;
+                var qtyInAllShipments = opv.GetTotalNumberOfItemsInAllShipment();
 
-                //ensure that this product variant can be shipped (have at least one item to ship)
-                if (maxQtyToShip <= 0)
+                //ensure that this product variant can be added to a shipment
+                if (maxQtyToAdd <= 0)
                     continue;
 
                 var sopvModel = new ShipmentModel.ShipmentOrderProductVariantModel()
@@ -1825,8 +1826,9 @@ namespace Nop.Admin.Controllers
                     Sku = opv.ProductVariant.Sku,
                     AttributeInfo = opv.AttributeDescription,
                     QuantityOrdered = qtyOrdered,
-                    QuantityShippedTotal = qtyShippedTotal,
-                    QuantityToShip = maxQtyToShip,
+                    QuantityInThisShipment = qtyInThisShipment,
+                    QuantityInAllShipments = qtyInAllShipments,
+                    QuantityToAdd = maxQtyToAdd,
                 };
 
                 //product name
@@ -1859,31 +1861,25 @@ namespace Nop.Admin.Controllers
                 //is shippable
                 if (!opv.ProductVariant.IsShipEnabled)
                     continue;
-
-                //quantities
-                var qtyShippedTotal = opv.GetTotalNumberOfShippedItems();
-                var qtyOrdered = opv.Quantity;
-                var maxQtyToShip = qtyOrdered - qtyShippedTotal;
-                if (maxQtyToShip < 0)
-                    maxQtyToShip = 0;
-
+                
                 //ensure that this product variant can be shipped (have at least one item to ship)
-                if (maxQtyToShip <= 0)
+                var maxQtyToAdd = opv.GetTotalNumberOfItemsCanBeAddedToShipment();
+                if (maxQtyToAdd <= 0)
                     continue;
 
-                int qtyToShip = 0; //parse quantity
+                int qtyToAdd = 0; //parse quantity
                 foreach (string formKey in form.AllKeys)
-                    if (formKey.Equals(string.Format("qtyToShip{0}", opv.Id), StringComparison.InvariantCultureIgnoreCase))
+                    if (formKey.Equals(string.Format("qtyToAdd{0}", opv.Id), StringComparison.InvariantCultureIgnoreCase))
                     {
-                        int.TryParse(form[formKey], out qtyToShip);
+                        int.TryParse(form[formKey], out qtyToAdd);
                         break;
                     }
 
                 //validate quantity
-                if (qtyToShip <= 0)
+                if (qtyToAdd <= 0)
                     continue;
-                if (qtyToShip > maxQtyToShip)
-                    qtyToShip = maxQtyToShip;
+                if (qtyToAdd > maxQtyToAdd)
+                    qtyToAdd = maxQtyToAdd;
 
                 //ok. we have at least one item. let's create a shipment (if it does not exist)
                 if (shipment == null)
@@ -1892,15 +1888,16 @@ namespace Nop.Admin.Controllers
                     {
                         OrderId = order.Id,
                         TrackingNumber = form["TrackingNumber"],
-                        ShippedDateUtc = DateTime.UtcNow,
+                        ShippedDateUtc = null,
                         DeliveryDateUtc = null,
+                        CreatedOnUtc = DateTime.UtcNow,
                     };
                 }
                 //create a shipment order product variant
                 var sopv = new ShipmentOrderProductVariant()
                 {
                     OrderProductVariantId = opv.Id,
-                    Quantity = qtyToShip,
+                    Quantity = qtyToAdd,
                 };
                 shipment.ShipmentOrderProductVariants.Add(sopv);
             }
@@ -1908,7 +1905,7 @@ namespace Nop.Admin.Controllers
             //if we have at least one item in the shipment, then save it
             if (shipment != null && shipment.ShipmentOrderProductVariants.Count > 0)
             {
-                _orderProcessingService.Ship(shipment, true);
+                _shipmentService.InsertShipment(shipment);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Orders.Shipments.Added"));
                 return continueEditing
@@ -1937,9 +1934,10 @@ namespace Nop.Admin.Controllers
                 Id = shipment.Id,
                 OrderId = shipment.OrderId,
                 TrackingNumber = shipment.TrackingNumber,
-                ShippedDate = _dateTimeHelper.ConvertToUserTime(shipment.ShippedDateUtc, DateTimeKind.Utc).ToString(),
+                ShippedDate = shipment.ShippedDateUtc.HasValue ? _dateTimeHelper.ConvertToUserTime(shipment.ShippedDateUtc.Value, DateTimeKind.Utc).ToString() : _localizationService.GetResource("Admin.Orders.Shipments.ShippedDate.NotYet"),
+                CanShip = !shipment.ShippedDateUtc.HasValue,
                 DeliveryDate = shipment.DeliveryDateUtc.HasValue ? _dateTimeHelper.ConvertToUserTime(shipment.DeliveryDateUtc.Value, DateTimeKind.Utc).ToString() : _localizationService.GetResource("Admin.Orders.Shipments.DeliveryDate.NotYet"),
-                CanDeliver = !shipment.DeliveryDateUtc.HasValue,
+                CanDeliver = shipment.ShippedDateUtc.HasValue && !shipment.DeliveryDateUtc.HasValue,
                 DisplayPdfPackagingSlip = _pdfSettings.Enabled,
             };
 
@@ -1950,12 +1948,10 @@ namespace Nop.Admin.Controllers
                     continue;
                 
                 //quantities
-                var qtyShipped = sopv.Quantity;
-                var qtyShippedTotal = opv.GetTotalNumberOfShippedItems();
+                var qtyInThisShipment = sopv.Quantity;
+                var maxQtyToAdd = opv.GetTotalNumberOfItemsCanBeAddedToShipment();
                 var qtyOrdered = opv.Quantity;
-                var maxQtyToShip = qtyOrdered - qtyShippedTotal;
-                if (maxQtyToShip < 0)
-                    maxQtyToShip = 0;
+                var qtyInAllShipments = opv.GetTotalNumberOfItemsInAllShipment();
 
                 var sopvModel = new ShipmentModel.ShipmentOrderProductVariantModel()
                 {
@@ -1965,9 +1961,9 @@ namespace Nop.Admin.Controllers
                     Sku = opv.ProductVariant.Sku,
                     AttributeInfo = opv.AttributeDescription,
                     QuantityOrdered = qtyOrdered,
-                    QuantityShipped = qtyShipped,
-                    QuantityShippedTotal = qtyShippedTotal,
-                    QuantityToShip = maxQtyToShip,
+                    QuantityInThisShipment = qtyInThisShipment,
+                    QuantityInAllShipments = qtyInAllShipments,
+                    QuantityToAdd = maxQtyToAdd,
                 };
 
                 //product name
@@ -2015,6 +2011,31 @@ namespace Nop.Admin.Controllers
             _shipmentService.UpdateShipment(shipment);
 
             return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
+        }
+
+        [HttpPost, ActionName("ShipmentDetails")]
+        [FormValueRequired("setasshipped")]
+        public ActionResult SetAsShipped(int id)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageOrders))
+                return AccessDeniedView();
+
+            var shipment = _shipmentService.GetShipmentById(id);
+            if (shipment == null)
+                //No shipment found with the specified id
+                return RedirectToAction("List");
+
+            try
+            {
+                _orderProcessingService.Ship(shipment, true);
+                return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
+            }
+            catch (Exception exc)
+            {
+                //error
+                ErrorNotification(exc, true);
+                return RedirectToAction("ShipmentDetails", new { id = shipment.Id });
+            }
         }
 
         [HttpPost, ActionName("ShipmentDetails")]

@@ -910,7 +910,7 @@ namespace Nop.Services.ExportImport
                 }
 
                 //shipments
-                var shipments = order.Shipments.OrderBy(x => x.ShippedDateUtc).ToList();
+                var shipments = order.Shipments.OrderBy(x => x.CreatedOnUtc).ToList();
                 if (shipments.Count > 0)
                 {
                     xmlWriter.WriteStartElement("Shipments");
@@ -920,9 +920,11 @@ namespace Nop.Services.ExportImport
                         xmlWriter.WriteElementString("ShipmentId", null, shipment.Id.ToString());
                         xmlWriter.WriteElementString("TrackingNumber", null, shipment.TrackingNumber);
 
-                        xmlWriter.WriteElementString("ShippedDateUtc", null, shipment.ShippedDateUtc.ToString());
-                        xmlWriter.WriteElementString("DeliveryDateUtc", null, shipment.DeliveryDateUtc.HasValue ? 
+                        xmlWriter.WriteElementString("ShippedDateUtc", null,shipment.ShippedDateUtc.HasValue ? 
+                            shipment.ShippedDateUtc.ToString() : "");
+                        xmlWriter.WriteElementString("DeliveryDateUtc", null, shipment.DeliveryDateUtc.HasValue ?
                             shipment.DeliveryDateUtc.Value.ToString() : "");
+                        xmlWriter.WriteElementString("CreatedOnUtc", null, shipment.CreatedOnUtc.ToString());
                         xmlWriter.WriteEndElement();
                     }
                     xmlWriter.WriteEndElement();

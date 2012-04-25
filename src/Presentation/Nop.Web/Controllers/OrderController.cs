@@ -131,16 +131,17 @@ namespace Nop.Web.Controllers
                 if (baseWeight != null)
                     model.BaseWeightIn = baseWeight.Name;
 
-                //shipments
-                var shipments = order.Shipments.OrderBy(x => x.ShippedDateUtc).ToList();
+                //shipments (only already shipped)
+                var shipments = order.Shipments.Where(x => x.ShippedDateUtc.HasValue).OrderBy(x => x.CreatedOnUtc).ToList();
                 foreach (var shipment in shipments)
                 {
                     var shipmentModel = new OrderDetailsModel.ShipmentBriefModel()
                     {
                         Id = shipment.Id,
                         TrackingNumber = shipment.TrackingNumber,
-                        ShippedDate = _dateTimeHelper.ConvertToUserTime(shipment.ShippedDateUtc, DateTimeKind.Utc),
                     };
+                    if (shipment.ShippedDateUtc.HasValue)
+                        shipmentModel.ShippedDate = _dateTimeHelper.ConvertToUserTime(shipment.ShippedDateUtc.Value, DateTimeKind.Utc);
                     if (shipment.DeliveryDateUtc.HasValue)
                         shipmentModel.DeliveryDate = _dateTimeHelper.ConvertToUserTime(shipment.DeliveryDateUtc.Value, DateTimeKind.Utc);
                     model.Shipments.Add(shipmentModel);
@@ -344,7 +345,8 @@ namespace Nop.Web.Controllers
             var model = new ShipmentDetailsModel();
             
             model.Id = shipment.Id;
-            model.ShippedDate = _dateTimeHelper.ConvertToUserTime(shipment.ShippedDateUtc, DateTimeKind.Utc);
+            if (shipment.ShippedDateUtc.HasValue)
+                model.ShippedDate = _dateTimeHelper.ConvertToUserTime(shipment.ShippedDateUtc.Value, DateTimeKind.Utc);
             if (shipment.DeliveryDateUtc.HasValue)
                 model.DeliveryDate = _dateTimeHelper.ConvertToUserTime(shipment.DeliveryDateUtc.Value, DateTimeKind.Utc);
             

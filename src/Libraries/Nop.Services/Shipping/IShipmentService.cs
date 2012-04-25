@@ -20,14 +20,14 @@ namespace Nop.Services.Shipping
         void DeleteShipment(Shipment shipment);
 
         /// <summary>
-        /// Gets all customers
+        /// Search shipments
         /// </summary>
-        /// <param name="shippedFrom">Date shipped from; null to load all records</param>
-        /// <param name="shippedTo">Date shipped to; null to load all records</param>
+        /// <param name="createdFrom">Created date from; null to load all records</param>
+        /// <param name="createdTo">Created date to; null to load all records</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Customer collection</returns>
-        IPagedList<Shipment> GetAllShipments(DateTime? shippedFrom, DateTime? shippedTo, 
+        IPagedList<Shipment> GetAllShipments(DateTime? createdFrom, DateTime? createdTo, 
             int pageIndex, int pageSize);
         
         /// <summary>

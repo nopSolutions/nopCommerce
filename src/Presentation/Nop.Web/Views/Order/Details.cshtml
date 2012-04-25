@@ -480,7 +480,14 @@
                                     @item.TrackingNumber
                                 </td>
                                 <td class="a-left">
-                                    @item.ShippedDate.ToString("D")
+                                    @if (item.ShippedDate.HasValue)
+                                    {
+                                        @item.ShippedDate.Value.ToString("D")
+                                    }
+                                    else
+                                    {
+                                        @T("Order.Shipments.ShippedDate.NotYet")
+                                    }
                                 </td>
                                 <td class="a-left">
                                     @if (item.DeliveryDate.HasValue)

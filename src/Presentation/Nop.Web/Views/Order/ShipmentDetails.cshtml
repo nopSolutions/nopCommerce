@@ -21,7 +21,16 @@
                 </b>
             </div>
             <div>@T("Order.Shipments.ShippingMethod"): @Model.Order.ShippingMethod</div>
-            <div>@T("Order.Shipments.ShippedDate"): @Model.ShippedDate.ToString("D")</div>
+            <div>@T("Order.Shipments.ShippedDate"): 
+            @if (Model.ShippedDate.HasValue)
+            {
+                @Model.ShippedDate.Value.ToString("D")
+            }
+            else
+            {
+                @T("Order.Shipments.ShippedDate.NotYet")
+            }
+            </div>
             <div>@T("Order.Shipments.DeliveryDate"): 
             @if (Model.DeliveryDate.HasValue)
             {

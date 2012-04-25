@@ -399,9 +399,7 @@ namespace Nop.Services.Messages
         protected virtual string ProductListToHtmlTable(Shipment shipment, int languageId)
         {
             var result = "";
-
-            var language = _languageService.GetLanguageById(languageId);
-
+            
             var sb = new StringBuilder();
             sb.AppendLine("<table border=\"0\" style=\"width:100%;\">");
 

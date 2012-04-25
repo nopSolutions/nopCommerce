@@ -371,7 +371,16 @@
                         <div class="shipments-box">
                             <div>@T("Order.Shipments.ID"): @item.Id.ToString()</div>
                             <div>@T("Order.Shipments.TrackingNumber"): @item.TrackingNumber</div>
-                            <div>@T("Order.Shipments.ShippedDate"): @item.ShippedDate.ToString("D")</div>
+                            <div>@T("Order.Shipments.ShippedDate"):
+                                @if (item.ShippedDate.HasValue)
+                                {
+                                    @item.ShippedDate.Value.ToString("D")
+                                }
+                                else
+                                {
+                                    @T("Order.Shipments.ShippedDate.NotYet")
+                                }
+                            </div>
                             <div>@T("Order.Shipments.DeliveryDate"):
                                 @if (item.DeliveryDate.HasValue)
                                 {

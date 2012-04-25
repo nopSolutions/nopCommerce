@@ -46,21 +46,8 @@ namespace Nop.Services.Orders
         bool CanCancelRecurringPayment(Customer customerToValidate, RecurringPayment recurringPayment);
 
 
+        
 
-
-        /// <summary>
-        /// Gets a value indicating whether an order has items to ship
-        /// </summary>
-        /// <param name="order">Order</param>
-        /// <returns>A value indicating whether an order has items to ship</returns>
-        bool OrderHasItemsToShip(Order order);
-
-        /// <summary>
-        /// Gets a value indicating whether an order has items to deliver
-        /// </summary>
-        /// <param name="order">Order</param>
-        /// <returns>A value indicating whether an order has items to deliver</returns>
-        bool OrderHasItemsToDeliver(Order order);
 
         /// <summary>
         /// Send a shipment

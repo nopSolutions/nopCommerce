@@ -370,7 +370,7 @@ namespace Nop.Services.Orders
             {
                 if (order.PaymentStatus == PaymentStatus.Paid)
                 {
-                    if (!OrderHasItemsToShip(order) && !OrderHasItemsToDeliver(order))
+                    if (order.ShippingStatus == ShippingStatus.ShippingNotRequired || order.ShippingStatus == ShippingStatus.Delivered)
                     {
                         SetOrderStatus(order, OrderStatus.Complete, true);
                     }
@@ -1508,72 +1508,6 @@ namespace Nop.Services.Orders
             return true;
         }
 
-
-        /// <summary>
-        /// Gets a value indicating whether an order has items to ship
-        /// </summary>
-        /// <param name="order">Order</param>
-        /// <returns>A value indicating whether an order has items to ship</returns>
-        public virtual bool OrderHasItemsToShip(Order order)
-        {
-            if (order == null)
-                throw new ArgumentNullException("order");
-            
-            foreach (var opv in order.OrderProductVariants)
-            {
-                //we can ship only shippable products
-                if (!opv.ProductVariant.IsShipEnabled)
-                    continue;
-
-                //quantities
-                var qtyShippedTotal = opv.GetTotalNumberOfShippedItems();
-                var qtyOrdered = opv.Quantity;
-                var maxQtyToShip = qtyOrdered - qtyShippedTotal;
-                if (maxQtyToShip < 0)
-                    maxQtyToShip = 0;
-
-                //ensure that this product variant can be shipped (have at least one item to ship)
-                if (maxQtyToShip <= 0)
-                    continue;
-
-                //yes, we have at least one item to ship
-                return true;
-            }
-            return false;
-        }
-        /// <summary>
-        /// Gets a value indicating whether an order has items to deliver
-        /// </summary>
-        /// <param name="order">Order</param>
-        /// <returns>A value indicating whether an order has items to deliver</returns>
-        public virtual bool OrderHasItemsToDeliver(Order order)
-        {
-            if (order == null)
-                throw new ArgumentNullException("order");
-
-            foreach (var opv in order.OrderProductVariants)
-            {
-                //we can ship only shippable products
-                if (!opv.ProductVariant.IsShipEnabled)
-                    continue;
-
-                //quantities
-                var qtyDeliveredTotal = opv.GetTotalNumberOfDeliveredItems();
-                var qtyOrdered = opv.Quantity;
-                var maxQtyToDeliver = qtyOrdered - qtyDeliveredTotal;
-                if (maxQtyToDeliver < 0)
-                    maxQtyToDeliver = 0;
-
-                //ensure that this product variant can be delivered (have at least one item to ship)
-                if (maxQtyToDeliver <= 0)
-                    continue;
-
-                //yes, we have at least one item to deliver
-                return true;
-            }
-            return false;
-        }
-        
         /// <summary>
         /// Send a shipment
         /// </summary>
@@ -1588,10 +1522,14 @@ namespace Nop.Services.Orders
             if (order == null)
                 throw new Exception("Order cannot be loaded");
 
-            //check whether we have more items to ship
-            _shipmentService.InsertShipment(shipment);
+            if (shipment.ShippedDateUtc.HasValue)
+                throw new Exception("This shipment is already shipped");
 
-            if (OrderHasItemsToShip(order))
+            shipment.ShippedDateUtc = DateTime.UtcNow;
+            _shipmentService.UpdateShipment(shipment);
+
+            //check whether we have more items to ship
+            if (order.HasItemsToAddToShipment() || order.HasItemsToShip())
                 order.ShippingStatusId = (int)ShippingStatus.PartiallyShipped;
             else
                 order.ShippingStatusId = (int)ShippingStatus.Shipped;
@@ -1640,10 +1578,13 @@ namespace Nop.Services.Orders
             if (order == null)
                 throw new Exception("Order cannot be loaded");
 
+            if (shipment.DeliveryDateUtc.HasValue)
+                throw new Exception("This shipment is already delivered");
+
             shipment.DeliveryDateUtc = DateTime.UtcNow;
             _shipmentService.UpdateShipment(shipment);
 
-            if (!OrderHasItemsToShip(order) && !OrderHasItemsToDeliver(order))
+            if (!order.HasItemsToAddToShipment() && !order.HasItemsToShip() && !order.HasItemsToDeliver())
                 order.ShippingStatusId = (int)ShippingStatus.Delivered;
             _orderService.UpdateOrder(order);
 
