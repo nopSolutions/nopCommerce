@@ -506,6 +506,7 @@ namespace Nop.Web.Controllers
             }
 
             model.AddProductReview.CanCurrentCustomerLeaveReview = _catalogSettings.AllowAnonymousUsersToReviewProduct || !_workContext.CurrentCustomer.IsGuest();
+            model.AddProductReview.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnProductReviewPage;
         }
         
         [NonAction]
@@ -2377,11 +2378,18 @@ namespace Nop.Web.Controllers
 
         [HttpPost, ActionName("ProductReviews")]
         [FormValueRequired("add-review")]
-        public ActionResult ProductReviewsAdd(int productId, ProductReviewsModel model)
+        [CaptchaValidator]
+        public ActionResult ProductReviewsAdd(int productId, ProductReviewsModel model, bool captchaValid)
         {
             var product = _productService.GetProductById(productId);
             if (product == null || product.Deleted || !product.Published || !product.AllowCustomerReviews)
                 return RedirectToAction("Index", "Home");
+
+            //validate CAPTCHA
+            if (_captchaSettings.Enabled && _captchaSettings.ShowOnProductReviewPage && !captchaValid)
+            {
+                ModelState.AddModelError("", _localizationService.GetResource("Common.WrongCaptcha"));
+            }
 
             if (_workContext.CurrentCustomer.IsGuest() && !_catalogSettings.AllowAnonymousUsersToReviewProduct)
             {

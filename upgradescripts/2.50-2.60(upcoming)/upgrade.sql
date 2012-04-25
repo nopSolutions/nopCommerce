@@ -176,6 +176,24 @@ set @resources='
   <LocaleResource Name="Admin.System.Warnings.FilePermission.Wrong">
     <Value>The ''{0}'' account is not granted with Modify permission on file ''{1}''. Please configure these permissions.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnBlogCommentPage">
+    <Value>Show on blog page (comments)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnBlogCommentPage.Hint">
+    <Value>Check to show CAPTCHA on blog page when writing a comment.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnNewsCommentPage">
+    <Value>Show on news page (comments)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnNewsCommentPage.Hint">
+    <Value>Check to show CAPTCHA on news page when writing a comment.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnProductReviewPage">
+    <Value>Show on product reviews page</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.CaptchaShowOnProductReviewPage.Hint">
+    <Value>Check to show CAPTCHA on product reviews page when writing a review.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -711,5 +729,26 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'commonsettings.displayja
 BEGIN
 	INSERT [Setting] ([Name], [Value])
 	VALUES (N'commonsettings.displayjavascriptdisabledwarning', N'false')
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'captchasettings.showonblogcommentpage')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'captchasettings.showonblogcommentpage', N'false')
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'captchasettings.showonnewscommentpage')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'captchasettings.showonnewscommentpage', N'false')
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'captchasettings.showonproductreviewpage')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'captchasettings.showonproductreviewpage', N'false')
 END
 GO

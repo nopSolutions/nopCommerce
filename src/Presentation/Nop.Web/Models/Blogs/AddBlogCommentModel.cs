@@ -9,5 +9,7 @@ namespace Nop.Web.Models.Blogs
         [NopResourceDisplayName("Blog.Comments.CommentText")]
         [AllowHtml]
         public string CommentText { get; set; }
+
+        public bool DisplayCaptcha { get; set; }
     }
 }

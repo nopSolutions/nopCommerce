@@ -4428,6 +4428,30 @@
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
+                  <LocaleResource Name="CaptchaShowOnBlogCommentPage">
+                    <Value>Show on blog page (comments)</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Check to show CAPTCHA on blog page when writing a comment.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="CaptchaShowOnNewsCommentPage">
+                    <Value>Show on news page (comments)</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Check to show CAPTCHA on news page when writing a comment.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="CaptchaShowOnProductReviewPage">
+                    <Value>Show on product reviews page</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Check to show CAPTCHA on product reviews page when writing a review.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
 									<LocaleResource Name="reCaptchaPublicKey">
 										<Value>reCAPTCHA public key</Value>
 										<Children>

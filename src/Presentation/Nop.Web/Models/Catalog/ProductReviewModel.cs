@@ -78,6 +78,8 @@ namespace Nop.Web.Models.Catalog
         [NopResourceDisplayName("Reviews.Fields.Rating")]
         public int Rating { get; set; }
 
+        public bool DisplayCaptcha { get; set; }
+
         public bool CanCurrentCustomerLeaveReview { get; set; }
         public bool SuccessfullyAdded { get; set; }
         public string Result { get; set; }

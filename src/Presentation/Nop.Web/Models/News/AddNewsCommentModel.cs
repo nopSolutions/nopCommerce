@@ -13,5 +13,7 @@ namespace Nop.Web.Models.News
         [NopResourceDisplayName("News.Comments.CommentText")]
         [AllowHtml]
         public string CommentText { get; set; }
+
+        public bool DisplayCaptcha { get; set; }
     }
 }

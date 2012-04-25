@@ -1,4 +1,5 @@
 ﻿@model Nop.Web.Models.Catalog.ProductReviewsModel
+@using Nop.Web.Framework.UI.Captcha;
 @{
     Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
 
@@ -73,6 +74,17 @@
                             @Html.ValidationSummary(true)
                         </td>
                     </tr>
+                    @if (Model.AddProductReview.DisplayCaptcha)
+                    {
+                        <tr>
+                            <td>
+                                &nbsp;
+                            </td>
+                            <td class="captcha-box">
+                                @Html.Raw(Html.GenerateCaptcha())
+                            </td>
+                        </tr>
+                    }
                     <tr>
                         <td>
                             &nbsp;

@@ -1,4 +1,5 @@
 ﻿@model Nop.Web.Models.News.NewsItemModel
+@using Nop.Web.Framework.UI.Captcha;
 @{
     Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
 
@@ -55,7 +56,7 @@
                             </td>
                         </tr>
                         @{
-                            string result = TempData["nop.news.addcomment.result"] as string;
+                    string result = TempData["nop.news.addcomment.result"] as string;
                         }                        
                         @if (!String.IsNullOrEmpty(result))
                         {
@@ -70,6 +71,17 @@
                                 @Html.ValidationSummary(true)
                             </td>
                         </tr>
+                        @if (Model.AddNewComment.DisplayCaptcha)
+                        {
+                            <tr>
+                                <td>
+                                    &nbsp;
+                                </td>
+                                <td class="captcha-box">
+                                    @Html.Raw(Html.GenerateCaptcha())
+                                </td>
+                            </tr>
+                        }
                         <tr>
                             <td>
                             </td>

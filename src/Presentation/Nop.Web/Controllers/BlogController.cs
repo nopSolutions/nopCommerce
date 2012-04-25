@@ -19,6 +19,7 @@ using Nop.Services.Seo;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Security;
+using Nop.Web.Framework.UI.Captcha;
 using Nop.Web.Models.Blogs;
 
 namespace Nop.Web.Controllers
@@ -42,6 +43,7 @@ namespace Nop.Web.Controllers
         private readonly LocalizationSettings _localizationSettings;
         private readonly CustomerSettings _customerSettings;
         private readonly StoreInformationSettings _storeInformationSettings;
+        private readonly CaptchaSettings _captchaSettings;
         
         #endregion
 
@@ -53,7 +55,7 @@ namespace Nop.Web.Controllers
             IWorkflowMessageService workflowMessageService, IWebHelper webHelper,
             MediaSettings mediaSettings, BlogSettings blogSettings,
             LocalizationSettings localizationSettings, CustomerSettings customerSettings,
-            StoreInformationSettings storeInformationSettings)
+            StoreInformationSettings storeInformationSettings, CaptchaSettings captchaSettings)
         {
             this._blogService = blogService;
             this._workContext = workContext;
@@ -69,6 +71,7 @@ namespace Nop.Web.Controllers
             this._localizationSettings = localizationSettings;
             this._customerSettings = customerSettings;
             this._storeInformationSettings = storeInformationSettings;
+            this._captchaSettings = captchaSettings;
         }
 
 		#endregion
@@ -92,6 +95,7 @@ namespace Nop.Web.Controllers
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(blogPost.CreatedOnUtc, DateTimeKind.Utc);
             model.Tags = blogPost.ParseTags().ToList();
             model.NumberOfComments = blogPost.BlogComments.Count;
+            model.AddNewComment.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnBlogCommentPage;
             if (prepareComments)
             {
                 var blogComments = blogPost.BlogComments.Where(pr => pr.IsApproved).OrderBy(pr => pr.CreatedOnUtc);
@@ -206,7 +210,8 @@ namespace Nop.Web.Controllers
 
         [HttpPost, ActionName("BlogPost")]
         [FormValueRequired("add-comment")]
-        public ActionResult BlogCommentAdd(int blogPostId, BlogPostModel model)
+        [CaptchaValidator]
+        public ActionResult BlogCommentAdd(int blogPostId, BlogPostModel model, bool captchaValid)
         {
             if (!_blogSettings.Enabled)
                 return RedirectToAction("Index", "Home");
@@ -218,6 +223,12 @@ namespace Nop.Web.Controllers
             if (_workContext.CurrentCustomer.IsGuest() && !_blogSettings.AllowNotRegisteredUsersToLeaveComments)
             {
                 ModelState.AddModelError("", _localizationService.GetResource("Blog.Comments.OnlyRegisteredUsersLeaveComments"));
+            }
+
+            //validate CAPTCHA
+            if (_captchaSettings.Enabled && _captchaSettings.ShowOnBlogCommentPage && !captchaValid)
+            {
+                ModelState.AddModelError("", _localizationService.GetResource("Common.WrongCaptcha"));
             }
 
             if (ModelState.IsValid)

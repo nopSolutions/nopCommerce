@@ -18,6 +18,7 @@ using Nop.Services.News;
 using Nop.Services.Seo;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
+using Nop.Web.Framework.UI.Captcha;
 using Nop.Web.Models.News;
 using Nop.Web.Framework.Security;
 
@@ -42,6 +43,7 @@ namespace Nop.Web.Controllers
         private readonly LocalizationSettings _localizationSettings;
         private readonly CustomerSettings _customerSettings;
         private readonly StoreInformationSettings _storeInformationSettings;
+        private readonly CaptchaSettings _captchaSettings;
         
         #endregion
 
@@ -53,7 +55,7 @@ namespace Nop.Web.Controllers
             IWorkflowMessageService workflowMessageService, IWebHelper webHelper,
             MediaSettings mediaSettings, NewsSettings newsSettings,
             LocalizationSettings localizationSettings, CustomerSettings customerSettings,
-            StoreInformationSettings storeInformationSettings)
+            StoreInformationSettings storeInformationSettings, CaptchaSettings captchaSettings)
         {
             this._newsService = newsService;
             this._workContext = workContext;
@@ -69,6 +71,7 @@ namespace Nop.Web.Controllers
             this._localizationSettings = localizationSettings;
             this._customerSettings = customerSettings;
             this._storeInformationSettings = storeInformationSettings;
+            this._captchaSettings = captchaSettings;
         }
 
         #endregion
@@ -92,6 +95,7 @@ namespace Nop.Web.Controllers
             model.AllowComments = newsItem.AllowComments;
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(newsItem.CreatedOnUtc, DateTimeKind.Utc);
             model.NumberOfComments = newsItem.NewsComments.Count;
+            model.AddNewComment.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnNewsCommentPage;
             if (prepareComments)
             {
                 var newsComments = newsItem.NewsComments.Where(pr => pr.IsApproved).OrderBy(pr => pr.CreatedOnUtc);
@@ -216,7 +220,8 @@ namespace Nop.Web.Controllers
 
         [HttpPost, ActionName("NewsItem")]
         [FormValueRequired("add-comment")]
-        public ActionResult NewsCommentAdd(int newsItemId, NewsItemModel model)
+        [CaptchaValidator]
+        public ActionResult NewsCommentAdd(int newsItemId, NewsItemModel model, bool captchaValid)
         {
             if (!_newsSettings.Enabled)
                 return RedirectToAction("Index", "Home");
@@ -224,6 +229,12 @@ namespace Nop.Web.Controllers
             var newsItem = _newsService.GetNewsById(newsItemId);
             if (newsItem == null || !newsItem.Published || !newsItem.AllowComments)
                 return RedirectToAction("Index", "Home");
+
+            //validate CAPTCHA
+            if (_captchaSettings.Enabled && _captchaSettings.ShowOnNewsCommentPage && !captchaValid)
+            {
+                ModelState.AddModelError("", _localizationService.GetResource("Common.WrongCaptcha"));
+            }
 
             if (_workContext.CurrentCustomer.IsGuest() && !_newsSettings.AllowNotRegisteredUsersToLeaveComments)
             {

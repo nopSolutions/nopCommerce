@@ -1,4 +1,5 @@
 ﻿@model Nop.Web.Models.News.NewsItemModel
+@using Nop.Web.Framework.UI.Captcha;
 @{
     Layout = "~/Views/Shared/_Root.cshtml";
 
@@ -53,6 +54,12 @@
                     <div class="message-error">
                         @Html.ValidationSummary(true)
                     </div>
+                    if (Model.AddNewComment.DisplayCaptcha)
+                    {
+                        <div class="captcha-box">
+                            @Html.Raw(Html.GenerateCaptcha())
+                        </div>
+                    }
                     <div class="buttons">
                         <input type="submit" id="add-comment" name="add-comment" value="@T("News.Comments.SubmitButton")" />
                     </div>
