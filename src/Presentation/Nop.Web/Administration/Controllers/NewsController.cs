@@ -73,7 +73,7 @@ namespace Nop.Admin.Controllers
                         m.EndDate = _dateTimeHelper.ConvertToUserTime(x.EndDateUtc.Value, DateTimeKind.Utc);
                     m.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
                     m.LanguageName = x.Language.Name;
-                    m.Comments = x.NewsComments.Count;
+                    m.Comments = x.ApprovedCommentCount + x.NotApprovedCommentCount;
                     return m;
                 }),
                 Total = news.TotalCount
@@ -99,7 +99,7 @@ namespace Nop.Admin.Controllers
                         m.EndDate = _dateTimeHelper.ConvertToUserTime(x.EndDateUtc.Value, DateTimeKind.Utc);
                     m.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
                     m.LanguageName = x.Language.Name;
-                    m.Comments = x.NewsComments.Count;
+                    m.Comments = x.ApprovedCommentCount + x.NotApprovedCommentCount;
                     return m;
                 }),
                 Total = news.TotalCount
@@ -269,10 +269,14 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageNews))
                 return AccessDeniedView();
 
-            var comment = _customerContentService.GetCustomerContentById(id);
+            var comment = _customerContentService.GetCustomerContentById(id) as NewsComment;
             if (comment == null)
                 throw new ArgumentException("No comment found with the specified id");
+
+            var newsItem = comment.NewsItem;
             _customerContentService.DeleteCustomerContent(comment);
+            //update totals
+            _newsService.UpdateCommentTotals(newsItem);
 
             return Comments(filterByNewsItemId, command);
         }

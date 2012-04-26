@@ -94,11 +94,12 @@ namespace Nop.Web.Controllers
             model.Full = newsItem.Full;
             model.AllowComments = newsItem.AllowComments;
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(newsItem.CreatedOnUtc, DateTimeKind.Utc);
-            model.NumberOfComments = newsItem.NewsComments.Count;
+            //model.NumberOfComments = newsItem.NewsComments.Count;
+            model.NumberOfComments = newsItem.ApprovedCommentCount;
             model.AddNewComment.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnNewsCommentPage;
             if (prepareComments)
             {
-                var newsComments = newsItem.NewsComments.Where(pr => pr.IsApproved).OrderBy(pr => pr.CreatedOnUtc);
+                var newsComments = newsItem.NewsComments.Where(n => n.IsApproved).OrderBy(pr => pr.CreatedOnUtc);
                 foreach (var nc in newsComments)
                 {
                     var commentModel = new NewsCommentModel()
@@ -256,7 +257,10 @@ namespace Nop.Web.Controllers
                 };
                 _customerContentService.InsertCustomerContent(comment);
 
-                //notify store owner
+                //update totals
+                _newsService.UpdateCommentTotals(newsItem);
+
+                //notify store owner);
                 if (_newsSettings.NotifyAboutNewNewsComments)
                     _workflowMessageService.SendNewsCommentNotificationMessage(comment, _localizationSettings.DefaultAdminLanguageId);
 

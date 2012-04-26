@@ -52,7 +52,22 @@ namespace Nop.Core.Domain.News
         public virtual bool AllowComments { get; set; }
 
         /// <summary>
+        /// Gets or sets the total number of approved comments
+        /// <remarks>The same as if we run newsItem.NewsComments.Where(n => n.IsApproved).Count()
+        /// We use this proeprty for performance optimization (no SQL command executed)
+        /// </remarks>
+        /// </summary>
+        public virtual int ApprovedCommentCount { get; set; }
+        /// <summary>
+        /// Gets or sets the total number of not approved comments
+        /// </summary>
+        public virtual int NotApprovedCommentCount { get; set; }
+
+        /// <summary>
         /// Gets or sets the date and time of entity creation
+        /// <remarks>The same as if we run newsItem.NewsComments.Where(n => !n.IsApproved).Count()
+        /// We use this proeprty for performance optimization (no SQL command executed)
+        /// </remarks>
         /// </summary>
         public virtual DateTime CreatedOnUtc { get; set; }
 

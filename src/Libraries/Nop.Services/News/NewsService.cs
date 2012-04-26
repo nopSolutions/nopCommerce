@@ -134,6 +134,31 @@ namespace Nop.Services.News
             //event notification
             _eventPublisher.EntityUpdated(news);
         }
+        
+        /// <summary>
+        /// Update news item comment totals
+        /// </summary>
+        /// <param name="newsItem">News item</param>
+        public virtual void UpdateCommentTotals(NewsItem newsItem)
+        {
+            if (newsItem == null)
+                throw new ArgumentNullException("newsItem");
+
+            int approvedCommentCount = 0;
+            int notApprovedCommentCount = 0;
+            var newsComments = newsItem.NewsComments;
+            foreach (var nc in newsComments)
+            {
+                if (nc.IsApproved)
+                    approvedCommentCount++;
+                else
+                    notApprovedCommentCount++;
+            }
+
+            newsItem.ApprovedCommentCount = approvedCommentCount;
+            newsItem.NotApprovedCommentCount = notApprovedCommentCount;
+            UpdateNews(newsItem);
+        }
 
         #endregion
     }

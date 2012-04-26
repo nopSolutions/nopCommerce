@@ -19,9 +19,13 @@ namespace Nop.Data.Tests.News
                 Title = "Title 1",
                 Short = "Short 1",
                 Full = "Full 1",
-                AllowComments = true,
                 Published = true,
-                CreatedOnUtc = new DateTime(2010, 01, 01),
+                StartDateUtc = new DateTime(2010, 01, 01),
+                EndDateUtc = new DateTime(2010, 01, 02),
+                AllowComments = true,
+                ApprovedCommentCount = 1,
+                NotApprovedCommentCount = 2,
+                CreatedOnUtc = new DateTime(2010, 01, 03),
                 Language = new Language()
                 {
                     Name = "English",
@@ -34,9 +38,13 @@ namespace Nop.Data.Tests.News
             fromDb.Title.ShouldEqual("Title 1");
             fromDb.Short.ShouldEqual("Short 1");
             fromDb.Full.ShouldEqual("Full 1");
-            fromDb.AllowComments.ShouldEqual(true);
             fromDb.Published.ShouldEqual(true);
-            fromDb.CreatedOnUtc.ShouldEqual(new DateTime(2010, 01, 01));
+            fromDb.StartDateUtc.ShouldEqual(new DateTime(2010, 01, 01));
+            fromDb.EndDateUtc.ShouldEqual(new DateTime(2010, 01, 02));
+            fromDb.AllowComments.ShouldEqual(true);
+            fromDb.ApprovedCommentCount.ShouldEqual(1);
+            fromDb.NotApprovedCommentCount.ShouldEqual(2);
+            fromDb.CreatedOnUtc.ShouldEqual(new DateTime(2010, 01, 03));
 
             fromDb.Language.ShouldNotBeNull();
             fromDb.Language.Name.ShouldEqual("English");

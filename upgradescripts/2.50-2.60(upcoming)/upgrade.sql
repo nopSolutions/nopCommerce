@@ -787,3 +787,62 @@ GO
 --Created shipments should not be immediately shipped
 ALTER TABLE [dbo].[Shipment] ALTER COLUMN [ShippedDateUtc] datetime NULL
 GO
+
+
+--Store comment count in [News] entity/table
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[News]') and NAME='ApprovedCommentCount')
+BEGIN
+	ALTER TABLE [dbo].[News]
+	ADD [ApprovedCommentCount] int NULL
+END
+GO
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[News]') and NAME='NotApprovedCommentCount')
+BEGIN
+	ALTER TABLE [dbo].[News]
+	ADD [NotApprovedCommentCount] int NULL
+END
+GO
+
+EXEC('
+	DECLARE @NewsId int
+	DECLARE cur_news CURSOR FOR
+	SELECT [Id]
+	FROM [News]
+	ORDER BY [Id]
+	OPEN cur_news
+	FETCH NEXT FROM cur_news INTO @NewsId
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+		--shipping status
+		DECLARE @ApprovedCommentCount int
+		DECLARE @NotApprovedCommentCount int
+		SET @ApprovedCommentCount = null -- clear cache (variable scope)
+		SET @NotApprovedCommentCount = null -- clear cache (variable scope)
+
+
+		SELECT @ApprovedCommentCount = COUNT(1) FROM [NewsComment] as [nc]
+		INNER JOIN [CustomerContent] AS [cc] ON [nc].[Id] = [cc].[Id]
+		WHERE [nc].[NewsItemId] = @NewsId AND [cc].[IsApproved]=1
+
+		SELECT @NotApprovedCommentCount = COUNT(1) FROM [NewsComment] as [nc]
+		INNER JOIN [CustomerContent] AS [cc] ON [nc].[Id] = [cc].[Id]
+		WHERE [nc].[NewsItemId] = @NewsId AND [cc].[IsApproved]=0
+	
+		UPDATE [News]
+		SET [ApprovedCommentCount] = @ApprovedCommentCount,
+		[NotApprovedCommentCount] = @NotApprovedCommentCount
+		WHERE [Id] = @NewsId
+	
+		--fetch next identifier
+		FETCH NEXT FROM cur_news INTO @NewsId
+	END
+	CLOSE cur_news
+	DEALLOCATE cur_news
+	')
+GO
+
+
+ALTER TABLE [dbo].[News] ALTER COLUMN [ApprovedCommentCount] int NOT NULL
+GO
+ALTER TABLE [dbo].[News] ALTER COLUMN [NotApprovedCommentCount] int NOT NULL
+GO

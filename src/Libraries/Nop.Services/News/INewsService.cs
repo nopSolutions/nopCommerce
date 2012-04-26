@@ -44,5 +44,11 @@ namespace Nop.Services.News
         /// </summary>
         /// <param name="news">News item</param>
         void UpdateNews(NewsItem news);
+
+        /// <summary>
+        /// Update news item comment totals
+        /// </summary>
+        /// <param name="newsItem">News item</param>
+        void UpdateCommentTotals(NewsItem newsItem);
     }
 }
