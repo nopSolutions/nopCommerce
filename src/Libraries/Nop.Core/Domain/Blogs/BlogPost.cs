@@ -32,6 +32,21 @@ namespace Nop.Core.Domain.Blogs
         public virtual bool AllowComments { get; set; }
 
         /// <summary>
+        /// Gets or sets the total number of approved comments
+        /// <remarks>The same as if we run newsItem.NewsComments.Where(n => n.IsApproved).Count()
+        /// We use this proeprty for performance optimization (no SQL command executed)
+        /// </remarks>
+        /// </summary>
+        public virtual int ApprovedCommentCount { get; set; }
+        /// <summary>
+        /// Gets or sets the total number of not approved comments
+        /// <remarks>The same as if we run newsItem.NewsComments.Where(n => !n.IsApproved).Count()
+        /// We use this proeprty for performance optimization (no SQL command executed)
+        /// </remarks>
+        /// </summary>
+        public virtual int NotApprovedCommentCount { get; set; }
+
+        /// <summary>
         /// Gets or sets the blog tags
         /// </summary>
         public virtual string Tags { get; set; }

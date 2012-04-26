@@ -73,7 +73,7 @@ namespace Nop.Admin.Controllers
                         m.EndDate = _dateTimeHelper.ConvertToUserTime(x.EndDateUtc.Value, DateTimeKind.Utc);
                     m.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
                     m.LanguageName = x.Language.Name;
-                    m.Comments = x.BlogComments.Count;
+                    m.Comments = x.ApprovedCommentCount + x.NotApprovedCommentCount;
                     return m;
                 }),
                 Total = blogPosts.TotalCount
@@ -99,7 +99,7 @@ namespace Nop.Admin.Controllers
                         m.EndDate = _dateTimeHelper.ConvertToUserTime(x.EndDateUtc.Value, DateTimeKind.Utc);
                     m.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
                     m.LanguageName = x.Language.Name;
-                    m.Comments = x.BlogComments.Count;
+                    m.Comments = x.ApprovedCommentCount + x.NotApprovedCommentCount;
                     return m;
                 }),
                 Total = blogPosts.TotalCount
@@ -267,11 +267,14 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageBlog))
                 return AccessDeniedView();
 
-            var comment = _customerContentService.GetCustomerContentById(id);
+            var comment = _customerContentService.GetCustomerContentById(id) as BlogComment;
             if (comment == null)
                 throw new ArgumentException("No comment found with the specified id");
 
+            var blogPost = comment.BlogPost;
             _customerContentService.DeleteCustomerContent(comment);
+            //update totals
+            _blogService.UpdateCommentTotals(blogPost);
 
             return Comments(filterByBlogPostId, command);
         }

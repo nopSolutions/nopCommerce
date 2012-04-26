@@ -94,7 +94,6 @@ namespace Nop.Web.Controllers
             model.Full = newsItem.Full;
             model.AllowComments = newsItem.AllowComments;
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(newsItem.CreatedOnUtc, DateTimeKind.Utc);
-            //model.NumberOfComments = newsItem.NewsComments.Count;
             model.NumberOfComments = newsItem.ApprovedCommentCount;
             model.AddNewComment.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnNewsCommentPage;
             if (prepareComments)

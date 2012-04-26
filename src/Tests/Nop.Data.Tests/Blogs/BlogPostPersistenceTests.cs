@@ -19,8 +19,12 @@ namespace Nop.Data.Tests.Blogs
                 Title = "Title 1",
                 Body = "Body 1",
                 AllowComments = true,
+                ApprovedCommentCount = 1,
+                NotApprovedCommentCount = 2,
                 Tags = "Tags 1",
-                CreatedOnUtc = new DateTime(2010, 01, 01),
+                StartDateUtc = new DateTime(2010, 01, 01),
+                EndDateUtc = new DateTime(2010, 01, 02),
+                CreatedOnUtc = new DateTime(2010, 01, 03),
                 Language = new Language()
                 {
                     Name = "English",
@@ -33,8 +37,12 @@ namespace Nop.Data.Tests.Blogs
             fromDb.Title.ShouldEqual("Title 1");
             fromDb.Body.ShouldEqual("Body 1");
             fromDb.AllowComments.ShouldEqual(true);
+            fromDb.ApprovedCommentCount.ShouldEqual(1);
+            fromDb.NotApprovedCommentCount.ShouldEqual(2);
             fromDb.Tags.ShouldEqual("Tags 1");
-            fromDb.CreatedOnUtc.ShouldEqual(new DateTime(2010, 01, 01));
+            fromDb.StartDateUtc.ShouldEqual(new DateTime(2010, 01, 01));
+            fromDb.EndDateUtc.ShouldEqual(new DateTime(2010, 01, 02));
+            fromDb.CreatedOnUtc.ShouldEqual(new DateTime(2010, 01, 03));
 
             fromDb.Language.ShouldNotBeNull();
             fromDb.Language.Name.ShouldEqual("English");

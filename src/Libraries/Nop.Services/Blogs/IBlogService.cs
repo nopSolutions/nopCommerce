@@ -64,5 +64,11 @@ namespace Nop.Services.Blogs
         /// </summary>
         /// <param name="blogPost">Blog post</param>
         void UpdateBlogPost(BlogPost blogPost);
+
+        /// <summary>
+        /// Update blog post comment totals
+        /// </summary>
+        /// <param name="blogPost">Blog post</param>
+        void UpdateCommentTotals(BlogPost blogPost);
     }
 }

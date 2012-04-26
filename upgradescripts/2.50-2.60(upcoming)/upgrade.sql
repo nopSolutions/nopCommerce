@@ -846,3 +846,63 @@ ALTER TABLE [dbo].[News] ALTER COLUMN [ApprovedCommentCount] int NOT NULL
 GO
 ALTER TABLE [dbo].[News] ALTER COLUMN [NotApprovedCommentCount] int NOT NULL
 GO
+
+
+
+--Store comment count in [BlogPost] entity/table
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[BlogPost]') and NAME='ApprovedCommentCount')
+BEGIN
+	ALTER TABLE [dbo].[BlogPost]
+	ADD [ApprovedCommentCount] int NULL
+END
+GO
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[BlogPost]') and NAME='NotApprovedCommentCount')
+BEGIN
+	ALTER TABLE [dbo].[BlogPost]
+	ADD [NotApprovedCommentCount] int NULL
+END
+GO
+
+EXEC('
+	DECLARE @BlogPostId int
+	DECLARE cur_blogpost CURSOR FOR
+	SELECT [Id]
+	FROM [BlogPost]
+	ORDER BY [Id]
+	OPEN cur_blogpost
+	FETCH NEXT FROM cur_blogpost INTO @BlogPostId
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+		--shipping status
+		DECLARE @ApprovedCommentCount int
+		DECLARE @NotApprovedCommentCount int
+		SET @ApprovedCommentCount = null -- clear cache (variable scope)
+		SET @NotApprovedCommentCount = null -- clear cache (variable scope)
+
+
+		SELECT @ApprovedCommentCount = COUNT(1) FROM [BlogComment] as [nc]
+		INNER JOIN [CustomerContent] AS [cc] ON [nc].[Id] = [cc].[Id]
+		WHERE [nc].[BlogPostId] = @BlogPostId AND [cc].[IsApproved]=1
+
+		SELECT @NotApprovedCommentCount = COUNT(1) FROM [BlogComment] as [nc]
+		INNER JOIN [CustomerContent] AS [cc] ON [nc].[Id] = [cc].[Id]
+		WHERE [nc].[BlogPostId] = @BlogPostId AND [cc].[IsApproved]=0
+	
+		UPDATE [BlogPost]
+		SET [ApprovedCommentCount] = @ApprovedCommentCount,
+		[NotApprovedCommentCount] = @NotApprovedCommentCount
+		WHERE [Id] = @BlogPostId
+	
+		--fetch next identifier
+		FETCH NEXT FROM cur_blogpost INTO @BlogPostId
+	END
+	CLOSE cur_blogpost
+	DEALLOCATE cur_blogpost
+	')
+GO
+
+
+ALTER TABLE [dbo].[BlogPost] ALTER COLUMN [ApprovedCommentCount] int NOT NULL
+GO
+ALTER TABLE [dbo].[BlogPost] ALTER COLUMN [NotApprovedCommentCount] int NOT NULL
+GO

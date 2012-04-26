@@ -94,7 +94,7 @@ namespace Nop.Web.Controllers
             model.AllowComments = blogPost.AllowComments;
             model.CreatedOn = _dateTimeHelper.ConvertToUserTime(blogPost.CreatedOnUtc, DateTimeKind.Utc);
             model.Tags = blogPost.ParseTags().ToList();
-            model.NumberOfComments = blogPost.BlogComments.Count;
+            model.NumberOfComments = blogPost.ApprovedCommentCount;
             model.AddNewComment.DisplayCaptcha = _captchaSettings.Enabled && _captchaSettings.ShowOnBlogCommentPage;
             if (prepareComments)
             {
@@ -244,6 +244,9 @@ namespace Nop.Web.Controllers
                     UpdatedOnUtc = DateTime.UtcNow,
                 };
                 _customerContentService.InsertCustomerContent(comment);
+
+                //update totals
+                _blogService.UpdateCommentTotals(blogPost);
 
                 //notify store owner
                 if (_blogSettings.NotifyAboutNewBlogComments)

@@ -197,6 +197,31 @@ namespace Nop.Services.Blogs
             //event notification
             _eventPublisher.EntityUpdated(blogPost);
         }
+        
+        /// <summary>
+        /// Update blog post comment totals
+        /// </summary>
+        /// <param name="blogPost">Blog post</param>
+        public virtual void UpdateCommentTotals(BlogPost blogPost)
+        {
+            if (blogPost == null)
+                throw new ArgumentNullException("blogPost");
+
+            int approvedCommentCount = 0;
+            int notApprovedCommentCount = 0;
+            var blogComments = blogPost.BlogComments;
+            foreach (var bc in blogComments)
+            {
+                if (bc.IsApproved)
+                    approvedCommentCount++;
+                else
+                    notApprovedCommentCount++;
+            }
+
+            blogPost.ApprovedCommentCount = approvedCommentCount;
+            blogPost.NotApprovedCommentCount = notApprovedCommentCount;
+            UpdateBlogPost(blogPost);
+        }
 
         #endregion
     }
