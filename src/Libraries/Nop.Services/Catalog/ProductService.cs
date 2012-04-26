@@ -979,8 +979,7 @@ namespace Nop.Services.Catalog
             productVariant.Deleted = true;
             UpdateProductVariant(productVariant);
         }
-
-
+        
         /// <summary>
         /// Adjusts inventory
         /// </summary>
@@ -1166,7 +1165,19 @@ namespace Nop.Services.Catalog
             var productVariants = new PagedList<ProductVariant>(query, pageIndex, pageSize);
             return productVariants;
         }
+        
+        /// <summary>
+        /// Update HasTierPrices property
+        /// </summary>
+        /// <param name="productVariant">Product variant</param>
+        public virtual void UpdateHasTierPricesProperty(ProductVariant productVariant)
+        {
+            if (productVariant == null)
+                throw new ArgumentNullException("productVariant");
 
+            productVariant.HasTierPrices = productVariant.TierPrices.Count > 0;
+            UpdateProductVariant(productVariant);
+        }
         #endregion
 
         #region Related products

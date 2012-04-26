@@ -3724,14 +3724,6 @@
 												<Value>Comma separated list of page size options (e.g. 10, 5, 15, 20). First option is the default page size if none are selected.</Value>
 											</LocaleResource>
 										</Children>
-									</LocaleResource>									
-									<LocaleResource Name="IgnoreTierPrices">
-										<Value>Ignore tier prices (sitewide)</Value>
-										<Children>
-											<LocaleResource Name="Hint">
-												<Value>Check to ignore tier prices (sitewide). It can significantly improve performance.</Value>
-											</LocaleResource>
-										</Children>
 									</LocaleResource>
 									<LocaleResource Name="IgnoreDiscounts">
 										<Value>Ignore discounts (sitewide)</Value>

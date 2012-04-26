@@ -105,7 +105,7 @@ namespace Nop.Services.Catalog
         /// <returns>Price</returns>
         protected virtual decimal? GetMinimumTierPrice(ProductVariant productVariant, Customer customer, int quantity)
         {
-            if (_catalogSettings.IgnoreTierPrices)
+            if (!productVariant.HasTierPrices)
                 return decimal.Zero;
 
             var tierPrices = productVariant.TierPrices
@@ -270,8 +270,8 @@ namespace Nop.Services.Catalog
             if (specialPrice.HasValue)
                 result = specialPrice.Value;
 
-            //tier prices)
-            if (!_catalogSettings.IgnoreTierPrices && productVariant.TierPrices.Count > 0)
+            //tier prices
+            if (productVariant.HasTierPrices)
             {
                 decimal? tierPrice = GetMinimumTierPrice(productVariant, customer, quantity);
                 if (tierPrice.HasValue)

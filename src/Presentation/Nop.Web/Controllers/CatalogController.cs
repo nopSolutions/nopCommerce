@@ -249,7 +249,7 @@ namespace Nop.Web.Controllers
 
                                             //do we have tier prices configured?
                                             var tierPrices = new List<TierPrice>();
-                                            if (!_catalogSettings.IgnoreTierPrices)
+                                            if (productVariant.HasTierPrices)
                                             {
                                                 tierPrices.AddRange(productVariant.TierPrices
                                                     .OrderBy(tp => tp.Quantity)
@@ -1854,15 +1854,15 @@ namespace Nop.Web.Controllers
         [ChildActionOnly]
         public ActionResult ProductTierPrices(int productVariantId)
         {
-            if (_catalogSettings.IgnoreTierPrices)
-                return Content(""); //ignore tier prices
-
             if (!_permissionService.Authorize(StandardPermissionProvider.DisplayPrices))
                 return Content(""); //hide prices
 
             var variant = _productService.GetProductVariantById(productVariantId);
             if (variant == null)
                 throw new ArgumentException("No product variant found with the specified id");
+
+            if (!variant.HasTierPrices)
+                return Content(""); //no tier prices
 
             var model = variant.TierPrices
                 .OrderBy(x => x.Quantity)

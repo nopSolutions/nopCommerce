@@ -209,7 +209,13 @@ namespace Nop.Services.Catalog
         /// <returns>Product variants</returns>
         IPagedList<ProductVariant> SearchProductVariants(int categoryId, int manufacturerId, 
             string keywords, bool searchDescriptions, int pageIndex, int pageSize, bool showHidden = false);
-        
+
+        /// <summary>
+        /// Update HasTierPrices property
+        /// </summary>
+        /// <param name="productVariant">Product variant</param>
+        void UpdateHasTierPricesProperty(ProductVariant productVariant);
+
         #endregion
 
         #region Related products

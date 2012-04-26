@@ -212,6 +212,12 @@ set @resources='
   <LocaleResource Name="Admin.Orders.Shipments.List.EndDate.Hint">
     <Value>The end date (shipment creation date) for the search.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.IgnoreTierPrices">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.IgnoreTierPrices>Hint">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -905,4 +911,57 @@ GO
 ALTER TABLE [dbo].[BlogPost] ALTER COLUMN [ApprovedCommentCount] int NOT NULL
 GO
 ALTER TABLE [dbo].[BlogPost] ALTER COLUMN [NotApprovedCommentCount] int NOT NULL
+GO
+
+
+--Store a value indicating whether we have tier prices in [ProductVariant] entity/table
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[ProductVariant]') and NAME='HasTierPrices')
+BEGIN
+	ALTER TABLE [dbo].[ProductVariant]
+	ADD [HasTierPrices] bit NULL
+END
+GO
+
+EXEC('
+	DECLARE @ProductVariantId int
+	DECLARE cur_productvariant CURSOR FOR
+	SELECT [Id]
+	FROM [ProductVariant]
+	ORDER BY [Id]
+	OPEN cur_productvariant
+	FETCH NEXT FROM cur_productvariant INTO @ProductVariantId
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+		--shipping status
+		DECLARE @HasTierPrices bit
+		SET @HasTierPrices = null -- clear cache (variable scope)
+
+
+		IF (EXISTS (SELECT 1 FROM [TierPrice] as [tp] WHERE [tp].[ProductVariantId] = @ProductVariantId))
+		BEGIN
+		SET @HasTierPrices = 1
+		END
+		ELSE
+		BEGIN
+		SET @HasTierPrices = 0
+		END
+
+		UPDATE [ProductVariant]
+		SET [HasTierPrices] = @HasTierPrices
+		WHERE [Id] = @ProductVariantId
+	
+		--fetch next identifier
+		FETCH NEXT FROM cur_productvariant INTO @ProductVariantId
+	END
+	CLOSE cur_productvariant
+	DEALLOCATE cur_productvariant
+	')
+GO
+
+
+ALTER TABLE [dbo].[ProductVariant] ALTER COLUMN [HasTierPrices] bit NOT NULL
+GO
+
+DELETE FROM [Setting]
+WHERE [Name] = N'catalogsettings.ignoretierprices'
 GO

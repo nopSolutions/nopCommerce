@@ -292,6 +292,15 @@ namespace Nop.Core.Domain.Catalog
         public virtual decimal MaximumCustomerEnteredPrice { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether this product variant has tier prices configured
+        /// <remarks>The same as if we run variant.TierPrices.Count > 0
+        /// We use this proeprty for performance optimization:
+        /// if this property is set to false, then we do not need to load tier prices navifation property
+        /// </remarks>
+        /// </summary>
+        public virtual bool HasTierPrices { get; set; }
+
+        /// <summary>
         /// Gets or sets the weight
         /// </summary>
         public virtual decimal Weight { get; set; }
@@ -350,6 +359,12 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the date and time of instance update
         /// </summary>
         public virtual DateTime UpdatedOnUtc { get; set; }
+
+
+
+
+
+
 
         /// <summary>
         /// Gets the full product name

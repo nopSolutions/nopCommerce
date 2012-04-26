@@ -4530,7 +4530,6 @@ namespace Nop.Services.Installation
                     UseSmallProductBoxOnHomePage =  true,
                     IncludeFeaturedProductsInNormalLists = false,
                     DisplayTierPricesWithDiscounts = true,
-                    IgnoreTierPrices = false,
                     IgnoreDiscounts = false,
                     IgnoreFeaturedProducts = false,
                     DefaultCategoryPageSizeOptions = "4, 2, 8, 12",

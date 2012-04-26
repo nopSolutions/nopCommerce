@@ -653,6 +653,10 @@ namespace Nop.Admin.Controllers
             };
             _productService.InsertTierPrice(tierPrice);
 
+            //update "HasTierPrices" property
+            var productVariant = _productService.GetProductVariantById(model.ProductVariantId);
+            _productService.UpdateHasTierPricesProperty(productVariant);
+
             return TierPriceList(command, model.ProductVariantId);
         }
 
@@ -686,7 +690,11 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentException("No tier price found with the specified id");
 
             var productVariantId = tierPrice.ProductVariantId;
+            var productVariant = _productService.GetProductVariantById(productVariantId);
             _productService.DeleteTierPrice(tierPrice);
+
+            //update "HasTierPrices" property
+            _productService.UpdateHasTierPricesProperty(productVariant);
 
             return TierPriceList(command, productVariantId);
         }

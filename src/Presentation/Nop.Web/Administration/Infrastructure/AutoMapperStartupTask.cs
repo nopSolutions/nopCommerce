@@ -195,6 +195,7 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.HidePublishedProperty, mo => mo.Ignore())
                 .ForMember(dest => dest.HideDisplayOrderProperty, mo => mo.Ignore());
             Mapper.CreateMap<ProductVariantModel, ProductVariant>()
+                .ForMember(dest => dest.HasTierPrices, mo => mo.Ignore())
                 .ForMember(dest => dest.BackorderMode, mo => mo.Ignore())
                 .ForMember(dest => dest.DownloadActivationType, mo => mo.Ignore())
                 .ForMember(dest => dest.GiftCardType, mo => mo.Ignore())
