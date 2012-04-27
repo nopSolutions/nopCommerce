@@ -308,6 +308,8 @@ namespace Nop.Admin.Controllers
                         variant.AppliedDiscounts.Add(discount);
                 }
                 _productService.UpdateProductVariant(variant);
+                //update "HasDiscountsApplied" property
+                _productService.UpdateHasDiscountsApplied(variant);
                 //update picture seo file name
                 UpdatePictureSeoNames(variant);
 
@@ -399,6 +401,8 @@ namespace Nop.Admin.Controllers
                     }
                 }
                 _productService.UpdateProductVariant(variant);
+                //update "HasDiscountsApplied" property
+                _productService.UpdateHasDiscountsApplied(variant);
                 //delete an old picture (if deleted or updated)
                 if (prevPictureId > 0 && prevPictureId != variant.PictureId)
                 {

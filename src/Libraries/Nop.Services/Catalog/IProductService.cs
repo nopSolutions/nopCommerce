@@ -211,10 +211,17 @@ namespace Nop.Services.Catalog
             string keywords, bool searchDescriptions, int pageIndex, int pageSize, bool showHidden = false);
 
         /// <summary>
-        /// Update HasTierPrices property
+        /// Update HasTierPrices property (used for performance optimization)
         /// </summary>
         /// <param name="productVariant">Product variant</param>
         void UpdateHasTierPricesProperty(ProductVariant productVariant);
+
+
+        /// <summary>
+        /// Update HasDiscountsApplied property (used for performance optimization)
+        /// </summary>
+        /// <param name="productVariant">Product variant</param>
+        void UpdateHasDiscountsApplied(ProductVariant productVariant);
 
         #endregion
 

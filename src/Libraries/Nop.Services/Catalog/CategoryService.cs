@@ -234,6 +234,19 @@ namespace Nop.Services.Catalog
         }
         
         /// <summary>
+        /// Update HasDiscountsApplied property (used for performance optimization)
+        /// </summary>
+        /// <param name="category">Category</param>
+        public virtual void UpdateHasDiscountsApplied(Category category)
+        {
+            if (category == null)
+                throw new ArgumentNullException("category");
+
+            category.HasDiscountsApplied = category.AppliedDiscounts.Count > 0;
+            UpdateCategory(category);
+        }
+
+        /// <summary>
         /// Deletes a product category mapping
         /// </summary>
         /// <param name="productCategory">Product category</param>

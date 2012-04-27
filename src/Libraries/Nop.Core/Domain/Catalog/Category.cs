@@ -84,6 +84,15 @@ namespace Nop.Core.Domain.Catalog
         public virtual bool ShowOnHomePage { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether this category has discounts applied
+        /// <remarks>The same as if we run category.AppliedDiscounts.Count > 0
+        /// We use this property for performance optimization:
+        /// if this property is set to false, then we do not need to load Applied Discounts navifation property
+        /// </remarks>
+        /// </summary>
+        public virtual bool HasDiscountsApplied { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether the entity is published
         /// </summary>
         public virtual bool Published { get; set; }

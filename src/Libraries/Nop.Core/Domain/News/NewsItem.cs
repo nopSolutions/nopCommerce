@@ -54,14 +54,14 @@ namespace Nop.Core.Domain.News
         /// <summary>
         /// Gets or sets the total number of approved comments
         /// <remarks>The same as if we run newsItem.NewsComments.Where(n => n.IsApproved).Count()
-        /// We use this proeprty for performance optimization (no SQL command executed)
+        /// We use this property for performance optimization (no SQL command executed)
         /// </remarks>
         /// </summary>
         public virtual int ApprovedCommentCount { get; set; }
         /// <summary>
         /// Gets or sets the total number of not approved comments
         /// <remarks>The same as if we run newsItem.NewsComments.Where(n => !n.IsApproved).Count()
-        /// We use this proeprty for performance optimization (no SQL command executed)
+        /// We use this property for performance optimization (no SQL command executed)
         /// </remarks>
         /// </summary>
         public virtual int NotApprovedCommentCount { get; set; }

@@ -75,6 +75,12 @@ namespace Nop.Services.Catalog
         void UpdateCategory(Category category);
 
         /// <summary>
+        /// Update HasDiscountsApplied property (used for performance optimization)
+        /// </summary>
+        /// <param name="category">Category</param>
+        void UpdateHasDiscountsApplied(Category category);
+
+        /// <summary>
         /// Deletes a product category mapping
         /// </summary>
         /// <param name="productCategory">Product category</param>

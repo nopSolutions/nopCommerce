@@ -474,6 +474,11 @@ namespace Nop.Services.Catalog
                         productVariantCopy.AppliedDiscounts.Add(discount);
                         _productService.UpdateProductVariant(productVariantCopy);
                     }
+
+
+                    //update "HasTierPrices" and "HasDiscountsApplied" properties
+                    _productService.UpdateHasTierPricesProperty(productVariantCopy);
+                    _productService.UpdateHasDiscountsApplied(productVariantCopy);
                 }
 
                 //uncomment this line to support transactions

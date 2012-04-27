@@ -97,6 +97,8 @@ namespace Nop.Services.Tests.Catalog
                 Quantity = 5,
                 ProductVariant = productVariant
             });
+            //set HasTierPrices property
+            productVariant.HasTierPrices = true;
 
             //customer
             Customer customer = null;
@@ -168,6 +170,8 @@ namespace Nop.Services.Tests.Catalog
                 ProductVariant = productVariant,
                 CustomerRole = customerRole2
             });
+            //set HasTierPrices property
+            productVariant.HasTierPrices = true;
 
             //customer
             Customer customer = new Customer();
@@ -236,6 +240,8 @@ namespace Nop.Services.Tests.Catalog
             };
             discount1.AppliedToProductVariants.Add(productVariant);
             productVariant.AppliedDiscounts.Add(discount1);
+            //set HasDiscountsApplied property
+            productVariant.HasDiscountsApplied = true;
             _discountService.Expect(ds => ds.IsDiscountValid(discount1, customer)).Return(true);
             
             _priceCalcService.GetFinalPrice(productVariant, customer, 0, true, 1).ShouldEqual(9.34M);
@@ -309,6 +315,8 @@ namespace Nop.Services.Tests.Catalog
             };
             discount1.AppliedToProductVariants.Add(productVariant);
             productVariant.AppliedDiscounts.Add(discount1);
+            //set HasDiscountsApplied property
+            productVariant.HasDiscountsApplied = true;
             _discountService.Expect(ds => ds.IsDiscountValid(discount1, customer)).Return(true);
 
             var discount2 = new Discount()

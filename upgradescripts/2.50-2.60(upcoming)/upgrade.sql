@@ -819,7 +819,6 @@ EXEC('
 	FETCH NEXT FROM cur_news INTO @NewsId
 	WHILE @@FETCH_STATUS = 0
 	BEGIN
-		--shipping status
 		DECLARE @ApprovedCommentCount int
 		DECLARE @NotApprovedCommentCount int
 		SET @ApprovedCommentCount = null -- clear cache (variable scope)
@@ -879,7 +878,6 @@ EXEC('
 	FETCH NEXT FROM cur_blogpost INTO @BlogPostId
 	WHILE @@FETCH_STATUS = 0
 	BEGIN
-		--shipping status
 		DECLARE @ApprovedCommentCount int
 		DECLARE @NotApprovedCommentCount int
 		SET @ApprovedCommentCount = null -- clear cache (variable scope)
@@ -932,7 +930,6 @@ EXEC('
 	FETCH NEXT FROM cur_productvariant INTO @ProductVariantId
 	WHILE @@FETCH_STATUS = 0
 	BEGIN
-		--shipping status
 		DECLARE @HasTierPrices bit
 		SET @HasTierPrices = null -- clear cache (variable scope)
 
@@ -964,4 +961,144 @@ GO
 
 DELETE FROM [Setting]
 WHERE [Name] = N'catalogsettings.ignoretierprices'
+GO
+
+
+
+
+
+--Store a value indicating whether we have discounts applied in [ProductVariant] entity/table
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[ProductVariant]') and NAME='HasDiscountsApplied')
+BEGIN
+	ALTER TABLE [dbo].[ProductVariant]
+	ADD [HasDiscountsApplied] bit NULL
+END
+GO
+
+EXEC('
+	DECLARE @ProductVariantId int
+	DECLARE cur_productvariant CURSOR FOR
+	SELECT [Id]
+	FROM [ProductVariant]
+	ORDER BY [Id]
+	OPEN cur_productvariant
+	FETCH NEXT FROM cur_productvariant INTO @ProductVariantId
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+		DECLARE @HasDiscountsApplied bit
+		SET @HasDiscountsApplied = null -- clear cache (variable scope)
+
+
+		IF (EXISTS (SELECT 1 FROM [Discount_AppliedToProductVariants] as [datpv] WHERE [datpv].[ProductVariant_Id] = @ProductVariantId))
+		BEGIN
+		SET @HasDiscountsApplied = 1
+		END
+		ELSE
+		BEGIN
+		SET @HasDiscountsApplied = 0
+		END
+
+		UPDATE [ProductVariant]
+		SET [HasDiscountsApplied] = @HasDiscountsApplied
+		WHERE [Id] = @ProductVariantId
+	
+		--fetch next identifier
+		FETCH NEXT FROM cur_productvariant INTO @ProductVariantId
+	END
+	CLOSE cur_productvariant
+	DEALLOCATE cur_productvariant
+	')
+GO
+
+
+ALTER TABLE [dbo].[ProductVariant] ALTER COLUMN [HasDiscountsApplied] bit NOT NULL
+GO
+
+
+--Store a value indicating whether we have discounts applied in [ProductVariant] entity/table
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[ProductVariant]') and NAME='HasDiscountsApplied')
+BEGIN
+	ALTER TABLE [dbo].[ProductVariant]
+	ADD [HasDiscountsApplied] bit NULL
+END
+GO
+
+EXEC('
+	DECLARE @ProductVariantId int
+	DECLARE cur_productvariant CURSOR FOR
+	SELECT [Id]
+	FROM [ProductVariant]
+	ORDER BY [Id]
+	OPEN cur_productvariant
+	FETCH NEXT FROM cur_productvariant INTO @ProductVariantId
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+		DECLARE @HasDiscountsApplied bit
+		SET @HasDiscountsApplied = null -- clear cache (variable scope)
+
+
+		IF (EXISTS (SELECT 1 FROM [Discount_AppliedToProductVariants] as [datpv] WHERE [datpv].[ProductVariant_Id] = @ProductVariantId))
+		BEGIN
+		SET @HasDiscountsApplied = 1
+		END
+		ELSE
+		BEGIN
+		SET @HasDiscountsApplied = 0
+		END
+
+		UPDATE [ProductVariant]
+		SET [HasDiscountsApplied] = @HasDiscountsApplied
+		WHERE [Id] = @ProductVariantId
+	
+		--fetch next identifier
+		FETCH NEXT FROM cur_productvariant INTO @ProductVariantId
+	END
+	CLOSE cur_productvariant
+	DEALLOCATE cur_productvariant
+	')
+GO
+
+--Store a value indicating whether we have discounts applied in [Category] entity/table
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Category]') and NAME='HasDiscountsApplied')
+BEGIN
+	ALTER TABLE [dbo].[Category]
+	ADD [HasDiscountsApplied] bit NULL
+END
+GO
+
+EXEC('
+	DECLARE @CategoryId int
+	DECLARE cur_category CURSOR FOR
+	SELECT [Id]
+	FROM [Category]
+	ORDER BY [Id]
+	OPEN cur_category
+	FETCH NEXT FROM cur_category INTO @CategoryId
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+		DECLARE @HasDiscountsApplied bit
+		SET @HasDiscountsApplied = null -- clear cache (variable scope)
+
+
+		IF (EXISTS (SELECT 1 FROM [Discount_AppliedToCategories] as [datc] WHERE [datc].[Category_Id] = @CategoryId))
+		BEGIN
+		SET @HasDiscountsApplied = 1
+		END
+		ELSE
+		BEGIN
+		SET @HasDiscountsApplied = 0
+		END
+
+		UPDATE [Category]
+		SET [HasDiscountsApplied] = @HasDiscountsApplied
+		WHERE [Id] = @CategoryId
+	
+		--fetch next identifier
+		FETCH NEXT FROM cur_category INTO @CategoryId
+	END
+	CLOSE cur_category
+	DEALLOCATE cur_category
+	')
+GO
+ALTER TABLE [dbo].[Category] ALTER COLUMN [HasDiscountsApplied] bit NOT NULL
 GO

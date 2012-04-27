@@ -461,6 +461,10 @@ namespace Nop.Services.ExportImport
                         _productService.UpdateProduct(productVariant.Product);
                     }
 
+                    //update "HasTierPrices" and "HasDiscountsApplied" properties
+                    _productService.UpdateHasTierPricesProperty(productVariant);
+                    _productService.UpdateHasDiscountsApplied(productVariant);
+
 
 
                     //next product

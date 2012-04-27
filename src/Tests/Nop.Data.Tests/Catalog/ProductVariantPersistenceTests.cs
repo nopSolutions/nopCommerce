@@ -66,6 +66,7 @@ namespace Nop.Data.Tests.Catalog
                                          MinimumCustomerEnteredPrice = 24.1M,
                                          MaximumCustomerEnteredPrice = 25.1M,
                                          HasTierPrices = true,
+                                         HasDiscountsApplied = true,
                                          Weight = 26.1M,
                                          Length = 27.1M,
                                          Width = 28.1M,
@@ -145,6 +146,7 @@ namespace Nop.Data.Tests.Catalog
             fromDb.MinimumCustomerEnteredPrice.ShouldEqual(24.1M);
             fromDb.MaximumCustomerEnteredPrice.ShouldEqual(25.1M);
             fromDb.HasTierPrices.ShouldEqual(true);
+            fromDb.HasDiscountsApplied.ShouldEqual(true);
             fromDb.Weight.ShouldEqual(26.1M);
             fromDb.Length.ShouldEqual(27.1M);
             fromDb.Width.ShouldEqual(28.1M);

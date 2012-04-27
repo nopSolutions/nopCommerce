@@ -27,6 +27,7 @@ namespace Nop.Data.Tests.Catalog
                                    PageSizeOptions = "4, 2, 8, 12",
                                    PriceRanges = "1-3;",
                                    ShowOnHomePage = false,
+                                   HasDiscountsApplied = true,
                                    Published = true,
                                    Deleted = false,
                                    DisplayOrder = 5,
@@ -48,6 +49,7 @@ namespace Nop.Data.Tests.Catalog
             fromDb.PageSizeOptions.ShouldEqual("4, 2, 8, 12");
             fromDb.PriceRanges.ShouldEqual("1-3;");
             fromDb.ShowOnHomePage.ShouldEqual(false);
+            fromDb.HasDiscountsApplied.ShouldEqual(true);
             fromDb.Published.ShouldEqual(true);
             fromDb.Deleted.ShouldEqual(false);
             fromDb.DisplayOrder.ShouldEqual(5);

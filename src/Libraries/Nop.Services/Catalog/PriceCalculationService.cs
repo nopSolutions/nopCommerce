@@ -50,12 +50,16 @@ namespace Nop.Services.Catalog
             if (_catalogSettings.IgnoreDiscounts)
                 return allowedDiscounts;
 
-            foreach (var discount in productVariant.AppliedDiscounts)
+            if (productVariant.HasDiscountsApplied)
             {
-                if (_discountService.IsDiscountValid(discount, customer) &&
-                    discount.DiscountType == DiscountType.AssignedToSkus &&
-                    !allowedDiscounts.ContainsDiscount(discount))
-                    allowedDiscounts.Add(discount);
+                //we use this property ("HasDiscountsApplied") for performance optimziation to avoid unnecessary database calls
+                foreach (var discount in productVariant.AppliedDiscounts)
+                {
+                    if (_discountService.IsDiscountValid(discount, customer) &&
+                        discount.DiscountType == DiscountType.AssignedToSkus &&
+                        !allowedDiscounts.ContainsDiscount(discount))
+                        allowedDiscounts.Add(discount);
+                }
             }
 
             var productCategories = _categoryService.GetProductCategoriesByProductId(productVariant.ProductId);
@@ -63,13 +67,19 @@ namespace Nop.Services.Catalog
             {
                 foreach (var productCategory in productCategories)
                 {
-                    var categoryDiscounts = productCategory.Category.AppliedDiscounts;
-                    foreach (var discount in categoryDiscounts)
+                    var category = productCategory.Category;
+
+                    if (category.HasDiscountsApplied)
                     {
-                        if (_discountService.IsDiscountValid(discount, customer) &&
-                            discount.DiscountType == DiscountType.AssignedToCategories &&
-                            !allowedDiscounts.ContainsDiscount(discount))
-                            allowedDiscounts.Add(discount);
+                        //we use this property ("HasDiscountsApplied") for performance optimziation to avoid unnecessary database calls
+                        var categoryDiscounts = category.AppliedDiscounts;
+                        foreach (var discount in categoryDiscounts)
+                        {
+                            if (_discountService.IsDiscountValid(discount, customer) &&
+                                discount.DiscountType == DiscountType.AssignedToCategories &&
+                                !allowedDiscounts.ContainsDiscount(discount))
+                                allowedDiscounts.Add(discount);
+                        }
                     }
                 }
             }

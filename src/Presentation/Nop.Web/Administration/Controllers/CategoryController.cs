@@ -138,6 +138,20 @@ namespace Nop.Admin.Controllers
             }
         }
 
+        [NonAction]
+        private void PrepareDiscountModel(CategoryModel model, Category category, bool excludeProperties)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            var discounts = _discountService.GetAllDiscounts(DiscountType.AssignedToCategories, true);
+            model.AvailableDiscounts = discounts.ToList();
+
+            if (!excludeProperties)
+            {
+                model.SelectedDiscountIds = category.AppliedDiscounts.Select(d => d.Id).ToArray();
+            }
+        }
         #endregion
         
         #region List / tree
@@ -313,6 +327,8 @@ namespace Nop.Admin.Controllers
                         category.AppliedDiscounts.Add(discount);
                 }
                 _categoryService.UpdateCategory(category);
+                //update "HasDiscountsApplied" property
+                _categoryService.UpdateHasDiscountsApplied(category);
                 //update picture seo file name
                 UpdatePictureSeoNames(category);
 
@@ -417,6 +433,8 @@ namespace Nop.Admin.Controllers
                     }
                 }
                 _categoryService.UpdateCategory(category);
+                //update "HasDiscountsApplied" property
+                _categoryService.UpdateHasDiscountsApplied(category);
                 //delete an old picture (if deleted or updated)
                 if (prevPictureId > 0 && prevPictureId != category.PictureId)
                 {
@@ -473,20 +491,6 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("List");
         }
         
-        [NonAction]
-        private void PrepareDiscountModel(CategoryModel model, Category category, bool excludeProperties)
-        {
-            if (model == null)
-                throw new ArgumentNullException("model");
-            
-            var discounts = _discountService.GetAllDiscounts(DiscountType.AssignedToCategories, true);
-            model.AvailableDiscounts = discounts.ToList();
-
-            if (!excludeProperties)
-            {
-                model.SelectedDiscountIds = category.AppliedDiscounts.Select(d => d.Id).ToArray();
-            }
-        }
 
         #endregion
 

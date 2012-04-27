@@ -1167,7 +1167,7 @@ namespace Nop.Services.Catalog
         }
         
         /// <summary>
-        /// Update HasTierPrices property
+        /// Update HasTierPrices property (used for performance optimization)
         /// </summary>
         /// <param name="productVariant">Product variant</param>
         public virtual void UpdateHasTierPricesProperty(ProductVariant productVariant)
@@ -1178,6 +1178,20 @@ namespace Nop.Services.Catalog
             productVariant.HasTierPrices = productVariant.TierPrices.Count > 0;
             UpdateProductVariant(productVariant);
         }
+
+        /// <summary>
+        /// Update HasDiscountsApplied property (used for performance optimization)
+        /// </summary>
+        /// <param name="productVariant">Product variant</param>
+        public virtual void UpdateHasDiscountsApplied(ProductVariant productVariant)
+        {
+            if (productVariant == null)
+                throw new ArgumentNullException("productVariant");
+
+            productVariant.HasDiscountsApplied = productVariant.AppliedDiscounts.Count > 0;
+            UpdateProductVariant(productVariant);
+        }
+
         #endregion
 
         #region Related products

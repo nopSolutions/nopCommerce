@@ -294,11 +294,19 @@ namespace Nop.Core.Domain.Catalog
         /// <summary>
         /// Gets or sets a value indicating whether this product variant has tier prices configured
         /// <remarks>The same as if we run variant.TierPrices.Count > 0
-        /// We use this proeprty for performance optimization:
+        /// We use this property for performance optimization:
         /// if this property is set to false, then we do not need to load tier prices navifation property
         /// </remarks>
         /// </summary>
         public virtual bool HasTierPrices { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether this product variant has discounts applied
+        /// <remarks>The same as if we run variant.AppliedDiscounts.Count > 0
+        /// We use this property for performance optimization:
+        /// if this property is set to false, then we do not need to load Applied Discounts navifation property
+        /// </remarks>
+        /// </summary>
+        public virtual bool HasDiscountsApplied { get; set; }
 
         /// <summary>
         /// Gets or sets the weight

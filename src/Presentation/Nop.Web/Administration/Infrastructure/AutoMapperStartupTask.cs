@@ -138,6 +138,7 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.AvailableDiscounts, mo => mo.Ignore())
                 .ForMember(dest => dest.SelectedDiscountIds, mo => mo.Ignore());
             Mapper.CreateMap<CategoryModel, Category>()
+                .ForMember(dest => dest.HasDiscountsApplied, mo => mo.Ignore())
                 .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
                 .ForMember(dest => dest.UpdatedOnUtc, mo => mo.Ignore())
                 .ForMember(dest => dest.Deleted, mo => mo.Ignore())
@@ -196,6 +197,7 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.HideDisplayOrderProperty, mo => mo.Ignore());
             Mapper.CreateMap<ProductVariantModel, ProductVariant>()
                 .ForMember(dest => dest.HasTierPrices, mo => mo.Ignore())
+                .ForMember(dest => dest.HasDiscountsApplied, mo => mo.Ignore())
                 .ForMember(dest => dest.BackorderMode, mo => mo.Ignore())
                 .ForMember(dest => dest.DownloadActivationType, mo => mo.Ignore())
                 .ForMember(dest => dest.GiftCardType, mo => mo.Ignore())

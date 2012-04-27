@@ -5,6 +5,7 @@ using Nop.Admin.Models.Discounts;
 using Nop.Core;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
+using Nop.Services.Catalog;
 using Nop.Services.Directory;
 using Nop.Services.Discounts;
 using Nop.Services.Helpers;
@@ -27,6 +28,8 @@ namespace Nop.Admin.Controllers
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ICurrencyService _currencyService;
+        private readonly ICategoryService _categoryService;
+        private readonly IProductService _productService;
         private readonly CurrencySettings _currencySettings;
         private readonly IPermissionService _permissionService;
 
@@ -36,6 +39,7 @@ namespace Nop.Admin.Controllers
 
         public DiscountController(IDiscountService discountService, 
             ILocalizationService localizationService, ICurrencyService currencyService,
+            ICategoryService categoryService, IProductService productService,
             IWebHelper webHelper, IDateTimeHelper dateTimeHelper,
             ICustomerActivityService customerActivityService, CurrencySettings currencySettings,
             IPermissionService permissionService)
@@ -43,6 +47,8 @@ namespace Nop.Admin.Controllers
             this._discountService = discountService;
             this._localizationService = localizationService;
             this._currencyService = currencyService;
+            this._categoryService = categoryService;
+            this._productService = productService;
             this._webHelper = webHelper;
             this._dateTimeHelper = dateTimeHelper;
             this._customerActivityService = customerActivityService;
@@ -241,20 +247,28 @@ namespace Nop.Admin.Controllers
                 discount = model.ToEntity(discount);
                 _discountService.UpdateDiscount(discount);
 
-                //clean up old references (if changed)
+                //clean up old references (if changed) and update "HasDiscountsApplied" properties
                 if (prevDiscountType == DiscountType.AssignedToCategories 
                     && discount.DiscountType != DiscountType.AssignedToCategories)
                 {
                     //applied to categories
+                    var categories = discount.AppliedToCategories.ToList();
                     discount.AppliedToCategories.Clear();
                     _discountService.UpdateDiscount(discount);
+                    //update "HasDiscountsApplied" property
+                    foreach (var category in categories)
+                        _categoryService.UpdateHasDiscountsApplied(category);
                 }
                 if (prevDiscountType == DiscountType.AssignedToSkus
                     && discount.DiscountType != DiscountType.AssignedToSkus)
                 {
-                    //applied to categories
+                    //applied to product variants
+                    var productVariants = discount.AppliedToProductVariants.ToList();
                     discount.AppliedToProductVariants.Clear();
                     _discountService.UpdateDiscount(discount);
+                    //update "HasDiscountsApplied" property
+                    foreach (var pv in productVariants)
+                        _productService.UpdateHasDiscountsApplied(pv);
                 }
 
                 //activity log
@@ -277,7 +291,22 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var discount = _discountService.GetDiscountById(id);
+            if (discount == null)
+                //No discount found with the specified id
+                return RedirectToAction("List");
+
+            //applied to categories
+            var categories = discount.AppliedToCategories.ToList();
+            //applied to product variants
+            var productVariants = discount.AppliedToProductVariants.ToList();
+
             _discountService.DeleteDiscount(discount);
+            
+            //update "HasDiscountsApplied" properties
+            foreach (var category in categories)
+                _categoryService.UpdateHasDiscountsApplied(category);
+            foreach (var pv in productVariants)
+                _productService.UpdateHasDiscountsApplied(pv);
 
             //activity log
             _customerActivityService.InsertActivity("DeleteDiscount", _localizationService.GetResource("ActivityLog.DeleteDiscount"), discount.Name);
