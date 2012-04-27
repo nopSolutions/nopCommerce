@@ -17,5 +17,10 @@ namespace Nop.Core.Domain.Media
         public bool DefaultPictureZoomEnabled { get; set; }
 
         public int MaximumImageSize { get; set; }
+
+        /// <summary>
+        /// Geta or sets a default quality used for image generation
+        /// </summary>
+        public int DefaultImageQuality { get; set; }
     }
 }

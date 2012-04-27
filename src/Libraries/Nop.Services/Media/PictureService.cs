@@ -695,7 +695,7 @@ namespace Nop.Services.Media
         {
             get
             {
-                return 100L;
+                return _mediaSettings.DefaultImageQuality;
             }
         }
 

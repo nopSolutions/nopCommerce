@@ -4598,6 +4598,7 @@ namespace Nop.Services.Installation
                     CartThumbPictureSize = 80,
                     MaximumImageSize = 1280,
                     DefaultPictureZoomEnabled = false,
+                    DefaultImageQuality = 100,
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<StoreInformationSettings>>()

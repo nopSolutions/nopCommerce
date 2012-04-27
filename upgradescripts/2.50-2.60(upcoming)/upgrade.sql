@@ -1102,3 +1102,12 @@ EXEC('
 GO
 ALTER TABLE [dbo].[Category] ALTER COLUMN [HasDiscountsApplied] bit NOT NULL
 GO
+
+
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'mediasettings.defaultimagequality')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'mediasettings.defaultimagequality', N'100')
+END
+GO
