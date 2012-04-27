@@ -21,10 +21,10 @@
     }
     @if (!Model.DisableBuyButton)
     {
-        <input type="submit" name="addtocart-@(Model.ProductVariantId)" value="@(Model.AvailableForPreOrder ? T("ShoppingCart.PreOrder") : T("ShoppingCart.AddToCart"))" />
+        <input type="submit" name="addtocartbutton-@(Model.ProductVariantId)" value="@(Model.AvailableForPreOrder ? T("ShoppingCart.PreOrder") : T("ShoppingCart.AddToCart"))" />
     }
     @if (!Model.DisableWishlistButton)
     {
-        <input type="submit" name="addtowishlist-@(Model.ProductVariantId)" value="@T("ShoppingCart.AddToWishlist")" />
+        <input type="submit" name="addtowishlistbutton-@(Model.ProductVariantId)" value="@T("ShoppingCart.AddToWishlist")" />
     }
 </div>

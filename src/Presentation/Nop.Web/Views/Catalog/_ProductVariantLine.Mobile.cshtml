@@ -57,6 +57,6 @@
     @{
         var dataDictAddToCart = new ViewDataDictionary();
         dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", Model.Id);
-        @Html.Partial("_ProductVariantAddToCart", Model.AddToCart, dataDictPrice)
+        @Html.Partial("_ProductVariantAddToCart", Model.AddToCart, dataDictAddToCart)
     }
 </div>

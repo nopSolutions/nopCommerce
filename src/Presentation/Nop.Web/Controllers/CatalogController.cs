@@ -1292,14 +1292,14 @@ namespace Nop.Web.Controllers
             ShoppingCartType cartType = ShoppingCartType.ShoppingCart;
             foreach (string formKey in form.AllKeys)
             {
-                if (formKey.StartsWith("addtocart-"))
+                if (formKey.StartsWith("addtocartbutton-"))
                 {
-                    productVariantId = Convert.ToInt32(formKey.Substring(("addtocart-").Length));
+                    productVariantId = Convert.ToInt32(formKey.Substring(("addtocartbutton-").Length));
                     cartType = ShoppingCartType.ShoppingCart;
                 }
-                else if (formKey.StartsWith("addtowishlist-"))
+                else if (formKey.StartsWith("addtowishlistbutton-"))
                 {
-                    productVariantId = Convert.ToInt32(formKey.Substring(("addtowishlist-").Length));
+                    productVariantId = Convert.ToInt32(formKey.Substring(("addtowishlistbutton-").Length));
                     cartType = ShoppingCartType.Wishlist;
                 }
             }
@@ -1314,7 +1314,7 @@ namespace Nop.Web.Controllers
             if (productVariant.CustomerEntersPrice)
             {
                 foreach (string formKey in form.AllKeys)
-                    if (formKey.Equals(string.Format("price_{0}.CustomerEnteredPrice", productVariantId), StringComparison.InvariantCultureIgnoreCase))
+                    if (formKey.Equals(string.Format("addtocart_{0}.CustomerEnteredPrice", productVariantId), StringComparison.InvariantCultureIgnoreCase))
                     {
                         if (decimal.TryParse(form[formKey], out customerEnteredPrice))
                             customerEnteredPriceConverted = _currencyService.ConvertToPrimaryStoreCurrency(customerEnteredPrice, _workContext.WorkingCurrency);
@@ -1327,7 +1327,7 @@ namespace Nop.Web.Controllers
 
             int quantity = 1;
             foreach (string formKey in form.AllKeys)
-                if (formKey.Equals(string.Format("price_{0}.EnteredQuantity", productVariantId), StringComparison.InvariantCultureIgnoreCase))
+                if (formKey.Equals(string.Format("addtocart_{0}.EnteredQuantity", productVariantId), StringComparison.InvariantCultureIgnoreCase))
                 {
                     int.TryParse(form[formKey], out quantity);
                     break;
