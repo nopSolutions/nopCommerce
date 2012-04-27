@@ -5652,6 +5652,8 @@ namespace Nop.Services.Installation
                 Quantity = 10,
                 Price = 15
             });
+            productAcerAspireOne.ProductVariants.FirstOrDefault().HasTierPrices = true;
+
             productAcerAspireOne.ProductCategories.Add(new ProductCategory()
             {
                 Category = _categoryRepository.Table.Where(c => c.Name == "Accessories").Single(),
@@ -5921,6 +5923,8 @@ namespace Nop.Services.Installation
                 Quantity = 10,
                 Price = 16
             });
+            productArrow.ProductVariants.FirstOrDefault().HasTierPrices = true;
+
             productArrow.ProductCategories.Add(new ProductCategory()
             {
                 Category = _categoryRepository.Table.Where(c => c.Name == "Shirts").Single(),
@@ -7517,6 +7521,8 @@ namespace Nop.Services.Installation
                 Quantity = 10,
                 Price = 35
             });
+            productLeviJeans.ProductVariants.FirstOrDefault().HasTierPrices = true;
+
             productLeviJeans.ProductCategories.Add(new ProductCategory()
             {
                 Category = _categoryRepository.Table.Where(c => c.Name == "Jeans").Single(),
