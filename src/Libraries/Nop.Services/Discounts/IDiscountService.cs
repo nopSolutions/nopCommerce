@@ -80,6 +80,15 @@ namespace Nop.Services.Discounts
         bool IsDiscountValid(Discount discount, Customer customer);
 
         /// <summary>
+        /// Check discount requirements
+        /// </summary>
+        /// <param name="discount">Discount</param>
+        /// <param name="customer">Customer</param>
+        /// <param name="couponCodeToValidate">Coupon code to validate</param>
+        /// <returns>true - requirement is met; otherwise, false</returns>
+        bool IsDiscountValid(Discount discount, Customer customer, string couponCodeToValidate);
+
+        /// <summary>
         /// Gets a discount usage history record
         /// </summary>
         /// <param name="discountUsageHistoryId">Discount usage history record identifier</param>

@@ -286,15 +286,30 @@ namespace Nop.Services.Discounts
             if (discount == null)
                 throw new ArgumentNullException("discount");
 
+            var couponCodeToValidate = "";
+            if (customer != null)
+                couponCodeToValidate = customer.DiscountCouponCode;
+
+            return IsDiscountValid(discount, customer, couponCodeToValidate);
+        }
+
+        /// <summary>
+        /// Check discount requirements
+        /// </summary>
+        /// <param name="discount">Discount</param>
+        /// <param name="customer">Customer</param>
+        /// <param name="couponCodeToValidate">Coupon code to validate</param>
+        /// <returns>true - requirement is met; otherwise, false</returns>
+        public virtual bool IsDiscountValid(Discount discount, Customer customer, string couponCodeToValidate)
+        {
+            if (discount == null)
+                throw new ArgumentNullException("discount");
+
             //check coupon code
             if (discount.RequiresCouponCode)
             {
                 if (String.IsNullOrEmpty(discount.CouponCode))
                     return false;
-
-                string couponCodeToValidate = string.Empty;
-                if (customer!=null)
-                    couponCodeToValidate = customer.DiscountCouponCode;
                 if (!discount.CouponCode.Equals(couponCodeToValidate, StringComparison.InvariantCultureIgnoreCase))
                     return false;
             }
@@ -316,7 +331,7 @@ namespace Nop.Services.Discounts
 
             if (!CheckDiscountLimitations(discount, customer))
                 return false;
-            
+
             //discount requirements
             var requirements = discount.DiscountRequirements;
             foreach (var req in requirements)
@@ -326,8 +341,8 @@ namespace Nop.Services.Discounts
                     continue;
                 var request = new CheckDiscountRequirementRequest()
                 {
-                     DiscountRequirement = req,
-                     Customer = customer
+                    DiscountRequirement = req,
+                    Customer = customer
                 };
                 if (!requirementRule.CheckRequirement(request))
                     return false;

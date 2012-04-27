@@ -165,9 +165,11 @@ namespace Nop.Web.Controllers
 
             //gift card and gift card boxes
             model.ShowDiscountBox = _shoppingCartSettings.ShowDiscountBox;
-            var currentDiscountWithCode = _discountService.GetDiscountByCouponCode(_workContext.CurrentCustomer.DiscountCouponCode);
-            model.CurrentDiscountCode = currentDiscountWithCode != null && currentDiscountWithCode.RequiresCouponCode 
-                ? currentDiscountWithCode.CouponCode : null;
+            var discount = _discountService.GetDiscountByCouponCode(_workContext.CurrentCustomer.DiscountCouponCode);
+            if (discount != null &&
+                discount.RequiresCouponCode &&
+                _discountService.IsDiscountValid(discount, _workContext.CurrentCustomer))
+                model.CurrentDiscountCode = discount.CouponCode;
             model.ShowGiftCardBox = _shoppingCartSettings.ShowGiftCardBox;
 
             //cart warnings
@@ -942,7 +944,9 @@ namespace Nop.Web.Controllers
             if (!String.IsNullOrWhiteSpace(discountcouponcode))
             {
                 var discount = _discountService.GetDiscountByCouponCode(discountcouponcode);
-                bool isDiscountValid = discount != null && discount.RequiresCouponCode;
+                bool isDiscountValid = discount != null && 
+                    discount.RequiresCouponCode &&
+                    _discountService.IsDiscountValid(discount, _workContext.CurrentCustomer, discountcouponcode);
                 if (isDiscountValid)
                 {
                     _workContext.CurrentCustomer.DiscountCouponCode = discountcouponcode;
