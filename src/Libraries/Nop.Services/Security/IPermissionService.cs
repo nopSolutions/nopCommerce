@@ -62,13 +62,6 @@ namespace Nop.Services.Security
         /// <summary>
         /// Authorize permission
         /// </summary>
-        /// <param name="permissionRecordSystemName">Permission record system name</param>
-        /// <returns>true - authorized; otherwise, false</returns>
-        bool Authorize(string permissionRecordSystemName);
-
-        /// <summary>
-        /// Authorize permission
-        /// </summary>
         /// <param name="permission">Permission record</param>
         /// <returns>true - authorized; otherwise, false</returns>
         bool Authorize(PermissionRecord permission);
@@ -80,5 +73,20 @@ namespace Nop.Services.Security
         /// <param name="customer">Customer</param>
         /// <returns>true - authorized; otherwise, false</returns>
         bool Authorize(PermissionRecord permission, Customer customer);
+
+        /// <summary>
+        /// Authorize permission
+        /// </summary>
+        /// <param name="permissionRecordSystemName">Permission record system name</param>
+        /// <returns>true - authorized; otherwise, false</returns>
+        bool Authorize(string permissionRecordSystemName);
+
+        /// <summary>
+        /// Authorize permission
+        /// </summary>
+        /// <param name="permissionRecordSystemName">Permission record system name</param>
+        /// <param name="customer">Customer</param>
+        /// <returns>true - authorized; otherwise, false</returns>
+        bool Authorize(string permissionRecordSystemName, Customer customer);
     }
 }

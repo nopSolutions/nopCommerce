@@ -154,7 +154,11 @@ namespace Nop.Web.Framework
             builder.RegisterType<CustomerService>().As<ICustomerService>().InstancePerHttpRequest();
             builder.RegisterType<CustomerRegistrationService>().As<ICustomerRegistrationService>().InstancePerHttpRequest();
             builder.RegisterType<CustomerReportService>().As<ICustomerReportService>().InstancePerHttpRequest();
-            builder.RegisterType<PermissionService>().As<IPermissionService>().InstancePerHttpRequest();
+
+            //pass MemoryCacheManager to SettingService as cacheManager (cache settngs between requests)
+            builder.RegisterType<PermissionService>().As<IPermissionService>()
+                .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
+                .InstancePerHttpRequest();
 
             builder.RegisterType<GeoCountryLookup>().As<IGeoCountryLookup>().InstancePerHttpRequest();
             builder.RegisterType<CountryService>().As<ICountryService>().InstancePerHttpRequest();
@@ -168,12 +172,10 @@ namespace Nop.Web.Framework
 
 
             //pass MemoryCacheManager to SettingService as cacheManager (cache settngs between requests)
-            //builder.RegisterType<SettingService>().As<ISettingService>().InstancePerHttpRequest();
             builder.RegisterType<SettingService>().As<ISettingService>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
                 .InstancePerHttpRequest();
             //pass MemoryCacheManager to LocalizationService as cacheManager (cache locales between requests)
-            //builder.RegisterType<LocalizationService>().As<ILocalizationService>().InstancePerHttpRequest();
             builder.RegisterType<LocalizationService>().As<ILocalizationService>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
                 .InstancePerHttpRequest();

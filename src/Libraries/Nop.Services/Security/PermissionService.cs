@@ -16,7 +16,14 @@ namespace Nop.Services.Security
     public partial class PermissionService : IPermissionService
     {
         #region Constants
-        private const string PERMISSIONS_ALL_KEY = "Nop.permission.all";
+        /// <summary>
+        /// Cache key for storing a valie indicating whether a certain customer role has a permission
+        /// </summary>
+        /// <remarks>
+        /// {0} : customer role id
+        /// {1} : permission system name
+        /// </remarks>
+        private const string PERMISSIONS_ALLOWED_KEY = "Nop.permission.allowed-{0}-{1}";
         private const string PERMISSIONS_PATTERN_KEY = "Nop.permission.";
         #endregion
 
@@ -46,6 +53,32 @@ namespace Nop.Services.Security
             this._customerService = customerService;
             this._workContext = workContext;
             this._cacheManager = cacheManager;
+        }
+
+        #endregion
+
+        #region Utilities
+
+        /// <summary>
+        /// Authorize permission
+        /// </summary>
+        /// <param name="permissionRecordSystemName">Permission record system name</param>
+        /// <param name="customerRole">Customer role</param>
+        /// <returns>true - authorized; otherwise, false</returns>
+        protected virtual bool Authorize(string permissionRecordSystemName, CustomerRole customerRole)
+        {
+            if (String.IsNullOrEmpty(permissionRecordSystemName))
+                return false;
+            
+            string key = string.Format(PERMISSIONS_ALLOWED_KEY, customerRole.Id, permissionRecordSystemName);
+            return _cacheManager.Get(key, () =>
+            {
+                foreach (var permission1 in customerRole.PermissionRecords)
+                    if (permission1.SystemName.Equals(permissionRecordSystemName, StringComparison.InvariantCultureIgnoreCase))
+                        return true;
+
+                return false;
+            });
         }
 
         #endregion
@@ -89,25 +122,13 @@ namespace Nop.Services.Security
             if (String.IsNullOrWhiteSpace(systemName))
                 return null;
 
+            var query = from pr in _permissionPecordRepository.Table
+                        where  pr.SystemName == systemName
+                        orderby pr.Id
+                        select pr;
 
-            //Little performance optimization hack here.
-            //We know that this method is used only in admin area menu when a lot of requests are made
-            //so let's just load all of them (cached) and find required one
-            return GetAllPermissionRecords()
-                .Where(p => systemName.Equals(p.SystemName, StringComparison.InvariantCultureIgnoreCase))
-                .FirstOrDefault();
-
-
-            //string key = string.Format(PERMISSIONS_BY_SYSTEMNAME_KEY, systemName);
-            //return _cacheManager.Get(key, () =>
-            //{
-            //    var query = from pr in _permissionPecordRepository.Table
-            //                orderby pr.Id
-            //                where pr.SystemName == systemName
-            //                select pr;
-            //    var permission = query.FirstOrDefault();
-            //    return permission;
-            //});
+            var permissionRecord = query.FirstOrDefault();
+            return permissionRecord;
         }
 
         /// <summary>
@@ -116,15 +137,11 @@ namespace Nop.Services.Security
         /// <returns>Permissions</returns>
         public virtual IList<PermissionRecord> GetAllPermissionRecords()
         {
-            string key = string.Format(PERMISSIONS_ALL_KEY);
-            return _cacheManager.Get(key, () =>
-            {
-                var query = from cr in _permissionPecordRepository.Table
-                            orderby cr.Name
-                            select cr;
-                var permissions = query.ToList();
-                return permissions;
-            });
+            var query = from pr in _permissionPecordRepository.Table
+                        orderby pr.Name
+                        select pr;
+            var permissions = query.ToList();
+            return permissions;
         }
 
         /// <summary>
@@ -229,21 +246,7 @@ namespace Nop.Services.Security
                 }
             }
         }
-
-        /// <summary>
-        /// Authorize permission
-        /// </summary>
-        /// <param name="permissionRecordSystemName">Permission record system name</param>
-        /// <returns>true - authorized; otherwise, false</returns>
-        public virtual bool Authorize(string permissionRecordSystemName)
-        {
-            if (String.IsNullOrEmpty(permissionRecordSystemName))
-                return false;
-
-            var permission = GetPermissionRecordBySystemName(permissionRecordSystemName);
-            return Authorize(permission);
-        }
-
+        
         /// <summary>
         /// Authorize permission
         /// </summary>
@@ -268,12 +271,46 @@ namespace Nop.Services.Security
             if (customer == null)
                 return false;
 
+            //old implementation of Authorize method
+            //var customerRoles = customer.CustomerRoles.Where(cr => cr.Active);
+            //foreach (var role in customerRoles)
+            //    foreach (var permission1 in role.PermissionRecords)
+            //        if (permission1.SystemName.Equals(permission.SystemName, StringComparison.InvariantCultureIgnoreCase))
+            //            return true;
+
+            //return false;
+
+            return Authorize(permission.SystemName, customer);
+        }
+
+        /// <summary>
+        /// Authorize permission
+        /// </summary>
+        /// <param name="permissionRecordSystemName">Permission record system name</param>
+        /// <returns>true - authorized; otherwise, false</returns>
+        public virtual bool Authorize(string permissionRecordSystemName)
+        {
+            return Authorize(permissionRecordSystemName, _workContext.CurrentCustomer);
+        }
+
+        /// <summary>
+        /// Authorize permission
+        /// </summary>
+        /// <param name="permissionRecordSystemName">Permission record system name</param>
+        /// <param name="customer">Customer</param>
+        /// <returns>true - authorized; otherwise, false</returns>
+        public virtual bool Authorize(string permissionRecordSystemName, Customer customer)
+        {
+            if (String.IsNullOrEmpty(permissionRecordSystemName))
+                return false;
+
             var customerRoles = customer.CustomerRoles.Where(cr => cr.Active);
             foreach (var role in customerRoles)
-                foreach (var permission1 in role.PermissionRecords)
-                    if (permission1.SystemName.Equals(permission.SystemName, StringComparison.InvariantCultureIgnoreCase))
-                        return true;
-
+                if (Authorize(permissionRecordSystemName, role))
+                    //yes, we have such permission
+                    return true;
+            
+            //no permission found
             return false;
         }
 
