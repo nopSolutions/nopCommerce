@@ -22,6 +22,7 @@
     <meta name="keywords" content="@(Html.NopMetaKeywords())" />
     @*This is used so that themes can inject content into the header*@
     @Html.Partial("Head")
+    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.HeadHtmlTag })
     @Html.NopCssFiles(ResourceLocation.Head)
     @Html.NopScripts(ResourceLocation.Head)
     @Html.NopCanonicalUrls()
@@ -29,7 +30,6 @@
     @Html.Action("RssHeaderLink", "Blog")
     @*Favicon - upload upload favicon.ico file to the root directory*@
     @Html.Action("Favicon", "Common")
-    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.HeadHtmlTag })
     @if (displayMiniProfiler)
     {
         @StackExchange.Profiling.MiniProfiler.RenderIncludes();
