@@ -1587,7 +1587,6 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\Head.cshtml" />
-    <Content Include="Views\Shared\_ColumnsFluid.cshtml" />
     <Content Include="Views\Shared\_ColumnsOne.cshtml" />
     <Content Include="Views\Shared\_ColumnsThree.cshtml" />
     <Content Include="Views\Shared\_ColumnsTwo.cshtml" />

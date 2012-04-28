@@ -1103,6 +1103,7 @@
 				<Value>Submitting order information...</Value>
 			</LocaleResource>
 			<LocaleResource Name="TermsOfService">
+        <Value>Terms of service</Value>
 				<Children>
 					<LocaleResource Name="IAccept">
 						<Value>I agree with the terms of service and I adhere to them unconditionally</Value>
@@ -1167,6 +1168,9 @@
 			<LocaleResource Name="Edit">
 				<Value>Edit</Value>
 			</LocaleResource>
+      <LocaleResource Name="Error">
+        <Value>Error</Value>
+      </LocaleResource>
 			<LocaleResource Name="Home">
 				<Value>Home</Value>
 			</LocaleResource>
@@ -1182,6 +1186,9 @@
 			<LocaleResource Name="NoCancel">
 				<Value>No, cancel</Value>
 			</LocaleResource>
+      <LocaleResource Name="Notification">
+        <Value>Notification</Value>
+      </LocaleResource>
 			<LocaleResource Name="Remove">
 				<Value>Remove</Value>
 			</LocaleResource>
@@ -1200,6 +1207,9 @@
 			<LocaleResource Name="Wait...">
 				<Value>Wait...</Value>
 			</LocaleResource>
+      <LocaleResource Name="Warning">
+        <Value>Warning</Value>
+      </LocaleResource>
 			<LocaleResource Name="WrongCaptcha">
 				<Value>The characters didn't match the picture. Please try again.</Value>
 			</LocaleResource>

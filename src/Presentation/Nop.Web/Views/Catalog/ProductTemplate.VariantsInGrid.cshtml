@@ -12,7 +12,7 @@
     Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Name);
     Html.AddMetaDescriptionParts(Model.MetaDescription);
     Html.AddMetaKeywordParts(Model.MetaKeywords);
-    
+
     var canonicalUrlsEnabled = EngineContext.Current.Resolve<SeoSettings>().CanonicalUrlsEnabled;
     if (canonicalUrlsEnabled)
     {
@@ -34,22 +34,20 @@
 }
 @if (errors.Count > 0)
 {
-    var addToCartWarningsSb = new System.Text.StringBuilder();
-    for (int i = 0; i < errors.Count; i++)
-    {
-        addToCartWarningsSb.Append(errors[i]);
-        if (i != errors.Count - 1)
-        {
-            addToCartWarningsSb.Append("\\n");
-        }
-    }
-
-    //display errors   
+    //display errors
+    Html.AddCssFileParts(@Url.Content("~/Content/smoothness/jquery-ui-1.8.17.custom.css"));
+    Html.AddScriptParts(@Url.Content("~/Scripts/jquery-ui.min.js"));
     <script type="text/javascript">
-        $(document).ready(function () {
-            alert('@Html.Raw(addToCartWarningsSb.ToString())');
+        $(function () {
+            $("#dialog-product-errors").dialog();
         });
-    </script>
+	</script>
+    <div id="dialog-product-errors" title="@T("Common.Warning")" style="display:none;">
+        @foreach (var error in errors)
+        {
+            <p>@error</p>
+        }
+    </div>
 }
 <!--product breadcrumb-->
 @Html.Action("ProductBreadcrumb", "Catalog", new { productId = Model.Id })

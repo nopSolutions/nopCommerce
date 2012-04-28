@@ -31,10 +31,6 @@ input
 .master-wrapper-center-3{float:left;width:560px;margin:0 0 0 10px;background:url(images/bg_maincolumn_3.gif) no-repeat left top #FFF;display:inline;overflow:hidden;}
 .master-wrapper-cph-3{float:left;width:540px;color:#000;min-height:600px;padding:10px;}
 .master-wrapper-rightside-3{float:right;width:180px;margin:0 10px;font-family:arial, helvetica, sans-serif;display:inline;}
-.master-wrapper-fluid-content{height:1%;margin:0;overflow:hidden;padding:0;}
-.master-wrapper-fluid-content-inner{overflow:hidden;width:100%;padding:0 10px;}
-.master-wrapper-fluid-content-left .master-wrapper-fluid-content-sidebar{float:left;overflow:hidden;padding-right:20px;margin-left:10px;width:180px;font-family:arial, helvetica, sans-serif;}
-.master-wrapper-fluid-content-right .master-wrapper-fluid-content-sidebar{float:right;overflow:hidden;padding-left:20px;margin-right:10px;width:180px;font-family:arial, helvetica, sans-serif;}
 /* MASTER HEADER */
 .header{padding:6px 6px 10px 5px;height:60px;}
 .header .icon{vertical-align:bottom;}

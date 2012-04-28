@@ -221,6 +221,18 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.IgnoreTierPrices>Hint">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Common.Error">
+    <Value>Error</Value>
+  </LocaleResource>
+  <LocaleResource Name="Common.Notification">
+    <Value>Notification</Value>
+  </LocaleResource>
+  <LocaleResource Name="Common.Warning">
+    <Value>Warning</Value>
+  </LocaleResource>
+  <LocaleResource Name="Checkout.TermsOfService">
+    <Value>Terms of service</Value>
+  </LocaleResource>
 </Language>
 '
 
