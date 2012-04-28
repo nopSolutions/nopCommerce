@@ -116,6 +116,9 @@ set @resources='
   <LocaleResource Name="Admin.Orders.Shipments.Products.SKU">
     <Value>SKU</Value>
   </LocaleResource>
+  <LocaleResource Name="PDFInvoice.SKU">
+    <Value>SKU</Value>
+  </LocaleResource>
   <LocaleResource Name="Enums.Nop.Core.Domain.Customers.ShowEmails.ShowEmails">
     <Value></Value>
   </LocaleResource>
