@@ -25,33 +25,35 @@
 }
 @if (successMessages.Count > 0)
 {
-    Html.AddCssFileParts(@Url.Content("~/Content/smoothness/jquery-ui-1.8.17.custom.css"));
-    Html.AddScriptParts(@Url.Content("~/Scripts/jquery-ui.min.js"));
+    var successSb = new System.Text.StringBuilder();
+    for (int i = 0; i < successMessages.Count; i++)
+    {
+        successSb.Append(successMessages[i]);
+        if (i != successMessages.Count - 1)
+        {
+            successSb.Append("\\n");
+        }
+    }
     <script type="text/javascript">
         $(document).ready(function () {
-            $("#dialog-notifications-success").dialog();
+            alert('@Html.Raw(successSb.ToString())');
         });
-	</script>
-    <div id="dialog-notifications-success" title="@T("Common.Notification")" style="display:none;">
-        @foreach (var message in successMessages)
-        {
-            <p>@message</p>
-        }
-    </div>
+    </script>
 }
 @if (errorMessages.Count > 0)
 {
-    Html.AddCssFileParts(@Url.Content("~/Content/smoothness/jquery-ui-1.8.17.custom.css"));
-    Html.AddScriptParts(@Url.Content("~/Scripts/jquery-ui.min.js"));
+    var errorsSb = new System.Text.StringBuilder();
+    for (int i = 0; i < errorMessages.Count; i++)
+    {
+        errorsSb.Append(errorMessages[i]);
+        if (i != errorMessages.Count - 1)
+        {
+            errorsSb.Append("\\n");
+        }
+    }
     <script type="text/javascript">
         $(document).ready(function () {
-            $("#dialog-notifications-error").dialog();
+            alert('@Html.Raw(errorsSb.ToString())');
         });
-	</script>
-    <div id="dialog-notifications-error" title="@T("Common.Error")" style="display:none;">
-        @foreach (var message in errorMessages)
-        {
-            <p>@message</p>
-        }
-    </div>
+    </script>
 }

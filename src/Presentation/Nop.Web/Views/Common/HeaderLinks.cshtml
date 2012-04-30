@@ -20,12 +20,23 @@
                 @Model.UnreadPrivateMessages</li>
                 if (!string.IsNullOrEmpty(Model.AlertMessage))
                 {
-                    //using $(document).bind instead of $(document).ready to execute the alert after tabs load (on privatemessages page)
-            <script type="text/javascript">
-                $(document).bind("ready", function () {
-                    alert('@Model.AlertMessage');
-                });
-            </script>
+                    @*using $(document).bind instead of $(document).ready to execute the alert after tabs load (on privatemessages page)
+                    <script type="text/javascript">
+                        $(document).bind("ready", function () {
+                            alert('@Model.AlertMessage');
+                        });
+                    </script>*@
+            
+                    Html.AddCssFileParts(@Url.Content("~/Content/smoothness/jquery-ui-1.8.17.custom.css"));
+                    Html.AddScriptParts(@Url.Content("~/Scripts/jquery-ui.min.js"));
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $("#dialog-privatemessage-new").dialog();
+                        });
+	                </script>
+                    <div id="dialog-privatemessage-new" title="@T("Common.Notification")" style="display:none;">
+                        <p>@Model.AlertMessage</p>
+                    </div>
                 }
             }
         }

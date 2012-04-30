@@ -1,60 +1,20 @@
-﻿@using Nop.Core
-@using Nop.Core.Infrastructure
-@using Nop.Core.Infrastructure.DependencyManagement
-@{
-    var displayMiniProfiler = EngineContext.Current.Resolve<Nop.Core.Domain.StoreInformationSettings>().DisplayMiniProfilerInPublicStore;
-    
-    //resources
-    Html.AppendScriptParts(@Url.Content("~/Scripts/public.js"));
-    Html.AppendScriptParts(@Url.Content("~/Scripts/MicrosoftMvcAjax.js"));
-    Html.AppendScriptParts(@Url.Content("~/Scripts/MicrosoftAjax.js"));
-    Html.AppendScriptParts(@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js"));
-    Html.AppendScriptParts(@Url.Content("~/Scripts/jquery.validate.min.js"));
-    Html.AppendScriptParts(@Url.Content("~/Scripts/jquery.unobtrusive-ajax.min.js"));
-    Html.AppendScriptParts(@Url.Content("~/Scripts/jquery-1.7.1.min.js"));
+﻿@{
+    Layout = "~/Views/Shared/_Root.Head.cshtml";
 }
-<!DOCTYPE html>
-<html @Html.Partial("LanguageAttributes")>
-<head>
-    <title>@Html.NopTitle(true)</title>
-    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
-    <meta name="description" content="@(Html.NopMetaDescription())" />
-    <meta name="keywords" content="@(Html.NopMetaKeywords())" />
-    @*This is used so that themes can inject content into the header*@
-    @Html.Partial("Head")
-    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.HeadHtmlTag })
-    @Html.NopCssFiles(ResourceLocation.Head)
-    @Html.NopScripts(ResourceLocation.Head)
-    @Html.NopCanonicalUrls()
-    @Html.Action("RssHeaderLink", "News")
-    @Html.Action("RssHeaderLink", "Blog")
-    @*Favicon - upload upload favicon.ico file to the root directory*@
-    @Html.Action("Favicon", "Common")
-    @if (displayMiniProfiler)
-    {
-        @StackExchange.Profiling.MiniProfiler.RenderIncludes();
-    }
-    <!--Powered by nopCommerce - http://www.nopCommerce.com-->
-    <!--Copyright (c) 2008-2012-->
-</head>
-<body>
-    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.AfterBodyStartHtmlTag })
-    <div class="master-wrapper-page">
-        @Html.Action("JavaScriptDisabledWarning", "Common")
-        <div class="master-wrapper-content">
-            @Html.Partial("_Notifications")
-            @Html.Partial("Header")
-            @Html.Partial("HeaderMenu")
-            @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.BeforeContent })
-            @RenderBody()
-            @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.AfterContent })
-            <div class="clear">
-            </div>
+
+@Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.AfterBodyStartHtmlTag })
+<div class="master-wrapper-page">
+    @Html.Action("JavaScriptDisabledWarning", "Common")
+    <div class="master-wrapper-content">
+        @Html.Partial("_Notifications")
+        @Html.Partial("Header")
+        @Html.Partial("HeaderMenu")
+        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.BeforeContent })
+        @RenderBody()
+        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.AfterContent })
+        <div class="clear">
         </div>
-        @Html.Action("Footer", "Common")
     </div>
-    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.BeforeBodyEndHtmlTag })    
-    @Html.NopCssFiles(ResourceLocation.Foot)
-    @Html.NopScripts(ResourceLocation.Foot)
-</body>
-</html>
+    @Html.Action("Footer", "Common")
+</div>
+@Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.BeforeBodyEndHtmlTag })

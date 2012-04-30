@@ -1746,6 +1746,9 @@
     <Content Include="Views\Order\ShipmentDetails.Mobile.cshtml" />
     <Content Include="Views\Catalog\_ProductReviewHelpfulness.Mobile.cshtml" />
     <Content Include="Views\Common\JavaScriptDisabledWarning.cshtml" />
+    <Content Include="Views\Shared\_Root.Head.cshtml" />
+    <Content Include="Views\Shared\_Root.Head.Mobile.cshtml" />
+    <Content Include="Views\Shared\_Notifications.Mobile.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

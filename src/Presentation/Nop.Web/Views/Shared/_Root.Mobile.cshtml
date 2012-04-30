@@ -1,91 +1,56 @@
-﻿@using Nop.Core
-@using Nop.Core.Infrastructure
-@using Nop.Core.Infrastructure.DependencyManagement
-@{
-    var storeLocation = EngineContext.Current.Resolve<Nop.Core.IWebHelper>().GetStoreLocation();
+﻿@{
+    Layout = "~/Views/Shared/_Root.Head.Mobile.cshtml";
 }
-<!DOCTYPE html>
-<html>
-<head>
-    <title>@Html.NopTitle(false)</title>
-    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    @*This is used so that themes can inject content into the header*@
-    @Html.Partial("Head")
-    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.MobileHeadHtmlTag })
-    @*custom css*@
-    @Html.NopCssFiles(ResourceLocation.Head)
-    <script src="@Url.Content("~/Scripts/jquery-1.7.1.min.js")" type="text/javascript"></script>
-    <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
-    <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
-    @*do not handle links via ajax by default
-    1. automatically update page URLs (for example, when adding a product to the cart
-    2. process SSL redirections*@
-    <script type="text/javascript">
-          $(document).bind("mobileinit", function () {
-              $.mobile.ajaxEnabled = false;
-          });
-        </script>
-    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.mobile-1.1.0.min.js")"></script>
-    @Html.NopScripts(ResourceLocation.Head)
-    <!--Powered by nopCommerce - http://www.nopCommerce.com-->
-    <!--Copyright (c) 2008-2012-->
-</head>
-<body>
-    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.MobileAfterBodyStartHtmlTag })
-    <div data-role="page" data-theme="b">
-        <div data-role="header" data-position="inline">
-            @*do not use @Html.Partial("Header")
+@Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.MobileAfterBodyStartHtmlTag })
+<div data-role="page" data-theme="b">
+    <div data-role="header" data-position="inline">
+        @*do not use @Html.Partial("Header")
             use sections right here so they can be overriden in the views*@
-            @if (IsSectionDefined("top-left-button"))
-            {
-                @RenderSection("top-left-button")
-            }
-            else
-            {
-                <a href="@Url.RouteUrl("HomePage")" data-icon="home">@T("Common.Home")</a>
-            }
-            @*title*@
-            <h1>@Html.NopTitle(false)</h1>
-            @if (IsSectionDefined("top-right-button"))
-            {
-                @RenderSection("top-right-button")
-            }
-            else
-            {
-                @*<a href="#" data-rel="back" data-icon="back">Back</a>*@
-                @Html.Action("ConfigButton", "Common")
-            }
-        </div>
-        @if (IsSectionDefined("headerlinks"))
+        @if (IsSectionDefined("top-left-button"))
         {
-            @RenderSection("headerlinks")
+            @RenderSection("top-left-button")
         }
         else
         {
-            <div data-role="header" data-position="inline">
-                @Html.Action("HeaderLinks", "Common")
-            </div>
+            <a href="@Url.RouteUrl("HomePage")" data-icon="home">@T("Common.Home")</a>
         }
-        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.MobileBeforeContent })
-        <div data-role="content">
-            @Html.Partial("_Notifications")
-            @RenderBody()
-        </div>
-        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.MobileAfterContent })
-        @if (IsSectionDefined("footer"))
+        @*title*@
+        <h1>@Html.NopTitle(false)</h1>
+        @if (IsSectionDefined("top-right-button"))
         {
-            @RenderSection("footer")
+            @RenderSection("top-right-button")
         }
         else
         {
-            <div data-role="footer">
-                @Html.Action("Footer", "Common")
-            </div>
+            @*<a href="#" data-rel="back" data-icon="back">Back</a>*@
+            @Html.Action("ConfigButton", "Common")
         }
     </div>
-    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.MobileBeforeBodyEndHtmlTag })
-    @Html.NopCssFiles(ResourceLocation.Foot)
-    @Html.NopScripts(ResourceLocation.Foot)
-</body>
-</html>
+    @if (IsSectionDefined("headerlinks"))
+    {
+        @RenderSection("headerlinks")
+    }
+    else
+    {
+        <div data-role="header" data-position="inline">
+            @Html.Action("HeaderLinks", "Common")
+        </div>
+    }
+    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.MobileBeforeContent })
+    <div data-role="content">
+        @Html.Partial("_Notifications")
+        @RenderBody()
+    </div>
+    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.MobileAfterContent })
+    @if (IsSectionDefined("footer"))
+    {
+        @RenderSection("footer")
+    }
+    else
+    {
+        <div data-role="footer">
+            @Html.Action("Footer", "Common")
+        </div>
+    }
+</div>
+@Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.MobileBeforeBodyEndHtmlTag })
