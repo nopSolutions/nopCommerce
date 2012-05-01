@@ -3456,6 +3456,9 @@
 					<LocaleResource Name="WasHelpful?">
 						<Value>Was this review helpful?</Value>
 					</LocaleResource>
+          <LocaleResource Name="YourOwnReview">
+            <Value>You cannot vote for your own review</Value>
+          </LocaleResource>
 				</Children>
 			</LocaleResource>
 			<LocaleResource Name="OnlyRegisteredUsersCanWriteReviews">

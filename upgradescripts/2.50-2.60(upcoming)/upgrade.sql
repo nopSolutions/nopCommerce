@@ -251,6 +251,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Plugins.Fields.FriendlyName.Required">
     <Value>Friendly name is required.</Value>
   </LocaleResource>
+  <LocaleResource Name="Reviews.Helpfulness.YourOwnReview">
+    <Value>You cannot vote for your own review</Value>
+  </LocaleResource>
 </Language>
 '
 

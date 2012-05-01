@@ -2463,6 +2463,17 @@ namespace Nop.Web.Controllers
                 });
             }
 
+            //customers aren't allowed to vote for their own reviews
+            if (productReview.CustomerId == _workContext.CurrentCustomer.Id)
+            {
+                return Json(new
+                {
+                    Result = _localizationService.GetResource("Reviews.Helpfulness.YourOwnReview"),
+                    TotalYes = productReview.HelpfulYesTotal,
+                    TotalNo = productReview.HelpfulNoTotal
+                });
+            }
+
             //delete previous helpfulness
             var oldPrh = (from prh in productReview.ProductReviewHelpfulnessEntries
                           where prh.CustomerId == _workContext.CurrentCustomer.Id
