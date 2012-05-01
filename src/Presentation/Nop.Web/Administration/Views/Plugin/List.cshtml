@@ -92,8 +92,8 @@
                         columns.Bound(x => x.SystemName)
                             .Width(50)
                             .Centered()
-                            .Template(x => "<input type='submit' value='Edit' onclick=\"" + "javascript:OpenWindow('" + @Url.Content("~/Admin/Plugin/EditPopup") + "?systemName=" + x.SystemName + "&btnId=btnRefresh&formId=plugins-form', 800, 250, true); return false;\" class='t-button' />")
-                            .ClientTemplate("<input type='submit' value='Edit' onclick=\"" + "javascript:OpenWindow('" + @Url.Content("~/Admin/Plugin/EditPopup") + "?systemName=<#= SystemName #>&btnId=btnRefresh&formId=plugins-form', 800, 250, true); return false;\" class='t-button' />")
+                            .Template(x => "<input type='submit' value='" + @T("Admin.Common.Edit").Text + "' onclick=\"" + "javascript:OpenWindow('" + @Url.Content("~/Admin/Plugin/EditPopup") + "?systemName=" + x.SystemName + "&btnId=btnRefresh&formId=plugins-form', 800, 250, true); return false;\" class='t-button' />")
+                            .ClientTemplate("<input type='submit' value='" + @T("Admin.Common.Edit").Text + "' onclick=\"" + "javascript:OpenWindow('" + @Url.Content("~/Admin/Plugin/EditPopup") + "?systemName=<#= SystemName #>&btnId=btnRefresh&formId=plugins-form', 800, 250, true); return false;\" class='t-button' />")
                             .Title(T("Admin.Common.Edit").Text);
                     })
                     .DataBinding(dataBinding =>

@@ -175,7 +175,7 @@
                                 columns.Bound(x => x.Id)
                                     .Width(50)
                                     .Centered()
-                                    .ClientTemplate("<input type='submit' id='btnEditValue<#= Id #>' name='btnEditValue<#= Id #>' value='Edit' onclick=\"" + "javascript:OpenWindow('" + @Url.Content("~/Admin/CheckoutAttribute/ValueEditPopup/") + "<#= Id #>?btnId=btnRefresh&formId=checkoutattribute-form', 800, 300, true); return false;\" class='t-button' />")
+                                    .ClientTemplate("<input type='submit' value='" + @T("Admin.Common.Edit").Text + "' onclick=\"" + "javascript:OpenWindow('" + @Url.Content("~/Admin/CheckoutAttribute/ValueEditPopup/") + "<#= Id #>?btnId=btnRefresh&formId=checkoutattribute-form', 800, 300, true); return false;\" class='t-button' />")
                                     .Title(T("Admin.Common.Edit").Text);
                                 columns.Command(commands =>
                                 {
