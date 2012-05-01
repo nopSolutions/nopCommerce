@@ -3310,6 +3310,9 @@
 					<LocaleResource Name="Plugins">
 						<Value>Plugins</Value>
 						<Children>
+              <LocaleResource Name="EditDetails">
+                <Value>Edit plugin details</Value>
+              </LocaleResource>
 							<LocaleResource Name="Description">
 								<Value>Manual plugin installation</Value>
 								<Children>
@@ -3330,14 +3333,6 @@
 									</LocaleResource>
 								</Children>
 							</LocaleResource>
-							<LocaleResource Name="Editing">
-								<Value>Editing</Value>
-								<Children>
-									<LocaleResource Name="Hint">
-										<Value>This grid allows the bulk editing of the 'Friendly name' and 'Display order' fields. To enter edit mode just click a cell.</Value>
-									</LocaleResource>
-								</Children>
-							</LocaleResource>
 							<LocaleResource Name="Fields">
 								<Children>
 									<LocaleResource Name="Group">
@@ -3345,6 +3340,14 @@
 									</LocaleResource>
 									<LocaleResource Name="FriendlyName">
 										<Value>Friendly name</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>The friendly name of the plugin.</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="Required">
+                        <Value>Friendly name is required.</Value>
+                      </LocaleResource>
+                    </Children>
 									</LocaleResource>
 									<LocaleResource Name="SystemName">
 										<Value>System name</Value>
@@ -3357,6 +3360,11 @@
 									</LocaleResource>
 									<LocaleResource Name="DisplayOrder">
 										<Value>Display order</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>The display order of the plugin. 1 represents the top of the list.</Value>
+                      </LocaleResource>
+                    </Children>
 									</LocaleResource>
 									<LocaleResource Name="Configure">
 										<Value>Configure</Value>

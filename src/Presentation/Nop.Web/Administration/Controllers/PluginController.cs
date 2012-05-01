@@ -29,6 +29,8 @@ namespace Nop.Admin.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly IWebHelper _webHelper;
         private readonly IPermissionService _permissionService;
+        private readonly ILanguageService _languageService;
+        private readonly ILocalizedEntityService _localizedEntityService;
 
 	    #endregion
 
@@ -36,12 +38,15 @@ namespace Nop.Admin.Controllers
 
         public PluginController(IPluginFinder pluginFinder,
             ILocalizationService localizationService, IWebHelper webHelper,
-            IPermissionService permissionService)
+            IPermissionService permissionService, ILanguageService languageService,
+            ILocalizedEntityService localizedEntityService)
 		{
             this._pluginFinder = pluginFinder;
             this._localizationService = localizationService;
             this._webHelper = webHelper;
             this._permissionService = permissionService;
+            this._languageService = languageService;
+            this._localizedEntityService = localizedEntityService;
 		}
 
 		#endregion 
@@ -52,6 +57,13 @@ namespace Nop.Admin.Controllers
         private PluginModel PreparePluginModel(PluginDescriptor pluginDescriptor)
         {
             var pluginModel = pluginDescriptor.ToModel();
+
+            //locales
+            AddLocales(_languageService, pluginModel.Locales, (locale, languageId) =>
+            {
+                locale.FriendlyName = pluginDescriptor.Instance().GetLocalizedFriendlyName(_localizationService, languageId, false);
+            });
+
             if (pluginDescriptor.Installed)
             {
                 //specify configuration URL only when a plugin is already installed
@@ -133,7 +145,7 @@ namespace Nop.Admin.Controllers
             return View(model);
         }
 
-        public ActionResult BulkEditSelect(GridCommand command)
+        public ActionResult ListSelect(GridCommand command)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return AccessDeniedView();
@@ -144,34 +156,7 @@ namespace Nop.Admin.Controllers
                 Data = model
             };
         }
-
-        [AcceptVerbs(HttpVerbs.Post)]
-        [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult BulkEditSave(GridCommand command,
-            [Bind(Prefix = "updated")]IEnumerable<PluginModel> updatedPlugins)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
-                return AccessDeniedView();
-
-            if (updatedPlugins != null)
-            {
-                foreach (var pluginModel in updatedPlugins)
-                {
-                    //update
-                    var pluginDescriptor = _pluginFinder.GetPluginDescriptorBySystemName(pluginModel.SystemName, false);
-                    if (pluginDescriptor != null)
-                    {
-                        //we allow editing of 'friendly name' and 'display order'
-                        pluginDescriptor.FriendlyName = pluginModel.FriendlyName;
-                        pluginDescriptor.DisplayOrder = pluginModel.DisplayOrder;
-                        PluginFileParser.SavePluginDescriptionFile(pluginDescriptor);
-                    }
-                }
-            }
-
-            return BulkEditSelect(command);
-        }
-
+        
         public ActionResult Install(string systemName)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
@@ -268,6 +253,55 @@ namespace Nop.Admin.Controllers
             model.ConfigurationActionName = actionName;
             model.ConfigurationControllerName = controllerName;
             model.ConfigurationRouteValues = routeValues;
+            return View(model);
+        }
+
+        //edit
+        public ActionResult EditPopup(string systemName)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
+                return AccessDeniedView();
+
+            var pluginDescriptor = _pluginFinder.GetPluginDescriptorBySystemName(systemName, false);
+            if (pluginDescriptor == null)
+                //No plugin found with the specified id
+                return RedirectToAction("List");
+
+            var model = PreparePluginModel(pluginDescriptor);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult EditPopup(string btnId, string formId, PluginModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
+                return AccessDeniedView();
+
+            var pluginDescriptor = _pluginFinder.GetPluginDescriptorBySystemName(model.SystemName, false);
+            if (pluginDescriptor == null)
+                //No plugin found with the specified id
+                return RedirectToAction("List");
+
+            if (ModelState.IsValid)
+            {
+                //we allow editing of 'friendly name' and 'display order'
+                pluginDescriptor.FriendlyName = model.FriendlyName;
+                pluginDescriptor.DisplayOrder = model.DisplayOrder;
+                PluginFileParser.SavePluginDescriptionFile(pluginDescriptor);
+                //locales
+                foreach (var localized in model.Locales)
+                {
+                    pluginDescriptor.Instance().SaveLocalizedFriendlyName(_localizationService, localized.LanguageId, localized.FriendlyName);
+                }
+
+                ViewBag.RefreshPage = true;
+                ViewBag.btnId = btnId;
+                ViewBag.formId = formId;
+                return View(model);
+            }
+
+            //If we got this far, something failed, redisplay form
             return View(model);
         }
 

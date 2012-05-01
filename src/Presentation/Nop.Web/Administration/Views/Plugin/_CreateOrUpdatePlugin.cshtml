@@ -1,0 +1,53 @@
+﻿@model PluginModel
+@using Telerik.Web.Mvc.UI;
+@Html.ValidationSummary(false)
+@Html.HiddenFor(model => model.SystemName)
+@if (ViewBag.RefreshPage == true)
+{
+    <script type="text/javascript">
+        try {window.opener.document.forms['@(ViewBag.formId)'].@(ViewBag.btnId).click();}
+        catch (e){} 
+        window.close();
+    </script>
+}
+@(Html.LocalizedEditor<PluginModel, PluginLocalizedModel>("plugin-localized",
+@<table class="adminContent">
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.Locales[item].FriendlyName):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => Model.Locales[item].FriendlyName)
+            @Html.ValidationMessageFor(model => model.Locales[item].FriendlyName)
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            @Html.HiddenFor(model => model.Locales[item].LanguageId)
+        </td>
+    </tr>
+</table>
+,
+@<table class="adminContent">
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.FriendlyName):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.FriendlyName)
+            @Html.ValidationMessageFor(model => model.FriendlyName)
+        </td>
+    </tr>
+</table>
+))
+<table class="adminContent">
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.DisplayOrder):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.DisplayOrder)
+            @Html.ValidationMessageFor(model => model.DisplayOrder)
+        </td>
+    </tr>
+</table>

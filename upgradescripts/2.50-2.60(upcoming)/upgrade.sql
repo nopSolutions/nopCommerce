@@ -233,6 +233,24 @@ set @resources='
   <LocaleResource Name="Checkout.TermsOfService">
     <Value>Terms of service</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Editing">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Editing.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.EditDetails">
+    <Value>Edit plugin details</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Fields.FriendlyName.Hint">
+    <Value>The friendly name of the plugin.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Fields.DisplayOrder.Hint">
+    <Value>The display order of the plugin. 1 represents the top of the list.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Fields.FriendlyName.Required">
+    <Value>Friendly name is required.</Value>
+  </LocaleResource>
 </Language>
 '
 

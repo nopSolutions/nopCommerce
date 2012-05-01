@@ -261,6 +261,7 @@
     <Compile Include="Validators\Affiliates\AffiliateValidator.cs" />
     <Compile Include="Validators\Messages\CampaignValidator.cs" />
     <Compile Include="Validators\Blogs\BlogPostValidator.cs" />
+    <Compile Include="Validators\Plugins\PluginValidator.cs" />
     <Compile Include="Validators\Polls\PollAnswerValidator.cs" />
     <Compile Include="Validators\Polls\PollValidator.cs" />
     <Compile Include="Validators\Settings\OrderSettingsValidator.cs" />
@@ -1023,6 +1024,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Order\ShipmentList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Plugin\EditPopup.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Plugin\_CreateOrUpdatePlugin.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

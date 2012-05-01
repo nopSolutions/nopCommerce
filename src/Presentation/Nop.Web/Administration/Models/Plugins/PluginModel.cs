@@ -1,11 +1,20 @@
-﻿using System.Web.Mvc;
+﻿using System.Collections.Generic;
+using System.Web.Mvc;
+using FluentValidation.Attributes;
+using Nop.Admin.Validators.Plugins;
 using Nop.Web.Framework;
+using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.Plugins
 {
-    public class PluginModel : BaseNopModel
+    [Validator(typeof(PluginValidator))]
+    public class PluginModel : BaseNopModel, ILocalizedModel<PluginLocalizedModel>
     {
+        public PluginModel()
+        {
+            Locales = new List<PluginLocalizedModel>();
+        }
         [NopResourceDisplayName("Admin.Configuration.Plugins.Fields.Group")]
         [AllowHtml]
         public string Group { get; set; }
@@ -34,5 +43,15 @@ namespace Nop.Admin.Models.Plugins
 
         [NopResourceDisplayName("Admin.Configuration.Plugins.Fields.Installed")]
         public bool Installed { get; set; }
+
+        public IList<PluginLocalizedModel> Locales { get; set; }
+    }
+    public class PluginLocalizedModel : ILocalizedModelLocal
+    {
+        public int LanguageId { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Plugins.Fields.FriendlyName")]
+        [AllowHtml]
+        public string FriendlyName { get; set; }
     }
 }

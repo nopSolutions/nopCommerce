@@ -1,47 +1,43 @@
 ﻿@model Telerik.Web.Mvc.GridModel<PluginModel>
 @using Telerik.Web.Mvc.UI
-<div class="section-header">
-    <div class="title">
-        <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
-        @T("Admin.Configuration.Plugins")
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "plugins-form" }))
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
+            @T("Admin.Configuration.Plugins")
+        </div>
+        <div class="options">
+            <a href="@Url.Action("ReloadList")" class="t-button">@T("Admin.Configuration.Plugins.ReloadList")</a>
+        </div>
     </div>
-    <div class="options">
-        <a href="@Url.Action("ReloadList")" class="t-button">@T("Admin.Configuration.Plugins.ReloadList")</a>
-    </div>
-</div>
-<script type="text/javascript">
-    $(document).ready(function () {
-        $("#plugins-grid a.install").click(function (e) {
-            showThrobber('@T("Admin.Configuration.Plugins.Fields.Install.Progress")');
-        });
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#plugins-grid a.install").click(function (e) {
+                showThrobber('@T("Admin.Configuration.Plugins.Fields.Install.Progress")');
+            });
 
-        $("#plugins-grid a.uninstall").click(function (e) {
-            showThrobber('@T("Admin.Configuration.Plugins.Fields.Uninstall.Progress")');
+            $("#plugins-grid a.uninstall").click(function (e) {
+                showThrobber('@T("Admin.Configuration.Plugins.Fields.Uninstall.Progress")');
+            });
         });
-    });
-</script>    
-<table class="adminContent">
-    <tr>
-        <td>
-            <h4>@T("Admin.Configuration.Plugins.Description"):</h4>
-            <ol>
-                <li>@T("Admin.Configuration.Plugins.Description.Step1")</li>
-                <li>@T("Admin.Configuration.Plugins.Description.Step2")</li>
-                <li>@T("Admin.Configuration.Plugins.Description.Step3")</li>
-                <li>@T("Admin.Configuration.Plugins.Description.Step4")</li>
-                <li>@T("Admin.Configuration.Plugins.Description.Step5")</li>
-            </ol>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <h4>@T("Admin.Configuration.Plugins.Editing")</h4>
-            @T("Admin.Configuration.Plugins.Editing.Hint")
-        </td>
-    </tr>
-    <tr>
-        <td>
-            @(Html.Telerik().Grid<PluginModel>()
+    </script>    
+    <table class="adminContent">
+        <tr>
+            <td>
+                <h4>@T("Admin.Configuration.Plugins.Description"):</h4>
+                <ol>
+                    <li>@T("Admin.Configuration.Plugins.Description.Step1")</li>
+                    <li>@T("Admin.Configuration.Plugins.Description.Step2")</li>
+                    <li>@T("Admin.Configuration.Plugins.Description.Step3")</li>
+                    <li>@T("Admin.Configuration.Plugins.Description.Step4")</li>
+                    <li>@T("Admin.Configuration.Plugins.Description.Step5")</li>
+                </ol>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @(Html.Telerik().Grid<PluginModel>()
                     .Name("plugins-grid")
                     .DataKeys(keys =>
                     {
@@ -93,20 +89,36 @@
                             .Width(50)
                             .Centered()
                             .HeaderTemplate(T("Admin.Configuration.Plugins.Fields.Installation").Text);
-                    })
-                    .ToolBar(commands =>
-                    {
-                        commands.SubmitChanges();
+                        columns.Bound(x => x.SystemName)
+                            .Width(50)
+                            .Centered()
+                            .Template(x => "<input type='submit' value='Edit' onclick=\"" + "javascript:OpenWindow('" + @Url.Content("~/Admin/Plugin/EditPopup") + "?systemName=" + x.SystemName + "&btnId=btnRefresh&formId=plugins-form', 800, 250, true); return false;\" class='t-button' />")
+                            .ClientTemplate("<input type='submit' value='Edit' onclick=\"" + "javascript:OpenWindow('" + @Url.Content("~/Admin/Plugin/EditPopup") + "?systemName=<#= SystemName #>&btnId=btnRefresh&formId=plugins-form', 800, 250, true); return false;\" class='t-button' />")
+                            .Title(T("Admin.Common.Edit").Text);
                     })
                     .DataBinding(dataBinding =>
                         dataBinding.Ajax()
-                            .Select("BulkEditSelect", "Plugin")
-                            .Update("BulkEditSave", "Plugin")
+                        .Select("ListSelect", "Plugin")
                     )
-                    .Editable(editing => editing.Mode(GridEditMode.InCell))
                     .Footer(false))
+            </td>
+        </tr>
+        <tr>
+            <td width="100%">
+                <input type="submit" id="btnRefresh" name="btnRefresh" style="display: none" />
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $('#btnRefresh').click(function () {
+                            //refresh grid
+                            var optionsGrid = $("#plugins-grid");
+                            optionsGrid.data('tGrid').ajaxRequest();
 
-                    
-        </td>
-    </tr>
-</table>
+                            //return false to don't reload a page
+                            return false;
+                        });
+                    });
+                </script>
+            </td>
+        </tr>
+    </table>
+}
