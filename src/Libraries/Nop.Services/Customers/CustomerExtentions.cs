@@ -192,7 +192,7 @@ namespace Nop.Services.Customers
 
             if (stripTooLong)
             {
-                int maxLength = 0; // EngineContext.Current.Resolve<CustomerSettings>().FormatNameMaxLength;
+                int maxLength = 0; // TODO make this setting configurable
                 if (maxLength > 0 && result.Length > maxLength)
                 {
                     result = result.Substring(0, maxLength);

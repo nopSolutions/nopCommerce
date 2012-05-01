@@ -6,6 +6,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
 using Nop.Services.Customers;
 using Nop.Services.Forums;
+using Nop.Services.Helpers;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Security;
 using Nop.Web.Models.Common;
@@ -19,17 +20,19 @@ namespace Nop.Web.Controllers
         private readonly IForumService _forumService;
         private readonly ICustomerService _customerService;
         private readonly IWorkContext _workContext;
+        private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ForumSettings _forumSettings;
         private readonly CustomerSettings _customerSettings;
 
         public PrivateMessagesController(IForumService forumService,
             ICustomerService customerService,
-            IWorkContext workContext,
+            IWorkContext workContext, IDateTimeHelper dateTimeHelper,
             ForumSettings forumSettings, CustomerSettings customerSettings)
         {
             this._forumService = forumService;
             this._customerService = customerService;
             this._workContext = workContext;
+            this._dateTimeHelper = dateTimeHelper;
             this._forumSettings = forumSettings;
             this._customerSettings = customerSettings;
         }
@@ -113,7 +116,7 @@ namespace Nop.Web.Controllers
                     AllowViewingToProfile = _customerSettings.AllowViewingProfiles && pm.ToCustomer != null && !pm.ToCustomer.IsGuest(),
                     Subject = pm.Subject,
                     Message = pm.Text,
-                    CreatedOnUtc = pm.CreatedOnUtc,
+                    CreatedOn = _dateTimeHelper.ConvertToUserTime( pm.CreatedOnUtc, DateTimeKind.Utc),
                     IsRead = pm.IsRead,
                 });
             }
@@ -166,7 +169,7 @@ namespace Nop.Web.Controllers
                     AllowViewingToProfile = _customerSettings.AllowViewingProfiles && pm.ToCustomer != null && !pm.ToCustomer.IsGuest(),
                     Subject = pm.Subject,
                     Message = pm.Text,
-                    CreatedOnUtc = pm.CreatedOnUtc,
+                    CreatedOn = _dateTimeHelper.ConvertToUserTime(pm.CreatedOnUtc, DateTimeKind.Utc),
                     IsRead = pm.IsRead,
                 });
             }
@@ -432,7 +435,7 @@ namespace Nop.Web.Controllers
                 AllowViewingToProfile = _customerSettings.AllowViewingProfiles && pm.ToCustomer != null && !pm.ToCustomer.IsGuest(),
                 Subject = pm.Subject,
                 Message = pm.FormatPrivateMessageText(),
-                CreatedOnUtc = pm.CreatedOnUtc,
+                CreatedOn = _dateTimeHelper.ConvertToUserTime(pm.CreatedOnUtc, DateTimeKind.Utc),
                 IsRead = pm.IsRead,
             };
 

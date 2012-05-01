@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Web.Mvc;
 using Nop.Core;
-using Nop.Core.Domain.Security;
 using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -14,6 +13,7 @@ using Nop.Web.Framework.UI;
 namespace Nop.Admin.Controllers
 {
     [NopHttpsRequirement(SslRequirement.Yes)]
+    [AdminValidateIpAddress]
     public abstract class BaseNopController : Controller
     {
         /// <summary>
@@ -29,18 +29,6 @@ namespace Nop.Admin.Controllers
         }
 
         /// <summary>
-        /// On action executing
-        /// </summary>
-        /// <param name="filterContext">Filter context</param>
-        protected override void OnActionExecuting(ActionExecutingContext filterContext)
-        {
-            //validate IP address
-            ValidateIpAddress(filterContext);
-
-            base.OnActionExecuting(filterContext);
-        }
-
-        /// <summary>
         /// On exception
         /// </summary>
         /// <param name="filterContext">Filter context</param>
@@ -50,44 +38,7 @@ namespace Nop.Admin.Controllers
                 LogException(filterContext.Exception);
             base.OnException(filterContext);
         }
-
-        /// <summary>
-        /// Validate IP address
-        /// </summary>
-        /// <param name="filterContext">Filter context</param>
-        protected virtual void ValidateIpAddress(ActionExecutingContext filterContext)
-        {
-            bool ok = false;
-            var ipAddresses = EngineContext.Current.Resolve<SecuritySettings>().AdminAreaAllowedIpAddresses;
-            if (ipAddresses!= null && ipAddresses.Count > 0)
-            {
-                var webHelper = EngineContext.Current.Resolve<IWebHelper>();
-                foreach (string ip in ipAddresses)
-                    if (ip.Equals(webHelper.GetCurrentIpAddress(), StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        ok =  true;
-                        break;
-                    }
-            }
-            else
-            {
-                //no restrictions
-                ok = true;
-            }
-
-            if (!ok)
-            {
-                //ensure that it's not 'Access denied' page
-                var webHelper = EngineContext.Current.Resolve<IWebHelper>();
-                var thisPageUrl = webHelper.GetThisPageUrl(false);
-                if (!thisPageUrl.StartsWith(string.Format("{0}admin/security/accessdenied",webHelper.GetStoreLocation()), StringComparison.InvariantCultureIgnoreCase))
-                {
-                    //redirect to 'Access denied' page
-                    filterContext.Result = RedirectToAction("AccessDenied", "Security");
-                }
-            }
-        }
-
+        
         /// <summary>
         /// Add locales for localizable entities
         /// </summary>

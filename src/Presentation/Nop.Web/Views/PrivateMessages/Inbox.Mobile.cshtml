@@ -4,9 +4,6 @@
 @using Nop.Web;
 @using Nop.Web.Extensions;
 @using Nop.Web.Models.PrivateMessages;
-@{
-    var dateTimeHelper = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Helpers.IDateTimeHelper>();
-}
 <div class="private-messages-box">
     @if (Model.Messages.Count > 0)
     {
@@ -30,7 +27,7 @@
                            }
                         </div>
                         <div>
-                            @T("PrivateMessages.Inbox.DateColumn"): @dateTimeHelper.ConvertToUserTime(pm.CreatedOnUtc)
+                            @T("PrivateMessages.Inbox.DateColumn"): @pm.CreatedOn
                         </div>
                     </div>
                 </li>

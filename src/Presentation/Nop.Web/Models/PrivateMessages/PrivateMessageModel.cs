@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Web.Mvc;
 using FluentValidation.Attributes;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Validators.PrivateMessages;
@@ -21,7 +20,7 @@ namespace Nop.Web.Models.PrivateMessages
 
         public string Message { get; set; }
         
-        public DateTime CreatedOnUtc { get; set; }
+        public DateTime CreatedOn { get; set; }
 
         public bool IsRead { get; set; }
     }

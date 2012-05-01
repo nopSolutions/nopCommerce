@@ -15,7 +15,7 @@
     </div>
     <div class="forumsmainheader">
         <div class="currenttime">
-            @(EngineContext.Current.Resolve<IDateTimeHelper>().ConvertToUserTime(@DateTime.UtcNow).ToString("F"))
+            @Model.CurrentTime.ToString("F")
         </div>
         @Html.Partial("_SearchBox")
     </div>

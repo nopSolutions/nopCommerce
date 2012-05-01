@@ -36,8 +36,7 @@
                .Encode(false)
                .Named(@T("PrivateMessages.Inbox.SubjectColumn").Text)
                .Attributes(style => "width:50%;");
-           column.For(pm => Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Helpers.IDateTimeHelper>().ConvertToUserTime(
-               pm.CreatedOnUtc, DateTimeKind.Utc).ToString())
+           column.For(pm => pm.CreatedOn.ToString())
                .Named(@T("PrivateMessages.Inbox.DateColumn").Text)
                .Attributes(style => "width:25%;", align => "center");
        }).Attributes(style => "border-collapse: collapse;", @class => "pmgridtablestyle", cellspacing => "0", cellpadding => "4", border => "0").HeaderRowAttributes(new Hash(@class => "pmgridheaderstyle")).RowStart((row) =>

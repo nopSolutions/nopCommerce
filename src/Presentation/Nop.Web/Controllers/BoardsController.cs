@@ -185,7 +185,10 @@ namespace Nop.Web.Controllers
 
             var forumGroups = _forumService.GetAllForumGroups();
 
-            var model = new BoardsIndexModel();
+            var model = new BoardsIndexModel()
+            {
+                CurrentTime = _dateTimeHelper.ConvertToUserTime(DateTime.UtcNow)
+            };
             foreach (var forumGroup in forumGroups)
             {
 
