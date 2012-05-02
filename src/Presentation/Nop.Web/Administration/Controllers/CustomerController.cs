@@ -1243,7 +1243,7 @@ namespace Nop.Admin.Controllers
                     address.CountryId = null;
                 if (address.StateProvinceId == 0)
                     address.StateProvinceId = null;
-                customer.AddAddress(address);
+                customer.Addresses.Add(address);
                 _customerService.UpdateCustomer(customer);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Customers.Customers.Addresses.Added"));

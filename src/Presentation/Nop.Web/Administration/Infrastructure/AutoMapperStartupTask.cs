@@ -315,7 +315,8 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.ConfigurationRouteValues, mo => mo.Ignore());
             //plugins
             Mapper.CreateMap<PluginDescriptor, PluginModel>()
-                .ForMember(dest => dest.ConfigurationUrl, mo => mo.Ignore());
+                .ForMember(dest => dest.ConfigurationUrl, mo => mo.Ignore())
+                .ForMember(dest => dest.Locales, mo => mo.Ignore());
             //newsLetter subscriptions
             Mapper.CreateMap<NewsLetterSubscription, NewsLetterSubscriptionModel>()
                 .ForMember(dest => dest.CreatedOn, mo => mo.Ignore());
@@ -509,7 +510,8 @@ namespace Nop.Admin.Infrastructure
             Mapper.CreateMap<MediaSettings, MediaSettingsModel>()
                 .ForMember(dest => dest.PicturesStoredIntoDatabase, mo => mo.Ignore());
             Mapper.CreateMap<MediaSettingsModel, MediaSettings>()
-                .ForMember(dest => dest.DefaultPictureZoomEnabled, mo => mo.Ignore());
+                .ForMember(dest => dest.DefaultPictureZoomEnabled, mo => mo.Ignore())
+                .ForMember(dest => dest.DefaultImageQuality, mo => mo.Ignore());
             Mapper.CreateMap<CustomerSettings,  CustomerUserSettingsModel.CustomerSettingsModel>();
             Mapper.CreateMap<CustomerUserSettingsModel.CustomerSettingsModel, CustomerSettings>()
                 .ForMember(dest => dest.HashedPasswordFormat, mo => mo.Ignore())

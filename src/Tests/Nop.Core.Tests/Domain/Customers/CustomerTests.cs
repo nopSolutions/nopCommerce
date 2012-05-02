@@ -22,38 +22,20 @@ namespace Nop.Core.Tests.Domain.Customers
             var customer = new Customer();
             var address = new Address { Id = 1 };
 
-            customer.AddAddress(address);
+            customer.Addresses.Add(address);
 
             customer.Addresses.Count.ShouldEqual(1);
             customer.Addresses.First().Id.ShouldEqual(1);
         }
-
-        [Test]
-        public void Can_not_add_duplicate_addresses()
-        {
-            var customer = new Customer();
-            var address = new Address { Id = 1 };
-            var address2 = new Address { Id = 2 };
-
-            customer.AddAddress(address);
-            customer.AddAddress(address); // should not add
-            customer.AddAddress(address2);
-
-
-            customer.Addresses.Count.ShouldEqual(2);
-            var addresses = customer.Addresses.ToList();
-            addresses[0].Id.ShouldEqual(1);
-            addresses[1].Id.ShouldEqual(2);
-        }
-
+        
         [Test]
         public void Can_remove_address_assigned_as_billing_address()
         {
             var customer = new Customer();
             var address = new Address { Id = 1 };
 
-            customer.AddAddress(address);
-            customer.SetBillingAddress(address);
+            customer.Addresses.Add(address);
+            customer.BillingAddress  = address;
 
             customer.BillingAddress.ShouldBeTheSameAs(customer.Addresses.First());
 

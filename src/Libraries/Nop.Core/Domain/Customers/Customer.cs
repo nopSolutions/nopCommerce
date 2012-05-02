@@ -338,12 +338,6 @@ namespace Nop.Core.Domain.Customers
 
         #region Addresses
 
-        public virtual void AddAddress(Address address)
-        {
-            if (!this.Addresses.Contains(address))
-                this.Addresses.Add(address);
-        }
-
         public virtual void RemoveAddress(Address address)
         {
             if (this.Addresses.Contains(address))
@@ -352,32 +346,6 @@ namespace Nop.Core.Domain.Customers
                 if (this.ShippingAddress == address) this.ShippingAddress = null;
 
                 this.Addresses.Remove(address);
-            }
-        }
-
-        public virtual void SetBillingAddress(Address address)
-        {
-            if (address != null)
-            {
-                if (this.Addresses.Contains(address))
-                    this.BillingAddress = address;
-            }
-            else
-            {
-                this.BillingAddress = address;
-            }
-        }
-
-        public virtual void SetShippingAddress(Address address)
-        {
-            if (address != null)
-            {
-                if (this.Addresses.Contains(address))
-                    this.ShippingAddress = address;
-            }
-            else
-            {
-                this.ShippingAddress = address;
             }
         }
 

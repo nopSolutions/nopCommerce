@@ -202,7 +202,7 @@ namespace Nop.Plugin.Payments.GoogleCheckout
                     customer.Addresses.Add(billingAddress);
                 }
                 //set default billing address
-                customer.SetBillingAddress(billingAddress);
+                customer.BillingAddress = billingAddress;
                 _customerService.UpdateCustomer(customer);
 
                 _customerService.SaveCustomerAttribute<ShippingOption>(customer, SystemCustomerAttributeNames.LastShippingOption, null);
@@ -254,7 +254,7 @@ namespace Nop.Plugin.Payments.GoogleCheckout
                         customer.Addresses.Add(shippingAddress);
                     }
                     //set default shipping address
-                    customer.SetShippingAddress(shippingAddress);
+                    customer.ShippingAddress = shippingAddress;
                     _customerService.UpdateCustomer(customer);
 
                     if (newOrderNotification.orderadjustment != null &&

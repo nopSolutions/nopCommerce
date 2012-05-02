@@ -168,7 +168,7 @@ namespace Nop.Data.Tests.Customers
                 CreatedOnUtc = new DateTime(2010, 01, 01),
             };
 
-            customer.AddAddress(address);
+            customer.Addresses.Add(address);
 
             var fromDb = SaveAndLoadEntity(customer);
             fromDb.ShouldNotBeNull();
@@ -196,11 +196,11 @@ namespace Nop.Data.Tests.Customers
             var address = new Address { FirstName = "Billing", Country = GetTestCountry(), CreatedOnUtc = new DateTime(2010, 01, 01) };
             var address2 = new Address { FirstName = "Shipping", Country = GetTestCountry(), CreatedOnUtc = new DateTime(2010, 01, 01) };
 
-            customer.AddAddress(address);
-            customer.AddAddress(address2);
+            customer.Addresses.Add(address);
+            customer.Addresses.Add(address2);
 
-            customer.SetBillingAddress(address);
-            customer.SetShippingAddress(address2);
+            customer.BillingAddress = address;
+            customer.ShippingAddress = address2;
 
             var fromDb = SaveAndLoadEntity(customer);
             fromDb.ShouldNotBeNull();
@@ -220,8 +220,8 @@ namespace Nop.Data.Tests.Customers
         {
             var customer = GetTestCustomer();
             var address = new Address { FirstName = "Test", Country = GetTestCountry(), CreatedOnUtc = new DateTime(2010, 01, 01) };
-            customer.AddAddress(address);
-            customer.SetBillingAddress(address);
+            customer.Addresses.Add(address);
+            customer.BillingAddress = address;
 
             var fromDb = SaveAndLoadEntity(customer);
             fromDb.ShouldNotBeNull();
@@ -252,7 +252,7 @@ namespace Nop.Data.Tests.Customers
                     Quantity = 2,
                     CreatedOnUtc = new DateTime(2010, 01, 01),
                     UpdatedOnUtc = new DateTime(2010, 01, 02),
-                    ProductVariant = GetTestProductVariant()
+                    ProductVariant = productVariant
                 }
             );
 

@@ -4063,9 +4063,9 @@ namespace Nop.Services.Installation
                 ZipPostalCode = "10021",
                 CreatedOnUtc = DateTime.UtcNow,
             };
-            adminUser.AddAddress(defaultAdminUserAddress);
-            adminUser.SetBillingAddress(defaultAdminUserAddress);
-            adminUser.SetShippingAddress(defaultAdminUserAddress);
+            adminUser.Addresses.Add(defaultAdminUserAddress);
+            adminUser.BillingAddress = defaultAdminUserAddress;
+            adminUser.ShippingAddress = defaultAdminUserAddress;
             adminUser.CustomerRoles.Add(crAdministrators);
             adminUser.CustomerRoles.Add(crForumModerators);
             adminUser.CustomerRoles.Add(crRegistered);

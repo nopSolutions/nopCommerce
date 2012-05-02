@@ -439,9 +439,9 @@ namespace Nop.Web.Controllers
                         if (defaultAddress.StateProvinceId == 0)
                             defaultAddress.StateProvinceId = null;
                         //set default address
-                        customer.AddAddress(defaultAddress);
-                        customer.SetBillingAddress(defaultAddress);
-                        customer.SetShippingAddress(defaultAddress);
+                        customer.Addresses.Add(defaultAddress);
+                        customer.BillingAddress = defaultAddress;
+                        customer.ShippingAddress = defaultAddress;
                         _customerService.UpdateCustomer(customer);
                     }
 
@@ -1042,7 +1042,7 @@ namespace Nop.Web.Controllers
                     address.CountryId = null;
                 if (address.StateProvinceId == 0)
                     address.StateProvinceId = null;
-                customer.AddAddress(address);
+                customer.Addresses.Add(address);
                 _customerService.UpdateCustomer(customer);
 
                 return RedirectToAction("Addresses");
