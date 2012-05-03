@@ -652,6 +652,28 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("List");
         }
 
+        public ActionResult DeleteSelected(string selectedIds)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
+            var products = new List<Product>();
+            if (selectedIds != null)
+            {
+                var ids = selectedIds
+                    .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(x => Convert.ToInt32(x))
+                    .ToArray();
+                products.AddRange(_productService.GetProductsByIds(ids));
+
+                for (int i = 0; i < products.Count; i++)
+                    _productService.DeleteProduct(products[i]);
+            }
+
+            return RedirectToAction("List");
+        }
+
+
         [GridAction(EnableCustomBinding = true)]
         public ActionResult GetVariants(int productId)
         {

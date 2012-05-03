@@ -2334,6 +2334,11 @@
 					</LocaleResource>
 					<LocaleResource Name="Delete">
 						<Value>Delete</Value>
+            <Children>
+              <LocaleResource Name="Selected">
+                <Value>Delete (selected)</Value>
+              </LocaleResource>
+            </Children>
 					</LocaleResource>
 					<LocaleResource Name="Edit">
 						<Value>Edit</Value>

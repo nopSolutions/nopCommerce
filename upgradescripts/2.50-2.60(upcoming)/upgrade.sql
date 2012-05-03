@@ -254,6 +254,9 @@ set @resources='
   <LocaleResource Name="Reviews.Helpfulness.YourOwnReview">
     <Value>You cannot vote for your own review</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Common.Delete.Selected">
+    <Value>Delete (selected)</Value>
+  </LocaleResource>
 </Language>
 '
 

@@ -21,6 +21,7 @@
             <a href="@Url.Action("ExportExcelAll")" class="t-button">@T("Admin.Common.ExportToExcel.All")</a>
             <button type="submit" id="exportexcel-selected" class="t-button">@T("Admin.Common.ExportToExcel.Selected")</button>
             <button type="submit" id="importexcel" name="importexcel" value="importexcel" class="t-button">@T("Admin.Common.ImportFromExcel")</button>
+            <button type="submit" id="delete-selected" class="t-button">@T("Admin.Common.Delete.Selected")</button>
         </div>
     </div>
 
@@ -210,6 +211,14 @@
 
             $('#mastercheckbox').click(function () {
                 $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
+            });
+
+            //"Delete (selected)" button
+            $('#delete-selected').click(function (e) {
+                e.preventDefault();
+                //redirect to required URL
+                setLocation('@(Url.Action("DeleteSelected", "Product"))?selectedIds=' + selectedIds.join(","));
+                return false;
             });
 
             //wire up checkboxes. 
