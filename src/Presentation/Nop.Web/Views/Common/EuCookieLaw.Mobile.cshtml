@@ -1,0 +1,65 @@
+﻿@model dynamic
+<div data-role="dialog" id="dialog-eu-cookie-law">
+    <div data-role="header">
+        <h1>
+            @T("EUCookieLaw.Title")
+        </h1>
+    </div>
+    <div data-role="content">
+        <script type="text/javascript">
+            $(document).ready(function () {
+                //display dialog
+                EuDialogDisplay();
+            });
+
+            function EuDialogDisplay() {
+                $.mobile.changePage('#dialog-eu-cookie-law', 'pop', false, false);
+            }
+            function EuDialogOkClick() {
+                //show progress
+                $.mobile.showPageLoadingMsg();
+                //store value
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("EuCookieLawAccept", "Common")',
+                    dataType: 'json',
+                    success: function (data) {
+                        //hide progress
+                        $.mobile.hidePageLoadingMsg();
+                        //go back to the main page
+                        $.mobile.changePage('#mainpage', 'pop', false, true);
+                    },
+                    failure: function () {
+                        //hide progress
+                        $.mobile.hidePageLoadingMsg();
+                        alert('Cannot store value');
+                    }
+                });
+            }
+            function EuDialogCancelClick() {
+                alert('@T("EUCookieLaw.CannotBrowse")');
+            }
+
+            function toggleEuCookiePrivacyInfo() {
+                $('#eu-cookie-law-privacyinfo').toggle();
+                if ($('#eu-cookie-law-privacyinfo').css('display') == 'none') {
+                    $('#eu-cookie-privacyinfo-tag').html('@T("Common.Show")');
+                }
+                else {
+                    $('#eu-cookie-privacyinfo-tag').html('@T("Common.Hide")');
+                }
+            }
+
+        </script>
+        <div>
+            @T("EUCookieLaw.Description") (<a id="eu-cookie-privacyinfo-tag" href="javascript:toggleEuCookiePrivacyInfo();">@T("Common.Show")</a>)
+        </div>
+        <div id="eu-cookie-law-privacyinfo" style="display: none;">
+            @Html.Action("TopicBlock", "Topic", new { systemName = "privacyinfo" })
+        </div>
+        <div>
+            <button id="eu-cookie-ok" onclick="EuDialogOkClick();">@T("EUCookieLaw.OK")</button>
+            <button id="eu-cookie-cancel" onclick="EuDialogCancelClick();">@T("EUCookieLaw.Cancel")</button>
+        </div>
+    </div>
+</div>

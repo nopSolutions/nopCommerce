@@ -1750,6 +1750,7 @@
     <Content Include="Views\Shared\_Root.Head.Mobile.cshtml" />
     <Content Include="Views\Shared\_Notifications.Mobile.cshtml" />
     <Content Include="Views\Common\EuCookieLaw.cshtml" />
+    <Content Include="Views\Common\EuCookieLaw.Mobile.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

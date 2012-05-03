@@ -27,11 +27,9 @@
                             alert('Cannot store value');
                         }
                     });
-
                 },
                 @T("EUCookieLaw.Cancel"): function () {
                     alert('@T("EUCookieLaw.CannotBrowse")');
-                    //$("#dialog-eu-cookie-law").dialog("close");
                 }
             }
         });
@@ -40,17 +38,17 @@
     function toggleEuCookiePrivacyInfo() {
         $('#eu-cookie-law-privacyinfo').toggle();
         if ($('#eu-cookie-law-privacyinfo').css('display') == 'none') {
-            $('#eu-cookie-privacyinfo-tag').html('@T("Admin.Common.Show")');
+            $('#eu-cookie-privacyinfo-tag').html('@T("Common.Show")');
         }
         else {
-            $('#eu-cookie-privacyinfo-tag').html('@T("Admin.Common.Hide")');
+            $('#eu-cookie-privacyinfo-tag').html('@T("Common.Hide")');
         }
     }
 
 </script>
 <div id="dialog-eu-cookie-law" title="@T("EUCookieLaw.Title")" style="display:none;" class="eu-cookie-law">
     <div>
-        @T("EUCookieLaw.Description") (<a id="eu-cookie-privacyinfo-tag" href="javascript:toggleEuCookiePrivacyInfo();" class="eu-cookie-privacyinfo-tag">@T("Admin.Common.Show")</a>)
+        @T("EUCookieLaw.Description") (<a id="eu-cookie-privacyinfo-tag" href="javascript:toggleEuCookiePrivacyInfo();" class="eu-cookie-privacyinfo-tag">@T("Common.Show")</a>)
     </div>
     <div class="clear">
     </div>

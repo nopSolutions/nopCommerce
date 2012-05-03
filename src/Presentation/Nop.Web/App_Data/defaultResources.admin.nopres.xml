@@ -4265,7 +4265,7 @@
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
-                  <LocaleResource Name="DisplayEuCookiesLawWarning">
+                  <LocaleResource Name="DisplayEuCookieLawWarning">
                     <Value>Display EU cookie law warning</Value>
                     <Children>
                       <LocaleResource Name="Hint">
