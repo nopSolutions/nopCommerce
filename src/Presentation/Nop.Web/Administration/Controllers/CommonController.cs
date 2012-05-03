@@ -116,7 +116,10 @@ namespace Nop.Admin.Controllers
 
             //store URL
             if (!String.IsNullOrEmpty(_storeInformationSettings.StoreUrl) &&
-                _storeInformationSettings.StoreUrl.Equals(_webHelper.GetStoreLocation(false), StringComparison.InvariantCultureIgnoreCase))
+                (_storeInformationSettings.StoreUrl.Equals(_webHelper.GetStoreLocation(false), StringComparison.InvariantCultureIgnoreCase)
+                ||
+                _storeInformationSettings.StoreUrl.Equals(_webHelper.GetStoreLocation(true), StringComparison.InvariantCultureIgnoreCase)
+                ))
                 model.Add(new SystemWarningModel()
                     {
                         Level = SystemWarningLevel.Pass,
