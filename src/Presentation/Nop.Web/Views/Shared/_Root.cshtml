@@ -12,8 +12,7 @@
         @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.BeforeContent })
         @RenderBody()
         @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.AfterContent })
-        <div class="clear">
-        </div>
+        @Html.Action("EuCookieLaw", "Common")
     </div>
     @Html.Action("Footer", "Common")
 </div>

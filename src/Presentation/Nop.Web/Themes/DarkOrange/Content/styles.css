@@ -113,6 +113,9 @@ td.fieldname{font-size:12px;}
 .sitemap-page .entity{margin:5px 0 30px;}
 .sitemap-page .topic-box,.sitemap-page .manufacturer-box,.sitemap-page .category-box,.sitemap-page .product-box{text-align:center;vertical-align:bottom;}
 .sitemap-page .topic-box .item,.sitemap-page .manufacturer-box .item,.sitemap-page .category-box .item,.sitemap-page .product-box .item{text-align:left;margin:3px 10px;width:150px;border-bottom:1px dotted #ADACAC;}
+/* EU cookie law */
+.eu-cookie-law{text-align:left;}
+a.eu-cookie-privacyinfo-tag{color:#F93 !important;text-decoration:underline;}
 /* inputs */
 .searchtext{border:solid 1px #d3d3d3;vertical-align:top;font-size:12px;width:100%;}
 .searchboxtext{background:#e3e3e3;width:110px;border:solid 1px #E3E3E3;vertical-align:top;font-size:12px;}

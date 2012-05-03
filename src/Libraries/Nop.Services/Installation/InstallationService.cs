@@ -4614,6 +4614,7 @@ namespace Nop.Services.Installation
                     DefaultStoreThemeForMobileDevices = "Mobile",
                     EmulateMobileDevice = false,
                     DisplayMiniProfilerInPublicStore = false,
+                    DisplayEuCookieLawWarning = false,
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<RewardPointsSettings>>()

@@ -1,0 +1,60 @@
+﻿@model dynamic
+@{ 
+    Html.AddCssFileParts(@Url.Content("~/Content/smoothness/jquery-ui-1.8.17.custom.css"));
+    Html.AddScriptParts(@Url.Content("~/Scripts/jquery-ui.min.js"));
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#dialog-eu-cookie-law").dialog({
+            resizable: true,
+            height: 250,
+            width: 500,
+            modal: true,
+            //little hack to disable X ("close") button. just uncomment the two lines below. but in this case all X button will be hidden for all dialogs
+            //closeOnEscape: false,
+            //open: function (event, ui) { $(".ui-dialog-titlebar-close").hide(); },
+            buttons: {
+                @T("EUCookieLaw.OK"): function () {
+                    //store value
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("EuCookieLawAccept", "Common")',
+                        dataType: 'json',
+                        success: function (data) {
+                            $("#dialog-eu-cookie-law").dialog("close");
+                        },
+                        failure: function () {
+                            alert('Cannot store value');
+                        }
+                    });
+
+                },
+                @T("EUCookieLaw.Cancel"): function () {
+                    alert('@T("EUCookieLaw.CannotBrowse")');
+                    //$("#dialog-eu-cookie-law").dialog("close");
+                }
+            }
+        });
+    });
+    
+    function toggleEuCookiePrivacyInfo() {
+        $('#eu-cookie-law-privacyinfo').toggle();
+        if ($('#eu-cookie-law-privacyinfo').css('display') == 'none') {
+            $('#eu-cookie-privacyinfo-tag').html('@T("Admin.Common.Show")');
+        }
+        else {
+            $('#eu-cookie-privacyinfo-tag').html('@T("Admin.Common.Hide")');
+        }
+    }
+
+</script>
+<div id="dialog-eu-cookie-law" title="@T("EUCookieLaw.Title")" style="display:none;" class="eu-cookie-law">
+    <div>
+        @T("EUCookieLaw.Description") (<a id="eu-cookie-privacyinfo-tag" href="javascript:toggleEuCookiePrivacyInfo();" class="eu-cookie-privacyinfo-tag">@T("Admin.Common.Show")</a>)
+    </div>
+    <div class="clear">
+    </div>
+    <div id="eu-cookie-law-privacyinfo" style="display: none;">
+        @Html.Action("TopicBlock", "Topic", new { systemName = "privacyinfo" })
+    </div>
+</div>

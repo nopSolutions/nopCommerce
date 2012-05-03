@@ -257,6 +257,33 @@ set @resources='
   <LocaleResource Name="Admin.Common.Delete.Selected">
     <Value>Delete (selected)</Value>
   </LocaleResource>
+  <LocaleResource Name="EUCookieLaw.Title">
+    <Value>Your cookie settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="EUCookieLaw.Description">
+    <Value>On 26 May 2011, the rules about cookies on websites changed. This site uses cookies. One or more of the cookies we use is essential for parts of this website to operate and has already been set. You may delete and block all cookies from this site, but parts of the site will not work. To find out more about cookies used on this website and how to delete cookies, see our privacy policy</Value>
+  </LocaleResource>
+  <LocaleResource Name="EUCookieLaw.OK">
+    <Value>OK</Value>
+  </LocaleResource>
+  <LocaleResource Name="EUCookieLaw.Cancel">
+    <Value>Cancel</Value>
+  </LocaleResource>
+  <LocaleResource Name="EUCookieLaw.CannotBrowse">
+    <Value>You cannot browse this site until you accept cookies</Value>
+  </LocaleResource>
+  <LocaleResource Name="Common.Hide">
+    <Value>Hide</Value>
+  </LocaleResource>
+  <LocaleResource Name="Common.Show">
+    <Value>Show</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayEuCookieLawWarning">
+    <Value>Display EU cookie law warning</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayEuCookieLawWarning.Hint">
+    <Value>Make the site EU cookie law compliant. When enabled, new customers will see an appropriate warning box.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1148,5 +1175,13 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'mediasettings.defaultima
 BEGIN
 	INSERT [Setting] ([Name], [Value])
 	VALUES (N'mediasettings.defaultimagequality', N'100')
+END
+GO
+
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'storeinformationsettings.displayeucookielawwarning')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'storeinformationsettings.displayeucookielawwarning', N'false')
 END
 GO

@@ -696,6 +696,8 @@ namespace Nop.Admin.Controllers
                     };
                 })
                 .ToList();
+            //EU Cookie law
+            model.StoreInformationSettings.DisplayEuCookieLawWarning = _storeInformationSettings.DisplayEuCookieLawWarning;
 
             //seo settings
             model.SeoSettings.PageTitleSeparator = _seoSettings.PageTitleSeparator;
@@ -771,6 +773,8 @@ namespace Nop.Admin.Controllers
                                                  model.StoreInformationSettings.MobileDevicesSupported;
             _storeInformationSettings.MobileDevicesSupported = model.StoreInformationSettings.MobileDevicesSupported;
             _storeInformationSettings.DefaultStoreThemeForMobileDevices = model.StoreInformationSettings.DefaultStoreThemeForMobileDevices;
+            //EU Cookie law
+            _storeInformationSettings.DisplayEuCookieLawWarning = model.StoreInformationSettings.DisplayEuCookieLawWarning;
             _settingService.SaveSetting(_storeInformationSettings);
 
 
