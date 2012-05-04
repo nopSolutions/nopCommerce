@@ -2287,12 +2287,23 @@
 								<Children>
 									<LocaleResource Name="Name">
 										<Value>Tag name</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>The name of the product tag.</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="Required">
+                        <Value>Please provide a name.</Value>
+                      </LocaleResource>
+                    </Children>
 									</LocaleResource>
 									<LocaleResource Name="ProductCount">
 										<Value>Tagged products</Value>
 									</LocaleResource>
 								</Children>
 							</LocaleResource>
+              <LocaleResource Name="EditTagDetails">
+                <Value>Edit product tag details</Value>
+              </LocaleResource>
 						</Children>
 					</LocaleResource>
 				</Children>

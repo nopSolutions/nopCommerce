@@ -1,16 +1,36 @@
-﻿using System.Web.Mvc;
+﻿using System.Collections.Generic;
+using System.Web.Mvc;
+using FluentValidation.Attributes;
+using Nop.Admin.Validators.Catalog;
 using Nop.Web.Framework;
+using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.Catalog
 {
-    public class ProductTagModel : BaseNopEntityModel
+    [Validator(typeof(ProductTagValidator))]
+    public class ProductTagModel : BaseNopEntityModel, ILocalizedModel<ProductTagLocalizedModel>
     {
+        public ProductTagModel()
+        {
+            Locales = new List<ProductTagLocalizedModel>();
+        }
         [NopResourceDisplayName("Admin.Catalog.ProductTags.Fields.Name")]
         [AllowHtml]
         public string Name { get; set; }
 
         [NopResourceDisplayName("Admin.Catalog.ProductTags.Fields.ProductCount")]
         public int ProductCount { get; set; }
+
+        public IList<ProductTagLocalizedModel> Locales { get; set; }
+    }
+
+    public class ProductTagLocalizedModel : ILocalizedModelLocal
+    {
+        public int LanguageId { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.ProductTags.Fields.Name")]
+        [AllowHtml]
+        public string Name { get; set; }
     }
 }

@@ -1,0 +1,42 @@
+﻿@model ProductTagModel
+@using Telerik.Web.Mvc.UI;
+@Html.ValidationSummary(false)
+@Html.HiddenFor(model => model.Id)
+@if (ViewBag.RefreshPage == true)
+{
+    <script type="text/javascript">
+        try {window.opener.document.forms['@(ViewBag.formId)'].@(ViewBag.btnId).click();}
+        catch (e){} 
+        window.close();
+    </script>
+}
+@(Html.LocalizedEditor<ProductTagModel, ProductTagLocalizedModel>("producttag-localized",
+@<table class="adminContent">
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.Locales[item].Name):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => Model.Locales[item].Name)
+            @Html.ValidationMessageFor(model => model.Locales[item].Name)
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            @Html.HiddenFor(model => model.Locales[item].LanguageId)
+        </td>
+    </tr>
+</table>
+,
+@<table class="adminContent">
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.Name):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.Name)
+            @Html.ValidationMessageFor(model => model.Name)
+        </td>
+    </tr>
+</table>
+))

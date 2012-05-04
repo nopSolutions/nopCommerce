@@ -284,6 +284,15 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.DisplayEuCookieLawWarning.Hint">
     <Value>Make the site EU cookie law compliant. When enabled, new customers will see an appropriate warning box.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductTags.Fields.Name.Required">
+    <Value>Please provide a name.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductTags.Fields.Name.Hint">
+    <Value>The name of the product tag.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.ProductTags.EditTagDetails">
+    <Value>Edit product tag details</Value>
+  </LocaleResource>
 </Language>
 '
 

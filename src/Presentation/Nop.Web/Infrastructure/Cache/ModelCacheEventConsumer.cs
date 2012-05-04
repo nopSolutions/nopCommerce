@@ -130,14 +130,18 @@ namespace Nop.Web.Infrastructure.Cache
         /// </summary>
         /// <remarks>
         /// {0} : product id
+        /// {1} : language id
         /// </remarks>
-        public const string PRODUCTTAG_BY_PRODUCT_MODEL_KEY = "nop.pres.producttag.byproduct-{0}";
+        public const string PRODUCTTAG_BY_PRODUCT_MODEL_KEY = "nop.pres.producttag.byproduct-{0}-{1}";
         public const string PRODUCTTAG_BY_PRODUCT_PATTERN_KEY = "nop.pres.producttag.byproduct";
 
         /// <summary>
         /// Key for PopularProductTagsModel caching
         /// </summary>
-        public const string PRODUCTTAG_POPULAR_MODEL_KEY = "nop.pres.producttag.popular";
+        /// <remarks>
+        /// {0} : language id
+        /// </remarks>
+        public const string PRODUCTTAG_POPULAR_MODEL_KEY = "nop.pres.producttag.popular-{0}";
         public const string PRODUCTTAG_POPULAR_PATTERN_KEY = "nop.pres.producttag.popular";
 
         /// <summary>
@@ -171,7 +175,7 @@ namespace Nop.Web.Infrastructure.Cache
         public const string PRODUCT_SPECS_PATTERN_KEY = "nop.pres.product.specs";
 
         /// <summary>
-        /// Key for PopularProductTagsModel caching
+        /// Key for TopicModel caching
         /// </summary>
         /// <remarks>
         /// {0} : topic id

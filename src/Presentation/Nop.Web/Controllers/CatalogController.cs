@@ -2167,7 +2167,7 @@ namespace Nop.Web.Controllers
             if (product == null)
                 throw new ArgumentException("No product found with the specified id");
 
-            var cacheKey = string.Format(ModelCacheEventConsumer.PRODUCTTAG_BY_PRODUCT_MODEL_KEY, product.Id);
+            var cacheKey = string.Format(ModelCacheEventConsumer.PRODUCTTAG_BY_PRODUCT_MODEL_KEY, product.Id, _workContext.WorkingLanguage.Id);
             var cacheModel = _cacheManager.Get(cacheKey, () =>
                 {
                     var model = product.ProductTags
@@ -2177,7 +2177,7 @@ namespace Nop.Web.Controllers
                                         var ptModel = new ProductTagModel()
                                         {
                                             Id = x.Id,
-                                            Name = x.Name,
+                                            Name = x.GetLocalized(y => y.Name),
                                             ProductCount = x.ProductCount
                                         };
                                         return ptModel;
@@ -2193,7 +2193,7 @@ namespace Nop.Web.Controllers
         //[OutputCache(Duration = 120, VaryByCustom = "WorkingLanguage")]
         public ActionResult PopularProductTags()
         {
-            var cacheKey = ModelCacheEventConsumer.PRODUCTTAG_POPULAR_MODEL_KEY;
+            var cacheKey = string.Format(ModelCacheEventConsumer.PRODUCTTAG_POPULAR_MODEL_KEY, _workContext.WorkingLanguage.Id);
             var cacheModel = _cacheManager.Get(cacheKey, () =>
             {
                 var model = new PopularProductTagsModel();
@@ -2205,13 +2205,13 @@ namespace Nop.Web.Controllers
                     .Take(_catalogSettings.NumberOfProductTags)
                     .ToList();
                 //sorting
-                tags = tags.OrderBy(x => x.Name).ToList();
+                tags = tags.OrderBy(x => x.GetLocalized(y => y.Name)).ToList();
 
                 foreach (var tag in tags)
                     model.Tags.Add(new ProductTagModel()
                     {
                         Id = tag.Id,
-                        Name = tag.Name,
+                        Name = tag.GetLocalized(y => y.Name),
                         ProductCount = tag.ProductCount
                     });
                 return model;
@@ -2231,7 +2231,7 @@ namespace Nop.Web.Controllers
 
             var model = new ProductsByTagModel()
             {
-                TagName = productTag.Name
+                TagName = productTag.GetLocalized(y => y.Name)
             };
 
 

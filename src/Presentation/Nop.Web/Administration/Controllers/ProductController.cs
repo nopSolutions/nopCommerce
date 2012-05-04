@@ -273,7 +273,17 @@ namespace Nop.Admin.Controllers
             }
         }
 
-
+        [NonAction]
+        private void UpdateLocales(ProductTag productTag, ProductTagModel model)
+        {
+            foreach (var localized in model.Locales)
+            {
+                _localizedEntityService.SaveLocalizedValue(productTag,
+                                                               x => x.Name,
+                                                               localized.Name,
+                                                               localized.LanguageId);
+            }
+        }
 
         [NonAction]
         private void FirstVariant_UpdateLocales(ProductVariant variant, ProductVariantModel model)
@@ -341,6 +351,7 @@ namespace Nop.Admin.Controllers
             return result.ToArray();
         }
 
+        [NonAction]
         private void SaveProductTags(Product product, string[] productTags)
         {
             if (product == null)
@@ -1449,6 +1460,60 @@ namespace Nop.Admin.Controllers
             _productTagService.DeleteProductTag(tag);
 
             return ProductTags(command);
+        }
+
+        //edit
+        public ActionResult EditProductTag(int id)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
+            var productTag = _productTagService.GetProductById(id);
+            if (productTag == null)
+                //No product tag found with the specified id
+                return RedirectToAction("List");
+
+            var model = new ProductTagModel()
+            {
+                Id = productTag.Id,
+                Name = productTag.Name,
+                ProductCount = productTag.ProductCount
+            };
+            //locales
+            AddLocales(_languageService, model.Locales, (locale, languageId) =>
+            {
+                locale.Name = productTag.GetLocalized(x => x.Name, languageId, false, false);
+            });
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult EditProductTag(string btnId, string formId, ProductTagModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return AccessDeniedView();
+
+            var productTag = _productTagService.GetProductById(model.Id);
+            if (productTag == null)
+                //No product tag found with the specified id
+                return RedirectToAction("List");
+
+            if (ModelState.IsValid)
+            {
+                productTag.Name = model.Name;
+                _productTagService.UpdateProductTag(productTag);
+                //locales
+                UpdateLocales(productTag, model);
+
+                ViewBag.RefreshPage = true;
+                ViewBag.btnId = btnId;
+                ViewBag.formId = formId;
+                return View(model);
+            }
+
+            //If we got this far, something failed, redisplay form
+            return View(model);
         }
 
         #endregion
