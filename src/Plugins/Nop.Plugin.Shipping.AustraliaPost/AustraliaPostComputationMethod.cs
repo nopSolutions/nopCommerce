@@ -161,12 +161,56 @@ namespace Nop.Plugin.Shipping.AustraliaPost
                 throw new NopException(err_msg);
             }
 
-            shippingOption.Name = serviceType;
+            var serviceName = GetServiceNameByType(serviceType);
+            if (serviceName != null && !serviceName.StartsWith("Australia Post.", StringComparison.InvariantCultureIgnoreCase))
+                serviceName = string.Format("Australia Post. {0}", serviceName);
+            shippingOption.Name = serviceName;
             shippingOption.Description = String.Format("{0} Days", rspParams["days"]);
             shippingOption.Rate = Decimal.Parse(rspParams["charge"]);
 
             return shippingOption;
         }
+        
+        private string GetServiceNameByType(string type)
+        {
+            if (String.IsNullOrEmpty(type))
+                return type;
+
+            var serviceName = "";
+            switch (type)
+            {
+                case "Standard":
+                    serviceName = "Regular Parcels";
+                    break;
+                case "Express":
+                    serviceName = "Express Parcels";
+                    break;
+                case "EXP_PLT":
+                    serviceName = "Express Parcels Platinum";
+                    break;
+                case "Air":
+                    serviceName = "Air Mail";
+                    break;
+                case "Sea":
+                    serviceName = "Sea Mail";
+                    break;
+                case "ECI_D":
+                    serviceName = "Express Courier International Document";
+                    break;
+                case "ECI_M":
+                    serviceName = "Express Courier International Merchandise";
+                    break;
+                case "EPI":
+                    serviceName = "Express Post International";
+                    break;
+                default:
+                    //not found. return service type
+                    serviceName = type;
+                    break;
+            }
+            return serviceName;
+        }
+
         #endregion
 
         #region Methods
@@ -252,11 +296,13 @@ namespace Nop.Plugin.Shipping.AustraliaPost
                 switch (country.ThreeLetterIsoCode)
                 {
                     case "AUS":
+                        //domestic services
                         response.ShippingOptions.Add(RequestShippingOption(zipPostalCodeFrom, zipPostalCodeTo, country.TwoLetterIsoCode, "Standard", weight, length, width, height, totalPackages));
                         response.ShippingOptions.Add(RequestShippingOption(zipPostalCodeFrom, zipPostalCodeTo, country.TwoLetterIsoCode, "Express", weight, length, width, height, totalPackages));
                         response.ShippingOptions.Add(RequestShippingOption(zipPostalCodeFrom, zipPostalCodeTo, country.TwoLetterIsoCode, "EXP_PLT", weight, length, width, height, totalPackages));
                         break;
                     default:
+                        //international services
                         response.ShippingOptions.Add(RequestShippingOption(zipPostalCodeFrom, zipPostalCodeTo, country.TwoLetterIsoCode, "Air", weight, length, width, height, totalPackages));
                         response.ShippingOptions.Add(RequestShippingOption(zipPostalCodeFrom, zipPostalCodeTo, country.TwoLetterIsoCode, "Sea", weight, length, width, height, totalPackages));
                         response.ShippingOptions.Add(RequestShippingOption(zipPostalCodeFrom, zipPostalCodeTo, country.TwoLetterIsoCode, "ECI_D", weight, length, width, height, totalPackages));
