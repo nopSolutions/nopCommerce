@@ -707,6 +707,7 @@ namespace Nop.Services.Messages
                 "%Order.BillingEmail%",
                 "%Order.BillingFaxNumber%",
                 "%Order.BillingCompany%",
+                "%Order.BillingAddress1%",
                 "%Order.BillingAddress2%",
                 "%Order.BillingCity%",
                 "%Order.BillingStateProvince%",
