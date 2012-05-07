@@ -34,6 +34,7 @@ using Nop.Core.IO;
 using Nop.Services.Customers;
 using Nop.Services.Helpers;
 using Nop.Services.Media;
+using Nop.Services.Common;
 
 namespace Nop.Services.Installation
 {
@@ -72,7 +73,7 @@ namespace Nop.Services.Installation
         private readonly IRepository<CategoryTemplate> _categoryTemplateRepository;
         private readonly IRepository<ManufacturerTemplate> _manufacturerTemplateRepository;
         private readonly IRepository<ScheduleTask> _scheduleTaskRepository;
-        private readonly ICustomerService _customerService;
+        private readonly IGenericAttributeService _genericAttributeService;
         private readonly IWebHelper _webHelper;
 
         #endregion
@@ -110,7 +111,7 @@ namespace Nop.Services.Installation
             IRepository<CategoryTemplate> categoryTemplateRepository,
             IRepository<ManufacturerTemplate> manufacturerTemplateRepository,
             IRepository<ScheduleTask> scheduleTaskRepository,
-            ICustomerService customerService,
+            IGenericAttributeService genericAttributeService,
             IWebHelper webHelper)
         {
             this._measureDimensionRepository = measureDimensionRepository;
@@ -144,7 +145,7 @@ namespace Nop.Services.Installation
             this._categoryTemplateRepository = categoryTemplateRepository;
             this._manufacturerTemplateRepository = manufacturerTemplateRepository;
             this._scheduleTaskRepository = scheduleTaskRepository;
-            this._customerService = customerService;
+            this._genericAttributeService = genericAttributeService;
             this._webHelper = webHelper;
         }
 
@@ -4071,8 +4072,8 @@ namespace Nop.Services.Installation
             adminUser.CustomerRoles.Add(crRegistered);
             _customerRepository.Insert(adminUser);
             //set default customer name
-            _customerService.SaveCustomerAttribute<string>(adminUser, SystemCustomerAttributeNames.FirstName, "John");
-            _customerService.SaveCustomerAttribute<string>(adminUser, SystemCustomerAttributeNames.LastName, "Smith");
+            _genericAttributeService.SaveAttribute(adminUser, SystemCustomerAttributeNames.FirstName, "John");
+            _genericAttributeService.SaveAttribute(adminUser, SystemCustomerAttributeNames.LastName, "Smith");
 
 
             //search engine (crawler) built-in user

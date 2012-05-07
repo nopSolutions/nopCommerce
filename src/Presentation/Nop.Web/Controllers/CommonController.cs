@@ -50,7 +50,7 @@ namespace Nop.Web.Controllers
         private readonly IThemeContext _themeContext;
         private readonly IThemeProvider _themeProvider;
         private readonly IForumService _forumservice;
-        private readonly ICustomerService _customerService;
+        private readonly IGenericAttributeService _genericAttributeService;
         private readonly IWebHelper _webHelper;
         private readonly IPermissionService _permissionService;
         private readonly IMobileDeviceHelper _mobileDeviceHelper;
@@ -75,7 +75,7 @@ namespace Nop.Web.Controllers
             IQueuedEmailService queuedEmailService, IEmailAccountService emailAccountService,
             ISitemapGenerator sitemapGenerator, IThemeContext themeContext,
             IThemeProvider themeProvider, IForumService forumService,
-            ICustomerService customerService, IWebHelper webHelper,
+            IGenericAttributeService genericAttributeService, IWebHelper webHelper,
             IPermissionService permissionService, IMobileDeviceHelper mobileDeviceHelper,
             HttpContextBase httpContext, CustomerSettings customerSettings, 
             TaxSettings taxSettings, CatalogSettings catalogSettings,
@@ -97,7 +97,7 @@ namespace Nop.Web.Controllers
             this._themeContext = themeContext;
             this._themeProvider = themeProvider;
             this._forumservice = forumService;
-            this._customerService = customerService;
+            this._genericAttributeService = genericAttributeService;
             this._webHelper = webHelper;
             this._permissionService = permissionService;
             this._mobileDeviceHelper = mobileDeviceHelper;
@@ -292,7 +292,7 @@ namespace Nop.Web.Controllers
                 if (_forumSettings.ShowAlertForPM && 
                     !customer.GetAttribute<bool>(SystemCustomerAttributeNames.NotifiedAboutNewPrivateMessages))
                 {
-                    _customerService.SaveCustomerAttribute<bool>(customer, SystemCustomerAttributeNames.NotifiedAboutNewPrivateMessages, true);
+                    _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.NotifiedAboutNewPrivateMessages, true);
                     alertMessage = string.Format(_localizationService.GetResource("PrivateMessages.YouHaveUnreadPM"), unreadMessageCount);
                 }
             }
@@ -568,7 +568,7 @@ namespace Nop.Web.Controllers
         /// <returns>Action result</returns>
         public ActionResult ChangeDevice(bool dontUseMobileVersion)
         {
-            _customerService.SaveCustomerAttribute(_workContext.CurrentCustomer,
+            _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
                 SystemCustomerAttributeNames.DontUseMobileVersion, dontUseMobileVersion);
 
             //TODO: URL referrer is null in IE 8. Fix it
@@ -621,7 +621,7 @@ namespace Nop.Web.Controllers
                 return Json(new { stored = false });
 
             //save setting
-            _customerService.SaveCustomerAttribute(_workContext.CurrentCustomer, "EuCookieLaw.Accepted", true);
+            _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, "EuCookieLaw.Accepted", true);
             return Json(new { stored = true });
         }
     }

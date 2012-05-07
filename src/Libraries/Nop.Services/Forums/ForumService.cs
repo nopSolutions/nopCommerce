@@ -7,6 +7,7 @@ using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Events;
+using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
 using Nop.Services.Messages;
@@ -37,7 +38,7 @@ namespace Nop.Services.Forums
         private readonly ForumSettings _forumSettings;
         private readonly IRepository<Customer> _customerRepository;
         private readonly ICacheManager _cacheManager;
-        private readonly ISettingService _settingService;
+        private readonly IGenericAttributeService _genericAttributeService;
         private readonly ICustomerService _customerService;
         private readonly IWorkContext _workContext;
         private readonly IWorkflowMessageService _workflowMessageService;
@@ -59,7 +60,7 @@ namespace Nop.Services.Forums
         /// <param name="forumSubscriptionRepository">Forum subscription repository</param>
         /// <param name="forumSettings">Forum settings</param>
         /// <param name="customerRepository">Customer repository</param>
-        /// <param name="settingService">Setting service</param>
+        /// <param name="genericAttributeService">Generic attribute service</param>
         /// <param name="customerService">Customer service</param>
         /// <param name="workContext">Work context</param>
         /// <param name="workflowMessageService">Workflow message service</param>
@@ -73,7 +74,7 @@ namespace Nop.Services.Forums
             IRepository<ForumSubscription> forumSubscriptionRepository,
             ForumSettings forumSettings,
             IRepository<Customer> customerRepository,
-            ISettingService settingService,
+            IGenericAttributeService genericAttributeService,
             ICustomerService customerService,
             IWorkContext workContext,
             IWorkflowMessageService workflowMessageService,
@@ -89,7 +90,7 @@ namespace Nop.Services.Forums
             this._forumSubscriptionRepository = forumSubscriptionRepository;
             this._forumSettings = forumSettings;
             this._customerRepository = customerRepository;
-            this._settingService = settingService;
+            this._genericAttributeService = genericAttributeService;
             this._customerService = customerService;
             this._workContext = workContext;
             this._workflowMessageService = workflowMessageService;
@@ -237,7 +238,7 @@ namespace Nop.Services.Forums
                         select fp.Id;
             int numPosts = query.Count();
 
-            _customerService.SaveCustomerAttribute<int>(customer, SystemCustomerAttributeNames.ForumPostCount, numPosts);
+            _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.ForumPostCount, numPosts);
         }
 
         private bool IsForumModerator(Customer customer)
@@ -1027,7 +1028,7 @@ namespace Nop.Services.Forums
             }
 
             //UI notification            
-            _customerService.SaveCustomerAttribute<bool>(customerTo, SystemCustomerAttributeNames.NotifiedAboutNewPrivateMessages, false);
+            _genericAttributeService.SaveAttribute(customerTo, SystemCustomerAttributeNames.NotifiedAboutNewPrivateMessages, false);
 
             //Email notification
             if (_forumSettings.NotifyAboutPrivateMessages)

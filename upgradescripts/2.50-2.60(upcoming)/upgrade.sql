@@ -1201,3 +1201,76 @@ UPDATE [TaxRate]
 SET [Zip] = null
 WHERE [Zip] = N'*'
 GO
+
+--new generic attribute implementation
+IF NOT EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[dbo].[GenericAttribute]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+BEGIN
+CREATE TABLE [dbo].[GenericAttribute](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[EntityId] [int] NOT NULL,
+	[KeyGroup] nvarchar(400) NOT NULL,
+	[Key] nvarchar(400) NOT NULL,
+	[Value] nvarchar(MAX) NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+END
+GO
+
+IF EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[dbo].[CustomerAttribute]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+BEGIN
+	--move customer attributes to the new generic attributes
+	EXEC('
+	DECLARE @CustomerAttributeId int
+	DECLARE cur_customerattribute CURSOR FOR
+	SELECT [Id]
+	FROM [CustomerAttribute]
+	ORDER BY [Id]
+	OPEN cur_customerattribute
+	FETCH NEXT FROM cur_customerattribute INTO @CustomerAttributeId
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+
+		DECLARE @AttributeCustomerId int
+		DECLARE @AttributeKey nvarchar(MAX)
+		DECLARE @AttributeValue nvarchar(MAX)
+		SET @AttributeCustomerId = null -- clear cache (variable scope)
+		SET @AttributeKey = null -- clear cache (variable scope)
+		SET @AttributeValue = null -- clear cache (variable scope)
+		SELECT @AttributeCustomerId = [CustomerId],
+		@AttributeKey = [Key],
+		@AttributeValue = [Value]
+		FROM [CustomerAttribute] WHERE [Id]=@CustomerAttributeId
+
+		--insert new generic attribute
+		INSERT INTO [GenericAttribute] ([EntityId], [KeyGroup], [Key], [Value])
+		VALUES (@AttributeCustomerId, N''Customer'', @AttributeKey, @AttributeValue)	
+			
+		--fetch next identifier
+		FETCH NEXT FROM cur_customerattribute INTO @CustomerAttributeId
+	END
+	CLOSE cur_customerattribute
+	DEALLOCATE cur_customerattribute
+	')
+
+	DROP TABLE [dbo].[CustomerAttribute]
+END
+GO
+
+
+--more SQL indexes
+IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_GenericAttribute_EntityId_and_KeyGroup' and id=object_id(N'[dbo].[GenericAttribute]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_GenericAttribute_EntityId_and_KeyGroup] ON [dbo].[GenericAttribute] 
+	(
+		[EntityId] ASC,
+		[KeyGroup] ASC
+	)
+END
+GO
+
+
+
+

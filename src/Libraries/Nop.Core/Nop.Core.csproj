@@ -62,6 +62,7 @@
   <ItemGroup>
     <Compile Include="ComponentModel\WriteLockDisposable.cs" />
     <Compile Include="Domain\Catalog\BackInStockSubscription.cs" />
+    <Compile Include="Domain\Common\GenericAttribute.cs" />
     <Compile Include="Domain\Common\PageTitleSeoAdjustment.cs" />
     <Compile Include="Domain\Orders\Events.cs" />
     <Compile Include="Domain\Shipping\ShipmentOrderProductVariant.cs" />
@@ -199,7 +200,6 @@
     <Compile Include="Infrastructure\ITypeFinder.cs" />
     <Compile Include="Infrastructure\NopEngine.cs" />
     <Compile Include="Domain\Common\Address.cs" />
-    <Compile Include="Domain\Customers\CustomerAttribute.cs" />
     <Compile Include="Domain\Customers\CustomerSettings.cs" />
     <Compile Include="Domain\Customers\CustomerRole.cs" />
     <Compile Include="Domain\Customers\RewardPointsSettings.cs" />

@@ -66,6 +66,7 @@
     <Compile Include="Cms\WidgetPersistenceTests.cs" />
     <Compile Include="Common\AddressPeristenceTests.cs" />
     <Compile Include="Catalog\CategoryPersistenceTests.cs" />
+    <Compile Include="Common\GenericAttributePersistenceTests.cs" />
     <Compile Include="Customers\ExternalAuthenticationRecordPersistenceTests.cs" />
     <Compile Include="Orders\CheckoutAttributePersistenceTests.cs" />
     <Compile Include="Orders\CheckoutAttributeValuePersistenceTests.cs" />
@@ -108,7 +109,6 @@
     <Compile Include="Tax\TaxCategoryPersistenceTests.cs" />
     <Compile Include="Discounts\DiscountRequirementPersistenceTests.cs" />
     <Compile Include="Discounts\DiscountPersistenceTests.cs" />
-    <Compile Include="Customers\CustomerAttributePersistenceTests.cs" />
     <Compile Include="Customers\CustomerRolePersistenceTests.cs" />
     <Compile Include="Directory\MeasureWeightPersistenceTests.cs" />
     <Compile Include="Directory\MeasureDimensionPersistenceTests.cs" />

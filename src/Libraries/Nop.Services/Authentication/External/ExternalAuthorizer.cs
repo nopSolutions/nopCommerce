@@ -4,6 +4,7 @@ using System;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
+using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
@@ -16,7 +17,7 @@ namespace Nop.Services.Authentication.External
 
         private readonly IAuthenticationService _authenticationService;
         private readonly IOpenAuthenticationService _openAuthenticationService;
-        private readonly ICustomerService _customerService;
+        private readonly IGenericAttributeService _genericAttributeService;
         private readonly ICustomerRegistrationService _customerRegistrationService;
         private readonly IWorkContext _workContext;
         private readonly CustomerSettings _customerSettings;
@@ -30,7 +31,7 @@ namespace Nop.Services.Authentication.External
 
         public ExternalAuthorizer(IAuthenticationService authenticationService,
             IOpenAuthenticationService openAuthenticationService,
-            ICustomerService customerService,
+            IGenericAttributeService genericAttributeService,
             ICustomerRegistrationService customerRegistrationService, 
             IWorkContext workContext, CustomerSettings customerSettings,
             ExternalAuthenticationSettings externalAuthenticationSettings,
@@ -39,7 +40,7 @@ namespace Nop.Services.Authentication.External
         {
             this._authenticationService = authenticationService;
             this._openAuthenticationService = openAuthenticationService;
-            this._customerService = customerService;
+            this._genericAttributeService = genericAttributeService;
             this._customerRegistrationService = customerRegistrationService;
             this._workContext = workContext;
             this._customerSettings = customerSettings;
@@ -121,9 +122,9 @@ namespace Nop.Services.Authentication.External
                     {
                         //store other parameters (form fields)
                         if (!String.IsNullOrEmpty(details.FirstName))
-                            _customerService.SaveCustomerAttribute(currentCustomer, SystemCustomerAttributeNames.FirstName, details.FirstName);
+                            _genericAttributeService.SaveAttribute(currentCustomer, SystemCustomerAttributeNames.FirstName, details.FirstName);
                         if (!String.IsNullOrEmpty(details.LastName))
-                            _customerService.SaveCustomerAttribute(currentCustomer, SystemCustomerAttributeNames.LastName, details.LastName);
+                            _genericAttributeService.SaveAttribute(currentCustomer, SystemCustomerAttributeNames.LastName, details.LastName);
                     
 
                         userFound = currentCustomer;
@@ -145,7 +146,7 @@ namespace Nop.Services.Authentication.External
                             case UserRegistrationType.EmailValidation:
                                 {
                                     //email validation message
-                                    _customerService.SaveCustomerAttribute(currentCustomer, SystemCustomerAttributeNames.AccountActivationToken, Guid.NewGuid().ToString());
+                                    _genericAttributeService.SaveAttribute(currentCustomer, SystemCustomerAttributeNames.AccountActivationToken, Guid.NewGuid().ToString());
                                     _workflowMessageService.SendCustomerEmailValidationMessage(currentCustomer, _workContext.WorkingLanguage.Id);
 
                                     //result

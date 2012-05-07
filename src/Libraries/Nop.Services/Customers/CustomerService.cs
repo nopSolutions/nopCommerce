@@ -6,10 +6,13 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Events;
+using Nop.Core.Infrastructure;
+using Nop.Services.Common;
 
 namespace Nop.Services.Customers
 {
@@ -30,7 +33,8 @@ namespace Nop.Services.Customers
 
         private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<CustomerRole> _customerRoleRepository;
-        private readonly IRepository<CustomerAttribute> _customerAttributeRepository;
+        private readonly IRepository<GenericAttribute> _gaRepository;
+        private readonly IGenericAttributeService _genericAttributeService;
         private readonly ICacheManager _cacheManager;
         private readonly IEventPublisher _eventPublisher;
 
@@ -44,18 +48,21 @@ namespace Nop.Services.Customers
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="customerRepository">Customer repository</param>
         /// <param name="customerRoleRepository">Customer role repository</param>
-        /// <param name="customerAttributeRepository">Customer attribute repository</param>
+        /// <param name="gaRepository">Generic attribute repository</param>
+        /// <param name="genericAttributeService">Generic attribute service</param>
         /// <param name="eventPublisher">Event published</param>
         public CustomerService(ICacheManager cacheManager,
             IRepository<Customer> customerRepository,
             IRepository<CustomerRole> customerRoleRepository,
-            IRepository<CustomerAttribute> customerAttributeRepository,
+            IRepository<GenericAttribute> gaRepository,
+            IGenericAttributeService genericAttributeService,
             IEventPublisher eventPublisher)
         {
             this._cacheManager = cacheManager;
             this._customerRepository = customerRepository;
             this._customerRoleRepository = customerRoleRepository;
-            this._customerAttributeRepository = customerAttributeRepository;
+            this._gaRepository = gaRepository;
+            this._genericAttributeService = genericAttributeService;
             this._eventPublisher = eventPublisher;
         }
 
@@ -104,9 +111,23 @@ namespace Nop.Services.Customers
             if (!String.IsNullOrWhiteSpace(username))
                 query = query.Where(c => c.Username.Contains(username));
             if (!String.IsNullOrWhiteSpace(firstName))
-                query = query.Where(c => c.CustomerAttributes.Where(ca => ca.Key == SystemCustomerAttributeNames.FirstName && ca.Value.Contains(firstName)).Count() > 0);
+            {
+                query = query
+                    .Join(_gaRepository.Table, x => x.Id, y => y.EntityId, (x, y) => new { Customer = x, Attribute = y })
+                    .Where((z => z.Attribute.KeyGroup == "Customer" &&
+                        z.Attribute.Key == SystemCustomerAttributeNames.FirstName &&
+                        z.Attribute.Value.Contains(firstName)))
+                    .Select(z => z.Customer);
+            }
             if (!String.IsNullOrWhiteSpace(lastName))
-                query = query.Where(c => c.CustomerAttributes.Where(ca => ca.Key == SystemCustomerAttributeNames.LastName && ca.Value.Contains(lastName)).Count() > 0);
+            {
+                query = query
+                    .Join(_gaRepository.Table, x => x.Id, y => y.EntityId, (x, y) => new { Customer = x, Attribute = y })
+                    .Where((z => z.Attribute.KeyGroup == "Customer" &&
+                        z.Attribute.Key == SystemCustomerAttributeNames.LastName &&
+                        z.Attribute.Value.Contains(lastName)))
+                    .Select(z => z.Customer);
+            }
             //date of birth is stored as a string into database.
             //we also know that date of birth is stored in the following format YYYY-MM-DD (for example, 1983-02-18).
             //so let's search it as a string
@@ -115,35 +136,76 @@ namespace Nop.Services.Customers
                 //both are specified
                 string dateOfBirthStr = monthOfBirth.ToString("00", CultureInfo.InvariantCulture) + "-" + dayOfBirth.ToString("00", CultureInfo.InvariantCulture);
                 //EndsWith is not supported by SQL Server Compact
-                //query = query.Where(c => c.CustomerAttributes.Where(ca => ca.Key == SystemCustomerAttributeNames.DateOfBirth && ca.Value.EndsWith(dateOfBirthStr)).Count() > 0);
                 //so let's use the following workaround http://social.msdn.microsoft.com/Forums/is/sqlce/thread/0f810be1-2132-4c59-b9ae-8f7013c0cc00
-                query = query.Where(c => c.CustomerAttributes.Where(ca => ca.Key == SystemCustomerAttributeNames.DateOfBirth && ca.Value.Substring(ca.Value.Length - dateOfBirthStr.Length, dateOfBirthStr.Length) == dateOfBirthStr).Count() > 0);
+                
+                //we also cannot use Length function in SQL Server Compact (not supported in this context)
+                //z.Attribute.Value.Length - dateOfBirthStr.Length = 5
+                //dateOfBirthStr.Length = 5
+                query = query
+                    .Join(_gaRepository.Table, x => x.Id, y => y.EntityId, (x, y) => new { Customer = x, Attribute = y })
+                    .Where((z => z.Attribute.KeyGroup == "Customer" &&
+                        z.Attribute.Key == SystemCustomerAttributeNames.DateOfBirth &&
+                        z.Attribute.Value.Substring(5, 5) == dateOfBirthStr))
+                    .Select(z => z.Customer);
             }
             else if (dayOfBirth > 0)
             {
                 //only day is specified
                 string dateOfBirthStr = dayOfBirth.ToString("00", CultureInfo.InvariantCulture);
                 //EndsWith is not supported by SQL Server Compact
-                //query = query.Where(c => c.CustomerAttributes.Where(ca => ca.Key == SystemCustomerAttributeNames.DateOfBirth && ca.Value.EndsWith(dateOfBirthStr)).Count() > 0);
                 //so let's use the following workaround http://social.msdn.microsoft.com/Forums/is/sqlce/thread/0f810be1-2132-4c59-b9ae-8f7013c0cc00
-                query = query.Where(c => c.CustomerAttributes.Where(ca => ca.Key == SystemCustomerAttributeNames.DateOfBirth && ca.Value.Substring(ca.Value.Length - dateOfBirthStr.Length, dateOfBirthStr.Length) == dateOfBirthStr).Count() > 0);
+                
+                //we also cannot use Length function in SQL Server Compact (not supported in this context)
+                //z.Attribute.Value.Length - dateOfBirthStr.Length = 8
+                //dateOfBirthStr.Length = 2
+                query = query
+                    .Join(_gaRepository.Table, x => x.Id, y => y.EntityId, (x, y) => new { Customer = x, Attribute = y })
+                    .Where((z => z.Attribute.KeyGroup == "Customer" &&
+                        z.Attribute.Key == SystemCustomerAttributeNames.DateOfBirth &&
+                        z.Attribute.Value.Substring(8, 2) == dateOfBirthStr))
+                    .Select(z => z.Customer);
             }
             else if (monthOfBirth > 0)
             {
                 //only month is specified
                 string dateOfBirthStr = "-" + monthOfBirth.ToString("00", CultureInfo.InvariantCulture) + "-";
-                query = query.Where(c => c.CustomerAttributes.Where(ca => ca.Key == SystemCustomerAttributeNames.DateOfBirth && ca.Value.Contains(dateOfBirthStr)).Count() > 0);
+                query = query
+                    .Join(_gaRepository.Table, x => x.Id, y => y.EntityId, (x, y) => new { Customer = x, Attribute = y })
+                    .Where((z => z.Attribute.KeyGroup == "Customer" &&
+                        z.Attribute.Key == SystemCustomerAttributeNames.DateOfBirth &&
+                        z.Attribute.Value.Contains(dateOfBirthStr)))
+                    .Select(z => z.Customer);
             }
             //search by company
             if (!String.IsNullOrWhiteSpace(company))
-                query = query.Where(c => c.CustomerAttributes.Where(ca => ca.Key == SystemCustomerAttributeNames.Company && ca.Value.Contains(company)).Count() > 0);
+            {
+                query = query
+                    .Join(_gaRepository.Table, x => x.Id, y => y.EntityId, (x, y) => new { Customer = x, Attribute = y })
+                    .Where((z => z.Attribute.KeyGroup == "Customer" &&
+                        z.Attribute.Key == SystemCustomerAttributeNames.Company &&
+                        z.Attribute.Value.Contains(company)))
+                    .Select(z => z.Customer);
+            }
             //search by phone
             if (!String.IsNullOrWhiteSpace(phone))
-                query = query.Where(c => c.CustomerAttributes.Where(ca => ca.Key == SystemCustomerAttributeNames.Phone && ca.Value.Contains(phone)).Count() > 0);
+            {
+                query = query
+                    .Join(_gaRepository.Table, x => x.Id, y => y.EntityId, (x, y) => new { Customer = x, Attribute = y })
+                    .Where((z => z.Attribute.KeyGroup == "Customer" &&
+                        z.Attribute.Key == SystemCustomerAttributeNames.Phone &&
+                        z.Attribute.Value.Contains(phone)))
+                    .Select(z => z.Customer);
+            }
             //search by zip
             if (!String.IsNullOrWhiteSpace(zipPostalCode))
-                query = query.Where(c => c.CustomerAttributes.Where(ca => ca.Key == SystemCustomerAttributeNames.ZipPostalCode && ca.Value.Contains(zipPostalCode)).Count() > 0);
-
+            {
+                query = query
+                    .Join(_gaRepository.Table, x => x.Id, y => y.EntityId, (x, y) => new { Customer = x, Attribute = y })
+                    .Where((z => z.Attribute.KeyGroup == "Customer" &&
+                        z.Attribute.Key == SystemCustomerAttributeNames.ZipPostalCode &&
+                        z.Attribute.Value.Contains(zipPostalCode)))
+                    .Select(z => z.Customer);
+            }
 
             if (loadOnlyWithShoppingCart)
             {
@@ -450,8 +512,8 @@ namespace Nop.Services.Customers
             customer.UseRewardPointsDuringCheckout = false;
 
             //clear selected shipping and payment methods
-            SaveCustomerAttribute<ShippingOption>(customer, SystemCustomerAttributeNames.LastShippingOption, null);
-            SaveCustomerAttribute<ShippingOption>(customer, SystemCustomerAttributeNames.OfferedShippingOptions, null);
+            _genericAttributeService.SaveAttribute<ShippingOption>(customer, SystemCustomerAttributeNames.LastShippingOption, null);
+            _genericAttributeService.SaveAttribute<ShippingOption>(customer, SystemCustomerAttributeNames.OfferedShippingOptions, null);
             customer.SelectedPaymentMethodSystemName = "";
 
             //clear entered coupon codes
@@ -630,117 +692,6 @@ namespace Nop.Services.Customers
 
             //event notification
             _eventPublisher.EntityUpdated(customerRole);
-        }
-
-        #endregion
-
-        #region Customer attributes
-
-        /// <summary>
-        /// Deletes a customer attribute
-        /// </summary>
-        /// <param name="customerAttribute">Customer attribute</param>
-        public virtual void DeleteCustomerAttribute(CustomerAttribute customerAttribute)
-        {
-            if (customerAttribute == null)
-                throw new ArgumentNullException("customerAttribute");
-
-            _customerAttributeRepository.Delete(customerAttribute);
-
-            //event notification
-            _eventPublisher.EntityDeleted(customerAttribute);
-        }
-
-        /// <summary>
-        /// Gets a customer attribute
-        /// </summary>
-        /// <param name="customerAttributeId">Customer attribute identifier</param>
-        /// <returns>A customer attribute</returns>
-        public virtual CustomerAttribute GetCustomerAttributeById(int customerAttributeId)
-        {
-            if (customerAttributeId == 0)
-                return null;
-
-            var customerAttribute = _customerAttributeRepository.GetById(customerAttributeId);
-            return customerAttribute;
-        }
-
-        /// <summary>
-        /// Inserts a customer attribute
-        /// </summary>
-        /// <param name="customerAttribute">Customer attribute</param>
-        public virtual void InsertCustomerAttribute(CustomerAttribute customerAttribute)
-        {
-            if (customerAttribute == null)
-                throw new ArgumentNullException("customerAttribute");
-
-            _customerAttributeRepository.Insert(customerAttribute);
-
-            //event notification
-            _eventPublisher.EntityInserted(customerAttribute);
-        }
-
-        /// <summary>
-        /// Updates the customer attribute
-        /// </summary>
-        /// <param name="customerAttribute">Customer attribute</param>
-        public virtual void UpdateCustomerAttribute(CustomerAttribute customerAttribute)
-        {
-            if (customerAttribute == null)
-                throw new ArgumentNullException("customerAttribute");
-
-            _customerAttributeRepository.Update(customerAttribute);
-
-            //event notification
-            _eventPublisher.EntityUpdated(customerAttribute);
-        }
-
-        /// <summary>
-        /// Save customer attribute
-        /// </summary>
-        /// <typeparam name="T">Type</typeparam>
-        /// <param name="customer">Customer</param>
-        /// <param name="key">Key</param>
-        /// <param name="value">Value</param>
-        /// <returns>Customer attribute</returns>
-        public virtual CustomerAttribute SaveCustomerAttribute<T>(Customer customer,
-            string key, T value)
-        {
-            if (customer == null)
-                throw new ArgumentNullException("customer");
-
-            if (!CommonHelper.GetNopCustomTypeConverter(typeof(T)).CanConvertTo(typeof(string)))
-                throw new NopException("Not supported customer attribute type");
-
-            string valueStr = CommonHelper.GetNopCustomTypeConverter(typeof(T)).ConvertToInvariantString(value);
-            //use the code below in order to support all serializable types (for example, ShippingOption)
-            //or use custom TypeConverters like it's implemented for ISettings
-            //using (var tr = new StringReader(customerAttribute.Value))
-            //{
-            //    var xmlS = new XmlSerializer(typeof(T));
-            //    valueStr = (T)xmlS.Deserialize(tr);
-            //}
-            
-            var customerAttribute = customer.CustomerAttributes.FirstOrDefault(ca => ca.Key.Equals(key, StringComparison.InvariantCultureIgnoreCase));
-            if (customerAttribute != null)
-            {
-                //update
-                customerAttribute.Value = valueStr;
-                UpdateCustomerAttribute(customerAttribute);
-            }
-            else
-            {
-                //insert
-                customerAttribute = new CustomerAttribute()
-                {
-                    Customer = customer,
-                    Key = key,
-                    Value = valueStr,
-                };
-                InsertCustomerAttribute(customerAttribute);
-            }
-
-            return customerAttribute;
         }
 
         #endregion

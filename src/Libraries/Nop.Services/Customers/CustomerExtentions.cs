@@ -3,6 +3,7 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Infrastructure;
+using Nop.Services.Common;
 using Nop.Services.Localization;
 
 namespace Nop.Services.Customers
@@ -91,40 +92,6 @@ namespace Nop.Services.Customers
         public static bool IsGuest(this Customer customer, bool onlyActiveCustomerRoles = true)
         {
             return IsInCustomerRole(customer, SystemCustomerRoleNames.Guests, onlyActiveCustomerRoles);
-        }
-
-        public static T GetAttribute<T>(this Customer customer,
-            string key)
-        {
-            if (customer == null)
-                throw new ArgumentNullException("customer");
-
-            var customerAttribute = customer.CustomerAttributes.FirstOrDefault(ca => ca.Key.Equals(key, StringComparison.InvariantCultureIgnoreCase));
-            if (customerAttribute == null)
-                return default(T);
-
-            if (String.IsNullOrEmpty(customerAttribute.Value))
-            {
-                //empty attribute
-                return default(T);
-            }
-            else
-            {
-                if (!CommonHelper.GetNopCustomTypeConverter(typeof(T)).CanConvertFrom(typeof(string)))
-                    throw new NopException("Not supported customer attribute type");
-                var attributeValue = (T)(CommonHelper.GetNopCustomTypeConverter(typeof(T)).ConvertFromInvariantString(customerAttribute.Value));
-                return attributeValue;
-
-                //use the code below in order to support all serializable types (for example, ShippingOption)
-                //or use custom TypeConverters like it's implemented for ISettings
-                //using (var tr = new StringReader(customerAttribute.Value))
-                //{
-                //    var xmlS = new XmlSerializer(typeof(T));
-                //    var attributeValue = (T)xmlS.Deserialize(tr);
-                //    return attributeValue;
-                //}
-
-            }
         }
         
         public static string GetFullName(this Customer customer)

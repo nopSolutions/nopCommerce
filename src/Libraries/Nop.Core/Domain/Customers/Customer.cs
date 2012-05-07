@@ -22,7 +22,6 @@ namespace Nop.Core.Domain.Customers
         private ICollection<ExternalAuthenticationRecord> _externalAuthenticationRecords;
         private ICollection<CustomerContent> _customerContent;
         private ICollection<CustomerRole> _customerRoles;
-        private ICollection<CustomerAttribute> _customerAttributes;
         private ICollection<ShoppingCartItem> _shoppingCartItems;
         private ICollection<Order> _orders;
         private ICollection<RewardPointsHistory> _rewardPointsHistory;
@@ -241,15 +240,6 @@ namespace Nop.Core.Domain.Customers
         {
             get { return _customerRoles ?? (_customerRoles = new List<CustomerRole>()); }
             protected set { _customerRoles = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets customer attributes
-        /// </summary>
-        public virtual ICollection<CustomerAttribute> CustomerAttributes
-        {
-            get { return _customerAttributes ?? (_customerAttributes = new List<CustomerAttribute>()); }
-            protected set { _customerAttributes = value; }
         }
 
         /// <summary>

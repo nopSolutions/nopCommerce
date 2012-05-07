@@ -2,6 +2,7 @@
 using Nop.Core;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Customers;
+using Nop.Services.Common;
 using Nop.Services.Customers;
 
 namespace Nop.Web.Framework.Themes
@@ -12,7 +13,7 @@ namespace Nop.Web.Framework.Themes
     public partial class ThemeContext : IThemeContext
     {
         private readonly IWorkContext _workContext;
-        private readonly ICustomerService _customerService;
+        private readonly IGenericAttributeService _genericAttributeService;
         private readonly StoreInformationSettings _storeInformationSettings;
         private readonly IThemeProvider _themeProvider;
 
@@ -22,11 +23,11 @@ namespace Nop.Web.Framework.Themes
         private bool _mobileThemeIsCached;
         private string _cachedMobileThemeName;
 
-        public ThemeContext(IWorkContext workContext, ICustomerService customerService,
+        public ThemeContext(IWorkContext workContext, IGenericAttributeService genericAttributeService,
             StoreInformationSettings storeInformationSettings, IThemeProvider themeProvider)
         {
             this._workContext = workContext;
-            this._customerService = customerService;
+            this._genericAttributeService = genericAttributeService;
             this._storeInformationSettings = storeInformationSettings;
             this._themeProvider = themeProvider;
         }
@@ -72,7 +73,7 @@ namespace Nop.Web.Framework.Themes
                 if (_workContext.CurrentCustomer == null)
                     return;
 
-                _customerService.SaveCustomerAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.WorkingDesktopThemeName, value);
+                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.WorkingDesktopThemeName, value);
 
                 //clear cache
                 this._desktopThemeIsCached = false;

@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseEfDataProvider.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="DataReaderExtensions.cs" />
     <Compile Include="DbContextExtensions.cs" />
     <Compile Include="Initializers\CreateCeDatabaseIfNotExists.cs" />
@@ -67,6 +68,7 @@
     <Compile Include="Mapping\Catalog\CategoryTemplateMap.cs" />
     <Compile Include="Mapping\Catalog\ProductTemplateMap.cs" />
     <Compile Include="Mapping\Cms\WidgetMap.cs" />
+    <Compile Include="Mapping\Common\GenericAttributeMap.cs" />
     <Compile Include="Mapping\Customers\ExternalAuthenticationRecordMap.cs" />
     <Compile Include="Mapping\Shipping\ShipmentMap.cs" />
     <Compile Include="Mapping\Shipping\ShipmentOrderProductVariantMap.cs" />
@@ -82,7 +84,6 @@
     <Compile Include="Mapping\Blogs\BlogCommentMap.cs" />
     <Compile Include="Mapping\News\NewsCommentMap.cs" />
     <Compile Include="Mapping\News\NewsItemMap.cs" />
-    <Compile Include="Mapping\Customers\CustomerAttributeMap.cs" />
     <Compile Include="Mapping\Customers\CustomerRoleMap.cs" />
     <Compile Include="Mapping\Customers\RewardPointsHistoryMap.cs" />
     <Compile Include="Mapping\Directory\MeasureWeightMap.cs" />

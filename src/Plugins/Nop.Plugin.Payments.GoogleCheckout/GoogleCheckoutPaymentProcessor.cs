@@ -47,6 +47,7 @@ namespace Nop.Plugin.Payments.GoogleCheckout
         private readonly IPriceCalculationService _priceCalculationService;
         private readonly IWorkContext _workContext;
         private readonly ICustomerService _customerService;
+        private readonly IGenericAttributeService _genericAttributeService;
         private readonly ICountryService _countryService;
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IOrderProcessingService _orderProcessingService;
@@ -62,7 +63,8 @@ namespace Nop.Plugin.Payments.GoogleCheckout
             IWebHelper webHelper, ITaxService taxService,
             IShippingService shippingService, IProductAttributeFormatter productAttributeFormatter,
             IPriceCalculationService priceCalculationService, IWorkContext workContext,
-            ICustomerService customerService, ICountryService countryService,
+            ICustomerService customerService, IGenericAttributeService genericAttributeService, 
+            ICountryService countryService,
             IStateProvinceService stateProvinceService, IOrderProcessingService orderProcessingService,
             IOrderService orderService, ILogger logger, HttpContextBase httpContext)
         {
@@ -74,6 +76,7 @@ namespace Nop.Plugin.Payments.GoogleCheckout
             this._priceCalculationService = priceCalculationService;
             this._workContext = workContext;
             this._customerService = customerService;
+            this._genericAttributeService = genericAttributeService;
             this._countryService = countryService;
             this._stateProvinceService = stateProvinceService;
             this._orderProcessingService = orderProcessingService;
@@ -205,7 +208,7 @@ namespace Nop.Plugin.Payments.GoogleCheckout
                 customer.BillingAddress = billingAddress;
                 _customerService.UpdateCustomer(customer);
 
-                _customerService.SaveCustomerAttribute<ShippingOption>(customer, SystemCustomerAttributeNames.LastShippingOption, null);
+                _genericAttributeService.SaveAttribute<ShippingOption>(customer, SystemCustomerAttributeNames.LastShippingOption, null);
 
                 bool shoppingCartRequiresShipping = cart.RequiresShipping();
                 if (shoppingCartRequiresShipping)
@@ -265,7 +268,7 @@ namespace Nop.Plugin.Payments.GoogleCheckout
                         var shippingOption = new ShippingOption();
                         shippingOption.Name = shippingMethod.shippingname;
                         shippingOption.Rate = shippingMethod.shippingcost.Value;
-                        _customerService.SaveCustomerAttribute<ShippingOption>(customer, SystemCustomerAttributeNames.LastShippingOption, shippingOption);
+                        _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.LastShippingOption, shippingOption);
                     }
                 }
 

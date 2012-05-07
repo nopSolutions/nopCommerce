@@ -10,7 +10,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Services.Catalog;
-using Nop.Services.Customers;
+using Nop.Services.Common;
 using Nop.Services.Discounts;
 using Nop.Services.Payments;
 using Nop.Services.Shipping;
@@ -33,6 +33,7 @@ namespace Nop.Services.Orders
         private readonly ICheckoutAttributeParser _checkoutAttributeParser;
         private readonly IDiscountService _discountService;
         private readonly IGiftCardService _giftCardService;
+        private readonly IGenericAttributeService _genericAttributeService;
         private readonly TaxSettings _taxSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly ShippingSettings _shippingSettings;
@@ -53,6 +54,7 @@ namespace Nop.Services.Orders
         /// <param name="checkoutAttributeParser">Checkout attribute parser</param>
         /// <param name="discountService">Discount service</param>
         /// <param name="giftCardService">Gift card service</param>
+        /// <param name="genericAttributeService">Generic attribute service</param>
         /// <param name="taxSettings">Tax settings</param>
         /// <param name="rewardPointsSettings">Reward points settings</param>
         /// <param name="shippingSettings">Shipping settings</param>
@@ -66,6 +68,7 @@ namespace Nop.Services.Orders
             ICheckoutAttributeParser checkoutAttributeParser,
             IDiscountService discountService,
             IGiftCardService giftCardService,
+            IGenericAttributeService genericAttributeService,
             TaxSettings taxSettings,
             RewardPointsSettings rewardPointsSettings,
             ShippingSettings shippingSettings,
@@ -80,6 +83,7 @@ namespace Nop.Services.Orders
             this._checkoutAttributeParser = checkoutAttributeParser;
             this._discountService = discountService;
             this._giftCardService = giftCardService;
+            this._genericAttributeService = genericAttributeService;
             this._taxSettings = taxSettings;
             this._rewardPointsSettings = rewardPointsSettings;
             this._shippingSettings = shippingSettings;
@@ -509,7 +513,7 @@ namespace Nop.Services.Orders
 
             ShippingOption lastShippingOption = null;
             if (customer != null)
-                lastShippingOption = customer.GetAttribute<ShippingOption>(SystemCustomerAttributeNames.LastShippingOption);
+                lastShippingOption = customer.GetAttribute<ShippingOption>(SystemCustomerAttributeNames.LastShippingOption, _genericAttributeService);
 
             if (lastShippingOption != null)
             {

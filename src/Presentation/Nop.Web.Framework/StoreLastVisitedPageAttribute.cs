@@ -4,6 +4,7 @@ using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Infrastructure;
+using Nop.Services.Common;
 using Nop.Services.Customers;
 
 namespace Nop.Web.Framework
@@ -35,12 +36,12 @@ namespace Nop.Web.Framework
             if (!String.IsNullOrEmpty(pageUrl))
             {
                 var workContext = EngineContext.Current.Resolve<IWorkContext>();
-                var customerService = EngineContext.Current.Resolve<ICustomerService>();
+                var genericAttributeService = EngineContext.Current.Resolve<IGenericAttributeService>();
 
                 var previousPageUrl = workContext.CurrentCustomer.GetAttribute<string>(SystemCustomerAttributeNames.LastVisitedPage);
                 if (!pageUrl.Equals(previousPageUrl))
                 {
-                    customerService.SaveCustomerAttribute(workContext.CurrentCustomer, SystemCustomerAttributeNames.LastVisitedPage, pageUrl);
+                    genericAttributeService.SaveAttribute(workContext.CurrentCustomer, SystemCustomerAttributeNames.LastVisitedPage, pageUrl);
                 }
             }
         }

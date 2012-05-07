@@ -42,6 +42,7 @@ namespace Nop.Web.Controllers
         private readonly IPriceFormatter _priceFormatter;
         private readonly IOrderProcessingService _orderProcessingService;
         private readonly ICustomerService _customerService;
+        private readonly IGenericAttributeService _genericAttributeService;
         private readonly ICountryService _countryService;
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IShippingService _shippingService;
@@ -66,7 +67,8 @@ namespace Nop.Web.Controllers
             IShoppingCartService shoppingCartService, ILocalizationService localizationService, 
             ITaxService taxService, ICurrencyService currencyService, 
             IPriceFormatter priceFormatter, IOrderProcessingService orderProcessingService,
-            ICustomerService customerService,  ICountryService countryService,
+            ICustomerService customerService,  IGenericAttributeService genericAttributeService,
+            ICountryService countryService,
             IStateProvinceService stateProvinceService, IShippingService shippingService, 
             IPaymentService paymentService, IOrderTotalCalculationService orderTotalCalculationService,
             ILogger logger, IOrderService orderService, IWebHelper webHelper,
@@ -82,6 +84,7 @@ namespace Nop.Web.Controllers
             this._priceFormatter = priceFormatter;
             this._orderProcessingService = orderProcessingService;
             this._customerService = customerService;
+            this._genericAttributeService = genericAttributeService;
             this._countryService = countryService;
             this._stateProvinceService = stateProvinceService;
             this._shippingService = shippingService;
@@ -180,7 +183,7 @@ namespace Nop.Web.Controllers
             {
                 //performance optimization. cache returned shipping options.
                 //we'll use them later (after a customer has selected an option).
-                _customerService.SaveCustomerAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.OfferedShippingOptions, getShippingOptionResponse.ShippingOptions);
+                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.OfferedShippingOptions, getShippingOptionResponse.ShippingOptions);
             
                 foreach (var shippingOption in getShippingOptionResponse.ShippingOptions)
                 {
@@ -517,7 +520,7 @@ namespace Nop.Web.Controllers
 
             if (!cart.RequiresShipping())
             {
-                _customerService.SaveCustomerAttribute<ShippingOption>(_workContext.CurrentCustomer, SystemCustomerAttributeNames.LastShippingOption, null);
+                _genericAttributeService.SaveAttribute<ShippingOption>(_workContext.CurrentCustomer, SystemCustomerAttributeNames.LastShippingOption, null);
                 return RedirectToRoute("CheckoutPaymentMethod");
             }
             
@@ -544,7 +547,7 @@ namespace Nop.Web.Controllers
 
             if (!cart.RequiresShipping())
             {
-                _customerService.SaveCustomerAttribute<ShippingOption>(_workContext.CurrentCustomer, SystemCustomerAttributeNames.LastShippingOption, null);
+                _genericAttributeService.SaveAttribute<ShippingOption>(_workContext.CurrentCustomer, SystemCustomerAttributeNames.LastShippingOption, null);
                 return RedirectToRoute("CheckoutPaymentMethod");
             }
 
@@ -581,7 +584,7 @@ namespace Nop.Web.Controllers
                 return ShippingMethod();
 
             //save
-            _customerService.SaveCustomerAttribute<ShippingOption>(_workContext.CurrentCustomer, SystemCustomerAttributeNames.LastShippingOption, shippingOption);
+            _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.LastShippingOption, shippingOption);
             
             return RedirectToRoute("CheckoutPaymentMethod");
         }
@@ -985,7 +988,7 @@ namespace Nop.Web.Controllers
                 else
                 {
                     //shipping is not required
-                    _customerService.SaveCustomerAttribute<ShippingOption>(_workContext.CurrentCustomer, SystemCustomerAttributeNames.LastShippingOption, null);
+                    _genericAttributeService.SaveAttribute<ShippingOption>(_workContext.CurrentCustomer, SystemCustomerAttributeNames.LastShippingOption, null);
 
 
                     //Check whether payment workflow is required
@@ -1177,7 +1180,7 @@ namespace Nop.Web.Controllers
                     throw new Exception("Selected shipping method can't be loaded");
 
                 //save
-                _customerService.SaveCustomerAttribute<ShippingOption>(_workContext.CurrentCustomer, SystemCustomerAttributeNames.LastShippingOption, shippingOption);
+                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.LastShippingOption, shippingOption);
 
 
                 bool isPaymentWorkflowRequired = IsPaymentWorkflowRequired(cart, true);

@@ -25,6 +25,9 @@ GO
 CREATE NONCLUSTERED INDEX [IX_Customer_CustomerGuid] ON [dbo].[Customer] ([CustomerGuid] ASC)
 GO
 
+CREATE NONCLUSTERED INDEX [IX_GenericAttribute_EntityId_and_KeyGroup] ON [dbo].[GenericAttribute] ([EntityId] ASC, [KeyGroup] ASC)
+GO
+
 CREATE NONCLUSTERED INDEX [IX_QueuedEmail_CreatedOnUtc] ON [dbo].[QueuedEmail] ([CreatedOnUtc] ASC)
 GO
 
@@ -32,9 +35,6 @@ CREATE NONCLUSTERED INDEX [IX_Order_CustomerId] ON [dbo].[Order] ([CustomerId] A
 GO
 
 CREATE NONCLUSTERED INDEX [IX_Language_DisplayOrder] ON [dbo].[Language] ([DisplayOrder] ASC)
-GO
-
-CREATE NONCLUSTERED INDEX [IX_CustomerAttribute_CustomerId] ON [dbo].[CustomerAttribute] ([CustomerId] ASC)
 GO
 
 CREATE NONCLUSTERED INDEX [IX_BlogPost_LanguageId] ON [dbo].[BlogPost] ([LanguageId] ASC)

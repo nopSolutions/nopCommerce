@@ -45,6 +45,7 @@ namespace Nop.Services.Tests.Orders
         ICheckoutAttributeParser _checkoutAttributeParser;
         IDiscountService _discountService;
         IGiftCardService _giftCardService;
+        IGenericAttributeService _genericAttributeService;
         TaxSettings _taxSettings;
         RewardPointsSettings _rewardPointsSettings;
         ICategoryService _categoryService;
@@ -122,6 +123,7 @@ namespace Nop.Services.Tests.Orders
             _paymentService = MockRepository.GenerateMock<IPaymentService>();
             _checkoutAttributeParser = MockRepository.GenerateMock<ICheckoutAttributeParser>();
             _giftCardService = MockRepository.GenerateMock<IGiftCardService>();
+            _genericAttributeService = MockRepository.GenerateMock<IGenericAttributeService>();
             
             //tax
             _taxSettings = new TaxSettings();
@@ -137,6 +139,7 @@ namespace Nop.Services.Tests.Orders
             _orderTotalCalcService = new OrderTotalCalculationService(_workContext,
                 _priceCalcService, _taxService, _shippingService, _paymentService,
                 _checkoutAttributeParser, _discountService, _giftCardService,
+                _genericAttributeService, 
                 _taxSettings, _rewardPointsSettings, _shippingSettings, _shoppingCartSettings, _catalogSettings);
 
             _orderService = MockRepository.GenerateMock<IOrderService>();

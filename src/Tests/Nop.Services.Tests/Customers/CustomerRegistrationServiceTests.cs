@@ -2,9 +2,11 @@
 using System.Linq;
 using Nop.Core.Caching;
 using Nop.Core.Data;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Security;
 using Nop.Core.Events;
+using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
@@ -20,7 +22,8 @@ namespace Nop.Services.Tests.Customers
     {
         IRepository<Customer> _customerRepo;
         IRepository<CustomerRole> _customerRoleRepo;
-        IRepository<CustomerAttribute> _customerAttributeRepo;
+        IRepository<GenericAttribute> _genericAttributeRepo;
+        IGenericAttributeService _genericAttributeService;
         IEncryptionService _encryptionService;
         ICustomerService _customerService;
         ICustomerRegistrationService _customerRegistrationService;
@@ -105,13 +108,14 @@ namespace Nop.Services.Tests.Customers
             _customerRepo.Expect(x => x.Table).Return(new List<Customer>() { customer1, customer2, customer3, customer4, customer5 }.AsQueryable());
 
             _customerRoleRepo = MockRepository.GenerateMock<IRepository<CustomerRole>>();
-            _customerAttributeRepo = MockRepository.GenerateMock<IRepository<CustomerAttribute>>();
-            _customerAttributeRepo = MockRepository.GenerateMock<IRepository<CustomerAttribute>>();
+            _genericAttributeRepo = MockRepository.GenerateMock<IRepository<GenericAttribute>>();
+
+            _genericAttributeService = MockRepository.GenerateMock<IGenericAttributeService>();
             _newsLetterSubscriptionService = MockRepository.GenerateMock<INewsLetterSubscriptionService>();
             
             _localizationService = MockRepository.GenerateMock<ILocalizationService>();
             _customerService = new CustomerService(new NopNullCache(), _customerRepo, _customerRoleRepo,
-                _customerAttributeRepo, _eventPublisher);
+                _genericAttributeRepo, _genericAttributeService, _eventPublisher);
             _customerRegistrationService = new CustomerRegistrationService(_customerService,
                 _encryptionService, _newsLetterSubscriptionService, _localizationService,
                 _rewardPointsSettings, _customerSettings);
