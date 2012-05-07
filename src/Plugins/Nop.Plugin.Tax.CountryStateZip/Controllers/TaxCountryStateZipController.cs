@@ -128,7 +128,7 @@ namespace Nop.Plugin.Tax.CountryStateZip.Controllers
         public ActionResult RateUpdate(TaxRateModel model, GridCommand command)
         {
             var taxRate = _taxRateService.GetTaxRateById(model.Id);
-            taxRate.Zip = model.Zip;
+            taxRate.Zip = model.Zip == "*" ? null : model.Zip;
             taxRate.Percentage = model.Percentage;
             _taxRateService.UpdateTaxRate(taxRate);
 

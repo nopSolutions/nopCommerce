@@ -1194,3 +1194,10 @@ BEGIN
 	VALUES (N'storeinformationsettings.displayeucookielawwarning', N'false')
 END
 GO
+
+
+--Tax By Country & State & Zip provider issue fix
+UPDATE [TaxRate]
+SET [Zip] = null
+WHERE [Zip] = N'*'
+GO
