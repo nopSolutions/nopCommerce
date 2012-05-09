@@ -90,6 +90,8 @@ td.fieldname{font-size:12px;}
 .data-table th{font-weight:bold;padding:3px 8px;white-space:nowrap;vertical-align:middle;}
 .data-table td{padding:3px 8px;}
 .data-table th,.data-table td{border-bottom:1px solid;border-right:1px solid;}
+.data-table .odd{}
+.data-table .even{background-color: #F4FAFF;}
 .htmlcontent{padding-bottom:5px;text-align:right;direction:rtl;}
 .htmlcontent-title{padding:0 0 5px;clear:both;}
 .htmlcontent-header{font-size:1.2em;font-weight:700;}
@@ -618,11 +620,9 @@ ul.languagelist li:hover{cursor:pointer;}
 .customer-rewardpoints{margin:0;padding:5px;font-size:11px;color:#555;background-color:inherit;}
 .customer-rewardpoints .section-title{padding:10px 10px 5px 0;font-weight:700;clear:both;font-size:12px;}
 .customer-rewardpoints .reward-points-overview{padding:10px 10px 5px 10px;width:100%;}
-.customer-rewardpoints .reward-points-history{padding:10px 10px 5px 10px;text-align:left;padding:10px;border:1px solid #d7d7d7;height:auto;}
+.customer-rewardpoints .reward-points-history{margin:0;padding:5px;font-size:11px;color:#555;background-color:inherit;}
 .backinstock-subscriptions-box{margin:0;padding:5px;font-size:11px;color:#555;}
 .backinstock-subscriptions-box .buttons{margin-bottom:5px;margin-top:5px;text-align:right;}
-.backinstock-subscriptions-box .backinstock-subscriptions-grid{font-family:arial;font-size:11px;border:1px solid gray;background-color:#FFF;margin-left:0;width:100%;border-collapse:collapse;}
-.backinstock-subscriptions-box .backinstock-subscriptions-grid a{display:block;margin-right:5px;}
 .bissgridpagerstyle{padding:5px;background:#eee;vertical-align:middle;}
 .bissgridpagerstyle span{font-weight:700;font-size:1.1em;}
 
@@ -751,7 +751,7 @@ ul.languagelist li:hover{cursor:pointer;}
 .private-messages-box{margin:0;padding:5px;font-size:11px;color:#555;}
 .private-messages-box .section-body{text-align:left;padding:10px;height:auto;}
 .private-messages-box .buttons{margin-bottom:5px;margin-top:5px;text-align:left;}
-.pmgridtablestyle{font-family:arial;font-size:11px;border:1px solid gray;background-color:#FFF;margin-left:0;width:100%;}
+.pmgridtablestyle{font-family:arial;font-size:11px;border:1px solid gray;border-collapse:collapse;background-color:#FFF;margin-left:0;width:100%;}
 .pmgridtablestyle td a{text-decoration:none;display:block;}
 .pmgridaltrowstyle{background-color:#F4FAFF;}
 .pmgridheaderstyle th{background:url(images/grid-bg.gif) repeat-x 50%;color:#fff;padding:5px 10px;text-align:center;vertical-align:middle;font-weight:700;border:solid 1px #676767;}
@@ -788,8 +788,6 @@ ul.languagelist li:hover{cursor:pointer;}
 .forumgroup tr.forum td.lastpost{font-size:.8em;color:#555;}
 .forum-subscriptions-box{margin:0;padding:5px;font-size:11px;color:#555;}
 .forum-subscriptions-box .buttons{margin-bottom:5px;margin-top:5px;text-align:right;}
-.forum-subscriptions-box .forum-subscriptions-grid{font-family:arial;font-size:11px;border:1px solid gray;background-color:#FFF;margin-left:0;width:100%;border-collapse:collapse;}
-.forum-subscriptions-box .forum-subscriptions-grid a{display:block;margin-right:5px;}
 /* FORUM PAGE */
 .forum{}
 .forum .forumheader{}
@@ -917,6 +915,7 @@ ul.languagelist li:hover{cursor:pointer;}
 .profile-page .body .userLastPosts .topicBody a{color:#f93;text-decoration:underline;}
 .profile-page .body .userLastPosts .topicBody .quote{padding:5px;border:dashed 1px #000;background-color:#fff;}
 .profile-page .body .userLastPosts .topicData{background:#f3f3f3;padding:3px;color:#555;font-size:.9em;}
+.profile-page .body .userLastPosts .posts-table{width:100%;border:0px;border-collapse:collapse;border-spacing:0;empty-cells:show;}
 /* BB CODE EDITOR */
 .toolbar{padding:2px;display:inline;}
 .toolbar .button{background:url(images/bbeditor-button-bg.gif) repeat-x;padding:2px;margin-right:2px;border:#cec6b5 1px solid;}

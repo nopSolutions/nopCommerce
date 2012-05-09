@@ -3,7 +3,6 @@
 @using Nop.Web.Extensions;
 @using Nop.Web.Framework;
 @using Nop.Web.Models.Customer;
-@using MvcContrib.UI.Grid;
 @{    
     Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
 
@@ -32,34 +31,52 @@
                     cbHeader.bind("click", function () {
                         cbRowItem.each(function () { this.checked = cbHeader[0].checked; })
                     });
-                    cbRowItem.bind("click", function () { if ($(this).checked == false) cbHeader[0].checked = false; });
                 });
             </script>            
             using (Html.BeginForm("backinstocksubscriptions", "customer", FormMethod.Post))
             {
-                <div class="backinstock-subscriptions-box">
-                    @Html.Grid(Model.Subscriptions).Columns(column =>
-               {
-                   column.For(biss => "<span class=\"cbRowItem\"><input type=\"checkbox\" name=\"biss" + biss.Id + "\" /></span>")
-                       .Encode(false)
-                       .Attributes(style => "width:5%;", align => "center")
-                       .Header("<th align=\"center\"><span class=\"cbHeader\"><input type=\"checkbox\" id=\"selectall\" /></span></th>");
-                   column.For(biss => (Html.RouteLink(biss.ProductName, "Product", new { productId = biss.ProductId, SeName = biss.SeName })))
-                       .Named(@T("Account.BackInStockSubscriptions.ProductColumn").Text)
-                       .HeaderAttributes(align => "center");
-               }).Attributes(style => "width:100%", @class => "backinstock-subscriptions-grid", cellspacing => "0", cellpadding => "4", border => "1").Empty("")
-                    @if (Model.PagerModel.TotalPages > 1)
-                    {
-                        <div class="bissgridpagerstyle">
-                            @Html.Pager(Model.PagerModel)
-                        </div>
-                    }
-                    <div class="clear">
+            <div class="backinstock-subscriptions-box">
+                <table class="data-table">
+                    <col width="1" />
+                    <col />
+                    <thead>
+                        <tr>
+                            <th class="a-center">
+                                <span class="cbHeader">
+                                    <input type="checkbox" id="selectall" /></span>
+                            </th>
+                            <th class="a-center">
+                                @T("Account.BackInStockSubscriptions.ProductColumn")
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.Subscriptions.Count; i++)
+                        {
+                            var item = Model.Subscriptions[i];
+                            <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
+                                <td class="a-center">
+                                    <span class="cbRowItem"><input type="checkbox" name="biss@(item.Id)" /></span>
+                                </td>
+                                <td class="a-left">
+                                    @Html.RouteLink(item.ProductName, "Product", new { productId = item.ProductId, SeName = item.SeName })
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                @if (Model.PagerModel.TotalPages > 1)
+                {
+                    <div class="bissgridpagerstyle">
+                        @Html.Pager(Model.PagerModel)
                     </div>
-                    <div class="buttons">
-                        <input type="submit" value="@T("Account.BackInStockSubscriptions.DeleteSelected")" class="deleteselectedbissbutton" />
-                    </div>
+                }
+                <div class="clear">
                 </div>
+                <div class="buttons">
+                    <input type="submit" value="@T("Account.BackInStockSubscriptions.DeleteSelected")" class="deleteselectedbissbutton" />
+                </div>
+            </div>
             }
         }
         else

@@ -69,9 +69,6 @@
     <Reference Include="MiniProfiler">
       <HintPath>..\..\packages\MiniProfiler.2.0.1\lib\net40\MiniProfiler.dll</HintPath>
     </Reference>
-    <Reference Include="MvcContrib">
-      <HintPath>..\..\packages\MvcContrib.2.0.95.0\lib\MvcContrib.dll</HintPath>
-    </Reference>
     <Reference Include="Recaptcha">
       <HintPath>..\..\packages\recaptcha.1.0.5.0\lib\.NetFramework 4.0\Recaptcha.dll</HintPath>
     </Reference>
@@ -1526,7 +1523,6 @@
     <Content Include="Views\PrivateMessages\SentItems.Mobile.cshtml" />
     <Content Include="Views\Catalog\RelatedProducts.Mobile.cshtml" />
     <Content Include="Views\Catalog\ProductsAlsoPurchased.Mobile.cshtml" />
-    <Content Include="Views\Catalog\ProductSpecifications.Mobile.cshtml" />
     <Content Include="Views\Customer\MyAccount.Mobile.cshtml" />
     <Content Include="Views\Customer\BackInStockSubscriptions.Mobile.cshtml" />
     <Content Include="Views\Customer\ForumSubscriptions.Mobile.cshtml" />
@@ -1597,7 +1593,9 @@
     <Content Include="Views\_ViewStart.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="packages.config" />
+    <Content Include="packages.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Catalog\_ProductPrice.cshtml" />

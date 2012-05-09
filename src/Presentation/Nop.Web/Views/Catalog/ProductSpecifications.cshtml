@@ -1,7 +1,6 @@
 ﻿@model IList<ProductSpecificationModel>
 @using Nop.Web.Framework.UI;
 @using Nop.Web.Models.Catalog;
-@using MvcContrib.UI.Grid
 @if (Model.Count > 0)
 {
     <div class="productspec-box">
@@ -11,16 +10,24 @@
         <div class="clear">
         </div>
         <div class="productspec-list">
-            @Html.Grid(Model).Columns(column =>
-           {
-               //MvcContrib Grid doesn't allow to disable header. Let's specify "" is column header
-               column.For(rph => rph.SpecificationAttributeName).Named("").Attributes(style => "width:30%;");
-               column.For(rph => rph.SpecificationAttributeOption).Named("").Attributes(style => "width:70%;");
-           }).Attributes(style => "width: 100%; border: 0px").RowStart((row) =>
-           {
-               if (row.IsAlternate) { return "<tr style='background-color: #F4FAFF;'>"; }
-               else { return "<tr>"; }
-           })
+            <table class="data-table">
+                <col width="25%" />
+                <col />
+                <tbody>
+                    @for (int i = 0; i < Model.Count; i++)
+                    {
+                        var item = Model[i];
+                        <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
+                            <td class="a-left specname">
+                                @item.SpecificationAttributeName
+                            </td>
+                            <td class="a-left specvalue">
+                                @item.SpecificationAttributeOption
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
     </div>
 }

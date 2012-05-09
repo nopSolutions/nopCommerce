@@ -6,7 +6,6 @@
     Html.AddTitleParts(T("PageTitle.Account").Text);
 }
 @using Nop.Web.Framework;
-@using MvcContrib.UI.Grid
 @section left
 {
     @Html.Partial("MyAccountNavigation", Model.NavigationModel, new ViewDataDictionary())
@@ -29,19 +28,51 @@
             </div>
             <div class="clear">
             </div>
-            <div class="reward-points-history">                
+            <div class="reward-points-history">
                 @if (Model.RewardPoints.Count > 0)
                 {
-                    @Html.Grid(Model.RewardPoints).Columns(column => {
-                       column.For(rph => rph.CreatedOn).Named(T("RewardPoints.Fields.Date").Text).Attributes(style => "width:20%;");
-                       column.For(rph => rph.Points).Named(T("RewardPoints.Fields.Points").Text).Attributes(style => "width:20%;");
-                       column.For(rph => rph.PointsBalance).Named(T("RewardPoints.Fields.PointsBalance").Text).Attributes(style => "width:20%;");
-                       column.For(rph => rph.Message).Named(T("RewardPoints.Fields.Message").Text).Attributes(style => "width:40%;");
-                   }).Attributes(style => "width: 100%; border: 0px").RowStart((row) =>
-                   {
-                       if (row.IsAlternate) { return "<tr style='background-color: #F4FAFF;'>"; }
-                       else { return "<tr>"; }
-                   })
+                    <table class="data-table">
+                        <col width="25%" />
+                        <col width="15%" />
+                        <col width="15%" />
+                        <col />
+                        <thead>
+                            <tr>
+                                <th class="a-center">
+                                    @T("RewardPoints.Fields.Date")
+                                </th>
+                                <th class="a-center">
+                                    @T("RewardPoints.Fields.Points")
+                                </th>
+                                <th class="a-center">
+                                    @T("RewardPoints.Fields.PointsBalance")
+                                </th>
+                                <th class="a-center">
+                                    @T("RewardPoints.Fields.Message")
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (int i = 0; i < Model.RewardPoints.Count; i++)
+                            {
+                                var item = Model.RewardPoints[i];
+                                <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
+                                    <td class="a-center">
+                                        @item.CreatedOn
+                                    </td>
+                                    <td class="a-center">
+                                        @item.Points
+                                    </td>
+                                    <td class="a-center">
+                                        @item.PointsBalance
+                                    </td>
+                                    <td class="a-left">
+                                        @item.Message
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
                 }
                 else
                 {

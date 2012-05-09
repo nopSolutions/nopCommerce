@@ -1,21 +1,39 @@
-﻿@model Nop.Web.Models.Profile.ProfilePostsModel    
-@using MvcContrib;       
-@using MvcContrib.UI.Grid;
+﻿@model Nop.Web.Models.Profile.ProfilePostsModel
 @using Nop.Web;
 @using Nop.Web.Extensions;
 <div class="userLastPosts">
     <div class="section-title">
-        @Html.Grid(Model.Posts).Columns(column =>
-   {
-       column.For(p =>
-           "<div class=\"topic\"><div class=\"topicTitle\"><span>" + @T("Profile.Topic").Text + "</span>: " +
-           @Html.RouteLink(p.ForumTopicTitle, "TopicSlug", new { id = p.ForumTopicId, slug = p.ForumTopicSlug }) +
-           "</div><div class=\"topicBody\"><span>" + p.ForumPostText + "</span> </div><div class=\"topicData\"><span>" +
-           @T("Profile.PostedOn").Text + "</span>: <span>" + p.Posted + "</span></div></div>")
-           .Encode(false)
-           .Attributes(style => "width:100%;")
-           .Named("");
-   }).Attributes(style => "border-collapse: collapse; width:100%;", cellspacing => "0", cellpadding => "4", border => "0").Empty(@T("Profile.LatestPosts.NoPosts").Text)
+        @if (Model.Posts.Count > 0)
+        {
+            <table class="posts-table">
+                <col />
+                <tbody>
+                    @for (int i = 0; i < Model.Posts.Count; i++)
+                    {
+                        var item = Model.Posts[i];
+                        <tr>
+                            <td class="a-left">
+                                <div class="topic">
+                                    <div class="topicTitle">
+                                        <span>@T("Profile.Topic")</span>:
+                                        @Html.RouteLink(item.ForumTopicTitle, "TopicSlug", new { id = item.ForumTopicId, slug = item.ForumTopicSlug })
+                                    </div>
+                                    <div class="topicBody">
+                                        <span>@Html.Raw(item.ForumPostText)</span></div>
+                                    <div class="topicData">
+                                        <span>
+                                            @T("Profile.PostedOn")</span>: <span>@item.Posted</span></div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            @T("Profile.LatestPosts.NoPosts")
+        }
         @if (Model.PagerModel.TotalPages > 1)
         {
             <div class="latestpostsgridpagerstyle">

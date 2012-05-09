@@ -13,6 +13,8 @@ body{font-family:arial, verdana, helvetica, sans-serif;font-size:12px;text-align
 .data-table th{font-weight:bold;padding:3px 8px;white-space:nowrap;vertical-align:middle;}
 .data-table td{padding:3px 8px;}
 .data-table th,.data-table td{border-bottom:1px solid;border-right:1px solid;}
+.data-table .odd{}
+.data-table .even{background-color: #F4FAFF;}
 
 .cart_total_left{width:100%;text-align:right;vertical-align:middle;height:21px;font-weight:700;color:#353434;}
 .cart_total_left_below{width:100%;text-align:right;vertical-align:top;height:30px;}

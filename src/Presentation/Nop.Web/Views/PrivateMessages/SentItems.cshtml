@@ -1,6 +1,4 @@
 ﻿@model PrivateMessageListModel 
-@using MvcContrib.UI.Grid;
-@using MvcContrib;
 @using Nop.Web;
 @using Nop.Web.Extensions;
 @using Nop.Web.Models.PrivateMessages;
@@ -12,49 +10,76 @@
             cbHeader.bind("click", function () {
                 cbRowItem.each(function () { this.checked = cbHeader[0].checked; })
             });
-            cbRowItem.bind("click", function () { if ($(this).checked == false) cbHeader[0].checked = false; });
         });    
     </script>
     @if (Model.Messages.Count > 0)
     {
         using (Html.BeginRouteForm("PrivateMessagesSent", FormMethod.Post))
         {
-            @Html.Grid(Model.Messages).Columns(column =>
-       {
-           column.For(pm => "<span class=\"cbRowItemPMSent\"><input type=\"checkbox\" name=\"si" + pm.Id + "\" /></span>")
-               .Encode(false)
-               .Attributes(style => "width:5%;", align => "center")
-               .Header("<th><span class=\"cbHeaderPMSent\"><input type=\"checkbox\" id=\"selectall\" /></span></th>");
-           column.For(pm => @pm.AllowViewingToProfile ?
-                 @Html.RouteLink(pm.CustomerToName, "CustomerProfile", new { Id = pm.ToCustomerId }).ToString() :
-                 @Html.Encode(pm.CustomerToName)
-            )
-            .Encode(false)
-            .Named(@T("PrivateMessages.Inbox.ToColumn").Text)
-            .Attributes(style => "width:20%;");
-           column.For(pm => @Html.RouteLink(pm.Subject, "ViewPM", new { privateMessageId = pm.Id }, new { @class = "pmread" }))
-               .Encode(false)
-               .Named(@T("PrivateMessages.Inbox.SubjectColumn").Text)
-               .Attributes(style => "width:50%;");
-           column.For(pm => pm.CreatedOn.ToString())
-               .Named(@T("PrivateMessages.Inbox.DateColumn").Text)
-               .Attributes(style => "width:25%;", align => "center");
-       }).Attributes(style => "border-collapse: collapse;", @class => "pmgridtablestyle", cellspacing => "0", cellpadding => "4", border => "0").HeaderRowAttributes(new Hash(@class => "pmgridheaderstyle")).RowStart((row) =>
-       {
-           if (row.IsAlternate) { return "<tr class=\"pmgridaltrowstyle\">"; }
-           else { return "<tr class=\"pmgridrowstyle\">"; }
-       }).Empty("")
-            if (Model.PagerModel.TotalPages > 1)
-            {
-                <div class="pmgridpagerstyle">
-                    @Html.Pager(Model.PagerModel)
-                </div>
-            }
-            <div class="clear">
-            </div>
-            <div class="buttons">
-                <button class="deleteselectedpmbutton" value="delete" name="sentupdate" type="submit">@T("PrivateMessages.Inbox.DeleteSelected")</button>
-            </div>
+            
+            
+        <table class="pmgridtablestyle" cellspacing="0" cellpadding="4">
+            <col width="5%" />
+            <col width="20%" />
+            <col width="50%" />
+            <col width="25%" />
+            <thead>
+                <tr class="pmgridheaderstyle">
+                    <th class="a-center">
+                        <span class="cbHeaderPMSent">
+                            <input type="checkbox" id="selectall" /></span>
+                    </th>
+                    <th class="a-center">
+                        @T("PrivateMessages.Inbox.ToColumn")
+                    </th>
+                    <th class="a-center">
+                        @T("PrivateMessages.Inbox.SubjectColumn")
+                    </th>
+                    <th class="a-center">
+                        @T("PrivateMessages.Inbox.DateColumn")
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.Messages.Count; i++)
+                {
+                    var item = Model.Messages[i];
+                    <tr @(i % 2 == 0 ? Html.Raw(" class=\"pmgridrowstyle\"") : Html.Raw(" class=\"pmgridaltrowstyle\""))>
+                        <td class="a-center">
+                            <span class="cbRowItemPMSent">
+                                <input type="checkbox" name="si@(item.Id)" /></span>
+                        </td>
+                        <td class="a-left">
+                            @if (item.AllowViewingToProfile)
+                            {
+                                @Html.RouteLink(item.CustomerToName, "CustomerProfile", new { Id = item.ToCustomerId })
+                            }
+                            else
+                            {
+                                @item.CustomerToName
+                            }
+                        </td>
+                        <td class="a-left">
+                            @Html.RouteLink(item.Subject, "ViewPM", new { privateMessageId = item.Id }, new { @class = "pmread" })
+                        </td>
+                        <td class="a-left">
+                            @item.CreatedOn
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+                if (Model.PagerModel.TotalPages > 1)
+                {
+        <div class="pmgridpagerstyle">
+            @Html.Pager(Model.PagerModel)
+        </div>
+                }
+        <div class="clear">
+        </div>
+        <div class="buttons">
+            <button class="deleteselectedpmbutton" value="delete" name="sentupdate" type="submit">@T("PrivateMessages.Inbox.DeleteSelected")</button>
+        </div>
         }
     }
 </div>
