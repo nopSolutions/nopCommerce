@@ -18,6 +18,7 @@ namespace Nop.Admin.Models.Customers
             AvailableTimeZones = new List<SelectListItem>();
             SendEmail = new SendEmailModel();
             SendPm = new SendPmModel();
+            AvailableCustomerRoles = new List<CustomerRoleModel>();
             AssociatedExternalAuthRecords = new List<AssociatedExternalAuthModel>();
             AvailableCountries = new List<SelectListItem>();
             AvailableStates = new List<SelectListItem>();
@@ -168,10 +169,9 @@ namespace Nop.Admin.Models.Customers
         //customer roles
         [NopResourceDisplayName("Admin.Customers.Customers.Fields.CustomerRoles")]
         public string CustomerRoleNames { get; set; }
-
-        public List<CustomerRole> AvailableCustomerRoles { get; set; }
-
+        public List<CustomerRoleModel> AvailableCustomerRoles { get; set; }
         public int[] SelectedCustomerRoleIds { get; set; }
+        public bool AllowManagingCustomerRoles { get; set; }
 
 
 

@@ -267,10 +267,9 @@ namespace Nop.Admin.Controllers
                 CompanyEnabled = _customerSettings.CompanyEnabled,
                 PhoneEnabled = _customerSettings.PhoneEnabled,
                 ZipPostalCodeEnabled = _customerSettings.ZipPostalCodeEnabled,
-                AvailableCustomerRoles = _customerService.GetAllCustomerRoles(true).ToList(),
+                AvailableCustomerRoles = _customerService.GetAllCustomerRoles(true).Select(cr => cr.ToModel()).ToList(),
                 SearchCustomerRoleIds = defaultRoleIds,
             };
-
             var customers = _customerService.GetAllCustomers(null, null, defaultRoleIds, null,
                 null, null, null, 0, 0, null, null, null,
                 false, null, 0, _adminAreaSettings.GridPageSize);
@@ -364,8 +363,10 @@ namespace Nop.Admin.Controllers
             ViewData["searchCustomerZipPostalCode"] = model.SearchZipPostalCode;
 
             //customer roles
-            var customerRoles = _customerService.GetAllCustomerRoles(true);
-            model.AvailableCustomerRoles = customerRoles.ToList();
+            model.AvailableCustomerRoles = _customerService
+                .GetAllCustomerRoles(true)
+                .Select(cr => cr.ToModel())
+                .ToList();
 
             //date of birth
             int searchCustomerDayOfBirth = 0, searchCustomerMonthOfBirth = 0;
@@ -403,9 +404,12 @@ namespace Nop.Admin.Controllers
                 model.AvailableTimeZones.Add(new SelectListItem() { Text = tzi.DisplayName, Value = tzi.Id, Selected = (tzi.Id == _dateTimeHelper.DefaultStoreTimeZone.Id) });
             model.DisplayVatNumber = false;
             //customer roles
-            var customerRoles = _customerService.GetAllCustomerRoles(true);
-            model.AvailableCustomerRoles = customerRoles.ToList();
+            model.AvailableCustomerRoles = _customerService
+                .GetAllCustomerRoles(true)
+                .Select(cr => cr.ToModel())
+                .ToList();
             model.SelectedCustomerRoleIds = new int[0];
+            model.AllowManagingCustomerRoles = _permissionService.Authorize(StandardPermissionProvider.ManageCustomerRoles);
             //form fields
             model.GenderEnabled = _customerSettings.GenderEnabled;
             model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
@@ -477,6 +481,7 @@ namespace Nop.Admin.Controllers
             var customerRolesError = ValidateCustomerRoles(newCustomerRoles);
             if (!String.IsNullOrEmpty(customerRolesError))
                 ModelState.AddModelError("", customerRolesError);
+            bool allowManagingCustomerRoles = _permissionService.Authorize(StandardPermissionProvider.ManageCustomerRoles);
             
             if (ModelState.IsValid)
             {
@@ -534,9 +539,12 @@ namespace Nop.Admin.Controllers
                 }
 
                 //customer roles
-                foreach (var customerRole in newCustomerRoles)
-                    customer.CustomerRoles.Add(customerRole);
-                _customerService.UpdateCustomer(customer);
+                if (allowManagingCustomerRoles)
+                {
+                    foreach (var customerRole in newCustomerRoles)
+                        customer.CustomerRoles.Add(customerRole);
+                    _customerService.UpdateCustomer(customer);
+                }
 
                 //activity log
                 _customerActivityService.InsertActivity("AddNewCustomer", _localizationService.GetResource("ActivityLog.AddNewCustomer"), customer.Id);
@@ -553,8 +561,11 @@ namespace Nop.Admin.Controllers
                 model.AvailableTimeZones.Add(new SelectListItem() { Text = tzi.DisplayName, Value = tzi.Id, Selected = (tzi.Id == model.TimeZoneId) });
             model.DisplayVatNumber = false;
             //customer roles
-            var customerRoles = _customerService.GetAllCustomerRoles(true);
-            model.AvailableCustomerRoles = customerRoles.ToList();
+            model.AvailableCustomerRoles = _customerService
+                .GetAllCustomerRoles(true)
+                .Select(cr => cr.ToModel())
+                .ToList();
+            model.AllowManagingCustomerRoles = allowManagingCustomerRoles;
             //form fields
             model.GenderEnabled = _customerSettings.GenderEnabled;
             model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
@@ -683,9 +694,12 @@ namespace Nop.Admin.Controllers
             }
 
             //customer roles
-            var customerRoles = _customerService.GetAllCustomerRoles(true);
-            model.AvailableCustomerRoles = customerRoles.ToList();
+            model.AvailableCustomerRoles = _customerService
+                .GetAllCustomerRoles(true)
+                .Select(cr => cr.ToModel())
+                .ToList();
             model.SelectedCustomerRoleIds = customer.CustomerRoles.Select(cr => cr.Id).ToArray();
+            model.AllowManagingCustomerRoles = _permissionService.Authorize(StandardPermissionProvider.ManageCustomerRoles);
             //reward points gistory
             model.DisplayRewardPointsHistory = _rewardPointsSettings.Enabled;
             model.AddRewardPointsValue = 0;
@@ -717,7 +731,8 @@ namespace Nop.Admin.Controllers
             var customerRolesError = ValidateCustomerRoles(newCustomerRoles);
             if (!String.IsNullOrEmpty(customerRolesError))
                 ModelState.AddModelError("", customerRolesError);
-
+            bool allowManagingCustomerRoles = _permissionService.Authorize(StandardPermissionProvider.ManageCustomerRoles);
+            
             if (ModelState.IsValid)
             {
                 try
@@ -794,22 +809,25 @@ namespace Nop.Admin.Controllers
 
 
                     //customer roles
-                    foreach (var customerRole in allCustomerRoles)
+                    if (allowManagingCustomerRoles)
                     {
-                        if (model.SelectedCustomerRoleIds != null && model.SelectedCustomerRoleIds.Contains(customerRole.Id))
+                        foreach (var customerRole in allCustomerRoles)
                         {
-                            //new role
-                            if (customer.CustomerRoles.Where(cr => cr.Id == customerRole.Id).Count() == 0)
-                                customer.CustomerRoles.Add(customerRole);
+                            if (model.SelectedCustomerRoleIds != null && model.SelectedCustomerRoleIds.Contains(customerRole.Id))
+                            {
+                                //new role
+                                if (customer.CustomerRoles.Where(cr => cr.Id == customerRole.Id).Count() == 0)
+                                    customer.CustomerRoles.Add(customerRole);
+                            }
+                            else
+                            {
+                                //removed role
+                                if (customer.CustomerRoles.Where(cr => cr.Id == customerRole.Id).Count() > 0)
+                                    customer.CustomerRoles.Remove(customerRole);
+                            }
                         }
-                        else
-                        {
-                            //removed role
-                            if (customer.CustomerRoles.Where(cr => cr.Id == customerRole.Id).Count() > 0)
-                                customer.CustomerRoles.Remove(customerRole);
-                        }
+                        _customerService.UpdateCustomer(customer);
                     }
-                    _customerService.UpdateCustomer(customer);
 
                     //activity log
                     _customerActivityService.InsertActivity("EditCustomer", _localizationService.GetResource("ActivityLog.EditCustomer"), customer.Id);
@@ -877,8 +895,11 @@ namespace Nop.Admin.Controllers
                 }
             }
             //customer roles
-            var customerRoles = _customerService.GetAllCustomerRoles(true);
-            model.AvailableCustomerRoles = customerRoles.ToList();
+            model.AvailableCustomerRoles = _customerService
+                .GetAllCustomerRoles(true)
+                .Select(cr => cr.ToModel())
+                .ToList();
+            model.AllowManagingCustomerRoles = allowManagingCustomerRoles;
             //reward points gistory
             model.DisplayRewardPointsHistory = _rewardPointsSettings.Enabled;
             model.AddRewardPointsValue = 0;

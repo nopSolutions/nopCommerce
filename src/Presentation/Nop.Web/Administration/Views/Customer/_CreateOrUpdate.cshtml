@@ -435,13 +435,17 @@
         {
             foreach (var customerRole in Model.AvailableCustomerRoles)
             {
-    <input type="checkbox" name="SelectedCustomerRoleIds" value="@customerRole.Id"
-            @if (Model.SelectedCustomerRoleIds != null && Model.SelectedCustomerRoleIds.Contains(customerRole.Id))
-            {
-                <text>checked="checked"</text>
-            }
-            />@customerRole.Name
-    <br />
+                <input type="checkbox" name="SelectedCustomerRoleIds" value="@customerRole.Id"
+                @if (Model.SelectedCustomerRoleIds != null && Model.SelectedCustomerRoleIds.Contains(customerRole.Id))
+                {
+                    <text> checked="checked"</text>
+                }
+                @if (!Model.AllowManagingCustomerRoles)
+                {
+                <text> disabled="disabled"</text>
+                }
+                />@customerRole.Name
+                <br />
             }
         }
         else
