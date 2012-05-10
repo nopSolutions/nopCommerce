@@ -145,11 +145,12 @@
             <td>
                 @(Html.Telerik().Grid<CustomerModel>(Model.Customers.Data)
                     .Name("customers-grid")
-                    .ClientEvents(events => events.OnDataBound("onDataBound"))
+                    .ClientEvents(events => events
+                        .OnDataBinding("onDataBinding")
+                        .OnDataBound("onDataBound"))
                     .Columns(columns =>
                     {
                         columns.Bound(x => x.Id)
-                        .Filterable(false)
                         .Template(x => string.Format("<input type='checkbox' name='checkedRecords' value='{0}' class='checkboxGroups'/>", x.Id))
                         .ClientTemplate("<input type='checkbox' name='checkedRecords' value='<#= Id #>' class='checkboxGroups'/>")
                         .Title("<input id='mastercheckbox' type='checkbox'/>")
@@ -158,142 +159,40 @@
                         .HeaderHtmlAttributes(new { style = "text-align:center" });
 
                         columns.Bound(x => x.Id)
-                            .Width(50)
-                            .Filterable(false);
+                            .Width(50);
                         //I don't know why but the customer list does not have an 'Edit' column in the grid on some machines (maybe because we are inside Html.BeginForm()).
                         //That's why the 'Email' column is clickable.
                         columns.Bound(x => x.Email)
                             .Template(x => Html.ActionLink(x.Email, "Edit", "Customer", new { id = x.Id }, new { }))
                             .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/Customer/Edit/") + "<#= Id #>\"><#= Email #></a>")
-                            .Width(150)
-                            .Filterable(false);
+                            .Width(150);
                         //Weird!!! We can't pass Model.UsernamesEnabled to Hidden method
                         var usernameColumn = columns.Bound(x => x.Username)
-                            .Width(150)
-                            .Filterable(false);
+                            .Width(150);
                         if (!Model.UsernamesEnabled)
                             usernameColumn.Hidden(true);
                         columns.Bound(x => x.FullName)
-                            .Width(200)
-                            .Filterable(false);
+                            .Width(200);
                         columns.Bound(x => x.CustomerRoleNames)
                             .Width(200)
-                            .Filterable(false);
-                        //hidden column used for filtering
-                        columns.Bound(x => x.SearchCustomerRoleIds)
-                            .Width(5)
-                            .Filterable(false)
-                            .Hidden(true);
-                        columns.Bound(x => x.SearchCustomerEmail)
-                            .Width(5)
-                            .Filterable(false)
-                            .Hidden(true);
-                        columns.Bound(x => x.SearchCustomerUsername)
-                            .Width(5)
-                            .Filterable(false)
-                            .Hidden(true);
-                        columns.Bound(x => x.SearchCustomerFirstName)
-                            .Width(5)
-                            .Filterable(false)
-                            .Hidden(true);
-                        columns.Bound(x => x.SearchCustomerLastName)
-                            .Width(5)
-                            .Filterable(false)
-                            .Hidden(true);
-                        columns.Bound(x => x.SearchCustomerDayOfBirth)
-                            .Width(5)
-                            .Filterable(false)
-                            .Hidden(true);
-                        columns.Bound(x => x.SearchCustomerMonthOfBirth)
-                            .Width(5)
-                            .Filterable(false)
-                            .Hidden(true);
-                        columns.Bound(x => x.SearchCustomerCompany)
-                            .Width(5)
-                            .Filterable(false)
-                            .Hidden(true);
-                        columns.Bound(x => x.SearchCustomerPhone)
-                            .Width(5)
-                            .Filterable(false)
-                            .Hidden(true);
-                        columns.Bound(x => x.SearchCustomerZipPostalCode)
-                            .Width(5)
-                            .Filterable(false)
                             .Hidden(true);
                         columns.Bound(x => x.Active)
                              .Width(100)
                              .Template(x => x.Active.ToString().ToLower())
-                             .Centered()
-                             .Filterable(false);
+                             .Centered();
                         columns.Bound(x => x.CreatedOn)
-                            .Width(100)
-                            .Filterable(false);
+                            .Width(100);
                         columns.Bound(x => x.LastActivityDate)
-                            .Width(100)
-                            .Filterable(false);
+                            .Width(100);
                         columns.Bound(x => x.Id)
                             .Width(50)
                             .Centered()
                             .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "Edit", new { id = x.Id }))
                             .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
-                            .Title(T("Admin.Common.Edit").Text)
-                            .Filterable(false);
+                            .Title(T("Admin.Common.Edit").Text);
                     })
                     .Pageable(settings => settings.Total(Model.Customers.Total).PageSize(gridPageSize).Position(GridPagerPosition.Both))
                     .DataBinding(dataBinding => dataBinding.Ajax().Select("CustomerList", "Customer"))
-                    .Filterable(filtering => filtering.Filters(filters =>
-                    {
-                        //customer role ids
-                        if (!String.IsNullOrEmpty(ViewData["searchCustomerRoleIds"] as string))
-                        {
-                            filters.Add(x => x.SearchCustomerRoleIds).Contains((string)ViewData["searchCustomerRoleIds"]);
-                        }
-                        //customer email
-                        if (!String.IsNullOrEmpty(ViewData["searchCustomerEmail"] as string))
-                        {
-                            filters.Add(x => x.SearchCustomerEmail).Contains((string)ViewData["searchCustomerEmail"]);
-                        }
-                        //customer username
-                        if (!String.IsNullOrEmpty(ViewData["searchCustomerUsername"] as string))
-                        {
-                            filters.Add(x => x.SearchCustomerUsername).Contains((string)ViewData["searchCustomerUsername"]);
-                        }
-                        //customer first name
-                        if (!String.IsNullOrEmpty(ViewData["searchCustomerFirstName"] as string))
-                        {
-                            filters.Add(x => x.SearchCustomerFirstName).Contains((string)ViewData["searchCustomerFirstName"]);
-                        }
-                        //customer last name
-                        if (!String.IsNullOrEmpty(ViewData["searchCustomerLastName"] as string))
-                        {
-                            filters.Add(x => x.SearchCustomerLastName).Contains((string)ViewData["searchCustomerLastName"]);
-                        }
-                        //customer day of birth
-                        if (!String.IsNullOrEmpty(ViewData["searchCustomerDayOfBirth"] as string))
-                        {
-                            filters.Add(x => x.SearchCustomerDayOfBirth).Contains((string)ViewData["searchCustomerDayOfBirth"]);
-                        }
-                        //customer month of birth
-                        if (!String.IsNullOrEmpty(ViewData["searchCustomerMonthOfBirth"] as string))
-                        {
-                            filters.Add(x => x.SearchCustomerMonthOfBirth).Contains((string)ViewData["searchCustomerMonthOfBirth"]);
-                        }
-                        //customer company
-                        if (!String.IsNullOrEmpty(ViewData["searchCustomerCompany"] as string))
-                        {
-                            filters.Add(x => x.SearchCustomerCompany).Contains((string)ViewData["searchCustomerCompany"]);
-                        }
-                        //customer phone
-                        if (!String.IsNullOrEmpty(ViewData["searchCustomerPhone"] as string))
-                        {
-                            filters.Add(x => x.SearchCustomerPhone).Contains((string)ViewData["searchCustomerPhone"]);
-                        }
-                        //customer zip
-                        if (!String.IsNullOrEmpty(ViewData["searchCustomerZipPostalCode"] as string))
-                        {
-                            filters.Add(x => x.SearchCustomerZipPostalCode).Contains((string)ViewData["searchCustomerZipPostalCode"]);
-                        }
-                    }))
                     .EnableCustomBinding(true))
             </td>
         </tr>
@@ -304,6 +203,14 @@
         var selectedIds = [];
 
         $(document).ready(function () {
+
+            //search button
+            $('#search-customers').click(function () {
+                var grid = $('#customers-grid').data('tGrid');
+                grid.currentPage = 1; //new search. Set page size to 1
+                grid.ajaxRequest();
+                return false;
+            });
 
             $("#@Html.FieldIdFor(model => model.SearchEmail)").keydown(function (event) {
                 if (event.keyCode == 13) {
@@ -402,33 +309,26 @@
             var numChkBoxesChecked = $('#customers-grid input[type=checkbox][checked][id!=mastercheckbox]').length;
             $('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
         }
-    </script>
-@*<script type="text/javascript">
-        $(document).ready(function () {
-            $('#search-customers').click(function () {
-                var grid = $('#customers-grid').data('tGrid');
-                grid.currentPage = 1; //new search. Set page size to 1
-                grid.ajaxRequest();
-                return false;
-            });
-        });
 
         function onDataBinding(e) {
-            //We need to use $.ajax({ data:{}, traditional:true });
-            //See the following forum topic to get more info: http://forum.jquery.com/topic/jquery-1-4-breaks-asp-net-mvc-parameter-posting
-            //But we don't have access to 'traditional' property passed by Telerik.
-
-            if ($('[name=SearchCustomerRoleIds]:checked').size() > 0) {
-                var customerRoleIds = [];
-            }
+            var customerRoleIds = [];
             $('[name=SearchCustomerRoleIds]:checked').each(function () {
                 customerRoleIds.push($(this).val());
             });
 
             var searchModel = {
-                SearchCustomerRoleIds: customerRoleIds
+                SearchCustomerRoleIds: customerRoleIds.join(","),
+                SearchEmail: $('#@Html.FieldIdFor(model => model.SearchEmail)').val(),
+                SearchUsername: $('#@Html.FieldIdFor(model => model.SearchUsername)').val(),
+                SearchFirstName: $('#@Html.FieldIdFor(model => model.SearchFirstName)').val(),
+                SearchLastName: $('#@Html.FieldIdFor(model => model.SearchLastName)').val(),
+                SearchDayOfBirth: $('#@Html.FieldIdFor(model => model.SearchDayOfBirth)').val(),
+                SearchMonthOfBirth: $('#@Html.FieldIdFor(model => model.SearchMonthOfBirth)').val(),
+                SearchCompany: $('#@Html.FieldIdFor(model => model.SearchCompany)').val(),
+                SearchPhone: $('#@Html.FieldIdFor(model => model.SearchPhone)').val(),
+                SearchZipPostalCode: $('#@Html.FieldIdFor(model => model.SearchZipPostalCode)').val()
             };
             e.data = searchModel;
         }
-   </script>*@
+    </script>
 }

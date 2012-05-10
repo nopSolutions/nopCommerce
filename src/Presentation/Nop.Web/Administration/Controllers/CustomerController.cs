@@ -252,14 +252,7 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             //load registered customers by default
-            var defaultRoleIds = new int[] { _customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered).Id };
-
-            //convert to string because passing int[] to grid is no possible
-            string searchCustomerRoleIdsStr = "";
-                foreach (var i in defaultRoleIds)
-                    searchCustomerRoleIdsStr += i + ",";
-            ViewData["searchCustomerRoleIds"] = searchCustomerRoleIdsStr;
-
+            var defaultRoleIds = new[] {_customerService.GetCustomerRoleBySystemName(SystemCustomerRoleNames.Registered).Id};
             var listModel = new CustomerListModel()
             {
                 UsernamesEnabled = _customerSettings.UsernamesEnabled,
@@ -276,51 +269,34 @@ namespace Nop.Admin.Controllers
             //customer list
             listModel.Customers = new GridModel<CustomerModel>
             {
-                Data = customers.Select(x => PrepareCustomerModelForList(x)),
+                Data = customers.Select(PrepareCustomerModelForList),
                 Total = customers.TotalCount
             };
             return View(listModel);
         }
 
         [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult CustomerList(GridCommand command)
+        public ActionResult CustomerList(GridCommand command, CustomerListModel model)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
-            //filtering
-            //convert to string because passing int[] to grid is no possible
-            string searchCustomerRoleIdsStr = command.FilterDescriptors.GetValueFromAppliedFilters("searchCustomerRoleIds");
-            var searchCustomerRoleIds = new List<int>();
-            foreach (var str1 in searchCustomerRoleIdsStr.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
-                searchCustomerRoleIds.Add(Convert.ToInt32(str1));
-            //List<int> converter should be registered
-            //var searchCustomerRoleIds = CommonHelper.GetNopCustomTypeConverter(typeof(List<int>)).ConvertFrom(searchCustomerRoleIdsStr) as List<int>;
-
-            string searchCustomerEmail = command.FilterDescriptors.GetValueFromAppliedFilters("searchCustomerEmail");
-            string searchCustomerUsername = command.FilterDescriptors.GetValueFromAppliedFilters("searchCustomerUsername");
-            string searchCustomerFirstName = command.FilterDescriptors.GetValueFromAppliedFilters("searchCustomerFirstName");
-            string searchCustomerLastName = command.FilterDescriptors.GetValueFromAppliedFilters("searchCustomerLastName");
-            int searchCustomerDayOfBirth = 0, searchCustomerMonthOfBirth = 0;
-            string searchCustomerDayOfBirthStr = command.FilterDescriptors.GetValueFromAppliedFilters("searchCustomerDayOfBirth");
-            if (!String.IsNullOrEmpty(searchCustomerDayOfBirthStr))
-                searchCustomerDayOfBirth = Convert.ToInt32(searchCustomerDayOfBirthStr);
-            string searchCustomerMonthOfBirthStr = command.FilterDescriptors.GetValueFromAppliedFilters("searchCustomerMonthOfBirth");
-            if (!String.IsNullOrEmpty(searchCustomerMonthOfBirthStr))
-                searchCustomerMonthOfBirth = Convert.ToInt32(searchCustomerMonthOfBirthStr);
-            string searchCustomerCompany = command.FilterDescriptors.GetValueFromAppliedFilters("searchCustomerCompany");
-            string searchCustomerPhone = command.FilterDescriptors.GetValueFromAppliedFilters("searchCustomerPhone");
-            string searchCustomerZipPostalCode = command.FilterDescriptors.GetValueFromAppliedFilters("searchCustomerZipPostalCode");
+            var searchDayOfBirth = 0;
+            int searchMonthOfBirth = 0;
+            if (!String.IsNullOrWhiteSpace(model.SearchDayOfBirth))
+                searchDayOfBirth = Convert.ToInt32(model.SearchDayOfBirth);
+            if (!String.IsNullOrWhiteSpace(model.SearchMonthOfBirth))
+                searchMonthOfBirth = Convert.ToInt32(model.SearchMonthOfBirth);
 
             var customers = _customerService.GetAllCustomers(null, null,
-                searchCustomerRoleIds.ToArray(), searchCustomerEmail, searchCustomerUsername,
-                searchCustomerFirstName, searchCustomerLastName,
-                searchCustomerDayOfBirth, searchCustomerMonthOfBirth,
-                searchCustomerCompany, searchCustomerPhone, searchCustomerZipPostalCode,
+                model.SearchCustomerRoleIds, model.SearchEmail, model.SearchUsername,
+                model.SearchFirstName, model.SearchLastName,
+                searchDayOfBirth, searchMonthOfBirth,
+                model.SearchCompany, model.SearchPhone, model.SearchZipPostalCode,
                 false, null, command.Page - 1, command.PageSize);
             var gridModel = new GridModel<CustomerModel>
             {
-                Data = customers.Select(x => PrepareCustomerModelForList(x)),
+                Data = customers.Select(PrepareCustomerModelForList),
                 Total = customers.TotalCount
             };
             return new JsonResult
@@ -328,69 +304,7 @@ namespace Nop.Admin.Controllers
                 Data = gridModel
             };
         }
-
-        [HttpPost, ActionName("List")]
-        [FormValueRequired("search-customers")]
-        public ActionResult Search(CustomerListModel model)
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
-                return AccessDeniedView();
-
-            model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
-            model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
-            model.CompanyEnabled = _customerSettings.CompanyEnabled;
-            model.PhoneEnabled = _customerSettings.PhoneEnabled;
-            model.ZipPostalCodeEnabled = _customerSettings.ZipPostalCodeEnabled;
-
-            //convert to string because passing int[] to grid is no possible
-            string searchCustomerRoleIdsStr = "";
-            if (model.SearchCustomerRoleIds != null)
-                foreach (var i in model.SearchCustomerRoleIds)
-                    searchCustomerRoleIdsStr+= i + ",";
-            ViewData["searchCustomerRoleIds"] = searchCustomerRoleIdsStr;
-            //if (model.SearchCustomerRoleIds != null)
-                //List<int> converter should be registered
-            //ViewData["searchCustomerRoleIds"] = CommonHelper.GetNopCustomTypeConverter(typeof(List<int>)).ConvertTo(model.SearchCustomerRoleIds, typeof(string)) as string;
-
-            ViewData["searchCustomerEmail"] = model.SearchEmail;
-            ViewData["searchCustomerUsername"] = model.SearchUsername;
-            ViewData["searchCustomerFirstName"] = model.SearchFirstName;
-            ViewData["searchCustomerLastName"] = model.SearchLastName;
-            ViewData["searchCustomerDayOfBirth"] = model.SearchDayOfBirth;
-            ViewData["searchCustomerMonthOfBirth"] = model.SearchMonthOfBirth;
-            ViewData["searchCustomerCompany"] = model.SearchCompany;
-            ViewData["searchCustomerPhone"] = model.SearchPhone;
-            ViewData["searchCustomerZipPostalCode"] = model.SearchZipPostalCode;
-
-            //customer roles
-            model.AvailableCustomerRoles = _customerService
-                .GetAllCustomerRoles(true)
-                .Select(cr => cr.ToModel())
-                .ToList();
-
-            //date of birth
-            int searchCustomerDayOfBirth = 0, searchCustomerMonthOfBirth = 0;
-            if (!String.IsNullOrEmpty(model.SearchDayOfBirth))
-                searchCustomerDayOfBirth = Convert.ToInt32(model.SearchDayOfBirth);
-            if (!String.IsNullOrEmpty(model.SearchMonthOfBirth))
-                searchCustomerMonthOfBirth = Convert.ToInt32(model.SearchMonthOfBirth);
-
-            //load customers
-            var customers = _customerService.GetAllCustomers(null, null,
-               model.SearchCustomerRoleIds, model.SearchEmail, model.SearchUsername,
-               model.SearchFirstName, model.SearchLastName,
-               searchCustomerDayOfBirth, searchCustomerMonthOfBirth,
-               model.SearchCompany, model.SearchPhone, model.SearchZipPostalCode,
-               false, null, 0, _adminAreaSettings.GridPageSize);
-            //customer list
-            model.Customers = new GridModel<CustomerModel>
-            {
-                Data = customers.Select(x => PrepareCustomerModelForList(x)),
-                Total = customers.TotalCount
-            };
-            return View(model);
-        }
-
+        
         public ActionResult Create()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))

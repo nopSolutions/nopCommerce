@@ -187,21 +187,6 @@ namespace Nop.Admin.Models.Customers
         [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.AddRewardPointsMessage")]
         [AllowHtml]
         public string AddRewardPointsMessage { get; set; }
-
-
-
-        
-        //properties used for filtering (customer list page)
-        public string SearchCustomerRoleIds { get; set; }
-        public string SearchCustomerEmail { get; set; }
-        public string SearchCustomerUsername { get; set; }
-        public string SearchCustomerFirstName { get; set; }
-        public string SearchCustomerLastName { get; set; }
-        public string SearchCustomerDayOfBirth { get; set; }
-        public string SearchCustomerMonthOfBirth { get; set; }
-        public string SearchCustomerCompany { get; set; }
-        public string SearchCustomerPhone { get; set; }
-        public string SearchCustomerZipPostalCode { get; set; }
         
         //send email model
         public SendEmailModel SendEmail { get; set; }
