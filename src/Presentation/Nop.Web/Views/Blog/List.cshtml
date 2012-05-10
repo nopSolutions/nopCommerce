@@ -15,33 +15,29 @@
 }
 <div class="blog">
     <div class="page-title">
-        <table style="width: 100%;">
-            <tr>
-                <td class="title">
-                    <h1>
-                        @if (String.IsNullOrEmpty(Model.PagingFilteringContext.Tag))
-                        {
-                            if (Model.PagingFilteringContext.GetParsedMonth().HasValue)
-                            {
-                            @string.Format(T("Blog.FilteredByMonth").Text, Model.PagingFilteringContext.GetParsedMonth().Value.Year, Model.PagingFilteringContext.GetParsedMonth().Value.ToString("MMMM"));
-                            }
-                            else
-                            {
-                            @T("Blog")
-                            }
-                        }
-                        else
-                        {
-                            @string.Format(T("Blog.TaggedWith").Text, Model.PagingFilteringContext.Tag);
-                        }
-                    </h1>
-                </td>
-                <td class="rss">
-                    <a href="@Url.RouteUrl("BlogRSS", new { languageId = Model.WorkingLanguageId })">
-                        <img title="@T("Blog.RSS.Hint")" src="@Url.Content("~/content/images/icon_rss.gif")" alt="@T("Blog.RSS")" /></a>
-                </td>
-            </tr>
-        </table>
+        <div class="title">
+            <h1>
+                @if (String.IsNullOrEmpty(Model.PagingFilteringContext.Tag))
+                {
+                    if (Model.PagingFilteringContext.GetParsedMonth().HasValue)
+                    {
+                    @string.Format(T("Blog.FilteredByMonth").Text, Model.PagingFilteringContext.GetParsedMonth().Value.Year, Model.PagingFilteringContext.GetParsedMonth().Value.ToString("MMMM"));
+                    }
+                    else
+                    {
+                    @T("Blog")
+                    }
+                }
+                else
+                {
+                    @string.Format(T("Blog.TaggedWith").Text, Model.PagingFilteringContext.Tag);
+                }
+            </h1>
+        </div>
+        <div class="rss">
+            <a href="@Url.RouteUrl("BlogRSS", new { languageId = Model.WorkingLanguageId })">
+                <img title="@T("Blog.RSS.Hint")" src="@Url.Content("~/content/images/icon_rss.gif")" alt="@T("Blog.RSS")" /></a>
+        </div>
     </div>
     <div class="clear">
     </div>

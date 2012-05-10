@@ -11,17 +11,13 @@
 @using Nop.Web.Models.Catalog;
 <div class="recently-added-products">
     <div class="page-title">
-        <table style="width: 100%;">
-            <tr>
-                <td class="title">
-                    <h1>@T("Products.NewProducts")</h1>
-                </td>
-                <td class="rss">
-                    <a href="@Url.RouteUrl("RecentlyAddedProductsRSS")">
-                        <img title="@T("Products.NewProducts.RSS.Hint")" src="@Url.Content("~/content/images/icon_rss.gif")" alt="@T("Products.NewProducts.RSS")" /></a>
-                </td>
-            </tr>
-        </table>
+        <div class="title">
+            <h1>@T("Products.NewProducts")</h1>
+        </div>
+        <div class="rss">
+            <a href="@Url.RouteUrl("RecentlyAddedProductsRSS")">
+                <img title="@T("Products.NewProducts.RSS.Hint")" src="@Url.Content("~/content/images/icon_rss.gif")" alt="@T("Products.NewProducts.RSS")" /></a>
+        </div>
     </div>
     <div class="clear">
     </div>

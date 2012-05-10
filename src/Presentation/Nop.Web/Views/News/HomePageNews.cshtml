@@ -5,19 +5,15 @@
 @using Nop.Web.Models.News
 @if (Model.NewsItems.Count > 0)
 {
-    <div class="newslist">
+    <div class="newslist-homepage">
         <div class="page-title">
-            <table style="width: 100%;">
-                <tr>
-                    <td class="title">
-                        @T("News")
-                    </td>
-                    <td class="rss">
-                        <a href="@Url.RouteUrl("NewsRSS", new { languageId = Model.WorkingLanguageId })">
-                            <img title="@T("News.RSS.Hint")" src="@Url.Content("~/content/images/icon_rss.gif")" alt="@T("News.RSS")" /></a>
-                    </td>
-                </tr>
-            </table>
+            <div class="title">
+                @T("News")
+            </div>
+            <div class="rss">
+                <a href="@Url.RouteUrl("NewsRSS", new { languageId = Model.WorkingLanguageId })">
+                    <img title="@T("News.RSS.Hint")" src="@Url.Content("~/content/images/icon_rss.gif")" alt="@T("News.RSS")" /></a>
+            </div>
         </div>
         <div class="clear">
         </div>

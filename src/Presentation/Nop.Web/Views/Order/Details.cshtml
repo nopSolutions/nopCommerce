@@ -18,20 +18,16 @@
     @if (!Model.PrintMode)
     {
         <div class="page-title">
-            <table style="width: 100%;">
-                <tr>
-                    <td class="title">
-                        <h1>@T("Order.OrderInformation")</h1>
-                    </td>
-                    <td class="print-buttons">
-                        <a href="@Url.RouteUrl("PrintOrderDetails", new { orderId = Model.Id })" target="_blank" class="orderdetailsprintbutton">@T("Order.Print")</a>
-                        @if (Model.DisplayPdfInvoice)
-                        {
-                            <a href="@Url.RouteUrl("GetOrderPdfInvoice", new { orderId = Model.Id })" class="orderdetailsprintbutton">@T("Order.GetPDFInvoice")</a>
-                        }
-                    </td>
-                </tr>
-            </table>
+            <div class="title">
+                <h1>@T("Order.OrderInformation")</h1>
+            </div>
+            <div class="print-buttons">
+                <a href="@Url.RouteUrl("PrintOrderDetails", new { orderId = Model.Id })" target="_blank" class="orderdetailsprintbutton">@T("Order.Print")</a>
+                            @if (Model.DisplayPdfInvoice)
+                            {
+                                <a href="@Url.RouteUrl("GetOrderPdfInvoice", new { orderId = Model.Id })" class="orderdetailsprintbutton">@T("Order.GetPDFInvoice")</a>
+                            }
+            </div>
         </div>
         <div class="clear">
         </div>
