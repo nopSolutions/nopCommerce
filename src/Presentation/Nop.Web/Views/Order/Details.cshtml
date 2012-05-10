@@ -34,7 +34,7 @@
     }
     <div class="info">
         <div class="order-overview">
-            <table width="100%" cellspacing="0" cellpadding="2" border="0">
+            <table class="order-overview-table">
                 <tbody>
                     <tr>
                         <td colspan="2">
@@ -62,10 +62,10 @@
         <div class="clear">
         </div>
         <div class="order-details-box">
-            <table width="100%" cellspacing="0" cellpadding="2" border="0">
+            <table class="order-details-table">
                 <tbody>
                     <tr>
-                        <td width="50%" style="vertical-align: top;">
+                        <td class="billinginfo">
                             <b>
                                 @T("Order.BillingAddress")</b>
                             <br />
@@ -127,7 +127,7 @@
                         </td>
                         @if (Model.IsShippable)
                         {
-                            <td width="50%" style="vertical-align: top;">
+                            <td class="shippinginfo">
                                 <b>
                                     @T("Order.ShippingAddress")</b>
                                 <br />
