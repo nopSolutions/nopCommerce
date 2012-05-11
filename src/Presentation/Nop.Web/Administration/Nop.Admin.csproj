@@ -334,7 +334,7 @@
     <Content Include="Content\images\warnings-warning.png" />
     <Content Include="Content\styles.css" />
     <Content Include="Content\uploadify.css" />
-    <Content Include="Scripts\admin.js" />
+    <Content Include="Scripts\admin.common.js" />
     <Content Include="Scripts\jquery-1.7.1-vsdoc.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
     <Content Include="Scripts\jquery-1.7.1.min.js" />

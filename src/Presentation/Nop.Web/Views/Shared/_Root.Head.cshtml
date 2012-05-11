@@ -5,7 +5,7 @@
     var displayMiniProfiler = EngineContext.Current.Resolve<Nop.Core.Domain.StoreInformationSettings>().DisplayMiniProfilerInPublicStore;
 
     //resources
-    Html.AppendScriptParts(@Url.Content("~/Scripts/public.js"));
+    Html.AppendScriptParts(@Url.Content("~/Scripts/public.common.js"));
     Html.AppendScriptParts(@Url.Content("~/Scripts/MicrosoftMvcAjax.js"));
     Html.AppendScriptParts(@Url.Content("~/Scripts/MicrosoftAjax.js"));
     Html.AppendScriptParts(@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js"));
