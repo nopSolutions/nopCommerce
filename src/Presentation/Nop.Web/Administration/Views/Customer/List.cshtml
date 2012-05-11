@@ -168,14 +168,12 @@
                             .Width(150);
                         //Weird!!! We can't pass Model.UsernamesEnabled to Hidden method
                         var usernameColumn = columns.Bound(x => x.Username)
-                            .Width(150);
-                        if (!Model.UsernamesEnabled)
-                            usernameColumn.Hidden(true);
+                            .Width(150)
+                            .Visible(Model.UsernamesEnabled);
                         columns.Bound(x => x.FullName)
                             .Width(200);
                         columns.Bound(x => x.CustomerRoleNames)
-                            .Width(200)
-                            .Hidden(true);
+                            .Width(200);
                         columns.Bound(x => x.Active)
                              .Width(100)
                              .Template(x => x.Active.ToString().ToLower())
@@ -213,6 +211,12 @@
             });
 
             $("#@Html.FieldIdFor(model => model.SearchEmail)").keydown(function (event) {
+                if (event.keyCode == 13) {
+                    $("#search-customers").click();
+                    return false;
+                }
+            });
+            $("#@Html.FieldIdFor(model => model.SearchUsername)").keydown(function (event) {
                 if (event.keyCode == 13) {
                     $("#search-customers").click();
                     return false;
