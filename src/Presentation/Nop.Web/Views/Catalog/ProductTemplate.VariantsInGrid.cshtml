@@ -35,19 +35,16 @@
 @if (errors.Count > 0)
 {
     //display errors
-    Html.AddCssFileParts(@Url.Content("~/Content/smoothness/jquery-ui-1.8.17.custom.css"));
-    Html.AddScriptParts(@Url.Content("~/Scripts/jquery-ui.min.js"));
     <script type="text/javascript">
         $(document).ready(function () {
-            $("#dialog-product-errors").dialog({ modal: true });
+            var producterrors = new Array();
+            @for (int i = 0; i < errors.Count; i++)
+            {
+            <text>producterrors[@(i)]="@(errors[i])";</text>
+            }
+            displayNotification(producterrors, 'error', true);
         });
 	</script>
-    <div id="dialog-product-errors" title="@T("Common.Warning")" style="display:none;">
-        @foreach (var error in errors)
-        {
-            <p>@error</p>
-        }
-    </div>
 }
 <!--product breadcrumb-->
 @Html.Action("ProductBreadcrumb", "Catalog", new { productId = Model.Id })
