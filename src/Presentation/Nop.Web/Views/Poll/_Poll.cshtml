@@ -44,7 +44,7 @@
                     var voteProgress = $("#poll-voting-progress-@(Model.Id)");
                     voteProgress.show();
                     $.ajax({
-                        cache:false,
+                        cache: false,
                         type: "POST",
                         url: "@(Url.Action("Vote", "Poll"))",
                         data: { "pollAnswerId": pollAnswerId },

@@ -48,7 +48,7 @@
                 var subscribeProgress = $("#subscribe-loading-progress");
                 subscribeProgress.show();
                 $.ajax({
-                    cache:false,
+                    cache: false,
                     type: "POST",
                     url: "@(Url.Action("SubscribeNewsletter", "Newsletter"))",
                     data: { "subscribe": subscribe, "email": email },

@@ -15,7 +15,7 @@
                 var estimateProgress = $("#estimate-shipping-loading-progress");
                 estimateProgress.show();                
                 $.ajax({
-                    cache:false,
+                    cache: false,
                     type: "GET",
                     url: "@(Url.Action("GetStatesByCountryId", "Country"))",
                     data: { "countryId": selectedItem, "addEmptyStateIfRequired": "true" },

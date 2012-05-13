@@ -99,6 +99,7 @@
                             //show progress
                             $.mobile.showPageLoadingMsg();
                             $.ajax({
+                                cache: false,
                                 type: 'POST',
                                 url: '@Url.RouteUrl("ForumWatch", new { id = @Model.Id })',
                                 dataType: 'json',

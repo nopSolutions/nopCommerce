@@ -54,6 +54,7 @@
                             //show progress
                             $.mobile.showPageLoadingMsg();
                             $.ajax({
+                                cache: false,
                                 type: 'POST',
                                 url: '@Url.RouteUrl("BackInStockSubscribePopup", new { productVariantId = Model.ProductVariantId })',
                                 data: $(this.form).serialize(),

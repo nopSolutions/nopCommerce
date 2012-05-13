@@ -13,6 +13,7 @@
                 @T("EUCookieLaw.OK"): function () {
                     //store value
                     $.ajax({
+                        cache: false,
                         type: 'POST',
                         url: '@Url.Action("EuCookieLawAccept", "Common")',
                         dataType: 'json',

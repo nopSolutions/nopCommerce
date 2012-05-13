@@ -19,6 +19,7 @@
                 var topicId = $("#@Html.FieldIdFor(model => model.Id)").val();
                 var password = $('#password').val();
                 $.ajax({
+                    cache: false,
                     type: 'POST',
                     url: '@Url.Action("Authenticate", "Topic")',
                     data: { "id": topicId, "password": password },

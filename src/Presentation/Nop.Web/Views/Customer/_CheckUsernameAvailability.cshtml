@@ -12,6 +12,7 @@
                 $('#availability-check-progress').show();
                 $('#check-availability-button').attr('disabled', 'disabled');
                 $.ajax({
+                    cache: false,
                     type: 'POST',
                     url: '@Url.Action("CheckUsernameAvailability", "Customer")',
                     data: $('#Username').serialize(),

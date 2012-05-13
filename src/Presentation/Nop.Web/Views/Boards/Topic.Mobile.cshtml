@@ -71,6 +71,7 @@
                         //show progress
                         $.mobile.showPageLoadingMsg();
                         $.ajax({
+                            cache: false,
                             type: 'POST',
                             url: '@Url.RouteUrl("TopicWatch", new { id = @Model.Id })',
                             dataType: 'json',

@@ -18,7 +18,7 @@
 
         function setProductReviewHelpfulness@(Model.ProductReviewId)(wasHelpful){
                 $.ajax({
-                    cache:false,
+                    cache: false,
                     type: "POST",
                     url: "@(Url.Action("SetProductReviewHelpfulness", "Catalog"))",
                     data: { "productReviewId": @(Model.ProductReviewId), "washelpful": wasHelpful },
