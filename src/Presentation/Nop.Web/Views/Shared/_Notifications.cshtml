@@ -22,9 +22,6 @@
     {
         errorMessages.AddRange(ViewData[string.Format("nop.notifications.{0}", NotifyType.Error)] as IList<string>);
     }
-
-    Html.AddCssFileParts(@Url.Content("~/Content/smoothness/jquery-ui-1.8.17.custom.css"));
-    Html.AddScriptParts(@Url.Content("~/Scripts/jquery-ui.min.js"));
 }
 @if (successMessages.Count > 0)
 {
