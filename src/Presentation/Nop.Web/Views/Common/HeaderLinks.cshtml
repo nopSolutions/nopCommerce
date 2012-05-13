@@ -48,12 +48,12 @@
         @if (Model.ShoppingCartEnabled)
         {
             <li><a href="@Url.RouteUrl("ShoppingCart")" class="ico-cart">@T("ShoppingCart")</a>
-                <a href="@Url.RouteUrl("ShoppingCart")">(@Model.ShoppingCartItems)</a> </li>
+                <a href="@Url.RouteUrl("ShoppingCart")" class="cart-qty">(@Model.ShoppingCartItems)</a> </li>
         }
         @if (Model.WishlistEnabled)
         {
-            <li><a href="@Url.RouteUrl("Wishlist")" class="ico-wishlist">@T("Wishlist")</a> <a href="@Url.RouteUrl("Wishlist")">
-                (@Model.WishlistItems)</a> </li>
+            <li><a href="@Url.RouteUrl("Wishlist")" class="ico-wishlist">@T("Wishlist")</a>
+            <a href="@Url.RouteUrl("Wishlist")" class="wishlist-qty">(@Model.WishlistItems)</a> </li>
         }
         @if (Model.DisplayAdminLink)
         {

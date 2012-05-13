@@ -30,6 +30,8 @@ using Nop.Services.Tax;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Security;
 using Nop.Web.Framework.UI.Captcha;
+using Nop.Web.Models.Catalog;
+using Nop.Web.Models.Common;
 using Nop.Web.Models.Media;
 using Nop.Web.Models.ShoppingCart;
 
@@ -543,58 +545,156 @@ namespace Nop.Web.Controllers
             return model;
         }
 
+        [NonAction]
+        protected MiniShoppingCartModel PrepareMiniShoppingCartModel()
+        {
+            var model = new MiniShoppingCartModel()
+            {
+                DisplayProducts = _shoppingCartSettings.MiniShoppingCartDisplayProducts,
+                //if "terms of services" are enabled, then redirect a customer to the shopping cart page
+                //because he should check an appropriate checkbox first.
+                RedirectToShoppingCartPage = _orderSettings.TermsOfServiceEnabled,
+            };
+
+            var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
+            model.TotalProducts = cart.GetTotalProducts();
+            if (cart.Count > 0)
+            {
+                //subtotal
+                decimal subtotalBase = decimal.Zero;
+                decimal orderSubTotalDiscountAmountBase = decimal.Zero;
+                Discount orderSubTotalAppliedDiscount = null;
+                decimal subTotalWithoutDiscountBase = decimal.Zero;
+                decimal subTotalWithDiscountBase = decimal.Zero;
+                _orderTotalCalculationService.GetShoppingCartSubTotal(cart,
+                    out orderSubTotalDiscountAmountBase, out orderSubTotalAppliedDiscount,
+                    out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
+                subtotalBase = subTotalWithoutDiscountBase;
+                decimal subtotal = _currencyService.ConvertFromPrimaryStoreCurrency(subtotalBase, _workContext.WorkingCurrency);
+                model.SubTotal = _priceFormatter.FormatPrice(subtotal);
+            }
+            if (_shoppingCartSettings.MiniShoppingCartDisplayProducts)
+            {
+                foreach (var sci in cart)
+                {
+                    var cartItemModel = new MiniShoppingCartModel.ShoppingCartItemModel()
+                    {
+                        Id = sci.Id,
+                        ProductId = sci.ProductVariant.ProductId,
+                        ProductSeName = sci.ProductVariant.Product.GetSeName(),
+                        Quantity = sci.Quantity,
+                    };
+
+                    //product name
+                    if (!String.IsNullOrEmpty(sci.ProductVariant.GetLocalized(x => x.Name)))
+                        cartItemModel.ProductName = string.Format("{0} ({1})", sci.ProductVariant.Product.GetLocalized(x => x.Name), sci.ProductVariant.GetLocalized(x => x.Name));
+                    else
+                        cartItemModel.ProductName = sci.ProductVariant.Product.GetLocalized(x => x.Name);
+
+                    model.Items.Add(cartItemModel);
+                }
+            }
+            return model;
+        }
         #endregion
 
         #region Shopping cart
 
+        [HttpPost]
         public ActionResult AddProductToCart(int productId)
         {
             var product = _productService.GetProductById(productId);
             if (product == null)
-                return RedirectToAction("Index", "Home");
+                //no product found
+                return Json(new
+                {
+                    success = false,
+                    message = "No product found with the specified ID"
+                });
 
-            int productVariantId = 0;
-            if (_shoppingCartService.DirectAddToCartAllowed(productId, out productVariantId))
+            var productVariants = _productService.GetProductVariantsByProductId(productId);
+            if (productVariants.Count != 1)
             {
-                var productVariant = _productService.GetProductVariantById(productVariantId);
-                var addToCartWarnings = _shoppingCartService.AddToCart(_workContext.CurrentCustomer,
-                    productVariant, ShoppingCartType.ShoppingCart,
-                    string.Empty, decimal.Zero, 1, true);
-                if (addToCartWarnings.Count == 0)
+                //we can add a product to the cart only if it has exactly one product variant
+                return Json(new
                 {
-                    //added to the cart
-                    if (_shoppingCartSettings.DisplayCartAfterAddingProduct)
-                    {
-                        //redirect to the shopping cart page
-                        return RedirectToRoute("ShoppingCart");
-                    }
-                    else
-                    {
-                        //TODO: URL referrer is null in IE 8. Fix it
-                        if (HttpContext.Request.UrlReferrer != null)
-                        {
-                            //redisplay the page with "Product has been added to the cart" notification message
-                            this.SuccessNotification(_localizationService.GetResource("Products.ProductHasBeenAddedToTheCart"), true);
-                            return Redirect(HttpContext.Request.UrlReferrer.PathAndQuery);
-                        }
-                        else
-                        {
-                            //redirect to the shopping cart page
-                            return RedirectToRoute("ShoppingCart");
-                        }       
-                    }
-                }
-                else
-                {
-                    //cannot be added to the cart
-                    return RedirectToRoute("Product", new {productId = product.Id, SeName = product.GetSeName()});
-                }
+                    redirect = Url.RouteUrl("Product", new { productId = product.Id, SeName = product.GetSeName() }, "http"),
+                });
             }
-            else
+
+            //get default product variant
+            var defaultProductVariant = productVariants[0];
+            if (defaultProductVariant.CustomerEntersPrice)
+            {
+                //cannot be added to the cart (requires a customer to enter price)
+                return Json(new
+                {
+                    redirect = Url.RouteUrl("Product", new { productId = product.Id, SeName = product.GetSeName() }, "http"),
+                });
+            }
+
+            //get standard warnings without attribute validations
+            var addToCartWarnings = _shoppingCartService
+                .GetShoppingCartItemWarnings(_workContext.CurrentCustomer, ShoppingCartType.ShoppingCart,
+                defaultProductVariant, string.Empty, decimal.Zero, 1, false, true, false, false, false);
+            if (addToCartWarnings.Count > 0)
             {
                 //cannot be added to the cart
-                return RedirectToRoute("Product", new {productId = product.Id, SeName = product.GetSeName()});
+                //let's display standard warnings
+                return Json(new
+                {
+                    success = false,
+                    message = addToCartWarnings.ToArray()
+                });
             }
+
+            //now let's try adding product to the cart (now including product attribute validation, etc)
+            addToCartWarnings = _shoppingCartService.AddToCart(_workContext.CurrentCustomer,
+                defaultProductVariant, ShoppingCartType.ShoppingCart,
+                string.Empty, decimal.Zero, 1, true);
+            if (addToCartWarnings.Count > 0)
+            {
+                //cannot be added to the cart
+                //but we do not display attribute and gift card warnings here. let's do it on the product details page
+                return Json(new
+                {
+                    redirect = Url.RouteUrl("Product", new { productId = product.Id, SeName = product.GetSeName() }, "http"),
+                });
+            }
+
+            //added to the cart
+            if (_shoppingCartSettings.DisplayCartAfterAddingProduct)
+            {
+                //redirect to the shopping cart page
+                return Json(new
+                {
+                    redirect = Url.RouteUrl("ShoppingCart", new { productId = product.Id, SeName = product.GetSeName() }, "http"),
+                });
+            }
+
+
+            //display "Product has been added to the cart" notification message
+            //and update appropriate blocks
+            var updateitemscountsectionhtml = string.Format("({0})",
+                _workContext
+                .CurrentCustomer
+                .ShoppingCartItems
+                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                .ToList()
+                .GetTotalProducts());
+            var updateminicartsectionhtml = (_shoppingCartSettings.MiniShoppingCartEnabled
+                && _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
+                ? RenderPartialViewToString("MiniShoppingCart", PrepareMiniShoppingCartModel())
+                : "";
+
+            return Json(new
+            {
+                success = true,
+                message = _localizationService.GetResource("Products.ProductHasBeenAddedToTheCart"),
+                updateitemscountsectionhtml = updateitemscountsectionhtml,
+                updateminicartsectionhtml = updateminicartsectionhtml,
+            });
+
         }
 
         [NopHttpsRequirement(SslRequirement.Yes)]
@@ -1258,52 +1358,7 @@ namespace Nop.Web.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
                 return Content("");
 
-            var model = new MiniShoppingCartModel()
-            {
-                DisplayProducts = _shoppingCartSettings.MiniShoppingCartDisplayProducts,
-                //if "terms of services" are enabled, then redirect a customer to the shopping cart page
-                //because he should check an appropriate checkbox first.
-                RedirectToShoppingCartPage = _orderSettings.TermsOfServiceEnabled,
-            };
-
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
-            model.TotalProducts = cart.GetTotalProducts();
-            if (cart.Count > 0)
-            {
-                //subtotal
-                decimal subtotalBase = decimal.Zero;
-                decimal orderSubTotalDiscountAmountBase = decimal.Zero;
-                Discount orderSubTotalAppliedDiscount = null;
-                decimal subTotalWithoutDiscountBase = decimal.Zero;
-                decimal subTotalWithDiscountBase = decimal.Zero;
-                _orderTotalCalculationService.GetShoppingCartSubTotal(cart,
-                    out orderSubTotalDiscountAmountBase, out orderSubTotalAppliedDiscount,
-                    out subTotalWithoutDiscountBase, out subTotalWithDiscountBase);
-                subtotalBase = subTotalWithoutDiscountBase;
-                decimal subtotal = _currencyService.ConvertFromPrimaryStoreCurrency(subtotalBase, _workContext.WorkingCurrency);
-                model.SubTotal = _priceFormatter.FormatPrice(subtotal);
-            }
-            if (_shoppingCartSettings.MiniShoppingCartDisplayProducts)
-            {
-                foreach (var sci in cart)
-                {
-                    var cartItemModel = new MiniShoppingCartModel.ShoppingCartItemModel()
-                    {
-                        Id = sci.Id,
-                        ProductId = sci.ProductVariant.ProductId,
-                        ProductSeName = sci.ProductVariant.Product.GetSeName(),
-                        Quantity = sci.Quantity,
-                    };
-
-                    //product name
-                    if (!String.IsNullOrEmpty(sci.ProductVariant.GetLocalized(x => x.Name)))
-                        cartItemModel.ProductName = string.Format("{0} ({1})", sci.ProductVariant.Product.GetLocalized(x => x.Name), sci.ProductVariant.GetLocalized(x => x.Name));
-                    else
-                        cartItemModel.ProductName = sci.ProductVariant.Product.GetLocalized(x => x.Name);
-
-                    model.Items.Add(cartItemModel);
-                }
-            }
+            var model = PrepareMiniShoppingCartModel();
             return PartialView(model);
         }
 

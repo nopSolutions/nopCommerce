@@ -22,36 +22,35 @@
     {
         errorMessages.AddRange(ViewData[string.Format("nop.notifications.{0}", NotifyType.Error)] as IList<string>);
     }
+
+    Html.AddCssFileParts(@Url.Content("~/Content/smoothness/jquery-ui-1.8.17.custom.css"));
+    Html.AddScriptParts(@Url.Content("~/Scripts/jquery-ui.min.js"));
 }
 @if (successMessages.Count > 0)
 {
-    Html.AddCssFileParts(@Url.Content("~/Content/smoothness/jquery-ui-1.8.17.custom.css"));
-    Html.AddScriptParts(@Url.Content("~/Scripts/jquery-ui.min.js"));
     <script type="text/javascript">
         $(document).ready(function () {
-            $("#dialog-notifications-success").dialog();
+            $("#dialog-notifications-success").dialog({ modal: true });
         });
-	</script>
-    <div id="dialog-notifications-success" title="@T("Common.Notification")" style="display:none;">
-        @foreach (var message in successMessages)
-        {
-            <p>@message</p>
-        }
-    </div>
+    </script>
 }
 @if (errorMessages.Count > 0)
 {
-    Html.AddCssFileParts(@Url.Content("~/Content/smoothness/jquery-ui-1.8.17.custom.css"));
-    Html.AddScriptParts(@Url.Content("~/Scripts/jquery-ui.min.js"));
     <script type="text/javascript">
         $(document).ready(function () {
-            $("#dialog-notifications-error").dialog();
+            $("#dialog-notifications-error").dialog({ modal: true });
         });
-	</script>
-    <div id="dialog-notifications-error" title="@T("Common.Error")" style="display:none;">
-        @foreach (var message in errorMessages)
-        {
-            <p>@message</p>
-        }
-    </div>
+    </script>
 }
+<div id="dialog-notifications-success" title="@T("Common.Notification")" style="display:none;">
+    @foreach (var message in successMessages)
+    {
+        <p>@message</p>
+    }
+</div>
+<div id="dialog-notifications-error" title="@T("Common.Error")" style="display:none;">
+    @foreach (var message in errorMessages)
+    {
+        <p>@message</p>
+    }
+</div>

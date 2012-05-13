@@ -119,11 +119,6 @@ namespace Nop.Web.Infrastructure
             
 
             //shopping cart
-            routes.MapLocalizedRoute("AddProductToCart",
-                            "cart/addproduct/{productId}",
-                            new { controller = "ShoppingCart", action = "AddProductToCart" },
-                            new { productId = @"\d+" },
-                            new[] { "Nop.Web.Controllers" });
             routes.MapLocalizedRoute("ShoppingCart",
                             "cart/",
                             new { controller = "ShoppingCart", action = "Cart" },

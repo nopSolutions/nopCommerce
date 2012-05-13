@@ -41,9 +41,7 @@ function showThrobber(message) {
 
 $(document).ready(function () {
     //Setup the ajax indicator
-    //TODO We'll not be able to load ajax-loading.gif when site is run in virtual directory. Fix it 
-    //1. Move to .cshtml file and use @Url.Content there)
-    //2. Or create css style
+    //TODO We'll not be able to load ajax-loading.gif when site is run in virtual directory. Fix it by creating CSS style
     $('body').append('<div id="ajaxBusy"><p><img src="/administration/content/images/ajax-loading.gif"></p></div>');
     $('#ajaxBusy').css({
         display: "none",
