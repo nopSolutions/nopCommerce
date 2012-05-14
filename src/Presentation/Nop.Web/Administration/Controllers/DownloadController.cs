@@ -1,33 +1,23 @@
 ﻿using System;
 using System.IO;
+using System.Web;
 using System.Web.Mvc;
-using System.Web.Security;
 using Nop.Core.Domain.Media;
-using Nop.Services.Authentication;
 using Nop.Services.Media;
-using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
 
 namespace Nop.Admin.Controllers
 {
-    //[AdminAuthorize] Do not use [AdminAuthorzie] attribute because of flash cookie bug used in uploadify
-    //we apply it only to requried methods (e.g. DownloadFile and SaveDownloadUrl)
+    [AdminAuthorize]
     public class DownloadController : BaseNopController
     {
         private readonly IDownloadService _downloadService;
-        private readonly IPermissionService _permissionService;
-        private readonly IAuthenticationService _authenticationService;
 
-        public DownloadController(IDownloadService downloadService,
-             IPermissionService permissionService,
-            IAuthenticationService authenticationService)
+        public DownloadController(IDownloadService downloadService)
         {
             this._downloadService = downloadService;
-            this._permissionService = permissionService;
-            this._authenticationService = authenticationService;
         }
 
-        [AdminAuthorize]
         public ActionResult DownloadFile(int downloadId)
         {
             var download = _downloadService.GetDownloadById(downloadId);
@@ -43,16 +33,16 @@ namespace Nop.Admin.Controllers
                 //use stored data
                 if (download.DownloadBinary == null)
                     return Content(string.Format("Download data is not available any more. Download ID={0}", downloadId));
-                
-                string fileName = download.Filename ?? downloadId.ToString();
-                return new FileContentResult(download.DownloadBinary, download.ContentType) { FileDownloadName = fileName + download.Extension };
+
+                string fileName = !String.IsNullOrWhiteSpace(download.Filename) ? download.Filename : downloadId.ToString();
+                string contentType = !String.IsNullOrWhiteSpace(download.ContentType) ? download.ContentType : "application/octet-stream";
+                return new FileContentResult(download.DownloadBinary, contentType) { FileDownloadName = fileName + download.Extension };
             }
 
         }
 
         [HttpPost]
         [ValidateInput(false)]
-        [AdminAuthorize]
         public ActionResult SaveDownloadUrl(string downloadUrl)
         {
             //insert
@@ -68,43 +58,58 @@ namespace Nop.Admin.Controllers
             return Json(new { downloadId = download.Id }, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult AsyncUpload(string authToken)
+        [HttpPost]
+        public ActionResult AsyncUpload()
         {
-            var httpPostedFile = Request.Files[0];
-            if (httpPostedFile == null)
-                throw new ArgumentException("No file uploaded");
+            //we process it distinct ways based on a browser
+            //find more info here http://stackoverflow.com/questions/4884920/mvc3-valums-ajax-file-upload
+            Stream stream = null;
+            var fileName = "";
+            var contentType = "";
+            if (String.IsNullOrEmpty(Request["qqfile"]))
+            {
+                // IE
+                HttpPostedFileBase httpPostedFile = Request.Files[0];
+                if (httpPostedFile == null)
+                    throw new ArgumentException("No file uploaded");
+                stream = httpPostedFile.InputStream;
+                fileName = Path.GetFileName(httpPostedFile.FileName);
+                contentType = httpPostedFile.ContentType;
+            }
+            else
+            {
+                //Webkit, Mozilla
+                stream = Request.InputStream;
+                fileName = Request["qqfile"];
+            }
 
-            //Workaround for flash cookie bug
-            //http://stackoverflow.com/questions/1729179/uploadify-session-and-authentication-with-asp-net-mvc
-            //http://geekswithblogs.net/apopovsky/archive/2009/05/06/working-around-flash-cookie-bug-in-asp.net-mvc.aspx
+            var fileBinary = new byte[stream.Length];
+            stream.Read(fileBinary, 0, fileBinary.Length);
 
-            var ticket = FormsAuthentication.Decrypt(authToken);
-            if (ticket == null)
-                throw new Exception("No token provided");
-
-            var identity = new FormsIdentity(ticket);
-            if (!identity.IsAuthenticated)
-                throw new Exception("User is not authenticated");
-
-            var customer = ((FormsAuthenticationService)_authenticationService).GetAuthenticatedCustomerFromTicket(ticket);
-            if (!_permissionService.Authorize(StandardPermissionProvider.AccessAdminPanel, customer))
-                throw new Exception("User is not admin");
-
+            var fileExtension = Path.GetExtension(fileName);
+            if (!String.IsNullOrEmpty(fileExtension))
+                fileExtension = fileExtension.ToLowerInvariant();
 
             var download = new Download()
             {
                 DownloadGuid = Guid.NewGuid(),
                 UseDownloadUrl = false,
                 DownloadUrl = "",
-                DownloadBinary = httpPostedFile.GetDownloadBits(),
-                ContentType = httpPostedFile.ContentType,
-                Filename = Path.GetFileNameWithoutExtension(httpPostedFile.FileName),
-                Extension = Path.GetExtension(httpPostedFile.FileName),
+                DownloadBinary = fileBinary,
+                ContentType = contentType,
+                //we store filename without extension for downloads
+                Filename = Path.GetFileNameWithoutExtension(fileName),
+                Extension = fileExtension,
                 IsNew = true
             };
             _downloadService.InsertDownload(download);
 
-            return Json(new { downloadId = download.Id, downloadUrl = Url.Action("DownloadFile", new { downloadId = download.Id }) });
+            //when returning JSON the mime-type must be set to text/plain
+            //otherwise some browsers will pop-up a "Save As" dialog.
+            return Json(new { success = true, 
+                downloadId = download.Id, 
+                downloadUrl = Url.Action("DownloadFile", new { downloadId = download.Id }) },
+                "text/plain");
         }
     }
 }

@@ -60,7 +60,6 @@ namespace Nop.Admin.Controllers
 
                 try
                 {
-                    //this code doesn't work in IE 8
                     int length = 4096;
                     int bytesRead = 0;
                     var buffer = new Byte[length];
@@ -85,8 +84,8 @@ namespace Nop.Admin.Controllers
                 return Json(new { success = false, message = ex.Message }, "application/json");
             }
 
-            //return Json(new { success = true }, "application/json");
-            //"application/json" content type won't work in IE
+            //when returning JSON the mime-type must be set to text/plain
+            //otherwise some browsers will pop-up a "Save As" dialog.
             return Json(new { success = true }, "text/html");
         }
 

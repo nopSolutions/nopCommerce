@@ -299,6 +299,7 @@
     <Compile Include="Views\Shared\TestMenuPlugin1.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\fileuploader.css" />
     <Content Include="Content\images\1pix.gif" />
     <Content Include="Content\images\admin-gvw-bg.gif" />
     <Content Include="Content\images\admin-header-bg.gif" />
@@ -306,7 +307,6 @@
     <Content Include="Content\images\ajax-loading.gif" />
     <Content Include="Content\images\background.gif" />
     <Content Include="Content\images\blue_button_bg.gif" />
-    <Content Include="Content\images\cancel-uploading.png" />
     <Content Include="Content\images\error-message.gif" />
     <Content Include="Content\images\google-maps.gif" />
     <Content Include="Content\images\grey_button_bg.gif" />
@@ -325,6 +325,7 @@
     <Content Include="Content\images\ico-stat1.gif" />
     <Content Include="Content\images\ico-system.png" />
     <Content Include="Content\images\ico-warnings.gif" />
+    <Content Include="Content\images\loading.gif" />
     <Content Include="Content\images\throbber-synchronizing.gif" />
     <Content Include="Content\images\logo.gif" />
     <Content Include="Content\images\success-message.gif" />
@@ -333,15 +334,14 @@
     <Content Include="Content\images\warnings-tick.png" />
     <Content Include="Content\images\warnings-warning.png" />
     <Content Include="Content\styles.css" />
-    <Content Include="Content\uploadify.css" />
     <Content Include="Scripts\admin.common.js" />
+    <Content Include="Scripts\fileuploader.js" />
     <Content Include="Scripts\jquery-1.7.1-vsdoc.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
     <Content Include="Scripts\jquery-1.7.1.min.js" />
     <Content Include="Scripts\jquery.tmpl.min.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
-    <Content Include="Scripts\jquery.uploadify.v2.1.4.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -352,7 +352,6 @@
     <Content Include="Scripts\MicrosoftMvcAjax.js" />
     <Content Include="Scripts\MicrosoftMvcValidation.debug.js" />
     <Content Include="Scripts\MicrosoftMvcValidation.js" />
-    <Content Include="Scripts\swfobject.js" />
     <Content Include="sitemap.xml">
       <SubType>Designer</SubType>
     </Content>

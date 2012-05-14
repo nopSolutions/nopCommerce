@@ -823,7 +823,6 @@
     <Content Include="Content\fancybox\jquery.fancybox-1.3.4.css" />
     <Content Include="Content\files\ExportImport\Index.htm" />
     <Content Include="Content\files\Index.htm" />
-    <Content Include="Content\flash\uploadify.swf" />
     <Content Include="Content\Images\ajax_loader_large.gif" />
     <Content Include="Content\Images\ajax_loader_small.gif" />
     <Content Include="Content\Images\ajax_loader_big.gif" />

@@ -3,9 +3,8 @@
 @using Nop.Web.Framework.UI;
 @{
     //register CSS and JS
-    Html.AddCssFileParts(@Url.Content("~/Administration/Content/uploadify.css"));
-    Html.AddScriptParts(@Url.Content("~/Administration/Scripts/swfobject.js"));
-    Html.AddScriptParts(@Url.Content("~/Administration/Scripts/jquery.uploadify.v2.1.4.min.js"));
+    Html.AddCssFileParts(@Url.Content("~/Administration/Content/fileuploader.css"));
+    Html.AddScriptParts(@Url.Content("~/Administration/Scripts/fileuploader.js"));
     
     //other variables
     var randomNumber = CommonHelper.GenerateRandomInteger();
@@ -95,29 +94,26 @@
             </td>
             <td class="adminData">
                 <div>
-                    <input type="file" id="@clientId"/>
+                    <div id="@clientId">
+                        <noscript>
+                            <p>
+                                Please enable JavaScript to use file uploader.</p>
+                            <!-- or put a simple form for upload here -->
+                        </noscript>
+                    </div>
                     <script type="text/javascript">
                     $(function () {
-                        $(function () {
-                        
-                            var authToken = '@(this.Context.Request.Cookies[FormsAuthentication.FormsCookieName] == null ? string.Empty : Request.Cookies[FormsAuthentication.FormsCookieName].Value)';
-
-                            $("#@clientId").uploadify({
-                                "uploader": "@(Url.Content("~/Content/Flash/uploadify.swf"))",
-                                "script": "@(Url.Content("~/Admin/Download/AsyncUpload"))",
-                                "scriptData": { authToken: authToken },
-                                "multi": "false",
-                                "auto": true,
-                                "buttonText": "Upload",
-                                "cancelImg": "@Url.Content("~/Administration/Content/images/cancel-uploading.png")",
-                                "onComplete": function (event, ID, fileObj, response, data) {
-                                    var json = jQuery.parseJSON(response);
-                                    $("#@(clientId + "downloadurl")").html("<a href='" + json.downloadUrl + "'>@T("Admin.Download.DownloadUploadedFile")</a>");
-                                    $("#@(clientId + "value") input").val(json.downloadId);
+                        $(function () {                        
+                            var uploader@(clientId) = new qq.FileUploader({
+                                element: document.getElementById('@clientId'),
+                                action: '@(Url.Content("~/Admin/Download/AsyncUpload"))',
+                                onComplete: function(id, fileName, responseJSON){
+                                    $("#@(clientId + "downloadurl")").html("<a href='" + responseJSON.downloadUrl + "'>@T("Admin.Download.DownloadUploadedFile")</a>");
+                                    $("#@(clientId + "value") input").val(responseJSON.downloadId);
                                     $("#@(clientId + "remove")").show();
                                 }
                             });
-
+                            
                             $("#@(clientId + "remove")").click(function(e){
                                 $("#@(clientId + "downloadurl")").html("");
                                 $("#@(clientId + "value") input").val(0);
