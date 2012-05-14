@@ -166,14 +166,22 @@
                             .Template(x => Html.ActionLink(x.Email, "Edit", "Customer", new { id = x.Id }, new { }))
                             .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/Customer/Edit/") + "<#= Id #>\"><#= Email #></a>")
                             .Width(150);
-                        //Weird!!! We can't pass Model.UsernamesEnabled to Hidden method
-                        var usernameColumn = columns.Bound(x => x.Username)
+                        columns.Bound(x => x.Username)
                             .Width(150)
                             .Visible(Model.UsernamesEnabled);
                         columns.Bound(x => x.FullName)
                             .Width(200);
                         columns.Bound(x => x.CustomerRoleNames)
                             .Width(200);
+                        columns.Bound(x => x.Company)
+                            .Width(150)
+                            .Visible(Model.CompanyEnabled);
+                        columns.Bound(x => x.Phone)
+                            .Width(100)
+                            .Visible(Model.PhoneEnabled);
+                        columns.Bound(x => x.ZipPostalCode)
+                            .Width(75)
+                            .Visible(Model.ZipPostalCodeEnabled);
                         columns.Bound(x => x.Active)
                              .Width(100)
                              .Template(x => x.Active.ToString().ToLower())
