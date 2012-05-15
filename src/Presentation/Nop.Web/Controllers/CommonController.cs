@@ -404,9 +404,11 @@ namespace Nop.Web.Controllers
             {
                 string email = model.Email.Trim();
                 string fullName = model.FullName;
-                string subject = string.Format("{0}. {1}", _storeInformationSettings.StoreName, "Contact us");
+                string subject = string.Format(_localizationService.GetResource("ContactUs.EmailSubject"), _storeInformationSettings.StoreName);
 
                 var emailAccount = _emailAccountService.GetEmailAccountById(_emailAccountSettings.DefaultEmailAccountId);
+                if (emailAccount == null)
+                    emailAccount = _emailAccountService.GetAllEmailAccounts().FirstOrDefault();
 
                 string from = null;
                 string fromName = null;

@@ -293,6 +293,9 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.ProductTags.EditTagDetails">
     <Value>Edit product tag details</Value>
   </LocaleResource>
+  <LocaleResource Name="ContactUs.EmailSubject">
+    <Value>{0}. Contact us</Value>
+  </LocaleResource>
 </Language>
 '
 

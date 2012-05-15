@@ -1247,6 +1247,9 @@
 					</LocaleResource>
 				</Children>
 			</LocaleResource>
+      <LocaleResource Name="EmailSubject">
+        <Value>{0}. Contact us</Value>
+      </LocaleResource>
 			<LocaleResource Name="Enquiry">
 				<Value>Enquiry</Value>
 				<Children>
