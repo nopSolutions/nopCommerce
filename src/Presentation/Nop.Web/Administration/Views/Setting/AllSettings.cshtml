@@ -13,6 +13,11 @@
 <table class="adminContent">
     <tr>
         <td>
+            @T("Admin.Configuration.Settings.AllSettings.Description")
+        </td>
+    </tr>
+    <tr>
+        <td>
             @(Html.Telerik().Grid(Model.Data)
                     .Name("settings-grid")
                     .DataKeys(x =>

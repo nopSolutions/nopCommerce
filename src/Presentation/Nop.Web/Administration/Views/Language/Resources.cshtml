@@ -33,6 +33,11 @@
 <table class="adminContent">
     <tr>
         <td>
+            @T("Admin.Configuration.Languages.Resources.Description")
+        </td>
+    </tr>
+    <tr>
+        <td>
             @(Html.Telerik().Grid(Model.Data)
                     .Name("resources-grid")
                     .DataKeys(x =>

@@ -296,6 +296,12 @@ set @resources='
   <LocaleResource Name="ContactUs.EmailSubject">
     <Value>{0}. Contact us</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Languages.Resources.Description">
+    <Value>To find text or a specific resource (by name), you can apply a filter via the funnel icon in the "Value" or "Resource name" column headers.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.AllSettings.Description">
+    <Value>To find text or a specific setting (by name), you can apply a filter via the funnel icon in the "Value" or "Setting name" column headers.</Value>
+  </LocaleResource>
 </Language>
 '
 
