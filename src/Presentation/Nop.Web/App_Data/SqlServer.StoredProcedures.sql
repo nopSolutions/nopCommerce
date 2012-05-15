@@ -1,4 +1,4 @@
-﻿CREATE FUNCTION [dbo].[nop_splitstring_to_table]
+﻿CREATE FUNCTION [nop_splitstring_to_table]
 (
     @string NVARCHAR(MAX),
     @delimiter CHAR(1)
@@ -25,7 +25,7 @@ GO
 
 
 
-CREATE FUNCTION [dbo].[nop_getnotnullnotempty]
+CREATE FUNCTION [nop_getnotnullnotempty]
 (
     @p1 nvarchar(max) = null, 
     @p2 nvarchar(max) = null
@@ -44,7 +44,7 @@ GO
 
 
 
-CREATE PROCEDURE [dbo].[ProductLoadAllPaged]
+CREATE PROCEDURE [ProductLoadAllPaged]
 (
 	@CategoryIds		nvarchar(MAX) = null,	--a list of category IDs (comma-separated list). e.g. 1,2,3
 	@ManufacturerId		int = 0,
@@ -156,7 +156,7 @@ BEGIN
 		CategoryId int not null
 	)
 	INSERT INTO #FilteredCategoryIds (CategoryId)
-	SELECT CAST(data as int) FROM dbo.[nop_splitstring_to_table](@CategoryIds, ',')	
+	SELECT CAST(data as int) FROM [nop_splitstring_to_table](@CategoryIds, ',')	
 	DECLARE @CategoryIdsCount int	
 	SET @CategoryIdsCount = (SELECT COUNT(1) FROM #FilteredCategoryIds)
 
@@ -167,7 +167,7 @@ BEGIN
 		SpecificationAttributeOptionId int not null
 	)
 	INSERT INTO #FilteredSpecs (SpecificationAttributeOptionId)
-	SELECT CAST(data as int) FROM dbo.[nop_splitstring_to_table](@FilteredSpecs, ',')	
+	SELECT CAST(data as int) FROM [nop_splitstring_to_table](@FilteredSpecs, ',')	
 	DECLARE @SpecAttributesCount int	
 	SET @SpecAttributesCount = (SELECT COUNT(1) FROM #FilteredSpecs)
 
@@ -330,7 +330,7 @@ BEGIN
 			WHERE
 				[fs].SpecificationAttributeOptionId NOT IN (
 					SELECT psam.SpecificationAttributeOptionId
-					FROM dbo.Product_SpecificationAttribute_Mapping psam
+					FROM Product_SpecificationAttribute_Mapping psam
 					WHERE psam.AllowFiltering = 1 AND psam.ProductId = p.Id
 				)
 			)'

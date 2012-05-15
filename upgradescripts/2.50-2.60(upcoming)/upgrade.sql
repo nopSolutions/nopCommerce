@@ -382,11 +382,11 @@ GO
 --Update stored procedure according to the new search parameters (return filterable specs)
 IF EXISTS (
 		SELECT *
-		FROM dbo.sysobjects
-		WHERE id = OBJECT_ID(N'[dbo].[ProductLoadAllPaged]') AND OBJECTPROPERTY(id,N'IsProcedure') = 1)
-DROP PROCEDURE [dbo].[ProductLoadAllPaged]
+		FROM sysobjects
+		WHERE id = OBJECT_ID(N'[ProductLoadAllPaged]') AND OBJECTPROPERTY(id,N'IsProcedure') = 1)
+DROP PROCEDURE [ProductLoadAllPaged]
 GO
-CREATE PROCEDURE [dbo].[ProductLoadAllPaged]
+CREATE PROCEDURE [ProductLoadAllPaged]
 (
 	@CategoryIds		nvarchar(MAX) = null,	--a list of category IDs (comma-separated list). e.g. 1,2,3
 	@ManufacturerId		int = 0,
@@ -498,7 +498,7 @@ BEGIN
 		CategoryId int not null
 	)
 	INSERT INTO #FilteredCategoryIds (CategoryId)
-	SELECT CAST(data as int) FROM dbo.[nop_splitstring_to_table](@CategoryIds, ',')	
+	SELECT CAST(data as int) FROM [nop_splitstring_to_table](@CategoryIds, ',')	
 	DECLARE @CategoryIdsCount int	
 	SET @CategoryIdsCount = (SELECT COUNT(1) FROM #FilteredCategoryIds)
 
@@ -509,7 +509,7 @@ BEGIN
 		SpecificationAttributeOptionId int not null
 	)
 	INSERT INTO #FilteredSpecs (SpecificationAttributeOptionId)
-	SELECT CAST(data as int) FROM dbo.[nop_splitstring_to_table](@FilteredSpecs, ',')	
+	SELECT CAST(data as int) FROM [nop_splitstring_to_table](@FilteredSpecs, ',')	
 	DECLARE @SpecAttributesCount int	
 	SET @SpecAttributesCount = (SELECT COUNT(1) FROM #FilteredSpecs)
 
@@ -672,7 +672,7 @@ BEGIN
 			WHERE
 				[fs].SpecificationAttributeOptionId NOT IN (
 					SELECT psam.SpecificationAttributeOptionId
-					FROM dbo.Product_SpecificationAttribute_Mapping psam
+					FROM Product_SpecificationAttribute_Mapping psam
 					WHERE psam.AllowFiltering = 1 AND psam.ProductId = p.Id
 				)
 			)'
@@ -770,10 +770,10 @@ GO
 
 
 
-IF  EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[dbo].[nop_splitstring_to_table]') AND xtype in (N'FN', N'IF', N'TF'))
-DROP FUNCTION [dbo].[nop_splitstring_to_table]
+IF  EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'[nop_splitstring_to_table]') AND xtype in (N'FN', N'IF', N'TF'))
+DROP FUNCTION [nop_splitstring_to_table]
 GO
-CREATE FUNCTION [dbo].[nop_splitstring_to_table]
+CREATE FUNCTION [nop_splitstring_to_table]
 (
     @string NVARCHAR(MAX),
     @delimiter CHAR(1)
@@ -800,28 +800,28 @@ GO
 
 
 --Add 'StartDateUtc' and 'EndDateUtc' columns to [News] table
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[News]') and NAME='StartDateUtc')
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[News]') and NAME='StartDateUtc')
 BEGIN
-	ALTER TABLE [dbo].[News]
+	ALTER TABLE [News]
 	ADD [StartDateUtc] datetime NULL
 END
 GO
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[News]') and NAME='EndDateUtc')
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[News]') and NAME='EndDateUtc')
 BEGIN
-	ALTER TABLE [dbo].[News]
+	ALTER TABLE [News]
 	ADD [EndDateUtc] datetime NULL
 END
 GO
 --Add 'StartDateUtc' and 'EndDateUtc' columns to [BlogPost] table
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[BlogPost]') and NAME='StartDateUtc')
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[BlogPost]') and NAME='StartDateUtc')
 BEGIN
-	ALTER TABLE [dbo].[BlogPost]
+	ALTER TABLE [BlogPost]
 	ADD [StartDateUtc] datetime NULL
 END
 GO
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[BlogPost]') and NAME='EndDateUtc')
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[BlogPost]') and NAME='EndDateUtc')
 BEGIN
-	ALTER TABLE [dbo].[BlogPost]
+	ALTER TABLE [BlogPost]
 	ADD [EndDateUtc] datetime NULL
 END
 GO
@@ -862,33 +862,33 @@ END
 GO
 
 --Add 'CreatedOnUtc' column to [Shipment] table
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Shipment]') and NAME='CreatedOnUtc')
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[Shipment]') and NAME='CreatedOnUtc')
 BEGIN
-	ALTER TABLE [dbo].[Shipment]
+	ALTER TABLE [Shipment]
 	ADD [CreatedOnUtc] datetime NULL
 
-	exec('UPDATE [dbo].[Shipment] SET [CreatedOnUtc] = [ShippedDateUtc]')
+	exec('UPDATE [Shipment] SET [CreatedOnUtc] = [ShippedDateUtc]')
 END
 GO
 
-ALTER TABLE [dbo].[Shipment] ALTER COLUMN [CreatedOnUtc] datetime NOT NULL
+ALTER TABLE [Shipment] ALTER COLUMN [CreatedOnUtc] datetime NOT NULL
 GO
 
 --Created shipments should not be immediately shipped
-ALTER TABLE [dbo].[Shipment] ALTER COLUMN [ShippedDateUtc] datetime NULL
+ALTER TABLE [Shipment] ALTER COLUMN [ShippedDateUtc] datetime NULL
 GO
 
 
 --Store comment count in [News] entity/table
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[News]') and NAME='ApprovedCommentCount')
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[News]') and NAME='ApprovedCommentCount')
 BEGIN
-	ALTER TABLE [dbo].[News]
+	ALTER TABLE [News]
 	ADD [ApprovedCommentCount] int NULL
 END
 GO
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[News]') and NAME='NotApprovedCommentCount')
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[News]') and NAME='NotApprovedCommentCount')
 BEGIN
-	ALTER TABLE [dbo].[News]
+	ALTER TABLE [News]
 	ADD [NotApprovedCommentCount] int NULL
 END
 GO
@@ -931,23 +931,23 @@ EXEC('
 GO
 
 
-ALTER TABLE [dbo].[News] ALTER COLUMN [ApprovedCommentCount] int NOT NULL
+ALTER TABLE [News] ALTER COLUMN [ApprovedCommentCount] int NOT NULL
 GO
-ALTER TABLE [dbo].[News] ALTER COLUMN [NotApprovedCommentCount] int NOT NULL
+ALTER TABLE [News] ALTER COLUMN [NotApprovedCommentCount] int NOT NULL
 GO
 
 
 
 --Store comment count in [BlogPost] entity/table
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[BlogPost]') and NAME='ApprovedCommentCount')
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[BlogPost]') and NAME='ApprovedCommentCount')
 BEGIN
-	ALTER TABLE [dbo].[BlogPost]
+	ALTER TABLE [BlogPost]
 	ADD [ApprovedCommentCount] int NULL
 END
 GO
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[BlogPost]') and NAME='NotApprovedCommentCount')
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[BlogPost]') and NAME='NotApprovedCommentCount')
 BEGIN
-	ALTER TABLE [dbo].[BlogPost]
+	ALTER TABLE [BlogPost]
 	ADD [NotApprovedCommentCount] int NULL
 END
 GO
@@ -990,16 +990,16 @@ EXEC('
 GO
 
 
-ALTER TABLE [dbo].[BlogPost] ALTER COLUMN [ApprovedCommentCount] int NOT NULL
+ALTER TABLE [BlogPost] ALTER COLUMN [ApprovedCommentCount] int NOT NULL
 GO
-ALTER TABLE [dbo].[BlogPost] ALTER COLUMN [NotApprovedCommentCount] int NOT NULL
+ALTER TABLE [BlogPost] ALTER COLUMN [NotApprovedCommentCount] int NOT NULL
 GO
 
 
 --Store a value indicating whether we have tier prices in [ProductVariant] entity/table
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[ProductVariant]') and NAME='HasTierPrices')
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[ProductVariant]') and NAME='HasTierPrices')
 BEGIN
-	ALTER TABLE [dbo].[ProductVariant]
+	ALTER TABLE [ProductVariant]
 	ADD [HasTierPrices] bit NULL
 END
 GO
@@ -1040,7 +1040,7 @@ EXEC('
 GO
 
 
-ALTER TABLE [dbo].[ProductVariant] ALTER COLUMN [HasTierPrices] bit NOT NULL
+ALTER TABLE [ProductVariant] ALTER COLUMN [HasTierPrices] bit NOT NULL
 GO
 
 DELETE FROM [Setting]
@@ -1052,9 +1052,9 @@ GO
 
 
 --Store a value indicating whether we have discounts applied in [ProductVariant] entity/table
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[ProductVariant]') and NAME='HasDiscountsApplied')
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[ProductVariant]') and NAME='HasDiscountsApplied')
 BEGIN
-	ALTER TABLE [dbo].[ProductVariant]
+	ALTER TABLE [ProductVariant]
 	ADD [HasDiscountsApplied] bit NULL
 END
 GO
@@ -1095,14 +1095,14 @@ EXEC('
 GO
 
 
-ALTER TABLE [dbo].[ProductVariant] ALTER COLUMN [HasDiscountsApplied] bit NOT NULL
+ALTER TABLE [ProductVariant] ALTER COLUMN [HasDiscountsApplied] bit NOT NULL
 GO
 
 
 --Store a value indicating whether we have discounts applied in [ProductVariant] entity/table
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[ProductVariant]') and NAME='HasDiscountsApplied')
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[ProductVariant]') and NAME='HasDiscountsApplied')
 BEGIN
-	ALTER TABLE [dbo].[ProductVariant]
+	ALTER TABLE [ProductVariant]
 	ADD [HasDiscountsApplied] bit NULL
 END
 GO
@@ -1143,9 +1143,9 @@ EXEC('
 GO
 
 --Store a value indicating whether we have discounts applied in [Category] entity/table
-IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[dbo].[Category]') and NAME='HasDiscountsApplied')
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[Category]') and NAME='HasDiscountsApplied')
 BEGIN
-	ALTER TABLE [dbo].[Category]
+	ALTER TABLE [Category]
 	ADD [HasDiscountsApplied] bit NULL
 END
 GO
@@ -1184,7 +1184,7 @@ EXEC('
 	DEALLOCATE cur_category
 	')
 GO
-ALTER TABLE [dbo].[Category] ALTER COLUMN [HasDiscountsApplied] bit NOT NULL
+ALTER TABLE [Category] ALTER COLUMN [HasDiscountsApplied] bit NOT NULL
 GO
 
 
@@ -1212,9 +1212,9 @@ WHERE [Zip] = N'*'
 GO
 
 --new generic attribute implementation
-IF NOT EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[dbo].[GenericAttribute]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+IF NOT EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[GenericAttribute]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
 BEGIN
-CREATE TABLE [dbo].[GenericAttribute](
+CREATE TABLE [GenericAttribute](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[EntityId] [int] NOT NULL,
 	[KeyGroup] nvarchar(400) NOT NULL,
@@ -1228,7 +1228,7 @@ PRIMARY KEY CLUSTERED
 END
 GO
 
-IF EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[dbo].[CustomerAttribute]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+IF EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[CustomerAttribute]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
 BEGIN
 	--move customer attributes to the new generic attributes
 	EXEC('
@@ -1264,15 +1264,15 @@ BEGIN
 	DEALLOCATE cur_customerattribute
 	')
 
-	DROP TABLE [dbo].[CustomerAttribute]
+	DROP TABLE [CustomerAttribute]
 END
 GO
 
 
 --more SQL indexes
-IF NOT EXISTS (SELECT 1 from dbo.sysindexes WHERE [NAME]=N'IX_GenericAttribute_EntityId_and_KeyGroup' and id=object_id(N'[dbo].[GenericAttribute]'))
+IF NOT EXISTS (SELECT 1 from sysindexes WHERE [NAME]=N'IX_GenericAttribute_EntityId_and_KeyGroup' and id=object_id(N'[GenericAttribute]'))
 BEGIN
-	CREATE NONCLUSTERED INDEX [IX_GenericAttribute_EntityId_and_KeyGroup] ON [dbo].[GenericAttribute] 
+	CREATE NONCLUSTERED INDEX [IX_GenericAttribute_EntityId_and_KeyGroup] ON [GenericAttribute] 
 	(
 		[EntityId] ASC,
 		[KeyGroup] ASC
