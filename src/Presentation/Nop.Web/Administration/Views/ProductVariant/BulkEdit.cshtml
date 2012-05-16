@@ -76,6 +76,7 @@
             columns.Bound(pv => pv.Published).Width(100);
             columns.Command(commands => commands.Delete()).Width(50);
             columns.Bound(x => x.Id)
+                .ReadOnly()
                 .Width(50)
                 .Centered()
                 .Template(x => Html.ActionLink(T("Admin.Common.View").Text, "Edit", new { id = x.Id }))
