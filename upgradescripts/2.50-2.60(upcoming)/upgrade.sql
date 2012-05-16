@@ -302,6 +302,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.AllSettings.Description">
     <Value>To find text or a specific setting (by name), you can apply a filter via the funnel icon in the "Value" or "Setting name" column headers.</Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.ByWeight.Fields.Country.Hint">
+    <Value>If an asterik is selected, then this tax rate will apply to all customers, regardless of the country.</Value>
+  </LocaleResource>
 </Language>
 '
 
