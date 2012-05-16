@@ -266,7 +266,11 @@ namespace Nop.Web.Framework
             {
                 //return primary store currency when we're in admin area/mode
                 if (this.IsAdmin)
-                    return _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
+                {
+                    var primaryStoreCurrency =  _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId);
+                    if (primaryStoreCurrency != null)
+                        return primaryStoreCurrency;
+                }
 
                 if (this.CurrentCustomer != null &&
                     this.CurrentCustomer.Currency != null &&
