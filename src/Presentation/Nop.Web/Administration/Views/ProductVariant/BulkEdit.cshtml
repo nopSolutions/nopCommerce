@@ -74,7 +74,13 @@
             columns.Bound(pv => pv.ManageInventoryMethod).ReadOnly().Width(150);
             columns.Bound(pv => pv.StockQuantity).Width(100);
             columns.Bound(pv => pv.Published).Width(100);
-            columns.Command(commands => commands.Delete()).Width(180);
+            columns.Command(commands => commands.Delete()).Width(50);
+            columns.Bound(x => x.Id)
+                .Width(50)
+                .Centered()
+                .Template(x => Html.ActionLink(T("Admin.Common.View").Text, "Edit", new { id = x.Id }))
+                .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.View").Text + "</a>")
+                .Title(T("Admin.Common.View").Text);
         })
         .ClientEvents(events => events.OnDataBinding("Grid_onDataBinding").OnError("Grid_onError").OnSubmitChanges("Grid_onSubmitChanges"))
         .Editable(editing => editing.Mode(GridEditMode.InCell))
