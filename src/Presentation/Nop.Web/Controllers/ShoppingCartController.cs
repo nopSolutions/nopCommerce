@@ -716,7 +716,7 @@ namespace Nop.Web.Controllers
             //display "Product has been added to the cart" notification message
             //and update appropriate blocks
             var updatetopcartsectionhtml = _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart)
-                ? RenderPartialViewToString("TopShoppingCart", PrepareTopShoppingCartModel())
+                ? this.RenderPartialViewToString("TopShoppingCart", PrepareTopShoppingCartModel())
                 : "";
 
             return Json(new
