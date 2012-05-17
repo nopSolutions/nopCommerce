@@ -338,6 +338,12 @@ set @resources='
   <LocaleResource Name="ShoppingCart.Mini.UnitPrice">
     <Value>Unit price</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.ShowProductImagesOnShoppingCart.Hint">
+    <Value>Determines whether product images should be displayed in your store shopping cart.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.ShowProductImagesOnWishList.Hint">
+    <Value>Determines whether product images should be displayed on customer wishlists.</Value>
+  </LocaleResource>
 </Language>
 '
 

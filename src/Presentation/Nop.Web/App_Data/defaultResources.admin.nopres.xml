@@ -4980,7 +4980,7 @@
 										<Value>Show product images on cart</Value>
 										<Children>
 											<LocaleResource Name="Hint">
-												<Value>Determines whether product images should are displayed in your store shopping cart.</Value>
+												<Value>Determines whether product images should be displayed in your store shopping cart.</Value>
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
@@ -4988,7 +4988,7 @@
 										<Value>Show product images on wishlist</Value>
 										<Children>
 											<LocaleResource Name="Hint">
-												<Value>Determines whether product images should are displayed on customer wishlists.</Value>
+												<Value>Determines whether product images should be displayed on customer wishlists.</Value>
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
