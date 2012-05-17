@@ -37,7 +37,10 @@ namespace Nop.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.ShoppingCart.MiniShoppingCartEnabled")]
         public bool MiniShoppingCartEnabled { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.Settings.ShoppingCart.MiniShoppingCartDisplayProducts")]
-        public bool MiniShoppingCartDisplayProducts { get; set; }
+        [NopResourceDisplayName("Admin.Configuration.Settings.ShoppingCart.ShowProductImagesInMiniShoppingCart")]
+        public bool ShowProductImagesInMiniShoppingCart { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.ShoppingCart.MiniShoppingCartProductNumber")]
+        public int MiniShoppingCartProductNumber { get; set; }
     }
 }

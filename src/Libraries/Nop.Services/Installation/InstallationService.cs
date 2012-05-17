@@ -4597,6 +4597,7 @@ namespace Nop.Services.Installation
                     CategoryThumbPictureSize = 125,
                     ManufacturerThumbPictureSize = 125,
                     CartThumbPictureSize = 80,
+                    MiniCartThumbPictureSize = 47,
                     MaximumImageSize = 1280,
                     DefaultPictureZoomEnabled = false,
                     DefaultImageQuality = 100,
@@ -4676,7 +4677,8 @@ namespace Nop.Services.Installation
                     CrossSellsNumber = 2,
                     EmailWishlistEnabled = true,
                     MiniShoppingCartEnabled = true,
-                    MiniShoppingCartDisplayProducts = false,
+                    ShowProductImagesInMiniShoppingCart = true,
+                    MiniShoppingCartProductNumber = 5,
                     RoundPricesDuringCalculation = true,
                 });
 

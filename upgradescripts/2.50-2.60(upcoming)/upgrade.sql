@@ -305,6 +305,39 @@ set @resources='
   <LocaleResource Name="Plugins.Shipping.ByWeight.Fields.Country.Hint">
     <Value>If an asterik is selected, then this tax rate will apply to all customers, regardless of the country.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.MiniShoppingCartDisplayProducts">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.MiniShoppingCartDisplayProducts.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.MiniShoppingCartProductNumber">
+    <Value>Mini-shopping cart product number</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.MiniShoppingCartProductNumber.Hint">
+    <Value>Specify the maximum number of products which can be displayed in the mini-shopping cart block.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.ShowProductImagesInMiniShoppingCart">
+    <Value>Show product images in mini-shopping cart</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.ShowProductImagesInMiniShoppingCart.Hint">
+    <Value>Determines whether product images should be displayed in the mini-shopping cart block.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.MiniCartThumbPictureSize">
+    <Value>Mini-shopping cart thumbnail image size</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.MiniCartThumbPictureSize.Hint">
+    <Value>The default size (pixels) for product thumbnail images in the mini-shopping cart block.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Mini.ViewCart">
+    <Value>Go to shopping cart</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Mini.Quantity">
+    <Value>Quantity</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.Mini.UnitPrice">
+    <Value>Unit price</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1283,6 +1316,27 @@ BEGIN
 END
 GO
 
+DELETE FROM [Setting]
+WHERE [Name] = N'shoppingcartsettings.minishoppingcartdisplayproducts'
+GO
 
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'shoppingcartsettings.minishoppingcartproductnumber')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'shoppingcartsettings.minishoppingcartproductnumber', N'5')
+END
+GO
 
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'shoppingcartsettings.showproductimagesinminishoppingcart')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'shoppingcartsettings.showproductimagesinminishoppingcart', N'true')
+END
+GO
 
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'mediasettings.minicartthumbpicturesize')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'mediasettings.minicartthumbpicturesize', N'47')
+END
+GO

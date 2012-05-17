@@ -1,0 +1,23 @@
+﻿@model TopShoppingCartModel
+@using Nop.Web.Models.ShoppingCart;
+<div id="topcart">
+    <div class="heading">
+        <a href="@Url.RouteUrl("ShoppingCart")" class="ico-cart">@T("ShoppingCart")</a>
+        <a href="@Url.RouteUrl("ShoppingCart")" class="cart-qty">(@Model.ProductCount)</a>
+    </div>
+    @if (Model.MiniShoppingCartEnabled)
+    {
+        <div class="flyout-content">
+            @Html.Action("MiniShoppingCart", "ShoppingCart")
+        </div>
+        <script type="text/javascript">
+            $('#topcart > .heading').live('mouseenter', function () {
+                $('#topcart').addClass('active');
+            });
+
+            $('#topcart').live('mouseleave', function () {
+                $('#topcart').removeClass('active');
+            });
+        </script>
+    }
+</div>

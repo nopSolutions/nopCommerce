@@ -127,7 +127,6 @@ namespace Nop.Web.MVC.Tests.Public.Infrastructure
         [Test]
         public void Cart_routes()
         {
-            "~/cart/addproduct/1".ShouldMapTo<ShoppingCartController>(c => c.AddProductToCart(1));
             "~/cart/".ShouldMapTo<ShoppingCartController>(c => c.Cart());
             "~/wishlist".ShouldMapTo<ShoppingCartController>(c => c.Wishlist(null));
             "~/wishlist/aa74c80f-1edd-43f7-85df-a3cccc1b47b9".ShouldMapTo<ShoppingCartController>(c => c.Wishlist(new Guid("aa74c80f-1edd-43f7-85df-a3cccc1b47b9")));

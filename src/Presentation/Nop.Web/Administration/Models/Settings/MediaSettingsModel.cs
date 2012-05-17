@@ -24,6 +24,8 @@ namespace Nop.Admin.Models.Settings
         public int ManufacturerThumbPictureSize { get; set; }
         [NopResourceDisplayName("Admin.Configuration.Settings.Media.CartThumbPictureSize")]
         public int CartThumbPictureSize { get; set; }
+        [NopResourceDisplayName("Admin.Configuration.Settings.Media.MiniCartThumbPictureSize")]
+        public int MiniCartThumbPictureSize { get; set; }
         
         [NopResourceDisplayName("Admin.Configuration.Settings.Media.MaximumImageSize")]
         public int MaximumImageSize { get; set; }

@@ -6,14 +6,12 @@
 var AjaxCart = {
     loadWaiting: false,
     urladd: '',
-    minicartselector: '',
-    productcountselector: '',
+    topcartselector: '',
 
-    init: function (urladd, minicartselector, productcountselector) {
+    init: function (urladd, topcartselector) {
         this.loadWaiting = false;
         this.urladd = urladd;
-        this.minicartselector = minicartselector;
-        this.productcountselector = productcountselector;
+        this.topcartselector = topcartselector;
     },
 
     setLoadWaiting: function (display) {
@@ -39,11 +37,8 @@ var AjaxCart = {
     },
 
     successprocess: function (response) {
-        if (response.updateitemscountsectionhtml) {
-            $(AjaxCart.productcountselector).html(response.updateitemscountsectionhtml);
-        }
-        if (response.updateminicartsectionhtml) {
-            $(AjaxCart.minicartselector).html(response.updateminicartsectionhtml);
+        if (response.updatetopcartsectionhtml) {
+            $(AjaxCart.topcartselector).html(response.updatetopcartsectionhtml);
         }
         if (response.message) {
             var messageType;

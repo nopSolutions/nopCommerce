@@ -37,10 +37,7 @@
     {
         @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.BeforeLeftSideColumn })
         <div class="clear">
-        </div>
-        @Html.Action("MiniShoppingCart", "ShoppingCart")
-        <div class="clear">
-        </div>        
+        </div>  
         @Html.Action("CategoryNavigation", "Catalog", new { currentCategoryId = currentCategoryId, currentProductId = currentProductId })
         <div class="clear">
         </div>

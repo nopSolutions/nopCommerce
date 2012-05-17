@@ -48,12 +48,13 @@ a.logo{background:url(images/logo.gif);display:block;width:225px;height:60px;tex
 .header-languageselector{float:right;}
 .header-taxDisplayTypeSelector{float:right;}
 .header-links-wrapper{float:right;text-align:right;width:670px;}
-.header-links{border:solid 1px #9a9a9a;padding:5px;margin-bottom:5px;display:inline-table;}
-.header-links ul{padding:0;margin:0;}
+.header-links{border:solid 1px #9a9a9a;padding:5px;margin-bottom:5px;float:right;text-align:right;}
+.header-links ul{padding:0;margin:0;float:right;white-space:nowrap;}
 .header-links ul li{list-style:none;display:inline;padding-right:2px;}
 .header-links a{color:#FFF;text-decoration:none;}
 .header-links a:hover{color:#f93;}
 .header-links a.account{color:#f93;}
+.header-links #topcart{float:right;padding-left:5px;position:relative;text-align:left;}
 .header-links span.impersonate{color:#58DE81;font-weight:700;}
 .header-links span.impersonate .finish-impersonation{color:#E44097;}
 .headermenu{color:#FFF;background:#3a3a3a;padding:8px 5px 9px;text-align:center;height:100%;vertical-align:middle;letter-spacing:1px;margin-bottom:10px;}
@@ -144,7 +145,7 @@ a.eu-cookie-privacyinfo-tag{color:#F93 !important;text-decoration:underline;}
 .postlink{padding:1px 3px;margin-right:5px;border:none;}
 .searchboxbutton{background:url(images/orange_button_bg.gif) no-repeat 25% 50% #F80;border:1px solid #F80;color:#FFF;height:18px;padding:0 5px;width:auto;overflow:visible;}
 .productlistproductdetailbutton,.productgridproductdetailbutton{background:url(images/orange_button_bg.gif) no-repeat 25% 50% #F80;border:1px solid #F80;margin-bottom:3px;color:#FFF;height:20px;padding:0 5px;width:auto;overflow:visible;}
-.searchbutton,.contactusbutton,.newsitemaddcommentbutton,.blogpostaddcommentbutton,.productvariantaddtocartbutton,.productwritereviewbutton,.loginbutton,.registerbutton,.checkoutasguestbutton,.savecustomerinfobutton,.addaddressbutton,.changepasswordbutton,.registernextstepbutton,.completeregistrationbutton,.passwordrecoverybutton,.newpasswordbutton,.saveaddressbutton,.sendemailafriendbutton,.checkoutbutton,.selectshippingaddressbutton,.newaddressnextstepbutton,.selectbillingaddressbutton,.sameasshippingaddressbutton,.shippingmethodnextstepbutton,.paymentmethodnextstepbutton,.paymentinfonextstepbutton,.confirmordernextstepbutton,.submitforumtopicbutton,.submitpmbutton,.replypmbutton,.deleteselectedpmbutton,.reorderbutton,.minicartcheckoutbutton,.newsletterbox-subscribebutton,.useragreementbutton,.deleteselectedfsbutton,.submitreturnrequestbutton,.uploadavatarbutton,.checkavailabilitybutton{background:url(images/orange_button_bg.gif) no-repeat 25% 50% #F80;border:1px solid #F80;color:#FFF;height:20px;padding:0 5px;width:auto;overflow:visible;}
+.searchbutton,.contactusbutton,.newsitemaddcommentbutton,.blogpostaddcommentbutton,.productvariantaddtocartbutton,.productwritereviewbutton,.loginbutton,.registerbutton,.checkoutasguestbutton,.savecustomerinfobutton,.addaddressbutton,.changepasswordbutton,.registernextstepbutton,.completeregistrationbutton,.passwordrecoverybutton,.newpasswordbutton,.saveaddressbutton,.sendemailafriendbutton,.cartbutton,.checkoutbutton,.selectshippingaddressbutton,.newaddressnextstepbutton,.selectbillingaddressbutton,.sameasshippingaddressbutton,.shippingmethodnextstepbutton,.paymentmethodnextstepbutton,.paymentinfonextstepbutton,.confirmordernextstepbutton,.submitforumtopicbutton,.submitpmbutton,.replypmbutton,.deleteselectedpmbutton,.reorderbutton,.minicartcheckoutbutton,.newsletterbox-subscribebutton,.useragreementbutton,.deleteselectedfsbutton,.submitreturnrequestbutton,.uploadavatarbutton,.checkavailabilitybutton{background:url(images/orange_button_bg.gif) no-repeat 25% 50% #F80;border:1px solid #F80;color:#FFF;height:20px;padding:0 5px;width:auto;overflow:visible;}
 .productlistaddtocartbutton,.productgridaddtocartbutton,.productemailafriendbutton,.productaddtocomparelistbutton,.productvariantaddtowishlistbutton,.editaddressbutton,.deleteaddressbutton,.cancelrecurringorderbutton,.orderdetailsbutton,.returnitemsbutton,.orderdetailsprintbutton,.estimateshippingbutton,.updatewishlistbutton,.applycouponcodebutton,.updatecartbutton,.continueshoppingbutton,.orderprocessedcontinuebutton,.submitpollvotebutton,.cancelforumtopicbutton,.forumsearchbutton,.forumsearchboxbutton,.cancelpmbutton,.deletepmbutton,.backpmbutton,.removeavatarbutton,.deleteselectedbissbutton{background:url(images/grey_button_bg.gif) no-repeat 25% 50% #333;border:1px solid #333;color:#FFF;height:20px;padding:0 5px;width:auto;overflow:visible;}
 ul.languagelist{display:inline;line-height:25px;}
 ul.languagelist li{list-style:none;display:inline;padding:0 5px;}
@@ -167,11 +168,8 @@ ul.languagelist li:hover{cursor:pointer;}
 .block a{color:#FFF;font-weight:700;text-decoration:none;}
 .block li{list-style:none;}
 .block li.separator{height:1px;line-height:1px;background:#f93;width:140px;font-size:1px;margin:5px 0;}
-.block-category-navigation,.block-manufacturer-navigation,.block-recently-viewed-products,.block-info,.block-shoppingcart,.block-newsletter,.block-livechat,.block-popular-tags,.block-popular-blogtags,.block-blog-archive,.block-poll,.block-account-navigation{}
+.block-category-navigation,.block-manufacturer-navigation,.block-recently-viewed-products,.block-info,.block-newsletter,.block-livechat,.block-popular-tags,.block-popular-blogtags,.block-blog-archive,.block-poll,.block-account-navigation{}
 .block-livechat .listbox{text-align:center;}
-.block-shoppingcart .items{margin-top:10px;}
-.block-shoppingcart .items ul{color:#FFF;}
-.block-shoppingcart .buttons{text-align:right;}
 .block-category-navigation .active a,.block-manufacturer-navigation .active a{color:#f93;font-weight:700;text-decoration:none;}
 .block-category-navigation .listbox ul .active,.block-manufacturer-navigation .listbox ul .active{font-weight:700;}
 .block-category-navigation .listbox ul .inactive,.block-manufacturer-navigation .listbox ul .inactive{}
@@ -184,6 +182,25 @@ ul.languagelist li:hover{cursor:pointer;}
 .block-recently-viewed-products a:hover{font-weight:700;text-decoration:none;color:#f93;}
 .block-popular-tags li,.block-popular-blogtags li{display:inline!important;}
 .block-blog-archive .year{color:#f93;font-weight:700;text-decoration:none;}
+/*Mini-shopping cart */
+#topcart .flyout-content{display:none;position:absolute;float:left;top:15px;right:0;width:270px;min-height:50px;background:#FFF;}
+#topcart.active .flyout-content{display:block;}
+.minishoppingcart{padding:5px 10px 10px;margin:0;border: 1px solid #C1C1C1;color:#FFF;background:#404040;font-size:11px;}
+.minishoppingcart a{color:#FFF;font-weight:700;text-decoration:none;}
+.minishoppingcart .count{margin:10px 0px 10px;}
+.minishoppingcart .items{overflow:hidden;}
+.minishoppingcart .items table{border-collapse:collapse;width:100%;}
+.minishoppingcart .items table .first td{border-top:1px solid #EEEEEE;}
+.minishoppingcart .items table td{border-bottom:1px solid #EEEEEE;padding:10px 5px;vertical-align:top;}
+.minishoppingcart .items .item{border-bottom:1px solid #CFCFCF;margin:5px 0;}
+.minishoppingcart .items .item .product .name{clear:both;}
+.minishoppingcart .items .item .product .attributes{font-size:10px;margin:0px;}
+.minishoppingcart .items .item .price{font-size:10px;margin:10px 0px 0px 0px;}
+.minishoppingcart .items .item .quantity{font-size:10px;margin:0px}
+.minishoppingcart .totals{margin:10px 0px;text-align:right;}
+.minishoppingcart .buttons{margin:10px 0px;text-align:right;}
+.minishoppingcart .cartbutton{margin:0px 5px;}
+.minishoppingcart .checkoutbutton{argin:0px 5px;}
 /* ORDER SUMMARY, SHOPPING CART, WISHLIST */
 .shoppingcart-page,.wishlist-page{}
 .shoppingcart-page .page-title,.wishlist-page .page-title{border-bottom:0 none;}

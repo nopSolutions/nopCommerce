@@ -54,19 +54,20 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets a value indicating whether "email a wishlist" feature is enabled
         /// </summary>
         public bool EmailWishlistEnabled { get; set; }
-
-
-        /// <summary>Gets or sets a value indicating whether mini shopping catr is enabled
+        
+        /// <summary>Gets or sets a value indicating whether mini-shopping catr is enabled
         /// </summary>
         public bool MiniShoppingCartEnabled { get; set; }
 
-
         /// <summary>
-        /// Gets or sets a value indicating whether to display products in mini shopping cart
+        /// Gets or sets a value indicating whether to show product images in the mini-shopping cart block
         /// </summary>
-        public bool MiniShoppingCartDisplayProducts { get; set; }
+        public bool ShowProductImagesInMiniShoppingCart { get; set; }
 
-
+        /// <summary>Gets or sets a maximum number of products which can be displayed in the mini-shopping cart block
+        /// </summary>
+        public int MiniShoppingCartProductNumber { get; set; }
+        
         //Round is already an issue. 
         //When enabled it can cause one issue: http://www.nopcommerce.com/boards/t/7679/vattax-rounding-error-important-fix.aspx
         //When disable it causes another one: http://www.nopcommerce.com/boards/t/11419/nop-20-order-of-steps-in-checkout.aspx?p=3#46924

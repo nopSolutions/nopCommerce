@@ -546,14 +546,24 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
+        protected TopShoppingCartModel PrepareTopShoppingCartModel()
+        {
+            var model = new TopShoppingCartModel()
+            {
+                ProductCount = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList().GetTotalProducts(),
+                MiniShoppingCartEnabled = _shoppingCartSettings.MiniShoppingCartEnabled,
+            };
+            return model;
+        }
+
+        [NonAction]
         protected MiniShoppingCartModel PrepareMiniShoppingCartModel()
         {
             var model = new MiniShoppingCartModel()
             {
-                DisplayProducts = _shoppingCartSettings.MiniShoppingCartDisplayProducts,
-                //if "terms of services" are enabled, then redirect a customer to the shopping cart page
-                //because he should check an appropriate checkbox first.
-                RedirectToShoppingCartPage = _orderSettings.TermsOfServiceEnabled,
+                //if "terms of services" are enabled, then a customer should visit the shopping cart page before going to checkout
+                AllowCheckoutPassingCartPage = !_orderSettings.TermsOfServiceEnabled,
+                ShowProductImages = _shoppingCartSettings.ShowProductImagesInMiniShoppingCart,
             };
 
             var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
@@ -573,29 +583,60 @@ namespace Nop.Web.Controllers
                 decimal subtotal = _currencyService.ConvertFromPrimaryStoreCurrency(subtotalBase, _workContext.WorkingCurrency);
                 model.SubTotal = _priceFormatter.FormatPrice(subtotal);
             }
-            if (_shoppingCartSettings.MiniShoppingCartDisplayProducts)
+            //products
+            foreach (var sci in cart.Take(_shoppingCartSettings.MiniShoppingCartProductNumber).ToList())
             {
-                foreach (var sci in cart)
+                var cartItemModel = new MiniShoppingCartModel.ShoppingCartItemModel()
                 {
-                    var cartItemModel = new MiniShoppingCartModel.ShoppingCartItemModel()
-                    {
-                        Id = sci.Id,
-                        ProductId = sci.ProductVariant.ProductId,
-                        ProductSeName = sci.ProductVariant.Product.GetSeName(),
-                        Quantity = sci.Quantity,
-                    };
+                    Id = sci.Id,
+                    ProductId = sci.ProductVariant.ProductId,
+                    ProductSeName = sci.ProductVariant.Product.GetSeName(),
+                    Quantity = sci.Quantity,
+                    AttributeInfo = _productAttributeFormatter.FormatAttributes(sci.ProductVariant, sci.AttributesXml)
+                };
 
-                    //product name
-                    if (!String.IsNullOrEmpty(sci.ProductVariant.GetLocalized(x => x.Name)))
-                        cartItemModel.ProductName = string.Format("{0} ({1})", sci.ProductVariant.Product.GetLocalized(x => x.Name), sci.ProductVariant.GetLocalized(x => x.Name));
-                    else
-                        cartItemModel.ProductName = sci.ProductVariant.Product.GetLocalized(x => x.Name);
+                //product name
+                if (!String.IsNullOrEmpty(sci.ProductVariant.GetLocalized(x => x.Name)))
+                    cartItemModel.ProductName = string.Format("{0} ({1})", sci.ProductVariant.Product.GetLocalized(x => x.Name), sci.ProductVariant.GetLocalized(x => x.Name));
+                else
+                    cartItemModel.ProductName = sci.ProductVariant.Product.GetLocalized(x => x.Name);
 
-                    model.Items.Add(cartItemModel);
+                //unit prices
+                if (sci.ProductVariant.CallForPrice)
+                {
+                    cartItemModel.UnitPrice = _localizationService.GetResource("Products.CallForPrice");
                 }
+                else
+                {
+                    decimal taxRate = decimal.Zero;
+                    decimal shoppingCartUnitPriceWithDiscountBase = _taxService.GetProductPrice(sci.ProductVariant, _priceCalculationService.GetUnitPrice(sci, true), out taxRate);
+                    decimal shoppingCartUnitPriceWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartUnitPriceWithDiscountBase, _workContext.WorkingCurrency);
+                    cartItemModel.UnitPrice = _priceFormatter.FormatPrice(shoppingCartUnitPriceWithDiscount);
+                }
+
+                //picture
+                if (_shoppingCartSettings.ShowProductImagesInMiniShoppingCart)
+                {
+                    var picture = _pictureService.GetPictureById(sci.ProductVariant.PictureId);
+                    if (picture == null)
+                    {
+                        picture = _pictureService.GetPicturesByProductId(sci.ProductVariant.Product.Id, 1).FirstOrDefault();
+                    }
+                    cartItemModel.Picture = new PictureModel()
+                    {
+                        ImageUrl = _pictureService.GetPictureUrl(picture, _mediaSetting.MiniCartThumbPictureSize, true),
+                        Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), cartItemModel.ProductName),
+                        AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), cartItemModel.ProductName),
+
+                    };
+                }
+
+                model.Items.Add(cartItemModel);
             }
+            
             return model;
         }
+
         #endregion
 
         #region Shopping cart
@@ -671,28 +712,18 @@ namespace Nop.Web.Controllers
                     redirect = Url.RouteUrl("ShoppingCart", new { productId = product.Id, SeName = product.GetSeName() }, "http"),
                 });
             }
-
-
+            
             //display "Product has been added to the cart" notification message
             //and update appropriate blocks
-            var updateitemscountsectionhtml = string.Format("({0})",
-                _workContext
-                .CurrentCustomer
-                .ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .ToList()
-                .GetTotalProducts());
-            var updateminicartsectionhtml = (_shoppingCartSettings.MiniShoppingCartEnabled
-                && _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
-                ? RenderPartialViewToString("MiniShoppingCart", PrepareMiniShoppingCartModel())
+            var updatetopcartsectionhtml = _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart)
+                ? RenderPartialViewToString("TopShoppingCart", PrepareTopShoppingCartModel())
                 : "";
 
             return Json(new
             {
                 success = true,
                 message = _localizationService.GetResource("Products.ProductHasBeenAddedToTheCart"),
-                updateitemscountsectionhtml = updateitemscountsectionhtml,
-                updateminicartsectionhtml = updateminicartsectionhtml,
+                updatetopcartsectionhtml = updatetopcartsectionhtml,
             });
 
         }
@@ -1359,6 +1390,17 @@ namespace Nop.Web.Controllers
                 return Content("");
 
             var model = PrepareMiniShoppingCartModel();
+            return PartialView(model);
+        }
+
+
+        [ChildActionOnly]
+        public ActionResult TopShoppingCart()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
+                return Content("");
+
+            var model = PrepareTopShoppingCartModel();
             return PartialView(model);
         }
 

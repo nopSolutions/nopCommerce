@@ -48,12 +48,13 @@ a.logo{background:url(images/logo.gif);display:block;width:225px;height:60px;tex
 .header-languageselector{float:right;}
 .header-taxDisplayTypeSelector{float:right;}
 .header-links-wrapper{float:right;text-align:right;width:670px;}
-.header-links{border:solid 1px #FFF;padding:5px;margin-bottom:5px;display:inline-table;}
-.header-links ul{padding:0;margin:0;}
+.header-links{border:solid 1px #FFF;padding:5px;margin-bottom:5px;float:right;text-align:right;}
+.header-links ul{padding:0;margin:0;float:right;white-space:nowrap;}
 .header-links ul li{list-style:none;display:inline;padding-right:2px;}
 .header-links a{color:#3664A5;text-decoration:none;}
 .header-links a:hover{color:#3664A5;}
 .header-links a.account{color:#3664A5;}
+.header-links #topcart{float:right;padding-left:5px;position:relative;text-align:left;}
 .header-links span.impersonate{color:#E44097;font-weight:700;}
 .header-links span.impersonate .finish-impersonation{color:#58DE81;}
 .headermenu{color:#FFF;background:#7692B9;padding:8px 5px 9px;text-align:center;height:100%;vertical-align:middle;letter-spacing:1px;margin:0 5px;}
@@ -142,7 +143,7 @@ a.eu-cookie-privacyinfo-tag{color:#3664A5 !important;text-decoration:underline;}
 .postlink{padding:1px 3px;margin-right:5px;border:none;}
 .searchboxbutton{margin-bottom:2px;}
 .productlistproductdetailbutton,.productgridproductdetailbutton{margin-bottom:3px;}
-.searchbutton,.contactusbutton,.newsitemaddcommentbutton,.blogpostaddcommentbutton,.productvariantaddtocartbutton,.productwritereviewbutton,.loginbutton,.registerbutton,.checkoutasguestbutton,.savecustomerinfobutton,.addaddressbutton,.changepasswordbutton,.registernextstepbutton,.completeregistrationbutton,.passwordrecoverybutton,.newpasswordbutton,.saveaddressbutton,.sendemailafriendbutton,.checkoutbutton,.selectshippingaddressbutton,.newaddressnextstepbutton,.selectbillingaddressbutton,.sameasshippingaddressbutton,.shippingmethodnextstepbutton,.paymentmethodnextstepbutton,.paymentinfonextstepbutton,.confirmordernextstepbutton,.submitforumtopicbutton,.submitpmbutton,.replypmbutton,.deleteselectedpmbutton,.reorderbutton,.minicartcheckoutbutton,.newsletterbox-subscribebutton,.useragreementbutton,.deleteselectedfsbutton,.submitreturnrequestbutton,.uploadavatarbutton,.checkavailabilitybutton{}
+.searchbutton,.contactusbutton,.newsitemaddcommentbutton,.blogpostaddcommentbutton,.productvariantaddtocartbutton,.productwritereviewbutton,.loginbutton,.registerbutton,.checkoutasguestbutton,.savecustomerinfobutton,.addaddressbutton,.changepasswordbutton,.registernextstepbutton,.completeregistrationbutton,.passwordrecoverybutton,.newpasswordbutton,.saveaddressbutton,.sendemailafriendbutton,.cartbutton,.checkoutbutton,.selectshippingaddressbutton,.newaddressnextstepbutton,.selectbillingaddressbutton,.sameasshippingaddressbutton,.shippingmethodnextstepbutton,.paymentmethodnextstepbutton,.paymentinfonextstepbutton,.confirmordernextstepbutton,.submitforumtopicbutton,.submitpmbutton,.replypmbutton,.deleteselectedpmbutton,.reorderbutton,.minicartcheckoutbutton,.newsletterbox-subscribebutton,.useragreementbutton,.deleteselectedfsbutton,.submitreturnrequestbutton,.uploadavatarbutton,.checkavailabilitybutton{}
 .productlistaddtocartbutton,.productgridaddtocartbutton,.productemailafriendbutton,.productaddtocomparelistbutton,.productvariantaddtowishlistbutton,.editaddressbutton,.deleteaddressbutton,.cancelrecurringorderbutton,.orderdetailsbutton,.returnitemsbutton,.orderdetailsprintbutton,.estimateshippingbutton,.updatewishlistbutton,.applycouponcodebutton,.updatecartbutton,.continueshoppingbutton,.orderprocessedcontinuebutton,.submitpollvotebutton,.cancelforumtopicbutton,.forumsearchbutton,.forumsearchboxbutton,.cancelpmbutton,.deletepmbutton,.backpmbutton,.removeavatarbutton{}
 ul.languagelist{display:inline;line-height:25px;}
 ul.languagelist li{list-style:none;display:inline;padding:0 5px;}
@@ -165,11 +166,8 @@ ul.languagelist li:hover{cursor:pointer;}
 .block a{}
 .block li{list-style:none;}
 .block li.separator{height:1px;background:#E8E6D2;width:140px;margin:5px 0;}
-.block-category-navigation,.block-manufacturer-navigation,.block-recently-viewed-products,.block-info,.block-shoppingcart,.block-newsletter,.block-livechat,.block-popular-tags,.block-popular-blogtags,.block-blog-archive,.block-poll,.block-account-navigation{}
+.block-category-navigation,.block-manufacturer-navigation,.block-recently-viewed-products,.block-info,.block-newsletter,.block-livechat,.block-popular-tags,.block-popular-blogtags,.block-blog-archive,.block-poll,.block-account-navigation{}
 .block-livechat .listbox{text-align:center;}
-.block-shoppingcart .items{margin-top:10px;}
-.block-shoppingcart .items ul{}
-.block-shoppingcart .buttons{text-align:right;}
 .block-category-navigation .active a,.block-manufacturer-navigation .active a{}
 .block-category-navigation .listbox ul .active,.block-manufacturer-navigation .listbox ul .active{font-weight:700;}
 .block-category-navigation .listbox ul .inactive,.block-manufacturer-navigation .listbox ul .inactive{}
@@ -182,6 +180,25 @@ ul.languagelist li:hover{cursor:pointer;}
 .block-recently-viewed-products a:hover{}
 .block-popular-tags li,.block-popular-blogtags li{display:inline!important;}
 .block-blog-archive .year{font-weight:700;}
+/*Mini-shopping cart */
+#topcart .flyout-content{display:none;position:absolute;float:left;top:15px;right:0;width:270px;min-height:50px;background:#FFF;}
+#topcart.active .flyout-content{display:block;}
+.minishoppingcart{padding:5px 10px 10px;margin:0;border: 1px solid #C1C1C1;color:#000;background:#FFF;font-size:11px;}
+.minishoppingcart a{color:#3664A5;font-weight:700;text-decoration:none;}
+.minishoppingcart .count{margin:10px 0px 10px;}
+.minishoppingcart .items{overflow:hidden;}
+.minishoppingcart .items table{border-collapse:collapse;width:100%;}
+.minishoppingcart .items table .first td{border-top:1px solid #EEEEEE;}
+.minishoppingcart .items table td{border-bottom:1px solid #EEEEEE;padding:10px 5px;vertical-align:top;}
+.minishoppingcart .items .item{border-bottom:1px solid #CFCFCF;margin:5px 0;}
+.minishoppingcart .items .item .product .name{clear:both;}
+.minishoppingcart .items .item .product .attributes{font-size:10px;margin:0px;}
+.minishoppingcart .items .item .price{font-size:10px;margin:10px 0px 0px 0px;}
+.minishoppingcart .items .item .quantity{font-size:10px;margin:0px}
+.minishoppingcart .totals{margin:10px 0px;text-align:right;}
+.minishoppingcart .buttons{margin:10px 0px;text-align:right;}
+.minishoppingcart .cartbutton{margin:0px 5px;}
+.minishoppingcart .checkoutbutton{argin:0px 5px;}
 /* ORDER SUMMARY, SHOPPING CART, WISHLIST */
 .shoppingcart-page,.wishlist-page{}
 .shoppingcart-page .page-title,.wishlist-page .page-title{border-bottom:0 none;}

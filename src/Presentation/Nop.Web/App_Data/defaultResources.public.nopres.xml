@@ -3742,6 +3742,15 @@
 					<LocaleResource Name="SeveralItemsText">
 						<Value>There are {0} in your cart.</Value>
 					</LocaleResource>
+          <LocaleResource Name="Quantity">
+            <Value>Quantity</Value>
+          </LocaleResource>
+          <LocaleResource Name="UnitPrice">
+            <Value>Unit price</Value>
+          </LocaleResource>
+          <LocaleResource Name="ViewCart">
+            <Value>Go to shopping cart</Value>
+          </LocaleResource>
 				</Children>
 			</LocaleResource>
 			<LocaleResource Name="NotAvailable">

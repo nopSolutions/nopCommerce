@@ -281,6 +281,7 @@
     <Compile Include="Models\Profile\ProfileIndexModel.cs" />
     <Compile Include="Models\Profile\PostsModel.cs" />
     <Compile Include="Models\Profile\ProfilePostsModel.cs" />
+    <Compile Include="Models\ShoppingCart\TopShoppingCartModel.cs" />
     <Compile Include="Models\ShoppingCart\MiniShoppingCartModel.cs" />
     <Compile Include="Models\ShoppingCart\WishlistEmailAFriendModel.cs" />
     <Compile Include="Models\ShoppingCart\WishlistModel.cs" />
@@ -1756,6 +1757,7 @@
     <Content Include="Views\Shared\_Notifications.Mobile.cshtml" />
     <Content Include="Views\Common\EuCookieLaw.cshtml" />
     <Content Include="Views\Common\EuCookieLaw.Mobile.cshtml" />
+    <Content Include="Views\ShoppingCart\TopShoppingCart.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

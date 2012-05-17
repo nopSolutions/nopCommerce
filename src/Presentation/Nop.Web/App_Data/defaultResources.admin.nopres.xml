@@ -4611,6 +4611,14 @@
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
+                  <LocaleResource Name="MiniCartThumbPictureSize">
+                    <Value>Mini-shopping cart thumbnail image size</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>The default size (pixels) for product thumbnail images in the mini-shopping cart block.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
 									<LocaleResource Name="MaximumImageSize">
 										<Value>Maximum image size</Value>
 										<Children>
@@ -5024,14 +5032,22 @@
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
-									<LocaleResource Name="MiniShoppingCartDisplayProducts">
-										<Value>Show product in mini-shopping cart</Value>
+									<LocaleResource Name="MiniShoppingCartProductNumber">
+										<Value>Mini-shopping cart product number</Value>
 										<Children>
 											<LocaleResource Name="Hint">
-												<Value>Check to show product in mini-shopping cart.</Value>
+												<Value>Specify the maximum number of products which can be displayed in the mini-shopping cart block.</Value>
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
+                  <LocaleResource Name="ShowProductImagesInMiniShoppingCart">
+                    <Value>Show product images in mini-shopping cart</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Determines whether product images should be displayed in the mini-shopping cart block.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
 								</Children>
 							</LocaleResource>
 							<LocaleResource Name="Tax">

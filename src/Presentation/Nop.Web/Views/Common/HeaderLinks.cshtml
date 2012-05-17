@@ -1,13 +1,23 @@
 ﻿@model HeaderLinksModel
 @using Nop.Web.Models.Common;
 <div class="header-links">
-    <ul>
-        @if (Model.IsCustomerImpersonated)
-        {
-@*customer is impersonated *@
+    @if (Model.ShoppingCartEnabled)
+    {
+        @Html.Action("TopShoppingCart", "ShoppingCart")
+    }
+    @if (Model.IsCustomerImpersonated)
+    {
+        <ul>
             <li><span class="impersonate">(@(string.Format(T("Account.ImpersonatedAs").Text, Model.CustomerEmailUsername)))
                 - <a href="@Url.RouteUrl("Logout")" class="finish-impersonation" title="@T("Account.ImpersonatedAs.Finish.Hint")">@T("Account.ImpersonatedAs.Finish")</a>
                 ) </span></li>
+        </ul>
+    }
+    <ul>
+        @if (Model.DisplayAdminLink)
+        {
+            <li><a href="@Url.Content("~/admin")" class="ico-admin">@T("Account.Administration")</a>
+            </li>
         }
         @if (Model.IsAuthenticated)
         {
@@ -20,11 +30,11 @@
                 @Model.UnreadPrivateMessages</li>
                 if (!string.IsNullOrEmpty(Model.AlertMessage))
                 {
-                    <script type="text/javascript">
-                        $(document).ready(function () {
-                            displayNotification('@(Model.AlertMessage)', 'success', false);
-                        });
-	                </script>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    displayNotification('@(Model.AlertMessage)', 'success', false);
+                });
+            </script>
                 }
             }
         }
@@ -33,20 +43,10 @@
             <li><a href="@Url.RouteUrl("Register")" class="ico-register">@T("Account.Register")</a></li>
             <li><a href="@Url.RouteUrl("Login")" class="ico-login">@T("Account.Login")</a></li>
         }
-        @if (Model.ShoppingCartEnabled)
-        {
-            <li><a href="@Url.RouteUrl("ShoppingCart")" class="ico-cart">@T("ShoppingCart")</a>
-                <a href="@Url.RouteUrl("ShoppingCart")" class="cart-qty">(@Model.ShoppingCartItems)</a> </li>
-        }
         @if (Model.WishlistEnabled)
         {
-            <li><a href="@Url.RouteUrl("Wishlist")" class="ico-wishlist">@T("Wishlist")</a>
-            <a href="@Url.RouteUrl("Wishlist")" class="wishlist-qty">(@Model.WishlistItems)</a> </li>
-        }
-        @if (Model.DisplayAdminLink)
-        {
-            <li><a href="@Url.Content("~/admin")" class="ico-admin">@T("Account.Administration")</a>
-            </li>
+            <li><a href="@Url.RouteUrl("Wishlist")" class="ico-wishlist">@T("Wishlist")</a> <a href="@Url.RouteUrl("Wishlist")" class="wishlist-qty">
+                (@Model.WishlistItems)</a> </li>
         }
         @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.HeaderLinks })
     </ul>

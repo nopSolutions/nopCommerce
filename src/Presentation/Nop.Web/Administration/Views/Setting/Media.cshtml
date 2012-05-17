@@ -107,6 +107,15 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.NopLabelFor(model => model.MiniCartThumbPictureSize):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.MiniCartThumbPictureSize)
+                @Html.ValidationMessageFor(model => model.MiniCartThumbPictureSize)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.NopLabelFor(model => model.MaximumImageSize):
             </td>
             <td class="adminData">

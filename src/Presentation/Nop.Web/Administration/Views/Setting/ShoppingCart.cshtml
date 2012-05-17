@@ -16,17 +16,19 @@
     <script type="text/javascript">
         $(document).ready(function () {
 
-            $("#@Html.FieldIdFor(model => model.MiniShoppingCartEnabled)").click(toggleMiniShoppingCartDisplayProducts);
+            $("#@Html.FieldIdFor(model => model.MiniShoppingCartEnabled)").click(toggleMiniShoppingCartEnabled);
 
-            toggleMiniShoppingCartDisplayProducts();
+            toggleMiniShoppingCartEnabled();
         });
 
-        function toggleMiniShoppingCartDisplayProducts() {
+        function toggleMiniShoppingCartEnabled() {
             if ($('#@Html.FieldIdFor(model => model.MiniShoppingCartEnabled)').is(':checked')) {
-                $('#pnlMiniShoppingCartDisplayProducts').show();
+                $('#pnlMiniShoppingCartProductNumber').show();
+                $('#pnlShowProductImagesInMiniShoppingCart').show();
             }
             else {
-                $('#pnlMiniShoppingCartDisplayProducts').hide();
+                $('#pnlMiniShoppingCartProductNumber').hide();
+                $('#pnlShowProductImagesInMiniShoppingCart').hide();
             }
         }
         
@@ -133,14 +135,23 @@
                 @Html.ValidationMessageFor(model => model.MiniShoppingCartEnabled)
             </td>
         </tr>
-        <tr id="pnlMiniShoppingCartDisplayProducts">
+        <tr id="pnlMiniShoppingCartProductNumber">
             <td class="adminTitle">
-                @Html.NopLabelFor(model => model.MiniShoppingCartDisplayProducts):
+                @Html.NopLabelFor(model => model.MiniShoppingCartProductNumber):
             </td>
             <td class="adminData">
-                @Html.EditorFor(model => model.MiniShoppingCartDisplayProducts)
-                @Html.ValidationMessageFor(model => model.MiniShoppingCartDisplayProducts)
+                @Html.EditorFor(model => model.MiniShoppingCartProductNumber)
+                @Html.ValidationMessageFor(model => model.MiniShoppingCartProductNumber)
             </td>
         </tr>
+        <tr id="pnlShowProductImagesInMiniShoppingCart">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ShowProductImagesInMiniShoppingCart):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ShowProductImagesInMiniShoppingCart)
+                @Html.ValidationMessageFor(model => model.ShowProductImagesInMiniShoppingCart)
+            </td>
+        </tr>        
     </table>
 }
