@@ -330,7 +330,7 @@ set @resources='
     <Value>The default size (pixels) for product thumbnail images in the mini-shopping cart block.</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.Mini.ViewCart">
-    <Value>Go to shopping cart</Value>
+    <Value>Go to cart</Value>
   </LocaleResource>
   <LocaleResource Name="ShoppingCart.Mini.Quantity">
     <Value>Quantity</Value>

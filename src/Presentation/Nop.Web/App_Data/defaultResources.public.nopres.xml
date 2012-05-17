@@ -3749,7 +3749,7 @@
             <Value>Unit price</Value>
           </LocaleResource>
           <LocaleResource Name="ViewCart">
-            <Value>Go to shopping cart</Value>
+            <Value>Go to cart</Value>
           </LocaleResource>
 				</Children>
 			</LocaleResource>
