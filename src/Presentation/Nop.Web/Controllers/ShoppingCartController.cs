@@ -67,7 +67,7 @@ namespace Nop.Web.Controllers
         private readonly IPermissionService _permissionService;
         private readonly IDownloadService _downloadService;
 
-        private readonly MediaSettings _mediaSetting;
+        private readonly MediaSettings _mediaSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
         private readonly CatalogSettings _catalogSettings;
         private readonly OrderSettings _orderSettings;
@@ -94,7 +94,7 @@ namespace Nop.Web.Controllers
             IWorkflowMessageService workflowMessageService,
             IPermissionService permissionService, 
             IDownloadService downloadService,
-            MediaSettings mediaSetting, ShoppingCartSettings shoppingCartSettings,
+            MediaSettings mediaSettings, ShoppingCartSettings shoppingCartSettings,
             CatalogSettings catalogSettings, OrderSettings orderSettings,
             ShippingSettings shippingSettings, TaxSettings taxSettings,
             CaptchaSettings captchaSettings)
@@ -125,7 +125,7 @@ namespace Nop.Web.Controllers
             this._permissionService = permissionService;
             this._downloadService = downloadService;
 
-            this._mediaSetting = mediaSetting;
+            this._mediaSettings = mediaSettings;
             this._shoppingCartSettings = shoppingCartSettings;
             this._catalogSettings = catalogSettings;
             this._orderSettings = orderSettings;
@@ -370,7 +370,7 @@ namespace Nop.Web.Controllers
                     }
                     cartItemModel.Picture = new PictureModel()
                     {
-                        ImageUrl = _pictureService.GetPictureUrl(picture, _mediaSetting.CartThumbPictureSize, true),
+                        ImageUrl = _pictureService.GetPictureUrl(picture, _mediaSettings.CartThumbPictureSize, true),
                         Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), cartItemModel.ProductName),
                         AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), cartItemModel.ProductName),
 
@@ -520,7 +520,7 @@ namespace Nop.Web.Controllers
                     }
                     cartItemModel.Picture = new PictureModel()
                     {
-                        ImageUrl = _pictureService.GetPictureUrl(picture, _mediaSetting.CartThumbPictureSize, true),
+                        ImageUrl = _pictureService.GetPictureUrl(picture, _mediaSettings.CartThumbPictureSize, true),
                         Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), cartItemModel.ProductName),
                         AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), cartItemModel.ProductName),
 
@@ -624,7 +624,7 @@ namespace Nop.Web.Controllers
                     }
                     cartItemModel.Picture = new PictureModel()
                     {
-                        ImageUrl = _pictureService.GetPictureUrl(picture, _mediaSetting.MiniCartThumbPictureSize, true),
+                        ImageUrl = _pictureService.GetPictureUrl(picture, _mediaSettings.MiniCartThumbPictureSize, true),
                         Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), cartItemModel.ProductName),
                         AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), cartItemModel.ProductName),
 

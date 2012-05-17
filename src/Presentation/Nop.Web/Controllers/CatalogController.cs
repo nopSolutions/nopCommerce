@@ -69,7 +69,7 @@ namespace Nop.Web.Controllers
         private readonly IPermissionService _permissionService;
         private readonly IDownloadService _downloadService;
 
-        private readonly MediaSettings _mediaSetting;
+        private readonly MediaSettings _mediaSettings;
         private readonly CatalogSettings _catalogSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
         private readonly StoreInformationSettings _storeInformationSettings;
@@ -99,7 +99,7 @@ namespace Nop.Web.Controllers
             IOrderReportService orderReportService, IGenericAttributeService genericAttributeService,
             IBackInStockSubscriptionService backInStockSubscriptionService,
             IPermissionService permissionService, IDownloadService downloadService,
-            MediaSettings mediaSetting, CatalogSettings catalogSettings,
+            MediaSettings mediaSettings, CatalogSettings catalogSettings,
             ShoppingCartSettings shoppingCartSettings, StoreInformationSettings storeInformationSettings,
             LocalizationSettings localizationSettings, CustomerSettings customerSettings, 
             CaptchaSettings captchaSettings,
@@ -136,7 +136,7 @@ namespace Nop.Web.Controllers
             this._downloadService = downloadService;
 
 
-            this._mediaSetting = mediaSetting;
+            this._mediaSettings = mediaSettings;
             this._catalogSettings = catalogSettings;
             this._shoppingCartSettings = shoppingCartSettings;
             this._storeInformationSettings = storeInformationSettings;
@@ -342,7 +342,7 @@ namespace Nop.Web.Controllers
                     #region Prepare product picture
 
                     //If a size has been set in the view, we use it in priority
-                    int pictureSize = productThumbPictureSize.HasValue ? productThumbPictureSize.Value : _mediaSetting.ProductThumbPictureSize;
+                    int pictureSize = productThumbPictureSize.HasValue ? productThumbPictureSize.Value : _mediaSettings.ProductThumbPictureSize;
                     //prepare picture model
                     var defaultProductPictureCacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_DEFAULTPICTURE_MODEL_KEY, product.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured());
                     model.DefaultPictureModel = _cacheManager.Get(defaultProductPictureCacheKey, () =>
@@ -427,14 +427,14 @@ namespace Nop.Web.Controllers
             });
 
             //pictures
-            model.DefaultPictureZoomEnabled = _mediaSetting.DefaultPictureZoomEnabled;
+            model.DefaultPictureZoomEnabled = _mediaSettings.DefaultPictureZoomEnabled;
             var pictures = _pictureService.GetPicturesByProductId(product.Id);
             if (pictures.Count > 0)
             {
                 //default picture
                 model.DefaultPictureModel = new PictureModel()
                 {
-                    ImageUrl = _pictureService.GetPictureUrl(pictures.FirstOrDefault(), _mediaSetting.ProductDetailsPictureSize),
+                    ImageUrl = _pictureService.GetPictureUrl(pictures.FirstOrDefault(), _mediaSettings.ProductDetailsPictureSize),
                     FullSizeImageUrl = _pictureService.GetPictureUrl(pictures.FirstOrDefault()),
                     Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), model.Name),
                     AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), model.Name),
@@ -444,7 +444,7 @@ namespace Nop.Web.Controllers
                 {
                     model.PictureModels.Add(new PictureModel()
                     {
-                        ImageUrl = _pictureService.GetPictureUrl(picture, _mediaSetting.ProductThumbPictureSizeOnProductDetailsPage),
+                        ImageUrl = _pictureService.GetPictureUrl(picture, _mediaSettings.ProductThumbPictureSizeOnProductDetailsPage),
                         FullSizeImageUrl = _pictureService.GetPictureUrl(picture),
                         Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), model.Name),
                         AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), model.Name),
@@ -456,7 +456,7 @@ namespace Nop.Web.Controllers
                 //no images. set the default one
                 model.DefaultPictureModel = new PictureModel()
                 {
-                    ImageUrl = _pictureService.GetDefaultPictureUrl(_mediaSetting.ProductDetailsPictureSize),
+                    ImageUrl = _pictureService.GetDefaultPictureUrl(_mediaSettings.ProductDetailsPictureSize),
                     FullSizeImageUrl = _pictureService.GetDefaultPictureUrl(),
                     Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), model.Name),
                     AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), model.Name),
@@ -532,7 +532,7 @@ namespace Nop.Web.Controllers
             model.Gtin = productVariant.Gtin;
             model.StockAvailablity = productVariant.FormatStockMessage(_localizationService);
             model.PictureModel.FullSizeImageUrl = _pictureService.GetPictureUrl(productVariant.PictureId, 0, false);
-            model.PictureModel.ImageUrl = _pictureService.GetPictureUrl(productVariant.PictureId, _mediaSetting.ProductVariantPictureSize, false);
+            model.PictureModel.ImageUrl = _pictureService.GetPictureUrl(productVariant.PictureId, _mediaSettings.ProductVariantPictureSize, false);
             model.PictureModel.Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), model.Name);
             model.PictureModel.AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), model.Name);
             if (productVariant.IsDownload && productVariant.HasSampleDownload)
@@ -879,7 +879,7 @@ namespace Nop.Web.Controllers
                     };
 
                     //prepare picture model
-                    int pictureSize = _mediaSetting.CategoryThumbPictureSize;
+                    int pictureSize = _mediaSettings.CategoryThumbPictureSize;
                     var categoryPictureCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_PICTURE_MODEL_KEY, x.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured());
                     subCatModel.PictureModel = _cacheManager.Get(categoryPictureCacheKey, () =>
                     {
@@ -988,7 +988,7 @@ namespace Nop.Web.Controllers
                     var catModel = x.ToModel();
 
                     //prepare picture model
-                    int pictureSize = _mediaSetting.CategoryThumbPictureSize;
+                    int pictureSize = _mediaSettings.CategoryThumbPictureSize;
                     var categoryPictureCacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_PICTURE_MODEL_KEY, x.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured());
                     catModel.PictureModel = _cacheManager.Get(categoryPictureCacheKey, () =>
                     {
@@ -1209,7 +1209,7 @@ namespace Nop.Web.Controllers
                 var modelMan = manufacturer.ToModel();
                 
                 //prepare picture model
-                int pictureSize = _mediaSetting.ManufacturerThumbPictureSize;
+                int pictureSize = _mediaSettings.ManufacturerThumbPictureSize;
                 var manufacturerPictureCacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURER_PICTURE_MODEL_KEY, manufacturer.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured());
                 modelMan.PictureModel = _cacheManager.Get(manufacturerPictureCacheKey, () =>
                 {
