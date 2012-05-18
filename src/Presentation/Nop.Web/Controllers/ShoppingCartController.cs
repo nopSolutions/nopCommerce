@@ -583,8 +583,11 @@ namespace Nop.Web.Controllers
                 decimal subtotal = _currencyService.ConvertFromPrimaryStoreCurrency(subtotalBase, _workContext.WorkingCurrency);
                 model.SubTotal = _priceFormatter.FormatPrice(subtotal);
             }
-            //products
-            foreach (var sci in cart.Take(_shoppingCartSettings.MiniShoppingCartProductNumber).ToList())
+            //products. sort descending (recently added products)
+            foreach (var sci in cart
+                .OrderByDescending(x => x.Id)
+                .Take(_shoppingCartSettings.MiniShoppingCartProductNumber)
+                .ToList())
             {
                 var cartItemModel = new MiniShoppingCartModel.ShoppingCartItemModel()
                 {
