@@ -42,8 +42,8 @@ namespace Nop.Services.Localization
         /// Gets all locale string resources by language identifier
         /// </summary>
         /// <param name="languageId">Language identifier</param>
-        /// <returns>Locale string resource collection</returns>
-        Dictionary<string, LocaleStringResource> GetAllResourcesByLanguageId(int languageId);
+        /// <returns>Locale string resources</returns>
+        IList<LocaleStringResource> GetAllResources(int languageId);
 
         /// <summary>
         /// Inserts a locale string resource
@@ -56,6 +56,13 @@ namespace Nop.Services.Localization
         /// </summary>
         /// <param name="localeStringResource">Locale string resource</param>
         void UpdateLocaleStringResource(LocaleStringResource localeStringResource);
+
+        /// <summary>
+        /// Gets all locale string resources by language identifier
+        /// </summary>
+        /// <param name="languageId">Language identifier</param>
+        /// <returns>Locale string resources</returns>
+        Dictionary<string, KeyValuePair<int, string>> GetAllResourceValues(int languageId);
 
         /// <summary>
         /// Gets a resource string based on the specified ResourceKey property.

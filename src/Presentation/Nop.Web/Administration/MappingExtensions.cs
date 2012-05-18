@@ -230,26 +230,7 @@ namespace Nop.Admin
         {
             return Mapper.Map(model, destination);
         }
-
-        #region Resources
-
-        public static LanguageResourceModel ToModel(this LocaleStringResource entity)
-        {
-            return Mapper.Map<LocaleStringResource, LanguageResourceModel>(entity);
-        }
-
-        public static LocaleStringResource ToEntity(this LanguageResourceModel model)
-        {
-            return Mapper.Map<LanguageResourceModel, LocaleStringResource>(model);
-        }
-
-        public static LocaleStringResource ToEntity(this LanguageResourceModel model, LocaleStringResource destination)
-        {
-            return Mapper.Map(model, destination);
-        }
-
-        #endregion
-
+        
         #endregion
 
         #region Email account

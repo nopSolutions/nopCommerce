@@ -238,15 +238,6 @@ namespace Nop.Admin.Infrastructure
             Mapper.CreateMap<CurrencyModel, Currency>()
                 .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
                 .ForMember(dest => dest.UpdatedOnUtc, mo => mo.Ignore());
-            //locale resource
-            Mapper.CreateMap<LocaleStringResource, LanguageResourceModel>()
-                .ForMember(dest => dest.Name, mo => mo.MapFrom(src => src.ResourceName))
-                .ForMember(dest => dest.Value, mo => mo.MapFrom(src => src.ResourceValue))
-                .ForMember(dest => dest.LanguageName, mo => mo.MapFrom(src => src.Language != null ? src.Language.Name : string.Empty));
-            Mapper.CreateMap<LanguageResourceModel, LocaleStringResource>()
-                .ForMember(dest => dest.ResourceName, mo => mo.MapFrom(src => src.Name))
-                .ForMember(dest => dest.ResourceValue, mo => mo.MapFrom(src => src.Value))
-                .ForMember(dest => dest.Language, mo => mo.Ignore());
             //measure weights
             Mapper.CreateMap<MeasureWeight, MeasureWeightModel>()
                 .ForMember(dest => dest.IsPrimaryWeight, mo => mo.Ignore());

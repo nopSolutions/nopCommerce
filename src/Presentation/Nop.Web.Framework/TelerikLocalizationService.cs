@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Nop.Web.Framework
@@ -35,8 +36,10 @@ namespace Nop.Web.Framework
         private IDictionary<string, string> ScopedResources()
         {
             var scope = "Admin.Telerik." + _resourceName;
-            return _localizationService.GetAllResourcesByLanguageId(_currentLanguageId).Where(x => x.Key.ToLower().StartsWith(scope)).ToDictionary(x => x.Key.Replace(scope,""),
-                                                                                                    x => x.Value.ResourceValue);
+            var result =  _localizationService.GetAllResourceValues(_currentLanguageId)
+                .Where(x => x.Key.StartsWith(scope, StringComparison.InvariantCultureIgnoreCase))
+                .ToDictionary(x => x.Key.Replace(scope,""), x => x.Value.Value);
+            return result;
         }
     }
 }

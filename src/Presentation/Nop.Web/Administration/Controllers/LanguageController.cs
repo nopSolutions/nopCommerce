@@ -193,10 +193,22 @@ namespace Nop.Admin.Controllers
 		    ViewBag.LanguageId = languageId;
 		    ViewBag.LanguageName = language.Name;
 
-			var resources = _localizationService.GetAllResourcesByLanguageId(languageId);
+		    var resources = _localizationService
+                .GetAllResourceValues(languageId)
+                .OrderBy(x => x.Key)
+                .ToList();
 			var gridModel = new GridModel<LanguageResourceModel>
 			{
-                Data = resources.Take(_adminAreaSettings.GridPageSize).Select(x => x.Value.ToModel()),
+                Data = resources
+                    .Take(_adminAreaSettings.GridPageSize)
+                    .Select(x => new LanguageResourceModel()
+                    {
+                        LanguageId = languageId,
+                        LanguageName = language.Name,
+                        Id = x.Value.Key,
+                        Name = x.Key,
+                        Value = x.Value.Value,
+                    }),
 				Total = resources.Count
 			};
 			return View(gridModel);
@@ -207,15 +219,27 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
+            
+		    var language = _languageService.GetLanguageById(languageId);
 
-		    var resources = _localizationService.GetAllResourcesByLanguageId(languageId).Select(x => x.Value)
-		        .Select(x => x.ToModel())
-		        .ForCommand(command);
-
+            var resources = _localizationService
+                .GetAllResourceValues(languageId)
+                .OrderBy(x => x.Key)
+                .Select(x => new LanguageResourceModel()
+                    {
+                        LanguageId = languageId,
+                        LanguageName = language.Name,
+                        Id = x.Value.Key,
+                        Name = x.Key,
+                        Value = x.Value.Value,
+                    })
+                .ForCommand(command)
+                .ToList();
+            
             var model = new GridModel<LanguageResourceModel>
             {
                 Data = resources.PagedForCommand(command),
-                Total = resources.Count()
+                Total = resources.Count
             };
 		    return new JsonResult
 			{
@@ -252,7 +276,8 @@ namespace Nop.Admin.Controllers
                 }
             }
 
-            resource = model.ToEntity(resource);
+            resource.ResourceName = model.Name;
+            resource.ResourceValue = model.Value;
             _localizationService.UpdateLocaleStringResource(resource);
 
             return Resources(model.LanguageId, command);
@@ -280,12 +305,13 @@ namespace Nop.Admin.Controllers
             if (res == null)
             {
                 var resource = new LocaleStringResource { LanguageId = id };
-                resource = model.ToEntity(resource);
+                resource.ResourceName = model.Name;
+                resource.ResourceValue = model.Value;
                 _localizationService.InsertLocaleStringResource(resource);
             }
             else
             {
-                return Content(string.Format(_localizationService.GetResource("Admin.Configuration.Languages.Resources.NameAlreadyExists"), res.ResourceName));
+                return Content(string.Format(_localizationService.GetResource("Admin.Configuration.Languages.Resources.NameAlreadyExists"), model.Name));
             }
             return Resources(id, command);
         }

@@ -88,7 +88,6 @@ namespace Nop.Services.Localization
                 return null;
 
             var localeStringResource = _lsrRepository.GetById(localeStringResourceId);
-
             return localeStringResource;
         }
 
@@ -115,33 +114,12 @@ namespace Nop.Services.Localization
         public virtual LocaleStringResource GetLocaleStringResourceByName(string resourceName, int languageId,
             bool logIfNotFound = true)
         {
-            LocaleStringResource localeStringResource = null;
+            var query = from lsr in _lsrRepository.Table
+                        orderby lsr.ResourceName
+                        where lsr.LanguageId == languageId && lsr.ResourceName == resourceName
+                        select lsr;
+            var localeStringResource = query.FirstOrDefault();
 
-            if (_localizationSettings.LoadAllLocaleRecordsOnStartup)
-            {
-                //load all records
-
-                // using an empty string so the request can still be logged
-                if (string.IsNullOrEmpty(resourceName))
-                    resourceName = string.Empty;
-                resourceName = resourceName.Trim().ToLowerInvariant();
-
-                var resources = GetAllResourcesByLanguageId(languageId);
-                if (resources.ContainsKey(resourceName))
-                {
-                    var localeStringResourceId = resources[resourceName].Id;
-                    localeStringResource = _lsrRepository.GetById(localeStringResourceId);
-                }
-            }
-            else
-            {
-                //gradual loading
-                var query = from lsr in _lsrRepository.Table
-                            orderby lsr.ResourceName
-                            where lsr.LanguageId == languageId && lsr.ResourceName == resourceName
-                            select lsr;
-                localeStringResource = query.FirstOrDefault();
-            }
             if (localeStringResource == null && logIfNotFound)
                 _logger.Warning(string.Format("Resource string ({0}) not found. Language ID = {1}", resourceName, languageId));
             return localeStringResource;
@@ -151,20 +129,15 @@ namespace Nop.Services.Localization
         /// Gets all locale string resources by language identifier
         /// </summary>
         /// <param name="languageId">Language identifier</param>
-        /// <returns>Locale string resource collection</returns>
-        public virtual Dictionary<string, LocaleStringResource> GetAllResourcesByLanguageId(int languageId)
+        /// <returns>Locale string resources</returns>
+        public virtual IList<LocaleStringResource> GetAllResources(int languageId)
         {
-            string key = string.Format(LOCALSTRINGRESOURCES_ALL_KEY, languageId);
-            return _cacheManager.Get(key, () =>
-                                              {
-                                                  var query = from l in _lsrRepository.Table
-                                                              orderby l.ResourceName
-                                                              where l.LanguageId == languageId
-                                                              select l;
-                                                  var localeStringResourceDictionary =
-                                                      query.ToDictionary(s => s.ResourceName.ToLowerInvariant());
-                                                  return localeStringResourceDictionary;
-                                              });
+            var query = from l in _lsrRepository.Table
+                        orderby l.ResourceName
+                        where l.LanguageId == languageId
+                        select l;
+            var locales = query.ToList();
+            return locales;
         }
 
         /// <summary>
@@ -202,7 +175,34 @@ namespace Nop.Services.Localization
             //event notification
             _eventPublisher.EntityUpdated(localeStringResource);
         }
-        
+
+        /// <summary>
+        /// Gets all locale string resources by language identifier
+        /// </summary>
+        /// <param name="languageId">Language identifier</param>
+        /// <returns>Locale string resources</returns>
+        public virtual Dictionary<string, KeyValuePair<int,string>> GetAllResourceValues(int languageId)
+        {
+            string key = string.Format(LOCALSTRINGRESOURCES_ALL_KEY, languageId);
+            return _cacheManager.Get(key, () =>
+            {
+                var query = from l in _lsrRepository.Table
+                            orderby l.ResourceName
+                            where l.LanguageId == languageId
+                            select l;
+                var locales = query.ToList();
+                //format: <name, <id, value>>
+                var dictionary = new Dictionary<string, KeyValuePair<int, string>>();
+                foreach (var locale in locales)
+                {
+                    var resourceName = locale.ResourceName.ToLowerInvariant();
+                    if (!dictionary.ContainsKey(resourceName))
+                        dictionary.Add(resourceName, new KeyValuePair<int, string>(locale.Id, locale.ResourceValue));
+                }
+                return dictionary;
+            });
+        }
+
         /// <summary>
         /// Gets a resource string based on the specified ResourceKey property.
         /// </summary>
@@ -229,30 +229,26 @@ namespace Nop.Services.Localization
             bool logIfNotFound = true, string defaultValue = "", bool returnEmptyIfNotFound = false)
         {
             string result = string.Empty;
-            var resourceKeyValue = resourceKey;
-            if (resourceKeyValue == null)
-                resourceKeyValue = string.Empty;
-            resourceKeyValue = resourceKeyValue.Trim().ToLowerInvariant();
+            if (resourceKey == null)
+                resourceKey = string.Empty;
+            resourceKey = resourceKey.Trim().ToLowerInvariant();
             if (_localizationSettings.LoadAllLocaleRecordsOnStartup)
             {
-                //load all records
-                var resources = GetAllResourcesByLanguageId(languageId);
-
-                if (resources.ContainsKey(resourceKeyValue))
+                //load all records (we know they are cached)
+                var resources = GetAllResourceValues(languageId);
+                if (resources.ContainsKey(resourceKey))
                 {
-                    var lsr = resources[resourceKeyValue];
-                    if (lsr != null)
-                        result = lsr.ResourceValue;
+                    result = resources[resourceKey].Value;
                 }
             }
             else
             {
                 //gradual loading
-                string key = string.Format(LOCALSTRINGRESOURCES_BY_RESOURCENAME_KEY, languageId, resourceKeyValue);
+                string key = string.Format(LOCALSTRINGRESOURCES_BY_RESOURCENAME_KEY, languageId, resourceKey);
                 string lsr = _cacheManager.Get(key, () =>
                 {
                     var query = from l in _lsrRepository.Table
-                                where l.ResourceName == resourceKeyValue
+                                where l.ResourceName == resourceKey
                                 && l.LanguageId == languageId
                                 select l.ResourceValue;
                     return query.FirstOrDefault();

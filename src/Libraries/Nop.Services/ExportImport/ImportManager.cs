@@ -501,7 +501,7 @@ namespace Nop.Services.ExportImport
                 if (String.IsNullOrEmpty(name))
                     continue;
                 
-                //do not use localizationservice because it'll clear cache and after adding each resoruce
+                //do not use localizationservice because it'll clear cache and after adding a new resource
                 //let's bulk insert
                 var resource = language.LocaleStringResources.Where(x => x.ResourceName.Equals(name, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
                 if (resource != null)
