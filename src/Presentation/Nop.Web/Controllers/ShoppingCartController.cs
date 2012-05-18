@@ -546,17 +546,6 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        protected TopShoppingCartModel PrepareTopShoppingCartModel()
-        {
-            var model = new TopShoppingCartModel()
-            {
-                ProductCount = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList().GetTotalProducts(),
-                MiniShoppingCartEnabled = _shoppingCartSettings.MiniShoppingCartEnabled,
-            };
-            return model;
-        }
-
-        [NonAction]
         protected MiniShoppingCartModel PrepareMiniShoppingCartModel()
         {
             var model = new MiniShoppingCartModel()
@@ -718,8 +707,15 @@ namespace Nop.Web.Controllers
             
             //display "Product has been added to the cart" notification message
             //and update appropriate blocks
-            var updatetopcartsectionhtml = _permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart)
-                ? this.RenderPartialViewToString("TopShoppingCart", PrepareTopShoppingCartModel())
+           var updatetopcartsectionhtml = string.Format("({0})",
+                _workContext
+                .CurrentCustomer
+                .ShoppingCartItems
+                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                .ToList()
+                .GetTotalProducts());
+            var updateflyoutcartsectionhtml = _shoppingCartSettings.MiniShoppingCartEnabled
+                ? this.RenderPartialViewToString("FlyoutShoppingCart", PrepareMiniShoppingCartModel())
                 : "";
 
             return Json(new
@@ -727,6 +723,7 @@ namespace Nop.Web.Controllers
                 success = true,
                 message = _localizationService.GetResource("Products.ProductHasBeenAddedToTheCart"),
                 updatetopcartsectionhtml = updatetopcartsectionhtml,
+                updateflyoutcartsectionhtml = updateflyoutcartsectionhtml,
             });
 
         }
@@ -1384,7 +1381,7 @@ namespace Nop.Web.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult MiniShoppingCart()
+        public ActionResult FlyoutShoppingCart()
         {
             if (!_shoppingCartSettings.MiniShoppingCartEnabled)
                 return Content("");
@@ -1393,17 +1390,6 @@ namespace Nop.Web.Controllers
                 return Content("");
 
             var model = PrepareMiniShoppingCartModel();
-            return PartialView(model);
-        }
-
-
-        [ChildActionOnly]
-        public ActionResult TopShoppingCart()
-        {
-            if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
-                return Content("");
-
-            var model = PrepareTopShoppingCartModel();
             return PartialView(model);
         }
 

@@ -7,11 +7,13 @@ var AjaxCart = {
     loadWaiting: false,
     urladd: '',
     topcartselector: '',
+    flyoutcartselector: '',
 
-    init: function (urladd, topcartselector) {
+    init: function (urladd, topcartselector, flyoutcartselector) {
         this.loadWaiting = false;
         this.urladd = urladd;
         this.topcartselector = topcartselector;
+        this.flyoutcartselector = flyoutcartselector;
     },
 
     setLoadWaiting: function (display) {
@@ -40,6 +42,9 @@ var AjaxCart = {
         if (response.updatetopcartsectionhtml) {
             $(AjaxCart.topcartselector).html(response.updatetopcartsectionhtml);
         }
+        if (response.updateflyoutcartsectionhtml) {
+            $(AjaxCart.flyoutcartselector).replaceWith(response.updateflyoutcartsectionhtml);
+        } 
         if (response.message) {
             var messageType;
             if (response.success == true) {

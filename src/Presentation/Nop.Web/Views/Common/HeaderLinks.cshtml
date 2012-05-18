@@ -1,19 +1,14 @@
 ﻿@model HeaderLinksModel
 @using Nop.Web.Models.Common;
 <div class="header-links">
-    @if (Model.ShoppingCartEnabled)
-    {
-        @Html.Action("TopShoppingCart", "ShoppingCart")
-    }
-    @if (Model.IsCustomerImpersonated)
-    {
-        <ul>
+    <ul>
+        @if (Model.IsCustomerImpersonated)
+        {
             <li><span class="impersonate">(@(string.Format(T("Account.ImpersonatedAs").Text, Model.CustomerEmailUsername)))
                 - <a href="@Url.RouteUrl("Logout")" class="finish-impersonation" title="@T("Account.ImpersonatedAs.Finish.Hint")">@T("Account.ImpersonatedAs.Finish")</a>
                 ) </span></li>
-        </ul>
-    }
-    <ul>
+        }
+        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.HeaderLinks })        
         @if (Model.DisplayAdminLink)
         {
             <li><a href="@Url.Content("~/admin")" class="ico-admin">@T("Account.Administration")</a>
@@ -43,11 +38,30 @@
             <li><a href="@Url.RouteUrl("Register")" class="ico-register">@T("Account.Register")</a></li>
             <li><a href="@Url.RouteUrl("Login")" class="ico-login">@T("Account.Login")</a></li>
         }
+        @if (Model.ShoppingCartEnabled)
+        {
+            <li id="topcartlink"><a href="@Url.RouteUrl("ShoppingCart")" class="ico-cart">@T("ShoppingCart")</a>
+                <a href="@Url.RouteUrl("ShoppingCart")" class="cart-qty">(@Model.ShoppingCartItems)</a>
+            </li>
+            <script type="text/javascript">
+                $('#topcartlink').live('mouseenter', function () {
+                    $('#flyout-cart').addClass('active');
+                });
+                $('#topcartlink').live('mouseleave', function () {
+                    $('#flyout-cart').removeClass('active');
+                });
+                $('#flyout-cart').live('mouseenter', function () {
+                    $('#flyout-cart').addClass('active');
+                });
+                $('#flyout-cart').live('mouseleave', function () {
+                    $('#flyout-cart').removeClass('active');
+                });
+            </script>
+        }
         @if (Model.WishlistEnabled)
         {
             <li><a href="@Url.RouteUrl("Wishlist")" class="ico-wishlist">@T("Wishlist")</a> <a href="@Url.RouteUrl("Wishlist")" class="wishlist-qty">
                 (@Model.WishlistItems)</a> </li>
         }
-        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.HeaderLinks })
     </ul>
 </div>

@@ -7,10 +7,11 @@
     <div class="master-wrapper-content">
         <script type="text/javascript">
         //<![CDATA[
-            AjaxCart.init('@Url.Action("AddProductToCart", "ShoppingCart")', '#topcart');
+            AjaxCart.init('@Url.Action("AddProductToCart", "ShoppingCart")', '.header-links .cart-qty', '#flyout-cart');
           //]]>
         </script>
         @Html.Partial("_Notifications")
+        @Html.Action("FlyoutShoppingCart", "ShoppingCart")
         @Html.Partial("Header")
         @Html.Partial("HeaderMenu")
         @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.BeforeContent })

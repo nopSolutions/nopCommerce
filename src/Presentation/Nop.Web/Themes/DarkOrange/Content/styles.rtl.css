@@ -49,13 +49,12 @@ a.logo{background:url(images/logo.gif);display:block;width:225px;height:60px;tex
 .header-languageselector{float:left;}
 .header-taxDisplayTypeSelector{float:left;}
 .header-links-wrapper{float:left;text-align:left;width:670px;}
-.header-links{border:solid 1px #9a9a9a;padding:5px;margin-bottom:5px;float:left;text-align:right;direction:rtl;}
-.header-links ul{padding:0;margin:0;float:left;white-space:nowrap;}
+.header-links{border:solid 1px #9a9a9a;padding:5px;margin-bottom:5px;display:inline-table;text-align:right;direction:rtl;}
+.header-links ul{padding:0;margin:0;}
 .header-links ul li{list-style:none;display:inline;padding-right:2px;}
 .header-links a{color:#FFF;text-decoration:none;float:right;}
 .header-links a:hover{color:#f93;}
 .header-links a.account{color:#f93;}
-.header-links #topcart{float:left;padding-right:5px;position:relative;text-align:right;}
 .header-links span.impersonate{color:#58DE81;font-weight:700;}
 .header-links span.impersonate .finish-impersonation{color:#E44097;}
 .headermenu{color:#FFF;background:#3a3a3a;padding:8px 5px 9px;text-align:center;height:100%;vertical-align:middle;letter-spacing:1px;margin-bottom:10px;}
@@ -183,9 +182,9 @@ ul.languagelist li:hover{cursor:pointer;}
 .block-popular-tags li,.block-popular-blogtags li{display:inline!important;}
 .block-blog-archive .year{color:#f93;font-weight:700;text-decoration:none;}
 /*Mini-shopping cart */
-#topcart .flyout-content{display:none;position:absolute;float:left;top:15px;right:0;width:270px;min-height:50px;background:#FFF;}
-#topcart.active .flyout-content{display:block;}
-.minishoppingcart{padding:5px 0px 10px 10px;margin:0;border: 1px solid #C1C1C1;color:#FFF;background:#404040;font-size:11px;}
+#flyout-cart{display:none;position:absolute;float:left;top:50px;left:65px;width:300px;min-height:50px;background:#FFF;z-index:99999;}
+#flyout-cart.active{display:block;}
+.minishoppingcart{text-align:right;direction:rtl;padding:5px 0px 10px 10px;margin:0;border: 1px solid #C1C1C1;color:#FFF;background:#404040;font-size:11px;}
 .minishoppingcart a{color:#FFF;font-weight:700;text-decoration:none;}
 .minishoppingcart .count{margin:10px 0px 10px;}
 .minishoppingcart .items{overflow:hidden;}

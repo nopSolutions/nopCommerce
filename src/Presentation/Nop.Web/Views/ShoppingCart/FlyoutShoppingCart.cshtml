@@ -1,0 +1,86 @@
+﻿@model MiniShoppingCartModel
+@using Nop.Web.Models.ShoppingCart;
+<div id="flyout-cart">
+    <div class="minishoppingcart">
+        <div class="count">
+            @if (Model.TotalProducts == 0)
+            {
+                @T("ShoppingCart.Mini.NoItems")
+            }
+            else if (Model.TotalProducts == 1)
+            {
+                @Html.Raw(string.Format(T("ShoppingCart.Mini.OneItemText").Text, string.Format("<a href=\"{0}\" class=\"items\">{1}</a>", Url.RouteUrl("ShoppingCart"), T("ShoppingCart.Mini.OneItem").Text)))
+            }
+            else
+            {
+                @Html.Raw(string.Format(T("ShoppingCart.Mini.SeveralItemsText").Text, string.Format("<a href=\"{0}\" class=\"items\">{1}</a>", Url.RouteUrl("ShoppingCart"), string.Format(T("ShoppingCart.Mini.SeveralItems").Text, Model.TotalProducts))))
+            }
+        </div>
+        @if (Model.TotalProducts > 0)
+        {
+            if (Model.Items.Count > 0)
+            {
+            <div class="items">
+                <table>
+                    @if (Model.ShowProductImages)
+                    {
+                        <col width="1" />
+                    }
+                    <col />
+                    <tbody>
+                        @for (int i = 0; i < Model.Items.Count; i++)
+                        {
+                            var item = Model.Items[i];
+                            <tr class="item @(i == 0 ? "first" : null)">
+                                @if (Model.ShowProductImages)
+                                {
+                                    <td class="picture">
+                                        <a href="@Url.RouteUrl("Product", new { productId = item.ProductId, SeName = item.ProductSeName })" title="@item.Picture.Title">
+                                            <img alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" />
+                                        </a>
+                                    </td>
+                                }
+                                <td class="product">
+                                    <div class="name">
+                                        <a href="@Url.RouteUrl("Product", new { productId = item.ProductId, SeName = item.ProductSeName })">@item.ProductName</a>
+                                    </div>
+                                    @if (!String.IsNullOrEmpty(item.AttributeInfo))
+                                    {
+                                        <div class="clear">
+                                        </div>
+                                        <div class="attributes">
+                                            @Html.Raw(item.AttributeInfo)
+                                        </div>
+                                    }
+                                    <div class="clear">
+                                    </div>
+                                    <div class="price">@T("ShoppingCart.Mini.UnitPrice"): @item.UnitPrice</div>
+                                    <div class="clear">
+                                    </div>
+                                    <div class="quantity">@T("ShoppingCart.Mini.Quantity"): @item.Quantity</div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="clear">
+            </div>
+            }
+            <div class="totals">@T("ShoppingCart.Totals.SubTotal"): @Model.SubTotal</div>
+            <div class="clear">
+            </div>
+            <div class="buttons">
+                @if (Model.AllowCheckoutPassingCartPage)
+                {
+                    <input type="submit" value="@T("ShoppingCart.Mini.ViewCart")" class="cartbutton" onclick="setLocation('@(Url.RouteUrl("ShoppingCart"))')" />
+                    <input type="submit" value="@T("Checkout")" class="checkoutbutton" onclick="setLocation('@(Url.RouteUrl("Checkout"))')" />
+                }
+                else
+                {
+                    <input type="submit" value="@T("ShoppingCart.Mini.ViewCart")" class="cartbutton" onclick="setLocation('@(Url.RouteUrl("ShoppingCart"))')" />
+                }
+            </div>
+        }
+    </div>
+</div>
