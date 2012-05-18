@@ -4,19 +4,24 @@
 @using Nop.Web.Models.PrivateMessages;
 <div class="private-messages-box">
     <script type="text/javascript">
-        $(window).bind('load', function () {
-            var cbHeader = $(".cbHeaderPMInbox input");
-            var cbRowItem = $(".cbRowItemPMInbox input");
-            cbHeader.bind("click", function () {
-                cbRowItem.each(function () { this.checked = cbHeader[0].checked; })
+        $(document).ready(function () {
+
+            $('#selectallinbox').click(function () {
+                $('#pminboxtable .rowcheckbox').attr('checked', $(this).is(':checked')).change();
             });
-        });    
+
+            $('#pminboxtable .rowcheckbox').live('change', function (e) {
+                var numChkBoxes = $('#pminboxtable .rowcheckbox').length;
+                var numChkBoxesChecked = $('#pminboxtable .rowcheckbox:checked').length;
+                $('#selectallinbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
+            });
+        });
     </script>
     @if (Model.Messages.Count > 0)
     {
         using (Html.BeginRouteForm("PrivateMessagesInbox", FormMethod.Post))
         {
-        <table class="pmgridtablestyle" cellspacing="0" cellpadding="4">
+        <table class="pmgridtablestyle" cellspacing="0" cellpadding="4" id="pminboxtable">
             <col width="5%" />
             <col width="20%" />
             <col width="50%" />
@@ -24,8 +29,7 @@
             <thead>
                 <tr class="pmgridheaderstyle">
                     <th class="a-center">
-                        <span class="cbHeaderPMInbox">
-                            <input type="checkbox" id="selectall" /></span>
+                        <input type="checkbox" id="selectallinbox" />
                     </th>
                     <th class="a-center">
                         @T("PrivateMessages.Inbox.FromColumn")
@@ -44,8 +48,7 @@
                     var item = Model.Messages[i];
                     <tr @(i % 2 == 0 ? Html.Raw(" class=\"pmgridrowstyle\"") : Html.Raw(" class=\"pmgridaltrowstyle\""))>
                         <td class="a-center">
-                            <span class="cbRowItemPMInbox">
-                                <input type="checkbox" name="pm@(item.Id)" /></span>
+                            <input type="checkbox" name="pm@(item.Id)" class="rowcheckbox" />
                         </td>
                         <td class="a-left">
                             @if (item.AllowViewingFromProfile)

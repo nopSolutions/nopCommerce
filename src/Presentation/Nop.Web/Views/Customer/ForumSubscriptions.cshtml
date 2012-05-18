@@ -24,14 +24,19 @@
             <br />
             <br />
             <script type="text/javascript">
-                $(window).bind('load', function () {
-                    var cbHeader = $(".cbHeader input");
-                    var cbRowItem = $(".cbRowItem input");
-                    cbHeader.bind("click", function () {
-                        cbRowItem.each(function () { this.checked = cbHeader[0].checked; })
+                $(document).ready(function () {
+
+                    $('#selectall').click(function () {
+                        $('.forum-subscriptions-box .rowcheckbox').attr('checked', $(this).is(':checked')).change();
+                    });
+
+                    $('.forum-subscriptions-box .rowcheckbox').live('change', function (e) {
+                        var numChkBoxes = $('.forum-subscriptions-box .rowcheckbox').length;
+                        var numChkBoxesChecked = $('.forum-subscriptions-box .rowcheckbox:checked').length;
+                        $('#selectall').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
                     });
                 });
-            </script>            
+            </script>
             using (Html.BeginForm("forumsubscriptions", "customer", FormMethod.Post))
             {
             <div class="forum-subscriptions-box">
@@ -41,8 +46,7 @@
                     <thead>
                         <tr>
                             <th class="a-center">
-                                <span class="cbHeader">
-                                    <input type="checkbox" id="selectall" /></span>
+                                <input type="checkbox" id="selectall" />
                             </th>
                             <th class="a-center">
                                 @T("Account.ForumSubscriptions.InfoColumn")
@@ -55,8 +59,7 @@
                             var item = Model.ForumSubscriptions[i];
                             <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
                                 <td class="a-center">
-                                    <span class="cbRowItem">
-                                        <input type="checkbox" name="fs@(item.Id)" /></span>
+                                    <input type="checkbox" name="fs@(item.Id)" class="rowcheckbox" />
                                 </td>
                                 <td class="a-left">
                                     @if (item.TopicSubscription)

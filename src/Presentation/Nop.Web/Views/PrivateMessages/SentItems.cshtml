@@ -4,13 +4,18 @@
 @using Nop.Web.Models.PrivateMessages;
 <div class="private-messages-box">
     <script type="text/javascript">
-        $(window).bind('load', function () {
-            var cbHeader = $(".cbHeaderPMSent input");
-            var cbRowItem = $(".cbRowItemPMSent input");
-            cbHeader.bind("click", function () {
-                cbRowItem.each(function () { this.checked = cbHeader[0].checked; })
+        $(document).ready(function () {
+
+            $('#selectallsent').click(function () {
+                $('#pmsenttable .rowcheckbox').attr('checked', $(this).is(':checked')).change();
             });
-        });    
+
+            $('#pmsenttable .rowcheckbox').live('change', function (e) {
+                var numChkBoxes = $('#pmsenttable .rowcheckbox').length;
+                var numChkBoxesChecked = $('#pmsenttable .rowcheckbox:checked').length;
+                $('#selectallsent').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
+            });
+        });
     </script>
     @if (Model.Messages.Count > 0)
     {
@@ -18,7 +23,7 @@
         {
             
             
-        <table class="pmgridtablestyle" cellspacing="0" cellpadding="4">
+        <table class="pmgridtablestyle" cellspacing="0" cellpadding="4" id="pmsenttable">
             <col width="5%" />
             <col width="20%" />
             <col width="50%" />
@@ -26,8 +31,7 @@
             <thead>
                 <tr class="pmgridheaderstyle">
                     <th class="a-center">
-                        <span class="cbHeaderPMSent">
-                            <input type="checkbox" id="selectall" /></span>
+                        <input type="checkbox" id="selectallsent" />
                     </th>
                     <th class="a-center">
                         @T("PrivateMessages.Inbox.ToColumn")
@@ -46,8 +50,7 @@
                     var item = Model.Messages[i];
                     <tr @(i % 2 == 0 ? Html.Raw(" class=\"pmgridrowstyle\"") : Html.Raw(" class=\"pmgridaltrowstyle\""))>
                         <td class="a-center">
-                            <span class="cbRowItemPMSent">
-                                <input type="checkbox" name="si@(item.Id)" /></span>
+                            <input type="checkbox" name="si@(item.Id)" class="rowcheckbox" />
                         </td>
                         <td class="a-left">
                             @if (item.AllowViewingToProfile)
