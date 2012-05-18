@@ -825,6 +825,11 @@ namespace Nop.Web.Controllers
                     }
                 }
             }
+            else
+            {
+                //customer is not allowed to select a page size
+                command.PageSize = category.PageSize;
+            }
 
             if (command.PageSize <= 0) command.PageSize = category.PageSize;
 
@@ -1134,6 +1139,11 @@ namespace Nop.Web.Controllers
                         }
                     }
                 }
+            }
+            else
+            {
+                //customer is not allowed to select a page size
+                command.PageSize = manufacturer.PageSize;
             }
 
             if (command.PageSize <= 0) command.PageSize = manufacturer.PageSize;
@@ -2157,10 +2167,8 @@ namespace Nop.Web.Controllers
         #endregion
 
         #region Product tags
-
-
+        
         //Product tags
-
         [ChildActionOnly]
         public ActionResult ProductTags(int productId)
         {
@@ -2337,6 +2345,11 @@ namespace Nop.Web.Controllers
                         }
                     }
                 }
+            }
+            else
+            {
+                //customer is not allowed to select a page size
+                command.PageSize = _catalogSettings.ProductsByTagPageSize;
             }
 
             if (command.PageSize <= 0) command.PageSize = _catalogSettings.ProductsByTagPageSize;
