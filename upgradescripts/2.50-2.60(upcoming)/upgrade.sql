@@ -347,6 +347,9 @@ set @resources='
   <LocaleResource Name="Polls.Voted">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Account.PasswordRecovery.Tooltip">
+    <Value>Please enter your email address below. You will receive a link to reset your password.</Value>
+  </LocaleResource>
 </Language>
 '
 

@@ -542,6 +542,9 @@
 							</LocaleResource>
 						</Children>
 					</LocaleResource>
+          <LocaleResource Name="Tooltip">
+            <Value>Please enter your email address below. You will receive a link to reset your password.</Value>
+          </LocaleResource>
 				</Children>
 			</LocaleResource>
 			<LocaleResource Name="Preferences">
