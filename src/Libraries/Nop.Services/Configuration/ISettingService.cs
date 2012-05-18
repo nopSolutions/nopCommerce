@@ -44,7 +44,7 @@ namespace Nop.Services.Configuration
         /// Gets all settings
         /// </summary>
         /// <returns>Setting collection</returns>
-        IDictionary<string, Setting> GetAllSettings();
+        IDictionary<string, KeyValuePair<int, string>> GetAllSettings();
 
         /// <summary>
         /// Save settings object

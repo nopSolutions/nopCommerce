@@ -63,6 +63,7 @@
   <ItemGroup>
     <Compile Include="Domain\Shipping\ShippingOptionListTypeConverterTests.cs" />
     <Compile Include="Infrastructure\DependencyManagement\AutofacTests.cs" />
+    <Compile Include="CommonHelperTests.cs" />
     <Compile Include="WebHelperTests.cs" />
     <Compile Include="ComponentModel\GenericListTypeConverterTests.cs" />
     <Compile Include="ExtensionsTests.cs" />
@@ -83,7 +84,7 @@
     <Compile Include="Infrastructure\SingletonTests.cs" />
     <Compile Include="Infrastructure\TypeFinderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SettingTestFixture.cs" />
+    <Compile Include="Domain\Configuration\SettingTestFixture.cs" />
     <Compile Include="TypeFindingBase.cs" />
   </ItemGroup>
   <ItemGroup>

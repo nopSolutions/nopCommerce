@@ -985,17 +985,20 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
-
-            var settings = _settingService.GetAllSettings().Select(x => x.Value).OrderBy(x => x.Name).ToList();
+            
+            var settings = _settingService
+                .GetAllSettings()
+                .OrderBy(x => x.Key)
+                .ToList();
             var model = new GridModel<SettingModel>
             {
                 Data = settings.Take(_adminAreaSettings.GridPageSize).Select(x => 
                 {
                     return new SettingModel()
                     {
-                        Id = x.Id,
-                        Name = x.Name,
-                        Value = x.Value
+                        Id = x.Value.Key,
+                        Name = x.Key,
+                        Value = x.Value.Value
                     };
                 }),
                 Total = settings.Count
@@ -1008,22 +1011,22 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
 
-            var settings = _settingService.GetAllSettings().Select(x => x.Value).OrderBy(x => x.Name)
-                .Select(x => 
-                {
-                    return new SettingModel()
+            var settings = _settingService
+                .GetAllSettings()
+                .OrderBy(x => x.Key)
+                .Select(x => new SettingModel()
                     {
-                        Id = x.Id,
-                        Name = x.Name,
-                        Value = x.Value
-                    };
-                })
-                .ForCommand(command);
-
+                        Id = x.Value.Key,
+                        Name = x.Key,
+                        Value = x.Value.Value
+                    })
+                .ForCommand(command)
+                .ToList();
+            
             var model = new GridModel<SettingModel>
             {
                 Data = settings.PagedForCommand(command),
-                Total = settings.Count()
+                Total = settings.Count
             };
             return new JsonResult
             {

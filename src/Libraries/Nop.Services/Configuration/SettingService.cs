@@ -121,10 +121,9 @@ namespace Nop.Services.Configuration
             key = key.Trim().ToLowerInvariant();
 
             var settings = GetAllSettings();
-            if (settings.ContainsKey(key)) {
-                var setting = settings[key];
-                return setting.As<T>();
-            }
+            if (settings.ContainsKey(key))
+                return CommonHelper.To<T>(settings[key].Value);
+
             return defaultValue;
         }
 
@@ -148,9 +147,8 @@ namespace Nop.Services.Configuration
             if (settings.ContainsKey(key))
             {
                 //update
-                setting = settings[key];
-                //little hack here because of EF issue
-                setting = GetSettingById(setting.Id);
+                var settingId = settings[key].Key;
+                setting = GetSettingById(settingId);
                 setting.Value = valueStr;
                 UpdateSetting(setting, clearCache);
             }
@@ -188,7 +186,7 @@ namespace Nop.Services.Configuration
         /// Gets all settings
         /// </summary>
         /// <returns>Setting collection</returns>
-        public virtual IDictionary<string, Setting> GetAllSettings()
+        public virtual IDictionary<string, KeyValuePair<int, string>> GetAllSettings()
         {
             //cache
             string key = string.Format(SETTINGS_ALL_KEY);
@@ -197,9 +195,16 @@ namespace Nop.Services.Configuration
                 var query = from s in _settingRepository.Table
                             orderby s.Name
                             select s;
-                var settings = query.ToDictionary(s => s.Name.ToLowerInvariant());
-
-                return settings;
+                var settings = query.ToList();
+                //format: <name, <id, value>>
+                var dictionary = new Dictionary<string, KeyValuePair<int, string>>();
+                foreach (var s in settings)
+                {
+                    var resourceName = s.Name.ToLowerInvariant();
+                    if (!dictionary.ContainsKey(resourceName))
+                        dictionary.Add(resourceName, new KeyValuePair<int, string>(s.Id, s.Value));
+                }
+                return dictionary;
             });
         }
 

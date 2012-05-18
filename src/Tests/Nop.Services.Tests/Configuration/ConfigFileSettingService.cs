@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using Nop.Core;
 using Nop.Core.Configuration;
 using Nop.Core.Domain.Configuration;
 using Nop.Services.Configuration;
@@ -24,7 +25,7 @@ namespace Nop.Services.Tests.Configuration
             key = key.Trim().ToLowerInvariant();
             var settings = GetAllSettings();
             if (settings.ContainsKey(key))
-                return settings[key].As<T>();
+                return CommonHelper.To<T>(settings[key].Value);
 
             return defaultValue;
         }
@@ -34,12 +35,12 @@ namespace Nop.Services.Tests.Configuration
             throw new NotImplementedException();
         }
 
-        public IDictionary<string, Setting> GetAllSettings()
+        public IDictionary<string, KeyValuePair<int, string>> GetAllSettings()
         {
-            var settings = new Dictionary<string, Setting>();
+            var settings = new Dictionary<string, KeyValuePair<int, string>>();
             var appSettings = ConfigurationManager.AppSettings;
             foreach (var setting in appSettings.AllKeys) {
-                settings.Add(setting.ToLowerInvariant(), new Setting(setting, appSettings[setting]));
+                settings.Add(setting.ToLowerInvariant(), new KeyValuePair<int,string>(0, appSettings[setting]));
             }
 
             return settings;

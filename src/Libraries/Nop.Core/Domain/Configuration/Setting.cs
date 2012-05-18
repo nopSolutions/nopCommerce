@@ -22,13 +22,6 @@ namespace Nop.Core.Domain.Configuration
         /// </summary>
         public virtual string Value { get; set; }
 
-        /// <summary>
-        /// Returns the setting value as the specified type
-        /// </summary>
-        public virtual T As<T>() {
-            return CommonHelper.To<T>(this.Value);
-        }
-
         public override string ToString()
         {
             return Name;
