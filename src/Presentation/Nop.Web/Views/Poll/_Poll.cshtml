@@ -1,7 +1,7 @@
 ﻿@model PollModel
 @using Nop.Web.Framework;
 @using Nop.Web.Models.Polls;
-<div class="poll-item">
+<div class="poll-item" id="pollblock-@(Model.Id)">
     <span class="poll-display-text">@Model.Name</span>
     @if (Model.AlreadyVoted)
     {
@@ -30,7 +30,7 @@
         </div>
         <div class="clear">
         </div>
-        <div id="pnl-poll-vote-result-@(Model.Id)">
+        <div id="pnl-poll-vote-error-@(Model.Id)">
         </div>
         
         <script type="text/javascript">
@@ -50,13 +50,15 @@
                         data: { "pollAnswerId": pollAnswerId },
                         success: function (data) {
                             voteProgress.hide();
-                            $("#pnl-poll-vote-result-@(Model.Id)").html(data.Result);
-                             if (data.Success) {
-                                $('#pnl-poll-vote-@(Model.Id)').hide();                            
-                             }
-                             else {
-                                $('#pnl-poll-vote-result-@(Model.Id)').fadeIn("slow").delay(2000).fadeOut("slow");
-                             }
+
+                            if (data.error) {
+                                $("#pnl-poll-vote-error-@(Model.Id)").html(data.error);
+                                $('#pnl-poll-vote-error-@(Model.Id)').fadeIn("slow").delay(2000).fadeOut("slow");
+                            }
+
+                            if (data.html) {
+                                $("#pollblock-@(Model.Id)").replaceWith(data.html);    
+                            }
                         },
                         error:function (xhr, ajaxOptions, thrownError){
                             alert('Failed to vote.');

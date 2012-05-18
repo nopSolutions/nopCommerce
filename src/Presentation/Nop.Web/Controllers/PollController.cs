@@ -6,6 +6,7 @@ using Nop.Core.Domain.Polls;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Polls;
+using Nop.Web.Framework.Controllers;
 using Nop.Web.Models.Polls;
 
 namespace Nop.Web.Controllers
@@ -66,53 +67,52 @@ namespace Nop.Web.Controllers
             var model = PreparePollModel(poll);
             return PartialView(model);
         }
-        
+
         [HttpPost]
         [ValidateInput(false)]
         public ActionResult Vote(int pollAnswerId)
         {
             var pollAnswer = _pollService.GetPollAnswerById(pollAnswerId);
             if (pollAnswer == null)
-                throw new ArgumentException("No poll answer found with the specified id");
+                return Json(new
+                {
+                    error = "No poll answer found with the specified id",
+                });
 
-            string result = "Thank you!";
-            bool success = false;
-
+            var poll = pollAnswer.Poll;
+            if (!poll.Published)
+                return Json(new
+                {
+                    error = "Poll is not available",
+                });
 
             if (!_workContext.CurrentCustomer.IsRegistered())
-            {
-                result = _localizationService.GetResource("Polls.OnlyRegisteredUsersVote");
-            }
-            else
-            {
-                var poll = pollAnswer.Poll;
-
-                bool alreadyVoted = _pollService.AlreadyVoted(poll.Id, _workContext.CurrentCustomer.Id);
-                if (!alreadyVoted)
+                return Json(new
                 {
-                    //vote
-                    pollAnswer.PollVotingRecords.Add(new PollVotingRecord()
-                    {
-                        PollAnswerId = pollAnswer.Id,
-                        CustomerId = _workContext.CurrentCustomer.Id,
-                        IpAddress = _webHelper.GetCurrentIpAddress(),
-                        IsApproved = true,
-                        CreatedOnUtc = DateTime.UtcNow,
-                        UpdatedOnUtc = DateTime.UtcNow,
-                    });
-                    //update totals
-                    pollAnswer.NumberOfVotes = pollAnswer.PollVotingRecords.Count;
-                    _pollService.UpdatePoll(poll);
+                    error = _localizationService.GetResource("Polls.OnlyRegisteredUsersVote"),
+                });
 
-                    result = _localizationService.GetResource("Polls.Voted");
-                    success = true;
-                }
+            bool alreadyVoted = _pollService.AlreadyVoted(poll.Id, _workContext.CurrentCustomer.Id);
+            if (!alreadyVoted)
+            {
+                //vote
+                pollAnswer.PollVotingRecords.Add(new PollVotingRecord()
+                {
+                    PollAnswerId = pollAnswer.Id,
+                    CustomerId = _workContext.CurrentCustomer.Id,
+                    IpAddress = _webHelper.GetCurrentIpAddress(),
+                    IsApproved = true,
+                    CreatedOnUtc = DateTime.UtcNow,
+                    UpdatedOnUtc = DateTime.UtcNow,
+                });
+                //update totals
+                pollAnswer.NumberOfVotes = pollAnswer.PollVotingRecords.Count;
+                _pollService.UpdatePoll(poll);
             }
 
             return Json(new
             {
-                Success = success,
-                Result = result,
+                html = this.RenderPartialViewToString("_Poll", PreparePollModel(poll)),
             });
         }
 

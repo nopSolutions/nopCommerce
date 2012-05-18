@@ -344,6 +344,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.ShowProductImagesOnWishList.Hint">
     <Value>Determines whether product images should be displayed on customer wishlists.</Value>
   </LocaleResource>
+  <LocaleResource Name="Polls.Voted">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 

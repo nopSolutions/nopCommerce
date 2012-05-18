@@ -2953,9 +2953,6 @@
 			<LocaleResource Name="Vote">
 				<Value>Vote</Value>
 			</LocaleResource>
-			<LocaleResource Name="Voted">
-				<Value>Thank you for voting! Please refresh the page in order to see results.</Value>
-			</LocaleResource>
 			<LocaleResource Name="VotesResultLine">
 				<Value>{0} ({1} vote(s) - {2}%)</Value>
 			</LocaleResource>
