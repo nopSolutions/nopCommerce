@@ -303,7 +303,10 @@ set @resources='
     <Value>To find text or a specific setting (by name), you can apply a filter via the funnel icon in the "Value" or "Setting name" column headers.</Value>
   </LocaleResource>
   <LocaleResource Name="Plugins.Shipping.ByWeight.Fields.Country.Hint">
-    <Value>If an asterik is selected, then this tax rate will apply to all customers, regardless of the country.</Value>
+    <Value>If an asterisk is selected, then this shipping rate will apply to all customers, regardless of the country.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Tax.CountryStateZip.Fields.StateProvince.Hint">
+    <Value>If an asterisk is selected, then this tax rate will apply to all customers from the given country, regardless of the state.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.MiniShoppingCartDisplayProducts">
     <Value></Value>
