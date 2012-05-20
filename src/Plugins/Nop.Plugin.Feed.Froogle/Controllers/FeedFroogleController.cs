@@ -321,7 +321,8 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePromotionFeeds))
                 throw new NopException("Not authorized");
 
-            var productVariants = _productService.SearchProductVariants(command.Page - 1, command.PageSize, true);
+            var productVariants = _productService.SearchProductVariants(0, 0, "", false,
+                command.Page - 1, command.PageSize, true);
             var productVariantsModel = productVariants
                 .Select(x =>
                             {

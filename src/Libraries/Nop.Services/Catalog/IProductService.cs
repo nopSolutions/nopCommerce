@@ -122,16 +122,7 @@ namespace Nop.Services.Catalog
         #endregion
 
         #region Product variants
-
-        /// <summary>
-        /// Search product variants
-        /// </summary>
-        /// <param name="pageIndex">Page index</param>
-        /// <param name="pageSize">Page size</param>
-        /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Product variants</returns>
-        IPagedList<ProductVariant> SearchProductVariants(int pageIndex, int pageSize, bool showHidden = false);
-
+        
         /// <summary>
         /// Get low stock product variants
         /// </summary>
