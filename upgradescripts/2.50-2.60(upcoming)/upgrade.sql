@@ -350,6 +350,18 @@ set @resources='
   <LocaleResource Name="Account.PasswordRecovery.Tooltip">
     <Value>Please enter your email address below. You will receive a link to reset your password.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductSearchAutoCompleteEnabled">
+    <Value>Search autocomplete enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductSearchAutoCompleteEnabled.Hint">
+    <Value>Check to enabled autocomplete in the search box.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductSearchAutoCompleteNumberOfProducts">
+    <Value>Number of ''autocomplete'' products to display</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductSearchAutoCompleteNumberOfProducts.Hint">
+    <Value>Change number of visible results shown in autocomplete dropdown when searching.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1350,5 +1362,19 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'mediasettings.minicartth
 BEGIN
 	INSERT [Setting] ([Name], [Value])
 	VALUES (N'mediasettings.minicartthumbpicturesize', N'47')
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.productsearchautocompleteenabled')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'catalogsettings.productsearchautocompleteenabled', N'true')
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.productsearchautocompletenumberofproducts')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'catalogsettings.productsearchautocompletenumberofproducts', N'10')
 END
 GO

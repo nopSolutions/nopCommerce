@@ -3699,6 +3699,22 @@
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
+                  <LocaleResource Name="ProductSearchAutoCompleteEnabled">
+                    <Value>Search autocomplete enabled</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Check to enabled autocomplete in the search box.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="ProductSearchAutoCompleteNumberOfProducts">
+                    <Value>Number of 'autocomplete' products to display</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Change number of visible results shown in autocomplete dropdown when searching.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
 									<LocaleResource Name="ProductsAlsoPurchasedEnabled">
 										<Value>'Products also purchased' enabled</Value>
 										<Children>

@@ -1,15 +1,16 @@
-﻿<div class="searchbox">
+﻿@model Nop.Web.Models.Catalog.SearchBoxModel
+<div class="searchbox">
     @using (Html.BeginRouteForm("ProductSearch", FormMethod.Get, new { onsubmit = "return check_small_search_form()" }))
     {
         <ul>
             <li>
                 <input type="text" class="searchboxtext" id="small-searchterms"
-                value="@T("Search.SearchBox.Tooltip")" name="q"  onfocus="if(this.value=='@T("Search.SearchBox.Tooltip")')this.value=''" onblur="if(this.value=='') {this.value = '@T("Search.SearchBox.Tooltip")';}" />&nbsp; </li>
+                value="@T("Search.SearchBox.Tooltip")" name="q"  onfocus="if(this.value=='@T("Search.SearchBox.Tooltip")')this.value=''" onblur="if(this.value=='') {this.value = '@T("Search.SearchBox.Tooltip")';}" />&nbsp;
+            </li>
             <li>
-                <input type="submit" class="searchboxbutton" id="btn-small-search" value="@T("Search")" />
+                <input type="submit" class="searchboxbutton" id="btn-small-search" value="@T("Search")" @(Model.AutoCompleteEnabled ? Html.Raw(" autocomplete=\"off\"") : null) />
             </li>
         </ul>
-
         <script type="text/javascript">
 
             function check_small_search_form() {
@@ -21,6 +22,23 @@
                 }
 
                 return true;
+            }
+            @if (Model.AutoCompleteEnabled)
+            {
+                <text>
+                $(function () {
+                    $('#small-searchterms').autocomplete({
+                        delay: 500,
+                        minLength: @(Model.SearchTermMinimumLength.ToString()),
+                        source: '@(Url.Action("SearchTermAutoComplete", "Catalog"))',
+			            select: function( event, ui ) {
+				            $("#small-searchterms").val(ui.item.label);
+                            setLocation(ui.item.producturl);
+				            return false;
+			            }
+                    });
+                });
+                </text>
             }
         </script>
     }

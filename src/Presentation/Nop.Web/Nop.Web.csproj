@@ -195,6 +195,7 @@
     <Compile Include="Models\Boards\SearchModel.cs" />
     <Compile Include="Models\Boards\TopicMoveModel.cs" />
     <Compile Include="Models\Catalog\BackInStockSubscribeModel.cs" />
+    <Compile Include="Models\Catalog\SearchBoxModel.cs" />
     <Compile Include="Models\Catalog\HomePageBestsellersModel.cs" />
     <Compile Include="Models\Catalog\HomePageProductsModel.cs" />
     <Compile Include="Models\Catalog\SearchModel.cs" />

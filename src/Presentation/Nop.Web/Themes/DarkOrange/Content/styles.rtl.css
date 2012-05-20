@@ -64,6 +64,7 @@ a.logo{background:url(images/logo.gif);display:block;width:225px;height:60px;tex
 .searchbox{float:left;display:inline;padding-left:5px;}
 .searchbox ul{margin:0;padding:0;}
 .searchbox ul li{list-style:none;float:right;}
+.searchbox .ui-autocomplete-loading{background:white url('images/ajax_loader_small.gif') left center no-repeat;}
 .headermenu ul.topmenu{text-align:right;height:16px;}
 .footer{clear:both;height:30px;padding:5px 3px;}
 .footer a{text-decoration:none;color:#FFF;}

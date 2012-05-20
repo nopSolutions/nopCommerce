@@ -2697,6 +2697,7 @@ namespace Nop.Web.Controllers
         #region Searching
 
         [NopHttpsRequirement(SslRequirement.No)]
+        [ValidateInput(false)]
         public ActionResult Search(SearchModel model, SearchPagingFilteringModel command)
         {
             if (model == null)
@@ -2815,7 +2816,32 @@ namespace Nop.Web.Controllers
         [ChildActionOnly]
         public ActionResult SearchBox()
         {
-            return PartialView();
+            var model = new SearchBoxModel()
+            {
+                AutoCompleteEnabled = _catalogSettings.ProductSearchAutoCompleteEnabled,
+                SearchTermMinimumLength = _catalogSettings.ProductSearchTermMinimumLength
+            };
+            return PartialView(model);
+        }
+
+        public ActionResult SearchTermAutoComplete(string term)
+        {
+            if (String.IsNullOrWhiteSpace(term) || term.Length < _catalogSettings.ProductSearchTermMinimumLength)
+                return Content("");
+
+            //products
+            var productNumber = _catalogSettings.ProductSearchAutoCompleteNumberOfProducts > 0 ?
+                _catalogSettings.ProductSearchAutoCompleteNumberOfProducts : 10;
+            IList<int> filterableSpecificationAttributeOptionIds = null;
+            var products = _productService.SearchProducts(null,0 , null,
+                null, null, 0,
+                term, false, _workContext.WorkingLanguage.Id, null,
+                ProductSortingEnum.Position, 0, productNumber,
+                false, out filterableSpecificationAttributeOptionIds);
+            var models =  PrepareProductOverviewModels(products, false, false).ToList();
+            var result = (from p in models
+                          select new { label = p.Name, producturl = Url.RouteUrl("Product", new { productId = p.Id, SeName = p.SeName }) }).ToList();
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
 
         #endregion

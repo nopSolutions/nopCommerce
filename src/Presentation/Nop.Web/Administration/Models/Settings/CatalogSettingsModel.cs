@@ -73,6 +73,12 @@ namespace Nop.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.SearchPageProductsPerPage")]
         public int SearchPageProductsPerPage { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ProductSearchAutoCompleteEnabled")]
+        public bool ProductSearchAutoCompleteEnabled { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ProductSearchAutoCompleteNumberOfProducts")]
+        public int ProductSearchAutoCompleteNumberOfProducts { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ProductsAlsoPurchasedEnabled")]
         public bool ProductsAlsoPurchasedEnabled { get; set; }
 

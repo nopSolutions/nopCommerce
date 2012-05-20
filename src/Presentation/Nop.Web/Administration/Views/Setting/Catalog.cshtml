@@ -23,6 +23,7 @@
             $("#@Html.FieldIdFor(model => model.ShowBestsellersOnHomepage)").click(toggleBestsellersOnHomepage);
             $("#@Html.FieldIdFor(model => model.ProductsAlsoPurchasedEnabled)").click(toggleProductsAlsoPurchasedNumber);
             $("#@Html.FieldIdFor(model => model.ProductsByTagAllowCustomersToSelectPageSize)").click(togglePageSize);
+            $("#@Html.FieldIdFor(model => model.ProductSearchAutoCompleteEnabled)").click(toggleProductSearchAutoComplete);
 
             toggleShowCategoryProductNumberIncludingSubcategories();
             toggleEmailAFriend();
@@ -31,6 +32,7 @@
             toggleBestsellersOnHomepage();
             toggleProductsAlsoPurchasedNumber();
             togglePageSize();
+            toggleProductSearchAutoComplete();
         });
 
         function toggleShowCategoryProductNumberIncludingSubcategories() {
@@ -96,6 +98,16 @@
                 $('#pnlPageSizeOptions').hide();
             }
         }
+
+        function toggleProductSearchAutoComplete() {
+            if ($('#@Html.FieldIdFor(model => model.ProductSearchAutoCompleteEnabled)').is(':checked')) {
+                $('#pnlProductSearchAutoCompleteNumberOfProducts').show();
+            }
+            else {
+                $('#pnlProductSearchAutoCompleteNumberOfProducts').hide();
+            }
+        }
+        
     </script>
 
 @Html.ValidationSummary(false)
@@ -305,6 +317,24 @@
             <td class="adminData">
                 @Html.EditorFor(model => model.SearchPageProductsPerPage)
                 @Html.ValidationMessageFor(model => model.SearchPageProductsPerPage)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ProductSearchAutoCompleteEnabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ProductSearchAutoCompleteEnabled)
+                @Html.ValidationMessageFor(model => model.ProductSearchAutoCompleteEnabled)
+            </td>
+        </tr>
+        <tr id="pnlProductSearchAutoCompleteNumberOfProducts">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ProductSearchAutoCompleteNumberOfProducts):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ProductSearchAutoCompleteNumberOfProducts)
+                @Html.ValidationMessageFor(model => model.ProductSearchAutoCompleteNumberOfProducts)
             </td>
         </tr>
         <tr>
