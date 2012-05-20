@@ -4,6 +4,7 @@
     Layout = "~/Views/Shared/_Root.cshtml";
 
     //title
+    Html.AddTitleParts(Model.ProductName);
     Html.AddTitleParts(T("PageTitle.ProductEmailAFriend").Text);
 }
 <div class="emailafriend-page">
