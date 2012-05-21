@@ -13,6 +13,7 @@ namespace Nop.Web.Controllers
     [StoreLastVisitedPage]
     [CheckAffiliate]
     [StoreClosedAttribute]
+    [PublicStoreAllowNavigation]
     public abstract class BaseNopController : Controller
     {
         /// <summary>

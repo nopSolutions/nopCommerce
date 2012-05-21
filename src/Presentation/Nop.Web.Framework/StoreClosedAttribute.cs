@@ -37,7 +37,9 @@ namespace Nop.Web.Framework
 
             var storeInformationSettings = EngineContext.Current.Resolve<StoreInformationSettings>();
             if (storeInformationSettings.StoreClosed &&
+                //ensure it's not the Login page
                 !(controllerName.Equals("Nop.Web.Controllers.CustomerController", StringComparison.InvariantCultureIgnoreCase) && actionName.Equals("Login", StringComparison.InvariantCultureIgnoreCase)) &&
+                //ensure it's not the Logout page
                 !(controllerName.Equals("Nop.Web.Controllers.CustomerController", StringComparison.InvariantCultureIgnoreCase) && actionName.Equals("Logout", StringComparison.InvariantCultureIgnoreCase)))
             {
                 if (storeInformationSettings.StoreClosedAllowForAdmins && EngineContext.Current.Resolve<IWorkContext>().CurrentCustomer.IsAdmin())

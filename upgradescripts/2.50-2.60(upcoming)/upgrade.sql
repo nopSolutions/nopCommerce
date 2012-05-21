@@ -1381,3 +1381,37 @@ BEGIN
 	VALUES (N'catalogsettings.productsearchautocompletenumberofproducts', N'10')
 END
 GO
+
+
+--new 'permission records
+IF NOT EXISTS (
+		SELECT 1
+		FROM [PermissionRecord]
+		WHERE [SystemName] = N'PublicStoreAllowNavigation')
+BEGIN
+	INSERT [PermissionRecord] ([Name], [SystemName], [Category])
+	VALUES (N'Public store. Allow navigation', N'PublicStoreAllowNavigation', N'PublicStore')
+
+	DECLARE @PermissionRecordId INT 
+	SET @PermissionRecordId = @@IDENTITY
+
+
+	--add it to all roles
+	DECLARE @CustomerRoleId int
+	DECLARE cur_customerrole CURSOR FOR
+	SELECT Id
+	FROM [CustomerRole]
+	OPEN cur_customerrole
+	FETCH NEXT FROM cur_customerrole INTO @CustomerRoleId
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+	
+		INSERT [PermissionRecord_Role_Mapping] ([PermissionRecord_Id], [CustomerRole_Id])
+		VALUES (@PermissionRecordId, @CustomerRoleId)
+		
+		FETCH NEXT FROM cur_customerrole INTO @CustomerRoleId
+	END
+	CLOSE cur_customerrole
+	DEALLOCATE cur_customerrole
+END
+GO
