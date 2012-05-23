@@ -200,7 +200,7 @@ ul.languagelist li:hover{cursor:pointer;}
 .minishoppingcart .totals{margin:10px 0px;text-align:right;}
 .minishoppingcart .buttons{margin:10px 0px;text-align:right;}
 .minishoppingcart .cartbutton{margin:0px 5px;}
-.minishoppingcart .checkoutbutton{argin:0px 5px;}
+.minishoppingcart .checkoutbutton{margin:0px 5px;}
 /* ORDER SUMMARY, SHOPPING CART, WISHLIST */
 .shoppingcart-page,.wishlist-page{}
 .shoppingcart-page .page-title,.wishlist-page .page-title{border-bottom:0 none;}
