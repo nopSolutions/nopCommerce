@@ -365,6 +365,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ProductSearchAutoCompleteNumberOfProducts.Hint">
     <Value>Change number of visible results shown in autocomplete dropdown when searching.</Value>
   </LocaleResource>
+  <LocaleResource Name="ShoppingCart.FileUploaded">
+    <Value>Your file successfully uploaded!</Value>
+  </LocaleResource>
 </Language>
 '
 

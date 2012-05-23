@@ -7,7 +7,7 @@
     <div class="master-wrapper-content">
         <script type="text/javascript">
         //<![CDATA[
-            AjaxCart.init('@Url.Action("AddProductToCart", "ShoppingCart")', '.header-links .cart-qty', '#flyout-cart');
+            AjaxCart.init('.header-links .cart-qty', '.header-links .wishlist-qty', '#flyout-cart');
           //]]>
         </script>
         @Html.Partial("_Notifications")

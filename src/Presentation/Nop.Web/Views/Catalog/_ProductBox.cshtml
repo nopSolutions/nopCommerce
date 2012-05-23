@@ -20,7 +20,7 @@
             @if (!Model.ProductPrice.DisableBuyButton)
             {
                 <br />                
-                <input type="button" value="@(Model.ProductPrice.AvailableForPreOrder ? T("ShoppingCart.PreOrder") : T("ShoppingCart.AddToCart"))" class="productlistaddtocartbutton" onclick="AjaxCart.addtocart('@Model.Id')" />
+                <input type="button" value="@(Model.ProductPrice.AvailableForPreOrder ? T("ShoppingCart.PreOrder") : T("ShoppingCart.AddToCart"))" class="productlistaddtocartbutton" onclick="AjaxCart.addproducttocart('@Url.RouteUrl("AddProductToCart", new { productId = Model.Id })');return false;" />
             }
         </div>
     </div>

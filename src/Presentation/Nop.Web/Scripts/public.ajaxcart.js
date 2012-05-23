@@ -5,14 +5,14 @@
 
 var AjaxCart = {
     loadWaiting: false,
-    urladd: '',
     topcartselector: '',
+    topwishlistselector: '',
     flyoutcartselector: '',
 
-    init: function (urladd, topcartselector, flyoutcartselector) {
+    init: function (topcartselector, topwishlistselector, flyoutcartselector) {
         this.loadWaiting = false;
-        this.urladd = urladd;
         this.topcartselector = topcartselector;
+        this.topwishlistselector = topwishlistselector;
         this.flyoutcartselector = flyoutcartselector;
     },
 
@@ -21,16 +21,32 @@ var AjaxCart = {
         this.loadWaiting = display;
     },
 
-    addtocart: function (productId) {
+    addproducttocart: function (urladd) {
         if (this.loadWaiting != false) {
-            alert('return');
             return;
         }
         this.setLoadWaiting(true);
 
         $.ajax({
-            url: this.urladd,
-            data: { "productId": productId },
+            cache: false,
+            url: urladd,
+            type: 'post',
+            success: this.successprocess,
+            complete: this.resetLoadWaiting,
+            error: this.ajaxFailure
+        });
+    },
+
+    addproductvarianttocart: function (urladd, formselector) {
+        if (this.loadWaiting != false) {
+            return;
+        }
+        this.setLoadWaiting(true);
+
+        $.ajax({
+            cache: false,
+            url: urladd,
+            data: $(formselector).serialize(),
             type: 'post',
             success: this.successprocess,
             complete: this.resetLoadWaiting,
@@ -42,9 +58,12 @@ var AjaxCart = {
         if (response.updatetopcartsectionhtml) {
             $(AjaxCart.topcartselector).html(response.updatetopcartsectionhtml);
         }
+        if (response.updatetopwishlistsectionhtml) {
+            $(AjaxCart.topwishlistselector).html(response.updatetopwishlistsectionhtml);
+        } 
         if (response.updateflyoutcartsectionhtml) {
             $(AjaxCart.flyoutcartselector).replaceWith(response.updateflyoutcartsectionhtml);
-        } 
+        }
         if (response.message) {
             var messageType;
             if (response.success == true) {

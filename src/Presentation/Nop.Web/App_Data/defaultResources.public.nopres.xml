@@ -3690,6 +3690,9 @@
 					</LocaleResource>
 				</Children>
 			</LocaleResource>
+      <LocaleResource Name="FileUploaded">
+        <Value>Your file successfully uploaded!</Value>
+      </LocaleResource>
 			<LocaleResource Name="GiftCardCouponCode">
 				<Value>Gift Cards</Value>
 				<Children>

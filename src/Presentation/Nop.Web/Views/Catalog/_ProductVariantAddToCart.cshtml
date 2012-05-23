@@ -1,5 +1,6 @@
 ﻿@model Nop.Web.Models.Catalog.ProductModel.ProductVariantModel.AddToCartModel
 @using Nop.Web.Framework;
+@using Nop.Core.Domain.Orders;
 <div class="add-info">
     @if (Model.CustomerEntersPrice)
     {
@@ -17,10 +18,10 @@
     }
     @if (!Model.DisableBuyButton)
     {
-        <input type="submit" name="addtocartbutton-@(Model.ProductVariantId)" class="productvariantaddtocartbutton" value="@(Model.AvailableForPreOrder ? T("ShoppingCart.PreOrder") : T("ShoppingCart.AddToCart"))" />
+        <input type="submit" name="addtocartbutton-@(Model.ProductVariantId)" class="productvariantaddtocartbutton" value="@(Model.AvailableForPreOrder ? T("ShoppingCart.PreOrder") : T("ShoppingCart.AddToCart"))" onclick="AjaxCart.addproductvarianttocart('@Url.RouteUrl("AddProductVariantToCart", new { productVariantId = Model.ProductVariantId, shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart })', '#product-details-form');return false;" />
     }
     @if (!Model.DisableWishlistButton)
     {
-        <input type="submit" name="addtowishlistbutton-@(Model.ProductVariantId)" class="productvariantaddtowishlistbutton" value="@T("ShoppingCart.AddToWishlist")" />
+        <input type="submit" name="addtowishlistbutton-@(Model.ProductVariantId)" class="productvariantaddtowishlistbutton" value="@T("ShoppingCart.AddToWishlist")" onclick="AjaxCart.addproductvarianttocart('@Url.RouteUrl("AddProductVariantToCart", new { productVariantId = Model.ProductVariantId, shoppingCartTypeId = (int)ShoppingCartType.Wishlist })', '#product-details-form');return false;" />
     }
 </div>

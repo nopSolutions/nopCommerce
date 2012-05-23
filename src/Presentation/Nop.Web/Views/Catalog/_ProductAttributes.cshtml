@@ -10,27 +10,27 @@
 @using Nop.Services.Security;
 @{
     var hidePrices = !EngineContext.Current.Resolve<IPermissionService>().Authorize(StandardPermissionProvider.DisplayPrices);
-                            
+
     var dynamicPriceUpdate = EngineContext.Current.Resolve<CatalogSettings>().EnableDynamicPriceUpdate;
     var adjustmentTableScripts = new StringBuilder();
     var attributeScripts = new StringBuilder();
-            
+
     string adjustmentTableName = "";
     string adjustmentFuncName = "";
     string priceVarName = "";
     string priceVarClass = "";
-            
+
     if (dynamicPriceUpdate && !hidePrices)
     {
         foreach (var attribute in Model)
         {
             string controlId = string.Format("product_attribute_{0}_{1}_{2}", attribute.ProductVariantId, attribute.ProductAttributeId, attribute.Id);
-                
+
             adjustmentTableName = string.Format("adjustmentTable_{0}", attribute.ProductVariantId);
             adjustmentFuncName = string.Format("adjustPrice_{0}", attribute.ProductVariantId);
             priceVarName = string.Format("priceValForDynUpd_{0}", attribute.ProductVariantId);
             priceVarClass = string.Format("price-val-for-dyn-upd-{0}", attribute.ProductVariantId);
-            
+
             switch (attribute.AttributeControlType)
             {
                 case AttributeControlType.DropdownList:
@@ -49,7 +49,7 @@
                             adjustmentTableScripts.AppendFormat(CultureInfo.InvariantCulture, "{0},", (float)pvaValue.PriceAdjustmentValue);
                             numberOfJsArrayItems++;
                         }
-                        
+
                         //If you create an array with a single numeric parameter, that number is used for specifying the number of elements in this array.
                         //so have a little hack here (we need at least two elements)
                         if (numberOfJsArrayItems == 1)
@@ -78,10 +78,10 @@
                         }
                     }
                     break;
-                default: 
+                default:
                     break;
             }
-                        
+
         }
     }
 }
@@ -203,7 +203,27 @@
                         break;
                     case AttributeControlType.FileUpload:
                         {
-                    <input type="file" id="@(controlId)" name="@(controlId)"></input>
+                            //register CSS and JS
+                            Html.AddCssFileParts(@Url.Content("~/Content/fileuploader/fileuploader.css"));
+                            Html.AddScriptParts(@Url.Content("~/Scripts/fileuploader.js"));
+                            
+                            <input id="@(controlId)" name="@(controlId)" type="hidden" />
+                            <div id="@(controlId)uploader">
+                            </div>
+                            <script type="text/javascript">
+                            $(function () {                   
+                                var @(controlId)uploader = new qq.FileUploader({
+                                    element: document.getElementById('@(controlId)uploader'),
+                                    action: '@(Url.RouteUrl("UploadFileProductAttribute", new {productVariantId = @attribute.ProductVariantId, productAttributeId = @attribute.ProductAttributeId }))',
+                                    onComplete: function(id, fileName, responseJSON){
+                                        $("#@(controlId)").val(responseJSON.downloadGuid);
+                                        if (responseJSON.message) {
+                                            alert(responseJSON.message);
+                                        }
+                                    }
+                                });
+                            });
+                            </script>
                         }
                         break;
                 }

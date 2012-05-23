@@ -325,7 +325,7 @@
     <Content Include="Content\images\ico-stat1.gif" />
     <Content Include="Content\images\ico-system.png" />
     <Content Include="Content\images\ico-warnings.gif" />
-    <Content Include="Content\images\loading.gif" />
+    <Content Include="Content\images\fileuploader-loading.gif" />
     <Content Include="Content\images\throbber-synchronizing.gif" />
     <Content Include="Content\images\logo.gif" />
     <Content Include="Content\images\success-message.gif" />

@@ -22,38 +22,13 @@
 }
 @{
     var defaultProductVariant = Model.ProductVariantModels.Count > 0 ? Model.ProductVariantModels[0] : null;
-
-    //errors
-    var errors = new List<string>();
-    foreach (var modelState in ViewData.ModelState.Values)
-    {
-        foreach (var error in modelState.Errors)
-        {
-            errors.Add(error.ErrorMessage);
-        }
-    }
-}
-@if (errors.Count > 0)
-{
-    //display errors
-    <script type="text/javascript">
-        $(document).ready(function () {
-            var producterrors = new Array();
-            @for (int i = 0; i < errors.Count; i++)
-            {
-            <text>producterrors[@(i)]="@(errors[i])";</text>
-            }
-            displayNotification(producterrors, 'error', true);
-        });
-	</script>
 }
 <!--product breadcrumb-->
 @Html.Action("ProductBreadcrumb", "Catalog", new { productId = Model.Id })
 <div class="clear">
 </div>
 <div class="product-details-page">
-    @*we add enctype = "multipart/form-data" because "File upload" attribute control type requries it*@
-    @using (Html.BeginRouteForm("Product", new { productId = Model.Id, SeName = Model.SeName }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+    @using (Html.BeginRouteForm("Product", new { productId = Model.Id, SeName = Model.SeName }, FormMethod.Post, new { id = "product-details-form" }))
     {
         <div class="product-essential">
             <div class="product-details-info">
@@ -100,22 +75,6 @@
                     }
                     <div class="clear">
                     </div>
-                    @if (errors.Count > 0)
-                    {
-                        //display errors   
-                        <span class="message-error">
-                            @for (int i = 0; i < errors.Count; i++)
-                            {
-                                @errors[i]
-                                if (i != errors.Count - 1)
-                                {
-                                    <br />
-                                }
-                            }
-                        </span>
-                        <div class="clear">
-                        </div>
-                    }
                     <br />
                     @Html.Action("ProductEmailAFriendButton", "Catalog", new { productId = Model.Id })
                     @Html.Action("CompareProductsButton", "Catalog", new { productId = Model.Id })

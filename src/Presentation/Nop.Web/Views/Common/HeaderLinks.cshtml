@@ -8,7 +8,7 @@
                 - <a href="@Url.RouteUrl("Logout")" class="finish-impersonation" title="@T("Account.ImpersonatedAs.Finish.Hint")">@T("Account.ImpersonatedAs.Finish")</a>
                 ) </span></li>
         }
-        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.HeaderLinks })        
+        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.HeaderLinks })
         @if (Model.DisplayAdminLink)
         {
             <li><a href="@Url.Content("~/admin")" class="ico-admin">@T("Account.Administration")</a>

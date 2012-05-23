@@ -132,6 +132,24 @@ namespace Nop.Web.Infrastructure
                             "emailwishlist",
                             new { controller = "ShoppingCart", action = "EmailWishlist" },
                             new[] { "Nop.Web.Controllers" });
+            //add product to cart (without any attributes and options)
+            routes.MapLocalizedRoute("AddProductToCart",
+                            "addproducttocart/{productId}",
+                            new { controller = "ShoppingCart", action = "AddProductToCart" },
+                            new { productId = @"\d+" },
+                            new[] { "Nop.Web.Controllers" });
+            //add product variant to cart (with attributes and options)
+            routes.MapLocalizedRoute("AddProductVariantToCart",
+                            "addproductvarianttocart/{productVariantId}/{shoppingCartTypeId}",
+                            new { controller = "ShoppingCart", action = "AddProductVariantToCart" },
+                            new { productVariantId = @"\d+", shoppingCartTypeId = @"\d+" },
+                            new[] { "Nop.Web.Controllers" });
+            //product attributes with "upload file" type
+            routes.MapLocalizedRoute("UploadFileProductAttribute",
+                            "uploadfileproductattribute/{productVariantId}/{productAttributeId}",
+                            new { controller = "ShoppingCart", action = "UploadFileProductAttribute" },
+                            new { productVariantId = @"\d+", productAttributeId = @"\d+" },
+                            new[] { "Nop.Web.Controllers" });
             
             //checkout
             routes.MapLocalizedRoute("Checkout",

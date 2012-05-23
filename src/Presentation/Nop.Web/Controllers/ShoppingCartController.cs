@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -34,6 +35,7 @@ using Nop.Web.Models.Catalog;
 using Nop.Web.Models.Common;
 using Nop.Web.Models.Media;
 using Nop.Web.Models.ShoppingCart;
+using System.Web;
 
 namespace Nop.Web.Controllers
 {
@@ -46,7 +48,9 @@ namespace Nop.Web.Controllers
         private readonly IShoppingCartService _shoppingCartService;
         private readonly IPictureService _pictureService;
         private readonly ILocalizationService _localizationService;
+        private readonly IProductAttributeService _productAttributeService;
         private readonly IProductAttributeFormatter _productAttributeFormatter;
+        private readonly IProductAttributeParser _productAttributeParser;
         private readonly ITaxService _taxService;
         private readonly ICurrencyService _currencyService;
         private readonly IPriceCalculationService _priceCalculationService;
@@ -81,7 +85,9 @@ namespace Nop.Web.Controllers
 
         public ShoppingCartController(IProductService productService, IWorkContext workContext,
             IShoppingCartService shoppingCartService, IPictureService pictureService,
-            ILocalizationService localizationService, IProductAttributeFormatter productAttributeFormatter,
+            ILocalizationService localizationService, 
+            IProductAttributeService productAttributeService, IProductAttributeFormatter productAttributeFormatter,
+            IProductAttributeParser productAttributeParser,
             ITaxService taxService, ICurrencyService currencyService, 
             IPriceCalculationService priceCalculationService, IPriceFormatter priceFormatter,
             ICheckoutAttributeParser checkoutAttributeParser, ICheckoutAttributeFormatter checkoutAttributeFormatter, 
@@ -104,7 +110,9 @@ namespace Nop.Web.Controllers
             this._shoppingCartService = shoppingCartService;
             this._pictureService = pictureService;
             this._localizationService = localizationService;
+            this._productAttributeService = productAttributeService;
             this._productAttributeFormatter = productAttributeFormatter;
+            this._productAttributeParser = productAttributeParser;
             this._taxService = taxService;
             this._currencyService = currencyService;
             this._priceCalculationService = priceCalculationService;
@@ -701,19 +709,18 @@ namespace Nop.Web.Controllers
                 //redirect to the shopping cart page
                 return Json(new
                 {
-                    redirect = Url.RouteUrl("ShoppingCart", new { productId = product.Id, SeName = product.GetSeName() }, "http"),
+                    redirect = Url.RouteUrl("ShoppingCart", null, "http"),
                 });
             }
-            
-            //display "Product has been added to the cart" notification message
-            //and update appropriate blocks
-           var updatetopcartsectionhtml = string.Format("({0})",
-                _workContext
-                .CurrentCustomer
-                .ShoppingCartItems
-                .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
-                .ToList()
-                .GetTotalProducts());
+
+            //display notification message and update appropriate blocks
+            var updatetopcartsectionhtml = string.Format("({0})",
+                 _workContext
+                 .CurrentCustomer
+                 .ShoppingCartItems
+                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                 .ToList()
+                 .GetTotalProducts());
             var updateflyoutcartsectionhtml = _shoppingCartSettings.MiniShoppingCartEnabled
                 ? this.RenderPartialViewToString("FlyoutShoppingCart", PrepareMiniShoppingCartModel())
                 : "";
@@ -727,6 +734,393 @@ namespace Nop.Web.Controllers
             });
 
         }
+
+        //add product variant to cart using AJAX
+        //currently we use this method only for desktop version
+        //mobile version uses HTTP POST version of this method (CatalogController.AddProductVariantToCart)
+        [HttpPost]
+        [ValidateInput(false)]
+        public ActionResult AddProductVariantToCart(int productVariantId, int shoppingCartTypeId, FormCollection form)
+        {
+            var productVariant = _productService.GetProductVariantById(productVariantId);
+            if (productVariant == null)
+            {
+                return Json(new
+                {
+                    redirect = Url.RouteUrl("HomePage", null, "http"),
+                });
+            }
+
+            #region Customer entered price
+            decimal customerEnteredPriceConverted = decimal.Zero;
+            if (productVariant.CustomerEntersPrice)
+            {
+                foreach (string formKey in form.AllKeys)
+                {
+                    if (formKey.Equals(string.Format("addtocart_{0}.CustomerEnteredPrice", productVariantId), StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        decimal customerEnteredPrice = decimal.Zero;
+                        if (decimal.TryParse(form[formKey], out customerEnteredPrice))
+                            customerEnteredPriceConverted = _currencyService.ConvertToPrimaryStoreCurrency(customerEnteredPrice, _workContext.WorkingCurrency);
+                        break;
+                    }
+                }
+            }
+            #endregion
+
+            #region Quantity
+
+            int quantity = 1;
+            foreach (string formKey in form.AllKeys)
+                if (formKey.Equals(string.Format("addtocart_{0}.EnteredQuantity", productVariantId), StringComparison.InvariantCultureIgnoreCase))
+                {
+                    int.TryParse(form[formKey], out quantity);
+                    break;
+                }
+
+            #endregion
+
+            var addToCartWarnings = new List<string>();
+            string attributes = "";
+
+            #region Product attributes
+            string selectedAttributes = string.Empty;
+            var productVariantAttributes = _productAttributeService.GetProductVariantAttributesByProductVariantId(productVariant.Id);
+            foreach (var attribute in productVariantAttributes)
+            {
+                string controlId = string.Format("product_attribute_{0}_{1}_{2}", attribute.ProductVariantId, attribute.ProductAttributeId, attribute.Id);
+                switch (attribute.AttributeControlType)
+                {
+                    case AttributeControlType.DropdownList:
+                        {
+                            var ddlAttributes = form[controlId];
+                            if (!String.IsNullOrEmpty(ddlAttributes))
+                            {
+                                int selectedAttributeId = int.Parse(ddlAttributes);
+                                if (selectedAttributeId > 0)
+                                    selectedAttributes = _productAttributeParser.AddProductAttribute(selectedAttributes,
+                                        attribute, selectedAttributeId.ToString());
+                            }
+                        }
+                        break;
+                    case AttributeControlType.RadioList:
+                        {
+                            var rblAttributes = form[controlId];
+                            if (!String.IsNullOrEmpty(rblAttributes))
+                            {
+                                int selectedAttributeId = int.Parse(rblAttributes);
+                                if (selectedAttributeId > 0)
+                                    selectedAttributes = _productAttributeParser.AddProductAttribute(selectedAttributes,
+                                        attribute, selectedAttributeId.ToString());
+                            }
+                        }
+                        break;
+                    case AttributeControlType.Checkboxes:
+                        {
+                            var cblAttributes = form[controlId];
+                            if (!String.IsNullOrEmpty(cblAttributes))
+                            {
+                                foreach (var item in cblAttributes.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                                {
+                                    int selectedAttributeId = int.Parse(item);
+                                    if (selectedAttributeId > 0)
+                                        selectedAttributes = _productAttributeParser.AddProductAttribute(selectedAttributes,
+                                            attribute, selectedAttributeId.ToString());
+                                }
+                            }
+                        }
+                        break;
+                    case AttributeControlType.TextBox:
+                        {
+                            var txtAttribute = form[controlId];
+                            if (!String.IsNullOrEmpty(txtAttribute))
+                            {
+                                string enteredText = txtAttribute.Trim();
+                                selectedAttributes = _productAttributeParser.AddProductAttribute(selectedAttributes,
+                                    attribute, enteredText);
+                            }
+                        }
+                        break;
+                    case AttributeControlType.MultilineTextbox:
+                        {
+                            var txtAttribute = form[controlId];
+                            if (!String.IsNullOrEmpty(txtAttribute))
+                            {
+                                string enteredText = txtAttribute.Trim();
+                                selectedAttributes = _productAttributeParser.AddProductAttribute(selectedAttributes,
+                                    attribute, enteredText);
+                            }
+                        }
+                        break;
+                    case AttributeControlType.Datepicker:
+                        {
+                            var day = form[controlId + "_day"];
+                            var month = form[controlId + "_month"];
+                            var year = form[controlId + "_year"];
+                            DateTime? selectedDate = null;
+                            try
+                            {
+                                selectedDate = new DateTime(Int32.Parse(year), Int32.Parse(month), Int32.Parse(day));
+                            }
+                            catch { }
+                            if (selectedDate.HasValue)
+                            {
+                                selectedAttributes = _productAttributeParser.AddProductAttribute(selectedAttributes,
+                                    attribute, selectedDate.Value.ToString("D"));
+                            }
+                        }
+                        break;
+                    case AttributeControlType.FileUpload:
+                        {
+                            Guid downloadGuid;
+                            Guid.TryParse(form[controlId], out downloadGuid);
+                            var download = _downloadService.GetDownloadByGuid(downloadGuid);
+                            if (download != null)
+                            {
+                                selectedAttributes = _productAttributeParser.AddProductAttribute(selectedAttributes,
+                                        attribute, download.DownloadGuid.ToString());
+                            }
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+            attributes = selectedAttributes;
+
+            #endregion
+
+            #region Gift cards
+
+            if (productVariant.IsGiftCard)
+            {
+                string recipientName = "";
+                string recipientEmail = "";
+                string senderName = "";
+                string senderEmail = "";
+                string giftCardMessage = "";
+                foreach (string formKey in form.AllKeys)
+                {
+                    if (formKey.Equals(string.Format("giftcard_{0}.RecipientName", productVariantId), StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        recipientName = form[formKey];
+                        continue;
+                    }
+                    if (formKey.Equals(string.Format("giftcard_{0}.RecipientEmail", productVariantId), StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        recipientEmail = form[formKey];
+                        continue;
+                    }
+                    if (formKey.Equals(string.Format("giftcard_{0}.SenderName", productVariantId), StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        senderName = form[formKey];
+                        continue;
+                    }
+                    if (formKey.Equals(string.Format("giftcard_{0}.SenderEmail", productVariantId), StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        senderEmail = form[formKey];
+                        continue;
+                    }
+                    if (formKey.Equals(string.Format("giftcard_{0}.Message", productVariantId), StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        giftCardMessage = form[formKey];
+                        continue;
+                    }
+                }
+
+                attributes = _productAttributeParser.AddGiftCardAttribute(attributes,
+                    recipientName, recipientEmail, senderName, senderEmail, giftCardMessage);
+            }
+
+            #endregion
+
+            //save item
+            var cartType = (ShoppingCartType)shoppingCartTypeId;
+            addToCartWarnings.AddRange(_shoppingCartService.AddToCart(_workContext.CurrentCustomer,
+                productVariant, cartType, attributes, customerEnteredPriceConverted, quantity, true));
+
+            #region Return result
+
+            if (addToCartWarnings.Count > 0)
+            {
+                //cannot be added to the cart/wishlist
+                //let's display warnings
+                return Json(new
+                {
+                    success = false,
+                    message = addToCartWarnings.ToArray()
+                });
+            }
+
+            //added to the cart/wishlist
+            switch (cartType)
+            {
+                case ShoppingCartType.Wishlist:
+                    {
+                        if (_shoppingCartSettings.DisplayWishlistAfterAddingProduct)
+                        {
+                            //redirect to the wishlist page
+                            return Json(new
+                            {
+                                redirect = Url.RouteUrl("Wishlist", null, "http"),
+                            });
+                        }
+                        else
+                        {
+                            //display notification message and update appropriate blocks
+                            var updatetopwishlistsectionhtml = string.Format("({0})",
+                                 _workContext
+                                 .CurrentCustomer
+                                 .ShoppingCartItems
+                                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist)
+                                 .ToList()
+                                 .GetTotalProducts());
+                            return Json(new
+                            {
+                                success = true,
+                                message = _localizationService.GetResource("Products.ProductHasBeenAddedToTheWishlist"),
+                                updatetopwishlistsectionhtml = updatetopwishlistsectionhtml,
+                            });
+                        }
+                    }
+                case ShoppingCartType.ShoppingCart:
+                default:
+                    {
+                        if (_shoppingCartSettings.DisplayCartAfterAddingProduct)
+                        {
+                            //redirect to the shopping cart page
+                            return Json(new
+                            {
+                                redirect = Url.RouteUrl("ShoppingCart", null, "http"),
+                            });
+                        }
+                        else
+                        {
+
+                            //display notification message and update appropriate blocks
+                            var updatetopcartsectionhtml = string.Format("({0})",
+                                 _workContext
+                                 .CurrentCustomer
+                                 .ShoppingCartItems
+                                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
+                                 .ToList()
+                                 .GetTotalProducts());
+                            var updateflyoutcartsectionhtml = _shoppingCartSettings.MiniShoppingCartEnabled
+                                ? this.RenderPartialViewToString("FlyoutShoppingCart", PrepareMiniShoppingCartModel())
+                                : "";
+
+                            return Json(new
+                            {
+                                success = true,
+                                message = _localizationService.GetResource("Products.ProductHasBeenAddedToTheCart"),
+                                updatetopcartsectionhtml = updatetopcartsectionhtml,
+                                updateflyoutcartsectionhtml = updateflyoutcartsectionhtml
+                            });
+                        }
+                    }
+            }
+
+
+            #endregion
+        }
+
+        [HttpPost]
+        public ActionResult UploadFileProductAttribute(int productVariantId, int productAttributeId)
+        {
+            var productVariant = _productService.GetProductVariantById(productVariantId);
+            if (productVariant == null ||
+                !productVariant.Published ||
+                productVariant.Deleted ||
+                productVariant.Product == null ||
+                !productVariant.Product.Published == null ||
+                productVariant.Product.Deleted == null)
+            {
+                return Json(new
+                {
+                    success = false,
+                    downloadGuid = Guid.Empty,
+                }, "text/plain");
+            }
+            //ensure that this attribute belong to this product variant and has "file upload" type
+            var pva = _productAttributeService
+                .GetProductVariantAttributesByProductVariantId(productVariantId)
+                .Where(pa => pa.ProductAttributeId == productAttributeId)
+                .FirstOrDefault();
+            if (pva == null || pva.AttributeControlType != AttributeControlType.FileUpload)
+            {
+                return Json(new
+                {
+                    success = false,
+                    downloadGuid = Guid.Empty,
+                }, "text/plain");
+            }
+
+            //we process it distinct ways based on a browser
+            //find more info here http://stackoverflow.com/questions/4884920/mvc3-valums-ajax-file-upload
+            Stream stream = null;
+            var fileName = "";
+            var contentType = "";
+            if (String.IsNullOrEmpty(Request["qqfile"]))
+            {
+                // IE
+                HttpPostedFileBase httpPostedFile = Request.Files[0];
+                if (httpPostedFile == null)
+                    throw new ArgumentException("No file uploaded");
+                stream = httpPostedFile.InputStream;
+                fileName = Path.GetFileName(httpPostedFile.FileName);
+                contentType = httpPostedFile.ContentType;
+            }
+            else
+            {
+                //Webkit, Mozilla
+                stream = Request.InputStream;
+                fileName = Request["qqfile"];
+            }
+
+            var fileBinary = new byte[stream.Length];
+            stream.Read(fileBinary, 0, fileBinary.Length);
+
+            var fileExtension = Path.GetExtension(fileName);
+            if (!String.IsNullOrEmpty(fileExtension))
+                fileExtension = fileExtension.ToLowerInvariant();
+
+            int fileMaxSize = _catalogSettings.FileUploadMaximumSizeBytes;
+            if (fileBinary.Length > fileMaxSize)
+            {
+                //when returning JSON the mime-type must be set to text/plain
+                //otherwise some browsers will pop-up a "Save As" dialog.
+                return Json(new
+                {
+                    success = false,
+                    message = string.Format(_localizationService.GetResource("ShoppingCart.MaximumUploadedFileSize"), (int)(fileMaxSize / 1024)),
+                    downloadGuid = Guid.Empty,
+                }, "text/plain");
+            }
+
+            var download = new Download()
+            {
+                DownloadGuid = Guid.NewGuid(),
+                UseDownloadUrl = false,
+                DownloadUrl = "",
+                DownloadBinary = fileBinary,
+                ContentType = contentType,
+                //we store filename without extension for downloads
+                Filename = Path.GetFileNameWithoutExtension(fileName),
+                Extension = fileExtension,
+                IsNew = true
+            };
+            _downloadService.InsertDownload(download);
+
+            //when returning JSON the mime-type must be set to text/plain
+            //otherwise some browsers will pop-up a "Save As" dialog.
+            return Json(new
+            {
+                success = true,
+                message = _localizationService.GetResource("ShoppingCart.FileUploaded"),
+                downloadGuid = download.DownloadGuid,
+            }, "text/plain");
+        }
+
 
         [NopHttpsRequirement(SslRequirement.Yes)]
         public ActionResult Cart()

@@ -1290,9 +1290,12 @@ namespace Nop.Web.Controllers
             return View(model.ProductTemplateViewPath, model);
         }
 
+        //add product variant to cart using HTTP POST
+        //currently we use this method only for mobile device version
+        //desktop version uses AJAX version of this method (ShoppingCartController.AddProductVariantToCart)
         [HttpPost, ActionName("Product")]
         [ValidateInput(false)]
-        public ActionResult AddToCartProduct(int productId, FormCollection form)
+        public ActionResult AddProductVariantToCart(int productId, FormCollection form)
         {
             var product = _productService.GetProductById(productId);
             if (product == null || product.Deleted || !product.Published)

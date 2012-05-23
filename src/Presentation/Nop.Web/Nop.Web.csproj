@@ -824,6 +824,8 @@
     <Content Include="Content\fancybox\jquery.fancybox-1.3.4.css" />
     <Content Include="Content\files\ExportImport\Index.htm" />
     <Content Include="Content\files\Index.htm" />
+    <Content Include="Content\fileuploader\fileuploader.css" />
+    <Content Include="Content\fileuploader\images\fileuploader-loading.gif" />
     <Content Include="Content\Images\ajax_loader_large.gif" />
     <Content Include="Content\Images\ajax_loader_small.gif" />
     <Content Include="Content\Images\ajax_loader_big.gif" />
@@ -1236,6 +1238,7 @@
     <Content Include="Scripts\2012.1.214\telerik.treeview.min.js" />
     <Content Include="Scripts\2012.1.214\telerik.upload.min.js" />
     <Content Include="Scripts\2012.1.214\telerik.window.min.js" />
+    <Content Include="Scripts\fileuploader.js" />
     <Content Include="Scripts\public.ajaxcart.js" />
     <Content Include="Scripts\public.accordion.js" />
     <Content Include="Scripts\jquery-1.7.1-vsdoc.js" />
