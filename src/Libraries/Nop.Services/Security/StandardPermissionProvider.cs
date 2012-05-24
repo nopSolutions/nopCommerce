@@ -99,6 +99,7 @@ namespace Nop.Services.Security
                 DisplayPrices,
                 EnableShoppingCart,
                 EnableWishlist,
+                PublicStoreAllowNavigation,
             };
         }
 
@@ -152,6 +153,7 @@ namespace Nop.Services.Security
                         DisplayPrices,
                         EnableShoppingCart,
                         EnableWishlist,
+                        PublicStoreAllowNavigation,
                     }
                 },
                 new DefaultPermissionRecord 
@@ -162,6 +164,7 @@ namespace Nop.Services.Security
                         DisplayPrices,
                         EnableShoppingCart,
                         EnableWishlist,
+                        PublicStoreAllowNavigation,
                     }
                 },
                 new DefaultPermissionRecord 
@@ -172,6 +175,7 @@ namespace Nop.Services.Security
                         DisplayPrices,
                         EnableShoppingCart,
                         EnableWishlist,
+                        PublicStoreAllowNavigation,
                     }
                 },
                 new DefaultPermissionRecord 
@@ -182,6 +186,7 @@ namespace Nop.Services.Security
                         DisplayPrices,
                         EnableShoppingCart,
                         EnableWishlist,
+                        PublicStoreAllowNavigation,
                     }
                 },
             };
