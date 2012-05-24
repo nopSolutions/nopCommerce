@@ -26,6 +26,7 @@ using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Media;
 using Nop.Services.Orders;
+using Nop.Services.Payments;
 using Nop.Services.Seo;
 
 namespace Nop.Services.Messages
@@ -44,6 +45,7 @@ namespace Nop.Services.Messages
         private readonly IWorkContext _workContext;
         private readonly IDownloadService _downloadService;
         private readonly IOrderService _orderService;
+        private readonly IPaymentService _paymentService;
 
         private readonly StoreInformationSettings _storeSettings;
         private readonly MessageTemplatesSettings _templatesSettings;
@@ -60,7 +62,7 @@ namespace Nop.Services.Messages
             IEmailAccountService emailAccountService,
             IPriceFormatter priceFormatter, ICurrencyService currencyService,IWebHelper webHelper,
             IWorkContext workContext, IDownloadService downloadService,
-            IOrderService orderService,
+            IOrderService orderService, IPaymentService paymentService,
             StoreInformationSettings storeSettings, MessageTemplatesSettings templatesSettings,
             EmailAccountSettings emailAccountSettings, CatalogSettings catalogSettings,
             TaxSettings taxSettings)
@@ -75,6 +77,7 @@ namespace Nop.Services.Messages
             this._workContext = workContext;
             this._downloadService = downloadService;
             this._orderService = orderService;
+            this._paymentService = paymentService;
 
             this._storeSettings = storeSettings;
             this._templatesSettings = templatesSettings;
@@ -510,7 +513,9 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Order.ShippingZipPostalCode", order.ShippingAddress != null ? order.ShippingAddress.ZipPostalCode : ""));
             tokens.Add(new Token("Order.ShippingCountry", order.ShippingAddress != null && order.ShippingAddress.Country != null ? order.ShippingAddress.Country.GetLocalized(x => x.Name) : ""));
 
-
+            var paymentMethod = _paymentService.LoadPaymentMethodBySystemName(order.PaymentMethodSystemName);
+            var paymentMethodName = paymentMethod != null ? paymentMethod.GetLocalizedFriendlyName(_localizationService, _workContext.WorkingLanguage.Id) : order.PaymentMethodSystemName;
+            tokens.Add(new Token("Order.PaymentMethod", paymentMethodName));
             tokens.Add(new Token("Order.VatNumber", order.VatNumber));
 
             tokens.Add(new Token("Order.Product(s)", ProductListToHtmlTable(order, languageId), true));
@@ -727,6 +732,7 @@ namespace Nop.Services.Messages
                 "%Order.ShippingStateProvince%",
                 "%Order.ShippingZipPostalCode%", 
                 "%Order.ShippingCountry%",
+                "%Order.PaymentMethod%",
                 "%Order.VatNumber%", 
                 "%Order.Product(s)%",
                 "%Order.CreatedOn%",
