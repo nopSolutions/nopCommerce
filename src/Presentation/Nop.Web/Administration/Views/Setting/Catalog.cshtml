@@ -402,6 +402,24 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.NopLabelFor(model => model.IncludeShortDescriptionInCompareProducts):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.IncludeShortDescriptionInCompareProducts)
+                @Html.ValidationMessageFor(model => model.IncludeShortDescriptionInCompareProducts)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.IncludeFullDescriptionInCompareProducts):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.IncludeFullDescriptionInCompareProducts)
+                @Html.ValidationMessageFor(model => model.IncludeFullDescriptionInCompareProducts)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.NopLabelFor(model => model.IgnoreDiscounts):
             </td>
             <td class="adminData">

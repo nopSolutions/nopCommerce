@@ -444,7 +444,7 @@ ul.languagelist li:hover{cursor:pointer;}
 .compare-products-table{width:100%;}
 .compare-products-table .remove-button{margin:5px 5px 5px 0;}
 .compare-products-table tr.product-name{background-color:#CCC;font-weight:700;}
-.compare-products-table td{border-width:1px;border-color:#BFBFBF;border-style:solid;padding:3px;}
+.compare-products-table td{border-width:1px;border-color:#BFBFBF;border-style:solid;padding:3px;vertical-align:top;}
 .login-page{}
 .login-page .page-title{border-bottom:0 none;}
 .login-page .wrapper{width:720px;margin-top:10px;padding-left:5px;font-size:11px;color:#555;}

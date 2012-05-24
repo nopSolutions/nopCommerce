@@ -3771,22 +3771,38 @@
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
-									<LocaleResource Name="IgnoreDiscounts">
-										<Value>Ignore discounts (sitewide)</Value>
-										<Children>
-											<LocaleResource Name="Hint">
-												<Value>Check to ignore discounts (sitewide). It can significantly improve performance.</Value>
-											</LocaleResource>
-										</Children>
-									</LocaleResource>
-									<LocaleResource Name="IgnoreFeaturedProducts">
-										<Value>Ignore featured products (sitewide)</Value>
-										<Children>
-											<LocaleResource Name="Hint">
-												<Value>Check to ignore featured products (sitewide). It can significantly improve performance.</Value>
-											</LocaleResource>
-										</Children>
-									</LocaleResource>
+                  <LocaleResource Name="IncludeShortDescriptionInCompareProducts">
+                    <Value>Include short description in compare products</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Check to dysplay product short description on the compare products page.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="IncludeFullDescriptionInCompareProducts">
+                    <Value>Include full description in compare products</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Check to dysplay product full description on the compare products page.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="IgnoreDiscounts">
+                    <Value>Ignore discounts (sitewide)</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Check to ignore discounts (sitewide). It can significantly improve performance.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="IgnoreFeaturedProducts">
+                    <Value>Ignore featured products (sitewide)</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Check to ignore featured products (sitewide). It can significantly improve performance.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
 								</Children>
 							</LocaleResource>
 							<LocaleResource Name="CustomerUser">

@@ -368,6 +368,24 @@ set @resources='
   <LocaleResource Name="ShoppingCart.FileUploaded">
     <Value>Your file successfully uploaded!</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.IncludeShortDescriptionInCompareProducts">
+    <Value>Include short description in compare products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.IncludeShortDescriptionInCompareProducts.Hint">
+    <Value>Check to dysplay product short description on the compare products page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.IncludeFullDescriptionInCompareProducts">
+    <Value>Include full description in compare products</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.IncludeFullDescriptionInCompareProducts.Hint">
+    <Value>Check to dysplay product full description on the compare products page.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Compare.ShortDescription">
+    <Value>Short description</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Compare.FullDescription">
+    <Value>Full description</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1416,5 +1434,19 @@ BEGIN
 	END
 	CLOSE cur_customerrole
 	DEALLOCATE cur_customerrole
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.includeshortdescriptionincompareproducts')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'catalogsettings.includeshortdescriptionincompareproducts', N'false')
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.includefulldescriptionincompareproducts')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'catalogsettings.includefulldescriptionincompareproducts', N'false')
 END
 GO

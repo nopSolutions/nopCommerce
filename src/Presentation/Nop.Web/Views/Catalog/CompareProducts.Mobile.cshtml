@@ -1,4 +1,4 @@
-﻿@model IList<ProductModel>
+﻿@model CompareProductsModel
 @{
     Layout = "~/Views/Shared/_Root.cshtml";
 
@@ -11,14 +11,14 @@
 @using Nop.Web.Models.Catalog;
 @{
     string columnWidth = "";
-    if (Model.Count > 0)
+    if (Model.Products.Count > 0)
     {
-        columnWidth = Math.Round((decimal)(90M / Model.Count), 0).ToString() + "%";
+        columnWidth = Math.Round((decimal)(90M / Model.Products.Count), 0).ToString() + "%";
     }
 
 
     var specificationAttributes = new List<ProductSpecificationModel>();
-    foreach (var product in Model)
+    foreach (var product in Model.Products)
     {
         foreach (var attribute in product.SpecificationAttributeModels)
         {
@@ -36,50 +36,64 @@
     <div class="clear">
     </div>
     <div class="body">
-        @if (Model.Count > 0)
+        @if (Model.Products.Count > 0)
         {
             <a href="@Url.RouteUrl("ClearCompareList")" data-role="button" data-ajax="false">@T("Products.Compare.Clear")</a>
 
             <br />
             <ul data-role="listview" data-inset="true" data-filter="false">
-                @foreach (var product in Model)
+                @foreach (var product in Model.Products)
                 {
                     <li>
-                    <div class="item">
-                        <div class="remove">
-                            <a href="@Url.RouteUrl("RemoveProductFromCompareList", new { productId = product.Id })" class="remove-button" data-role="button" data-ajax="false">@T("Common.Remove")</a>
-                        </div>
-                        <div class="product-picture">
-                            <img alt="@product.DefaultPictureModel.AlternateText" src="@product.DefaultPictureModel.ImageUrl" title="@product.DefaultPictureModel.Title" />
-                        </div>
-                        <div class="product-name">
-                            <a class="link" href="@Url.RouteUrl("Product", new { productId = product.Id, SeName = product.SeName })">@product.Name</a>
-                        </div>
-                        <div class="productPrice">
-                            @T("Products.Compare.Price"): @product.ProductPrice.Price
-                        </div>
-                        <div class="attributes">
-                            @foreach (var specificationAttribute in specificationAttributes)
-                            {
-                                <div class="attribute">
-                                    @specificationAttribute.SpecificationAttributeName:
-                                    @{
-                                        var foundProductSpec = product.SpecificationAttributeModels.Where(psa => psa.SpecificationAttributeId == specificationAttribute.SpecificationAttributeId).FirstOrDefault();
-                                        var specValue = foundProductSpec != null ? foundProductSpec.SpecificationAttributeOption : "";
+                        <div class="item">
+                            <div class="remove">
+                                <a href="@Url.RouteUrl("RemoveProductFromCompareList", new { productId = product.Id })" class="remove-button" data-role="button" data-ajax="false">@T("Common.Remove")</a>
+                            </div>
+                            <div class="product-picture">
+                                <img alt="@product.DefaultPictureModel.AlternateText" src="@product.DefaultPictureModel.ImageUrl" title="@product.DefaultPictureModel.Title" />
+                            </div>
+                            <div class="product-name">
+                                <a class="link" href="@Url.RouteUrl("Product", new { productId = product.Id, SeName = product.SeName })">@product.Name</a>
+                            </div>
+                            <div class="productPrice">
+                                @T("Products.Compare.Price"): @product.ProductPrice.Price
+                            </div>
+                            <div class="attributes">
+                                @foreach (var specificationAttribute in specificationAttributes)
+                                {
+                                    <div class="attribute">
+                                        @specificationAttribute.SpecificationAttributeName:
+                                        @{
+                                    var foundProductSpec = product.SpecificationAttributeModels.Where(psa => psa.SpecificationAttributeId == specificationAttribute.SpecificationAttributeId).FirstOrDefault();
+                                    var specValue = foundProductSpec != null ? foundProductSpec.SpecificationAttributeOption : "";
 
-                                        if (!String.IsNullOrEmpty(specValue))
-                                        {
-                                        @specValue
-                                        }
-                                        else
-                                        {
-                                        <text>&nbsp;</text>
-                                        }
+                                    if (!String.IsNullOrEmpty(specValue))
+                                    {
+                                            @specValue
                                     }
+                                    else
+                                    {
+                                            <text>&nbsp;</text>
+                                    }
+                                        }
+                                    </div>
+                                }
+                            </div>
+                            @*we do not display descriptions in mobile version even when enabled
+                            uncomment the lines below to enabled this option*@
+                            @*@if (Model.IncludeShortDescriptionInCompareProducts)
+                            {
+                                <div class="short-description">
+                                    @T("Products.Compare.ShortDescription"): @Html.Raw(product.ShortDescription)
                                 </div>
                             }
+                            @if (Model.IncludeFullDescriptionInCompareProducts)
+                            {
+                                <div class="full-description">
+                                    @T("Products.Compare.FullDescription"): @Html.Raw(product.FullDescription)
+                                </div>
+                            }*@
                         </div>
-                    </div>
                     </li>
                 }
             </ul>

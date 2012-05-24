@@ -4529,6 +4529,8 @@ namespace Nop.Services.Installation
                     EnableDynamicPriceUpdate = false,
                     NumberOfProductTags = 15,
                     ProductsByTagPageSize = 4,
+                    IncludeShortDescriptionInCompareProducts = false,
+                    IncludeFullDescriptionInCompareProducts = false,
                     UseSmallProductBoxOnHomePage =  true,
                     IncludeFeaturedProductsInNormalLists = false,
                     DisplayTierPricesWithDiscounts = true,

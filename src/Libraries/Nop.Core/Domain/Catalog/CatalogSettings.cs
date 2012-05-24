@@ -29,6 +29,7 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a value indicating whether customers are allowed to change product view mode
         /// </summary>
         public bool AllowProductViewModeChanging { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether customers are allowed to change product view mode
         /// </summary>
@@ -183,6 +184,16 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the available customer selectable page size options for 'products by tag'
         /// </summary>
         public string ProductsByTagPageSizeOptions { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to include "Short description" in compare products
+        /// </summary>
+        public bool IncludeShortDescriptionInCompareProducts { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to include "Full description" in compare products
+        /// </summary>
+        public bool IncludeFullDescriptionInCompareProducts { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to use small product boxes on home page

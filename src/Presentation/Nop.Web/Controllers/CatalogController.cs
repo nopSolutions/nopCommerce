@@ -189,7 +189,9 @@ namespace Nop.Web.Controllers
         }
         
         [NonAction]
-        protected IEnumerable<ProductModel> PrepareProductOverviewModels(IEnumerable<Product> products, bool preparePriceModel = true, bool preparePictureModel = true, int? productThumbPictureSize = null)
+        protected IEnumerable<ProductModel> PrepareProductOverviewModels(IEnumerable<Product> products, 
+            bool preparePriceModel = true, bool preparePictureModel = true, 
+            int? productThumbPictureSize = null, bool prepareSpecificationAttributes = false)
         {
             if (products == null)
                 throw new ArgumentNullException("products");
@@ -359,6 +361,22 @@ namespace Nop.Web.Controllers
                     });
 
                     #endregion
+                }
+
+                //specs
+                if (prepareSpecificationAttributes)
+                {
+                    //specs for comparing
+                    model.SpecificationAttributeModels = _specificationAttributeService.GetProductSpecificationAttributesByProductId(product.Id, null, true)
+                        .Select(psa =>
+                        {
+                            return new ProductSpecificationModel()
+                            {
+                                SpecificationAttributeId = psa.SpecificationAttributeOption.SpecificationAttributeId,
+                                SpecificationAttributeName = psa.SpecificationAttributeOption.SpecificationAttribute.GetLocalized(x => x.Name),
+                                SpecificationAttributeOption = psa.SpecificationAttributeOption.GetLocalized(x => x.Name)
+                            };
+                        }).ToList();
                 }
 
                 models.Add(model);
@@ -2650,24 +2668,15 @@ namespace Nop.Web.Controllers
             if (!_catalogSettings.CompareProductsEnabled)
                 return RedirectToAction("Index", "Home");
 
-            var model = new List<ProductModel>();
-            foreach (var product in _compareProductsService.GetComparedProducts())
+            var model = new CompareProductsModel()
             {
-                var productModel = PrepareProductOverviewModels(new[] {product}).FirstOrDefault();
-                //specs for comparing
-                productModel.SpecificationAttributeModels = _specificationAttributeService.GetProductSpecificationAttributesByProductId(product.Id, null, true)
-                    .Select(psa =>
-                    {
-                        return new ProductSpecificationModel()
-                        {
-                            SpecificationAttributeId = psa.SpecificationAttributeOption.SpecificationAttributeId,
-                            SpecificationAttributeName = psa.SpecificationAttributeOption.SpecificationAttribute.GetLocalized(x => x.Name),
-                            SpecificationAttributeOption = psa.SpecificationAttributeOption.GetLocalized(x => x.Name)
-                        };
-                    })
-                    .ToList();
-                model.Add(productModel);
-            }
+                IncludeShortDescriptionInCompareProducts = _catalogSettings.IncludeShortDescriptionInCompareProducts,
+                IncludeFullDescriptionInCompareProducts = _catalogSettings.IncludeFullDescriptionInCompareProducts,
+            };
+            var products = _compareProductsService.GetComparedProducts();
+            PrepareProductOverviewModels(products, prepareSpecificationAttributes: true)
+                .ToList()
+                .ForEach(model.Products.Add);
             return View(model);
         }
 

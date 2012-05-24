@@ -3158,12 +3158,18 @@
 					<LocaleResource Name="Clear">
 						<Value>Clear list</Value>
 					</LocaleResource>
+          <LocaleResource Name="FullDescription">
+            <Value>Full description</Value>
+          </LocaleResource>
 					<LocaleResource Name="List">
 						<Value>Compare products list</Value>
 					</LocaleResource>
 					<LocaleResource Name="Price">
 						<Value>Price</Value>
 					</LocaleResource>
+          <LocaleResource Name="ShortDescription">
+            <Value>Short description</Value>
+          </LocaleResource>
 					<LocaleResource Name="Title">
 						<Value>Compare products</Value>
 					</LocaleResource>

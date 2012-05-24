@@ -99,6 +99,12 @@ namespace Nop.Admin.Models.Settings
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ProductsByTagPageSizeOptions")]
         public string ProductsByTagPageSizeOptions { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.IncludeShortDescriptionInCompareProducts")]
+        public bool IncludeShortDescriptionInCompareProducts { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.IncludeFullDescriptionInCompareProducts")]
+        public bool IncludeFullDescriptionInCompareProducts { get; set; }
         
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.IgnoreDiscounts")]
         public bool IgnoreDiscounts { get; set; }
