@@ -2,7 +2,7 @@
 /* Contributor(s): RetroViz Design. */
 /* HTML GENERAL */
 body,h1,h2,h3,h4,h5,h6,address,blockquote,dd,dl,hr,form,input{margin:0;padding:0;}
-body{font-family:arial, verdana, helvetica, sans-serif;font-size:12px;text-align:center;background:#444 url(images/bg_body.gif) repeat-x;color:#f93;}
+body{font-family:arial, verdana, helvetica, sans-serif;font-size:12px;background:#444 url(images/bg_body.gif) repeat-x;color:#f93;}
 a{color:#3a3a3a;text-decoration:none;}
 a:hover{color:#f93;text-decoration:none;}
 img{border:0;}
