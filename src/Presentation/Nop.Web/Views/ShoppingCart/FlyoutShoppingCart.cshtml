@@ -71,14 +71,14 @@
             <div class="clear">
             </div>
             <div class="buttons">
-                @if (Model.AllowCheckoutPassingCartPage)
+                @if (Model.DisplayShoppingCartButton)
                 {
                     <input type="submit" value="@T("ShoppingCart.Mini.ViewCart")" class="cartbutton" onclick="setLocation('@(Url.RouteUrl("ShoppingCart"))')" />
-                    <input type="submit" value="@T("Checkout")" class="checkoutbutton" onclick="setLocation('@(Url.RouteUrl("Checkout"))')" />
+                    
                 }
-                else
+                @if (Model.DisplayCheckoutButton)
                 {
-                    <input type="submit" value="@T("ShoppingCart.Mini.ViewCart")" class="cartbutton" onclick="setLocation('@(Url.RouteUrl("ShoppingCart"))')" />
+                    <input type="submit" value="@T("Checkout")" class="checkoutbutton" onclick="setLocation('@(Url.RouteUrl("Checkout"))')" />
                 }
             </div>
         }

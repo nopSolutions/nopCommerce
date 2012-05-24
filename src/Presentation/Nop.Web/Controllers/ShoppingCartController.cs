@@ -558,9 +558,9 @@ namespace Nop.Web.Controllers
         {
             var model = new MiniShoppingCartModel()
             {
-                //if "terms of services" are enabled, then a customer should visit the shopping cart page before going to checkout
-                AllowCheckoutPassingCartPage = !_orderSettings.TermsOfServiceEnabled,
                 ShowProductImages = _shoppingCartSettings.ShowProductImagesInMiniShoppingCart,
+                //let's always display it
+                DisplayShoppingCartButton = true
             };
 
             var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
@@ -579,7 +579,14 @@ namespace Nop.Web.Controllers
                 subtotalBase = subTotalWithoutDiscountBase;
                 decimal subtotal = _currencyService.ConvertFromPrimaryStoreCurrency(subtotalBase, _workContext.WorkingCurrency);
                 model.SubTotal = _priceFormatter.FormatPrice(subtotal);
+
+                //a customer should visit the shopping cart page before going to checkout if:
+                //1.  "terms of services" are enabled
+                //2. we have at least one checkout attribute
+                var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes(!cart.RequiresShipping());
+                model.DisplayCheckoutButton = !_orderSettings.TermsOfServiceEnabled && checkoutAttributes.Count == 0;
             }
+
             //products. sort descending (recently added products)
             foreach (var sci in cart
                 .OrderByDescending(x => x.Id)

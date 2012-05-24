@@ -14,7 +14,8 @@ namespace Nop.Web.Models.ShoppingCart
         public IList<ShoppingCartItemModel> Items { get; set; }
         public int TotalProducts { get; set; }
         public string SubTotal { get; set; }
-        public bool AllowCheckoutPassingCartPage { get; set; }
+        public bool DisplayShoppingCartButton { get; set; }
+        public bool DisplayCheckoutButton { get; set; }
         public bool ShowProductImages { get; set; }
 
 
