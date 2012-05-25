@@ -34,6 +34,9 @@ namespace Nop.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.ShoppingCart.EmailWishlistEnabled")]
         public bool EmailWishlistEnabled { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.ShoppingCart.AllowAnonymousUsersToEmailWishlist")]
+        public bool AllowAnonymousUsersToEmailWishlist { get; set; }
+
         [NopResourceDisplayName("Admin.Configuration.Settings.ShoppingCart.MiniShoppingCartEnabled")]
         public bool MiniShoppingCartEnabled { get; set; }
 

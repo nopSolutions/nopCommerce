@@ -17,8 +17,10 @@
         $(document).ready(function () {
 
             $("#@Html.FieldIdFor(model => model.MiniShoppingCartEnabled)").click(toggleMiniShoppingCartEnabled);
+            $("#@Html.FieldIdFor(model => model.EmailWishlistEnabled)").click(toggleEmailWishlistEnabled);
 
             toggleMiniShoppingCartEnabled();
+            toggleEmailWishlistEnabled();
         });
 
         function toggleMiniShoppingCartEnabled() {
@@ -29,6 +31,15 @@
             else {
                 $('#pnlMiniShoppingCartProductNumber').hide();
                 $('#pnlShowProductImagesInMiniShoppingCart').hide();
+            }
+        }
+
+        function toggleEmailWishlistEnabled() {
+            if ($('#@Html.FieldIdFor(model => model.EmailWishlistEnabled)').is(':checked')) {
+                $('#pnlAllowAnonymousUsersToEmailWishlist').show();
+            }
+            else {
+                $('#pnlAllowAnonymousUsersToEmailWishlist').hide();
             }
         }
         
@@ -126,6 +137,15 @@
                 @Html.ValidationMessageFor(model => model.EmailWishlistEnabled)
             </td>
         </tr>
+        <tr id="pnlAllowAnonymousUsersToEmailWishlist">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AllowAnonymousUsersToEmailWishlist):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AllowAnonymousUsersToEmailWishlist)
+                @Html.ValidationMessageFor(model => model.AllowAnonymousUsersToEmailWishlist)
+            </td>
+        </tr>        
         <tr>
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.MiniShoppingCartEnabled):

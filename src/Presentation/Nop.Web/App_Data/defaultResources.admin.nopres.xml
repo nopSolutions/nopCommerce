@@ -5056,6 +5056,14 @@
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
+                  <LocaleResource Name="AllowAnonymousUsersToEmailWishlist">
+                    <Value>Allow guests to email their wishlists</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Check to allow guests to email their wishlists to friends.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
 									<LocaleResource Name="MiniShoppingCartEnabled">
 										<Value>Show mini-shopping cart</Value>
 										<Children>

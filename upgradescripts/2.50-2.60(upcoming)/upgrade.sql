@@ -386,6 +386,12 @@ set @resources='
   <LocaleResource Name="Products.Compare.FullDescription">
     <Value>Full description</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.AllowAnonymousUsersToEmailWishlist">
+    <Value>Allow guests to email their wishlists</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.AllowAnonymousUsersToEmailWishlist.Hint">
+    <Value>Check to allow guests to email their wishlists to friends.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1448,5 +1454,12 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.includef
 BEGIN
 	INSERT [Setting] ([Name], [Value])
 	VALUES (N'catalogsettings.includefulldescriptionincompareproducts', N'false')
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'shoppingcartsettings.allowanonymoususerstoemailwishlist')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'shoppingcartsettings.allowanonymoususerstoemailwishlist', N'false')
 END
 GO
