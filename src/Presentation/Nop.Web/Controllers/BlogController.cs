@@ -4,6 +4,7 @@ using System.Linq;
 using System.ServiceModel.Syndication;
 using System.Web.Mvc;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Customers;
@@ -21,6 +22,7 @@ using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Security;
 using Nop.Web.Framework.UI.Captcha;
+using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Blogs;
 
 namespace Nop.Web.Controllers
@@ -38,6 +40,7 @@ namespace Nop.Web.Controllers
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IWebHelper _webHelper;
+        private readonly ICacheManager _cacheManager;
 
         private readonly MediaSettings _mediaSettings;
         private readonly BlogSettings _blogSettings;
@@ -54,6 +57,7 @@ namespace Nop.Web.Controllers
             IWorkContext workContext, IPictureService pictureService, ILocalizationService localizationService,
             ICustomerContentService customerContentService, IDateTimeHelper dateTimeHelper,
             IWorkflowMessageService workflowMessageService, IWebHelper webHelper,
+            ICacheManager cacheManager, 
             MediaSettings mediaSettings, BlogSettings blogSettings,
             LocalizationSettings localizationSettings, CustomerSettings customerSettings,
             StoreInformationSettings storeInformationSettings, CaptchaSettings captchaSettings)
@@ -66,6 +70,7 @@ namespace Nop.Web.Controllers
             this._dateTimeHelper = dateTimeHelper;
             this._workflowMessageService = workflowMessageService;
             this._webHelper = webHelper;
+            this._cacheManager = cacheManager;
 
             this._mediaSettings = mediaSettings;
             this._blogSettings = blogSettings;
@@ -271,24 +276,29 @@ namespace Nop.Web.Controllers
             if (!_blogSettings.Enabled)
                 return Content("");
 
-            var model = new BlogPostTagListModel();
+            var cacheKey = string.Format(ModelCacheEventConsumer.BLOG_TAGS_MODEL_KEY, _workContext.WorkingLanguage.Id);
+            var cachedModel = _cacheManager.Get(cacheKey, () =>
+            {
+                var model = new BlogPostTagListModel();
 
-            //get tags
-            var tags = _blogService.GetAllBlogPostTags(_workContext.WorkingLanguage.Id)
-                .OrderByDescending(x => x.BlogPostCount)
-                .Take(_blogSettings.NumberOfTags)
-                .ToList();
-            //sorting
-            tags = tags.OrderBy(x => x.Name).ToList();
+                //get tags
+                var tags = _blogService.GetAllBlogPostTags(_workContext.WorkingLanguage.Id)
+                    .OrderByDescending(x => x.BlogPostCount)
+                    .Take(_blogSettings.NumberOfTags)
+                    .ToList();
+                //sorting
+                tags = tags.OrderBy(x => x.Name).ToList();
 
-            foreach (var tag in tags)
-                model.Tags.Add(new BlogPostTagModel()
+                foreach (var tag in tags)
+                    model.Tags.Add(new BlogPostTagModel()
                     {
                         Name = tag.Name,
                         BlogPostCount = tag.BlogPostCount
                     });
+                return model;
+            });
 
-            return PartialView(model);
+            return PartialView(cachedModel);
         }
 
         [ChildActionOnly]
@@ -298,54 +308,59 @@ namespace Nop.Web.Controllers
             if (!_blogSettings.Enabled)
                 return Content("");
 
-            var model = new List<BlogPostYearModel>();
-
-            var blogPosts = _blogService.GetAllBlogPosts(_workContext.WorkingLanguage.Id, null, null, 0, int.MaxValue);
-            if (blogPosts.Count > 0)
+            var cacheKey = string.Format(ModelCacheEventConsumer.BLOG_MONTHS_MODEL_KEY, _workContext.WorkingLanguage.Id);
+            var cachedModel = _cacheManager.Get(cacheKey, () =>
             {
-                var months = new SortedDictionary<DateTime, int>();
+                var model = new List<BlogPostYearModel>();
 
-                var first = blogPosts[blogPosts.Count - 1].CreatedOnUtc;
-                while (DateTime.SpecifyKind(first, DateTimeKind.Utc) <= DateTime.UtcNow.AddMonths(1))
+                var blogPosts = _blogService.GetAllBlogPosts(_workContext.WorkingLanguage.Id, null, null, 0, int.MaxValue);
+                if (blogPosts.Count > 0)
                 {
-                    var list = blogPosts.GetPostsByDate(new DateTime(first.Year, first.Month, 1), new DateTime(first.Year, first.Month, 1).AddMonths(1).AddSeconds(-1));
-                    if (list.Count > 0)
+                    var months = new SortedDictionary<DateTime, int>();
+
+                    var first = blogPosts[blogPosts.Count - 1].CreatedOnUtc;
+                    while (DateTime.SpecifyKind(first, DateTimeKind.Utc) <= DateTime.UtcNow.AddMonths(1))
                     {
-                        var date = new DateTime(first.Year, first.Month, 1);
-                        months.Add(date, list.Count);
-                    }
-
-                    first = first.AddMonths(1);
-                }
-
-
-                int current = 0;
-                foreach (var kvp in months)
-                {
-                    var date = kvp.Key;
-                    var blogPostCount = kvp.Value;
-                    if (current == 0)
-                        current = date.Year;
-
-                    if (date.Year > current || model.Count == 0)
-                    {
-                        var yearModel = new BlogPostYearModel()
+                        var list = blogPosts.GetPostsByDate(new DateTime(first.Year, first.Month, 1), new DateTime(first.Year, first.Month, 1).AddMonths(1).AddSeconds(-1));
+                        if (list.Count > 0)
                         {
-                            Year = date.Year
-                        };
-                        model.Add(yearModel);
+                            var date = new DateTime(first.Year, first.Month, 1);
+                            months.Add(date, list.Count);
+                        }
+
+                        first = first.AddMonths(1);
                     }
 
-                    model.Last().Months.Add(new BlogPostMonthModel()
+
+                    int current = 0;
+                    foreach (var kvp in months)
+                    {
+                        var date = kvp.Key;
+                        var blogPostCount = kvp.Value;
+                        if (current == 0)
+                            current = date.Year;
+
+                        if (date.Year > current || model.Count == 0)
+                        {
+                            var yearModel = new BlogPostYearModel()
+                            {
+                                Year = date.Year
+                            };
+                            model.Add(yearModel);
+                        }
+
+                        model.Last().Months.Add(new BlogPostMonthModel()
                         {
                             Month = date.Month,
                             BlogPostCount = blogPostCount
                         });
 
-                    current = date.Year;
+                        current = date.Year;
+                    }
                 }
-            }
-            return PartialView(model);
+                return model;
+            });
+            return PartialView(cachedModel);
         }
 
         [ChildActionOnly]

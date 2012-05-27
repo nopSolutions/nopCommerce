@@ -65,7 +65,6 @@ namespace Nop.Web.Controllers
             if (String.IsNullOrWhiteSpace(systemKeyword))
                 return Content("");
 
-            //template
             var cacheKey = string.Format(ModelCacheEventConsumer.POLL_BY_SYSTEMNAME__MODEL_KEY, systemKeyword);
             var cachedModel = _cacheManager.Get(cacheKey, () =>
             {
@@ -141,7 +140,6 @@ namespace Nop.Web.Controllers
         [ChildActionOnly]
         public ActionResult HomePagePolls()
         {
-            //template
             var cacheKey = string.Format(ModelCacheEventConsumer.HOMEPAGE_POLLS_MODEL_KEY, _workContext.WorkingLanguage.Id);
             var cachedModel = _cacheManager.Get(cacheKey, () =>
             {

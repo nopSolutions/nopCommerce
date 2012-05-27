@@ -1,4 +1,5 @@
 ﻿using Nop.Core.Caching;
+using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Localization;
@@ -95,10 +96,14 @@ namespace Nop.Web.Infrastructure.Cache
         IConsumer<EntityInserted<ProductPicture>>,
         IConsumer<EntityUpdated<ProductPicture>>,
         IConsumer<EntityDeleted<ProductPicture>>,
-        //languages
+        //polls
         IConsumer<EntityInserted<Poll>>,
         IConsumer<EntityUpdated<Poll>>,
-        IConsumer<EntityDeleted<Poll>>
+        IConsumer<EntityDeleted<Poll>>,
+        //blog posts
+        IConsumer<EntityInserted<BlogPost>>,
+        IConsumer<EntityUpdated<BlogPost>>,
+        IConsumer<EntityDeleted<BlogPost>>
     {
         /// <summary>
         /// Key for ManufacturerNavigationModel caching
@@ -275,7 +280,23 @@ namespace Nop.Web.Infrastructure.Cache
         /// {0} : poll system name
         /// </remarks>
         public const string POLL_BY_SYSTEMNAME__MODEL_KEY = "nop.pres.poll.systemname-{0}";
-        public const string HOMEPAGE_POLLS_PATTERN_KEY = "nop.pres.poll.";
+        public const string POLLS_PATTERN_KEY = "nop.pres.poll.";
+
+        /// <summary>
+        /// Key for blog tag list model
+        /// </summary>
+        /// <remarks>
+        /// {0} : language ID
+        /// </remarks>
+        public const string BLOG_TAGS_MODEL_KEY = "nop.pres.blog.tags-{0}";
+        /// <summary>
+        /// Key for blog archive (years, months) block model
+        /// </summary>
+        /// <remarks>
+        /// {0} : language ID
+        /// </remarks>
+        public const string BLOG_MONTHS_MODEL_KEY = "nop.pres.blog.months-{0}";
+        public const string BLOG_PATTERN_KEY = "nop.pres.blog.";
 
         private readonly ICacheManager _cacheManager;
         
@@ -327,12 +348,15 @@ namespace Nop.Web.Infrastructure.Cache
             //clear models which depend on settings
             _cacheManager.RemoveByPattern(CATEGORY_NAVIGATION_PATTERN_KEY); //depends on CatalogSettings.ShowCategoryProductNumber and CatalogSettings.ShowCategoryProductNumberIncludingSubcategories
             _cacheManager.RemoveByPattern(HOMEPAGE_BESTSELLERS_IDS_PATTERN_KEY); //depends on CatalogSettings.NumberOfBestsellersOnHomepage
+            _cacheManager.RemoveByPattern(BLOG_PATTERN_KEY); //depends on BlogSettings.NumberOfTags
+            
         }
         public void HandleEvent(EntityDeleted<Setting> eventMessage)
         {
             //clear models which depend on settings
             _cacheManager.RemoveByPattern(CATEGORY_NAVIGATION_PATTERN_KEY); //depends on CatalogSettings.ShowCategoryProductNumber and CatalogSettings.ShowCategoryProductNumberIncludingSubcategories
             _cacheManager.RemoveByPattern(HOMEPAGE_BESTSELLERS_IDS_PATTERN_KEY); //depends on CatalogSettings.NumberOfBestsellersOnHomepage
+            _cacheManager.RemoveByPattern(BLOG_PATTERN_KEY); //depends on BlogSettings.NumberOfTags
         }
         
         //manufacturers
@@ -613,15 +637,29 @@ namespace Nop.Web.Infrastructure.Cache
         //Polls
         public void HandleEvent(EntityInserted<Poll> eventMessage)
         {
-            _cacheManager.RemoveByPattern(HOMEPAGE_POLLS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(POLLS_PATTERN_KEY);
         }
         public void HandleEvent(EntityUpdated<Poll> eventMessage)
         {
-            _cacheManager.RemoveByPattern(HOMEPAGE_POLLS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(POLLS_PATTERN_KEY);
         }
         public void HandleEvent(EntityDeleted<Poll> eventMessage)
         {
-            _cacheManager.RemoveByPattern(HOMEPAGE_POLLS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(POLLS_PATTERN_KEY);
+        }
+
+        //Blog posts
+        public void HandleEvent(EntityInserted<BlogPost> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(BLOG_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityUpdated<BlogPost> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(BLOG_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityDeleted<BlogPost> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(BLOG_PATTERN_KEY);
         }
     }
 }

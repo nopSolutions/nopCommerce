@@ -18,6 +18,8 @@ namespace Nop.Web.Infrastructure
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"));
             builder.RegisterType<PollController>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"));
+            builder.RegisterType<BlogController>()
+                .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"));
         }
 
         public int Order
