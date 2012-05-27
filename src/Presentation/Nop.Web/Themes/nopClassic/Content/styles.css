@@ -226,6 +226,7 @@ ul.languagelist li:hover{cursor:pointer;}
 .order-summary-content .cart .cart-item-row td.end,.wishlist-content .cart .cart-item-row td.end{border-top:1px dotted #c5c5c5;background:none;text-align:right;font-weight:700;color:Green;}
 .order-summary-content .cart .cart-item-row .qty-input,.wishlist-content .cart .cart-item-row .qty-input{border:solid 1px #E3E3E3;font-size:12px;text-align:right;width:40px;}
 .order-summary-content .total-info{margin:0;}
+.order-summary-content .total-info .selected-shipping-method{font-weight:normal;font-size:11px;}
 .cart_total_left{width:100%;text-align:right;vertical-align:middle;height:21px;font-weight:700;color:#353434;}
 .cart_total_left_below{width:100%;text-align:right;vertical-align:top;height:30px;}
 .cart_total_right{text-align:right;vertical-align:middle;padding-left:5px;}
