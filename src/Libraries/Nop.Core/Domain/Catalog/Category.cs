@@ -10,7 +10,6 @@ namespace Nop.Core.Domain.Catalog
     /// </summary>
     public partial class Category : BaseEntity, ILocalizedEntity
     {
-        private ICollection<ProductCategory> _productCategories;
         private ICollection<Discount> _appliedDiscounts;
 
         /// <summary>
@@ -117,14 +116,6 @@ namespace Nop.Core.Domain.Catalog
         /// </summary>
         public virtual DateTime UpdatedOnUtc { get; set; }
 
-        /// <summary>
-        /// Gets or sets the collection of ProductCategory
-        /// </summary>
-        public virtual ICollection<ProductCategory> ProductCategories
-        {
-            get { return _productCategories ?? (_productCategories = new List<ProductCategory>()); }
-            protected set { _productCategories = value; }
-        }
         /// <summary>
         /// Gets or sets the collection of applied discounts
         /// </summary>

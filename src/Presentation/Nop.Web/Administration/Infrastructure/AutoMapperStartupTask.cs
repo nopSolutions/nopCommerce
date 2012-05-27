@@ -142,7 +142,6 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
                 .ForMember(dest => dest.UpdatedOnUtc, mo => mo.Ignore())
                 .ForMember(dest => dest.Deleted, mo => mo.Ignore())
-                .ForMember(dest => dest.ProductCategories, mo => mo.Ignore())
                 .ForMember(dest => dest.AppliedDiscounts, mo => mo.Ignore());
             //manufacturer
             Mapper.CreateMap<Manufacturer, ManufacturerModel>()
@@ -151,8 +150,7 @@ namespace Nop.Admin.Infrastructure
             Mapper.CreateMap<ManufacturerModel, Manufacturer>()
                 .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
                 .ForMember(dest => dest.UpdatedOnUtc, mo => mo.Ignore())
-                .ForMember(dest => dest.Deleted, mo => mo.Ignore())
-                .ForMember(dest => dest.ProductManufacturers, mo => mo.Ignore());
+                .ForMember(dest => dest.Deleted, mo => mo.Ignore());
             //products
             Mapper.CreateMap<Product, ProductModel>()
                 .ForMember(dest => dest.ProductTags, mo => mo.Ignore())

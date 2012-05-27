@@ -9,8 +9,6 @@ namespace Nop.Core.Domain.Catalog
     /// </summary>
     public partial class Manufacturer : BaseEntity, ILocalizedEntity
     {
-        private ICollection<ProductManufacturer> _productManufacturers;
-
         /// <summary>
         /// Gets or sets the name
         /// </summary>
@@ -95,14 +93,5 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the date and time of instance update
         /// </summary>
         public virtual DateTime UpdatedOnUtc { get; set; }
-        
-        /// <summary>
-        /// Gets or sets the product manufacturers
-        /// </summary>
-        public virtual ICollection<ProductManufacturer> ProductManufacturers
-        {
-            get { return _productManufacturers ?? (_productManufacturers = new List<ProductManufacturer>()); }
-            protected set { _productManufacturers = value; }
-        }
     }
 }
