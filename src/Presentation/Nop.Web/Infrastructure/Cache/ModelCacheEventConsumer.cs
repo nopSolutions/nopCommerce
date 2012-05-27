@@ -3,6 +3,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
+using Nop.Core.Domain.Polls;
 using Nop.Core.Domain.Topics;
 using Nop.Core.Events;
 using Nop.Core.Infrastructure;
@@ -93,7 +94,11 @@ namespace Nop.Web.Infrastructure.Cache
         //Product picture mapping
         IConsumer<EntityInserted<ProductPicture>>,
         IConsumer<EntityUpdated<ProductPicture>>,
-        IConsumer<EntityDeleted<ProductPicture>>
+        IConsumer<EntityDeleted<ProductPicture>>,
+        //languages
+        IConsumer<EntityInserted<Poll>>,
+        IConsumer<EntityUpdated<Poll>>,
+        IConsumer<EntityDeleted<Poll>>
     {
         /// <summary>
         /// Key for ManufacturerNavigationModel caching
@@ -255,6 +260,22 @@ namespace Nop.Web.Infrastructure.Cache
         /// </remarks>
         public const string MANUFACTURER_PICTURE_MODEL_KEY = "nop.pres.manufacturer.picture-{0}-{1}-{2}-{3}-{4}";
         public const string MANUFACTURER_PICTURE_PATTERN_KEY = "nop.pres.manufacturer.picture";
+
+        /// <summary>
+        /// Key for home page polls
+        /// </summary>
+        /// <remarks>
+        /// {0} : language ID
+        /// </remarks>
+        public const string HOMEPAGE_POLLS_MODEL_KEY = "nop.pres.poll.homepage-{0}";
+        /// <summary>
+        /// Key for polls by system name
+        /// </summary>
+        /// <remarks>
+        /// {0} : poll system name
+        /// </remarks>
+        public const string POLL_BY_SYSTEMNAME__MODEL_KEY = "nop.pres.poll.systemname-{0}";
+        public const string HOMEPAGE_POLLS_PATTERN_KEY = "nop.pres.poll.";
 
         private readonly ICacheManager _cacheManager;
         
@@ -587,6 +608,20 @@ namespace Nop.Web.Infrastructure.Cache
         public void HandleEvent(EntityDeleted<ProductPicture> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_DEFAULTPICTURE_PATTERN_KEY);
+        }
+
+        //Polls
+        public void HandleEvent(EntityInserted<Poll> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(HOMEPAGE_POLLS_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityUpdated<Poll> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(HOMEPAGE_POLLS_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityDeleted<Poll> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(HOMEPAGE_POLLS_PATTERN_KEY);
         }
     }
 }
