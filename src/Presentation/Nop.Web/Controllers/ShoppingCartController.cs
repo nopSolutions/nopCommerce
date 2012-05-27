@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
@@ -31,11 +33,9 @@ using Nop.Services.Tax;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Security;
 using Nop.Web.Framework.UI.Captcha;
-using Nop.Web.Models.Catalog;
-using Nop.Web.Models.Common;
+using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Media;
 using Nop.Web.Models.ShoppingCart;
-using System.Web;
 
 namespace Nop.Web.Controllers
 {
@@ -70,6 +70,8 @@ namespace Nop.Web.Controllers
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IPermissionService _permissionService;
         private readonly IDownloadService _downloadService;
+        private readonly ICacheManager _cacheManager;
+        private readonly IWebHelper _webHelper;
 
         private readonly MediaSettings _mediaSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
@@ -99,7 +101,8 @@ namespace Nop.Web.Controllers
             ICheckoutAttributeService checkoutAttributeService, IPaymentService paymentService,
             IWorkflowMessageService workflowMessageService,
             IPermissionService permissionService, 
-            IDownloadService downloadService,
+            IDownloadService downloadService, ICacheManager cacheManager,
+            IWebHelper webHelper,
             MediaSettings mediaSettings, ShoppingCartSettings shoppingCartSettings,
             CatalogSettings catalogSettings, OrderSettings orderSettings,
             ShippingSettings shippingSettings, TaxSettings taxSettings,
@@ -132,7 +135,9 @@ namespace Nop.Web.Controllers
             this._workflowMessageService = workflowMessageService;
             this._permissionService = permissionService;
             this._downloadService = downloadService;
-
+            this._cacheManager = cacheManager;
+            this._webHelper = webHelper;
+            
             this._mediaSettings = mediaSettings;
             this._shoppingCartSettings = shoppingCartSettings;
             this._catalogSettings = catalogSettings;
@@ -145,6 +150,33 @@ namespace Nop.Web.Controllers
         #endregion
 
         #region Utilities
+
+        [NonAction]
+        protected PictureModel PrepareCartItemPictureModel(ProductVariant productVariant,
+            int pictureSize, bool showDefaultPicture, string productName)
+        {
+            if (productVariant == null)
+                throw new ArgumentNullException("productVariant");
+
+            var pictureCacheKey = string.Format(ModelCacheEventConsumer.CART_PICTURE_MODEL_KEY, productVariant.Id, pictureSize, true, _workContext.WorkingLanguage.Id, _webHelper.IsCurrentConnectionSecured());
+            var model = _cacheManager.Get(pictureCacheKey, () =>
+            {
+                //first try to load product variant piture
+                var picture = _pictureService.GetPictureById(productVariant.PictureId);
+                if (picture == null)
+                {
+                    //if product variant doesn't have any picture assigned, then load product picture
+                    picture = _pictureService.GetPicturesByProductId(productVariant.Product.Id, 1).FirstOrDefault();
+                }
+                return new PictureModel()
+                {
+                    ImageUrl = _pictureService.GetPictureUrl(picture, pictureSize, showDefaultPicture),
+                    Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), productName),
+                    AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), productName),
+                };
+            });
+            return model;
+        }
 
         [NonAction]
         protected ShoppingCartModel PrepareShoppingCartModel(ShoppingCartModel model, 
@@ -371,18 +403,8 @@ namespace Nop.Web.Controllers
                 //picture
                 if (_shoppingCartSettings.ShowProductImagesOnShoppingCart)
                 {
-                    var picture = _pictureService.GetPictureById(sci.ProductVariant.PictureId);
-                    if (picture == null)
-                    {
-                        picture = _pictureService.GetPicturesByProductId(sci.ProductVariant.Product.Id, 1).FirstOrDefault();
-                    }
-                    cartItemModel.Picture = new PictureModel()
-                    {
-                        ImageUrl = _pictureService.GetPictureUrl(picture, _mediaSettings.CartThumbPictureSize, true),
-                        Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), cartItemModel.ProductName),
-                        AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), cartItemModel.ProductName),
-
-                    };
+                    cartItemModel.Picture = PrepareCartItemPictureModel(sci.ProductVariant,
+                        _mediaSettings.CartThumbPictureSize, true, cartItemModel.ProductName);
                 }
 
                 //item warnings
@@ -521,18 +543,8 @@ namespace Nop.Web.Controllers
                 //picture
                 if (_shoppingCartSettings.ShowProductImagesOnShoppingCart)
                 {
-                    var picture = _pictureService.GetPictureById(sci.ProductVariant.PictureId);
-                    if (picture == null)
-                    {
-                        picture = _pictureService.GetPicturesByProductId(sci.ProductVariant.Product.Id, 1).FirstOrDefault();
-                    }
-                    cartItemModel.Picture = new PictureModel()
-                    {
-                        ImageUrl = _pictureService.GetPictureUrl(picture, _mediaSettings.CartThumbPictureSize, true),
-                        Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), cartItemModel.ProductName),
-                        AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), cartItemModel.ProductName),
-
-                    };
+                    cartItemModel.Picture = PrepareCartItemPictureModel(sci.ProductVariant,
+                        _mediaSettings.CartThumbPictureSize, true, cartItemModel.ProductName);
                 }
 
                 //item warnings
@@ -585,60 +597,50 @@ namespace Nop.Web.Controllers
                 //2. we have at least one checkout attribute
                 var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes(!cart.RequiresShipping());
                 model.DisplayCheckoutButton = !_orderSettings.TermsOfServiceEnabled && checkoutAttributes.Count == 0;
-            }
 
-            //products. sort descending (recently added products)
-            foreach (var sci in cart
-                .OrderByDescending(x => x.Id)
-                .Take(_shoppingCartSettings.MiniShoppingCartProductNumber)
-                .ToList())
-            {
-                var cartItemModel = new MiniShoppingCartModel.ShoppingCartItemModel()
+                //products. sort descending (recently added products)
+                foreach (var sci in cart
+                    .OrderByDescending(x => x.Id)
+                    .Take(_shoppingCartSettings.MiniShoppingCartProductNumber)
+                    .ToList())
                 {
-                    Id = sci.Id,
-                    ProductId = sci.ProductVariant.ProductId,
-                    ProductSeName = sci.ProductVariant.Product.GetSeName(),
-                    Quantity = sci.Quantity,
-                    AttributeInfo = _productAttributeFormatter.FormatAttributes(sci.ProductVariant, sci.AttributesXml)
-                };
-
-                //product name
-                if (!String.IsNullOrEmpty(sci.ProductVariant.GetLocalized(x => x.Name)))
-                    cartItemModel.ProductName = string.Format("{0} ({1})", sci.ProductVariant.Product.GetLocalized(x => x.Name), sci.ProductVariant.GetLocalized(x => x.Name));
-                else
-                    cartItemModel.ProductName = sci.ProductVariant.Product.GetLocalized(x => x.Name);
-
-                //unit prices
-                if (sci.ProductVariant.CallForPrice)
-                {
-                    cartItemModel.UnitPrice = _localizationService.GetResource("Products.CallForPrice");
-                }
-                else
-                {
-                    decimal taxRate = decimal.Zero;
-                    decimal shoppingCartUnitPriceWithDiscountBase = _taxService.GetProductPrice(sci.ProductVariant, _priceCalculationService.GetUnitPrice(sci, true), out taxRate);
-                    decimal shoppingCartUnitPriceWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartUnitPriceWithDiscountBase, _workContext.WorkingCurrency);
-                    cartItemModel.UnitPrice = _priceFormatter.FormatPrice(shoppingCartUnitPriceWithDiscount);
-                }
-
-                //picture
-                if (_shoppingCartSettings.ShowProductImagesInMiniShoppingCart)
-                {
-                    var picture = _pictureService.GetPictureById(sci.ProductVariant.PictureId);
-                    if (picture == null)
+                    var cartItemModel = new MiniShoppingCartModel.ShoppingCartItemModel()
                     {
-                        picture = _pictureService.GetPicturesByProductId(sci.ProductVariant.Product.Id, 1).FirstOrDefault();
-                    }
-                    cartItemModel.Picture = new PictureModel()
-                    {
-                        ImageUrl = _pictureService.GetPictureUrl(picture, _mediaSettings.MiniCartThumbPictureSize, true),
-                        Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), cartItemModel.ProductName),
-                        AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), cartItemModel.ProductName),
-
+                        Id = sci.Id,
+                        ProductId = sci.ProductVariant.ProductId,
+                        ProductSeName = sci.ProductVariant.Product.GetSeName(),
+                        Quantity = sci.Quantity,
+                        AttributeInfo = _productAttributeFormatter.FormatAttributes(sci.ProductVariant, sci.AttributesXml)
                     };
-                }
 
-                model.Items.Add(cartItemModel);
+                    //product name
+                    if (!String.IsNullOrEmpty(sci.ProductVariant.GetLocalized(x => x.Name)))
+                        cartItemModel.ProductName = string.Format("{0} ({1})", sci.ProductVariant.Product.GetLocalized(x => x.Name), sci.ProductVariant.GetLocalized(x => x.Name));
+                    else
+                        cartItemModel.ProductName = sci.ProductVariant.Product.GetLocalized(x => x.Name);
+
+                    //unit prices
+                    if (sci.ProductVariant.CallForPrice)
+                    {
+                        cartItemModel.UnitPrice = _localizationService.GetResource("Products.CallForPrice");
+                    }
+                    else
+                    {
+                        decimal taxRate = decimal.Zero;
+                        decimal shoppingCartUnitPriceWithDiscountBase = _taxService.GetProductPrice(sci.ProductVariant, _priceCalculationService.GetUnitPrice(sci, true), out taxRate);
+                        decimal shoppingCartUnitPriceWithDiscount = _currencyService.ConvertFromPrimaryStoreCurrency(shoppingCartUnitPriceWithDiscountBase, _workContext.WorkingCurrency);
+                        cartItemModel.UnitPrice = _priceFormatter.FormatPrice(shoppingCartUnitPriceWithDiscount);
+                    }
+
+                    //picture
+                    if (_shoppingCartSettings.ShowProductImagesInMiniShoppingCart)
+                    {
+                        cartItemModel.Picture = PrepareCartItemPictureModel(sci.ProductVariant,
+                            _mediaSettings.MiniCartThumbPictureSize, true, cartItemModel.ProductName);
+                    }
+
+                    model.Items.Add(cartItemModel);
+                }
             }
             
             return model;

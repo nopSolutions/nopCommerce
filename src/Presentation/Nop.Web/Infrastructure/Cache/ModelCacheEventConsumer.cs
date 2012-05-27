@@ -267,6 +267,19 @@ namespace Nop.Web.Infrastructure.Cache
         public const string MANUFACTURER_PICTURE_PATTERN_KEY = "nop.pres.manufacturer.picture";
 
         /// <summary>
+        /// Key for cart picture caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : product variant id
+        /// {1} : picture size
+        /// {2} : value indicating whether a default picture is displayed in case if no real picture exists
+        /// {3} : language ID ("alt" and "title" can depend on localized product name)
+        /// {4} : is connection SSL secured?
+        /// </remarks>
+        public const string CART_PICTURE_MODEL_KEY = "nop.pres.cart.picture-{0}-{1}-{2}-{3}-{4}";
+        public const string CART_PICTURE_PATTERN_KEY = "nop.pres.cart.picture";
+
+        /// <summary>
         /// Key for home page polls
         /// </summary>
         /// <remarks>
@@ -439,6 +452,7 @@ namespace Nop.Web.Infrastructure.Cache
         {
             _cacheManager.RemoveByPattern(CATEGORY_NAVIGATION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCT_DEFAULTPICTURE_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(CART_PICTURE_PATTERN_KEY);
         }
         public void HandleEvent(EntityDeleted<Product> eventMessage)
         {
@@ -454,6 +468,7 @@ namespace Nop.Web.Infrastructure.Cache
         public void HandleEvent(EntityUpdated<ProductVariant> eventMessage)
         {
             _cacheManager.RemoveByPattern(CATEGORY_NAVIGATION_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(CART_PICTURE_PATTERN_KEY);
         }
         public void HandleEvent(EntityDeleted<ProductVariant> eventMessage)
         {
@@ -606,18 +621,21 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(PRODUCT_DEFAULTPICTURE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_PICTURE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(MANUFACTURER_PICTURE_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(CART_PICTURE_PATTERN_KEY);
         }
         public void HandleEvent(EntityUpdated<Picture> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_DEFAULTPICTURE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_PICTURE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(MANUFACTURER_PICTURE_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(CART_PICTURE_PATTERN_KEY);
         }
         public void HandleEvent(EntityDeleted<Picture> eventMessage)
         {
             _cacheManager.RemoveByPattern(PRODUCT_DEFAULTPICTURE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_PICTURE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(MANUFACTURER_PICTURE_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(CART_PICTURE_PATTERN_KEY);
         }
 
         //Product picture mappings
