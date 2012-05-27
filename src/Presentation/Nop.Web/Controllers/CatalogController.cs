@@ -1923,20 +1923,16 @@ namespace Nop.Web.Controllers
         public ActionResult RelatedProducts(int productId, int? productThumbPictureSize)
         {
             var products = new List<Product>();
-            foreach (var rp in _productService.GetRelatedProductsByProductId1(productId))
+            var relatedProducts = _productService.GetRelatedProductsByProductId1(productId);
+            foreach (var product in _productService.GetProductsByIds(relatedProducts.Select(x => x.Id).ToArray()))
             {
-                var product = _productService.GetProductById(rp.ProductId2);
-                if (product == null)
-                    continue;
-
-                //ensure that a related product has at least one available variant
+                //ensure that a product has at least one available variant
                 var variants = _productService.GetProductVariantsByProductId(product.Id);
                 if (variants.Count > 0)
                     products.Add(product);
             }
-
-
             var model = PrepareProductOverviewModels(products, true, true, productThumbPictureSize).ToList();
+            
             return PartialView(model);
         }
 
