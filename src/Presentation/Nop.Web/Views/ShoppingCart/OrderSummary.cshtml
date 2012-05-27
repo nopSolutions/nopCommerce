@@ -327,8 +327,11 @@
                 }
             </div>
             <div class="clear">
-            </div>
-            @Html.Action("CrossSellProducts", "Catalog")
+            </div>            
+            @if (Model.IsEditable)
+            {
+                @Html.Action("CrossSellProducts", "Catalog")
+            }
         </div>
     }
     else
