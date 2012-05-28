@@ -81,7 +81,7 @@ namespace Nop.Services.ExportImport
 
 
                     xmlWriter.WriteStartElement("Products");
-                    var productCategories = _categoryService.GetProductCategoriesByCategoryId(category.Id, true);
+                    var productCategories = _categoryService.GetProductCategoriesByCategoryId(category.Id, 0, int.MaxValue, true);
                     foreach (var productCategory in productCategories)
                     {
                         var product = productCategory.Product;
@@ -147,7 +147,7 @@ namespace Nop.Services.ExportImport
                 xmlWriter.WriteElementString("UpdatedOnUtc", null, manufacturer.UpdatedOnUtc.ToString());
 
                 xmlWriter.WriteStartElement("Products");
-                var productManufacturers = _manufacturerService.GetProductManufacturersByManufacturerId(manufacturer.Id, true);
+                var productManufacturers = _manufacturerService.GetProductManufacturersByManufacturerId(manufacturer.Id, 0, int.MaxValue, true);
                 if (productManufacturers != null)
                 {
                     foreach (var productManufacturer in productManufacturers)

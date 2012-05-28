@@ -227,7 +227,7 @@
     {
     if (Model.Id > 0)
     {
-            
+        var gridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSize;
             <table class="adminContent">
                 <tr>
                     <td>
@@ -262,6 +262,7 @@
                         })
                         .Width(180);
                     })
+                    .Pageable(settings => settings.PageSize(gridPageSize).Position(GridPagerPosition.Both))
                     .EnableCustomBinding(true))
                     </td>
                 </tr>

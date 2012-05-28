@@ -17,7 +17,7 @@ namespace Nop.Services.Catalog
         #region Constants
         private const string CATEGORIES_BY_ID_KEY = "Nop.category.id-{0}";
         private const string CATEGORIES_BY_PARENT_CATEGORY_ID_KEY = "Nop.category.byparent-{0}-{1}";
-        private const string PRODUCTCATEGORIES_ALLBYCATEGORYID_KEY = "Nop.productcategory.allbycategoryid-{0}-{1}";
+        private const string PRODUCTCATEGORIES_ALLBYCATEGORYID_KEY = "Nop.productcategory.allbycategoryid-{0}-{1}-{2}-{3}";
         private const string PRODUCTCATEGORIES_ALLBYPRODUCTID_KEY = "Nop.productcategory.allbyproductid-{0}-{1}";
         private const string PRODUCTCATEGORIES_BY_ID_KEY = "Nop.productcategory.id-{0}";
         private const string CATEGORIES_PATTERN_KEY = "Nop.category.";
@@ -269,14 +269,16 @@ namespace Nop.Services.Catalog
         /// Gets product category mapping collection
         /// </summary>
         /// <param name="categoryId">Category identifier</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Product a category mapping collection</returns>
-        public virtual IList<ProductCategory> GetProductCategoriesByCategoryId(int categoryId, bool showHidden = false)
+        public virtual IPagedList<ProductCategory> GetProductCategoriesByCategoryId(int categoryId, int pageIndex, int pageSize, bool showHidden = false)
         {
             if (categoryId == 0)
-                return new List<ProductCategory>();
+                return new PagedList<ProductCategory>(new List<ProductCategory>(), pageIndex, pageSize);
 
-            string key = string.Format(PRODUCTCATEGORIES_ALLBYCATEGORYID_KEY, showHidden, categoryId);
+            string key = string.Format(PRODUCTCATEGORIES_ALLBYCATEGORYID_KEY, showHidden, categoryId, pageIndex, pageSize);
             return _cacheManager.Get(key, () =>
             {
                 var query = from pc in _productCategoryRepository.Table
@@ -286,7 +288,7 @@ namespace Nop.Services.Catalog
                                   (showHidden || p.Published)
                             orderby pc.DisplayOrder
                             select pc;
-                var productCategories = query.ToList();
+                var productCategories = new PagedList<ProductCategory>(query, pageIndex, pageSize);
                 return productCategories;
             });
         }

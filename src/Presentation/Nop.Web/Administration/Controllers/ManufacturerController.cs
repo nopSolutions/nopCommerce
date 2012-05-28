@@ -353,8 +353,12 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
 
-            var productManufacturers = _manufacturerService.GetProductManufacturersByManufacturerId(manufacturerId, true);
-            var productManufacturersModel = productManufacturers
+            var productManufacturers = _manufacturerService.GetProductManufacturersByManufacturerId(manufacturerId,
+                command.Page - 1, command.PageSize, true);
+
+            var model = new GridModel<ManufacturerModel.ManufacturerProductModel>
+            {
+                Data = productManufacturers
                 .Select(x =>
                 {
                     return new ManufacturerModel.ManufacturerProductModel()
@@ -366,13 +370,8 @@ namespace Nop.Admin.Controllers
                         IsFeaturedProduct = x.IsFeaturedProduct,
                         DisplayOrder1 = x.DisplayOrder
                     };
-                })
-                .ToList();
-
-            var model = new GridModel<ManufacturerModel.ManufacturerProductModel>
-            {
-                Data = productManufacturersModel,
-                Total = productManufacturersModel.Count
+                }),
+                Total = productManufacturers.TotalCount
             };
 
             return new JsonResult
@@ -479,7 +478,7 @@ namespace Nop.Admin.Controllers
                     var product = _productService.GetProductById(id);
                     if (product != null)
                     {
-                        var existingProductmanufacturers = _manufacturerService.GetProductManufacturersByManufacturerId(model.ManufacturerId);
+                        var existingProductmanufacturers = _manufacturerService.GetProductManufacturersByManufacturerId(model.ManufacturerId, 0, int.MaxValue, true);
                         if (existingProductmanufacturers.FindProductManufacturer(id, model.ManufacturerId) == null)
                         {
                             _manufacturerService.InsertProductManufacturer(

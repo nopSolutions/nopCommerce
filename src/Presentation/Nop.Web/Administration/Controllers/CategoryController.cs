@@ -524,8 +524,11 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
 
-            var productCategories = _categoryService.GetProductCategoriesByCategoryId(categoryId, true);
-            var productCategoriesModel = productCategories
+            var productCategories = _categoryService.GetProductCategoriesByCategoryId(categoryId,
+                command.Page - 1, command.PageSize, true);
+            var model = new GridModel<CategoryModel.CategoryProductModel>
+            {
+                Data = productCategories
                 .Select(x =>
                 {
                     return new CategoryModel.CategoryProductModel()
@@ -537,13 +540,8 @@ namespace Nop.Admin.Controllers
                         IsFeaturedProduct = x.IsFeaturedProduct,
                         DisplayOrder1 = x.DisplayOrder
                     };
-                })
-                .ToList();
-
-            var model = new GridModel<CategoryModel.CategoryProductModel>
-            {
-                Data = productCategoriesModel,
-                Total = productCategoriesModel.Count
+                }),
+                Total = productCategories.TotalCount
             };
 
             return new JsonResult
@@ -650,7 +648,7 @@ namespace Nop.Admin.Controllers
                     var product = _productService.GetProductById(id);
                     if (product != null)
                     {
-                        var existingProductCategories = _categoryService.GetProductCategoriesByCategoryId(model.CategoryId);
+                        var existingProductCategories = _categoryService.GetProductCategoriesByCategoryId(model.CategoryId, 0, int.MaxValue, true);
                         if (existingProductCategories.FindProductCategory(id, model.CategoryId) == null)
                         {
                             _categoryService.InsertProductCategory(
