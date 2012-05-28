@@ -238,6 +238,7 @@
     <Compile Include="Models\Install\InstallModel.cs" />
     <Compile Include="Models\Cms\WidgetModel.cs" />
     <Compile Include="Models\News\AddNewsCommentModel.cs" />
+    <Compile Include="Models\News\HomePageNewsItemsModel.cs" />
     <Compile Include="Models\News\NewsCommentModel.cs" />
     <Compile Include="Models\News\NewsPagingFilteringModel.cs" />
     <Compile Include="Models\News\NewsItemListModel.cs" />

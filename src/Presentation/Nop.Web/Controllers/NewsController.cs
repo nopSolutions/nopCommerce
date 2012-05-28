@@ -4,6 +4,7 @@ using System.Linq;
 using System.ServiceModel.Syndication;
 using System.Web.Mvc;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
@@ -20,6 +21,7 @@ using Nop.Services.Seo;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.UI.Captcha;
+using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.News;
 using Nop.Web.Framework.Security;
 
@@ -38,6 +40,7 @@ namespace Nop.Web.Controllers
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IWebHelper _webHelper;
+        private readonly ICacheManager _cacheManager;
 
         private readonly MediaSettings _mediaSettings;
         private readonly NewsSettings _newsSettings;
@@ -54,6 +57,7 @@ namespace Nop.Web.Controllers
             IWorkContext workContext, IPictureService pictureService, ILocalizationService localizationService,
             ICustomerContentService customerContentService, IDateTimeHelper dateTimeHelper,
             IWorkflowMessageService workflowMessageService, IWebHelper webHelper,
+            ICacheManager cacheManager,
             MediaSettings mediaSettings, NewsSettings newsSettings,
             LocalizationSettings localizationSettings, CustomerSettings customerSettings,
             StoreInformationSettings storeInformationSettings, CaptchaSettings captchaSettings)
@@ -66,6 +70,7 @@ namespace Nop.Web.Controllers
             this._dateTimeHelper = dateTimeHelper;
             this._workflowMessageService = workflowMessageService;
             this._webHelper = webHelper;
+            this._cacheManager = cacheManager;
 
             this._mediaSettings = mediaSettings;
             this._newsSettings = newsSettings;
@@ -133,21 +138,31 @@ namespace Nop.Web.Controllers
         {
             if (!_newsSettings.Enabled || !_newsSettings.ShowNewsOnMainPage)
                 return Content("");
-
-            var model = new NewsItemListModel();
-            model.WorkingLanguageId = _workContext.WorkingLanguage.Id;
-
-            var newsItems = _newsService.GetAllNews(_workContext.WorkingLanguage.Id, 0, _newsSettings.MainPageNewsCount);
-
-            model.NewsItems = newsItems
-                .Select(x =>
+            
+            var cacheKey = string.Format(ModelCacheEventConsumer.HOMEPAGE_NEWSMODEL_KEY, _workContext.WorkingLanguage.Id);
+            var cachedModel = _cacheManager.Get(cacheKey, () =>
+            {
+                var newsItems = _newsService.GetAllNews(_workContext.WorkingLanguage.Id, 0, _newsSettings.MainPageNewsCount);
+                return new HomePageNewsItemsModel()
                 {
-                    var newsModel = new NewsItemModel();
-                    PrepareNewsItemModel(newsModel, x, false);
-                    return newsModel;
-                })
-                .ToList();
+                    WorkingLanguageId = _workContext.WorkingLanguage.Id,
+                    NewsItems = newsItems
+                        .Select(x =>
+                                    {
+                                        var newsModel = new NewsItemModel();
+                                        PrepareNewsItemModel(newsModel, x, false);
+                                        return newsModel;
+                                    })
+                        .ToList()
+                };
+            });
 
+            //"Comments" property of "NewsItemModel" object depends on the current customer.
+            //Furthermore, we just don't need it for home page news. So let's update reset it.
+            //But first we need to clone the cached model (the updated one should not be cached)
+            var model = (HomePageNewsItemsModel)cachedModel.Clone();
+            foreach (var newsItemModel in model.NewsItems)
+                newsItemModel.Comments.Clear();
             return PartialView(model);
         }
 

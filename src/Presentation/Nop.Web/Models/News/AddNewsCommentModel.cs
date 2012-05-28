@@ -4,7 +4,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Web.Models.News
 {
-    public class AddNewsCommentModel : BaseNopEntityModel
+    public class AddNewsCommentModel : BaseNopModel
     {
         [NopResourceDisplayName("News.Comments.CommentTitle")]
         [AllowHtml]

@@ -3,6 +3,7 @@ using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Configuration;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Polls;
 using Nop.Core.Domain.Topics;
@@ -103,7 +104,11 @@ namespace Nop.Web.Infrastructure.Cache
         //blog posts
         IConsumer<EntityInserted<BlogPost>>,
         IConsumer<EntityUpdated<BlogPost>>,
-        IConsumer<EntityDeleted<BlogPost>>
+        IConsumer<EntityDeleted<BlogPost>>,
+        //news itesm
+        IConsumer<EntityInserted<NewsItem>>,
+        IConsumer<EntityUpdated<NewsItem>>,
+        IConsumer<EntityDeleted<NewsItem>>
     {
         /// <summary>
         /// Key for ManufacturerNavigationModel caching
@@ -311,6 +316,15 @@ namespace Nop.Web.Infrastructure.Cache
         public const string BLOG_MONTHS_MODEL_KEY = "nop.pres.blog.months-{0}";
         public const string BLOG_PATTERN_KEY = "nop.pres.blog.";
 
+        /// <summary>
+        /// Key for home page news
+        /// </summary>
+        /// <remarks>
+        /// {0} : language ID
+        /// </remarks>
+        public const string HOMEPAGE_NEWSMODEL_KEY = "nop.pres.news.homepage-{0}";
+        public const string NEWS_PATTERN_KEY = "nop.pres.news.";
+
         private readonly ICacheManager _cacheManager;
         
         public ModelCacheEventConsumer()
@@ -362,6 +376,7 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(CATEGORY_NAVIGATION_PATTERN_KEY); //depends on CatalogSettings.ShowCategoryProductNumber and CatalogSettings.ShowCategoryProductNumberIncludingSubcategories
             _cacheManager.RemoveByPattern(HOMEPAGE_BESTSELLERS_IDS_PATTERN_KEY); //depends on CatalogSettings.NumberOfBestsellersOnHomepage
             _cacheManager.RemoveByPattern(BLOG_PATTERN_KEY); //depends on BlogSettings.NumberOfTags
+            _cacheManager.RemoveByPattern(NEWS_PATTERN_KEY); //depends on NewsSettings.MainPageNewsCount
             
         }
         public void HandleEvent(EntityDeleted<Setting> eventMessage)
@@ -370,6 +385,7 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(CATEGORY_NAVIGATION_PATTERN_KEY); //depends on CatalogSettings.ShowCategoryProductNumber and CatalogSettings.ShowCategoryProductNumberIncludingSubcategories
             _cacheManager.RemoveByPattern(HOMEPAGE_BESTSELLERS_IDS_PATTERN_KEY); //depends on CatalogSettings.NumberOfBestsellersOnHomepage
             _cacheManager.RemoveByPattern(BLOG_PATTERN_KEY); //depends on BlogSettings.NumberOfTags
+            _cacheManager.RemoveByPattern(NEWS_PATTERN_KEY); //depends on NewsSettings.MainPageNewsCount
         }
         
         //manufacturers
@@ -678,6 +694,20 @@ namespace Nop.Web.Infrastructure.Cache
         public void HandleEvent(EntityDeleted<BlogPost> eventMessage)
         {
             _cacheManager.RemoveByPattern(BLOG_PATTERN_KEY);
+        }
+
+        //News items
+        public void HandleEvent(EntityInserted<NewsItem> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(NEWS_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityUpdated<NewsItem> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(NEWS_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityDeleted<NewsItem> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(NEWS_PATTERN_KEY);
         }
     }
 }
