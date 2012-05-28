@@ -47,7 +47,7 @@ a.logo{background:url(images/logo.gif);display:block;width:225px;height:60px;tex
 .header-currencyselector{float:right;}
 .header-languageselector{float:right;}
 .header-taxDisplayTypeSelector{float:right;}
-.header-links-wrapper{float:right;text-align:right;width:670px;}
+.header-links-wrapper{position:relative;float:right;text-align:right;width:670px;}
 .header-links{border:solid 1px #9a9a9a;padding:5px;margin-bottom:5px;display:inline-table;}
 .header-links ul{padding:0;margin:0;}
 .header-links ul li{list-style:none;display:inline;padding-right:2px;}
@@ -182,7 +182,7 @@ ul.languagelist li:hover{cursor:pointer;}
 .block-popular-tags li,.block-popular-blogtags li{display:inline!important;}
 .block-blog-archive .year{color:#f93;font-weight:700;text-decoration:none;}
 /*Mini-shopping cart */
-#flyout-cart{display:none;position:absolute;float:left;top:50px;right:65px;width:300px;min-height:50px;background:#FFF;z-index:99999;}
+#flyout-cart{display:none;position:absolute;float:left;top:19px;right:0px;width:300px;min-height:50px;background:#FFF;z-index:99999;}
 #flyout-cart.active{display:block;}
 .minishoppingcart{padding:5px 10px 10px;margin:0;border: 1px solid #C1C1C1;color:#FFF;background:#404040;font-size:11px;}
 .minishoppingcart a{color:#FFF;font-weight:700;text-decoration:none;}
@@ -262,7 +262,6 @@ ul.languagelist li:hover{cursor:pointer;}
 .checkout-page,.checkout-one-page{}
 .checkout-page .page-title,.checkout-one-page .page-title{border-bottom:0 none;}
 .checkout-page .checkout-data,.checkout-one-page .checkout-data{margin:0;padding:0;font-size:11px;color:#555;background-color:inherit;}
-.checkout-one-page .checkout-data .progress{position:absolute;top:100px;width:180px;left:0;right:0;margin-left:auto;margin-right:auto;background:none repeat scroll 0 0 #FFF;padding:5px 10px;text-align:center;z-index:2147483647;}
 .checkoutstep{}
 .checkoutstep .steptitle{border:1px solid #2F4F4F;color:#FFF;background-color:#2E4d7B;font-family:Arial, Sans-Serif;font-size:12px;font-weight:700;padding:5px;margin-top:5px;}
 .checkoutstep .stepcontent{border:dashed 1px #2F4F4F;border-top:none;padding:5px;}

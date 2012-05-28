@@ -1041,8 +1041,8 @@ namespace Nop.Web.Controllers
                 !productVariant.Published ||
                 productVariant.Deleted ||
                 productVariant.Product == null ||
-                !productVariant.Product.Published == null ||
-                productVariant.Product.Deleted == null)
+                !productVariant.Product.Published ||
+                productVariant.Product.Deleted)
             {
                 return Json(new
                 {
