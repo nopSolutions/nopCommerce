@@ -17,11 +17,19 @@
     Html.AppendScriptParts(@Url.Content("~/Administration/Scripts/jquery.validate.min.js"));
     Html.AppendScriptParts(@Url.Content("~/Administration/Scripts/jquery.unobtrusive-ajax.min.js"));
     Html.AppendScriptParts(@Url.Content("~/Administration/Scripts/jquery-1.7.1.min.js"));
+
+    //page title
+    string adminPageTitle = "";
+    if (!String.IsNullOrWhiteSpace(ViewBag.Title))
+    {
+        adminPageTitle = ViewBag.Title + " / ";
+    }
+    adminPageTitle += @T("Admin.PageTitle").Text;
 }
 <!DOCTYPE html>
 <html>
 <head>
-    <title>NopCommerce Web Administration. @ViewBag.Title</title>
+    <title>@adminPageTitle</title>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
     @Html.NopCssFiles(ResourceLocation.Head)
     @Html.NopScripts(ResourceLocation.Head)

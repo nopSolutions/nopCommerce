@@ -8226,6 +8226,9 @@
 					</LocaleResource>
 				</Children>
 			</LocaleResource>
+      <LocaleResource Name="PageTitle">
+        <Value>nopCommerce administration</Value>
+      </LocaleResource>
 			<LocaleResource Name="Picture">
 				<Children>
 					<LocaleResource Name="RemovePicture">

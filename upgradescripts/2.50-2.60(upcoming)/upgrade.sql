@@ -392,6 +392,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.AllowAnonymousUsersToEmailWishlist.Hint">
     <Value>Check to allow guests to email their wishlists to friends.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.PageTitle">
+    <Value>nopCommerce administration</Value>
+  </LocaleResource>
 </Language>
 '
 
