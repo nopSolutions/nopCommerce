@@ -185,7 +185,7 @@ ul.languagelist li:hover{cursor:pointer;}
 /*Mini-shopping cart */
 #flyout-cart{display:none;position:absolute;float:left;top:50px;left:65px;width:300px;min-height:50px;background:#FFF;z-index:99999;}
 #flyout-cart.active{display:block;}
-.minishoppingcart{text-align:right;direction:rtl;padding:5px 0px 10px 10px;margin:0;border: 1px solid #C1C1C1;color:#FFF;background:#404040;font-size:11px;}
+.minishoppingcart{text-align:right;direction:rtl;padding:5px 10px 10px;margin:0;border: 1px solid #C1C1C1;color:#FFF;background:#404040;font-size:11px;}
 .minishoppingcart a{color:#FFF;font-weight:700;text-decoration:none;}
 .minishoppingcart .count{margin:10px 0px 10px;}
 .minishoppingcart .items{overflow:hidden;}
