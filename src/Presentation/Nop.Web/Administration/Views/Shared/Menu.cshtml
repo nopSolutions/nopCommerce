@@ -6,7 +6,7 @@
     if (!Telerik.Web.Mvc.SiteMapManager.SiteMaps.ContainsKey("admin"))
     {
         Telerik.Web.Mvc.SiteMapManager.SiteMaps.Register<Telerik.Web.Mvc.XmlSiteMap>("admin", sitemap =>
-            sitemap.LoadFrom("~/Administration/sitemap.xml"));
+            sitemap.LoadFrom("~/Administration/sitemap.config"));
     }
     var adminMenuPlugins = EngineContext.Current.Resolve<Nop.Core.Plugins.IPluginFinder>().GetPlugins<IAdminMenuPlugin>();
 

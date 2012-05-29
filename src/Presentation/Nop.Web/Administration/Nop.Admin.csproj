@@ -352,7 +352,7 @@
     <Content Include="Scripts\MicrosoftMvcAjax.js" />
     <Content Include="Scripts\MicrosoftMvcValidation.debug.js" />
     <Content Include="Scripts\MicrosoftMvcValidation.js" />
-    <Content Include="sitemap.xml">
+    <Content Include="sitemap.config">
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
