@@ -54,7 +54,7 @@ a.logo{background:url(images/logo.gif);display:block;width:225px;height:60px;tex
 .header-links ul li{list-style:none;display:inline;padding-right:2px;}
 .header-links a{color:#FFF;text-decoration:none;float:right;}
 .header-links a:hover{color:#f93;}
-.header-links a.account{color:#f93;}
+.header-links a.account{color:#f93;padding-right:2px;}
 .header-links span.impersonate{color:#58DE81;font-weight:700;}
 .header-links span.impersonate .finish-impersonation{color:#E44097;}
 .headermenu{color:#FFF;background:#3a3a3a;padding:8px 5px 9px;text-align:center;height:100%;vertical-align:middle;letter-spacing:1px;margin-bottom:10px;}
