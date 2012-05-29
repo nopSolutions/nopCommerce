@@ -23,6 +23,7 @@
         errorMessages.AddRange(ViewData[string.Format("nop.notifications.{0}", NotifyType.Error)] as IList<string>);
     }
 }
+@*TODO use "displayPopupNotification" java-script function*@
 @if (successMessages.Count > 0)
 {
     <script type="text/javascript">
@@ -50,4 +51,7 @@
     {
         <p>@message</p>
     }
+</div>
+<div id="bar-notification" class="bar-notification">
+    <img src="@Url.Content("~/Content/Images/ico-close-notification-bar.png")" class="close" alt="Close" title="Close" />
 </div>

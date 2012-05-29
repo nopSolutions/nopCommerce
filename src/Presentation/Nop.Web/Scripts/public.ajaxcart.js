@@ -5,12 +5,14 @@
 
 var AjaxCart = {
     loadWaiting: false,
+    usepopupnotifications: false,
     topcartselector: '',
     topwishlistselector: '',
     flyoutcartselector: '',
 
-    init: function (topcartselector, topwishlistselector, flyoutcartselector) {
+    init: function (usepopupnotifications, topcartselector, topwishlistselector, flyoutcartselector) {
         this.loadWaiting = false;
+        this.usepopupnotifications = usepopupnotifications;
         this.topcartselector = topcartselector;
         this.topwishlistselector = topwishlistselector;
         this.flyoutcartselector = flyoutcartselector;
@@ -60,21 +62,33 @@ var AjaxCart = {
         }
         if (response.updatetopwishlistsectionhtml) {
             $(AjaxCart.topwishlistselector).html(response.updatetopwishlistsectionhtml);
-        } 
+        }
         if (response.updateflyoutcartsectionhtml) {
             $(AjaxCart.flyoutcartselector).replaceWith(response.updateflyoutcartsectionhtml);
         }
         if (response.message) {
-            var messageType;
+            //display notification
             if (response.success == true) {
-                messageType = 'success';
+                //success
+                if (AjaxCart.usepopupnotifications == true) {
+                    displayPopupNotification(response.message, 'success', true);
+                }
+                else {
+                    //specify timeout for success messages
+                    displayBarNotification(response.message, 'success', 3500);
+                }
             }
             else {
-                messageType = 'error';
+                //error
+                if (AjaxCart.usepopupnotifications == true) {
+                    displayPopupNotification(response.message, 'error', true);
+                }
+                else {
+                    //no timeout for errors
+                    displayBarNotification(response.message, 'error', 0);
+                }
+                
             }
-
-            displayNotification(response.message, messageType, true);
-
             return false;
         }
         if (response.redirect) {

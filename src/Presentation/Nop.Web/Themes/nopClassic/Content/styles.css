@@ -198,6 +198,12 @@ ul.languagelist li:hover{cursor:pointer;}
 .minishoppingcart .buttons{margin:10px 0px;text-align:right;}
 .minishoppingcart .cartbutton{margin:0px 5px;}
 .minishoppingcart .checkoutbutton{margin:0px 5px;}
+/* notifications */
+.bar-notification{display:none;left:0;position:fixed;top:0;width:100%;z-index:100000;}
+.bar-notification.success{background:none repeat scroll 0 0 #91BD09;border-bottom:3px solid #FFFFFF !important;color:#FFFFFF;margin: 0 0 10px;}
+.bar-notification.error{background:none repeat scroll 0 0 #CC0000;border-bottom:3px solid #FFFFFF !important;color:#FFFFFF;margin: 0 0 10px;}
+.bar-notification .close{float:right;margin:9px 9px 0px 0px;cursor:pointer;}
+.bar-notification p.content{padding:0px 10px;}
 /* ORDER SUMMARY, SHOPPING CART, WISHLIST */
 .shoppingcart-page,.wishlist-page{}
 .shoppingcart-page .page-title,.wishlist-page .page-title{border-bottom:0 none;}

@@ -2,15 +2,16 @@
     Layout = "~/Views/Shared/_Root.Head.cshtml";
 }
 @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.AfterBodyStartHtmlTag })
+@Html.Partial("_Notifications")
 <div class="master-wrapper-page">
     @Html.Action("JavaScriptDisabledWarning", "Common")
     <div class="master-wrapper-content">
         <script type="text/javascript">
         //<![CDATA[
-            AjaxCart.init('.header-links .cart-qty', '.header-links .wishlist-qty', '#flyout-cart');
+            //replace the first parameter with "true" to use popup notifications
+            AjaxCart.init(false, '.header-links .cart-qty', '.header-links .wishlist-qty', '#flyout-cart');
           //]]>
         </script>
-        @Html.Partial("_Notifications")
         @Html.Partial("Header")
         @Html.Partial("HeaderMenu")
         @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.BeforeContent })

@@ -1079,7 +1079,7 @@
     <Content Include="Content\Images\flags\za.png" />
     <Content Include="Content\Images\flags\zm.png" />
     <Content Include="Content\Images\flags\zw.png" />
-    <Content Include="Content\Images\ico-delete.gif" />
+    <Content Include="Content\Images\ico-close-notification-bar.png" />
     <Content Include="Content\Images\icon_rss.gif" />
     <Content Include="Content\Images\noDefaultImage.gif" />
     <Content Include="Content\Images\noDefaultImage1.gif" />
