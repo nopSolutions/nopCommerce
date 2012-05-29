@@ -1,4 +1,16 @@
 ﻿@model Nop.Web.Models.Catalog.ProductModel
+@{
+    //prepare "Add to cart" AJAX link
+    string addtocartlink = "";
+    if (Model.ProductPrice.ForceRedirectionAfterAddingToCart)
+    {
+        addtocartlink = Url.RouteUrl("AddProductToCart", new { productId = Model.Id, forceredirection = Model.ProductPrice.ForceRedirectionAfterAddingToCart});
+    }
+    else
+    {
+        addtocartlink = Url.RouteUrl("AddProductToCart", new { productId = Model.Id });
+    }    
+}
 <div class="product-item">
     <h2 class="product-title">
         <a href="@Url.RouteUrl("Product", new { productId = Model.Id, SeName = Model.SeName })">@Model.Name</a>
@@ -20,7 +32,7 @@
             @if (!Model.ProductPrice.DisableBuyButton)
             {
                 <br />                
-                <input type="button" value="@(Model.ProductPrice.AvailableForPreOrder ? T("ShoppingCart.PreOrder") : T("ShoppingCart.AddToCart"))" class="productlistaddtocartbutton" onclick="AjaxCart.addproducttocart('@Url.RouteUrl("AddProductToCart", new { productId = Model.Id })');return false;" />
+                <input type="button" value="@(Model.ProductPrice.AvailableForPreOrder ? T("ShoppingCart.PreOrder") : T("ShoppingCart.AddToCart"))" class="productlistaddtocartbutton" onclick="AjaxCart.addproducttocart('@addtocartlink');return false;" />
             }
         </div>
     </div>

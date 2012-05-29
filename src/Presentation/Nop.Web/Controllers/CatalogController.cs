@@ -190,8 +190,9 @@ namespace Nop.Web.Controllers
         
         [NonAction]
         protected IEnumerable<ProductModel> PrepareProductOverviewModels(IEnumerable<Product> products, 
-            bool preparePriceModel = true, bool preparePictureModel = true, 
-            int? productThumbPictureSize = null, bool prepareSpecificationAttributes = false)
+            bool preparePriceModel = true, bool preparePictureModel = true,
+            int? productThumbPictureSize = null, bool prepareSpecificationAttributes = false,
+            bool forceRedirectionAfterAddingToCart = false)
         {
             if (products == null)
                 throw new ArgumentNullException("products");
@@ -334,6 +335,7 @@ namespace Nop.Web.Controllers
                             break;
                     }
 
+                    priceModel.ForceRedirectionAfterAddingToCart = forceRedirectionAfterAddingToCart;
                     model.ProductPrice = priceModel;
                     #endregion
                 }
@@ -1974,7 +1976,13 @@ namespace Nop.Web.Controllers
             var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
 
             var products = _productService.GetCrosssellProductsByShoppingCart(cart, _shoppingCartSettings.CrossSellsNumber);
-            var model = PrepareProductOverviewModels(products, true, true, productThumbPictureSize).ToList();
+            //Cross-sell products are dispalyed on the shoppnig cart page.
+            //We know that the entire shopping cart page is not refresh
+            //even if "ShoppingCartSettings.DisplayCartAfterAddingProduct" setting  is enabled.
+            //That's why we force page refresh (redirect) in this case
+            var model = PrepareProductOverviewModels(products,  
+                productThumbPictureSize: productThumbPictureSize, forceRedirectionAfterAddingToCart: true)
+                .ToList();
 
             return PartialView(model);
         }

@@ -651,7 +651,7 @@ namespace Nop.Web.Controllers
         #region Shopping cart
 
         [HttpPost]
-        public ActionResult AddProductToCart(int productId)
+        public ActionResult AddProductToCart(int productId, bool forceredirection = false)
         {
             var product = _productService.GetProductById(productId);
             if (product == null)
@@ -713,7 +713,8 @@ namespace Nop.Web.Controllers
             }
 
             //added to the cart
-            if (_shoppingCartSettings.DisplayCartAfterAddingProduct)
+            if (_shoppingCartSettings.DisplayCartAfterAddingProduct ||
+                forceredirection)
             {
                 //redirect to the shopping cart page
                 return Json(new

@@ -56,6 +56,8 @@ namespace Nop.Web.Models.Catalog
             public bool DisableBuyButton { get; set; }
 
             public bool AvailableForPreOrder { get; set; }
+
+            public bool ForceRedirectionAfterAddingToCart { get; set; }
         }
 
         public class ProductBreadcrumbModel : BaseNopModel
