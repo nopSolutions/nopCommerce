@@ -1,5 +1,8 @@
 ﻿@model CountryModel
-
+@{
+    //page title
+    ViewBag.Title = @T("Admin.Configuration.Countries.AddNew").Text;
+}
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "country-form" }))
 {
     <div class="section-header">

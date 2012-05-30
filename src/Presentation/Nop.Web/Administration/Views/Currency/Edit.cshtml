@@ -1,6 +1,8 @@
 ﻿@model CurrencyModel
-           
-
+@{
+    //page title
+    ViewBag.Title = @T("Admin.Configuration.Currencies.EditCurrencyDetails").Text;
+}
 @using (Html.BeginForm())
 {
     <div class="section-header">

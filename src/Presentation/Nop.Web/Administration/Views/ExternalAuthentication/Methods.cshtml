@@ -1,6 +1,9 @@
 ﻿@model Telerik.Web.Mvc.GridModel<AuthenticationMethodModel>
 @using Telerik.Web.Mvc.UI
-
+@{
+    //page title
+    ViewBag.Title = @T("Admin.Configuration.ExternalAuthenticationMethods").Text;
+}
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />

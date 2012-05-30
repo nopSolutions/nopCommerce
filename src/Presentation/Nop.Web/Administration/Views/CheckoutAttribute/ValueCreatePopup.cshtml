@@ -4,6 +4,10 @@
 
 @model CheckoutAttributeValueModel
 
+@{
+    //page title
+    ViewBag.Title = @T("Admin.Catalog.Attributes.CheckoutAttributes.Values.AddNew").Text;
+}
 @using (Html.BeginForm())
 {
     <div class="section-header">

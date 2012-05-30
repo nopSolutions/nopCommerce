@@ -1,16 +1,17 @@
 ﻿@{
     Layout = "~/Administration/Views/Shared/_AdminPopupLayout.cshtml";
 }
-
-
 @model ProductTagModel
-
+@{
+    //page title
+    ViewBag.Title = T("Admin.Catalog.ProductTags.EditTagDetails").Text;
+}
 @using (Html.BeginForm())
 {
     <div class="section-header">
         <div class="title">
             <img src="@Url.Content("~/Administration/Content/images/ico-catalog.png")" alt="" />
-            @T("Admin.Catalog.ProductTags.EditTagDetails")- @Model.Name 
+            @T("Admin.Catalog.ProductTags.EditTagDetails")- @Model.Name
         </div>
         <div class="options">
             <button type="submit" name="save" value="save" class="t-button">@T("Admin.Common.Save")</button>

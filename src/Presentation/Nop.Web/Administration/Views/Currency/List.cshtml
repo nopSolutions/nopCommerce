@@ -1,9 +1,10 @@
 ﻿@model Telerik.Web.Mvc.GridModel<CurrencyModel>
 @using Telerik.Web.Mvc.UI
-
 @{
     List<Nop.Core.Domain.Directory.ExchangeRate> rates = ViewBag.Rates;
-    bool autoUpdateEnabled=ViewBag.AutoUpdateEnabled??false;
+    bool autoUpdateEnabled = ViewBag.AutoUpdateEnabled ?? false;
+    //page title
+    ViewBag.Title = @T("Admin.Configuration.Currencies").Text;
 }
 <div class="section-header">
     <div class="title">
@@ -12,12 +13,11 @@
     </div>
     <div class="options">
         <a href="javascript:document.CurrencySettings.submit()" class="t-button">@T("Admin.Common.Save")</a>
-        <a href="@Url.Action("List","Currency", new { liveRates=true })" class="t-button">@T("Admin.Configuration.Currencies.GetLiveRates")</a>
+        <a href="@Url.Action("List", "Currency", new { liveRates = true })" class="t-button">@T("Admin.Configuration.Currencies.GetLiveRates")</a>
         <a href="@Url.Action("Create")" class="t-button">@T("Admin.Common.AddNew")</a>
     </div>
-
 </div>
-@using (Html.BeginForm("Save","Currency", FormMethod.Post, new { name = "CurrencySettings" }))
+@using (Html.BeginForm("Save", "Currency", FormMethod.Post, new { name = "CurrencySettings" }))
 {  
     <table class="adminContent">
         <tr>
@@ -54,7 +54,7 @@
                             .Centered();
                         columns.Bound(x => x.IsPrimaryExchangeRateCurrency)
                             .Centered()
-                            .Width(100);        
+                            .Width(100);
                         columns.Bound(x => x.Id)
                             .Template(x => Html.ActionLink(T("Admin.Telerik.GridLocalization.Select").Text, "MarkAsPrimaryExchangeRateCurrency", new { id = x.Id }, new { @class = "t-button" }))
                             .Centered()
@@ -82,11 +82,12 @@
         </td>
     </tr>
 </table>
-<p></p>
+<p>
+</p>
 @if (rates != null)
 {
-<h4>@T("Admin.Configuration.Currencies.LiveRates")</h4>
-    <table class="adminContent" style="width:300px">
+    <h4>@T("Admin.Configuration.Currencies.LiveRates")</h4>
+    <table class="adminContent" style="width: 300px">
         <tr>
             <td>
                 @(Html.Telerik().Grid<Nop.Core.Domain.Directory.ExchangeRate>()
@@ -117,4 +118,3 @@
         </tr>
     </table>
 }
-

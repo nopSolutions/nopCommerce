@@ -1,11 +1,14 @@
 ﻿@model ProductVariantModel
-
+@{
+    //page title
+    ViewBag.Title = string.Format(T("Admin.Catalog.Products.Variants.AddNewForProduct").Text, Model.ProductName);
+}
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "productvariant-form" }))
 {
     <div class="section-header">
         <div class="title">
             <img src="@Url.Content("~/Administration/Content/images/ico-catalog.png")" alt="" />
-            @T("Admin.Catalog.Products.Variants.AddNewForProduct", Html.Encode(Model.ProductName)) @Html.ActionLink("(" + T("Admin.Catalog.Products.Variants.BackToProduct") + ")", "Edit", "Product", new { Id = Model.ProductId }, null)
+            @string.Format(T("Admin.Catalog.Products.Variants.AddNewForProduct").Text, Model.ProductName) @Html.ActionLink("(" + T("Admin.Catalog.Products.Variants.BackToProduct") + ")", "Edit", "Product", new { Id = Model.ProductId }, null)
         </div>
         <div class="options">
             <button type="submit" name="save" value="save" class="t-button">@T("Admin.Common.Save")</button>

@@ -1,5 +1,8 @@
 ﻿@model ProductReviewModel
-
+@{  
+    //page title
+    ViewBag.Title = @T("Admin.Catalog.ProductReviews.EditProductReviewDetails").Text;
+}
 @using (Html.BeginForm())
 {
     <div class="section-header">

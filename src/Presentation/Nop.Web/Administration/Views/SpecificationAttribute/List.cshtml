@@ -1,6 +1,9 @@
 ﻿@model Telerik.Web.Mvc.GridModel<SpecificationAttributeModel>
 @using Telerik.Web.Mvc.UI
-
+@{    
+    //page title
+    ViewBag.Title = @T("Admin.Catalog.Attributes.SpecificationAttributes").Text;
+}
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Administration/Content/images/ico-catalog.png")" alt="" />

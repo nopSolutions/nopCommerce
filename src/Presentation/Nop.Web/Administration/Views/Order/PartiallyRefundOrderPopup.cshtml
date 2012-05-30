@@ -2,9 +2,11 @@
     Layout = "~/Administration/Views/Shared/_AdminPopupLayout.cshtml";
 }
 @model OrderModel
-
 @using Telerik.Web.Mvc.UI;
-
+@{    
+    //page title
+    ViewBag.Title = T("Admin.Orders.Fields.PartialRefund").Text;
+}
 @using (Html.BeginForm())
 {
     <div class="section-header">
@@ -18,14 +20,14 @@
     
     @Html.ValidationSummary(false)
     
-if (ViewBag.RefreshPage == true)
-{
+    if (ViewBag.RefreshPage == true)
+    {
     <script type="text/javascript">
         try {window.opener.document.forms['@(ViewBag.formId)'].@(ViewBag.btnId).click();}
         catch (e){} 
         window.close();
     </script>
-}
+    }
 
 
     <p>
@@ -38,9 +40,7 @@ if (ViewBag.RefreshPage == true)
                 @Html.NopLabelFor(model => model.AmountToRefund):
             </td>
             <td class="adminData">
-                @Html.EditorFor(model => model.AmountToRefund):
-                &nbsp;&nbsp;&nbsp; 
-                <span style="white-space: nowrap">
+                @Html.EditorFor(model => model.AmountToRefund): &nbsp;&nbsp;&nbsp; <span style="white-space: nowrap">
                     @string.Format(@T("Admin.Orders.Fields.PartialRefund.AmountToRefund.Max").Text, Model.MaxAmountToRefund.ToString("G29"), Model.PrimaryStoreCurrencyCode)</span>
             </td>
         </tr>

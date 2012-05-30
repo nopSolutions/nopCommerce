@@ -2,6 +2,10 @@
 @using Telerik.Web.Mvc.UI;
 @using Nop.Core.Domain.Customers;
 @using Nop.Core.Domain.Security;
+@{
+    //page title
+    ViewBag.Title = @T("Admin.Configuration.Settings.GeneralCommon").Text;
+}
 @using (Html.BeginForm())
 {
     <div class="section-header">

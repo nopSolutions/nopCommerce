@@ -1,7 +1,9 @@
 ﻿@model MediaSettingsModel
-
-
 @using Telerik.Web.Mvc.UI;
+@{
+    //page title
+    ViewBag.Title = @T("Admin.Configuration.Settings.Media").Text;
+}
 @using (Html.BeginForm())
 {
     <div class="section-header">

@@ -1,6 +1,10 @@
 ﻿@model Telerik.Web.Mvc.GridModel<TaxCategoryModel>
 @using Telerik.Web.Mvc.UI;
 @using System.Linq;
+@{    
+    //page title
+    ViewBag.Title = @T("Admin.Configuration.Tax.Categories").Text;
+}
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Administration/Content/images/ico-content.png")" alt="" />

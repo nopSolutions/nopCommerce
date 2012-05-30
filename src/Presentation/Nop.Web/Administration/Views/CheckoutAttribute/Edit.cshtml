@@ -1,5 +1,10 @@
 ﻿@model CheckoutAttributeModel
 
+@{
+    //page title
+    ViewBag.Title = @T("Admin.Catalog.Attributes.CheckoutAttributes.EditAttributeDetails").Text;
+}
+
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "checkoutattribute-form" }))
 {
     <div class="section-header">

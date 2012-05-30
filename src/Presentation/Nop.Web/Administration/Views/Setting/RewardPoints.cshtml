@@ -1,8 +1,10 @@
 ﻿@model RewardPointsSettingsModel
-
-
 @using Telerik.Web.Mvc.UI;
 @using Nop.Core.Domain.Orders;
+@{
+    //page title
+    ViewBag.Title = @T("Admin.Configuration.Settings.RewardPoints").Text;
+}
 @using (Html.BeginForm())
 {
     <div class="section-header">

@@ -1,6 +1,10 @@
 ﻿@model OrderSettingsModel
 @using Telerik.Web.Mvc.UI;
 @using Nop.Core.Domain.Orders;
+@{
+    //page title
+    ViewBag.Title = @T("Admin.Configuration.Settings.Order").Text;
+}
 @using (Html.BeginForm())
 {
     <div class="section-header">

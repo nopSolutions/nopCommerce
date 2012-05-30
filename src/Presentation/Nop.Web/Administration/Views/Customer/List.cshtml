@@ -3,6 +3,9 @@
 @using System.Globalization;
 @{
     var gridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSize;
+    
+    //page title
+    ViewBag.Title = @T("Admin.Customers.Customers").Text;
 }
 @using (Html.BeginForm())
 {

@@ -1,6 +1,10 @@
 ﻿@model ProductVariantModel.ProductVariantAttributeValueListModel
 
 @using Telerik.Web.Mvc.UI;
+@{    
+    //page title
+    ViewBag.Title = string.Format(T("Admin.Catalog.Products.Variants.ProductVariantAttributes.Attributes.Values.EditAttributeDetails").Text, Model.ProductVariantAttributeName, Model.ProductVariantName);
+}
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "productvariantattribute-form" }))
 {
 <div class="section-header">

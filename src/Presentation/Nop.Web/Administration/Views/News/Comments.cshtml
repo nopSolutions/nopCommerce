@@ -3,9 +3,11 @@
 
 @{
     var gridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSize;
-}
-@{
+
     int? filterByNewsItemId = ViewBag.FilterByNewsItemId;
+    
+    //page title
+    ViewBag.Title = @T("Admin.ContentManagement.News.Comments").Text;
 }
 <div class="section-header">
     <div class="title">

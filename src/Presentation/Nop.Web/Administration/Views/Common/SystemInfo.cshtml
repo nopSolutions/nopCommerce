@@ -1,4 +1,8 @@
 ﻿@model SystemInfoModel
+@{
+    //page title
+    ViewBag.Title = @T("Admin.System.SystemInfo").Text;
+}
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Administration/Content/images/ico-system.png")" alt="" />

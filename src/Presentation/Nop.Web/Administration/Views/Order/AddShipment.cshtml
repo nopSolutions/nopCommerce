@@ -1,6 +1,10 @@
 ﻿@model ShipmentModel
 @using Nop.Core.Domain.Tax;
 @using Nop.Core.Domain.Catalog;
+@{
+    //page title
+    ViewBag.Title = string.Format(T("Admin.Orders.Shipments.AddNew.Title").Text, Model.OrderId);
+}
 @using (Html.BeginForm())
 {
     <div class="section-header">

@@ -1,4 +1,8 @@
 ﻿@model PaymentMethodModel
+@{    
+    //page title
+    ViewBag.Title = T("Admin.Configuration.Payment.Methods.Configure").Text + " - " + Model.FriendlyName;
+}
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />

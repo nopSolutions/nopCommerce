@@ -1,4 +1,8 @@
-﻿<div class="section-title">
+﻿@{
+    //page title
+    ViewBag.Title = @T("Admin.Dashboard").Text;
+}
+<div class="section-title">
     <img src="@Url.Content("~/Administration/Content/images/ico-dashboard.png")" alt="" />
     @T("Admin.Dashboard")
 </div>

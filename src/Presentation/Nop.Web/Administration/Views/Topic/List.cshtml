@@ -1,7 +1,9 @@
 ﻿@model Telerik.Web.Mvc.GridModel<TopicModel>
 @using Telerik.Web.Mvc.UI
-
-
+@{    
+    //page title
+    ViewBag.Title = @T("Admin.ContentManagement.Topics").Text;
+}
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Administration/Content/images/ico-content.png")" alt="" />

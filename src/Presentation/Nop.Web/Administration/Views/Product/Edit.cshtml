@@ -1,5 +1,9 @@
 ﻿@model ProductModel
 @using Telerik.Web.Mvc.UI;
+@{
+    //page title
+    ViewBag.Title = T("Admin.Catalog.Products.EditProductDetails").Text;
+}
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "product-form" }))
 {
     <div class="section-header">

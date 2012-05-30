@@ -1,6 +1,8 @@
 ﻿@model CampaignModel
-           
-
+@{
+    //page title
+    ViewBag.Title = @T("Admin.Promotions.Campaigns.EditCampaignDetails").Text;
+}
 @using (Html.BeginForm())
 {
     <div class="section-header">

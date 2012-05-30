@@ -1,6 +1,9 @@
 ﻿@model Telerik.Web.Mvc.GridModel<ProductTagModel>
 @{
     var gridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSize;
+    
+    //page title
+    ViewBag.Title = T("Admin.Catalog.ProductTags").Text;
 }
 @using Telerik.Web.Mvc.UI;
 @using System.Linq;

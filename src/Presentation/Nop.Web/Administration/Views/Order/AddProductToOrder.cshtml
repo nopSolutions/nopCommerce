@@ -1,6 +1,9 @@
 ﻿@model OrderModel.AddOrderProductModel
 @{
     var gridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSize;
+    
+    //page title
+    ViewBag.Title = string.Format(T("Admin.Orders.Products.AddNew.Title1").Text, Model.OrderId);
 }
 @using Telerik.Web.Mvc.UI;
 <div class="section-header">

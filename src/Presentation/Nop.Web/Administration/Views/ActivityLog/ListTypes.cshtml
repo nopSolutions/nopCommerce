@@ -1,7 +1,10 @@
 ﻿@model GridModel<ActivityLogTypeModel>
 @using Telerik.Web.Mvc;
 @using Telerik.Web.Mvc.UI;
-
+@{  
+    //page title
+    ViewBag.Title = @T("Admin.Configuration.ActivityLog.ActivityLogType").Text;
+}
 @using (Html.BeginForm("SaveTypes", "ActivityLog"))
 {
     <div class="section-header">

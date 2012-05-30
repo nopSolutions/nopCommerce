@@ -1,5 +1,8 @@
 ﻿@model DiscountModel
-
+@{
+    //page title
+    ViewBag.Title = @T("Admin.Promotions.Discounts.EditDiscountDetails").Text;
+}
 @using (Html.BeginForm())
 {
     <div class="section-header">

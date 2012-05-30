@@ -1,7 +1,9 @@
 ﻿@model ShoppingCartSettingsModel
-
-
 @using Telerik.Web.Mvc.UI;
+@{
+    //page title
+    ViewBag.Title = @T("Admin.Configuration.Settings.ShoppingCart").Text;
+}
 @using (Html.BeginForm())
 {
     <div class="section-header">

@@ -434,9 +434,6 @@
     <Content Include="Views\ProductVariant\_CreateOrUpdate.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Helpers\Admin.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\QueuedEmail\List.cshtml" />
   </ItemGroup>
   <ItemGroup>

@@ -1,5 +1,9 @@
 ﻿@model EditWidgetModel
 @using Nop.Core.Domain.Cms;
+@{    
+    //page title
+    ViewBag.Title = @T("Admin.ContentManagement.Widgets.AddNew").Text + " - " + Model.PluginFriendlyName;
+}
 @using (Html.BeginForm())
 {
     @Html.ValidationSummary(true)

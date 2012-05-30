@@ -1,4 +1,8 @@
 ﻿@model PromotionFeedModel
+@{
+    //page title
+    ViewBag.Title = T("Admin.Promotions.Feeds.Configure").Text + " - " + Model.FriendlyName;
+}
 <div class="section-header">
     <div class="title">
         <img src="@Url.Content("~/Administration/Content/images/ico-promotions.png")" alt="" />

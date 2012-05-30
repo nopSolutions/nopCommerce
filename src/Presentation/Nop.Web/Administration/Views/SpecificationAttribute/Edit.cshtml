@@ -1,5 +1,8 @@
 ﻿@model SpecificationAttributeModel
-
+@{    
+    //page title
+    ViewBag.Title = @T("Admin.Catalog.Attributes.SpecificationAttributes.EditAttributeDetails").Text;
+}
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "specificationattribute-form" }))
 {
     <div class="section-header">

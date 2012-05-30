@@ -1,11 +1,12 @@
 ﻿@{
     Layout = "~/Administration/Views/Shared/_AdminPopupLayout.cshtml";
 }
-
 @model ProductModel.AddCrossSellProductModel
-
 @{
     var gridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSize;
+
+    //page title
+    ViewBag.Title = T("Admin.Catalog.Products.CrossSells.AddNew").Text;
 }
 @using Telerik.Web.Mvc.UI;
 @using (Html.BeginForm())
@@ -17,14 +18,14 @@
         </div>
     </div>    
     
-       if (ViewBag.RefreshPage == true)
-       {
-        <script type="text/javascript">
+    if (ViewBag.RefreshPage == true)
+    {
+    <script type="text/javascript">
             try {window.opener.document.forms['@(ViewBag.formId)'].@(ViewBag.btnId).click();}
             catch (e){} 
             window.close();
-        </script>
-       }
+    </script>
+    }
 
     
     <table width="100%">
@@ -70,8 +71,8 @@
                         columns.Bound(x => x.Id)
                         .Template(
                                 @<text>
-                                    <input name="SelectedProductIds" type="checkbox" value="@item.Id " />
-                                </text>
+                <input name="SelectedProductIds" type="checkbox" value="@item.Id " />
+                </text>
                         )
                         .ClientTemplate("<input type='checkbox' name='SelectedProductIds' value='<#= Id #>' />")
                         .Title(T("Admin.Common.Check").Text)
@@ -113,5 +114,5 @@
             };
             e.data = searchModel;
         }
-   </script>
+    </script>
 }

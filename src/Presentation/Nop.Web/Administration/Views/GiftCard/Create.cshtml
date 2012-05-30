@@ -1,5 +1,8 @@
 ﻿@model GiftCardModel
-
+@{
+    //page title
+    ViewBag.Title = @T("Admin.GiftCards.AddNew").Text;
+}
 @using (Html.BeginForm())
 {
     <div class="section-header">

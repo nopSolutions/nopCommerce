@@ -1,8 +1,10 @@
 ﻿@model ManufacturerListModel
 @using Telerik.Web.Mvc.UI
-
 @{
     var gridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSize;
+    
+    //page title
+    ViewBag.Title = @T("Admin.Catalog.Manufacturers").Text;
 }
 <div class="section-header">
     <div class="title">

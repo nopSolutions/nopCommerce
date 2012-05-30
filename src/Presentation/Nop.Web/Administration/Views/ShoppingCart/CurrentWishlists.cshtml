@@ -2,6 +2,9 @@
 
 @{
     var gridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSize;
+    
+    //page title
+    ViewBag.Title = @T("Admin.CurrentWishlists").Text;
 }
 @using (Html.BeginForm())
 {

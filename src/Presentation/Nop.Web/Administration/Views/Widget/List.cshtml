@@ -1,5 +1,9 @@
 ﻿@model WidgetListModel
 @using Telerik.Web.Mvc.UI
+@{    
+    //page title
+    ViewBag.Title = @T("Admin.ContentManagement.Widgets").Text;
+}
 @using (Html.BeginForm())
 {
     <div class="section-header">

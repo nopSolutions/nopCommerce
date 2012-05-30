@@ -1,6 +1,8 @@
 ﻿@model ShippingMethodRestrictionModel
-
-
+@{
+    //page title
+    ViewBag.Title = @T("Admin.Configuration.Shipping.Restrictions").Text;   
+}
 @using (Html.BeginForm())
 {
     <div class="section-header">

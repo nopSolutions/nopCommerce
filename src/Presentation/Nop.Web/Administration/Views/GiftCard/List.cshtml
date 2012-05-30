@@ -1,11 +1,11 @@
 ﻿@model GiftCardListModel
-           
 @using Telerik.Web.Mvc.UI
-
 @{
     var gridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSize;
-}
 
+    //page title
+    ViewBag.Title = @T("Admin.GiftCards").Text;
+}
 @using (Html.BeginForm())
 {
     <div class="section-header">
@@ -40,7 +40,7 @@
             </td>
         </tr>
     </table>
-     <p>
+    <p>
     </p>
     <table class="adminContent">
         <tr>
@@ -82,14 +82,14 @@
             });
         });
 
-    function onDataBinding(e) {
-        var searchModel = {
+        function onDataBinding(e) {
+            var searchModel = {
                 ActivatedId: $('#@Html.FieldIdFor(model => model.ActivatedId)').val(),
                 CouponCode: $('#@Html.FieldIdFor(model => model.CouponCode)').val()
-                };
-        e.data = searchModel;
-    }
+            };
+            e.data = searchModel;
+        }
 
-   </script>
+    </script>
     
 }

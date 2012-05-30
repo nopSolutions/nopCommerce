@@ -1,8 +1,11 @@
 ﻿@model OrderModel
-
 @using Telerik.Web.Mvc.UI;
 @using Nop.Core.Domain.Tax;
 @using Nop.Core.Domain.Catalog;
+@{
+    //page title
+    ViewBag.Title = T("Admin.Orders.EditOrderDetails").Text;
+}
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "order-form" }))
 {
 

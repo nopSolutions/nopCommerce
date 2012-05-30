@@ -2,9 +2,11 @@
     Layout = "~/Administration/Views/Shared/_AdminPopupLayout.cshtml";
 }
 @model OrderModel.UploadLicenseModel
-
 @using Telerik.Web.Mvc.UI;
-
+@{    
+    //page title
+    ViewBag.Title = T("Admin.Orders.Products.License.UploadFile").Text;
+}
 @using (Html.BeginForm())
 {
     <div class="section-header">
@@ -18,14 +20,14 @@
     
     @Html.ValidationSummary(false)
     
-if (ViewBag.RefreshPage == true)
-{
+    if (ViewBag.RefreshPage == true)
+    {
     <script type="text/javascript">
         try {window.opener.document.forms['@(ViewBag.formId)'].@(ViewBag.btnId).click();}
         catch (e){} 
         window.close();
     </script>
-}
+    }
 
     @Html.HiddenFor(model => model.OrderId)
     @Html.HiddenFor(model => model.OrderProductVariantId)
