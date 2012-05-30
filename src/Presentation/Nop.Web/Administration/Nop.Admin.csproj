@@ -354,6 +354,7 @@
     <Content Include="Scripts\MicrosoftMvcValidation.js" />
     <Content Include="sitemap.config">
       <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
