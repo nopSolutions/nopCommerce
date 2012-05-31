@@ -209,7 +209,7 @@ namespace Nop.Web.Infrastructure
                             new[] { "Nop.Web.Controllers" });
             routes.MapLocalizedRoute("ReturnRequest",
                             "returnrequest/{orderId}",
-                            new { controller = "Order", action = "ReturnRequest" },
+                            new { controller = "ReturnRequest", action = "ReturnRequest" },
                             new { orderId = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
             routes.MapLocalizedRoute("ReOrder",

@@ -151,10 +151,15 @@ namespace Nop.Web.MVC.Tests.Public.Infrastructure
         public void Order_routes()
         {
             "~/orderdetails/1".ShouldMapTo<OrderController>(c => c.Details(1));
-            "~/returnrequest/2".ShouldMapTo<OrderController>(c => c.ReturnRequest(2));
             "~/reorder/3".ShouldMapTo<OrderController>(c => c.ReOrder(3));
             "~/orderdetails/pdf/4".ShouldMapTo<OrderController>(c => c.GetPdfInvoice(4));
             "~/orderdetails/print/5".ShouldMapTo<OrderController>(c => c.PrintOrderDetails(5));
+        }
+
+        [Test]
+        public void ReturnRequest_routes()
+        {
+            "~/returnrequest/2".ShouldMapTo<ReturnRequestController>(c => c.ReturnRequest(2));
         }
 
         [Test]

@@ -146,6 +146,7 @@
     <Compile Include="Controllers\CommonController.cs" />
     <Compile Include="Controllers\BlogController.cs" />
     <Compile Include="Controllers\BackwardCompatibility1XController.cs" />
+    <Compile Include="Controllers\ReturnRequestController.cs" />
     <Compile Include="Controllers\KeepAliveController.cs" />
     <Compile Include="Controllers\ExternalAuthenticationController.cs" />
     <Compile Include="Controllers\InstallController.cs" />
@@ -1504,7 +1505,7 @@
     <Content Include="Views\Common\ChangeDeviceBlock.Mobile.cshtml" />
     <Content Include="Views\Common\ChangeDeviceBlock.cshtml" />
     <Content Include="Views\Customer\Orders.Mobile.cshtml" />
-    <Content Include="Views\Order\ReturnRequest.Mobile.cshtml" />
+    <Content Include="Views\ReturnRequest\ReturnRequest.Mobile.cshtml" />
     <Content Include="Views\Order\Details.Mobile.cshtml" />
     <Content Include="Views\Shared\Footer.Mobile.cshtml" />
     <Content Include="Views\Topic\TopicDetails.Mobile.cshtml" />
@@ -1674,7 +1675,7 @@
     <Content Include="Views\Customer\Orders.cshtml" />
     <Content Include="Views\Customer\DownloadableProducts.cshtml" />
     <Content Include="Views\Customer\UserAgreement.cshtml" />
-    <Content Include="Views\Order\ReturnRequest.cshtml" />
+    <Content Include="Views\ReturnRequest\ReturnRequest.cshtml" />
     <Content Include="Views\Customer\ReturnRequests.cshtml" />
     <Content Include="Views\Catalog\RecentlyViewedProducts.cshtml" />
     <Content Include="Views\Catalog\RecentlyViewedProductsBlock.cshtml" />
