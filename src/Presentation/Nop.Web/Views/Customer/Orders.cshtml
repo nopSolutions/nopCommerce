@@ -1,4 +1,4 @@
-﻿@model Nop.Web.Models.Customer.CustomerOrderListModel
+﻿@model CustomerOrderListModel
 @{
     Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
 
@@ -6,6 +6,7 @@
     Html.AddTitleParts(T("PageTitle.Account").Text);
 }
 @using Nop.Web.Framework;
+@using Nop.Web.Models.Customer;
 @section left
 {
     @Html.Partial("MyAccountNavigation", Model.NavigationModel, new ViewDataDictionary())

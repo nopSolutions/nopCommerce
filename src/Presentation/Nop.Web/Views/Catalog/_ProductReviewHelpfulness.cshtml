@@ -1,4 +1,5 @@
-﻿@model Nop.Web.Models.Catalog.ProductReviewHelpfulnessModel
+﻿@model ProductReviewHelpfulnessModel
+@using Nop.Web.Models.Catalog;
 <div class="product-review-helpfulness">
     @T("Reviews.Helpfulness.WasHelpful?")
     <span id="vote-yes-@(Model.ProductReviewId)" class="vote">@T("Common.Yes")</span>&nbsp;<span id="vote-no-@(Model.ProductReviewId)" class="vote">@T("Common.No")</span>

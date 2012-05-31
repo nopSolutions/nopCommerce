@@ -1,4 +1,5 @@
-﻿@model Nop.Web.Models.Catalog.ProductOverviewModel.ProductPriceModel
+﻿@model ProductOverviewModel.ProductPriceModel
+@using Nop.Web.Models.Catalog;
 @if (!String.IsNullOrEmpty(Model.OldPrice))
 {
     <span class="oldproductPrice">@Model.OldPrice</span>

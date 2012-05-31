@@ -1,4 +1,5 @@
-﻿@model Nop.Web.Models.Customer.CustomerAddressListModel
+﻿@model CustomerAddressListModel
+@using Nop.Web.Models.Customer;
 @{
     Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
 
@@ -79,11 +80,11 @@
                         </table>
                     </div>
             
-                    if (i != Model.Addresses.Count - 1)
-                    {
+                                            if (i != Model.Addresses.Count - 1)
+                                            {
                     <div class="clear">
                     </div>
-                    }
+                                            }
                     }
                 }
                 else

@@ -1,5 +1,6 @@
-﻿@model Nop.Web.Models.Common.TaxTypeSelectorModel
-@using Nop.Core.Domain.Tax
+﻿@model TaxTypeSelectorModel
+@using Nop.Core.Domain.Tax;
+@using Nop.Web.Models.Common;
 @if (Model.Enabled)
 {
     var taxTypes = new List<SelectListItem>();

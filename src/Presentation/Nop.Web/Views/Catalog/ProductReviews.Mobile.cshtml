@@ -1,4 +1,5 @@
-﻿@model Nop.Web.Models.Catalog.ProductReviewsModel
+﻿@model ProductReviewsModel
+@using Nop.Web.Models.Catalog;
 @using Nop.Web.Framework.UI.Captcha;
 @using Nop.Web.Framework;
 @{
@@ -50,12 +51,12 @@
                 <div class="message-error">
                     @Html.ValidationSummary(true)
                 </div>
-                if (Model.AddProductReview.DisplayCaptcha)
-                {
+                        if (Model.AddProductReview.DisplayCaptcha)
+                        {
                     <div class="captcha-box">
                         @Html.Raw(Html.GenerateCaptcha())
                     </div>
-                }                 
+                        }                 
                 <input type="submit" id="add-review" name="add-review" value="@T("Reviews.SubmitButton")" />                    
             }
         </div>

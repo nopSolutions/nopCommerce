@@ -1,5 +1,5 @@
-﻿@model Nop.Web.Models.Common.MenuModel
-
+﻿@model MenuModel
+@using Nop.Web.Models.Common;
 <ul class="topmenu">
     <li><a href="@Url.RouteUrl("HomePage")">@T("HomePage")</a></li>
     @if (Model.RecentlyAddedProductsEnabled)

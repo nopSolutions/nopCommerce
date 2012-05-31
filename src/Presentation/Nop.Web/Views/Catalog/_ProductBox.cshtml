@@ -1,10 +1,11 @@
-﻿@model Nop.Web.Models.Catalog.ProductOverviewModel
+﻿@model ProductOverviewModel
+@using Nop.Web.Models.Catalog;
 @{
     //prepare "Add to cart" AJAX link
     string addtocartlink = "";
     if (Model.ProductPrice.ForceRedirectionAfterAddingToCart)
     {
-        addtocartlink = Url.RouteUrl("AddProductToCart", new { productId = Model.Id, forceredirection = Model.ProductPrice.ForceRedirectionAfterAddingToCart});
+        addtocartlink = Url.RouteUrl("AddProductToCart", new { productId = Model.Id, forceredirection = Model.ProductPrice.ForceRedirectionAfterAddingToCart });
     }
     else
     {

@@ -1,4 +1,5 @@
-﻿@model Nop.Web.Models.Common.CurrencySelectorModel
+﻿@model CurrencySelectorModel
+@using Nop.Web.Models.Common;
 @if (Model.AvailableCurrencies.Count > 1)
 {
     var currencies = Model.AvailableCurrencies.Select(x => new SelectListItem

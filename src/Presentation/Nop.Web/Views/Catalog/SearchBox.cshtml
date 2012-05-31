@@ -1,4 +1,5 @@
-﻿@model Nop.Web.Models.Catalog.SearchBoxModel
+﻿@model SearchBoxModel
+@using Nop.Web.Models.Catalog;
 <div class="searchbox">
     @using (Html.BeginRouteForm("ProductSearch", FormMethod.Get, new { onsubmit = "return check_small_search_form()" }))
     {

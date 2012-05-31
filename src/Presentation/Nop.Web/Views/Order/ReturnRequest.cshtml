@@ -1,4 +1,5 @@
-﻿@model Nop.Web.Models.Order.SubmitReturnRequestModel
+﻿@model SubmitReturnRequestModel
+@using Nop.Web.Models.Order;
 @{
     Layout = "~/Views/Shared/_ColumnsOne.cshtml";
 
@@ -84,7 +85,7 @@
                                 @Html.LabelFor(model => model.ReturnReason):
                             </td>
                             <td class="item-value">
-                                @Html.DropDownListFor(model => model.ReturnReason, Model.AvailableReturnReasons, new { @class="return-reasons" })
+                                @Html.DropDownListFor(model => model.ReturnReason, Model.AvailableReturnReasons, new { @class = "return-reasons" })
                             </td>
                         </tr>
                         <tr class="row">

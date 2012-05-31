@@ -1,4 +1,5 @@
-﻿@model Nop.Web.Models.Profile.ProfileInfoModel
+﻿@model ProfileInfoModel
+@using Nop.Web.Models.Profile;
 <div class="profileInfoBox">
     <div class="userDetails">
         @if (Model.AvatarEnabled && !String.IsNullOrEmpty(Model.AvatarUrl))
