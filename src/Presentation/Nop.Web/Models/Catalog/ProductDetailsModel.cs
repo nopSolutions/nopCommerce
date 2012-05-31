@@ -8,11 +8,10 @@ using Nop.Web.Models.Media;
 
 namespace Nop.Web.Models.Catalog
 {
-    public class ProductModel : BaseNopEntityModel
+    public class ProductDetailsModel : BaseNopEntityModel
     {
-        public ProductModel()
+        public ProductDetailsModel()
         {
-            ProductPrice = new ProductPriceModel();
             DefaultPictureModel = new PictureModel();
             PictureModels = new List<PictureModel>();
             ProductVariantModels = new List<ProductVariantModel>();
@@ -20,46 +19,26 @@ namespace Nop.Web.Models.Catalog
         }
 
         public string Name { get; set; }
-
         public string ShortDescription { get; set; }
-
         public string FullDescription { get; set; }
-
         public string ProductTemplateViewPath { get; set; }
-
         public string MetaKeywords { get; set; }
-
         public string MetaDescription { get; set; }
-
         public string MetaTitle { get; set; }
-
         public string SeName { get; set; }
-
-        //price
-        public ProductPriceModel ProductPrice { get; set; }
 
         //picture(s)
         public bool DefaultPictureZoomEnabled { get; set; }
         public PictureModel DefaultPictureModel { get; set; }
         public IList<PictureModel> PictureModels { get; set; }
+
+        //product variant(s)
         public IList<ProductVariantModel> ProductVariantModels { get; set; }
+        //specification attributes
         public IList<ProductSpecificationModel> SpecificationAttributeModels { get; set; }
 
 		#region Nested Classes
-
-        public class ProductPriceModel : BaseNopModel
-        {
-            public string OldPrice { get; set; }
-
-            public string Price {get;set;}
-
-            public bool DisableBuyButton { get; set; }
-
-            public bool AvailableForPreOrder { get; set; }
-
-            public bool ForceRedirectionAfterAddingToCart { get; set; }
-        }
-
+        
         public class ProductBreadcrumbModel : BaseNopModel
         {
             public ProductBreadcrumbModel()

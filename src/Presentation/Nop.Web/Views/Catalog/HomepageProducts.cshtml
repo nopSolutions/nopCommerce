@@ -11,7 +11,7 @@
         </div>
         @if (Model.UseSmallProductBox)
         {
-            @(Html.DataList<ProductModel>(Model.Products, 3,
+            @(Html.DataList<ProductOverviewModel>(Model.Products, 3,
             @<div class="item-box">
                 @Html.Partial("_ProductSmallBox", @item)
             </div>
@@ -19,7 +19,7 @@
         }
         else
         {
-        @(Html.DataList<ProductModel>(Model.Products, 2,
+        @(Html.DataList<ProductOverviewModel>(Model.Products, 2,
             @<div class="item-box">
                 @Html.Partial("_ProductBox", @item)
             </div>

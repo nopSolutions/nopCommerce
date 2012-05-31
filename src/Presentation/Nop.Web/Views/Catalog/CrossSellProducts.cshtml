@@ -1,4 +1,4 @@
-﻿@model IList<ProductModel>
+﻿@model IList<ProductOverviewModel>
 @using Nop.Web.Framework.UI;
 @using Nop.Web.Models.Catalog;
 @if (Model.Count > 0)
@@ -8,7 +8,7 @@
             @T("ShoppingCart.CrossSells"): </span>
         <div class="clear">
         </div>
-        @(Html.DataList<ProductModel>(Model, 2,
+        @(Html.DataList<ProductOverviewModel>(Model, 2,
                     @<div class="item-box">
                         @Html.Partial("_ProductBox", @item)
                     </div>

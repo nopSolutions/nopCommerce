@@ -64,7 +64,7 @@
         <div class="entity">
             <h2>
                 @T("Sitemap.Products")</h2>
-            @(Html.DataList<ProductModel>(Model.Products, 4,
+            @(Html.DataList<ProductOverviewModel>(Model.Products, 4,
                 @<div class="product-box">
                     <div class="item">
                         <a href="@Url.RouteUrl("Product", new { productId = item.Id, SeName = item.SeName })">@item.Name</a>

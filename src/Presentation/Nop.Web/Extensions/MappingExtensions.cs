@@ -81,26 +81,6 @@ namespace Nop.Web.Extensions
             return model;
         }
 
-        //product
-        public static ProductModel ToModel(this Product entity)
-        {
-            if (entity == null)
-                return null;
-
-            var model = new ProductModel()
-            {
-                Id = entity.Id,
-                Name = entity.GetLocalized(x => x.Name),
-                ShortDescription = entity.GetLocalized(x => x.ShortDescription),
-                FullDescription = entity.GetLocalized(x => x.FullDescription),
-                MetaKeywords = entity.GetLocalized(x => x.MetaKeywords),
-                MetaDescription = entity.GetLocalized(x => x.MetaDescription),
-                MetaTitle = entity.GetLocalized(x => x.MetaTitle),
-                SeName = entity.GetSeName(),
-            };
-            return model;
-        }
-
         //address
         public static AddressModel ToModel(this Address entity)
         {

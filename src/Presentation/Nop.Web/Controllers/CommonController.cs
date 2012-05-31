@@ -30,6 +30,7 @@ using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Security;
 using Nop.Web.Framework.Themes;
 using Nop.Web.Framework.UI.Captcha;
+using Nop.Web.Models.Catalog;
 using Nop.Web.Models.Common;
 
 namespace Nop.Web.Controllers
@@ -474,7 +475,14 @@ namespace Nop.Web.Controllers
                 var products = _productService.SearchProducts(0, 0, null, null, null, 0, null, false, 0, null,
                      ProductSortingEnum.Position, 0, 200,
                      false, out filterableSpecificationAttributeOptionIds);
-                model.Products = products.Select(x => x.ToModel()).ToList();
+                model.Products = products.Select(product => new ProductOverviewModel()
+                {
+                    Id = product.Id,
+                    Name = product.GetLocalized(x => x.Name),
+                    ShortDescription = product.GetLocalized(x => x.ShortDescription),
+                    FullDescription = product.GetLocalized(x => x.FullDescription),
+                    SeName = product.GetSeName(),
+                }).ToList();
             }
             if (_commonSettings.SitemapIncludeTopics)
             {

@@ -1,4 +1,4 @@
-﻿@model IList<Nop.Web.Models.Catalog.ProductModel>
+﻿@model IList<ProductOverviewModel>
 @{
     Layout = "~/Views/Shared/_ColumnsThree.cshtml";
 
@@ -26,7 +26,7 @@
     {
 @*grid mode*@
         <div class="product-grid">
-            @(Html.DataList<ProductModel>(Model, 2,
+            @(Html.DataList<ProductOverviewModel>(Model, 2,
                     @<div class="item-box">
                         @Html.Partial("_ProductBox", @item)
                     </div>

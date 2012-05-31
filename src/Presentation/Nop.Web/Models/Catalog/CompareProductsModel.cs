@@ -7,9 +7,9 @@ namespace Nop.Web.Models.Catalog
     {
         public CompareProductsModel()
         {
-            Products = new List<ProductModel>();
+            Products = new List<ProductOverviewModel>();
         }
-        public IList<ProductModel> Products { get; set; }
+        public IList<ProductOverviewModel> Products { get; set; }
 
         public bool IncludeShortDescriptionInCompareProducts { get; set; }
         public bool IncludeFullDescriptionInCompareProducts { get; set; }

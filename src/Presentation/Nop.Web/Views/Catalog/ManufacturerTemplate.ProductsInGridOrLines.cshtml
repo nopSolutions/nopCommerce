@@ -45,7 +45,7 @@
                 @T("Products.FeaturedProducts")
             </div>
             <div>
-                @(Html.DataList<ProductModel>(Model.FeaturedProducts, 2,
+                @(Html.DataList<ProductOverviewModel>(Model.FeaturedProducts, 2,
                     @<div class="item-box">
                         @Html.Partial("_ProductBox", @item)
                     </div>
@@ -127,7 +127,7 @@
         {
             @*grid mode*@
             <div class="product-grid">
-                @(Html.DataList<ProductModel>(Model.Products, 2,
+                @(Html.DataList<ProductOverviewModel>(Model.Products, 2,
                     @<div class="item-box">
                         @Html.Partial("_ProductBox", @item)
                     </div>

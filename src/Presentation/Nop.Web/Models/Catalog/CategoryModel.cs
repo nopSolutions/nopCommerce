@@ -9,8 +9,8 @@ namespace Nop.Web.Models.Catalog
         public CategoryModel()
         {
             PictureModel = new PictureModel();
-            FeaturedProducts = new List<ProductModel>();
-            Products = new List<ProductModel>();
+            FeaturedProducts = new List<ProductOverviewModel>();
+            Products = new List<ProductOverviewModel>();
             PagingFilteringContext = new CatalogPagingFilteringModel();
             SubCategories = new List<SubCategoryModel>();
             CategoryBreadcrumb = new List<CategoryModel>();
@@ -31,9 +31,9 @@ namespace Nop.Web.Models.Catalog
         public IList<CategoryModel> CategoryBreadcrumb { get; set; }
         
         public IList<SubCategoryModel> SubCategories { get; set; }
-        
-        public IList<ProductModel> FeaturedProducts { get; set; }
-        public IList<ProductModel> Products { get; set; }
+
+        public IList<ProductOverviewModel> FeaturedProducts { get; set; }
+        public IList<ProductOverviewModel> Products { get; set; }
         
 
 		#region Nested Classes

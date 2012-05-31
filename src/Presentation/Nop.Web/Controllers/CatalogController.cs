@@ -189,7 +189,7 @@ namespace Nop.Web.Controllers
         }
         
         [NonAction]
-        protected IEnumerable<ProductModel> PrepareProductOverviewModels(IEnumerable<Product> products, 
+        protected IEnumerable<ProductOverviewModel> PrepareProductOverviewModels(IEnumerable<Product> products, 
             bool preparePriceModel = true, bool preparePictureModel = true,
             int? productThumbPictureSize = null, bool prepareSpecificationAttributes = false,
             bool forceRedirectionAfterAddingToCart = false)
@@ -201,16 +201,23 @@ namespace Nop.Web.Controllers
             var allVariants = _productService.GetProductVariantsByProductIds(products.Select(x => x.Id).ToArray());
 
 
-            var models = new List<ProductModel>();
+            var models = new List<ProductOverviewModel>();
             foreach (var product in products)
             {
-                var model = product.ToModel();
+                var model = new ProductOverviewModel()
+                {
+                    Id = product.Id,
+                    Name = product.GetLocalized(x => x.Name),
+                    ShortDescription = product.GetLocalized(x => x.ShortDescription),
+                    FullDescription = product.GetLocalized(x => x.FullDescription),
+                    SeName = product.GetSeName(),
+                };
                 //price
                 if (preparePriceModel)
                 {
                     #region Prepare product price
 
-                    var priceModel = new ProductModel.ProductPriceModel();
+                    var priceModel = new ProductOverviewModel.ProductPriceModel();
 
                     //var productVariants = _productService.GetProductVariantsByProductId(product.Id);
                     //we use already loaded variants
@@ -428,12 +435,22 @@ namespace Nop.Web.Controllers
         }
         
         [NonAction]
-        protected ProductModel PrepareProductDetailsPageModel(Product product)
+        protected ProductDetailsModel PrepareProductDetailsPageModel(Product product)
         {
             if (product == null)
                 throw new ArgumentNullException("product");
-
-            var model = product.ToModel();
+            
+            var model = new ProductDetailsModel()
+            {
+                Id = product.Id,
+                Name = product.GetLocalized(x => x.Name),
+                ShortDescription = product.GetLocalized(x => x.ShortDescription),
+                FullDescription = product.GetLocalized(x => x.FullDescription),
+                MetaKeywords = product.GetLocalized(x => x.MetaKeywords),
+                MetaDescription = product.GetLocalized(x => x.MetaDescription),
+                MetaTitle = product.GetLocalized(x => x.MetaTitle),
+                SeName = product.GetSeName(),
+            };
 
             //template
 
@@ -486,7 +503,7 @@ namespace Nop.Web.Controllers
 
             //product variants
             foreach (var variant in _productService.GetProductVariantsByProductId(product.Id))
-                model.ProductVariantModels.Add(PrepareProductVariantModel(new ProductModel.ProductVariantModel(), variant));
+                model.ProductVariantModels.Add(PrepareProductVariantModel(new ProductDetailsModel.ProductVariantModel(), variant));
 
             return model;
         }
@@ -531,7 +548,7 @@ namespace Nop.Web.Controllers
         }
         
         [NonAction]
-        protected ProductModel.ProductVariantModel PrepareProductVariantModel(ProductModel.ProductVariantModel model, ProductVariant productVariant)
+        protected ProductDetailsModel.ProductVariantModel PrepareProductVariantModel(ProductDetailsModel.ProductVariantModel model, ProductVariant productVariant)
         {
             if (productVariant == null)
                 throw new ArgumentNullException("productVariant");
@@ -671,7 +688,7 @@ namespace Nop.Web.Controllers
             var productVariantAttributes = _productAttributeService.GetProductVariantAttributesByProductVariantId(productVariant.Id);
             foreach (var attribute in productVariantAttributes)
             {
-                var pvaModel = new ProductModel.ProductVariantModel.ProductVariantAttributeModel()
+                var pvaModel = new ProductDetailsModel.ProductVariantModel.ProductVariantAttributeModel()
                     {
                         Id = attribute.Id,
                         ProductVariantId = productVariant.Id,
@@ -689,7 +706,7 @@ namespace Nop.Web.Controllers
                     var pvaValues = _productAttributeService.GetProductVariantAttributeValues(attribute.Id);
                     foreach (var pvaValue in pvaValues)
                     {
-                        var pvaValueModel = new ProductModel.ProductVariantModel.ProductVariantAttributeValueModel()
+                        var pvaValueModel = new ProductDetailsModel.ProductVariantModel.ProductVariantAttributeValueModel()
                         {
                             Id = pvaValue.Id,
                             Name = pvaValue.GetLocalized(x=>x.Name),
@@ -1552,7 +1569,7 @@ namespace Nop.Web.Controllers
             //set already entered values (quantity, customer entered price, gift card attributes, product attributes
             //we do it manually because views do not use HTML helpers for rendering controls
             
-            Action<ProductModel> setEnteredValues = (productModel) =>
+            Action<ProductDetailsModel> setEnteredValues = (productModel) =>
                 {
                     //find product variant model
                     var productVariantModel = productModel
@@ -1791,7 +1808,7 @@ namespace Nop.Web.Controllers
             var cacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_BREADCRUMB_MODEL_KEY, product.Id, _workContext.WorkingLanguage.Id);
             var cacheModel = _cacheManager.Get(cacheKey, () =>
                 {
-                    var model = new ProductModel.ProductBreadcrumbModel()
+                    var model = new ProductDetailsModel.ProductBreadcrumbModel()
                         {
                             ProductId = product.Id,
                             ProductName = product.GetLocalized(x => x.Name),
@@ -1905,7 +1922,7 @@ namespace Nop.Web.Controllers
                 .RemoveDuplicatedQuantities()
                 .Select(tierPrice =>
                             {
-                                var m = new ProductModel.ProductVariantModel.TierPriceModel()
+                                var m = new ProductDetailsModel.ProductVariantModel.TierPriceModel()
                                 {
                                     Quantity = tierPrice.Quantity,
                                 };
@@ -1991,7 +2008,7 @@ namespace Nop.Web.Controllers
         [NopHttpsRequirement(SslRequirement.No)]
         public ActionResult RecentlyViewedProducts()
         {
-            var model = new List<ProductModel>();
+            var model = new List<ProductOverviewModel>();
             if (_catalogSettings.RecentlyViewedProductsEnabled)
             {
                 var products = _recentlyViewedProductsService.GetRecentlyViewedProducts(_catalogSettings.RecentlyViewedProductsNumber);
@@ -2003,7 +2020,7 @@ namespace Nop.Web.Controllers
         [ChildActionOnly]
         public ActionResult RecentlyViewedProductsBlock(int? productThumbPictureSize)
         {
-            var model = new List<ProductModel>();
+            var model = new List<ProductOverviewModel>();
             if (_catalogSettings.RecentlyViewedProductsEnabled)
             {
                 var products = _recentlyViewedProductsService.GetRecentlyViewedProducts(_catalogSettings.RecentlyViewedProductsNumber);
@@ -2016,7 +2033,7 @@ namespace Nop.Web.Controllers
         [NopHttpsRequirement(SslRequirement.No)]
         public ActionResult RecentlyAddedProducts()
         {
-            var model = new List<ProductModel>();
+            var model = new List<ProductOverviewModel>();
             if (_catalogSettings.RecentlyAddedProductsEnabled)
             {
                 IList<int> filterableSpecificationAttributeOptionIds = null;

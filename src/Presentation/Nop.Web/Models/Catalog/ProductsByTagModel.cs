@@ -7,7 +7,7 @@ namespace Nop.Web.Models.Catalog
     {
         public ProductsByTagModel()
         {
-            Products = new List<ProductModel>();
+            Products = new List<ProductOverviewModel>();
             PagingFilteringContext = new CatalogPagingFilteringModel();
         }
 
@@ -15,6 +15,6 @@ namespace Nop.Web.Models.Catalog
 
         public CatalogPagingFilteringModel PagingFilteringContext { get; set; }
 
-        public IList<ProductModel> Products { get; set; }
+        public IList<ProductOverviewModel> Products { get; set; }
     }
 }

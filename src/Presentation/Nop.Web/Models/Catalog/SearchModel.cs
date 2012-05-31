@@ -10,7 +10,7 @@ namespace Nop.Web.Models.Catalog
         public SearchModel()
         {
             PagingFilteringContext = new SearchPagingFilteringModel();
-            Products = new List<ProductModel>();
+            Products = new List<ProductOverviewModel>();
 
             this.AvailableCategories = new List<SelectListItem>();
             this.AvailableManufacturers = new List<SelectListItem>();
@@ -63,6 +63,6 @@ namespace Nop.Web.Models.Catalog
 
 
         public SearchPagingFilteringModel PagingFilteringContext { get; set; }
-        public IList<ProductModel> Products { get; set; }
+        public IList<ProductOverviewModel> Products { get; set; }
     }
 }
