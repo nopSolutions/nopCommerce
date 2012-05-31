@@ -76,7 +76,7 @@ namespace Nop.Web.Models.Catalog
             public bool ShowGtin { get; set; }
             public string Gtin { get; set; }
 
-            public string DownloadSampleUrl { get; set; }
+            public bool HasSampleDownload { get; set; }
 
             public GiftCardModel GiftCard { get; set; }
 

@@ -586,10 +586,7 @@ namespace Nop.Web.Controllers
             model.PictureModel.ImageUrl = _pictureService.GetPictureUrl(productVariant.PictureId, _mediaSettings.ProductVariantPictureSize, false);
             model.PictureModel.Title = string.Format(_localizationService.GetResource("Media.Product.ImageLinkTitleFormat"), model.Name);
             model.PictureModel.AlternateText = string.Format(_localizationService.GetResource("Media.Product.ImageAlternateTextFormat"), model.Name);
-            if (productVariant.IsDownload && productVariant.HasSampleDownload)
-            {
-                model.DownloadSampleUrl = Url.Action("Sample", "Download", new { productVariantId = productVariant.Id });
-            }
+            model.HasSampleDownload = productVariant.IsDownload && productVariant.HasSampleDownload;
             model.IsCurrentCustomerRegistered = _workContext.CurrentCustomer.IsRegistered();
             //back in stock subscriptions)
             if (productVariant.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
