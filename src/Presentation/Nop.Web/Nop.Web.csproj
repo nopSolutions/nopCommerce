@@ -1613,9 +1613,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Catalog\_ProductPrice.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Content\samples\product_BattleOfLa_1.zip" />
     <Content Include="Content\samples\product_PokerFace_1.zip" />
     <Content Include="Content\samples\product_SingleLadies_1.zip" />

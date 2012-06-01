@@ -10,6 +10,11 @@
         </div>
     }
     <div class="prices">
-        @Html.Partial("_ProductPrice", Model.ProductPrice)
+        @if (!String.IsNullOrEmpty(Model.ProductPrice.OldPrice))
+        {
+            <span class="oldproductPrice">@Model.ProductPrice.OldPrice</span>
+            <br />
+        }
+        <span class="productPrice">@Model.ProductPrice.Price</span>
     </div>
 </a>
