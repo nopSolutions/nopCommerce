@@ -1,0 +1,90 @@
+﻿@model TopicModel
+@using Nop.Web.Models.Topics;
+@using Nop.Web.Framework;
+@if (Model.IsPasswordProtected)
+{
+    <script type="text/javascript">
+        $(function () {
+            $('#btnPassword-@Model.Id').click(function () {
+                var topicId = $("#@Html.FieldIdFor(model => model.Id)").val();
+                var password = $('#password-@Model.Id').val();
+                $.ajax({
+                    cache: false,
+                    type: 'POST',
+                    url: '@Url.RouteUrl("TopicAuthenticate")',
+                    data: { "id": topicId, "password": password },
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.Authenticated) {
+                            $('#phTitle-@Model.Id .htmlcontent-title h2.htmlcontent-header').html(data.Title);
+                            if ($('#phTitle-@Model.Id .htmlcontent-title h2.htmlcontent-header').text().length == 0) {
+                                $('#phTitle-@Model.Id').hide();
+                            }
+                            $('#phTopic-@Model.Id .htmlcontent-body').html(data.Body);
+                            $('#phPassword-@Model.Id').hide();
+                            $('#phTopic-@Model.Id').show();
+                        }
+                        else {
+                            $('#passworderror-@Model.Id').text(data.Error);
+                            $('#phPassword-@Model.Id #password-@Model.Id').select().focus();
+                        }
+                    }
+                });
+                return false;
+            });
+        });
+
+        $(document).ready(function () {
+            $('#phTopic-@Model.Id').hide();
+            $('#phPassword-@Model.Id #password-@Model.Id').select().focus();
+        });
+    </script>
+    <div id="phPassword-@Model.Id">
+        @using (Html.BeginRouteForm("TopicAuthenticate"))
+        {
+            <div>
+                @Html.HiddenFor(model => model.Id)
+                @T("Topic.EnterPassword")
+            </div>
+            <div>
+                @Html.Password("password", null, new { id = "password-" + @Model.Id })
+            </div>
+            <div>
+                <input type="submit" id="btnPassword-@Model.Id" value = @T("Topic.Button") class="useragreementbutton"/>
+            </div>
+            <div>
+                <span id="passworderror-@Model.Id"></span>
+            </div>
+        }
+    </div>
+    <div class="htmlcontent" id="phTopic-@Model.Id">
+        <div id="phTitle-@Model.Id">
+            <div class="htmlcontent-title">
+                <h2 class="htmlcontent-header">
+                    @Model.Title</h2>
+            </div>
+            <div class="clear">
+            </div>
+        </div>
+        <div class="htmlcontent-body">
+            @Html.Raw(Model.Body)
+        </div>
+    </div>
+}
+else
+{
+    <div class="htmlcontent">
+        @if (!String.IsNullOrEmpty(Model.Title))
+        {
+            <div class="htmlcontent-title">
+                <h2 class="htmlcontent-header">
+                    @Model.Title</h2>
+            </div>
+            <div class="clear">
+            </div>
+        }
+        <div class="htmlcontent-body">
+            @Html.Raw(Model.Body)
+        </div>
+    </div>
+}
