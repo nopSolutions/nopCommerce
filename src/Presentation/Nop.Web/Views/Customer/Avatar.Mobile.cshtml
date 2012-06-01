@@ -8,7 +8,7 @@
 }
 @using Nop.Web.Framework;
 @*set "data-ajax" attribute to "false" because jQuery Mobile does not support file uploading*@
-@using (Html.BeginForm("Avatar", "Customer", FormMethod.Post,
+@using (Html.BeginRouteForm("CustomerAvatar", FormMethod.Post,
     new Dictionary<string, Object> { { "enctype", "multipart/form-data" }, { "data-ajax", "false" } }))
 {
     <div class="account-page">

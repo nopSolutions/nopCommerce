@@ -116,7 +116,7 @@
                                 {
 @*Completing payment support (for redirection payment methods*@
                                 <br />
-                                    using (Html.BeginForm("Details", "Order", FormMethod.Post))
+                                    using (Html.BeginRouteForm("OrderDetails", FormMethod.Post))
                                     {
                                 <input type="submit" name="repost-payment" value="@T("Order.CompletePayment")" id="repost-payment" class="reorderbutton" />
                                 <br />

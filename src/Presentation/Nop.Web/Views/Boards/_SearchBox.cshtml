@@ -1,5 +1,5 @@
 ﻿<div class="forumsearchbox">    
-    @using (Html.BeginForm("Search", "Boards", FormMethod.Get))
+    @using (Html.BeginRouteForm("Search", FormMethod.Get))
     {
         var searchText = T("Forum.SearchForumsTooltip");
         @Html.TextBox("searchterms", searchText, new { @class = "forumsearchboxtext", onclick = String.Format("if(this.value=='{0}')this.value=''", searchText), onblur = String.Format("if(this.value=='')this.value='{0}';", searchText) })

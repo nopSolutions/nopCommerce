@@ -85,7 +85,7 @@
                         {
 @*Completing payment support (for redirection payment methods)*
 @*set "data-ajax" attribute to "false"*@
-                            using (Html.BeginForm("Details", "Order", FormMethod.Post,
+                            using (Html.BeginRouteForm("OrderDetails", FormMethod.Post,
                                 new Dictionary<string, Object> { { "data-ajax", "false" } }))
                             {
                             <input type="submit" name="repost-payment" value="@T("Order.CompletePayment")" id="repost-payment" />

@@ -50,7 +50,7 @@
         });
     </script>
     <div id="phPassword">
-        @using (Html.BeginForm("Authenticate", "Topic"))
+        @using (Html.BeginRouteForm("TopicAuthenticate"))
         {
             <div>
                 @Html.HiddenFor(model => model.Id)

@@ -35,7 +35,7 @@
         <div class="clear">
         </div>
         <div class="search-input">
-            @using (Html.BeginForm("Search", "Boards", FormMethod.Get))
+            @using (Html.BeginRouteForm("Search", FormMethod.Get))
             {
                 @Html.TextBox("searchterms", null, new { @class = "forumsearchtext" })
                 <input type="submit" class="forumsearchbutton" value="@T("Forum.SearchButton")" />
