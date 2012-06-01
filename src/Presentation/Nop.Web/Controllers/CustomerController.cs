@@ -219,7 +219,7 @@ namespace Nop.Web.Controllers
                     if (!String.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                         return Redirect(returnUrl);
                     else
-                        return RedirectToAction("Index", "Home");
+                        return RedirectToRoute("HomePage");
                 }
                 else
                 {
@@ -476,7 +476,7 @@ namespace Nop.Web.Controllers
                             }
                         default:
                             {
-                                return RedirectToAction("Index", "Home");
+                                return RedirectToRoute("HomePage");
                             }
                     }
                 }
@@ -640,14 +640,14 @@ namespace Nop.Web.Controllers
         {
             var customer = _customerService.GetCustomerByEmail(email);
             if (customer == null)
-                return RedirectToAction("Index", "Home");
+                return RedirectToRoute("HomePage");
 
             var cToken = customer.GetAttribute<string>(SystemCustomerAttributeNames.AccountActivationToken);
             if (String.IsNullOrEmpty(cToken))
-                return RedirectToAction("Index", "Home");
+                return RedirectToRoute("HomePage");
 
             if (!cToken.Equals(token, StringComparison.InvariantCultureIgnoreCase))
-                return RedirectToAction("Index", "Home");
+                return RedirectToRoute("HomePage");
 
             //activate user account
             customer.Active = true;
@@ -1344,12 +1344,12 @@ namespace Nop.Web.Controllers
         {
             var opv = _orderService.GetOrderProductVariantByGuid(opvId);
             if (opv == null)
-                return RedirectToAction("Index", "Home");
+                return RedirectToRoute("HomePage");
 
 
             var productVariant = opv.ProductVariant;
             if (productVariant == null || !productVariant.HasUserAgreement)
-                return RedirectToAction("Index", "Home");
+                return RedirectToRoute("HomePage");
 
             var model = new UserAgreementModel();
             model.UserAgreementText = productVariant.UserAgreementText;
@@ -1599,14 +1599,14 @@ namespace Nop.Web.Controllers
         {
             var customer = _customerService.GetCustomerByEmail(email);
             if (customer == null )
-                return RedirectToAction("Index", "Home");
+                return RedirectToRoute("HomePage");
 
             var cPrt = customer.GetAttribute<string>(SystemCustomerAttributeNames.PasswordRecoveryToken);
             if (String.IsNullOrEmpty(cPrt))
-                return RedirectToAction("Index", "Home");
+                return RedirectToRoute("HomePage");
 
             if (!cPrt.Equals(token, StringComparison.InvariantCultureIgnoreCase))
-                return RedirectToAction("Index", "Home");
+                return RedirectToRoute("HomePage");
             
             var model = new PasswordRecoveryConfirmModel();
             return View(model);
@@ -1618,14 +1618,14 @@ namespace Nop.Web.Controllers
         {
             var customer = _customerService.GetCustomerByEmail(email);
             if (customer == null)
-                return RedirectToAction("Index", "Home");
+                return RedirectToRoute("HomePage");
 
             var cPrt = customer.GetAttribute<string>(SystemCustomerAttributeNames.PasswordRecoveryToken);
             if (String.IsNullOrEmpty(cPrt))
-                return RedirectToAction("Index", "Home");
+                return RedirectToRoute("HomePage");
 
             if (!cPrt.Equals(token, StringComparison.InvariantCultureIgnoreCase))
-                return RedirectToAction("Index", "Home");
+                return RedirectToRoute("HomePage");
             
             if (ModelState.IsValid)
             {

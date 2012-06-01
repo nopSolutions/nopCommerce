@@ -118,7 +118,7 @@ namespace Nop.Web.Controllers
         public ActionResult Index()
         {
             if (DataSettingsHelper.DatabaseIsInstalled())
-                return RedirectToAction("Index", "Home");
+                return RedirectToRoute("HomePage");
 
             //set page timeout to 5 minutes
             this.Server.ScriptTimeout = 300;
@@ -144,7 +144,7 @@ namespace Nop.Web.Controllers
         public ActionResult Index(InstallModel model)
         {
             if (DataSettingsHelper.DatabaseIsInstalled())
-                return RedirectToAction("Index", "Home");
+                return RedirectToRoute("HomePage");
 
             //set page timeout to 5 minutes
             this.Server.ScriptTimeout = 300;
@@ -325,7 +325,7 @@ namespace Nop.Web.Controllers
                     webHelper.RestartAppDomain();
 
                     //Redirect to home page
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToRoute("HomePage");
                 }
                 catch (Exception exception)
                 {
@@ -348,14 +348,14 @@ namespace Nop.Web.Controllers
         public ActionResult RestartInstall()
         {
             if (DataSettingsHelper.DatabaseIsInstalled())
-                return RedirectToAction("Index", "Home");
+                return RedirectToRoute("HomePage");
             
             //restart application
             var webHelper = EngineContext.Current.Resolve<IWebHelper>();
             webHelper.RestartAppDomain();
 
             //Redirect to home page
-            return RedirectToAction("Index", "Home");
+            return RedirectToRoute("HomePage");
         }
 
         #endregion

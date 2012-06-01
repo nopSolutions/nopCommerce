@@ -75,6 +75,22 @@ namespace Nop.Web.Infrastructure
                             new { controller = "Catalog", action = "Manufacturer", SeName = UrlParameter.Optional },
                             new { manufacturerId = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
+            //downloads
+            routes.MapRoute("GetSampleDownload",
+                            "download/sample/{productvariantid}",
+                            new { controller = "Download", action = "Sample"},
+                            new { productvariantid = @"\d+" },
+                            new[] { "Nop.Web.Controllers" });
+            routes.MapRoute("GetDownload",
+                            "download/getdownload/{opvid}/{agree}",
+                            new { controller = "Download", action = "GetDownload", agree = UrlParameter.Optional },
+                            new { opvid = new GuidConstraint(false) },
+                            new[] { "Nop.Web.Controllers" });
+            routes.MapRoute("GetLicense",
+                            "download/getlicense/{opvid}/",
+                            new { controller = "Download", action = "GetLicense" },
+                            new { opvid = new GuidConstraint(false) },
+                            new[] { "Nop.Web.Controllers" });
 
             //reviews
             routes.MapLocalizedRoute("ProductReviews",

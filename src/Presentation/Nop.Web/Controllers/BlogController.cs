@@ -136,7 +136,7 @@ namespace Nop.Web.Controllers
         public ActionResult List(BlogPagingFilteringModel command)
         {
             if (!_blogSettings.Enabled)
-                return RedirectToAction("Index", "Home");
+                return RedirectToRoute("HomePage");
 
             var model = new BlogPostListModel();
             model.PagingFilteringContext.Tag = command.Tag;
@@ -200,13 +200,13 @@ namespace Nop.Web.Controllers
         public ActionResult BlogPost(int blogPostId)
         {
             if (!_blogSettings.Enabled)
-                return RedirectToAction("Index", "Home");
+                return RedirectToRoute("HomePage");
 
             var blogPost = _blogService.GetBlogPostById(blogPostId);
             if (blogPost == null ||
                 (blogPost.StartDateUtc.HasValue && blogPost.StartDateUtc.Value >= DateTime.UtcNow) ||
                 (blogPost.EndDateUtc.HasValue && blogPost.EndDateUtc.Value <= DateTime.UtcNow))
-                return RedirectToAction("Index", "Home");
+                return RedirectToRoute("HomePage");
 
             var model = new BlogPostModel();
             PrepareBlogPostModel(model, blogPost, true);
@@ -220,11 +220,11 @@ namespace Nop.Web.Controllers
         public ActionResult BlogCommentAdd(int blogPostId, BlogPostModel model, bool captchaValid)
         {
             if (!_blogSettings.Enabled)
-                return RedirectToAction("Index", "Home");
+                return RedirectToRoute("HomePage");
 
             var blogPost = _blogService.GetBlogPostById(blogPostId);
             if (blogPost == null || !blogPost.AllowComments)
-                return RedirectToAction("Index", "Home");
+                return RedirectToRoute("HomePage");
 
             if (_workContext.CurrentCustomer.IsGuest() && !_blogSettings.AllowNotRegisteredUsersToLeaveComments)
             {

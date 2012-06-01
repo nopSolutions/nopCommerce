@@ -1136,7 +1136,7 @@ namespace Nop.Web.Controllers
         public ActionResult Cart()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
-                return RedirectToAction("Index", "Home");
+                return RedirectToRoute("HomePage");
 
             var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
             var model = PrepareShoppingCartModel(new ShoppingCartModel(), cart, true, false, true);
@@ -1158,7 +1158,7 @@ namespace Nop.Web.Controllers
         public ActionResult UpdateCartAll(FormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
-                return RedirectToAction("Index", "Home");
+                return RedirectToRoute("HomePage");
 
             var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
 
@@ -1214,7 +1214,7 @@ namespace Nop.Web.Controllers
         public ActionResult UpdateCartItem(FormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
-                return RedirectToAction("Index", "Home");
+                return RedirectToRoute("HomePage");
 
             //get shopping cart item identifier
             int sciId = 0;
@@ -1265,7 +1265,7 @@ namespace Nop.Web.Controllers
         public ActionResult RemoveCartItem(FormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
-                return RedirectToAction("Index", "Home");
+                return RedirectToRoute("HomePage");
 
             //get shopping cart item identifier
             int sciId = 0;
@@ -1303,7 +1303,7 @@ namespace Nop.Web.Controllers
             }
             else
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToRoute("HomePage");
             }
         }
         
@@ -1805,13 +1805,13 @@ namespace Nop.Web.Controllers
         public ActionResult Wishlist(Guid? customerGuid)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableWishlist))
-                return RedirectToAction("Index", "Home");
+                return RedirectToRoute("HomePage");
 
             Customer customer = customerGuid.HasValue ? 
                 _customerService.GetCustomerByGuid(customerGuid.Value)
                 : _workContext.CurrentCustomer;
             if (customer == null)
-                return RedirectToAction("Index", "Home");
+                return RedirectToRoute("HomePage");
             var cart = customer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist).ToList();
             var model = PrepareWishlistModel(new WishlistModel(), cart, !customerGuid.HasValue);
             return View(model);
@@ -1824,7 +1824,7 @@ namespace Nop.Web.Controllers
         public ActionResult UpdateWishlistAll(FormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableWishlist))
-                return RedirectToAction("Index", "Home");
+                return RedirectToRoute("HomePage");
 
             var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist).ToList();
 
@@ -1880,7 +1880,7 @@ namespace Nop.Web.Controllers
         public ActionResult UpdateWishlistItem(FormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableWishlist))
-                return RedirectToAction("Index", "Home");
+                return RedirectToRoute("HomePage");
 
             //get wishlist cart item identifier
             int sciId = 0;
@@ -1931,7 +1931,7 @@ namespace Nop.Web.Controllers
         public ActionResult RemoveWishlistItem(FormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableWishlist))
-                return RedirectToAction("Index", "Home");
+                return RedirectToRoute("HomePage");
 
             //get wishlist cart item identifier
             int sciId = 0;
@@ -1963,10 +1963,10 @@ namespace Nop.Web.Controllers
         public ActionResult AddItemstoCartFromWishlist(FormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
-                return RedirectToAction("Index", "Home");
+                return RedirectToRoute("HomePage");
 
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableWishlist))
-                return RedirectToAction("Index", "Home");
+                return RedirectToRoute("HomePage");
 
             var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist).ToList();
 
@@ -1994,10 +1994,10 @@ namespace Nop.Web.Controllers
         public ActionResult AddOneItemtoCartFromWishlist(FormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
-                return RedirectToAction("Index", "Home");
+                return RedirectToRoute("HomePage");
 
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableWishlist))
-                return RedirectToAction("Index", "Home");
+                return RedirectToRoute("HomePage");
 
             //get wishlist cart item identifier
             int sciId = 0;
@@ -2029,12 +2029,12 @@ namespace Nop.Web.Controllers
         public ActionResult EmailWishlist()
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableWishlist) || !_shoppingCartSettings.EmailWishlistEnabled)
-                return RedirectToAction("Index", "Home");
+                return RedirectToRoute("HomePage");
 
             var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist).ToList();
 
             if (cart.Count == 0)
-                return RedirectToAction("Index", "Home");
+                return RedirectToRoute("HomePage");
 
             var model = new WishlistEmailAFriendModel()
             {
@@ -2050,11 +2050,11 @@ namespace Nop.Web.Controllers
         public ActionResult EmailWishlistSend(WishlistEmailAFriendModel model, bool captchaValid)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableWishlist) || !_shoppingCartSettings.EmailWishlistEnabled)
-                return RedirectToAction("Index", "Home");
+                return RedirectToRoute("HomePage");
 
             var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist).ToList();
             if (cart.Count == 0)
-                return RedirectToAction("Index", "Home");
+                return RedirectToRoute("HomePage");
 
             //validate CAPTCHA
             if (_captchaSettings.Enabled && _captchaSettings.ShowOnEmailWishlistToFriendPage && !captchaValid)

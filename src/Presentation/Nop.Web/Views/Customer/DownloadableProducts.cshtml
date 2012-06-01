@@ -66,7 +66,7 @@
                                         @if (item.DownloadId > 0)
                                         {
                                             <div>
-                                                <a class="link" href="@Url.Action("GetDownload", "Download", new { opvId = item.OrderProductVariantGuid })">@T("DownloadableProducts.Fields.Download")</a>
+                                                <a class="link" href="@Url.RouteUrl("GetDownload", new { opvId = item.OrderProductVariantGuid })">@T("DownloadableProducts.Fields.Download")</a>
                                             </div>
                                         }
                                         else
@@ -78,7 +78,7 @@
                                         @if (item.LicenseId > 0)
                                         {
                                             <div>
-                                                <a class="link" href="@Url.Action("GetLicense", "Download", new { opvId = item.OrderProductVariantGuid })">@T("DownloadableProducts.Fields.DownloadLicense")</a>
+                                                <a class="link" href="@Url.RouteUrl("GetLicense", new { opvId = item.OrderProductVariantGuid })">@T("DownloadableProducts.Fields.DownloadLicense")</a>
                                             </div>
                                         }
                                     </td>

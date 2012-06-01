@@ -64,7 +64,7 @@ namespace Nop.Web.Controllers
             var customer = _customerService.GetCustomerById(customerId);
             if (!_customerSettings.AllowViewingProfiles || (customer == null || customer.IsGuest()))
             {
-                return RedirectToAction("index", "home");
+                return RedirectToRoute("HomePage");
             }
 
             bool pagingPosts = false;
@@ -98,7 +98,7 @@ namespace Nop.Web.Controllers
             var customer = _customerService.GetCustomerById(customerProfileId);
             if (customer == null)
             {
-                return RedirectToAction("index", "home");
+                return RedirectToRoute("HomePage");
             }
 
             //avatar
@@ -203,7 +203,7 @@ namespace Nop.Web.Controllers
             var customer = _customerService.GetCustomerById(customerProfileId);
             if (customer == null)
             {
-                return RedirectToAction("index", "home");
+                return RedirectToRoute("HomePage");
             }
 
             if (page > 0)

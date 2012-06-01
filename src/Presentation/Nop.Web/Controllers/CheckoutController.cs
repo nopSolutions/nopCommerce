@@ -851,7 +851,7 @@ namespace Nop.Web.Controllers
 
             var orders = _orderService.GetOrdersByCustomerId(_workContext.CurrentCustomer.Id);
             if (orders.Count == 0)
-                return RedirectToAction("Index", "Home");
+                return RedirectToRoute("HomePage");
             else
             {
                 var lastOrder = orders[0];
@@ -1468,7 +1468,7 @@ namespace Nop.Web.Controllers
             {
                 //validation
                 if (!UseOnePageCheckout())
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToRoute("HomePage");
 
                 if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
                     return new HttpUnauthorizedResult();
@@ -1476,19 +1476,19 @@ namespace Nop.Web.Controllers
                 //get the order
                 var orders = _orderService.GetOrdersByCustomerId(_workContext.CurrentCustomer.Id);
                 if (orders.Count == 0)
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToRoute("HomePage");
 
                 
                 var order = orders[0];
                 var paymentMethod = _paymentService.LoadPaymentMethodBySystemName(order.PaymentMethodSystemName);
                 if (paymentMethod == null)
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToRoute("HomePage");
                 if (paymentMethod.PaymentMethodType != PaymentMethodType.Redirection)
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToRoute("HomePage");
 
                 //ensure that order has been just placed
                 if ((DateTime.UtcNow - order.CreatedOnUtc).TotalMinutes > 3)
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToRoute("HomePage");
 
 
                 //Redirection will not work on one page checkout page because it's AJAX request.

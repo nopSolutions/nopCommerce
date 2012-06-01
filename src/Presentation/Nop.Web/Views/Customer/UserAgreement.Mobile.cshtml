@@ -52,7 +52,7 @@
             <label for="agreementagree">@T("DownloadableProducts.IAgree")</label>
         </div>
         <div>
-            <a id="continuedownloading" data-ajax="false" data-role="button" href="@Url.Action("GetDownload", "Download", new { opvId = Model.OrderProductVariantGuid, agree = true })">@T("Common.Continue")</a>
+            <a id="continuedownloading" data-ajax="false" data-role="button" href="@Url.RouteUrl("GetDownload", new { opvId = Model.OrderProductVariantGuid, agree = true })">@T("Common.Continue")</a>
         </div>
     </div>
 </div>

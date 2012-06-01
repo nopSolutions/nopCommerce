@@ -159,7 +159,7 @@ namespace Nop.Web.Controllers
                 }
                 else
                 {
-                    string redirectUrl = Url.Action("Index", "Home");
+                    string redirectUrl = Url.RouteUrl("HomePage");
                     redirectUrl = redirectUrl.AddLocalizedPathToRawUrl(applicationPath, _workContext.WorkingLanguage);
                     return Redirect(redirectUrl);
                 }
@@ -173,7 +173,7 @@ namespace Nop.Web.Controllers
                 }
                 else
                 {
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToRoute("HomePage");
                 }
             }
         }
@@ -208,7 +208,7 @@ namespace Nop.Web.Controllers
             }
             else
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToRoute("HomePage");
             }
         }
 
@@ -241,7 +241,7 @@ namespace Nop.Web.Controllers
             }
             else
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToRoute("HomePage");
             }
         }
 
@@ -455,7 +455,7 @@ namespace Nop.Web.Controllers
         public ActionResult Sitemap()
         {
             if (!_commonSettings.SitemapEnabled)
-                return RedirectToAction("Index", "Home");
+                return RedirectToRoute("HomePage");
 
             var model = new SitemapModel();
             if (_commonSettings.SitemapIncludeCategories)
@@ -497,7 +497,7 @@ namespace Nop.Web.Controllers
         public ActionResult SitemapSeo()
         {
             if (!_commonSettings.SitemapEnabled)
-                return RedirectToAction("Index", "Home");
+                return RedirectToRoute("HomePage");
 
             string siteMap = _sitemapGenerator.Generate();
             return Content(siteMap, "text/xml");
@@ -588,7 +588,7 @@ namespace Nop.Web.Controllers
             }
             else
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToRoute("HomePage");
             }
         }
         [ChildActionOnly]

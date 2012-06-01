@@ -169,7 +169,7 @@ namespace Nop.Web.Controllers
         public ActionResult List(NewsPagingFilteringModel command)
         {
             if (!_newsSettings.Enabled)
-                return RedirectToAction("Index", "Home");
+                return RedirectToRoute("HomePage");
 
             var model = new NewsItemListModel();
             model.WorkingLanguageId = _workContext.WorkingLanguage.Id;
@@ -219,14 +219,14 @@ namespace Nop.Web.Controllers
         public ActionResult NewsItem(int newsItemId)
         {
             if (!_newsSettings.Enabled)
-                return RedirectToAction("Index", "Home");
+                return RedirectToRoute("HomePage");
 
             var newsItem = _newsService.GetNewsById(newsItemId);
             if (newsItem == null || 
                 !newsItem.Published ||
                 (newsItem.StartDateUtc.HasValue && newsItem.StartDateUtc.Value >= DateTime.UtcNow) ||
                 (newsItem.EndDateUtc.HasValue && newsItem.EndDateUtc.Value <= DateTime.UtcNow))
-                return RedirectToAction("Index", "Home");
+                return RedirectToRoute("HomePage");
 
             var model = new NewsItemModel();
             PrepareNewsItemModel(model, newsItem, true);
@@ -240,11 +240,11 @@ namespace Nop.Web.Controllers
         public ActionResult NewsCommentAdd(int newsItemId, NewsItemModel model, bool captchaValid)
         {
             if (!_newsSettings.Enabled)
-                return RedirectToAction("Index", "Home");
+                return RedirectToRoute("HomePage");
 
             var newsItem = _newsService.GetNewsById(newsItemId);
             if (newsItem == null || !newsItem.Published || !newsItem.AllowComments)
-                return RedirectToAction("Index", "Home");
+                return RedirectToRoute("HomePage");
 
             //validate CAPTCHA
             if (_captchaSettings.Enabled && _captchaSettings.ShowOnNewsCommentPage && !captchaValid)

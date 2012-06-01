@@ -4,7 +4,7 @@
 {
     <div class="downloadsample">
         <span class="downloadsamplebutton">
-            <a href="@Url.Action("sample", "download", new { productvariantid = Model.Id })">@T("Products.DownloadSample")</a>
+            <a href="@Url.RouteUrl("GetSampleDownload", new { productvariantid = Model.Id })">@T("Products.DownloadSample")</a>
         </span>
     </div>
 }

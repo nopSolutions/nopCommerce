@@ -62,7 +62,7 @@ namespace Nop.Web.Controllers
             var cacheModel = _cacheManager.Get(cacheKey, () => PrepareTopicModel(systemName));
 
             if (cacheModel == null)
-                return RedirectToAction("Index", "Home");
+                return RedirectToRoute("HomePage");
             return View("TopicDetails", cacheModel);
         }
 
@@ -72,7 +72,7 @@ namespace Nop.Web.Controllers
             var cacheModel = _cacheManager.Get(cacheKey, () => PrepareTopicModel(systemName));
 
             if (cacheModel == null)
-                return RedirectToAction("Index", "Home");
+                return RedirectToRoute("HomePage");
 
             ViewBag.IsPopup = true;
             return View("TopicDetails", cacheModel);

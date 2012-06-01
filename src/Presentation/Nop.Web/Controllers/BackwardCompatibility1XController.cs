@@ -146,7 +146,7 @@ namespace Nop.Web.Controllers
             }
 
             //no permanent redirect in this case
-            return RedirectToAction("Index", "Home");
+            return RedirectToRoute("HomePage");
         }
 
         public ActionResult RedirectProduct(string id, bool idIncludesSename = true)
@@ -155,7 +155,7 @@ namespace Nop.Web.Controllers
             var productId = idIncludesSename ? Convert.ToInt32(id.Split(new char[] { '-' })[0]) : Convert.ToInt32(id);
             var product = _productService.GetProductById(productId);
             if (product == null)
-                return RedirectToActionPermanent("Index", "Home");
+                return RedirectToRoutePermanent("HomePage");
 
             return RedirectToRoutePermanent("Product", new { productId = product.Id, SeName = product.GetSeName() });
         }
@@ -166,7 +166,7 @@ namespace Nop.Web.Controllers
             var categoryid = idIncludesSename ? Convert.ToInt32(id.Split(new char[] { '-' })[0]) : Convert.ToInt32(id);
             var category = _categoryService.GetCategoryById(categoryid);
             if (category == null)
-                return RedirectToActionPermanent("Index", "Home");
+                return RedirectToRoutePermanent("HomePage");
 
             return RedirectToRoutePermanent("Category", new { categoryId = category.Id, SeName = category.GetSeName() });
         }
@@ -177,7 +177,7 @@ namespace Nop.Web.Controllers
             var manufacturerId = idIncludesSename ? Convert.ToInt32(id.Split(new char[] { '-' })[0]) : Convert.ToInt32(id);
             var manufacturer = _manufacturerService.GetManufacturerById(manufacturerId);
             if (manufacturer == null)
-                return RedirectToActionPermanent("Index", "Home");
+                return RedirectToRoutePermanent("HomePage");
 
             return RedirectToRoutePermanent("Manufacturer", new { manufacturerId = manufacturer.Id, SeName = manufacturer.GetSeName() });
         }
@@ -188,7 +188,7 @@ namespace Nop.Web.Controllers
             var tagId = idIncludesSename ? Convert.ToInt32(id.Split(new char[] { '-' })[0]) : Convert.ToInt32(id);
             var tag = _productTagService.GetProductById(tagId);
             if (tag == null)
-                return RedirectToActionPermanent("Index", "Home");
+                return RedirectToRoutePermanent("HomePage");
 
             return RedirectToRoutePermanent("ProductsByTag", new { productTagId = tag.Id });
         }
@@ -199,7 +199,7 @@ namespace Nop.Web.Controllers
             var newsId = idIncludesSename ? Convert.ToInt32(id.Split(new char[] { '-' })[0]) : Convert.ToInt32(id);
             var newsItem = _newsService.GetNewsById(newsId);
             if (newsItem == null)
-                return RedirectToActionPermanent("Index", "Home");
+                return RedirectToRoutePermanent("HomePage");
 
             return RedirectToRoutePermanent("NewsItem", new { newsItemId = newsItem.Id, SeName = newsItem.GetSeName() });
         }
@@ -210,7 +210,7 @@ namespace Nop.Web.Controllers
             var blogPostId = idIncludesSename ? Convert.ToInt32(id.Split(new char[] { '-' })[0]) : Convert.ToInt32(id);
             var blogPost = _blogService.GetBlogPostById(blogPostId);
             if (blogPost == null)
-                return RedirectToActionPermanent("Index", "Home");
+                return RedirectToRoutePermanent("HomePage");
 
             return RedirectToRoutePermanent("BlogPost", new { blogPostId = blogPost.Id, SeName = blogPost.GetSeName() });
         }
@@ -221,7 +221,7 @@ namespace Nop.Web.Controllers
             var topicid = idIncludesSename ? Convert.ToInt32(id.Split(new char[] { '-' })[0]) : Convert.ToInt32(id);
             var topic = _topicService.GetTopicById(topicid);
             if (topic == null)
-                return RedirectToActionPermanent("Index", "Home");
+                return RedirectToRoutePermanent("HomePage");
 
             return RedirectToRoutePermanent("Topic", new { systemName = topic.SystemName });
         }
@@ -232,7 +232,7 @@ namespace Nop.Web.Controllers
             var forumGroupId = idIncludesSename ? Convert.ToInt32(id.Split(new char[] { '-' })[0]) : Convert.ToInt32(id);
             var forumGroup = _forumService.GetForumGroupById(forumGroupId);
             if (forumGroup == null)
-                return RedirectToActionPermanent("Index", "Home");
+                return RedirectToRoutePermanent("HomePage");
 
             return RedirectToRoutePermanent("ForumGroupSlug", new { id = forumGroup.Id, slug = forumGroup.GetSeName() });
         }
@@ -243,7 +243,7 @@ namespace Nop.Web.Controllers
             var forumId = idIncludesSename ? Convert.ToInt32(id.Split(new char[] { '-' })[0]) : Convert.ToInt32(id);
             var forum = _forumService.GetForumById(forumId);
             if (forum == null)
-                return RedirectToActionPermanent("Index", "Home");
+                return RedirectToRoutePermanent("HomePage");
 
             return RedirectToRoutePermanent("ForumSlug", new { id = forum.Id, slug = forum.GetSeName() });
         }
@@ -254,7 +254,7 @@ namespace Nop.Web.Controllers
             var forumTopicId = idIncludesSename ? Convert.ToInt32(id.Split(new char[] { '-' })[0]) : Convert.ToInt32(id);
             var topic = _forumService.GetTopicById(forumTopicId);
             if (topic == null)
-                return RedirectToActionPermanent("Index", "Home");
+                return RedirectToRoutePermanent("HomePage");
 
             return RedirectToRoutePermanent("TopicSlug", new { id = topic.Id, slug = topic.GetSeName() });
         }
@@ -265,7 +265,7 @@ namespace Nop.Web.Controllers
             var userId = Convert.ToInt32(id);
             var user = _customerService.GetCustomerById(userId);
             if (user == null)
-                return RedirectToActionPermanent("Index", "Home");
+                return RedirectToRoutePermanent("HomePage");
 
             return RedirectToRoutePermanent("CustomerProfile", new { id = user.Id});
         }

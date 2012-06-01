@@ -181,7 +181,7 @@ namespace Nop.Web.Controllers
         {
             if (!ForumsEnabled())
             {
-                return RedirectToAction("index", "home");
+                return RedirectToRoute("HomePage");
             }
 
             var forumGroups = _forumService.GetAllForumGroups();
@@ -204,7 +204,7 @@ namespace Nop.Web.Controllers
         {
             if (!ForumsEnabled())
             {
-                return RedirectToAction("index", "home");
+                return RedirectToRoute("HomePage");
             }
 
             int topicLimit = _forumSettings.HomePageActiveDiscussionsTopicCount;
@@ -229,7 +229,7 @@ namespace Nop.Web.Controllers
         {
             if (!ForumsEnabled())
             {
-                return RedirectToAction("index", "home");
+                return RedirectToRoute("HomePage");
             }
 
             int topicLimit = _forumSettings.ActiveDiscussionsPageTopicCount;
@@ -251,7 +251,7 @@ namespace Nop.Web.Controllers
         {
             if (!ForumsEnabled())
             {
-                return RedirectToAction("index", "home");
+                return RedirectToRoute("HomePage");
             }
 
             if (!_forumSettings.ActiveDiscussionsFeedEnabled)
@@ -295,7 +295,7 @@ namespace Nop.Web.Controllers
         {
             if (!ForumsEnabled())
             {
-                return RedirectToAction("index", "home");
+                return RedirectToRoute("HomePage");
             }
 
             var forumGroup = _forumService.GetForumGroupById(id);
@@ -310,7 +310,7 @@ namespace Nop.Web.Controllers
         {
             if (!ForumsEnabled())
             {
-                return RedirectToAction("index", "home");
+                return RedirectToRoute("HomePage");
             }
 
             var forum = _forumService.GetForumById(id);
@@ -364,7 +364,7 @@ namespace Nop.Web.Controllers
         {
             if (!ForumsEnabled())
             {
-                return RedirectToAction("index", "home");
+                return RedirectToRoute("HomePage");
             }
 
             if (!_forumSettings.ForumFeedsEnabled)
@@ -463,7 +463,7 @@ namespace Nop.Web.Controllers
         {
             if (!ForumsEnabled())
             {
-                return RedirectToAction("index", "home");
+                return RedirectToRoute("HomePage");
             }
 
             var forumTopic = _forumService.GetTopicById(id);
@@ -613,7 +613,7 @@ namespace Nop.Web.Controllers
         {
             if (!ForumsEnabled())
             {
-                return RedirectToAction("index", "home");
+                return RedirectToRoute("HomePage");
             }
 
             var forumTopic = _forumService.GetTopicById(id);
@@ -636,7 +636,7 @@ namespace Nop.Web.Controllers
         {
             if (!ForumsEnabled())
             {
-                return RedirectToAction("index", "home");
+                return RedirectToRoute("HomePage");
             }
 
             var forumTopic = _forumService.GetTopicById(model.Id);
@@ -661,7 +661,7 @@ namespace Nop.Web.Controllers
         {
             if (!ForumsEnabled())
             {
-                return RedirectToAction("index", "home");
+                return RedirectToRoute("HomePage");
             }
 
             var forumTopic = _forumService.GetTopicById(id);
@@ -688,7 +688,7 @@ namespace Nop.Web.Controllers
         {
             if (!ForumsEnabled())
             {
-                return RedirectToAction("index", "home");
+                return RedirectToRoute("HomePage");
             }
 
             var forum = _forumService.GetForumById(id);
@@ -723,7 +723,7 @@ namespace Nop.Web.Controllers
         {
             if (!ForumsEnabled())
             {
-                return RedirectToAction("index", "home");
+                return RedirectToRoute("HomePage");
             }
 
             var forum = _forumService.GetForumById(model.ForumId);
@@ -842,7 +842,7 @@ namespace Nop.Web.Controllers
         {
             if (!ForumsEnabled())
             {
-                return RedirectToAction("index", "home");
+                return RedirectToRoute("HomePage");
             }
 
             var forumTopic = _forumService.GetTopicById(id);
@@ -896,7 +896,7 @@ namespace Nop.Web.Controllers
         {
             if (!ForumsEnabled())
             {
-                return RedirectToAction("index", "home");
+                return RedirectToRoute("HomePage");
             }
 
             var forumTopic = _forumService.GetTopicById(model.Id);
@@ -1031,7 +1031,7 @@ namespace Nop.Web.Controllers
         {
             if (!ForumsEnabled())
             {
-                return RedirectToAction("index", "home");
+                return RedirectToRoute("HomePage");
             }
 
             var forumPost = _forumService.GetPostById(id);
@@ -1069,7 +1069,7 @@ namespace Nop.Web.Controllers
         {
             if (!ForumsEnabled())
             {
-                return RedirectToAction("index", "home");
+                return RedirectToRoute("HomePage");
             }
 
             var forumTopic = _forumService.GetTopicById(id);
@@ -1142,7 +1142,7 @@ namespace Nop.Web.Controllers
         {
             if (!ForumsEnabled())
             {
-                return RedirectToAction("index", "home");
+                return RedirectToRoute("HomePage");
             }
 
             var forumTopic = _forumService.GetTopicById(model.ForumTopicId);
@@ -1250,7 +1250,7 @@ namespace Nop.Web.Controllers
         {
             if (!ForumsEnabled())
             {
-                return RedirectToAction("index", "home");
+                return RedirectToRoute("HomePage");
             }
 
             var forumPost = _forumService.GetPostById(id);
@@ -1306,7 +1306,7 @@ namespace Nop.Web.Controllers
         {
             if (!ForumsEnabled())
             {
-                return RedirectToAction("index", "home");
+                return RedirectToRoute("HomePage");
             }
 
             var forumPost = _forumService.GetPostById(model.Id);
@@ -1418,7 +1418,7 @@ namespace Nop.Web.Controllers
         {
             if (!ForumsEnabled())
             {
-                return RedirectToAction("index", "home");
+                return RedirectToRoute("HomePage");
             }
 
             int pageSize = 10;

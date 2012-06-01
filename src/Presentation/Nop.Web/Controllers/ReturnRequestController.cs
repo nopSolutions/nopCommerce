@@ -161,7 +161,7 @@ namespace Nop.Web.Controllers
                 return new HttpUnauthorizedResult();
 
             if (!_orderProcessingService.IsReturnRequestAllowed(order))
-                return RedirectToAction("Index", "Home");
+                return RedirectToRoute("HomePage");
 
             var model = new SubmitReturnRequestModel();
             model = PrepareReturnRequestModel(model, order);
@@ -177,7 +177,7 @@ namespace Nop.Web.Controllers
                 return new HttpUnauthorizedResult();
 
             if (!_orderProcessingService.IsReturnRequestAllowed(order))
-                return RedirectToAction("Index", "Home");
+                return RedirectToRoute("HomePage");
 
             int count = 0;
             foreach (var opv in order.OrderProductVariants)

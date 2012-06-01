@@ -16,7 +16,7 @@ namespace Nop.Web.Framework.Mvc.Routes
         {
             if (values.ContainsKey(parameterName))
             {
-                string stringValue = values[parameterName] as string;
+                string stringValue = values[parameterName] != null ? values[parameterName].ToString() : null;
 
                 if (!string.IsNullOrEmpty(stringValue))
                 {

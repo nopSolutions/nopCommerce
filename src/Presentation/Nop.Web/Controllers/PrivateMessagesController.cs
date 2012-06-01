@@ -47,7 +47,7 @@ namespace Nop.Web.Controllers
         {
             if (!AllowPrivateMessages())
             {
-                return RedirectToAction("index", "home");
+                return RedirectToRoute("HomePage");
             }
 
             if (_workContext.CurrentCustomer.IsGuest())
@@ -270,7 +270,7 @@ namespace Nop.Web.Controllers
         {
             if (!AllowPrivateMessages())
             {
-                return RedirectToAction("index", "home");
+                return RedirectToRoute("HomePage");
             }
 
             if (_workContext.CurrentCustomer.IsGuest())
@@ -316,7 +316,7 @@ namespace Nop.Web.Controllers
         {
             if (!AllowPrivateMessages())
             {
-                return RedirectToAction("index", "home");
+                return RedirectToRoute("HomePage");
             }
 
             if (_workContext.CurrentCustomer.IsGuest())
@@ -397,7 +397,7 @@ namespace Nop.Web.Controllers
         {
             if (!AllowPrivateMessages())
             {
-                return RedirectToAction("index", "home");
+                return RedirectToRoute("HomePage");
             }
 
             if (_workContext.CurrentCustomer.IsGuest())
@@ -446,7 +446,7 @@ namespace Nop.Web.Controllers
         {
             if (!AllowPrivateMessages())
             {
-                return RedirectToAction("index", "home");
+                return RedirectToRoute("HomePage");
             }
 
             if (_workContext.CurrentCustomer.IsGuest())
