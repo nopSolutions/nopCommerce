@@ -102,7 +102,7 @@ namespace Nop.Services.Catalog
                                 //encode (if required)
                                 if (htmlEncode)
                                     attributeName = HttpUtility.HtmlEncode(attributeName);
-                                pvaAttribute = string.Format("{0}: {1}", attributeName, HtmlHelper.FormatText(valueStr, false, true, true, false, false, false));
+                                pvaAttribute = string.Format("{0}: {1}", attributeName, HtmlHelper.FormatText(valueStr, false, true, false, false, false, false));
                                 //we never encode multiline textbox input
                             }
                             else if (pva.AttributeControlType == AttributeControlType.FileUpload)
