@@ -80,7 +80,7 @@ a.logo{background:url(images/logo.gif);display:block;width:225px;height:60px;tex
 .a-right{text-align:left!important;}
 .page-title{border-bottom:1px solid;margin:0 0 10px;overflow:hidden;width:100%;}
 .page-title h1,.page-title h2{padding:5px 5px 5px 0;font-size:20px;margin:0;font-family:Arial,Helvetica,sans-serif;font-weight:400;}
-.page-title .title{float:right;text-alight:right;}
+.page-title .title{float:right;text-align:right;}
 .page-title .rss{float:left;text-align:left;}
 td{vertical-align:middle;}
 td.fieldname{font-size:12px;}
