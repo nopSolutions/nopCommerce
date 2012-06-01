@@ -9,10 +9,10 @@
         </div>
         <ul data-role="listview" data-inset="true" data-filter="false">
             <li @(Model.CurrentTaxType == TaxDisplayType.IncludingTax ? " data-icon=false" : null)>
-                <a href="@Url.Action("taxtypeselected", "common", new { customerTaxType = ((int)TaxDisplayType.IncludingTax).ToString() })" data-ajax="false">
+                <a href="@Url.RouteUrl("ChangeTaxType", new { customertaxtype = ((int)TaxDisplayType.IncludingTax).ToString() })" data-ajax="false">
                     @T("Tax.Inclusive")</a></li>
             <li @(Model.CurrentTaxType == TaxDisplayType.ExcludingTax ? " data-icon=false" : null)>
-                <a href="@Url.Action("taxtypeselected", "common", new { customerTaxType = ((int)TaxDisplayType.ExcludingTax).ToString() })" data-ajax="false">
+                <a href="@Url.RouteUrl("ChangeTaxType", new { customertaxtype = ((int)TaxDisplayType.ExcludingTax).ToString() })" data-ajax="false">
                     @T("Tax.Exclusive")</a></li>
         </ul>
     </div>

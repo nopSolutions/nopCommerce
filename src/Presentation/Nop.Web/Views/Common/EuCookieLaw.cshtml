@@ -15,7 +15,7 @@
                     $.ajax({
                         cache: false,
                         type: 'POST',
-                        url: '@Url.Action("EuCookieLawAccept", "Common")',
+                        url: '@Url.RouteUrl("EuCookieLawAccept")',
                         dataType: 'json',
                         success: function (data) {
                             $("#dialog-eu-cookie-law").dialog("close");

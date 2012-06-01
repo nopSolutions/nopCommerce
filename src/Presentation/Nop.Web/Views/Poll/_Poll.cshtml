@@ -46,7 +46,7 @@
                     $.ajax({
                         cache: false,
                         type: "POST",
-                        url: "@(Url.Action("Vote", "Poll"))",
+                        url: "@(Url.RouteUrl("PollVote"))",
                         data: { "pollAnswerId": pollAnswerId },
                         success: function (data) {
                             voteProgress.hide();

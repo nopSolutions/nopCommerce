@@ -31,7 +31,7 @@
                     $('#small-searchterms').autocomplete({
                         delay: 500,
                         minLength: @(Model.SearchTermMinimumLength.ToString()),
-                        source: '@(Url.Action("SearchTermAutoComplete", "Catalog"))',
+                        source: '@(Url.RouteUrl("ProductSearchAutoComplete"))',
 			            select: function( event, ui ) {
 				            $("#small-searchterms").val(ui.item.label);
                             setLocation(ui.item.producturl);

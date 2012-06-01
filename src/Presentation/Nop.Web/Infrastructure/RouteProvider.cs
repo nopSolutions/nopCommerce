@@ -91,11 +91,20 @@ namespace Nop.Web.Infrastructure
                             new { controller = "Download", action = "GetLicense" },
                             new { opvid = new GuidConstraint(false) },
                             new[] { "Nop.Web.Controllers" });
+            routes.MapLocalizedRoute("DownloadUserAgreement",
+                            "customer/useragreement/{opvid}",
+                            new { controller = "Customer", action = "UserAgreement" },
+                            new { opvid = new GuidConstraint(false) },
+                            new[] { "Nop.Web.Controllers" });
 
             //reviews
             routes.MapLocalizedRoute("ProductReviews",
                             "productreviews/{productId}",
                             new { controller = "Catalog", action = "ProductReviews" },
+                            new[] { "Nop.Web.Controllers" });
+            routes.MapRoute("SetProductReviewHelpfulness",
+                            "setproductreviewhelpfulness",
+                            new { controller = "Catalog", action = "SetProductReviewHelpfulness" },
                             new[] { "Nop.Web.Controllers" });
 
             //back in stock notifications
@@ -132,7 +141,10 @@ namespace Nop.Web.Infrastructure
                             new { controller = "Customer", action = "RegisterResult" },
                             new { resultId = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
-            
+            routes.MapLocalizedRoute("CheckUsernameAvailability",
+                            "customer/checkusernameavailability",
+                            new { controller = "Customer", action = "CheckUsernameAvailability" },
+                            new[] { "Nop.Web.Controllers" });
 
             //shopping cart
             routes.MapLocalizedRoute("ShoppingCart",
@@ -264,6 +276,10 @@ namespace Nop.Web.Infrastructure
                             "newsletter/subscriptionactivation/{token}/{active}",
                             new { controller = "Newsletter", action = "SubscriptionActivation" },
                             new { token = new GuidConstraint(false) },
+                            new[] { "Nop.Web.Controllers" });
+            routes.MapLocalizedRoute("SubscribeNewsletter",
+                            "subscribenewsletter",
+                            new { controller = "Newsletter", action = "SubscribeNewsletter" },
                             new[] { "Nop.Web.Controllers" });
 
             
@@ -485,6 +501,7 @@ namespace Nop.Web.Infrastructure
                             new { controller = "Boards", action = "Search" },
                             new[] { "Nop.Web.Controllers" });
 
+
             //private messages
             routes.MapLocalizedRoute("PrivateMessages",
                             "privatemessages/{tab}",
@@ -578,12 +595,54 @@ namespace Nop.Web.Infrastructure
                             "search/",
                             new { controller = "Catalog", action = "Search" },
                             new[] { "Nop.Web.Controllers" });
+            routes.MapLocalizedRoute("ProductSearchAutoComplete",
+                            "catalog/searchtermautocomplete",
+                            new { controller = "Catalog", action = "SearchTermAutoComplete" },
+                            new[] { "Nop.Web.Controllers" });
 
             //config
             routes.MapLocalizedRoute("Config",
                             "config",
                             new { controller = "Common", action = "Config" },
                             new[] { "Nop.Web.Controllers" });
+
+            //some AJAX links
+            routes.MapRoute("GetStatesByCountryId",
+                            "country/getstatesbycountryid/",
+                            new { controller = "Country", action = "GetStatesByCountryId" },
+                            new[] { "Nop.Web.Controllers" });
+            routes.MapLocalizedRoute("ChangeDevice",
+                            "changedevice/{dontusemobileversion}",
+                            new { controller = "Common", action = "ChangeDevice" },
+                            new[] { "Nop.Web.Controllers" });
+            routes.MapLocalizedRoute("ChangeCurrency",
+                            "changecurrency/{customercurrency}",
+                            new { controller = "Common", action = "CurrencySelected" },
+                            //no constraints because we use placeholders for URL generatation
+                            new[] { "Nop.Web.Controllers" });
+            routes.MapLocalizedRoute("ChangeLanguage",
+                            "changelanguage/{langid}",
+                            new { controller = "Common", action = "SetLanguage" },
+                            //no constraints because we use placeholders for URL generatation
+                            new[] { "Nop.Web.Controllers" });
+            routes.MapLocalizedRoute("ChangeTaxType",
+                            "changetaxtype/{customertaxtype}",
+                            new { controller = "Common", action = "TaxTypeSelected" },
+                            //no constraints because we use placeholders for URL generatation
+                            new[] { "Nop.Web.Controllers" });
+            routes.MapRoute("EuCookieLawAccept",
+                            "eucookielawaccept",
+                            new { controller = "Common", action = "EuCookieLawAccept" },
+                            new[] { "Nop.Web.Controllers" });
+            routes.MapLocalizedRoute("PollVote",
+                            "poll/vote",
+                            new { controller = "Poll", action = "Vote" },
+                            new[] { "Nop.Web.Controllers" });
+            routes.MapLocalizedRoute("TopicAuthenticate",
+                            "topic/authenticate",
+                            new { controller = "Topic", action = "Authenticate" },
+                            new[] { "Nop.Web.Controllers" });
+
         }
 
         public int Priority

@@ -82,7 +82,7 @@ namespace Nop.Web.Controllers
             if (productVariant.HasUserAgreement)
             {
                 if (!agree)
-                    return RedirectToAction("useragreement", "customer", new { opvId = opvId });
+                    return RedirectToRoute("DownloadUserAgreement", new { opvid = opvId });
             }
 
 

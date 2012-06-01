@@ -11,8 +11,6 @@
 }
 @if (Model.IsPasswordProtected)
 {
-    
-    
     <script type="text/javascript">
         $(function () {
             $('#btnPassword').click(function () {
@@ -21,7 +19,7 @@
                 $.ajax({
                     cache: false,
                     type: 'POST',
-                    url: '@Url.Action("Authenticate", "Topic")',
+                    url: '@Url.RouteUrl("TopicAuthenticate")',
                     data: { "id": topicId, "password": password },
                     dataType: 'json',
                     success: function (data) {

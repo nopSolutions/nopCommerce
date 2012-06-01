@@ -48,7 +48,7 @@
         }
     </script>
     <div id="phPassword">
-        @using (Ajax.BeginForm("Authenticate", new AjaxOptions
+        @using (Ajax.BeginRouteForm("TopicAuthenticate", new AjaxOptions
         {
             HttpMethod = "Post",
             OnSuccess = "OnAuthenticateSuccess",

@@ -261,7 +261,7 @@ namespace Nop.Web.Controllers
 
             int topicLimit = _forumSettings.ActiveDiscussionsFeedCount;
             var topics = _forumService.GetActiveTopics(forumId, topicLimit);
-            string url = Url.Action("ActiveDiscussionsRSS", "Boards", null, "http");
+            string url = Url.RouteUrl("ActiveDiscussionsRSS", null, "http");
 
             var feedTitle = _localizationService.GetResource("Forum.ActiveDiscussionsFeedTitle");
             var feedDescription = _localizationService.GetResource("Forum.ActiveDiscussionsFeedDescription");
@@ -381,7 +381,7 @@ namespace Nop.Web.Controllers
                 var topics = _forumService.GetAllTopics(forum.Id, 0, string.Empty,
                      ForumSearchType.All, 0, 0, topicLimit);
 
-                string url = Url.Action("ForumRSS", "Boards", new { id = forum.Id }, "http");
+                string url = Url.RouteUrl("ForumRSS", new { id = forum.Id }, "http");
 
                 var feedTitle = _localizationService.GetResource("Forum.ForumFeedTitle");
                 var feedDescription = _localizationService.GetResource("Forum.ForumFeedDescription");
@@ -903,12 +903,12 @@ namespace Nop.Web.Controllers
 
             if (forumTopic == null)
             {
-                return RedirectToAction("Index", "Boards");
+                return RedirectToRoute("Boards");
             }
             var forum = forumTopic.Forum;
             if (forum == null)
             {
-                return RedirectToAction("Index", "Boards");
+                return RedirectToRoute("Boards");
             }
 
             if (ModelState.IsValid)

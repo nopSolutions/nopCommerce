@@ -229,7 +229,7 @@ namespace Nop.Web.Controllers
                     }
                 }
             }
-            return RedirectToAction("Index");
+            return RedirectToRoute("PrivateMessages");
         }
 
         //updates sent items (deletes PrivateMessages)
@@ -263,7 +263,7 @@ namespace Nop.Web.Controllers
 
                 }
             }
-            return RedirectToAction("Index", new { tab = "sent" });
+            return RedirectToRoute("PrivateMessages", new { tab = "sent" });
         }
 
         public ActionResult SendPM(int toCustomerId, int? replyToMessageId)
@@ -282,7 +282,7 @@ namespace Nop.Web.Controllers
 
             if (customerTo == null || customerTo.IsGuest())
             {
-                return RedirectToAction("Index");
+                return RedirectToRoute("PrivateMessages");
             }
 
             var model = new SendPrivateMessageModel();
@@ -295,7 +295,7 @@ namespace Nop.Web.Controllers
                 var replyToPM = _forumService.GetPrivateMessageById(replyToMessageId.Value);
                 if (replyToPM == null)
                 {
-                    return RedirectToAction("Index");
+                    return RedirectToRoute("PrivateMessages");
                 }
 
                 if (replyToPM.ToCustomerId == _workContext.CurrentCustomer.Id || replyToPM.FromCustomerId == _workContext.CurrentCustomer.Id)
@@ -305,7 +305,7 @@ namespace Nop.Web.Controllers
                 }
                 else
                 {
-                    return RedirectToAction("Index");
+                    return RedirectToRoute("PrivateMessages");
                 }
             }
             return View(model);
@@ -334,7 +334,7 @@ namespace Nop.Web.Controllers
                 }
                 else
                 {
-                    return RedirectToAction("Index");
+                    return RedirectToRoute("PrivateMessages");
                 }
             }
             else
@@ -344,7 +344,7 @@ namespace Nop.Web.Controllers
 
             if (toCustomer == null || toCustomer.IsGuest())
             {
-                return RedirectToAction("Index");
+                return RedirectToRoute("PrivateMessages");
             }
             model.ToCustomerId = toCustomer.Id;
             model.CustomerToName = toCustomer.FormatUserName();
@@ -382,7 +382,7 @@ namespace Nop.Web.Controllers
 
                     _forumService.InsertPrivateMessage(privateMessage);
 
-                    return RedirectToAction("Index", new {tab = "sent"});
+                    return RedirectToRoute("PrivateMessages", new { tab = "sent" });
                 }
                 catch (Exception ex)
                 {
@@ -410,7 +410,7 @@ namespace Nop.Web.Controllers
             {
                 if (pm.ToCustomerId != _workContext.CurrentCustomer.Id && pm.FromCustomerId != _workContext.CurrentCustomer.Id)
                 {
-                    return RedirectToAction("Index");
+                    return RedirectToRoute("PrivateMessages");
                 }
 
                 if (!pm.IsRead && pm.ToCustomerId == _workContext.CurrentCustomer.Id)
@@ -421,7 +421,7 @@ namespace Nop.Web.Controllers
             }
             else
             {
-                return RedirectToAction("Index");
+                return RedirectToRoute("PrivateMessages");
             }
 
             var model = new PrivateMessageModel()
@@ -467,9 +467,9 @@ namespace Nop.Web.Controllers
                 {
                     pm.IsDeletedByRecipient = true;
                     _forumService.UpdatePrivateMessage(pm);
-                }       
+                }
             }
-            return RedirectToAction("Index");
+            return RedirectToRoute("PrivateMessages");
         }
     }
 }

@@ -50,7 +50,7 @@
                 $.ajax({
                     cache: false,
                     type: "POST",
-                    url: "@(Url.Action("SubscribeNewsletter", "Newsletter"))",
+                    url: "@(Url.RouteUrl("SubscribeNewsletter"))",
                     data: { "subscribe": subscribe, "email": email },
                     success: function (data) {
                         subscribeProgress.hide();

@@ -14,7 +14,7 @@
                 $.ajax({
                     cache: false,
                     type: 'POST',
-                    url: '@Url.Action("CheckUsernameAvailability", "Customer")',
+                    url: '@Url.RouteUrl("CheckUsernameAvailability")',
                     data: $('#Username').serialize(),
                     dataType: 'json',
                     success: function (data) {

@@ -630,7 +630,7 @@ namespace Nop.Web.Controllers
             {
                 //standard logout 
                 _authenticationService.SignOut();
-                return this.RedirectToAction("Index", "Home");
+                return RedirectToRoute("HomePage");
             }
 
         }
@@ -829,7 +829,7 @@ namespace Nop.Web.Controllers
                     if (_forumSettings.ForumsEnabled && _forumSettings.SignaturesEnabled)
                         _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.Signature, model.Signature);
 
-                    return RedirectToAction("info");
+                    return RedirectToRoute("CustomerInfo");
                 }
             }
             catch (Exception exc)
@@ -1000,7 +1000,7 @@ namespace Nop.Web.Controllers
                 _addressService.DeleteAddress(address);
             }
 
-            return RedirectToAction("Addresses");
+            return RedirectToRoute("CustomerAddresses");
         }
 
         [NopHttpsRequirement(SslRequirement.Yes)]
@@ -1048,7 +1048,7 @@ namespace Nop.Web.Controllers
                 customer.Addresses.Add(address);
                 _customerService.UpdateCustomer(customer);
 
-                return RedirectToAction("Addresses");
+                return RedirectToRoute("CustomerAddresses");
             }
             
 
@@ -1086,7 +1086,7 @@ namespace Nop.Web.Controllers
             var address = customer.Addresses.Where(a => a.Id == addressId).FirstOrDefault();
             if (address == null)
                 //address is not found
-                return RedirectToAction("Addresses");
+                return RedirectToRoute("CustomerAddresses");
 
             model.Address = address.ToModel();
             //countries
@@ -1126,12 +1126,12 @@ namespace Nop.Web.Controllers
                 var address = customer.Addresses.Where(a => a.Id == addressId).FirstOrDefault();
                 if (address == null)
                     //address is not found
-                    return RedirectToAction("Addresses");
+                    return RedirectToRoute("CustomerAddresses");
 
                 address = model.Address.ToEntity(address);
                 _addressService.UpdateAddress(address);
 
-                return RedirectToAction("Addresses");
+                return RedirectToRoute("CustomerAddresses");
             }
 
             //If we got this far, something failed, redisplay form
@@ -1183,7 +1183,7 @@ namespace Nop.Web.Controllers
             var recurringPayment = _orderService.GetRecurringPaymentById(recurringPaymentId);
             if (recurringPayment == null)
             {
-                return RedirectToAction("Orders");
+                return RedirectToRoute("CustomerOrders");
             }
 
             var customer = _workContext.CurrentCustomer;
@@ -1198,7 +1198,7 @@ namespace Nop.Web.Controllers
             }
             else
             {
-                return RedirectToAction("Orders");
+                return RedirectToRoute("CustomerOrders");
             }
         }
 
@@ -1369,7 +1369,7 @@ namespace Nop.Web.Controllers
                 return new HttpUnauthorizedResult();
 
             if (!_rewardPointsSettings.Enabled)
-                return RedirectToAction("MyAccount");
+                return RedirectToRoute("CustomerInfo");
 
             var customer = _workContext.CurrentCustomer;
 
@@ -1455,9 +1455,9 @@ namespace Nop.Web.Controllers
         {
             if (!IsCurrentUserRegistered())
                 return new HttpUnauthorizedResult();
-            
+
             if (!_customerSettings.AllowCustomersToUploadAvatars)
-                return RedirectToAction("MyAccount");
+                return RedirectToRoute("CustomerInfo");
 
             var customer = _workContext.CurrentCustomer;
 
@@ -1477,9 +1477,9 @@ namespace Nop.Web.Controllers
         {
             if (!IsCurrentUserRegistered())
                 return new HttpUnauthorizedResult();
-            
+
             if (!_customerSettings.AllowCustomersToUploadAvatars)
-                return RedirectToAction("MyAccount");
+                return RedirectToRoute("CustomerInfo");
 
             var customer = _workContext.CurrentCustomer;
 
@@ -1540,7 +1540,7 @@ namespace Nop.Web.Controllers
                 return new HttpUnauthorizedResult();
 
             if (!_customerSettings.AllowCustomersToUploadAvatars)
-                return RedirectToAction("MyAccount");
+                return RedirectToRoute("CustomerInfo");
 
             var customer = _workContext.CurrentCustomer;
 
@@ -1552,7 +1552,7 @@ namespace Nop.Web.Controllers
                 _pictureService.DeletePicture(customerAvatar);
             _genericAttributeService.SaveAttribute(customer, SystemCustomerAttributeNames.AvatarPictureId, 0);
 
-            return RedirectToAction("Avatar");
+            return RedirectToRoute("CustomerAvatar");
         }
 
         #endregion
@@ -1658,7 +1658,7 @@ namespace Nop.Web.Controllers
         {
             if (!_forumSettings.AllowCustomersToManageSubscriptions)
             {
-                return RedirectToAction("MyAccount");
+                return RedirectToRoute("CustomerInfo");
             }
 
             int pageIndex = 0;
@@ -1753,7 +1753,7 @@ namespace Nop.Web.Controllers
                 }
             }
 
-            return RedirectToAction("ForumSubscriptions");
+            return RedirectToRoute("CustomerForumSubscriptions");
         }
 
         public ActionResult DeleteForumSubscription(int subscriptionId)
@@ -1764,7 +1764,7 @@ namespace Nop.Web.Controllers
                 _forumService.DeleteSubscription(forumSubscription);
             }
 
-            return RedirectToAction("ForumSubscriptions");
+            return RedirectToRoute("CustomerForumSubscriptions");
         }
 
         #endregion
@@ -1775,7 +1775,7 @@ namespace Nop.Web.Controllers
         {
             if (_customerSettings.HideBackInStockSubscriptionsTab)
             {
-                return RedirectToAction("MyAccount");
+                return RedirectToRoute("CustomerInfo");
             }
 
             int pageIndex = 0;
@@ -1853,7 +1853,7 @@ namespace Nop.Web.Controllers
                 }
             }
 
-            return RedirectToAction("BackInStockSubscriptions");
+            return RedirectToRoute("CustomerBackInStockSubscriptions");
         }
 
         public ActionResult DeleteBackInStockSubscription(int subscriptionId)
@@ -1864,7 +1864,7 @@ namespace Nop.Web.Controllers
                 _backInStockSubscriptionService.DeleteSubscription(subscription);
             }
 
-            return RedirectToAction("BackInStockSubscriptions");
+            return RedirectToRoute("CustomerBackInStockSubscriptions");
         }
 
         #endregion
