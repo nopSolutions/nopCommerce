@@ -25,12 +25,9 @@ namespace Nop.Data.Mapping.Orders
             this.Property(o => o.OrderWeight).HasPrecision(18, 4);
 
             this.Property(o => o.TaxRates).IsMaxLength();
-            this.Property(o => o.AuthorizationTransactionId).IsMaxLength();
             this.Property(o => o.AuthorizationTransactionCode).IsMaxLength();
             this.Property(o => o.AuthorizationTransactionResult).IsMaxLength();
-            this.Property(o => o.CaptureTransactionId).IsMaxLength();
             this.Property(o => o.CaptureTransactionResult).IsMaxLength();
-            this.Property(o => o.SubscriptionTransactionId).IsMaxLength();
             this.Property(o => o.PurchaseOrderNumber).IsMaxLength();
 
             this.Ignore(o => o.OrderStatus);

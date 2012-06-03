@@ -275,14 +275,23 @@ namespace Nop.Services.Orders
             _eventPublisher.EntityDeleted(orderNote);
         }
 
+        /// <summary>
+        /// Get an order by authorization transaction ID and payment method system name
+        /// </summary>
+        /// <param name="authorizationTransactionId">Authorization transaction ID</param>
+        /// <param name="paymentMethodSystemName">Payment method system name</param>
+        /// <returns>Order</returns>
         public virtual Order GetOrderByAuthorizationTransactionIdAndPaymentMethod(string authorizationTransactionId, 
             string paymentMethodSystemName)
-        {
-            var query = from o in _orderRepository.Table
-                        orderby o.CreatedOnUtc descending
-                        where o.AuthorizationTransactionId == authorizationTransactionId &&
-                        o.PaymentMethodSystemName == paymentMethodSystemName
-                        select o;
+        { 
+            var query = _orderRepository.Table;
+            if (!String.IsNullOrWhiteSpace(authorizationTransactionId))
+                query = query.Where(o => o.AuthorizationTransactionId == authorizationTransactionId);
+            
+            if (!String.IsNullOrWhiteSpace(paymentMethodSystemName))
+                query = query.Where(o => o.PaymentMethodSystemName == paymentMethodSystemName);
+            
+            query = query.OrderByDescending(o => o.CreatedOnUtc);
             var order = query.FirstOrDefault();
             return order;
         }
