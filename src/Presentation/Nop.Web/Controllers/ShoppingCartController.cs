@@ -649,7 +649,9 @@ namespace Nop.Web.Controllers
         #endregion
 
         #region Shopping cart
-
+        
+        //add product (not product variant) to cart using AJAX
+        //currently we use this method on catalog pages (category/manufacturer/etc)
         [HttpPost]
         public ActionResult AddProductToCart(int productId, bool forceredirection = false)
         {
