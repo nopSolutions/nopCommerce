@@ -4342,7 +4342,7 @@
 										<Value>PDF logo</Value>
 										<Children>
 											<LocaleResource Name="Hint">
-												<Value>Image file what will be displayed in PDF order invoices.</Value>
+												<Value>Image file what will be displayed in PDF order invoices. Do not upload an image with big size.</Value>
 											</LocaleResource>
 										</Children>
 									</LocaleResource>

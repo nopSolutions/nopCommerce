@@ -395,6 +395,9 @@ set @resources='
   <LocaleResource Name="Admin.PageTitle">
     <Value>nopCommerce administration</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.PdfLogo.Hint">
+    <Value>Image file what will be displayed in PDF order invoices. Do not upload an image with big size.</Value>
+  </LocaleResource>
 </Language>
 '
 
