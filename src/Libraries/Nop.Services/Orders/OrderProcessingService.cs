@@ -1509,6 +1509,8 @@ namespace Nop.Services.Orders
             return true;
         }
 
+
+
         /// <summary>
         /// Send a shipment
         /// </summary>
@@ -1898,8 +1900,9 @@ namespace Nop.Services.Orders
             if (order.OrderTotal == decimal.Zero)
                 return false;
 
-            if (order.OrderStatus == OrderStatus.Cancelled)
-                return false;
+            //uncomment the lines below in order to allow this operation for cancelled orders
+            //if (order.OrderStatus == OrderStatus.Cancelled)
+            //    return false;
 
             if (order.PaymentStatus == PaymentStatus.Paid &&
                 _paymentService.SupportRefund(order.PaymentMethodSystemName))
@@ -1999,8 +2002,9 @@ namespace Nop.Services.Orders
             if (order.OrderTotal == decimal.Zero)
                 return false;
 
-            if (order.OrderStatus == OrderStatus.Cancelled)
-                return false;
+            //uncomment the lines below in order to allow this operation for cancelled orders
+            //if (order.OrderStatus == OrderStatus.Cancelled)
+            //     return false;
 
             if (order.PaymentStatus == PaymentStatus.Paid)
                 return true;
@@ -2058,8 +2062,9 @@ namespace Nop.Services.Orders
             if (order.OrderTotal == decimal.Zero)
                 return false;
 
-            if (order.OrderStatus == OrderStatus.Cancelled)
-                return false;
+            //uncomment the lines below in order to allow this operation for cancelled orders
+            //if (order.OrderStatus == OrderStatus.Cancelled)
+            //    return false;
 
             decimal canBeRefunded = order.OrderTotal - order.RefundedAmount;
             if (canBeRefunded <= decimal.Zero)
@@ -2171,8 +2176,9 @@ namespace Nop.Services.Orders
             if (order.OrderTotal == decimal.Zero)
                 return false;
 
-            if (order.OrderStatus == OrderStatus.Cancelled)
-                return false;
+            //uncomment the lines below in order to allow this operation for cancelled orders
+            //if (order.OrderStatus == OrderStatus.Cancelled)
+            //    return false;
 
             decimal canBeRefunded = order.OrderTotal - order.RefundedAmount;
             if (canBeRefunded <= decimal.Zero)
@@ -2238,8 +2244,9 @@ namespace Nop.Services.Orders
             if (order.OrderTotal == decimal.Zero)
                 return false;
 
-            if (order.OrderStatus == OrderStatus.Cancelled)
-                return false;
+            //uncomment the lines below in order to allow this operation for cancelled orders
+            //if (order.OrderStatus == OrderStatus.Cancelled)
+            //    return false;
 
             if (order.PaymentStatus == PaymentStatus.Authorized &&
                 _paymentService.SupportVoid(order.PaymentMethodSystemName))
@@ -2333,8 +2340,9 @@ namespace Nop.Services.Orders
             if (order.OrderTotal == decimal.Zero)
                 return false;
 
-            if (order.OrderStatus == OrderStatus.Cancelled)
-                return false;
+            //uncomment the lines below in order to allow this operation for cancelled orders
+            //if (order.OrderStatus == OrderStatus.Cancelled)
+            //    return false;
 
             if (order.PaymentStatus == PaymentStatus.Authorized)
                 return true;

@@ -228,7 +228,7 @@ namespace Nop.Services.Tests.Orders
         public void Ensure_order_can_only_be_captured_when_orderStatus_is_not_cancelled_or_pending_and_paymentstatus_is_authorized_and_paymentModule_supports_capture()
         {
             _paymentService.Expect(ps => ps.SupportCapture("paymentMethodSystemName_that_supports_capture")).Return(true);
-            _paymentService.Expect(ps => ps.SupportCapture("paymentMethodSystemName_that_don't_support_capture")).Return(false);
+            _paymentService.Expect(ps => ps.SupportCapture("paymentMethodSystemName_that_doesn't_support_capture")).Return(false);
             var order = new Order();
 
 
@@ -249,7 +249,7 @@ namespace Nop.Services.Tests.Orders
                     }
 
 
-            order.PaymentMethodSystemName = "paymentMethodSystemName_that_don't_support_capture";
+            order.PaymentMethodSystemName = "paymentMethodSystemName_that_doesn't_support_capture";
             foreach (OrderStatus os in Enum.GetValues(typeof(OrderStatus)))
                 foreach (PaymentStatus ps in Enum.GetValues(typeof(PaymentStatus)))
                     foreach (ShippingStatus ss in Enum.GetValues(typeof(ShippingStatus)))
@@ -282,10 +282,10 @@ namespace Nop.Services.Tests.Orders
         }
 
         [Test]
-        public void Ensure_order_can_only_be_refunded_when_orderStatus_is_not_cancelled_and_paymentstatus_is_paid_and_paymentModule_supports_refund()
+        public void Ensure_order_can_only_be_refunded_when_paymentstatus_is_paid_and_paymentModule_supports_refund()
         {
             _paymentService.Expect(ps => ps.SupportRefund("paymentMethodSystemName_that_supports_refund")).Return(true);
-            _paymentService.Expect(ps => ps.SupportRefund("paymentMethodSystemName_that_don't_support_refund")).Return(false);
+            _paymentService.Expect(ps => ps.SupportRefund("paymentMethodSystemName_that_doesn't_support_refund")).Return(false);
             var order = new Order();
             order.OrderTotal = 1;
             order.PaymentMethodSystemName = "paymentMethodSystemName_that_supports_refund";
@@ -298,8 +298,7 @@ namespace Nop.Services.Tests.Orders
                         order.PaymentStatus = ps;
                         order.ShippingStatus = ss;
 
-                        if ((os != OrderStatus.Cancelled)
-                            && (ps == PaymentStatus.Paid))
+                        if (ps == PaymentStatus.Paid)
                             _orderProcessingService.CanRefund(order).ShouldBeTrue();
                         else
                             _orderProcessingService.CanRefund(order).ShouldBeFalse();
@@ -307,7 +306,7 @@ namespace Nop.Services.Tests.Orders
 
 
 
-            order.PaymentMethodSystemName = "paymentMethodSystemName_that_don't_support_refund";
+            order.PaymentMethodSystemName = "paymentMethodSystemName_that_doesn't_support_refund";
             foreach (OrderStatus os in Enum.GetValues(typeof(OrderStatus)))
                 foreach (PaymentStatus ps in Enum.GetValues(typeof(PaymentStatus)))
                     foreach (ShippingStatus ss in Enum.GetValues(typeof(ShippingStatus)))
@@ -340,7 +339,7 @@ namespace Nop.Services.Tests.Orders
         }
         
         [Test]
-        public void Ensure_order_can_only_be_refunded_offline_when_orderStatus_is_not_cancelled_and_paymentstatus_is_paid()
+        public void Ensure_order_can_only_be_refunded_offline_when_paymentstatus_is_paid()
         {
             var order = new Order()
             {
@@ -354,8 +353,7 @@ namespace Nop.Services.Tests.Orders
                         order.PaymentStatus = ps;
                         order.ShippingStatus = ss;
 
-                        if ((os != OrderStatus.Cancelled)
-                            && (ps == PaymentStatus.Paid))
+                        if (ps == PaymentStatus.Paid)
                             _orderProcessingService.CanRefundOffline(order).ShouldBeTrue();
                         else
                             _orderProcessingService.CanRefundOffline(order).ShouldBeFalse();
@@ -380,10 +378,10 @@ namespace Nop.Services.Tests.Orders
         }
 
         [Test]
-        public void Ensure_order_can_only_be_voided_when_orderStatus_is_not_cancelled_and_paymentstatus_is_authorized_and_paymentModule_supports_void()
+        public void Ensure_order_can_only_be_voided_when_paymentstatus_is_authorized_and_paymentModule_supports_void()
         {
             _paymentService.Expect(ps => ps.SupportVoid("paymentMethodSystemName_that_supports_void")).Return(true);
-            _paymentService.Expect(ps => ps.SupportVoid("paymentMethodSystemName_that_don't_support_void")).Return(false);
+            _paymentService.Expect(ps => ps.SupportVoid("paymentMethodSystemName_that_doesn't_support_void")).Return(false);
             var order = new Order();
             order.OrderTotal = 1;
             order.PaymentMethodSystemName = "paymentMethodSystemName_that_supports_void";
@@ -396,8 +394,7 @@ namespace Nop.Services.Tests.Orders
                         order.PaymentStatus = ps;
                         order.ShippingStatus = ss;
 
-                        if ((os != OrderStatus.Cancelled)
-                            && (ps == PaymentStatus.Authorized))
+                        if (ps == PaymentStatus.Authorized)
                             _orderProcessingService.CanVoid(order).ShouldBeTrue();
                         else
                             _orderProcessingService.CanVoid(order).ShouldBeFalse();
@@ -405,7 +402,7 @@ namespace Nop.Services.Tests.Orders
 
 
 
-            order.PaymentMethodSystemName = "paymentMethodSystemName_that_don't_support_void";
+            order.PaymentMethodSystemName = "paymentMethodSystemName_that_doesn't_support_void";
             foreach (OrderStatus os in Enum.GetValues(typeof(OrderStatus)))
                 foreach (PaymentStatus ps in Enum.GetValues(typeof(PaymentStatus)))
                     foreach (ShippingStatus ss in Enum.GetValues(typeof(ShippingStatus)))
@@ -438,7 +435,7 @@ namespace Nop.Services.Tests.Orders
         }
 
         [Test]
-        public void Ensure_order_can_only_be_voided_offline_when_orderStatus_is_not_cancelled_and_paymentstatus_is_authorized()
+        public void Ensure_order_can_only_be_voided_offline_when_paymentstatus_is_authorized()
         {
             var order = new Order()
             {
@@ -452,8 +449,7 @@ namespace Nop.Services.Tests.Orders
                         order.PaymentStatus = ps;
                         order.ShippingStatus = ss;
 
-                        if ((os != OrderStatus.Cancelled)
-                            && (ps == PaymentStatus.Authorized))
+                        if (ps == PaymentStatus.Authorized)
                             _orderProcessingService.CanVoidOffline(order).ShouldBeTrue();
                         else
                             _orderProcessingService.CanVoidOffline(order).ShouldBeFalse();
@@ -478,10 +474,10 @@ namespace Nop.Services.Tests.Orders
         }
 
         [Test]
-        public void Ensure_order_can_only_be_partially_refunded_when_orderStatus_is_not_cancelled_and_paymentstatus_is_paid_or_partiallyRefunded_and_paymentModule_supports_partialRefund()
+        public void Ensure_order_can_only_be_partially_refunded_when_paymentstatus_is_paid_or_partiallyRefunded_and_paymentModule_supports_partialRefund()
         {
             _paymentService.Expect(ps => ps.SupportPartiallyRefund("paymentMethodSystemName_that_supports_partialrefund")).Return(true);
-            _paymentService.Expect(ps => ps.SupportPartiallyRefund("paymentMethodSystemName_that_don't_support_partialrefund")).Return(false);
+            _paymentService.Expect(ps => ps.SupportPartiallyRefund("paymentMethodSystemName_that_doesn't_support_partialrefund")).Return(false);
             var order = new Order();
             order.OrderTotal = 100;
             order.PaymentMethodSystemName = "paymentMethodSystemName_that_supports_partialrefund";
@@ -494,8 +490,7 @@ namespace Nop.Services.Tests.Orders
                         order.PaymentStatus = ps;
                         order.ShippingStatus = ss;
 
-                        if ((os != OrderStatus.Cancelled)
-                            && (ps == PaymentStatus.Paid || order.PaymentStatus == PaymentStatus.PartiallyRefunded))
+                        if (ps == PaymentStatus.Paid || order.PaymentStatus == PaymentStatus.PartiallyRefunded)
                             _orderProcessingService.CanPartiallyRefund(order, 10).ShouldBeTrue();
                         else
                             _orderProcessingService.CanPartiallyRefund(order, 10).ShouldBeFalse();
@@ -503,7 +498,7 @@ namespace Nop.Services.Tests.Orders
 
 
 
-            order.PaymentMethodSystemName = "paymentMethodSystemName_that_don't_support_partialrefund";
+            order.PaymentMethodSystemName = "paymentMethodSystemName_that_doesn't_support_partialrefund";
             foreach (OrderStatus os in Enum.GetValues(typeof(OrderStatus)))
                 foreach (PaymentStatus ps in Enum.GetValues(typeof(PaymentStatus)))
                     foreach (ShippingStatus ss in Enum.GetValues(typeof(ShippingStatus)))
@@ -540,7 +535,7 @@ namespace Nop.Services.Tests.Orders
         }
 
         [Test]
-        public void Ensure_order_can_only_be_partially_refunded_offline_when_orderStatus_is_not_cancelled_and_paymentstatus_is_paid_or_partiallyRefunded()
+        public void Ensure_order_can_only_be_partially_refunded_offline_when_paymentstatus_is_paid_or_partiallyRefunded()
         {
             var order = new Order();
             order.OrderTotal = 100;
@@ -558,8 +553,7 @@ namespace Nop.Services.Tests.Orders
                             order.PaymentStatus = ps;
                             order.ShippingStatus = ss;
 
-                            if ((os != OrderStatus.Cancelled)
-                                && (ps == PaymentStatus.Paid || order.PaymentStatus == PaymentStatus.PartiallyRefunded))
+                            if (ps == PaymentStatus.Paid || order.PaymentStatus == PaymentStatus.PartiallyRefunded)
                                 _orderProcessingService.CanPartiallyRefundOffline(order, 10).ShouldBeTrue();
                             else
                                 _orderProcessingService.CanPartiallyRefundOffline(order, 10).ShouldBeFalse();
