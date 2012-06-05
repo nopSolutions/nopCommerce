@@ -5008,6 +5008,14 @@
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
+                  <LocaleResource Name="AllowOutOfStockItemsToBeAddedToWishlist">
+                    <Value>Allow 'out of stock' items to be added to wishlist</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Check to allow 'out of stock' products to be added to wishlist.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
 									<LocaleResource Name="ShowProductImagesOnShoppingCart">
 										<Value>Show product images on cart</Value>
 										<Children>

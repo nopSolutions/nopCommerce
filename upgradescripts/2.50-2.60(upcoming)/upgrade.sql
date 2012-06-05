@@ -398,6 +398,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.PdfLogo.Hint">
     <Value>Image file what will be displayed in PDF order invoices. Do not upload an image with big size.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.AllowOutOfStockItemsToBeAddedToWishlist">
+    <Value>Allow ''out of stock'' items to be added to wishlist</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.AllowOutOfStockItemsToBeAddedToWishlist.Hint">
+    <Value>Check to allow ''out of stock'' products to be added to wishlist.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1467,5 +1473,12 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'shoppingcartsettings.all
 BEGIN
 	INSERT [Setting] ([Name], [Value])
 	VALUES (N'shoppingcartsettings.allowanonymoususerstoemailwishlist', N'false')
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'shoppingcartsettings.allowoutofstockitemstobeaddedtowishlist')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'shoppingcartsettings.allowoutofstockitemstobeaddedtowishlist', N'false')
 END
 GO

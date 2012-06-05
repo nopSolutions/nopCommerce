@@ -26,6 +26,11 @@ namespace Nop.Core.Domain.Orders
         public int MaximumWishlistItems { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to show product images in the mini-shopping cart block
+        /// </summary>
+        public bool AllowOutOfStockItemsToBeAddedToWishlist { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether to show product image on shopping cart page
         /// </summary>
         public bool ShowProductImagesOnShoppingCart { get; set; }
