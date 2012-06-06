@@ -23,20 +23,20 @@
             $("#@Html.FieldIdFor(model => model.CustomerSettings.AllowCustomersToUploadAvatars)").click(toggleAvatar);
             $("#@Html.FieldIdFor(model => model.CustomerSettings.UsernamesEnabled)").click(toggleUsername);
             $("#@Html.FieldIdFor(model => model.CustomerSettings.CountryEnabled)").click(toggleCountryFormField);
+            $("#@Html.FieldIdFor(model => model.CustomerSettings.CompanyEnabled)").click(toggleRequiredFormField);
+            $("#@Html.FieldIdFor(model => model.CustomerSettings.StreetAddressEnabled)").click(toggleRequiredFormField);
+            $("#@Html.FieldIdFor(model => model.CustomerSettings.StreetAddress2Enabled)").click(toggleRequiredFormField);
+            $("#@Html.FieldIdFor(model => model.CustomerSettings.ZipPostalCodeEnabled)").click(toggleRequiredFormField);
+            $("#@Html.FieldIdFor(model => model.CustomerSettings.CityEnabled)").click(toggleRequiredFormField);
+            $("#@Html.FieldIdFor(model => model.CustomerSettings.PhoneEnabled)").click(toggleRequiredFormField);
+            $("#@Html.FieldIdFor(model => model.CustomerSettings.FaxEnabled)").click(toggleRequiredFormField);
+
 
             toggleAvatar();
             toggleUsername();
             toggleCountryFormField();
+            toggleRequiredFormField();
         });
-
-        function toggleCountryFormField() {
-            if ($('#@Html.FieldIdFor(model => model.CustomerSettings.CountryEnabled)').is(':checked')) {
-                $('#pnlStateProvincEnabled').show();
-            }
-            else {
-                $('#pnlStateProvincEnabled').hide();
-            }
-        }
 
         function toggleAvatar() {
             if ($('#@Html.FieldIdFor(model => model.CustomerSettings.AllowCustomersToUploadAvatars)').is(':checked')) {
@@ -55,6 +55,66 @@
             else {
                 $('#pnlAllowUsersToChangeUsernames').hide();
                 $('#pnlCheckUsernameAvailability').hide();
+            }
+        }
+
+        function toggleCountryFormField() {
+            if ($('#@Html.FieldIdFor(model => model.CustomerSettings.CountryEnabled)').is(':checked')) {
+                $('#pnlStateProvincEnabled').show();
+            }
+            else {
+                $('#pnlStateProvincEnabled').hide();
+            }
+        }
+
+        function toggleRequiredFormField() {
+            if ($('#@Html.FieldIdFor(model => model.CustomerSettings.CompanyEnabled)').is(':checked')) {
+                $('#pnlCompanyRequired').show();
+            }
+            else {
+                $('#pnlCompanyRequired').hide();
+            }
+
+            if ($('#@Html.FieldIdFor(model => model.CustomerSettings.StreetAddressEnabled)').is(':checked')) {
+                $('#pnlStreetAddressRequired').show();
+            }
+            else {
+                $('#pnlStreetAddressRequired').hide();
+            }
+
+            if ($('#@Html.FieldIdFor(model => model.CustomerSettings.StreetAddress2Enabled)').is(':checked')) {
+                $('#pnlStreetAddress2Required').show();
+            }
+            else {
+                $('#pnlStreetAddress2Required').hide();
+            }
+
+            if ($('#@Html.FieldIdFor(model => model.CustomerSettings.ZipPostalCodeEnabled)').is(':checked')) {
+                $('#pnlZipPostalCodeRequired').show();
+            }
+            else {
+                $('#pnlZipPostalCodeRequired').hide();
+            }
+
+            if ($('#@Html.FieldIdFor(model => model.CustomerSettings.CityEnabled)').is(':checked')) {
+                $('#pnlCityRequired').show();
+            }
+            else {
+                $('#pnlCityRequired').hide();
+            }
+
+            if ($('#@Html.FieldIdFor(model => model.CustomerSettings.PhoneEnabled)').is(':checked')) {
+                $('#pnlPhoneRequired').show();
+            }
+            else {
+                $('#pnlPhoneRequired').hide();
+            }
+
+            if ($('#@Html.FieldIdFor(model => model.CustomerSettings.FaxEnabled)').is(':checked')) {
+                $('#pnlFaxRequired').show();
+            }
+            else {
+                $('#pnlFaxRequired').hide();
             }
         }
         
@@ -243,6 +303,15 @@
                 @Html.ValidationMessageFor(model => model.CustomerSettings.CompanyEnabled)
             </td>
         </tr>
+        <tr id="pnlCompanyRequired">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CustomerSettings.CompanyRequired):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.CustomerSettings.CompanyRequired)
+                @Html.ValidationMessageFor(model => model.CustomerSettings.CompanyRequired)
+            </td>
+        </tr>
         <tr>
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.CustomerSettings.StreetAddressEnabled):
@@ -250,6 +319,15 @@
             <td class="adminData">
                 @Html.EditorFor(model => model.CustomerSettings.StreetAddressEnabled)
                 @Html.ValidationMessageFor(model => model.CustomerSettings.StreetAddressEnabled)
+            </td>
+        </tr>
+        <tr id="pnlStreetAddressRequired">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CustomerSettings.StreetAddressRequired):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.CustomerSettings.StreetAddressRequired)
+                @Html.ValidationMessageFor(model => model.CustomerSettings.StreetAddressRequired)
             </td>
         </tr>
         <tr>
@@ -261,6 +339,15 @@
                 @Html.ValidationMessageFor(model => model.CustomerSettings.StreetAddress2Enabled)
             </td>
         </tr>
+        <tr id="pnlStreetAddress2Required">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CustomerSettings.StreetAddress2Required):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.CustomerSettings.StreetAddress2Required)
+                @Html.ValidationMessageFor(model => model.CustomerSettings.StreetAddress2Required)
+            </td>
+        </tr>
         <tr>
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.CustomerSettings.ZipPostalCodeEnabled):
@@ -270,6 +357,15 @@
                 @Html.ValidationMessageFor(model => model.CustomerSettings.ZipPostalCodeEnabled)
             </td>
         </tr>
+        <tr id="pnlZipPostalCodeRequired">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CustomerSettings.ZipPostalCodeRequired):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.CustomerSettings.ZipPostalCodeRequired)
+                @Html.ValidationMessageFor(model => model.CustomerSettings.ZipPostalCodeRequired)
+            </td>
+        </tr>
         <tr>
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.CustomerSettings.CityEnabled):
@@ -277,6 +373,15 @@
             <td class="adminData">
                 @Html.EditorFor(model => model.CustomerSettings.CityEnabled)
                 @Html.ValidationMessageFor(model => model.CustomerSettings.CityEnabled)
+            </td>
+        </tr>
+        <tr id="pnlCityRequired">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CustomerSettings.CityRequired):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.CustomerSettings.CityRequired)
+                @Html.ValidationMessageFor(model => model.CustomerSettings.CityRequired)
             </td>
         </tr>
         <tr>
@@ -306,6 +411,15 @@
                 @Html.ValidationMessageFor(model => model.CustomerSettings.PhoneEnabled)
             </td>
         </tr>
+        <tr id="pnlPhoneRequired">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CustomerSettings.PhoneRequired):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.CustomerSettings.PhoneRequired)
+                @Html.ValidationMessageFor(model => model.CustomerSettings.PhoneRequired)
+            </td>
+        </tr>
         <tr>
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.CustomerSettings.FaxEnabled):
@@ -313,6 +427,15 @@
             <td class="adminData">
                 @Html.EditorFor(model => model.CustomerSettings.FaxEnabled)
                 @Html.ValidationMessageFor(model => model.CustomerSettings.FaxEnabled)
+            </td>
+        </tr>
+        <tr id="pnlFaxRequired">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CustomerSettings.FaxRequired):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.CustomerSettings.FaxRequired)
+                @Html.ValidationMessageFor(model => model.CustomerSettings.FaxRequired)
             </td>
         </tr>
         <tr>

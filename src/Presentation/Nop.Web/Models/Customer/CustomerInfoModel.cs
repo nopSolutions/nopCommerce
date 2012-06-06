@@ -51,26 +51,31 @@ namespace Nop.Web.Models.Customer
         public int? DateOfBirthYear { get; set; }
 
         public bool CompanyEnabled { get; set; }
+        public bool CompanyRequired { get; set; }
         [NopResourceDisplayName("Account.Fields.Company")]
         [AllowHtml]
         public string Company { get; set; }
-        
+
         public bool StreetAddressEnabled { get; set; }
+        public bool StreetAddressRequired { get; set; }
         [NopResourceDisplayName("Account.Fields.StreetAddress")]
         [AllowHtml]
         public string StreetAddress { get; set; }
 
         public bool StreetAddress2Enabled { get; set; }
+        public bool StreetAddress2Required { get; set; }
         [NopResourceDisplayName("Account.Fields.StreetAddress2")]
         [AllowHtml]
         public string StreetAddress2 { get; set; }
 
         public bool ZipPostalCodeEnabled { get; set; }
+        public bool ZipPostalCodeRequired { get; set; }
         [NopResourceDisplayName("Account.Fields.ZipPostalCode")]
         [AllowHtml]
         public string ZipPostalCode { get; set; }
 
         public bool CityEnabled { get; set; }
+        public bool CityRequired { get; set; }
         [NopResourceDisplayName("Account.Fields.City")]
         [AllowHtml]
         public string City { get; set; }
@@ -86,11 +91,13 @@ namespace Nop.Web.Models.Customer
         public IList<SelectListItem> AvailableStates { get; set; }
 
         public bool PhoneEnabled { get; set; }
+        public bool PhoneRequired { get; set; }
         [NopResourceDisplayName("Account.Fields.Phone")]
         [AllowHtml]
         public string Phone { get; set; }
 
         public bool FaxEnabled { get; set; }
+        public bool FaxRequired { get; set; }
         [NopResourceDisplayName("Account.Fields.Fax")]
         [AllowHtml]
         public string Fax { get; set; }

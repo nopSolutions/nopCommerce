@@ -280,9 +280,19 @@
 				<Children>
 					<LocaleResource Name="City">
 						<Value>City</Value>
+            <Children>
+              <LocaleResource Name="Required">
+                <Value>City is required</Value>
+              </LocaleResource>
+            </Children>
 					</LocaleResource>
 					<LocaleResource Name="Company">
 						<Value>Company name</Value>
+            <Children>
+              <LocaleResource Name="Required">
+                <Value>Company name is required</Value>
+              </LocaleResource>
+            </Children>
 					</LocaleResource>
 					<LocaleResource Name="ConfirmPassword">
 						<Value>Confirm password</Value>
@@ -308,6 +318,11 @@
 					</LocaleResource>
 					<LocaleResource Name="Fax">
 						<Value>Fax</Value>
+            <Children>
+              <LocaleResource Name="Required">
+                <Value>Fax is required</Value>
+              </LocaleResource>
+            </Children>
 					</LocaleResource>
 					<LocaleResource Name="FirstName">
 						<Value>First name</Value>
@@ -355,6 +370,11 @@
 					</LocaleResource>
 					<LocaleResource Name="Phone">
 						<Value>Phone</Value>
+            <Children>
+              <LocaleResource Name="Required">
+                <Value>Phone is required</Value>
+              </LocaleResource>
+            </Children>
 					</LocaleResource>
 					<LocaleResource Name="Signature">
 						<Value>Signature</Value>
@@ -364,9 +384,19 @@
 					</LocaleResource>
 					<LocaleResource Name="StreetAddress">
 						<Value>Street address</Value>
+            <Children>
+              <LocaleResource Name="Required">
+                <Value>Street address is required</Value>
+              </LocaleResource>
+            </Children>
 					</LocaleResource>
 					<LocaleResource Name="StreetAddress2">
 						<Value>Street address 2</Value>
+            <Children>
+              <LocaleResource Name="Required">
+                <Value>Street address 2 is required</Value>
+              </LocaleResource>
+            </Children>
 					</LocaleResource>
 					<LocaleResource Name="Timezone">
 						<Value>Time zone</Value>
@@ -390,6 +420,11 @@
 					</LocaleResource>
 					<LocaleResource Name="ZipPostalCode">
 						<Value>Zip / postal code</Value>
+            <Children>
+              <LocaleResource Name="Required">
+                <Value>Zip / postal code is required</Value>
+              </LocaleResource>
+            </Children>
 					</LocaleResource>
 				</Children>
 			</LocaleResource>

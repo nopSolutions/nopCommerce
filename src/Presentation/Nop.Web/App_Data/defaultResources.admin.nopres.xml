@@ -3921,6 +3921,14 @@
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
+                  <LocaleResource Name="CompanyRequired">
+                    <Value>'Company' required</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Check if 'Company' is required.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
 									<LocaleResource Name="StreetAddressEnabled">
 										<Value>'Street address' enabled</Value>
 										<Children>
@@ -3929,6 +3937,14 @@
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
+                  <LocaleResource Name="StreetAddressRequired">
+                    <Value>'Street address' required</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Check if 'Street address' is required.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
 									<LocaleResource Name="StreetAddress2Enabled">
 										<Value>'Street address 2' enabled</Value>
 										<Children>
@@ -3937,6 +3953,14 @@
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
+                  <LocaleResource Name="StreetAddress2Required">
+                    <Value>'Street address 2' required</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Check if 'Street address 2' is required.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
 									<LocaleResource Name="ZipPostalCodeEnabled">
 										<Value>'Zip / postal code' enabled</Value>
 										<Children>
@@ -3945,6 +3969,14 @@
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
+                  <LocaleResource Name="ZipPostalCodeRequired">
+                    <Value>'Zip / postal code' required</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Check if 'Zip / postal code' is required.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
 									<LocaleResource Name="CityEnabled">
 										<Value>'City' enabled</Value>
 										<Children>
@@ -3953,6 +3985,14 @@
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
+                  <LocaleResource Name="CityRequired">
+                    <Value>'City' required</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Check if 'City' is required.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
 									<LocaleResource Name="CountryEnabled">
 										<Value>'Country' enabled</Value>
 										<Children>
@@ -3969,14 +4009,6 @@
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
-									<LocaleResource Name="CompanyEnabled">
-										<Value>'Company' enabled</Value>
-										<Children>
-											<LocaleResource Name="Hint">
-												<Value>Set if 'Company' is enabled.</Value>
-											</LocaleResource>
-										</Children>
-									</LocaleResource>
 									<LocaleResource Name="PhoneEnabled">
 										<Value>'Phone number' enabled</Value>
 										<Children>
@@ -3985,6 +4017,14 @@
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
+                  <LocaleResource Name="PhoneRequired">
+                    <Value>'Phone number' required</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Check if 'Phone number' is required.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
 									<LocaleResource Name="FaxEnabled">
 										<Value>'Fax number' enabled</Value>
 										<Children>
@@ -3993,6 +4033,14 @@
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
+                  <LocaleResource Name="FaxRequired">
+                    <Value>'Fax number' required</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Check if 'Fax number' is required.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
 									<LocaleResource Name="NewsletterEnabled">
 										<Value>'Newsletter' enabled</Value>
 										<Children>
@@ -6535,6 +6583,9 @@
 											<LocaleResource Name="Hint">
 												<Value>The company name.</Value>
 											</LocaleResource>
+                      <LocaleResource Name="Required">
+                        <Value>Company is required.</Value>
+                      </LocaleResource>
 										</Children>
 									</LocaleResource>
 									<LocaleResource Name="StreetAddress">
@@ -6543,6 +6594,9 @@
 											<LocaleResource Name="Hint">
 												<Value>The address.</Value>
 											</LocaleResource>
+                      <LocaleResource Name="Required">
+                        <Value>Street address is required</Value>
+                      </LocaleResource>
 										</Children>
 									</LocaleResource>
 									<LocaleResource Name="StreetAddress2">
@@ -6551,6 +6605,9 @@
 											<LocaleResource Name="Hint">
 												<Value>The address 2.</Value>
 											</LocaleResource>
+                      <LocaleResource Name="Required">
+                        <Value>Street address 2 is required</Value>
+                      </LocaleResource>
 										</Children>
 									</LocaleResource>
 									<LocaleResource Name="ZipPostalCode">
@@ -6559,6 +6616,9 @@
 											<LocaleResource Name="Hint">
 												<Value>The zip / postal code.</Value>
 											</LocaleResource>
+                      <LocaleResource Name="Required">
+                        <Value>Zip / postal code is required</Value>
+                      </LocaleResource>
 										</Children>
 									</LocaleResource>
 									<LocaleResource Name="City">
@@ -6567,6 +6627,9 @@
 											<LocaleResource Name="Hint">
 												<Value>The city.</Value>
 											</LocaleResource>
+                      <LocaleResource Name="Required">
+                        <Value>City is required</Value>
+                      </LocaleResource>
 										</Children>
 									</LocaleResource>
 									<LocaleResource Name="Country">
@@ -6591,6 +6654,9 @@
 											<LocaleResource Name="Hint">
 												<Value>The phone.</Value>
 											</LocaleResource>
+                      <LocaleResource Name="Required">
+                        <Value>Phone is required</Value>
+                      </LocaleResource>
 										</Children>
 									</LocaleResource>
 									<LocaleResource Name="Fax">
@@ -6599,6 +6665,9 @@
 											<LocaleResource Name="Hint">
 												<Value>The fax.</Value>
 											</LocaleResource>
+                      <LocaleResource Name="Required">
+                        <Value>Fax is required</Value>
+                      </LocaleResource>
 										</Children>
 									</LocaleResource>
 									<LocaleResource Name="AdminComment">

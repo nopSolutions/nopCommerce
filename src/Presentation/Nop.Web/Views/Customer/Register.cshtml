@@ -8,7 +8,6 @@
     //title
     Html.AddTitleParts(T("PageTitle.Register").Text);
 }
-
 @if (Model.CountryEnabled && Model.StateProvinceEnabled)
 {
     <script type="text/javascript">
@@ -37,7 +36,7 @@
                 });
             });
         });
-</script>
+    </script>
 }
 @using (Html.BeginForm())
 {
@@ -144,12 +143,13 @@
                             </tr>
                             if (Model.CheckUsernameAvailabilityEnabled)
                             {
-                                <tr class="row">
-                                    <td class="item-name"></td>
-                                    <td class="item-value">
-                                        @Html.Partial("_CheckUsernameAvailability")
-                                    </td>
-                                </tr>
+                            <tr class="row">
+                                <td class="item-name">
+                                </td>
+                                <td class="item-value">
+                                    @Html.Partial("_CheckUsernameAvailability")
+                                </td>
+                            </tr>
                             }
                         }
                     </tbody>
@@ -175,6 +175,10 @@
                                     </td>
                                     <td class="item-value">
                                         @Html.EditorFor(model => model.Company)
+                                        @if (Model.CompanyRequired)
+                                        {
+                                            @Html.RequiredHint()
+                                        }
                                         @Html.ValidationMessageFor(model => model.Company)
                                     </td>
                                 </tr>
@@ -201,7 +205,7 @@
                 </div>                       
                 <div class="clear">
                 </div>
-            }            
+            }
             @if (Model.StreetAddressEnabled ||
                 Model.StreetAddress2Enabled ||
                 Model.ZipPostalCodeEnabled ||
@@ -224,6 +228,10 @@
                                     </td>
                                     <td class="item-value">
                                         @Html.EditorFor(model => model.StreetAddress)
+                                        @if (Model.StreetAddressRequired)
+                                        {
+                                            @Html.RequiredHint()
+                                        }
                                         @Html.ValidationMessageFor(model => model.StreetAddress)
                                     </td>
                                 </tr>
@@ -236,6 +244,10 @@
                                     </td>
                                     <td class="item-value">
                                         @Html.EditorFor(model => model.StreetAddress2)
+                                        @if (Model.StreetAddress2Required)
+                                        {
+                                            @Html.RequiredHint()
+                                        }
                                         @Html.ValidationMessageFor(model => model.StreetAddress2)
                                     </td>
                                 </tr>
@@ -248,6 +260,10 @@
                                     </td>
                                     <td class="item-value">
                                         @Html.EditorFor(model => model.ZipPostalCode)
+                                        @if (Model.ZipPostalCodeRequired)
+                                        {
+                                            @Html.RequiredHint()
+                                        }
                                         @Html.ValidationMessageFor(model => model.ZipPostalCode)
                                     </td>
                                 </tr>
@@ -260,6 +276,10 @@
                                     </td>
                                     <td class="item-value">
                                         @Html.EditorFor(model => model.City)
+                                        @if (Model.CityRequired)
+                                        {
+                                            @Html.RequiredHint()
+                                        }
                                         @Html.ValidationMessageFor(model => model.City)
                                     </td>
                                 </tr>
@@ -313,6 +333,10 @@
                                     </td>
                                     <td class="item-value">
                                         @Html.EditorFor(model => model.Phone)
+                                        @if (Model.PhoneRequired)
+                                        {
+                                            @Html.RequiredHint()
+                                        }
                                         @Html.ValidationMessageFor(model => model.Phone)
                                     </td>
                                 </tr>
@@ -325,6 +349,10 @@
                                     </td>
                                     <td class="item-value">
                                         @Html.EditorFor(model => model.Fax)
+                                        @if (Model.FaxRequired)
+                                        {
+                                            @Html.RequiredHint()
+                                        }
                                         @Html.ValidationMessageFor(model => model.Fax)
                                     </td>
                                 </tr>
@@ -418,11 +446,11 @@
                         </tr>
                         @if (Model.DisplayCaptcha)
                         {
-                        <tr class="row">
-                            <td class="captcha-box" colspan="2">
-                                @Html.Raw(Html.GenerateCaptcha())
-                            </td>
-                        </tr>
+                            <tr class="row">
+                                <td class="captcha-box" colspan="2">
+                                    @Html.Raw(Html.GenerateCaptcha())
+                                </td>
+                            </tr>
                         }
                     </tbody>
                 </table>

@@ -1,27 +1,29 @@
 ﻿using FluentValidation;
 using Nop.Admin.Models.Customers;
+using Nop.Core.Domain.Customers;
 using Nop.Services.Localization;
 
 namespace Nop.Admin.Validators.Customers
 {
     public class CustomerValidator : AbstractValidator<CustomerModel>
     {
-        public CustomerValidator(ILocalizationService localizationService)
+        public CustomerValidator(ILocalizationService localizationService, CustomerSettings customerSettings)
         {
-            //we store 'UsernamesEnabled' and 'AllowUsersToChangeUsernames' as hidden fields; otherwise, they always be false.
-            //...wrong. CustomerSettings can be injected into CustomerValidator
-            //RuleFor(x => x.Username)
-            //    .NotNull()
-            //    .WithMessage(localizationService.GetResource("Admin.Customers.Customers.Fields.Username.Required"))
-            //    .When(x => x.UsernamesEnabled && x.AllowUsersToChangeUsernames);
-
-            //RuleFor(x => x.Email)
-            //    .NotNull()
-            //    .WithMessage(localizationService.GetResource("Admin.Customers.Customers.Fields.Email.Required"));
-
-            //RuleFor(x => x.Email)
-            //    .EmailAddress()
-            //    .WithMessage(localizationService.GetResource("Admin.Common.WrongEmail"));
+            //form fields
+            RuleFor(x => x.Company).NotEmpty().WithMessage(localizationService.GetResource("Admin.Customers.Customers.Fields.Company.Required"))
+                .When(x => customerSettings.CompanyRequired && customerSettings.CompanyEnabled);
+            RuleFor(x => x.StreetAddress).NotEmpty().WithMessage(localizationService.GetResource("Admin.Customers.Customers.Fields.StreetAddress.Required"))
+                .When(x => customerSettings.StreetAddressRequired && customerSettings.StreetAddressEnabled);
+            RuleFor(x => x.StreetAddress2).NotEmpty().WithMessage(localizationService.GetResource("Admin.Customers.Customers.Fields.StreetAddress2.Required"))
+                .When(x => customerSettings.StreetAddress2Required && customerSettings.StreetAddress2Enabled);
+            RuleFor(x => x.ZipPostalCode).NotEmpty().WithMessage(localizationService.GetResource("Admin.Customers.Customers.Fields.ZipPostalCode.Required"))
+                .When(x => customerSettings.ZipPostalCodeRequired && customerSettings.ZipPostalCodeEnabled);
+            RuleFor(x => x.City).NotEmpty().WithMessage(localizationService.GetResource("Admin.Customers.Customers.Fields.City.Required"))
+                .When(x => customerSettings.CityRequired && customerSettings.CityEnabled);
+            RuleFor(x => x.Phone).NotEmpty().WithMessage(localizationService.GetResource("Admin.Customers.Customers.Fields.Phone.Required"))
+                .When(x => customerSettings.PhoneRequired && customerSettings.PhoneEnabled);
+            RuleFor(x => x.Fax).NotEmpty().WithMessage(localizationService.GetResource("Admin.Customers.Customers.Fields.Fax.Required"))
+                .When(x => customerSettings.FaxRequired && customerSettings.FaxEnabled);
         }
     }
 }

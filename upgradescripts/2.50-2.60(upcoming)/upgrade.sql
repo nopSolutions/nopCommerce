@@ -404,6 +404,90 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.AllowOutOfStockItemsToBeAddedToWishlist.Hint">
     <Value>Check to allow ''out of stock'' products to be added to wishlist.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.CompanyRequired">
+    <Value>''Company'' required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.CompanyRequired.Hint">
+    <Value>Check if ''Company'' is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.StreetAddressRequired">
+    <Value>''Street address'' required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.StreetAddressRequired.Hint">
+    <Value>Check if ''Street address'' is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.StreetAddress2Required">
+    <Value>''Street address 2'' required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.StreetAddress2Required.Hint">
+    <Value>Check if ''Street address 2'' is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.ZipPostalCodeRequired">
+    <Value>''Zip / postal code'' required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.ZipPostalCodeRequired.Hint">
+    <Value>Check if ''Zip / postal code'' is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.CityRequired">
+    <Value>''City'' required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.CityRequired.Hint">
+    <Value>Check if ''City'' is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PhoneRequired">
+    <Value>''Phone number'' required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.PhoneRequired.Hint">
+    <Value>Check if ''Phone number'' is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.FaxRequired">
+    <Value>''Fax number'' required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.FaxRequired.Hint">
+    <Value>Check if ''Fax number'' is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Fields.Company.Required">
+    <Value>Company name is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Fields.StreetAddress.Required">
+    <Value>Street address is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Fields.StreetAddress2.Required">
+    <Value>Street address 2 is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Fields.ZipPostalCode.Required">
+    <Value>Zip / postal code is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Fields.City.Required">
+    <Value>City is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Fields.Phone.Required">
+    <Value>Phone is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Account.Fields.Fax.Required">
+    <Value>Fax is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.Company.Required">
+    <Value>Company name is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.StreetAddress.Required">
+    <Value>Street address is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.StreetAddress2.Required">
+    <Value>Street address 2 is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.ZipPostalCode.Required">
+    <Value>Zip / postal code is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.City.Required">
+    <Value>City is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.Phone.Required">
+    <Value>Phone is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.Fax.Required">
+    <Value>Fax is required</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1480,5 +1564,54 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'shoppingcartsettings.all
 BEGIN
 	INSERT [Setting] ([Name], [Value])
 	VALUES (N'shoppingcartsettings.allowoutofstockitemstobeaddedtowishlist', N'false')
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'customersettings.companyrequired')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'customersettings.companyrequired', N'false')
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'customersettings.streetaddressrequired')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'customersettings.streetaddressrequired', N'false')
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'customersettings.streetaddress2required')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'customersettings.streetaddress2required', N'false')
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'customersettings.zippostalcoderequired')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'customersettings.zippostalcoderequired', N'false')
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'customersettings.cityrequired')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'customersettings.cityrequired', N'false')
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'customersettings.phonerequired')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'customersettings.phonerequired', N'false')
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'customersettings.faxrequired')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'customersettings.faxrequired', N'false')
 END
 GO
