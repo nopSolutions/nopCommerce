@@ -59,18 +59,5 @@ namespace Nop.Web.Models.Common
 
         public IList<SelectListItem> AvailableCountries { get; set; }
         public IList<SelectListItem> AvailableStates { get; set; }
-
-        public bool FirstNameDisabled { get; set; }
-        public bool LastNameDisabled { get; set; }
-        public bool EmailDisabled { get; set; }
-        public bool CompanyDisabled { get; set; }
-        public bool CountryDisabled { get; set; }
-        public bool StateProvinceDisabled { get; set; }
-        public bool CityDisabled { get; set; }
-        public bool Address1Disabled { get; set; }
-        public bool Address2Disabled { get; set; }
-        public bool ZipPostalCodeDisabled { get; set; }
-        public bool PhoneNumberDisabled { get; set; }
-        public bool FaxNumberDisabled { get; set; }
     }
 }
