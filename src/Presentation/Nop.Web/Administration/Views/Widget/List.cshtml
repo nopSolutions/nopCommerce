@@ -1,60 +1,57 @@
-﻿@model WidgetListModel
+﻿@model Telerik.Web.Mvc.GridModel<WidgetModel>
 @using Telerik.Web.Mvc.UI
 @{    
     //page title
-    ViewBag.Title = @T("Admin.ContentManagement.Widgets").Text;
+    ViewBag.Title = T("Admin.ContentManagement.Widgets").Text;
 }
-@using (Html.BeginForm())
-{
-    <div class="section-header">
-        <div class="title">
-            <img src="@Url.Content("~/Administration/Content/images/ico-content.png")" alt="" />
-            @T("Admin.ContentManagement.Widgets")
-        </div>
-    </div>        
-    <table class="adminContent">
-        <tr>
-            <td style="width: 50%">
-                <b>@T("Admin.ContentManagement.Widgets.Widgets")</b>
-            </td>
-            <td style="width: 50%">
-                <b>@T("Admin.ContentManagement.Widgets.AvailableWidgetPlugins")</b>
-            </td>
-        </tr>
-        <tr>
-            <td style="vertical-align: top">
-                @(Html.Telerik().Grid<WidgetModel>(Model.AvailableWidgets)
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Administration/Content/images/ico-content.png")" alt="" />
+        @T("Admin.ContentManagement.Widgets")
+    </div>
+</div>
+<table class="adminContent">
+    <tr>
+        <td>
+            @(Html.Telerik().Grid<WidgetModel>()
                     .Name("widgets-grid")
-                    .Columns(columns =>
+                    .DataKeys(x =>
                     {
-                        columns.Bound(w => w.WidgetZoneName).Width(200);
-                        columns.Bound(w => w.PluginFriendlyName).Width(200);
-                        columns.Bound(w => w.DisplayOrder).Width(100);
-                        columns.Bound(w => w.Id)
-                            .Template(w => Html.ActionLink(T("Admin.Common.Edit").Text, "Edit", new { id = w.Id }))
-                            .Title(T("Admin.Common.Edit").Text);
+                        x.Add(y => y.SystemName).RouteKey("systemName");
                     })
-                    .EnableCustomBinding(true))
-            </td>
-            <td style="vertical-align: top">
-                @(Html.Telerik().Grid<WidgetPluginModel>()
-                    .Name("widgetplugins-grid")
-                    .BindTo(Model.AvailableWidgetPlugins)
+                    .BindTo(Model.Data)
                     .Columns(columns =>
                     {
                         columns.Bound(x => x.FriendlyName)
-                             .Width(150)
-                             .Centered();
-                        columns.Bound(x => x.SystemName)
-                            .Template(x =>
-                                Html.ActionLink(T("Admin.ContentManagement.Widgets.AvailableWidgetPlugins.AddToZone").Text, "Create", new { systemName = x.SystemName }))
-                            .Width(50)
+                            .Width(150)
+                            .ReadOnly();
+                        columns.Template(
+                                @<div>
+                                    @Html.ActionLink(T("Admin.ContentManagement.Widgets.Configure").Text, "ConfigureWidget", new { systemName = @item.SystemName })
+                                </div>
+                            )
+                            .ClientTemplate("<a href=\"ConfigureWidget?systemName=<#= SystemName #>\">" + T("Admin.ContentManagement.Widgets.Configure").Text + "</a>")
+                            .Width(100)
                             .Centered()
-                            .HeaderTemplate(T("Admin.ContentManagement.Widgets.AvailableWidgetPlugins.AddToZone").Text);
+                            .Title(T("Admin.ContentManagement.Widgets.Configure").Text);
+                        columns.Bound(x => x.SystemName).Width(150).ReadOnly();
+                        columns.Bound(x => x.DisplayOrder)
+                            .Width(100)
+                            .ReadOnly();
+                        columns.Bound(x => x.IsActive)
+                            .Template(x => x.IsActive.ToString().ToLower())
+                            .Width(100);
+                        columns.Command(commands =>
+                        {
+                            commands.Edit();
+                        }).Width(100);
                     })
-                    .Footer(false))
-            </td>
-        </tr>
-    </table>
-   
-}
+                    .DataBinding(dataBinding =>
+                    {
+                        dataBinding.Ajax().Select("List", "Widget")
+                            .Update("WidgetUpdate", "Widget");
+                    })
+                    .EnableCustomBinding(true))
+        </td>
+    </tr>
+</table>

@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     @*This is used so that themes can inject content into the header*@
     @Html.Partial("Head")
-    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.MobileHeadHtmlTag })
+    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_head_html_tag" })
     @*custom css*@
     @Html.NopCssFiles(ResourceLocation.Head)
     <script src="@Url.Content("~/Scripts/jquery-1.7.1.min.js")" type="text/javascript"></script>

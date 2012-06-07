@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Nop.Admin.Models.Blogs;
 using Nop.Admin.Models.Catalog;
+using Nop.Admin.Models.Cms;
 using Nop.Admin.Models.Common;
 using Nop.Admin.Models.Customers;
 using Nop.Admin.Models.Directory;
@@ -40,6 +41,7 @@ using Nop.Core.Domain.Topics;
 using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
 using Nop.Services.Authentication.External;
+using Nop.Services.Cms;
 using Nop.Services.Messages;
 using Nop.Services.Payments;
 using Nop.Services.PromotionFeed;
@@ -299,6 +301,15 @@ namespace Nop.Admin.Infrastructure
             Mapper.CreateMap<IPromotionFeed, PromotionFeedModel>()
                 .ForMember(dest => dest.FriendlyName, mo => mo.MapFrom(src => src.PluginDescriptor.FriendlyName))
                 .ForMember(dest => dest.SystemName, mo => mo.MapFrom(src => src.PluginDescriptor.SystemName))
+                .ForMember(dest => dest.ConfigurationActionName, mo => mo.Ignore())
+                .ForMember(dest => dest.ConfigurationControllerName, mo => mo.Ignore())
+                .ForMember(dest => dest.ConfigurationRouteValues, mo => mo.Ignore());
+            //widgets
+            Mapper.CreateMap<IWidgetPlugin, WidgetModel>()
+                .ForMember(dest => dest.FriendlyName, mo => mo.MapFrom(src => src.PluginDescriptor.FriendlyName))
+                .ForMember(dest => dest.SystemName, mo => mo.MapFrom(src => src.PluginDescriptor.SystemName))
+                .ForMember(dest => dest.DisplayOrder, mo => mo.MapFrom(src => src.PluginDescriptor.DisplayOrder))
+                .ForMember(dest => dest.IsActive, mo => mo.Ignore())
                 .ForMember(dest => dest.ConfigurationActionName, mo => mo.Ignore())
                 .ForMember(dest => dest.ConfigurationControllerName, mo => mo.Ignore())
                 .ForMember(dest => dest.ConfigurationRouteValues, mo => mo.Ignore());

@@ -1,0 +1,19 @@
+﻿@model WidgetModel
+@{    
+    //page title
+    ViewBag.Title = T("Admin.ContentManagement.Widgets.Configure").Text + " - " + Model.FriendlyName;
+}
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Administration/Content/images/ico-content.png")" alt="" />
+        @T("Admin.ContentManagement.Widgets.Configure") - @Model.FriendlyName @Html.ActionLink("(" + T("Admin.ContentManagement.Widgets.BackToList") + ")", "List")
+    </div>
+</div>
+@if (!String.IsNullOrEmpty(Model.ConfigurationActionName))
+{
+    @Html.Action(Model.ConfigurationActionName, Model.ConfigurationControllerName, Model.ConfigurationRouteValues);
+}
+else
+{
+    @T("Admin.Common.ConfigurationNotRequired")
+}

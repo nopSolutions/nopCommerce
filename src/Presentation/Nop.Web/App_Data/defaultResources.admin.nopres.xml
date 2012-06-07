@@ -6225,80 +6225,35 @@
 					<LocaleResource Name="Widgets">
 						<Value>Widgets</Value>
 						<Children>
-							<LocaleResource Name="AddNew">
-								<Value>Add a new widget</Value>
-							</LocaleResource>
 							<LocaleResource Name="BackToList">
 								<Value>back to widget list</Value>
 							</LocaleResource>
-							<LocaleResource Name="EditWidgetDetails">
-								<Value>Edit widget details</Value>
-							</LocaleResource>
-							<LocaleResource Name="AvailableWidgetPlugins">
-								<Value>
-									Available Widget Plugins
-								</Value>
-								<Children>
-									<LocaleResource Name="FriendlyName">
-										<Value>Plugin</Value>
-									</LocaleResource>
-									<LocaleResource Name="AddToZone">
-										<Value>Add to zone</Value>
-									</LocaleResource>
-								</Children>
-							</LocaleResource>
-							<LocaleResource Name="Widgets">
-								<Value>
-									Widgets
-								</Value>
-								<Children>
-									<LocaleResource Name="WidgetZone">
-										<Value>Widget zone</Value>
-									</LocaleResource>
-									<LocaleResource Name="PluginFriendlyName">
-										<Value>Widget name</Value>
-									</LocaleResource>
-									<LocaleResource Name="DisplayOrder">
-										<Value>Display order</Value>
-									</LocaleResource>
-								</Children>
-							</LocaleResource>
+              <LocaleResource Name="ChooseZone">
+                <Value>Widget zone</Value>
+                <Children>
+                  <LocaleResource Name="Hint">
+                    <Value>Choose widget zone</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
+              <LocaleResource Name="Configure">
+                <Value>Configure</Value>
+              </LocaleResource>
 							<LocaleResource Name="Fields">
 								<Children>
-									<LocaleResource Name="WidgetZone">
-										<Value>Widget zone</Value>
-										<Children>
-											<LocaleResource Name="Hint">
-												<Value>Select widget zone.</Value>
-											</LocaleResource>
-										</Children>
-									</LocaleResource>
-									<LocaleResource Name="PluginFriendlyName">
-										<Value>Widget name</Value>
-										<Children>
-											<LocaleResource Name="Hint">
-												<Value>Used widget name.</Value>
-											</LocaleResource>
-										</Children>
-									</LocaleResource>
+                  <LocaleResource Name="FriendlyName">
+                    <Value>Friendly name</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="SystemName">
+                    <Value>System name</Value>
+                  </LocaleResource>
 									<LocaleResource Name="DisplayOrder">
 										<Value>Display order</Value>
-										<Children>
-											<LocaleResource Name="Hint">
-												<Value>The widget display order. 1 represents the first item in the list.</Value>
-											</LocaleResource>
-										</Children>
 									</LocaleResource>
+                  <LocaleResource Name="IsActive">
+                    <Value>Is active</Value>
+                  </LocaleResource>
 								</Children>
-							</LocaleResource>
-							<LocaleResource Name="Added">
-								<Value>The new widget has been added successfully.</Value>
-							</LocaleResource>
-							<LocaleResource Name="Deleted">
-								<Value>The widget has been deleted successfully.</Value>
-							</LocaleResource>
-							<LocaleResource Name="Updated">
-								<Value>The widget has been updated successfully.</Value>
 							</LocaleResource>
 						</Children>
 					</LocaleResource>

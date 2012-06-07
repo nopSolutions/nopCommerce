@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Web.Routing;
-using Nop.Core.Domain.Cms;
 using Nop.Core.Plugins;
 using Nop.Services.Cms;
 using Nop.Services.Configuration;
@@ -14,51 +13,50 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics
     public class GoogleAnalyticPlugin : BasePlugin, IWidgetPlugin
     {
         private readonly ISettingService _settingService;
+        private readonly GoogleAnalyticsSettings _googleAnalyticsSettings;
 
-        public GoogleAnalyticPlugin(ISettingService settingService)
+        public GoogleAnalyticPlugin(ISettingService settingService,
+            GoogleAnalyticsSettings googleAnalyticsSettings)
         {
             this._settingService = settingService;
+            this._googleAnalyticsSettings = googleAnalyticsSettings;
         }
+
         /// <summary>
-        /// Get a list of supported widget zones; if empty list is returned, then all zones are supported
+        /// Gets widget zones where this widget should be rendered
         /// </summary>
-        /// <returns>A list of supported widget zones</returns>
-        public IList<WidgetZone> SupportedWidgetZones()
+        /// <returns>Widget zones</returns>
+        public IList<string> GetWidgetZones()
         {
-            //limit widget to the following zones
-            return new List<WidgetZone>() 
-            { 
-                WidgetZone.HeadHtmlTag, 
-                WidgetZone.BeforeBodyEndHtmlTag
-            };
+            return !string.IsNullOrWhiteSpace(_googleAnalyticsSettings.WidgetZone)
+                       ? new List<string>() { _googleAnalyticsSettings.WidgetZone }
+                       : new List<string>() { "head_html_tag" };
         }
 
         /// <summary>
         /// Gets a route for provider configuration
         /// </summary>
-        /// <param name="widgetId">Widget identifier</param>
         /// <param name="actionName">Action name</param>
         /// <param name="controllerName">Controller name</param>
         /// <param name="routeValues">Route values</param>
-        public void GetConfigurationRoute(int widgetId, out string actionName, out string controllerName, out RouteValueDictionary routeValues)
+        public void GetConfigurationRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues)
         {
             actionName = "Configure";
             controllerName = "WidgetsGoogleAnalytics";
-            routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Widgets.GoogleAnalytics.Controllers" }, { "area", null }, { "widgetId", widgetId } };
+            routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Widgets.GoogleAnalytics.Controllers" }, { "area", null } };
         }
 
         /// <summary>
         /// Gets a route for displaying widget
         /// </summary>
-        /// <param name="widgetId">Widget identifier</param>
         /// <param name="actionName">Action name</param>
         /// <param name="controllerName">Controller name</param>
         /// <param name="routeValues">Route values</param>
-        public void GetDisplayWidgetRoute(int widgetId, out string actionName, out string controllerName, out RouteValueDictionary routeValues)
+        public void GetDisplayWidgetRoute(out string actionName, out string controllerName, out RouteValueDictionary routeValues)
         {
             actionName = "PublicInfo";
             controllerName = "WidgetsGoogleAnalytics";
-            routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Widgets.GoogleAnalytics.Controllers" }, { "area", null }, { "widgetId", widgetId } };
+            routeValues = new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Widgets.GoogleAnalytics.Controllers" }, { "area", null } };
         }
 
         /// <summary>

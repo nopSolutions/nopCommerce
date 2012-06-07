@@ -9,56 +9,29 @@ namespace Nop.Services.Cms
     public partial interface IWidgetService
     {
         /// <summary>
-        /// Load widget plugin provider by system name
-        /// </summary>
-        /// <param name="systemName">System name</param>
-        /// <returns>Found widget plugin</returns>
-        IWidgetPlugin LoadWidgetPluginBySystemName(string systemName);
-
-        /// <summary>
-        /// Load all widget plugins
-        /// </summary>
-        /// <returns>widget plugins</returns>
-        IList<IWidgetPlugin> LoadAllWidgetPlugins();
-
-
-
-        /// <summary>
-        /// Delete widget
-        /// </summary>
-        /// <param name="widget">Widget</param>
-        void DeleteWidget(Widget widget);
-        
-        /// <summary>
-        /// Gets all widgets
+        /// Load active widgets
         /// </summary>
         /// <returns>Widgets</returns>
-        IList<Widget> GetAllWidgets();
+        IList<IWidgetPlugin> LoadActiveWidgets();
 
         /// <summary>
-        /// Gets all widgets
+        /// Load active widgets
         /// </summary>
         /// <param name="widgetZone">Widget zone</param>
         /// <returns>Widgets</returns>
-        IList<Widget> GetAllWidgetsByZone(WidgetZone widgetZone);
+        IList<IWidgetPlugin> LoadActiveWidgetsByWidgetZone(string widgetZone);
 
         /// <summary>
-        /// Gets a widget
+        /// Load widget by system name
         /// </summary>
-        /// <param name="widgetId">Widget identifier</param>
-        /// <returns>Widget</returns>
-        Widget GetWidgetById(int widgetId);
+        /// <param name="systemName">System name</param>
+        /// <returns>Found widget</returns>
+        IWidgetPlugin LoadWidgetBySystemName(string systemName);
 
         /// <summary>
-        /// Inserts widget
+        /// Load all widgets
         /// </summary>
-        /// <param name="widget">Widget</param>
-        void InsertWidget(Widget widget);
-
-        /// <summary>
-        /// Updates the widget
-        /// </summary>
-        /// <param name="widget">Widget</param>
-        void UpdateWidget(Widget widget);
+        /// <returns>Widgets</returns>
+        IList<IWidgetPlugin> LoadAllWidgets();
     }
 }

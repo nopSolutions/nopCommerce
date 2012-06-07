@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\WidgetsLivePersonChatController.cs" />
+    <Compile Include="LivePersonChatSettings.cs" />
     <Compile Include="LivePersonChatPlugin.cs" />
     <Compile Include="Models\ConfigurationModel.cs" />
     <Compile Include="Models\PublicInfoModel.cs" />

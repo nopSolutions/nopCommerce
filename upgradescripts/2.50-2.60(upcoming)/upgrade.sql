@@ -488,6 +488,144 @@ set @resources='
   <LocaleResource Name="Admin.Customers.Customers.Fields.Fax.Required">
     <Value>Fax is required</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Widgets.Fields.FriendlyName">
+    <Value>Friendly name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Widgets.Fields.SystemName">
+    <Value>System name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Widgets.Fields.DisplayOrder">
+    <Value>Display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Widgets.Configure">
+    <Value>Configure</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Widgets.Fields.IsActive">
+    <Value>Is active</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Widgets.Fields.WidgetZone">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Widgets.Fields.WidgetZone.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Widgets.Fields.PluginFriendlyName">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Widgets.Fields.PluginFriendlyName.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Widgets.Fields.DisplayOrder.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Widgets.AvailableWidgetPlugins">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Widgets.AvailableWidgetPlugins.FriendlyName">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Widgets.AvailableWidgetPlugins.AddToZone">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Widgets.AddNew">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Widgets.Widgets">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Widgets.Widgets.WidgetZone">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Widgets.Widgets.PluginFriendlyName">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Widgets.Widgets.DisplayOrder">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Widgets.Added">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Widgets.Deleted">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Widgets.Updated">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Widgets.EditWidgetDetails">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Cms.WidgetZone.HeadHtmlTag">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Cms.WidgetZone.AfterBodyStartHtmlTag">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Cms.WidgetZone.HeaderLinks">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Cms.WidgetZone.HeaderSelectors">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Cms.WidgetZone.HeaderMenu">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Cms.WidgetZone.BeforeContent">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Cms.WidgetZone.BeforeLeftSideColumn">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Cms.WidgetZone.AfterLeftSideColumn">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Cms.WidgetZone.BeforeMainColumn">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Cms.WidgetZone.AfterMainColumn">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Cms.WidgetZone.BeforeRightSideColumn">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Cms.WidgetZone.AfterRightSideColumn">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Cms.WidgetZone.AfterContent">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Cms.WidgetZone.Footer">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Cms.WidgetZone.BeforeBodyEndHtmlTag">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Cms.WidgetZone.MobileHeadHtmlTag">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Cms.WidgetZone.MobileAfterBodyStartHtmlTag">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Cms.WidgetZone.MobileHeaderLinks">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Cms.WidgetZone.MobileBeforeContent">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Cms.WidgetZone.MobileAfterContent">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Cms.WidgetZone.MobileFooter">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Cms.WidgetZone.MobileBeforeBodyEndHtmlTag">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Widgets.ChooseZone">
+    <Value>Widget zone</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Widgets.ChooseZone.Hint">
+    <Value>Choose widget zone</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1613,5 +1751,19 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'customersettings.faxrequ
 BEGIN
 	INSERT [Setting] ([Name], [Value])
 	VALUES (N'customersettings.faxrequired', N'false')
+END
+GO
+
+--new widget implementation
+IF EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[Widget]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+BEGIN
+	DROP TABLE [Widget]
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'widgetsettings.activewidgetsystemnames')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'widgetsettings.activewidgetsystemnames', N'')
 END
 GO

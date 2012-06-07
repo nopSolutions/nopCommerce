@@ -7,48 +7,55 @@ namespace Nop.Plugin.Widgets.LivePersonChat.Controllers
 {
     public class WidgetsLivePersonChatController : Controller
     {
+        private readonly LivePersonChatSettings _livePersonChatSettings;
         private readonly ISettingService _settingService;
 
-        public WidgetsLivePersonChatController(ISettingService settingService)
+        public WidgetsLivePersonChatController(LivePersonChatSettings livePersonChatSettings, ISettingService settingService)
         {
+            this._livePersonChatSettings = livePersonChatSettings;
             this._settingService = settingService;
         }
         
         [AdminAuthorize]
         [ChildActionOnly]
-        public ActionResult Configure(int widgetId)
+        public ActionResult Configure()
         {
             var model = new ConfigurationModel();
-            if (widgetId > 0)
-            {
-                model.ButtonCode = _settingService.GetSettingByKey<string>(string.Format("Widgets.LivePersonChat.ButtonCode.{0}", widgetId));
-                model.MonitoringCode = _settingService.GetSettingByKey<string>(string.Format("Widgets.LivePersonChat.MonitoringCode.{0}", widgetId));
-            }
+            model.ButtonCode = _livePersonChatSettings.ButtonCode;
+            model.MonitoringCode = _livePersonChatSettings.MonitoringCode;
 
+            model.ZoneId = _livePersonChatSettings.WidgetZone;
+            model.AvailableZones.Add(new SelectListItem() { Text = "Before left side column", Value = "before_left_side_column" });
+            model.AvailableZones.Add(new SelectListItem() { Text = "After left side column", Value = "after_left_side_column" });
+            model.AvailableZones.Add(new SelectListItem() { Text = "Before right side column", Value = "before_right_side_column" });
+            model.AvailableZones.Add(new SelectListItem() { Text = "After right side column", Value = "after_right_side_column" });
+            
             return View("Nop.Plugin.Widgets.LivePersonChat.Views.WidgetsLivePersonChat.Configure", model);
         }
 
         [HttpPost]
         [AdminAuthorize]
         [ChildActionOnly]
-        public ActionResult Configure(int widgetId, ConfigurationModel model)
+        public ActionResult Configure(ConfigurationModel model)
         {
             if (!ModelState.IsValid)
-                return Configure(widgetId);
-            
+                return Configure();
+
             //save settings
-            _settingService.SetSetting(string.Format("Widgets.LivePersonChat.ButtonCode.{0}", widgetId), model.ButtonCode);
-            _settingService.SetSetting(string.Format("Widgets.LivePersonChat.MonitoringCode.{0}", widgetId), model.MonitoringCode);
-            
-            return View("Nop.Plugin.Widgets.LivePersonChat.Views.WidgetsLivePersonChat.Configure", model);
+            _livePersonChatSettings.ButtonCode = model.ButtonCode;
+            _livePersonChatSettings.MonitoringCode = model.MonitoringCode;
+            _livePersonChatSettings.WidgetZone = model.ZoneId;
+            _settingService.SaveSetting(_livePersonChatSettings);
+
+            return Configure();
         }
 
         [ChildActionOnly]
-        public ActionResult PublicInfo(int widgetId)
+        public ActionResult PublicInfo()
         {
             var model = new PublicInfoModel();
-            model.ButtonCode = _settingService.GetSettingByKey<string>(string.Format("Widgets.LivePersonChat.ButtonCode.{0}", widgetId));
-            model.MonitoringCode = _settingService.GetSettingByKey<string>(string.Format("Widgets.LivePersonChat.MonitoringCode.{0}", widgetId));
+            model.ButtonCode = _livePersonChatSettings.ButtonCode;
+            model.MonitoringCode = _livePersonChatSettings.MonitoringCode;
 
             return View("Nop.Plugin.Widgets.LivePersonChat.Views.WidgetsLivePersonChat.PublicInfo", model);
         }

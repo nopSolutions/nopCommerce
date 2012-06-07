@@ -27,7 +27,7 @@
     <meta name="keywords" content="@(Html.NopMetaKeywords())" />
     @*This is used so that themes can inject content into the header*@
     @Html.Partial("Head")
-    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.HeadHtmlTag })
+    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "head_html_tag" })
     @Html.NopCssFiles(ResourceLocation.Head)
     @Html.NopScripts(ResourceLocation.Head)
     @Html.NopCanonicalUrls()

@@ -41,39 +41,42 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
 
         [AdminAuthorize]
         [ChildActionOnly]
-        public ActionResult Configure(int widgetId)
+        public ActionResult Configure()
         {
             var model = new ConfigurationModel();
             model.GoogleId = _googleAnalyticsSettings.GoogleId;
             model.TrackingScript = _googleAnalyticsSettings.TrackingScript; 
             model.EcommerceScript = _googleAnalyticsSettings.EcommerceScript;
             model.EcommerceDetailScript = _googleAnalyticsSettings.EcommerceDetailScript;
-            
 
+            model.ZoneId = _googleAnalyticsSettings.WidgetZone;
+            model.AvailableZones.Add(new SelectListItem() { Text = "<head> HTML tag", Value = "head_html_tag"});
+            model.AvailableZones.Add(new SelectListItem() { Text = "Before <body> end HTML tag", Value = "before_body_end_html_tag" });
+            
             return View("Nop.Plugin.Widgets.GoogleAnalytics.Views.WidgetsGoogleAnalytics.Configure", model);
         }
 
         [HttpPost]
         [AdminAuthorize]
         [ChildActionOnly]
-        public ActionResult Configure(int widgetId, ConfigurationModel model)
+        public ActionResult Configure(ConfigurationModel model)
         {
             if (!ModelState.IsValid)
-                return Configure(widgetId);
+                return Configure();
 
             //save settings
             _googleAnalyticsSettings.GoogleId = model.GoogleId;
             _googleAnalyticsSettings.TrackingScript = model.TrackingScript; 
             _googleAnalyticsSettings.EcommerceScript = model.EcommerceScript;
             _googleAnalyticsSettings.EcommerceDetailScript = model.EcommerceDetailScript;
-            
+            _googleAnalyticsSettings.WidgetZone = model.ZoneId;
             _settingService.SaveSetting(_googleAnalyticsSettings);
 
-            return View("Nop.Plugin.Widgets.GoogleAnalytics.Views.WidgetsGoogleAnalytics.Configure", model);
+            return Configure();
         }
 
         [ChildActionOnly]
-        public ActionResult PublicInfo(int widgetId)
+        public ActionResult PublicInfo()
         {
             string globalScript = "";
             var routeData = ((System.Web.UI.Page)this.HttpContext.CurrentHandler).RouteData;

@@ -115,6 +115,7 @@
     <Compile Include="Catalog\ProductAttributeFormatter.cs" />
     <Compile Include="Catalog\ProductAttributeParser.cs" />
     <Compile Include="Cms\IWidgetService.cs" />
+    <Compile Include="Cms\WidgetExtentions.cs" />
     <Compile Include="Cms\WidgetService.cs" />
     <Compile Include="Cms\IWidgetPlugin.cs" />
     <Compile Include="Common\AddressService.cs" />

@@ -3,8 +3,8 @@
 }
 <div class="master-wrapper-center-1">
     <div class="master-wrapper-cph-1">
-        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.BeforeMainColumn })
+        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "before_main_column" })
         @RenderBody()
-        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.AfterMainColumn })
+        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "after_main_column" })
     </div>
 </div>

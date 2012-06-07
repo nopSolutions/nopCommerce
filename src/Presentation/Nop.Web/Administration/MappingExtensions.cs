@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Nop.Admin.Models.Blogs;
 using Nop.Admin.Models.Catalog;
+using Nop.Admin.Models.Cms;
 using Nop.Admin.Models.Common;
 using Nop.Admin.Models.Customers;
 using Nop.Admin.Models.Directory;
@@ -39,6 +40,7 @@ using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Topics;
 using Nop.Core.Plugins;
 using Nop.Services.Authentication.External;
+using Nop.Services.Cms;
 using Nop.Services.Messages;
 using Nop.Services.Payments;
 using Nop.Services.PromotionFeed;
@@ -501,6 +503,15 @@ namespace Nop.Admin
         public static PromotionFeedModel ToModel(this IPromotionFeed entity)
         {
             return Mapper.Map<IPromotionFeed, PromotionFeedModel>(entity);
+        }
+
+        #endregion
+
+        #region Widgets
+
+        public static WidgetModel ToModel(this IWidgetPlugin entity)
+        {
+            return Mapper.Map<IWidgetPlugin, WidgetModel>(entity);
         }
 
         #endregion

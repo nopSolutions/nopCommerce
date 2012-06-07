@@ -1,7 +1,7 @@
 ﻿@{
     Layout = "~/Views/Shared/_Root.Head.cshtml";
 }
-@Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.AfterBodyStartHtmlTag })
+@Html.Action("WidgetsByZone", "Widget", new { widgetZone = "after_body_start_html_tag" })
 @Html.Partial("_Notifications")
 <div class="master-wrapper-page">
     @Html.Action("JavaScriptDisabledWarning", "Common")
@@ -14,16 +14,16 @@
         </script>
         @Html.Partial("Header")
         @Html.Partial("HeaderMenu")
-        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.BeforeContent })
+        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "before_content" })
         @*ajax loading window*@
         <div class="ajax-loading-block-window" style="display: none">
             <div class="loading-image">
             </div>
         </div>
         @RenderBody()
-        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.AfterContent })
+        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "after_content" })
         @Html.Action("EuCookieLaw", "Common")
     </div>
     @Html.Action("Footer", "Common")
 </div>
-@Html.Action("WidgetsByZone", "Widget", new { widgetZone = Nop.Core.Domain.Cms.WidgetZone.BeforeBodyEndHtmlTag })
+@Html.Action("WidgetsByZone", "Widget", new { widgetZone = "before_body_end_html_tag" })

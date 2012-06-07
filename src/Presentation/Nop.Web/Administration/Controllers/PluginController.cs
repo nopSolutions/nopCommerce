@@ -7,6 +7,7 @@ using Nop.Admin.Models.Plugins;
 using Nop.Core;
 using Nop.Core.Plugins;
 using Nop.Services.Authentication.External;
+using Nop.Services.Cms;
 using Nop.Services.Common;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
@@ -102,6 +103,11 @@ namespace Nop.Admin.Controllers
                 {
                     //promotion feed
                     configurationUrl = Url.Action("ConfigureMethod", "PromotionFeed", new { systemName = pluginDescriptor.SystemName });
+                }
+                else if (pluginInstance is IWidgetPlugin)
+                {
+                    //Misc plugins
+                    configurationUrl = Url.Action("ConfigureWidget", "Widget", new { systemName = pluginDescriptor.SystemName });
                 }
                 else if (pluginInstance is IMiscPlugin)
                 {
