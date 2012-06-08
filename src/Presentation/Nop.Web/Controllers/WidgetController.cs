@@ -40,7 +40,7 @@ namespace Nop.Web.Controllers
                 string actionName;
                 string controllerName;
                 RouteValueDictionary routeValues;
-                widget.GetDisplayWidgetRoute(out actionName, out controllerName, out routeValues);
+                widget.GetDisplayWidgetRoute(widgetZone, out actionName, out controllerName, out routeValues);
                 widgetModel.ActionName = actionName;
                 widgetModel.ControllerName = controllerName;
                 widgetModel.RouteValues = routeValues;

@@ -51,7 +51,7 @@ namespace Nop.Plugin.Widgets.LivePersonChat.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult PublicInfo()
+        public ActionResult PublicInfo(string widgetZone)
         {
             var model = new PublicInfoModel();
             model.ButtonCode = _livePersonChatSettings.ButtonCode;
