@@ -21,6 +21,7 @@
     <div class="checkout-data">
         @using (Html.BeginRouteForm("CheckoutShippingMethod", FormMethod.Post))
         {
+            @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "checkout_shipping_method_top" })
             <div class="shipping-options">
                 @if (Model.Warnings.Count == 0)
                 {
@@ -56,14 +57,15 @@
                             @for (int i = 0; i < Model.Warnings.Count; i++)
                             {
                                 @Model.Warnings[i]
-                           if (i != Model.Warnings.Count - 1)
-                           {
+                                if (i != Model.Warnings.Count - 1)
+                                {
                                 <br />
-                           }
+                                }
                             }
                         </div>
                 }
             </div>
+            @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "checkout_shipping_method_bottom" })
         }
         <div class="clear">
         </div>

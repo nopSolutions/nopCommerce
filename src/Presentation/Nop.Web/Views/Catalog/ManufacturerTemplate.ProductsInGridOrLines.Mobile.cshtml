@@ -14,6 +14,7 @@
 @Html.Action("SearchBox", "Catalog")
 <div class="manufacturer-page">
 
+    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_manufacturerdetails_top" })
 
     @*description*@
     @if (!String.IsNullOrWhiteSpace(Model.Description))
@@ -24,9 +25,9 @@
         <div class="clear">
         </div>
     }
-
-
     
+    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_manufacturerdetails_before_featured_products" })
+        
     @*featured products*@
     @if (Model.FeaturedProducts.Count > 0)
     {
@@ -49,9 +50,8 @@
         </div>
     }
     
-    
-    
-    
+    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_manufacturerdetails_before_product_list" })   
+
     @*product list*@
     @if (Model.Products.Count > 0)
     {
@@ -73,4 +73,6 @@
     <div class="pager">
     @Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber")
     </div>
+
+    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_manufacturerdetails_bottom" })
 </div>

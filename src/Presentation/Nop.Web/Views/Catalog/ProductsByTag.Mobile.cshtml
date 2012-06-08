@@ -16,6 +16,8 @@
 @Html.Action("SearchBox", "Catalog")
 <div class="producttag-page">
 
+    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_productsbytag_top" })
+
     @*product list*@
     @if (Model.Products.Count > 0)
     {
@@ -37,4 +39,6 @@
     <div class="pager">
     @Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber")
     </div>
+
+    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_productsbytag_bottom" })
 </div>

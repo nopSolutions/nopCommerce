@@ -2,13 +2,13 @@
 @using Nop.Web.Models.Common;
 <div class="header-links">
     <ul>
+        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "header_links_before" })
         @if (Model.IsCustomerImpersonated)
         {
             <li><span class="impersonate">(@(string.Format(T("Account.ImpersonatedAs").Text, Model.CustomerEmailUsername)))
                 - <a href="@Url.RouteUrl("Logout")" class="finish-impersonation" title="@T("Account.ImpersonatedAs.Finish.Hint")">@T("Account.ImpersonatedAs.Finish")</a>
                 ) </span></li>
         }
-        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "header_links" })
         @if (Model.DisplayAdminLink)
         {
             <li><a href="@Url.Content("~/admin")" class="ico-admin">@T("Account.Administration")</a>
@@ -63,5 +63,6 @@
             <li><a href="@Url.RouteUrl("Wishlist")" class="ico-wishlist">@T("Wishlist")</a> <a href="@Url.RouteUrl("Wishlist")" class="wishlist-qty">
                 (@Model.WishlistItems)</a> </li>
         }
+        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "header_links_after" })
     </ul>
 </div>

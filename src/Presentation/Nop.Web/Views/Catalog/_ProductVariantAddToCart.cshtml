@@ -25,4 +25,5 @@
     {
         <input type="submit" name="addtowishlistbutton-@(Model.ProductVariantId)" class="productvariantaddtowishlistbutton" value="@T("ShoppingCart.AddToWishlist")" onclick="AjaxCart.addproductvarianttocart('@Url.RouteUrl("AddProductVariantToCart", new { productVariantId = Model.ProductVariantId, shoppingCartTypeId = (int)ShoppingCartType.Wishlist })', '#product-details-form');return false;" />
     }
+    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "productdetails_add_info" })
 </div>

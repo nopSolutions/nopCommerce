@@ -22,6 +22,7 @@
                 </div>
             </div>  
         }
+        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "profile_page_info_userdetails" })
     </div>
     <div class="userStats">
         <div class="section-title">
@@ -45,7 +46,6 @@
                 @T("Profile.DateOfBirth"): <span class="profileStatValue">@Model.DateOfBirth</span>
             </div>
         }
-    </div>
-    <div class="clear">
+        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "profile_page_info_userstats" })
     </div>
 </div>

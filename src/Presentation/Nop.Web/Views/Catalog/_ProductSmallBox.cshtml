@@ -10,4 +10,5 @@
             <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl"
                                         title="@Model.DefaultPictureModel.Title" /></a>
     </div>
+    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "productsmallbox" })
 </div>

@@ -32,8 +32,10 @@
     {
         <div class="product-essential">
             <div class="product-details-info">
+                @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "productdetails_before_pictures" })
                 <!--product pictures-->
                 @Html.Partial("_ProductDetailsPictures", Model)
+                @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "productdetails_after_pictures" })
                 <div class="overview">
                     <h1 class="productname">
                         @Model.Name
@@ -44,6 +46,7 @@
                     </div>
                     <div class="clear">
                     </div>
+                    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "productdetails_overview_top" })
                     <!--product SKU, manufacturer part number, stock info-->
                     @Html.Partial("_ProductVariant_SKU_Man_Stock", defaultProductVariant)
                     <div class="clear">
@@ -81,6 +84,7 @@
                     <div class="clear">
                     </div>
                     @Html.Action("ShareButton", "Catalog")
+                    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "productdetails_overview_bottom" })
                 </div>
                 <div class="fulldescription">
                     @Html.Raw(Model.FullDescription)
@@ -96,15 +100,15 @@
                 <div class="clear">
                 </div>
                 @{
-                    var dataDictAttributes = new ViewDataDictionary();
-                    dataDictAttributes.TemplateInfo.HtmlFieldPrefix = string.Format("attributes_{0}", defaultProductVariant.Id);
+        var dataDictAttributes = new ViewDataDictionary();
+        dataDictAttributes.TemplateInfo.HtmlFieldPrefix = string.Format("attributes_{0}", defaultProductVariant.Id);
                     @Html.Partial("_ProductAttributes", defaultProductVariant.ProductVariantAttributes, dataDictAttributes)                  
                 }
                 <div class="clear">
                 </div>
                 @{
-                    var dataDictGiftCard = new ViewDataDictionary();
-                    dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = string.Format("giftcard_{0}", defaultProductVariant.Id);
+        var dataDictGiftCard = new ViewDataDictionary();
+        dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = string.Format("giftcard_{0}", defaultProductVariant.Id);
                     @Html.Partial("_GiftCardInfo", defaultProductVariant.GiftCard, dataDictGiftCard)
                 }
             </div>

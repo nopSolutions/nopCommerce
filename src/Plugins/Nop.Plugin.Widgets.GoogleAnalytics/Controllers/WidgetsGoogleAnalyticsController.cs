@@ -51,7 +51,7 @@ namespace Nop.Plugin.Widgets.GoogleAnalytics.Controllers
 
             model.ZoneId = _googleAnalyticsSettings.WidgetZone;
             model.AvailableZones.Add(new SelectListItem() { Text = "<head> HTML tag", Value = "head_html_tag"});
-            model.AvailableZones.Add(new SelectListItem() { Text = "Before <body> end HTML tag", Value = "before_body_end_html_tag" });
+            model.AvailableZones.Add(new SelectListItem() { Text = "Before <body> end HTML tag", Value = "body_end_html_tag_before" });
             
             return View("Nop.Plugin.Widgets.GoogleAnalytics.Views.WidgetsGoogleAnalytics.Configure", model);
         }

@@ -41,5 +41,6 @@
                 <input type="button" value="@(Model.ProductPrice.AvailableForPreOrder ? T("ShoppingCart.PreOrder") : T("ShoppingCart.AddToCart"))" class="productlistaddtocartbutton" onclick="AjaxCart.addproducttocart('@addtocartlink');return false;" />
             }
         </div>
+        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "productbox_add_info" })
     </div>
 </div>

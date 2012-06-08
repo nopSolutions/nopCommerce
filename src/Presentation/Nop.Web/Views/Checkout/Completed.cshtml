@@ -20,6 +20,7 @@
     </div>
     <div class="checkout-data">
         <div class="order-completed">
+            @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "checkout_completed_top" })
             <div class="body">
                 <b>
                     @T("Checkout.YourOrderHasBeenSuccessfullyProcessed")</b>
@@ -35,6 +36,7 @@
             <div class="select-button">
                 <input type="submit" name="nextstep" value="@T("Checkout.Continue")" id="nextstep" class="orderprocessedcontinuebutton" onclick="setLocation('@Url.RouteUrl("HomePage")')" />
             </div>
+            @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "checkout_completed_bottom" })
         </div>
     </div>
 </div>

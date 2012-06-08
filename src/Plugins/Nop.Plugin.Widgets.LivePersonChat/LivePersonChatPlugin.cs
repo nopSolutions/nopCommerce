@@ -26,7 +26,7 @@ namespace Nop.Plugin.Widgets.LivePersonChat
         {
             return !string.IsNullOrWhiteSpace(_livePersonChatSettings.WidgetZone)
                        ? new List<string>() { _livePersonChatSettings.WidgetZone }
-                       : new List<string>() { "before_left_side_column" };
+                       : new List<string>() { "left_side_column_before" };
         }
 
         /// <summary>

@@ -20,9 +20,10 @@
         @using (Html.BeginRouteForm("CheckoutPaymentInfo", FormMethod.Post,
                 new Dictionary<string, Object> { { "data-ajax", "false" } }))
         {
-                <div class="message-error">
-                    @Html.ValidationSummary(false)
-                </div>
+            @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_checkout_payment_info_top" })
+            <div class="message-error">
+                @Html.ValidationSummary(false)
+            </div>
             <div class="clear">
             </div>
             <div class="payment-info">
@@ -35,6 +36,7 @@
                     <input type="submit" name="nextstep" value="@T("Checkout.NextButton")" id="nextstep"/>
                 </div>
             </div>
+            @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_checkout_payment_info_bottom" })
         }
     </div>
 </div>

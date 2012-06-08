@@ -16,6 +16,7 @@
     <div class="postdate">
         @Model.CreatedOn.ToString("D")
     </div>
+    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_blogpost_page_before_body" })
     <div class="postbody">
         @Html.Raw(Model.Body)
     </div>
@@ -37,6 +38,7 @@
             }
         }
     </div>
+    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_blogpost_page_before_comments" })
     @if (Model.AllowComments)
     {
         <div class="clear">
@@ -113,6 +115,7 @@
                                             </span>
                                         </div>
                                     </div>
+                                    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_blogpost_page_inside_comment" })
                                 </div>
                             </li>
                         }
@@ -121,4 +124,5 @@
             </div>
         </div>
     }
+    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_blogpost_page_after_comments" })
 </div>

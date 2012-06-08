@@ -30,8 +30,10 @@
     {
         <div class="product-essential">
             <div class="product-details-info">
+                @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "productdetails_before_pictures" })
                 <!--product pictures-->
                 @Html.Partial("_ProductDetailsPictures", Model)
+                @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "productdetails_after_pictures" })
                 <div class="overview">
                     <h1 class="productname">
                         @Model.Name
@@ -42,6 +44,7 @@
                     </div>
                     <div class="clear">
                     </div>
+                    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "productdetails_overview_top" })
                     <!--product manufactures-->
                     @Html.Action("ProductManufacturers", "Catalog", new { productId = Model.Id })
                     <div class="clear">
@@ -56,6 +59,7 @@
                     <div class="clear">
                     </div>
                     @Html.Action("ShareButton", "Catalog")
+                    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "productdetails_overview_bottom" })
                 </div>
                 <div class="fulldescription">
                     @Html.Raw(Model.FullDescription)

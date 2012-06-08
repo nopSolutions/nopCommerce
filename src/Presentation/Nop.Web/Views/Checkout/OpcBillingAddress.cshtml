@@ -6,6 +6,7 @@
 <div class="checkout-data">
     <div class="enter-address">
         <div class="enter-address-body">
+            @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "op_checkout_billing_address_top" })
             @if (Model.ExistingAddresses.Count > 0)
             {
                 <div>
@@ -35,6 +36,7 @@
                 <div class="clear">
                 </div>
             }
+            @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "op_checkout_billing_address_middle" })
             <div id="billing-new-address-form">
                 @{
                     var dataDictAddress = new ViewDataDictionary();
@@ -44,6 +46,7 @@
                     @Html.Partial("_CreateOrUpdateAddress", Model.NewAddress, dataDictAddress)              
                 }
             </div>
+            @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "op_checkout_billing_address_bottom" })
         </div>
     </div>
 </div>

@@ -8,6 +8,7 @@
     </div>
     <div class="listbox">
         <ul>
+            @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "infoblock_before" })
             <li><a href="@Url.RouteUrl("ContactUs")">@T("ContactUs")</a> </li>
             <li><a href="@Url.RouteUrl("Topic", new { SystemName = "aboutus" })">@T("AboutUs")</a></li>
             @if (Model.BlogEnabled)
@@ -37,6 +38,7 @@
             <li><a href="@Url.RouteUrl("Topic", new { SystemName = "shippinginfo" })">@T("ShippingReturns")</a></li>
             <li><a href="@Url.RouteUrl("Topic", new { SystemName = "privacyinfo" })">@T("PrivacyNotice")</a></li>
             <li><a href="@Url.RouteUrl("Topic", new { SystemName = "conditionsofUse" })">@T("ConditionsOfUse")</a></li>
+            @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "infoblock_after" })
         </ul>
     </div>
 </div>

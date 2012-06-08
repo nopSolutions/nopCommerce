@@ -21,14 +21,15 @@
     <div class="checkout-data">
         @using (Html.BeginRouteForm("CheckoutConfirm", FormMethod.Post, new { id = "confirmorderform" }))
         {
+            @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "checkout_confirm_top" })
             
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('#confirmorderform').submit(function () {
-                $('input[type=submit]', this).attr('disabled', 'disabled');
-            });
-        });
-    </script>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#confirmorderform').submit(function () {
+                        $('input[type=submit]', this).attr('disabled', 'disabled');
+                    });
+                });
+            </script>
             
             <div class="confirm-order">
                 <div class="select-button">
@@ -45,18 +46,19 @@
                 {
                     <div class="clear">
                     </div>
-                        <div class="message-error">
-                            @for (int i = 0; i < Model.Warnings.Count; i++)
+                    <div class="message-error">
+                        @for (int i = 0; i < Model.Warnings.Count; i++)
+                        {
+                            @Model.Warnings[i]
+                            if (i != Model.Warnings.Count - 1)
                             {
-                                @Model.Warnings[i]
-                           if (i != Model.Warnings.Count - 1)
-                           {
-                                <br />
-                           }
+                            <br />
                             }
-                        </div>
+                        }
+                    </div>
                 }
             </div>  
+            @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "checkout_confirm_bottom" })
         }
         <div class="clear">
         </div>

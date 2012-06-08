@@ -30,6 +30,7 @@
     </div>
     <div class="clear">
     </div>
+    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_bloglist_page_before_posts" })
     <div class="blogposts">
         @foreach (var item in Model.BlogPosts)
         {
@@ -65,10 +66,12 @@
                         @string.Format(@T("Blog.CommentsLink").Text, item.NumberOfComments)
                     </a>
                 }
+                @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_bloglist_page_inside_post" })
             </div>
         }
     </div>
     <div class="pager">
         @Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber")
     </div>
+    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_bloglist_page_after_posts" })
 </div>

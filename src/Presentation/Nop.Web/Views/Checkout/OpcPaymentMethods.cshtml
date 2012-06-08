@@ -1,6 +1,7 @@
 ﻿@model CheckoutPaymentMethodModel
 @using Nop.Web.Models.Checkout;
 <div class="checkout-data">
+    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "op_checkout_payment_method_top" })
     @if (Model.DisplayRewardPoints && Model.PaymentMethods.Count > 0)
     {
         <div class="userewardpoints">
@@ -37,9 +38,10 @@
         {
             <div class="clear">
             </div>
-                <div class="message-error">
-                    @T("Checkout.NoPaymentMethods")
-                </div>
+            <div class="message-error">
+                @T("Checkout.NoPaymentMethods")
+            </div>
         }
     </div>
+    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "op_checkout_payment_method_bottom" })
 </div>

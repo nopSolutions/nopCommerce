@@ -4,6 +4,7 @@
 @using Nop.Web.Models.Common;
 @using Nop.Web.Framework.UI;
 <div class="checkout-data">
+    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "op_checkout_confirm_top" })
     <div>
         @if (!String.IsNullOrEmpty(Model.MinOrderTotalWarning))
         {
@@ -14,17 +15,18 @@
     {
         <div class="clear">
         </div>
-            <div class="message-error">
-                @for (int i = 0; i < Model.Warnings.Count; i++)
+        <div class="message-error">
+            @for (int i = 0; i < Model.Warnings.Count; i++)
+            {
+                @Model.Warnings[i]
+                if (i != Model.Warnings.Count - 1)
                 {
-                    @Model.Warnings[i]
-                    if (i != Model.Warnings.Count - 1)
-                    {
-                    <br />
-                    }
+                <br />
                 }
-            </div>
+            }
+        </div>
     }
+    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "op_checkout_confirm_bottom" })
     <div class="clear">
     </div>
     <div class="order-summary-body">

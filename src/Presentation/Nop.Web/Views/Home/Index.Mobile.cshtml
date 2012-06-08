@@ -1,6 +1,7 @@
 ﻿@{
     Layout = "~/Views/Shared/_Root.cshtml";
 }
+@Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_home_page_top" })
 @*product search box*@
 @Html.Action("SearchBox", "Catalog")
 @*logo*@
@@ -12,3 +13,4 @@
 @*home page products*@
 @*uncomment the line below to show home page featured products*@
 @*@Html.Action("HomepageProducts", "Catalog")*@
+@Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_home_page_bottom" })

@@ -28,4 +28,5 @@
     {
         <input type="submit" name="addtowishlistbutton-@(Model.ProductVariantId)" value="@T("ShoppingCart.AddToWishlist")" />
     }
+    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_productdetails_add_info" })
 </div>

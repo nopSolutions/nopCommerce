@@ -50,6 +50,7 @@
                         @Html.TextBoxFor(model => model.Q, new { @class = "searchtext" })
                     </td>
                 </tr>
+                @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "productsearch_page_basic" })
                 <tr>
                     <td class="title" colspan="2">
                         @Html.CheckBoxFor(model => model.As)
@@ -105,6 +106,7 @@
                                         @Html.LabelFor(model => model.Sid)
                                     </td>
                                 </tr>
+                                @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "productsearch_page_advanced" })
                             </tbody>
                         </table>
                     </td>

@@ -4,6 +4,7 @@
 @using Nop.Web.Models.Common;
 @using Nop.Web.Framework.UI;
 <div class="checkout-data">
+    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "op_checkout_payment_info_top" })
     <div class="payment-info">
         <div class="body">
             @Html.Action(Model.PaymentInfoActionName, Model.PaymentInfoControllerName, Model.PaymentInfoRouteValues)
@@ -11,9 +12,10 @@
     </div>
     <div class="clear">
     </div>
-        <div class="message-error">
-            @Html.ValidationSummary(false)
-        </div>
+    <div class="message-error">
+        @Html.ValidationSummary(false)
+    </div>
+    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "op_checkout_payment_info_bottom" })
     @if (Model.DisplayOrderTotals)
     {
         <div class="clear">

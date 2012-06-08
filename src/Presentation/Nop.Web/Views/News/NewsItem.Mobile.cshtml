@@ -16,9 +16,11 @@
     <div class="newsdate">
         @Model.CreatedOn.ToString("D")
     </div>
+    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_newsitem_page_before_body" })
     <div class="newsbody">
         @Html.Raw(Model.Full)
     </div>
+    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_newsitem_page_before_comments" })
     @if (Model.AllowComments)
     {
         <div class="newscomments">
@@ -100,6 +102,7 @@
                                             <span class="commenttext">@Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(comment.CommentText, false, true, false, false, false, false))</span>
                                         </div>
                                     </div>
+                                    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_newsitem_page_inside_comment" })
                                 </div>
                             </li>
                         }
@@ -108,4 +111,5 @@
             </div>
         </div>
     }
+    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_newsitem_page_after_comments" })
 </div>

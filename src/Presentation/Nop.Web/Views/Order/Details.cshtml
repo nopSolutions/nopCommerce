@@ -33,6 +33,7 @@
         </div>
     }
     <div class="info">
+        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "orderdetails_page_top" })
         <div class="order-overview">
             <table class="order-overview-table">
                 <tbody>
@@ -56,6 +57,7 @@
                             @T("Order.OrderStatus"): @Model.OrderStatus
                         </td>
                     </tr>
+                    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "orderdetails_page_overview" })
                 </tbody>
             </table>
         </div>
@@ -179,6 +181,7 @@
         </div>
         <div class="clear">
         </div>
+        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "orderdetails_page_beforeproducts" })
         @if (Model.Items.Count > 0)
         {
             <div class="section-title">
@@ -283,6 +286,7 @@
             <div class="clear">
             </div>
         }
+        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "orderdetails_page_afterproducts" })
         <div class="total-info">
             <table class="cart-total">
                 <tbody>
@@ -546,6 +550,7 @@
                 </table>
             </div>
             }
-        }
+        }        
+        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "orderdetails_page_bottom" })
     </div>
 </div>

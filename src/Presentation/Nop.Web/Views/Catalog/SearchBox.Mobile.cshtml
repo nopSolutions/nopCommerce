@@ -3,5 +3,6 @@
     {
         <label for="small-searchterms" class="ui-hidden-accessible">@T("Search"):</label>
         <input type="search" name="q" id="small-searchterms"  placeholder="@T("Search.SearchBox.Tooltip")"  />
+        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_searchbox" })
     }
 </div>

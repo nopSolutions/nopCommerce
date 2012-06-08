@@ -14,6 +14,7 @@
     </div>
     <div class="clear">
     </div>
+    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "productreviews_page_top" })
     @if (Model.AddProductReview.SuccessfullyAdded)
     {
         @Model.AddProductReview.Result
@@ -143,8 +144,10 @@
                         @review.WrittenOnStr
                     </div>
                     @Html.Partial("_ProductReviewHelpfulness", review.Helpfulness, new ViewDataDictionary())
+                    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "productreviews_page_inside_review" })
                 </div>
             }
         </div>
     }
+    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "productreviews_page_bottom" })
 </div>

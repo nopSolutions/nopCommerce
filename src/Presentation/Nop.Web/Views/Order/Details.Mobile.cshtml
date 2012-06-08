@@ -14,7 +14,8 @@
     </div>
     <div class="clear">
     </div>
-    <div class="info">
+    <div class="info">    
+        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_orderdetails_page_top" })
         <div class="order-overview">
             <div>
                 <b>@T("Order.Order#")@Model.Id</b>
@@ -28,6 +29,7 @@
             <div>
                 @T("Order.OrderStatus"): @Model.OrderStatus
             </div>
+            @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_orderdetails_page_overview" })
         </div>
         <div class="clear">
         </div>
@@ -153,6 +155,7 @@
         </div>
         <div class="clear">
         </div>
+        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_orderdetails_page_beforeproducts" })
         @if (Model.Items.Count > 0)
         {
             <div class="section-title">
@@ -212,6 +215,7 @@
             <div class="clear">
             </div>
         }
+        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_orderdetails_page_afterproducts" })
         <div class="total-info">
             <table class="cart-total">
                 <tbody>
@@ -416,6 +420,7 @@
                     </li>
                 }
             </ul>
-        }
+        }        
+    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_orderdetails_page_bottom" })
     </div>
 </div>

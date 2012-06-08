@@ -20,6 +20,7 @@
         @using (Html.BeginRouteForm("CheckoutConfirm", FormMethod.Post,
                 new Dictionary<string, Object> { { "data-ajax", "false" }, { "id", "confirmorderform" } }))
         {
+            @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_checkout_confirm_top" })
 
             if (Model.Warnings.Count > 0)
             {
@@ -56,6 +57,7 @@
                     }
                 </div>
             </div>  
+            @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_checkout_confirm_bottom" })
         }
         <div class="clear">
         </div>

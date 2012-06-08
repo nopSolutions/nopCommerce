@@ -25,10 +25,10 @@ namespace Nop.Plugin.Widgets.LivePersonChat.Controllers
             model.MonitoringCode = _livePersonChatSettings.MonitoringCode;
 
             model.ZoneId = _livePersonChatSettings.WidgetZone;
-            model.AvailableZones.Add(new SelectListItem() { Text = "Before left side column", Value = "before_left_side_column" });
-            model.AvailableZones.Add(new SelectListItem() { Text = "After left side column", Value = "after_left_side_column" });
-            model.AvailableZones.Add(new SelectListItem() { Text = "Before right side column", Value = "before_right_side_column" });
-            model.AvailableZones.Add(new SelectListItem() { Text = "After right side column", Value = "after_right_side_column" });
+            model.AvailableZones.Add(new SelectListItem() { Text = "Before left side column", Value = "left_side_column_before" });
+            model.AvailableZones.Add(new SelectListItem() { Text = "After left side column", Value = "left_side_column_after" });
+            model.AvailableZones.Add(new SelectListItem() { Text = "Before right side column", Value = "right_side_column_before" });
+            model.AvailableZones.Add(new SelectListItem() { Text = "After right side column", Value = "right_side_column_after" });
             
             return View("Nop.Plugin.Widgets.LivePersonChat.Views.WidgetsLivePersonChat.Configure", model);
         }

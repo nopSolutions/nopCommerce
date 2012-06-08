@@ -1,6 +1,7 @@
 ﻿@model CheckoutShippingMethodModel
 @using Nop.Web.Models.Checkout;
 <div class="checkout-data">
+    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "op_checkout_shipping_method_top" })
     <div class="shipping-options">
         @if (Model.Warnings.Count == 0)
         {
@@ -27,16 +28,17 @@
         {
             <div class="clear">
             </div>
-                <div class="message-error">
-                    @for (int i = 0; i < Model.Warnings.Count; i++)
+            <div class="message-error">
+                @for (int i = 0; i < Model.Warnings.Count; i++)
+                {
+                    @Model.Warnings[i]
+                    if (i != Model.Warnings.Count - 1)
                     {
-                        @Model.Warnings[i]
-                        if (i != Model.Warnings.Count - 1)
-                        {
-                        <br />
-                        }
+                    <br />
                     }
-                </div>
+                }
+            </div>
         }
     </div>
+    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "op_checkout_shipping_method_bottom" })
 </div>

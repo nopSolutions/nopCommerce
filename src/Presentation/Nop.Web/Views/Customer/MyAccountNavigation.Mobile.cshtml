@@ -1,6 +1,7 @@
 ﻿@model CustomerNavigationModel
 @using Nop.Web.Models.Customer;
 <ul data-role="listview" data-inset="true" data-filter="false">
+    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_account_navigation_before" })
     @if (!Model.HideInfo)
     {
         <li><a href="@Url.RouteUrl("CustomerInfo")">@T("Account.CustomerInfo")</a></li>
@@ -41,4 +42,5 @@
     {
         <li><a href="@Url.RouteUrl("CustomerForumSubscriptions")">@T("Account.ForumSubscriptions")</a></li>
     }
+    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_account_navigation_after" })
 </ul>

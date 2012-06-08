@@ -1,5 +1,6 @@
 ﻿@model InfoBlockModel
 @using Nop.Web.Models.Common;
+@Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_infoblock_before" })
 <div data-role="navbar">
     <ul>
         <li><a href="@Url.RouteUrl("ContactUs")" data-role="button">@T("ContactUs")</a></li>
@@ -38,3 +39,4 @@
         </ul>
     </div>
 }
+@Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_infoblock_after" })

@@ -93,6 +93,7 @@
                                     @T("Products.Compare.FullDescription"): @Html.Raw(product.FullDescription)
                                 </div>
                             }*@
+                            @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_compareproducts_row" })
                         </div>
                     </li>
                 }

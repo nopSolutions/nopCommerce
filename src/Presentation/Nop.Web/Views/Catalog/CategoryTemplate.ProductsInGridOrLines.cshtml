@@ -22,6 +22,8 @@
 @using Nop.Web.Extensions;
 <div class="category-page">
 
+    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "categorydetails_top" })
+
     @*category breadcrumb*@
     @if (Model.DisplayCategoryBreadcrumb)
     {
@@ -42,8 +44,8 @@
         </div>
     }
     
-
-
+    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "categorydetails_after_breadcrumb" })
+    
     @*description*@
     @if (!String.IsNullOrWhiteSpace(Model.Description))
     {
@@ -54,7 +56,7 @@
         </div>
     }
 
-
+    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "categorydetails_before_subcategories" })
     
     @*subcategories*@
     @if (Model.SubCategories.Count > 0)
@@ -79,8 +81,8 @@
         <div class="clear">
         </div>
     }
-
-
+    
+    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "categorydetails_before_featured_products" })
     
     @*featured products*@
     @if (Model.FeaturedProducts.Count > 0)
@@ -100,9 +102,8 @@
         <div class="clear">
         </div>
     }
-    
-    
-    
+        
+    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "categorydetails_after_featured_products" })
     
     @*view mode*@
     @if (Model.PagingFilteringContext.AllowProductViewModeChanging && Model.Products.Count > 0)
@@ -135,6 +136,8 @@
     <div class="clear">
     </div>
     
+    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "categorydetails_before_filters" })
+
     @*filtering*@
     @if (Model.PagingFilteringContext.PriceRangeFilter.Enabled ||
         Model.PagingFilteringContext.SpecificationFilter.Enabled)
@@ -158,10 +161,9 @@
         </div>
         <div class="clear">
         </div>
-    }
+    }    
     
-    
-    
+    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "categorydetails_before_product_list" })    
     
     @*product list*@
     @if (Model.Products.Count > 0)
@@ -197,4 +199,6 @@
     <div class="pager">
     @Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber")
     </div>
+
+    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "categorydetails_bottom" })
 </div>
