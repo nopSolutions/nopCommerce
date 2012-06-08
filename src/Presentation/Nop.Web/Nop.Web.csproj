@@ -238,7 +238,7 @@
     <Compile Include="Models\Customer\ForumSubscriptionModel.cs" />
     <Compile Include="Models\Customer\ExternalAuthenticationMethodModel.cs" />
     <Compile Include="Models\Install\InstallModel.cs" />
-    <Compile Include="Models\Cms\WidgetModel.cs" />
+    <Compile Include="Models\Cms\RenderWidgetModel.cs" />
     <Compile Include="Models\News\AddNewsCommentModel.cs" />
     <Compile Include="Models\News\HomePageNewsItemsModel.cs" />
     <Compile Include="Models\News\NewsCommentModel.cs" />

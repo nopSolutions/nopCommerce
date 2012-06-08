@@ -30,12 +30,12 @@ namespace Nop.Web.Controllers
         public ActionResult WidgetsByZone(string widgetZone)
         {
             //model
-            var model = new List<WidgetModel>();
+            var model = new List<RenderWidgetModel>();
 
             var widgets = _widgetService.LoadActiveWidgetsByWidgetZone(widgetZone);
             foreach (var widget in widgets)
             {
-                var widgetModel = new WidgetModel();
+                var widgetModel = new RenderWidgetModel();
 
                 string actionName;
                 string controllerName;

@@ -1,9 +1,9 @@
 ﻿using System.Web.Routing;
 using Nop.Web.Framework.Mvc;
 
-namespace Nop.Web.Models.Cms
+namespace Nop.Admin.Models.Cms
 {
-    public class WidgetModel : BaseNopModel
+    public class RenderWidgetModel : BaseNopModel
     {
         public string ActionName { get; set; }
         public string ControllerName { get; set; }

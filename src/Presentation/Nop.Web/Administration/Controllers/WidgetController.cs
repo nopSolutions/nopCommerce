@@ -3,11 +3,9 @@ using System.Linq;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Nop.Admin.Models.Cms;
-using Nop.Core;
 using Nop.Core.Domain.Cms;
 using Nop.Services.Cms;
 using Nop.Services.Configuration;
-using Nop.Services.Localization;
 using Nop.Services.Security;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
@@ -143,7 +141,31 @@ namespace Nop.Admin.Controllers
             model.ConfigurationRouteValues = routeValues;
             return View(model);
         }
-        
+
+        [ChildActionOnly]
+        public ActionResult WidgetsByZone(string widgetZone)
+        {
+            //model
+            var model = new List<RenderWidgetModel>();
+
+            var widgets = _widgetService.LoadActiveWidgetsByWidgetZone(widgetZone);
+            foreach (var widget in widgets)
+            {
+                var widgetModel = new RenderWidgetModel();
+
+                string actionName;
+                string controllerName;
+                RouteValueDictionary routeValues;
+                widget.GetDisplayWidgetRoute(widgetZone, out actionName, out controllerName, out routeValues);
+                widgetModel.ActionName = actionName;
+                widgetModel.ControllerName = controllerName;
+                widgetModel.RouteValues = routeValues;
+
+                model.Add(widgetModel);
+            }
+
+            return PartialView(model);
+        }
         #endregion
     }
 }
