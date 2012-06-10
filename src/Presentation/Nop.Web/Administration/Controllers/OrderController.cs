@@ -310,7 +310,7 @@ namespace Nop.Admin.Controllers
             if (order.BillingAddress.StateProvince != null)
                 model.BillingAddress.StateProvinceName = order.BillingAddress.StateProvince.Name;
 
-
+            model.ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext); ;
             if (order.ShippingStatus != ShippingStatus.ShippingNotRequired)
             {
                 model.IsShippable = true;
