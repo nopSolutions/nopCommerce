@@ -36,8 +36,7 @@
                             .Title(T("Admin.ContentManagement.Widgets.Configure").Text);
                         columns.Bound(x => x.SystemName).Width(150).ReadOnly();
                         columns.Bound(x => x.DisplayOrder)
-                            .Width(100)
-                            .ReadOnly();
+                            .Width(100);
                         columns.Bound(x => x.IsActive)
                             .Template(x => x.IsActive.ToString().ToLower())
                             .Width(100);

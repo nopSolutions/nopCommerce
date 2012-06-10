@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using Nop.Admin.Models.Cms;
 using Nop.Core.Domain.Cms;
+using Nop.Core.Plugins;
 using Nop.Services.Cms;
 using Nop.Services.Configuration;
 using Nop.Services.Security;
@@ -118,6 +119,10 @@ namespace Nop.Admin.Controllers
                     _settingService.SaveSetting(_widgetSettings);
                 }
             }
+            var pluginDescriptor = widget.PluginDescriptor;
+            //display order
+            pluginDescriptor.DisplayOrder = model.DisplayOrder;
+            PluginFileParser.SavePluginDescriptionFile(pluginDescriptor);
 
             return List(command);
         }

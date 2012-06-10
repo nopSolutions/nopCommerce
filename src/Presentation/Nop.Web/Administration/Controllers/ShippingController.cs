@@ -6,6 +6,7 @@ using System.Web.Routing;
 using Nop.Admin.Models.Directory;
 using Nop.Admin.Models.Shipping;
 using Nop.Core.Domain.Shipping;
+using Nop.Core.Plugins;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
@@ -147,6 +148,10 @@ namespace Nop.Admin.Controllers
                     _settingService.SaveSetting(_shippingSettings);
                 }
             }
+            var pluginDescriptor = srcm.PluginDescriptor;
+            //display order
+            pluginDescriptor.DisplayOrder = model.DisplayOrder;
+            PluginFileParser.SavePluginDescriptionFile(pluginDescriptor);
 
 
             return Providers(command);

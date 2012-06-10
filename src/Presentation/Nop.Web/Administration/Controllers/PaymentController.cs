@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using Nop.Admin.Models.Payments;
 using Nop.Core.Domain.Payments;
+using Nop.Core.Plugins;
 using Nop.Services.Configuration;
 using Nop.Services.Payments;
 using Nop.Services.Security;
@@ -112,6 +113,10 @@ namespace Nop.Admin.Controllers
                     _settingService.SaveSetting(_paymentSettings);
                 }
             }
+            var pluginDescriptor = pm.PluginDescriptor;
+            //display order
+            pluginDescriptor.DisplayOrder = model.DisplayOrder;
+            PluginFileParser.SavePluginDescriptionFile(pluginDescriptor);
             
             return Methods(command);
         }
