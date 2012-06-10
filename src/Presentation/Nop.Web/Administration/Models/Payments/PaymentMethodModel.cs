@@ -1,6 +1,5 @@
 ﻿using System.Web.Mvc;
 using System.Web.Routing;
-using Nop.Services.Payments;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
 
@@ -35,7 +34,7 @@ namespace Nop.Admin.Models.Payments
         public bool SupportVoid { get; set; }
 
         [NopResourceDisplayName("Admin.Configuration.Payment.Methods.Fields.RecurringPaymentType")]
-        public RecurringPaymentType RecurringPaymentType { get; set; }
+        public string RecurringPaymentType { get; set; }
         
 
 
