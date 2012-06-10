@@ -53,9 +53,11 @@
                 <div class="header">
                     <div class="logo">
                     </div>
+                    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "admin_header_before" })
                     <div class="languageselector">
                         @Html.Action("LanguageSelector", "Common")
                     </div>
+                    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "admin_header_middle" })
                     <div class="links">
                         @Html.ActionLink(T("Admin.Header.PublicStore").Text, "Index", "Home", new { area = "" }, null)
                         <span class="separator">|</span>                        
@@ -73,6 +75,7 @@
                     <div class="version">
                         <span>nopCommerce @currentVersion</span>
                     </div>
+                    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "admin_header_after" })
                 </div>
                 <div class="clear">
                 </div>
@@ -99,6 +102,7 @@
                     </div>
                     <div class="breadcrumb">
                         <!-- SiteMapPath here-->
+                    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "admin_breadcrumb" })
                     </div>
                 </div>
                 <div class="clear">
