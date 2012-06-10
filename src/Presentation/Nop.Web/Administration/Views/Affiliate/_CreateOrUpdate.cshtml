@@ -12,6 +12,9 @@
         x.Add().Text(T("Admin.Affiliates.Customers").Text).Content(TabCustomers().ToHtmlString());
         x.Add().Text(T("Admin.Affiliates.Orders").Text).Content(TabOrders().ToHtmlString());
     }
+
+    //generate an event
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "affiliate-edit"));
 })
 @helper TabInfo()
     {        

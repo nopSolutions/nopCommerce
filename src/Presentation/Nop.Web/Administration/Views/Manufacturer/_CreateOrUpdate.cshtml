@@ -9,6 +9,9 @@
     x.Add().Text(T("Admin.Catalog.Manufacturers.Info").Text).Content(TabInfo().ToHtmlString()).Selected(true);
     x.Add().Text(T("Admin.Common.SEO").Text).Content(TabSeo().ToHtmlString());
     x.Add().Text(T("Admin.Catalog.Manufacturers.Products").Text).Content(TabProducts().ToHtmlString());
+
+    //generate an event
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "manufacturer-edit"));
 })
 @helper TabInfo()
     { 

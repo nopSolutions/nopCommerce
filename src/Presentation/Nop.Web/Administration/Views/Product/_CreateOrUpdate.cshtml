@@ -1,7 +1,6 @@
 ﻿@model ProductModel
 
 @using Telerik.Web.Mvc.UI;
-
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
 @Html.Telerik().TabStrip().Name("product-edit").Items(x =>
@@ -22,6 +21,9 @@
     x.Add().Text(T("Admin.Catalog.Products.CrossSells").Text).Content(TabCrossSells().ToHtmlString());
     x.Add().Text(T("Admin.Catalog.Products.Pictures").Text).Content(TabPictures().ToHtmlString());
     x.Add().Text(T("Admin.Catalog.Products.SpecificationAttributes").Text).Content(TabSpecificationAttributes().ToHtmlString());
+
+    //generate an event
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "product-edit"));
 })
 @helper TabInfo()
     { 
@@ -249,7 +251,7 @@
         columns.Bound(x => x.Sku);
         columns.Bound(x => x.Price);
         columns.Bound(x => x.DisplayOrder)
-            .Centered(); 
+            .Centered();
         columns.Bound(x => x.Published)
             .Filterable(false)
             .Template(x => x.Published.ToString().ToLower())
@@ -259,14 +261,14 @@
     .Footer(false))
     <div class="clear">
     </div>
-    <a href="@Url.Action("Create", "ProductVariant", new { productId= Model.Id })" class="t-button">@T("Admin.Catalog.Products.Variants.AddNew")</a>
+    <a href="@Url.Action("Create", "ProductVariant", new { productId = Model.Id })" class="t-button">@T("Admin.Catalog.Products.Variants.AddNew")</a>
 }
 @helper TabCategories()
     {
-    if (Model.Id > 0)
-    {
-        if (Model.NumberOfAvailableCategories > 0)
+        if (Model.Id > 0)
         {
+            if (Model.NumberOfAvailableCategories > 0)
+            {
                 @(Html.Telerik().Grid<ProductModel.ProductCategoryModel>()
                     .Name("productcategories-grid")
                        .DataKeys(keys =>
@@ -309,24 +311,24 @@
                         });
                     }
                 </script>
+            }
+            else
+            {
+                    @T("Admin.Catalog.Products.Categories.NoCategoriesAvailable")
+            }
         }
         else
         {
-                    @T("Admin.Catalog.Products.Categories.NoCategoriesAvailable")
-        }
-    }
-    else
-    {
             @T("Admin.Catalog.Products.Categories.SaveBeforeEdit")
-    }
+        }
         
 }
 @helper TabManufacturers()
     {
-    if (Model.Id > 0)
-    {
-        if (Model.NumberOfAvailableManufacturers > 0)
+        if (Model.Id > 0)
         {
+            if (Model.NumberOfAvailableManufacturers > 0)
+            {
                 @(Html.Telerik().Grid<ProductModel.ProductManufacturerModel>()
                     .Name("productmanufacturers-grid")
                        .DataKeys(keys =>
@@ -369,22 +371,22 @@
                         });
                     }
                 </script>
+            }
+            else
+            {
+                @T("Admin.Catalog.Products.Manufacturers.NoManufacturersAvailable")
+            }
         }
         else
         {
-                @T("Admin.Catalog.Products.Manufacturers.NoManufacturersAvailable")
-        }
-    }
-    else
-    {
             @T("Admin.Catalog.Products.Manufacturers.SaveBeforeEdit")
-    }
+        }
         
 }
 @helper TabRelatedProducts()
     {
-    if (Model.Id > 0)
-    {
+        if (Model.Id > 0)
+        {
             
             <table class="adminContent">
                 <tr>
@@ -439,17 +441,17 @@
                     </td>
                 </tr>
             </table>
-    }
-    else
-    {
+        }
+        else
+        {
             @T("Admin.Catalog.Products.RelatedProducts.SaveBeforeEdit")
-    }
+        }
         
 }
 @helper TabCrossSells()
     {
-    if (Model.Id > 0)
-    {
+        if (Model.Id > 0)
+        {
             
             <table class="adminContent">
                 <tr>
@@ -499,11 +501,11 @@
                     </td>
                 </tr>
             </table>
-    }
-    else
-    {
+        }
+        else
+        {
             @T("Admin.Catalog.Products.CrossSells.SaveBeforeEdit")
-    }
+        }
         
 }
 @helper TabPictures()

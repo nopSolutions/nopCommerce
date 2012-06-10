@@ -88,6 +88,7 @@
   <ItemGroup>
     <Compile Include="CheckAffiliateAttribute.cs" />
     <Compile Include="Controllers\ContollerExtensions.cs" />
+    <Compile Include="Events\AdminTabStripCreated.cs" />
     <Compile Include="PublicStoreAllowNavigationAttribute.cs" />
     <Compile Include="Mvc\Routes\GuidConstraint.cs" />
     <Compile Include="Security\AdminValidateIpAddressAttribute.cs" />

@@ -6,6 +6,9 @@
 {
     x.Add().Text(T("Admin.ContentManagement.Polls.Info").Text).Content(TabInfo().ToHtmlString()).Selected(true);
     x.Add().Text(T("Admin.ContentManagement.Polls.Answers").Text).Content(TabAnswers().ToHtmlString());
+
+    //generate an event
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "poll-edit"));
 })
 @helper TabInfo()
     {

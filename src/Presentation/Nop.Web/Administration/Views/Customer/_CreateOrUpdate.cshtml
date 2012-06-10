@@ -64,6 +64,9 @@
             tabInfo.Selected(true);
             break;
     }
+    
+    //generate an event
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "customer-edit"));
 })
 @helper TabInfo()
     { 

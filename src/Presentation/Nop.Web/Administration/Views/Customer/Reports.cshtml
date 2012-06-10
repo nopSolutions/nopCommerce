@@ -17,6 +17,9 @@
     x.Add().Text(T("Admin.Customers.Reports.BestBy.BestByOrderTotal").Text).Content(TabBestByOrderTotal().ToHtmlString()).Selected(true);
     x.Add().Text(T("Admin.Customers.Reports.BestBy.BestByNumberOfOrders").Text).Content(TabBestByNumberOfOrders().ToHtmlString());
     x.Add().Text(T("Admin.Customers.Reports.RegisteredCustomers").Text).Content(TabRegisteredCustomers().ToHtmlString());
+
+    //generate an event
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "customer-reports"));
 })
 @helper TabBestByOrderTotal()
     {

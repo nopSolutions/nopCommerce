@@ -23,6 +23,9 @@
             tabInfo.Selected(true);
             break;
     }
+    
+    //generate an event
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "recurringpayment-edit"));
 })
 @helper TabInfo()
     {

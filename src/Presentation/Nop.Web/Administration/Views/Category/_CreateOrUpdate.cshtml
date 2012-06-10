@@ -9,6 +9,9 @@
     x.Add().Text(T("Admin.Common.SEO").Text).Content(TabSeo().ToHtmlString());
     x.Add().Text(T("Admin.Catalog.Categories.Products").Text).Content(TabProducts().ToHtmlString());
     x.Add().Text(T("Admin.Catalog.Categories.Discounts").Text).Content(TabDiscounts().ToHtmlString());
+    
+    //generate an event
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "category-edit"));
 })
 @helper TabInfo()
     { 

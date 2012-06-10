@@ -16,6 +16,9 @@
     {
         x.Add().Text(T("Admin.Promotions.Discounts.History").Text).Content(TabHistory().ToHtmlString());
     }
+    
+    //generate an event
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "discount-edit"));
 })
 @helper TabInfo()
     {

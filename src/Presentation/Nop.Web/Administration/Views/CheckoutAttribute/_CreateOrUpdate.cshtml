@@ -9,6 +9,9 @@
 {
     x.Add().Text(T("Admin.Catalog.Attributes.CheckoutAttributes.Info").Text).Content(TabInfo().ToHtmlString()).Selected(true);
     x.Add().Text(T("Admin.Catalog.Attributes.CheckoutAttributes.Values").Text).Content(TabValues().ToHtmlString());
+    
+    //generate an event
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "checkoutattribute-edit"));
 })
 @helper TabInfo()
     { 

@@ -20,10 +20,13 @@
 
     
      
-    @Html.Telerik().TabStrip().Name("customersettings-edit").Items(x =>
+    @Html.Telerik().TabStrip().Name("ordersettings-edit").Items(x =>
 {
     x.Add().Text(T("Admin.Configuration.Settings.Order.OrderSettings").Text).Content(TabOrderSettings().ToHtmlString()).Selected(true);
     x.Add().Text(T("Admin.Configuration.Settings.Order.ReturnRequestSettings").Text).Content(TabReturnRequestSettings().ToHtmlString());
+    
+    //generate an event
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "ordersettings-edit"));
 })
 }
 @helper TabOrderSettings()

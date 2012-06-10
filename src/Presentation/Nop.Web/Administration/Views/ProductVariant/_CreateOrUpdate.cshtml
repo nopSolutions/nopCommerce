@@ -11,6 +11,9 @@
     x.Add().Text(T("Admin.Catalog.Products.Variants.TierPrices").Text).Content(TabTierPrices().ToHtmlString());
     x.Add().Text(T("Admin.Catalog.Products.Variants.ProductVariantAttributes").Text).Content(TabProductVariantAttributes().ToHtmlString());
     x.Add().Text(T("Admin.Catalog.Products.Variants.Discounts").Text).Content(TabDiscounts().ToHtmlString());
+
+    //generate an event
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "productvariant-edit"));
 })
 @helper TabInfo()
     {
@@ -75,10 +78,13 @@
         {
             if (Model.NumberOfAvailableProductAttributes > 0)
             {
-    @Html.Telerik().TabStrip().Name("productattribute-edit").Items(x =>
+    @Html.Telerik().TabStrip().Name("productvariantattribute-edit").Items(x =>
 {
     x.Add().Text(T("Admin.Catalog.Products.Variants.ProductVariantAttributes.Attributes").Text).Content(TabAttributes().ToHtmlString()).Selected(true);
     x.Add().Text(T("Admin.Catalog.Products.Variants.ProductVariantAttributes.AttributeCombinations").Text).Content(TabAttributeCombinations().ToHtmlString());
+
+    //generate an event
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "productvariantattribute-edit"));
 })
             }
             else
