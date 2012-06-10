@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
 using System.Text;
 using System.Web.Services.Protocols;
-using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Shipping.Tracking;
 

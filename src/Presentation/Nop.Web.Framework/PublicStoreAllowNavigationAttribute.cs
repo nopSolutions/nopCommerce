@@ -2,7 +2,6 @@
 using System.Web;
 using System.Web.Mvc;
 using Nop.Core.Data;
-using Nop.Core.Domain;
 using Nop.Core.Infrastructure;
 using Nop.Services.Security;
 

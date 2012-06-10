@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Infrastructure;
 using Nop.Services.Common;

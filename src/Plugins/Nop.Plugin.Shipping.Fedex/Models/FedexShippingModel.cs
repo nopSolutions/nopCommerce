@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using Nop.Web.Framework;
 using System.Web.Mvc;
+using Nop.Web.Framework;
 
 namespace Nop.Plugin.Shipping.Fedex.Models
 {

@@ -1,9 +1,4 @@
-using System;
-using System.Linq;
-using Nop.Core;
 using Nop.Core.Domain.Customers;
-using Nop.Services.Messages;
-using Nop.Services.Security;
 
 namespace Nop.Services.Customers
 {

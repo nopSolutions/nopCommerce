@@ -4,14 +4,12 @@ using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
 using Nop.Core;
-using Nop.Core.Caching;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Catalog;
 using Nop.Services.Localization;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
 using Nop.Web.Framework.UI.Paging;
-using Nop.Web.Infrastructure.Cache;
 
 namespace Nop.Web.Models.Catalog
 {

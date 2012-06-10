@@ -10,7 +10,6 @@ using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Services.Catalog;
 using Nop.Services.Helpers;
-using Nop.Core.Domain.Tax;
 
 namespace Nop.Services.Orders
 {

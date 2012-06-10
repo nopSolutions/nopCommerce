@@ -1,16 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
+﻿using System.IO;
 using System.Web.Mvc;
-using Nop.Core;
-using Nop.Core.Infrastructure;
-using Nop.Services.Helpers;
-using Nop.Services.Localization;
-using Telerik.Web.Mvc;
-using Telerik.Web.Mvc.Extensions;
-using Telerik.Web.Mvc.UI.Fluent;
 
 namespace Nop.Web.Framework.Controllers
 {

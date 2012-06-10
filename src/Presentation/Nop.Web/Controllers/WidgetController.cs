@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Nop.Core.Domain.Cms;
 using Nop.Services.Cms;
 using Nop.Web.Models.Cms;
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Web;
+using Nop.Core;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -9,7 +10,6 @@ using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.News;
 using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
-using Nop.Core;
 
 namespace Nop.Services.Seo
 {

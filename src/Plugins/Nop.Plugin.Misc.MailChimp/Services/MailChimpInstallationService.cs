@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using Nop.Core.Domain.Tasks;
+﻿using Nop.Core.Domain.Tasks;
 using Nop.Core.Plugins;
 using Nop.Plugin.Misc.MailChimp.Data;
 using Nop.Services.Localization;

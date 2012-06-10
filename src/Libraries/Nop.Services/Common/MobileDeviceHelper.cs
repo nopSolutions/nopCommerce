@@ -2,7 +2,6 @@ using System.Web;
 using Nop.Core;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Customers;
-using Nop.Services.Customers;
 
 namespace Nop.Services.Common
 {

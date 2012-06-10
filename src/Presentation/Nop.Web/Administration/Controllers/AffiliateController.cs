@@ -8,7 +8,6 @@ using Nop.Core.Domain.Affiliates;
 using Nop.Core.Domain.Directory;
 using Nop.Services.Affiliates;
 using Nop.Services.Catalog;
-using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;

@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.IO;
 using System.Linq;
-using System.Security.AccessControl;
 using System.Security.Principal;
 using System.Threading;
 using System.Web.Hosting;
@@ -14,8 +12,8 @@ using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
 using Nop.Services.Installation;
 using Nop.Services.Security;
-using Nop.Web.Models.Install;
 using Nop.Web.Framework.Security;
+using Nop.Web.Models.Install;
 
 namespace Nop.Web.Controllers
 {

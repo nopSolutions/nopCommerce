@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Nop.Core;
 using Nop.Core.Domain.Catalog;
 
 namespace Nop.Services.Catalog

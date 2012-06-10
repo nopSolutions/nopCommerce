@@ -1,6 +1,4 @@
-﻿
-using System;
-using Nop.Core.Configuration;
+﻿using Nop.Core.Configuration;
 
 namespace Nop.Plugin.Feed.Froogle
 {

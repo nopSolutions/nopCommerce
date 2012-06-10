@@ -11,7 +11,6 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Events;
-using Nop.Core.Infrastructure;
 using Nop.Services.Common;
 
 namespace Nop.Services.Customers

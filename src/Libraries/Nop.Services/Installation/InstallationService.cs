@@ -31,10 +31,10 @@ using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Topics;
 using Nop.Core.Infrastructure;
 using Nop.Core.IO;
+using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Helpers;
 using Nop.Services.Media;
-using Nop.Services.Common;
 
 namespace Nop.Services.Installation
 {

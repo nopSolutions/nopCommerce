@@ -1,9 +1,8 @@
-﻿using System.ComponentModel;
-using System.Linq;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 using Nop.Core.Domain.Shipping;
 using Nop.Tests;
 using NUnit.Framework;
-using System.Collections.Generic;
 
 namespace Nop.Core.Tests.Domain.Shipping
 {

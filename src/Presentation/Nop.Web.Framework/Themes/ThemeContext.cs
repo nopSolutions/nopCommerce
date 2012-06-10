@@ -3,7 +3,6 @@ using Nop.Core;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Common;
-using Nop.Services.Customers;
 
 namespace Nop.Web.Framework.Themes
 {
