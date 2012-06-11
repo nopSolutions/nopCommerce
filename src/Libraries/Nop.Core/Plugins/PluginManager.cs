@@ -95,12 +95,12 @@ namespace Nop.Core.Plugins
                     }
 
                     //load description files
-                    foreach (var descriptionFile in pluginFolder.GetFiles("Description.txt", SearchOption.AllDirectories))
+                    foreach (var dfd in GetDescriptionFilesAndDescriptors(pluginFolder))
                     {
                         try
                         {
-                            //parse file
-                            var description = PluginFileParser.ParsePluginDescriptionFile(descriptionFile.FullName);
+                            var descriptionFile = dfd.Key;
+                            var description = dfd.Value;
                             
                             //ensure that version of plugin is valid
                             if (!description.SupportedVersions.Contains(NopVersion.CurrentVersion, StringComparer.InvariantCultureIgnoreCase))
@@ -260,6 +260,39 @@ namespace Nop.Core.Plugins
 
         #region Utilities
 
+        /// <summary>
+        /// Get description files
+        /// </summary>
+        /// <param name="pluginFolder">Plugin direcotry info</param>
+        /// <returns>Original and parsed description files</returns>
+        private static IEnumerable<KeyValuePair<FileInfo, PluginDescriptor>> GetDescriptionFilesAndDescriptors(DirectoryInfo pluginFolder)
+        {
+            if (pluginFolder == null)
+                throw new ArgumentNullException("pluginFolder");
+
+            //create list (<file info, parsed plugin descritor>)
+            var result = new List<KeyValuePair<FileInfo, PluginDescriptor>>();
+            //add display order and path to list
+            foreach (var descriptionFile in pluginFolder.GetFiles("Description.txt", SearchOption.AllDirectories))
+            {
+                //parse file
+                var pluginDescriptor = PluginFileParser.ParsePluginDescriptionFile(descriptionFile.FullName);
+
+                //populate list
+                result.Add(new KeyValuePair<FileInfo, PluginDescriptor>(descriptionFile, pluginDescriptor));
+            }
+
+            //sort list by display order. NOTE: Lowest DisplayOrder will be first i.e 0 , 1, 1, 1, 5, 10
+            //it's required: http://www.nopcommerce.com/boards/t/17455/load-plugins-based-on-their-displayorder-on-startup.aspx
+            result.Sort((firstPair, nextPair) => firstPair.Value.DisplayOrder.CompareTo(nextPair.Value.DisplayOrder));
+            return result;
+        }
+
+        /// <summary>
+        /// Indicates whether assembly file is already loaded
+        /// </summary>
+        /// <param name="fileInfo">File info</param>
+        /// <returns>Result</returns>
         private static bool IsAlreadyLoaded(FileInfo fileInfo)
         {
             //compare full assembly name
