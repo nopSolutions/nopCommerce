@@ -97,30 +97,30 @@ namespace Nop.Core.Plugins
                     //load description files
                     foreach (var dfd in GetDescriptionFilesAndDescriptors(pluginFolder))
                     {
+                        var descriptionFile = dfd.Key;
+                        var pluginDescriptor = dfd.Value;
+
+                        //ensure that version of plugin is valid
+                        if (!pluginDescriptor.SupportedVersions.Contains(NopVersion.CurrentVersion, StringComparer.InvariantCultureIgnoreCase))
+                        {
+                            incompatiblePlugins.Add(pluginDescriptor.SystemName);
+                            continue;
+                        }
+
+                        //some validation
+                        if (String.IsNullOrWhiteSpace(pluginDescriptor.SystemName))
+                            throw new Exception(string.Format("A plugin '{0}' has no system name. Try assigning the plugin a unique name and recompiling.", descriptionFile.FullName));
+                        if (referencedPlugins.Contains(pluginDescriptor))
+                            throw new Exception(string.Format("A plugin with '{0}' system name is already defined", pluginDescriptor.SystemName));
+
+                        //set 'Installed' property
+                        pluginDescriptor.Installed = installedPluginSystemNames
+                            .ToList()
+                            .Where(x => x.Equals(pluginDescriptor.SystemName, StringComparison.InvariantCultureIgnoreCase))
+                            .FirstOrDefault() != null;
+
                         try
                         {
-                            var descriptionFile = dfd.Key;
-                            var description = dfd.Value;
-                            
-                            //ensure that version of plugin is valid
-                            if (!description.SupportedVersions.Contains(NopVersion.CurrentVersion, StringComparer.InvariantCultureIgnoreCase))
-                            {
-                                incompatiblePlugins.Add(description.SystemName);
-                                continue;
-                            }
-
-                            //some validation
-                            if (String.IsNullOrWhiteSpace(description.SystemName))
-                                throw new Exception(string.Format("A plugin '{0}' has no system name. Try assigning the plugin a unique name and recompiling.", descriptionFile.FullName));
-                            if (referencedPlugins.Contains(description))
-                                throw new Exception(string.Format("A plugin with '{0}' system name is already defined", description.SystemName));
-
-                            //set 'Installed' property
-                            description.Installed = installedPluginSystemNames
-                                .ToList()
-                                .Where(x => x.Equals(description.SystemName, StringComparison.InvariantCultureIgnoreCase))
-                                .FirstOrDefault() != null;
-
                             //get list of all DLLs in plugins (not in bin!)
                             var pluginFiles = descriptionFile.Directory.GetFiles("*.dll", SearchOption.AllDirectories)
                                 //just make sure we're not registering shadow copied plugins
@@ -129,30 +129,29 @@ namespace Nop.Core.Plugins
                                 .ToList();
 
                             //other plugin description info
-                            var mainPluginFile = pluginFiles.Where(x => x.Name.Equals(description.PluginFileName, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
-                            description.OriginalAssemblyFile = mainPluginFile;
+                            var mainPluginFile = pluginFiles.Where(x => x.Name.Equals(pluginDescriptor.PluginFileName, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+                            pluginDescriptor.OriginalAssemblyFile = mainPluginFile;
 
-                            //shadow copy main pugin file
-                            description.ReferencedAssembly = PerformFileDeploy(mainPluginFile);
+                            //shadow copy main plugin file
+                            pluginDescriptor.ReferencedAssembly = PerformFileDeploy(mainPluginFile);
 
                             //load all other referenced assemblies now
                             foreach (var plugin in pluginFiles
                                 .Where(x => !x.Name.Equals(mainPluginFile.Name, StringComparison.InvariantCultureIgnoreCase))
                                 .Where(x => !IsAlreadyLoaded(x)))
                                     PerformFileDeploy(plugin);
-
-
+                            
                             //init plugin type (only one plugin per assembly is allowed)
-                            foreach (var t in description.ReferencedAssembly.GetTypes())
+                            foreach (var t in pluginDescriptor.ReferencedAssembly.GetTypes())
                                 if (typeof(IPlugin).IsAssignableFrom(t))
                                     if (!t.IsInterface)
                                         if (t.IsClass && !t.IsAbstract)
                                         {
-                                            description.PluginType = t;
+                                            pluginDescriptor.PluginType = t;
                                             break;
                                         }
 
-                            referencedPlugins.Add(description);
+                            referencedPlugins.Add(pluginDescriptor);
                         }
                         catch (ReflectionTypeLoadException ex)
                         {
@@ -165,12 +164,6 @@ namespace Nop.Core.Plugins
 
                             throw fail;
                         }
-                        //catch (Exception ex)
-                        //{
-                        //    var fail = new Exception("Could not initialise plugin folder", ex);
-                        //    Debug.WriteLine(fail.Message);
-                        //    throw fail;
-                        //}
                     }
                 }
                 catch (Exception ex)
