@@ -1938,7 +1938,7 @@ namespace Nop.Web.Controllers
         {
             var products = new List<Product>();
             var relatedProducts = _productService.GetRelatedProductsByProductId1(productId);
-            foreach (var product in _productService.GetProductsByIds(relatedProducts.Select(x => x.Id).ToArray()))
+            foreach (var product in _productService.GetProductsByIds(relatedProducts.Select(x => x.ProductId2).ToArray()))
             {
                 //ensure that a product has at least one available variant
                 var variants = _productService.GetProductVariantsByProductId(product.Id);
