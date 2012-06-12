@@ -16,12 +16,14 @@ namespace Nop.Admin.Models.Settings
             SecuritySettings = new SecuritySettingsModel();
             PdfSettings = new PdfSettingsModel();
             LocalizationSettings = new LocalizationSettingsModel();
+            FullTextSettings = new FullTextSettingsModel();
         }
         public StoreInformationSettingsModel StoreInformationSettings { get; set; }
         public SeoSettingsModel SeoSettings { get; set; }
         public SecuritySettingsModel SecuritySettings { get; set; }
         public PdfSettingsModel PdfSettings { get; set; }
         public LocalizationSettingsModel LocalizationSettings { get; set; }
+        public FullTextSettingsModel FullTextSettings { get; set; }
 
         #region Nested classes
 
@@ -183,6 +185,13 @@ namespace Nop.Admin.Models.Settings
             public bool SeoFriendlyUrlsForLanguagesEnabled { get; set; }
         }
 
+        public class FullTextSettingsModel
+        {
+            public bool Supported { get; set; }
+
+            public bool Enabled { get; set; }
+        }
+        
         #endregion
     }
 }

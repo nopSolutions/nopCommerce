@@ -4473,6 +4473,7 @@ namespace Nop.Services.Installation
                     SitemapIncludeProducts = false,
                     SitemapIncludeTopics = true,
                     DisplayJavaScriptDisabledWarning = false,
+                    UseFullTextSearch = false,
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<SeoSettings>>()

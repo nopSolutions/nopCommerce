@@ -146,6 +146,8 @@ namespace Nop.Web.Framework
             builder.RegisterType<AffiliateService>().As<IAffiliateService>().InstancePerHttpRequest();
             builder.RegisterType<AddressService>().As<IAddressService>().InstancePerHttpRequest();
             builder.RegisterType<GenericAttributeService>().As<IGenericAttributeService>().InstancePerHttpRequest();
+            builder.RegisterType<FulltextService>().As<IFulltextService>().InstancePerHttpRequest();
+
 
             builder.RegisterGeneric(typeof(ConfigurationProvider<>)).As(typeof(IConfigurationProvider<>));
             builder.RegisterSource(new SettingsSource());

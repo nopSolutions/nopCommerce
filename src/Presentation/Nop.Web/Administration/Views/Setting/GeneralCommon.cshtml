@@ -100,7 +100,8 @@
     x.Add().Text(T("Admin.Configuration.Settings.GeneralCommon.SecuritySettings").Text).Content(TabSecuritySettings().ToHtmlString());
     x.Add().Text(T("Admin.Configuration.Settings.GeneralCommon.PdfSettings").Text).Content(TabPdfSettings().ToHtmlString());
     x.Add().Text(T("Admin.Configuration.Settings.GeneralCommon.LocalizationSettings").Text).Content(TabLocalizationSettings().ToHtmlString());
-
+    x.Add().Text(T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings").Text).Content(TabFullTextSettings().ToHtmlString());
+    
     //generate an event
     EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "generalsettings-edit"));
 })
@@ -491,5 +492,38 @@
                 @Html.ValidationMessageFor(model => model.LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
             </td>
         </tr>
+    </table>
+}
+@helper TabFullTextSettings()
+    {
+    <table class="adminContent">
+        <tr>
+            <td colspan="2">
+                @if (Model.FullTextSettings.Supported)
+                {
+                    @T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.Supported")
+                }
+                else
+                {
+                    @T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.NotSupported")
+                }
+            </td>
+        </tr>
+        @if (Model.FullTextSettings.Supported)
+        {
+            <tr>
+                <td colspan="2">
+                    @if (Model.FullTextSettings.Enabled)
+                    {
+                        @T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.CurrenlyEnabled")
+                    }
+                    else
+                    {
+                        @T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.CurrenlyDisabled")
+                    }
+                    <input type="submit" name="togglefulltext" value="@(Model.FullTextSettings.Enabled ? T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.Disable").Text : T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.Enable").Text)" class="adminButton" />
+                </td>
+            </tr>
+        }
     </table>
 }

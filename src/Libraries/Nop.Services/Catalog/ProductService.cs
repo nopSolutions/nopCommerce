@@ -417,6 +417,11 @@ namespace Nop.Services.Catalog
                 pSearchDescriptions.Value = searchDescriptions;
                 pSearchDescriptions.DbType = DbType.Boolean;
 
+                var pUseFullTextSearch = _dataProvider.GetParameter();
+                pUseFullTextSearch.ParameterName = "UseFullTextSearch";
+                pUseFullTextSearch.Value = _commonSettings.UseFullTextSearch;
+                pUseFullTextSearch.DbType = DbType.Boolean;
+
                 var pFilteredSpecs = _dataProvider.GetParameter();
                 pFilteredSpecs.ParameterName = "FilteredSpecs";
                 pFilteredSpecs.Value = commaSeparatedSpecIds != null ? (object)commaSeparatedSpecIds : DBNull.Value;
@@ -455,7 +460,7 @@ namespace Nop.Services.Catalog
                 var pFilterableSpecificationAttributeOptionIds = _dataProvider.GetParameter();
                 pFilterableSpecificationAttributeOptionIds.ParameterName = "FilterableSpecificationAttributeOptionIds";
                 pFilterableSpecificationAttributeOptionIds.Direction = ParameterDirection.Output;
-                pFilterableSpecificationAttributeOptionIds.Size = int.MaxValue-1;
+                pFilterableSpecificationAttributeOptionIds.Size = int.MaxValue - 1;
                 pFilterableSpecificationAttributeOptionIds.DbType = DbType.String;
 
                 var pTotalRecords = _dataProvider.GetParameter();
@@ -475,6 +480,7 @@ namespace Nop.Services.Catalog
                     pPriceMax,
                     pKeywords,
                     pSearchDescriptions,
+                    pUseFullTextSearch,
                     pFilteredSpecs,
                     pLanguageId,
                     pOrderBy,

@@ -62,6 +62,7 @@ namespace Nop.Admin.Controllers
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IPermissionService _permissionService;
         private readonly IWebHelper _webHelper;
+	    private readonly IFulltextService _fulltextService;
 
 
         private BlogSettings _blogSettings;
@@ -85,6 +86,7 @@ namespace Nop.Admin.Controllers
         private readonly AdminAreaSettings _adminAreaSettings;
         private readonly CaptchaSettings _captchaSettings;
         private readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
+	    private readonly CommonSettings _commonSettings;
 
 		#endregion
 
@@ -98,7 +100,8 @@ namespace Nop.Admin.Controllers
             IOrderService orderService, IEncryptionService encryptionService,
             IThemeProvider themeProvider, ICustomerService customerService, 
             ICustomerActivityService customerActivityService, IPermissionService permissionService,
-            IWebHelper webHelper, BlogSettings blogSettings,
+            IWebHelper webHelper, IFulltextService fulltextService,
+            BlogSettings blogSettings,
             ForumSettings forumSettings, NewsSettings newsSettings,
             ShippingSettings shippingSettings, TaxSettings taxSettings,
             CatalogSettings catalogSettings, RewardPointsSettings rewardPointsSettings,
@@ -108,7 +111,8 @@ namespace Nop.Admin.Controllers
             DateTimeSettings dateTimeSettings, StoreInformationSettings storeInformationSettings,
             SeoSettings seoSettings,SecuritySettings securitySettings, PdfSettings pdfSettings,
             LocalizationSettings localizationSettings, AdminAreaSettings adminAreaSettings,
-            CaptchaSettings captchaSettings, ExternalAuthenticationSettings externalAuthenticationSettings)
+            CaptchaSettings captchaSettings, ExternalAuthenticationSettings externalAuthenticationSettings,
+            CommonSettings commonSettings)
         {
             this._settingService = settingService;
             this._countryService = countryService;
@@ -126,6 +130,7 @@ namespace Nop.Admin.Controllers
             this._customerActivityService = customerActivityService;
             this._permissionService = permissionService;
             this._webHelper = webHelper;
+            this._fulltextService = fulltextService;
 
             this._blogSettings = blogSettings;
             this._forumSettings = forumSettings;
@@ -148,6 +153,7 @@ namespace Nop.Admin.Controllers
             this._adminAreaSettings = adminAreaSettings;
             this._captchaSettings = captchaSettings;
             this._externalAuthenticationSettings = externalAuthenticationSettings;
+            this._commonSettings = commonSettings;
         }
 
 		#endregion 
@@ -743,9 +749,13 @@ namespace Nop.Admin.Controllers
             model.PdfSettings.LetterPageSizeEnabled = _pdfSettings.LetterPageSizeEnabled;
             model.PdfSettings.LogoPictureId = _pdfSettings.LogoPictureId;
 
-            //lcoalization
+            //localization
             model.LocalizationSettings.UseImagesForLanguageSelection = _localizationSettings.UseImagesForLanguageSelection;
             model.LocalizationSettings.SeoFriendlyUrlsForLanguagesEnabled = _localizationSettings.SeoFriendlyUrlsForLanguagesEnabled;
+
+            //full-text support
+            model.FullTextSettings.Supported = _fulltextService.IsFullTextSupported();
+            model.FullTextSettings.Enabled = _commonSettings.UseFullTextSearch;
 
             return View(model);
         }
@@ -969,6 +979,43 @@ namespace Nop.Admin.Controllers
                 _securitySettings.EncryptionKey = newEncryptionPrivateKey;
                 _settingService.SaveSetting(_securitySettings);
                 SuccessNotification("Encryption key is changed");
+            }
+            catch (Exception exc)
+            {
+                ErrorNotification(exc);
+            }
+            return RedirectToAction("GeneralCommon");
+        }
+        [HttpPost, ActionName("GeneralCommon")]
+        [FormValueRequired("togglefulltext")]
+        public ActionResult ToggleFullText(GeneralCommonSettingsModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
+                return AccessDeniedView();
+
+            try
+            {
+                if (! _fulltextService.IsFullTextSupported())
+                    throw new NopException(_localizationService.GetResource("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.NotSupported"));
+
+                if (_commonSettings.UseFullTextSearch)
+                {
+                    _fulltextService.DisableFullText();
+
+                    _commonSettings.UseFullTextSearch = false;
+                    _settingService.SaveSetting(_commonSettings);
+
+                    SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.Disabled"));
+                }
+                else
+                {
+                    _fulltextService.EnableFullText();
+
+                    _commonSettings.UseFullTextSearch = true;
+                    _settingService.SaveSetting(_commonSettings);
+
+                    SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.Enabled"));
+                }
             }
             catch (Exception exc)
             {

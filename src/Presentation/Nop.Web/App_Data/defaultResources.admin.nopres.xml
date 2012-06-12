@@ -4602,6 +4602,35 @@
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
+                  <LocaleResource Name="FullTextSettings">
+                    <Value>Full-Text settings</Value>
+                    <Children>
+                        <LocaleResource Name="Supported">
+                          <Value>Full-Text is supported by your database</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="NotSupported">
+                          <Value>Full-Text is not supported by your database</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="Enabled">
+                          <Value>Full-Text support has been enabled successfully.</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="Disabled">
+                          <Value>Full-Text support has been disabled successfully.</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="Enable">
+                          <Value>Enable Full-Text</Value>
+                        </LocaleResource>
+                        <LocaleResource Name="Disable">
+                          <Value>Disable Full-Text</Value>
+                        </LocaleResource>
+                      <LocaleResource Name="CurrenlyEnabled">
+                        <Value>Full-Text is enabled</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="CurrenlyDisabled">
+                        <Value>Full-Text is disabled</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
 								</Children>
 							</LocaleResource>
 							<LocaleResource Name="Media">

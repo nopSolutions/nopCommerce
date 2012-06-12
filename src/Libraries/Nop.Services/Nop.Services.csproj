@@ -120,6 +120,7 @@
     <Compile Include="Cms\IWidgetPlugin.cs" />
     <Compile Include="Common\AddressService.cs" />
     <Compile Include="Common\AddressExtentions.cs" />
+    <Compile Include="Common\IFulltextService.cs" />
     <Compile Include="Common\IGenericAttributeService.cs" />
     <Compile Include="Common\GenericAttributeService.cs" />
     <Compile Include="Common\IMobileDeviceHelper.cs" />
@@ -130,6 +131,7 @@
     <Compile Include="Common\IPdfService.cs" />
     <Compile Include="Common\PdfService.cs" />
     <Compile Include="Common\IAddressService.cs" />
+    <Compile Include="Common\FulltextService.cs" />
     <Compile Include="Configuration\ConfigurationProvider.cs" />
     <Compile Include="Customers\ICustomerRegistrationService.cs" />
     <Compile Include="Customers\CustomerRegistrationService.cs" />

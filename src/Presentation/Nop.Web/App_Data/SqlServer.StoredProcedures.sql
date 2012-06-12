@@ -44,6 +44,25 @@ GO
 
 
 
+CREATE FUNCTION [nop_getprimarykey_indexname]
+(
+    @table_name nvarchar(1000) = null
+)
+RETURNS nvarchar(1000)
+AS
+BEGIN
+	DECLARE @index_name nvarchar(1000)
+
+    SELECT @index_name = i.name
+	FROM sys.tables AS tbl
+	INNER JOIN sys.indexes AS i ON (i.index_id > 0 and i.is_hypothetical = 0) AND (i.object_id=tbl.object_id)
+	WHERE (i.is_unique=1 and i.is_disabled=0) and (tbl.name=@table_name)
+
+    RETURN @index_name
+END
+GO
+
+
 CREATE PROCEDURE [ProductLoadAllPaged]
 (
 	@CategoryIds		nvarchar(MAX) = null,	--a list of category IDs (comma-separated list). e.g. 1,2,3
@@ -52,8 +71,9 @@ CREATE PROCEDURE [ProductLoadAllPaged]
 	@FeaturedProducts	bit = null,	--0 featured only , 1 not featured only, null - load all products
 	@PriceMin			decimal(18, 4) = null,
 	@PriceMax			decimal(18, 4) = null,
-	@Keywords			nvarchar(MAX) = null,
+	@Keywords			nvarchar(4000) = null,
 	@SearchDescriptions bit = 0,
+	@UseFullTextSearch  bit = 0,
 	@FilteredSpecs		nvarchar(MAX) = null,	--filter by attributes (comma-separated list). e.g. 14,15,16
 	@LanguageId			int = 0,
 	@OrderBy			int = 0, --0 position, 5 - Name: A to Z, 6 - Name: Z to A, 10 - Price: Low to High, 11 - Price: High to Low, 15 - creation date
@@ -86,62 +106,141 @@ BEGIN
 		SET @SearchKeywords = 1
 		
 		SET @Keywords = isnull(@Keywords, '')
-		SET @Keywords = '%' + rtrim(ltrim(@Keywords)) + '%'
-		
+		SET @Keywords = rtrim(ltrim(@Keywords))
+		IF @UseFullTextSearch = 1
+		BEGIN
+			--full-text search
+			--we use CONTAINS with <prefix_term>
+			--but you can modify the line below to search for your needs (use AND, OR, FORMSOF, etc)
+			SET @Keywords = ' "' + @Keywords + '*" '
+		END
+		ELSE
+		BEGIN
+			--usual search by PATINDEX
+			SET @Keywords = '%' + @Keywords + '%'
+		END
+
+		--product name
 		SET @sql = '
 		INSERT INTO #KeywordProducts ([ProductId])
 		SELECT p.Id
 		FROM Product p with (NOLOCK)
-		WHERE PATINDEX(@Keywords, p.name) > 0
+		WHERE '
+		IF @UseFullTextSearch = 1
+			SET @sql = @sql + 'CONTAINS(p.[Name], @Keywords) '
+		ELSE
+			SET @sql = @sql + 'PATINDEX(@Keywords, p.[Name]) > 0 '
+
+
+		--product variant name
+		SET @sql = @sql + '
 		UNION
 		SELECT pv.ProductId
 		FROM ProductVariant pv with (NOLOCK)
-		WHERE PATINDEX(@Keywords, pv.name) > 0
+		WHERE '
+		IF @UseFullTextSearch = 1
+			SET @sql = @sql + 'CONTAINS(pv.[Name], @Keywords) '
+		ELSE
+			SET @sql = @sql + 'PATINDEX(@Keywords, pv.[Name]) > 0 '
+
+
+		--SKU
+		SET @sql = @sql + '
 		UNION
 		SELECT pv.ProductId
 		FROM ProductVariant pv with (NOLOCK)
-		WHERE PATINDEX(@Keywords, pv.sku) > 0
+		WHERE '
+		IF @UseFullTextSearch = 1
+			SET @sql = @sql + 'CONTAINS(pv.[Sku], @Keywords) '
+		ELSE
+			SET @sql = @sql + 'PATINDEX(@Keywords, pv.[Sku]) > 0 '
+
+
+		--localized product name
+		SET @sql = @sql + '
 		UNION
 		SELECT lp.EntityId
 		FROM LocalizedProperty lp with (NOLOCK)
 		WHERE
 			lp.LocaleKeyGroup = N''Product''
 			AND lp.LanguageId = ' + ISNULL(CAST(@LanguageId AS nvarchar(max)), '0') + '
-			AND lp.LocaleKey = N''Name''
-			AND PATINDEX(@Keywords, lp.LocaleValue) > 0'
-			
-		IF @SearchDescriptions = 1 SET @sql = @sql + '
-		UNION
-		SELECT p.Id
-		FROM Product p with (NOLOCK)
-		WHERE PATINDEX(@Keywords, p.ShortDescription) > 0
-		UNION
-		SELECT p.Id
-		FROM Product p with (NOLOCK)
-		WHERE PATINDEX(@Keywords, p.FullDescription) > 0
-		UNION
-		SELECT pv.ProductId
-		FROM ProductVariant pv with (NOLOCK)
-		WHERE PATINDEX(@Keywords, pv.Description) > 0
-		UNION
-		SELECT lp.EntityId
-		FROM LocalizedProperty lp with (NOLOCK)
-		WHERE
-			lp.LocaleKeyGroup = N''Product''
-			AND lp.LanguageId = ' + ISNULL(CAST(@LanguageId AS nvarchar(max)), '0') + '
-			AND lp.LocaleKey = N''ShortDescription''
-			AND PATINDEX(@Keywords, lp.LocaleValue) > 0
-		UNION
-		SELECT lp.EntityId
-		FROM LocalizedProperty lp with (NOLOCK)
-		WHERE
-			lp.LocaleKeyGroup = N''Product''
-			AND lp.LanguageId = ' + ISNULL(CAST(@LanguageId AS nvarchar(max)), '0') + '
-			AND lp.LocaleKey = N''FullDescription''
-			AND PATINDEX(@Keywords, lp.LocaleValue) > 0'
-		
+			AND lp.LocaleKey = N''Name'''
+		IF @UseFullTextSearch = 1
+			SET @sql = @sql + ' AND CONTAINS(lp.[LocaleValue], @Keywords) '
+		ELSE
+			SET @sql = @sql + ' AND PATINDEX(@Keywords, lp.[LocaleValue]) > 0 '
+	
+
+		--product short description
+		IF @SearchDescriptions = 1
+		BEGIN
+			SET @sql = @sql + '
+			UNION
+			SELECT p.Id
+			FROM Product p with (NOLOCK)
+			WHERE '
+			IF @UseFullTextSearch = 1
+				SET @sql = @sql + 'CONTAINS(p.[ShortDescription], @Keywords) '
+			ELSE
+				SET @sql = @sql + 'PATINDEX(@Keywords, p.[ShortDescription]) > 0 '
+
+
+			--product full description
+			SET @sql = @sql + '
+			UNION
+			SELECT p.Id
+			FROM Product p with (NOLOCK)
+			WHERE '
+			IF @UseFullTextSearch = 1
+				SET @sql = @sql + 'CONTAINS(p.[FullDescription], @Keywords) '
+			ELSE
+				SET @sql = @sql + 'PATINDEX(@Keywords, p.[FullDescription]) > 0 '
+
+
+			--product variant description
+			SET @sql = @sql + '
+			UNION
+			SELECT pv.ProductId
+			FROM ProductVariant pv with (NOLOCK)
+			WHERE '
+			IF @UseFullTextSearch = 1
+				SET @sql = @sql + 'CONTAINS(pv.[Description], @Keywords) '
+			ELSE
+				SET @sql = @sql + 'PATINDEX(@Keywords, pv.[Description]) > 0 '
+
+
+			--localized product short description
+			SET @sql = @sql + '
+			UNION
+			SELECT lp.EntityId
+			FROM LocalizedProperty lp with (NOLOCK)
+			WHERE
+				lp.LocaleKeyGroup = N''Product''
+				AND lp.LanguageId = ' + ISNULL(CAST(@LanguageId AS nvarchar(max)), '0') + '
+				AND lp.LocaleKey = N''ShortDescription'''
+			IF @UseFullTextSearch = 1
+				SET @sql = @sql + ' AND CONTAINS(lp.[LocaleValue], @Keywords) '
+			ELSE
+				SET @sql = @sql + ' AND PATINDEX(@Keywords, lp.[LocaleValue]) > 0 '
+				
+
+			--localized product full description
+			SET @sql = @sql + '
+			UNION
+			SELECT lp.EntityId
+			FROM LocalizedProperty lp with (NOLOCK)
+			WHERE
+				lp.LocaleKeyGroup = N''Product''
+				AND lp.LanguageId = ' + ISNULL(CAST(@LanguageId AS nvarchar(max)), '0') + '
+				AND lp.LocaleKey = N''FullDescription'''
+			IF @UseFullTextSearch = 1
+				SET @sql = @sql + ' AND CONTAINS(lp.[LocaleValue], @Keywords) '
+			ELSE
+				SET @sql = @sql + ' AND PATINDEX(@Keywords, lp.[LocaleValue]) > 0 '
+		END
+
 		--PRINT (@sql)
-		EXEC sp_executesql @sql, N'@Keywords nvarchar(MAX)', @Keywords
+		EXEC sp_executesql @sql, N'@Keywords nvarchar(4000)', @Keywords
 
 	END
 	ELSE
@@ -423,5 +522,83 @@ BEGIN
 		[pi].IndexId
 	
 	DROP TABLE #PageIndex
+END
+GO
+
+
+
+CREATE PROCEDURE [FullText_IsSupported]
+AS
+BEGIN	
+	EXEC('
+	SELECT CASE SERVERPROPERTY(''IsFullTextInstalled'')
+	WHEN 1 THEN 
+		CASE DatabaseProperty (DB_NAME(DB_ID()), ''IsFulltextEnabled'')
+		WHEN 1 THEN 1
+		ELSE 0
+		END
+	ELSE 0
+	END')
+END
+GO
+
+
+
+CREATE PROCEDURE [FullText_Enable]
+AS
+BEGIN
+	--create catalog
+	EXEC('
+	IF NOT EXISTS (SELECT 1 FROM sys.fulltext_catalogs WHERE [name] = ''nopCommerceFullTextCatalog'')
+		CREATE FULLTEXT CATALOG [nopCommerceFullTextCatalog] AS DEFAULT')
+	
+	--create indexes
+	DECLARE @create_index_text nvarchar(4000)
+	SET @create_index_text = '
+	IF NOT EXISTS (SELECT 1 FROM sys.fulltext_indexes WHERE object_id = object_id(''[Product]''))
+		CREATE FULLTEXT INDEX ON [Product]([Name], [ShortDescription], [FullDescription])
+		KEY INDEX [' + dbo.[nop_getprimarykey_indexname] ('Product') +  '] ON [nopCommerceFullTextCatalog] WITH CHANGE_TRACKING AUTO'
+	EXEC(@create_index_text)
+	
+	SET @create_index_text = '
+	IF NOT EXISTS (SELECT 1 FROM sys.fulltext_indexes WHERE object_id = object_id(''[ProductVariant]''))
+		CREATE FULLTEXT INDEX ON [ProductVariant]([Name], [Description], [SKU])
+		KEY INDEX [' + dbo.[nop_getprimarykey_indexname] ('ProductVariant') +  '] ON [nopCommerceFullTextCatalog] WITH CHANGE_TRACKING AUTO'
+	EXEC(@create_index_text)
+
+	SET @create_index_text = '
+	IF NOT EXISTS (SELECT 1 FROM sys.fulltext_indexes WHERE object_id = object_id(''[LocalizedProperty]''))
+		CREATE FULLTEXT INDEX ON [LocalizedProperty]([LocaleValue])
+		KEY INDEX [' + dbo.[nop_getprimarykey_indexname] ('LocalizedProperty') +  '] ON [nopCommerceFullTextCatalog] WITH CHANGE_TRACKING AUTO'
+	EXEC(@create_index_text)
+END
+GO
+
+
+
+CREATE PROCEDURE [FullText_Disable]
+AS
+BEGIN
+	EXEC('
+	--drop indexes
+	IF EXISTS (SELECT 1 FROM sys.fulltext_indexes WHERE object_id = object_id(''[Product]''))
+		DROP FULLTEXT INDEX ON [Product]
+	')
+
+	EXEC('
+	IF EXISTS (SELECT 1 FROM sys.fulltext_indexes WHERE object_id = object_id(''[ProductVariant]''))
+		DROP FULLTEXT INDEX ON [ProductVariant]
+	')
+
+	EXEC('
+	IF EXISTS (SELECT 1 FROM sys.fulltext_indexes WHERE object_id = object_id(''[LocalizedProperty]''))
+		DROP FULLTEXT INDEX ON [LocalizedProperty]
+	')
+
+	--drop catalog
+	EXEC('
+	IF EXISTS (SELECT 1 FROM sys.fulltext_catalogs WHERE [name] = ''nopCommerceFullTextCatalog'')
+		DROP FULLTEXT CATALOG [nopCommerceFullTextCatalog]
+	')
 END
 GO
