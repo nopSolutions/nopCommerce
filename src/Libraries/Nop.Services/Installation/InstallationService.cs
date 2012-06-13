@@ -4474,6 +4474,7 @@ namespace Nop.Services.Installation
                     SitemapIncludeTopics = true,
                     DisplayJavaScriptDisabledWarning = false,
                     UseFullTextSearch = false,
+                    FullTextMode = FulltextSearchMode.ExactMatch,
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<SeoSettings>>()

@@ -1487,6 +1487,19 @@
 					</LocaleResource>
 				</Children>
 			</LocaleResource>
+      <LocaleResource Name="Nop.Core.Domain.Common.FulltextSearchMode">
+        <Children>
+          <LocaleResource Name="ExactMatch">
+            <Value>Exact match (using CONTAINS with prefix_term)</Value>
+          </LocaleResource>
+          <LocaleResource Name="Or">
+            <Value>Using CONTAINS and OR with prefix_term</Value>
+          </LocaleResource>
+          <LocaleResource Name="And">
+            <Value>Using CONTAINS and AND with prefix_term</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
 			<LocaleResource Name="Nop.Core.Domain.Common.PageTitleSeoAdjustment">
 				<Children>
 					<LocaleResource Name="PagenameAfterStorename">

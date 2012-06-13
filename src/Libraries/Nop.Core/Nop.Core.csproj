@@ -63,6 +63,7 @@
     <Compile Include="ComponentModel\WriteLockDisposable.cs" />
     <Compile Include="Domain\Catalog\BackInStockSubscription.cs" />
     <Compile Include="Domain\Cms\WidgetSettings.cs" />
+    <Compile Include="Domain\Common\FulltextSearchMode.cs" />
     <Compile Include="Domain\Common\GenericAttribute.cs" />
     <Compile Include="Domain\Common\PageTitleSeoAdjustment.cs" />
     <Compile Include="Domain\Orders\Events.cs" />

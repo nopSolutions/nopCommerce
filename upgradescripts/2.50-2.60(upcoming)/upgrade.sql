@@ -653,6 +653,21 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.FullTextSettings.CurrenlyDisabled">
     <Value>Full-Text is disabled</Value>
   </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Common.FulltextSearchMode.ExactMatch">
+    <Value>Exact match (using CONTAINS with prefix_term)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Common.FulltextSearchMode.Or">
+    <Value>Using CONTAINS and OR with prefix_term</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.Nop.Core.Domain.Common.FulltextSearchMode.And">
+    <Value>Using CONTAINS and AND with prefix_term</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.FullTextSettings.SearchMode">
+    <Value>Search mode</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.FullTextSettings.SearchMode.Hint">
+    <Value>Choose Full-Text search mode</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1803,6 +1818,13 @@ BEGIN
 END
 GO
 
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'commonsettings.fulltextsearchmode')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'commonsettings.fulltextsearchmode', N'ExactMatch')
+END
+GO
+
 IF EXISTS (
 		SELECT *
 		FROM sysobjects
@@ -1820,6 +1842,7 @@ CREATE PROCEDURE [ProductLoadAllPaged]
 	@Keywords			nvarchar(4000) = null,
 	@SearchDescriptions bit = 0,
 	@UseFullTextSearch  bit = 0,
+	@FullTextMode		int = 0, --0 using CONTAINS with <prefix_term>, 5 - using CONTAINS and OR with <prefix_term>, 10 - using CONTAINS and AND with <prefix_term>
 	@FilteredSpecs		nvarchar(MAX) = null,	--filter by attributes (comma-separated list). e.g. 14,15,16
 	@LanguageId			int = 0,
 	@OrderBy			int = 0, --0 position, 5 - Name: A to Z, 6 - Name: Z to A, 10 - Price: Low to High, 11 - Price: High to Low, 15 - creation date
@@ -1847,24 +1870,81 @@ BEGIN
 	SET NOCOUNT ON
 	
 	--filter by keywords
+	SET @Keywords = isnull(@Keywords, '')
+	SET @Keywords = rtrim(ltrim(@Keywords))
 	IF ISNULL(@Keywords, '') != ''
 	BEGIN
 		SET @SearchKeywords = 1
 		
-		SET @Keywords = isnull(@Keywords, '')
-		SET @Keywords = rtrim(ltrim(@Keywords))
 		IF @UseFullTextSearch = 1
 		BEGIN
 			--full-text search
-			--we use CONTAINS with <prefix_term>
-			--but you can modify the line below to search for your needs (use AND, OR, FORMSOF, etc)
-			SET @Keywords = ' "' + @Keywords + '*" '
+			IF @FullTextMode = 0 
+			BEGIN
+				--0 - using CONTAINS with <prefix_term>
+				SET @Keywords = ' "' + @Keywords + '*" '
+			END
+			ELSE
+			BEGIN
+				--5 - using CONTAINS and OR with <prefix_term>
+				--10 - using CONTAINS and AND with <prefix_term>
+
+				--remove wrong chars (' ")
+				SET @Keywords = REPLACE(@Keywords, '''', '')
+				SET @Keywords = REPLACE(@Keywords, '"', '')
+				--clean multiple spaces
+				WHILE CHARINDEX('  ', @Keywords) > 0 
+					SET @Keywords = REPLACE(@Keywords, '  ', ' ')
+
+				DECLARE @concat_term nvarchar(100)				
+				IF @FullTextMode = 5 --5 - using CONTAINS and OR with <prefix_term>
+				BEGIN
+					SET @concat_term = 'OR'
+				END 
+				IF @FullTextMode = 10 --10 - using CONTAINS and AND with <prefix_term>
+				BEGIN
+					SET @concat_term = 'AND'
+				END
+
+				--now let's build search string
+				declare @fulltext_keywords nvarchar(4000)
+				set @fulltext_keywords = N''
+				declare @index int		
+		
+				set @index = CHARINDEX(' ', @Keywords, 0)
+
+				-- if index = 0, then only one field was passed
+				IF(@index = 0)
+					set @fulltext_keywords = ' "' + @Keywords + '*" '
+				ELSE
+				BEGIN		
+					DECLARE @first BIT
+					SET  @first = 1			
+					WHILE @index > 0
+					BEGIN
+						IF (@first = 0)
+							SET @fulltext_keywords = @fulltext_keywords + ' ' + @concat_term + ' '
+						ELSE
+							SET @first = 0
+
+						SET @fulltext_keywords = @fulltext_keywords + '"' + SUBSTRING(@Keywords, 1, @index - 1) + '*"'					
+						SET @Keywords = SUBSTRING(@Keywords, @index + 1, LEN(@Keywords) - @index)						
+						SET @index = CHARINDEX(' ', @Keywords, 0)
+					end
+					
+					-- add the last field
+					IF LEN(@fulltext_keywords) > 0
+						SET @fulltext_keywords = @fulltext_keywords + ' ' + @concat_term + ' ' + '"' + SUBSTRING(@Keywords, 1, LEN(@Keywords)) + '*"'	
+				END
+				SET @Keywords = @fulltext_keywords
+			END
 		END
 		ELSE
 		BEGIN
 			--usual search by PATINDEX
 			SET @Keywords = '%' + @Keywords + '%'
 		END
+		--PRINT @Keywords
 
 		--product name
 		SET @sql = '

@@ -422,6 +422,11 @@ namespace Nop.Services.Catalog
                 pUseFullTextSearch.Value = _commonSettings.UseFullTextSearch;
                 pUseFullTextSearch.DbType = DbType.Boolean;
 
+                var pFullTextMode = _dataProvider.GetParameter();
+                pFullTextMode.ParameterName = "FullTextMode";
+                pFullTextMode.Value = (int)_commonSettings.FullTextMode;
+                pFullTextMode.DbType = DbType.Int32;
+
                 var pFilteredSpecs = _dataProvider.GetParameter();
                 pFilteredSpecs.ParameterName = "FilteredSpecs";
                 pFilteredSpecs.Value = commaSeparatedSpecIds != null ? (object)commaSeparatedSpecIds : DBNull.Value;
@@ -470,7 +475,6 @@ namespace Nop.Services.Catalog
 
                 //invoke stored procedure
                 var products = _dbContext.ExecuteStoredProcedureList<Product>(
-                    //"EXEC [ProductLoadAllPaged] @CategoryId, @ManufacturerId, @ProductTagId, @FeaturedProducts, @PriceMin, @PriceMax, @Keywords, @SearchDescriptions, @FilteredSpecs, @LanguageId, @OrderBy, @PageIndex, @PageSize, @ShowHidden, @TotalRecords",
                     "ProductLoadAllPaged",
                     pCategoryIds,
                     pManufacturerId,
@@ -481,6 +485,7 @@ namespace Nop.Services.Catalog
                     pKeywords,
                     pSearchDescriptions,
                     pUseFullTextSearch,
+                    pFullTextMode,
                     pFilteredSpecs,
                     pLanguageId,
                     pOrderBy,

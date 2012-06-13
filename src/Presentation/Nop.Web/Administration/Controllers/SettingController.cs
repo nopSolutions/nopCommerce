@@ -656,7 +656,7 @@ namespace Nop.Admin.Controllers
 
 
 
-        public ActionResult GeneralCommon()
+        public ActionResult GeneralCommon(string selectedTab)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageSettings))
                 return AccessDeniedView();
@@ -756,7 +756,10 @@ namespace Nop.Admin.Controllers
             //full-text support
             model.FullTextSettings.Supported = _fulltextService.IsFullTextSupported();
             model.FullTextSettings.Enabled = _commonSettings.UseFullTextSearch;
+            model.FullTextSettings.SearchModeValues = _commonSettings.FullTextMode.ToSelectList();
 
+
+            ViewData["selectedTab"] = selectedTab;
             return View(model);
         }
         [HttpPost]
@@ -896,6 +899,10 @@ namespace Nop.Admin.Controllers
             }
             _settingService.SaveSetting(_localizationSettings);
 
+            //full-text
+            _commonSettings.FullTextMode = model.FullTextSettings.SearchMode;
+            _settingService.SaveSetting(_commonSettings);
+
             //activity log
             _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));
 
@@ -984,7 +991,7 @@ namespace Nop.Admin.Controllers
             {
                 ErrorNotification(exc);
             }
-            return RedirectToAction("GeneralCommon");
+            return RedirectToAction("GeneralCommon", new { selectedTab = "security" });
         }
         [HttpPost, ActionName("GeneralCommon")]
         [FormValueRequired("togglefulltext")]
@@ -1021,7 +1028,7 @@ namespace Nop.Admin.Controllers
             {
                 ErrorNotification(exc);
             }
-            return RedirectToAction("GeneralCommon");
+            return RedirectToAction("GeneralCommon", new { selectedTab = "fulltext" });
         }
 
 

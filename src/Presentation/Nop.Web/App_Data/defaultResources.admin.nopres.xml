@@ -4629,6 +4629,14 @@
                       <LocaleResource Name="CurrenlyDisabled">
                         <Value>Full-Text is disabled</Value>
                       </LocaleResource>
+                      <LocaleResource Name="SearchMode">
+                        <Value>Search mode</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Choose Full-Text search mode</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
                     </Children>
                   </LocaleResource>
 								</Children>

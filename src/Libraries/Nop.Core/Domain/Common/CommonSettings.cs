@@ -26,5 +26,10 @@ namespace Nop.Core.Domain.Common
         /// Gets a sets a value indicating whether to full-text search is supported
         /// </summary>
         public bool UseFullTextSearch { get; set; }
+
+        /// <summary>
+        /// Gets a sets a Full-Text search mode
+        /// </summary>
+        public FulltextSearchMode FullTextMode { get; set; }
     }
 }

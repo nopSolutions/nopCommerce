@@ -19,89 +19,115 @@
     </div>
         
     
-<script type="text/javascript">
-    $(document).ready(function () {
+    <script type="text/javascript">
+        $(document).ready(function () {
 
-        $("#@Html.FieldIdFor(model => model.StoreInformationSettings.StoreClosed)").click(toggleStoreClosed);
-        $("#@Html.FieldIdFor(model => model.StoreInformationSettings.MobileDevicesSupported)").click(toggleMobileDevicesSupported);
-        $("#@Html.FieldIdFor(model => model.SecuritySettings.CaptchaEnabled)").click(toggleReCaptcha);
-        $("#@Html.FieldIdFor(model => model.SecuritySettings.UseSsl)").click(toggleSSL);
+            $("#@Html.FieldIdFor(model => model.StoreInformationSettings.StoreClosed)").click(toggleStoreClosed);
+            $("#@Html.FieldIdFor(model => model.StoreInformationSettings.MobileDevicesSupported)").click(toggleMobileDevicesSupported);
+            $("#@Html.FieldIdFor(model => model.SecuritySettings.CaptchaEnabled)").click(toggleReCaptcha);
+            $("#@Html.FieldIdFor(model => model.SecuritySettings.UseSsl)").click(toggleSSL);
 
-        toggleStoreClosed();
-        toggleMobileDevicesSupported();
-        toggleReCaptcha();
-        toggleSSL();
-    });
+            toggleStoreClosed();
+            toggleMobileDevicesSupported();
+            toggleReCaptcha();
+            toggleSSL();
+        });
 
-    function toggleStoreClosed() {
-        if ($('#@Html.FieldIdFor(model => model.StoreInformationSettings.StoreClosed)').is(':checked')) {
-            $('#pnlStoreClosedAllowForAdmins').show();
+        function toggleStoreClosed() {
+            if ($('#@Html.FieldIdFor(model => model.StoreInformationSettings.StoreClosed)').is(':checked')) {
+                $('#pnlStoreClosedAllowForAdmins').show();
+            }
+            else {
+                $('#pnlStoreClosedAllowForAdmins').hide();
+            }
         }
-        else {
-            $('#pnlStoreClosedAllowForAdmins').hide();
-        }
-    }
 
-    function toggleMobileDevicesSupported() {
-        if ($('#@Html.FieldIdFor(model => model.StoreInformationSettings.MobileDevicesSupported)').is(':checked')) {
-            $('#pnlDefaultStoreThemeForMobileDevices').show();
+        function toggleMobileDevicesSupported() {
+            if ($('#@Html.FieldIdFor(model => model.StoreInformationSettings.MobileDevicesSupported)').is(':checked')) {
+                $('#pnlDefaultStoreThemeForMobileDevices').show();
+            }
+            else {
+                $('#pnlDefaultStoreThemeForMobileDevices').hide();
+            }
         }
-        else {
-            $('#pnlDefaultStoreThemeForMobileDevices').hide();
-        }
-    }
-    
-    function toggleReCaptcha() {
-        if ($('#@Html.FieldIdFor(model => model.SecuritySettings.CaptchaEnabled)').is(':checked')) {
-            $('#ssCaptchaShowOnLoginPagepnl').show();
-            $('#ssCaptchaShowOnRegistrationPagepnl').show();
-            $('#ssCaptchaShowOnContactUsPagepnl').show();
-            $('#ssCaptchaShowOnEmailWishlistToFriendPagepnl').show();
-            $('#ssCaptchaShowOnEmailProductToFriendPagepnl').show();
-            $('#ssCaptchaShowOnBlogCommentPagepnl').show();
-            $('#ssCaptchaShowOnNewsCommentPagepnl').show();
-            $('#ssCaptchaShowOnProductReviewPagepnl').show();
-            $('#ssReCaptchaPublicKeypnl').show();
-            $('#ssReCaptchaPrivateKeypnl').show();
-        }
-        else {
-            $('#ssCaptchaShowOnLoginPagepnl').hide();
-            $('#ssCaptchaShowOnRegistrationPagepnl').hide();
-            $('#ssCaptchaShowOnContactUsPagepnl').hide();
-            $('#ssCaptchaShowOnEmailWishlistToFriendPagepnl').hide();
-            $('#ssCaptchaShowOnEmailProductToFriendPagepnl').hide();
-            $('#ssCaptchaShowOnBlogCommentPagepnl').hide();
-            $('#ssCaptchaShowOnNewsCommentPagepnl').hide();
-            $('#ssCaptchaShowOnProductReviewPagepnl').hide();
-            $('#ssReCaptchaPublicKeypnl').hide();
-            $('#ssReCaptchaPrivateKeypnl').hide();
-        }
-    }
 
-    function toggleSSL() {
-        if ($('#@Html.FieldIdFor(model => model.SecuritySettings.UseSsl)').is(':checked')) {
-            $('#ssSharedSslUrlpnl').show();
-            $('#ssNonSharedSslUrlpnl').show();
+        function toggleReCaptcha() {
+            if ($('#@Html.FieldIdFor(model => model.SecuritySettings.CaptchaEnabled)').is(':checked')) {
+                $('#ssCaptchaShowOnLoginPagepnl').show();
+                $('#ssCaptchaShowOnRegistrationPagepnl').show();
+                $('#ssCaptchaShowOnContactUsPagepnl').show();
+                $('#ssCaptchaShowOnEmailWishlistToFriendPagepnl').show();
+                $('#ssCaptchaShowOnEmailProductToFriendPagepnl').show();
+                $('#ssCaptchaShowOnBlogCommentPagepnl').show();
+                $('#ssCaptchaShowOnNewsCommentPagepnl').show();
+                $('#ssCaptchaShowOnProductReviewPagepnl').show();
+                $('#ssReCaptchaPublicKeypnl').show();
+                $('#ssReCaptchaPrivateKeypnl').show();
+            }
+            else {
+                $('#ssCaptchaShowOnLoginPagepnl').hide();
+                $('#ssCaptchaShowOnRegistrationPagepnl').hide();
+                $('#ssCaptchaShowOnContactUsPagepnl').hide();
+                $('#ssCaptchaShowOnEmailWishlistToFriendPagepnl').hide();
+                $('#ssCaptchaShowOnEmailProductToFriendPagepnl').hide();
+                $('#ssCaptchaShowOnBlogCommentPagepnl').hide();
+                $('#ssCaptchaShowOnNewsCommentPagepnl').hide();
+                $('#ssCaptchaShowOnProductReviewPagepnl').hide();
+                $('#ssReCaptchaPublicKeypnl').hide();
+                $('#ssReCaptchaPrivateKeypnl').hide();
+            }
         }
-        else {
-            $('#ssSharedSslUrlpnl').hide();
-            $('#ssNonSharedSslUrlpnl').hide();
+
+        function toggleSSL() {
+            if ($('#@Html.FieldIdFor(model => model.SecuritySettings.UseSsl)').is(':checked')) {
+                $('#ssSharedSslUrlpnl').show();
+                $('#ssNonSharedSslUrlpnl').show();
+            }
+            else {
+                $('#ssSharedSslUrlpnl').hide();
+                $('#ssNonSharedSslUrlpnl').hide();
+            }
         }
-    }
-</script>
+    </script>
     
     @Html.ValidationSummary(false)
 
     
     @Html.Telerik().TabStrip().Name("generalsettings-edit").Items(x =>
 {
-    x.Add().Text(T("Admin.Configuration.Settings.GeneralCommon.StoreInformationSettings").Text).Content(TabStoreInformationSettings().ToHtmlString()).Selected(true);
-    x.Add().Text(T("Admin.Configuration.Settings.GeneralCommon.SEOSettings").Text).Content(TabSEOSettings().ToHtmlString());
-    x.Add().Text(T("Admin.Configuration.Settings.GeneralCommon.SecuritySettings").Text).Content(TabSecuritySettings().ToHtmlString());
-    x.Add().Text(T("Admin.Configuration.Settings.GeneralCommon.PdfSettings").Text).Content(TabPdfSettings().ToHtmlString());
-    x.Add().Text(T("Admin.Configuration.Settings.GeneralCommon.LocalizationSettings").Text).Content(TabLocalizationSettings().ToHtmlString());
-    x.Add().Text(T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings").Text).Content(TabFullTextSettings().ToHtmlString());
-    
+    var tabStoreInformationSettings = x.Add().Text(T("Admin.Configuration.Settings.GeneralCommon.StoreInformationSettings").Text).Content(TabStoreInformationSettings().ToHtmlString());
+    var tabSEOSettings = x.Add().Text(T("Admin.Configuration.Settings.GeneralCommon.SEOSettings").Text).Content(TabSEOSettings().ToHtmlString());
+    var tabSecuritySettings = x.Add().Text(T("Admin.Configuration.Settings.GeneralCommon.SecuritySettings").Text).Content(TabSecuritySettings().ToHtmlString());
+    var tabPdfSettings = x.Add().Text(T("Admin.Configuration.Settings.GeneralCommon.PdfSettings").Text).Content(TabPdfSettings().ToHtmlString());
+    var tabLocalizationSettings = x.Add().Text(T("Admin.Configuration.Settings.GeneralCommon.LocalizationSettings").Text).Content(TabLocalizationSettings().ToHtmlString());
+    var tabFullTextSettings = x.Add().Text(T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings").Text).Content(TabFullTextSettings().ToHtmlString());
+
+    var selectedTab = (string)ViewData["selectedTab"];
+    switch (selectedTab)
+    {
+        case "storeinformation":
+            tabStoreInformationSettings.Selected(true);
+            break;
+        case "seo":
+            tabSEOSettings.Selected(true);
+            break;
+        case "security":
+            tabSecuritySettings.Selected(true);
+            break;
+        case "pdf":
+            tabPdfSettings.Selected(true);
+            break;
+        case "localization":
+            tabLocalizationSettings.Selected(true);
+            break;
+        case "fulltext":
+            tabFullTextSettings.Selected(true);
+            break;
+        default:
+            tabStoreInformationSettings.Selected(true);
+            break;
+    }
+
     //generate an event
     EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "generalsettings-edit"));
 })
@@ -299,7 +325,13 @@
             <td colspan="2">
                 <hr />
                 <br />
-                A CAPTCHA is a program that can tell whether its user is a human or a computer. You've probably seen them — colorful images with distorted text at the bottom of Web registration forms. CAPTCHAs are used by many websites to prevent abuse from "bots," or automated programs usually written to generate spam. No computer program can read distorted text as well as humans can, so bots cannot navigate sites protected by CAPTCHAs. nopCommerce uses <a href="http://www.google.com/recaptcha" target="_blank">reCAPTCHA</a>.
+                A CAPTCHA is a program that can tell whether its user is a human or a computer.
+                You've probably seen them — colorful images with distorted text at the bottom of
+                Web registration forms. CAPTCHAs are used by many websites to prevent abuse from
+                "bots," or automated programs usually written to generate spam. No computer program
+                can read distorted text as well as humans can, so bots cannot navigate sites protected
+                by CAPTCHAs. nopCommerce uses <a href="http://www.google.com/recaptcha" target="_blank">
+                    reCAPTCHA</a>.
             </td>
         </tr>
         <tr>
@@ -459,7 +491,7 @@
                 @Html.EditorFor(model => model.PdfSettings.LetterPageSizeEnabled)
                 @Html.ValidationMessageFor(model => model.PdfSettings.LetterPageSizeEnabled)
             </td>
-        </tr>        
+        </tr>
         <tr>
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.PdfSettings.LogoPictureId):
@@ -524,6 +556,21 @@
                     <input type="submit" name="togglefulltext" value="@(Model.FullTextSettings.Enabled ? T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.Disable").Text : T("Admin.Configuration.Settings.GeneralCommon.FullTextSettings.Enable").Text)" class="adminButton" />
                 </td>
             </tr>
+                    if (Model.FullTextSettings.Enabled)
+                    {
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.FullTextSettings.SearchMode):
+                </td>
+                <td class="adminData">
+                    @(Html.Telerik().DropDownListFor(model => model.FullTextSettings.SearchMode)
+                            .BindTo(Model.FullTextSettings.SearchModeValues)
+                                .HtmlAttributes(new { style = "width:355px" })
+                    )
+                    @Html.ValidationMessageFor(model => model.FullTextSettings.SearchMode)
+                </td>
+            </tr>
+                    }
         }
     </table>
 }
