@@ -5,22 +5,9 @@
     var currencies = Model.AvailableCurrencies.Select(x => new SelectListItem
     {
         Text = x.Name,
-        Value = x.Id.ToString(),
+        Value = @Url.RouteUrl("ChangeCurrency", new { customercurrency = x.Id }),
         Selected = x.Id.Equals(Model.CurrentCurrency.Id)
     });
     
-    @Html.DropDownList("customerCurrency", currencies)
-    
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $("#customerCurrency").change(onCurrencyChanged);
-        });
-
-        function onCurrencyChanged() {
-            var selectedCurrencyId = $("#customerCurrency").val();
-            var changeCurrencyActionUrl = '@Url.RouteUrl("ChangeCurrency", new { customercurrency = "currencyplaceholder" })';
-            changeCurrencyActionUrl = changeCurrencyActionUrl.replace("currencyplaceholder", selectedCurrencyId);
-            setLocation(changeCurrencyActionUrl);
-        }
-    </script>
+    @Html.DropDownList("customerCurrency", currencies, new { onchange = "setLocation(this.value);" })
 }

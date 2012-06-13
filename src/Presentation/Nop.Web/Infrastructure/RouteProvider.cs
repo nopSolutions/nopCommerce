@@ -618,17 +618,17 @@ namespace Nop.Web.Infrastructure
             routes.MapLocalizedRoute("ChangeCurrency",
                             "changecurrency/{customercurrency}",
                             new { controller = "Common", action = "CurrencySelected" },
-                            //no constraints because we use placeholders for URL generatation
+                            new { customercurrency = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
             routes.MapLocalizedRoute("ChangeLanguage",
                             "changelanguage/{langid}",
                             new { controller = "Common", action = "SetLanguage" },
-                            //no constraints because we use placeholders for URL generatation
+                            new { langid = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
             routes.MapLocalizedRoute("ChangeTaxType",
                             "changetaxtype/{customertaxtype}",
                             new { controller = "Common", action = "TaxTypeSelected" },
-                            //no constraints because we use placeholders for URL generatation
+                            new { customertaxtype = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
             routes.MapRoute("EuCookieLawAccept",
                             "eucookielawaccept",

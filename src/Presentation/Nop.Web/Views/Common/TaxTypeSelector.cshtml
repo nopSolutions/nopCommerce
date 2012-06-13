@@ -7,28 +7,15 @@
     taxTypes.Add(new SelectListItem()
     {
         Text = T("Tax.Inclusive").Text,
-        Value = ((int)TaxDisplayType.IncludingTax).ToString(),
+        Value = @Url.RouteUrl("ChangeTaxType", new { customertaxtype = ((int)TaxDisplayType.IncludingTax) }),
         Selected = Model.CurrentTaxType == TaxDisplayType.IncludingTax
     });
     taxTypes.Add(new SelectListItem()
     {
         Text = T("Tax.Exclusive").Text,
-        Value = ((int)TaxDisplayType.ExcludingTax).ToString(),
+        Value = @Url.RouteUrl("ChangeTaxType", new { customertaxtype = ((int)TaxDisplayType.ExcludingTax) }),
         Selected = Model.CurrentTaxType == TaxDisplayType.ExcludingTax
     });
     
-    @Html.DropDownList("customerTaxType", taxTypes)
-    
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $("#customerTaxType").change(onTaxTypeChanged);
-        });
-
-        function onTaxTypeChanged() {
-            var selectedTaxTypeId = $("#customerTaxType").val();
-            var changeTaxTypeActionUrl = '@Url.RouteUrl("ChangeTaxType", new { customertaxtype = "taxtypeplaceholder" })';
-            changeTaxTypeActionUrl = changeTaxTypeActionUrl.replace("taxtypeplaceholder", selectedTaxTypeId);
-            setLocation(changeTaxTypeActionUrl);
-        }
-    </script>
+    @Html.DropDownList("customerTaxType", taxTypes, new { onchange = "setLocation(this.value);" })
 }
