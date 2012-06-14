@@ -24,8 +24,6 @@ namespace Nop.Admin.Controllers
 
 		private readonly ILanguageService _languageService;
 		private readonly ILocalizationService _localizationService;
-        private readonly IExportManager _exportManager;
-        private readonly IImportManager _importManager;
         private readonly IPermissionService _permissionService;
         private readonly AdminAreaSettings _adminAreaSettings;
 
@@ -33,14 +31,13 @@ namespace Nop.Admin.Controllers
 
 		#region Constructors
 
-		public LanguageController(ILanguageService languageService, ILocalizationService localizationService,
-            IExportManager exportManager, IImportManager importManager, IPermissionService permissionService,
+		public LanguageController(ILanguageService languageService,
+            ILocalizationService localizationService,
+            IPermissionService permissionService,
             AdminAreaSettings adminAreaSettings)
 		{
 			this._localizationService = localizationService;
             this._languageService = languageService;
-            this._exportManager = exportManager;
-            this._importManager = importManager;
             this._permissionService = permissionService;
             this._adminAreaSettings = adminAreaSettings;
 		}
@@ -347,7 +344,7 @@ namespace Nop.Admin.Controllers
             try
             {
                 var fileName = string.Format("language_{0}.xml", id);
-                var xml = _exportManager.ExportLanguageToXml(language);
+                var xml = _localizationService.ExportLanguageToXml(language);
                 return new XmlDownloadResult(xml, fileName);
             }
             catch (Exception exc)
@@ -379,7 +376,7 @@ namespace Nop.Admin.Controllers
                     using (var sr = new StreamReader(file.InputStream, Encoding.UTF8))
                     {
                         string content = sr.ReadToEnd();
-                        _importManager.ImportLanguageFromXml(language, content);
+                        _localizationService.ImportLanguageFromXml(language, content);
                     }
 
                 }

@@ -65,12 +65,5 @@ namespace Nop.Services.ExportImport
         /// <param name="customers">Customers</param>
         /// <returns>Result in XML format</returns>
         string ExportCustomersToXml(IList<Customer> customers);
-        
-        /// <summary>
-        /// Export language resources to xml
-        /// </summary>
-        /// <param name="language">Language</param>
-        /// <returns>Result in XML format</returns>
-        string ExportLanguageToXml(Language language);
     }
 }

@@ -24,14 +24,20 @@ namespace Nop.Services.ExportImport
     /// <summary>
     /// Export manager
     /// </summary>
-    public partial class ExportManager : IExportManager
+public partial class ExportManager : IExportManager
     {
+        #region Fields
+
         private readonly ICategoryService _categoryService;
         private readonly IManufacturerService _manufacturerService;
         private readonly IProductService _productService;
         private readonly IPictureService _pictureService;
         private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
         private readonly StoreInformationSettings _storeInformationSettings;
+
+        #endregion
+
+        #region Ctor
 
         public ExportManager(ICategoryService categoryService,
             IManufacturerService manufacturerService,
@@ -47,6 +53,8 @@ namespace Nop.Services.ExportImport
             this._newsLetterSubscriptionService = newsLetterSubscriptionService;
             this._storeInformationSettings = storeInformationSettings;
         }
+
+        #endregion
 
         #region Utilities
 
@@ -1516,36 +1524,6 @@ namespace Nop.Services.ExportImport
             return stringWriter.ToString();
         }
 
-        /// <summary>
-        /// Export language resources to xml
-        /// </summary>
-        /// <param name="language">Language</param>
-        /// <returns>Result in XML format</returns>
-        public virtual string ExportLanguageToXml(Language language)
-        {
-            if (language == null)
-                throw new ArgumentNullException("language");
-            var sb = new StringBuilder();
-            var stringWriter = new StringWriter(sb);
-            var xmlWriter = new XmlTextWriter(stringWriter);
-            xmlWriter.WriteStartDocument();
-            xmlWriter.WriteStartElement("Language");
-            xmlWriter.WriteAttributeString("Name", language.Name);
-
-            var resources = language.LocaleStringResources.OrderBy(x => x.ResourceName).ToList();
-            foreach (var resource in resources)
-            {
-                xmlWriter.WriteStartElement("LocaleResource");
-                xmlWriter.WriteAttributeString("Name", resource.ResourceName);
-                xmlWriter.WriteElementString("Value", null, resource.ResourceValue);
-                xmlWriter.WriteEndElement();
-            }
-
-            xmlWriter.WriteEndElement();
-            xmlWriter.WriteEndDocument();
-            xmlWriter.Close();
-            return stringWriter.ToString();
-        }
 
         #endregion
     }

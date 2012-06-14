@@ -1,11 +1,17 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.IO;
 using System.Linq;
+using System.Text;
+using System.Xml;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Events;
+using Nop.Data;
 using Nop.Services.Logging;
 
 namespace Nop.Services.Localization
@@ -26,7 +32,11 @@ namespace Nop.Services.Localization
         private readonly IRepository<LocaleStringResource> _lsrRepository;
         private readonly IWorkContext _workContext;
         private readonly ILogger _logger;
+        private readonly ILanguageService _languageService;
         private readonly ICacheManager _cacheManager;
+        private readonly IDataProvider _dataProvider;
+        private readonly IDbContext _dbContext;
+        private readonly CommonSettings _commonSettings;
         private readonly LocalizationSettings _localizationSettings;
         private readonly IEventPublisher _eventPublisher;
 
@@ -41,18 +51,32 @@ namespace Nop.Services.Localization
         /// <param name="logger">Logger</param>
         /// <param name="workContext">Work context</param>
         /// <param name="lsrRepository">Locale string resource repository</param>
+        /// <param name="languageService">Language service</param>
+        /// <param name="dataProvider">Data provider</param>
+        /// <param name="dbContext">Database Context</param>
+        /// <param name="commonSettings">Common settings</param>
         /// <param name="localizationSettings">Localization settings</param>
         /// <param name="eventPublisher">Event published</param>
         public LocalizationService(ICacheManager cacheManager,
             ILogger logger, IWorkContext workContext,
-            IRepository<LocaleStringResource> lsrRepository, LocalizationSettings localizationSettings, IEventPublisher eventPublisher)
+            IRepository<LocaleStringResource> lsrRepository, 
+            ILanguageService languageService,
+            IDataProvider dataProvider, IDbContext dbContext, CommonSettings commonSettings,
+            LocalizationSettings localizationSettings, IEventPublisher eventPublisher)
         {
-            _cacheManager = cacheManager;
-            _logger = logger;
-            _workContext = workContext;
-            _lsrRepository = lsrRepository;
-            _localizationSettings = localizationSettings;
-            _eventPublisher = eventPublisher;
+            this._cacheManager = cacheManager;
+            this._logger = logger;
+            this._workContext = workContext;
+            this._lsrRepository = lsrRepository;
+            this._languageService = languageService;
+            this._dataProvider = dataProvider;
+            this._dbContext = dbContext;
+            this._commonSettings = commonSettings;
+            this._dataProvider = dataProvider;
+            this._dbContext = dbContext;
+            this._commonSettings = commonSettings;
+            this._localizationSettings = localizationSettings;
+            this._eventPublisher = eventPublisher;
         }
 
         #endregion
@@ -276,10 +300,114 @@ namespace Nop.Services.Localization
         }
 
         /// <summary>
-        /// Clear cache
+        /// Export language resources to xml
         /// </summary>
-        public virtual void ClearCache()
+        /// <param name="language">Language</param>
+        /// <returns>Result in XML format</returns>
+        public virtual string ExportLanguageToXml(Language language)
         {
+            if (language == null)
+                throw new ArgumentNullException("language");
+            var sb = new StringBuilder();
+            var stringWriter = new StringWriter(sb);
+            var xmlWriter = new XmlTextWriter(stringWriter);
+            xmlWriter.WriteStartDocument();
+            xmlWriter.WriteStartElement("Language");
+            xmlWriter.WriteAttributeString("Name", language.Name);
+
+            var resources = language.LocaleStringResources.OrderBy(x => x.ResourceName).ToList();
+            foreach (var resource in resources)
+            {
+                xmlWriter.WriteStartElement("LocaleResource");
+                xmlWriter.WriteAttributeString("Name", resource.ResourceName);
+                xmlWriter.WriteElementString("Value", null, resource.ResourceValue);
+                xmlWriter.WriteEndElement();
+            }
+
+            xmlWriter.WriteEndElement();
+            xmlWriter.WriteEndDocument();
+            xmlWriter.Close();
+            return stringWriter.ToString();
+        }
+
+        /// <summary>
+        /// Import language resources from XML file
+        /// </summary>
+        /// <param name="language">Language</param>
+        /// <param name="xml">XML</param>
+        public virtual void ImportLanguageFromXml(Language language, string xml)
+        {
+            if (language == null)
+                throw new ArgumentNullException("language");
+
+            if (String.IsNullOrEmpty(xml))
+                return;
+            if (_commonSettings.UseStoredProceduresIfSupported && _dataProvider.StoredProceduredSupported)
+            {
+                //SQL 2005 insists that your XML schema incoding be in UTF-16.
+                //Otherwise, you'll get "XML parsing: line 1, character XXX, unable to switch the encoding"
+                //so let's remove XML declaration
+                var inDoc = new XmlDocument();
+                inDoc.LoadXml(xml);
+                var sb = new StringBuilder();
+                using (var xWriter = XmlWriter.Create(sb, new XmlWriterSettings() { OmitXmlDeclaration = true }))
+                {
+                    inDoc.Save(xWriter);
+                    xWriter.Close();
+                }
+                var outDoc = new XmlDocument();
+                outDoc.LoadXml(sb.ToString());
+                xml = outDoc.OuterXml;
+
+                //stored procedures are enabled and supported by the database.
+                var pLanguageId = _dataProvider.GetParameter();
+                pLanguageId.ParameterName = "LanguageId";
+                pLanguageId.Value = language.Id;
+                pLanguageId.DbType = DbType.Int32;
+
+                var pXmlPackage = _dataProvider.GetParameter();
+                pXmlPackage.ParameterName = "XmlPackage";
+                pXmlPackage.Value = xml;
+                pXmlPackage.DbType = DbType.Xml;
+                _dbContext.ExecuteSqlCommand("EXEC [LanguagePackImport] @LanguageId, @XmlPackage", pLanguageId, pXmlPackage);
+            }
+            else
+            {
+                //stored procedures aren't supported
+                var xmlDoc = new XmlDocument();
+                xmlDoc.LoadXml(xml);
+
+                var nodes = xmlDoc.SelectNodes(@"//Language/LocaleResource");
+                foreach (XmlNode node in nodes)
+                {
+                    string name = node.Attributes["Name"].InnerText.Trim();
+                    string value = "";
+                    var valueNode = node.SelectSingleNode("Value");
+                    if (valueNode != null)
+                        value = valueNode.InnerText;
+
+                    if (String.IsNullOrEmpty(name))
+                        continue;
+
+                    //do not use localizationservice because it'll clear cache and after adding a new resource
+                    //let's bulk insert
+                    var resource = language.LocaleStringResources.Where(x => x.ResourceName.Equals(name, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+                    if (resource != null)
+                        resource.ResourceValue = value;
+                    else
+                    {
+                        language.LocaleStringResources.Add(
+                            new LocaleStringResource()
+                            {
+                                ResourceName = name,
+                                ResourceValue = value
+                            });
+                    }
+                }
+                _languageService.UpdateLanguage(language);
+            }
+
+            //clear cache
             _cacheManager.RemoveByPattern(LOCALSTRINGRESOURCES_PATTERN_KEY);
         }
 
