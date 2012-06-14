@@ -31,8 +31,9 @@ namespace Nop.Services.Tasks
         /// <summary>
         /// Gets all tasks
         /// </summary>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Tasks</returns>
-        IList<ScheduleTask> GetAllTasks();
+        IList<ScheduleTask> GetAllTasks(bool showHidden = false);
 
         /// <summary>
         /// Inserts a task

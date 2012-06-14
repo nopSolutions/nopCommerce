@@ -25,7 +25,10 @@ namespace Nop.Services.Tasks
             this._taskThreads.Clear();
 
             var taskService = EngineContext.Current.Resolve<IScheduleTaskService>();
-            var scheduleTasks = taskService.GetAllTasks().ToList().OrderBy(x => x.Seconds);
+            var scheduleTasks = taskService
+                .GetAllTasks()
+                .OrderBy(x => x.Seconds)
+                .ToList();
 
             //group by threads with the same seconds
             foreach (var scheduleTaskGrouped in scheduleTasks.GroupBy(x => x.Seconds))

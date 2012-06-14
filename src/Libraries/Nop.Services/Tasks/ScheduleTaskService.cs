@@ -74,10 +74,15 @@ namespace Nop.Services.Tasks
         /// <summary>
         /// Gets all tasks
         /// </summary>
+        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Tasks</returns>
-        public virtual IList<ScheduleTask> GetAllTasks()
+        public virtual IList<ScheduleTask> GetAllTasks(bool showHidden = false)
         {
             var query = _taskRepository.Table;
+            if (!showHidden)
+            {
+                query = query.Where(t => t.Enabled);
+            }
             query = query.OrderByDescending(t => t.Seconds);
 
             var tasks = query.ToList();
