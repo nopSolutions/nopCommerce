@@ -304,7 +304,7 @@ namespace Nop.Services.Localization
         /// </summary>
         /// <param name="language">Language</param>
         /// <returns>Result in XML format</returns>
-        public virtual string ExportLanguageToXml(Language language)
+        public virtual string ExportResourcesToXml(Language language)
         {
             if (language == null)
                 throw new ArgumentNullException("language");
@@ -315,7 +315,8 @@ namespace Nop.Services.Localization
             xmlWriter.WriteStartElement("Language");
             xmlWriter.WriteAttributeString("Name", language.Name);
 
-            var resources = language.LocaleStringResources.OrderBy(x => x.ResourceName).ToList();
+
+            var resources = GetAllResources(language.Id);
             foreach (var resource in resources)
             {
                 xmlWriter.WriteStartElement("LocaleResource");
@@ -335,7 +336,7 @@ namespace Nop.Services.Localization
         /// </summary>
         /// <param name="language">Language</param>
         /// <param name="xml">XML</param>
-        public virtual void ImportLanguageFromXml(Language language, string xml)
+        public virtual void ImportResourcesFromXml(Language language, string xml)
         {
             if (language == null)
                 throw new ArgumentNullException("language");
@@ -389,7 +390,7 @@ namespace Nop.Services.Localization
                     if (String.IsNullOrEmpty(name))
                         continue;
 
-                    //do not use localizationservice because it'll clear cache and after adding a new resource
+                    //do not use "Insert"/"Update" methods because they clear cache
                     //let's bulk insert
                     var resource = language.LocaleStringResources.Where(x => x.ResourceName.Equals(name, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
                     if (resource != null)

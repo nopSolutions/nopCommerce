@@ -35,6 +35,7 @@ using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Helpers;
 using Nop.Services.Media;
+using Nop.Services.Localization;
 
 namespace Nop.Services.Installation
 {
@@ -266,79 +267,6 @@ namespace Nop.Services.Installation
 
         }
 
-        private void AddLocaleResources(Language language)
-        {
-            //insert default sting resources (temporary solution). Requires some performance optimization
-            foreach (var filePath in System.IO.Directory.EnumerateFiles(_webHelper.MapPath("~/App_Data/"), "*.nopres.xml"))
-            {
-                //read and parse original file with resources (with <Children> elements)
-
-                var originalXmlDocument = new XmlDocument();
-                originalXmlDocument.Load(filePath);
-
-                var resources = new List<LocaleStringResourceParent>();
-
-                foreach (XmlNode resNode in originalXmlDocument.SelectNodes(@"//Language/LocaleResource"))
-                    resources.Add(new LocaleStringResourceParent(resNode));
-
-                resources.Sort((x1, x2) => x1.ResourceName.CompareTo(x2.ResourceName));
-
-                foreach (var resource in resources)
-                    RecursivelySortChildrenResource(resource);
-
-                var sb = new StringBuilder();
-                var writer = XmlWriter.Create(sb);
-                writer.WriteStartDocument();
-                writer.WriteStartElement("Language", "");
-
-                writer.WriteStartAttribute("Name", "");
-                writer.WriteString(originalXmlDocument.SelectSingleNode(@"//Language").Attributes["Name"].InnerText.Trim());
-                writer.WriteEndAttribute();
-
-                foreach (var resource in resources)
-                    RecursivelyWriteResource(resource, writer);
-
-                writer.WriteEndElement();
-                writer.WriteEndDocument();
-                writer.Flush();
-
-
-
-                //read and parse resources (without <Children> elements)
-                var resXml = new XmlDocument();
-                var sr = new StringReader(sb.ToString());
-                resXml.Load(sr);
-                var resNodeList = resXml.SelectNodes(@"//Language/LocaleResource");
-                foreach (XmlNode resNode in resNodeList)
-                    if (resNode.Attributes != null && resNode.Attributes["Name"] != null)
-                    {
-                        string resName = resNode.Attributes["Name"].InnerText.Trim();
-                        string resValue = resNode.SelectSingleNode("Value").InnerText;
-                        if (!String.IsNullOrEmpty(resName))
-                        {
-                            //ensure it's not duplicate
-                            bool duplicate = false;
-                            foreach (var res1 in language.LocaleStringResources)
-                                if (resName.Equals(res1.ResourceName, StringComparison.InvariantCultureIgnoreCase))
-                                {
-                                    duplicate = true;
-                                    break;
-                                }
-                            if (duplicate)
-                                continue;
-
-                            //insert resource
-                            var lsr = new LocaleStringResource
-                            {
-                                ResourceName = resName,
-                                ResourceValue = resValue
-                            };
-                            language.LocaleStringResources.Add(lsr);
-                        }
-                    }
-            }
-        }
-
         protected virtual void InstallMeasures()
         {
             var measureDimensions = new List<MeasureDimension>()
@@ -444,9 +372,9 @@ namespace Nop.Services.Installation
 
         }
 
-        protected virtual void InstallLanguagesAndResources()
+        protected virtual void InstallLanguages()
         {
-            var languageEng = new Language
+            var language = new Language
             {
                 Name = "English",
                 LanguageCulture = "en-US",
@@ -455,8 +383,57 @@ namespace Nop.Services.Installation
                 Published = true,
                 DisplayOrder = 1
             };
-            AddLocaleResources(languageEng);
-            _languageRepository.Insert(languageEng);
+            _languageRepository.Insert(language);
+        }
+
+        protected virtual void InstallLocaleResources()
+        {
+            //'English' language
+            var language = _languageRepository.Table.Where(l => l.Name == "English").Single();
+
+            //save resoureces
+            foreach (var filePath in System.IO.Directory.EnumerateFiles(_webHelper.MapPath("~/App_Data/"), "*.nopres.xml"))
+            {
+                #region Parse resource files (with <Children> elements)
+                //read and parse original file with resources (with <Children> elements)
+
+                var originalXmlDocument = new XmlDocument();
+                originalXmlDocument.Load(filePath);
+
+                var resources = new List<LocaleStringResourceParent>();
+
+                foreach (XmlNode resNode in originalXmlDocument.SelectNodes(@"//Language/LocaleResource"))
+                    resources.Add(new LocaleStringResourceParent(resNode));
+
+                resources.Sort((x1, x2) => x1.ResourceName.CompareTo(x2.ResourceName));
+
+                foreach (var resource in resources)
+                    RecursivelySortChildrenResource(resource);
+
+                var sb = new StringBuilder();
+                var writer = XmlWriter.Create(sb);
+                writer.WriteStartDocument();
+                writer.WriteStartElement("Language", "");
+
+                writer.WriteStartAttribute("Name", "");
+                writer.WriteString(originalXmlDocument.SelectSingleNode(@"//Language").Attributes["Name"].InnerText.Trim());
+                writer.WriteEndAttribute();
+
+                foreach (var resource in resources)
+                    RecursivelyWriteResource(resource, writer);
+
+                writer.WriteEndElement();
+                writer.WriteEndDocument();
+                writer.Flush();
+
+                var parsedXml = sb.ToString();
+                #endregion
+
+                //now we have a parsed XML file (the same structure as exported language packs)
+                //let's save resources
+                var localizationService = EngineContext.Current.Resolve<ILocalizationService>();
+                localizationService.ImportResourcesFromXml(language, parsedXml);
+            }
 
         }
 
@@ -9436,7 +9413,7 @@ namespace Nop.Services.Installation
         {
             InstallMeasures();
             InstallTaxCategories();
-            InstallLanguagesAndResources();
+            InstallLanguages();
             InstallCurrencies();
             InstallCountriesAndStates();
             InstallShippingMethods();
@@ -9445,6 +9422,7 @@ namespace Nop.Services.Installation
             InstallMessageTemplates();
             InstallTopics();
             InstallSettings();
+            InstallLocaleResources();
             InstallActivityLogTypes();
             HashDefaultCustomerPassword(defaultUserEmail, defaultUserPassword);
             InstallProductTemplates();

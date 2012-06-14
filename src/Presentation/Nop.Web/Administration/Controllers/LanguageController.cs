@@ -344,7 +344,7 @@ namespace Nop.Admin.Controllers
             try
             {
                 var fileName = string.Format("language_{0}.xml", id);
-                var xml = _localizationService.ExportLanguageToXml(language);
+                var xml = _localizationService.ExportResourcesToXml(language);
                 return new XmlDownloadResult(xml, fileName);
             }
             catch (Exception exc)
@@ -376,7 +376,7 @@ namespace Nop.Admin.Controllers
                     using (var sr = new StreamReader(file.InputStream, Encoding.UTF8))
                     {
                         string content = sr.ReadToEnd();
-                        _localizationService.ImportLanguageFromXml(language, content);
+                        _localizationService.ImportResourcesFromXml(language, content);
                     }
 
                 }

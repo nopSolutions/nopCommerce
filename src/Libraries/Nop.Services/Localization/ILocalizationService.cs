@@ -88,13 +88,13 @@ namespace Nop.Services.Localization
         /// </summary>
         /// <param name="language">Language</param>
         /// <returns>Result in XML format</returns>
-        string ExportLanguageToXml(Language language);
+        string ExportResourcesToXml(Language language);
 
         /// <summary>
         /// Import language resources from XML file
         /// </summary>
         /// <param name="language">Language</param>
         /// <param name="xml">XML</param>
-        void ImportLanguageFromXml(Language language, string xml);
+        void ImportResourcesFromXml(Language language, string xml);
     }
 }
