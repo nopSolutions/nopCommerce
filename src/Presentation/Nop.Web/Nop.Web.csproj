@@ -1419,7 +1419,7 @@
     <Content Include="Scripts\MicrosoftMvcValidation.debug.js" />
     <Content Include="Views\Shared\Header.cshtml" />
     <Content Include="Views\Shared\HeaderMenu.cshtml" />
-    <Content Include="Views\Shared\Footer.cshtml" />
+    <Content Include="Views\Common\Footer.cshtml" />
     <Content Include="Views\Shared\_RootPopup.cshtml" />
     <Content Include="Views\Customer\_ExternalAuthentication.AssociateMessage.cshtml" />
     <Content Include="Views\ExternalAuthentication\ExternalMethods.cshtml" />
@@ -1515,7 +1515,7 @@
     <Content Include="Views\Customer\Orders.Mobile.cshtml" />
     <Content Include="Views\ReturnRequest\ReturnRequest.Mobile.cshtml" />
     <Content Include="Views\Order\Details.Mobile.cshtml" />
-    <Content Include="Views\Shared\Footer.Mobile.cshtml" />
+    <Content Include="Views\Common\Footer.Mobile.cshtml" />
     <Content Include="Views\Topic\TopicDetails.Mobile.cshtml" />
     <Content Include="Views\ShoppingCart\OrderSummary.Mobile.cshtml" />
     <Content Include="Views\ShoppingCart\OrderTotals.Mobile.cshtml" />
