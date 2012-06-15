@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using FluentValidation.Attributes;
 using Nop.Web.Framework.Mvc;
@@ -9,6 +10,10 @@ namespace Nop.Web.Models.Install
     [Validator(typeof(InstallValidator))]
     public class InstallModel : BaseNopModel
     {
+        public InstallModel()
+        {
+            this.AvailableLanguages = new List<SelectListItem>();
+        }
         [AllowHtml]
         public string AdminEmail { get; set; }
         [AllowHtml]
@@ -41,5 +46,7 @@ namespace Nop.Web.Models.Install
 
 
         public bool InstallSampleData { get; set; }
+
+        public List<SelectListItem> AvailableLanguages { get; set; }
     }
 }

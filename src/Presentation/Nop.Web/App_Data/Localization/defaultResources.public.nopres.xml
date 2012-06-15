@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Language Name="English">
+﻿<Language Name="English">
 	<LocaleResource Name="ExampleOfNestedResources">
 		<Value>Resouce name will be 'ExampleOfNestedResources'</Value>
 		<Children>

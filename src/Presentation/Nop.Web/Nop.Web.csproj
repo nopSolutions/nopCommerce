@@ -170,6 +170,8 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\Cache\ModelCacheEventConsumer.cs" />
+    <Compile Include="Infrastructure\Installation\InstallationLanguage.cs" />
+    <Compile Include="Infrastructure\Installation\InstallationLocalizationService.cs" />
     <Compile Include="Infrastructure\DependencyRegistrar.cs" />
     <Compile Include="Infrastructure\UpgradeRouteProvider.cs" />
     <Compile Include="Infrastructure\RouteProvider.cs" />
@@ -313,11 +315,17 @@
     <Compile Include="Validators\Common\ContactUsValidator.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\SqlServer.StoredProcedures.sql" />
-    <Content Include="App_Data\defaultResources.admin.nopres.xml">
+    <Content Include="App_Data\Localization\Installation\installation.ru.xml">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="App_Data\defaultResources.public.nopres.xml">
+    <Content Include="App_Data\Localization\Installation\installation.en.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_Data\SqlServer.StoredProcedures.sql" />
+    <Content Include="App_Data\Localization\defaultResources.admin.nopres.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_Data\Localization\defaultResources.public.nopres.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="App_Data\SqlServer.Indexes.sql" />
@@ -1741,7 +1749,6 @@
     <Content Include="Views\Boards\LastPost.cshtml" />
     <Content Include="Views\Boards\_SearchBox.cshtml" />
     <Content Include="Views\Install\Index.cshtml" />
-    <Content Include="Views\Shared\_Installation.cshtml" />
     <Content Include="Views\PrivateMessages\Index.cshtml" />
     <Content Include="Views\PrivateMessages\SendPM.cshtml" />
     <Content Include="Views\PrivateMessages\ViewPM.cshtml" />

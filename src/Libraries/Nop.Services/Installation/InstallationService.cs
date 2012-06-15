@@ -392,7 +392,7 @@ namespace Nop.Services.Installation
             var language = _languageRepository.Table.Where(l => l.Name == "English").Single();
 
             //save resoureces
-            foreach (var filePath in System.IO.Directory.EnumerateFiles(_webHelper.MapPath("~/App_Data/"), "*.nopres.xml"))
+            foreach (var filePath in System.IO.Directory.EnumerateFiles(_webHelper.MapPath("~/App_Data/Localization/"), "*.nopres.xml", SearchOption.TopDirectoryOnly))
             {
                 #region Parse resource files (with <Children> elements)
                 //read and parse original file with resources (with <Children> elements)

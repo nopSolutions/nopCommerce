@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Nop.Web.Infrastructure.Installation;
 using Nop.Web.Models.Install;
 
 namespace Nop.Web.Validators.Install
@@ -7,12 +8,14 @@ namespace Nop.Web.Validators.Install
     {
         public InstallValidator()
         {
-            RuleFor(x => x.AdminEmail).NotEmpty().WithMessage("Enter admin email");
+            var locService = new InstallationLocalizationService();
+
+            RuleFor(x => x.AdminEmail).NotEmpty().WithMessage(locService.GetResource("AdminEmailRequired"));
             RuleFor(x => x.AdminEmail).EmailAddress();
-            RuleFor(x => x.AdminPassword).NotEmpty().WithMessage("Enter admin password");
-            RuleFor(x => x.ConfirmPassword).NotEmpty().WithMessage("Enter confirm password");
-            RuleFor(x => x.AdminPassword).Equal(x => x.ConfirmPassword).WithMessage("The passwords do not match");
-            RuleFor(x => x.DataProvider).NotEmpty().WithMessage("Select data provider");
-            
-        }}
+            RuleFor(x => x.AdminPassword).NotEmpty().WithMessage(locService.GetResource("AdminPasswordRequired"));
+            RuleFor(x => x.ConfirmPassword).NotEmpty().WithMessage(locService.GetResource("ConfirmPasswordRequired"));
+            RuleFor(x => x.AdminPassword).Equal(x => x.ConfirmPassword).WithMessage(locService.GetResource("PasswordsDoNotMatch"));
+            RuleFor(x => x.DataProvider).NotEmpty().WithMessage(locService.GetResource("DataProviderRequired"));
+        }
+    }
 }

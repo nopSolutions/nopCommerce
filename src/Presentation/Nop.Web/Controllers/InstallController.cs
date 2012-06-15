@@ -13,12 +13,28 @@ using Nop.Core.Plugins;
 using Nop.Services.Installation;
 using Nop.Services.Security;
 using Nop.Web.Framework.Security;
+using Nop.Web.Infrastructure.Installation;
 using Nop.Web.Models.Install;
 
 namespace Nop.Web.Controllers
 {
     public class InstallController : BaseNopController
     {
+        #region Fields
+
+        private readonly InstallationLocalizationService _locService;
+
+        #endregion
+
+        #region Ctor
+
+        public InstallController()
+        {
+            this._locService = new InstallationLocalizationService();
+        }
+
+        #endregion
+
         #region Utilities
 
         /// <summary>
@@ -75,7 +91,7 @@ namespace Nop.Web.Controllers
             }
             catch (Exception ex)
             {
-                return string.Format("An error occured when creating database: {0}", ex.Message);
+                return string.Format(_locService.GetResource("DatabaseCreationError"), ex.Message);
             }
         }
         
@@ -90,7 +106,8 @@ namespace Nop.Web.Controllers
         /// <param name="timeout">The connection timeout</param>
         /// <returns>Connection string</returns>
         private string createConnectionString(bool trustedConnection,
-            string serverName, string databaseName, string userName, string password, int timeout = 0)
+            string serverName, string databaseName, 
+            string userName, string password, int timeout = 0)
         {
             var builder = new SqlConnectionStringBuilder();
             builder.IntegratedSecurity = trustedConnection;
@@ -109,6 +126,7 @@ namespace Nop.Web.Controllers
             }
             return builder.ConnectionString;
         }
+
         #endregion
 
         #region Methods
@@ -133,8 +151,18 @@ namespace Nop.Web.Controllers
                 SqlConnectionInfo = "sqlconnectioninfo_values",
                 SqlServerCreateDatabase = false,
                 UseCustomCollation = false,
-                Collation = "SQL_Latin1_General_CP1_CI_AS"
+                Collation = "SQL_Latin1_General_CP1_CI_AS",
             };
+            foreach (var lang in _locService.GetAvailableLanguages())
+            {
+                model.AvailableLanguages.Add(new SelectListItem()
+                {
+                    Value = Url.Action("ChangeLanguage", "Install", new { language = lang.Code}),
+                    Text = lang.Name,
+                    Selected = _locService.GetCurrentLanguage().Code == lang.Code,
+                });
+            }
+
             return View(model);
         }
 
@@ -150,6 +178,17 @@ namespace Nop.Web.Controllers
             if (model.DatabaseConnectionString != null)
                 model.DatabaseConnectionString = model.DatabaseConnectionString.Trim();
 
+            //prepare language list
+            foreach (var lang in _locService.GetAvailableLanguages())
+            {
+                model.AvailableLanguages.Add(new SelectListItem()
+                {
+                    Value = Url.Action("ChangeLanguage", "Install", new { language = lang.Code }),
+                    Text = lang.Name,
+                    Selected = _locService.GetCurrentLanguage().Code == lang.Code,
+                });
+            }
+
             //SQL Server
             if (model.DataProvider.Equals("sqlserver", StringComparison.InvariantCultureIgnoreCase))
             {
@@ -157,7 +196,7 @@ namespace Nop.Web.Controllers
                 {
                     //raw connection string
                     if (string.IsNullOrEmpty(model.DatabaseConnectionString))
-                        ModelState.AddModelError("", "A SQL connection string is required");
+                        ModelState.AddModelError("", _locService.GetResource("ConnectionStringRequired"));
 
                     try
                     {
@@ -166,25 +205,25 @@ namespace Nop.Web.Controllers
                     }
                     catch
                     {
-                        ModelState.AddModelError("", "Wrong SQL connection string format");
+                        ModelState.AddModelError("", _locService.GetResource("ConnectionStringWrongFormat"));
                     }
                 }
                 else
                 {
                     //values
                     if (string.IsNullOrEmpty(model.SqlServerName))
-                        ModelState.AddModelError("", "SQL Server name is required");
+                        ModelState.AddModelError("", _locService.GetResource("SqlServerNameRequired"));
                     if (string.IsNullOrEmpty(model.SqlDatabaseName))
-                        ModelState.AddModelError("", "Database name is required");
+                        ModelState.AddModelError("", _locService.GetResource("DatabaseNameRequired"));
 
                     //authentication type
                     if (model.SqlAuthenticationType.Equals("sqlauthentication", StringComparison.InvariantCultureIgnoreCase))
                     {
                         //SQL authentication
                         if (string.IsNullOrEmpty(model.SqlServerUsername))
-                            ModelState.AddModelError("", "SQL Username is required");
+                            ModelState.AddModelError("", _locService.GetResource("SqlServerUsernameRequired"));
                         if (string.IsNullOrEmpty(model.SqlServerPassword))
-                            ModelState.AddModelError("", "SQL Password is required");
+                            ModelState.AddModelError("", _locService.GetResource("SqlServerPasswordRequired"));
                     }
                 }
             }
@@ -201,12 +240,12 @@ namespace Nop.Web.Controllers
             var dirsToCheck = FilePermissionHelper.GetDirectoriesWrite(webHelper);
             foreach (string dir in dirsToCheck)
                 if (!FilePermissionHelper.CheckPermissions(dir, false, true, true, false))
-                    ModelState.AddModelError("", string.Format("The '{0}' account is not granted with Modify permission on folder '{1}'. Please configure these permissions.", WindowsIdentity.GetCurrent().Name, dir));
+                    ModelState.AddModelError("", string.Format(_locService.GetResource("ConfigureDirectoryPermissions"), WindowsIdentity.GetCurrent().Name, dir));
 
             var filesToCheck = FilePermissionHelper.GetFilesWrite(webHelper);
             foreach (string file in filesToCheck)
                 if (!FilePermissionHelper.CheckPermissions(file, false, true, true, true))
-                    ModelState.AddModelError("", string.Format("The '{0}' account is not granted with Modify permission on file '{1}'. Please configure these permissions.", WindowsIdentity.GetCurrent().Name, file));
+                    ModelState.AddModelError("", string.Format(_locService.GetResource("ConfigureFilePermissions"), WindowsIdentity.GetCurrent().Name, file));
             
             if (ModelState.IsValid)
             {
@@ -257,7 +296,7 @@ namespace Nop.Web.Controllers
                         {
                             //check whether database exists
                             if (!sqlServerDatabaseExists(connectionString))
-                                throw new Exception("Database does not exist or you don't have permissions to connect to it");
+                                throw new Exception(_locService.GetResource("DatabaseNotExists"));
                         }
                     }
                     else
@@ -336,11 +375,22 @@ namespace Nop.Web.Controllers
                         DataProvider = null,
                         DataConnectionString = null
                     });
-                    
-                    ModelState.AddModelError("", "Setup failed: " + exception.Message);
+
+                    ModelState.AddModelError("", string.Format(_locService.GetResource("SetupFailed"), exception.Message));
                 }
             }
             return View(model);
+        }
+
+        public ActionResult ChangeLanguage(string language)
+        {
+            if (DataSettingsHelper.DatabaseIsInstalled())
+                return RedirectToRoute("HomePage");
+
+            _locService.SaveCurrentLanguage(language);
+
+            //Reload the page);
+            return RedirectToAction("Index", "Install");
         }
 
         public ActionResult RestartInstall()
