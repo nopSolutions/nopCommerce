@@ -30,8 +30,6 @@ namespace Nop.Web.Models.Order
         public bool IsShippable { get; set; }
         public string ShippingStatus { get; set; }
         public AddressModel ShippingAddress { get; set; }
-        public decimal OrderWeight { get; set; }
-        public string BaseWeightIn { get; set; }
         public string ShippingMethod { get; set; }
         public IList<ShipmentBriefModel> Shipments { get; set; }
 

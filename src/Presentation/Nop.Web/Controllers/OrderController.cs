@@ -36,7 +36,6 @@ namespace Nop.Web.Controllers
         private readonly IPriceFormatter _priceFormatter;
         private readonly IOrderProcessingService _orderProcessingService;
         private readonly IDateTimeHelper _dateTimeHelper;
-        private readonly IMeasureService _measureService;
         private readonly IPaymentService _paymentService;
         private readonly ILocalizationService _localizationService;
         private readonly IPdfService _pdfService;
@@ -44,7 +43,6 @@ namespace Nop.Web.Controllers
         private readonly ICountryService _countryService;
         private readonly IWebHelper _webHelper;
 
-        private readonly MeasureSettings _measureSettings;
         private readonly OrderSettings _orderSettings;
         private readonly TaxSettings _taxSettings;
         private readonly CatalogSettings _catalogSettings;
@@ -58,13 +56,12 @@ namespace Nop.Web.Controllers
         public OrderController(IOrderService orderService, 
             IShipmentService shipmentService, IWorkContext workContext,
             ICurrencyService currencyService, IPriceFormatter priceFormatter,
-            IOrderProcessingService orderProcessingService,
-            IDateTimeHelper dateTimeHelper, IMeasureService measureService,
+            IOrderProcessingService orderProcessingService, IDateTimeHelper dateTimeHelper,
             IPaymentService paymentService, ILocalizationService localizationService,
             IPdfService pdfService, IShippingService shippingService,
             ICountryService countryService, IWebHelper webHelper, 
-            MeasureSettings measureSettings, CatalogSettings catalogSettings,
-            OrderSettings orderSettings, TaxSettings taxSettings, PdfSettings pdfSettings,
+            CatalogSettings catalogSettings, OrderSettings orderSettings,
+            TaxSettings taxSettings, PdfSettings pdfSettings,
             ShippingSettings shippingSettings)
         {
             this._orderService = orderService;
@@ -74,7 +71,6 @@ namespace Nop.Web.Controllers
             this._priceFormatter = priceFormatter;
             this._orderProcessingService = orderProcessingService;
             this._dateTimeHelper = dateTimeHelper;
-            this._measureService = measureService;
             this._paymentService = paymentService;
             this._localizationService = localizationService;
             this._pdfService = pdfService;
@@ -82,7 +78,6 @@ namespace Nop.Web.Controllers
             this._countryService = countryService;
             this._webHelper = webHelper;
 
-            this._measureSettings = measureSettings;
             this._catalogSettings = catalogSettings;
             this._orderSettings = orderSettings;
             this._taxSettings = taxSettings;
@@ -115,10 +110,7 @@ namespace Nop.Web.Controllers
                 model.IsShippable = true;
                 model.ShippingAddress = order.ShippingAddress.ToModel();
                 model.ShippingMethod = order.ShippingMethod;
-                model.OrderWeight = order.OrderWeight;
-                var baseWeight = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId);
-                if (baseWeight != null)
-                    model.BaseWeightIn = baseWeight.Name;
+   
 
                 //shipments (only already shipped)
                 var shipments = order.Shipments.Where(x => x.ShippedDateUtc.HasValue).OrderBy(x => x.CreatedOnUtc).ToList();

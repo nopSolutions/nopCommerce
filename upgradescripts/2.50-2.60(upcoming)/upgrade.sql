@@ -674,6 +674,9 @@ set @resources='
   <LocaleResource Name="Admin.Orders.Shipments.TotalWeight.Hint">
     <Value>Shipment total weight.</Value>
   </LocaleResource>
+  <LocaleResource Name="Order.Weight">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 

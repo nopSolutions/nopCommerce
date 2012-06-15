@@ -928,6 +928,7 @@ public partial class ExportManager : IExportManager
                         xmlWriter.WriteStartElement("Shipment");
                         xmlWriter.WriteElementString("ShipmentId", null, shipment.Id.ToString());
                         xmlWriter.WriteElementString("TrackingNumber", null, shipment.TrackingNumber);
+                        xmlWriter.WriteElementString("TotalWeight", null, shipment.TotalWeight.HasValue ? shipment.TotalWeight.Value.ToString() : "");
 
                         xmlWriter.WriteElementString("ShippedDateUtc", null,shipment.ShippedDateUtc.HasValue ? 
                             shipment.ShippedDateUtc.ToString() : "");

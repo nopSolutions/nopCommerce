@@ -2617,9 +2617,6 @@
 			<LocaleResource Name="VATNumber">
 				<Value>VAT number</Value>
 			</LocaleResource>
-			<LocaleResource Name="Weight">
-				<Value>Weight</Value>
-			</LocaleResource>
 		</Children>
 	</LocaleResource>
 	<LocaleResource Name="PageTitle">
