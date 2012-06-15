@@ -1,6 +1,6 @@
 ﻿@model StoreThemeSelectorModel
 @using Nop.Web.Models.Common;
-@using (Ajax.BeginForm("StoreThemeSelected", "Common", new AjaxOptions { OnComplete = "onStoreThemeChangedRequestCompleted();" }, new { id = "form-storethemeselector" }))
+@using (Ajax.BeginForm("StoreThemeSelected", "Common", null, new AjaxOptions { OnComplete = "onStoreThemeChangedRequestCompleted();" }, new { id = "form-storethemeselector" }))
 {
     var themes = Model.AvailableStoreThemes.Select(x => new SelectListItem
     {
