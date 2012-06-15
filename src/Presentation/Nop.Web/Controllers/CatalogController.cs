@@ -2224,6 +2224,7 @@ namespace Nop.Web.Controllers
                                         {
                                             Id = x.Id,
                                             Name = x.GetLocalized(y => y.Name),
+                                            SeName = x.GetSeName(),
                                             ProductCount = x.ProductCount
                                         };
                                         return ptModel;
@@ -2258,6 +2259,7 @@ namespace Nop.Web.Controllers
                     {
                         Id = tag.Id,
                         Name = tag.GetLocalized(y => y.Name),
+                        SeName = tag.GetSeName(),
                         ProductCount = tag.ProductCount
                     });
                 return model;
