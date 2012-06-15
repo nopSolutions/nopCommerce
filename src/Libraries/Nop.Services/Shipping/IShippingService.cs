@@ -69,6 +69,13 @@ namespace Nop.Services.Shipping
 
 
         /// <summary>
+        /// Gets shopping cart item weight (of one item)
+        /// </summary>
+        /// <param name="shoppingCartItem">Shopping cart item</param>
+        /// <returns>Shopping cart item weight</returns>
+        decimal GetShoppingCartItemWeight(ShoppingCartItem shoppingCartItem);
+
+        /// <summary>
         /// Gets shopping cart item total weight
         /// </summary>
         /// <param name="shoppingCartItem">Shopping cart item</param>

@@ -22,6 +22,12 @@ namespace Nop.Core.Domain.Shipping
         public virtual string TrackingNumber { get; set; }
 
         /// <summary>
+        /// Gets or sets the total weight of this shipment
+        /// It's nullable for compatibility with the previous version of nopCommerce where was no such property
+        /// </summary>
+        public virtual decimal? TotalWeight { get; set; }
+
+        /// <summary>
         /// Gets or sets the shipped date and time
         /// </summary>
         public virtual DateTime? ShippedDateUtc { get; set; }

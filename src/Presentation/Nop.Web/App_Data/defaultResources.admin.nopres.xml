@@ -8269,6 +8269,14 @@
                   </LocaleResource>
                 </Children>
               </LocaleResource>
+              <LocaleResource Name="TotalWeight">
+                <Value>Total weight</Value>
+                <Children>
+                  <LocaleResource Name="Hint">
+                    <Value>Shipment total weight.</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
               <LocaleResource Name="TrackingNumber">
                 <Value>Tracking number</Value>
                 <Children>

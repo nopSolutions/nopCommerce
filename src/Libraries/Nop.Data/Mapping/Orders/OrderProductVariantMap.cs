@@ -18,6 +18,7 @@ namespace Nop.Data.Mapping.Orders
             this.Property(opv => opv.PriceExclTax).HasPrecision(18, 4);
             this.Property(opv => opv.DiscountAmountInclTax).HasPrecision(18, 4);
             this.Property(opv => opv.DiscountAmountExclTax).HasPrecision(18, 4);
+            this.Property(opv => opv.ItemWeight).HasPrecision(18, 4);
 
 
             this.HasRequired(opv => opv.Order)

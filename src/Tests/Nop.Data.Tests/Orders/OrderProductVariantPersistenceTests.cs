@@ -32,6 +32,7 @@ namespace Nop.Data.Tests.Orders
                 DownloadCount= 7,
                 IsDownloadActivated=true,
                 LicenseDownloadId= 8,
+                ItemWeight = 9.87M
             };
 
             var fromDb = SaveAndLoadEntity(opv);
@@ -49,6 +50,7 @@ namespace Nop.Data.Tests.Orders
             fromDb.DownloadCount.ShouldEqual(7);
             fromDb.IsDownloadActivated.ShouldEqual(true);
             fromDb.LicenseDownloadId.ShouldEqual(8);
+            fromDb.ItemWeight.ShouldEqual(9.87M);
 
             fromDb.Order.ShouldNotBeNull();
         }

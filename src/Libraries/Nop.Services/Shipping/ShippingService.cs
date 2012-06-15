@@ -233,15 +233,15 @@ namespace Nop.Services.Shipping
         #region Workflow
 
         /// <summary>
-        /// Gets shopping cart item total weight
+        /// Gets shopping cart item weight (of one item)
         /// </summary>
         /// <param name="shoppingCartItem">Shopping cart item</param>
         /// <returns>Shopping cart item weight</returns>
-        public virtual decimal GetShoppingCartItemTotalWeight(ShoppingCartItem shoppingCartItem)
+        public virtual decimal GetShoppingCartItemWeight(ShoppingCartItem shoppingCartItem)
         {
             if (shoppingCartItem == null)
                 throw new ArgumentNullException("shoppingCartItem");
-            decimal totalWeight = decimal.Zero;
+            decimal weight = decimal.Zero;
             if (shoppingCartItem.ProductVariant != null)
             {
                 decimal attributesTotalWeight = decimal.Zero;
@@ -252,9 +252,22 @@ namespace Nop.Services.Shipping
                     foreach (var pvaValue in pvaValues)
                         attributesTotalWeight += pvaValue.WeightAdjustment;
                 }
-                decimal unitWeight = shoppingCartItem.ProductVariant.Weight + attributesTotalWeight;
-                totalWeight = unitWeight * shoppingCartItem.Quantity;
+                weight = shoppingCartItem.ProductVariant.Weight + attributesTotalWeight;
             }
+            return weight;
+        }
+
+        /// <summary>
+        /// Gets shopping cart item total weight
+        /// </summary>
+        /// <param name="shoppingCartItem">Shopping cart item</param>
+        /// <returns>Shopping cart item weight</returns>
+        public virtual decimal GetShoppingCartItemTotalWeight(ShoppingCartItem shoppingCartItem)
+        {
+            if (shoppingCartItem == null)
+                throw new ArgumentNullException("shoppingCartItem");
+
+            decimal totalWeight = GetShoppingCartItemWeight(shoppingCartItem) * shoppingCartItem.Quantity;
             return totalWeight;
         }
 

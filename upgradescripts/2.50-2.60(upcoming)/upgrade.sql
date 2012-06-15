@@ -668,6 +668,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.FullTextSettings.SearchMode.Hint">
     <Value>Choose Full-Text search mode</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.TotalWeight">
+    <Value>Total weight</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.TotalWeight.Hint">
+    <Value>Shipment total weight.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -2539,5 +2545,21 @@ BEGIN
 
 		DROP TABLE #LocaleStringResourceTmp
 	END
+END
+GO
+
+
+--Add 'Weight' column to [Shipment] and [OrderProductVariant] tables
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[Shipment]') and NAME='TotalWeight')
+BEGIN
+	ALTER TABLE [Shipment]
+	ADD [TotalWeight] decimal(18, 4) NULL
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[OrderProductVariant]') and NAME='ItemWeight')
+BEGIN
+	ALTER TABLE [OrderProductVariant]
+	ADD [ItemWeight] decimal(18, 4) NULL
 END
 GO

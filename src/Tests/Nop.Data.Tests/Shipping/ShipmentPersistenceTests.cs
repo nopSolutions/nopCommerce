@@ -21,6 +21,7 @@ namespace Nop.Data.Tests.Shipping
             {
                 Order = GetTestOrder(),
                 TrackingNumber = "TrackingNumber 1",
+                TotalWeight = 9.87M,
                 ShippedDateUtc = new DateTime(2010, 01, 01),
                 DeliveryDateUtc = new DateTime(2010, 01, 02),
                 CreatedOnUtc = new DateTime(2010, 01, 03),
@@ -29,6 +30,7 @@ namespace Nop.Data.Tests.Shipping
             var fromDb = SaveAndLoadEntity(shipment);
             fromDb.ShouldNotBeNull();
             fromDb.TrackingNumber.ShouldEqual("TrackingNumber 1");
+            fromDb.TotalWeight.ShouldEqual(9.87M);
             fromDb.ShippedDateUtc.ShouldEqual(new DateTime(2010, 01, 01));
             fromDb.DeliveryDateUtc.ShouldEqual(new DateTime(2010, 01, 02));
             fromDb.CreatedOnUtc.ShouldEqual(new DateTime(2010, 01, 03));

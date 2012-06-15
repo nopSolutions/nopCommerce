@@ -973,6 +973,8 @@ namespace Nop.Services.Orders
                                 //attributes
                                 string attributeDescription = _productAttributeFormatter.FormatAttributes(sc.ProductVariant, sc.AttributesXml, customer);
 
+                                var itemWeight = _shippingService.GetShoppingCartItemWeight(sc);
+
                                 //save order item
                                 var opv = new OrderProductVariant()
                                 {
@@ -990,7 +992,8 @@ namespace Nop.Services.Orders
                                     DiscountAmountExclTax = discountAmountExclTax,
                                     DownloadCount = 0,
                                     IsDownloadActivated = false,
-                                    LicenseDownloadId = 0
+                                    LicenseDownloadId = 0,
+                                    ItemWeight = itemWeight,
                                 };
                                 order.OrderProductVariants.Add(opv);
                                 _orderService.UpdateOrder(order);
@@ -1055,7 +1058,8 @@ namespace Nop.Services.Orders
                                     DiscountAmountExclTax = opv.DiscountAmountExclTax,
                                     DownloadCount = 0,
                                     IsDownloadActivated = false,
-                                    LicenseDownloadId = 0
+                                    LicenseDownloadId = 0,
+                                    ItemWeight = opv.ItemWeight,
                                 };
                                 order.OrderProductVariants.Add(newOpv);
                                 _orderService.UpdateOrder(order);

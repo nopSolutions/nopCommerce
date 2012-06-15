@@ -85,7 +85,13 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets a license download identifier (in case this is a downloadable product)
         /// </summary>
         public virtual int? LicenseDownloadId { get; set; }
-        
+
+        /// <summary>
+        /// Gets or sets the total weight of one item
+        /// It's nullable for compatibility with the previous version of nopCommerce where was no such property
+        /// </summary>
+        public virtual decimal? ItemWeight { get; set; }
+
         /// <summary>
         /// Gets the order
         /// </summary>

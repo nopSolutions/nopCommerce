@@ -133,6 +133,7 @@ namespace Nop.Admin.Controllers
 
         #region Utilities
 
+        [NonAction]
         private void PrepareOrderDetailsModel(OrderModel model, Order order)
         {
             if (order == null)
@@ -393,6 +394,7 @@ namespace Nop.Admin.Controllers
             #endregion
         }
 
+        [NonAction]
         private OrderModel.AddOrderProductModel.ProductDetailsModel PrepareAddProductToOrderModel(int orderId, int productVariantId)
         {
 
@@ -446,6 +448,67 @@ namespace Nop.Admin.Controllers
             if (model.GiftCard.IsGiftCard)
             {
                 model.GiftCard.GiftCardType = productVariant.GiftCardType;
+            }
+            return model;
+        }
+
+        [NonAction]
+        private ShipmentModel PrepareShipmentModel(Shipment shipment, bool prepareProducts)
+        {
+            
+            var baseWeightIn = "";
+            var baseWeight = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId);
+            if (baseWeight != null)
+                baseWeightIn = baseWeight.Name;
+
+            var model = new ShipmentModel()
+            {
+                Id = shipment.Id,
+                OrderId = shipment.OrderId,
+                TrackingNumber = shipment.TrackingNumber,
+                TotalWeight = shipment.TotalWeight.HasValue ? string.Format("{0:F2} [{1}]", shipment.TotalWeight, baseWeightIn) : "",
+                ShippedDate = shipment.ShippedDateUtc.HasValue ? _dateTimeHelper.ConvertToUserTime(shipment.ShippedDateUtc.Value, DateTimeKind.Utc).ToString() : _localizationService.GetResource("Admin.Orders.Shipments.ShippedDate.NotYet"),
+                CanShip = !shipment.ShippedDateUtc.HasValue,
+                DeliveryDate = shipment.DeliveryDateUtc.HasValue ? _dateTimeHelper.ConvertToUserTime(shipment.DeliveryDateUtc.Value, DateTimeKind.Utc).ToString() : _localizationService.GetResource("Admin.Orders.Shipments.DeliveryDate.NotYet"),
+                CanDeliver = shipment.ShippedDateUtc.HasValue && !shipment.DeliveryDateUtc.HasValue,
+                DisplayPdfPackagingSlip = _pdfSettings.Enabled,
+            };
+
+            if (prepareProducts)
+            {
+                foreach (var sopv in shipment.ShipmentOrderProductVariants)
+                {
+                    var opv = _orderService.GetOrderProductVariantById(sopv.OrderProductVariantId);
+                    if (opv == null)
+                        continue;
+
+                    //quantities
+                    var qtyInThisShipment = sopv.Quantity;
+                    var maxQtyToAdd = opv.GetTotalNumberOfItemsCanBeAddedToShipment();
+                    var qtyOrdered = opv.Quantity;
+                    var qtyInAllShipments = opv.GetTotalNumberOfItemsInAllShipment();
+
+                    var sopvModel = new ShipmentModel.ShipmentOrderProductVariantModel()
+                    {
+                        Id = sopv.Id,
+                        OrderProductVariantId = opv.Id,
+                        ProductVariantId = opv.ProductVariantId,
+                        Sku = opv.ProductVariant.Sku,
+                        AttributeInfo = opv.AttributeDescription,
+                        QuantityOrdered = qtyOrdered,
+                        QuantityInThisShipment = qtyInThisShipment,
+                        QuantityInAllShipments = qtyInAllShipments,
+                        QuantityToAdd = maxQtyToAdd,
+                    };
+
+                    //product name
+                    if (!String.IsNullOrEmpty(opv.ProductVariant.Name))
+                        sopvModel.FullProductName = string.Format("{0} ({1})", opv.ProductVariant.Product.Name,
+                                                                  opv.ProductVariant.Name);
+                    else
+                        sopvModel.FullProductName = opv.ProductVariant.Product.Name;
+                    model.Products.Add(sopvModel);
+                }
             }
             return model;
         }
@@ -1727,19 +1790,7 @@ namespace Nop.Admin.Controllers
                 command.Page - 1, command.PageSize);
             var gridModel = new GridModel<ShipmentModel>
             {
-                Data = shipments.Select(shipment =>
-                {
-                    return new ShipmentModel()
-                    {
-                        Id = shipment.Id,
-                        OrderId = shipment.OrderId,
-                        TrackingNumber = shipment.TrackingNumber,
-                        ShippedDate = shipment.ShippedDateUtc.HasValue ? _dateTimeHelper.ConvertToUserTime(shipment.ShippedDateUtc.Value, DateTimeKind.Utc).ToString() : _localizationService.GetResource("Admin.Orders.Shipments.ShippedDate.NotYet"),
-                        CanShip = !shipment.ShippedDateUtc.HasValue,
-                        DeliveryDate = shipment.DeliveryDateUtc.HasValue ? _dateTimeHelper.ConvertToUserTime(shipment.DeliveryDateUtc.Value, DateTimeKind.Utc).ToString() : _localizationService.GetResource("Admin.Orders.Shipments.DeliveryDate.NotYet"),
-                        CanDeliver = shipment.ShippedDateUtc.HasValue && !shipment.DeliveryDateUtc.HasValue,
-                    };
-                }),
+                Data = shipments.Select(shipment => PrepareShipmentModel(shipment, false)),
                 Total = shipments.TotalCount
             };
 			return new JsonResult
@@ -1762,18 +1813,7 @@ namespace Nop.Admin.Controllers
             var shipmentModels = new List<ShipmentModel>();
             var shipments = order.Shipments.OrderBy(s => s.CreatedOnUtc).ToList();
             foreach (var shipment in shipments)
-            {
-                shipmentModels.Add(new ShipmentModel()
-                {
-                    Id = shipment.Id,
-                    OrderId = shipment.OrderId,
-                    TrackingNumber = shipment.TrackingNumber,
-                    ShippedDate = shipment.ShippedDateUtc.HasValue ? _dateTimeHelper.ConvertToUserTime(shipment.ShippedDateUtc.Value, DateTimeKind.Utc).ToString() : _localizationService.GetResource("Admin.Orders.Shipments.ShippedDate.NotYet"),
-                    CanShip = !shipment.ShippedDateUtc.HasValue,
-                    DeliveryDate = shipment.DeliveryDateUtc.HasValue ? _dateTimeHelper.ConvertToUserTime(shipment.DeliveryDateUtc.Value, DateTimeKind.Utc).ToString() : _localizationService.GetResource("Admin.Orders.Shipments.DeliveryDate.NotYet"),
-                    CanDeliver = shipment.ShippedDateUtc.HasValue && !shipment.DeliveryDateUtc.HasValue,
-                });
-            }
+                shipmentModels.Add(PrepareShipmentModel(shipment, false));
 
             var model = new GridModel<ShipmentModel>
             {
@@ -1855,6 +1895,7 @@ namespace Nop.Admin.Controllers
 
             Shipment shipment = null;
 
+            decimal? totalWeight = null;
             foreach (var opv in order.OrderProductVariants)
             {
                 //is shippable
@@ -1879,14 +1920,23 @@ namespace Nop.Admin.Controllers
                     continue;
                 if (qtyToAdd > maxQtyToAdd)
                     qtyToAdd = maxQtyToAdd;
-
+                
                 //ok. we have at least one item. let's create a shipment (if it does not exist)
+
+                var opvTotalWeight = opv.ItemWeight.HasValue ? opv.ItemWeight * qtyToAdd : null;
+                if (opvTotalWeight.HasValue)
+                {
+                    if (!totalWeight.HasValue)
+                        totalWeight = 0;
+                    totalWeight += opvTotalWeight.Value;
+                }
                 if (shipment == null)
                 {
                     shipment = new Shipment()
                     {
                         OrderId = order.Id,
                         TrackingNumber = form["TrackingNumber"],
+                        TotalWeight = null,
                         ShippedDateUtc = null,
                         DeliveryDateUtc = null,
                         CreatedOnUtc = DateTime.UtcNow,
@@ -1904,6 +1954,7 @@ namespace Nop.Admin.Controllers
             //if we have at least one item in the shipment, then save it
             if (shipment != null && shipment.ShipmentOrderProductVariants.Count > 0)
             {
+                shipment.TotalWeight = totalWeight;
                 _shipmentService.InsertShipment(shipment);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Orders.Shipments.Added"));
@@ -1928,51 +1979,7 @@ namespace Nop.Admin.Controllers
                 //No shipment found with the specified id
                 return RedirectToAction("List");
 
-            var model = new ShipmentModel()
-            {
-                Id = shipment.Id,
-                OrderId = shipment.OrderId,
-                TrackingNumber = shipment.TrackingNumber,
-                ShippedDate = shipment.ShippedDateUtc.HasValue ? _dateTimeHelper.ConvertToUserTime(shipment.ShippedDateUtc.Value, DateTimeKind.Utc).ToString() : _localizationService.GetResource("Admin.Orders.Shipments.ShippedDate.NotYet"),
-                CanShip = !shipment.ShippedDateUtc.HasValue,
-                DeliveryDate = shipment.DeliveryDateUtc.HasValue ? _dateTimeHelper.ConvertToUserTime(shipment.DeliveryDateUtc.Value, DateTimeKind.Utc).ToString() : _localizationService.GetResource("Admin.Orders.Shipments.DeliveryDate.NotYet"),
-                CanDeliver = shipment.ShippedDateUtc.HasValue && !shipment.DeliveryDateUtc.HasValue,
-                DisplayPdfPackagingSlip = _pdfSettings.Enabled,
-            };
-
-            foreach (var sopv in shipment.ShipmentOrderProductVariants)
-            {
-                var opv = _orderService.GetOrderProductVariantById(sopv.OrderProductVariantId);
-                if (opv == null)
-                    continue;
-                
-                //quantities
-                var qtyInThisShipment = sopv.Quantity;
-                var maxQtyToAdd = opv.GetTotalNumberOfItemsCanBeAddedToShipment();
-                var qtyOrdered = opv.Quantity;
-                var qtyInAllShipments = opv.GetTotalNumberOfItemsInAllShipment();
-
-                var sopvModel = new ShipmentModel.ShipmentOrderProductVariantModel()
-                {
-                    Id = sopv.Id,
-                    OrderProductVariantId = opv.Id,
-                    ProductVariantId = opv.ProductVariantId,
-                    Sku = opv.ProductVariant.Sku,
-                    AttributeInfo = opv.AttributeDescription,
-                    QuantityOrdered = qtyOrdered,
-                    QuantityInThisShipment = qtyInThisShipment,
-                    QuantityInAllShipments = qtyInAllShipments,
-                    QuantityToAdd = maxQtyToAdd,
-                };
-
-                //product name
-                if (!String.IsNullOrEmpty(opv.ProductVariant.Name))
-                    sopvModel.FullProductName = string.Format("{0} ({1})", opv.ProductVariant.Product.Name, opv.ProductVariant.Name);
-                else
-                    sopvModel.FullProductName = opv.ProductVariant.Product.Name;
-                model.Products.Add(sopvModel);
-            }
-
+            var model = PrepareShipmentModel(shipment, true);
             return View(model);
         }
 
