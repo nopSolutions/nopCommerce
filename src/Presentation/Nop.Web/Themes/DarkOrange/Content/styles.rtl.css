@@ -47,7 +47,7 @@ a.logo{background:url(images/logo.gif);display:block;width:225px;height:60px;tex
 .header-selectors-wrapper{text-align:left;float:left;width:500px;}
 .header-currencyselector{float:left;}
 .header-languageselector{float:left;}
-.header-taxDisplayTypeSelector{float:left;}
+.header-taxdisplaytypeselector{float:left;}
 .header-links-wrapper{position:relative;float:left;text-align:left;width:670px;}
 .header-links{border:solid 1px #9a9a9a;padding:5px;margin-bottom:5px;display:inline-table;text-align:right;direction:rtl;}
 .header-links ul{padding:0;margin:0;}
@@ -705,13 +705,13 @@ ul.languagelist li:hover{cursor:pointer;}
 .product-variant-line .attributes .textbox{width:300px;}
 .product-variant-line .attributes textarea{width:300px;height:150px;}
 .product-variant-line .stock,.product-variant-line .sku,.product-variant-line .manufacturerpartnumber,.product-variant-line .gtin{}
-.product-variant-line .giftCard{}
-.product-variant-line .giftCard dt{clear:right;float:right;width:150px;}
-.product-variant-line .giftCard .recipientname{}
-.product-variant-line .giftCard .recipientemail{}
-.product-variant-line .giftCard .sendername{}
-.product-variant-line .giftCard .senderemail{}
-.product-variant-line .giftCard .message{width:300px;height:100px;}
+.product-variant-line .giftcard{}
+.product-variant-line .giftcard dt{clear:right;float:right;width:150px;}
+.product-variant-line .giftcard .recipientname{}
+.product-variant-line .giftcard .recipientemail{}
+.product-variant-line .giftcard .sendername{}
+.product-variant-line .giftcard .senderemail{}
+.product-variant-line .giftcard .message{width:300px;height:100px;}
 .related-products-grid,.also-purchased-products-grid{}
 .related-products-grid .title,.also-purchased-products-grid .title{padding:10px 10px 10px 0;font-weight:700;text-transform:uppercase;clear:both;font-size:1.1em;color:#f93;}
 .related-products-grid .item-box,.also-purchased-products-grid .item-box{padding-bottom:10px;text-align:center;vertical-align:text-top;}
@@ -920,24 +920,24 @@ ul.languagelist li:hover{cursor:pointer;}
 .profile-page{}
 .profile-page .title{background:url(images/forum-header-bg.gif) repeat-x 50%;color:#FFF;border:solid 1px #6a6a6a;height:28px;line-height:28px;font-weight:700;padding-left:3px;}
 .profile-page .body{margin-top:15px;}
-.profile-page .body .profileInfoBox{background:url(images/forum-footer-bg.gif) repeat-x bottom;}
-.profile-page .body .profileInfoBox, .profile-page .body .userLastPosts{font-size:12px;}
-.profile-page .body .profileInfoBox .title{}
-.profile-page .body .profileInfoBox .profileStat{font-weight:700;padding:2px;}
-.profile-page .body .profileInfoBox .profileStat .profileStatValue{font-weight:400;color:#555;}
-.profile-page .body .profileInfoBox .userDetails{width:180px;float:left;padding:10px;height:100%;border-right:solid 1px #F3F3F3;text-align:center;}
-.profile-page .body .profileInfoBox .userDetails .avatar{margin-bottom:5px;}
-.profile-page .body .profileInfoBox .userDetails .avatar .avatar-img{border:solid 2px #CEDBE1!important;}
-.profile-page .body .profileInfoBox .userStats{margin-left:200px;border-left:solid 1px #F3F3F3;padding:10px;}
-.profile-page .body .profileInfoBox .userStats .section-title{text-transform:uppercase;margin-bottom:10px;}
-.profile-page .body .userLastPosts{}
-.profile-page .body .userLastPosts .topic{border:solid 1px #F3F3F3;margin-bottom:10px;}
-.profile-page .body .userLastPosts .topicTitle{font-weight:700;line-height:20px;background:#e3f3f3;padding:3px;}
-.profile-page .body .userLastPosts .topicBody{padding:10px;}
-.profile-page .body .userLastPosts .topicBody a{color:#f93;text-decoration:underline;}
-.profile-page .body .userLastPosts .topicBody .quote{padding:5px;border:dashed 1px #000;background-color:#fff;}
-.profile-page .body .userLastPosts .topicData{background:#f3f3f3;padding:3px;color:#555;font-size:.9em;}
-.profile-page .body .userLastPosts .posts-table{width:100%;border:0px;border-collapse:collapse;border-spacing:0;empty-cells:show;}
+.profile-page .body .profile-info-box{background:url(images/forum-footer-bg.gif) repeat-x bottom;}
+.profile-page .body .profile-info-box, .profile-page .body .user-last-posts{font-size:12px;}
+.profile-page .body .profile-info-box .title{}
+.profile-page .body .profile-info-box .profile-stat{font-weight:700;padding:2px;}
+.profile-page .body .profile-info-box .profile-stat .profile-stat-value{font-weight:400;color:#555;}
+.profile-page .body .profile-info-box .user-details{width:180px;float:left;padding:10px;height:100%;border-right:solid 1px #F3F3F3;text-align:center;}
+.profile-page .body .profile-info-box .user-details .avatar{margin-bottom:5px;}
+.profile-page .body .profile-info-box .user-details .avatar .avatar-img{border:solid 2px #CEDBE1!important;}
+.profile-page .body .profile-info-box .user-stats{margin-left:200px;border-left:solid 1px #F3F3F3;padding:10px;}
+.profile-page .body .profile-info-box .user-stats .section-title{text-transform:uppercase;margin-bottom:10px;}
+.profile-page .body .user-last-posts{}
+.profile-page .body .user-last-posts .topic{border:solid 1px #F3F3F3;margin-bottom:10px;}
+.profile-page .body .user-last-posts .topictitle{font-weight:700;line-height:20px;background:#e3f3f3;padding:3px;}
+.profile-page .body .user-last-posts .topicbody{padding:10px;}
+.profile-page .body .user-last-posts .topicbody a{color:#f93;text-decoration:underline;}
+.profile-page .body .user-last-posts .topicbody .quote{padding:5px;border:dashed 1px #000;background-color:#fff;}
+.profile-page .body .user-last-posts .topicdata{background:#f3f3f3;padding:3px;color:#555;font-size:.9em;}
+.profile-page .body .user-last-posts .posts-table{width:100%;border:0px;border-collapse:collapse;border-spacing:0;empty-cells:show;}
 /* BB CODE EDITOR */
 .toolbar{padding:2px;display:inline;}
 .toolbar .button{background:url(images/bbeditor-button-bg.gif) repeat-x;padding:2px;margin-right:2px;border:#cec6b5 1px solid;}

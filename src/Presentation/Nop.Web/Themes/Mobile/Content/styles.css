@@ -366,12 +366,12 @@
 .product-variant-line .attributes .textbox{width:300px;}
 .product-variant-line .attributes textarea{width:300px;height:150px;}
 .product-variant-line .stock,.product-variant-line .sku,.product-variant-line .manufacturerpartnumber,.product-variant-line .gtin{}
-.product-variant-line .giftCard{}
-.product-variant-line .giftCard .recipientname{}
-.product-variant-line .giftCard .recipientemail{}
-.product-variant-line .giftCard .sendername{}
-.product-variant-line .giftCard .senderemail{}
-.product-variant-line .giftCard .message{}
+.product-variant-line .giftcard{}
+.product-variant-line .giftcard .recipientname{}
+.product-variant-line .giftcard .recipientemail{}
+.product-variant-line .giftcard .sendername{}
+.product-variant-line .giftcard .senderemail{}
+.product-variant-line .giftcard .message{}
 .related-products-grid,.also-purchased-products-grid{margin:5px 0}
 .related-products-grid .title,.also-purchased-products-grid .title{font-weight:700;font-size:1.1em;}
 .productspec-box{margin:5px 0}
@@ -497,15 +497,15 @@
 .profile-page{}
 .profile-page .title{}
 .profile-page .body{margin-top:15px;}
-.profile-page .body .profileInfoBox{}
-.profile-page .body .profileInfoBox .title{}
-.profile-page .body .profileInfoBox .profileStat{font-weight:700;padding:2px;}
-.profile-page .body .profileInfoBox .profileStat .profileStatValue{font-weight:400;color:#555;}
-.profile-page .body .profileInfoBox .userDetails{padding:10px;}
-.profile-page .body .profileInfoBox .userDetails .avatar{margin-bottom:5px;}
-.profile-page .body .profileInfoBox .userDetails .avatar .avatar-img{border:solid 2px #CEDBE1!important;}
-.profile-page .body .profileInfoBox .userStats{padding:10px;}
-.profile-page .body .profileInfoBox .userStats .section-title{text-transform:uppercase;margin-bottom:10px;}
+.profile-page .body .profile-info-box{}
+.profile-page .body .profile-info-box .title{}
+.profile-page .body .profile-info-box .profile-stat{font-weight:700;padding:2px;}
+.profile-page .body .profile-info-box .profile-stat .profile-stat-value{font-weight:400;color:#555;}
+.profile-page .body .profile-info-box .user-details{padding:10px;}
+.profile-page .body .profile-info-box .user-details .avatar{margin-bottom:5px;}
+.profile-page .body .profile-info-box .user-details .avatar .avatar-img{border:solid 2px #CEDBE1!important;}
+.profile-page .body .profile-info-box .user-stats{padding:10px;}
+.profile-page .body .profile-info-box .user-stats .section-title{text-transform:uppercase;margin-bottom:10px;}
 /* ACTIVE DISCUSSIONS */
 .activediscussionspage{}
 .activediscussions .activediscussionstitle{font-size:1.1em;padding-bottom:5px;font-weight:700;}

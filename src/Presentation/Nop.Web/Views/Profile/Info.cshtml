@@ -1,7 +1,7 @@
 ﻿@model ProfileInfoModel
 @using Nop.Web.Models.Profile;
-<div class="profileInfoBox">
-    <div class="userDetails">
+<div class="profile-info-box">
+    <div class="user-details">
         @if (Model.AvatarEnabled && !String.IsNullOrEmpty(Model.AvatarUrl))
         {
             <div class="avatar">
@@ -10,13 +10,13 @@
         }
         @if (Model.LocationEnabled)
         {            
-            <div class="profileStat">
-                @T("Profile.Country"): <span class="profileStatValue">@Model.Location</span>
+            <div class="profile-stat">
+                @T("Profile.Country"): <span class="profile-stat-value">@Model.Location</span>
             </div>  
         }
         @if (Model.PMEnabled)
         {
-            <div class="profileStat">
+            <div class="profile-stat">
                 <div class="sendpmbox">
                     @Html.RouteLink(T("Forum.PrivateMessages.PM").Text, "SendPM", new { toCustomerId = @Model.CustomerProfileId }, new { @class = "pmlinkbutton" })
                 </div>
@@ -24,26 +24,26 @@
         }
         @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "profile_page_info_userdetails" })
     </div>
-    <div class="userStats">
+    <div class="user-stats">
         <div class="section-title">
             @T("Profile.Statistics")
         </div>
         @if (Model.TotalPostsEnabled)
         {
-            <div class="profileStat">
-                @T("Profile.TotalPosts"): <span class="profileStatValue">@Model.TotalPosts</span>
+            <div class="profile-stat">
+                @T("Profile.TotalPosts"): <span class="profile-stat-value">@Model.TotalPosts</span>
             </div>         
         }
         @if (Model.JoinDateEnabled)
         {        
-            <div class="profileStat">
-                @T("Profile.JoinDate"): <span class="profileStatValue">@Model.JoinDate</span>
+            <div class="profile-stat">
+                @T("Profile.JoinDate"): <span class="profile-stat-value">@Model.JoinDate</span>
             </div>
         }
         @if (Model.DateOfBirthEnabled)
         {
-            <div class="profileStat">
-                @T("Profile.DateOfBirth"): <span class="profileStatValue">@Model.DateOfBirth</span>
+            <div class="profile-stat">
+                @T("Profile.DateOfBirth"): <span class="profile-stat-value">@Model.DateOfBirth</span>
             </div>
         }
         @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "profile_page_info_userstats" })
