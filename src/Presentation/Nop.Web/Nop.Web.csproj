@@ -315,12 +315,19 @@
     <Compile Include="Validators\Common\ContactUsValidator.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\Localization\Installation\installation.cz.xml" />
+    <Content Include="App_Data\Localization\Installation\installation.da.xml" />
+    <Content Include="App_Data\Localization\Installation\installation.fr.xml" />
+    <Content Include="App_Data\Localization\Installation\installation.gr.xml" />
+    <Content Include="App_Data\Localization\Installation\installation.hi.xml" />
+    <Content Include="App_Data\Localization\Installation\installation.it.xml" />
     <Content Include="App_Data\Localization\Installation\installation.ru.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="App_Data\Localization\Installation\installation.en.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="App_Data\Localization\Installation\installation.sp.xml" />
     <Content Include="App_Data\SqlServer.StoredProcedures.sql" />
     <Content Include="App_Data\Localization\defaultResources.admin.nopres.xml">
       <SubType>Designer</SubType>
