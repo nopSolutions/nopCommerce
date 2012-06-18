@@ -614,18 +614,19 @@ namespace Nop.Web.Controllers
             }
 
             //model
-            var model = PreparePaymentMethodModel(cart);
+            var paymentMethodModel = PreparePaymentMethodModel(cart);
 
-            //if we have only one payment method and reward points are disabled or the current customer doesn't have any reward points
             if (_paymentSettings.BypassPaymentMethodSelectionIfOnlyOne &&
-                model.PaymentMethods.Count == 1 && !model.DisplayRewardPoints)
+                paymentMethodModel.PaymentMethods.Count == 1 && !paymentMethodModel.DisplayRewardPoints)
             {
-                _workContext.CurrentCustomer.SelectedPaymentMethodSystemName = model.PaymentMethods[0].PaymentMethodSystemName;
+                //if we have only one payment method and reward points are disabled or the current customer doesn't have any reward points
+                //so customer doesn't have to choose a payment method
+                _workContext.CurrentCustomer.SelectedPaymentMethodSystemName = paymentMethodModel.PaymentMethods[0].PaymentMethodSystemName;
                 _customerService.UpdateCustomer(_workContext.CurrentCustomer);
                 return RedirectToRoute("CheckoutPaymentInfo");
             }
 
-            return View(model);
+            return View(paymentMethodModel);
         }
         [HttpPost, ActionName("PaymentMethod")]
         [FormValueRequired("nextstep")]
@@ -998,15 +999,44 @@ namespace Nop.Web.Controllers
                     {
                         //payment is required
                         var paymentMethodModel = PreparePaymentMethodModel(cart);
-                        return Json(new
+
+                        if (_paymentSettings.BypassPaymentMethodSelectionIfOnlyOne &&
+                            paymentMethodModel.PaymentMethods.Count == 1 && !paymentMethodModel.DisplayRewardPoints)
                         {
-                            update_section = new UpdateSectionJsonModel()
+                            //if we have only one payment method and reward points are disabled or the current customer doesn't have any reward points
+                            //so customer doesn't have to choose a payment method
+                            _workContext.CurrentCustomer.SelectedPaymentMethodSystemName = paymentMethodModel.PaymentMethods[0].PaymentMethodSystemName;
+                            _customerService.UpdateCustomer(_workContext.CurrentCustomer);
+
+                            var paymentMethodInst = _paymentService.LoadPaymentMethodBySystemName(_workContext.CurrentCustomer.SelectedPaymentMethodSystemName);
+                            if (paymentMethodInst == null || !paymentMethodInst.IsPaymentMethodActive(_paymentSettings))
+                                throw new Exception("Selected payment method can't be parsed");
+
+
+                            var paymenInfoModel = PreparePaymentInfoModel(paymentMethodInst);
+                            return Json(new
                             {
-                                name = "payment-method",
-                                html = this.RenderPartialViewToString("OpcPaymentMethods", paymentMethodModel)
-                            },
-                            goto_section = "payment_method"
-                        });
+                                update_section = new UpdateSectionJsonModel()
+                                {
+                                    name = "payment-info",
+                                    html = this.RenderPartialViewToString("OpcPaymentInfo", paymenInfoModel)
+                                },
+                                goto_section = "payment_info"
+                            });
+                        }
+                        else
+                        {
+                            //customer have to choose a payment method
+                            return Json(new
+                            {
+                                update_section = new UpdateSectionJsonModel()
+                                {
+                                    name = "payment-method",
+                                    html = this.RenderPartialViewToString("OpcPaymentMethods", paymentMethodModel)
+                                },
+                                goto_section = "payment_method"
+                            });
+                        }
                     }
                     else
                     {
@@ -1190,15 +1220,44 @@ namespace Nop.Web.Controllers
                 {
                     //payment is required
                     var paymentMethodModel = PreparePaymentMethodModel(cart);
-                    return Json(new
+
+                    if (_paymentSettings.BypassPaymentMethodSelectionIfOnlyOne &&
+                        paymentMethodModel.PaymentMethods.Count == 1 && !paymentMethodModel.DisplayRewardPoints)
                     {
-                        update_section = new UpdateSectionJsonModel()
+                        //if we have only one payment method and reward points are disabled or the current customer doesn't have any reward points
+                        //so customer doesn't have to choose a payment method
+                        _workContext.CurrentCustomer.SelectedPaymentMethodSystemName = paymentMethodModel.PaymentMethods[0].PaymentMethodSystemName;
+                        _customerService.UpdateCustomer(_workContext.CurrentCustomer);
+
+                        var paymentMethodInst = _paymentService.LoadPaymentMethodBySystemName(_workContext.CurrentCustomer.SelectedPaymentMethodSystemName);
+                        if (paymentMethodInst == null || !paymentMethodInst.IsPaymentMethodActive(_paymentSettings))
+                            throw new Exception("Selected payment method can't be parsed");
+
+
+                        var paymenInfoModel = PreparePaymentInfoModel(paymentMethodInst);
+                        return Json(new
                         {
-                            name = "payment-method",
-                            html = this.RenderPartialViewToString("OpcPaymentMethods", paymentMethodModel)
-                        },
-                        goto_section = "payment_method"
-                    });
+                            update_section = new UpdateSectionJsonModel()
+                            {
+                                name = "payment-info",
+                                html = this.RenderPartialViewToString("OpcPaymentInfo", paymenInfoModel)
+                            },
+                            goto_section = "payment_info"
+                        });
+                    }
+                    else
+                    {
+                        //customer have to choose a payment method
+                        return Json(new
+                        {
+                            update_section = new UpdateSectionJsonModel()
+                            {
+                                name = "payment-method",
+                                html = this.RenderPartialViewToString("OpcPaymentMethods", paymentMethodModel)
+                            },
+                            goto_section = "payment_method"
+                        });
+                    }
                 }
                 else
                 {
