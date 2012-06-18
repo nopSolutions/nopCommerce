@@ -1183,6 +1183,8 @@ namespace Nop.Web.Controllers
                 _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.LastShippingOption, shippingOption);
 
 
+                //Check whether payment workflow is required
+                //we ignore reward points during cart total calculation
                 bool isPaymentWorkflowRequired = IsPaymentWorkflowRequired(cart, true);
                 if (isPaymentWorkflowRequired)
                 {
@@ -1253,7 +1255,6 @@ namespace Nop.Web.Controllers
                 _customerService.UpdateCustomer(_workContext.CurrentCustomer);
 
                 //Check whether payment workflow is required
-                //we ignore reward points during cart total calculation
                 bool isPaymentWorkflowRequired = IsPaymentWorkflowRequired(cart);
                 if (!isPaymentWorkflowRequired)
                 {
