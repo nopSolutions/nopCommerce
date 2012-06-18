@@ -17,17 +17,17 @@ using Nop.Core.Plugins;
 using Nop.Plugin.Feed.Froogle.Data;
 using Nop.Plugin.Feed.Froogle.Services;
 using Nop.Services.Catalog;
+using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Media;
-using Nop.Services.PromotionFeed;
 using Nop.Services.Seo;
 using Nop.Services.Tasks;
 
 namespace Nop.Plugin.Feed.Froogle
 {
-    public class FroogleService : BasePlugin,  IPromotionFeed
+    public class FroogleService : BasePlugin, IMiscPlugin
     {
         #region Fields
 

@@ -252,9 +252,6 @@
     <Compile Include="Payments\RecurringPaymentType.cs" />
     <Compile Include="Polls\IPollService.cs" />
     <Compile Include="Polls\PollService.cs" />
-    <Compile Include="PromotionFeed\IPromotionFeed.cs" />
-    <Compile Include="PromotionFeed\IPromotionFeedService.cs" />
-    <Compile Include="PromotionFeed\PromotionFeedService.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>

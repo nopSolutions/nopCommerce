@@ -8506,27 +8506,6 @@
 							</LocaleResource>
 						</Children>
 					</LocaleResource>
-					<LocaleResource Name="Feeds">
-						<Value>Promotion feeds</Value>
-						<Children>
-							<LocaleResource Name="BackToList">
-								<Value>back to feed list</Value>
-							</LocaleResource>
-							<LocaleResource Name="Configure">
-								<Value>Configure</Value>
-							</LocaleResource>
-							<LocaleResource Name="Fields">
-								<Children>
-									<LocaleResource Name="FriendlyName">
-										<Value>Friendly name</Value>
-									</LocaleResource>
-									<LocaleResource Name="SystemName">
-										<Value>System name</Value>
-									</LocaleResource>
-								</Children>
-							</LocaleResource>
-						</Children>
-					</LocaleResource>
 					<LocaleResource Name="NewsLetterSubscriptions">
 						<Value>Newsletter Subscribers</Value>
 						<Children>

@@ -2,12 +2,12 @@
 using System.IO;
 using System.Web.Mvc;
 using Nop.Core;
+using Nop.Core.Plugins;
 using Nop.Plugin.Feed.Become.Models;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
-using Nop.Services.PromotionFeed;
 using Nop.Web.Framework.Controllers;
 
 namespace Nop.Plugin.Feed.Become.Controllers
@@ -17,20 +17,20 @@ namespace Nop.Plugin.Feed.Become.Controllers
     {
         private readonly ICurrencyService _currencyService;
         private readonly ILocalizationService _localizationService;
-        private readonly IPromotionFeedService _promotionFeedService;
+        private readonly IPluginFinder _pluginFinder;
         private readonly ILogger _logger;
         private readonly IWebHelper _webHelper;
         private readonly BecomeSettings _becomeSettings;
         private readonly ISettingService _settingService;
 
         public FeedBecomeController(ICurrencyService currencyService,
-            ILocalizationService localizationService, IPromotionFeedService promotionFeedService, 
+            ILocalizationService localizationService, IPluginFinder pluginFinder, 
             ILogger logger, IWebHelper webHelper,
             BecomeSettings becomeSettings, ISettingService settingService)
         {
             this._currencyService = currencyService;
             this._localizationService = localizationService;
-            this._promotionFeedService = promotionFeedService;
+            this._pluginFinder = pluginFinder;
             this._logger = logger;
             this._webHelper = webHelper;
             this._becomeSettings = becomeSettings;
@@ -96,8 +96,16 @@ namespace Nop.Plugin.Feed.Become.Controllers
                 string filePath = string.Format("{0}content\\files\\exportimport\\{1}", Request.PhysicalApplicationPath, fileName);
                 using (var fs = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite))
                 {
-                    var feed = _promotionFeedService.LoadPromotionFeedBySystemName("PromotionFeed.Become");
-                    feed.GenerateFeed(fs);
+                    var pluginDescriptor = _pluginFinder.GetPluginDescriptorBySystemName("PromotionFeed.Become");
+                    if (pluginDescriptor == null)
+                        throw new Exception("Cannot load the plugin");
+
+                    //plugin
+                    var plugin = pluginDescriptor.Instance() as BecomeService;
+                    if (plugin == null)
+                        throw new Exception("Cannot load the plugin");
+
+                    plugin.GenerateFeed(fs);
                 }
 
                 string clickhereStr = string.Format("<a href=\"{0}content/files/exportimport/{1}\" target=\"_blank\">{2}</a>", _webHelper.GetStoreLocation(false), fileName, _localizationService.GetResource("Plugins.Feed.Become.ClickHere"));

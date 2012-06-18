@@ -70,7 +70,7 @@ namespace Nop.Plugin.Misc.WebServices
         {
             //check whether web service plugin is installed
             var pluginDescriptor = _pluginFinder.GetPluginDescriptorBySystemName("Misc.WebServices");
-            if (pluginDescriptor == null || !pluginDescriptor.Installed)
+            if (pluginDescriptor == null)
                 throw new ApplicationException("Web services plugin cannot be loaded");
 
             if (!_customerRegistrationService.ValidateCustomer(usernameOrEmail, userPassword))

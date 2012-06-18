@@ -11,16 +11,16 @@ using Nop.Core.Domain.Media;
 using Nop.Core.Html;
 using Nop.Core.Plugins;
 using Nop.Services.Catalog;
+using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Media;
-using Nop.Services.PromotionFeed;
 using Nop.Services.Seo;
 
 namespace Nop.Plugin.Feed.Become
 {
-    public class BecomeService : BasePlugin,  IPromotionFeed
+    public class BecomeService : BasePlugin,  IMiscPlugin
     {
         #region Fields
 
@@ -120,7 +120,7 @@ namespace Nop.Plugin.Feed.Become
         /// <returns>Generated feed</returns>
         public void GenerateFeed(Stream stream)
         {
-            using (StreamWriter writer = new StreamWriter(stream))
+            using (var writer = new StreamWriter(stream))
             {
                 writer.WriteLine("UPC;Mfr Part #;Manufacturer;Product URL;Image URL;Product Title;Product Description;Category;Price;Condition;Stock Status");
 

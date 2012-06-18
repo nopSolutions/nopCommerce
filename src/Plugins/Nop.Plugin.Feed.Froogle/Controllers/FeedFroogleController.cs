@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Tasks;
+using Nop.Core.Plugins;
 using Nop.Plugin.Feed.Froogle.Domain;
 using Nop.Plugin.Feed.Froogle.Models;
 using Nop.Plugin.Feed.Froogle.Services;
@@ -14,8 +15,6 @@ using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
-using Nop.Services.PromotionFeed;
-using Nop.Services.Security;
 using Nop.Services.Tasks;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
@@ -29,32 +28,29 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
         private readonly IProductService _productService;
         private readonly ICurrencyService _currencyService;
         private readonly ILocalizationService _localizationService;
-        private readonly IPromotionFeedService _promotionFeedService;
+        private readonly IPluginFinder _pluginFinder;
         private readonly ILogger _logger;
         private readonly IWebHelper _webHelper;
         private readonly IScheduleTaskService _scheduleTaskService;
         private readonly FroogleSettings _froogleSettings;
         private readonly ISettingService _settingService;
-        private readonly IPermissionService _permissionService;
 
         public FeedFroogleController(IGoogleService googleService, 
             IProductService productService, ICurrencyService currencyService,
-            ILocalizationService localizationService, IPromotionFeedService promotionFeedService, 
+            ILocalizationService localizationService, IPluginFinder pluginFinder, 
             ILogger logger, IWebHelper webHelper, IScheduleTaskService scheduleTaskService, 
-            FroogleSettings froogleSettings, ISettingService settingService,
-            IPermissionService permissionService)
+            FroogleSettings froogleSettings, ISettingService settingService)
         {
             this._googleService = googleService;
             this._productService = productService;
             this._currencyService = currencyService;
             this._localizationService = localizationService;
-            this._promotionFeedService = promotionFeedService;
+            this._pluginFinder = pluginFinder;
             this._logger = logger;
             this._webHelper = webHelper;
             this._scheduleTaskService = scheduleTaskService;
             this._froogleSettings = froogleSettings;
             this._settingService = settingService;
-            this._permissionService = permissionService;
         }
 
         [NonAction]
@@ -186,8 +182,16 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
 
             try
             {
-                var feed = _promotionFeedService.LoadPromotionFeedBySystemName("PromotionFeed.Froogle") as FroogleService;
-                feed.GenerateStaticFile();
+                var pluginDescriptor = _pluginFinder.GetPluginDescriptorBySystemName("PromotionFeed.Froogle");
+                if (pluginDescriptor == null)
+                    throw new Exception("Cannot load the plugin");
+
+                //plugin
+                var plugin = pluginDescriptor.Instance() as FroogleService;
+                if (plugin == null)
+                    throw new Exception("Cannot load the plugin");
+
+                plugin.GenerateStaticFile();
 
                 string clickhereStr = string.Format("<a href=\"{0}content/files/exportimport/{1}\" target=\"_blank\">{2}</a>", _webHelper.GetStoreLocation(false), _froogleSettings.StaticFileName, _localizationService.GetResource("Plugins.Feed.Froogle.ClickHere"));
                 string result = string.Format(_localizationService.GetResource("Plugins.Feed.Froogle.SuccessResult"), clickhereStr);
@@ -257,8 +261,16 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
 
                 using (Stream reqStream = req.GetRequestStream())
                 {
-                    var feed = _promotionFeedService.LoadPromotionFeedBySystemName("PromotionFeed.Froogle");
-                    feed.GenerateFeed(reqStream);
+                    var pluginDescriptor = _pluginFinder.GetPluginDescriptorBySystemName("PromotionFeed.Froogle");
+                    if (pluginDescriptor == null)
+                        throw new Exception("Cannot load the plugin");
+
+                    //plugin
+                    var plugin = pluginDescriptor.Instance() as FroogleService;
+                    if (plugin == null)
+                        throw new Exception("Cannot load the plugin");
+
+                    plugin.GenerateFeed(reqStream);
                 }
 
                 var rsp = req.GetResponse() as FtpWebResponse;
@@ -318,9 +330,6 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult GoogleProductList(GridCommand command)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePromotionFeeds))
-                throw new NopException("Not authorized");
-
             var productVariants = _productService.SearchProductVariants(0, 0, "", false,
                 command.Page - 1, command.PageSize, true);
             var productVariantsModel = productVariants
@@ -354,10 +363,6 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
         [GridAction(EnableCustomBinding = true)]
         public ActionResult GoogleProductUpdate(GridCommand command, FeedFroogleModel.GoogleProductModel model)
         {
-            if (!_permissionService.Authorize(StandardPermissionProvider.ManagePromotionFeeds))
-                throw new NopException("Not authorized");
-
-
             var googleProduct = _googleService.GetByProductVariantId(model.ProductVariantId);
             if (googleProduct != null)
             {

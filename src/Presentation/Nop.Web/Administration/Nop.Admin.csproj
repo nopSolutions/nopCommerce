@@ -107,7 +107,6 @@
     <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\SmsController.cs" />
     <Compile Include="Controllers\MessageTemplateController.cs" />
-    <Compile Include="Controllers\PromotionFeedController.cs" />
     <Compile Include="Controllers\ProductReviewController.cs" />
     <Compile Include="Controllers\ReturnRequestController.cs" />
     <Compile Include="Controllers\RecurringPaymentController.cs" />
@@ -208,7 +207,6 @@
     <Compile Include="Models\Orders\OrderModel.cs" />
     <Compile Include="Models\Messages\SmsProviderModel.cs" />
     <Compile Include="Models\Messages\MessageTemplateModel.cs" />
-    <Compile Include="Models\PromotionFeeds\PromotionFeedModel.cs" />
     <Compile Include="Models\Directory\StateProvinceModel.cs" />
     <Compile Include="Models\Directory\CountryModel.cs" />
     <Compile Include="Models\Catalog\ProductReviewModel.cs" />
@@ -725,12 +723,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Country\List.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\PromotionFeed\ConfigureMethod.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\PromotionFeed\List.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Shared\EditorTemplates\RichEditor.cshtml" />

@@ -40,7 +40,6 @@ using Nop.Services.News;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Polls;
-using Nop.Services.PromotionFeed;
 using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Shipping;
@@ -169,8 +168,6 @@ namespace Nop.Web.Framework
             builder.RegisterType<StateProvinceService>().As<IStateProvinceService>().InstancePerHttpRequest();
 
             builder.RegisterType<DiscountService>().As<IDiscountService>().InstancePerHttpRequest();
-            builder.RegisterType<PromotionFeedService>().As<IPromotionFeedService>().InstancePerHttpRequest();
-
 
 
             //pass MemoryCacheManager to SettingService as cacheManager (cache settngs between requests)

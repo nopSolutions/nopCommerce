@@ -677,6 +677,21 @@ set @resources='
   <LocaleResource Name="Order.Weight">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Feeds">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Feeds.BackToList">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Feeds.Configure">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Feeds.Fields.FriendlyName">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Promotions.Feeds.Fields.SystemName">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -2565,4 +2580,9 @@ BEGIN
 	ALTER TABLE [OrderProductVariant]
 	ADD [ItemWeight] decimal(18, 4) NULL
 END
+GO
+
+--delete obsolete permission
+DELETE FROM [PermissionRecord]
+WHERE [SystemName] = N'ManagePromotionFeeds'
 GO

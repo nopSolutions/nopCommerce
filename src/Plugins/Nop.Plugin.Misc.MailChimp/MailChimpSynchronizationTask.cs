@@ -22,7 +22,7 @@ namespace Nop.Plugin.Misc.MailChimp
         {
             //is plugin installed?
             var pluginDescriptor = _pluginFinder.GetPluginDescriptorBySystemName("Misc.MailChimp");
-            if (pluginDescriptor == null || !pluginDescriptor.Installed)
+            if (pluginDescriptor == null)
                 return;
 
             //is plugin configured?

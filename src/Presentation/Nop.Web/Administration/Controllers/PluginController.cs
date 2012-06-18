@@ -11,7 +11,6 @@ using Nop.Services.Common;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Payments;
-using Nop.Services.PromotionFeed;
 using Nop.Services.Security;
 using Nop.Services.Shipping;
 using Nop.Services.Tax;
@@ -97,11 +96,6 @@ namespace Nop.Admin.Controllers
                 {
                     //SMS provider
                     configurationUrl = Url.Action("ConfigureProvider", "Sms", new { systemName = pluginDescriptor.SystemName });
-                }
-                else if (pluginInstance is IPromotionFeed)
-                {
-                    //promotion feed
-                    configurationUrl = Url.Action("ConfigureMethod", "PromotionFeed", new { systemName = pluginDescriptor.SystemName });
                 }
                 else if (pluginInstance is IWidgetPlugin)
                 {

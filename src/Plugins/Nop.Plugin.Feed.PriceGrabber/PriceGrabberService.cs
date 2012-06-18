@@ -11,16 +11,16 @@ using Nop.Core.Domain.Media;
 using Nop.Core.Html;
 using Nop.Core.Plugins;
 using Nop.Services.Catalog;
+using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Media;
-using Nop.Services.PromotionFeed;
 using Nop.Services.Seo;
 
 namespace Nop.Plugin.Feed.PriceGrabber
 {
-    public class PriceGrabberService : BasePlugin,  IPromotionFeed
+    public class PriceGrabberService : BasePlugin,  IMiscPlugin
     {
         #region Fields
 

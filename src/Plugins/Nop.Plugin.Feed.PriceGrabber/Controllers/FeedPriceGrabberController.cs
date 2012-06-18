@@ -2,12 +2,12 @@
 using System.IO;
 using System.Web.Mvc;
 using Nop.Core;
+using Nop.Core.Plugins;
 using Nop.Plugin.Feed.PriceGrabber.Models;
 using Nop.Services.Configuration;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
-using Nop.Services.PromotionFeed;
 using Nop.Web.Framework.Controllers;
 
 namespace Nop.Plugin.Feed.PriceGrabber.Controllers
@@ -17,20 +17,20 @@ namespace Nop.Plugin.Feed.PriceGrabber.Controllers
     {
         private readonly ICurrencyService _currencyService;
         private readonly ILocalizationService _localizationService;
-        private readonly IPromotionFeedService _promotionFeedService;
+        private readonly IPluginFinder _pluginFinder;
         private readonly ILogger _logger;
         private readonly IWebHelper _webHelper;
         private readonly PriceGrabberSettings _priceGrabberSettings;
         private readonly ISettingService _settingService;
 
         public FeedPriceGrabberController(ICurrencyService currencyService,
-            ILocalizationService localizationService, IPromotionFeedService promotionFeedService, 
+            ILocalizationService localizationService, IPluginFinder pluginFinder, 
             ILogger logger, IWebHelper webHelper,
             PriceGrabberSettings priceGrabberSettings, ISettingService settingService)
         {
             this._currencyService = currencyService;
             this._localizationService = localizationService;
-            this._promotionFeedService = promotionFeedService;
+            this._pluginFinder = pluginFinder;
             this._logger = logger;
             this._webHelper = webHelper;
             this._priceGrabberSettings = priceGrabberSettings;
@@ -96,8 +96,16 @@ namespace Nop.Plugin.Feed.PriceGrabber.Controllers
                 string filePath = string.Format("{0}content\\files\\exportimport\\{1}", Request.PhysicalApplicationPath, fileName);
                 using (var fs = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite))
                 {
-                    var feed = _promotionFeedService.LoadPromotionFeedBySystemName("PromotionFeed.PriceGrabber");
-                    feed.GenerateFeed(fs);
+                    var pluginDescriptor = _pluginFinder.GetPluginDescriptorBySystemName("PromotionFeed.PriceGrabber");
+                    if (pluginDescriptor == null)
+                        throw new Exception("Cannot load the plugin");
+
+                    //plugin
+                    var plugin = pluginDescriptor.Instance() as PriceGrabberService;
+                    if (plugin == null)
+                        throw new Exception("Cannot load the plugin");
+
+                    plugin.GenerateFeed(fs);
                 }
 
                 string clickhereStr = string.Format("<a href=\"{0}content/files/exportimport/{1}\" target=\"_blank\">{2}</a>", _webHelper.GetStoreLocation(false), fileName, _localizationService.GetResource("Plugins.Feed.PriceGrabber.ClickHere"));

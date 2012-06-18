@@ -26,7 +26,7 @@ namespace Nop.Plugin.Misc.MailChimp.Services
         {
             //is plugin installed?
             var pluginDescriptor = _pluginFinder.GetPluginDescriptorBySystemName("Misc.MailChimp");
-            if (pluginDescriptor == null || !pluginDescriptor.Installed)
+            if (pluginDescriptor == null)
                 return;
             
             _service.Insert(new MailChimpEventQueueRecord { Email = eventMessage.Email, IsSubscribe = true, CreatedOnUtc = DateTime.UtcNow});
@@ -40,7 +40,7 @@ namespace Nop.Plugin.Misc.MailChimp.Services
         {
             //is plugin installed?
             var pluginDescriptor = _pluginFinder.GetPluginDescriptorBySystemName("Misc.MailChimp");
-            if (pluginDescriptor == null || !pluginDescriptor.Installed)
+            if (pluginDescriptor == null)
                 return;
 
             _service.Insert(new MailChimpEventQueueRecord { Email = eventMessage.Email, IsSubscribe = false, CreatedOnUtc = DateTime.UtcNow });

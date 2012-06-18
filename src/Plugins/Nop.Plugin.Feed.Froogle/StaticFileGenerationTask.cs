@@ -19,7 +19,7 @@ namespace Nop.Plugin.Feed.Froogle
         {
             //is plugin installed?
             var pluginDescriptor = _pluginFinder.GetPluginDescriptorBySystemName("PromotionFeed.Froogle");
-            if (pluginDescriptor == null || !pluginDescriptor.Installed)
+            if (pluginDescriptor == null)
                 return;
 
             //plugin
