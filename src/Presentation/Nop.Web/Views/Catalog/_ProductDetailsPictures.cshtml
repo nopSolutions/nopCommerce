@@ -2,6 +2,8 @@
 @using Nop.Web.Models.Catalog;
 @{
     Html.AddScriptParts(@Url.Content("~/Scripts/slimbox2.js"));
+
+    int productPerRow = 6;
 }
 <div class="picture">
     @if (Model.DefaultPictureZoomEnabled)
@@ -17,16 +19,28 @@
     @if (Model.PictureModels.Count > 1)
     {
         <table class="picturethumbs">
-            <tr>
-                @foreach (var picture in Model.PictureModels)
+            @for (int i = 0; i < Model.PictureModels.Count; i++)
+            {
+                var picture = Model.PictureModels[i];
+
+                if (i % productPerRow == 0)
                 {
-                    <td class="a-left">
-                        <a href="@picture.FullSizeImageUrl" data-gallery="lightbox-p" title="@Model.Name">
-                            <img src="@picture.ImageUrl" alt="@picture.AlternateText" title="@picture.Title" />
-                        </a>
-                    </td>
+                @Html.Raw("<tr>")
                 }
-            </tr>
+                    
+                <td class="a-left">
+                    <a href="@picture.FullSizeImageUrl" data-gallery="lightbox-p" title="@Model.Name">
+                        <img src="@picture.ImageUrl" alt="@picture.AlternateText" title="@picture.Title" />
+                    </a>
+                </td>
+                                    
+                if ((i % productPerRow == (productPerRow - 1)) ||
+                    //last image
+                    (i == (Model.PictureModels.Count - 1)))
+                {
+                @Html.Raw("</tr>")
+                }
+            }
         </table>
     }
 </div>
