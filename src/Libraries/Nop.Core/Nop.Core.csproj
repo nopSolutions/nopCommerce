@@ -166,7 +166,6 @@
     <Compile Include="Domain\Messages\MessageTemplate.cs" />
     <Compile Include="Domain\Messages\NewsLetterSubscription.cs" />
     <Compile Include="Domain\Messages\QueuedEmail.cs" />
-    <Compile Include="Domain\Messages\SmsSettings.cs" />
     <Compile Include="Domain\Orders\OrderNote.cs" />
     <Compile Include="Domain\Orders\OrderProductVariant.cs" />
     <Compile Include="Domain\Orders\OrderStatus.cs" />

@@ -61,7 +61,6 @@ namespace Nop.Services.Orders
         private readonly IEncryptionService _encryptionService;
         private readonly IWorkContext _workContext;
         private readonly IWorkflowMessageService _workflowMessageService;
-        private readonly ISmsService _smsService;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly ICurrencyService _currencyService;
         private readonly IEventPublisher _eventPublisher;
@@ -136,7 +135,6 @@ namespace Nop.Services.Orders
             IEncryptionService encryptionService,
             IWorkContext workContext,
             IWorkflowMessageService workflowMessageService,
-            ISmsService smsService,
             ICustomerActivityService customerActivityService,
             ICurrencyService currencyService,
             IEventPublisher eventPublisher,
@@ -170,7 +168,6 @@ namespace Nop.Services.Orders
             this._customerService = customerService;
             this._discountService = discountService;
             this._encryptionService = encryptionService;
-            this._smsService = smsService;
             this._customerActivityService = customerActivityService;
             this._currencyService = currencyService;
             this._eventPublisher = eventPublisher;
@@ -1219,18 +1216,6 @@ namespace Nop.Services.Orders
                             order.OrderNotes.Add(new OrderNote()
                             {
                                 Note = string.Format("\"Order placed\" email (to customer) has been queued. Queued email identifier: {0}.", orderPlacedCustomerNotificationQueuedEmailId),
-                                DisplayToCustomer = false,
-                                CreatedOnUtc = DateTime.UtcNow
-                            });
-                            _orderService.UpdateOrder(order);
-                        }
-
-                        //send SMS
-                        if (_smsService.SendSms(String.Format("New order(#{0}) has been placed.", order.Id)) > 0)
-                        {
-                            order.OrderNotes.Add(new OrderNote()
-                            {
-                                Note = "\"Order placed\" SMS alert (to store owner) has been sent",
                                 DisplayToCustomer = false,
                                 CreatedOnUtc = DateTime.UtcNow
                             });

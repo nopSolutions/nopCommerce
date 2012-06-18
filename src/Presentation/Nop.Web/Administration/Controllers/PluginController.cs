@@ -92,11 +92,6 @@ namespace Nop.Admin.Controllers
                     //external auth method
                     configurationUrl = Url.Action("ConfigureMethod", "ExternalAuthentication", new { systemName = pluginDescriptor.SystemName });
                 }
-                else if (pluginInstance is ISmsProvider)
-                {
-                    //SMS provider
-                    configurationUrl = Url.Action("ConfigureProvider", "Sms", new { systemName = pluginDescriptor.SystemName });
-                }
                 else if (pluginInstance is IWidgetPlugin)
                 {
                     //Misc plugins

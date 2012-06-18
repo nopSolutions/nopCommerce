@@ -4,6 +4,9 @@ namespace Nop.Plugin.Sms.Clickatell.Models
 {
     public class SmsClickatellModel
     {
+        [NopResourceDisplayName("Plugins.Sms.Clickatell.Fields.Enabled")]
+        public bool Enabled { get; set; }
+
         [NopResourceDisplayName("Plugins.Sms.Clickatell.Fields.PhoneNumber")]
         public string PhoneNumber { get; set; }
 

@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="Controllers\SmsVerizonController.cs" />
     <Compile Include="Models\SmsVerizonModel.cs" />
+    <Compile Include="OrderPlacedEventConsumer.cs" />
     <Compile Include="RouteProvider.cs" />
     <Compile Include="VerizonSettings.cs" />
     <Compile Include="VerizonSmsProvider.cs" />

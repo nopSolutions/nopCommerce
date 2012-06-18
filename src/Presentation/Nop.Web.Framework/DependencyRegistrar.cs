@@ -197,7 +197,6 @@ namespace Nop.Web.Framework
             builder.RegisterType<MessageTokenProvider>().As<IMessageTokenProvider>().InstancePerHttpRequest();
             builder.RegisterType<Tokenizer>().As<ITokenizer>().InstancePerHttpRequest();
             builder.RegisterType<EmailSender>().As<IEmailSender>().InstancePerHttpRequest();
-            builder.RegisterType<SmsService>().As<ISmsService>().InstancePerHttpRequest();
 
             builder.RegisterType<CheckoutAttributeFormatter>().As<ICheckoutAttributeFormatter>().InstancePerHttpRequest();
             builder.RegisterType<CheckoutAttributeParser>().As<ICheckoutAttributeParser>().InstancePerHttpRequest();

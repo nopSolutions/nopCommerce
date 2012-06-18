@@ -4,6 +4,7 @@ using System.Web.Routing;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Plugins;
+using Nop.Services.Common;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -14,7 +15,7 @@ namespace Nop.Plugin.SMS.Verizon
     /// <summary>
     /// Represents the Verizon SMS provider
     /// </summary>
-    public class VerizonSmsProvider : BasePlugin, ISmsProvider
+    public class VerizonSmsProvider : BasePlugin, IMiscPlugin
     {
         private readonly VerizonSettings _verizonSettings;
         private readonly IQueuedEmailService _queuedEmailService;
@@ -104,6 +105,8 @@ namespace Nop.Plugin.SMS.Verizon
             //locales
             this.AddOrUpdatePluginLocaleResource("Plugins.Sms.Verizon.TestFailed", "Test message sending failed");
             this.AddOrUpdatePluginLocaleResource("Plugins.Sms.Verizon.TestSuccess", "Test message was sent (queued)");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Sms.Verizon.Fields.Enabled", "Enabled");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Sms.Verizon.Fields.Enabled.Hint", "Check to enable SMS provider");
             this.AddOrUpdatePluginLocaleResource("Plugins.Sms.Verizon.Fields.Email", "Email");
             this.AddOrUpdatePluginLocaleResource("Plugins.Sms.Verizon.Fields.Email.Hint", "Verizon email address(e.g. your_phone_number@vtext.com)");
             this.AddOrUpdatePluginLocaleResource("Plugins.Sms.Verizon.Fields.TestMessage", "Message text");
@@ -122,6 +125,8 @@ namespace Nop.Plugin.SMS.Verizon
             //locales
             this.DeletePluginLocaleResource("Plugins.Sms.Verizon.TestFailed");
             this.DeletePluginLocaleResource("Plugins.Sms.Verizon.TestSuccess");
+            this.DeletePluginLocaleResource("Plugins.Sms.Verizon.Fields.Enabled");
+            this.DeletePluginLocaleResource("Plugins.Sms.Verizon.Fields.Enabled.Hint");
             this.DeletePluginLocaleResource("Plugins.Sms.Verizon.Fields.Email");
             this.DeletePluginLocaleResource("Plugins.Sms.Verizon.Fields.Email.Hint");
             this.DeletePluginLocaleResource("Plugins.Sms.Verizon.Fields.TestMessage");

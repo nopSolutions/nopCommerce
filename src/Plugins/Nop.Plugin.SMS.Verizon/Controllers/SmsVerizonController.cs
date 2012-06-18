@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Web.Mvc;
-using Nop.Plugin.SMS.Verizon;
+using Nop.Core.Plugins;
 using Nop.Plugin.Sms.Verizon.Models;
+using Nop.Plugin.SMS.Verizon;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
-using Nop.Services.Messages;
 using Nop.Web.Framework.Controllers;
 
 namespace Nop.Plugin.Sms.Verizon.Controllers
@@ -14,22 +14,23 @@ namespace Nop.Plugin.Sms.Verizon.Controllers
     {
         private readonly VerizonSettings _verizonSettings;
         private readonly ISettingService _settingService;
-        private readonly ISmsService _smsService;
+        private readonly IPluginFinder _pluginFinder;
         private readonly ILocalizationService _localizationService;
 
         public SmsVerizonController(VerizonSettings verizonSettings,
-            ISettingService settingService, ISmsService smsService,
+            ISettingService settingService, IPluginFinder pluginFinder,
             ILocalizationService localizationService)
         {
             this._verizonSettings = verizonSettings;
             this._settingService = settingService;
-            this._smsService = smsService;
+            this._pluginFinder = pluginFinder;
             this._localizationService = localizationService;
         }
 
         public ActionResult Configure()
         {
             var model = new SmsVerizonModel();
+            model.Enabled = _verizonSettings.Enabled;
             model.Email = _verizonSettings.Email;
             return View("Nop.Plugin.SMS.Verizon.Views.SmsVerizon.Configure", model);
         }
@@ -42,8 +43,9 @@ namespace Nop.Plugin.Sms.Verizon.Controllers
             {
                 return Configure();
             }
-            
+
             //save settings
+            _verizonSettings.Enabled = model.Enabled;
             _verizonSettings.Email = model.Email;
             _settingService.SaveSetting(_verizonSettings);
 
@@ -62,9 +64,14 @@ namespace Nop.Plugin.Sms.Verizon.Controllers
                 }
                 else
                 {
-                    var smsProvider = _smsService.LoadSmsProviderBySystemName("Mobile.SMS.Verizon");
+                    var pluginDescriptor = _pluginFinder.GetPluginDescriptorBySystemName("Mobile.SMS.Verizon");
+                    if (pluginDescriptor == null)
+                        throw new Exception("Cannot load the plugin");
+                    var plugin = pluginDescriptor.Instance() as VerizonSmsProvider;
+                    if (plugin == null)
+                        throw new Exception("Cannot load the plugin");
 
-                    if (!smsProvider.SendSms(model.TestMessage))
+                    if (!plugin.SendSms(model.TestMessage))
                     {
                         model.TestSmsResult = _localizationService.GetResource("Plugins.Sms.Verizon.TestFailed");
                     }

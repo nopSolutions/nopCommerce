@@ -105,7 +105,6 @@
     <Compile Include="Controllers\TopicController.cs" />
     <Compile Include="Controllers\NewsController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
-    <Compile Include="Controllers\SmsController.cs" />
     <Compile Include="Controllers\MessageTemplateController.cs" />
     <Compile Include="Controllers\ProductReviewController.cs" />
     <Compile Include="Controllers\ReturnRequestController.cs" />
@@ -205,7 +204,6 @@
     <Compile Include="Models\Orders\OrderAddressModel.cs" />
     <Compile Include="Models\Orders\OrderListModel.cs" />
     <Compile Include="Models\Orders\OrderModel.cs" />
-    <Compile Include="Models\Messages\SmsProviderModel.cs" />
     <Compile Include="Models\Messages\MessageTemplateModel.cs" />
     <Compile Include="Models\Directory\StateProvinceModel.cs" />
     <Compile Include="Models\Directory\CountryModel.cs" />
@@ -747,12 +745,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Campaign\Create.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Sms\ConfigureProvider.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Sms\Providers.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Order\AddressEdit.cshtml" />

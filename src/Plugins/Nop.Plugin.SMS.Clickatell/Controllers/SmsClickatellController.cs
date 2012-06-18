@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Web.Mvc;
-using Nop.Plugin.SMS.Clickatell;
+using Nop.Core.Plugins;
 using Nop.Plugin.Sms.Clickatell.Models;
+using Nop.Plugin.SMS.Clickatell;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
-using Nop.Services.Messages;
 using Nop.Web.Framework.Controllers;
 
 namespace Nop.Plugin.Sms.Clickatell.Controllers
@@ -14,22 +14,23 @@ namespace Nop.Plugin.Sms.Clickatell.Controllers
     {
         private readonly ClickatellSettings _clickatellSettings;
         private readonly ISettingService _settingService;
-        private readonly ISmsService _smsService;
+        private readonly IPluginFinder _pluginFinder;
         private readonly ILocalizationService _localizationService;
 
         public SmsClickatellController(ClickatellSettings clickatellSettings,
-            ISettingService settingService, ISmsService smsService,
+            ISettingService settingService, IPluginFinder pluginFinder,
             ILocalizationService localizationService)
         {
             this._clickatellSettings = clickatellSettings;
             this._settingService = settingService;
-            this._smsService = smsService;
+            this._pluginFinder = pluginFinder;
             this._localizationService = localizationService;
         }
 
         public ActionResult Configure()
         {
             var model = new SmsClickatellModel();
+            model.Enabled = _clickatellSettings.Enabled;
             model.PhoneNumber = _clickatellSettings.PhoneNumber;
             model.ApiId = _clickatellSettings.ApiId;
             model.Username = _clickatellSettings.Username;
@@ -45,8 +46,9 @@ namespace Nop.Plugin.Sms.Clickatell.Controllers
             {
                 return Configure();
             }
-            
+
             //save settings
+            _clickatellSettings.Enabled = model.Enabled;
             _clickatellSettings.PhoneNumber = model.PhoneNumber;
             _clickatellSettings.ApiId = model.ApiId;
             _clickatellSettings.Username = model.Username;
@@ -68,9 +70,14 @@ namespace Nop.Plugin.Sms.Clickatell.Controllers
                 }
                 else
                 {
-                    var smsProvider = _smsService.LoadSmsProviderBySystemName("Mobile.SMS.Clickatell");
+                    var pluginDescriptor = _pluginFinder.GetPluginDescriptorBySystemName("Mobile.SMS.Clickatell");
+                    if (pluginDescriptor == null)
+                        throw new Exception("Cannot load the plugin");
+                    var plugin = pluginDescriptor.Instance() as ClickatellSmsProvider;
+                    if (plugin == null)
+                        throw new Exception("Cannot load the plugin");
 
-                    if (!smsProvider.SendSms(model.TestMessage))
+                    if (!plugin.SendSms(model.TestMessage))
                     {
                         model.TestSmsResult = _localizationService.GetResource("Plugins.Sms.Clickatell.TestFailed");
                     }

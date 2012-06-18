@@ -692,6 +692,18 @@ set @resources='
   <LocaleResource Name="Admin.Promotions.Feeds.Fields.SystemName">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Sms.Clickatell.Fields.Enabled">
+    <Value>Enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Sms.Clickatell.Fields.Enabled.Hint">
+    <Value>Check to enable SMS provider</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Sms.Verizon.Fields.Enabled">
+    <Value>Enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Sms.Verizon.Fields.Enabled.Hint">
+    <Value>Check to enable SMS provider</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -2585,4 +2597,22 @@ GO
 --delete obsolete permission
 DELETE FROM [PermissionRecord]
 WHERE [SystemName] = N'ManagePromotionFeeds'
+GO
+DELETE FROM [Setting]
+WHERE [Name] = N'smssettings.activesmsprovidersystemnames'
+GO
+DELETE FROM [PermissionRecord]
+WHERE [SystemName] = N'ManageSMSProviders'
+GO
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'clickatellsettings.enabled')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'clickatellsettings.enabled', N'false')
+END
+GO
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'verizonsettings.enabled')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'verizonsettings.enabled', N'false')
+END
 GO

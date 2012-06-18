@@ -486,15 +486,6 @@ namespace Nop.Admin
         }
 
         #endregion
-
-        #region SMS providers
-
-        public static SmsProviderModel ToModel(this ISmsProvider entity)
-        {
-            return Mapper.Map<ISmsProvider, SmsProviderModel>(entity);
-        }
-
-        #endregion
         
         #region Widgets
 
