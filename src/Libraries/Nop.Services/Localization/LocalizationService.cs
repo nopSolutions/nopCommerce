@@ -370,7 +370,9 @@ namespace Nop.Services.Localization
                 pXmlPackage.ParameterName = "XmlPackage";
                 pXmlPackage.Value = xml;
                 pXmlPackage.DbType = DbType.Xml;
-                _dbContext.ExecuteSqlCommand("EXEC [LanguagePackImport] @LanguageId, @XmlPackage", pLanguageId, pXmlPackage);
+
+                //long-running query. specify timeout (600 seconds)
+                _dbContext.ExecuteSqlCommand("EXEC [LanguagePackImport] @LanguageId, @XmlPackage", 600, pLanguageId, pXmlPackage);
             }
             else
             {
