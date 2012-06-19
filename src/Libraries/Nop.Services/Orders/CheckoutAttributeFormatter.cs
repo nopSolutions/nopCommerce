@@ -95,7 +95,7 @@ namespace Nop.Services.Orders
                             //encode (if required)
                             if (htmlEncode)
                                 attributeName = HttpUtility.HtmlEncode(attributeName);
-                            caAttribute = string.Format("{0}: {1}", attributeName, HtmlHelper.FormatText(valueStr, false, true, true, false, false, false));
+                            caAttribute = string.Format("{0}: {1}", attributeName, HtmlHelper.FormatText(valueStr, false, true, false, false, false, false));
                             //we never encode multiline textbox input
                         }
                         else if (ca.AttributeControlType == AttributeControlType.FileUpload)
