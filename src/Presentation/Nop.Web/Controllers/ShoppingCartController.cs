@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -297,6 +298,25 @@ namespace Nop.Web.Controllers
                                 if (enteredText.Count > 0)
                                     caModel.DefaultValue = enteredText[0];
                             }
+                        }
+                        break;
+                    case AttributeControlType.Datepicker:
+                        {
+                            //keep in mind my that the code below works only in the current culture
+                            var selectedDateStr = _checkoutAttributeParser.ParseValues(selectedCheckoutAttributes, attribute.Id);
+                            if (selectedDateStr.Count > 0)
+                            {
+                                DateTime selectedDate;
+                                if (DateTime.TryParseExact(selectedDateStr[0], "D", CultureInfo.CurrentCulture,
+                                                       DateTimeStyles.None, out selectedDate))
+                                {
+                                    //successfully parsed
+                                    caModel.SelectedDay = selectedDate.Day;
+                                    caModel.SelectedMonth = selectedDate.Month;
+                                    caModel.SelectedYear = selectedDate.Year;
+                                }
+                            }
+                            
                         }
                         break;
                     default:
