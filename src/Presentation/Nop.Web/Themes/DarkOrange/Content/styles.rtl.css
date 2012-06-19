@@ -365,6 +365,7 @@ ul.languagelist li:hover{cursor:pointer;}
 .opc .active .step-title h2{color:#F93;}
 .opc .step{border:1px solid #bbafa0;border-top:0;background:#fbfaf6 0 0 repeat-x;padding:15px 30px;position:relative;}
 .opc .step-title:after{display:block;content:".";clear:both;font-size:0;line-height:0;height:0;overflow:hidden;}
+.opc .order-summary-content .cart-footer{background:none!important;}
 /* HOME PAGE */
 .home-page-product-grid{margin-left:auto;margin-right:auto;width:520px;}
 .home-page-product-grid .title{padding:10px 10px 10px 0;margin:0 0 0 10px;font-weight:700;text-transform:uppercase;font-size:1.1em;color:#3a3a3a;text-align:center;}
