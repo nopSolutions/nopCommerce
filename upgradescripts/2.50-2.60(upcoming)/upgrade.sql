@@ -704,6 +704,24 @@ set @resources='
   <LocaleResource Name="Plugins.Sms.Verizon.Fields.Enabled.Hint">
     <Value>Check to enable SMS provider</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.AssociatedExternalAuth.YourAccountWillBeLinkedTo">
+    <Value>Account Association: Your new user account will be linked to</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EncryptionKey.Changed">
+    <Value>Encryption key is changed</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EncryptionKey.TooShort">
+    <Value>Encryption private key must be 16 characters long</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EncryptionKey.TheSame">
+    <Value>The new ecryption key is the same as the old one</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SSLSettings">
+    <Value>SSL settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SSLSettings.Hint">
+    <Value>SSL settings can be also changed in web.config file.</Value>
+  </LocaleResource>
 </Language>
 '
 

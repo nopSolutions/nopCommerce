@@ -5,7 +5,7 @@
 @if (openAuthParameters != null)
 {
     <div class="external-auth-association">
-        Account Association: Your new user account will be linked to <span class="identifier">@openAuthParameters.ExternalIdentifier</span>
+        @T("Account.AssociatedExternalAuth.YourAccountWillBeLinkedTo") <span class="identifier">@openAuthParameters.ExternalIdentifier</span>
             <a href="@Url.Action("RemoveParameterAssociation", "ExternalAuthentication", new { ReturnUrl = Request.Url.ToString() })" class="remove">
                 (remove)</a>            
     </div>

@@ -4452,9 +4452,18 @@
 									<LocaleResource Name="EncryptionKey">
 										<Value>Encryption private key</Value>
 										<Children>
-											<LocaleResource Name="Hint">
-												<Value>The encryption private key used for storing sensitive data.</Value>
-											</LocaleResource>
+                      <LocaleResource Name="Changed">
+                        <Value>Encryption key is changed</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="Hint">
+                        <Value>The encryption private key used for storing sensitive data.</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="TheSame">
+                        <Value>The new ecryption key is the same as the old one</Value>
+                      </LocaleResource>
+                      <LocaleResource Name="TooShort">
+                        <Value>Encryption private key must be 16 characters long</Value>
+                      </LocaleResource>
 										</Children>
 									</LocaleResource>
 									<LocaleResource Name="AdminAreaAllowedIpAddresses">
@@ -4577,6 +4586,14 @@
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
+                  <LocaleResource Name="SSLSettings">
+                    <Value>SSL settings</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>SSL settings can be also changed in web.config file.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
 									<LocaleResource Name="UseSSL">
 										<Value>Use SSL</Value>
 										<Children>

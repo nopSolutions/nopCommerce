@@ -935,11 +935,11 @@ namespace Nop.Admin.Controllers
 
                 var newEncryptionPrivateKey = model.SecuritySettings.EncryptionKey;
                 if (String.IsNullOrEmpty(newEncryptionPrivateKey) || newEncryptionPrivateKey.Length != 16)
-                    throw new NopException("Encryption private key must be 16 characters long");
+                    throw new NopException(_localizationService.GetResource("Admin.Configuration.Settings.GeneralCommon.EncryptionKey.TooShort"));
 
                 string oldEncryptionPrivateKey = _securitySettings.EncryptionKey;
                 if (oldEncryptionPrivateKey == newEncryptionPrivateKey)
-                    throw new NopException("The new ecryption key is the same as the old one");
+                    throw new NopException(_localizationService.GetResource("Admin.Configuration.Settings.GeneralCommon.EncryptionKey.TheSame"));
 
                 //update encrypted order info
                 var orders = _orderService.LoadAllOrders();
@@ -985,7 +985,7 @@ namespace Nop.Admin.Controllers
 
                 _securitySettings.EncryptionKey = newEncryptionPrivateKey;
                 _settingService.SaveSetting(_securitySettings);
-                SuccessNotification("Encryption key is changed");
+                SuccessNotification(_localizationService.GetResource("Admin.Configuration.Settings.GeneralCommon.EncryptionKey.Changed"));
             }
             catch (Exception exc)
             {
