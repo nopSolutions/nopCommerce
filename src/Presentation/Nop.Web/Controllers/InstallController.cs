@@ -22,15 +22,15 @@ namespace Nop.Web.Controllers
     {
         #region Fields
 
-        private readonly InstallationLocalizationService _locService;
+        private readonly IInstallationLocalizationService _locService;
 
         #endregion
 
         #region Ctor
 
-        public InstallController()
+        public InstallController(IInstallationLocalizationService locService)
         {
-            this._locService = new InstallationLocalizationService();
+            this._locService = locService;
         }
 
         #endregion

@@ -1,19 +1,26 @@
 ﻿using FluentValidation.TestHelper;
+using Nop.Web.Infrastructure.Installation;
 using Nop.Web.Models.Install;
 using Nop.Web.Validators.Install;
 using NUnit.Framework;
+using Rhino.Mocks;
 
 namespace Nop.Web.MVC.Tests.Public.Validators.Install
 {
     [TestFixture]
     public class InstallValidatorTests : BaseValidatorTests
     {
+        protected IInstallationLocalizationService _ilService;
         private InstallValidator _validator;
 
         [SetUp]
         public new void Setup()
         {
-            _validator = new InstallValidator();
+            //set up localziation service used by almost all validators
+            _ilService = MockRepository.GenerateMock<IInstallationLocalizationService>();
+            _ilService.Expect(l => l.GetResource("")).Return("Invalid").IgnoreArguments();
+
+            _validator = new InstallValidator(_ilService);
         }
         
         [Test]

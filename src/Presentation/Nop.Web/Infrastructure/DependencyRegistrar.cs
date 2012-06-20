@@ -1,9 +1,11 @@
 using Autofac;
 using Autofac.Core;
+using Autofac.Integration.Mvc;
 using Nop.Core.Caching;
 using Nop.Core.Infrastructure;
 using Nop.Core.Infrastructure.DependencyManagement;
 using Nop.Web.Controllers;
+using Nop.Web.Infrastructure.Installation;
 
 namespace Nop.Web.Infrastructure
 {
@@ -24,6 +26,9 @@ namespace Nop.Web.Infrastructure
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"));
             builder.RegisterType<TopicController>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"));
+            
+            //installation localization service
+            builder.RegisterType<InstallationLocalizationService>().As<IInstallationLocalizationService>().InstancePerHttpRequest();
         }
 
         public int Order

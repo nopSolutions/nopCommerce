@@ -1,11 +1,12 @@
 ﻿@model InstallModel
+@using Nop.Core.Infrastructure;
 @using Nop.Web.Models.Install;
 @using Nop.Web.Infrastructure.Installation;
 @{
     //localizatrion service for installation service
     //we do not use standart nopCommerce localization because database is not installed yet
     //locale resources fpr installation process are stored into \App_Data\Localization\Installation directory
-    var ILS = new InstallationLocalizationService();
+    var ILS = EngineContext.Current.Resolve<IInstallationLocalizationService>();
 }
 <!DOCTYPE html>
 <html>

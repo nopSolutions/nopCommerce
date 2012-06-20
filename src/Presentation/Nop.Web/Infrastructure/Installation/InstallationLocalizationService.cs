@@ -14,7 +14,7 @@ namespace Nop.Web.Infrastructure.Installation
     /// <summary>
     /// Localization service for installation process
     /// </summary>
-    public partial class InstallationLocalizationService
+    public partial class InstallationLocalizationService : IInstallationLocalizationService
     {
         private const string LanguageCookieName = "nop.installation.lang";
 

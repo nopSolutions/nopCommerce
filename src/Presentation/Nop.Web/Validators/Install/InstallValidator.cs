@@ -6,10 +6,8 @@ namespace Nop.Web.Validators.Install
 {
     public class InstallValidator : AbstractValidator<InstallModel>
     {
-        public InstallValidator()
+        public InstallValidator(IInstallationLocalizationService locService)
         {
-            var locService = new InstallationLocalizationService();
-
             RuleFor(x => x.AdminEmail).NotEmpty().WithMessage(locService.GetResource("AdminEmailRequired"));
             RuleFor(x => x.AdminEmail).EmailAddress();
             RuleFor(x => x.AdminPassword).NotEmpty().WithMessage(locService.GetResource("AdminPasswordRequired"));
