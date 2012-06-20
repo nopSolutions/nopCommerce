@@ -722,6 +722,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SSLSettings.Hint">
     <Value>SSL settings can be also changed in web.config file.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.AllowGuestsToVote">
+    <Value>Allow guests to vote</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Polls.Fields.AllowGuestsToVote.Hint">
+    <Value>Check to allow guests to vote.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -2633,4 +2639,21 @@ BEGIN
 	INSERT [Setting] ([Name], [Value])
 	VALUES (N'verizonsettings.enabled', N'false')
 END
+GO
+
+
+--Add 'AllowGuestsToVote' column to [Poll] table
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[Poll]') and NAME='AllowGuestsToVote')
+BEGIN
+	ALTER TABLE [Poll]
+	ADD [AllowGuestsToVote] bit NULL
+END
+GO
+
+UPDATE [Poll]
+SET [AllowGuestsToVote] = 0
+WHERE [AllowGuestsToVote] IS NULL
+GO
+
+ALTER TABLE [Poll] ALTER COLUMN [AllowGuestsToVote] bit NOT NULL
 GO

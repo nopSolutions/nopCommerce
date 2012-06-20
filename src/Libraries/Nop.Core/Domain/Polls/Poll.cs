@@ -37,6 +37,11 @@ namespace Nop.Core.Domain.Polls
         public virtual bool ShowOnHomePage { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the anonymous votes are allowed
+        /// </summary>
+        public virtual bool AllowGuestsToVote { get; set; }
+
+        /// <summary>
         /// Gets or sets the display order
         /// </summary>
         public virtual int DisplayOrder { get; set; }

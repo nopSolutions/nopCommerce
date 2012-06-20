@@ -107,7 +107,7 @@ namespace Nop.Web.Controllers
                     error = "Poll is not available",
                 });
 
-            if (!_workContext.CurrentCustomer.IsRegistered())
+            if (_workContext.CurrentCustomer.IsGuest() && !poll.AllowGuestsToVote)
                 return Json(new
                 {
                     error = _localizationService.GetResource("Polls.OnlyRegisteredUsersVote"),

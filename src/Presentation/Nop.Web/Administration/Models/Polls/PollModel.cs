@@ -32,6 +32,9 @@ namespace Nop.Admin.Models.Polls
         [NopResourceDisplayName("Admin.ContentManagement.Polls.Fields.ShowOnHomePage")]
         public bool ShowOnHomePage { get; set; }
 
+        [NopResourceDisplayName("Admin.ContentManagement.Polls.Fields.AllowGuestsToVote")]
+        public bool AllowGuestsToVote { get; set; }
+
         [NopResourceDisplayName("Admin.ContentManagement.Polls.Fields.DisplayOrder")]
         public int DisplayOrder { get; set; }
 

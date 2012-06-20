@@ -6111,6 +6111,14 @@
 											</LocaleResource>
 										</Children>
 									</LocaleResource>
+                  <LocaleResource Name="AllowGuestsToVote">
+                    <Value>Allow guests to vote</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Check to allow guests to vote.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
 									<LocaleResource Name="DisplayOrder">
 										<Value>Display order</Value>
 										<Children>
