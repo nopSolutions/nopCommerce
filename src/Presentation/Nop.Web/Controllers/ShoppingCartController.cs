@@ -675,6 +675,8 @@ namespace Nop.Web.Controllers
         [HttpPost]
         public ActionResult AddProductToCart(int productId, bool forceredirection = false)
         {
+            var shoppingCartType = ShoppingCartType.ShoppingCart;
+
             var product = _productService.GetProductById(productId);
             if (product == null)
                 //no product found
@@ -705,10 +707,26 @@ namespace Nop.Web.Controllers
                 });
             }
 
+            //quantity to add
+            var qtyToAdd = defaultProductVariant.OrderMinimumQuantity > 0 ? 
+                defaultProductVariant.OrderMinimumQuantity : 1;
+
+
             //get standard warnings without attribute validations
+            //first, try to find existing shopping cart item
+            var cart = _workContext
+                .CurrentCustomer
+                .ShoppingCartItems
+                .Where(sci => sci.ShoppingCartType == shoppingCartType)
+                .ToList();
+            var shoppingCartItem = _shoppingCartService
+                .FindShoppingCartItemInTheCart(cart, shoppingCartType, defaultProductVariant);
+            //if we already have the same product variant in the cart, then use the total quantity to validate
+            var quantityToValidate = shoppingCartItem != null ?
+                shoppingCartItem.Quantity + qtyToAdd : qtyToAdd;
             var addToCartWarnings = _shoppingCartService
                 .GetShoppingCartItemWarnings(_workContext.CurrentCustomer, ShoppingCartType.ShoppingCart,
-                defaultProductVariant, string.Empty, decimal.Zero, 1, false, true, false, false, false);
+                defaultProductVariant, string.Empty, decimal.Zero, quantityToValidate, false, true, false, false, false);
             if (addToCartWarnings.Count > 0)
             {
                 //cannot be added to the cart
@@ -723,7 +741,7 @@ namespace Nop.Web.Controllers
             //now let's try adding product to the cart (now including product attribute validation, etc)
             addToCartWarnings = _shoppingCartService.AddToCart(_workContext.CurrentCustomer,
                 defaultProductVariant, ShoppingCartType.ShoppingCart,
-                string.Empty, decimal.Zero, 1, true);
+                string.Empty, decimal.Zero, qtyToAdd, true);
             if (addToCartWarnings.Count > 0)
             {
                 //cannot be added to the cart

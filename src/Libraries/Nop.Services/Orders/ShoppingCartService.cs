@@ -768,7 +768,7 @@ namespace Nop.Services.Orders
 
             var cart = customer.ShoppingCartItems.Where(sci=>sci.ShoppingCartType == shoppingCartType).ToList();
 
-            ShoppingCartItem shoppingCartItem = FindShoppingCartItemInTheCart(cart,
+            var shoppingCartItem = FindShoppingCartItemInTheCart(cart,
                 shoppingCartType, productVariant, selectedAttributes, customerEnteredPrice);
 
             if (shoppingCartItem != null)
