@@ -397,8 +397,11 @@ namespace Nop.Web.Controllers
                                 newsletter.Active = true;
                                 _newsLetterSubscriptionService.UpdateNewsLetterSubscription(newsletter);
                             }
-                            else
-                                _newsLetterSubscriptionService.DeleteNewsLetterSubscription(newsletter);
+                            //else
+                            //{
+                                //When registering, not checking the newsletter check box should not take an existing email address off of the subscription list.
+                                //_newsLetterSubscriptionService.DeleteNewsLetterSubscription(newsletter);
+                            //}
                         }
                         else
                         {
