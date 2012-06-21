@@ -4,6 +4,122 @@
         <name>Autofac</name>
     </assembly>
     <members>
+        <member name="T:Autofac.Features.LazyDependencies.LazyRegistrationSource">
+            <summary>
+            Support the <see cref="T:System.Lazy`1"/> 
+            type automatically whenever type T is registered with the container.
+            When a dependency of a lazy type is used, the instantiation of the underlying
+            component will be delayed until the Value property is first accessed.
+            </summary>
+        </member>
+        <member name="T:Autofac.Core.IRegistrationSource">
+            <summary>
+            Allows registrations to be made on-the-fly when unregistered
+            services are requested (lazy registrations.)
+            </summary>
+        </member>
+        <member name="M:Autofac.Core.IRegistrationSource.RegistrationsFor(Autofac.Core.Service,System.Func{Autofac.Core.Service,System.Collections.Generic.IEnumerable{Autofac.Core.IComponentRegistration}})">
+            <summary>
+            Retrieve registrations for an unregistered service, to be used
+            by the container.
+            </summary>
+            <param name="service">The service that was requested.</param>
+            <param name="registrationAccessor">A function that will return existing registrations for a service.</param>
+            <returns>Registrations providing the service.</returns>
+            <remarks>
+            If the source is queried for service s, and it returns a component that implements both s and s', then it
+            will not be queried again for either s or s'. This means that if the source can return other implementations
+            of s', it should return these, plus the transitive closure of other components implementing their 
+            additional services, along with the implementation of s. It is not an error to return components
+            that do not implement <paramref name="service"/>.
+            </remarks>
+        </member>
+        <member name="P:Autofac.Core.IRegistrationSource.IsAdapterForIndividualComponents">
+            <summary>
+            Gets whether the registrations provided by this source are 1:1 adapters on top
+            of other components (I.e. like Meta, Func or Owned.)
+            </summary>
+        </member>
+        <member name="T:Autofac.Features.LazyDependencies.LazyWithMetadataRegistrationSource">
+            <summary>
+            Support the <see cref="T:System.Lazy`2"/>
+            types automatically whenever type T is registered with the container.
+            Metadata values come from the component registration's metadata.
+            When a dependency of a lazy type is used, the instantiation of the underlying
+            component will be delayed until the Value property is first accessed.
+            </summary>
+        </member>
+        <member name="T:Autofac.Features.Metadata.Meta`2">
+            <summary>
+            Provides a value along with metadata describing the value.
+            </summary>
+            <typeparam name="T">The type of the value.</typeparam>
+            <typeparam name="TMetadata">An interface to which metadata values can be bound.</typeparam>
+        </member>
+        <member name="M:Autofac.Features.Metadata.Meta`2.#ctor(`0,`1)">
+            <summary>
+            Create a new instance.
+            </summary>
+            <param name="value">The value described by the instance.</param>
+            <param name="metadata">The metadata describing the value.</param>
+        </member>
+        <member name="P:Autofac.Features.Metadata.Meta`2.Value">
+            <summary>
+            The value described by <see cref="P:Autofac.Features.Metadata.Meta`2.Metadata"/>.
+            </summary>
+        </member>
+        <member name="P:Autofac.Features.Metadata.Meta`2.Metadata">
+            <summary>
+            Metadata describing the value.
+            </summary>
+        </member>
+        <member name="T:Autofac.Features.Metadata.StronglyTypedMetaRegistrationSource">
+            <summary>
+            Support the <see cref="T:Autofac.Features.Metadata.Meta`2"/>
+            types automatically whenever type T is registered with the container.
+            Metadata values come from the component registration's metadata.
+            </summary>
+        </member>
+        <member name="T:Autofac.Features.GeneratedFactories.FactoryGenerator">
+            <summary>
+            Generates context-bound closures that represent factories from
+            a set of heuristics based on delegate type signatures.
+            </summary>
+        </member>
+        <member name="M:Autofac.Features.GeneratedFactories.FactoryGenerator.#ctor(System.Type,Autofac.Core.Service,Autofac.Features.GeneratedFactories.ParameterMapping)">
+            <summary>
+            Create a factory generator.
+            </summary>
+            <param name="service">The service that will be activated in
+            order to create the products of the factory.</param>
+            <param name="delegateType">The delegate to provide as a factory.</param>
+            <param name="parameterMapping">The parameter mapping mode to use.</param>
+        </member>
+        <member name="M:Autofac.Features.GeneratedFactories.FactoryGenerator.#ctor(System.Type,Autofac.Core.IComponentRegistration,Autofac.Features.GeneratedFactories.ParameterMapping)">
+            <summary>
+            Create a factory generator.
+            </summary>
+            <param name="productRegistration">The component that will be activated in
+            order to create the products of the factory.</param>
+            <param name="delegateType">The delegate to provide as a factory.</param>
+            <param name="parameterMapping">The parameter mapping mode to use.</param>
+        </member>
+        <member name="M:Autofac.Features.GeneratedFactories.FactoryGenerator.GenerateFactory(Autofac.IComponentContext,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter})">
+            <summary>
+            Generates a factory delegate that closes over the provided context.
+            </summary>
+            <param name="context">The context in which the factory will be used.</param>
+            <param name="parameters">Parameters provided to the resolve call for the factory itself.</param>
+            <returns>A factory delegate that will work within the context.</returns>
+        </member>
+        <member name="M:Autofac.Features.GeneratedFactories.FactoryGenerator.GenerateFactory``1(Autofac.IComponentContext,System.Collections.Generic.IEnumerable{Autofac.Core.Parameter})">
+            <summary>
+            Generates a factory delegate that closes over the provided context.
+            </summary>
+            <param name="context">The context in which the factory will be used.</param>
+            <param name="parameters">Parameters provided to the resolve call for the factory itself.</param>
+            <returns>A factory delegate that will work within the context.</returns>
+        </member>
         <member name="T:Autofac.Builder.ConcreteReflectionActivatorData">
             <summary>
             Reflection activator data for concrete types.
@@ -464,34 +580,6 @@
             var handler = container.Resolve&lt;IHandler&lt;DerivedCommand&gt;&gt;();
             handler.Handle(new DerivedCommand());
             </example>
-        </member>
-        <member name="T:Autofac.Core.IRegistrationSource">
-            <summary>
-            Allows registrations to be made on-the-fly when unregistered
-            services are requested (lazy registrations.)
-            </summary>
-        </member>
-        <member name="M:Autofac.Core.IRegistrationSource.RegistrationsFor(Autofac.Core.Service,System.Func{Autofac.Core.Service,System.Collections.Generic.IEnumerable{Autofac.Core.IComponentRegistration}})">
-            <summary>
-            Retrieve registrations for an unregistered service, to be used
-            by the container.
-            </summary>
-            <param name="service">The service that was requested.</param>
-            <param name="registrationAccessor">A function that will return existing registrations for a service.</param>
-            <returns>Registrations providing the service.</returns>
-            <remarks>
-            If the source is queried for service s, and it returns a component that implements both s and s', then it
-            will not be queried again for either s or s'. This means that if the source can return other implementations
-            of s', it should return these, plus the transitive closure of other components implementing their 
-            additional services, along with the implementation of s. It is not an error to return components
-            that do not implement <paramref name="service"/>.
-            </remarks>
-        </member>
-        <member name="P:Autofac.Core.IRegistrationSource.IsAdapterForIndividualComponents">
-            <summary>
-            Gets whether the registrations provided by this source are 1:1 adapters on top
-            of other components (I.e. like Meta, Func or Owned.)
-            </summary>
         </member>
         <member name="M:Autofac.Features.Variance.ContravariantRegistrationSource.RegistrationsFor(Autofac.Core.Service,System.Func{Autofac.Core.Service,System.Collections.Generic.IEnumerable{Autofac.Core.IComponentRegistration}})">
             <summary>
@@ -1963,9 +2051,6 @@
             <param name="key">The value to retrieve.</param>
             <returns>The associated value.</returns>
         </member>
-        <member name="T:Autofac.Features.Indexed.KeyedServiceIndex`2">
-            <summary>Internal implementation</summary>
-        </member>
         <member name="M:Autofac.Features.Indexed.KeyedServiceIndex`2.#ctor(Autofac.IComponentContext)">
             <summary></summary>
         </member>
@@ -2975,6 +3060,17 @@
             </summary>
             <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
         </member>
+        <member name="M:Autofac.Core.Container.System#IServiceProvider#GetService(System.Type)">
+            <summary>
+            Gets the service object of the specified type.
+            </summary>
+            <param name="serviceType">An object that specifies the type of service object 
+            to get.</param>
+            <returns>
+            A service object of type <paramref name="serviceType"/>.-or- null if there is 
+            no service object of type <paramref name="serviceType"/>.
+            </returns>
+        </member>
         <member name="P:Autofac.Core.Container.Empty">
             <summary>
             An empty container.
@@ -3033,6 +3129,15 @@
             </summary>
             <param name="message">The message.</param>
             <param name="innerException">The inner exception.</param>
+        </member>
+        <member name="M:Autofac.Core.DependencyResolutionException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Autofac.Core.Registration.ComponentNotRegisteredException"/> class.
+            </summary>
+            <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> that holds the serialized object data about the exception being thrown.</param>
+            <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext"/> that contains contextual information about the source or destination.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="info"/> parameter is null. </exception>
+            <exception cref="T:System.Runtime.Serialization.SerializationException">The class name is null or <see cref="P:System.Exception.HResult"/> is zero (0). </exception>
         </member>
         <member name="T:Autofac.Core.Disposer">
             <summary>
@@ -3280,6 +3385,17 @@
             </summary>
             <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
         </member>
+        <member name="M:Autofac.Core.Lifetime.LifetimeScope.System#IServiceProvider#GetService(System.Type)">
+            <summary>
+            Gets the service object of the specified type.
+            </summary>
+            <param name="serviceType">An object that specifies the type of service object 
+            to get.</param>
+            <returns>
+            A service object of type <paramref name="serviceType"/>.-or- null if there is 
+            no service object of type <paramref name="serviceType"/>.
+            </returns>
+        </member>
         <member name="P:Autofac.Core.Lifetime.LifetimeScope.ParentLifetimeScope">
             <summary>
             The parent of this node of the hierarchy, or null.
@@ -3328,7 +3444,7 @@
             Attaches the component's lifetime to scopes matching a supplied expression.
             </summary>
         </member>
-        <member name="M:Autofac.Core.Lifetime.MatchingScopeLifetime.#ctor(System.Func{Autofac.ILifetimeScope,System.Boolean})">
+        <member name="M:Autofac.Core.Lifetime.MatchingScopeLifetime.#ctor(System.Linq.Expressions.Expression{System.Func{Autofac.ILifetimeScope,System.Boolean}})">
             <summary>
             Match scopes based on the provided expression.
             </summary>
@@ -3449,6 +3565,15 @@
             </summary>
             <param name="service">The service.</param>
             <param name="innerException">The inner exception.</param>
+        </member>
+        <member name="M:Autofac.Core.Registration.ComponentNotRegisteredException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Autofac.Core.Registration.ComponentNotRegisteredException"/> class.
+            </summary>
+            <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> that holds the serialized object data about the exception being thrown.</param>
+            <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext"/> that contains contextual information about the source or destination.</param>
+            <exception cref="T:System.ArgumentNullException">The <paramref name="info"/> parameter is null. </exception>
+            <exception cref="T:System.Runtime.Serialization.SerializationException">The class name is null or <see cref="P:System.Exception.HResult"/> is zero (0). </exception>
         </member>
         <member name="T:Autofac.Core.Registration.ComponentNotRegisteredExceptionResources">
             <summary>
@@ -4378,6 +4503,21 @@
             </summary>
             <param name="builder">The builder to register the module with.</param>
             <typeparam name="TModule">The module to add.</typeparam>
+        </member>
+        <member name="M:Autofac.RegistrationExtensions.RegisterAssemblyModules(Autofac.ContainerBuilder,System.Reflection.Assembly[])">
+            <summary>
+            Registers modules found in an assembly.
+            </summary>
+            <param name="builder">Container builder.</param>
+            <param name="assemblies">The assemblies from which to register modules.</param>
+        </member>
+        <member name="M:Autofac.RegistrationExtensions.RegisterAssemblyModules``1(Autofac.ContainerBuilder,System.Reflection.Assembly[])">
+            <summary>
+            Registers modules found in an assembly.
+            </summary>
+            <param name="builder">Container builder.</param>
+            <param name="assemblies">The assemblies from which to register modules.</param>
+            <typeparam name="TModule">The type of the module to add.</typeparam>
         </member>
         <member name="M:Autofac.RegistrationExtensions.RegisterComponent(Autofac.ContainerBuilder,Autofac.Core.IComponentRegistration)">
             <summary>
@@ -6179,16 +6319,6 @@
             <param name="sequence">The sequence.</param>
             <param name="leadingItem">The leading item.</param>
             <returns></returns>
-        </member>
-        <member name="T:System.Security.AllowPartiallyTrustedCallersAttribute">
-            <summary>
-            Attribute marker to make code compatible with Silverlight
-            </summary>
-        </member>
-        <member name="T:System.SerializableAttribute">
-            <summary>
-            Attribute marker to make code compatible with Silverlight
-            </summary>
         </member>
         <member name="M:Autofac.Util.TypeExtensions.GetTypesThatClose(System.Type,System.Type)">
             <summary>Returns the first concrete interface supported by the candidate type that

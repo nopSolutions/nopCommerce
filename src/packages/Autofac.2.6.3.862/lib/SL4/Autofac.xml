@@ -4486,6 +4486,21 @@
             <param name="builder">The builder to register the module with.</param>
             <typeparam name="TModule">The module to add.</typeparam>
         </member>
+        <member name="M:Autofac.RegistrationExtensions.RegisterAssemblyModules(Autofac.ContainerBuilder,System.Reflection.Assembly[])">
+            <summary>
+            Registers modules found in an assembly.
+            </summary>
+            <param name="builder">Container builder.</param>
+            <param name="assemblies">The assemblies from which to register modules.</param>
+        </member>
+        <member name="M:Autofac.RegistrationExtensions.RegisterAssemblyModules``1(Autofac.ContainerBuilder,System.Reflection.Assembly[])">
+            <summary>
+            Registers modules found in an assembly.
+            </summary>
+            <param name="builder">Container builder.</param>
+            <param name="assemblies">The assemblies from which to register modules.</param>
+            <typeparam name="TModule">The type of the module to add.</typeparam>
+        </member>
         <member name="M:Autofac.RegistrationExtensions.RegisterComponent(Autofac.ContainerBuilder,Autofac.Core.IComponentRegistration)">
             <summary>
             Add a component to the container.
