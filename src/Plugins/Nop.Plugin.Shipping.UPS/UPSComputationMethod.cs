@@ -652,6 +652,9 @@ namespace Nop.Plugin.Shipping.UPS
         /// </summary>
         public override void Uninstall()
         {
+            //settings
+            _settingService.DeleteSetting<UPSSettings>();
+
             //locales
             this.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.Url");
             this.DeletePluginLocaleResource("Plugins.Shipping.UPS.Fields.Url.Hint");

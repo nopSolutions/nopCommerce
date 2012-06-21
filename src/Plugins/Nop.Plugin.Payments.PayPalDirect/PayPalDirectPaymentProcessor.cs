@@ -711,6 +711,9 @@ namespace Nop.Plugin.Payments.PayPalDirect
         
         public override void Uninstall()
         {
+            //settings
+            _settingService.DeleteSetting<PayPalDirectPaymentSettings>();
+
             //locales
             this.DeletePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.UseSandbox");
             this.DeletePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.UseSandbox.Hint");

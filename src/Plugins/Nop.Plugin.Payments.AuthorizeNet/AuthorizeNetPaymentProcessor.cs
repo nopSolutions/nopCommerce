@@ -547,6 +547,9 @@ namespace Nop.Plugin.Payments.AuthorizeNet
 
         public override void Uninstall()
         {
+            //settings
+            _settingService.DeleteSetting<AuthorizeNetPaymentSettings>();
+
             //locales
             this.DeletePluginLocaleResource("Plugins.Payments.AuthorizeNet.Notes");
             this.DeletePluginLocaleResource("Plugins.Payments.AuthorizeNet.Fields.UseSandbox");

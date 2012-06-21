@@ -371,6 +371,9 @@ namespace Nop.Plugin.Shipping.AustraliaPost
 
         public override void Uninstall()
         {
+            //settings
+            _settingService.DeleteSetting<AustraliaPostSettings>();
+
             //locales
             this.DeletePluginLocaleResource("Plugins.Shipping.AustraliaPost.Fields.GatewayUrl");
             this.DeletePluginLocaleResource("Plugins.Shipping.AustraliaPost.Fields.GatewayUrl.Hint");

@@ -17,6 +17,13 @@ namespace Nop.Services.Configuration
         Setting GetSettingById(int settingId);
 
         /// <summary>
+        /// Get setting by key
+        /// </summary>
+        /// <param name="key">Key</param>
+        /// <returns>Setting object</returns>
+        Setting GetSettingByKey(string key);
+
+        /// <summary>
         /// Get setting value by key
         /// </summary>
         /// <typeparam name="T">Type</typeparam>
@@ -52,6 +59,12 @@ namespace Nop.Services.Configuration
         /// <typeparam name="T">Type</typeparam>
         /// <param name="settingInstance">Setting instance</param>
         void SaveSetting<T>(T settingInstance) where T : ISettings, new();
+
+        /// <summary>
+        /// Delete all settings
+        /// </summary>
+        /// <typeparam name="T">Type</typeparam>
+        void DeleteSetting<T>() where T : ISettings, new();
 
         /// <summary>
         /// Clear cache

@@ -231,6 +231,9 @@ namespace Nop.Plugin.Feed.PriceGrabber
         /// </summary>
         public override void Uninstall()
         {
+            //settings
+            _settingService.DeleteSetting<PriceGrabberSettings>();
+
             //locales
             this.DeletePluginLocaleResource("Plugins.Feed.PriceGrabber.ClickHere");
             this.DeletePluginLocaleResource("Plugins.Feed.PriceGrabber.Currency");

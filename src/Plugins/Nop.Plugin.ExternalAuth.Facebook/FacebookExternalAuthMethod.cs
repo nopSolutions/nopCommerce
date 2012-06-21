@@ -1,6 +1,7 @@
 using System.Web.Routing;
 using Nop.Core.Plugins;
 using Nop.Services.Authentication.External;
+using Nop.Services.Configuration;
 using Nop.Services.Localization;
 
 namespace Nop.Plugin.ExternalAuth.Facebook
@@ -11,14 +12,16 @@ namespace Nop.Plugin.ExternalAuth.Facebook
     public class FacebookExternalAuthMethod : BasePlugin, IExternalAuthenticationMethod
     {
         #region Fields
-        private readonly FacebookExternalAuthSettings _facebookExternalAuthSettings;
+
+        private readonly ISettingService _settingService;
+
         #endregion
 
         #region Ctor
 
-        public FacebookExternalAuthMethod(FacebookExternalAuthSettings facebookExternalAuthSettings)
+        public FacebookExternalAuthMethod(ISettingService settingService)
         {
-            this._facebookExternalAuthSettings = facebookExternalAuthSettings;
+            this._settingService = settingService;
         }
 
         #endregion
@@ -56,6 +59,14 @@ namespace Nop.Plugin.ExternalAuth.Facebook
         /// </summary>
         public override void Install()
         {
+            //settings
+            var settings = new FacebookExternalAuthSettings()
+            {
+                ClientKeyIdentifier = "",
+                ClientSecret = "",
+            };
+            _settingService.SaveSetting(settings);
+
             //locales
             this.AddOrUpdatePluginLocaleResource("Plugins.ExternalAuth.Facebook.Login", "Login using Facebook account");
             this.AddOrUpdatePluginLocaleResource("Plugins.ExternalAuth.Facebook.ClientKeyIdentifier", "Client key identifier");
@@ -68,6 +79,9 @@ namespace Nop.Plugin.ExternalAuth.Facebook
 
         public override void Uninstall()
         {
+            //settings
+            _settingService.DeleteSetting<FacebookExternalAuthSettings>();
+
             //locales
             this.DeletePluginLocaleResource("Plugins.ExternalAuth.Facebook.Login");
             this.DeletePluginLocaleResource("Plugins.ExternalAuth.Facebook.ClientKeyIdentifier");

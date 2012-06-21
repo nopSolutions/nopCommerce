@@ -107,6 +107,29 @@ namespace Nop.Services.Configuration
         }
 
         /// <summary>
+        /// Get setting by key
+        /// </summary>
+        /// <param name="key">Key</param>
+        /// <returns>Setting object</returns>
+        public virtual Setting GetSettingByKey(string key)
+        {
+            if (String.IsNullOrEmpty(key))
+                return null;
+
+            key = key.Trim().ToLowerInvariant();
+
+            var settings = GetAllSettings();
+            if (settings.ContainsKey(key))
+            {
+                var id = settings[key].Key;
+                return GetSettingById(id);
+            }
+
+            return null;
+        }
+
+
+        /// <summary>
         /// Get setting value by key
         /// </summary>
         /// <typeparam name="T">Type</typeparam>
@@ -217,6 +240,15 @@ namespace Nop.Services.Configuration
         {
             //We should be sure that an appropriate ISettings object will not be cached in IoC tool after updating (by default cached per HTTP request)
             EngineContext.Current.Resolve<IConfigurationProvider<T>>().SaveSettings(settingInstance);
+        }
+
+        /// <summary>
+        /// Delete all settings
+        /// </summary>
+        /// <typeparam name="T">Type</typeparam>
+        public virtual void DeleteSetting<T>() where T : ISettings, new()
+        {
+            EngineContext.Current.Resolve<IConfigurationProvider<T>>().DeleteSettings();
         }
 
         /// <summary>

@@ -188,6 +188,9 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder
         
         public override void Uninstall()
         {
+            //settings
+            _settingService.DeleteSetting<CheckMoneyOrderPaymentSettings>();
+
             //locales
             this.DeletePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.DescriptionText");
             this.DeletePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.DescriptionText.Hint");

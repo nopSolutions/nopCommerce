@@ -228,6 +228,9 @@ namespace Nop.Plugin.Payments.Manual
 
         public override void Uninstall()
         {
+            //settings
+            _settingService.DeleteSetting<ManualPaymentSettings>();
+
             //locales
             this.DeletePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFee");
             this.DeletePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFee.Hint");

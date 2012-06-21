@@ -5,6 +5,7 @@ using Nop.Core.Plugins;
 using Nop.Plugin.Shipping.ByWeight.Data;
 using Nop.Plugin.Shipping.ByWeight.Services;
 using Nop.Services.Catalog;
+using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Shipping;
 using Nop.Services.Shipping.Tracking;
@@ -20,6 +21,7 @@ namespace Nop.Plugin.Shipping.ByWeight
         private readonly IPriceCalculationService _priceCalculationService;
         private readonly ShippingByWeightSettings _shippingByWeightSettings;
         private readonly ShippingByWeightObjectContext _objectContext;
+        private readonly ISettingService _settingService;
 
         #endregion
 
@@ -28,13 +30,15 @@ namespace Nop.Plugin.Shipping.ByWeight
             IShippingByWeightService shippingByWeightService,
             IPriceCalculationService priceCalculationService, 
             ShippingByWeightSettings shippingByWeightSettings,
-            ShippingByWeightObjectContext objectContext)
+            ShippingByWeightObjectContext objectContext,
+            ISettingService settingService)
         {
             this._shippingService = shippingService;
             this._shippingByWeightService = shippingByWeightService;
             this._priceCalculationService = priceCalculationService;
             this._shippingByWeightSettings = shippingByWeightSettings;
             this._objectContext = objectContext;
+            this._settingService = settingService;
         }
         #endregion
 
@@ -154,6 +158,15 @@ namespace Nop.Plugin.Shipping.ByWeight
         /// </summary>
         public override void Install()
         {
+            //settings
+            var settings = new ShippingByWeightSettings()
+            {
+                CalculatePerWeightUnit = false,
+                LimitMethodsToCreated = false,
+            };
+            _settingService.SaveSetting(settings);
+
+
             //database objects
             _objectContext.Install();
 
@@ -187,6 +200,9 @@ namespace Nop.Plugin.Shipping.ByWeight
         /// </summary>
         public override void Uninstall()
         {
+            //settings
+            _settingService.DeleteSetting<ShippingByWeightSettings>();
+
             //database objects
             _objectContext.Uninstall();
 

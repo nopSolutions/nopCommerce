@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Web.Routing;
 using Nop.Core.Plugins;
 using Nop.Services.Cms;
+using Nop.Services.Configuration;
 using Nop.Services.Localization;
 
 namespace Nop.Plugin.Widgets.LivePersonChat
@@ -11,10 +12,13 @@ namespace Nop.Plugin.Widgets.LivePersonChat
     /// </summary>
     public class LivePersonChatPlugin : BasePlugin, IWidgetPlugin
     {
+        private readonly ISettingService _settingService;
         private readonly LivePersonChatSettings _livePersonChatSettings;
 
-        public LivePersonChatPlugin(LivePersonChatSettings livePersonChatSettings)
+        public LivePersonChatPlugin(ISettingService settingService,
+            LivePersonChatSettings livePersonChatSettings)
         {
+            this._settingService = settingService;
             this._livePersonChatSettings = livePersonChatSettings;
         }
 
@@ -66,6 +70,15 @@ namespace Nop.Plugin.Widgets.LivePersonChat
         /// </summary>
         public override void Install()
         {
+            //settings
+            var settings = new LivePersonChatSettings()
+            {
+                ButtonCode = "",
+                MonitoringCode = "",
+                WidgetZone = ""
+            };
+            _settingService.SaveSetting(settings);
+
             this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.LivePersonChat.ButtonCode", "Button code(max 2000)");
             this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.LivePersonChat.ButtonCode.Hint", "Enter your button code here.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Widgets.LivePersonChat.LiveChat", "Live chat");
@@ -80,6 +93,9 @@ namespace Nop.Plugin.Widgets.LivePersonChat
         /// </summary>
         public override void Uninstall()
         {
+            //settings
+            _settingService.DeleteSetting<LivePersonChatSettings>();
+
             //locales
             this.DeletePluginLocaleResource("Plugins.Widgets.LivePersonChat.ButtonCode");
             this.DeletePluginLocaleResource("Plugins.Widgets.LivePersonChat.ButtonCode.Hint");

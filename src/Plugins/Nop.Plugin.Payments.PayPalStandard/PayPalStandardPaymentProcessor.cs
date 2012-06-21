@@ -508,6 +508,9 @@ namespace Nop.Plugin.Payments.PayPalStandard
         
         public override void Uninstall()
         {
+            //settings
+            _settingService.DeleteSetting<PayPalStandardPaymentSettings>();
+
             //locales
             this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.RedirectionTip");
             this.DeletePluginLocaleResource("Plugins.Payments.PayPalStandard.Fields.UseSandbox");

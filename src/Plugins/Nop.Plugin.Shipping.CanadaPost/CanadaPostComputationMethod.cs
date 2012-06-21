@@ -403,6 +403,9 @@ namespace Nop.Plugin.Shipping.CanadaPost
         /// </summary>
         public override void Uninstall()
         {
+            //settings
+            _settingService.DeleteSetting<CanadaPostSettings>();
+
             //locales
             this.DeletePluginLocaleResource("Plugins.Shipping.CanadaPost.Fields.Url");
             this.DeletePluginLocaleResource("Plugins.Shipping.CanadaPost.Fields.Url.Hint");

@@ -7,6 +7,7 @@ using System.Web.Routing;
 using Nop.Core.Caching;
 using Nop.Core.Plugins;
 using Nop.Plugin.Tax.StrikeIron.TaxDataBasic;
+using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Tax;
 
@@ -19,11 +20,14 @@ namespace Nop.Plugin.Tax.StrikeIron
     {
         private const string TAXRATEUSA_KEY = "Nop.taxrateusa.zipCode-{0}";
         private const string TAXRATECANADA_KEY = "Nop.taxratecanada.province-{0}";
-        
+
+        private readonly ISettingService _settingService;
         private readonly StrikeIronTaxSettings _strikeIronTaxSettings;
 
-        public StrikeIronTaxProvider(StrikeIronTaxSettings strikeIronTaxSettings)
+        public StrikeIronTaxProvider(ISettingService settingService,
+            StrikeIronTaxSettings strikeIronTaxSettings)
         {
+            this._settingService = settingService;
             this._strikeIronTaxSettings = strikeIronTaxSettings;
         }
 
@@ -272,6 +276,14 @@ namespace Nop.Plugin.Tax.StrikeIron
         
         public override void Install()
         {
+            //settings
+            var settings = new StrikeIronTaxSettings()
+            {
+                UserId = "",
+                Password = ""
+            };
+            _settingService.SaveSetting(settings);
+
             //locales
             this.AddOrUpdatePluginLocaleResource("Plugins.Tax.StrikeIron.UserId", "StrikeIron User ID");
             this.AddOrUpdatePluginLocaleResource("Plugins.Tax.StrikeIron.UserId.Hint", "Specify StrikeIron user identifier.");
@@ -294,6 +306,9 @@ namespace Nop.Plugin.Tax.StrikeIron
         /// </summary>
         public override void Uninstall()
         {
+            //settings
+            _settingService.DeleteSetting<StrikeIronTaxSettings>();
+
             //locales
             this.DeletePluginLocaleResource("Plugins.Tax.StrikeIron.UserId");
             this.DeletePluginLocaleResource("Plugins.Tax.StrikeIron.UserId.Hint");

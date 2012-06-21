@@ -2,6 +2,7 @@
 using System.Web.Mvc;
 using Nop.Plugin.Tax.StrikeIron.Models;
 using Nop.Services.Configuration;
+using Nop.Services.Tax;
 using Nop.Web.Framework.Controllers;
 
 namespace Nop.Plugin.Tax.StrikeIron.Controllers
@@ -9,11 +10,14 @@ namespace Nop.Plugin.Tax.StrikeIron.Controllers
     [AdminAuthorize]
     public class TaxStrikeIronController : Controller
     {
+        private readonly ITaxService _taxService;
         private readonly StrikeIronTaxSettings _strikeIronTaxSettings;
         private readonly ISettingService _settingService;
 
-        public TaxStrikeIronController(StrikeIronTaxSettings strikeIronTaxSettings, ISettingService settingService)
+        public TaxStrikeIronController(ITaxService taxService,
+            StrikeIronTaxSettings strikeIronTaxSettings, ISettingService settingService)
         {
+            this._taxService = taxService;
             this._strikeIronTaxSettings = strikeIronTaxSettings;
             this._settingService = settingService;
         }
@@ -66,7 +70,7 @@ namespace Nop.Plugin.Tax.StrikeIron.Controllers
 
             try
             {
-                var strikeIronTaxProvider = new StrikeIronTaxProvider(_strikeIronTaxSettings);
+                var strikeIronTaxProvider = _taxService.LoadTaxProviderBySystemName("Tax.StrikeIron.Basic") as StrikeIronTaxProvider;
                 string zip = model.TestingUsaZip;
                 string userId = model.UserId;
                 string password = model.Password;
@@ -101,7 +105,8 @@ namespace Nop.Plugin.Tax.StrikeIron.Controllers
 
             try
             {
-                var strikeIronTaxProvider = new StrikeIronTaxProvider(_strikeIronTaxSettings);
+                var strikeIronTaxProvider = _taxService.LoadTaxProviderBySystemName("Tax.StrikeIron.Basic") as StrikeIronTaxProvider;
+                
                 string province = model.TestingCanadaProvinceCode;
                 string userId = model.UserId;
                 string password = model.Password;

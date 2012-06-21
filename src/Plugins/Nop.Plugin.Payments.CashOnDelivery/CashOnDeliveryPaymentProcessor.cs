@@ -186,6 +186,9 @@ namespace Nop.Plugin.Payments.CashOnDelivery
         
         public override void Uninstall()
         {
+            //settings
+            _settingService.DeleteSetting<CashOnDeliveryPaymentSettings>();
+
             //locales
             this.DeletePluginLocaleResource("Plugins.Payment.CashOnDelivery.DescriptionText");
             this.DeletePluginLocaleResource("Plugins.Payment.CashOnDelivery.DescriptionText.Hint");

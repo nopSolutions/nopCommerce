@@ -426,6 +426,9 @@ namespace Nop.Plugin.Feed.Froogle
         /// </summary>
         public override void Uninstall()
         {
+            //settings
+            _settingService.DeleteSetting<FroogleSettings>();
+
             //data
             _objectContext.Uninstall();
 

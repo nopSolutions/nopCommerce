@@ -683,6 +683,9 @@ namespace Nop.Plugin.Shipping.USPS
         /// </summary>
         public override void Uninstall()
         {
+            //settings
+            _settingService.DeleteSetting<USPSSettings>();
+
             //locales
             this.DeletePluginLocaleResource("Plugins.Shipping.USPS.Fields.Url");
             this.DeletePluginLocaleResource("Plugins.Shipping.USPS.Fields.Url.Hint");

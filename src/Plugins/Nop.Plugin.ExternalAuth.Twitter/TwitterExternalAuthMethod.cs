@@ -1,6 +1,7 @@
 using System.Web.Routing;
 using Nop.Core.Plugins;
 using Nop.Services.Authentication.External;
+using Nop.Services.Configuration;
 using Nop.Services.Localization;
 
 namespace Nop.Plugin.ExternalAuth.Twitter
@@ -11,14 +12,16 @@ namespace Nop.Plugin.ExternalAuth.Twitter
     public class TwitterExternalAuthMethod : BasePlugin, IExternalAuthenticationMethod
     {
         #region Fields
-        private readonly TwitterExternalAuthSettings _twitterExternalAuthSettings;
+
+        private readonly ISettingService _settingService;
+
         #endregion
 
         #region Ctor
 
-        public TwitterExternalAuthMethod(TwitterExternalAuthSettings twitterExternalAuthSettings)
+        public TwitterExternalAuthMethod(ISettingService settingService)
         {
-            this._twitterExternalAuthSettings = twitterExternalAuthSettings;
+            this._settingService = settingService;
         }
 
         #endregion
@@ -56,6 +59,14 @@ namespace Nop.Plugin.ExternalAuth.Twitter
         /// </summary>
         public override void Install()
         {
+            //settings
+            var settings = new TwitterExternalAuthSettings()
+            {
+                ConsumerKey = "",
+                ConsumerSecret = "",
+            };
+            _settingService.SaveSetting(settings);
+
             //locales
             this.AddOrUpdatePluginLocaleResource("Plugins.ExternalAuth.Twitter.Login", "Login using Twitter account");
             this.AddOrUpdatePluginLocaleResource("Plugins.ExternalAuth.Twitter.ConsumerKey", "Consumer key");
@@ -68,6 +79,9 @@ namespace Nop.Plugin.ExternalAuth.Twitter
 
         public override void Uninstall()
         {
+            //settings
+            _settingService.DeleteSetting<TwitterExternalAuthSettings>();
+
             //locales
             this.DeletePluginLocaleResource("Plugins.ExternalAuth.Twitter.Login");
             this.DeletePluginLocaleResource("Plugins.ExternalAuth.Twitter.ConsumerKey");

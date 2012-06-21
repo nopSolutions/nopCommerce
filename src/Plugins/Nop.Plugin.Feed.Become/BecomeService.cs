@@ -232,6 +232,9 @@ namespace Nop.Plugin.Feed.Become
         
         public override void Uninstall()
         {
+            //settings
+            _settingService.DeleteSetting<BecomeSettings>();
+
             //locales
             this.DeletePluginLocaleResource("Plugins.Feed.Become.ClickHere");
             this.DeletePluginLocaleResource("Plugins.Feed.Become.Currency");

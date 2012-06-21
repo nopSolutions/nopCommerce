@@ -5,6 +5,7 @@ using Nop.Core;
 using Nop.Core.Plugins;
 using Nop.Plugin.SMS.Clickatell.Clickatell;
 using Nop.Services.Common;
+using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 
@@ -16,13 +17,15 @@ namespace Nop.Plugin.SMS.Clickatell
     public class ClickatellSmsProvider : BasePlugin, IMiscPlugin
     {
         private readonly ILogger _logger;
+        private readonly ISettingService _settingService;
         private readonly ClickatellSettings _clickatellSettings;
 
         public ClickatellSmsProvider(ClickatellSettings clickatellSettings,
-            ILogger logger)
+            ILogger logger, ISettingService settingService)
         {
             this._clickatellSettings = clickatellSettings;
             this._logger = logger;
+            this._settingService = settingService;
         }
 
         /// <summary>
@@ -81,6 +84,13 @@ namespace Nop.Plugin.SMS.Clickatell
         /// </summary>
         public override void Install()
         {
+            //settings
+            var settings = new ClickatellSettings()
+            {
+                Enabled = false,
+            };
+            _settingService.SaveSetting(settings);
+
             //locales
             this.AddOrUpdatePluginLocaleResource("Plugins.Sms.Clickatell.TestFailed", "Test message sending failed");
             this.AddOrUpdatePluginLocaleResource("Plugins.Sms.Clickatell.TestSuccess", "Test message was sent");
@@ -107,6 +117,9 @@ namespace Nop.Plugin.SMS.Clickatell
         /// </summary>
         public override void Uninstall()
         {
+            //settings
+            _settingService.DeleteSetting<ClickatellSettings>();
+
             //locales
             this.DeletePluginLocaleResource("Plugins.Sms.Clickatell.TestFailed");
             this.DeletePluginLocaleResource("Plugins.Sms.Clickatell.TestSuccess");

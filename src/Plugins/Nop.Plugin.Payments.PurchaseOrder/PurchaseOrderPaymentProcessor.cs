@@ -4,6 +4,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Plugins;
 using Nop.Plugin.Payments.PurchaseOrder.Controllers;
+using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Payments;
 
@@ -15,14 +16,19 @@ namespace Nop.Plugin.Payments.PurchaseOrder
     public class PurchaseOrderPaymentProcessor : BasePlugin, IPaymentMethod
     {
         #region Fields
+
         private readonly PurchaseOrderPaymentSettings _purchaseOrderPaymentSettings;
+        private readonly ISettingService _settingService;
+
         #endregion
 
         #region Ctor
 
-        public PurchaseOrderPaymentProcessor(PurchaseOrderPaymentSettings purchaseOrderPaymentSettings)
+        public PurchaseOrderPaymentProcessor(PurchaseOrderPaymentSettings purchaseOrderPaymentSettings,
+            ISettingService settingService)
         {
             this._purchaseOrderPaymentSettings = purchaseOrderPaymentSettings;
+            this._settingService = settingService;
         }
 
         #endregion
@@ -169,6 +175,14 @@ namespace Nop.Plugin.Payments.PurchaseOrder
         /// </summary>
         public override void Install()
         {
+            //settings
+            var settings = new PurchaseOrderPaymentSettings()
+            {
+                AdditionalFee = 0,
+            };
+            _settingService.SaveSetting(settings);
+
+
             //locales
             this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PurchaseOrder.PurchaseOrderNumber", "PO Number");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PurchaseOrder.AdditionalFee", "Additional fee");
@@ -179,6 +193,9 @@ namespace Nop.Plugin.Payments.PurchaseOrder
 
         public override void Uninstall()
         {
+            //settings
+            _settingService.DeleteSetting<PurchaseOrderPaymentSettings>();
+
             //locales
             this.DeletePluginLocaleResource("Plugins.Payment.PurchaseOrder.PurchaseOrderNumber");
             this.DeletePluginLocaleResource("Plugins.Payment.PurchaseOrder.AdditionalFee");

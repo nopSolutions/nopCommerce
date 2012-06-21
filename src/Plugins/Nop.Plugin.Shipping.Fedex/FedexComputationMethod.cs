@@ -908,6 +908,9 @@ namespace Nop.Plugin.Shipping.Fedex
         /// </summary>
         public override void Uninstall()
         {
+            //settings
+            _settingService.DeleteSetting<FedexSettings>();
+
             //locales
             this.DeletePluginLocaleResource("Plugins.Shipping.Fedex.Fields.Url");
             this.DeletePluginLocaleResource("Plugins.Shipping.Fedex.Fields.Url.Hint");

@@ -122,6 +122,9 @@ namespace Nop.Plugin.SMS.Verizon
         /// </summary>
         public override void Uninstall()
         {
+            //settings
+            _settingService.DeleteSetting<VerizonSettings>();
+
             //locales
             this.DeletePluginLocaleResource("Plugins.Sms.Verizon.TestFailed");
             this.DeletePluginLocaleResource("Plugins.Sms.Verizon.TestSuccess");

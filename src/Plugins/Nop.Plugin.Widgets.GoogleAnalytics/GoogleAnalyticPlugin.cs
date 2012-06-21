@@ -111,6 +111,9 @@ _gaq.push(['_trackTrans']); ",
         /// </summary>
         public override void Uninstall()
         {
+            //settings
+            _settingService.DeleteSetting<GoogleAnalyticsSettings>();
+
             //locales
             this.DeletePluginLocaleResource("Plugins.Widgets.GoogleAnalytics.GoogleId");
             this.DeletePluginLocaleResource("Plugins.Widgets.GoogleAnalytics.GoogleId.Hint");

@@ -5,5 +5,6 @@ namespace Nop.Core.Configuration
     {
         TSettings Settings { get; }
         void SaveSettings(TSettings settings);
+        void DeleteSettings();
     }
 }

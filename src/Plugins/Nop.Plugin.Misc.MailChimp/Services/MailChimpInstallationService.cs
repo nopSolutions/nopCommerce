@@ -1,6 +1,7 @@
 ﻿using Nop.Core.Domain.Tasks;
 using Nop.Core.Plugins;
 using Nop.Plugin.Misc.MailChimp.Data;
+using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Tasks;
 
@@ -10,12 +11,14 @@ namespace Nop.Plugin.Misc.MailChimp.Services
     {
         private readonly MailChimpObjectContext _mailChimpObjectContext;
         private readonly IScheduleTaskService _scheduleTaskService;
+        private readonly ISettingService _settingService;
 
         public MailChimpInstallationService(MailChimpObjectContext mailChimpObjectContext,
-            IScheduleTaskService scheduleTaskService)
+            IScheduleTaskService scheduleTaskService, ISettingService settingService)
         {
-            _mailChimpObjectContext = mailChimpObjectContext;
-            _scheduleTaskService = scheduleTaskService;
+            this._mailChimpObjectContext = mailChimpObjectContext;
+            this._scheduleTaskService = scheduleTaskService;
+            this._settingService = settingService;
         }
 
         /// <summary>
@@ -52,6 +55,16 @@ namespace Nop.Plugin.Misc.MailChimp.Services
         /// <param name="plugin">The plugin.</param>
         public virtual void Install(BasePlugin plugin)
         {
+            //settings
+            var settings = new MailChimpSettings()
+            {
+                ApiKey = "",
+                DefaultListId = "",
+                WebHookKey = "",
+            };
+            _settingService.SaveSetting(settings);
+
+
             //locales
             plugin.AddOrUpdatePluginLocaleResource("Plugin.Misc.MailChimp.ApiKey", "MailChimp API Key");
             plugin.AddOrUpdatePluginLocaleResource("Plugin.Misc.MailChimp.DefaultListId", "Default MailChimp List");
@@ -77,6 +90,9 @@ namespace Nop.Plugin.Misc.MailChimp.Services
         /// <param name="plugin">The plugin.</param>
         public virtual void Uninstall(BasePlugin plugin)
         {
+            //settings
+            _settingService.DeleteSetting<MailChimpSettings>();
+
             //locales
             plugin.DeletePluginLocaleResource("Plugin.Misc.MailChimp.ApiKey");
             plugin.DeletePluginLocaleResource("Plugin.Misc.MailChimp.DefaultListId");

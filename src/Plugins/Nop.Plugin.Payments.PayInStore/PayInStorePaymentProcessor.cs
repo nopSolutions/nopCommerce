@@ -186,6 +186,9 @@ namespace Nop.Plugin.Payments.PayInStore
         
         public override void Uninstall()
         {
+            //settings
+            _settingService.DeleteSetting<PayInStorePaymentSettings>();
+
             //locales
             this.DeletePluginLocaleResource("Plugins.Payment.PayInStore.DescriptionText");
             this.DeletePluginLocaleResource("Plugins.Payment.PayInStore.DescriptionText.Hint");
