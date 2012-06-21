@@ -384,6 +384,14 @@ namespace Nop.Web.Infrastructure
                             "blog",
                             new { controller = "Blog", action = "List" },
                             new[] { "Nop.Web.Controllers" });
+            routes.MapLocalizedRoute("BlogByTag",
+                            "blog/tag/{tag}",
+                            new { controller = "Blog", action = "BlogByTag" },
+                            new[] { "Nop.Web.Controllers" });
+            routes.MapLocalizedRoute("BlogByMonth",
+                            "blog/month/{month}",
+                            new { controller = "Blog", action = "BlogByMonth" },
+                            new[] { "Nop.Web.Controllers" });
             routes.MapLocalizedRoute("BlogRSS",
                             "blog/rss/{languageId}",
                             new { controller = "Blog", action = "ListRss" },
@@ -393,14 +401,6 @@ namespace Nop.Web.Infrastructure
                             "blog/{blogPostId}/{SeName}",
                             new { controller = "Blog", action = "BlogPost", SeName = UrlParameter.Optional },
                             new { blogPostId = @"\d+" },
-                            new[] { "Nop.Web.Controllers" });
-            routes.MapLocalizedRoute("BlogByTag",
-                            "blog/tag/{tag}",
-                            new { controller = "Blog", action = "List" },
-                            new[] { "Nop.Web.Controllers" });
-            routes.MapLocalizedRoute("BlogByMonth",
-                            "blog/month/{month}",
-                            new { controller = "Blog", action = "List" },
                             new[] { "Nop.Web.Controllers" });
 
             //forum

@@ -41,9 +41,12 @@ namespace Nop.Services.Blogs
         /// </summary>
         /// <param name="languageId">Language identifier. 0 if you want to get all news</param>
         /// <param name="tag">Tag</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Blog posts</returns>
-        IList<BlogPost> GetAllBlogPostsByTag(int languageId, string tag, bool showHidden = false);
+        IPagedList<BlogPost> GetAllBlogPostsByTag(int languageId, string tag, 
+            int pageIndex, int pageSize, bool showHidden = false);
 
         /// <summary>
         /// Gets all blog post tags

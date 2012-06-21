@@ -128,15 +128,12 @@ namespace Nop.Web.Controllers
                 }
             }
         }
-        
-        #endregion
 
-        #region Methods
-
-        public ActionResult List(BlogPagingFilteringModel command)
+        [NonAction]
+        protected BlogPostListModel PrepareBlogPostListModel(BlogPagingFilteringModel command)
         {
-            if (!_blogSettings.Enabled)
-                return RedirectToRoute("HomePage");
+            if (command == null)
+                throw new ArgumentNullException("command");
 
             var model = new BlogPostListModel();
             model.PagingFilteringContext.Tag = command.Tag;
@@ -149,17 +146,18 @@ namespace Nop.Web.Controllers
             DateTime? dateFrom = command.GetFromMonth();
             DateTime? dateTo = command.GetToMonth();
 
-            IList<BlogPost> blogPosts;
+            IPagedList<BlogPost> blogPosts;
             if (String.IsNullOrEmpty(command.Tag))
             {
                 blogPosts = _blogService.GetAllBlogPosts(_workContext.WorkingLanguage.Id,
                     dateFrom, dateTo, command.PageNumber - 1, command.PageSize);
-                model.PagingFilteringContext.LoadPagedList(blogPosts as IPagedList<BlogPost>);
             }
             else
             {
-                blogPosts = _blogService.GetAllBlogPostsByTag(_workContext.WorkingLanguage.Id, command.Tag);
+                blogPosts = _blogService.GetAllBlogPostsByTag(_workContext.WorkingLanguage.Id,
+                    command.Tag, command.PageNumber - 1, command.PageSize);
             }
+            model.PagingFilteringContext.LoadPagedList(blogPosts);
 
             model.BlogPosts = blogPosts
                 .Select(x =>
@@ -170,7 +168,36 @@ namespace Nop.Web.Controllers
                 })
                 .ToList();
 
-            return View(model);
+            return model;
+        }
+        
+        #endregion
+
+        #region Methods
+
+        public ActionResult List(BlogPagingFilteringModel command)
+        {
+            if (!_blogSettings.Enabled)
+                return RedirectToRoute("HomePage");
+            
+            var model = PrepareBlogPostListModel(command);
+            return View("List", model);
+        }
+        public ActionResult BlogByTag(BlogPagingFilteringModel command)
+        {
+            if (!_blogSettings.Enabled)
+                return RedirectToRoute("HomePage");
+
+            var model = PrepareBlogPostListModel(command);
+            return View("List", model);
+        }
+        public ActionResult BlogByMonth(BlogPagingFilteringModel command)
+        {
+            if (!_blogSettings.Enabled)
+                return RedirectToRoute("HomePage");
+
+            var model = PrepareBlogPostListModel(command);
+            return View("List", model);
         }
 
         public ActionResult ListRss(int languageId)

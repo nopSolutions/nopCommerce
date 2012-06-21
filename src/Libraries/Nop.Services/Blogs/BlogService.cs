@@ -112,22 +112,28 @@ namespace Nop.Services.Blogs
         /// </summary>
         /// <param name="languageId">Language identifier. 0 if you want to get all news</param>
         /// <param name="tag">Tag</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Blog posts</returns>
-        public virtual IList<BlogPost> GetAllBlogPostsByTag(int languageId, string tag, bool showHidden = false)
+        public virtual IPagedList<BlogPost> GetAllBlogPostsByTag(int languageId, string tag,
+            int pageIndex, int pageSize, bool showHidden = false)
         {
             tag = tag.Trim();
 
+            //we laod all records and only then filter them by tag
             var blogPostsAll = GetAllBlogPosts(languageId, null, null, 0, int.MaxValue, showHidden);
-            var blogPosts = new List<BlogPost>();
+            var taggedBlogPosts = new List<BlogPost>();
             foreach (var blogPost in blogPostsAll)
             {
                 var tags = blogPost.ParseTags();
                 if (!String.IsNullOrEmpty(tags.FirstOrDefault(t => t.Equals(tag, StringComparison.InvariantCultureIgnoreCase))))
-                    blogPosts.Add(blogPost);
+                    taggedBlogPosts.Add(blogPost);
             }
 
-            return blogPosts;
+            //server-side paging
+            var result = new PagedList<BlogPost>(taggedBlogPosts, pageIndex, pageSize);
+            return result;
         }
 
         /// <summary>
