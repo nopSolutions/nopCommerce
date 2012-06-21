@@ -1342,7 +1342,7 @@
             <param name="name">A descriptive name for the code that is encapsulated by the resulting IDisposable's lifetime.</param>
             <param name="level">This step's visibility level; allows filtering when <see cref="M:StackExchange.Profiling.MiniProfiler.Start(StackExchange.Profiling.ProfileLevel)"/> is called.</param>
         </member>
-        <member name="M:StackExchange.Profiling.MiniProfiler.RenderIncludes(System.Nullable{StackExchange.Profiling.RenderPosition},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Boolean)">
+        <member name="M:StackExchange.Profiling.MiniProfiler.RenderIncludes(System.Nullable{StackExchange.Profiling.RenderPosition},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{System.Int32},System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Boolean)">
             <summary>
             Returns the css and javascript includes needed to display the MiniProfiler results UI.
             </summary>
@@ -1351,6 +1351,7 @@
             <param name="showTimeWithChildren">Whether to show time the time with children column by default (defaults to false)</param>
             <param name="maxTracesToShow">The maximum number of trace popups to show before removing the oldest (defaults to 15)</param>
             <param name="showControls">when true, shows buttons to minimize and clear MiniProfiler results</param>
+            <param name="useExistingjQuery">Whether MiniProfiler should attempt to load its own version of jQuery, or rely on a version previously loaded on the page</param>
             <returns>Script and link elements normally; an empty string when there is no active profiling session.</returns>
         </member>
         <member name="M:StackExchange.Profiling.MiniProfiler.ToJson">
@@ -1561,16 +1562,19 @@
         <member name="P:StackExchange.Profiling.MiniProfiler.Settings.AssembliesToExclude">
             <summary>
             Assemblies to exclude from the stack trace report.
+            Add to this using the <see cref="M:StackExchange.Profiling.MiniProfiler.Settings.ExcludeAssembly(System.String)"/> method.
             </summary>
         </member>
         <member name="P:StackExchange.Profiling.MiniProfiler.Settings.TypesToExclude">
             <summary>
             Types to exclude from the stack trace report.
+            Add to this using the <see cref="M:StackExchange.Profiling.MiniProfiler.Settings.ExcludeType(System.String)"/> method.
             </summary>
         </member>
         <member name="P:StackExchange.Profiling.MiniProfiler.Settings.MethodsToExclude">
             <summary>
             Methods to exclude from the stack trace report.
+            Add to this using the <see cref="M:StackExchange.Profiling.MiniProfiler.Settings.ExcludeMethod(System.String)"/> method.
             </summary>
         </member>
         <member name="P:StackExchange.Profiling.MiniProfiler.Settings.MaxUnviewedProfiles">
@@ -1618,6 +1622,7 @@
             For a per-page override you can use .RenderIncludes(showControls: true/false)
             </summary>
         </member>
+        <!-- Badly formed XML comment ignored for member "P:StackExchange.Profiling.MiniProfiler.Settings.UseExistingjQuery" -->
         <member name="P:StackExchange.Profiling.MiniProfiler.Settings.ExcludeStackTraceSnippetFromSqlTimings">
             <summary>
             By default, SqlTimings will grab a stack trace to help locate where queries are being executed.
