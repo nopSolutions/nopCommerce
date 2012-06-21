@@ -522,15 +522,14 @@
                     .Columns(columns =>
                     {
                         columns.Bound(x => x.PictureUrl)
-                            .Width(400)
-                            .ClientTemplate("<img alt='<#= Id #>' src='<#= PictureUrl #>' />")
+                            .ClientTemplate("<a href='<#= PictureUrl #>' target='_blank'><img alt='<#= Id #>' src='<#= PictureUrl #>' width='150' /><a/>")
                             .ReadOnly();
-                        columns.Bound(x => x.DisplayOrder).Width(100);
+                        columns.Bound(x => x.DisplayOrder);
                         columns.Command(commands =>
                         {
                             commands.Edit();
                             commands.Delete();
-                        }).Width(180);
+                        });
 
                     })
                     .Editable(x =>
