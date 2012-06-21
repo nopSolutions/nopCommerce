@@ -675,7 +675,8 @@ namespace Nop.Web.Controllers
         [HttpPost]
         public ActionResult AddProductToCart(int productId, bool forceredirection = false)
         {
-            var shoppingCartType = ShoppingCartType.ShoppingCart;
+            //current we support only ShoppingCartType.ShoppingCart
+            const ShoppingCartType shoppingCartType = ShoppingCartType.ShoppingCart;
 
             var product = _productService.GetProductById(productId);
             if (product == null)
@@ -692,7 +693,7 @@ namespace Nop.Web.Controllers
                 //we can add a product to the cart only if it has exactly one product variant
                 return Json(new
                 {
-                    redirect = Url.RouteUrl("Product", new { productId = product.Id, SeName = product.GetSeName() }, "http"),
+                    redirect = Url.RouteUrl("Product", new { productId = product.Id, SeName = product.GetSeName() }),
                 });
             }
 
@@ -703,7 +704,7 @@ namespace Nop.Web.Controllers
                 //cannot be added to the cart (requires a customer to enter price)
                 return Json(new
                 {
-                    redirect = Url.RouteUrl("Product", new { productId = product.Id, SeName = product.GetSeName() }, "http"),
+                    redirect = Url.RouteUrl("Product", new { productId = product.Id, SeName = product.GetSeName() }),
                 });
             }
 
@@ -748,7 +749,7 @@ namespace Nop.Web.Controllers
                 //but we do not display attribute and gift card warnings here. let's do it on the product details page
                 return Json(new
                 {
-                    redirect = Url.RouteUrl("Product", new { productId = product.Id, SeName = product.GetSeName() }, "http"),
+                    redirect = Url.RouteUrl("Product", new { productId = product.Id, SeName = product.GetSeName() }),
                 });
             }
 
@@ -759,7 +760,7 @@ namespace Nop.Web.Controllers
                 //redirect to the shopping cart page
                 return Json(new
                 {
-                    redirect = Url.RouteUrl("ShoppingCart", null, "http"),
+                    redirect = Url.RouteUrl("ShoppingCart"),
                 });
             }
 
@@ -797,7 +798,7 @@ namespace Nop.Web.Controllers
             {
                 return Json(new
                 {
-                    redirect = Url.RouteUrl("HomePage", null, "http"),
+                    redirect = Url.RouteUrl("HomePage"),
                 });
             }
 
@@ -1012,7 +1013,7 @@ namespace Nop.Web.Controllers
                             //redirect to the wishlist page
                             return Json(new
                             {
-                                redirect = Url.RouteUrl("Wishlist", null, "http"),
+                                redirect = Url.RouteUrl("Wishlist"),
                             });
                         }
                         else
@@ -1041,7 +1042,7 @@ namespace Nop.Web.Controllers
                             //redirect to the shopping cart page
                             return Json(new
                             {
-                                redirect = Url.RouteUrl("ShoppingCart", null, "http"),
+                                redirect = Url.RouteUrl("ShoppingCart"),
                             });
                         }
                         else
