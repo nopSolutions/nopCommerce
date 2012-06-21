@@ -84,43 +84,6 @@ namespace Nop.Services.Orders
 
         #endregion
 
-        #region Utilities
-
-        /// <summary>
-        /// Get a list of required product variants
-        /// </summary>
-        /// <param name="productVariant">Product variant</param>
-        /// <returns>Required product variants</returns>
-        protected virtual IList<ProductVariant> GetRequiredProductVariants(ProductVariant productVariant)
-        {
-            if (productVariant == null)
-                throw new ArgumentNullException("productVariant");
-
-            var requiredProductVariants = new List<ProductVariant>();
-
-            var ids = productVariant.ParseRequiredProductVariantIds();
-            foreach (var id in ids)
-            {
-                var pv = _productService.GetProductVariantById(id);
-                var nowUtc = DateTime.UtcNow;
-                //ensure that product and product variant are published, not deleted, etc
-                if (pv != null &&
-                    !pv.Deleted &&
-                    pv.Published &&
-                    !pv.Product.Deleted &&
-                    pv.Product.Published &&
-                    (!pv.AvailableStartDateTimeUtc.HasValue || pv.AvailableStartDateTimeUtc.Value < nowUtc) &&
-                    (!pv.AvailableEndDateTimeUtc.HasValue || pv.AvailableEndDateTimeUtc.Value > nowUtc))
-                {
-                    requiredProductVariants.Add(pv);
-                }
-            }
-
-            return requiredProductVariants;
-        }
-
-        #endregion
-
         #region Methods
 
         /// <summary>
@@ -184,7 +147,14 @@ namespace Nop.Services.Orders
 
             if (productVariant.RequireOtherProducts)
             {
-                var requiredProductVariants = GetRequiredProductVariants(productVariant);
+                var requiredProductVariants = new List<ProductVariant>();
+                foreach (var id in productVariant.ParseRequiredProductVariantIds())
+                {
+                    var rpv = _productService.GetProductVariantById(id);
+                    if (rpv != null)
+                        requiredProductVariants.Add(rpv);
+                }
+                
                 foreach (var rpv in requiredProductVariants)
                 {
                     //ensure that product is in the cart
@@ -219,7 +189,7 @@ namespace Nop.Services.Orders
                                     //a product wasn't atomatically added for some reasons
 
                                     //don't display specific errors from 'addToCartWarnings' variable
-                                    //display only geenric error
+                                    //display only generic error
                                     warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.RequiredProductWarning"), fullProductName));
                                 }
                             }
