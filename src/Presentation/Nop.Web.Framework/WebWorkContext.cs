@@ -67,7 +67,7 @@ namespace Nop.Web.Framework
                 //check whether request is made by a search engine
                 //in this case return built-in customer record for search engines 
                 //or comment the following two lines of code in order to disable this functionality
-                if (_webHelper.IsSearchEngine(_httpContext.Request))
+                if (_webHelper.IsSearchEngine(_httpContext))
                     customer = _customerService.GetCustomerBySystemName(SystemCustomerNames.SearchEngine);
 
                 //registered user

@@ -587,17 +587,19 @@ namespace Nop.Core
         /// <summary>
         /// Get a value indicating whether the request is made by search engine (web crawler)
         /// </summary>
-        /// <param name="request">HTTP Request</param>
+        /// <param name="context">HTTP context</param>
         /// <returns>Result</returns>
-        public virtual bool IsSearchEngine(HttpRequestBase request)
+        public virtual bool IsSearchEngine(HttpContextBase context)
         {
-            if (request == null)
+            //we accept HttpContext instead of HttpRequest and put required logic in try-catch block
+            //more info: http://www.nopcommerce.com/boards/t/17711/unhandled-exception-request-is-not-available-in-this-context.aspx
+            if (context == null)
                 return false;
 
             bool result = false;
             try
             {
-                result = request.Browser.Crawler;
+                result = context.Request.Browser.Crawler;
                 if (!result)
                 {
                     //put any additional known crawlers in the Regex below for some custom validation
