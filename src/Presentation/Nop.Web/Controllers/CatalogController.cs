@@ -1295,17 +1295,22 @@ namespace Nop.Web.Controllers
                 {
                     var currentManufacturer = _manufacturerService.GetManufacturerById(currentManufacturerId);
 
-                    var model = new List<ManufacturerNavigationModel>();
-                    foreach (var manufacturer in _manufacturerService.GetAllManufacturers())
+                    var manufacturers = _manufacturerService.GetAllManufacturers();
+                    var model = new ManufacturerNavigationModel()
                     {
-                        var modelMan = new ManufacturerNavigationModel()
+                        TotalManufacturers = manufacturers.Count
+                    };
+
+                    foreach (var manufacturer in manufacturers.Take(_catalogSettings.ManufacturersBlockItemsToDisplay))
+                    {
+                        var modelMan = new ManufacturerBriefInfoModel()
                         {
                             Id = manufacturer.Id,
                             Name = manufacturer.GetLocalized(x => x.Name),
                             SeName = manufacturer.GetSeName(),
                             IsActive = currentManufacturer != null && currentManufacturer.Id == manufacturer.Id,
                         };
-                        model.Add(modelMan);
+                        model.Manufacturers.Add(modelMan);
                     }
                     return model;
                 });

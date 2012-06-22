@@ -3802,6 +3802,14 @@
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
+                  <LocaleResource Name="ManufacturersBlockItemsToDisplay">
+                    <Value>Number of manufactures to display</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Enter the number of manufactures to display in manufacturer navigation block.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
 								</Children>
 							</LocaleResource>
 							<LocaleResource Name="CustomerUser">

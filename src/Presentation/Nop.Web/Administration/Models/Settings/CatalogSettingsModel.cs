@@ -111,5 +111,8 @@ namespace Nop.Admin.Models.Settings
 
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.IgnoreFeaturedProducts")]
         public bool IgnoreFeaturedProducts { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ManufacturersBlockItemsToDisplay")]
+        public int ManufacturersBlockItemsToDisplay { get; set; }
     }
 }

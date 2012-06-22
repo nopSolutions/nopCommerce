@@ -1,21 +1,31 @@
-﻿@model IList<ManufacturerNavigationModel>
+﻿@model ManufacturerNavigationModel
 @using Nop.Core.Domain.Catalog;
 @using Nop.Core.Infrastructure;
 @using Nop.Services.Catalog;
 @using Nop.Web.Models.Catalog;
-@if (Model.Count > 0)
-{<div class="block block-manufacturer-navigation">
-    <div class="title">
-        @T("Manufacturers")
-    </div>
-    <div class="clear">
-    </div>
-    <ul data-role="listview" data-inset="true" data-filter="false">
-        @foreach (var manufacturer in Model)
+@if (Model.Manufacturers.Count > 0)
+{
+    <div class="block block-manufacturer-navigation">
+        <div class="title">
+            @T("Manufacturers")
+        </div>
+        <div class="clear">
+        </div>
+        <ul data-role="listview" data-inset="true" data-filter="false">
+            @foreach (var manufacturer in Model.Manufacturers)
+            {
+                //we display all manufactures in mobile version (do not use @Model.ManufacturersToDisplay)
+                <li><a href="@Url.RouteUrl("Manufacturer", new { manufacturerId = manufacturer.Id, SeName = manufacturer.SeName })">
+                    @manufacturer.Name</a></li>
+            }
+        </ul>
+        <div class="clear">
+        </div>
+        @if (Model.TotalManufacturers > Model.Manufacturers.Count)
         {
-            <li><a href="@Url.RouteUrl("Manufacturer", new { manufacturerId = manufacturer.Id, SeName = manufacturer.SeName })">
-                @manufacturer.Name</a></li>
+            <div class="viewall">
+                <a href="@Url.RouteUrl("ManufacturerList")">@T("Manufacturers.ViewAll")</a>
+            </div>
         }
-    </ul>
     </div>
 }

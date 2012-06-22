@@ -404,6 +404,15 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ManufacturersBlockItemsToDisplay):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ManufacturersBlockItemsToDisplay)
+                @Html.ValidationMessageFor(model => model.ManufacturersBlockItemsToDisplay)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.NopLabelFor(model => model.IncludeShortDescriptionInCompareProducts):
             </td>
             <td class="adminData">

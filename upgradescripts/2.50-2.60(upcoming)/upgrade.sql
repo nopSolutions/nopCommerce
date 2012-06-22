@@ -743,6 +743,12 @@ set @resources='
   <LocaleResource Name="Common.FileUploader.Failed">
     <Value>Failed</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ManufacturersBlockItemsToDisplay">
+    <Value>Number of manufactures to display</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ManufacturersBlockItemsToDisplay.Hint">
+    <Value>Enter the number of manufactures to display in manufacturers block.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -2681,5 +2687,13 @@ IF NOT EXISTS (
 BEGIN
 	INSERT [dbo].[MessageTemplate] ([Name], [BccEmailAddresses], [Subject], [Body], [IsActive], [EmailAccountId])
 	VALUES (N'RecurringPaymentCancelled.StoreOwnerNotification', null, N'%Store.Name%. Recurring payment cancelled', N'<p><a href="%Store.URL%">%Store.Name%</a> <br /><br />%Customer.FullName% (%Customer.Email%) has just cancelled a recurring payment ID=%RecurringPayment.ID%.</p>', 1, 0)
+END
+GO
+
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.manufacturersblockitemstodisplay')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'catalogsettings.manufacturersblockitemstodisplay', N'5')
 END
 GO

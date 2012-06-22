@@ -4529,6 +4529,7 @@ namespace Nop.Services.Installation
                     ProductsByTagPageSizeOptions = "4, 2, 8, 12",
                     MaximumBackInStockSubscriptions = 200,
                     FileUploadMaximumSizeBytes = 1024 * 200, //200KB
+                    ManufacturersBlockItemsToDisplay = 5,
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<LocalizationSettings>>()

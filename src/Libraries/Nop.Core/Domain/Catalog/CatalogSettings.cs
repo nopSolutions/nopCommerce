@@ -239,5 +239,10 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a maximum file upload size in bytes for product attributes ('File Upload' type)
         /// </summary>
         public int FileUploadMaximumSizeBytes { get; set; }
+
+        /// <summary>
+        /// Gets or set the value indicating how many manufactures to display in manufacturers block
+        /// </summary>
+        public int ManufacturersBlockItemsToDisplay { get; set; }
     }
 }
