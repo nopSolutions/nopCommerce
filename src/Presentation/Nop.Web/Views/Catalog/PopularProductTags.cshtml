@@ -18,6 +18,12 @@
                     }
                 </ul>
             </div>
+            @if (Model.TotalTags > Model.Tags.Count)
+            {
+                <div class="viewall">
+                    <a href="@Url.RouteUrl("ProductTagsAll")">@T("Products.Tags.Popular.ViewAll")</a>
+                </div>
+            }
         </div>
     </div>
 }

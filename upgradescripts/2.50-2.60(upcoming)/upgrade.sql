@@ -749,6 +749,15 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ManufacturersBlockItemsToDisplay.Hint">
     <Value>Enter the number of manufactures to display in manufacturer navigation block.</Value>
   </LocaleResource>
+  <LocaleResource Name="Products.Tags.Popular.ViewAll">
+    <Value>View all</Value>
+  </LocaleResource>
+  <LocaleResource Name="PageTitle.AllProductTags">
+    <Value>All product tags</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.Tags.All">
+    <Value>All product tags</Value>
+  </LocaleResource>
 </Language>
 '
 

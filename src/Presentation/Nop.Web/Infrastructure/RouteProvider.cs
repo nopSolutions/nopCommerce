@@ -589,7 +589,11 @@ namespace Nop.Web.Infrastructure
                             new { controller = "Catalog", action = "ProductsByTag", SeName = UrlParameter.Optional },
                             new { productTagId = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
-            
+            routes.MapLocalizedRoute("ProductTagsAll",
+                            "productag/all/",
+                            new { controller = "Catalog", action = "ProductTagsAll" },
+                            new[] { "Nop.Web.Controllers" });
+
             //product search
             routes.MapLocalizedRoute("ProductSearch",
                             "search/",

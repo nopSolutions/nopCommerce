@@ -2645,6 +2645,9 @@
 			<LocaleResource Name="AccountActivation">
 				<Value>Account Activation</Value>
 			</LocaleResource>
+      <LocaleResource Name="AllProductTags">
+        <Value>All product tags</Value>
+      </LocaleResource>
 			<LocaleResource Name="BackInStockSubscriptions">
 				<Value>Back in stock subscriptions</Value>
 			</LocaleResource>
@@ -3309,11 +3312,19 @@
 			<LocaleResource Name="Tags">
 				<Value>Product tags</Value>
 				<Children>
+          <LocaleResource Name="All">
+            <Value>All product tags</Value>
+          </LocaleResource>
 					<LocaleResource Name="ProductsTaggedWith">
 						<Value>Products tagged with '{0}'</Value>
 					</LocaleResource>
 					<LocaleResource Name="Popular">
 						<Value>Popular tags</Value>
+            <Children>
+              <LocaleResource Name="ViewAll">
+                <Value>View all</Value>
+              </LocaleResource>
+            </Children>
 					</LocaleResource>
 					<LocaleResource Name="PageSize">
 						<Value>Display</Value>

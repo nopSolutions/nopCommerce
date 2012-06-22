@@ -1,0 +1,27 @@
+﻿@model PopularProductTagsModel
+@{
+    Layout = "~/Views/Shared/_ColumnsThree.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.AllProductTags").Text);
+}
+@using Nop.Web.Models.Catalog;
+<div class="producttagall-page">
+    <div class="page-title">
+        <h1>@T("Products.Tags.All")</h1>
+    </div>
+    <div class="clear">
+    </div>
+    <div class="body">
+        @if (Model.Tags.Count > 0)
+        {
+            <ul class="producttags-list">
+                @foreach (var item in Model.Tags)
+                {
+                    <li><a href="@Url.RouteUrl("ProductsByTag", new { productTagId = item.Id, SeName = item.SeName })" class="producttag"  style="font-size:@(Model.GetFontSize(item))%;">
+                        @item.Name</a> </li>
+                }
+            </ul>
+        }
+    </div>
+</div>

@@ -11,16 +11,7 @@ namespace Nop.Web.Models.Catalog
             Tags = new List<ProductTagModel>();
         }
 
-        public int GetFontSize(ProductTagModel productTag)
-        {
-            double mean = 0;
-            var itemWeights = new List<double>();
-            foreach (var tag in Tags)
-                itemWeights.Add(tag.ProductCount);
-            double stdDev = StdDev(itemWeights, out mean);
-
-            return GetFontSize(productTag.ProductCount, mean, stdDev);
-        }
+        #region Utilities
 
         protected int GetFontSize(double weight, double mean, double stdDev)
         {
@@ -67,7 +58,29 @@ namespace Nop.Web.Models.Catalog
             return Math.Sqrt(sumOfDiffSquares / count);
         }
 
+        #endregion
+
+        #region Methods
+
+        public int GetFontSize(ProductTagModel productTag)
+        {
+            double mean = 0;
+            var itemWeights = new List<double>();
+            foreach (var tag in Tags)
+                itemWeights.Add(tag.ProductCount);
+            double stdDev = StdDev(itemWeights, out mean);
+
+            return GetFontSize(productTag.ProductCount, mean, stdDev);
+        }
+
+        #endregion
+
+        #region Properties
+
+        public int TotalTags { get; set; }
 
         public IList<ProductTagModel> Tags { get; set; }
+
+        #endregion
     }
 }

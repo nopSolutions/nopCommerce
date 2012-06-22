@@ -80,6 +80,7 @@ namespace Nop.Web.MVC.Tests.Public.Infrastructure
 
             "~/productag/9/".ShouldMapTo<CatalogController>(c => c.ProductsByTag(9, null));
             "~/productag/9/se-name/".ShouldMapTo<CatalogController>(c => c.ProductsByTag(9, null));
+            "~/productag/all/".ShouldMapTo<CatalogController>(c => c.ProductTagsAll());
 
             "~/search/".ShouldMapTo<CatalogController>(c => c.Search(null,null));
         }

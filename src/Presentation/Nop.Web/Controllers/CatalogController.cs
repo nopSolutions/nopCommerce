@@ -2251,7 +2251,8 @@ namespace Nop.Web.Controllers
                 var model = new PopularProductTagsModel();
 
                 //get all tags
-                var tags = _productTagService.GetAllProductTags()
+                var allTags = _productTagService.GetAllProductTags();
+                var tags = allTags
                     .OrderByDescending(x => x.ProductCount)
                     .Where(x => x.ProductCount > 0)
                     .Take(_catalogSettings.NumberOfProductTags)
@@ -2259,6 +2260,8 @@ namespace Nop.Web.Controllers
                 //sorting
                 tags = tags.OrderBy(x => x.GetLocalized(y => y.Name)).ToList();
 
+                model.TotalTags = allTags.Count;
+                
                 foreach (var tag in tags)
                     model.Tags.Add(new ProductTagModel()
                     {
@@ -2411,6 +2414,29 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
+        [NopHttpsRequirement(SslRequirement.No)]
+        public ActionResult ProductTagsAll()
+        {
+            var model = new PopularProductTagsModel();
+            model.Tags = _productTagService.GetAllProductTags()
+                .OrderByDescending(x => x.ProductCount)
+                .Where(x => x.ProductCount > 0)
+                //sort by name
+                .OrderBy(x => x.GetLocalized(y => y.Name))
+                .Select(x =>
+                            {
+                                var ptModel = new ProductTagModel()
+                                {
+                                    Id = x.Id,
+                                    Name = x.GetLocalized(y => y.Name),
+                                    SeName = x.GetSeName(),
+                                    ProductCount = x.ProductCount
+                                };
+                                return ptModel;
+                            })
+                .ToList();
+            return View(model);
+        }
 
         #endregion
 
