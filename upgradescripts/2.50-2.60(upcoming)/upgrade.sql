@@ -731,6 +731,18 @@ set @resources='
   <LocaleResource Name="Admin.RecurringPayments.Fields.ID">
     <Value>ID</Value>
   </LocaleResource>
+  <LocaleResource Name="Common.FileUploader.Upload">
+    <Value>Upload a file</Value>
+  </LocaleResource>
+  <LocaleResource Name="Common.FileUploader.DropFiles">
+    <Value>Drop files here to upload</Value>
+  </LocaleResource>
+  <LocaleResource Name="Common.FileUploader.Cancel">
+    <Value>Cancel</Value>
+  </LocaleResource>
+  <LocaleResource Name="Common.FileUploader.Failed">
+    <Value>Failed</Value>
+  </LocaleResource>
 </Language>
 '
 

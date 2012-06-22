@@ -111,6 +111,12 @@
                                     $("#@(clientId + "downloadurl")").html("<a href='" + responseJSON.downloadUrl + "'>@T("Admin.Download.DownloadUploadedFile")</a>");
                                     $("#@(clientId + "value") input").val(responseJSON.downloadId);
                                     $("#@(clientId + "remove")").show();
+                                },
+                                strings: {
+                                    upload: "@T("Common.FileUploader.Upload")",
+                                    drop: "@T("Common.FileUploader.DropFiles")",
+                                    cancel: "@T("Common.FileUploader.Cancel")",
+                                    failed: "@T("Common.FileUploader.Failed")"
                                 }
                             });
                             

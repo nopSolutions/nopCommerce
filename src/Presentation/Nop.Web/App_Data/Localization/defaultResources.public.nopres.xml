@@ -1211,6 +1211,22 @@
       <LocaleResource Name="Error">
         <Value>Error</Value>
       </LocaleResource>
+      <LocaleResource Name="FileUploader">
+        <Children>
+          <LocaleResource Name="Upload">
+            <Value>Upload a file</Value>
+          </LocaleResource>
+          <LocaleResource Name="DropFiles">
+            <Value>Drop files here to upload</Value>
+          </LocaleResource>
+          <LocaleResource Name="Cancel">
+            <Value>Cancel</Value>
+          </LocaleResource>
+          <LocaleResource Name="Failed">
+            <Value>Failed</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
       <LocaleResource Name="Hide">
         <Value>Hide</Value>
       </LocaleResource>

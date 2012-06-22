@@ -46,6 +46,12 @@ else
                         $("#@(clientId + "value") input").val(responseJSON.pictureId);
                         $("#@(clientId + "remove")").show();
                     }
+                },
+                strings: {
+                    upload: "@T("Common.FileUploader.Upload")",
+                    drop: "@T("Common.FileUploader.DropFiles")",
+                    cancel: "@T("Common.FileUploader.Cancel")",
+                    failed: "@T("Common.FileUploader.Failed")"
                 }
             });
 
