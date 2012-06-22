@@ -747,7 +747,7 @@ set @resources='
     <Value>Number of manufactures to display</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ManufacturersBlockItemsToDisplay.Hint">
-    <Value>Enter the number of manufactures to display in manufacturers block.</Value>
+    <Value>Enter the number of manufactures to display in manufacturer navigation block.</Value>
   </LocaleResource>
 </Language>
 '
