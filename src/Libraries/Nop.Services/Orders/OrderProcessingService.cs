@@ -1425,6 +1425,11 @@ namespace Nop.Services.Orders
                         CreatedOnUtc = DateTime.UtcNow
                     });
                     _orderService.UpdateOrder(initialOrder);
+
+                    //notify a store owner
+                    _workflowMessageService
+                        .SendRecurringPaymentCancelledStoreOwnerNotification(recurringPayment, 
+                        _localizationSettings.DefaultAdminLanguageId);
                 }
             }
             catch (Exception exc)

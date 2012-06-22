@@ -15,6 +15,9 @@ namespace Nop.Admin.Models.Orders
             History = new List<RecurringPaymentHistoryModel>();
         }
 
+        [NopResourceDisplayName("Admin.RecurringPayments.Fields.ID")]
+        public override int Id { get; set; }
+
         [NopResourceDisplayName("Admin.RecurringPayments.Fields.CycleLength")]
         public int CycleLength { get; set; }
 

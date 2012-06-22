@@ -133,6 +133,18 @@ namespace Nop.Services.Messages
 
             return tokens;
         }
+        private IList<Token> GenerateTokens(RecurringPayment recurringPayment, int languageId)
+        {
+            var tokens = new List<Token>();
+
+            _messageTokenProvider.AddStoreTokens(tokens);
+            _messageTokenProvider.AddOrderTokens(tokens, recurringPayment.InitialOrder, languageId);
+            _messageTokenProvider.AddCustomerTokens(tokens, recurringPayment.InitialOrder.Customer);
+            _messageTokenProvider.AddRecurringPaymentTokens(tokens, recurringPayment);
+
+            return tokens;
+        }
+
 
         private IList<Token> GenerateTokens(ReturnRequest returnRequest,  OrderProductVariant opv)
         {
@@ -587,6 +599,33 @@ namespace Nop.Services.Messages
             var toName = string.Format("{0} {1}", order.BillingAddress.FirstName, order.BillingAddress.LastName);
             return SendNotification(messageTemplate, emailAccount,
                 languageId, orderTokens,
+                toEmail, toName);
+        }
+
+        /// <summary>
+        /// Sends a "Recurring payment cancelled" notification to a store owner
+        /// </summary>
+        /// <param name="recurringPayment">Recurring payment</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        public virtual int SendRecurringPaymentCancelledStoreOwnerNotification(RecurringPayment recurringPayment, int languageId)
+        {
+            if (recurringPayment == null)
+                throw new ArgumentNullException("recurringPayment");
+
+            languageId = EnsureLanguageIsActive(languageId);
+
+            var messageTemplate = GetLocalizedActiveMessageTemplate("RecurringPaymentCancelled.StoreOwnerNotification", languageId);
+            if (messageTemplate == null)
+                return 0;
+
+            var tokens = GenerateTokens(recurringPayment, languageId);
+
+            var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
+            var toEmail = emailAccount.Email;
+            var toName = emailAccount.DisplayName;
+            return SendNotification(messageTemplate, emailAccount,
+                languageId, tokens,
                 toEmail, toName);
         }
 

@@ -8664,6 +8664,9 @@
 					</LocaleResource>
 					<LocaleResource Name="Fields">
 						<Children>
+              <LocaleResource Name="ID">
+                <Value>ID</Value>
+              </LocaleResource>
               <LocaleResource Name="Customer">
                 <Value>Customer</Value>
                 <Children>

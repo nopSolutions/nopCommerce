@@ -105,6 +105,14 @@ namespace Nop.Services.Messages
         /// <returns>Queued email identifier</returns>
         int SendNewOrderNoteAddedCustomerNotification(OrderNote orderNote, int languageId);
 
+        /// <summary>
+        /// Sends a "Recurring payment cancelled" notification to a store owner
+        /// </summary>
+        /// <param name="recurringPayment">Recurring payment</param>
+        /// <param name="languageId">Message language identifier</param>
+        /// <returns>Queued email identifier</returns>
+        int SendRecurringPaymentCancelledStoreOwnerNotification(RecurringPayment recurringPayment, int languageId);
+        
         #endregion
 
         #region Newsletter workflow

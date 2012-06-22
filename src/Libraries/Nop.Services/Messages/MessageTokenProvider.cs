@@ -547,6 +547,11 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Order.NewNoteText", orderNote.FormatOrderNoteText(), true));
         }
 
+        public virtual void AddRecurringPaymentTokens(IList<Token> tokens, RecurringPayment recurringPayment)
+        {
+            tokens.Add(new Token("RecurringPayment.ID", recurringPayment.Id.ToString()));
+        }
+
         public virtual void AddReturnRequestTokens(IList<Token> tokens, ReturnRequest returnRequest, OrderProductVariant opv)
         {
             tokens.Add(new Token("ReturnRequest.ID", returnRequest.Id.ToString()));
@@ -738,6 +743,7 @@ namespace Nop.Services.Messages
                 "%Order.CreatedOn%",
                 "%Order.OrderURLForCustomer%",
                 "%Order.NewNoteText%",
+                "%RecurringPayment.ID%",
                 "%Shipment.ShipmentNumber%",
                 "%Shipment.TrackingNumber%",
                 "%Shipment.Product(s)%",

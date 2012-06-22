@@ -4342,6 +4342,14 @@ namespace Nop.Services.Installation
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
                                        },
+                                   new MessageTemplate
+                                       {
+                                           Name = "RecurringPaymentCancelled.StoreOwnerNotification",
+                                           Subject = "%Store.Name%. Recurring payment cancelled",
+                                           Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />%Customer.FullName% (%Customer.Email%) has just cancelled a recurring payment ID=%RecurringPayment.ID%.</p>",
+                                           IsActive = true,
+                                           EmailAccountId = eaGeneral.Id,
+                                       },
                                };
             messageTemplates.ForEach(mt => _messageTemplateRepository.Insert(mt));
 
