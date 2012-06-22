@@ -27,6 +27,7 @@ using Nop.Services.Media;
 using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Seo;
+using Nop.Core.Events;
 
 namespace Nop.Services.Messages
 {
@@ -52,6 +53,8 @@ namespace Nop.Services.Messages
         private readonly CatalogSettings _catalogSettings;
         private readonly TaxSettings _taxSettings;
 
+        private readonly IEventPublisher _eventPublisher;
+
         #endregion
 
         #region Ctor
@@ -64,7 +67,8 @@ namespace Nop.Services.Messages
             IOrderService orderService, IPaymentService paymentService,
             StoreInformationSettings storeSettings, MessageTemplatesSettings templatesSettings,
             EmailAccountSettings emailAccountSettings, CatalogSettings catalogSettings,
-            TaxSettings taxSettings)
+            TaxSettings taxSettings,
+            IEventPublisher eventPublisher)
         {
             this._languageService = languageService;
             this._localizationService = localizationService;
@@ -83,6 +87,7 @@ namespace Nop.Services.Messages
             this._emailAccountSettings = emailAccountSettings;
             this._catalogSettings = catalogSettings;
             this._taxSettings = taxSettings;
+            this._eventPublisher = eventPublisher;
         }
 
         #endregion
@@ -532,6 +537,9 @@ namespace Nop.Services.Messages
 
             //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
             tokens.Add(new Token("Order.OrderURLForCustomer", string.Format("{0}orderdetails/{1}", _webHelper.GetStoreLocation(false), order.Id), true));
+
+            //event notification
+            _eventPublisher.TokensAdded(order, tokens);
         }
 
         public virtual void AddShipmentTokens(IList<Token> tokens, Shipment shipment, int languageId)
@@ -540,16 +548,25 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Shipment.TrackingNumber", shipment.TrackingNumber));
             tokens.Add(new Token("Shipment.Product(s)", ProductListToHtmlTable(shipment, languageId), true));
             tokens.Add(new Token("Shipment.URLForCustomer", string.Format("{0}orderdetails/shipment/{1}", _webHelper.GetStoreLocation(false), shipment.Id), true));
+
+            //event notification
+            _eventPublisher.TokensAdded(shipment, tokens);
         }
 
         public virtual void AddOrderNoteTokens(IList<Token> tokens, OrderNote orderNote)
         {
             tokens.Add(new Token("Order.NewNoteText", orderNote.FormatOrderNoteText(), true));
+
+            //event notification
+            _eventPublisher.TokensAdded(orderNote, tokens);
         }
 
         public virtual void AddRecurringPaymentTokens(IList<Token> tokens, RecurringPayment recurringPayment)
         {
             tokens.Add(new Token("RecurringPayment.ID", recurringPayment.Id.ToString()));
+
+            //event notification
+            _eventPublisher.TokensAdded(recurringPayment, tokens);
         }
 
         public virtual void AddReturnRequestTokens(IList<Token> tokens, ReturnRequest returnRequest, OrderProductVariant opv)
@@ -562,6 +579,9 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("ReturnRequest.CustomerComment", HtmlHelper.FormatText(returnRequest.CustomerComments, false, true, false, false, false, false), true));
             tokens.Add(new Token("ReturnRequest.StaffNotes", HtmlHelper.FormatText(returnRequest.StaffNotes, false, true, false, false, false, false), true));
             tokens.Add(new Token("ReturnRequest.Status", returnRequest.ReturnRequestStatus.GetLocalizedEnum(_localizationService, _workContext)));
+
+            //event notification
+            _eventPublisher.TokensAdded(returnRequest, tokens);
         }
 
         public virtual void AddGiftCardTokens(IList<Token> tokens, GiftCard giftCard)
@@ -577,6 +597,9 @@ namespace Nop.Services.Messages
                 HtmlHelper.FormatText(giftCard.Message, false, true, false, false, false, false) : "";
 
             tokens.Add(new Token("GiftCard.Message", giftCardMesage, true));
+
+            //event notification
+            _eventPublisher.TokensAdded(giftCard, tokens);
         }
 
         public virtual void AddCustomerTokens(IList<Token> tokens, Customer customer)
@@ -596,6 +619,9 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Customer.PasswordRecoveryURL", passwordRecoveryUrl, true));
             tokens.Add(new Token("Customer.AccountActivationURL", accountActivationUrl, true));
             tokens.Add(new Token("Wishlist.URLForCustomer", wishlistUrl, true));
+
+            //event notification
+            _eventPublisher.TokensAdded(customer, tokens);
         }
 
         public virtual void AddNewsLetterSubscriptionTokens(IList<Token> tokens, NewsLetterSubscription subscription)
@@ -610,21 +636,33 @@ namespace Nop.Services.Messages
 
             var deActivationUrl = String.Format(urlFormat, _webHelper.GetStoreLocation(false), subscription.NewsLetterSubscriptionGuid, "false");
             tokens.Add(new Token("NewsLetterSubscription.DeactivationUrl", deActivationUrl, true));
+
+            //event notification
+            _eventPublisher.TokensAdded(subscription, tokens);
         }
 
         public virtual void AddProductReviewTokens(IList<Token> tokens, ProductReview productReview)
         {
             tokens.Add(new Token("ProductReview.ProductName", productReview.Product.Name));
+
+            //event notification
+            _eventPublisher.TokensAdded(productReview, tokens);
         }
 
         public virtual void AddBlogCommentTokens(IList<Token> tokens, BlogComment blogComment)
         {
             tokens.Add(new Token("BlogComment.BlogPostTitle", blogComment.BlogPost.Title));
+
+            //event notification
+            _eventPublisher.TokensAdded(blogComment, tokens);
         }
 
         public virtual void AddNewsCommentTokens(IList<Token> tokens, NewsComment newsComment)
         {
             tokens.Add(new Token("NewsComment.NewsTitle", newsComment.NewsItem.Title));
+
+            //event notification
+            _eventPublisher.TokensAdded(newsComment, tokens);
         }
 
         public virtual void AddProductTokens(IList<Token> tokens, Product product)
@@ -635,6 +673,9 @@ namespace Nop.Services.Messages
             //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)
             var productUrl = string.Format("{0}p/{1}/{2}", _webHelper.GetStoreLocation(false), product.Id, product.GetSeName());
             tokens.Add(new Token("Product.ProductURLForCustomer", productUrl, true));
+
+            //event notification
+            _eventPublisher.TokensAdded(product, tokens);
         }
 
         public virtual void AddProductVariantTokens(IList<Token> tokens, ProductVariant productVariant)
@@ -642,6 +683,9 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("ProductVariant.ID", productVariant.Id.ToString()));
             tokens.Add(new Token("ProductVariant.FullProductName", productVariant.FullProductName));
             tokens.Add(new Token("ProductVariant.StockQuantity", productVariant.StockQuantity.ToString()));
+
+            //event notification
+            _eventPublisher.TokensAdded(productVariant, tokens);
         }
 
         public virtual void AddForumTopicTokens(IList<Token> tokens, ForumTopic forumTopic, 
@@ -657,12 +701,18 @@ namespace Nop.Services.Messages
                 topicUrl = string.Format("{0}#{1}", topicUrl, appendedPostIdentifierAnchor.Value);
             tokens.Add(new Token("Forums.TopicURL", topicUrl, true));
             tokens.Add(new Token("Forums.TopicName", forumTopic.Subject));
+
+            //event notification
+            _eventPublisher.TokensAdded(forumTopic, tokens);
         }
 
         public virtual void AddForumPostTokens(IList<Token> tokens, ForumPost forumPost)
         {
             tokens.Add(new Token("Forums.PostAuthor", forumPost.Customer.FormatUserName()));
             tokens.Add(new Token("Forums.PostBody", forumPost.FormatPostText(), true));
+
+            //event notification
+            _eventPublisher.TokensAdded(forumPost, tokens);
         }
 
         public virtual void AddForumTokens(IList<Token> tokens, Forum forum)
@@ -671,17 +721,26 @@ namespace Nop.Services.Messages
             var forumUrl = string.Format("{0}boards/forum/{1}/{2}", _webHelper.GetStoreLocation(false), forum.Id, forum.GetSeName());
             tokens.Add(new Token("Forums.ForumURL", forumUrl, true));
             tokens.Add(new Token("Forums.ForumName", forum.Name));
+
+            //event notification
+            _eventPublisher.TokensAdded(forum, tokens);
         }
 
         public virtual void AddPrivateMessageTokens(IList<Token> tokens, PrivateMessage privateMessage)
         {
             tokens.Add(new Token("PrivateMessage.Subject", privateMessage.Subject));
             tokens.Add(new Token("PrivateMessage.Text",  privateMessage.FormatPrivateMessageText(), true));
+
+            //event notification
+            _eventPublisher.TokensAdded(privateMessage, tokens);
         }
 
         public virtual void AddBackInStockTokens(IList<Token> tokens, BackInStockSubscription subscription)
         {
             tokens.Add(new Token("BackInStockSubscription.ProductName", subscription.ProductVariant.FullProductName));
+
+            //event notification
+            _eventPublisher.TokensAdded(subscription, tokens);
         }
 
         /// <summary>

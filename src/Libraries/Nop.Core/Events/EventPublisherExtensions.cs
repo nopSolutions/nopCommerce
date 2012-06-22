@@ -16,5 +16,10 @@
         {
             eventPublisher.Publish(new EntityDeleted<T>(entity));
         }
+        
+        public static void TokensAdded<T, U>(this IEventPublisher eventPublisher, T entity, System.Collections.Generic.IList<U> tokens) where T : BaseEntity
+        {
+            eventPublisher.Publish(new TokensAdded<T, U>(entity, tokens));
+        }
     }
 }
