@@ -342,6 +342,7 @@ namespace Nop.Admin.Controllers
                 {
                     Id = opv.Id,
                     ProductVariantId = opv.ProductVariantId,
+                    Sku = opv.ProductVariant.Sku,
                     Quantity = opv.Quantity,
                     IsDownload = opv.ProductVariant.IsDownload,
                     DownloadCount = opv.DownloadCount,

@@ -767,6 +767,9 @@ set @resources='
   <LocaleResource Name="Admin.Orders.Shipments.Products.ItemDimensions">
     <Value>Item dimensions</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Products.SKU">
+    <Value>SKU</Value>
+  </LocaleResource>
 </Language>
 '
 

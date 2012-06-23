@@ -1048,6 +1048,12 @@
                                             <br />
                                             @Html.Raw(item.RecurringInfo)
                                         }
+                                        @if (!String.IsNullOrEmpty(item.Sku))
+                                        {
+                                            <br />
+                                            <strong>@T("Admin.Orders.Products.SKU")</strong><text>:</text>
+                                            @item.Sku
+                                        }
                                         @if (item.ReturnRequestIds.Count > 0)
                                         {
                                             <br />
