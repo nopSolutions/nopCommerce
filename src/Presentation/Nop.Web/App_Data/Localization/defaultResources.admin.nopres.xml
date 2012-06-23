@@ -8268,6 +8268,12 @@
                   <LocaleResource Name="SKU">
                     <Value>SKU</Value>
                   </LocaleResource>
+                  <LocaleResource Name="ItemWeight">
+                    <Value>Item weight</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="ItemDimensions">
+                    <Value>Item dimensions</Value>
+                  </LocaleResource>
                   <LocaleResource Name="QtyOrdered">
                     <Value>Qty ordered</Value>
                   </LocaleResource>

@@ -761,6 +761,12 @@ set @resources='
   <LocaleResource Name="Admin.Orders.Fields.OrderWeight">
     <Value></Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.Products.ItemWeight">
+    <Value>Item weight</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Shipments.Products.ItemDimensions">
+    <Value>Item dimensions</Value>
+  </LocaleResource>
 </Language>
 '
 

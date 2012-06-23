@@ -41,6 +41,9 @@
                     <col />
                     <col />
                     <col />
+                    <col />
+                    <col />
+                    <col />
                     <thead>
                         <tr class="headerstyle">
                             <th align="center">
@@ -48,6 +51,12 @@
                             </th>
                             <th align="center">
                                 @T("Admin.Orders.Shipments.Products.SKU")
+                            </th>
+                            <th align="center">
+                                @T("Admin.Orders.Shipments.Products.ItemWeight")
+                            </th>
+                            <th align="center">
+                                @T("Admin.Orders.Shipments.Products.ItemDimensions")
                             </th>
                             <th align="center">
                                 @T("Admin.Orders.Shipments.Products.QtyOrdered")
@@ -78,6 +87,12 @@
                                     <div style="padding-left: 10px; padding-right: 10px; text-align: left;">
                                         @item.Sku
                                     </div>
+                                </td>
+                                <td align="center" style="width: 10%;">
+                                    @item.ItemWeight
+                                </td>
+                                <td align="center" style="width: 10%;">
+                                    @item.ItemDimensions
                                 </td>
                                 <td align="center" style="width: 10%;">
                                     @item.QuantityOrdered
