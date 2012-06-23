@@ -16,8 +16,20 @@
     @if (!Model.DisableBuyButton || !Model.DisableWishlistButton)
     {
         <div>
-            @Html.LabelFor(model => model.EnteredQuantity, new { @class = "qty-label" })
-            @Html.TextBoxFor(model => model.EnteredQuantity, new { @class = "qty-input" })
+            @if (Model.AllowedQuantities.Count > 0)
+            {
+                <div data-role="fieldcontain">
+                    <fieldset data-role="controlgroup" data-type="horizontal" data-mini="true">
+                        @Html.LabelFor(model => model.EnteredQuantity, new { @class = "qty-label" })
+                        @Html.DropDownListFor(model => model.EnteredQuantity, Model.AllowedQuantities, new { @class = "qty-dropdown" })
+                    </fieldset>
+                </div>
+            }
+            else
+            {
+                @Html.LabelFor(model => model.EnteredQuantity, new { @class = "qty-label" })
+                @Html.TextBoxFor(model => model.EnteredQuantity, new { @class = "qty-input" })
+            }
         </div>
     }
     @if (!Model.DisableBuyButton)

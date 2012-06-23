@@ -89,7 +89,19 @@
                                         @T("ShoppingCart.Quantity"):
                                         @if (Model.IsEditable)
                                         {
-                                            <input name="itemquantity@(item.Id)" type="text" value="@(item.Quantity)" id="itemquantity@(item.Id)" class="qty-input" />
+                                            if (item.AllowedQuantities.Count > 0)
+                                            {
+                                                <select name="itemquantity@(item.Id)"  id="itemquantity@(item.Id)" class="qty-dropdown"  data-mini="true" data-inline="true">
+                                                @foreach(var qty in item.AllowedQuantities)
+                                                {
+                                                    <option @(qty.Selected ? Html.Raw(" selected=\"selected\"") : null) value="@qty.Value">@qty.Value</option>
+                                                }
+                                                </select>
+                                            }
+                                            else
+                                            {
+                                                <input name="itemquantity@(item.Id)" type="text" value="@(item.Quantity)" id="itemquantity@(item.Id)" class="qty-input" />
+                                            }
                                         }
                                         else
                                         {

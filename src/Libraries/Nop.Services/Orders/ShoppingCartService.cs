@@ -288,6 +288,12 @@ namespace Nop.Services.Orders
                 warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.MaximumQuantity"), productVariant.OrderMaximumQuantity));
             }
 
+            var allowedQuantities = productVariant.ParseAllowedQuatities();
+            if (allowedQuantities.Length > 0 && !allowedQuantities.Contains(quantity))
+            {
+                warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.AllowedQuantities"), string.Join(", ", allowedQuantities)));
+            }
+
             var validateOutOfStock = shoppingCartType == ShoppingCartType.ShoppingCart ||
                                      !_shoppingCartSettings.AllowOutOfStockItemsToBeAddedToWishlist;
             if (validateOutOfStock)

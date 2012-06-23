@@ -112,6 +112,7 @@ namespace Nop.Services.ExportImport
                     "AllowBackInStockSubscriptions",
                     "OrderMinimumQuantity",
                     "OrderMaximumQuantity",
+                    "AllowedQuantities",
                     "DisableBuyButton",
                     "DisableWishlistButton",
                     "CallForPrice",
@@ -198,6 +199,7 @@ namespace Nop.Services.ExportImport
                     bool allowBackInStockSubscriptions = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "AllowBackInStockSubscriptions")].Value);
                     int orderMinimumQuantity = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "OrderMinimumQuantity")].Value);
                     int orderMaximumQuantity = Convert.ToInt32(worksheet.Cells[iRow, GetColumnIndex(properties, "OrderMaximumQuantity")].Value);
+                    string allowedQuantities = worksheet.Cells[iRow, GetColumnIndex(properties, "AllowedQuantities")].Value as string;
                     bool disableBuyButton = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "DisableBuyButton")].Value);
                     bool disableWishlistButton = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "DisableWishlistButton")].Value);
                     bool callForPrice = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "CallForPrice")].Value);
@@ -290,6 +292,7 @@ namespace Nop.Services.ExportImport
                         productVariant.AllowBackInStockSubscriptions = allowBackInStockSubscriptions;
                         productVariant.OrderMinimumQuantity = orderMinimumQuantity;
                         productVariant.OrderMaximumQuantity = orderMaximumQuantity;
+                        productVariant.AllowedQuantities = allowedQuantities;
                         productVariant.DisableBuyButton = disableBuyButton;
                         productVariant.DisableWishlistButton = disableWishlistButton;
                         productVariant.CallForPrice = callForPrice;
@@ -371,6 +374,7 @@ namespace Nop.Services.ExportImport
                             AllowBackInStockSubscriptions = allowBackInStockSubscriptions,
                             OrderMinimumQuantity = orderMinimumQuantity,
                             OrderMaximumQuantity = orderMaximumQuantity,
+                            AllowedQuantities = allowedQuantities,
                             DisableBuyButton = disableBuyButton,
                             CallForPrice = callForPrice,
                             Price = price,

@@ -290,6 +290,7 @@ public partial class ExportManager : IExportManager
                         xmlWriter.WriteElementString("AllowBackInStockSubscriptions", null, productVariant.AllowBackInStockSubscriptions.ToString());
                         xmlWriter.WriteElementString("OrderMinimumQuantity", null, productVariant.OrderMinimumQuantity.ToString());
                         xmlWriter.WriteElementString("OrderMaximumQuantity", null, productVariant.OrderMaximumQuantity.ToString());
+                        xmlWriter.WriteElementString("AllowedQuantities", null, productVariant.AllowedQuantities);
                         xmlWriter.WriteElementString("DisableBuyButton", null, productVariant.DisableBuyButton.ToString());
                         xmlWriter.WriteElementString("DisableWishlistButton", null, productVariant.DisableWishlistButton.ToString());
                         xmlWriter.WriteElementString("CallForPrice", null, productVariant.CallForPrice.ToString());
@@ -504,6 +505,7 @@ public partial class ExportManager : IExportManager
                     "AllowBackInStockSubscriptions",
                     "OrderMinimumQuantity",
                     "OrderMaximumQuantity",
+                    "AllowedQuantities",
                     "DisableBuyButton",
                     "DisableWishlistButton",
                     "CallForPrice",
@@ -686,6 +688,9 @@ public partial class ExportManager : IExportManager
                         col++;
 
                         worksheet.Cells[row, col].Value = pv.OrderMaximumQuantity;
+                        col++;
+
+                        worksheet.Cells[row, col].Value = pv.AllowedQuantities;
                         col++;
 
                         worksheet.Cells[row, col].Value = pv.DisableBuyButton;

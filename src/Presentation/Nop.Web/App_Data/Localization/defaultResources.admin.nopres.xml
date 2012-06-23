@@ -1727,6 +1727,14 @@
 													</LocaleResource>
 												</Children>
 											</LocaleResource>
+                      <LocaleResource Name="AllowedQuantities">
+                        <Value>Allowed quantities</Value>
+                        <Children>
+                          <LocaleResource Name="Hint">
+                            <Value>Enter a comma separated list of quantities you want this product variant to be restricted to. Instead of a quantity textbox that allows them to enter any quantity, they will receive a dropdown list of the values you enter here.</Value>
+                          </LocaleResource>
+                        </Children>
+                      </LocaleResource>
 											<LocaleResource Name="AutomaticallyAddRequiredProductVariants">
 												<Value>Automatically add these product variants to the cart</Value>
 												<Children>

@@ -3636,6 +3636,9 @@
 			<LocaleResource Name="AddToWishlist">
 				<Value>Add to wishlist</Value>
 			</LocaleResource>
+      <LocaleResource Name="AllowedQuantities">
+        <Value>Allowed quantities for this product: {0}</Value>
+      </LocaleResource>
 			<LocaleResource Name="BuyingDisabled">
 				<Value>Buying is disabled for this product</Value>
 			</LocaleResource>

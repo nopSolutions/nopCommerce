@@ -832,6 +832,15 @@
             @Html.ValidationMessageFor(model => model.OrderMaximumQuantity)
         </td>
     </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.AllowedQuantities):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.AllowedQuantities)
+            @Html.ValidationMessageFor(model => model.AllowedQuantities)
+        </td>
+    </tr>
     <tr class="adminSeparator">
         <td colspan="2">
             <hr />

@@ -157,8 +157,13 @@ namespace Nop.Services.Catalog
 
             return stockMessage;
         }
-
-
+        
+        /// <summary>
+        /// Indicates whether a product tag exists
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <param name="productTagId">Product tag identifier</param>
+        /// <returns>Result</returns>
         public static bool ProductTagExists(this Product product,
             int productTagId)
         {
@@ -168,5 +173,36 @@ namespace Nop.Services.Catalog
             bool result = product.ProductTags.ToList().Find(pt => pt.Id == productTagId) != null;
             return result;
         }
+
+        /// <summary>
+        /// Get a list of allowed quanities (parse 'AllowedQuanities' property)
+        /// </summary>
+        /// <param name="productVariant">Product variant</param>
+        /// <returns>Result</returns>
+        public static int[] ParseAllowedQuatities(this ProductVariant productVariant)
+        {
+            if (productVariant == null)
+                throw new ArgumentNullException("productVariant");
+
+            var result = new List<int>();
+            if (!String.IsNullOrWhiteSpace(productVariant.AllowedQuantities))
+            {
+                productVariant
+                    .AllowedQuantities
+                    .Split(new [] {','}, StringSplitOptions.RemoveEmptyEntries)
+                    .ToList()
+                    .ForEach(qtyStr =>
+                                 {
+                                     int qty = 0;
+                                     if (int.TryParse(qtyStr.Trim(), out qty))
+                                     {
+                                         result.Add(qty);
+                                     }
+                                 } );
+            }
+
+            return result.ToArray();
+        }
+        
     }
 }

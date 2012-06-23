@@ -98,6 +98,10 @@ namespace Nop.Web.Models.Catalog
 
             public class AddToCartModel : BaseNopModel
             {
+                public AddToCartModel()
+                {
+                    this.AllowedQuantities = new List<SelectListItem>();
+                }
                 public int ProductVariantId { get; set; }
 
                 [NopResourceDisplayName("Products.Qty")]
@@ -111,6 +115,7 @@ namespace Nop.Web.Models.Catalog
                 
                 public bool DisableBuyButton { get; set; }
                 public bool DisableWishlistButton { get; set; }
+                public List<SelectListItem> AllowedQuantities { get; set; }
                 public bool AvailableForPreOrder { get; set; }
             }
 

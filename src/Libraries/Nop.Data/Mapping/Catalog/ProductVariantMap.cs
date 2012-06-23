@@ -30,6 +30,7 @@ namespace Nop.Data.Mapping.Catalog
             this.Property(pv => pv.Height).HasPrecision(18, 4);
 
             this.Property(pv => pv.RequiredProductVariantIds).HasMaxLength(1000);
+            this.Property(pv => pv.AllowedQuantities).HasMaxLength(1000);
 
             this.Ignore(pv => pv.BackorderMode);
             this.Ignore(pv => pv.DownloadActivationType);

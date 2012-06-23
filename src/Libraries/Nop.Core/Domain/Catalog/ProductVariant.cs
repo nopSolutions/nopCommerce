@@ -227,6 +227,11 @@ namespace Nop.Core.Domain.Catalog
         public virtual int OrderMaximumQuantity { get; set; }
 
         /// <summary>
+        /// Gets or sets the comma seperated list of allowed quantities. null or empty if any quantity is allowed
+        /// </summary>
+        public virtual string AllowedQuantities { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether to disable buy (Add to cart) button
         /// </summary>
         public virtual bool DisableBuyButton { get; set; }

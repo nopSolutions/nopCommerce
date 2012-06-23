@@ -770,6 +770,15 @@ set @resources='
   <LocaleResource Name="Admin.Orders.Products.SKU">
     <Value>SKU</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Variants.Fields.AllowedQuantities">
+    <Value>Allowed quantities</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Variants.Fields.AllowedQuantities.Hint">
+    <Value>Enter a comma separated list of quantities you want this product variant to be restricted to. Instead of a quantity textbox that allows them to enter any quantity, they will receive a dropdown list of the values you enter here.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.AllowedQuantities">
+    <Value>Allowed quantities for this product: {0}</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -2723,5 +2732,14 @@ IF EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[Order]') and NAME='Orde
 BEGIN
 	ALTER TABLE [Order]
 	DROP COLUMN [OrderWeight]
+END
+GO
+
+
+--Add 'AllowedQuantities' column to [ProductVariant] table
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[ProductVariant]') and NAME='AllowedQuantities')
+BEGIN
+	ALTER TABLE [ProductVariant]
+	ADD [AllowedQuantities] nvarchar(1000) NULL
 END
 GO

@@ -14,8 +14,15 @@
     }
     @if (!Model.DisableBuyButton || !Model.DisableWishlistButton)
     {
-        @Html.LabelFor(model => model.EnteredQuantity, new { @class = "qty-label" })<text>:</text> 
-        @Html.TextBoxFor(model => model.EnteredQuantity, new { @class = "qty-input" })
+        @Html.LabelFor(model => model.EnteredQuantity, new { @class = "qty-label" })<text>:</text>
+        if (Model.AllowedQuantities.Count > 0)
+        {
+            @Html.DropDownListFor(model => model.EnteredQuantity, Model.AllowedQuantities, new { @class = "qty-dropdown" })
+        }
+        else
+        {
+            @Html.TextBoxFor(model => model.EnteredQuantity, new { @class = "qty-input" })
+        }
     }
     @if (!Model.DisableBuyButton)
     {

@@ -52,6 +52,7 @@ namespace Nop.Data.Tests.Catalog
                                          AllowBackInStockSubscriptions = true,
                                          OrderMinimumQuantity = 18,
                                          OrderMaximumQuantity = 19,
+                                         AllowedQuantities = "1, 5,6,10",
                                          DisableBuyButton = true,
                                          DisableWishlistButton = true,
                                          AvailableForPreOrder = true,
@@ -132,6 +133,7 @@ namespace Nop.Data.Tests.Catalog
             fromDb.AllowBackInStockSubscriptions.ShouldEqual(true);
             fromDb.OrderMinimumQuantity.ShouldEqual(18);
             fromDb.OrderMaximumQuantity.ShouldEqual(19);
+            fromDb.AllowedQuantities.ShouldEqual("1, 5,6,10");
             fromDb.DisableBuyButton.ShouldEqual(true);
             fromDb.DisableWishlistButton.ShouldEqual(true);
             fromDb.AvailableForPreOrder.ShouldEqual(true);

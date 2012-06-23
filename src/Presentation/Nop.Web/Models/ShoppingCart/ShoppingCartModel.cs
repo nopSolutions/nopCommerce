@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Web.Mvc;
 using System.Web.Routing;
 using Nop.Core.Domain.Catalog;
 using Nop.Web.Framework.Mvc;
@@ -58,6 +59,7 @@ namespace Nop.Web.Models.ShoppingCart
             public ShoppingCartItemModel()
             {
                 Picture = new PictureModel();
+                AllowedQuantities = new List<SelectListItem>();
                 Warnings = new List<string>();
             }
             public string Sku { get; set; }
@@ -77,6 +79,7 @@ namespace Nop.Web.Models.ShoppingCart
             public string Discount { get; set; }
 
             public int Quantity { get; set; }
+            public List<SelectListItem> AllowedQuantities { get; set; }
             
             public string AttributeInfo { get; set; }
 

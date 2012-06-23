@@ -374,6 +374,18 @@ namespace Nop.Web.Controllers
                     Quantity = sci.Quantity,
                     AttributeInfo = _productAttributeFormatter.FormatAttributes(sci.ProductVariant, sci.AttributesXml),
                 };
+
+                //allowed quantities
+                var allowedQuantities = sci.ProductVariant.ParseAllowedQuatities();
+                foreach (var qty in allowedQuantities)
+                {
+                    cartItemModel.AllowedQuantities.Add(new SelectListItem()
+                    {
+                        Text = qty.ToString(),
+                        Value = qty.ToString(),
+                        Selected = sci.Quantity == qty
+                    });
+                }
                 
                 //recurring info
                 if (sci.ProductVariant.IsRecurring)
@@ -514,6 +526,19 @@ namespace Nop.Web.Controllers
                     Quantity = sci.Quantity,
                     AttributeInfo = _productAttributeFormatter.FormatAttributes(sci.ProductVariant, sci.AttributesXml),
                 };
+
+                //allowed quantities
+                var allowedQuantities = sci.ProductVariant.ParseAllowedQuatities();
+                foreach (var qty in allowedQuantities)
+                {
+                    cartItemModel.AllowedQuantities.Add(new SelectListItem()
+                    {
+                        Text = qty.ToString(),
+                        Value = qty.ToString(),
+                        Selected = sci.Quantity == qty
+                    });
+                }
+                
 
                 //recurring info
                 if (sci.ProductVariant.IsRecurring)
@@ -711,7 +736,16 @@ namespace Nop.Web.Controllers
             //quantity to add
             var qtyToAdd = defaultProductVariant.OrderMinimumQuantity > 0 ? 
                 defaultProductVariant.OrderMinimumQuantity : 1;
-
+            
+            var allowedQuantities = defaultProductVariant.ParseAllowedQuatities();
+            if (allowedQuantities.Length > 0)
+            {
+                //cannot be added to the cart (requires a customer to select a quantity from dropdownlist)
+                return Json(new
+                {
+                    redirect = Url.RouteUrl("Product", new { productId = product.Id, SeName = product.GetSeName() }),
+                });
+            }
 
             //get standard warnings without attribute validations
             //first, try to find existing shopping cart item

@@ -679,6 +679,16 @@ namespace Nop.Web.Controllers
                     _priceFormatter.FormatPrice(minimumCustomerEnteredPrice, false, false),
                     _priceFormatter.FormatPrice(maximumCustomerEnteredPrice, false, false));
             }
+            //allowed quantities
+            var allowedQuantities = productVariant.ParseAllowedQuatities();
+            foreach (var qty in allowedQuantities)
+            {
+                model.AddToCart.AllowedQuantities.Add(new SelectListItem()
+                {
+                    Text = qty.ToString(),
+                    Value = qty.ToString()
+                });
+            }
 
             #endregion 
             
@@ -1599,6 +1609,19 @@ namespace Nop.Web.Controllers
 
                     //entered quantity
                     productVariantModel.AddToCart.EnteredQuantity = quantity;
+                    //allowed quantities
+                    var allowedQuantities = productVariant.ParseAllowedQuatities();
+                    if (allowedQuantities.Length > 0)
+                    {
+                        var allowedQuantitySelectedItem = productVariantModel.AddToCart.AllowedQuantities
+                            .Where(x => x.Text == quantity.ToString())
+                            .FirstOrDefault();
+                        if (allowedQuantitySelectedItem != null)
+                        {
+                            allowedQuantitySelectedItem.Selected = true;
+                        }
+                    }
+
                     //customer entered price
                     if (productVariantModel.AddToCart.CustomerEntersPrice)
                     {

@@ -361,6 +361,7 @@
 .product-variant-line .add-info .enter-price-input{display:inline-block;width:60px;}
 .product-variant-line .add-info .qty-label{display:inline-block;margin-right:10px;}
 .product-variant-line .add-info .qty-input{display:inline-block;width:40px;}
+.product-variant-line .add-info .qty-dropdown{}
 .product-variant-line .attributes{}
 .product-variant-line .attributes .textprompt{font-weight:bold;}
 .product-variant-line .attributes .textbox{width:300px;}

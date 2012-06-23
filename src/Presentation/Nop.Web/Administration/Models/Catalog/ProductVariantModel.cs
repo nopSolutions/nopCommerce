@@ -159,6 +159,9 @@ namespace Nop.Admin.Models.Catalog
 
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.OrderMaximumQuantity")]
         public int OrderMaximumQuantity { get; set; }
+
+        [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.AllowedQuantities")]
+        public string AllowedQuantities { get; set; }
         
         [NopResourceDisplayName("Admin.Catalog.Products.Variants.Fields.DisableBuyButton")]
         public bool DisableBuyButton { get; set; }
