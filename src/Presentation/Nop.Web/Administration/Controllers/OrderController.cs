@@ -322,13 +322,8 @@ namespace Nop.Admin.Controllers
                 if (order.ShippingAddress.StateProvince != null)
                     model.ShippingAddress.StateProvinceName = order.ShippingAddress.StateProvince.Name;
 
-
                 model.ShippingMethod = order.ShippingMethod;
 
-                model.OrderWeight = order.OrderWeight;
-                var baseWeight = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId);
-                if (baseWeight != null)
-                    model.BaseWeightIn = baseWeight.Name;
                 model.ShippingAddressGoogleMapsUrl = string.Format("http://maps.google.com/maps?f=q&hl=en&ie=UTF8&oe=UTF8&geocode=&q={0}", Server.UrlEncode(order.ShippingAddress.Address1 + " " + order.ShippingAddress.ZipPostalCode + " " + order.ShippingAddress.City + " " + (order.ShippingAddress.Country != null ? order.ShippingAddress.Country.Name : "")));
                 model.CanAddNewShipments = order.HasItemsToAddToShipment();
             }

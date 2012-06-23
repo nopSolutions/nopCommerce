@@ -7761,14 +7761,6 @@
 									</LocaleResource>
 								</Children>
 							</LocaleResource>
-							<LocaleResource Name="OrderWeight">
-								<Value>Order weight</Value>
-								<Children>
-									<LocaleResource Name="Hint">
-										<Value>The total weight of this order.</Value>
-									</LocaleResource>
-								</Children>
-							</LocaleResource>
 							<LocaleResource Name="PartialRefund">
 								<Value>Partial refund</Value>
 								<Children>

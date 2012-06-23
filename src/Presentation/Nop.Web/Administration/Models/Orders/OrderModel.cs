@@ -147,9 +147,6 @@ namespace Nop.Admin.Models.Orders
         public string ShippingStatus { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.ShippingAddress")]
         public AddressModel ShippingAddress { get; set; }
-        [NopResourceDisplayName("Admin.Orders.Fields.OrderWeight")]
-        public decimal OrderWeight { get; set; }
-        public string BaseWeightIn { get; set; }
         [NopResourceDisplayName("Admin.Orders.Fields.ShippingMethod")]
         public string ShippingMethod { get; set; }
         public string ShippingAddressGoogleMapsUrl { get; set; }

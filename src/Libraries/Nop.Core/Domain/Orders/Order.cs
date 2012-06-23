@@ -311,11 +311,6 @@ namespace Nop.Core.Domain.Orders
         public virtual string ShippingRateComputationMethodSystemName { get; set; }
 
         /// <summary>
-        /// Gets or sets the order weight
-        /// </summary>
-        public virtual decimal OrderWeight { get; set; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether the entity has been deleted
         /// </summary>
         public virtual bool Deleted { get; set; }

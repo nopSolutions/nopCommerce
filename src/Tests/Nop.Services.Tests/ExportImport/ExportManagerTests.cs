@@ -148,7 +148,6 @@ namespace Nop.Services.Tests.ExportImport
                 ShippingAddress = GetTestShippingAddress(),
                 ShippingMethod = "ShippingMethod1",
                 ShippingRateComputationMethodSystemName="ShippingRateComputationMethodSystemName1",
-                OrderWeight = 16.1M,
                 Deleted = false,
                 CreatedOnUtc = new DateTime(2010, 01, 04)
             }

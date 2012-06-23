@@ -22,7 +22,6 @@ namespace Nop.Data.Mapping.Orders
             this.Property(o => o.OrderDiscount).HasPrecision(18, 4);
             this.Property(o => o.OrderTotal).HasPrecision(18, 4);
             this.Property(o => o.RefundedAmount).HasPrecision(18, 4);
-            this.Property(o => o.OrderWeight).HasPrecision(18, 4);
 
             this.Property(o => o.TaxRates).IsMaxLength();
             this.Property(o => o.AuthorizationTransactionCode).IsMaxLength();

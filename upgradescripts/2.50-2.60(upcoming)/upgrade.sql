@@ -758,6 +758,9 @@ set @resources='
   <LocaleResource Name="Products.Tags.All">
     <Value>All product tags</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.OrderWeight">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -2704,5 +2707,12 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.manufact
 BEGIN
 	INSERT [Setting] ([Name], [Value])
 	VALUES (N'catalogsettings.manufacturersblockitemstodisplay', N'5')
+END
+GO
+
+IF EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[Order]') and NAME='OrderWeight')
+BEGIN
+	ALTER TABLE [Order]
+	DROP COLUMN [OrderWeight]
 END
 GO

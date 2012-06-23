@@ -605,18 +605,14 @@ namespace Nop.Services.Orders
 
 
                 //shipping info
-                decimal orderWeight = decimal.Zero;
                 bool shoppingCartRequiresShipping = false;
                 if (!processPaymentRequest.IsRecurringPayment)
                 {
-                    orderWeight = _shippingService.GetShoppingCartTotalWeight(cart);
                     shoppingCartRequiresShipping = cart.RequiresShipping();
                 }
                 else
                 {
-                    orderWeight = initialOrder.OrderWeight;
-                    if (initialOrder.ShippingStatus != ShippingStatus.ShippingNotRequired)
-                        shoppingCartRequiresShipping = true;
+                    shoppingCartRequiresShipping = initialOrder.ShippingStatus != ShippingStatus.ShippingNotRequired;
                 }
                 Address shippingAddress = null;
                 string shippingMethodName = "", shippingRateComputationMethodSystemName = "";
@@ -912,7 +908,6 @@ namespace Nop.Services.Orders
                             CheckoutAttributesXml = checkoutAttributesXml,
                             CustomerCurrencyCode = customerCurrencyCode,
                             CurrencyRate = customerCurrencyRate,
-                            OrderWeight = orderWeight,
                             AffiliateId = (customer.Affiliate != null && !customer.Affiliate.Deleted && customer.Affiliate.Active) ? customer.AffiliateId : null,
                             OrderStatus = OrderStatus.Pending,
                             AllowStoringCreditCardNumber = processPaymentResult.AllowStoringCreditCardNumber,
