@@ -2035,7 +2035,7 @@ namespace Nop.Web.Controllers
         [ValidateInput(false)]
         [HttpPost, ActionName("Wishlist")]
         [FormValueRequired("addtocartbutton")]
-        public ActionResult AddItemstoCartFromWishlist(FormCollection form)
+        public ActionResult AddItemstoCartFromWishlist(Guid? customerGuid, FormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
                 return RedirectToRoute("HomePage");
@@ -2043,10 +2043,16 @@ namespace Nop.Web.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableWishlist))
                 return RedirectToRoute("HomePage");
 
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist).ToList();
+            var pageCustomer = customerGuid.HasValue
+                ? _customerService.GetCustomerByGuid(customerGuid.Value)
+                : _workContext.CurrentCustomer;
+            if (pageCustomer == null)
+                return RedirectToRoute("HomePage");
+
+            var pageCart = pageCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist).ToList();
 
             var allIdsToAdd = form["addtocart"] != null ? form["addtocart"].Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => int.Parse(x)).ToList() : new List<int>();
-            foreach (var sci in cart)
+            foreach (var sci in pageCart)
             {
                 if (allIdsToAdd.Contains(sci.Id))
                 {
@@ -2057,8 +2063,8 @@ namespace Nop.Web.Controllers
             }
 
             //updated wishlist
-            cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist).ToList();
-            var model = PrepareWishlistModel(new WishlistModel(), cart, true);
+            var cart = pageCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist).ToList();
+            var model = PrepareWishlistModel(new WishlistModel(), cart, !customerGuid.HasValue);
             return View(model);
         }
 
@@ -2066,7 +2072,7 @@ namespace Nop.Web.Controllers
         [ValidateInput(false)]
         [HttpPost, ActionName("Wishlist")]
         [FormValueRequired(FormValueRequirement.StartsWith, "addtocart-")]
-        public ActionResult AddOneItemtoCartFromWishlist(FormCollection form)
+        public ActionResult AddOneItemtoCartFromWishlist(Guid? customerGuid, FormCollection form)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.EnableShoppingCart))
                 return RedirectToRoute("HomePage");
@@ -2080,9 +2086,15 @@ namespace Nop.Web.Controllers
                 if (formValue.StartsWith("addtocart-", StringComparison.InvariantCultureIgnoreCase))
                     sciId = Convert.ToInt32(formValue.Substring("addtocart-".Length));
             //get wishlist cart item
-            var cart = _workContext.CurrentCustomer.ShoppingCartItems
-                .Where(x => x.ShoppingCartType == ShoppingCartType.Wishlist).ToList();
-            var sci = cart.Where(x => x.Id == sciId).FirstOrDefault();
+            var pageCustomer = customerGuid.HasValue
+                ? _customerService.GetCustomerByGuid(customerGuid.Value)
+                : _workContext.CurrentCustomer;
+            if (pageCustomer == null)
+                return RedirectToRoute("HomePage");
+
+            var pageCart = pageCustomer.ShoppingCartItems.Where(x => x.ShoppingCartType == ShoppingCartType.Wishlist).ToList();
+
+            var sci = pageCart.Where(x => x.Id == sciId).FirstOrDefault();
             if (sci == null)
             {
                 return RedirectToRoute("Wishlist");
@@ -2093,10 +2105,8 @@ namespace Nop.Web.Controllers
 
 
             //updated wishlist
-            cart =
-                _workContext.CurrentCustomer.ShoppingCartItems.Where(
-                    x => x.ShoppingCartType == ShoppingCartType.Wishlist).ToList();
-            var model = PrepareWishlistModel(new WishlistModel(), cart, true);
+            var cart = pageCustomer.ShoppingCartItems.Where(x => x.ShoppingCartType == ShoppingCartType.Wishlist).ToList();
+            var model = PrepareWishlistModel(new WishlistModel(), cart, !customerGuid.HasValue);
             return View(model);
         }
 

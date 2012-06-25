@@ -30,14 +30,14 @@
                 if (Model.Warnings.Count > 0)
                 {
                 <div class="message-error">
-                        @for (int i = 0; i < Model.Warnings.Count; i++)
+                    @for (int i = 0; i < Model.Warnings.Count; i++)
+                    {
+                        @Model.Warnings[i]
+                        if (i != Model.Warnings.Count - 1)
                         {
-                            @Model.Warnings[i]
-                            if (i != Model.Warnings.Count - 1)
-                            {
-                                <br />
-                            }
+                        <br />
                         }
+                    }
                 </div>
                 }
                 using (Html.BeginRouteForm("Wishlist", FormMethod.Post))
@@ -46,10 +46,10 @@
                     @if (Model.IsEditable)
                     {
                         <col width="1" />
-                        if (Model.DisplayAddToCart)
-                        {
+                    }
+                    @if (Model.DisplayAddToCart)
+                    {
                         <col width="1" />
-                        }
                     }
                     @if (Model.ShowSku)
                     {
@@ -70,14 +70,14 @@
                                 <th>
                                     @T("ShoppingCart.Remove")
                                 </th>
-                                if (Model.DisplayAddToCart)
-                                {
+                            }
+                            @if (Model.DisplayAddToCart)
+                            {
                                 <th>
                                     <span class="nobr">
                                         @T("ShoppingCart.AddToCart")
                                     </span>
                                 </th>
-                                }
                             }
                             @if (Model.ShowSku)
                             {
@@ -113,12 +113,12 @@
                                     <td>
                                         <input id="removefromcart" type="checkbox" name="removefromcart" value="@(item.Id)" />
                                     </td>
-                                    if (Model.DisplayAddToCart)
-                                    {
+                                }
+                                @if (Model.DisplayAddToCart)
+                                {
                                     <td>
                                         <input id="addtocart" type="checkbox" name="addtocart" value="@(item.Id)" />
                                     </td>
-                                    }
                                 }
                                 @if (Model.ShowSku)
                                 {
@@ -147,14 +147,14 @@
                                     @if (item.Warnings.Count > 0)
                                     {
                                         <div class="message-error">
-                                                @for (int i = 0; i < item.Warnings.Count; i++)
+                                            @for (int i = 0; i < item.Warnings.Count; i++)
+                                            {
+                                                @item.Warnings[i]
+                                                if (i != item.Warnings.Count - 1)
                                                 {
-                                                    @item.Warnings[i]
-                                                    if (i != item.Warnings.Count - 1)
-                                                    {
-                                                        <br />
-                                                    }
+                                                <br />
                                                 }
+                                            }
                                         </div>
                                     }
                                 </td>
@@ -166,16 +166,16 @@
                                     {
                                         if (item.AllowedQuantities.Count > 0)
                                         {
-                                            <select name="itemquantity@(item.Id)"  id="itemquantity@(item.Id)" class="qty-dropdown">
-                                            @foreach(var qty in item.AllowedQuantities)
+                                        <select name="itemquantity@(item.Id)"  id="itemquantity@(item.Id)" class="qty-dropdown">
+                                            @foreach (var qty in item.AllowedQuantities)
                                             {
                                                 <option @(qty.Selected ? Html.Raw(" selected=\"selected\"") : null) value="@qty.Value">@qty.Value</option>
                                             }
-                                            </select>
+                                        </select>
                                         }
                                         else
                                         {
-                                            <input name="itemquantity@(item.Id)" type="text" value="@(item.Quantity)" id="itemquantity@(item.Id)" class="qty-input"/>
+                                        <input name="itemquantity@(item.Id)" type="text" value="@(item.Quantity)" id="itemquantity@(item.Id)" class="qty-input"/>
                                         }
                                     }
                                     else
@@ -199,20 +199,20 @@
                 <div class="clear">
                 </div>                        
                 <div>
-                    @if (Model.IsEditable)
-                    {
-                        <div class="common-buttons">
+                    <div class="common-buttons">
+                        @if (Model.IsEditable)
+                        {
                             <input type="submit" name="updatecart" value="@T("Wishlist.UpdateCart")" id="updatecart" class="updatewishlistbutton" />
-                            @if (Model.DisplayAddToCart)
-                            {
+                        }
+                        @if (Model.DisplayAddToCart)
+                        {
                             <input type="submit" name="addtocartbutton" value="@T("ShoppingCart.AddToCart")" id="addtocartbutton" class="updatewishlistbutton" />
-                            }
-                            @if (Model.EmailWishlistEnabled)
-                            {
+                        }
+                        @if (Model.IsEditable && Model.EmailWishlistEnabled)
+                        {
                             <input type="button" name="emailafriend" value="@T("Wishlist.EmailAFriend")" id="emailafriend"  class="updatewishlistbutton" onclick="setLocation('@Url.RouteUrl("EmailWishlist")')" />
-                            }
-                        </div>
-                    }
+                        }
+                    </div>
                 </div>        
                 }
             }
