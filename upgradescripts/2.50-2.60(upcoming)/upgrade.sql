@@ -797,6 +797,21 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowProductImagesInSearchAutoComplete.Hint">
     <Value>Determines whether product images should be displayed in the autocomplete search box.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.ActivityLog.ActivityLog.Fields.CustomerEmail.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.ActivityLog">
+    <Value>Activity Log</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.ActivityLog.ActivityLogType">
+    <Value>Activity Log Type</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.ActivityLog.Comment">
+    <Value>Comment</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.ActivityLog.CreatedOn">
+    <Value>Created on</Value>
+  </LocaleResource>
 </Language>
 '
 

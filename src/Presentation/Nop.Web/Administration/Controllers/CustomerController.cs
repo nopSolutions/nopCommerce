@@ -1500,6 +1500,33 @@ namespace Nop.Admin.Controllers
 
         #endregion
 
+        #region Activity log
+
+        [HttpPost, GridAction(EnableCustomBinding = true)]
+        public JsonResult ListActivityLog(GridCommand command, int customerId)
+        {
+            var activityLog = _customerActivityService.GetAllActivities(null, null, customerId, 0, command.Page - 1, command.PageSize);
+            var gridModel = new GridModel<CustomerModel.ActivityLogModel>
+            {
+                Data = activityLog.Select(x =>
+                {
+                    var m = new CustomerModel.ActivityLogModel()
+                    {
+                        Id = x.Id,
+                        ActivityLogTypeName = x.ActivityLogType.Name,
+                        Comment = x.Comment,
+                        CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc)
+                    };
+                    return m;
+
+                }),
+                Total = activityLog.TotalCount
+            };
+            return new JsonResult { Data = gridModel }; ;
+        }
+
+        #endregion
+
         #region Export / Import
 
         public ActionResult ExportExcelAll()

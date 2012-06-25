@@ -267,6 +267,15 @@ namespace Nop.Admin.Models.Customers
             public DateTime CreatedOn { get; set; }
         }
 
+        public partial class ActivityLogModel : BaseNopEntityModel
+        {
+            [NopResourceDisplayName("Admin.Customers.Customers.ActivityLog.ActivityLogType")]
+            public string ActivityLogTypeName { get; set; }
+            [NopResourceDisplayName("Admin.Customers.Customers.ActivityLog.Comment")]
+            public string Comment { get; set; }
+            [NopResourceDisplayName("Admin.Customers.Customers.ActivityLog.CreatedOn")]
+            public DateTime CreatedOn { get; set; }
+        }
         #endregion
     }
 }

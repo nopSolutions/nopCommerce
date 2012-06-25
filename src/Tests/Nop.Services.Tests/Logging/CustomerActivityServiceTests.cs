@@ -42,12 +42,14 @@ namespace Nop.Services.Tests.Logging
             };
             _customer1 = new Customer()
             {
+                Id = 1,
                 Email = "test1@teststore1.com",
                 Username = "TestUser1",
                 Deleted = false,
             };
            _customer2 = new Customer()
            {
+               Id = 2,
                Email = "test2@teststore2.com",
                Username = "TestUser2",
                Deleted = false,
@@ -56,12 +58,14 @@ namespace Nop.Services.Tests.Logging
             {
                 Id = 1,
                 ActivityLogType = _activityType1,
+                CustomerId = _customer1.Id,
                 Customer = _customer1
             };
             _activity2 = new ActivityLog()
             {
                 Id = 2,
                 ActivityLogType = _activityType1,
+                CustomerId = _customer2.Id,
                 Customer = _customer2
             };
             _cacheManager = new NopNullCache();
@@ -76,11 +80,11 @@ namespace Nop.Services.Tests.Logging
         [Test]
         public void Can_Find_Activities()
         {
-            var activities = _customerActivityService.GetAllActivities(null, null, "test1@teststore1.com", "TestUser1",0,0,10);
+            var activities = _customerActivityService.GetAllActivities(null, null, 1, 0,0,10);
             activities.Contains(_activity1).ShouldBeTrue();
-            activities = _customerActivityService.GetAllActivities(null, null, "test2@teststore2.com", "TestUser2", 0, 0, 10);
+            activities = _customerActivityService.GetAllActivities(null, null, 2, 0, 0, 10);
             activities.Contains(_activity1).ShouldBeFalse();
-            activities = _customerActivityService.GetAllActivities(null, null, "test2@teststore2.com", "TestUser2", 0, 0, 10);
+            activities = _customerActivityService.GetAllActivities(null, null, 2, 0, 0, 10);
             activities.Contains(_activity2).ShouldBeTrue();
         }
 

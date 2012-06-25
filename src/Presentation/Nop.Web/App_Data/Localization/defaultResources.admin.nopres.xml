@@ -6463,6 +6463,20 @@
 					<LocaleResource Name="Customers">
 						<Value>Customers</Value>
 						<Children>
+              <LocaleResource Name="ActivityLog">
+                <Value>Activity Log</Value>
+                <Children>
+                  <LocaleResource Name="ActivityLogType">
+                    <Value>Activity Log Type</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="Comment">
+                    <Value>Comment</Value>
+                  </LocaleResource>
+                  <LocaleResource Name="CreatedOn">
+                    <Value>Created on</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
 							<LocaleResource Name="Addresses">
 								<Value>Addresses</Value>
 								<Children>

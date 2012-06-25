@@ -178,14 +178,13 @@ namespace Nop.Services.Logging
         /// </summary>
         /// <param name="createdOnFrom">Log item creation from; null to load all customers</param>
         /// <param name="createdOnTo">Log item creation to; null to load all customers</param>
-        /// <param name="email">Customer Email</param>
-        /// <param name="username">Customer username</param>
+        /// <param name="customerId">Customer identifier; null to load all customers</param>
         /// <param name="activityLogTypeId">Activity log type identifier</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Activity log collection</returns>
-        public virtual PagedList<ActivityLog> GetAllActivities(DateTime? createdOnFrom,
-            DateTime? createdOnTo, string email, string username, int activityLogTypeId,
+        public virtual IPagedList<ActivityLog> GetAllActivities(DateTime? createdOnFrom,
+            DateTime? createdOnTo, int? customerId, int activityLogTypeId,
             int pageIndex, int pageSize)
         {
             var query = _activityLogRepository.Table;
@@ -195,16 +194,8 @@ namespace Nop.Services.Logging
                 query = query.Where(al => createdOnTo.Value >= al.CreatedOnUtc);
             if (activityLogTypeId > 0)
                 query = query.Where(al => activityLogTypeId == al.ActivityLogTypeId);
-            query = query.Where(al => !al.Customer.Deleted);
-            
-            if (!String.IsNullOrEmpty(email))
-            {
-                query = query.Where(c => c.Customer.Email.Contains(email));
-            }
-            if (!String.IsNullOrEmpty(username))
-            {
-                query = query.Where(c => c.Customer.Username.Contains(username));
-            }
+            if (customerId.HasValue)
+                query = query.Where(al => customerId.Value == al.CustomerId);
 
             query = query.OrderByDescending(al => al.CreatedOnUtc);
 

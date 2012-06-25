@@ -130,17 +130,17 @@ namespace Nop.Admin.Controllers
             DateTime? endDateValue = (model.CreatedOnTo == null) ? null
                             : (DateTime?)_dateTimeHelper.ConvertToUtcTime(model.CreatedOnTo.Value, _dateTimeHelper.CurrentTimeZone).AddDays(1);
 
-            var activityLogModel = _customerActivityService.GetAllActivities(startDateValue, endDateValue, model.CustomerEmail, null, model.ActivityLogTypeId, command.Page - 1, command.PageSize);
+            var activityLog = _customerActivityService.GetAllActivities(startDateValue, endDateValue,null, model.ActivityLogTypeId, command.Page - 1, command.PageSize);
             var gridModel = new GridModel<ActivityLogModel>
             {
-                Data = activityLogModel.Select(x =>
+                Data = activityLog.Select(x =>
                 {
                     var m = x.ToModel();
                     m.CreatedOn = _dateTimeHelper.ConvertToUserTime(x.CreatedOnUtc, DateTimeKind.Utc);
                     return m;
                     
                 }),
-                Total = activityLogModel.TotalCount
+                Total = activityLog.TotalCount
             };
             return new JsonResult { Data = gridModel};;
         }

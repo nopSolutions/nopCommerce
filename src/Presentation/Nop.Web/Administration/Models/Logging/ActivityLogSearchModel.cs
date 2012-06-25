@@ -21,10 +21,6 @@ namespace Nop.Admin.Models.Logging
         [UIHint("DateNullable")]
         public DateTime? CreatedOnTo { get; set; }
 
-        [NopResourceDisplayName("Admin.Configuration.ActivityLog.ActivityLog.Fields.CustomerEmail")]
-        [AllowHtml]
-        public string CustomerEmail { get; set; }
-
         [NopResourceDisplayName("Admin.Configuration.ActivityLog.ActivityLog.Fields.ActivityLogType")]
         public int ActivityLogTypeId { get; set; }
 

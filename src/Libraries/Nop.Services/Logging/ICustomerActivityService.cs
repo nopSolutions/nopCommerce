@@ -61,15 +61,14 @@ namespace Nop.Services.Logging
         /// </summary>
         /// <param name="createdOnFrom">Log item creation from; null to load all customers</param>
         /// <param name="createdOnTo">Log item creation to; null to load all customers</param>
-        /// <param name="email">Customer Email</param>
-        /// <param name="username">Customer username</param>
+        /// <param name="customerId">Customer identifier; null to load all customers</param>
         /// <param name="activityLogTypeId">Activity log type identifier</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Activity log collection</returns>
-        PagedList<ActivityLog> GetAllActivities(DateTime? createdOnFrom,
-            DateTime? createdOnTo, string email, string username, int activityLogTypeId,
-            int pageIndex, int pageSize);
+        IPagedList<ActivityLog> GetAllActivities(DateTime? createdOnFrom,
+            DateTime? createdOnTo, int? customerId,
+            int activityLogTypeId, int pageIndex, int pageSize);
         
         /// <summary>
         /// Gets an activity log item

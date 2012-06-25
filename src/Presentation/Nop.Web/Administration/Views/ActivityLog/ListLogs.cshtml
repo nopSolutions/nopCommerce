@@ -39,14 +39,6 @@
         </tr>
         <tr>
             <td class="adminTitle">
-                @Html.NopLabelFor(model => model.CustomerEmail):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.CustomerEmail)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
                 @Html.NopLabelFor(model => model.ActivityLogTypeId):
             </td>
             <td class="adminData">
@@ -111,7 +103,6 @@
             var searchModel = {
                 CreatedOnFrom: $('#@Html.FieldIdFor(model => model.CreatedOnFrom)').val(),
                 CreatedOnTo: $('#@Html.FieldIdFor(model => model.CreatedOnTo)').val(),
-                CustomerEmail: $('#@Html.FieldIdFor(model => model.CustomerEmail)').val(),
                 ActivityLogTypeId: $('#ActivityLogTypeId').val()
             };
             e.data = searchModel;

@@ -29,6 +29,10 @@
     if (Model.Id > 0)
         tabWishlist = x.Add().Text(T("Admin.Customers.Customers.CurrentWishlist").Text).Content(TabCurrentWishlist().ToHtmlString());
 
+    TabStripItemBuilder tabActivityLog = null;
+    if (Model.Id > 0)
+        tabActivityLog = x.Add().Text(T("Admin.Customers.Customers.ActivityLog").Text).Content(TabActivityLog().ToHtmlString());
+
     TabStripItemBuilder tabImpersonate = null;
     if (Model.Id > 0)
         tabImpersonate = x.Add().Text(T("Admin.Customers.Customers.Impersonate").Text).Content(TabImpersonate().ToHtmlString());
@@ -56,6 +60,9 @@
             break;
         case "wishlist":
             tabWishlist.Selected(true);
+            break;
+        case "activitylog":
+            tabActivityLog.Selected(true);
             break;
         case "impersonate":
             tabImpersonate.Selected(true);
@@ -653,6 +660,35 @@
                                 customerId = Model.Id,
                                 cartTypeId = (int)ShoppingCartType.Wishlist
                             }))
+                        )
+            </td>
+        </tr>
+    </table>
+}
+@helper TabActivityLog()
+    {
+        var gridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSize;
+    
+    <table class="adminContent">
+        <tr>
+            <td>
+                @(Html.Telerik().Grid<CustomerModel.ActivityLogModel>()
+                            .Name("activitylog-grid")
+                            .Columns(columns =>
+                            {
+                                columns.Bound(x => x.ActivityLogTypeName)
+                                    .Centered();
+                                columns.Bound(x => x.Comment)
+                                    .Centered();
+                                columns.Bound(x => x.CreatedOn)
+                                    .Centered();
+                            })
+                            .Pageable(settings => settings.PageSize(gridPageSize).Position(GridPagerPosition.Both))
+                            .DataBinding(dataBinding => dataBinding.Ajax()
+                                .Select("ListActivityLog", "Customer", new
+                                {
+                                    customerId = Model.Id
+                                }))
                         )
             </td>
         </tr>

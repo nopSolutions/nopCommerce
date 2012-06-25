@@ -424,7 +424,7 @@ namespace Nop.Admin.Controllers
                     _backInStockSubscriptionService.SendNotificationsToSubscribers(variant);
                 }
                 //activity log
-                _customerActivityService.InsertActivity("EditProductVariant", _localizationService.GetResource("ActivityLog.EditProductVariant"), variant.Name);
+                _customerActivityService.InsertActivity("EditProductVariant", _localizationService.GetResource("ActivityLog.EditProductVariant"), variant.FullProductName);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Catalog.Products.Variants.Updated"));
                 return continueEditing ? RedirectToAction("Edit", model.Id) : RedirectToAction("Edit", "Product", new { id = variant.ProductId });
