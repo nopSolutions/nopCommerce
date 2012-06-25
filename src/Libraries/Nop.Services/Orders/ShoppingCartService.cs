@@ -113,7 +113,8 @@ namespace Nop.Services.Orders
         /// Deletes expired shopping cart items
         /// </summary>
         /// <param name="olderThanUtc">Older than date and time</param>
-        public virtual void DeleteExpiredShoppingCartItems(DateTime olderThanUtc)
+        /// <returns>Number of deleted items</returns>
+        public virtual int DeleteExpiredShoppingCartItems(DateTime olderThanUtc)
         {
             var query = from sci in _sciRepository.Table
                            where sci.UpdatedOnUtc < olderThanUtc
@@ -122,6 +123,7 @@ namespace Nop.Services.Orders
             var cartItems = query.ToList();
             foreach (var cartItem in cartItems)
                 _sciRepository.Delete(cartItem);
+            return cartItems.Count;
         }
         
         /// <summary>

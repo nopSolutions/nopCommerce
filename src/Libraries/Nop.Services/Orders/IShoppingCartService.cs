@@ -22,7 +22,8 @@ namespace Nop.Services.Orders
         /// Deletes expired shopping cart items
         /// </summary>
         /// <param name="olderThanUtc">Older than date and time</param>
-        void DeleteExpiredShoppingCartItems(DateTime olderThanUtc);
+        /// <returns>Number of deleted items</returns>
+        int DeleteExpiredShoppingCartItems(DateTime olderThanUtc);
 
         /// <summary>
         /// Validates required product variants (product variants which require other variant to be added to the cart)

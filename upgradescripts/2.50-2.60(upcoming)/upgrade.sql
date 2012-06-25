@@ -779,6 +779,18 @@ set @resources='
   <LocaleResource Name="ShoppingCart.AllowedQuantities">
     <Value>Allowed quantities for this product: {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.DeleteAbandonedCarts">
+    <Value>Deleting abondoned shopping carts</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.DeleteAbandonedCarts.OlderThan">
+    <Value>Created before</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.DeleteAbandonedCarts.OlderThan.Hint">
+    <Value>Delete shipping cart items created before the specified date.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.Maintenance.DeleteAbandonedCarts.TotalDeleted">
+    <Value>{0} items were deleted</Value>
+  </LocaleResource>
 </Language>
 '
 

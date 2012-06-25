@@ -15,6 +15,7 @@ using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
+using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Security;
 using Nop.Services.Shipping;
@@ -30,6 +31,7 @@ namespace Nop.Admin.Controllers
 
         private readonly IPaymentService _paymentService;
         private readonly IShippingService _shippingService;
+        private readonly IShoppingCartService _shoppingCartService;
         private readonly ICurrencyService _currencyService;
         private readonly IMeasureService _measureService;
         private readonly ICustomerService _customerService;
@@ -48,6 +50,7 @@ namespace Nop.Admin.Controllers
         #region Constructors
 
         public CommonController(IPaymentService paymentService, IShippingService shippingService,
+            IShoppingCartService shoppingCartService, 
             ICurrencyService currencyService, IMeasureService measureService,
             ICustomerService customerService, IWebHelper webHelper,
             StoreInformationSettings storeInformationSettings, CurrencySettings currencySettings,
@@ -57,6 +60,7 @@ namespace Nop.Admin.Controllers
         {
             this._paymentService = paymentService;
             this._shippingService = shippingService;
+            this._shoppingCartService = shoppingCartService;
             this._currencyService = currencyService;
             this._measureService = measureService;
             this._customerService = customerService;
@@ -322,6 +326,7 @@ namespace Nop.Admin.Controllers
             var model = new MaintenanceModel();
             model.DeleteGuests.EndDate = DateTime.UtcNow.AddDays(-7);
             model.DeleteGuests.OnlyWithoutShoppingCart = true;
+            model.DeleteAbandonedCarts.OlderThan = DateTime.UtcNow.AddDays(-182);
             return View(model);
         }
 
@@ -342,6 +347,20 @@ namespace Nop.Admin.Controllers
 
             return View(model);
         }
+
+        [HttpPost, ActionName("Maintenance")]
+        [FormValueRequired("delete-abondoned-carts")]
+        public ActionResult MaintenanceDeleteAbandonedCarts(MaintenanceModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageMaintenance))
+                return AccessDeniedView();
+
+            var olderThanDateValue = _dateTimeHelper.ConvertToUtcTime(model.DeleteAbandonedCarts.OlderThan, _dateTimeHelper.CurrentTimeZone);
+
+            model.DeleteAbandonedCarts.NumberOfDeletedItems = _shoppingCartService.DeleteExpiredShoppingCartItems(olderThanDateValue);
+            return View(model);
+        }
+
 
         [HttpPost, ActionName("Maintenance")]
         [FormValueRequired("delete-exported-files")]

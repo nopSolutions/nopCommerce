@@ -9254,6 +9254,22 @@
 									</LocaleResource>
 								</Children>
 							</LocaleResource>
+              <LocaleResource Name="DeleteAbandonedCarts">
+                <Value>Deleting abondoned shopping carts</Value>
+                <Children>
+                  <LocaleResource Name="OlderThan">
+                    <Value>Created before</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Delete shipping cart items created before the specified date.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
+                  <LocaleResource Name="TotalDeleted">
+                    <Value>{0} items were deleted</Value>
+                  </LocaleResource>
+                </Children>
+              </LocaleResource>
 						</Children>
 					</LocaleResource>
 					<LocaleResource Name="QueuedEmails">

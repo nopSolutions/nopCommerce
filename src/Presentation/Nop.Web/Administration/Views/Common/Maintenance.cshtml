@@ -65,6 +65,39 @@
     <table width="100%">
         <tr>
             <td colspan="2">
+                <b>@T("Admin.System.Maintenance.DeleteAbandonedCarts")</b>
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.DeleteAbandonedCarts.OlderThan):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.DeleteAbandonedCarts.OlderThan)
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <button type="submit" name="delete-abondoned-carts" value="delete-abondoned-carts" class="t-button">@T("Admin.Common.Delete")</button>
+            </td>
+        </tr>
+        @if (Model.DeleteAbandonedCarts.NumberOfDeletedItems.HasValue)
+        {
+            <tr>
+                <td colspan="2">
+                    <b>@string.Format(@T("Admin.System.Maintenance.DeleteAbandonedCarts.TotalDeleted").Text, Model.DeleteAbandonedCarts.NumberOfDeletedItems.Value)</b>
+                </td>
+            </tr>
+        }
+    </table>
+    <p>
+        <br />
+        <hr />
+        <br />
+    </p>
+    <table width="100%">
+        <tr>
+            <td colspan="2">
                 <b>@T("Admin.System.Maintenance.DeleteExportedFiles")</b>
             </td>
         </tr>
