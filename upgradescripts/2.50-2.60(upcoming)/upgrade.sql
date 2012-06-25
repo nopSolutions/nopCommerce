@@ -791,6 +791,12 @@ set @resources='
   <LocaleResource Name="Admin.System.Maintenance.DeleteAbandonedCarts.TotalDeleted">
     <Value>{0} items were deleted</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowProductImagesInSearchAutoComplete">
+    <Value>Show product images in autocomplete box</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Catalog.ShowProductImagesInSearchAutoComplete.Hint">
+    <Value>Determines whether product images should be displayed in the autocomplete search box.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -2753,5 +2759,19 @@ IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[ProductVariant]') a
 BEGIN
 	ALTER TABLE [ProductVariant]
 	ADD [AllowedQuantities] nvarchar(1000) NULL
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'mediasettings.autocompletesearchthumbpicturesize')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'mediasettings.autocompletesearchthumbpicturesize', N'20')
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.showproductimagesinsearchautocomplete')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'catalogsettings.showproductimagesinsearchautocomplete', N'false')
 END
 GO

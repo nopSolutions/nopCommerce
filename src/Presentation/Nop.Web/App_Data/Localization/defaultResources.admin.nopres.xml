@@ -3722,6 +3722,14 @@
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
+                  <LocaleResource Name="ShowProductImagesInSearchAutoComplete">
+                    <Value>Show product images in autocomplete box</Value>
+                    <Children>
+                      <LocaleResource Name="Hint">
+                        <Value>Determines whether product images should be displayed in the autocomplete search box.</Value>
+                      </LocaleResource>
+                    </Children>
+                  </LocaleResource>
 									<LocaleResource Name="ProductsAlsoPurchasedEnabled">
 										<Value>'Products also purchased' enabled</Value>
 										<Children>

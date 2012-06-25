@@ -495,7 +495,8 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.PicturesStoredIntoDatabase, mo => mo.Ignore());
             Mapper.CreateMap<MediaSettingsModel, MediaSettings>()
                 .ForMember(dest => dest.DefaultPictureZoomEnabled, mo => mo.Ignore())
-                .ForMember(dest => dest.DefaultImageQuality, mo => mo.Ignore());
+                .ForMember(dest => dest.DefaultImageQuality, mo => mo.Ignore())
+                .ForMember(dest => dest.AutoCompleteSearchThumbPictureSize, mo => mo.Ignore());
             Mapper.CreateMap<CustomerSettings,  CustomerUserSettingsModel.CustomerSettingsModel>();
             Mapper.CreateMap<CustomerUserSettingsModel.CustomerSettingsModel, CustomerSettings>()
                 .ForMember(dest => dest.HashedPasswordFormat, mo => mo.Ignore())

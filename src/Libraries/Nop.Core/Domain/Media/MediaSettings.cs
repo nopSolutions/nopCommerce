@@ -14,6 +14,7 @@ namespace Nop.Core.Domain.Media
         public int ManufacturerThumbPictureSize { get; set; }
         public int CartThumbPictureSize { get; set; }
         public int MiniCartThumbPictureSize { get; set; }
+        public int AutoCompleteSearchThumbPictureSize { get; set; }
 
         public bool DefaultPictureZoomEnabled { get; set; }
 

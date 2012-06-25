@@ -104,9 +104,11 @@
         function toggleProductSearchAutoComplete() {
             if ($('#@Html.FieldIdFor(model => model.ProductSearchAutoCompleteEnabled)').is(':checked')) {
                 $('#pnlProductSearchAutoCompleteNumberOfProducts').show();
+                $('#pnlShowProductImagesInSearchAutoComplete').show();                
             }
             else {
                 $('#pnlProductSearchAutoCompleteNumberOfProducts').hide();
+                $('#pnlShowProductImagesInSearchAutoComplete').hide();
             }
         }
         
@@ -337,6 +339,15 @@
             <td class="adminData">
                 @Html.EditorFor(model => model.ProductSearchAutoCompleteNumberOfProducts)
                 @Html.ValidationMessageFor(model => model.ProductSearchAutoCompleteNumberOfProducts)
+            </td>
+        </tr>
+        <tr id="pnlShowProductImagesInSearchAutoComplete">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ShowProductImagesInSearchAutoComplete):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ShowProductImagesInSearchAutoComplete)
+                @Html.ValidationMessageFor(model => model.ShowProductImagesInSearchAutoComplete)
             </td>
         </tr>
         <tr>

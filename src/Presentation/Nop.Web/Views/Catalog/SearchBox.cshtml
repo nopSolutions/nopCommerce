@@ -37,7 +37,16 @@
                             setLocation(ui.item.producturl);
 				            return false;
 			            }
-                    });
+                    })
+                    .data("autocomplete")._renderItem = function( ul, item ) {
+                    var t = item.label;
+                    //html encode
+                    t = htmlEncode(t);
+                    return $("<li></li>")
+                    .data("item.autocomplete", item)
+                    .append("<a>@(Model.ShowProductImagesInSearchAutoComplete ? Html.Raw("<img src='\" + item.productpictureurl + \"'>") : null )" + t + "</a>")
+                    .appendTo(ul);
+                    };
                 });
                 </text>
             }

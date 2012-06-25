@@ -2904,6 +2904,7 @@ namespace Nop.Web.Controllers
             var model = new SearchBoxModel()
             {
                 AutoCompleteEnabled = _catalogSettings.ProductSearchAutoCompleteEnabled,
+                ShowProductImagesInSearchAutoComplete = _catalogSettings.ShowProductImagesInSearchAutoComplete,
                 SearchTermMinimumLength = _catalogSettings.ProductSearchTermMinimumLength
             };
             return PartialView(model);
@@ -2923,9 +2924,15 @@ namespace Nop.Web.Controllers
                 term, false, _workContext.WorkingLanguage.Id, null,
                 ProductSortingEnum.Position, 0, productNumber,
                 false, out filterableSpecificationAttributeOptionIds);
-            var models =  PrepareProductOverviewModels(products, false, false).ToList();
+            var models =  PrepareProductOverviewModels(products, false, _catalogSettings.ShowProductImagesInSearchAutoComplete, _mediaSettings.AutoCompleteSearchThumbPictureSize).ToList();
             var result = (from p in models
-                          select new { label = p.Name, producturl = Url.RouteUrl("Product", new { productId = p.Id, SeName = p.SeName }) }).ToList();
+                          select new
+                          {
+                              label = p.Name,
+                              producturl = Url.RouteUrl("Product", new { productId = p.Id, SeName = p.SeName }),
+                              productpictureurl = p.DefaultPictureModel.ImageUrl
+                          })
+                          .ToList();
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
