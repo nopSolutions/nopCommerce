@@ -2790,3 +2790,10 @@ BEGIN
 	VALUES (N'catalogsettings.showproductimagesinsearchautocomplete', N'false')
 END
 GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'frooglesettings.passshippinginfo')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'frooglesettings.passshippinginfo', N'false')
+END
+GO

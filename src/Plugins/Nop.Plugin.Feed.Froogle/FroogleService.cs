@@ -41,6 +41,8 @@ namespace Nop.Plugin.Feed.Froogle
         private readonly IWebHelper _webHelper;
         private readonly ISettingService _settingService;
         private readonly IWorkContext _workContext;
+        private readonly IMeasureService _measureService;
+        private readonly MeasureSettings _measureSettings;
         private readonly StoreInformationSettings _storeInformationSettings;
         private readonly FroogleSettings _froogleSettings;
         private readonly CurrencySettings _currencySettings;
@@ -59,6 +61,8 @@ namespace Nop.Plugin.Feed.Froogle
             IWebHelper webHelper,
             ISettingService settingService,
             IWorkContext workContext,
+            IMeasureService measureService,
+            MeasureSettings measureSettings,
             StoreInformationSettings storeInformationSettings,
             FroogleSettings froogleSettings,
             CurrencySettings currencySettings,
@@ -74,6 +78,8 @@ namespace Nop.Plugin.Feed.Froogle
             this._webHelper = webHelper;
             this._settingService = settingService;
             this._workContext = workContext;
+            this._measureService = measureService;
+            this._measureSettings = measureSettings;
             this._storeInformationSettings = storeInformationSettings;
             this._froogleSettings = froogleSettings;
             this._currencySettings = currencySettings;
@@ -332,11 +338,34 @@ namespace Nop.Plugin.Feed.Froogle
                         //IMPORTANT NOTE: Set tax in your Google Merchant Center account settings
 
                         //IMPORTANT NOTE: Set shipping in your Google Merchant Center account settings
-
-                        //if (productVariant.Weight != decimal.Zero)
-                        //{
-                        //    writer.WriteElementString("g", "weight", googleBaseNamespace, string.Format(CultureInfo.InvariantCulture, "{0} {1}", productVariant.Weight.ToString(new CultureInfo("en-US", false).NumberFormat), IoC.Resolve<IMeasureService>().BaseWeightIn.SystemKeyword));
-                        //}
+                        
+                        //shipping weight [shipping_weight] - Weight of the item for shipping
+                        //We accept only the following units of weight: lb, oz, g, kg.
+                        if (_froogleSettings.PassShippingInfo)
+                        {
+                            var weightName = "kg";
+                            var shippingWeight = productVariant.Weight;
+                            switch (_measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).SystemKeyword)
+                            {
+                                case "ounce":
+                                    weightName = "oz";
+                                    break;
+                                case "lb":
+                                    weightName = "lb";
+                                    break;
+                                case "grams":
+                                    weightName = "g";
+                                    break;
+                                case "kg":
+                                    weightName = "kg";
+                                    break;
+                                default:
+                                    //unknown weight 
+                                    weightName = "kg";
+                                    break;
+                            }
+                            writer.WriteElementString("g", "shipping_weight", googleBaseNamespace, string.Format(CultureInfo.InvariantCulture, "{0} {1}", shippingWeight.ToString(new CultureInfo("en-US", false).NumberFormat), weightName));
+                        }
 
                         #endregion
                         
@@ -362,6 +391,7 @@ namespace Nop.Plugin.Feed.Froogle
             var settings = new FroogleSettings()
             {
                 ProductPictureSize = 125,
+                PassShippingInfo = false,
                 FtpHostname = "ftp://uploads.google.com",
                 StaticFileName = string.Format("froogle_{0}.xml", CommonHelper.GenerateRandomDigitCode(10)),
             };

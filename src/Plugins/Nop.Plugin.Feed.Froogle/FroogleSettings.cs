@@ -7,6 +7,7 @@ namespace Nop.Plugin.Feed.Froogle
         public int ProductPictureSize { get; set; }
 
         public int CurrencyId { get; set; }
+        public bool PassShippingInfo { get; set; }
 
         public string DefaultGoogleCategory { get; set; }
         
