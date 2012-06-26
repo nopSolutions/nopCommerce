@@ -44,11 +44,13 @@ namespace Nop.Plugin.Shipping.ByWeight
 
         #region Utilities
         
-        private decimal? GetRate(decimal subTotal, decimal weight, int shippingMethodId, int countryId)
+        private decimal? GetRate(decimal subTotal, decimal weight, int shippingMethodId,
+            int countryId, int stateProvinceId, string zip)
         {
             decimal? shippingTotal = null;
 
-            var shippingByWeightRecord = _shippingByWeightService.FindRecord(shippingMethodId, countryId, weight);
+            var shippingByWeightRecord = _shippingByWeightService.FindRecord(shippingMethodId, 
+                countryId, stateProvinceId, zip, weight);
             if (shippingByWeightRecord == null)
             {
                 if (_shippingByWeightSettings.LimitMethodsToCreated)
@@ -102,7 +104,8 @@ namespace Nop.Plugin.Shipping.ByWeight
             }
             
             int countryId = getShippingOptionRequest.ShippingAddress.CountryId.HasValue ? getShippingOptionRequest.ShippingAddress.CountryId.Value : 0;
-            
+            int stateProvinceId = getShippingOptionRequest.ShippingAddress.StateProvinceId.HasValue ? getShippingOptionRequest.ShippingAddress.StateProvinceId.Value : 0;
+            string zip = getShippingOptionRequest.ShippingAddress.ZipPostalCode;
             decimal subTotal = decimal.Zero;
             foreach (var shoppingCartItem in getShippingOptionRequest.Items)
             {
@@ -115,7 +118,8 @@ namespace Nop.Plugin.Shipping.ByWeight
             var shippingMethods = _shippingService.GetAllShippingMethods(countryId);
             foreach (var shippingMethod in shippingMethods)
             {
-                decimal? rate = GetRate(subTotal, weight, shippingMethod.Id, countryId);
+                decimal? rate = GetRate(subTotal, weight, shippingMethod.Id,
+                    countryId, stateProvinceId, zip);
                 if (rate.HasValue)
                 {
                     var shippingOption = new ShippingOption();
@@ -173,6 +177,10 @@ namespace Nop.Plugin.Shipping.ByWeight
             //locales
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.Country", "Country");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.Country.Hint", "If an asterisk is selected, then this shipping rate will apply to all customers, regardless of the country.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.StateProvince", "State / province");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.StateProvince.Hint", "If an asterisk is selected, then this shipping rate will apply to all customers from the given country, regardless of the state.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.Zip", "Zip");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.Zip.Hint", "Zip / postal code. If zip is empty, then this shipping rate will apply to all customers from the given country or state, regardless of the zip code.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.ShippingMethod", "Shipping method");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.ShippingMethod.Hint", "The shipping method.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.From", "Order weight from");
@@ -209,6 +217,10 @@ namespace Nop.Plugin.Shipping.ByWeight
             //locales
             this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.Country");
             this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.Country.Hint");
+            this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.StateProvince");
+            this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.StateProvince.Hint");
+            this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.Zip");
+            this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.Zip.Hint");
             this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.ShippingMethod");
             this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.ShippingMethod.Hint");
             this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.From");

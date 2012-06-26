@@ -9,7 +9,8 @@ namespace Nop.Plugin.Shipping.ByWeight.Services
 
         IList<ShippingByWeightRecord> GetAll();
 
-        ShippingByWeightRecord FindRecord(int shippingMethodId, int countryId, decimal weight);
+        ShippingByWeightRecord FindRecord(int shippingMethodId,
+            int countryId, int stateProvinceId, string zip, decimal weight);
 
         ShippingByWeightRecord GetById(int shippingByWeightRecordId);
 

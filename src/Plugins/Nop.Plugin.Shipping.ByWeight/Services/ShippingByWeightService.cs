@@ -9,6 +9,11 @@ namespace Nop.Plugin.Shipping.ByWeight.Services
 {
     public partial class ShippingByWeightService : IShippingByWeightService
     {
+        #region Constants
+        private const string SHIPPINGBYWEIGHT_ALL_KEY = "Nop.shippingbyweight.all";
+        private const string SHIPPINGBYWEIGHT_PATTERN_KEY = "Nop.shippingbyweight.";
+        #endregion
+
         #region Fields
 
         private readonly IRepository<ShippingByWeightRecord> _sbwRepository;
@@ -36,36 +41,69 @@ namespace Nop.Plugin.Shipping.ByWeight.Services
                 throw new ArgumentNullException("shippingByWeightRecord");
 
             _sbwRepository.Delete(shippingByWeightRecord);
+
+            _cacheManager.RemoveByPattern(SHIPPINGBYWEIGHT_PATTERN_KEY);
         }
 
         public virtual IList<ShippingByWeightRecord> GetAll()
         {
-            var query = from sbw in _sbwRepository.Table
-                        orderby sbw.CountryId, sbw.ShippingMethodId, sbw.From
-                        select sbw;
-            var records = query.ToList();
-            return records;
+            string key = SHIPPINGBYWEIGHT_ALL_KEY;
+            return _cacheManager.Get(key, () =>
+            {
+                var query = from sbw in _sbwRepository.Table
+                            orderby sbw.CountryId, sbw.StateProvinceId, sbw.Zip, sbw.ShippingMethodId, sbw.From
+                            select sbw;
+                var records = query.ToList();
+                return records;
+            });
         }
 
-        public virtual ShippingByWeightRecord FindRecord(int shippingMethodId, int countryId, decimal weight)
+        public virtual ShippingByWeightRecord FindRecord(int shippingMethodId,
+            int countryId, int stateProvinceId, string zip, decimal weight)
         {
-            var query = from sbw in _sbwRepository.Table
-                        where sbw.ShippingMethodId == shippingMethodId && weight >= sbw.From && weight <= sbw.To
-                        orderby sbw.CountryId, sbw.ShippingMethodId, sbw.From
-                        select sbw;
+            if (zip == null)
+                zip = string.Empty;
+            zip = zip.Trim();
 
-            var existingRecords = query.ToList();
-
+            //filter by weight and shipping method
+            var existingRates = GetAll()
+                .Where(sbw => sbw.ShippingMethodId == shippingMethodId && weight >= sbw.From && weight <= sbw.To)
+                .ToList();
+            
             //filter by country
-            foreach (var sbw in existingRecords)
+            var matchedByCountry = new List<ShippingByWeightRecord>();
+            foreach (var sbw in existingRates)
                 if (countryId == sbw.CountryId)
-                    return sbw;
+                    matchedByCountry.Add(sbw);
+            if (matchedByCountry.Count == 0)
+                foreach (var sbw in existingRates)
+                    if (sbw.CountryId == 0)
+                        matchedByCountry.Add(sbw);
 
-            foreach (var sbw in existingRecords)
-                if (sbw.CountryId == 0)
-                    return sbw;
+            //filter by state/province
+            var matchedByStateProvince = new List<ShippingByWeightRecord>();
+            foreach (var sbw in matchedByCountry)
+                if (stateProvinceId == sbw.StateProvinceId)
+                    matchedByStateProvince.Add(sbw);
+            if (matchedByStateProvince.Count == 0)
+                foreach (var sbw in matchedByCountry)
+                    if (sbw.StateProvinceId == 0)
+                        matchedByStateProvince.Add(sbw);
 
-            return null;
+
+            //filter by zip
+            var matchedByZip = new List<ShippingByWeightRecord>();
+            foreach (var sbw in matchedByStateProvince)
+                if ((String.IsNullOrEmpty(zip) && String.IsNullOrEmpty(sbw.Zip)) ||
+                    (zip.Equals(sbw.Zip, StringComparison.InvariantCultureIgnoreCase)))
+                    matchedByZip.Add(sbw);
+
+            if (matchedByZip.Count == 0)
+                foreach (var taxRate in matchedByStateProvince)
+                    if (String.IsNullOrWhiteSpace(taxRate.Zip))
+                        matchedByZip.Add(taxRate);
+
+            return matchedByZip.FirstOrDefault();
         }
 
         public virtual ShippingByWeightRecord GetById(int shippingByWeightRecordId)
@@ -83,6 +121,8 @@ namespace Nop.Plugin.Shipping.ByWeight.Services
                 throw new ArgumentNullException("shippingByWeightRecord");
 
             _sbwRepository.Insert(shippingByWeightRecord);
+
+            _cacheManager.RemoveByPattern(SHIPPINGBYWEIGHT_PATTERN_KEY);
         }
 
         public virtual void UpdateShippingByWeightRecord(ShippingByWeightRecord shippingByWeightRecord)
@@ -91,6 +131,8 @@ namespace Nop.Plugin.Shipping.ByWeight.Services
                 throw new ArgumentNullException("shippingByWeightRecord");
 
             _sbwRepository.Update(shippingByWeightRecord);
+
+            _cacheManager.RemoveByPattern(SHIPPINGBYWEIGHT_PATTERN_KEY);
         }
 
         #endregion

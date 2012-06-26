@@ -812,6 +812,18 @@ set @resources='
   <LocaleResource Name="Admin.Customers.Customers.ActivityLog.CreatedOn">
     <Value>Created on</Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.ByWeight.Fields.StateProvince">
+    <Value>State / province</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.ByWeight.Fields.StateProvince.Hint">
+    <Value>If an asterisk is selected, then this shipping rate will apply to all customers from the given country, regardless of the state.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.ByWeight.Fields.Zip">
+    <Value>Zip</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.ByWeight.Fields.Zip.Hint">
+    <Value>Zip / postal code. If zip is empty, then this shipping rate will apply to all customers from the given country or state, regardless of the zip code.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -2795,5 +2807,37 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'frooglesettings.passship
 BEGIN
 	INSERT [Setting] ([Name], [Value])
 	VALUES (N'frooglesettings.passshippinginfo', N'false')
+END
+GO
+
+IF (EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[ShippingByWeight]') and OBJECTPROPERTY(id, N'IsUserTable') = 1))
+	AND (NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[ShippingByWeight]') and NAME='StateProvinceId'))
+BEGIN
+	EXEC ('ALTER TABLE [ShippingByWeight]
+	ADD [StateProvinceId] int NULL')
+END
+GO
+
+IF (EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[ShippingByWeight]') and OBJECTPROPERTY(id, N'IsUserTable') = 1))
+	AND (EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[ShippingByWeight]') and NAME='StateProvinceId'))
+BEGIN
+	EXEC ('UPDATE [ShippingByWeight]
+	SET [StateProvinceId] = 0
+	WHERE [StateProvinceId] IS NULL')
+END
+GO
+
+IF (EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[ShippingByWeight]') and OBJECTPROPERTY(id, N'IsUserTable') = 1))
+	AND (EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[ShippingByWeight]') and NAME='StateProvinceId'))
+BEGIN
+	EXEC('ALTER TABLE [ShippingByWeight] ALTER COLUMN [StateProvinceId] int NOT NULL')
+END
+GO
+
+IF (EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[ShippingByWeight]') and OBJECTPROPERTY(id, N'IsUserTable') = 1))
+	AND (NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[ShippingByWeight]') and NAME='Zip'))
+BEGIN
+	EXEC ('ALTER TABLE [ShippingByWeight]
+	ADD [Zip] nvarchar(400) NULL')
 END
 GO

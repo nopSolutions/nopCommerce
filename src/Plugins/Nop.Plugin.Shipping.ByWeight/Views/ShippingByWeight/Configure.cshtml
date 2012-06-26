@@ -14,14 +14,16 @@
                     .DataKeys(keys => keys.Add(x => x.Id).RouteKey("Id"))
                     .Columns(columns =>
                     {
-                        columns.Bound(x => x.CountryName).Width(200).ReadOnly();
-                        columns.Bound(x => x.ShippingMethodName).Width(200).ReadOnly();
-                        columns.Bound(x => x.From).Width(100);
-                        columns.Bound(x => x.To).Width(100);
-                        columns.Bound(x => x.UsePercentage).Width(50)
+                        columns.Bound(x => x.CountryName).ReadOnly();
+                        columns.Bound(x => x.StateProvinceName).ReadOnly();
+                        columns.Bound(x => x.Zip);
+                        columns.Bound(x => x.ShippingMethodName).ReadOnly();
+                        columns.Bound(x => x.From);
+                        columns.Bound(x => x.To);
+                        columns.Bound(x => x.UsePercentage)
                             .ClientTemplate("<input type='checkbox' disabled='disabled' name='UsePercentage' <#=UsePercentage ? checked='checked' : ''#> />");
-                        columns.Bound(x => x.ShippingChargePercentage).Width(100);
-                        columns.Bound(x => x.ShippingChargeAmount).Width(100);
+                        columns.Bound(x => x.ShippingChargePercentage);
+                        columns.Bound(x => x.ShippingChargeAmount);
                         columns.Command(commands =>
                         {
                             commands.Edit();
@@ -46,6 +48,29 @@
 </table>
 <p>
 </p>
+<script type="text/javascript">
+     $(function() {
+            $("#@Html.FieldIdFor(model => model.AddCountryId)").change(function() {
+                var selectedItem = $(this).val();
+                var ddlStates = $("#@Html.FieldIdFor(model => model.AddStateProvinceId)")
+                $.ajax({
+                    cache:false,
+                    type: "GET",
+                    url: "@(Url.Action("GetStatesByCountryId", "Country", new RouteValueDictionary() { { "area", "Admin" } }))",
+                    data: { "countryId": selectedItem, "addAsterisk": "true" },
+                    success: function (data) {
+                        ddlStates.html('');
+                        $.each(data, function(id, option) {
+                            ddlStates.append($('<option></option>').val(option.id).html(option.name));
+                        });
+                    },
+                    error:function (xhr, ajaxOptions, thrownError){
+                        alert('Failed to retrieve states.')
+                    }  
+                });
+            });
+        });
+</script>
 @using (Html.BeginForm())
 {
     
@@ -81,6 +106,24 @@
             <td class="adminData">
                 @Html.DropDownListFor(model => model.AddCountryId, Model.AvailableCountries)
                 @Html.ValidationMessageFor(model => model.AddCountryId)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+            @Html.NopLabelFor(model => model.AddStateProvinceId):
+            </td>
+            <td class="adminData">
+            @Html.DropDownListFor(model => model.AddStateProvinceId, Model.AvailableStates)
+            @Html.ValidationMessageFor(model => model.AddStateProvinceId)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AddZip):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AddZip)
+                @Html.ValidationMessageFor(model => model.AddZip)
             </td>
         </tr>
         <tr>

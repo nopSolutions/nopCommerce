@@ -10,6 +10,14 @@ namespace Nop.Plugin.Shipping.ByWeight.Models
         [NopResourceDisplayName("Plugins.Shipping.ByWeight.Fields.Country")]
         public string CountryName { get; set; }
 
+        [NopResourceDisplayName("Plugins.Shipping.ByWeight.Fields.StateProvince")]
+        public int StateProvinceId { get; set; }
+        [NopResourceDisplayName("Plugins.Shipping.ByWeight.Fields.StateProvince")]
+        public string StateProvinceName { get; set; }
+
+        [NopResourceDisplayName("Plugins.Shipping.ByWeight.Fields.Zip")]
+        public string Zip { get; set; }
+
         [NopResourceDisplayName("Plugins.Shipping.ByWeight.Fields.ShippingMethod")]
         public int ShippingMethodId { get; set; }
         [NopResourceDisplayName("Plugins.Shipping.ByWeight.Fields.ShippingMethod")]

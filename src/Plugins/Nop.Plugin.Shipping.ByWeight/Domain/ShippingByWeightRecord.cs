@@ -13,6 +13,16 @@ namespace Nop.Plugin.Shipping.ByWeight.Domain
         public virtual int CountryId { get; set; }
 
         /// <summary>
+        /// Gets or sets the state/province identifier
+        /// </summary>
+        public virtual int StateProvinceId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the zip
+        /// </summary>
+        public virtual string Zip { get; set; }
+
+        /// <summary>
         /// Gets or sets the shipping method identifier
         /// </summary>
         public virtual int ShippingMethodId { get; set; }
