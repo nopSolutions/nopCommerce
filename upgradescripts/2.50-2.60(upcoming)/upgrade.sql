@@ -2757,10 +2757,10 @@ GO
 --'Recurring payment cancelled' message template
 IF NOT EXISTS (
 		SELECT 1
-		FROM [dbo].[MessageTemplate]
+		FROM [MessageTemplate]
 		WHERE [Name] = N'RecurringPaymentCancelled.StoreOwnerNotification')
 BEGIN
-	INSERT [dbo].[MessageTemplate] ([Name], [BccEmailAddresses], [Subject], [Body], [IsActive], [EmailAccountId])
+	INSERT [MessageTemplate] ([Name], [BccEmailAddresses], [Subject], [Body], [IsActive], [EmailAccountId])
 	VALUES (N'RecurringPaymentCancelled.StoreOwnerNotification', null, N'%Store.Name%. Recurring payment cancelled', N'<p><a href="%Store.URL%">%Store.Name%</a> <br /><br />%Customer.FullName% (%Customer.Email%) has just cancelled a recurring payment ID=%RecurringPayment.ID%.</p>', 1, 0)
 END
 GO
