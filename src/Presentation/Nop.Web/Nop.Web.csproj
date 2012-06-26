@@ -316,6 +316,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\Localization\Installation\installation.bg.xml" />
+    <Content Include="App_Data\Localization\Installation\installation.bs-Latn-BA.xml" />
     <Content Include="App_Data\Localization\Installation\installation.cz.xml" />
     <Content Include="App_Data\Localization\Installation\installation.da.xml" />
     <Content Include="App_Data\Localization\Installation\installation.fr.xml" />
