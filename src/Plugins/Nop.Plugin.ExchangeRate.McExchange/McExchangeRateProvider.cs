@@ -1,15 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Net;
 using System.Xml;
 using Nop.Core.Plugins;
 using Nop.Services.Directory;
+using Nop.Services.Logging;
 
 namespace Nop.Plugin.ExchangeRate.McExchange
 {
     public class McExchangeRateProvider : BasePlugin, IExchangeRateProvider
     {
+        private readonly ILogger _logger;
+
+        public McExchangeRateProvider(ILogger logger)
+        {
+            this._logger = logger;
+        }
+
         /// <summary>
         /// Gets currency live rates
         /// </summary>
@@ -29,11 +38,7 @@ namespace Nop.Plugin.ExchangeRate.McExchange
                 nsmgr.AddNamespace("atom", "http://www.w3.org/2005/Atom");
                 nsmgr.AddNamespace("cf", "http://www.microsoft.com/schemas/rss/core/2005");
                 nsmgr.AddNamespace("cfi", "http://www.microsoft.com/schemas/rss/core/2005/internal");
-
-                var provider = new NumberFormatInfo();
-                provider.NumberDecimalSeparator = ".";
-                provider.NumberGroupSeparator = "";
-
+                
                 foreach (XmlNode node in xmlDoc.DocumentElement.FirstChild.ChildNodes)
                 {
                     if (node.Name == "item")
@@ -55,43 +60,49 @@ namespace Nop.Plugin.ExchangeRate.McExchange
                                   <cfi:lastdownloadtime>2009-02-20T08:05:27.168Z</cfi:lastdownloadtime>
                                 </item>
                         */
-                        var rate = new Core.Domain.Directory.ExchangeRate();
-                        foreach (XmlNode detailNode in node.ChildNodes)
+                        try
                         {
-                            switch (detailNode.Name)
+                            var rate = new Core.Domain.Directory.ExchangeRate();
+                            foreach (XmlNode detailNode in node.ChildNodes)
                             {
-                                case "title":
-                                    rate.CurrencyCode = detailNode.InnerText.Substring(0, 3);
-                                    break;
+                                switch (detailNode.Name)
+                                {
+                                    case "title":
+                                        rate.CurrencyCode = detailNode.InnerText.Substring(0, 3);
+                                        break;
 
-                                case "pubDate":
-                                    rate.UpdatedOn = DateTime.Parse(detailNode.InnerText);
-                                    break;
+                                    case "pubDate":
+                                        rate.UpdatedOn = DateTime.Parse(detailNode.InnerText, CultureInfo.InvariantCulture);
+                                        break;
 
-                                case "description":
-                                    string description = detailNode.InnerText;
-                                    int x = description.IndexOf('=');
-                                    int y = description.IndexOf(' ', x + 2);
+                                    case "description":
+                                        string description = detailNode.InnerText;
+                                        int x = description.IndexOf('=');
+                                        int y = description.IndexOf(' ', x + 2);
 
-                                    //          1         2         3         4
-                                    //01234567890123456789012345678901234567890
-                                    // 1 New Zealand Dollar = 0.78815 Australian Dollar
-                                    // x = 21
-                                    // y = 30
-                                    string rateText = description.Substring(x + 1, y - x - 1).Trim();
-                                    rate.Rate = decimal.Parse(rateText, provider);
-                                    break;
+                                        //          1         2         3         4
+                                        //01234567890123456789012345678901234567890
+                                        // 1 New Zealand Dollar = 0.78815 Australian Dollar
+                                        // x = 21
+                                        // y = 30
+                                        string rateText = description.Substring(x + 1, y - x - 1).Trim();
+                                        rate.Rate = decimal.Parse(rateText, CultureInfo.InvariantCulture);
+                                        break;
 
-                                default:
-                                    break;
+                                    default:
+                                        break;
+                                }
                             }
 
+                            // Update the Rate in the collection if its already in there
+                            if (rate.CurrencyCode != null)
+                            {
+                                exchangeRates.Add(rate);
+                            }
                         }
-
-                        // Update the Rate in the collection if its already in there
-                        if (rate.CurrencyCode != null)
+                        catch (Exception exc)
                         {
-                            exchangeRates.Add(rate);
+                            _logger.Warning(string.Format("Error parsing currency rates (MC): {0}", exc.Message), exc);
                         }
                     } // if node is an item
                 } // foreach child node under <channel>
