@@ -14,7 +14,7 @@ using Telerik.Web.Mvc;
 namespace Nop.Admin.Controllers
 {
 	[AdminAuthorize]
-    public class MeasureController : BaseNopController
+    public partial class MeasureController : BaseNopController
 	{
 		#region Fields
 

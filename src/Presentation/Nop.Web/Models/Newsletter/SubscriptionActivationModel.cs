@@ -2,7 +2,7 @@
 
 namespace Nop.Web.Models.Newsletter
 {
-    public class SubscriptionActivationModel : BaseNopModel
+    public partial class SubscriptionActivationModel : BaseNopModel
     {
         public string Result { get; set; }
     }

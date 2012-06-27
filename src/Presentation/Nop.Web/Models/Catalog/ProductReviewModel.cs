@@ -7,7 +7,7 @@ using Nop.Web.Validators.Catalog;
 
 namespace Nop.Web.Models.Catalog
 {
-    public class ProductReviewOverviewModel : BaseNopModel
+    public partial class ProductReviewOverviewModel : BaseNopModel
     {
         public int ProductId { get; set; }
 
@@ -19,7 +19,7 @@ namespace Nop.Web.Models.Catalog
     }
 
     [Validator(typeof(ProductReviewsValidator))]
-    public class ProductReviewsModel : BaseNopModel
+    public partial class ProductReviewsModel : BaseNopModel
     {
         public ProductReviewsModel()
         {
@@ -36,7 +36,7 @@ namespace Nop.Web.Models.Catalog
         public AddProductReviewModel AddProductReview { get; set; }
     }
 
-    public class ProductReviewModel : BaseNopEntityModel
+    public partial class ProductReviewModel : BaseNopEntityModel
     {
         public int CustomerId { get; set; }
 
@@ -56,16 +56,16 @@ namespace Nop.Web.Models.Catalog
     }
 
 
-    public class ProductReviewHelpfulnessModel : BaseNopModel
+    public partial class ProductReviewHelpfulnessModel : BaseNopModel
     {
         public int ProductReviewId { get; set; }
 
         public int HelpfulYesTotal { get; set; }
 
         public int HelpfulNoTotal { get; set; }
-    } 
+    }
 
-    public class AddProductReviewModel : BaseNopModel
+    public partial class AddProductReviewModel : BaseNopModel
     {
         [AllowHtml]
         [NopResourceDisplayName("Reviews.Fields.Title")]

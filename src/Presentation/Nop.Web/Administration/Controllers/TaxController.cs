@@ -14,7 +14,7 @@ using Telerik.Web.Mvc;
 namespace Nop.Admin.Controllers
 {
 	[AdminAuthorize]
-    public class TaxController : BaseNopController
+    public partial class TaxController : BaseNopController
 	{
 		#region Fields
 

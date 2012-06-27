@@ -13,7 +13,7 @@ using Nop.Web.Framework.UI.Paging;
 
 namespace Nop.Web.Models.Catalog
 {
-    public class CatalogPagingFilteringModel : BasePageableModel
+    public partial class CatalogPagingFilteringModel : BasePageableModel
     {
         #region Constructors
 
@@ -67,7 +67,7 @@ namespace Nop.Web.Models.Catalog
 
         #region Nested classes
 
-        public class PriceRangeFilterModel : BaseNopModel
+        public partial class PriceRangeFilterModel : BaseNopModel
         {
             #region Const
 
@@ -217,7 +217,7 @@ namespace Nop.Web.Models.Catalog
             #endregion
         }
 
-        public class PriceRangeFilterItem : BaseNopModel
+        public partial class PriceRangeFilterItem : BaseNopModel
         {
             public string From { get; set; }
             public string To { get; set; }
@@ -225,7 +225,7 @@ namespace Nop.Web.Models.Catalog
             public bool Selected { get; set; }
         }
 
-        public class SpecificationFilterModel : BaseNopModel
+        public partial class SpecificationFilterModel : BaseNopModel
         {
             #region Const
 
@@ -408,7 +408,7 @@ namespace Nop.Web.Models.Catalog
             #endregion
         }
 
-        public class SpecificationFilterItem : BaseNopModel
+        public partial class SpecificationFilterItem : BaseNopModel
         {
             public string SpecificationAttributeName { get; set; }
             public string SpecificationAttributeOptionName { get; set; }

@@ -2,7 +2,7 @@
 
 namespace Nop.Web.Models.Catalog
 {
-    public class SearchPagingFilteringModel : BasePageableModel
+    public partial class SearchPagingFilteringModel : BasePageableModel
     {
     }
 }

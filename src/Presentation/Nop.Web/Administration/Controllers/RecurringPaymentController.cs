@@ -17,7 +17,7 @@ using Telerik.Web.Mvc;
 namespace Nop.Admin.Controllers
 {
     [AdminAuthorize]
-    public class RecurringPaymentController : BaseNopController
+    public partial class RecurringPaymentController : BaseNopController
     {
         #region Fields
 

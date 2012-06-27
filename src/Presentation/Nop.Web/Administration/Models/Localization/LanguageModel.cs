@@ -7,7 +7,7 @@ using Nop.Web.Framework.Mvc;
 namespace Nop.Admin.Models.Localization
 {
     [Validator(typeof(LanguageValidator))]
-    public class LanguageModel : BaseNopEntityModel
+    public partial class LanguageModel : BaseNopEntityModel
     {
         [NopResourceDisplayName("Admin.Configuration.Languages.Fields.Name")]
         [AllowHtml]

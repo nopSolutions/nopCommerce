@@ -4,7 +4,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.Catalog
 {
-    public class ProductSpecificationAttributeModel : BaseNopEntityModel
+    public partial class ProductSpecificationAttributeModel : BaseNopEntityModel
     {
         [NopResourceDisplayName("Admin.Catalog.Products.SpecificationAttributes.Fields.SpecificationAttribute")]
         [AllowHtml]

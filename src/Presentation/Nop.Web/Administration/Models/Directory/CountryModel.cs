@@ -9,7 +9,7 @@ using Nop.Web.Framework.Mvc;
 namespace Nop.Admin.Models.Directory
 {
     [Validator(typeof(CountryValidator))]
-    public class CountryModel : BaseNopEntityModel, ILocalizedModel<CountryLocalizedModel>
+    public partial class CountryModel : BaseNopEntityModel, ILocalizedModel<CountryLocalizedModel>
     {
         public CountryModel()
         {
@@ -54,7 +54,7 @@ namespace Nop.Admin.Models.Directory
         public IList<CountryLocalizedModel> Locales { get; set; }
     }
 
-    public class CountryLocalizedModel : ILocalizedModelLocal
+    public partial class CountryLocalizedModel : ILocalizedModelLocal
     {
         public int LanguageId { get; set; }
 

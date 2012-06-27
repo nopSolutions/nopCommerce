@@ -1,7 +1,7 @@
 ﻿
 namespace Nop.Web.Models.Profile
 {
-    public class PostsModel
+    public partial class PostsModel
     {
         public int ForumTopicId { get; set; }
         public string ForumTopicTitle { get; set; }

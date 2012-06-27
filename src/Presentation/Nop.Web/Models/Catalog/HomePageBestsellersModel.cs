@@ -3,7 +3,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Web.Models.Catalog
 {
-    public class HomePageBestsellersModel : BaseNopModel
+    public partial class HomePageBestsellersModel : BaseNopModel
     {
         public HomePageBestsellersModel()
         {

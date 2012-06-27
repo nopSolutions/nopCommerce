@@ -2,7 +2,7 @@
 
 namespace Nop.Web.Models.Common
 {
-    public class MenuModel : BaseNopModel
+    public partial class MenuModel : BaseNopModel
     {
         public bool BlogEnabled { get; set; }
         public bool RecentlyAddedProductsEnabled { get; set; }

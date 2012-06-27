@@ -7,7 +7,7 @@ using Nop.Web.Framework.Mvc;
 namespace Nop.Admin.Models.Messages
 {
     [Validator(typeof(EmailAccountValidator))]
-    public class EmailAccountModel : BaseNopEntityModel
+    public partial class EmailAccountModel : BaseNopEntityModel
     {
         [NopResourceDisplayName("Admin.Configuration.EmailAccounts.Fields.Email")]
         [AllowHtml]

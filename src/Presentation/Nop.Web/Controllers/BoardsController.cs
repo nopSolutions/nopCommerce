@@ -24,7 +24,7 @@ using Nop.Web.Models.Boards;
 namespace Nop.Web.Controllers
 {
     [NopHttpsRequirement(SslRequirement.No)]
-    public class BoardsController : BaseNopController
+    public partial class BoardsController : BaseNopController
     {
         private readonly IForumService _forumService;
         private readonly ILocalizationService _localizationService;

@@ -23,7 +23,7 @@ using Telerik.Web.Mvc;
 namespace Nop.Admin.Controllers
 {
     [AdminAuthorize]
-    public class ProductController : BaseNopController
+    public partial class ProductController : BaseNopController
     {
 		#region Fields
 

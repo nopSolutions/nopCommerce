@@ -2,7 +2,7 @@
 
 namespace Nop.Web.Models.Common
 {
-    public class InfoBlockModel : BaseNopModel
+    public partial class InfoBlockModel : BaseNopModel
     {
         public bool RecentlyAddedProductsEnabled { get; set; }
         public bool RecentlyViewedProductsEnabled { get; set; }

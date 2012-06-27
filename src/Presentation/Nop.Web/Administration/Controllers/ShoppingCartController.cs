@@ -16,7 +16,7 @@ using Telerik.Web.Mvc;
 namespace Nop.Admin.Controllers
 {
     [AdminAuthorize]
-    public class ShoppingCartController : BaseNopController
+    public partial class ShoppingCartController : BaseNopController
     {
         #region Fields
 

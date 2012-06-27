@@ -5,7 +5,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.Common
 {
-    public class MaintenanceModel : BaseNopModel
+    public partial class MaintenanceModel : BaseNopModel
     {
         public MaintenanceModel()
         {
@@ -20,7 +20,7 @@ namespace Nop.Admin.Models.Common
 
         #region Nested classes
 
-        public class DeleteGuestsModel : BaseNopModel
+        public partial class DeleteGuestsModel : BaseNopModel
         {
             [NopResourceDisplayName("Admin.System.Maintenance.DeleteGuests.StartDate")]
             [UIHint("DateNullable")]
@@ -36,7 +36,7 @@ namespace Nop.Admin.Models.Common
             public int? NumberOfDeletedCustomers { get; set; }
         }
 
-        public class DeleteAbandonedCartsModel : BaseNopModel
+        public partial class DeleteAbandonedCartsModel : BaseNopModel
         {
             [NopResourceDisplayName("Admin.System.Maintenance.DeleteAbandonedCarts.OlderThan")]
             [UIHint("Date")]
@@ -45,7 +45,7 @@ namespace Nop.Admin.Models.Common
             public int? NumberOfDeletedItems { get; set; }
         }
 
-        public class DeleteExportedFilesModel : BaseNopModel
+        public partial class DeleteExportedFilesModel : BaseNopModel
         {
             [NopResourceDisplayName("Admin.System.Maintenance.DeleteExportedFiles.StartDate")]
             [UIHint("DateNullable")]

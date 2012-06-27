@@ -9,7 +9,7 @@ using Nop.Web.Framework.Controllers;
 namespace Nop.Admin.Controllers
 {
     [AdminAuthorize]
-    public class DownloadController : BaseNopController
+    public partial class DownloadController : BaseNopController
     {
         private readonly IDownloadService _downloadService;
 

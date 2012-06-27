@@ -2,7 +2,7 @@
 
 namespace Nop.Web.Models.News
 {
-    public class NewsPagingFilteringModel : BasePageableModel
+    public partial class NewsPagingFilteringModel : BasePageableModel
     {
     }
 }

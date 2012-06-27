@@ -8,7 +8,7 @@ using Nop.Web.Framework.Mvc;
 namespace Nop.Admin.Models.Directory
 {
     [Validator(typeof(MeasureWeightValidator))]
-    public class MeasureWeightModel : BaseNopEntityModel
+    public partial class MeasureWeightModel : BaseNopEntityModel
     {
         [NopResourceDisplayName("Admin.Configuration.Measures.Weights.Fields.Name")]
         [AllowHtml]

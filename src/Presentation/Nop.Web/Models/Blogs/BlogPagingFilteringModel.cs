@@ -3,7 +3,7 @@ using Nop.Web.Framework.UI.Paging;
 
 namespace Nop.Web.Models.Blogs
 {
-    public class BlogPagingFilteringModel : BasePageableModel
+    public partial class BlogPagingFilteringModel : BasePageableModel
     {
         #region Methods
 

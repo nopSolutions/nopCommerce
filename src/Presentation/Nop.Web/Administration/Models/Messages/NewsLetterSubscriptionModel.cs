@@ -8,7 +8,7 @@ using Nop.Web.Framework.Mvc;
 namespace Nop.Admin.Models.Messages
 {
     [Validator(typeof(NewsLetterSubscriptionValidator))]
-    public class NewsLetterSubscriptionModel : BaseNopEntityModel
+    public partial class NewsLetterSubscriptionModel : BaseNopEntityModel
     {
         [NopResourceDisplayName("Admin.Promotions.NewsLetterSubscriptions.Fields.Email")]
         [AllowHtml]

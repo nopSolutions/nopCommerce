@@ -5,7 +5,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Web.Models.Order
 {
-    public class SubmitReturnRequestModel : BaseNopModel
+    public partial class SubmitReturnRequestModel : BaseNopModel
     {
         public SubmitReturnRequestModel()
         {
@@ -36,7 +36,7 @@ namespace Nop.Web.Models.Order
         
         #region Nested classes
 
-        public class OrderProductVariantModel : BaseNopEntityModel
+        public partial class OrderProductVariantModel : BaseNopEntityModel
         {
             public int ProductId { get; set; }
 

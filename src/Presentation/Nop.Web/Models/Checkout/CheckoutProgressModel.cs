@@ -2,7 +2,7 @@
 
 namespace Nop.Web.Models.Checkout
 {
-    public class CheckoutProgressModel : BaseNopModel
+    public partial class CheckoutProgressModel : BaseNopModel
     {
         public CheckoutProgressStep CheckoutProgressStep { get; set; }
     }

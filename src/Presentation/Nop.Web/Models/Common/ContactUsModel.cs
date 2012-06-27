@@ -7,7 +7,7 @@ using Nop.Web.Validators.Common;
 namespace Nop.Web.Models.Common
 {
     [Validator(typeof(ContactUsValidator))]
-    public class ContactUsModel : BaseNopModel
+    public partial class ContactUsModel : BaseNopModel
     {
         [AllowHtml]
         [NopResourceDisplayName("ContactUs.Email")]

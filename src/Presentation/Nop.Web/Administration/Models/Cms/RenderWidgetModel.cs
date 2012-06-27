@@ -3,7 +3,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.Cms
 {
-    public class RenderWidgetModel : BaseNopModel
+    public partial class RenderWidgetModel : BaseNopModel
     {
         public string ActionName { get; set; }
         public string ControllerName { get; set; }

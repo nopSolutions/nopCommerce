@@ -2,7 +2,7 @@
 
 namespace Nop.Web.Models.Customer
 {
-    public class ForumSubscriptionModel : BaseNopEntityModel
+    public partial class ForumSubscriptionModel : BaseNopEntityModel
     {
         public int ForumId { get; set; }
         public int ForumTopicId { get; set; }

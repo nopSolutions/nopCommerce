@@ -5,7 +5,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.Orders
 {
-    public class GiftCardListModel : BaseNopModel
+    public partial class GiftCardListModel : BaseNopModel
     {
         public GiftCardListModel()
         {

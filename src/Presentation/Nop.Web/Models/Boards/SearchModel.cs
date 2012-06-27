@@ -3,7 +3,7 @@ using System.Web.Mvc;
 
 namespace Nop.Web.Models.Boards
 {
-    public class SearchModel
+    public partial class SearchModel
     {
         public SearchModel()
         {

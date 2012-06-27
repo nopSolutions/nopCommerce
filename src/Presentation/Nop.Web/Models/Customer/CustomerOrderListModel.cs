@@ -4,7 +4,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Web.Models.Customer
 {
-    public class CustomerOrderListModel : BaseNopModel
+    public partial class CustomerOrderListModel : BaseNopModel
     {
         public CustomerOrderListModel()
         {
@@ -21,14 +21,14 @@ namespace Nop.Web.Models.Customer
 
 
         #region Nested classes
-        public class OrderDetailsModel : BaseNopEntityModel
+        public partial class OrderDetailsModel : BaseNopEntityModel
         {
             public string OrderTotal { get; set; }
             public bool IsReturnRequestAllowed { get; set; }
             public string OrderStatus { get; set; }
             public DateTime CreatedOn { get; set; }
         }
-        public class RecurringOrderModel : BaseNopEntityModel
+        public partial class RecurringOrderModel : BaseNopEntityModel
         {
             public string StartDate { get; set; }
             public string CycleInfo { get; set; }

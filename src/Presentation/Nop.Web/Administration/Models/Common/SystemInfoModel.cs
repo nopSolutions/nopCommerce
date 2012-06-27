@@ -5,7 +5,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.Common
 {
-    public class SystemInfoModel : BaseNopModel
+    public partial class SystemInfoModel : BaseNopModel
     {
         public SystemInfoModel()
         {
@@ -36,7 +36,7 @@ namespace Nop.Admin.Models.Common
         [NopResourceDisplayName("Admin.System.SystemInfo.LoadedAssemblies")]
         public IList<LoadedAssembly> LoadedAssemblies { get; set; }
 
-        public class LoadedAssembly : BaseNopModel
+        public partial class LoadedAssembly : BaseNopModel
         {
             public string FullName { get; set; }
             public string Location { get; set; }

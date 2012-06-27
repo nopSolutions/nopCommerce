@@ -8,7 +8,7 @@ using Nop.Web.Validators.Customer;
 namespace Nop.Web.Models.Customer
 {
     [Validator(typeof(PasswordRecoveryConfirmValidator))]
-    public class PasswordRecoveryConfirmModel : BaseNopModel
+    public partial class PasswordRecoveryConfirmModel : BaseNopModel
     {
         [AllowHtml]
         [DataType(DataType.Password)]

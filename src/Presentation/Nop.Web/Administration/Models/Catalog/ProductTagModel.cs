@@ -9,7 +9,7 @@ using Nop.Web.Framework.Mvc;
 namespace Nop.Admin.Models.Catalog
 {
     [Validator(typeof(ProductTagValidator))]
-    public class ProductTagModel : BaseNopEntityModel, ILocalizedModel<ProductTagLocalizedModel>
+    public partial class ProductTagModel : BaseNopEntityModel, ILocalizedModel<ProductTagLocalizedModel>
     {
         public ProductTagModel()
         {
@@ -25,7 +25,7 @@ namespace Nop.Admin.Models.Catalog
         public IList<ProductTagLocalizedModel> Locales { get; set; }
     }
 
-    public class ProductTagLocalizedModel : ILocalizedModelLocal
+    public partial class ProductTagLocalizedModel : ILocalizedModelLocal
     {
         public int LanguageId { get; set; }
 

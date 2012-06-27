@@ -2,7 +2,7 @@
 
 namespace Nop.Web.Models.Boards
 {
-    public class ForumTopicRowModel
+    public partial class ForumTopicRowModel
     {
         public int Id { get; set; }
         public string Subject { get; set; }

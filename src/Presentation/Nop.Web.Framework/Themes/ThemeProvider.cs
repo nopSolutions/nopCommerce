@@ -8,7 +8,7 @@ using Nop.Core.Configuration;
 
 namespace Nop.Web.Framework.Themes
 {
-    public class ThemeProvider : IThemeProvider
+    public partial class ThemeProvider : IThemeProvider
     {
 		#region Fields
 

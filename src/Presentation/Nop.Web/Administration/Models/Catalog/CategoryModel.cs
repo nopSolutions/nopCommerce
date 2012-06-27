@@ -13,7 +13,7 @@ using Telerik.Web.Mvc.UI;
 namespace Nop.Admin.Models.Catalog
 {
     [Validator(typeof(CategoryValidator))]
-    public class CategoryModel : BaseNopEntityModel, ILocalizedModel<CategoryLocalizedModel>
+    public partial class CategoryModel : BaseNopEntityModel, ILocalizedModel<CategoryLocalizedModel>
     {
         public CategoryModel()
         {
@@ -102,7 +102,7 @@ namespace Nop.Admin.Models.Catalog
 
         #region Nested classes
 
-        public class CategoryProductModel : BaseNopEntityModel
+        public partial class CategoryProductModel : BaseNopEntityModel
         {
             public int CategoryId { get; set; }
 
@@ -121,7 +121,7 @@ namespace Nop.Admin.Models.Catalog
             public int DisplayOrder1 { get; set; }
         }
 
-        public class AddCategoryProductModel : BaseNopModel
+        public partial class AddCategoryProductModel : BaseNopModel
         {
             public AddCategoryProductModel()
             {
@@ -149,7 +149,7 @@ namespace Nop.Admin.Models.Catalog
         #endregion
     }
 
-    public class CategoryLocalizedModel : ILocalizedModelLocal
+    public partial class CategoryLocalizedModel : ILocalizedModelLocal
     {
         public int LanguageId { get; set; }
 

@@ -6,7 +6,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.Messages
 {
-    public class QueuedEmailListModel : BaseNopModel
+    public partial class QueuedEmailListModel : BaseNopModel
     {
         public QueuedEmailListModel()
         {

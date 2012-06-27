@@ -5,7 +5,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.Catalog
 {
-    public class ProductReviewListModel : BaseNopModel
+    public partial class ProductReviewListModel : BaseNopModel
     {
         [NopResourceDisplayName("Admin.Catalog.ProductReviews.List.CreatedOnFrom")]
         [UIHint("DateNullable")]

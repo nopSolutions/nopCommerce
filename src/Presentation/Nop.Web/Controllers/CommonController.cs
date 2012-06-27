@@ -35,7 +35,7 @@ using Nop.Web.Models.Common;
 
 namespace Nop.Web.Controllers
 {
-    public class CommonController : BaseNopController
+    public partial class CommonController : BaseNopController
     {
         private readonly ICategoryService _categoryService;
         private readonly IProductService _productService;
@@ -564,7 +564,7 @@ namespace Nop.Web.Controllers
         {
             var model = new FaviconModel()
             {
-                Uploaded = System.IO.File.Exists(Request.PhysicalApplicationPath + "favicon.ico"),
+                Uploaded = System.IO.File.Exists(System.IO.Path.Combine(Request.PhysicalApplicationPath, "favicon.ico")),
                 FaviconUrl = _webHelper.GetStoreLocation() + "favicon.ico"
             };
             

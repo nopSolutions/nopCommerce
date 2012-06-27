@@ -4,7 +4,7 @@ using Nop.Web.Framework;
 
 namespace Nop.Admin.Models.Settings
 {
-    public class ForumSettingsModel
+    public partial class ForumSettingsModel
     {
         [NopResourceDisplayName("Admin.Configuration.Settings.Forums.ForumsEnabled")]
         public bool ForumsEnabled { get; set; }

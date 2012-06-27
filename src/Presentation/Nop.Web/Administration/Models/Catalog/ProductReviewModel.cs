@@ -8,7 +8,7 @@ using Nop.Web.Framework.Mvc;
 namespace Nop.Admin.Models.Catalog
 {
     [Validator(typeof(ProductReviewValidator))]
-    public class ProductReviewModel : BaseNopEntityModel
+    public partial class ProductReviewModel : BaseNopEntityModel
     {
         [NopResourceDisplayName("Admin.Catalog.ProductReviews.Fields.Product")]
         public int ProductId { get; set; }

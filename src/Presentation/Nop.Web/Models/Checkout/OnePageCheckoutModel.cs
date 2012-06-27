@@ -2,7 +2,7 @@
 
 namespace Nop.Web.Models.Checkout
 {
-    public class OnePageCheckoutModel : BaseNopModel
+    public partial class OnePageCheckoutModel : BaseNopModel
     {
         public bool ShippingRequired { get; set; }
     }

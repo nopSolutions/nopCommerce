@@ -7,7 +7,7 @@ using Nop.Web.Validators.Catalog;
 namespace Nop.Web.Models.Catalog
 {
     [Validator(typeof(ProductEmailAFriendValidator))]
-    public class ProductEmailAFriendModel : BaseNopModel
+    public partial class ProductEmailAFriendModel : BaseNopModel
     {
         public int ProductId { get; set; }
 

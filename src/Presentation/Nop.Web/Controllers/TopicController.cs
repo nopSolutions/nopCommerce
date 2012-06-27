@@ -9,7 +9,7 @@ using Nop.Web.Models.Topics;
 
 namespace Nop.Web.Controllers
 {
-    public class TopicController : BaseNopController
+    public partial class TopicController : BaseNopController
     {
         #region Fields
 

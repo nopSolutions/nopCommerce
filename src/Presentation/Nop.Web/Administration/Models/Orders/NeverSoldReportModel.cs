@@ -5,7 +5,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.Orders
 {
-    public class NeverSoldReportModel : BaseNopModel
+    public partial class NeverSoldReportModel : BaseNopModel
     {
         [NopResourceDisplayName("Admin.SalesReport.NeverSold.StartDate")]
         [UIHint("DateNullable")]

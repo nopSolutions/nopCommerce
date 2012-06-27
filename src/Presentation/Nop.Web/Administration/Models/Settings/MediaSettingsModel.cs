@@ -3,7 +3,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.Settings
 {
-    public class MediaSettingsModel : BaseNopModel
+    public partial class MediaSettingsModel : BaseNopModel
     {
         [NopResourceDisplayName("Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase")]
         public bool PicturesStoredIntoDatabase { get; set; }

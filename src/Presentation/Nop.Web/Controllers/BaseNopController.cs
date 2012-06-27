@@ -13,7 +13,7 @@ namespace Nop.Web.Controllers
     [CheckAffiliate]
     [StoreClosedAttribute]
     [PublicStoreAllowNavigation]
-    public abstract class BaseNopController : Controller
+    public abstract partial class BaseNopController : Controller
     {
         /// <summary>
         /// Log exception

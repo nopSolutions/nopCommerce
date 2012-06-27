@@ -9,7 +9,7 @@ using Nop.Web.Framework.Mvc;
 namespace Nop.Admin.Models.Catalog
 {
     [Validator(typeof(SpecificationAttributeValidator))]
-    public class SpecificationAttributeModel : BaseNopEntityModel, ILocalizedModel<SpecificationAttributeLocalizedModel>
+    public partial class SpecificationAttributeModel : BaseNopEntityModel, ILocalizedModel<SpecificationAttributeLocalizedModel>
     {
         public SpecificationAttributeModel()
         {
@@ -28,7 +28,7 @@ namespace Nop.Admin.Models.Catalog
 
     }
 
-    public class SpecificationAttributeLocalizedModel : ILocalizedModelLocal
+    public partial class SpecificationAttributeLocalizedModel : ILocalizedModelLocal
     {
         public int LanguageId { get; set; }
 

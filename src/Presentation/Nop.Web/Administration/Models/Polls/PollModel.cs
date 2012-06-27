@@ -9,7 +9,7 @@ using Nop.Web.Framework.Mvc;
 namespace Nop.Admin.Models.Polls
 {
     [Validator(typeof(PollValidator))]
-    public class PollModel : BaseNopEntityModel
+    public partial class PollModel : BaseNopEntityModel
     {
         [NopResourceDisplayName("Admin.ContentManagement.Polls.Fields.Language")]
         public int LanguageId { get; set; }

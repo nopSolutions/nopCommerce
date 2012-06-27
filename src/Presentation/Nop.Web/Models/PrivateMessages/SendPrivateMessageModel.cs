@@ -6,7 +6,7 @@ using Nop.Web.Validators.PrivateMessages;
 namespace Nop.Web.Models.PrivateMessages
 {
     [Validator(typeof(SendPrivateMessageValidator))]
-    public class SendPrivateMessageModel : BaseNopEntityModel
+    public partial class SendPrivateMessageModel : BaseNopEntityModel
     {
         public int ToCustomerId { get; set; }
         public string CustomerToName { get; set; }

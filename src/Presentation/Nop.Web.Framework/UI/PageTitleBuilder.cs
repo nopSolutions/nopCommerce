@@ -6,7 +6,7 @@ using Nop.Core.Domain.Common;
 
 namespace Nop.Web.Framework.UI
 {
-    public class PageTitleBuilder : IPageTitleBuilder
+    public partial class PageTitleBuilder : IPageTitleBuilder
     {
         private readonly SeoSettings _seoSettings;
         private readonly List<string> _titleParts;

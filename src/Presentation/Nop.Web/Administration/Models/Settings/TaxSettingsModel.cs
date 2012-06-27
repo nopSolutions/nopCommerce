@@ -6,7 +6,7 @@ using Nop.Web.Framework;
 
 namespace Nop.Admin.Models.Settings
 {
-    public class TaxSettingsModel
+    public partial class TaxSettingsModel
     {
         public TaxSettingsModel()
         {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Nop.Web.Models.Boards
 {
-    public class BoardsIndexModel
+    public partial class BoardsIndexModel
     {
         public BoardsIndexModel()
         {

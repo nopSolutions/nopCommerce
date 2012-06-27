@@ -8,7 +8,7 @@ using Nop.Web.Framework.Mvc;
 namespace Nop.Admin.Models.Orders
 {
     [Validator(typeof(RecurringPaymentValidator))]
-    public class RecurringPaymentModel : BaseNopEntityModel
+    public partial class RecurringPaymentModel : BaseNopEntityModel
     {
         public RecurringPaymentModel()
         {
@@ -61,7 +61,7 @@ namespace Nop.Admin.Models.Orders
         #region Nested classes
 
 
-        public class RecurringPaymentHistoryModel : BaseNopEntityModel
+        public partial class RecurringPaymentHistoryModel : BaseNopEntityModel
         {
             [NopResourceDisplayName("Admin.RecurringPayments.History.Order")]
             public int OrderId { get; set; }

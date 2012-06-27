@@ -5,7 +5,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.Payments
 {
-    public class PaymentMethodModel : BaseNopModel
+    public partial class PaymentMethodModel : BaseNopModel
     {
         [NopResourceDisplayName("Admin.Configuration.Payment.Methods.Fields.FriendlyName")]
         [AllowHtml]

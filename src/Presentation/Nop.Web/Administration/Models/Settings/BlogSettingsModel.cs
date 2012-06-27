@@ -3,7 +3,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.Settings
 {
-    public class BlogSettingsModel : BaseNopModel
+    public partial class BlogSettingsModel : BaseNopModel
     {
         [NopResourceDisplayName("Admin.Configuration.Settings.Blog.Enabled")]
         public bool Enabled { get; set; }

@@ -2,7 +2,7 @@
 
 namespace Nop.Admin.Models.Common
 {
-    public class SystemWarningModel : BaseNopModel
+    public partial class SystemWarningModel : BaseNopModel
     {
         public SystemWarningLevel Level { get; set; }
 

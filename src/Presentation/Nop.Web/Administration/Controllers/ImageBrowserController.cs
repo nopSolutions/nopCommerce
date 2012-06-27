@@ -6,7 +6,7 @@ using Telerik.Web.Mvc.UI;
 namespace Nop.Admin.Controllers
 {
     [AdminAuthorize]
-    public class ImageBrowserController : EditorFileBrowserController
+    public partial class ImageBrowserController : EditorFileBrowserController
     {
         private const string UploadedImagesFolder = "~/content/images/uploaded/";
 

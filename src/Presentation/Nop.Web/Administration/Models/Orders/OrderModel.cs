@@ -12,7 +12,7 @@ using Telerik.Web.Mvc;
 
 namespace Nop.Admin.Models.Orders
 {
-    public class OrderModel : BaseNopEntityModel
+    public partial class OrderModel : BaseNopEntityModel
     {
         public OrderModel()
         {
@@ -207,7 +207,7 @@ namespace Nop.Admin.Models.Orders
 
         #region Nested Classes
 
-        public class OrderProductVariantModel : BaseNopEntityModel
+        public partial class OrderProductVariantModel : BaseNopEntityModel
         {
             public OrderProductVariantModel()
             {
@@ -248,20 +248,20 @@ namespace Nop.Admin.Models.Orders
             public int? LicenseDownloadId { get; set; }
         }
 
-        public class TaxRate : BaseNopModel
+        public partial class TaxRate : BaseNopModel
         {
             public string Rate { get; set; }
             public string Value { get; set; }
         }
 
-        public class GiftCard : BaseNopModel
+        public partial class GiftCard : BaseNopModel
         {
             [NopResourceDisplayName("Admin.Orders.Fields.GiftCardInfo")]
             public string CouponCode { get; set; }
             public string Amount { get; set; }
         }
 
-        public class OrderNote : BaseNopEntityModel
+        public partial class OrderNote : BaseNopEntityModel
         {
             public int OrderId { get; set; }
             [NopResourceDisplayName("Admin.Orders.OrderNotes.Fields.DisplayToCustomer")]
@@ -272,7 +272,7 @@ namespace Nop.Admin.Models.Orders
             public DateTime CreatedOn { get; set; }
         }
 
-        public class UploadLicenseModel : BaseNopModel
+        public partial class UploadLicenseModel : BaseNopModel
         {
             public int OrderId { get; set; }
 
@@ -283,7 +283,7 @@ namespace Nop.Admin.Models.Orders
 
         }
 
-        public class AddOrderProductModel : BaseNopModel
+        public partial class AddOrderProductModel : BaseNopModel
         {
             public AddOrderProductModel()
             {
@@ -307,7 +307,7 @@ namespace Nop.Admin.Models.Orders
 
             #region Nested classes
             
-            public class ProductVariantLineModel : BaseNopEntityModel
+            public partial class ProductVariantLineModel : BaseNopEntityModel
             {
                 [NopResourceDisplayName("Admin.Orders.Products.AddNew.Name")]
                 [AllowHtml]
@@ -318,7 +318,7 @@ namespace Nop.Admin.Models.Orders
                 public string Sku { get; set; }
             }
 
-            public class ProductDetailsModel : BaseNopModel
+            public partial class ProductDetailsModel : BaseNopModel
             {
                 public ProductDetailsModel()
                 {
@@ -355,7 +355,7 @@ namespace Nop.Admin.Models.Orders
 
             }
 
-            public class ProductVariantAttributeModel : BaseNopEntityModel
+            public partial class ProductVariantAttributeModel : BaseNopEntityModel
             {
                 public ProductVariantAttributeModel()
                 {
@@ -375,7 +375,7 @@ namespace Nop.Admin.Models.Orders
                 public IList<ProductVariantAttributeValueModel> Values { get; set; }
             }
 
-            public class ProductVariantAttributeValueModel : BaseNopEntityModel
+            public partial class ProductVariantAttributeValueModel : BaseNopEntityModel
             {
                 public string Name { get; set; }
 
@@ -383,7 +383,7 @@ namespace Nop.Admin.Models.Orders
             }
 
 
-            public class GiftCardModel : BaseNopModel
+            public partial class GiftCardModel : BaseNopModel
             {
                 public bool IsGiftCard { get; set; }
 

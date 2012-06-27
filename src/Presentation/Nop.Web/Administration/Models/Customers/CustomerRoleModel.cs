@@ -7,7 +7,7 @@ using Nop.Web.Framework.Mvc;
 namespace Nop.Admin.Models.Customers
 {
     [Validator(typeof(CustomerRoleValidator))]
-    public class CustomerRoleModel : BaseNopEntityModel
+    public partial class CustomerRoleModel : BaseNopEntityModel
     {
         [NopResourceDisplayName("Admin.Customers.CustomerRoles.Fields.Name")]
         [AllowHtml]

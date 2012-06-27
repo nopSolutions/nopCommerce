@@ -3,7 +3,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.Customers
 {
-    public class BestCustomerReportLineModel : BaseNopModel
+    public partial class BestCustomerReportLineModel : BaseNopModel
     {
         public int CustomerId { get; set; }
         [NopResourceDisplayName("Admin.Customers.Reports.BestBy.Fields.Customer")]

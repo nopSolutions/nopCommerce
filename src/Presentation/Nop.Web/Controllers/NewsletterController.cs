@@ -9,7 +9,7 @@ using Nop.Web.Models.Newsletter;
 
 namespace Nop.Web.Controllers
 {
-    public class NewsletterController : BaseNopController
+    public partial class NewsletterController : BaseNopController
     {
         private readonly ILocalizationService _localizationService;
         private readonly IWorkContext _workContext;

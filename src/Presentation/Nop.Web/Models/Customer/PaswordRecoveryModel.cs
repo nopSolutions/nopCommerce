@@ -7,7 +7,7 @@ using Nop.Web.Validators.Customer;
 namespace Nop.Web.Models.Customer
 {
     [Validator(typeof(PasswordRecoveryValidator))]
-    public class PasswordRecoveryModel : BaseNopModel
+    public partial class PasswordRecoveryModel : BaseNopModel
     {
         [AllowHtml]
         [NopResourceDisplayName("Account.PasswordRecovery.Email")]

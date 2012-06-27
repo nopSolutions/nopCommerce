@@ -12,7 +12,7 @@ using Nop.Web.Framework.Controllers;
 namespace Nop.Admin.Controllers
 {
     [AdminAuthorize]
-    public class HomeController : BaseNopController
+    public partial class HomeController : BaseNopController
     {
         #region Fields
         private readonly StoreInformationSettings _storeInformationSettings;

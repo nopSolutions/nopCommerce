@@ -3,7 +3,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Web.Models.Common
 {
-    public class StoreThemeSelectorModel : BaseNopModel
+    public partial class StoreThemeSelectorModel : BaseNopModel
     {
         public StoreThemeSelectorModel()
         {

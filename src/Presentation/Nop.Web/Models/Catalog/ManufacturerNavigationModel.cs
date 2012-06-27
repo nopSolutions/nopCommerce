@@ -3,7 +3,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Web.Models.Catalog
 {
-    public class ManufacturerNavigationModel : BaseNopModel
+    public partial class ManufacturerNavigationModel : BaseNopModel
     {
         public ManufacturerNavigationModel()
         {
@@ -15,7 +15,7 @@ namespace Nop.Web.Models.Catalog
         public int TotalManufacturers { get; set; }
     }
 
-    public class ManufacturerBriefInfoModel : BaseNopEntityModel
+    public partial class ManufacturerBriefInfoModel : BaseNopEntityModel
     {
         public string Name { get; set; }
 

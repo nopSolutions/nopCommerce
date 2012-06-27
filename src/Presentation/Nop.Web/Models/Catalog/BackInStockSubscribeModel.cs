@@ -2,7 +2,7 @@
 
 namespace Nop.Web.Models.Catalog
 {
-    public class BackInStockSubscribeModel : BaseNopModel
+    public partial class BackInStockSubscribeModel : BaseNopModel
     {
         public int ProductId { get; set; }
         public string ProductName { get; set; }

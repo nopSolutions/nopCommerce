@@ -2,7 +2,7 @@
 
 namespace Nop.Admin.Models.Settings
 {
-    public class ShoppingCartSettingsModel
+    public partial class ShoppingCartSettingsModel
     {
         [NopResourceDisplayName("Admin.Configuration.Settings.ShoppingCart.DisplayCartAfterAddingProduct")]
         public bool DisplayCartAfterAddingProduct { get; set; }

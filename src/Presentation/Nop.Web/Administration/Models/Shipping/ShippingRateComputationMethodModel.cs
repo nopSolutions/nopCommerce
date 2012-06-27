@@ -5,7 +5,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.Shipping
 {
-    public class ShippingRateComputationMethodModel : BaseNopModel
+    public partial class ShippingRateComputationMethodModel : BaseNopModel
     {
         [NopResourceDisplayName("Admin.Configuration.Shipping.Providers.Fields.FriendlyName")]
         [AllowHtml]

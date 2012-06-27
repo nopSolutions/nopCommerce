@@ -4,7 +4,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Web.Models.Boards
 {
-    public class TopicMoveModel : BaseNopEntityModel
+    public partial class TopicMoveModel : BaseNopEntityModel
     {
         public TopicMoveModel()
         {

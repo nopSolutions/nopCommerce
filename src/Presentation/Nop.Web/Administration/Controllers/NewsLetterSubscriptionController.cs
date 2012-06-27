@@ -17,7 +17,7 @@ using Telerik.Web.Mvc;
 namespace Nop.Admin.Controllers
 {
 	[AdminAuthorize]
-	public class NewsLetterSubscriptionController : BaseNopController
+	public partial class NewsLetterSubscriptionController : BaseNopController
 	{
 		private readonly INewsLetterSubscriptionService _newsLetterSubscriptionService;
 		private readonly IDateTimeHelper _dateTimeHelper;

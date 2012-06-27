@@ -3,7 +3,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.Plugins
 {
-    public class MiscPluginModel : BaseNopModel
+    public partial class MiscPluginModel : BaseNopModel
     {
         public string FriendlyName { get; set; }
 

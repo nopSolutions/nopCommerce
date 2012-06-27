@@ -5,7 +5,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.Cms
 {
-    public class WidgetModel : BaseNopModel
+    public partial class WidgetModel : BaseNopModel
     {
         [NopResourceDisplayName("Admin.ContentManagement.Widgets.Fields.FriendlyName")]
         [AllowHtml]

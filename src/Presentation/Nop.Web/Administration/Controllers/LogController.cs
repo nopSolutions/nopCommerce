@@ -16,7 +16,7 @@ using Telerik.Web.Mvc;
 namespace Nop.Admin.Controllers
 {
     [AdminAuthorize]
-    public class LogController : BaseNopController
+    public partial class LogController : BaseNopController
     {
         private readonly ILogger _logger;
         private readonly IWorkContext _workContext;

@@ -7,7 +7,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.Logging
 {
-    public class LogListModel : BaseNopModel
+    public partial class LogListModel : BaseNopModel
     {
         public LogListModel()
         {

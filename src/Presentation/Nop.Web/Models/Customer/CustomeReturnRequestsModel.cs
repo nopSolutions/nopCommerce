@@ -4,7 +4,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Web.Models.Customer
 {
-    public class CustomeReturnRequestsModel : BaseNopModel
+    public partial class CustomeReturnRequestsModel : BaseNopModel
     {
         public CustomeReturnRequestsModel()
         {
@@ -15,7 +15,7 @@ namespace Nop.Web.Models.Customer
         public CustomerNavigationModel NavigationModel { get; set; }
 
         #region Nested classes
-        public class ReturnRequestModel : BaseNopEntityModel
+        public partial class ReturnRequestModel : BaseNopEntityModel
         {
             public string ReturnRequestStatus { get; set; }
             public int ProductId { get; set; }

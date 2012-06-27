@@ -5,7 +5,7 @@ using Telerik.Web.Mvc;
 
 namespace Nop.Admin.Models.Catalog
 {
-    public class CategoryListModel : BaseNopModel
+    public partial class CategoryListModel : BaseNopModel
     {
         [NopResourceDisplayName("Admin.Catalog.Categories.List.SearchCategoryName")]
         [AllowHtml]

@@ -3,7 +3,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.Customers
 {
-    public class RegisteredCustomerReportLineModel : BaseNopModel
+    public partial class RegisteredCustomerReportLineModel : BaseNopModel
     {
         [NopResourceDisplayName("Admin.Customers.Reports.RegisteredCustomers.Fields.Period")]
         public string Period { get; set; }

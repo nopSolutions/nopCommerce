@@ -9,7 +9,7 @@ using Nop.Web.Framework.Mvc;
 namespace Nop.Admin.Models.Shipping
 {
     [Validator(typeof(ShippingMethodValidator))]
-    public class ShippingMethodModel : BaseNopEntityModel, ILocalizedModel<ShippingMethodLocalizedModel>
+    public partial class ShippingMethodModel : BaseNopEntityModel, ILocalizedModel<ShippingMethodLocalizedModel>
     {
         public ShippingMethodModel()
         {
@@ -29,7 +29,7 @@ namespace Nop.Admin.Models.Shipping
         public IList<ShippingMethodLocalizedModel> Locales { get; set; }
     }
 
-    public class ShippingMethodLocalizedModel : ILocalizedModelLocal
+    public partial class ShippingMethodLocalizedModel : ILocalizedModelLocal
     {
         public int LanguageId { get; set; }
 

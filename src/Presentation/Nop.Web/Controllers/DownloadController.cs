@@ -8,7 +8,7 @@ using Nop.Services.Orders;
 
 namespace Nop.Web.Controllers
 {
-    public class DownloadController : BaseNopController
+    public partial class DownloadController : BaseNopController
     {
         private readonly IDownloadService _downloadService;
         private readonly IProductService _productService;

@@ -7,7 +7,7 @@ using Nop.Web.Framework;
 namespace Nop.Admin.Models.Settings
 {
     [Validator(typeof(OrderSettingsValidator))]
-    public class OrderSettingsModel
+    public partial class OrderSettingsModel
     {
         public OrderSettingsModel()
         {

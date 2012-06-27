@@ -13,7 +13,7 @@ namespace Nop.Admin.Controllers
 {
     [NopHttpsRequirement(SslRequirement.Yes)]
     [AdminValidateIpAddress]
-    public abstract class BaseNopController : Controller
+    public abstract partial class BaseNopController : Controller
     {
         /// <summary>
         /// Initialize controller

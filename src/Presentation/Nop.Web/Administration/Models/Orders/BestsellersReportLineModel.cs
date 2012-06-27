@@ -3,7 +3,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.Orders
 {
-    public class BestsellersReportLineModel : BaseNopModel
+    public partial class BestsellersReportLineModel : BaseNopModel
     {
         public int ProductVariantId { get; set; }
         [NopResourceDisplayName("Admin.SalesReport.Bestsellers.Fields.Name")]

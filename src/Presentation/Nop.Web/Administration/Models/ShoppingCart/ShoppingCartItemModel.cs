@@ -4,7 +4,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.ShoppingCart
 {
-    public class ShoppingCartItemModel : BaseNopEntityModel
+    public partial class ShoppingCartItemModel : BaseNopEntityModel
     {
         [NopResourceDisplayName("Admin.CurrentCarts.Product")]
         public int ProductVariantId { get; set; }

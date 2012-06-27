@@ -2,7 +2,7 @@
 
 namespace Nop.Web.Models.Topics
 {
-    public class TopicModel : BaseNopEntityModel
+    public partial class TopicModel : BaseNopEntityModel
     {
         public string SystemName { get; set; }
 

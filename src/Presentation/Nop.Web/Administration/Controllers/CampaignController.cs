@@ -16,7 +16,7 @@ using Telerik.Web.Mvc;
 namespace Nop.Admin.Controllers
 {
 	[AdminAuthorize]
-	public class CampaignController : BaseNopController
+	public partial class CampaignController : BaseNopController
 	{
         private readonly ICampaignService _campaignService;
         private readonly IDateTimeHelper _dateTimeHelper;

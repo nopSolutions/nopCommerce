@@ -5,7 +5,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.News
 {
-    public class NewsCommentModel : BaseNopEntityModel
+    public partial class NewsCommentModel : BaseNopEntityModel
     {
         [NopResourceDisplayName("Admin.ContentManagement.News.Comments.Fields.NewsItem")]
         public int NewsItemId { get; set; }

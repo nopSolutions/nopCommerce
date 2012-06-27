@@ -11,7 +11,7 @@ using Nop.Web.Framework.Controllers;
 namespace Nop.Admin.Controllers
 {
     [AdminAuthorize]
-    public class ForumController : BaseNopController
+    public partial class ForumController : BaseNopController
     {
         private readonly IForumService _forumService;
         private readonly IDateTimeHelper _dateTimeHelper;

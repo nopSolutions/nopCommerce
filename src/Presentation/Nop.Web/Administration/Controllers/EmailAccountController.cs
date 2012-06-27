@@ -16,7 +16,7 @@ using Telerik.Web.Mvc;
 namespace Nop.Admin.Controllers
 {
 	[AdminAuthorize]
-	public class EmailAccountController : BaseNopController
+	public partial class EmailAccountController : BaseNopController
 	{
         private readonly IEmailAccountService _emailAccountService;
         private readonly ILocalizationService _localizationService;

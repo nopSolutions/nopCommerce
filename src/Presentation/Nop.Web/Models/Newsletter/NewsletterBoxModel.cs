@@ -5,7 +5,7 @@ using Nop.Web.Validators.Newsletter;
 namespace Nop.Web.Models.Newsletter
 {
     [Validator(typeof(NewsletterBoxValidator))]
-    public class NewsletterBoxModel : BaseNopModel
+    public partial class NewsletterBoxModel : BaseNopModel
     {
         public string Email { get; set; }
     }

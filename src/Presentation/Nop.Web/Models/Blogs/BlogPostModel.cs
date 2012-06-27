@@ -7,7 +7,7 @@ using Nop.Web.Validators.Blogs;
 namespace Nop.Web.Models.Blogs
 {
     [Validator(typeof(BlogPostValidator))]
-    public class BlogPostModel : BaseNopEntityModel
+    public partial class BlogPostModel : BaseNopEntityModel
     {
         public BlogPostModel()
         {

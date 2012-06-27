@@ -9,7 +9,7 @@ using Nop.Web.Framework.Mvc;
 namespace Nop.Admin.Models.Messages
 {
     [Validator(typeof(MessageTemplateValidator))]
-    public class MessageTemplateModel : BaseNopEntityModel, ILocalizedModel<MessageTemplateLocalizedModel>
+    public partial class MessageTemplateModel : BaseNopEntityModel, ILocalizedModel<MessageTemplateLocalizedModel>
     {
         public MessageTemplateModel()
         {
@@ -48,7 +48,7 @@ namespace Nop.Admin.Models.Messages
         public IList<EmailAccountModel> AvailableEmailAccounts { get; set; }
     }
 
-    public class MessageTemplateLocalizedModel : ILocalizedModelLocal
+    public partial class MessageTemplateLocalizedModel : ILocalizedModelLocal
     {
         public int LanguageId { get; set; }
 

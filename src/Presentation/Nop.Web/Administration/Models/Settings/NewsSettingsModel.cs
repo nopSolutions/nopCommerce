@@ -2,7 +2,7 @@
 
 namespace Nop.Admin.Models.Settings
 {
-    public class NewsSettingsModel
+    public partial class NewsSettingsModel
     {
         [NopResourceDisplayName("Admin.Configuration.Settings.News.Enabled")]
         public bool Enabled { get; set; }

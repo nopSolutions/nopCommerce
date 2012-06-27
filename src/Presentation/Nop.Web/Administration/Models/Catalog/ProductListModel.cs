@@ -6,7 +6,7 @@ using Telerik.Web.Mvc;
 
 namespace Nop.Admin.Models.Catalog
 {
-    public class ProductListModel : BaseNopModel
+    public partial class ProductListModel : BaseNopModel
     {
         public ProductListModel()
         {

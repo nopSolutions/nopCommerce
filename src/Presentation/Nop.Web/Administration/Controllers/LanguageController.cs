@@ -18,7 +18,7 @@ using Telerik.Web.Mvc.UI;
 namespace Nop.Admin.Controllers
 {
 	[AdminAuthorize]
-    public class LanguageController : BaseNopController
+    public partial class LanguageController : BaseNopController
 	{
 		#region Fields
 

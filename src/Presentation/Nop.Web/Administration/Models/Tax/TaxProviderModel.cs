@@ -5,7 +5,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.Tax
 {
-    public class TaxProviderModel : BaseNopModel
+    public partial class TaxProviderModel : BaseNopModel
     {
         [NopResourceDisplayName("Admin.Configuration.Tax.Providers.Fields.FriendlyName")]
         [AllowHtml]

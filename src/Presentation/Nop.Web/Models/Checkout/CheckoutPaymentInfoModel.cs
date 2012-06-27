@@ -3,7 +3,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Web.Models.Checkout
 {
-    public class CheckoutPaymentInfoModel : BaseNopModel
+    public partial class CheckoutPaymentInfoModel : BaseNopModel
     {
         public string PaymentInfoActionName { get; set; }
         public string PaymentInfoControllerName { get; set; }

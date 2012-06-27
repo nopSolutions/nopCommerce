@@ -2,7 +2,7 @@
 
 namespace Nop.Web.Models.Customer
 {
-    public class CustomerNavigationModel : BaseNopModel
+    public partial class CustomerNavigationModel : BaseNopModel
     {
         public bool HideInfo { get; set; }
         public bool HideAddresses { get; set; }

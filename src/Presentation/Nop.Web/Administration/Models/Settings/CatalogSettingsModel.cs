@@ -2,7 +2,7 @@
 
 namespace Nop.Admin.Models.Settings
 {
-    public class CatalogSettingsModel
+    public partial class CatalogSettingsModel
     {
         [NopResourceDisplayName("Admin.Configuration.Settings.Catalog.ShowProductSku")]
         public bool ShowProductSku { get; set; }

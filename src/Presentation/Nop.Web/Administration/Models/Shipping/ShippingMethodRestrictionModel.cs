@@ -4,7 +4,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.Shipping
 {
-    public class ShippingMethodRestrictionModel : BaseNopModel
+    public partial class ShippingMethodRestrictionModel : BaseNopModel
     {
         public ShippingMethodRestrictionModel()
         {

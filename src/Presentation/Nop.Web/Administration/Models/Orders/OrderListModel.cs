@@ -7,7 +7,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.Orders
 {
-    public class OrderListModel : BaseNopModel
+    public partial class OrderListModel : BaseNopModel
     {
         public OrderListModel()
         {

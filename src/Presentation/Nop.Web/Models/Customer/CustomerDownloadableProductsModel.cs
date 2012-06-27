@@ -4,7 +4,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Web.Models.Customer
 {
-    public class CustomerDownloadableProductsModel : BaseNopModel
+    public partial class CustomerDownloadableProductsModel : BaseNopModel
     {
         public CustomerDownloadableProductsModel()
         {
@@ -15,7 +15,7 @@ namespace Nop.Web.Models.Customer
         public CustomerNavigationModel NavigationModel { get; set; }
 
         #region Nested classes
-        public class DownloadableProductsModel : BaseNopModel
+        public partial class DownloadableProductsModel : BaseNopModel
         {
             public Guid OrderProductVariantGuid { get; set; }
 
@@ -34,7 +34,7 @@ namespace Nop.Web.Models.Customer
         #endregion
     }
 
-    public class UserAgreementModel : BaseNopModel
+    public partial class UserAgreementModel : BaseNopModel
     {
         public Guid OrderProductVariantGuid { get; set; }
         public string UserAgreementText { get; set; }

@@ -9,7 +9,7 @@ using Nop.Web.Framework.Mvc;
 namespace Nop.Admin.Models.Topics
 {
     [Validator(typeof(TopicValidator))]
-    public class TopicModel : BaseNopEntityModel, ILocalizedModel<TopicLocalizedModel>
+    public partial class TopicModel : BaseNopEntityModel, ILocalizedModel<TopicLocalizedModel>
     {
         public TopicModel()
         {
@@ -56,7 +56,7 @@ namespace Nop.Admin.Models.Topics
         public IList<TopicLocalizedModel> Locales { get; set; }
     }
 
-    public class TopicLocalizedModel : ILocalizedModelLocal
+    public partial class TopicLocalizedModel : ILocalizedModelLocal
     {
         public int LanguageId { get; set; }
 

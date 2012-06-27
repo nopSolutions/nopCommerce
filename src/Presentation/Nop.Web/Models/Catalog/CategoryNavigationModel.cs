@@ -2,7 +2,7 @@
 
 namespace Nop.Web.Models.Catalog
 {
-    public class CategoryNavigationModel : BaseNopEntityModel
+    public partial class CategoryNavigationModel : BaseNopEntityModel
     {
         public string Name { get; set; }
 

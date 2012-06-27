@@ -5,7 +5,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.Orders
 {
-    public class ShipmentListModel : BaseNopModel
+    public partial class ShipmentListModel : BaseNopModel
     {
         [NopResourceDisplayName("Admin.Orders.Shipments.List.StartDate")]
         [UIHint("DateNullable")]

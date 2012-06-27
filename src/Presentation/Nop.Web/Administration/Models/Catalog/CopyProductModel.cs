@@ -4,7 +4,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.Catalog
 {
-    public class CopyProductModel : BaseNopEntityModel
+    public partial class CopyProductModel : BaseNopEntityModel
     {
 
         [NopResourceDisplayName("Admin.Catalog.Products.Copy.Name")]

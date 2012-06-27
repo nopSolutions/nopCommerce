@@ -7,7 +7,7 @@ using Nop.Web.Framework.Mvc;
 namespace Nop.Admin.Models.Settings
 {
     [Validator(typeof(SettingValidator))]
-    public class SettingModel : BaseNopEntityModel
+    public partial class SettingModel : BaseNopEntityModel
     {
         [NopResourceDisplayName("Admin.Configuration.Settings.AllSettings.Fields.Name")]
         [AllowHtml]

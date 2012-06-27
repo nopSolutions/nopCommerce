@@ -7,7 +7,7 @@ using Nop.Web.Validators.News;
 namespace Nop.Web.Models.News
 {
     [Validator(typeof(NewsItemValidator))]
-    public class NewsItemModel : BaseNopEntityModel
+    public partial class NewsItemModel : BaseNopEntityModel
     {
         public NewsItemModel()
         {

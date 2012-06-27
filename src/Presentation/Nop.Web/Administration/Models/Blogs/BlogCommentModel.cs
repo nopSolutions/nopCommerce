@@ -5,7 +5,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.Blogs
 {
-    public class BlogCommentModel : BaseNopEntityModel
+    public partial class BlogCommentModel : BaseNopEntityModel
     {
         [NopResourceDisplayName("Admin.ContentManagement.Blog.Comments.Fields.BlogPost")]
         public int BlogPostId { get; set; }

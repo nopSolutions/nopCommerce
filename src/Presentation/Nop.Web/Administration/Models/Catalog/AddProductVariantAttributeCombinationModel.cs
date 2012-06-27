@@ -5,7 +5,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.Catalog
 {
-    public class AddProductVariantAttributeCombinationModel : BaseNopModel
+    public partial class AddProductVariantAttributeCombinationModel : BaseNopModel
     {
         public AddProductVariantAttributeCombinationModel()
         {
@@ -27,7 +27,7 @@ namespace Nop.Admin.Models.Catalog
 
         #region Nested classes
 
-        public class ProductVariantAttributeModel : BaseNopEntityModel
+        public partial class ProductVariantAttributeModel : BaseNopEntityModel
         {
             public ProductVariantAttributeModel()
             {
@@ -47,7 +47,7 @@ namespace Nop.Admin.Models.Catalog
             public IList<ProductVariantAttributeValueModel> Values { get; set; }
         }
 
-        public class ProductVariantAttributeValueModel : BaseNopEntityModel
+        public partial class ProductVariantAttributeValueModel : BaseNopEntityModel
         {
             public string Name { get; set; }
 

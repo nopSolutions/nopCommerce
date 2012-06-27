@@ -11,7 +11,7 @@ using Telerik.Web.Mvc;
 namespace Nop.Admin.Models.Catalog
 {
     [Validator(typeof(ProductValidator))]
-    public class ProductModel : BaseNopEntityModel, ILocalizedModel<ProductLocalizedModel>
+    public partial class ProductModel : BaseNopEntityModel, ILocalizedModel<ProductLocalizedModel>
     {
         public ProductModel()
         {
@@ -116,7 +116,7 @@ namespace Nop.Admin.Models.Catalog
         
         #region Nested classes
         
-        public class AddProductSpecificationAttributeModel : BaseNopEntityModel
+        public partial class AddProductSpecificationAttributeModel : BaseNopEntityModel
         {
             public AddProductSpecificationAttributeModel()
             {
@@ -143,7 +143,7 @@ namespace Nop.Admin.Models.Catalog
             public IList<SelectListItem> AvailableOptions { get; set; }
         }
         
-        public class ProductPictureModel : BaseNopEntityModel
+        public partial class ProductPictureModel : BaseNopEntityModel
         {
             public int ProductId { get; set; }
 
@@ -158,7 +158,7 @@ namespace Nop.Admin.Models.Catalog
             public int DisplayOrder { get; set; }
         }
         
-        public class ProductCategoryModel : BaseNopEntityModel
+        public partial class ProductCategoryModel : BaseNopEntityModel
         {
             [NopResourceDisplayName("Admin.Catalog.Products.Categories.Fields.Category")]
             [UIHint("ProductCategory")]
@@ -175,7 +175,7 @@ namespace Nop.Admin.Models.Catalog
             public int DisplayOrder { get; set; }
         }
 
-        public class ProductManufacturerModel : BaseNopEntityModel
+        public partial class ProductManufacturerModel : BaseNopEntityModel
         {
             [NopResourceDisplayName("Admin.Catalog.Products.Manufacturers.Fields.Manufacturer")]
             [UIHint("ProductManufacturer")]
@@ -192,7 +192,7 @@ namespace Nop.Admin.Models.Catalog
             public int DisplayOrder { get; set; }
         }
 
-        public class RelatedProductModel : BaseNopEntityModel
+        public partial class RelatedProductModel : BaseNopEntityModel
         {
             public int ProductId1 { get; set; }
 
@@ -205,7 +205,7 @@ namespace Nop.Admin.Models.Catalog
             public int DisplayOrder { get; set; }
         }
 
-        public class AddRelatedProductModel : BaseNopModel
+        public partial class AddRelatedProductModel : BaseNopModel
         {
             public AddRelatedProductModel()
             {
@@ -232,7 +232,7 @@ namespace Nop.Admin.Models.Catalog
             public int[] SelectedProductIds { get; set; }
         }
 
-        public class CrossSellProductModel : BaseNopEntityModel
+        public partial class CrossSellProductModel : BaseNopEntityModel
         {
             public int ProductId1 { get; set; }
 
@@ -242,7 +242,7 @@ namespace Nop.Admin.Models.Catalog
             public string Product2Name { get; set; }
         }
 
-        public class AddCrossSellProductModel : BaseNopModel
+        public partial class AddCrossSellProductModel : BaseNopModel
         {
             public AddCrossSellProductModel()
             {
@@ -272,7 +272,7 @@ namespace Nop.Admin.Models.Catalog
         #endregion
     }
 
-    public class ProductLocalizedModel : ILocalizedModelLocal
+    public partial class ProductLocalizedModel : ILocalizedModelLocal
     {
         public int LanguageId { get; set; }
 

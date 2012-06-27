@@ -9,7 +9,7 @@ using Nop.Web.Framework.Mvc;
 namespace Nop.Admin.Models.Plugins
 {
     [Validator(typeof(PluginValidator))]
-    public class PluginModel : BaseNopModel, ILocalizedModel<PluginLocalizedModel>
+    public partial class PluginModel : BaseNopModel, ILocalizedModel<PluginLocalizedModel>
     {
         public PluginModel()
         {
@@ -46,7 +46,7 @@ namespace Nop.Admin.Models.Plugins
 
         public IList<PluginLocalizedModel> Locales { get; set; }
     }
-    public class PluginLocalizedModel : ILocalizedModelLocal
+    public partial class PluginLocalizedModel : ILocalizedModelLocal
     {
         public int LanguageId { get; set; }
 

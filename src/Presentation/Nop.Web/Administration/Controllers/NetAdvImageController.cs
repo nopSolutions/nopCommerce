@@ -13,7 +13,7 @@ namespace Nop.Admin.Controllers
     /// Controller used by netadvimage plugin (TimyMVC)
     /// </summary>
     [AdminAuthorize]
-    public class NetAdvImageController : BaseNopController
+    public partial class NetAdvImageController : BaseNopController
     {
         private readonly INetAdvImageService _imageService;
         private readonly INetAdvDirectoryService _directoryService;

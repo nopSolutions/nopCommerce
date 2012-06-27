@@ -10,7 +10,7 @@ using Nop.Web.Framework.Mvc;
 namespace Nop.Admin.Models.Customers
 {
     [Validator(typeof(CustomerValidator))]
-    public class CustomerModel : BaseNopEntityModel
+    public partial class CustomerModel : BaseNopEntityModel
     {
         public CustomerModel()
         {
@@ -198,7 +198,7 @@ namespace Nop.Admin.Models.Customers
         
         #region Nested classes
 
-        public class AssociatedExternalAuthModel : BaseNopEntityModel
+        public partial class AssociatedExternalAuthModel : BaseNopEntityModel
         {
             [NopResourceDisplayName("Admin.Customers.Customers.AssociatedExternalAuth.Fields.Email")]
             public string Email { get; set; }
@@ -210,7 +210,7 @@ namespace Nop.Admin.Models.Customers
             public string AuthMethodName { get; set; }
         }
 
-        public class RewardPointsHistoryModel : BaseNopEntityModel
+        public partial class RewardPointsHistoryModel : BaseNopEntityModel
         {
             [NopResourceDisplayName("Admin.Customers.Customers.RewardPoints.Fields.Points")]
             public int Points { get; set; }
@@ -226,7 +226,7 @@ namespace Nop.Admin.Models.Customers
             public DateTime CreatedOn { get; set; }
         }
 
-        public class SendEmailModel : BaseNopModel
+        public partial class SendEmailModel : BaseNopModel
         {
             [NopResourceDisplayName("Admin.Customers.Customers.SendEmail.Subject")]
             [AllowHtml]
@@ -237,7 +237,7 @@ namespace Nop.Admin.Models.Customers
             public string Body { get; set; }
         }
 
-        public class SendPmModel : BaseNopModel
+        public partial class SendPmModel : BaseNopModel
         {
             [NopResourceDisplayName("Admin.Customers.Customers.SendPM.Subject")]
             public string Subject { get; set; }
@@ -246,7 +246,7 @@ namespace Nop.Admin.Models.Customers
             public string Message { get; set; }
         }
 
-        public class OrderModel : BaseNopEntityModel
+        public partial class OrderModel : BaseNopEntityModel
         {
             [NopResourceDisplayName("Admin.Customers.Customers.Orders.ID")]
             public override int Id { get; set; }

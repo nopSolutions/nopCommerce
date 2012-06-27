@@ -8,7 +8,7 @@ using Nop.Web.Framework.Mvc;
 namespace Nop.Admin.Models.Orders
 {
     [Validator(typeof(ReturnRequestValidator))]
-    public class ReturnRequestModel : BaseNopEntityModel
+    public partial class ReturnRequestModel : BaseNopEntityModel
     {
         [NopResourceDisplayName("Admin.ReturnRequests.Fields.ID")]
         public override int Id { get; set; }

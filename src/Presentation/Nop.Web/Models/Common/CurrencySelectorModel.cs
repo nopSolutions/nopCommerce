@@ -3,7 +3,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Web.Models.Common
 {
-    public class CurrencySelectorModel : BaseNopModel
+    public partial class CurrencySelectorModel : BaseNopModel
     {
         public CurrencySelectorModel()
         {

@@ -4,7 +4,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.Security
 {
-    public class PermissionMappingModel : BaseNopModel
+    public partial class PermissionMappingModel : BaseNopModel
     {
         public PermissionMappingModel()
         {

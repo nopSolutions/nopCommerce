@@ -4,7 +4,7 @@ using Nop.Web.Framework;
 
 namespace Nop.Admin.Models.Settings
 {
-    public class CustomerUserSettingsModel
+    public partial class CustomerUserSettingsModel
     {
         public CustomerUserSettingsModel()
         {
@@ -18,7 +18,7 @@ namespace Nop.Admin.Models.Settings
 
         #region Nested classes
         
-        public class CustomerSettingsModel
+        public partial class CustomerSettingsModel
         {
             [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.UsernamesEnabled")]
             public bool UsernamesEnabled { get; set; }
@@ -119,7 +119,7 @@ namespace Nop.Admin.Models.Settings
             public bool FaxRequired { get; set; }
         }
         
-        public class DateTimeSettingsModel
+        public partial class DateTimeSettingsModel
         {
             public DateTimeSettingsModel()
             {
@@ -136,7 +136,7 @@ namespace Nop.Admin.Models.Settings
             public IList<SelectListItem> AvailableTimeZones { get; set; }
         }
 
-        public class ExternalAuthenticationSettingsModel
+        public partial class ExternalAuthenticationSettingsModel
         {
             [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.ExternalAuthenticationAutoRegisterEnabled")]
             public bool AutoRegisterEnabled { get; set; }

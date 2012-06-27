@@ -3,7 +3,7 @@ using Nop.Web.Framework;
 
 namespace Nop.Admin.Models.Settings
 {
-    public class ShippingSettingsModel
+    public partial class ShippingSettingsModel
     {
         [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.FreeShippingOverXEnabled")]
         public bool FreeShippingOverXEnabled { get; set; }

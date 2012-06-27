@@ -4,7 +4,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.Orders
 {
-    public class ShipmentModel : BaseNopEntityModel
+    public partial class ShipmentModel : BaseNopEntityModel
     {
         public ShipmentModel()
         {
@@ -31,7 +31,7 @@ namespace Nop.Admin.Models.Orders
 
         #region Nested classes
 
-        public class ShipmentOrderProductVariantModel : BaseNopEntityModel
+        public partial class ShipmentOrderProductVariantModel : BaseNopEntityModel
         {
             public int OrderProductVariantId { get; set; }
             public int ProductVariantId { get; set; }

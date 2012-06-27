@@ -14,7 +14,7 @@ using Telerik.Web.Mvc;
 namespace Nop.Admin.Controllers
 {
 	[AdminAuthorize]
-	public class QueuedEmailController : BaseNopController
+	public partial class QueuedEmailController : BaseNopController
 	{
 		private readonly IQueuedEmailService _queuedEmailService;
         private readonly IDateTimeHelper _dateTimeHelper;

@@ -4,7 +4,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Web.Models.Customer
 {
-    public class LoginModel : BaseNopModel
+    public partial class LoginModel : BaseNopModel
     {
         public bool CheckoutAsGuest { get; set; }
 

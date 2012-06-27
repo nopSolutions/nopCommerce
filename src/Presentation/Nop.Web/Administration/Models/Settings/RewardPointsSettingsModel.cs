@@ -5,7 +5,7 @@ using Nop.Web.Framework;
 namespace Nop.Admin.Models.Settings
 {
     [Validator(typeof(RewardPointsSettingsValidator))]
-    public class RewardPointsSettingsModel
+    public partial class RewardPointsSettingsModel
     {
         [NopResourceDisplayName("Admin.Configuration.Settings.RewardPoints.Enabled")]
         public bool Enabled { get; set; }

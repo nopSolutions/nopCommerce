@@ -14,7 +14,7 @@ using Nop.Web.Models.Polls;
 
 namespace Nop.Web.Controllers
 {
-    public class PollController : BaseNopController
+    public partial class PollController : BaseNopController
     {
         private readonly ILocalizationService _localizationService;
         private readonly IWorkContext _workContext;

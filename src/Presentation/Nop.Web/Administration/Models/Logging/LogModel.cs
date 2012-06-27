@@ -5,7 +5,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.Logging
 {
-    public class LogModel : BaseNopEntityModel
+    public partial class LogModel : BaseNopEntityModel
     {
         [NopResourceDisplayName("Admin.System.Log.Fields.LogLevel")]
         public string LogLevel { get; set; }

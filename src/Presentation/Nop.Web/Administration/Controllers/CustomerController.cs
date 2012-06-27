@@ -38,7 +38,7 @@ using Telerik.Web.Mvc;
 namespace Nop.Admin.Controllers
 {
     [AdminAuthorize]
-    public class CustomerController : BaseNopController
+    public partial class CustomerController : BaseNopController
     {
         #region Fields
 

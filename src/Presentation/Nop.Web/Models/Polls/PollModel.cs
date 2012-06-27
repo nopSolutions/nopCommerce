@@ -4,7 +4,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Web.Models.Polls
 {
-    public class PollModel : BaseNopEntityModel, ICloneable
+    public partial class PollModel : BaseNopEntityModel, ICloneable
     {
         public PollModel()
         {
@@ -26,7 +26,7 @@ namespace Nop.Web.Models.Polls
         }
     }
 
-    public class PollAnswerModel : BaseNopEntityModel
+    public partial class PollAnswerModel : BaseNopEntityModel
     {
         public string Name { get; set; }
 

@@ -9,7 +9,7 @@ using Nop.Web.Validators.Customer;
 namespace Nop.Web.Models.Customer
 {
     [Validator(typeof(RegisterValidator))]
-    public class RegisterModel : BaseNopModel
+    public partial class RegisterModel : BaseNopModel
     {
         public RegisterModel()
         {

@@ -7,7 +7,7 @@ using Nop.Web.Framework.Mvc;
 namespace Nop.Admin.Models.Polls
 {
     [Validator(typeof(PollAnswerValidator))]
-    public class PollAnswerModel : BaseNopEntityModel
+    public partial class PollAnswerModel : BaseNopEntityModel
     {
         public int PollId { get; set; }
 

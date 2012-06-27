@@ -9,7 +9,7 @@ using Nop.Web.Framework.Mvc;
 namespace Nop.Admin.Models.Forums
 {
     [Validator(typeof(ForumValidator))]
-    public class ForumModel : BaseNopEntityModel
+    public partial class ForumModel : BaseNopEntityModel
     {
         public ForumModel()
         {

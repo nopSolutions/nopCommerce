@@ -15,7 +15,7 @@ using Nop.Web.Models.PrivateMessages;
 namespace Nop.Web.Controllers
 {
     [NopHttpsRequirement(SslRequirement.Yes)]
-    public class PrivateMessagesController : BaseNopController
+    public partial class PrivateMessagesController : BaseNopController
     {
         private readonly IForumService _forumService;
         private readonly ICustomerService _customerService;

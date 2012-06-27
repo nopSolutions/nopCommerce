@@ -2,7 +2,7 @@
 
 namespace Nop.Web.Models.Boards
 {
-    public class ActiveDiscussionsModel
+    public partial class ActiveDiscussionsModel
     {
         public ActiveDiscussionsModel()
         {

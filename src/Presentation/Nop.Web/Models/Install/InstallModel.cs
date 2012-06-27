@@ -8,7 +8,7 @@ using Nop.Web.Validators.Install;
 namespace Nop.Web.Models.Install
 {
     [Validator(typeof(InstallValidator))]
-    public class InstallModel : BaseNopModel
+    public partial class InstallModel : BaseNopModel
     {
         public InstallModel()
         {

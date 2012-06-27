@@ -9,7 +9,7 @@ using Nop.Web.Framework.Mvc;
 namespace Nop.Admin.Models.News
 {
     [Validator(typeof(NewsItemValidator))]
-    public class NewsItemModel : BaseNopEntityModel
+    public partial class NewsItemModel : BaseNopEntityModel
     {
         [NopResourceDisplayName("Admin.ContentManagement.News.NewsItems.Fields.Language")]
         public int LanguageId { get; set; }

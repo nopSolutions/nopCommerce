@@ -4,7 +4,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.Customers
 {
-    public class OnlineCustomerModel : BaseNopEntityModel
+    public partial class OnlineCustomerModel : BaseNopEntityModel
     {
         [NopResourceDisplayName("Admin.Customers.OnlineCustomers.Fields.CustomerInfo")]
         public string CustomerInfo { get; set; }

@@ -7,7 +7,7 @@ using Nop.Web.Framework.Mvc;
 namespace Nop.Admin.Models.Tax
 {
     [Validator(typeof(TaxCategoryValidator))]
-    public class TaxCategoryModel : BaseNopEntityModel
+    public partial class TaxCategoryModel : BaseNopEntityModel
     {
         [NopResourceDisplayName("Admin.Configuration.Tax.Categories.Fields.Name")]
         [AllowHtml]

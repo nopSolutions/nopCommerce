@@ -9,7 +9,7 @@ using Nop.Web.Framework.Controllers;
 namespace Nop.Admin.Controllers
 {
     [AdminAuthorize]
-    public class PictureController : BaseNopController
+    public partial class PictureController : BaseNopController
     {
         private readonly IPictureService _pictureService;
         private readonly IPermissionService _permissionService;

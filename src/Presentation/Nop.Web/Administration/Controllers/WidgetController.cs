@@ -15,7 +15,7 @@ using Telerik.Web.Mvc;
 namespace Nop.Admin.Controllers
 {
 	[AdminAuthorize]
-    public class WidgetController : BaseNopController
+    public partial class WidgetController : BaseNopController
 	{
 		#region Fields
 

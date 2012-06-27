@@ -7,7 +7,7 @@ using Nop.Web.Validators.Boards;
 namespace Nop.Web.Models.Boards
 {
     [Validator(typeof(EditForumTopicValidator))]
-    public class EditForumTopicModel
+    public partial class EditForumTopicModel
     {
         public EditForumTopicModel()
         {

@@ -8,7 +8,7 @@ using Nop.Web.Validators.Customer;
 namespace Nop.Web.Models.Customer
 {
     [Validator(typeof(ChangePasswordValidator))]
-    public class ChangePasswordModel : BaseNopModel
+    public partial class ChangePasswordModel : BaseNopModel
     {
         [AllowHtml]
         [DataType(DataType.Password)]

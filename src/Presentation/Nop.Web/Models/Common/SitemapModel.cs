@@ -5,7 +5,7 @@ using Nop.Web.Models.Topics;
 
 namespace Nop.Web.Models.Common
 {
-    public class SitemapModel : BaseNopModel
+    public partial class SitemapModel : BaseNopModel
     {
         public SitemapModel()
         {

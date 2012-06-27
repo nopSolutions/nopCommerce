@@ -2,7 +2,7 @@
 
 namespace Nop.Web.Models.Boards
 {
-    public class ForumTopicPageModel
+    public partial class ForumTopicPageModel
     {
         public ForumTopicPageModel()
         {

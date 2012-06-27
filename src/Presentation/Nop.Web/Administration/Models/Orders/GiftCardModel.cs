@@ -6,7 +6,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.Orders
 {
-    public class GiftCardModel: BaseNopEntityModel
+    public partial class GiftCardModel: BaseNopEntityModel
     {
         [NopResourceDisplayName("Admin.GiftCards.Fields.GiftCardType")]
         public GiftCardType GiftCardType { get; set; }
@@ -60,7 +60,7 @@ namespace Nop.Admin.Models.Orders
 
         #region Nested classes
 
-        public class GiftCardUsageHistoryModel : BaseNopEntityModel
+        public partial class GiftCardUsageHistoryModel : BaseNopEntityModel
         {
             [NopResourceDisplayName("Admin.GiftCards.History.UsedValue")]
             public string UsedValue { get; set; }

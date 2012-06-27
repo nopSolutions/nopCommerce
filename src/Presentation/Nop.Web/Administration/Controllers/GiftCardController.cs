@@ -20,7 +20,7 @@ using Telerik.Web.Mvc;
 namespace Nop.Admin.Controllers
 {
     [AdminAuthorize]
-    public class GiftCardController : BaseNopController
+    public partial class GiftCardController : BaseNopController
     {
         #region Fields
 

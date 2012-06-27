@@ -40,7 +40,7 @@ using Nop.Web.Models.ShoppingCart;
 
 namespace Nop.Web.Controllers
 {
-    public class ShoppingCartController : BaseNopController
+    public partial class ShoppingCartController : BaseNopController
     {
 		#region Fields
 

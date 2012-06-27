@@ -2,7 +2,7 @@
 
 namespace Nop.Web.Models.Common
 {
-    public class HeaderLinksModel : BaseNopModel
+    public partial class HeaderLinksModel : BaseNopModel
     {
         public bool IsAuthenticated { get; set; }
         public string CustomerEmailUsername { get; set; }

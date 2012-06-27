@@ -2,7 +2,7 @@
 
 namespace Nop.Web.Models.Customer
 {
-    public class AccountActivationModel : BaseNopModel
+    public partial class AccountActivationModel : BaseNopModel
     {
         public string Result { get; set; }
     }

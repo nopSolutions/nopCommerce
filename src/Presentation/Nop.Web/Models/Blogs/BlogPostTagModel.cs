@@ -2,7 +2,7 @@
 
 namespace Nop.Web.Models.Blogs
 {
-    public class BlogPostTagModel : BaseNopModel
+    public partial class BlogPostTagModel : BaseNopModel
     {
         public string Name { get; set; }
 

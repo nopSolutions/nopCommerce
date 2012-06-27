@@ -19,7 +19,7 @@ using Telerik.Web.Mvc;
 namespace Nop.Admin.Controllers
 {
     [AdminAuthorize]
-    public class AffiliateController : BaseNopController
+    public partial class AffiliateController : BaseNopController
     {
         #region Fields
 

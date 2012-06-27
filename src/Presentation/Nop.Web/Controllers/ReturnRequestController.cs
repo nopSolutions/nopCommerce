@@ -16,7 +16,7 @@ using Nop.Web.Models.Order;
 
 namespace Nop.Web.Controllers
 {
-    public class ReturnRequestController : BaseNopController
+    public partial class ReturnRequestController : BaseNopController
     {
 		#region Fields
 

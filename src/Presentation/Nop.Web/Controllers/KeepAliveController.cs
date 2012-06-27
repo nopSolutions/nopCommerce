@@ -2,7 +2,7 @@
 
 namespace Nop.Web.Controllers
 {
-    public class KeepAliveController : Controller
+    public partial class KeepAliveController : Controller
     {
         public ActionResult Index()
         {

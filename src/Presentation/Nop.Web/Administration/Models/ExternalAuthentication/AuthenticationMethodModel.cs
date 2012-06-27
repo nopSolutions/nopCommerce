@@ -5,7 +5,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.ExternalAuthentication
 {
-    public class AuthenticationMethodModel : BaseNopModel
+    public partial class AuthenticationMethodModel : BaseNopModel
     {
         [NopResourceDisplayName("Admin.Configuration.ExternalAuthenticationMethods.Fields.FriendlyName")]
         [AllowHtml]

@@ -5,7 +5,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.Catalog
 {
-    public class BulkEditListModel : BaseNopModel
+    public partial class BulkEditListModel : BaseNopModel
     {
         public BulkEditListModel()
         {

@@ -12,7 +12,7 @@ using Telerik.Web.Mvc;
 namespace Nop.Admin.Controllers
 {
     [AdminAuthorize]
-    public class MessageTemplateController : BaseNopController
+    public partial class MessageTemplateController : BaseNopController
     {
         #region Fields
 

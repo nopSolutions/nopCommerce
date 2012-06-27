@@ -6,7 +6,7 @@ using Telerik.Web.Mvc;
 
 namespace Nop.Admin.Models.Customers
 {
-    public class CustomerListModel : BaseNopModel
+    public partial class CustomerListModel : BaseNopModel
     {
         public GridModel<CustomerModel> Customers { get; set; }
 

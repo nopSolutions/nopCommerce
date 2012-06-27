@@ -10,7 +10,7 @@ using Nop.Web.Framework.Mvc;
 namespace Nop.Admin.Models.Directory
 {
     [Validator(typeof(CurrencyValidator))]
-    public class CurrencyModel : BaseNopEntityModel, ILocalizedModel<CurrencyLocalizedModel>
+    public partial class CurrencyModel : BaseNopEntityModel, ILocalizedModel<CurrencyLocalizedModel>
     {
         public CurrencyModel()
         {
@@ -53,7 +53,7 @@ namespace Nop.Admin.Models.Directory
         public IList<CurrencyLocalizedModel> Locales { get; set; }
     }
 
-    public class CurrencyLocalizedModel : ILocalizedModelLocal
+    public partial class CurrencyLocalizedModel : ILocalizedModelLocal
     {
         public int LanguageId { get; set; }
 

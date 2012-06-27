@@ -6,7 +6,7 @@ using Nop.Web.Models.Cms;
 
 namespace Nop.Web.Controllers
 {
-    public class WidgetController : BaseNopController
+    public partial class WidgetController : BaseNopController
     {
 		#region Fields
 

@@ -5,7 +5,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Web.Models.Customer
 {
-    public class CustomerRewardPointsModel : BaseNopModel
+    public partial class CustomerRewardPointsModel : BaseNopModel
     {
         public CustomerRewardPointsModel()
         {
@@ -17,7 +17,7 @@ namespace Nop.Web.Models.Customer
         public CustomerNavigationModel NavigationModel { get; set; }
 
         #region Nested classes
-        public class RewardPointsHistoryModel : BaseNopEntityModel
+        public partial class RewardPointsHistoryModel : BaseNopEntityModel
         {
             [NopResourceDisplayName("RewardPoints.Fields.Points")]
             public int Points { get; set; }

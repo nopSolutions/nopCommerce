@@ -5,7 +5,7 @@ using Nop.Web.Models.Common;
 
 namespace Nop.Web.Models.Order
 {
-    public class OrderDetailsModel : BaseNopEntityModel
+    public partial class OrderDetailsModel : BaseNopEntityModel
     {
         public OrderDetailsModel()
         {
@@ -63,7 +63,7 @@ namespace Nop.Web.Models.Order
 
 		#region Nested Classes
 
-        public class OrderProductVariantModel : BaseNopEntityModel
+        public partial class OrderProductVariantModel : BaseNopEntityModel
         {
             public string Sku { get; set; }
             public int ProductId { get; set; }
@@ -75,25 +75,25 @@ namespace Nop.Web.Models.Order
             public string AttributeInfo { get; set; }
         }
 
-        public class TaxRate : BaseNopModel
+        public partial class TaxRate : BaseNopModel
         {
             public string Rate { get; set; }
             public string Value { get; set; }
         }
 
-        public class GiftCard : BaseNopModel
+        public partial class GiftCard : BaseNopModel
         {
             public string CouponCode { get; set; }
             public string Amount { get; set; }
         }
 
-        public class OrderNote : BaseNopModel
+        public partial class OrderNote : BaseNopModel
         {
             public string Note { get; set; }
             public DateTime CreatedOn { get; set; }
         }
 
-        public class ShipmentBriefModel : BaseNopEntityModel
+        public partial class ShipmentBriefModel : BaseNopEntityModel
         {
             public string TrackingNumber { get; set; }
             public DateTime? ShippedDate { get; set; }

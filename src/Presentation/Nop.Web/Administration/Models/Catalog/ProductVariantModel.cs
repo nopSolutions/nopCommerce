@@ -12,7 +12,7 @@ using Nop.Web.Framework.Mvc;
 namespace Nop.Admin.Models.Catalog
 {
     [Validator(typeof(ProductVariantValidator))]
-    public class ProductVariantModel : BaseNopEntityModel, ILocalizedModel<ProductVariantLocalizedModel>
+    public partial class ProductVariantModel : BaseNopEntityModel, ILocalizedModel<ProductVariantLocalizedModel>
     {
         public ProductVariantModel()
         {
@@ -239,7 +239,7 @@ namespace Nop.Admin.Models.Catalog
 
         #region Nested classes
 
-        public class TierPriceModel : BaseNopEntityModel
+        public partial class TierPriceModel : BaseNopEntityModel
         {
             public int ProductVariantId { get; set; }
 
@@ -258,7 +258,7 @@ namespace Nop.Admin.Models.Catalog
             public decimal Price1 { get; set; }
         }
 
-        public class ProductVariantAttributeModel : BaseNopEntityModel
+        public partial class ProductVariantAttributeModel : BaseNopEntityModel
         {
             public int ProductVariantId { get; set; }
 
@@ -289,7 +289,7 @@ namespace Nop.Admin.Models.Catalog
             public string ViewEditText { get; set; }
         }
 
-        public class ProductVariantAttributeValueListModel : BaseNopModel
+        public partial class ProductVariantAttributeValueListModel : BaseNopModel
         {
             public int ProductVariantId { get; set; }
 
@@ -301,7 +301,7 @@ namespace Nop.Admin.Models.Catalog
         }
 
         [Validator(typeof(ProductVariantAttributeValueModelValidator))]
-        public class ProductVariantAttributeValueModel : BaseNopEntityModel, ILocalizedModel<ProductVariantAttributeValueLocalizedModel>
+        public partial class ProductVariantAttributeValueModel : BaseNopEntityModel, ILocalizedModel<ProductVariantAttributeValueLocalizedModel>
         {
             public ProductVariantAttributeValueModel()
             {
@@ -329,7 +329,7 @@ namespace Nop.Admin.Models.Catalog
             public IList<ProductVariantAttributeValueLocalizedModel> Locales { get; set; }
         }
         
-        public class ProductVariantAttributeValueLocalizedModel : ILocalizedModelLocal
+        public partial class ProductVariantAttributeValueLocalizedModel : ILocalizedModelLocal
         {
             public int LanguageId { get; set; }
 
@@ -338,7 +338,7 @@ namespace Nop.Admin.Models.Catalog
             public string Name { get; set; }
         }
 
-        public class ProductVariantAttributeCombinationModel : BaseNopEntityModel
+        public partial class ProductVariantAttributeCombinationModel : BaseNopEntityModel
         {
             public int ProductVariantId { get; set; }
 
@@ -387,7 +387,7 @@ namespace Nop.Admin.Models.Catalog
         public bool HideDisplayOrderProperty { get; set; }
     }
 
-    public class ProductVariantLocalizedModel : ILocalizedModelLocal
+    public partial class ProductVariantLocalizedModel : ILocalizedModelLocal
     {
         public int LanguageId { get; set; }
 

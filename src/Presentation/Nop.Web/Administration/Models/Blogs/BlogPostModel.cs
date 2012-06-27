@@ -9,7 +9,7 @@ using Nop.Web.Framework.Mvc;
 namespace Nop.Admin.Models.Blogs
 {
     [Validator(typeof(BlogPostValidator))]
-    public class BlogPostModel : BaseNopEntityModel
+    public partial class BlogPostModel : BaseNopEntityModel
     {
         [NopResourceDisplayName("Admin.ContentManagement.Blog.BlogPosts.Fields.Language")]
         public int LanguageId { get; set; }

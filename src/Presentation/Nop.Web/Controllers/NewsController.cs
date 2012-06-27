@@ -28,7 +28,7 @@ using Nop.Web.Models.News;
 namespace Nop.Web.Controllers
 {
     [NopHttpsRequirement(SslRequirement.No)]
-    public class NewsController : BaseNopController
+    public partial class NewsController : BaseNopController
     {
 		#region Fields
 

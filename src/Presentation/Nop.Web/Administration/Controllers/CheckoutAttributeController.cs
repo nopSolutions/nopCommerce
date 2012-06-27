@@ -17,7 +17,7 @@ using Telerik.Web.Mvc;
 namespace Nop.Admin.Controllers
 {
     [AdminAuthorize]
-    public class CheckoutAttributeController : BaseNopController
+    public partial class CheckoutAttributeController : BaseNopController
     {
         #region Fields
 

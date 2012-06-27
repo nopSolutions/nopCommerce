@@ -3,7 +3,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.Customers
 {
-    public class CustomerAddressModel : BaseNopModel
+    public partial class CustomerAddressModel : BaseNopModel
     {
         public int CustomerId { get; set; }
 

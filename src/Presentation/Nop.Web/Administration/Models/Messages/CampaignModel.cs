@@ -8,7 +8,7 @@ using Nop.Web.Framework.Mvc;
 namespace Nop.Admin.Models.Messages
 {
     [Validator(typeof(CampaignValidator))]
-    public class CampaignModel : BaseNopEntityModel
+    public partial class CampaignModel : BaseNopEntityModel
     {
         [NopResourceDisplayName("Admin.Promotions.Campaigns.Fields.Name")]
         [AllowHtml]

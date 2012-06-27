@@ -9,7 +9,7 @@ using Nop.Web.Framework.Mvc;
 namespace Nop.Admin.Models.Messages
 {
     [Validator(typeof(QueuedEmailValidator))]
-    public class QueuedEmailModel: BaseNopEntityModel
+    public partial class QueuedEmailModel: BaseNopEntityModel
     {
         [NopResourceDisplayName("Admin.System.QueuedEmails.Fields.Id")]
         public override int Id { get; set; }

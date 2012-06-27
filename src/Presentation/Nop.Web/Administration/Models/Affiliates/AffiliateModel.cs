@@ -8,7 +8,7 @@ using Nop.Web.Framework.Mvc;
 namespace Nop.Admin.Models.Affiliates
 {
     [Validator(typeof(AffiliateValidator))]
-    public class AffiliateModel : BaseNopEntityModel
+    public partial class AffiliateModel : BaseNopEntityModel
     {
         public AffiliateModel()
         {
@@ -28,7 +28,7 @@ namespace Nop.Admin.Models.Affiliates
 
         #region Nested classes
         
-        public class AffiliatedOrderModel : BaseNopEntityModel
+        public partial class AffiliatedOrderModel : BaseNopEntityModel
         {
             [NopResourceDisplayName("Admin.Affiliates.Orders.Order")]
             public override int Id { get; set; }
@@ -49,7 +49,7 @@ namespace Nop.Admin.Models.Affiliates
             public DateTime CreatedOn { get; set; }
         }
 
-        public class AffiliatedCustomerModel : BaseNopEntityModel
+        public partial class AffiliatedCustomerModel : BaseNopEntityModel
         {
             [NopResourceDisplayName("Admin.Affiliates.Customers.Name")]
             public string Name { get; set; }

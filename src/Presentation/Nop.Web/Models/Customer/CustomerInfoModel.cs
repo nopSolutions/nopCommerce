@@ -8,7 +8,7 @@ using Nop.Web.Validators.Customer;
 namespace Nop.Web.Models.Customer
 {
     [Validator(typeof(CustomerInfoValidator))]
-    public class CustomerInfoModel : BaseNopModel
+    public partial class CustomerInfoModel : BaseNopModel
     {
         public CustomerInfoModel()
         {
@@ -134,7 +134,7 @@ namespace Nop.Web.Models.Customer
 
         #region Nested classes
 
-        public class AssociatedExternalAuthModel : BaseNopEntityModel
+        public partial class AssociatedExternalAuthModel : BaseNopEntityModel
         {
             public string Email { get; set; }
 

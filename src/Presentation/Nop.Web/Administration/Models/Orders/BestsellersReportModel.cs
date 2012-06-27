@@ -7,7 +7,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.Orders
 {
-    public class BestsellersReportModel : BaseNopModel
+    public partial class BestsellersReportModel : BaseNopModel
     {
         public BestsellersReportModel()
         {

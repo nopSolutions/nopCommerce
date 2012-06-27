@@ -3,7 +3,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Web.Models.News
 {
-    public class NewsCommentModel : BaseNopEntityModel
+    public partial class NewsCommentModel : BaseNopEntityModel
     {
         public int CustomerId { get; set; }
 

@@ -7,7 +7,7 @@ using Nop.Web.Models.Media;
 
 namespace Nop.Web.Models.ShoppingCart
 {
-    public class ShoppingCartModel : BaseNopModel
+    public partial class ShoppingCartModel : BaseNopModel
     {
         public ShoppingCartModel()
         {
@@ -54,7 +54,7 @@ namespace Nop.Web.Models.ShoppingCart
 
 		#region Nested Classes
 
-        public class ShoppingCartItemModel : BaseNopEntityModel
+        public partial class ShoppingCartItemModel : BaseNopEntityModel
         {
             public ShoppingCartItemModel()
             {
@@ -89,7 +89,7 @@ namespace Nop.Web.Models.ShoppingCart
 
         }
 
-        public class CheckoutAttributeModel : BaseNopEntityModel
+        public partial class CheckoutAttributeModel : BaseNopEntityModel
         {
             public CheckoutAttributeModel()
             {
@@ -122,7 +122,7 @@ namespace Nop.Web.Models.ShoppingCart
             public IList<CheckoutAttributeValueModel> Values { get; set; }
         }
 
-        public class CheckoutAttributeValueModel : BaseNopEntityModel
+        public partial class CheckoutAttributeValueModel : BaseNopEntityModel
         {
             public string Name { get; set; }
 

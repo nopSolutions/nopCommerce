@@ -8,7 +8,7 @@ using Nop.Web.Models.Media;
 
 namespace Nop.Web.Models.Catalog
 {
-    public class ProductDetailsModel : BaseNopEntityModel
+    public partial class ProductDetailsModel : BaseNopEntityModel
     {
         public ProductDetailsModel()
         {
@@ -38,8 +38,8 @@ namespace Nop.Web.Models.Catalog
         public IList<ProductSpecificationModel> SpecificationAttributeModels { get; set; }
 
 		#region Nested Classes
-        
-        public class ProductBreadcrumbModel : BaseNopModel
+
+        public partial class ProductBreadcrumbModel : BaseNopModel
         {
             public ProductBreadcrumbModel()
             {
@@ -51,8 +51,8 @@ namespace Nop.Web.Models.Catalog
             public string ProductSeName { get; set; }
             public IList<CategoryModel> CategoryBreadcrumb { get; set; }
         }
-        
-        public class ProductVariantModel : BaseNopEntityModel
+
+        public partial class ProductVariantModel : BaseNopEntityModel
         {
             public ProductVariantModel()
             {
@@ -96,7 +96,7 @@ namespace Nop.Web.Models.Catalog
 
             #region Nested Classes
 
-            public class AddToCartModel : BaseNopModel
+            public partial class AddToCartModel : BaseNopModel
             {
                 public AddToCartModel()
                 {
@@ -119,7 +119,7 @@ namespace Nop.Web.Models.Catalog
                 public bool AvailableForPreOrder { get; set; }
             }
 
-            public class ProductVariantPriceModel : BaseNopModel
+            public partial class ProductVariantPriceModel : BaseNopModel
             {
                 public string OldPrice { get; set; }
 
@@ -140,7 +140,7 @@ namespace Nop.Web.Models.Catalog
                 public bool DynamicPriceUpdate { get; set; }
             }
 
-            public class GiftCardModel : BaseNopModel
+            public partial class GiftCardModel : BaseNopModel
             {
                 public bool IsGiftCard { get; set; }
 
@@ -163,14 +163,14 @@ namespace Nop.Web.Models.Catalog
                 public GiftCardType GiftCardType { get; set; }
             }
 
-            public class TierPriceModel : BaseNopModel
+            public partial class TierPriceModel : BaseNopModel
             {
                 public string Price { get; set; }
 
                 public int Quantity { get; set; }
             }
 
-            public class ProductVariantAttributeModel : BaseNopEntityModel
+            public partial class ProductVariantAttributeModel : BaseNopEntityModel
             {
                 public ProductVariantAttributeModel()
                 {
@@ -217,7 +217,7 @@ namespace Nop.Web.Models.Catalog
 
             }
 
-            public class ProductVariantAttributeValueModel : BaseNopEntityModel
+            public partial class ProductVariantAttributeValueModel : BaseNopEntityModel
             {
                 public string Name { get; set; }
 

@@ -3,7 +3,7 @@ using Nop.Web.Models.Common;
 
 namespace Nop.Web.Models.Customer
 {
-    public class CustomerBackInStockSubscriptionsModel
+    public partial class CustomerBackInStockSubscriptionsModel
     {
         public CustomerBackInStockSubscriptionsModel()
         {

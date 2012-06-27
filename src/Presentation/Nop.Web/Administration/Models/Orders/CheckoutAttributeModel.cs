@@ -9,7 +9,7 @@ using Nop.Web.Framework.Mvc;
 namespace Nop.Admin.Models.Orders
 {
     [Validator(typeof(CheckoutAttributeValidator))]
-    public class CheckoutAttributeModel : BaseNopEntityModel, ILocalizedModel<CheckoutAttributeLocalizedModel>
+    public partial class CheckoutAttributeModel : BaseNopEntityModel, ILocalizedModel<CheckoutAttributeLocalizedModel>
     {
         public CheckoutAttributeModel()
         {
@@ -52,7 +52,7 @@ namespace Nop.Admin.Models.Orders
 
     }
 
-    public class CheckoutAttributeLocalizedModel : ILocalizedModelLocal
+    public partial class CheckoutAttributeLocalizedModel : ILocalizedModelLocal
     {
         public int LanguageId { get; set; }
 

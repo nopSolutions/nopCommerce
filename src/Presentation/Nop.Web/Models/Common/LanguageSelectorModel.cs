@@ -3,7 +3,7 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Web.Models.Common
 {
-    public class LanguageSelectorModel : BaseNopModel
+    public partial class LanguageSelectorModel : BaseNopModel
     {
         public LanguageSelectorModel()
         {
