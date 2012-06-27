@@ -54,7 +54,7 @@ namespace Nop.Admin.Controllers
         #region Utilities
 
         [NonAction]
-        public void UpdateLocales(Currency currency, CurrencyModel model)
+        protected void UpdateLocales(Currency currency, CurrencyModel model)
         {
             foreach (var localized in model.Locales)
             {

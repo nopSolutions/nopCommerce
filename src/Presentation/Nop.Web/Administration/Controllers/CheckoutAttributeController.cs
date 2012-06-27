@@ -65,7 +65,7 @@ namespace Nop.Admin.Controllers
         #region Utilities
 
         [NonAction]
-        public void UpdateAttributeLocales(CheckoutAttribute checkoutAttribute, CheckoutAttributeModel model)
+        protected void UpdateAttributeLocales(CheckoutAttribute checkoutAttribute, CheckoutAttributeModel model)
         {
             foreach (var localized in model.Locales)
             {
@@ -82,7 +82,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        public void UpdateValueLocales(CheckoutAttributeValue checkoutAttributeValue, CheckoutAttributeValueModel model)
+        protected void UpdateValueLocales(CheckoutAttributeValue checkoutAttributeValue, CheckoutAttributeValueModel model)
         {
             foreach (var localized in model.Locales)
             {
@@ -94,7 +94,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        private void PrepareCheckoutAttributeModel(CheckoutAttributeModel model, CheckoutAttribute checkoutAttribute, bool excludeProperties)
+        protected void PrepareCheckoutAttributeModel(CheckoutAttributeModel model, CheckoutAttribute checkoutAttribute, bool excludeProperties)
         {
             if (model == null)
                 throw new ArgumentNullException("model");

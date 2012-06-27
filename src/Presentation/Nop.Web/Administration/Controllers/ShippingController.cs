@@ -56,7 +56,7 @@ namespace Nop.Admin.Controllers
         #region Utilities
 
         [NonAction]
-        public void UpdateLocales(ShippingMethod shippingMethod, ShippingMethodModel model)
+        protected void UpdateLocales(ShippingMethod shippingMethod, ShippingMethodModel model)
         {
             foreach (var localized in model.Locales)
             {

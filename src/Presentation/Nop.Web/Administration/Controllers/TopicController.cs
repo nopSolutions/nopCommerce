@@ -41,7 +41,7 @@ namespace Nop.Admin.Controllers
         #region Utilities
 
         [NonAction]
-        public void UpdateLocales(Topic topic, TopicModel model)
+        protected void UpdateLocales(Topic topic, TopicModel model)
         {
             foreach (var localized in model.Locales)
             {

@@ -16,11 +16,17 @@ namespace Nop.Web.Controllers
 {
     public partial class PollController : BaseNopController
     {
+        #region Fields
+
         private readonly ILocalizationService _localizationService;
         private readonly IWorkContext _workContext;
         private readonly IPollService _pollService;
         private readonly IWebHelper _webHelper;
         private readonly ICacheManager _cacheManager;
+
+        #endregion
+
+        #region Constructors
 
         public PollController(ILocalizationService localizationService,
             IWorkContext workContext, IPollService pollService,
@@ -33,7 +39,11 @@ namespace Nop.Web.Controllers
             this._cacheManager = cacheManager;
         }
 
+        #endregion
 
+        #region Utilities
+
+        [NonAction]
         protected PollModel PreparePollModel(Poll poll, bool setAlreadyVotedProperty)
         {
             var model = new PollModel()
@@ -58,6 +68,10 @@ namespace Nop.Web.Controllers
 
             return model;
         }
+
+        #endregion
+
+        #region Methods
 
         [ChildActionOnly]
         public ActionResult PollBlock(string systemKeyword)
@@ -158,6 +172,8 @@ namespace Nop.Web.Controllers
             }
             return PartialView(model);
         }
+
+        #endregion
 
     }
 }

@@ -47,10 +47,10 @@ namespace Nop.Admin.Controllers
 
 		#endregion 
 
-        #region Utilities 
+        #region Utilities
         
         [NonAction]
-        public void UpdateLocales(Country country, CountryModel model)
+        protected void UpdateLocales(Country country, CountryModel model)
         {
             foreach (var localized in model.Locales)
             {
@@ -62,7 +62,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        public void UpdateLocales(StateProvince stateProvince, StateProvinceModel model)
+        protected void UpdateLocales(StateProvince stateProvince, StateProvinceModel model)
         {
             foreach (var localized in model.Locales)
             {

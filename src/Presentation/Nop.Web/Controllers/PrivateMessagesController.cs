@@ -17,12 +17,18 @@ namespace Nop.Web.Controllers
     [NopHttpsRequirement(SslRequirement.Yes)]
     public partial class PrivateMessagesController : BaseNopController
     {
+        #region Fields
+
         private readonly IForumService _forumService;
         private readonly ICustomerService _customerService;
         private readonly IWorkContext _workContext;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ForumSettings _forumSettings;
         private readonly CustomerSettings _customerSettings;
+
+        #endregion
+
+        #region Constructors
 
         public PrivateMessagesController(IForumService forumService,
             ICustomerService customerService,
@@ -37,11 +43,19 @@ namespace Nop.Web.Controllers
             this._customerSettings = customerSettings;
         }
 
+        #endregion
+
+        #region Utilities
+
         [NonAction]
         private bool AllowPrivateMessages()
         {
             return _forumSettings.AllowPrivateMessages;
         }
+
+        #endregion
+
+        #region Methods
 
         public ActionResult Index(int? page, string tab)
         {
@@ -471,5 +485,7 @@ namespace Nop.Web.Controllers
             }
             return RedirectToRoute("PrivateMessages");
         }
+
+        #endregion
     }
 }

@@ -109,7 +109,7 @@ namespace Nop.Admin.Controllers
         #region Utilities
 
         [NonAction]
-        private void UpdateLocales(ProductVariant variant, ProductVariantModel model)
+        protected void UpdateLocales(ProductVariant variant, ProductVariantModel model)
         {
             foreach (var localized in model.Locales)
             {
@@ -125,7 +125,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        private void UpdatePictureSeoNames(ProductVariant variant)
+        protected void UpdatePictureSeoNames(ProductVariant variant)
         {
             var picture = _pictureService.GetPictureById(variant.PictureId);
             if (picture != null)
@@ -133,7 +133,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        private void UpdateAttributeValueLocales(ProductVariantAttributeValue pvav, ProductVariantModel.ProductVariantAttributeValueModel model)
+        protected void UpdateAttributeValueLocales(ProductVariantAttributeValue pvav, ProductVariantModel.ProductVariantAttributeValueModel model)
         {
             foreach (var localized in model.Locales)
             {
@@ -145,7 +145,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        private void PrepareProductModel(ProductVariantModel model, Product product)
+        protected void PrepareProductModel(ProductVariantModel model, Product product)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
@@ -154,7 +154,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        private void PrepareProductVariantModel(ProductVariantModel model, ProductVariant variant, bool setPredefinedValues)
+        protected void PrepareProductVariantModel(ProductVariantModel model, ProductVariant variant, bool setPredefinedValues)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
@@ -188,7 +188,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        private void PrepareDiscountModel(ProductVariantModel model, ProductVariant variant, bool excludeProperties)
+        protected void PrepareDiscountModel(ProductVariantModel model, ProductVariant variant, bool excludeProperties)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
@@ -203,7 +203,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        private void PrepareProductAttributesMapping(ProductVariantModel model, ProductVariant variant)
+        protected void PrepareProductAttributesMapping(ProductVariantModel model, ProductVariant variant)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
@@ -212,7 +212,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        private void PrepareAddProductAttributeCombinationModel(AddProductVariantAttributeCombinationModel model, ProductVariant variant)
+        protected void PrepareAddProductAttributeCombinationModel(AddProductVariantAttributeCombinationModel model, ProductVariant variant)
         {
             if (model == null)
                 throw new ArgumentNullException("model");

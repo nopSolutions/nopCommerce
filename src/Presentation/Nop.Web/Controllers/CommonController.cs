@@ -37,6 +37,8 @@ namespace Nop.Web.Controllers
 {
     public partial class CommonController : BaseNopController
     {
+        #region Fields
+
         private readonly ICategoryService _categoryService;
         private readonly IProductService _productService;
         private readonly IManufacturerService _manufacturerService;
@@ -67,6 +69,10 @@ namespace Nop.Web.Controllers
         private readonly ForumSettings _forumSettings;
         private readonly LocalizationSettings _localizationSettings;
         private readonly CaptchaSettings _captchaSettings;
+
+        #endregion
+
+        #region Constructors
 
         public CommonController(ICategoryService categoryService, IProductService productService,
             IManufacturerService manufacturerService, ITopicService topicService,
@@ -116,9 +122,12 @@ namespace Nop.Web.Controllers
             this._captchaSettings = captchaSettings;
         }
 
-        //language
+        #endregion
+
+        #region Utilities
+
         [NonAction]
-        private LanguageSelectorModel PrepareLanguageSelectorModel()
+        protected LanguageSelectorModel PrepareLanguageSelectorModel()
         {
             var model = new LanguageSelectorModel()
             {
@@ -128,6 +137,52 @@ namespace Nop.Web.Controllers
             };
             return model;
         }
+
+        [NonAction]
+        protected CurrencySelectorModel PrepareCurrencySelectorModel()
+        {
+            var model = new CurrencySelectorModel()
+            {
+                CurrentCurrency = _workContext.WorkingCurrency.ToModel(),
+                AvailableCurrencies = _currencyService.GetAllCurrencies().Select(x => x.ToModel()).ToList()
+            };
+            return model;
+        }
+
+        [NonAction]
+        protected TaxTypeSelectorModel PrepareTaxTypeSelectorModel()
+        {
+            var model = new TaxTypeSelectorModel()
+            {
+                Enabled = _taxSettings.AllowCustomersToSelectTaxDisplayType,
+                CurrentTaxType = _workContext.TaxDisplayType
+            };
+            return model;
+        }
+
+        [NonAction]
+        protected int GetUnreadPrivateMessages()
+        {
+            var result = 0;
+            var customer = _workContext.CurrentCustomer;
+            if (_forumSettings.AllowPrivateMessages && !customer.IsGuest())
+            {
+                var privateMessages = _forumservice.GetAllPrivateMessages(0, customer.Id, false, null, false, string.Empty, 0, 1);
+
+                if (privateMessages.TotalCount > 0)
+                {
+                    result = privateMessages.TotalCount;
+                }
+            }
+
+            return result;
+        }
+
+        #endregion
+
+        #region Methods
+
+        //language
         [ChildActionOnly]
         public ActionResult LanguageSelector()
         {
@@ -179,16 +234,6 @@ namespace Nop.Web.Controllers
         }
 
         //currency
-        [NonAction]
-        private CurrencySelectorModel PrepareCurrencySelectorModel()
-        {
-            var model = new CurrencySelectorModel()
-            {
-                CurrentCurrency = _workContext.WorkingCurrency.ToModel(),
-                AvailableCurrencies = _currencyService.GetAllCurrencies().Select(x => x.ToModel()).ToList()
-            };
-            return model;
-        }
         [ChildActionOnly]
         public ActionResult CurrencySelector()
         {
@@ -213,16 +258,6 @@ namespace Nop.Web.Controllers
         }
 
         //tax type
-        [NonAction]
-        private TaxTypeSelectorModel PrepareTaxTypeSelectorModel()
-        {
-            var model = new TaxTypeSelectorModel()
-            {
-                Enabled = _taxSettings.AllowCustomersToSelectTaxDisplayType,
-                CurrentTaxType = _workContext.TaxDisplayType
-            };
-            return model;
-        }
         [ChildActionOnly]
         public ActionResult TaxTypeSelector()
         {
@@ -314,24 +349,6 @@ namespace Nop.Web.Controllers
             };
 
             return PartialView(model);
-        }
-
-        [NonAction]
-        private int GetUnreadPrivateMessages()
-        {
-            var result = 0;
-            var customer = _workContext.CurrentCustomer;
-            if (_forumSettings.AllowPrivateMessages && !customer.IsGuest())
-            {
-                var privateMessages = _forumservice.GetAllPrivateMessages(0, customer.Id, false, null, false, string.Empty, 0, 1);
-
-                if (privateMessages.TotalCount > 0)
-                {
-                    result = privateMessages.TotalCount;
-                }
-            }
-
-            return result;
         }
 
         //footer
@@ -634,5 +651,7 @@ namespace Nop.Web.Controllers
             _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, "EuCookieLaw.Accepted", true);
             return Json(new { stored = true });
         }
+
+        #endregion
     }
 }

@@ -45,7 +45,7 @@ namespace Nop.Admin.Controllers
         #region Utilities
 
         [NonAction]
-        public void UpdateLocales(ProductAttribute productAttribute, ProductAttributeModel model)
+        protected void UpdateLocales(ProductAttribute productAttribute, ProductAttributeModel model)
         {
             foreach (var localized in model.Locales)
             {
@@ -60,8 +60,7 @@ namespace Nop.Admin.Controllers
                                                            localized.LanguageId);
             }
         }
-
-
+        
         #endregion
         
         #region Methods

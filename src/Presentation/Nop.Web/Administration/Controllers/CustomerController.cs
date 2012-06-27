@@ -128,7 +128,7 @@ namespace Nop.Admin.Controllers
         #region Utilities
 
         [NonAction]
-        private string GetCustomerRolesNames(IList<CustomerRole> customerRoles, string separator = ",")
+        protected string GetCustomerRolesNames(IList<CustomerRole> customerRoles, string separator = ",")
         {
             var sb = new StringBuilder();
             for (int i = 0; i < customerRoles.Count; i++)
@@ -144,7 +144,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        private IList<RegisteredCustomerReportLineModel> GetReportRegisteredCustomersModel()
+        protected IList<RegisteredCustomerReportLineModel> GetReportRegisteredCustomersModel()
         {
             var report = new List<RegisteredCustomerReportLineModel>();
             report.Add(new RegisteredCustomerReportLineModel()
@@ -173,7 +173,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        private IList<CustomerModel.AssociatedExternalAuthModel> GetAssociatedExternalAuthRecords(Customer customer)
+        protected IList<CustomerModel.AssociatedExternalAuthModel> GetAssociatedExternalAuthRecords(Customer customer)
         {
             if (customer == null)
                 throw new ArgumentNullException("customer");
@@ -198,7 +198,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        private CustomerModel PrepareCustomerModelForList(Customer customer)
+        protected CustomerModel PrepareCustomerModelForList(Customer customer)
         {
             return new CustomerModel()
             {
@@ -217,7 +217,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        private string ValidateCustomerRoles(IList<CustomerRole> customerRoles)
+        protected string ValidateCustomerRoles(IList<CustomerRole> customerRoles)
         {
             if (customerRoles == null)
                 throw new ArgumentNullException("customerRoles");

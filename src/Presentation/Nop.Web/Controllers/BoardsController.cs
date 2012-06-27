@@ -26,6 +26,8 @@ namespace Nop.Web.Controllers
     [NopHttpsRequirement(SslRequirement.No)]
     public partial class BoardsController : BaseNopController
     {
+        #region Fields
+
         private readonly IForumService _forumService;
         private readonly ILocalizationService _localizationService;
         private readonly IPictureService _pictureService;
@@ -37,6 +39,10 @@ namespace Nop.Web.Controllers
         private readonly CustomerSettings _customerSettings;
         private readonly MediaSettings _mediaSettings;
         private readonly IDateTimeHelper _dateTimeHelper;
+
+        #endregion
+
+        #region Constructors
 
         public BoardsController(IForumService forumService,
             ILocalizationService localizationService,
@@ -63,8 +69,12 @@ namespace Nop.Web.Controllers
             this._dateTimeHelper = dateTimeHelper;
         }
 
+        #endregion
+
+        #region Utilities
+
         [NonAction]
-        private ForumTopicRowModel PrepareForumTopicRowModel(ForumTopic topic)
+        protected ForumTopicRowModel PrepareForumTopicRowModel(ForumTopic topic)
         {
             var topicModel = new ForumTopicRowModel()
             {
@@ -89,7 +99,7 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        private ForumRowModel PrepareForumRowModel(Forum forum)
+        protected ForumRowModel PrepareForumRowModel(Forum forum)
         {
             var forumModel = new ForumRowModel()
             {
@@ -105,7 +115,7 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        private ForumGroupModel PrepareForumGroupModel(ForumGroup forumGroup)
+        protected ForumGroupModel PrepareForumGroupModel(ForumGroup forumGroup)
         {
             var forumGroupModel = new ForumGroupModel()
             {
@@ -121,12 +131,6 @@ namespace Nop.Web.Controllers
                 forumGroupModel.Forums.Add(forumModel);
             }
             return forumGroupModel;
-        }
-
-        [NonAction]
-        private bool ForumsEnabled()
-        {
-            return _forumSettings.ForumsEnabled;
         }
 
         [NonAction]
@@ -156,7 +160,7 @@ namespace Nop.Web.Controllers
         }
 
         [NonAction]
-        private IEnumerable<SelectListItem> ForumGroupsForumsList()
+        protected IEnumerable<SelectListItem> ForumGroupsForumsList()
         {
             var forumsList = new List<SelectListItem>();
             var separator = "--";
@@ -177,9 +181,13 @@ namespace Nop.Web.Controllers
             return forumsList;
         }
 
+        #endregion
+
+        #region Methods
+
         public ActionResult Index()
         {
-            if (!ForumsEnabled())
+            if (!_forumSettings.ForumsEnabled)
             {
                 return RedirectToRoute("HomePage");
             }
@@ -202,7 +210,7 @@ namespace Nop.Web.Controllers
         [ChildActionOnly]
         public ActionResult ActiveDiscussionsSmall()
         {
-            if (!ForumsEnabled())
+            if (!_forumSettings.ForumsEnabled)
             {
                 return RedirectToRoute("HomePage");
             }
@@ -227,7 +235,7 @@ namespace Nop.Web.Controllers
 
         public ActionResult ActiveDiscussions(int forumId = 0)
         {
-            if (!ForumsEnabled())
+            if (!_forumSettings.ForumsEnabled)
             {
                 return RedirectToRoute("HomePage");
             }
@@ -249,7 +257,7 @@ namespace Nop.Web.Controllers
 
         public ActionResult ActiveDiscussionsRss(int forumId = 0)
         {
-            if (!ForumsEnabled())
+            if (!_forumSettings.ForumsEnabled)
             {
                 return RedirectToRoute("HomePage");
             }
@@ -293,7 +301,7 @@ namespace Nop.Web.Controllers
 
         public ActionResult ForumGroup(int id)
         {
-            if (!ForumsEnabled())
+            if (!_forumSettings.ForumsEnabled)
             {
                 return RedirectToRoute("HomePage");
             }
@@ -308,7 +316,7 @@ namespace Nop.Web.Controllers
 
         public ActionResult Forum(int id, int page = 1)
         {
-            if (!ForumsEnabled())
+            if (!_forumSettings.ForumsEnabled)
             {
                 return RedirectToRoute("HomePage");
             }
@@ -362,7 +370,7 @@ namespace Nop.Web.Controllers
 
         public ActionResult ForumRss(int id)
         {
-            if (!ForumsEnabled())
+            if (!_forumSettings.ForumsEnabled)
             {
                 return RedirectToRoute("HomePage");
             }
@@ -461,7 +469,7 @@ namespace Nop.Web.Controllers
 
         public ActionResult Topic(int id, int page = 1)
         {
-            if (!ForumsEnabled())
+            if (!_forumSettings.ForumsEnabled)
             {
                 return RedirectToRoute("HomePage");
             }
@@ -611,7 +619,7 @@ namespace Nop.Web.Controllers
 
         public ActionResult TopicMove(int id)
         {
-            if (!ForumsEnabled())
+            if (!_forumSettings.ForumsEnabled)
             {
                 return RedirectToRoute("HomePage");
             }
@@ -634,7 +642,7 @@ namespace Nop.Web.Controllers
         [HttpPost]
         public ActionResult TopicMove(TopicMoveModel model)
         {
-            if (!ForumsEnabled())
+            if (!_forumSettings.ForumsEnabled)
             {
                 return RedirectToRoute("HomePage");
             }
@@ -659,7 +667,7 @@ namespace Nop.Web.Controllers
 
         public ActionResult TopicDelete(int id)
         {
-            if (!ForumsEnabled())
+            if (!_forumSettings.ForumsEnabled)
             {
                 return RedirectToRoute("HomePage");
             }
@@ -686,7 +694,7 @@ namespace Nop.Web.Controllers
 
         public ActionResult TopicCreate(int id)
         {
-            if (!ForumsEnabled())
+            if (!_forumSettings.ForumsEnabled)
             {
                 return RedirectToRoute("HomePage");
             }
@@ -721,7 +729,7 @@ namespace Nop.Web.Controllers
         [ValidateInput(false)]
         public ActionResult TopicCreate(EditForumTopicModel model)
         {
-            if (!ForumsEnabled())
+            if (!_forumSettings.ForumsEnabled)
             {
                 return RedirectToRoute("HomePage");
             }
@@ -840,7 +848,7 @@ namespace Nop.Web.Controllers
 
         public ActionResult TopicEdit(int id)
         {
-            if (!ForumsEnabled())
+            if (!_forumSettings.ForumsEnabled)
             {
                 return RedirectToRoute("HomePage");
             }
@@ -894,7 +902,7 @@ namespace Nop.Web.Controllers
         [ValidateInput(false)]
         public ActionResult TopicEdit(EditForumTopicModel model)
         {
-            if (!ForumsEnabled())
+            if (!_forumSettings.ForumsEnabled)
             {
                 return RedirectToRoute("HomePage");
             }
@@ -1029,7 +1037,7 @@ namespace Nop.Web.Controllers
 
         public ActionResult PostDelete(int id)
         {
-            if (!ForumsEnabled())
+            if (!_forumSettings.ForumsEnabled)
             {
                 return RedirectToRoute("HomePage");
             }
@@ -1067,7 +1075,7 @@ namespace Nop.Web.Controllers
 
         public ActionResult PostCreate(int id, int? quote)
         {
-            if (!ForumsEnabled())
+            if (!_forumSettings.ForumsEnabled)
             {
                 return RedirectToRoute("HomePage");
             }
@@ -1140,7 +1148,7 @@ namespace Nop.Web.Controllers
         [ValidateInput(false)]
         public ActionResult PostCreate(EditForumPostModel model)
         {
-            if (!ForumsEnabled())
+            if (!_forumSettings.ForumsEnabled)
             {
                 return RedirectToRoute("HomePage");
             }
@@ -1248,7 +1256,7 @@ namespace Nop.Web.Controllers
 
         public ActionResult PostEdit(int id)
         {
-            if (!ForumsEnabled())
+            if (!_forumSettings.ForumsEnabled)
             {
                 return RedirectToRoute("HomePage");
             }
@@ -1304,7 +1312,7 @@ namespace Nop.Web.Controllers
         [ValidateInput(false)]
         public ActionResult PostEdit(EditForumPostModel model)
         {
-            if (!ForumsEnabled())
+            if (!_forumSettings.ForumsEnabled)
             {
                 return RedirectToRoute("HomePage");
             }
@@ -1416,7 +1424,7 @@ namespace Nop.Web.Controllers
         public ActionResult Search(string searchterms, bool? adv, string forumId,
             string within, string limitDays, int page = 1)
         {
-            if (!ForumsEnabled())
+            if (!_forumSettings.ForumsEnabled)
             {
                 return RedirectToRoute("HomePage");
             }
@@ -1662,5 +1670,8 @@ namespace Nop.Web.Controllers
 
             return PartialView(model);
         }
+
+        #endregion
     }
+
 }

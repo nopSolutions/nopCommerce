@@ -13,7 +13,7 @@ namespace Nop.Web.Models.Catalog
 
         #region Utilities
 
-        protected int GetFontSize(double weight, double mean, double stdDev)
+        protected virtual int GetFontSize(double weight, double mean, double stdDev)
         {
             double factor = (weight - mean);
 
@@ -28,7 +28,7 @@ namespace Nop.Web.Models.Catalog
                 75;
         }
 
-        protected double Mean(IEnumerable<double> values)
+        protected virtual double Mean(IEnumerable<double> values)
         {
             double sum = 0;
             int count = 0;
@@ -42,7 +42,7 @@ namespace Nop.Web.Models.Catalog
             return sum / count;
         }
 
-        protected double StdDev(IEnumerable<double> values, out double mean)
+        protected virtual double StdDev(IEnumerable<double> values, out double mean)
         {
             mean = Mean(values);
             double sumOfDiffSquares = 0;
@@ -62,7 +62,7 @@ namespace Nop.Web.Models.Catalog
 
         #region Methods
 
-        public int GetFontSize(ProductTagModel productTag)
+        public virtual int GetFontSize(ProductTagModel productTag)
         {
             double mean = 0;
             var itemWeights = new List<double>();

@@ -53,7 +53,7 @@ namespace Nop.Admin.Controllers
         #region Utilities
 
         [NonAction]
-        private PluginModel PreparePluginModel(PluginDescriptor pluginDescriptor)
+        protected PluginModel PreparePluginModel(PluginDescriptor pluginDescriptor)
         {
             var pluginModel = pluginDescriptor.ToModel();
 
@@ -108,7 +108,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        private GridModel<PluginModel> PreparePluginListModel()
+        protected GridModel<PluginModel> PreparePluginListModel()
         {
             var pluginDescriptors = _pluginFinder.GetPluginDescriptors(false);
             var model = new GridModel<PluginModel>

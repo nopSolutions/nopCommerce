@@ -59,7 +59,7 @@ namespace Nop.Admin.Controllers
         #region Utilities
 
         [NonAction]
-        private bool PrepareReturnRequestModel(ReturnRequestModel model,
+        protected bool PrepareReturnRequestModel(ReturnRequestModel model,
             ReturnRequest returnRequest, bool excludeProperties)
         {
             if (model == null)

@@ -77,7 +77,7 @@ namespace Nop.Admin.Controllers
         #region Utilities
 
         [NonAction]
-        public void UpdateLocales(Category category, CategoryModel model)
+        protected void UpdateLocales(Category category, CategoryModel model)
         {
             foreach (var localized in model.Locales)
             {
@@ -114,7 +114,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        private void UpdatePictureSeoNames(Category category)
+        protected void UpdatePictureSeoNames(Category category)
         {
             var picture = _pictureService.GetPictureById(category.PictureId);
             if (picture != null)
@@ -122,7 +122,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        private void PrepareTemplatesModel(CategoryModel model)
+        protected void PrepareTemplatesModel(CategoryModel model)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
@@ -139,7 +139,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        private void PrepareDiscountModel(CategoryModel model, Category category, bool excludeProperties)
+        protected void PrepareDiscountModel(CategoryModel model, Category category, bool excludeProperties)
         {
             if (model == null)
                 throw new ArgumentNullException("model");
@@ -152,6 +152,7 @@ namespace Nop.Admin.Controllers
                 model.SelectedDiscountIds = category.AppliedDiscounts.Select(d => d.Id).ToArray();
             }
         }
+        
         #endregion
         
         #region List / tree

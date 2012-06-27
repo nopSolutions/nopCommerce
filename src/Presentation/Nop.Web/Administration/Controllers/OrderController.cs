@@ -134,7 +134,7 @@ namespace Nop.Admin.Controllers
         #region Utilities
 
         [NonAction]
-        private void PrepareOrderDetailsModel(OrderModel model, Order order)
+        protected void PrepareOrderDetailsModel(OrderModel model, Order order)
         {
             if (order == null)
                 throw new ArgumentNullException("order");
@@ -391,7 +391,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        private OrderModel.AddOrderProductModel.ProductDetailsModel PrepareAddProductToOrderModel(int orderId, int productVariantId)
+        protected OrderModel.AddOrderProductModel.ProductDetailsModel PrepareAddProductToOrderModel(int orderId, int productVariantId)
         {
 
             var productVariant = _productService.GetProductVariantById(productVariantId);
@@ -449,7 +449,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        private ShipmentModel PrepareShipmentModel(Shipment shipment, bool prepareProducts)
+        protected ShipmentModel PrepareShipmentModel(Shipment shipment, bool prepareProducts)
         {
             //measures
             var baseWeight = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId);

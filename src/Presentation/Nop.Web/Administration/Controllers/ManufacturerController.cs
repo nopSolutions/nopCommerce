@@ -71,7 +71,7 @@ namespace Nop.Admin.Controllers
         #region Utilities
 
         [NonAction]
-        public void UpdateLocales(Manufacturer manufacturer, ManufacturerModel model)
+        protected void UpdateLocales(Manufacturer manufacturer, ManufacturerModel model)
         {
             foreach (var localized in model.Locales)
             {
@@ -108,7 +108,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        private void UpdatePictureSeoNames(Manufacturer manufacturer)
+        protected void UpdatePictureSeoNames(Manufacturer manufacturer)
         {
             var picture = _pictureService.GetPictureById(manufacturer.PictureId);
             if (picture != null)
@@ -116,7 +116,7 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
-        private void PrepareTemplatesModel(ManufacturerModel model)
+        protected void PrepareTemplatesModel(ManufacturerModel model)
         {
             if (model == null)
                 throw new ArgumentNullException("model");

@@ -174,6 +174,193 @@ namespace Nop.Web.Controllers
             _openAuthenticationService.AssociateExternalAccountWithUser(customer, parameters);
         }
 
+        [NonAction]
+        protected bool UsernameIsValid(string username)
+        {
+            var result = true;
+
+            if (String.IsNullOrEmpty(username))
+            {
+                return false;
+            }
+
+            // other validation 
+
+            return result;
+        }
+
+        [NonAction]
+        protected void PrepareCustomerInfoModel(CustomerInfoModel model, Customer customer, bool excludeProperties)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            if (customer == null)
+                throw new ArgumentNullException("customer");
+
+            model.AllowCustomersToSetTimeZone = _dateTimeSettings.AllowCustomersToSetTimeZone;
+            foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
+                model.AvailableTimeZones.Add(new SelectListItem() { Text = tzi.DisplayName, Value = tzi.Id, Selected = (excludeProperties ? tzi.Id == model.TimeZoneId : tzi.Id == _dateTimeHelper.CurrentTimeZone.Id) });
+
+            if (!excludeProperties)
+            {
+                model.VatNumber = customer.VatNumber;
+                model.FirstName = customer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName);
+                model.LastName = customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName);
+                model.Gender = customer.GetAttribute<string>(SystemCustomerAttributeNames.Gender);
+                var dateOfBirth = customer.GetAttribute<DateTime?>(SystemCustomerAttributeNames.DateOfBirth);
+                if (dateOfBirth.HasValue)
+                {
+                    model.DateOfBirthDay = dateOfBirth.Value.Day;
+                    model.DateOfBirthMonth = dateOfBirth.Value.Month;
+                    model.DateOfBirthYear = dateOfBirth.Value.Year;
+                }
+                model.Company = customer.GetAttribute<string>(SystemCustomerAttributeNames.Company);
+                model.StreetAddress = customer.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress);
+                model.StreetAddress2 = customer.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress2);
+                model.ZipPostalCode = customer.GetAttribute<string>(SystemCustomerAttributeNames.ZipPostalCode);
+                model.City = customer.GetAttribute<string>(SystemCustomerAttributeNames.City);
+                model.CountryId = customer.GetAttribute<int>(SystemCustomerAttributeNames.CountryId);
+                model.StateProvinceId = customer.GetAttribute<int>(SystemCustomerAttributeNames.StateProvinceId);
+                model.Phone = customer.GetAttribute<string>(SystemCustomerAttributeNames.Phone);
+                model.Fax = customer.GetAttribute<string>(SystemCustomerAttributeNames.Fax);
+
+                //newsletter
+                var newsletter = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmail(customer.Email);
+                model.Newsletter = newsletter != null && newsletter.Active;
+
+                model.Signature = customer.GetAttribute<string>(SystemCustomerAttributeNames.Signature);
+
+                model.Email = customer.Email;
+                model.Username = customer.Username;
+            }
+            else
+            {
+                if (_customerSettings.UsernamesEnabled && !_customerSettings.AllowUsersToChangeUsernames)
+                    model.Username = customer.Username;
+            }
+
+            //countries and states
+            if (_customerSettings.CountryEnabled)
+            {
+                model.AvailableCountries.Add(new SelectListItem() { Text = _localizationService.GetResource("Address.SelectCountry"), Value = "0" });
+                foreach (var c in _countryService.GetAllCountries())
+                {
+                    model.AvailableCountries.Add(new SelectListItem()
+                    {
+                        Text = c.GetLocalized(x => x.Name),
+                        Value = c.Id.ToString(),
+                        Selected = c.Id == model.CountryId
+                    });
+                }
+
+                if (_customerSettings.StateProvinceEnabled)
+                {
+                    //states
+                    var states = _stateProvinceService.GetStateProvincesByCountryId(model.CountryId).ToList();
+                    if (states.Count > 0)
+                    {
+                        foreach (var s in states)
+                            model.AvailableStates.Add(new SelectListItem() { Text = s.GetLocalized(x => x.Name), Value = s.Id.ToString(), Selected = (s.Id == model.StateProvinceId) });
+                    }
+                    else
+                        model.AvailableStates.Add(new SelectListItem() { Text = _localizationService.GetResource("Address.OtherNonUS"), Value = "0" });
+
+                }
+            }
+            model.DisplayVatNumber = _taxSettings.EuVatEnabled;
+            model.VatNumberStatusNote = customer.VatNumberStatus.GetLocalizedEnum(_localizationService, _workContext);
+            model.GenderEnabled = _customerSettings.GenderEnabled;
+            model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
+            model.CompanyEnabled = _customerSettings.CompanyEnabled;
+            model.CompanyRequired = _customerSettings.CompanyRequired;
+            model.StreetAddressEnabled = _customerSettings.StreetAddressEnabled;
+            model.StreetAddressRequired = _customerSettings.StreetAddressRequired;
+            model.StreetAddress2Enabled = _customerSettings.StreetAddress2Enabled;
+            model.StreetAddress2Required = _customerSettings.StreetAddress2Required;
+            model.ZipPostalCodeEnabled = _customerSettings.ZipPostalCodeEnabled;
+            model.ZipPostalCodeRequired = _customerSettings.ZipPostalCodeRequired;
+            model.CityEnabled = _customerSettings.CityEnabled;
+            model.CityRequired = _customerSettings.CityRequired;
+            model.CountryEnabled = _customerSettings.CountryEnabled;
+            model.StateProvinceEnabled = _customerSettings.StateProvinceEnabled;
+            model.PhoneEnabled = _customerSettings.PhoneEnabled;
+            model.PhoneRequired = _customerSettings.PhoneRequired;
+            model.FaxEnabled = _customerSettings.FaxEnabled;
+            model.FaxRequired = _customerSettings.FaxRequired;
+            model.NewsletterEnabled = _customerSettings.NewsletterEnabled;
+            model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
+            model.AllowUsersToChangeUsernames = _customerSettings.AllowUsersToChangeUsernames;
+            model.CheckUsernameAvailabilityEnabled = _customerSettings.CheckUsernameAvailabilityEnabled;
+            model.SignatureEnabled = _forumSettings.ForumsEnabled && _forumSettings.SignaturesEnabled;
+
+            //external authentication
+            foreach (var ear in _openAuthenticationService.GetExternalIdentifiersFor(customer))
+            {
+                var authMethod = _openAuthenticationService.LoadExternalAuthenticationMethodBySystemName(ear.ProviderSystemName);
+                if (authMethod == null || !authMethod.IsMethodActive(_externalAuthenticationSettings))
+                    continue;
+
+                model.AssociatedExternalAuthRecords.Add(new CustomerInfoModel.AssociatedExternalAuthModel()
+                {
+                    Id = ear.Id,
+                    Email = ear.Email,
+                    ExternalIdentifier = ear.ExternalIdentifier,
+                    AuthMethodName = authMethod.GetLocalizedFriendlyName(_localizationService, _workContext.WorkingLanguage.Id)
+                });
+            }
+
+
+            model.NavigationModel = GetCustomerNavigationModel(customer);
+            model.NavigationModel.SelectedTab = CustomerNavigationEnum.Info;
+        }
+
+        [NonAction]
+        protected CustomerOrderListModel PrepareCustomerOrderListModel(Customer customer)
+        {
+            if (customer == null)
+                throw new ArgumentNullException("customer");
+
+            var model = new CustomerOrderListModel();
+            model.NavigationModel = GetCustomerNavigationModel(customer);
+            model.NavigationModel.SelectedTab = CustomerNavigationEnum.Orders;
+            var orders = _orderService.GetOrdersByCustomerId(customer.Id);
+            foreach (var order in orders)
+            {
+                var orderModel = new CustomerOrderListModel.OrderDetailsModel()
+                {
+                    Id = order.Id,
+                    CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc),
+                    OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
+                    IsReturnRequestAllowed = _orderProcessingService.IsReturnRequestAllowed(order)
+                };
+                var orderTotalInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderTotal, order.CurrencyRate);
+                orderModel.OrderTotal = _priceFormatter.FormatPrice(orderTotalInCustomerCurrency, true, order.CustomerCurrencyCode, false, _workContext.WorkingLanguage);
+
+                model.Orders.Add(orderModel);
+            }
+
+            var recurringPayments = _orderService.SearchRecurringPayments(customer.Id, 0, null);
+            foreach (var recurringPayment in recurringPayments)
+            {
+                var recurringPaymentModel = new CustomerOrderListModel.RecurringOrderModel()
+                {
+                    Id = recurringPayment.Id,
+                    StartDate = _dateTimeHelper.ConvertToUserTime(recurringPayment.StartDateUtc, DateTimeKind.Utc).ToString(),
+                    CycleInfo = string.Format("{0} {1}", recurringPayment.CycleLength, recurringPayment.CyclePeriod.GetLocalizedEnum(_localizationService, _workContext)),
+                    NextPayment = recurringPayment.NextPaymentDate.HasValue ? _dateTimeHelper.ConvertToUserTime(recurringPayment.NextPaymentDate.Value, DateTimeKind.Utc).ToString() : "",
+                    TotalCycles = recurringPayment.TotalCycles,
+                    CyclesRemaining = recurringPayment.CyclesRemaining,
+                    InitialOrderId = recurringPayment.InitialOrder.Id,
+                    CanCancel = _orderProcessingService.CanCancelRecurringPayment(customer, recurringPayment),
+                };
+
+                model.RecurringOrders.Add(recurringPaymentModel);
+            }
+
+            return model;
+        }
+
         #endregion
 
         #region Login / logout / register
@@ -612,23 +799,7 @@ namespace Nop.Web.Controllers
 
             return Json(new { Available = usernameAvailable, Text = statusText });
         }
-
-        [NonAction]
-        public bool UsernameIsValid(string username)
-        {
-            var result = true;
-
-            if (String.IsNullOrEmpty(username))
-            {
-                return false;
-            }
-
-            // other validation 
-
-            return result;
-        }
-
-
+        
         public ActionResult Logout()
         {
             //external authentication
@@ -860,132 +1031,6 @@ namespace Nop.Web.Controllers
             return View(model);
         }
         
-        [NonAction]
-        private void PrepareCustomerInfoModel(CustomerInfoModel model, Customer customer, bool excludeProperties)
-        {
-            if (model == null)
-                throw new ArgumentNullException("model");
-
-            if (customer == null)
-                throw new ArgumentNullException("customer");
-            
-            model.AllowCustomersToSetTimeZone = _dateTimeSettings.AllowCustomersToSetTimeZone;
-            foreach (var tzi in _dateTimeHelper.GetSystemTimeZones())
-                model.AvailableTimeZones.Add(new SelectListItem() { Text = tzi.DisplayName, Value = tzi.Id, Selected = (excludeProperties ? tzi.Id == model.TimeZoneId : tzi.Id == _dateTimeHelper.CurrentTimeZone.Id) });
-            
-            if (!excludeProperties)
-            {
-                model.VatNumber = customer.VatNumber;
-                model.FirstName = customer.GetAttribute<string>(SystemCustomerAttributeNames.FirstName);
-                model.LastName = customer.GetAttribute<string>(SystemCustomerAttributeNames.LastName);
-                model.Gender = customer.GetAttribute<string>(SystemCustomerAttributeNames.Gender);
-                var dateOfBirth = customer.GetAttribute<DateTime?>(SystemCustomerAttributeNames.DateOfBirth);
-                if (dateOfBirth.HasValue)
-                {
-                    model.DateOfBirthDay = dateOfBirth.Value.Day;
-                    model.DateOfBirthMonth = dateOfBirth.Value.Month;
-                    model.DateOfBirthYear = dateOfBirth.Value.Year;
-                }
-                model.Company = customer.GetAttribute<string>(SystemCustomerAttributeNames.Company);
-                model.StreetAddress = customer.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress);
-                model.StreetAddress2 = customer.GetAttribute<string>(SystemCustomerAttributeNames.StreetAddress2);
-                model.ZipPostalCode = customer.GetAttribute<string>(SystemCustomerAttributeNames.ZipPostalCode);
-                model.City = customer.GetAttribute<string>(SystemCustomerAttributeNames.City);
-                model.CountryId = customer.GetAttribute<int>(SystemCustomerAttributeNames.CountryId);
-                model.StateProvinceId = customer.GetAttribute<int>(SystemCustomerAttributeNames.StateProvinceId);
-                model.Phone = customer.GetAttribute<string>(SystemCustomerAttributeNames.Phone);
-                model.Fax = customer.GetAttribute<string>(SystemCustomerAttributeNames.Fax);
-
-                //newsletter
-                var newsletter = _newsLetterSubscriptionService.GetNewsLetterSubscriptionByEmail(customer.Email);
-                model.Newsletter = newsletter != null && newsletter.Active;
-
-                model.Signature = customer.GetAttribute<string>(SystemCustomerAttributeNames.Signature);
-
-                model.Email = customer.Email;
-                model.Username = customer.Username;
-            }
-            else
-            {
-                if (_customerSettings.UsernamesEnabled && !_customerSettings.AllowUsersToChangeUsernames)
-                    model.Username = customer.Username;
-            }
-
-            //countries and states
-            if (_customerSettings.CountryEnabled)
-            {
-                model.AvailableCountries.Add(new SelectListItem() { Text = _localizationService.GetResource("Address.SelectCountry"), Value = "0" });
-                foreach (var c in _countryService.GetAllCountries())
-                {
-                    model.AvailableCountries.Add(new SelectListItem()
-                    {
-                        Text = c.GetLocalized(x => x.Name),
-                        Value = c.Id.ToString(),
-                        Selected = c.Id == model.CountryId
-                    });
-                }
-
-                if (_customerSettings.StateProvinceEnabled)
-                {
-                    //states
-                    var states = _stateProvinceService.GetStateProvincesByCountryId(model.CountryId).ToList();
-                    if (states.Count > 0)
-                    {
-                        foreach (var s in states)
-                            model.AvailableStates.Add(new SelectListItem() { Text = s.GetLocalized(x => x.Name), Value = s.Id.ToString(), Selected = (s.Id == model.StateProvinceId) });
-                    }
-                    else
-                        model.AvailableStates.Add(new SelectListItem() { Text = _localizationService.GetResource("Address.OtherNonUS"), Value = "0" });
-
-                }
-            }
-            model.DisplayVatNumber = _taxSettings.EuVatEnabled;
-            model.VatNumberStatusNote = customer.VatNumberStatus.GetLocalizedEnum(_localizationService, _workContext);
-            model.GenderEnabled = _customerSettings.GenderEnabled;
-            model.DateOfBirthEnabled = _customerSettings.DateOfBirthEnabled;
-            model.CompanyEnabled = _customerSettings.CompanyEnabled;
-            model.CompanyRequired = _customerSettings.CompanyRequired;
-            model.StreetAddressEnabled = _customerSettings.StreetAddressEnabled;
-            model.StreetAddressRequired = _customerSettings.StreetAddressRequired;
-            model.StreetAddress2Enabled = _customerSettings.StreetAddress2Enabled;
-            model.StreetAddress2Required = _customerSettings.StreetAddress2Required;
-            model.ZipPostalCodeEnabled = _customerSettings.ZipPostalCodeEnabled;
-            model.ZipPostalCodeRequired = _customerSettings.ZipPostalCodeRequired;
-            model.CityEnabled = _customerSettings.CityEnabled;
-            model.CityRequired = _customerSettings.CityRequired;
-            model.CountryEnabled = _customerSettings.CountryEnabled;
-            model.StateProvinceEnabled = _customerSettings.StateProvinceEnabled;
-            model.PhoneEnabled = _customerSettings.PhoneEnabled;
-            model.PhoneRequired = _customerSettings.PhoneRequired;
-            model.FaxEnabled = _customerSettings.FaxEnabled;
-            model.FaxRequired = _customerSettings.FaxRequired;
-            model.NewsletterEnabled = _customerSettings.NewsletterEnabled;
-            model.UsernamesEnabled = _customerSettings.UsernamesEnabled;
-            model.AllowUsersToChangeUsernames = _customerSettings.AllowUsersToChangeUsernames;
-            model.CheckUsernameAvailabilityEnabled = _customerSettings.CheckUsernameAvailabilityEnabled;
-            model.SignatureEnabled = _forumSettings.ForumsEnabled && _forumSettings.SignaturesEnabled;
-
-            //external authentication
-            foreach (var ear in _openAuthenticationService.GetExternalIdentifiersFor(customer))
-            {
-                var authMethod = _openAuthenticationService.LoadExternalAuthenticationMethodBySystemName(ear.ProviderSystemName);
-                if (authMethod == null || !authMethod.IsMethodActive(_externalAuthenticationSettings))
-                    continue;
-
-                model.AssociatedExternalAuthRecords.Add(new CustomerInfoModel.AssociatedExternalAuthModel()
-                {
-                    Id = ear.Id,
-                    Email = ear.Email,
-                    ExternalIdentifier = ear.ExternalIdentifier,
-                    AuthMethodName = authMethod.GetLocalizedFriendlyName(_localizationService, _workContext.WorkingLanguage.Id)
-                });
-            }
-
-
-            model.NavigationModel = GetCustomerNavigationModel(customer);
-            model.NavigationModel.SelectedTab = CustomerNavigationEnum.Info;
-        }
-
         #endregion
 
         #region Addresses
@@ -1224,51 +1269,6 @@ namespace Nop.Web.Controllers
             {
                 return RedirectToRoute("CustomerOrders");
             }
-        }
-
-        private CustomerOrderListModel PrepareCustomerOrderListModel(Customer customer)
-        {
-            if (customer == null)
-                throw new ArgumentNullException("customer");
-
-            var model = new CustomerOrderListModel();
-            model.NavigationModel = GetCustomerNavigationModel(customer);
-            model.NavigationModel.SelectedTab = CustomerNavigationEnum.Orders;
-            var orders = _orderService.GetOrdersByCustomerId(customer.Id);
-            foreach (var order in orders)
-            {
-                var orderModel = new CustomerOrderListModel.OrderDetailsModel()
-                {
-                    Id = order.Id,
-                    CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc),
-                    OrderStatus = order.OrderStatus.GetLocalizedEnum(_localizationService, _workContext),
-                    IsReturnRequestAllowed = _orderProcessingService.IsReturnRequestAllowed(order)
-                };
-                var orderTotalInCustomerCurrency = _currencyService.ConvertCurrency(order.OrderTotal, order.CurrencyRate);
-                orderModel.OrderTotal = _priceFormatter.FormatPrice(orderTotalInCustomerCurrency, true, order.CustomerCurrencyCode, false, _workContext.WorkingLanguage);
-
-                model.Orders.Add(orderModel);
-            }
-
-            var recurringPayments = _orderService.SearchRecurringPayments(customer.Id, 0, null);
-            foreach (var recurringPayment in recurringPayments)
-            {
-                var recurringPaymentModel = new CustomerOrderListModel.RecurringOrderModel()
-                {
-                    Id = recurringPayment.Id,
-                    StartDate = _dateTimeHelper.ConvertToUserTime(recurringPayment.StartDateUtc, DateTimeKind.Utc).ToString(),
-                    CycleInfo =string.Format("{0} {1}", recurringPayment.CycleLength, recurringPayment.CyclePeriod.GetLocalizedEnum(_localizationService,_workContext)),
-                    NextPayment = recurringPayment.NextPaymentDate.HasValue ? _dateTimeHelper.ConvertToUserTime(recurringPayment.NextPaymentDate.Value, DateTimeKind.Utc).ToString() : "",
-                    TotalCycles = recurringPayment.TotalCycles,
-                    CyclesRemaining = recurringPayment.CyclesRemaining,
-                    InitialOrderId = recurringPayment.InitialOrder.Id,
-                    CanCancel = _orderProcessingService.CanCancelRecurringPayment(customer, recurringPayment),
-                };
-
-                model.RecurringOrders.Add(recurringPaymentModel);
-            }
-
-            return model;
         }
 
         #endregion

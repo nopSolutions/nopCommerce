@@ -42,7 +42,8 @@ namespace Nop.Web.Controllers
         /// </summary>
         /// <param name="connectionString">Connection string</param>
         /// <returns>Returns true if the database exists.</returns>
-        private bool sqlServerDatabaseExists(string connectionString)
+        [NonAction]
+        protected bool SqlServerDatabaseExists(string connectionString)
         {
             try
             {
@@ -65,7 +66,8 @@ namespace Nop.Web.Controllers
         /// <param name="connectionString">Connection string</param>
         /// <param name="collation">Server collation; the default one will be used if not specified</param>
         /// <returns>Error</returns>
-        private string createDatabase(string connectionString, string collation)
+        [NonAction]
+        protected string CreateDatabase(string connectionString, string collation)
         {
             try
             {
@@ -105,7 +107,8 @@ namespace Nop.Web.Controllers
         /// <param name="password">The password for the SQL Server account</param>
         /// <param name="timeout">The connection timeout</param>
         /// <returns>Connection string</returns>
-        private string createConnectionString(bool trustedConnection,
+        [NonAction]
+        protected string CreateConnectionString(bool trustedConnection,
             string serverName, string databaseName, 
             string userName, string password, int timeout = 0)
         {
@@ -270,18 +273,18 @@ namespace Nop.Web.Controllers
                         else
                         {
                             //values
-                            connectionString = createConnectionString(model.SqlAuthenticationType == "windowsauthentication",
+                            connectionString = CreateConnectionString(model.SqlAuthenticationType == "windowsauthentication",
                                 model.SqlServerName, model.SqlDatabaseName,
                                 model.SqlServerUsername, model.SqlServerPassword);
                         }
                         
                         if (model.SqlServerCreateDatabase)
                         {
-                            if (!sqlServerDatabaseExists(connectionString))
+                            if (!SqlServerDatabaseExists(connectionString))
                             {
                                 //create database
                                 var collation = model.UseCustomCollation ? model.Collation : "";
-                                var errorCreatingDatabase = createDatabase(connectionString, collation);
+                                var errorCreatingDatabase = CreateDatabase(connectionString, collation);
                                 if (!String.IsNullOrEmpty(errorCreatingDatabase))
                                     throw new Exception(errorCreatingDatabase);
                                 else
@@ -295,7 +298,7 @@ namespace Nop.Web.Controllers
                         else
                         {
                             //check whether database exists
-                            if (!sqlServerDatabaseExists(connectionString))
+                            if (!SqlServerDatabaseExists(connectionString))
                                 throw new Exception(_locService.GetResource("DatabaseNotExists"));
                         }
                     }

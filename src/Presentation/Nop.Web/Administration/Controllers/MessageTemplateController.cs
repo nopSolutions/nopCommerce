@@ -62,7 +62,7 @@ namespace Nop.Admin.Controllers
         #region Utilities
 
         [NonAction]
-        public void UpdateLocales(MessageTemplate mt, MessageTemplateModel model)
+        protected void UpdateLocales(MessageTemplate mt, MessageTemplateModel model)
         {
             foreach (var localized in model.Locales)
             {
