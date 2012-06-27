@@ -117,8 +117,8 @@ _gaq.push(['_trackTrans']); ",
             //locales
             this.DeletePluginLocaleResource("Plugins.Widgets.GoogleAnalytics.GoogleId");
             this.DeletePluginLocaleResource("Plugins.Widgets.GoogleAnalytics.GoogleId.Hint");
-            this.DeletePluginLocaleResource("Plugins.Widgets.GoogleAnalytics.JavaScript");
-            this.DeletePluginLocaleResource("Plugins.Widgets.GoogleAnalytics.JavaScript.Hint");
+            this.DeletePluginLocaleResource("Plugins.Widgets.GoogleAnalytics.TrackingScript");
+            this.DeletePluginLocaleResource("Plugins.Widgets.GoogleAnalytics.TrackingScript.Hint");
             this.DeletePluginLocaleResource("Plugins.Widgets.GoogleAnalytics.EcommerceScript");
             this.DeletePluginLocaleResource("Plugins.Widgets.GoogleAnalytics.EcommerceScript.Hint");
             this.DeletePluginLocaleResource("Plugins.Widgets.GoogleAnalytics.EcommerceDetailScript");
