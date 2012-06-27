@@ -1533,7 +1533,7 @@ namespace Nop.Admin.Controllers
                     ProductSortingEnum.Position, 0, int.MaxValue,
                     false, out filterableSpecificationAttributeOptionIds, true);
                 string fileName = string.Format("pdfcatalog_{0}_{1}.pdf", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
-                string filePath = string.Format("{0}content\\files\\ExportImport\\{1}", this.Request.PhysicalApplicationPath, fileName);
+                string filePath = System.IO.Path.Combine(this.Request.PhysicalApplicationPath, "content\\files\\ExportImport", fileName);
                 _pdfService.PrintProductsToPdf(products, _workContext.WorkingLanguage, filePath);
                 var bytes = System.IO.File.ReadAllBytes(filePath);
                 return File(bytes, "application/pdf", fileName);
@@ -1603,7 +1603,7 @@ namespace Nop.Admin.Controllers
                     false, out filterableSpecificationAttributeOptionIds, true);
 
                 string fileName = string.Format("products_{0}_{1}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
-                string filePath = string.Format("{0}content\\files\\ExportImport\\{1}", Request.PhysicalApplicationPath, fileName);
+                string filePath = System.IO.Path.Combine(Request.PhysicalApplicationPath, "content\\files\\ExportImport", fileName);
 
                 _exportManager.ExportProductsToXlsx(filePath, products);
 
@@ -1633,7 +1633,7 @@ namespace Nop.Admin.Controllers
             }
 
             string fileName = string.Format("products_{0}_{1}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
-            string filePath = string.Format("{0}content\\files\\ExportImport\\{1}", Request.PhysicalApplicationPath, fileName);
+            string filePath = System.IO.Path.Combine(Request.PhysicalApplicationPath, "content\\files\\ExportImport", fileName);
 
             _exportManager.ExportProductsToXlsx(filePath, products);
 
@@ -1656,7 +1656,7 @@ namespace Nop.Admin.Controllers
                     file.InputStream.Read(fileBytes, 0, file.ContentLength);
                     //do stuff with the bytes
                     string fileName = string.Format("products_{0}_{1}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
-                    string filePath = string.Format("{0}content\\files\\ExportImport\\{1}", Request.PhysicalApplicationPath, fileName);
+                    string filePath = System.IO.Path.Combine(Request.PhysicalApplicationPath, "content\\files\\ExportImport", fileName);
 
                     System.IO.File.WriteAllBytes(filePath, fileBytes);
                     _importManager.ImportProductsFromXlsx(filePath);

@@ -93,7 +93,7 @@ namespace Nop.Plugin.Feed.Become.Controllers
             try
             {
                 string fileName = string.Format("become_{0}_{1}.csv", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
-                string filePath = string.Format("{0}content\\files\\exportimport\\{1}", Request.PhysicalApplicationPath, fileName);
+                string filePath = System.IO.Path.Combine(Request.PhysicalApplicationPath, "content\\files\\exportimport", fileName);
                 using (var fs = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite))
                 {
                     var pluginDescriptor = _pluginFinder.GetPluginDescriptorBySystemName("PromotionFeed.Become");

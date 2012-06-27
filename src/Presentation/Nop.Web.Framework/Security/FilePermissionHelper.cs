@@ -155,15 +155,15 @@ namespace Nop.Web.Framework.Security
             string rootDir = webHelper.MapPath("~/");
             var dirsToCheck = new List<string>();
             //dirsToCheck.Add(rootDir);
-            dirsToCheck.Add(rootDir + "App_Data");
-            dirsToCheck.Add(rootDir + "bin");
-            dirsToCheck.Add(rootDir + "content");
-            dirsToCheck.Add(rootDir + "content\\images");
-            dirsToCheck.Add(rootDir + "content\\images\\thumbs");
-            dirsToCheck.Add(rootDir + "content\\images\\uploaded");
-            dirsToCheck.Add(rootDir + "content\\files\\exportimport");
-            dirsToCheck.Add(rootDir + "plugins");
-            dirsToCheck.Add(rootDir + "plugins\\bin");
+            dirsToCheck.Add(Path.Combine(rootDir, "App_Data"));
+            dirsToCheck.Add(Path.Combine(rootDir, "bin"));
+            dirsToCheck.Add(Path.Combine(rootDir, "content"));
+            dirsToCheck.Add(Path.Combine(rootDir, "content\\images"));
+            dirsToCheck.Add(Path.Combine(rootDir, "content\\images\\thumbs"));
+            dirsToCheck.Add(Path.Combine(rootDir, "content\\images\\uploaded"));
+            dirsToCheck.Add(Path.Combine(rootDir, "content\\files\\exportimport"));
+            dirsToCheck.Add(Path.Combine(rootDir, "plugins"));
+            dirsToCheck.Add(Path.Combine(rootDir, "plugins\\bin"));
             return dirsToCheck;
         }
 
@@ -176,10 +176,10 @@ namespace Nop.Web.Framework.Security
         {
             string rootDir = webHelper.MapPath("~/");
             var filesToCheck = new List<string>();
-            filesToCheck.Add(rootDir + "Global.asax");
-            filesToCheck.Add(rootDir + "web.config");
-            filesToCheck.Add(rootDir + "App_Data\\InstalledPlugins.txt");
-            filesToCheck.Add(rootDir + "App_Data\\Settings.txt");
+            filesToCheck.Add(Path.Combine(rootDir, "Global.asax"));
+            filesToCheck.Add(Path.Combine(rootDir, "web.config"));
+            filesToCheck.Add(Path.Combine(rootDir,"App_Data\\InstalledPlugins.txt"));
+            filesToCheck.Add(Path.Combine(rootDir, "App_Data\\Settings.txt"));
             return filesToCheck;
         }
     }

@@ -103,7 +103,7 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
                 model.TaskEnabled = task.Enabled;
             }
             //file path
-            if (System.IO.File.Exists(string.Format("{0}content\\files\\exportimport\\{1}", HttpRuntime.AppDomainAppPath, _froogleSettings.StaticFileName)))
+            if (System.IO.File.Exists(System.IO.Path.Combine(HttpRuntime.AppDomainAppPath, "content\\files\\exportimport", _froogleSettings.StaticFileName)))
                 model.StaticFilePath = string.Format("{0}content/files/exportimport/{1}", _webHelper.GetStoreLocation(false), _froogleSettings.StaticFileName);
 
             return View("Nop.Plugin.Feed.Froogle.Views.FeedFroogle.Configure", model);
@@ -162,7 +162,7 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
                 });
             }
             //file path
-            if (System.IO.File.Exists(string.Format("{0}content\\files\\exportimport\\{1}", HttpRuntime.AppDomainAppPath, _froogleSettings.StaticFileName)))
+            if (System.IO.File.Exists(System.IO.Path.Combine(HttpRuntime.AppDomainAppPath, "content\\files\\exportimport", _froogleSettings.StaticFileName)))
                 model.StaticFilePath = string.Format("{0}content/files/exportimport/{1}", _webHelper.GetStoreLocation(false), _froogleSettings.StaticFileName);
 
             //set result text
@@ -235,7 +235,7 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
             }
 
             //file path
-            if (System.IO.File.Exists(string.Format("{0}content\\files\\exportimport\\{1}", HttpRuntime.AppDomainAppPath, _froogleSettings.StaticFileName)))
+            if (System.IO.File.Exists(System.IO.Path.Combine(HttpRuntime.AppDomainAppPath, "content\\files\\exportimport", _froogleSettings.StaticFileName)))
                 model.StaticFilePath = string.Format("{0}content/files/exportimport/{1}", _webHelper.GetStoreLocation(false), _froogleSettings.StaticFileName);
 
             return View("Nop.Plugin.Feed.Froogle.Views.FeedFroogle.Configure", model);
@@ -314,7 +314,7 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
             }
 
             //file path
-            if (System.IO.File.Exists(string.Format("{0}content\\files\\exportimport\\{1}", HttpRuntime.AppDomainAppPath, _froogleSettings.StaticFileName)))
+            if (System.IO.File.Exists(System.IO.Path.Combine(HttpRuntime.AppDomainAppPath, "content\\files\\exportimport", _froogleSettings.StaticFileName)))
                 model.StaticFilePath = string.Format("{0}content/files/exportimport/{1}", _webHelper.GetStoreLocation(false), _froogleSettings.StaticFileName);
 
 

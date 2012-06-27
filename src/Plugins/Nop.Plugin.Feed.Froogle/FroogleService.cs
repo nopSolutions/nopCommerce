@@ -508,7 +508,7 @@ namespace Nop.Plugin.Feed.Froogle
         /// </summary>
         public virtual void GenerateStaticFile()
         {
-            string filePath = string.Format("{0}content\\files\\exportimport\\{1}", HttpRuntime.AppDomainAppPath, _froogleSettings.StaticFileName);
+            string filePath = System.IO.Path.Combine(HttpRuntime.AppDomainAppPath, "content\\files\\exportimport", _froogleSettings.StaticFileName);
             using (var fs = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite))
             {
                 GenerateFeed(fs);

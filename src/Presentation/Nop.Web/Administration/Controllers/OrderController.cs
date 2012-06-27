@@ -661,7 +661,7 @@ namespace Nop.Admin.Controllers
                     null, null, null, null, 0, int.MaxValue);
 
                 string fileName = string.Format("orders_{0}_{1}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
-                string filePath = string.Format("{0}content\\files\\ExportImport\\{1}", Request.PhysicalApplicationPath, fileName);
+                string filePath = System.IO.Path.Combine(Request.PhysicalApplicationPath, "content\\files\\ExportImport", fileName);
 
                 _exportManager.ExportOrdersToXlsx(filePath, orders);
 
@@ -691,7 +691,7 @@ namespace Nop.Admin.Controllers
             }
 
             string fileName = string.Format("orders_{0}_{1}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
-            string filePath = string.Format("{0}content\\files\\ExportImport\\{1}", Request.PhysicalApplicationPath, fileName);
+            string filePath = System.IO.Path.Combine(Request.PhysicalApplicationPath, "content\\files\\ExportImport", fileName);
 
             _exportManager.ExportOrdersToXlsx(filePath, orders);
 
@@ -1031,7 +1031,7 @@ namespace Nop.Admin.Controllers
             var orders = new List<Order>();
             orders.Add(order);
             string fileName = string.Format("order_{0}_{1}.pdf", order.OrderGuid, DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
-            string filePath = string.Format("{0}content\\files\\ExportImport\\{1}", this.Request.PhysicalApplicationPath, fileName);
+            string filePath = System.IO.Path.Combine(this.Request.PhysicalApplicationPath, "content\\files\\ExportImport", fileName);
             _pdfService.PrintOrdersToPdf(orders, _workContext.WorkingLanguage, filePath);
             var bytes = System.IO.File.ReadAllBytes(filePath);
             return File(bytes, "application/pdf", fileName);
@@ -2091,7 +2091,7 @@ namespace Nop.Admin.Controllers
             var shipments = new List<Shipment>();
             shipments.Add(shipment);
             string fileName = string.Format("packagingslip_{0}_{1}_{2}.pdf", order.OrderGuid, shipment.Id, DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
-            string filePath = string.Format("{0}content\\files\\ExportImport\\{1}", this.Request.PhysicalApplicationPath, fileName);
+            string filePath = System.IO.Path.Combine(this.Request.PhysicalApplicationPath, "content\\files\\ExportImport", fileName);
             _pdfService.PrintPackagingSlipsToPdf(shipments, filePath);
             var bytes = System.IO.File.ReadAllBytes(filePath);
             return File(bytes, "application/pdf", fileName);
@@ -2104,7 +2104,7 @@ namespace Nop.Admin.Controllers
 
             var shipments = _shipmentService.GetAllShipments(null, null, 0, int.MaxValue);
             string fileName = string.Format("packagingslips_{0}.pdf", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
-            string filePath = string.Format("{0}content\\files\\ExportImport\\{1}", this.Request.PhysicalApplicationPath, fileName);
+            string filePath = System.IO.Path.Combine(this.Request.PhysicalApplicationPath, "content\\files\\ExportImport", fileName);
             _pdfService.PrintPackagingSlipsToPdf(shipments, filePath);
             var bytes = System.IO.File.ReadAllBytes(filePath);
             return File(bytes, "application/pdf", fileName);
@@ -2126,7 +2126,7 @@ namespace Nop.Admin.Controllers
             }
 
             string fileName = string.Format("packagingslips_{0}.pdf", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
-            string filePath = string.Format("{0}content\\files\\ExportImport\\{1}", this.Request.PhysicalApplicationPath, fileName);
+            string filePath = System.IO.Path.Combine(this.Request.PhysicalApplicationPath, "content\\files\\ExportImport", fileName);
             _pdfService.PrintPackagingSlipsToPdf(shipments, filePath);
             var bytes = System.IO.File.ReadAllBytes(filePath);
             return File(bytes, "application/pdf", fileName);

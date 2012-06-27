@@ -1541,7 +1541,7 @@ namespace Nop.Admin.Controllers
                     false, null, 0, int.MaxValue);
 
                 string fileName = string.Format("customers_{0}_{1}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
-                string filePath = string.Format("{0}content\\files\\ExportImport\\{1}", Request.PhysicalApplicationPath, fileName);
+                string filePath = System.IO.Path.Combine(Request.PhysicalApplicationPath, "content\\files\\ExportImport", fileName);
 
                 _exportManager.ExportCustomersToXlsx(filePath, customers);
 
@@ -1571,7 +1571,7 @@ namespace Nop.Admin.Controllers
             }
 
             string fileName = string.Format("customers_{0}_{1}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
-            string filePath = string.Format("{0}content\\files\\ExportImport\\{1}", Request.PhysicalApplicationPath, fileName);
+            string filePath = System.IO.Path.Combine(Request.PhysicalApplicationPath, "content\\files\\ExportImport", fileName);
 
             _exportManager.ExportCustomersToXlsx(filePath, customers);
 
