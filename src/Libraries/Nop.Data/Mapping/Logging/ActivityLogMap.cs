@@ -16,7 +16,7 @@ namespace Nop.Data.Mapping.Logging
                 .HasForeignKey(al => al.ActivityLogTypeId);
 
             this.HasRequired(al => al.Customer)
-                .WithMany(c => c.ActivityLog)
+                .WithMany()
                 .HasForeignKey(al => al.CustomerId);
         }
     }

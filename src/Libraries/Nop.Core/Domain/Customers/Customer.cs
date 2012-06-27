@@ -27,7 +27,6 @@ namespace Nop.Core.Domain.Customers
         private ICollection<RewardPointsHistory> _rewardPointsHistory;
         private ICollection<ReturnRequest> _returnRequests;
         private ICollection<Address> _addresses;
-        private ICollection<ActivityLog> _activityLog;
         private ICollection<ForumTopic> _forumTopics;
         private ICollection<ForumPost> _forumPosts;
 
@@ -296,16 +295,7 @@ namespace Nop.Core.Domain.Customers
             get { return _addresses ?? (_addresses = new List<Address>()); }
             protected set { _addresses = value; }            
         }
-
-        /// <summary>
-        /// Gets the activity log
-        /// </summary>
-        public virtual ICollection<ActivityLog> ActivityLog
-        {
-            get { return _activityLog ?? (_activityLog = new List<ActivityLog>()); }
-            protected set { _activityLog = value; }            
-        }
-
+        
         /// <summary>
         /// Gets or sets the created forum topics
         /// </summary>
