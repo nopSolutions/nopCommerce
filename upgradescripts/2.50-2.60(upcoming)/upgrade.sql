@@ -2841,3 +2841,11 @@ BEGIN
 	ADD [Zip] nvarchar(400) NULL')
 END
 GO
+
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.fileuploadallowedextensions')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'catalogsettings.fileuploadallowedextensions', N'')
+END
+GO

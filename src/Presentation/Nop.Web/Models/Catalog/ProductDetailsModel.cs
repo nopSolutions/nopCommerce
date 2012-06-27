@@ -174,6 +174,7 @@ namespace Nop.Web.Models.Catalog
             {
                 public ProductVariantAttributeModel()
                 {
+                    AllowedFileExtensions = new List<string>();
                     Values = new List<ProductVariantAttributeValueModel>();
                 }
 
@@ -205,9 +206,13 @@ namespace Nop.Web.Models.Catalog
                 /// Selected year value for datepicker
                 /// </summary>
                 public int? SelectedYear { get; set; }
+                /// <summary>
+                /// Allowed file extensions for customer uploaded files
+                /// </summary>
+                public IList<string> AllowedFileExtensions { get; set; }
 
                 public AttributeControlType AttributeControlType { get; set; }
-
+                
                 public IList<ProductVariantAttributeValueModel> Values { get; set; }
 
             }

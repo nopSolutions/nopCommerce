@@ -206,6 +206,9 @@
                             //register CSS and JS
                             Html.AddCssFileParts(@Url.Content("~/Content/fileuploader/fileuploader.css"));
                             Html.AddScriptParts(@Url.Content("~/Scripts/fileuploader.js"));
+
+                            //ex. ['jpg', 'jpeg', 'png', 'gif'] or []
+                            var allowedFileExtensions = string.Join(", ", attribute.AllowedFileExtensions.Select(x => "'" + x.Trim() +"'").ToList());
                             
                             <input id="@(controlId)" name="@(controlId)" type="hidden" />
                             <div id="@(controlId)uploader">
@@ -214,13 +217,14 @@
                             $(function () {                   
                                 var @(controlId)uploader = new qq.FileUploader({
                                     element: document.getElementById('@(controlId)uploader'),
-                                    action: '@(Url.RouteUrl("UploadFileProductAttribute", new {productVariantId = @attribute.ProductVariantId, productAttributeId = @attribute.ProductAttributeId }))',
+                                    action: '@(Url.RouteUrl("UploadFileProductAttribute", new { productVariantId = @attribute.ProductVariantId, productAttributeId = @attribute.ProductAttributeId }))',
                                     onComplete: function(id, fileName, responseJSON){
                                         $("#@(controlId)").val(responseJSON.downloadGuid);
                                         if (responseJSON.message) {
                                             alert(responseJSON.message);
                                         }
                                     },
+                                    allowedExtensions: [@Html.Raw(allowedFileExtensions)],
                                     strings: {
                                         upload: "@T("Common.FileUploader.Upload")",
                                         drop: "@T("Common.FileUploader.DropFiles")",

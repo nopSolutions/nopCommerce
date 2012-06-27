@@ -1,10 +1,16 @@
 ﻿
+using System.Collections.Generic;
 using Nop.Core.Configuration;
 
 namespace Nop.Core.Domain.Catalog
 {
     public class CatalogSettings : ISettings
     {
+        public CatalogSettings()
+        {
+            FileUploadAllowedExtensions = new List<string>();
+        }
+
         /// <summary>
         /// Gets or sets a value indicating whether to display product SKU
         /// </summary>
@@ -243,6 +249,11 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets a maximum file upload size in bytes for product attributes ('File Upload' type)
         /// </summary>
         public int FileUploadMaximumSizeBytes { get; set; }
+
+        /// <summary>
+        /// Gets or sets a list of allowed file extensions for customer uploaded files
+        /// </summary>
+        public List<string> FileUploadAllowedExtensions { get; set; }
 
         /// <summary>
         /// Gets or set the value indicating how many manufactures to display in manufacturers block

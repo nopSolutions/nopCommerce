@@ -719,6 +719,7 @@ namespace Nop.Web.Controllers
                         TextPrompt = attribute.TextPrompt,
                         IsRequired = attribute.IsRequired,
                         AttributeControlType = attribute.AttributeControlType,
+                        AllowedFileExtensions = _catalogSettings.FileUploadAllowedExtensions,
                     };
 
                 if (attribute.ShouldHaveValues())
