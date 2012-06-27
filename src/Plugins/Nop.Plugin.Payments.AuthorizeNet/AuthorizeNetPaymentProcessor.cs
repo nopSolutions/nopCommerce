@@ -444,7 +444,6 @@ namespace Nop.Plugin.Payments.AuthorizeNet
         /// <returns>Result</returns>
         public CancelRecurringPaymentResult CancelRecurringPayment(CancelRecurringPaymentRequest cancelPaymentRequest)
         {
-            //always success
             var result = new CancelRecurringPaymentResult();
             var authentication = PopulateMerchantAuthentication();
             long subscriptionId = 0;

@@ -633,8 +633,43 @@ namespace Nop.Plugin.Payments.PayPalDirect
         /// <returns>Result</returns>
         public CancelRecurringPaymentResult CancelRecurringPayment(CancelRecurringPaymentRequest cancelPaymentRequest)
         {
-            //always success (cancel only on PayPal site)
-            return new CancelRecurringPaymentResult();
+            var result = new CancelRecurringPaymentResult();
+            var order = cancelPaymentRequest.Order;
+
+            var req = new ManageRecurringPaymentsProfileStatusReq();
+            req.ManageRecurringPaymentsProfileStatusRequest = new ManageRecurringPaymentsProfileStatusRequestType();
+            req.ManageRecurringPaymentsProfileStatusRequest.Version = GetApiVersion();
+            var details = new ManageRecurringPaymentsProfileStatusRequestDetailsType();
+            req.ManageRecurringPaymentsProfileStatusRequest.ManageRecurringPaymentsProfileStatusRequestDetails = details;
+
+            details.Action = StatusChangeActionType.Cancel;
+            //Recurring payments profile ID returned in the CreateRecurringPaymentsProfile response
+            details.ProfileID = order.SubscriptionTransactionId;
+            
+            using (var service2 = new PayPalAPIAASoapBinding())
+            {
+                if (!_paypalDirectPaymentSettings.UseSandbox)
+                    service2.Url = "https://api-3t.paypal.com/2.0/";
+                else
+                    service2.Url = "https://api-3t.sandbox.paypal.com/2.0/";
+
+                service2.RequesterCredentials = new CustomSecurityHeaderType();
+                service2.RequesterCredentials.Credentials = new UserIdPasswordType();
+                service2.RequesterCredentials.Credentials.Username = _paypalDirectPaymentSettings.ApiAccountName;
+                service2.RequesterCredentials.Credentials.Password = _paypalDirectPaymentSettings.ApiAccountPassword;
+                service2.RequesterCredentials.Credentials.Signature = _paypalDirectPaymentSettings.Signature;
+                service2.RequesterCredentials.Credentials.Subject = "";
+
+                var response = service2.ManageRecurringPaymentsProfileStatus(req);
+
+                string error = "";
+                if (!PaypalHelper.CheckSuccess(response, out error))
+                {
+                    result.AddError(error);
+                }
+            }
+
+            return result;
         }
 
         /// <summary>
