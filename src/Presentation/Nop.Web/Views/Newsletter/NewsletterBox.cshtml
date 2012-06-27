@@ -8,33 +8,30 @@
     <div class="clear">
     </div>
     <div class="listbox">
-        @using (Html.BeginForm())
-        {
-            <div id="pnl-newsletter-subscribe">
-                @T("Newsletter.Email"):
-                @Html.TextBoxFor(x => x.Email, new { id = "newsletteremail" })
-                @Html.ValidationMessageFor(x => x.Email)
-                <div class="options">
-                    <input id="newsletter-subscribe" type="radio" name="newsletter-subscribe" value="newsletter-subscribe"
-                        checked="checked" />
-                    <label for="newsletter-subscribe">@T("Newsletter.Subscribe")</label>
-                    <input id="newsletter-unsubscribe" type="radio" name="newsletter-subscribe" value="newsletter-unsubscribe" />
-                    <label for="newsletter-unsubscribe">@T("Newsletter.Unsubscribe")</label>
-                </div>
-                <div class="clear">
-                </div>
-                <div class="buttons">
-                    <input type="submit" name="newsletter-subscribe-button" value="@T("Newsletter.Button")" id="newsletter-subscribe-button" class="newsletterbox-subscribebutton" />
-                    <span id="subscribe-loading-progress" style="display: none;">@T("Common.Wait...")
-                            <img src='@Url.Content("~/Content/Images/ajax_loader_small.gif")' alt="@T("Common.Wait...")" />
-                        </span>
-                </div>
+        <div id="pnl-newsletter-subscribe">
+            @T("Newsletter.Email"):
+            @Html.TextBoxFor(x => x.NewsletterEmail, new { id = "newsletteremail" })
+            @Html.ValidationMessageFor(x => x.NewsletterEmail)
+            <div class="options">
+                <input id="newsletter-subscribe" type="radio" name="newsletter-subscribe" value="newsletter-subscribe"
+                    checked="checked" />
+                <label for="newsletter-subscribe">@T("Newsletter.Subscribe")</label>
+                <input id="newsletter-unsubscribe" type="radio" name="newsletter-subscribe" value="newsletter-unsubscribe" />
+                <label for="newsletter-unsubscribe">@T("Newsletter.Unsubscribe")</label>
             </div>
             <div class="clear">
             </div>
-            <div id="pnl-newsletter-result">
+            <div class="buttons">
+                <input type="submit" name="newsletter-subscribe-button" value="@T("Newsletter.Button")" id="newsletter-subscribe-button" class="newsletterbox-subscribebutton" />
+                <span id="subscribe-loading-progress" style="display: none;">@T("Common.Wait...")
+                    <img src='@Url.Content("~/Content/Images/ajax_loader_small.gif")' alt="@T("Common.Wait...")" />
+                </span>
             </div>
-        }
+        </div>
+        <div class="clear">
+        </div>
+        <div id="pnl-newsletter-result">
+        </div>
     </div>
     <script type="text/javascript">
         $(document).ready(function () {
@@ -56,7 +53,8 @@
                         subscribeProgress.hide();
                         $("#pnl-newsletter-result").html(data.Result);
                          if (data.Success) {
-                            $('#pnl-newsletter-subscribe').hide();                            
+                            $('#pnl-newsletter-subscribe').hide();
+                            $('#pnl-newsletter-result').show();
                          }
                          else {
                             $('#pnl-newsletter-result').fadeIn("slow").delay(2000).fadeOut("slow");

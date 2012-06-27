@@ -304,7 +304,6 @@
     <Compile Include="Validators\Common\AddressValidator.cs" />
     <Compile Include="Validators\Install\InstallValidator.cs" />
     <Compile Include="Validators\News\NewsItemValidator.cs" />
-    <Compile Include="Validators\Newsletter\NewsletterBoxValidator.cs" />
     <Compile Include="Validators\Customer\PasswordRecoveryConfirmValidator.cs" />
     <Compile Include="Validators\Customer\PasswordRecoveryValidator.cs" />
     <Compile Include="Validators\PrivateMessages\SendPrivateMessageValidator.cs" />

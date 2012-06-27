@@ -1,12 +1,9 @@
-﻿using FluentValidation.Attributes;
-using Nop.Web.Framework.Mvc;
-using Nop.Web.Validators.Newsletter;
+﻿using Nop.Web.Framework.Mvc;
 
 namespace Nop.Web.Models.Newsletter
 {
-    [Validator(typeof(NewsletterBoxValidator))]
     public partial class NewsletterBoxModel : BaseNopModel
     {
-        public string Email { get; set; }
+        public string NewsletterEmail { get; set; }
     }
 }
