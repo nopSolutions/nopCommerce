@@ -145,15 +145,9 @@ namespace Nop.Plugin.Tax.CountryStateZip.Controllers
             return RatesList(command);
         }
 
-        [HttpPost, ActionName("Configure")]
-        [FormValueRequired("addtaxrate")]
+        [HttpPost]
         public ActionResult AddTaxRate(TaxRateListModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                return Configure();
-            }
-
             var taxRate = new TaxRate()
             {
                 TaxCategoryId = model.AddTaxCategoryId,
@@ -164,7 +158,7 @@ namespace Nop.Plugin.Tax.CountryStateZip.Controllers
             };
             _taxRateService.InsertTaxRate(taxRate);
 
-            return Configure();
+            return Json(new { Result = true });
         }
 
     }

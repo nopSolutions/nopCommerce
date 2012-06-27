@@ -13,6 +13,17 @@ namespace Nop.Plugin.Shipping.ByWeight
                  new { controller = "ShippingByWeight", action = "Configure" },
                  new[] { "Nop.Plugin.Shipping.ByWeight.Controllers" }
             );
+
+            routes.MapRoute("Plugin.Shipping.ByWeight.AddShippingRate",
+                 "Plugins/ShippingByWeight/AddShippingRate",
+                 new { controller = "ShippingByWeight", action = "AddShippingRate" },
+                 new[] { "Nop.Plugin.Shipping.ByWeight.Controllers" }
+            );
+            routes.MapRoute("Plugin.Shipping.ByWeight.SaveGeneralSettings",
+                 "Plugins/ShippingByWeight/SaveGeneralSettings",
+                 new { controller = "ShippingByWeight", action = "SaveGeneralSettings" },
+                 new[] { "Nop.Plugin.Shipping.ByWeight.Controllers" }
+            );
         }
         public int Priority
         {

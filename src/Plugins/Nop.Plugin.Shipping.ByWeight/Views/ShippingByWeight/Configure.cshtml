@@ -10,7 +10,7 @@
     <tr>
         <td>
             @(Html.Telerik().Grid(Model.Records)
-                    .Name("Grid")
+                    .Name("shipping-byweight-grid")
                     .DataKeys(keys => keys.Add(x => x.Id).RouteKey("Id"))
                     .Columns(columns =>
                     {
@@ -92,6 +92,45 @@
                 $('#pnlAddShippingChargeAmount').show();
             }
         }
+
+        $(function () {
+            $('#addshippingbyweightrecord').click(function () {
+                $.ajax({
+                    cache: false,
+                    type: 'POST',
+                    url: '@Url.RouteUrl("Plugin.Shipping.ByWeight.AddShippingRate")',
+                    data: $(this.form).serialize(),
+                    dataType: 'json',
+                    success: function (data) {
+                        var shippingByweightGrid = $("#shipping-byweight-grid");
+                        shippingByweightGrid.data('tGrid').ajaxRequest();
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert('Failed to add record.');
+                    }
+                });
+                return false;
+            });
+        });
+
+        $(function () {
+            $('#savegeneralsettings').click(function () {
+                $.ajax({
+                    cache: false,
+                    type: 'POST',
+                    url: '@Url.RouteUrl("Plugin.Shipping.ByWeight.SaveGeneralSettings")',
+                    data: $(this.form).serialize(),
+                    dataType: 'json',
+                    success: function (data) {
+                        alert('Saved');
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert('Failed to add record.');
+                    }
+                });
+                return false;
+            });
+        });
     </script>
     <table class="adminContent" style="border: 1px solid black; padding: 15px;">
         <tr>
@@ -182,8 +221,7 @@
         </tr>
         <tr>
             <td colspan="2" align="left">
-                <button type="submit" name="addshippingbyweightrecord" value="addshippingbyweightrecord"
-                    class="t-button">
+                <button type="button" id="addshippingbyweightrecord" class="t-button">
                     @T("Plugins.Shipping.ByWeight.AddRecord")</button>
             </td>
         </tr>
@@ -212,8 +250,7 @@
         </tr>
         <tr>
             <td colspan="2" align="left">
-                <button type="submit" name="savegeneralsettings" value="savegeneralsettings" class="t-button">
-                    @T("Admin.Common.Save")</button>
+                <button type="button" id="savegeneralsettings" class="t-button">@T("Admin.Common.Save")</button>
             </td>
         </tr>
     </table>

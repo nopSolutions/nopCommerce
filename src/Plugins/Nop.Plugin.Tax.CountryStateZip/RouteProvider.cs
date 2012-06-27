@@ -13,6 +13,12 @@ namespace Nop.Plugin.Tax.CountryStateZip
                  new { controller = "TaxCountryStateZip", action = "Configure" },
                  new[] { "Nop.Plugin.Tax.CountryStateZip.Controllers" }
             );
+
+            routes.MapRoute("Plugin.Tax.CountryStateZip.AddTaxRate",
+                 "Plugins/TaxCountryStateZip/AddTaxRate",
+                 new { controller = "TaxCountryStateZip", action = "AddTaxRate" },
+                 new[] { "Nop.Plugin.Tax.CountryStateZip.Controllers" }
+            );
         }
         public int Priority
         {

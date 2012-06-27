@@ -179,15 +179,9 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
             return RatesList(command);
         }
 
-        [HttpPost, ActionName("Configure")]
-        [FormValueRequired("addshippingbyweightrecord")]
-        public ActionResult AddShippingByWeightRecord(ShippingByWeightListModel model)
+        [HttpPost]
+        public ActionResult AddShippingRate(ShippingByWeightListModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                return Configure();
-            }
-
             var sbw = new ShippingByWeightRecord()
             {
                 ShippingMethodId = model.AddShippingMethodId,
@@ -202,19 +196,18 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
             };
             _shippingByWeightService.InsertShippingByWeightRecord(sbw);
 
-            return Configure();
+            return Json(new { Result = true });
         }
 
-        [HttpPost, ActionName("Configure")]
-        [FormValueRequired("savegeneralsettings")]
+        [HttpPost]
         public ActionResult SaveGeneralSettings(ShippingByWeightListModel model)
         {
             //save settings
             _shippingByWeightSettings.LimitMethodsToCreated = model.LimitMethodsToCreated;
             _shippingByWeightSettings.CalculatePerWeightUnit = model.CalculatePerWeightUnit;
             _settingService.SaveSetting(_shippingByWeightSettings);
-            
-            return Configure();
+
+            return Json(new { Result = true });
         }
         
     }

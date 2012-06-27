@@ -8,8 +8,8 @@
 <table class="adminContent">
     <tr>
         <td>
-                    @(Html.Telerik().Grid(Model.TaxRates)
-                    .Name("Grid")
+            @(Html.Telerik().Grid(Model.TaxRates)
+                    .Name("tax-countrystatezip-grid")
                     .DataKeys(keys => keys.Add(x => x.Id).RouteKey("Id"))
                     .Columns(columns =>
                     {
@@ -42,7 +42,6 @@
 </table>
 <p>
 </p>
-
 <script type="text/javascript">
      $(function() {
             $("#@Html.FieldIdFor(model => model.AddCountryId)").change(function() {
@@ -69,60 +68,81 @@
 @using (Html.BeginForm())
 {
     <table class="adminContent">
-<tr>
-    <td class="adminTitle" colspan="2">
-        <b>@T("Plugins.Tax.CountryStateZip.AddRecord.Hint")</b>
-    </td>
-</tr>
-<tr>
-    <td class="adminTitle">
-        @Html.NopLabelFor(model => model.AddCountryId):
-    </td>
-    <td class="adminData">
-        @Html.DropDownListFor(model => model.AddCountryId, Model.AvailableCountries)
-        @Html.ValidationMessageFor(model => model.AddCountryId)
-    </td>
-</tr>
-<tr>
-    <td class="adminTitle">
-    @Html.NopLabelFor(model => model.AddStateProvinceId):
-    </td>
-    <td class="adminData">
-    @Html.DropDownListFor(model => model.AddStateProvinceId, Model.AvailableStates)
-    @Html.ValidationMessageFor(model => model.AddStateProvinceId)
-    </td>
-</tr>
-<tr>
-    <td class="adminTitle">
-        @Html.NopLabelFor(model => model.AddZip):
-    </td>
-    <td class="adminData">
-        @Html.EditorFor(model => model.AddZip)
-        @Html.ValidationMessageFor(model => model.AddZip)
-    </td>
-</tr>
-<tr>
-    <td class="adminTitle">
-        @Html.NopLabelFor(model => model.AddTaxCategoryId):
-    </td>
-    <td class="adminData">
-        @Html.DropDownListFor(model => model.AddTaxCategoryId, Model.AvailableTaxCategories)
-        @Html.ValidationMessageFor(model => model.AddTaxCategoryId)
-    </td>
-</tr>
-<tr>
-    <td class="adminTitle">
-        @Html.NopLabelFor(model => model.AddPercentage):
-    </td>
-    <td class="adminData">
-        @Html.EditorFor(model => model.AddPercentage)
-        @Html.ValidationMessageFor(model => model.AddPercentage)
-    </td>
-</tr>
-<tr>
-    <td colspan="2" align="left">
-        <button type="submit" name="addtaxrate" value="addtaxrate" class="t-button">@T("Plugins.Tax.CountryStateZip.AddRecord")</button>
-    </td>
-</tr>
-</table>
+        <tr>
+            <td class="adminTitle" colspan="2">
+                <b>@T("Plugins.Tax.CountryStateZip.AddRecord.Hint")</b>
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AddCountryId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.AddCountryId, Model.AvailableCountries)
+                @Html.ValidationMessageFor(model => model.AddCountryId)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AddStateProvinceId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.AddStateProvinceId, Model.AvailableStates)
+                @Html.ValidationMessageFor(model => model.AddStateProvinceId)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AddZip):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AddZip)
+                @Html.ValidationMessageFor(model => model.AddZip)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AddTaxCategoryId):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.AddTaxCategoryId, Model.AvailableTaxCategories)
+                @Html.ValidationMessageFor(model => model.AddTaxCategoryId)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AddPercentage):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AddPercentage)
+                @Html.ValidationMessageFor(model => model.AddPercentage)
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" align="left">
+                <button type="button" id="addtaxrate" class="t-button">@T("Plugins.Tax.CountryStateZip.AddRecord")</button>
+            </td>
+        </tr>
+    </table>
+    <script type="text/javascript">
+        $(function () {
+            $('#addtaxrate').click(function () {
+                $.ajax({
+                    cache: false,
+                    type: 'POST',
+                    url: '@Url.RouteUrl("Plugin.Tax.CountryStateZip.AddTaxRate")',
+                    data: $(this.form).serialize(),
+                    dataType: 'json',
+                    success: function (data) {
+                        var taxCountrystatezipGrid = $("#tax-countrystatezip-grid");
+                        taxCountrystatezipGrid.data('tGrid').ajaxRequest();
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert('Failed to add record.');
+                    }
+                });
+                return false;
+            });
+        });
+    </script>
 }
