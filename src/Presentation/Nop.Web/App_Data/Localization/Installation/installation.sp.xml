@@ -1,4 +1,4 @@
-﻿<Language Name="Español" IsDefault="false">
+﻿<Language Name="Español" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>Correo electrónico del usuario admin</Value>
   </LocaleResource>

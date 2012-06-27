@@ -1,4 +1,4 @@
-﻿<Language Name="עברית" IsDefault="false">
+﻿<Language Name="עברית" IsDefault="false" IsRightToLeft="true">
   <LocaleResource Name="AdminEmail">
     <Value>אימיל מנהל החנות</Value>
   </LocaleResource>

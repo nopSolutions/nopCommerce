@@ -1,4 +1,4 @@
-﻿<Language Name="Ελληνικά" IsDefault="false">
+﻿<Language Name="Ελληνικά" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>Το e-mail του διαχειριστή</Value>
   </LocaleResource>

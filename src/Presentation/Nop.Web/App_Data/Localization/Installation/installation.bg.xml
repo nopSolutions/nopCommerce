@@ -1,4 +1,4 @@
-﻿<Language Name="Български" IsDefault="false">
+﻿<Language Name="Български" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>Email на администратора</Value>
   </LocaleResource>

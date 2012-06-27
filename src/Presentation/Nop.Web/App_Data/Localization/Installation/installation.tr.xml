@@ -1,4 +1,4 @@
-﻿<Language Name="Türkçe" IsDefault="false">
+﻿<Language Name="Türkçe" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>Yönetici e-posta</Value>
   </LocaleResource>

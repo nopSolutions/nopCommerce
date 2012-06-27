@@ -15,6 +15,7 @@ namespace Nop.Web.Infrastructure.Installation
         public string Name { get; set; }
         public string Code { get; set; }
         public bool IsDefault { get; set; }
+        public bool IsRightToLeft { get; set; }
 
         public List<InstallationLocaleResource> Resources { get; protected set; }
     }

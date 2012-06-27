@@ -1,4 +1,4 @@
-﻿<Language Name="Dansk" IsDefault="false">
+﻿<Language Name="Dansk" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>Admin bruger email</Value>
   </LocaleResource>

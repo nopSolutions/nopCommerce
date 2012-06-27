@@ -1,4 +1,4 @@
-<Language Name="Portugês (Brasil)" IsDefault="false">
+<Language Name="Portugês (Brasil)" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>Email do Administrador</Value>
   </LocaleResource>

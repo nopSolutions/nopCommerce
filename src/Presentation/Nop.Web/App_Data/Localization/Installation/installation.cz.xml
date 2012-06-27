@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- (http://fibox.cz) František Fiala (FIBOX, s.r.o.) -->
-<Language Name="Česky" IsDefault="false">
+<Language Name="Česky" IsDefault="false" IsRightToLeft="false">
 	<LocaleResource Name="AdminEmail">
 		<Value>Email administrátora</Value>
 	</LocaleResource>

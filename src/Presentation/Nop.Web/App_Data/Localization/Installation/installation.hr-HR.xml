@@ -1,4 +1,4 @@
-﻿<Language Name="Hrvatski" IsDefault="false">
+﻿<Language Name="Hrvatski" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>Email administratora</Value>
   </LocaleResource>

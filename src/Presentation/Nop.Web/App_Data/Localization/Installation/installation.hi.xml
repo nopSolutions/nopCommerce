@@ -1,4 +1,4 @@
-﻿<Language Name="हिंदी" IsDefault="false">
+﻿<Language Name="हिंदी" IsDefault="false" IsRightToLeft="false">
   <LocaleResource Name="AdminEmail">
     <Value>व्यवस्थापक उपयोगकर्ता के ईमेल</Value>
   </LocaleResource>

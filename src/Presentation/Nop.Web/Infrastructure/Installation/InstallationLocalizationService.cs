@@ -101,14 +101,20 @@ namespace Nop.Web.Infrastructure.Installation
                     var languageName = xmlDocument.SelectSingleNode(@"//Language").Attributes["Name"].InnerText.Trim();
                     
                     //is default
-                    var isDefault = Convert.ToBoolean(xmlDocument.SelectSingleNode(@"//Language").Attributes["IsDefault"].InnerText.Trim());
+                    var isDefaultAttribute = xmlDocument.SelectSingleNode(@"//Language").Attributes["IsDefault"];
+                    var isDefault = isDefaultAttribute != null ? Convert.ToBoolean(isDefaultAttribute.InnerText.Trim()) : false;
+
+                    //is default
+                    var isRightToLeftAttribute = xmlDocument.SelectSingleNode(@"//Language").Attributes["IsRightToLeft"];
+                    var isRightToLeft = isRightToLeftAttribute != null ? Convert.ToBoolean(isRightToLeftAttribute.InnerText.Trim()) : false;
 
                     //create language
                     var language = new InstallationLanguage()
                     {
                         Code = languageCode,
                         Name = languageName,
-                        IsDefault = isDefault
+                        IsDefault = isDefault,
+                        IsRightToLeft = isRightToLeft,
                     };
                     //load resources
                     foreach (XmlNode resNode in xmlDocument.SelectNodes(@"//Language/LocaleResource"))

@@ -1130,6 +1130,7 @@
     <Content Include="Content\install\images\topleft.gif" />
     <Content Include="Content\install\images\topright.gif" />
     <Content Include="Content\install\style.css" />
+    <Content Include="Content\install\style.rtl.css" />
     <Content Include="Content\samples\category_accessories.jpg" />
     <Content Include="Content\samples\category_accessories_apparel.jpg" />
     <Content Include="Content\samples\category_apparel_shoes.jpeg" />
