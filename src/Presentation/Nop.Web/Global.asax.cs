@@ -95,20 +95,20 @@ namespace Nop.Web
             HostingEnvironment.RegisterVirtualPathProvider(embeddedProvider);
 
             //mobile device support
-            if (databaseInstalled)
-            {
-                if (EngineContext.Current.Resolve<StoreInformationSettings>().MobileDevicesSupported)
-                {
-                    //Enable the mobile detection provider (if enabled)
-                    HttpCapabilitiesBase.BrowserCapabilitiesProvider = new FiftyOne.Foundation.Mobile.Detection.MobileCapabilitiesProvider();
-                }
-                else
-                {
-                    //set BrowserCapabilitiesProvider to null because 51Degrees assembly always sets it to MobileCapabilitiesProvider
-                    //it'll allow us to use default browserCaps.config file
-                    HttpCapabilitiesBase.BrowserCapabilitiesProvider = null;
-                }
-            }
+            //if (databaseInstalled)
+            //{
+            //    if (EngineContext.Current.Resolve<StoreInformationSettings>().MobileDevicesSupported)
+            //    {
+            //        //Enable the mobile detection provider (if enabled)
+            //        HttpCapabilitiesBase.BrowserCapabilitiesProvider = new FiftyOne.Foundation.Mobile.Detection.MobileCapabilitiesProvider();
+            //    }
+            //    else
+            //    {
+            //        //set BrowserCapabilitiesProvider to null because 51Degrees assembly always sets it to MobileCapabilitiesProvider
+            //        //which does not support our browserCaps.config file
+            //        HttpCapabilitiesBase.BrowserCapabilitiesProvider = null;
+            //    }
+            //}
 
             //start scheduled tasks
             if (databaseInstalled)
