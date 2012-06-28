@@ -9033,6 +9033,7 @@ namespace Nop.Services.Installation
         {
             var activityLogTypes = new List<ActivityLogType>()
                                       {
+                                          //admin area activities
                                           new ActivityLogType
                                               {
                                                   SystemKeyword = "AddNewCategory",
@@ -9284,6 +9285,31 @@ namespace Nop.Services.Installation
                                                   SystemKeyword = "EditWidget",
                                                   Enabled = true,
                                                   Name = "Edit a widget"
+                                              },
+                                              //public store activities
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "PublicStore.ViewCategory",
+                                                  Enabled = false,
+                                                  Name = "Public store. View a category"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "PublicStore.ViewManufacturer",
+                                                  Enabled = false,
+                                                  Name = "Public store. View a manufacturer"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "PublicStore.ViewProduct",
+                                                  Enabled = false,
+                                                  Name = "Public store. View a product"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "PublicStore.PlaceOrder",
+                                                  Enabled = false,
+                                                  Name = "Public store. Place an order"
                                               },
                                       };
             activityLogTypes.ForEach(alt => _activityLogTypeRepository.Insert(alt));

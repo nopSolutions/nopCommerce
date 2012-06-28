@@ -1227,8 +1227,8 @@ namespace Nop.Services.Orders
                         if (!processPaymentRequest.IsRecurringPayment)
                         {
                             _customerActivityService.InsertActivity(
-                                "PlaceOrder",
-                                _localizationService.GetResource("ActivityLog.PlaceOrder"),
+                                "PublicStore.PlaceOrder",
+                                _localizationService.GetResource("ActivityLog.PublicStore.PlaceOrder"),
                                 order.Id);
                         }
 

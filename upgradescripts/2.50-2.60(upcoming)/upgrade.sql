@@ -830,6 +830,21 @@ set @resources='
   <LocaleResource Name="PDFInvoice.PurchaseOrderNumber">
     <Value>Purchase Order Number: {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.PlaceOrder">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.PublicStore.PlaceOrder">
+    <Value>Placed a new order (ID = {0})</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.PublicStore.ViewCategory">
+    <Value>Public store. Viewed a category details page (''{0}'')</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.PublicStore.ViewManufacturer">
+    <Value>Public store. Viewed a manufacturer details page (''{0}'')</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.PublicStore.ViewProduct">
+    <Value>Public store. Viewed a product details page (''{0}'')</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -2853,5 +2868,34 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'catalogsettings.fileuplo
 BEGIN
 	INSERT [Setting] ([Name], [Value])
 	VALUES (N'catalogsettings.fileuploadallowedextensions', N'')
+END
+GO
+
+--new activity types
+IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'PublicStore.ViewCategory')
+BEGIN
+	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
+	VALUES (N'PublicStore.ViewCategory', N'Public store. View a category', N'false')
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'PublicStore.ViewManufacturer')
+BEGIN
+	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
+	VALUES (N'PublicStore.ViewManufacturer', N'Public store. View a manufacturer', N'false')
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'PublicStore.ViewProduct')
+BEGIN
+	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
+	VALUES (N'PublicStore.ViewProduct', N'Public store. View a product', N'false')
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'PublicStore.PlaceOrder')
+BEGIN
+	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
+	VALUES (N'PublicStore.PlaceOrder', N'Public store. Place an order', N'false')
 END
 GO

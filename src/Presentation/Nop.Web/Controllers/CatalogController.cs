@@ -32,6 +32,7 @@ using Nop.Web.Framework.UI.Captcha;
 using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Catalog;
 using Nop.Web.Models.Media;
+using Nop.Services.Logging;
 
 namespace Nop.Web.Controllers
 {
@@ -68,6 +69,7 @@ namespace Nop.Web.Controllers
         private readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
         private readonly IPermissionService _permissionService;
         private readonly IDownloadService _downloadService;
+        private readonly ICustomerActivityService _customerActivityService;
 
         private readonly MediaSettings _mediaSettings;
         private readonly CatalogSettings _catalogSettings;
@@ -99,6 +101,7 @@ namespace Nop.Web.Controllers
             IOrderReportService orderReportService, IGenericAttributeService genericAttributeService,
             IBackInStockSubscriptionService backInStockSubscriptionService,
             IPermissionService permissionService, IDownloadService downloadService,
+            ICustomerActivityService customerActivityService,
             MediaSettings mediaSettings, CatalogSettings catalogSettings,
             ShoppingCartSettings shoppingCartSettings, StoreInformationSettings storeInformationSettings,
             LocalizationSettings localizationSettings, CustomerSettings customerSettings, 
@@ -134,6 +137,7 @@ namespace Nop.Web.Controllers
             this._backInStockSubscriptionService = backInStockSubscriptionService;
             this._permissionService = permissionService;
             this._downloadService = downloadService;
+            this._customerActivityService = customerActivityService;
 
 
             this._mediaSettings = mediaSettings;
@@ -1017,6 +1021,9 @@ namespace Nop.Web.Controllers
                     return template.ViewPath;
                 });
 
+            //activity log
+            _customerActivityService.InsertActivity("PublicStore.ViewCategory", _localizationService.GetResource("ActivityLog.PublicStore.ViewCategory"), category.Name);
+
             return View(templateViewPath, model);
         }
 
@@ -1265,6 +1272,9 @@ namespace Nop.Web.Controllers
                 return template.ViewPath;
             });
 
+            //activity log
+            _customerActivityService.InsertActivity("PublicStore.ViewManufacturer", _localizationService.GetResource("ActivityLog.PublicStore.ViewManufacturer"), manufacturer.Name);
+
             return View(templateViewPath, model);
         }
 
@@ -1350,6 +1360,9 @@ namespace Nop.Web.Controllers
             
             //save as recently viewed
             _recentlyViewedProductsService.AddProductToRecentlyViewedList(product.Id);
+
+            //activity log
+            _customerActivityService.InsertActivity("PublicStore.ViewProduct", _localizationService.GetResource("ActivityLog.PublicStore.ViewProduct"), product.Name);
 
             return View(model.ProductTemplateViewPath, model);
         }
