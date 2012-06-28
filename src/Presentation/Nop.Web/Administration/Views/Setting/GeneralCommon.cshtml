@@ -300,7 +300,7 @@
             <td class="adminData">
                 @Html.EditorFor(model => model.SecuritySettings.EncryptionKey)
                 @Html.ValidationMessageFor(model => model.SecuritySettings.EncryptionKey)
-                <input type="submit" name="changeencryptionkey" value="@T("Admin.Common.Change")" id="changeencryptionkey" class="adminButton" />
+                <input type="submit" name="changeencryptionkey" value="@T("Admin.Common.Change")" id="changeencryptionkey" class="adminButton" onclick="return confirm('@T("Admin.Common.AreYouSure")');" />
             </td>
         </tr>
         <tr>

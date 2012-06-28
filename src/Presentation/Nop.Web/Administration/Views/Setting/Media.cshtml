@@ -31,7 +31,7 @@
                     @T("Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.FileSystem")
                 }
                 
-            <button type="submit" name="change-picture-storage" value="change-picture-storage" class="t-button">@T("Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.Change")</button>
+            <button type="submit" name="change-picture-storage" value="change-picture-storage" class="t-button" onclick="return confirm('@T("Admin.Common.AreYouSure")');">@T("Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.Change")</button>
             NOTE: Do not forget to backup your database before changing this option.
             </td>
         </tr>
