@@ -22,9 +22,10 @@ namespace Nop.Services.Common
         /// <summary>
         /// Print packaging slips to PDF
         /// </summary>
-        /// <param name="shipments">Shipmentss</param>
+        /// <param name="shipments">Shipments</param>
+        /// <param name="lang">Language</param>
         /// <param name="filePath">File path</param>
-        void PrintPackagingSlipsToPdf(IList<Shipment> shipments, string filePath);
+        void PrintPackagingSlipsToPdf(IList<Shipment> shipments, Language lang, string filePath);
 
         
         /// <summary>

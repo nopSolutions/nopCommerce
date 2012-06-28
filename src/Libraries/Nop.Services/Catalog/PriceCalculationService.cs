@@ -15,12 +15,18 @@ namespace Nop.Services.Catalog
     /// </summary>
     public partial class PriceCalculationService : IPriceCalculationService
     {
+        #region Fields
+
         private readonly IWorkContext _workContext;
         private readonly IDiscountService _discountService;
         private readonly ICategoryService _categoryService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly ShoppingCartSettings _shoppingCartSettings;
         private readonly CatalogSettings _catalogSettings;
+
+        #endregion
+
+        #region Ctor
 
         public PriceCalculationService(IWorkContext workContext,
             IDiscountService discountService, ICategoryService categoryService,
@@ -35,6 +41,8 @@ namespace Nop.Services.Catalog
             this._catalogSettings = catalogSettings;
         }
         
+        #endregion
+
         #region Utilities
 
         /// <summary>
