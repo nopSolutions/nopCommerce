@@ -792,8 +792,10 @@
           <LocaleResource Name="PlaceOrder">
             <Value>Placed a new order (ID = {0})</Value>
           </LocaleResource>
-		</Children>
-	</LocaleResource>
+        </Children>
+      </LocaleResource>
+    </Children>
+  </LocaleResource>
 	<LocaleResource Name="Address">
 		<Value>Address</Value>
 		<Children>
