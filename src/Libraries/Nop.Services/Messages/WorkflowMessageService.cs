@@ -11,6 +11,7 @@ using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Services.Customers;
 using Nop.Services.Localization;
+using Nop.Core.Events;
 
 namespace Nop.Services.Messages
 {
@@ -26,6 +27,7 @@ namespace Nop.Services.Messages
         private readonly IMessageTokenProvider _messageTokenProvider;
 
         private readonly EmailAccountSettings _emailAccountSettings;
+        private readonly IEventPublisher _eventPublisher;
 
         #endregion
 
@@ -35,7 +37,8 @@ namespace Nop.Services.Messages
             IQueuedEmailService queuedEmailService, ILanguageService languageService,
             ITokenizer tokenizer, IEmailAccountService emailAccountService,
             IMessageTokenProvider messageTokenProvider,
-            EmailAccountSettings emailAccountSettings)
+            EmailAccountSettings emailAccountSettings,
+            IEventPublisher eventPublisher)
         {
             this._messageTemplateService = messageTemplateService;
             this._queuedEmailService = queuedEmailService;
@@ -45,6 +48,7 @@ namespace Nop.Services.Messages
             this._messageTokenProvider = messageTokenProvider;
 
             this._emailAccountSettings = emailAccountSettings;
+            this._eventPublisher = eventPublisher;
         }
 
         #endregion
@@ -312,6 +316,9 @@ namespace Nop.Services.Messages
 
             var customerTokens = GenerateTokens(customer);
 
+            //event notification
+            _eventPublisher.MessageTokensAdded(messageTemplate, customerTokens);
+
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
             var toEmail = emailAccount.Email;
             var toName = emailAccount.DisplayName;
@@ -338,6 +345,9 @@ namespace Nop.Services.Messages
                 return 0;
 
             var customerTokens = GenerateTokens(customer);
+
+            //event notification
+            _eventPublisher.MessageTokensAdded(messageTemplate, customerTokens);
 
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
             var toEmail = customer.Email;
@@ -366,6 +376,9 @@ namespace Nop.Services.Messages
 
             var customerTokens = GenerateTokens(customer);
 
+            //event notification
+            _eventPublisher.MessageTokensAdded(messageTemplate, customerTokens);
+
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
             var toEmail = customer.Email;
             var toName = customer.GetFullName();
@@ -392,6 +405,9 @@ namespace Nop.Services.Messages
                 return 0;
 
             var customerTokens = GenerateTokens(customer);
+
+            //event notification
+            _eventPublisher.MessageTokensAdded(messageTemplate, customerTokens);
 
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
             var toEmail = customer.Email;
@@ -424,6 +440,9 @@ namespace Nop.Services.Messages
 
             var orderTokens = GenerateTokens(order, languageId);
 
+            //event notification
+            _eventPublisher.MessageTokensAdded(messageTemplate, orderTokens);
+
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
             var toEmail = emailAccount.Email;
             var toName = emailAccount.DisplayName;
@@ -450,6 +469,9 @@ namespace Nop.Services.Messages
                 return 0;
 
             var orderTokens = GenerateTokens(order, languageId);
+
+            //event notification
+            _eventPublisher.MessageTokensAdded(messageTemplate, orderTokens);
 
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
             var toEmail = order.BillingAddress.Email;
@@ -481,6 +503,9 @@ namespace Nop.Services.Messages
 
             var shipmentTokens = GenerateTokens(shipment, languageId);
 
+            //event notification
+            _eventPublisher.MessageTokensAdded(messageTemplate, shipmentTokens);
+
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
             var toEmail = order.BillingAddress.Email;
             var toName = string.Format("{0} {1}", order.BillingAddress.FirstName, order.BillingAddress.LastName);
@@ -511,6 +536,9 @@ namespace Nop.Services.Messages
 
             var shipmentTokens = GenerateTokens(shipment, languageId);
 
+            //event notification
+            _eventPublisher.MessageTokensAdded(messageTemplate, shipmentTokens);
+
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
             var toEmail = order.BillingAddress.Email;
             var toName = string.Format("{0} {1}", order.BillingAddress.FirstName, order.BillingAddress.LastName);
@@ -538,6 +566,9 @@ namespace Nop.Services.Messages
 
             var orderTokens = GenerateTokens(order, languageId);
 
+            //event notification
+            _eventPublisher.MessageTokensAdded(messageTemplate, orderTokens);
+
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
             var toEmail = order.BillingAddress.Email;
             var toName = string.Format("{0} {1}", order.BillingAddress.FirstName, order.BillingAddress.LastName);
@@ -564,6 +595,9 @@ namespace Nop.Services.Messages
                 return 0;
 
             var orderTokens = GenerateTokens(order, languageId);
+
+            //event notification
+            _eventPublisher.MessageTokensAdded(messageTemplate, orderTokens);
 
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
             var toEmail = order.BillingAddress.Email;
@@ -594,6 +628,9 @@ namespace Nop.Services.Messages
 
             var orderTokens = GenerateTokens(orderNote, languageId);
 
+            //event notification
+            _eventPublisher.MessageTokensAdded(messageTemplate, orderTokens);
+
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
             var toEmail = order.BillingAddress.Email;
             var toName = string.Format("{0} {1}", order.BillingAddress.FirstName, order.BillingAddress.LastName);
@@ -620,6 +657,9 @@ namespace Nop.Services.Messages
                 return 0;
 
             var tokens = GenerateTokens(recurringPayment, languageId);
+
+            //event notification
+            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
             var toEmail = emailAccount.Email;
@@ -653,6 +693,9 @@ namespace Nop.Services.Messages
 
             var orderTokens = GenerateTokens(subscription);
 
+            //event notification
+            _eventPublisher.MessageTokensAdded(messageTemplate, orderTokens);
+
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
             var toEmail = subscription.Email;
             var toName = "";
@@ -680,6 +723,9 @@ namespace Nop.Services.Messages
                 return 0;
 
             var orderTokens = GenerateTokens(subscription);
+
+            //event notification
+            _eventPublisher.MessageTokensAdded(messageTemplate, orderTokens);
 
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
             var toEmail = subscription.Email;
@@ -722,6 +768,9 @@ namespace Nop.Services.Messages
             customerProductTokens.Add(new Token("EmailAFriend.PersonalMessage", personalMessage, true));
             customerProductTokens.Add(new Token("EmailAFriend.Email", customerEmail));
 
+            //event notification
+            _eventPublisher.MessageTokensAdded(messageTemplate, customerProductTokens);
+
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
             var toEmail = friendsEmail;
             var toName = "";
@@ -755,6 +804,9 @@ namespace Nop.Services.Messages
             customerTokens.Add(new Token("Wishlist.PersonalMessage", personalMessage, true));
             customerTokens.Add(new Token("Wishlist.Email", customerEmail));
 
+            //event notification
+            _eventPublisher.MessageTokensAdded(messageTemplate, customerTokens);
+
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
             var toEmail = friendsEmail;
             var toName = "";
@@ -787,6 +839,9 @@ namespace Nop.Services.Messages
 
             var orderTokens = GenerateTokens(returnRequest, opv);
 
+            //event notification
+            _eventPublisher.MessageTokensAdded(messageTemplate, orderTokens);
+
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
             var toEmail = emailAccount.Email;
             var toName = emailAccount.DisplayName;
@@ -814,6 +869,9 @@ namespace Nop.Services.Messages
                 return 0;
 
             var orderTokens = GenerateTokens(returnRequest, opv);
+
+            //event notification
+            _eventPublisher.MessageTokensAdded(messageTemplate, orderTokens);
 
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
             var toEmail = returnRequest.Customer.Email;
@@ -851,6 +909,9 @@ namespace Nop.Services.Messages
 
             var tokens = GenerateTokens(forumTopic);
 
+            //event notification
+            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
             var toEmail = customer.Email;
             var toName = customer.GetFullName();
@@ -885,6 +946,9 @@ namespace Nop.Services.Messages
 
             var tokens = GenerateTokens(forumPost, friendlyForumTopicPageIndex, forumPost.Id);
 
+            //event notification
+            _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
+
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);            
             var toEmail = customer.Email;
             var toName = customer.GetFullName();
@@ -912,6 +976,9 @@ namespace Nop.Services.Messages
             }
 
             var privateMessageTokens = GenerateTokens(privateMessage);
+
+            //event notification
+            _eventPublisher.MessageTokensAdded(messageTemplate, privateMessageTokens);
 
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);            
             var toEmail = privateMessage.ToCustomer.Email;
@@ -943,6 +1010,8 @@ namespace Nop.Services.Messages
 
             var giftCardTokens = GenerateTokens(giftCard);
 
+            //event notification
+            _eventPublisher.MessageTokensAdded(messageTemplate, giftCardTokens);
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
             var toEmail = giftCard.RecipientEmail;
             var toName = giftCard.RecipientName;
@@ -971,6 +1040,9 @@ namespace Nop.Services.Messages
 
             var productReviewTokens = GenerateTokens(productReview);
             
+            //event notification
+            _eventPublisher.MessageTokensAdded(messageTemplate, productReviewTokens);
+
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
             var toEmail = emailAccount.Email;
             var toName = emailAccount.DisplayName;
@@ -997,6 +1069,9 @@ namespace Nop.Services.Messages
                 return 0;
 
             var productVariantTokens = GenerateTokens(productVariant);
+
+            //event notification
+            _eventPublisher.MessageTokensAdded(messageTemplate, productVariantTokens);
 
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
             var toEmail = emailAccount.Email;
@@ -1030,6 +1105,9 @@ namespace Nop.Services.Messages
             vatSubmittedTokens.Add(new Token("VatValidationResult.Name", vatName));
             vatSubmittedTokens.Add(new Token("VatValidationResult.Address", vatAddress));
 
+            //event notification
+            _eventPublisher.MessageTokensAdded(messageTemplate, vatSubmittedTokens);
+
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
             var toEmail = emailAccount.Email;
             var toName = emailAccount.DisplayName;
@@ -1056,6 +1134,9 @@ namespace Nop.Services.Messages
                 return 0;
 
             var blogCommentTokens = GenerateTokens(blogComment);
+
+            //event notification
+            _eventPublisher.MessageTokensAdded(messageTemplate, blogCommentTokens);
 
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
             var toEmail = emailAccount.Email;
@@ -1084,6 +1165,9 @@ namespace Nop.Services.Messages
 
             var newsCommentTokens = GenerateTokens(newsComment);
 
+            //event notification
+            _eventPublisher.MessageTokensAdded(messageTemplate, newsCommentTokens);
+
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
             var toEmail = emailAccount.Email;
             var toName = emailAccount.DisplayName;
@@ -1110,6 +1194,9 @@ namespace Nop.Services.Messages
                 return 0;
 
             var subscriptionTokens = GenerateTokens(subscription);
+
+            //event notification
+            _eventPublisher.MessageTokensAdded(messageTemplate, subscriptionTokens);
 
             var emailAccount = GetEmailAccountOfMessageTemplate(messageTemplate, languageId);
             var customer = subscription.Customer;
