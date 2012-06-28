@@ -824,6 +824,12 @@ set @resources='
   <LocaleResource Name="Plugins.Shipping.ByWeight.Fields.Zip.Hint">
     <Value>Zip / postal code. If zip is empty, then this shipping rate will apply to all customers from the given country or state, regardless of the zip code.</Value>
   </LocaleResource>
+  <LocaleResource Name="Order.PurchaseOrderNumber">
+    <Value>Purchase Order Number</Value>
+  </LocaleResource>
+  <LocaleResource Name="PDFInvoice.PurchaseOrderNumber">
+    <Value>Purchase Order Number: {0}</Value>
+  </LocaleResource>
 </Language>
 '
 

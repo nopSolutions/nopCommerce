@@ -270,7 +270,7 @@ namespace Nop.Admin.Controllers
             }
 
 
-            //purchase order number
+            //purchase order number (we have to find a better to inject this information because it's related to a certain plugin)
             var pm = _paymentService.LoadPaymentMethodBySystemName(order.PaymentMethodSystemName);
             if (pm != null && pm.PluginDescriptor.SystemName.Equals("Payments.PurchaseOrder", StringComparison.InvariantCultureIgnoreCase))
             {

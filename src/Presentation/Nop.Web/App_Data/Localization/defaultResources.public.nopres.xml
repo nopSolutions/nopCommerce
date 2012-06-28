@@ -2506,6 +2506,9 @@
 					</LocaleResource>
 				</Children>
 			</LocaleResource>
+      <LocaleResource Name="PurchaseOrderNumber">
+        <Value>Purchase Order Number</Value>
+      </LocaleResource>
 			<LocaleResource Name="Reorder">
 				<Value>Re-order</Value>
 			</LocaleResource>
@@ -2869,6 +2872,9 @@
 			<LocaleResource Name="ProductTotal">
 				<Value>Total</Value>
 			</LocaleResource>
+      <LocaleResource Name="PurchaseOrderNumber">
+        <Value>Purchase Order Number: {0}</Value>
+      </LocaleResource>
 			<LocaleResource Name="RewardPoints">
 				<Value>{0} reward points:</Value>
 			</LocaleResource>

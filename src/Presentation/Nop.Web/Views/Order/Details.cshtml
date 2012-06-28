@@ -126,6 +126,13 @@
                                     }
                                 }
                             }
+                            @if (Model.DisplayPurchaseOrderNumber)
+                            {
+                                <br />
+                                <b>@T("Order.PurchaseOrderNumber")</b>
+                                <br />
+                                @Model.PurchaseOrderNumber
+                            }
                         </td>
                         @if (Model.IsShippable)
                         {

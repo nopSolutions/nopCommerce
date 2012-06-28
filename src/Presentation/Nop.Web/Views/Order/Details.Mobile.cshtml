@@ -98,6 +98,15 @@
                         }
                     </div>
                 }
+                @if (Model.DisplayPurchaseOrderNumber)
+                {
+                    <div>
+                        <b>@T("Order.PurchaseOrderNumber")</b>
+                    </div>
+                    <div>
+                        @Model.PurchaseOrderNumber
+                    </div>
+                }
             </div>
             @if (Model.IsShippable)
             {

@@ -213,6 +213,15 @@ namespace Nop.Services.Common
                     cell.AddElement(new Paragraph("   " + String.Format(_localizationService.GetResource("PDFInvoice.PaymentMethod", lang.Id), paymentMethodStr), font));
                     cell.AddElement(new Paragraph());
                 }
+
+                //purchase order number (we have to find a better to inject this information because it's related to a certain plugin)
+                if (paymentMethod != null && paymentMethod.PluginDescriptor.SystemName.Equals("Payments.PurchaseOrder", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    cell.AddElement(new Paragraph(" "));
+                    cell.AddElement(new Paragraph("   " + String.Format(_localizationService.GetResource("PDFInvoice.PurchaseOrderNumber", lang.Id), order.PurchaseOrderNumber), font));
+                    cell.AddElement(new Paragraph());
+                }
+
                 addressTable.AddCell(cell);
 
                 //shipping info
