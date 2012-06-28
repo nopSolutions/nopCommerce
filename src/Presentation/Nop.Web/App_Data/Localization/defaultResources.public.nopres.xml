@@ -2785,6 +2785,20 @@
 			<LocaleResource Name="ExpirationDate">
 				<Value>Expiration date</Value>
 			</LocaleResource>
+      <LocaleResource Name="ExpireMonth">
+        <Children>
+          <LocaleResource Name="Required">
+            <Value>Expire month is required</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
+      <LocaleResource Name="ExpireYear">
+        <Children>
+          <LocaleResource Name="Required">
+            <Value>Expire year is required</Value>
+          </LocaleResource>
+        </Children>
+      </LocaleResource>
 			<LocaleResource Name="SelectCreditCard">
 				<Value>Select credit card</Value>
 			</LocaleResource>

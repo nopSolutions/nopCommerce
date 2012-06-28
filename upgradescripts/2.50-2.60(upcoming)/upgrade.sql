@@ -845,6 +845,12 @@ set @resources='
   <LocaleResource Name="ActivityLog.PublicStore.ViewProduct">
     <Value>Public store. Viewed a product details page (''{0}'')</Value>
   </LocaleResource>
+  <LocaleResource Name="Payment.ExpireMonth.Required">
+    <Value>Expire month is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Payment.ExpireYear.Required">
+    <Value>Expire year is required</Value>
+  </LocaleResource>
 </Language>
 '
 

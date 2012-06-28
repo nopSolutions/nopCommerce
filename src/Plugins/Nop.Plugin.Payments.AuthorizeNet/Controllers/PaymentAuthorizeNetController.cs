@@ -141,6 +141,8 @@ namespace Nop.Plugin.Payments.AuthorizeNet.Controllers
                 CardholderName = form["CardholderName"],
                 CardNumber = form["CardNumber"],
                 CardCode = form["CardCode"],
+                ExpireMonth = form["ExpireMonth"],
+                ExpireYear = form["ExpireYear"]
             };
             var validationResult = validator.Validate(model);
             if (!validationResult.IsValid)
