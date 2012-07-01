@@ -372,13 +372,13 @@ set @resources='
     <Value>Include short description in compare products</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.IncludeShortDescriptionInCompareProducts.Hint">
-    <Value>Check to dysplay product short description on the compare products page.</Value>
+    <Value>Check to display product short description on the compare products page.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.IncludeFullDescriptionInCompareProducts">
     <Value>Include full description in compare products</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.IncludeFullDescriptionInCompareProducts.Hint">
-    <Value>Check to dysplay product full description on the compare products page.</Value>
+    <Value>Check to display product full description on the compare products page.</Value>
   </LocaleResource>
   <LocaleResource Name="Products.Compare.ShortDescription">
     <Value>Short description</Value>
@@ -396,7 +396,7 @@ set @resources='
     <Value>nopCommerce administration</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.PdfLogo.Hint">
-    <Value>Image file what will be displayed in PDF order invoices. Do not upload an image with big size.</Value>
+    <Value>Image file that will be displayed in PDF order invoices. A small image is recommended.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.AllowOutOfStockItemsToBeAddedToWishlist">
     <Value>Allow ''out of stock'' items to be added to wishlist</Value>
@@ -708,19 +708,19 @@ set @resources='
     <Value>Account Association: Your new user account will be linked to</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EncryptionKey.Changed">
-    <Value>Encryption key is changed</Value>
+    <Value>Encryption key changed</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EncryptionKey.TooShort">
     <Value>Encryption private key must be 16 characters long</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.EncryptionKey.TheSame">
-    <Value>The new ecryption key is the same as the old one</Value>
+    <Value>The new encryption key is the same as the old one</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SSLSettings">
     <Value>SSL settings</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.GeneralCommon.SSLSettings.Hint">
-    <Value>SSL settings can be also changed in web.config file.</Value>
+    <Value>SSL settings can also be changed in web.config file.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Polls.Fields.AllowGuestsToVote">
     <Value>Allow guests to vote</Value>
@@ -744,10 +744,10 @@ set @resources='
     <Value>Failed</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ManufacturersBlockItemsToDisplay">
-    <Value>Number of manufactures to display</Value>
+    <Value>Number of manufacturers to display</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.Catalog.ManufacturersBlockItemsToDisplay.Hint">
-    <Value>Enter the number of manufactures to display in manufacturer navigation block.</Value>
+    <Value>Enter the number of manufacturers to display in manufacturer navigation block.</Value>
   </LocaleResource>
   <LocaleResource Name="Products.Tags.Popular.ViewAll">
     <Value>View all</Value>
@@ -780,13 +780,13 @@ set @resources='
     <Value>Allowed quantities for this product: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.Maintenance.DeleteAbandonedCarts">
-    <Value>Deleting abondoned shopping carts</Value>
+    <Value>Deleting abandoned shopping carts</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.Maintenance.DeleteAbandonedCarts.OlderThan">
     <Value>Created before</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.Maintenance.DeleteAbandonedCarts.OlderThan.Hint">
-    <Value>Delete shipping cart items created before the specified date.</Value>
+    <Value>Delete shopping cart items created before the specified date.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.System.Maintenance.DeleteAbandonedCarts.TotalDeleted">
     <Value>{0} items were deleted</Value>
@@ -850,6 +850,12 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Payment.ExpireYear.Required">
     <Value>Expire year is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="PageTitle.Manufactures">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="PageTitle.Manufacturers">
+    <Value>Manufacturers</Value>
   </LocaleResource>
 </Language>
 '

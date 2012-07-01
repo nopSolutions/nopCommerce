@@ -231,12 +231,12 @@ namespace Nop.Core.Domain.Catalog
         public bool IgnoreFeaturedProducts { get; set; }
 
         /// <summary>
-        /// Gets or set the default value to use for Category page size options (for new Categories)
+        /// Gets or sets the default value to use for Category page size options (for new Categories)
         /// </summary>
         public string DefaultCategoryPageSizeOptions { get; set; }
 
         /// <summary>
-        /// Gets or set the default value to use for Manufacturer page size opitons (for new Manufacturers)
+        /// Gets or sets the default value to use for Manufacturer page size options (for new Manufacturers)
         /// </summary>
         public string DefaultManufacturerPageSizeOptions { get; set; }
 
@@ -256,7 +256,7 @@ namespace Nop.Core.Domain.Catalog
         public List<string> FileUploadAllowedExtensions { get; set; }
 
         /// <summary>
-        /// Gets or set the value indicating how many manufactures to display in manufacturers block
+        /// Gets or sets the value indicating how many manufacturers to display in manufacturers block
         /// </summary>
         public int ManufacturersBlockItemsToDisplay { get; set; }
     }

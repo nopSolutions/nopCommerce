@@ -14,7 +14,7 @@
         <ul data-role="listview" data-inset="true" data-filter="false">
             @foreach (var manufacturer in Model.Manufacturers)
             {
-                //we display all manufactures in mobile version (do not use @Model.ManufacturersToDisplay)
+                //we display all manufacturers in mobile version (do not use @Model.ManufacturersToDisplay)
                 <li><a href="@Url.RouteUrl("Manufacturer", new { manufacturerId = manufacturer.Id, SeName = manufacturer.SeName })">
                     @manufacturer.Name</a></li>
             }

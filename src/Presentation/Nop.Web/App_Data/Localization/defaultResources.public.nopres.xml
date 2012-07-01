@@ -2685,8 +2685,8 @@
 			<LocaleResource Name="Login">
 				<Value>Login</Value>
 			</LocaleResource>
-			<LocaleResource Name="Manufactures">
-				<Value>Manufactures</Value>
+			<LocaleResource Name="Manufacturers">
+				<Value>Manufacturers</Value>
 			</LocaleResource>
 			<LocaleResource Name="NewsArchive">
 				<Value>News Archive</Value>

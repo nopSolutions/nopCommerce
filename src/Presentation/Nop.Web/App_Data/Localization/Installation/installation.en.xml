@@ -45,7 +45,7 @@
     <Value>Specify custom SQL Server collation</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseCreationError">
-    <Value>An error occured when creating database: {0}</Value>
+    <Value>An error occurred while creating the database: {0}</Value>
   </LocaleResource>
   <LocaleResource Name="DatabaseInformation">
     <Value>Database information</Value>
@@ -132,7 +132,7 @@
     <Value>nopCommerce is the leading ASP.NET online shop e-commerce solution. This wizard will guide you through the process of configuring nopCommerce</Value>
   </LocaleResource>
   <LocaleResource Name="Tooltip2">
-    <Value>To complete this wizard you must know some information regarding your database server ("connection string"). Please contact your ISP if necessary. If you're installing on a local machine or server you might need information from your System Admin.</Value>
+    <Value>To complete this wizard, you must know some information regarding your database server ("connection string"). Please contact your ISP if necessary. If you're installing on a local machine or server, you might need information from your System Admin.</Value>
   </LocaleResource>
   <LocaleResource Name="WindowsAuthentication">
     <Value>Use integrated Windows authentication</Value>
