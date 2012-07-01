@@ -617,7 +617,9 @@ namespace Nop.Web.Controllers
             {
                 ShowProductImages = _shoppingCartSettings.ShowProductImagesInMiniShoppingCart,
                 //let's always display it
-                DisplayShoppingCartButton = true
+                DisplayShoppingCartButton = true,
+                CurrentCustomerIsGuest = _workContext.CurrentCustomer.IsGuest(),
+                AnonymousCheckoutAllowed = _orderSettings.AnonymousCheckoutAllowed,
             };
 
             var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();

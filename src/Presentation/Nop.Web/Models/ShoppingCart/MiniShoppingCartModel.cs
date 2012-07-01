@@ -16,6 +16,8 @@ namespace Nop.Web.Models.ShoppingCart
         public string SubTotal { get; set; }
         public bool DisplayShoppingCartButton { get; set; }
         public bool DisplayCheckoutButton { get; set; }
+        public bool CurrentCustomerIsGuest { get; set; }
+        public bool AnonymousCheckoutAllowed { get; set; }
         public bool ShowProductImages { get; set; }
 
 

@@ -78,7 +78,16 @@
                 }
                 @if (Model.DisplayCheckoutButton)
                 {
-                    <input type="submit" value="@T("Checkout")" class="checkoutbutton" onclick="setLocation('@(Url.RouteUrl("Checkout"))')" />
+                    var checkoutUrl = "";
+                    if (Model.AnonymousCheckoutAllowed && Model.CurrentCustomerIsGuest)
+                    {
+                        checkoutUrl = Url.RouteUrl("LoginCheckoutAsGuest", new { returnUrl = Url.RouteUrl("ShoppingCart") });
+                    }
+                    else
+                    {
+                        checkoutUrl = Url.RouteUrl("Checkout");
+                    }
+                    <input type="submit" value="@T("Checkout")" class="checkoutbutton" onclick="setLocation('@checkoutUrl')" />
                 }
             </div>
         }
