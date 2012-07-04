@@ -5,6 +5,7 @@ using Nop.Core;
 using Nop.Core.Infrastructure;
 using Nop.Services.Logging;
 using Nop.Web.Framework;
+using Nop.Web.Framework.Security;
 using Nop.Web.Framework.UI;
 
 namespace Nop.Web.Controllers
@@ -13,6 +14,7 @@ namespace Nop.Web.Controllers
     [CheckAffiliate]
     [StoreClosedAttribute]
     [PublicStoreAllowNavigation]
+    [NopHttpsRequirement(SslRequirement.NoMatter)]
     public abstract partial class BaseNopController : Controller
     {
         /// <summary>

@@ -4691,6 +4691,7 @@ namespace Nop.Services.Installation
             EngineContext.Current.Resolve<IConfigurationProvider<SecuritySettings>>()
                 .SaveSettings(new SecuritySettings()
                 {
+                    ForceSslForAllPages = false,
                     EncryptionKey = "273ece6f97dd844d",
                     AdminAreaAllowedIpAddresses = null
                 });

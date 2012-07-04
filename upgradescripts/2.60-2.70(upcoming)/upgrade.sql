@@ -81,3 +81,12 @@ DEALLOCATE cur_existinglanguage
 
 DROP TABLE #LocaleStringResourceTmp
 GO
+
+
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'securitysettings.forcesslforallpages')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'securitysettings.forcesslforallpages', N'false')
+END
+GO
