@@ -539,7 +539,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Order.OrderURLForCustomer", string.Format("{0}orderdetails/{1}", _webHelper.GetStoreLocation(false), order.Id), true));
 
             //event notification
-            _eventPublisher.TokensAdded(order, tokens);
+            _eventPublisher.EntityTokensAdded(order, tokens);
         }
 
         public virtual void AddShipmentTokens(IList<Token> tokens, Shipment shipment, int languageId)
@@ -550,7 +550,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Shipment.URLForCustomer", string.Format("{0}orderdetails/shipment/{1}", _webHelper.GetStoreLocation(false), shipment.Id), true));
 
             //event notification
-            _eventPublisher.TokensAdded(shipment, tokens);
+            _eventPublisher.EntityTokensAdded(shipment, tokens);
         }
 
         public virtual void AddOrderNoteTokens(IList<Token> tokens, OrderNote orderNote)
@@ -558,7 +558,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Order.NewNoteText", orderNote.FormatOrderNoteText(), true));
 
             //event notification
-            _eventPublisher.TokensAdded(orderNote, tokens);
+            _eventPublisher.EntityTokensAdded(orderNote, tokens);
         }
 
         public virtual void AddRecurringPaymentTokens(IList<Token> tokens, RecurringPayment recurringPayment)
@@ -566,7 +566,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("RecurringPayment.ID", recurringPayment.Id.ToString()));
 
             //event notification
-            _eventPublisher.TokensAdded(recurringPayment, tokens);
+            _eventPublisher.EntityTokensAdded(recurringPayment, tokens);
         }
 
         public virtual void AddReturnRequestTokens(IList<Token> tokens, ReturnRequest returnRequest, OrderProductVariant opv)
@@ -581,7 +581,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("ReturnRequest.Status", returnRequest.ReturnRequestStatus.GetLocalizedEnum(_localizationService, _workContext)));
 
             //event notification
-            _eventPublisher.TokensAdded(returnRequest, tokens);
+            _eventPublisher.EntityTokensAdded(returnRequest, tokens);
         }
 
         public virtual void AddGiftCardTokens(IList<Token> tokens, GiftCard giftCard)
@@ -599,7 +599,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("GiftCard.Message", giftCardMesage, true));
 
             //event notification
-            _eventPublisher.TokensAdded(giftCard, tokens);
+            _eventPublisher.EntityTokensAdded(giftCard, tokens);
         }
 
         public virtual void AddCustomerTokens(IList<Token> tokens, Customer customer)
@@ -621,7 +621,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Wishlist.URLForCustomer", wishlistUrl, true));
 
             //event notification
-            _eventPublisher.TokensAdded(customer, tokens);
+            _eventPublisher.EntityTokensAdded(customer, tokens);
         }
 
         public virtual void AddNewsLetterSubscriptionTokens(IList<Token> tokens, NewsLetterSubscription subscription)
@@ -638,7 +638,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("NewsLetterSubscription.DeactivationUrl", deActivationUrl, true));
 
             //event notification
-            _eventPublisher.TokensAdded(subscription, tokens);
+            _eventPublisher.EntityTokensAdded(subscription, tokens);
         }
 
         public virtual void AddProductReviewTokens(IList<Token> tokens, ProductReview productReview)
@@ -646,7 +646,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("ProductReview.ProductName", productReview.Product.Name));
 
             //event notification
-            _eventPublisher.TokensAdded(productReview, tokens);
+            _eventPublisher.EntityTokensAdded(productReview, tokens);
         }
 
         public virtual void AddBlogCommentTokens(IList<Token> tokens, BlogComment blogComment)
@@ -654,7 +654,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("BlogComment.BlogPostTitle", blogComment.BlogPost.Title));
 
             //event notification
-            _eventPublisher.TokensAdded(blogComment, tokens);
+            _eventPublisher.EntityTokensAdded(blogComment, tokens);
         }
 
         public virtual void AddNewsCommentTokens(IList<Token> tokens, NewsComment newsComment)
@@ -662,7 +662,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("NewsComment.NewsTitle", newsComment.NewsItem.Title));
 
             //event notification
-            _eventPublisher.TokensAdded(newsComment, tokens);
+            _eventPublisher.EntityTokensAdded(newsComment, tokens);
         }
 
         public virtual void AddProductTokens(IList<Token> tokens, Product product)
@@ -675,7 +675,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Product.ProductURLForCustomer", productUrl, true));
 
             //event notification
-            _eventPublisher.TokensAdded(product, tokens);
+            _eventPublisher.EntityTokensAdded(product, tokens);
         }
 
         public virtual void AddProductVariantTokens(IList<Token> tokens, ProductVariant productVariant)
@@ -685,7 +685,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("ProductVariant.StockQuantity", productVariant.StockQuantity.ToString()));
 
             //event notification
-            _eventPublisher.TokensAdded(productVariant, tokens);
+            _eventPublisher.EntityTokensAdded(productVariant, tokens);
         }
 
         public virtual void AddForumTopicTokens(IList<Token> tokens, ForumTopic forumTopic, 
@@ -703,7 +703,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Forums.TopicName", forumTopic.Subject));
 
             //event notification
-            _eventPublisher.TokensAdded(forumTopic, tokens);
+            _eventPublisher.EntityTokensAdded(forumTopic, tokens);
         }
 
         public virtual void AddForumPostTokens(IList<Token> tokens, ForumPost forumPost)
@@ -712,7 +712,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Forums.PostBody", forumPost.FormatPostText(), true));
 
             //event notification
-            _eventPublisher.TokensAdded(forumPost, tokens);
+            _eventPublisher.EntityTokensAdded(forumPost, tokens);
         }
 
         public virtual void AddForumTokens(IList<Token> tokens, Forum forum)
@@ -723,7 +723,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("Forums.ForumName", forum.Name));
 
             //event notification
-            _eventPublisher.TokensAdded(forum, tokens);
+            _eventPublisher.EntityTokensAdded(forum, tokens);
         }
 
         public virtual void AddPrivateMessageTokens(IList<Token> tokens, PrivateMessage privateMessage)
@@ -732,7 +732,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("PrivateMessage.Text",  privateMessage.FormatPrivateMessageText(), true));
 
             //event notification
-            _eventPublisher.TokensAdded(privateMessage, tokens);
+            _eventPublisher.EntityTokensAdded(privateMessage, tokens);
         }
 
         public virtual void AddBackInStockTokens(IList<Token> tokens, BackInStockSubscription subscription)
@@ -740,7 +740,7 @@ namespace Nop.Services.Messages
             tokens.Add(new Token("BackInStockSubscription.ProductName", subscription.ProductVariant.FullProductName));
 
             //event notification
-            _eventPublisher.TokensAdded(subscription, tokens);
+            _eventPublisher.EntityTokensAdded(subscription, tokens);
         }
 
         /// <summary>

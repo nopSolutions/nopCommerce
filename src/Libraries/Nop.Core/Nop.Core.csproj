@@ -71,7 +71,8 @@
     <Compile Include="Domain\Shipping\Shipment.cs" />
     <Compile Include="Domain\Tasks\ScheduleTask.cs" />
     <Compile Include="Domain\Messages\Events.cs" />
-    <Compile Include="Events\TokensAdded.cs" />
+    <Compile Include="Events\EntityTokensAdded.cs" />
+    <Compile Include="Events\MessageTokensAdded.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Data\BaseDataProviderManager.cs" />
     <Compile Include="Data\IDataProvider.cs" />
