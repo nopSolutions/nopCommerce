@@ -1769,7 +1769,7 @@ GO
 --new generic attribute implementation
 IF NOT EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[GenericAttribute]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
 BEGIN
-CREATE TABLE [GenericAttribute](
+CREATE TABLE [dbo].[GenericAttribute](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[EntityId] [int] NOT NULL,
 	[KeyGroup] nvarchar(400) NOT NULL,
