@@ -10,7 +10,7 @@ if (!/android|iphone|ipod|series60|symbian|windows ce|blackberry/i.test(navigato
 	jQuery(function($) {
 	    $("a[data-gallery^='lightbox']").slimbox({/* Put custom options here */
 	}, null, function (el) {
-	    return (this == el) || ((this.dataset.gallery.length > 8) && (this.dataset.gallery == el.dataset.gallery));
+	    return (this == el) || ((this.getAttribute('data-gallery').length > 8) && (this.getAttribute('data-gallery') == el.getAttribute('data-gallery')));
 		});
 	});
 }
