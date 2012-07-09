@@ -131,13 +131,8 @@ namespace Nop.Admin.Controllers
 
 			var sb = new StringBuilder();
 			var newsLetterSubscriptions = _newsLetterSubscriptionService.GetAllNewsLetterSubscriptions(model.SearchEmail, 0, int.MaxValue, true);
-			if (newsLetterSubscriptions.Count == 0)
+			foreach (var subscription in newsLetterSubscriptions)
 			{
-				throw new NopException("No emails to export");
-			}
-			for (int i = 0; i < newsLetterSubscriptions.Count; i++)
-			{
-				var subscription = newsLetterSubscriptions[i];
 				sb.Append(subscription.Email);
                 sb.Append(",");
                 sb.Append(subscription.Active);
