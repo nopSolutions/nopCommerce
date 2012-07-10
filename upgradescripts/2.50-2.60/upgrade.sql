@@ -1328,7 +1328,7 @@ GO
 IF  EXISTS (SELECT * FROM sysobjects WHERE id = OBJECT_ID(N'[nop_splitstring_to_table]') AND xtype in (N'FN', N'IF', N'TF'))
 DROP FUNCTION [nop_splitstring_to_table]
 GO
-CREATE FUNCTION [nop_splitstring_to_table]
+CREATE FUNCTION [dbo].[nop_splitstring_to_table]
 (
     @string NVARCHAR(MAX),
     @delimiter CHAR(1)
@@ -2547,7 +2547,7 @@ IF EXISTS (
 		WHERE id = OBJECT_ID(N'[nop_getprimarykey_indexname]') AND xtype in (N'FN', N'IF', N'TF'))
 DROP FUNCTION  [nop_getprimarykey_indexname]
 GO
-CREATE FUNCTION [nop_getprimarykey_indexname]
+CREATE FUNCTION [dbo].[nop_getprimarykey_indexname]
 (
     @table_name nvarchar(1000) = null
 )

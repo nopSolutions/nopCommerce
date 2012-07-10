@@ -1,4 +1,4 @@
-﻿CREATE FUNCTION [nop_splitstring_to_table]
+﻿CREATE FUNCTION [dbo].[nop_splitstring_to_table]
 (
     @string NVARCHAR(MAX),
     @delimiter CHAR(1)
@@ -25,7 +25,7 @@ GO
 
 
 
-CREATE FUNCTION [nop_getnotnullnotempty]
+CREATE FUNCTION [dbo].[nop_getnotnullnotempty]
 (
     @p1 nvarchar(max) = null, 
     @p2 nvarchar(max) = null
@@ -44,7 +44,7 @@ GO
 
 
 
-CREATE FUNCTION [nop_getprimarykey_indexname]
+CREATE FUNCTION [dbo].[nop_getprimarykey_indexname]
 (
     @table_name nvarchar(1000) = null
 )
