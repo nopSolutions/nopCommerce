@@ -334,6 +334,7 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="App_Data\Localization\Installation\installation.sp.xml" />
+    <Content Include="App_Data\Localization\Installation\installation.sv.xml" />
     <Content Include="App_Data\Localization\Installation\installation.tr.xml" />
     <Content Include="App_Data\Localization\Installation\installation.ur.xml" />
     <Content Include="App_Data\Localization\Installation\installation.zhs.xml" />
