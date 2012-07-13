@@ -577,16 +577,20 @@ namespace Nop.Services.Forums
             {
                 limitDate = DateTime.UtcNow.AddDays(-limitDays);
             }
+            //we need to cast it to int, otherwise it won't work in SQLCE4
+            //we cannot use String.IsNullOrEmpty in query because it causes SqlCeException on SQLCE4
+            bool searchKeywords = !String.IsNullOrEmpty(keywords);
+            bool searchTopicTitles = searchType == ForumSearchType.All || searchType == ForumSearchType.TopicTitlesOnly;
+            bool searchPostText = searchType == ForumSearchType.All || searchType == ForumSearchType.PostTextOnly;
             var query1 = from ft in _forumTopicRepository.Table
                          join fp in _forumPostRepository.Table on ft.Id equals fp.TopicId
                          where
                          (forumId == 0 || ft.ForumId == forumId) &&
                          (customerId == 0 || ft.CustomerId == customerId) &&
                          (
-                             // following line causes SqlCeException on SQLCE4 (comparing parameter to IS NULL in query) -works on SQL Server
-                             // String.IsNullOrEmpty(keywords) ||
-                         ((searchType == ForumSearchType.All || searchType == ForumSearchType.TopicTitlesOnly) && ft.Subject.Contains(keywords)) ||
-                         ((searchType == ForumSearchType.All || searchType == ForumSearchType.PostTextOnly) && fp.Text.Contains(keywords))) &&
+                            !searchKeywords ||
+                            (searchTopicTitles && ft.Subject.Contains(keywords)) ||
+                            (searchPostText && fp.Text.Contains(keywords))) && 
                          (!limitDate.HasValue || limitDate.Value <= ft.LastPostTime)
                          select ft.Id;
 
