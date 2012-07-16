@@ -9,7 +9,6 @@ using Nop.Core;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
@@ -468,6 +467,7 @@ public partial class ExportManager : IExportManager
                     "SeName",
                     "AllowCustomerReviews",
                     "Published",
+                    "ProductVariantName",
                     "SKU",
                     "ManufacturerPartNumber",
                     "Gtin",
@@ -577,6 +577,9 @@ public partial class ExportManager : IExportManager
                         col++;
 
                         worksheet.Cells[row, col].Value = p.Published;
+                        col++;
+                        
+                        worksheet.Cells[row, col].Value = pv.Name;
                         col++;
 
                         worksheet.Cells[row, col].Value = pv.Sku;

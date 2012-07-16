@@ -1,12 +1,9 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Xml;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Domain.Localization;
 using Nop.Services.Catalog;
-using Nop.Services.Localization;
 using Nop.Services.Media;
 using OfficeOpenXml;
 
@@ -75,6 +72,7 @@ namespace Nop.Services.ExportImport
                     "SeName",
                     "AllowCustomerReviews",
                     "Published",
+                    "ProductVariantName",
                     "SKU",
                     "ManufacturerPartNumber",
                     "Gtin",
@@ -162,6 +160,7 @@ namespace Nop.Services.ExportImport
                     string seName = worksheet.Cells[iRow, GetColumnIndex(properties, "SeName")].Value as string;
                     bool allowCustomerReviews = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "AllowCustomerReviews")].Value);
                     bool published = Convert.ToBoolean(worksheet.Cells[iRow, GetColumnIndex(properties, "Published")].Value);
+                    string productVariantName = worksheet.Cells[iRow, GetColumnIndex(properties, "ProductVariantName")].Value as string;
                     string sku = worksheet.Cells[iRow, GetColumnIndex(properties, "SKU")].Value as string;
                     string manufacturerPartNumber = worksheet.Cells[iRow, GetColumnIndex(properties, "ManufacturerPartNumber")].Value as string;
                     string gtin = worksheet.Cells[iRow, GetColumnIndex(properties, "Gtin")].Value as string;
@@ -255,6 +254,7 @@ namespace Nop.Services.ExportImport
 
                         _productService.UpdateProduct(product);
 
+                        productVariant.Name = productVariantName;
                         productVariant.Sku = sku;
                         productVariant.ManufacturerPartNumber = manufacturerPartNumber;
                         productVariant.Gtin = gtin;
@@ -337,6 +337,7 @@ namespace Nop.Services.ExportImport
                         productVariant = new ProductVariant()
                         {
                             ProductId = product.Id,
+                            Name = productVariantName,
                             Sku = sku,
                             ManufacturerPartNumber = manufacturerPartNumber,
                             Gtin = gtin,
