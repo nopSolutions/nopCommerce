@@ -740,6 +740,11 @@ namespace Nop.Services.Orders
                 return warnings;
             }
 
+            if (quantity <= 0)
+            {
+                warnings.Add(_localizationService.GetResource("ShoppingCart.QuantityShouldPositive"));
+                return warnings;
+            }
 
             //reset checkout info
             _customerService.ResetCheckoutData(customer, false);

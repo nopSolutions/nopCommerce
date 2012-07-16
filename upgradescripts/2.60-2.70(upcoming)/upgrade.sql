@@ -5,8 +5,8 @@ declare @resources xml
 --a resource will be delete if its value is empty
 set @resources='
 <Language>
-  <LocaleResource Name="">
-    <Value></Value>
+  <LocaleResource Name="ShoppingCart.QuantityShouldPositive">
+    <Value>Quantity should be positive</Value>
   </LocaleResource>
 </Language>
 '

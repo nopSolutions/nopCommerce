@@ -3684,6 +3684,9 @@
 			<LocaleResource Name="CannotMixStandardAndAutoshipProducts">
 				<Value>Your cart has standard and auto-ship (recurring) items. Only one product type is allowed per order.</Value>
 			</LocaleResource>
+      <LocaleResource Name="QuantityShouldPositive">
+        <Value>Quantity should be positive</Value>
+      </LocaleResource>
 			<LocaleResource Name="CartIsEmpty">
 				<Value>Your Shopping Cart is empty!</Value>
 			</LocaleResource>
