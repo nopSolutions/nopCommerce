@@ -138,10 +138,12 @@ namespace Nop.Plugin.Feed.PriceGrabber
 
                         string imageUrl = string.Empty;
                         var pictures = _pictureService.GetPicturesByProductId(p.Id, 1);
+
+                        //always use HTTP when getting image URL
                         if (pictures.Count > 0)
-                            imageUrl = _pictureService.GetPictureUrl(pictures[0], _priceGrabberSettings.ProductPictureSize , true);
+                            imageUrl = _pictureService.GetPictureUrl(pictures[0], _priceGrabberSettings.ProductPictureSize, useSsl: false);
                         else
-                            imageUrl = _pictureService.GetDefaultPictureUrl(_priceGrabberSettings.ProductPictureSize, PictureType.Entity);
+                            imageUrl = _pictureService.GetDefaultPictureUrl(_priceGrabberSettings.ProductPictureSize, useSsl: false);
 
                         string description = pv.Description;
                         var currency = GetUsedCurrency();

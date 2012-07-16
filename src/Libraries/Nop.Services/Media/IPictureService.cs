@@ -23,8 +23,9 @@ namespace Nop.Services.Media
         /// </summary>
         /// <param name="targetSize">The target picture size (longest side)</param>
         /// <param name="defaultPictureType">Default picture type</param>
-        /// <returns></returns>
-        string GetDefaultPictureUrl(int targetSize = 0, PictureType defaultPictureType = PictureType.Entity);
+        /// <param name="useSsl">Value indicating whether to get SSL protected picture URL; null to use the same value as the current page</param>
+        /// <returns>Picture URL</returns>
+        string GetDefaultPictureUrl(int targetSize = 0, PictureType defaultPictureType = PictureType.Entity, bool? useSsl = null);
 
         /// <summary>
         /// Loads a cpiture from file
@@ -55,8 +56,9 @@ namespace Nop.Services.Media
         /// <param name="pictureId">Picture identifier</param>
         /// <param name="targetSize">The target picture size (longest side)</param>
         /// <param name="showDefaultPicture">A value indicating whether the default picture is shown</param>
-        /// <returns></returns>
-        string GetPictureUrl(int pictureId, int targetSize = 0, bool showDefaultPicture = true);
+        /// <param name="useSsl">Value indicating whether to get SSL protected picture URL; null to use the same value as the current page</param>
+        /// <returns>Picture URL</returns>
+        string GetPictureUrl(int pictureId, int targetSize = 0, bool showDefaultPicture = true, bool? useSsl = null);
 
         /// <summary>
         /// Get a picture URL
@@ -64,8 +66,9 @@ namespace Nop.Services.Media
         /// <param name="picture">Picture instance</param>
         /// <param name="targetSize">The target picture size (longest side)</param>
         /// <param name="showDefaultPicture">A value indicating whether the default picture is shown</param>
-        /// <returns></returns>
-        string GetPictureUrl(Picture picture, int targetSize = 0, bool showDefaultPicture = true);
+        /// <param name="useSsl">Value indicating whether to get SSL protected picture URL; null to use the same value as the current page</param>
+        /// <returns>Picture URL</returns>
+        string GetPictureUrl(Picture picture, int targetSize = 0, bool showDefaultPicture = true, bool? useSsl = null);
 
         /// <summary>
         /// Get a picture local path

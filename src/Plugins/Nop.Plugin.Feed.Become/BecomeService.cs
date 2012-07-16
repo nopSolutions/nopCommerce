@@ -7,7 +7,6 @@ using System.Web.Routing;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
-using Nop.Core.Domain.Media;
 using Nop.Core.Html;
 using Nop.Core.Plugins;
 using Nop.Services.Catalog;
@@ -138,10 +137,12 @@ namespace Nop.Plugin.Feed.Become
 
                         string imageUrl = string.Empty;
                         var pictures = _pictureService.GetPicturesByProductId(p.Id, 1);
+
+                        //always use HTTP when getting image URL
                         if (pictures.Count > 0)
-                            imageUrl = _pictureService.GetPictureUrl(pictures[0], _becomeSettings.ProductPictureSize, true);
+                            imageUrl = _pictureService.GetPictureUrl(pictures[0], _becomeSettings.ProductPictureSize, useSsl: false);
                         else
-                            imageUrl = _pictureService.GetDefaultPictureUrl(_becomeSettings.ProductPictureSize, PictureType.Entity);
+                            imageUrl = _pictureService.GetDefaultPictureUrl(_becomeSettings.ProductPictureSize, useSsl: false);
 
                         string description = pv.Description;
                         var currency = GetUsedCurrency();

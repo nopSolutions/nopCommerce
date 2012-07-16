@@ -245,10 +245,12 @@ namespace Nop.Plugin.Feed.Froogle
                         var picture = _pictureService.GetPictureById(productVariant.PictureId);
                         if (picture == null)
                             picture = _pictureService.GetPicturesByProductId(product.Id, 1).FirstOrDefault();
+
+                        //always use HTTP when getting image URL
                         if (picture != null)
-                            imageUrl = _pictureService.GetPictureUrl(picture, _froogleSettings.ProductPictureSize, true);
+                            imageUrl = _pictureService.GetPictureUrl(picture, _froogleSettings.ProductPictureSize, useSsl: false);
                         else
-                            imageUrl = _pictureService.GetDefaultPictureUrl(_froogleSettings.ProductPictureSize, PictureType.Entity);
+                            imageUrl = _pictureService.GetDefaultPictureUrl(_froogleSettings.ProductPictureSize, useSsl: false);
 
                         writer.WriteElementString("g", "image_link", googleBaseNamespace, imageUrl);
 

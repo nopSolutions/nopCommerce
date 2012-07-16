@@ -228,8 +228,9 @@ namespace Nop.Services.Media
         /// </summary>
         /// <param name="targetSize">The target picture size (longest side)</param>
         /// <param name="defaultPictureType">Default picture type</param>
-        /// <returns></returns>
-        public virtual string GetDefaultPictureUrl(int targetSize = 0, PictureType defaultPictureType = PictureType.Entity)
+        /// <param name="useSsl">Value indicating whether to get SSL protected picture URL; null to use the same value as the current page</param>
+        /// <returns>Picture URL</returns>
+        public virtual string GetDefaultPictureUrl(int targetSize = 0, PictureType defaultPictureType = PictureType.Entity, bool? useSsl = null)
         {
             string defaultImageName;
             switch (defaultPictureType)
@@ -246,7 +247,10 @@ namespace Nop.Services.Media
             }
 
 
-            string relPath = _webHelper.GetStoreLocation() + "content/images/" + defaultImageName;
+            string relPath = (useSsl.HasValue
+                                 ? _webHelper.GetStoreLocation(useSsl.Value)
+                                 : _webHelper.GetStoreLocation())
+                                 + "content/images/" + defaultImageName;
             if (targetSize == 0)
                 return relPath;
             else
@@ -286,7 +290,10 @@ namespace Nop.Services.Media
                         newBitMap.Dispose();
                         b.Dispose();
                     }
-                    return _webHelper.GetStoreLocation() + "content/images/thumbs/" + fname;
+                    return (useSsl.HasValue
+                               ? _webHelper.GetStoreLocation(useSsl.Value)
+                               : _webHelper.GetStoreLocation())
+                               + "content/images/thumbs/" + fname;
                 }
                 return relPath;
             }
@@ -342,11 +349,12 @@ namespace Nop.Services.Media
         /// <param name="pictureId">Picture identifier</param>
         /// <param name="targetSize">The target picture size (longest side)</param>
         /// <param name="showDefaultPicture">A value indicating whether the default picture is shown</param>
-        /// <returns></returns>
-        public virtual string GetPictureUrl(int pictureId, int targetSize = 0, bool showDefaultPicture = true)
+        /// <param name="useSsl">Value indicating whether to get SSL protected picture URL; null to use the same value as the current page</param>
+        /// <returns>Picture URL</returns>
+        public virtual string GetPictureUrl(int pictureId, int targetSize = 0, bool showDefaultPicture = true, bool? useSsl = null)
         {
             var picture = GetPictureById(pictureId);
-            return GetPictureUrl(picture, targetSize, showDefaultPicture);
+            return GetPictureUrl(picture, targetSize, showDefaultPicture, useSsl);
         }
         
         /// <summary>
@@ -355,8 +363,9 @@ namespace Nop.Services.Media
         /// <param name="picture">Picture instance</param>
         /// <param name="targetSize">The target picture size (longest side)</param>
         /// <param name="showDefaultPicture">A value indicating whether the default picture is shown</param>
-        /// <returns></returns>
-        public virtual string GetPictureUrl(Picture picture, int targetSize = 0, bool showDefaultPicture = true)
+        /// <param name="useSsl">Value indicating whether to get SSL protected picture URL; null to use the same value as the current page</param>
+        /// <returns>Picture URL</returns>
+        public virtual string GetPictureUrl(Picture picture, int targetSize = 0, bool showDefaultPicture = true, bool? useSsl = null)
         {
             string url = string.Empty;
             if (picture == null || LoadPictureBinary(picture).Length == 0)
@@ -435,7 +444,10 @@ namespace Nop.Services.Media
                     }
                 }
             }
-            url = _webHelper.GetStoreLocation() + "content/images/thumbs/" + localFilename;
+            url = (useSsl.HasValue
+                ? _webHelper.GetStoreLocation(useSsl.Value)
+                : _webHelper.GetStoreLocation())
+                + "content/images/thumbs/" + localFilename;
             return url;
         }
 
