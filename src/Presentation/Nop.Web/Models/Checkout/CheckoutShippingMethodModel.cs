@@ -23,6 +23,7 @@ namespace Nop.Web.Models.Checkout
             public string Name { get; set; }
             public string Description { get; set; }
             public string Fee { get; set; }
+            public bool Selected { get; set; }
         }
         #endregion
     }

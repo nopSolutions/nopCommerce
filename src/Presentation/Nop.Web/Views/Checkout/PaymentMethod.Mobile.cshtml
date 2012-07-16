@@ -46,7 +46,7 @@
                             }
                             <div class="payment-method-item">
                                 <div class="option-name">
-                                    <input id="paymentmethod_@(i)" type="radio" name="paymentmethod" value="@(paymentMethod.PaymentMethodSystemName)"  @(i == 0 ? Html.Raw(" checked=\"checked\"") : null) />
+                                    <input id="paymentmethod_@(i)" type="radio" name="paymentmethod" value="@(paymentMethod.PaymentMethodSystemName)"  @(paymentMethod.Selected ? Html.Raw(" checked=\"checked\"") : null) />
                                     <label for="paymentmethod_@(i)">@paymentMethodName</label>
                                 </div>
                             </div>

@@ -205,6 +205,24 @@ namespace Nop.Web.Controllers
 
                     model.ShippingMethods.Add(soModel);
                 }
+
+                //find a selected (previously) shipping method
+                var lastShippingOption = _workContext.CurrentCustomer.GetAttribute<ShippingOption>(SystemCustomerAttributeNames.LastShippingOption);
+                if (lastShippingOption != null)
+                {
+                    var shippingOptionToSelect = model.ShippingMethods.ToList()
+                        .Find(so => !String.IsNullOrEmpty(so.Name) && so.Name.Equals(lastShippingOption.Name, StringComparison.InvariantCultureIgnoreCase) &&
+                        !String.IsNullOrEmpty(so.ShippingRateComputationMethodSystemName) && so.ShippingRateComputationMethodSystemName.Equals(lastShippingOption.ShippingRateComputationMethodSystemName, StringComparison.InvariantCultureIgnoreCase));
+                    if (shippingOptionToSelect != null)
+                        shippingOptionToSelect.Selected = true;
+                }
+                //if no option has been selected, let's do it for the first one
+                if (model.ShippingMethods.Where(so => so.Selected).FirstOrDefault() == null)
+                {
+                    var shippingOptionToSelect = model.ShippingMethods.FirstOrDefault();
+                    if (shippingOptionToSelect != null)
+                        shippingOptionToSelect.Selected = true;
+                }
             }
             else
                 foreach (var error in getShippingOptionResponse.Errors)
@@ -254,6 +272,22 @@ namespace Nop.Web.Controllers
                     pmModel.Fee = _priceFormatter.FormatPaymentMethodAdditionalFee(rate, true);
 
                 model.PaymentMethods.Add(pmModel);
+            }
+            
+            //find a selected (previously) payment method
+            if (!String.IsNullOrEmpty(_workContext.CurrentCustomer.SelectedPaymentMethodSystemName))
+            {
+                var paymentMethodToSelect = model.PaymentMethods.ToList()
+                    .Find(pm => pm.PaymentMethodSystemName.Equals(_workContext.CurrentCustomer.SelectedPaymentMethodSystemName, StringComparison.InvariantCultureIgnoreCase));
+                if (paymentMethodToSelect != null)
+                    paymentMethodToSelect.Selected = true;
+            }
+            //if no option has been selected, let's do it for the first one
+            if (model.PaymentMethods.Where(so => so.Selected).FirstOrDefault() == null)
+            {
+                var paymentMethodToSelect = model.PaymentMethods.FirstOrDefault();
+                if (paymentMethodToSelect != null)
+                    paymentMethodToSelect.Selected = true;
             }
 
             return model;
