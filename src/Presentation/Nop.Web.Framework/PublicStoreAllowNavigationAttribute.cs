@@ -48,7 +48,9 @@ namespace Nop.Web.Framework
                 //ensure it's not the Account activation page
                 !(controllerName.Equals("Nop.Web.Controllers.CustomerController", StringComparison.InvariantCultureIgnoreCase) && actionName.Equals("AccountActivation", StringComparison.InvariantCultureIgnoreCase)) &&
                 //ensure it's not the Register page
-                !(controllerName.Equals("Nop.Web.Controllers.CustomerController", StringComparison.InvariantCultureIgnoreCase) && actionName.Equals("CheckUsernameAvailability", StringComparison.InvariantCultureIgnoreCase)))
+                !(controllerName.Equals("Nop.Web.Controllers.CustomerController", StringComparison.InvariantCultureIgnoreCase) && actionName.Equals("CheckUsernameAvailability", StringComparison.InvariantCultureIgnoreCase)) &&
+                //ensure it's not the GetStatesByCountryId ajax method (can be used during registration)
+                !(controllerName.Equals("Nop.Web.Controllers.CountryController", StringComparison.InvariantCultureIgnoreCase) && actionName.Equals("GetStatesByCountryId", StringComparison.InvariantCultureIgnoreCase)))
             {
                 //var webHelper = EngineContext.Current.Resolve<IWebHelper>();
                 //var loginPageUrl = webHelper.GetStoreLocation() + "login";
