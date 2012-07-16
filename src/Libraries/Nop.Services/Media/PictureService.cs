@@ -372,7 +372,7 @@ namespace Nop.Services.Media
             {
                 if(showDefaultPicture)
                 {
-                    url = GetDefaultPictureUrl(targetSize);
+                    url = GetDefaultPictureUrl(targetSize, useSsl: useSsl);
                 }
                 return url;
             }
