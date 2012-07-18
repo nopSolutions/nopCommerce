@@ -1571,6 +1571,8 @@ namespace Nop.Web.Controllers
                     model.DiscountMessage = _localizationService.GetResource("ShoppingCart.DiscountCouponCode.WrongDiscount");
                 }
             }
+            else
+                model.DiscountMessage = _localizationService.GetResource("ShoppingCart.DiscountCouponCode.WrongDiscount");
 
             model = PrepareShoppingCartModel(model, cart, true, false, true);
             return View(model);
@@ -1599,6 +1601,8 @@ namespace Nop.Web.Controllers
                     else
                         model.GiftCardMessage = _localizationService.GetResource("ShoppingCart.GiftCardCouponCode.WrongGiftCard");
                 }
+                else
+                    model.GiftCardMessage = _localizationService.GetResource("ShoppingCart.GiftCardCouponCode.WrongGiftCard");
             }
             else
                 model.GiftCardMessage = _localizationService.GetResource("ShoppingCart.GiftCardCouponCode.DontWorkWithAutoshipProducts");
