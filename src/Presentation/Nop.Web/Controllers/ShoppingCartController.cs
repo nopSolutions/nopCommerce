@@ -640,10 +640,14 @@ namespace Nop.Web.Controllers
                 model.SubTotal = _priceFormatter.FormatPrice(subtotal);
 
                 //a customer should visit the shopping cart page before going to checkout if:
-                //1.  "terms of services" are enabled
+                //1. "terms of services" are enabled
                 //2. we have at least one checkout attribute
+                //3. min order sub-total is OK
                 var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes(!cart.RequiresShipping());
-                model.DisplayCheckoutButton = !_orderSettings.TermsOfServiceEnabled && checkoutAttributes.Count == 0;
+                bool minOrderSubtotalAmountOk = _orderProcessingService.ValidateMinOrderSubtotalAmount(cart);
+                model.DisplayCheckoutButton = !_orderSettings.TermsOfServiceEnabled && 
+                    checkoutAttributes.Count == 0 &&
+                    minOrderSubtotalAmountOk;
 
                 //products. sort descending (recently added products)
                 foreach (var sci in cart
