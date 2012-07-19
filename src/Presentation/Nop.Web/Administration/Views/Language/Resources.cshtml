@@ -20,12 +20,10 @@
                 @T("Admin.Configuration.Languages.Select")
             </td>
             <td class="adminData">
-                @(Html.Telerik().ComboBox().Name("select-language")
-                .ClientEvents(x => x.OnChange("onLanguageSelected"))
-                .BindTo(ViewBag.AllLanguages))
+                @Html.DropDownList("localeresource-language", (IEnumerable<SelectListItem>)ViewBag.AllLanguages, new { onchange = "onLocaleResourceLanguageSelected(this.value);" })
                 <script type="text/javascript">
-                    function onLanguageSelected(e) {
-                        window.location = "/Admin/Language/Resources?languageId=" + e.value;
+                    function onLocaleResourceLanguageSelected(languageid) {
+                        window.location = '@(Url.Action("Resources") + "?languageId=")' + languageid;
                     }
                 </script>
             </td>
