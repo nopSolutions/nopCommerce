@@ -1,0 +1,140 @@
+<Language Name="Lietuvių" IsDefault="false" IsRightToLeft="false">
+  <LocaleResource Name="AdminEmail">
+    <Value>Administratoriaus el. paštas</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminEmailRequired">
+    <Value>Įveskite el. pašta</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPassword">
+    <Value>Administratoriaus slaptažodis</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPasswordRequired">
+    <Value>Įveskite slaptažodį</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureDirectoryPermissions">
+    <Value>'{0}' Paskyra neaktyvuota modifikavimui papkėje '{1}'. Prašome sukonfigūruoti priėjimo teises.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureFilePermissions">
+    <Value>'{0}' Paskyra neaktyvuota modifikavimui papkėje '{1}'. Prašome sukonfigūruoti priėjimo teises.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPassword">
+    <Value>Patvirtinkite slaptažodį</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPasswordRequired">
+    <Value>Patvirtinkite slaptažodį</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionString">
+    <Value>Prisijungimo informacija</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringRequired">
+    <Value>SQL Įveskite prisijungimo informacija</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringValues">
+    <Value>Įveskite SQL prisijungimo duomenis</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringWrongFormat">
+    <Value>Klaidingas SQL prisijungimo duomenų formatas</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateDatabaseIfDoesNotExist">
+    <Value>Sukurti duomenų baze jeigu nėra atitikmens.</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateSampleData">
+    <Value>Įdiegti pavyzdinius duomenis?</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomCollation">
+    <Value>Norodykite modifikuotus SQL Serverio duomenis</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>Klaida kuriant duomenu baze: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseInformation">
+    <Value>Duomenų bazės informacija</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseName">
+    <Value>Duomenų bazės pavadinimas</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNameRequired">
+    <Value>Įveskite duomenų bazės pavadinima</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNotExists">
+    <Value>Tokios duomenų bazės nėra, arba jus neturite teisės prie jos prisijungti.</Value>
+  </LocaleResource>
+  <LocaleResource Name="DataProviderRequired">
+    <Value>Pasirinkite duomenų teikėją</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation1">
+    <Value>Jeigu reikia daugiau informacijos kaip naudotis nopCommerce, perskaitykite</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation2">
+    <Value>dokumentacija nopCommerce.com svetainėje</Value>
+  </LocaleResource>
+  <LocaleResource Name="Example">
+    <Value>Pavyzdys</Value>
+  </LocaleResource>
+  <LocaleResource Name="Install">
+    <Value>Įdiegti</Value>
+  </LocaleResource>
+  <LocaleResource Name="Installing">
+    <Value>Diegiama nopCommerce aplikacija...</Value>
+  </LocaleResource>
+  <LocaleResource Name="PasswordsDoNotMatch">
+    <Value>Slaptažodžiai nesutampa</Value>
+  </LocaleResource>
+  <LocaleResource Name="RawConnectionString">
+    <Value>Įveskite prisijungimo duomenis vienoje eilutėje</Value>
+  </LocaleResource>
+  <LocaleResource Name="Recommended">
+    <Value>[Rekomenduojama]</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallation">
+    <Value>Perkrauti diegima</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallationTooltip">
+    <Value>Paspauskite norėdami perkrauti diegimo procesą (ištrinti visas patalpintas reikšmes)</Value>
+  </LocaleResource>
+  <LocaleResource Name="SetupFailed">
+    <Value>Diegimo klaida: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlAuthentication">
+    <Value>Naudoti SQL Serverio paskyrą</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlCompact">
+    <Value>Naudoti standartine duomenų talpykla (SQL Server Compact)</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerName">
+    <Value>SQL Serverio pavadinimas</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerNameRequired">
+    <Value>Įveskite SQL serverio pavadinimą</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerPassword">
+    <Value>SQL Slaptažodis</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerPasswordRequired">
+    <Value>Įveskite SQL slaptažodį</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerUsername">
+    <Value>SQL Vartotojo vardas</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerUsernameRequired">
+    <Value>Įveskite SQL vartotojo vardą</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlStandard">
+    <Value>Naudoti SQL Serverio (arba SQL Express) duomenų bazę?</Value>
+  </LocaleResource>
+  <LocaleResource Name="StoreInformation">
+    <Value>E-parduotuvės informacija</Value>
+  </LocaleResource>
+  <LocaleResource Name="Title">
+    <Value>nopCommerce diegimas</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip1">
+    <Value>nopCommerce yra labiausiai paplitusi ASP.NET elektroninės prekybos sistema. Šis vedlys pedės jums įdiegti bei sukonfiguruoti nopCommerce sistemą.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip2">
+    <Value>Norėdami įdiegti šią aplikaciją, jūs turite žinoti šiek tiek informacijos apie savo SQL serverį (prisijugimo informaciją). Prašome susisiekti su savo ISP, jei būtina. Jeigu diegiate į vietinį kompiuterį ar serverį, jums gali prireikti informacijos iš jūsų sistemos administratoriaus.</Value>
+  </LocaleResource>
+  <LocaleResource Name="WindowsAuthentication">
+    <Value>Naudoti integruotą Windows autentifikavimą</Value>
+  </LocaleResource>
+</Language>
