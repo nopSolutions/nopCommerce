@@ -585,7 +585,7 @@ namespace Nop.Services.Orders
                 int cycleLength = 0;
                 RecurringProductCyclePeriod cyclePeriod =  RecurringProductCyclePeriod.Days;
                 int totalCycles = 0;
-                string cyclesError = shoppingCart.GetReccuringCycleInfo(out cycleLength, out cyclePeriod, out totalCycles);
+                string cyclesError = shoppingCart.GetRecurringCycleInfo(out cycleLength, out cyclePeriod, out totalCycles);
                 if (!string.IsNullOrEmpty(cyclesError))
                 {
                     warnings.Add(cyclesError);

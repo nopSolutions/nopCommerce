@@ -56,14 +56,14 @@ namespace Nop.Services.Orders
         }
 
         /// <summary>
-        /// Validates whether this shopping cart is valid
+        /// Get a recurring cycle information
         /// </summary>
         /// <param name="shoppingCart">Shopping cart</param>
         /// <param name="cycleLength">Cycle length</param>
         /// <param name="cyclePeriod">Cycle period</param>
         /// <param name="totalCycles">Total cycles</param>
         /// <returns>Error (if exists); otherwise, empty string</returns>
-        public static string GetReccuringCycleInfo(this IList<ShoppingCartItem> shoppingCart,
+        public static string GetRecurringCycleInfo(this IList<ShoppingCartItem> shoppingCart,
             out int cycleLength, out RecurringProductCyclePeriod cyclePeriod, out int totalCycles)
         {
             string error = "";
