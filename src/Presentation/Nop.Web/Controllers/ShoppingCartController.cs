@@ -191,9 +191,9 @@ namespace Nop.Web.Controllers
         /// <returns>Model</returns>
         [NonAction]
         protected void PrepareShoppingCartModel(ShoppingCartModel model, 
-            IList<ShoppingCartItem> cart, bool isEditable, 
-            bool validateCheckoutAttributes, 
-            bool prepareEstimateShippingIfEnabled, bool setEstimateShippingDefaultAddress)
+            IList<ShoppingCartItem> cart, bool isEditable = true, 
+            bool validateCheckoutAttributes = false, 
+            bool prepareEstimateShippingIfEnabled = true, bool setEstimateShippingDefaultAddress = true)
         {
             if (cart == null)
                 throw new ArgumentNullException("cart");
@@ -494,11 +494,18 @@ namespace Nop.Web.Controllers
             }
 
             #endregion
+
+            #region Order review data
+            if (prepareAndDisplayOrderReviewData)
+            {
+                
+            }
+            #endregion
         }
 
         [NonAction]
-        protected void PrepareWishlistModel(WishlistModel model, 
-            IList<ShoppingCartItem> cart, bool isEditable)
+        protected void PrepareWishlistModel(WishlistModel model,
+            IList<ShoppingCartItem> cart, bool isEditable = true)
         {
             if (cart == null)
                 throw new ArgumentNullException("cart");
@@ -1234,7 +1241,7 @@ namespace Nop.Web.Controllers
 
             var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
             var model = new ShoppingCartModel();
-            PrepareShoppingCartModel(model, cart, true, false, true, true);
+            PrepareShoppingCartModel(model, cart);
             return View(model);
         }
 
@@ -1243,7 +1250,7 @@ namespace Nop.Web.Controllers
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
             var model = new ShoppingCartModel();
-            PrepareShoppingCartModel(model, cart, false, false, false, true);
+            PrepareShoppingCartModel(model, cart, isEditable: false, prepareEstimateShippingIfEnabled: false);
             return PartialView(model);
         }
 
@@ -1287,7 +1294,7 @@ namespace Nop.Web.Controllers
             //updated cart
             cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
             var model = new ShoppingCartModel();
-            PrepareShoppingCartModel(model, cart, true, false, true, true);
+            PrepareShoppingCartModel(model, cart);
             //update current warnings
             foreach (var kvp in innerWarnings)
             {
@@ -1345,7 +1352,7 @@ namespace Nop.Web.Controllers
             //updated cart
             cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(x => x.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
             var model = new ShoppingCartModel();
-            PrepareShoppingCartModel(model, cart, true, false, true, true);
+            PrepareShoppingCartModel(model, cart);
             //update current warnings
             //find model
             var sciModel = model.Items.Where(x => x.Id == sciId).FirstOrDefault();
@@ -1380,13 +1387,13 @@ namespace Nop.Web.Controllers
             }
 
             //remove the cart item
-            _shoppingCartService.DeleteShoppingCartItem(sci, true);
+            _shoppingCartService.DeleteShoppingCartItem(sci);
 
 
             //updated cart
             cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(x => x.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
             var model = new ShoppingCartModel();
-            PrepareShoppingCartModel(model, cart, true, false, true, true);
+            PrepareShoppingCartModel(model, cart);
             return View(model);
         }
 
@@ -1548,7 +1555,7 @@ namespace Nop.Web.Controllers
             {
                 //something wrong, redisplay the page with warnings
                 var model = new ShoppingCartModel();
-                PrepareShoppingCartModel(model, cart, true, true, true, true);
+                PrepareShoppingCartModel(model, cart, validateCheckoutAttributes: true);
                 return View(model);
             }
 
@@ -1597,7 +1604,7 @@ namespace Nop.Web.Controllers
             else
                 model.DiscountBox.Message = _localizationService.GetResource("ShoppingCart.DiscountCouponCode.WrongDiscount");
 
-            PrepareShoppingCartModel(model, cart, true, false, true, true);
+            PrepareShoppingCartModel(model, cart);
             return View(model);
         }
 
@@ -1630,7 +1637,7 @@ namespace Nop.Web.Controllers
             else
                 model.GiftCardBox.Message = _localizationService.GetResource("ShoppingCart.GiftCardCouponCode.DontWorkWithAutoshipProducts");
 
-            PrepareShoppingCartModel(model, cart, true, false, true, true);
+            PrepareShoppingCartModel(model, cart);
             return View(model);
         }
         
@@ -1644,7 +1651,7 @@ namespace Nop.Web.Controllers
             model.EstimateShipping.CountryId = shippingModel.CountryId;
             model.EstimateShipping.StateProvinceId = shippingModel.StateProvinceId;
             model.EstimateShipping.ZipPostalCode = shippingModel.ZipPostalCode;
-            PrepareShoppingCartModel(model, cart, true, false, true, false);
+            PrepareShoppingCartModel(model, cart,setEstimateShippingDefaultAddress: false);
 
             if (cart.RequiresShipping())
             {
@@ -1865,7 +1872,7 @@ namespace Nop.Web.Controllers
             _workContext.CurrentCustomer.DiscountCouponCode = "";
             _customerService.UpdateCustomer(_workContext.CurrentCustomer);
 
-            PrepareShoppingCartModel(model, cart, true, false, true, true);
+            PrepareShoppingCartModel(model, cart);
             return View(model);
         }
 
@@ -1884,7 +1891,7 @@ namespace Nop.Web.Controllers
                 _customerService.UpdateCustomer(_workContext.CurrentCustomer);
             }
 
-            PrepareShoppingCartModel(model, cart, true, false, true, true);
+            PrepareShoppingCartModel(model, cart);
             return View(model);
         }
 
@@ -1962,7 +1969,7 @@ namespace Nop.Web.Controllers
             //updated wishlist
             cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist).ToList();
             var model = new WishlistModel();
-            PrepareWishlistModel(model, cart, true);
+            PrepareWishlistModel(model, cart);
             //update current warnings
             foreach (var kvp in innerWarnings)
             {
@@ -2020,7 +2027,7 @@ namespace Nop.Web.Controllers
             //updated wishlist
             cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(x => x.ShoppingCartType == ShoppingCartType.Wishlist).ToList();
             var model = new WishlistModel();
-            PrepareWishlistModel(model, cart, true);
+            PrepareWishlistModel(model, cart);
             //update current warnings
             //find model
             var sciModel = model.Items.Where(x => x.Id == sciId).FirstOrDefault();
@@ -2061,7 +2068,7 @@ namespace Nop.Web.Controllers
             //updated wishlist
             cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(x => x.ShoppingCartType == ShoppingCartType.Wishlist).ToList();
             var model = new WishlistModel();
-            PrepareWishlistModel(model, cart, true);
+            PrepareWishlistModel(model, cart);
             return View(model);
         }
 
