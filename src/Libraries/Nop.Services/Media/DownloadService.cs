@@ -5,7 +5,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
-using Nop.Core.Events;
+using Nop.Services.Events;
 
 namespace Nop.Services.Media
 {

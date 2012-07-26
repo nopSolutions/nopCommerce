@@ -1,5 +1,5 @@
 ﻿using Nop.Core.Domain.Orders;
-using Nop.Core.Events;
+using Nop.Services.Events;
 
 namespace Nop.Services.Orders
 {

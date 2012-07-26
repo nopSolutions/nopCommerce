@@ -5,7 +5,7 @@ using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
-using Nop.Core.Events;
+using Nop.Services.Events;
 
 namespace Nop.Services.Shipping
 {
@@ -18,7 +18,6 @@ namespace Nop.Services.Shipping
 
         private readonly IRepository<Shipment> _shipmentRepository;
         private readonly IRepository<ShipmentOrderProductVariant> _sopvRepository;
-        private readonly IRepository<Order> _orderRepository;
         private readonly IEventPublisher _eventPublisher;
         
         #endregion
@@ -30,16 +29,13 @@ namespace Nop.Services.Shipping
         /// </summary>
         /// <param name="shipmentRepository">Shipment repository</param>
         /// <param name="sopvRepository">Shipment order product variant repository</param>
-        /// <param name="orderRepository">Order repository</param>
         /// <param name="eventPublisher">Event published</param>
         public ShipmentService(IRepository<Shipment> shipmentRepository,
             IRepository<ShipmentOrderProductVariant> sopvRepository,
-            IRepository<Order> orderRepository,
             IEventPublisher eventPublisher)
         {
             this._shipmentRepository = shipmentRepository;
             this._sopvRepository = sopvRepository;
-            this._orderRepository = orderRepository;
             _eventPublisher = eventPublisher;
         }
 

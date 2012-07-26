@@ -4,9 +4,9 @@ using System.Linq;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Localization;
-using Nop.Core.Events;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
+using Nop.Services.Events;
 
 namespace Nop.Services.Localization
 {

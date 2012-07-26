@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Nop.Core.Events
+namespace Nop.Services.Events
 {
     public interface ISubscriptionService
     {

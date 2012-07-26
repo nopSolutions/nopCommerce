@@ -1,8 +1,8 @@
 ﻿using System;
 using Nop.Core.Domain.Messages;
-using Nop.Core.Events;
 using Nop.Core.Plugins;
 using Nop.Plugin.Misc.MailChimp.Data;
+using Nop.Services.Events;
 
 namespace Nop.Plugin.Misc.MailChimp.Services
 {

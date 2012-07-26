@@ -9,8 +9,8 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
-using Nop.Core.Events;
 using Nop.Data;
+using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
 

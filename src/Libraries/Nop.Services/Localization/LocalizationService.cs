@@ -10,8 +10,8 @@ using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Localization;
-using Nop.Core.Events;
 using Nop.Data;
+using Nop.Services.Events;
 using Nop.Services.Logging;
 
 namespace Nop.Services.Localization

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace Nop.Core.Events
+namespace Nop.Services.Events
 {
     public class EventPublisher : IEventPublisher
     {

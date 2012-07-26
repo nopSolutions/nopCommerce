@@ -6,9 +6,9 @@ using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Forums;
-using Nop.Core.Events;
 using Nop.Services.Common;
 using Nop.Services.Customers;
+using Nop.Services.Events;
 using Nop.Services.Messages;
 
 namespace Nop.Services.Forums

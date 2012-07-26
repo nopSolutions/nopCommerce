@@ -1,7 +1,7 @@
 ﻿using Nop.Core.Data;
 using Nop.Core.Domain.Messages;
-using Nop.Core.Events;
 using Nop.Data;
+using Nop.Services.Events;
 using Nop.Services.Messages;
 using NUnit.Framework;
 using Rhino.Mocks;

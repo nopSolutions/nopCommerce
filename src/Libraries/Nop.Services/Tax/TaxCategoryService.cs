@@ -4,7 +4,7 @@ using System.Linq;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Tax;
-using Nop.Core.Events;
+using Nop.Services.Events;
 
 namespace Nop.Services.Tax
 {

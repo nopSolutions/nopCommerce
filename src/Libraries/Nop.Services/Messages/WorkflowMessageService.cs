@@ -10,8 +10,8 @@ using Nop.Core.Domain.News;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Services.Customers;
+using Nop.Services.Events;
 using Nop.Services.Localization;
-using Nop.Core.Events;
 
 namespace Nop.Services.Messages
 {

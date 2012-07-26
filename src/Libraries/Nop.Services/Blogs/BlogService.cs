@@ -5,7 +5,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Blogs;
-using Nop.Core.Events;
+using Nop.Services.Events;
 
 namespace Nop.Services.Blogs
 {
@@ -29,7 +29,8 @@ namespace Nop.Services.Blogs
 
         #region Ctor
 
-        public BlogService(IRepository<BlogPost> blogPostRepository, ICacheManager cacheManager, IEventPublisher eventPublisher)
+        public BlogService(IRepository<BlogPost> blogPostRepository, 
+            ICacheManager cacheManager, IEventPublisher eventPublisher)
         {
             _blogPostRepository = blogPostRepository;
             _cacheManager = cacheManager;

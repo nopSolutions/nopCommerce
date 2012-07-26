@@ -10,8 +10,8 @@ using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
-using Nop.Core.Events;
 using Nop.Services.Common;
+using Nop.Services.Events;
 
 namespace Nop.Services.Customers
 {

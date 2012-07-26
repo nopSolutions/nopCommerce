@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Nop.Core.Infrastructure;
 
-namespace Nop.Core.Events
+namespace Nop.Services.Events
 {
     public class SubscriptionService : ISubscriptionService
     {

@@ -3,7 +3,7 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
-using Nop.Core.Events;
+using Nop.Services.Events;
 using Nop.Services.Messages;
 
 namespace Nop.Services.Catalog

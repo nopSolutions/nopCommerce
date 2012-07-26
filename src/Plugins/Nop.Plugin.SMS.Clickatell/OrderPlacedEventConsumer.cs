@@ -1,7 +1,7 @@
 ﻿using System;
 using Nop.Core.Domain.Orders;
-using Nop.Core.Events;
 using Nop.Core.Plugins;
+using Nop.Services.Events;
 using Nop.Services.Orders;
 
 namespace Nop.Plugin.SMS.Clickatell

@@ -8,7 +8,7 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
-using Nop.Core.Events;
+using Nop.Services.Events;
 
 namespace Nop.Services.Orders
 {

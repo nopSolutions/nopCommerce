@@ -10,6 +10,7 @@ using Nop.Core.Domain.Polls;
 using Nop.Core.Domain.Topics;
 using Nop.Core.Events;
 using Nop.Core.Infrastructure;
+using Nop.Services.Events;
 
 namespace Nop.Web.Infrastructure.Cache
 {

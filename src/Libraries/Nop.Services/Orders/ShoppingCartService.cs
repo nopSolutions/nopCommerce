@@ -6,10 +6,10 @@ using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
-using Nop.Core.Events;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
+using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Security;
 

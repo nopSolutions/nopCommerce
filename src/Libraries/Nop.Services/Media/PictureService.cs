@@ -9,8 +9,8 @@ using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Media;
-using Nop.Core.Events;
 using Nop.Services.Configuration;
+using Nop.Services.Events;
 
 namespace Nop.Services.Media
 {

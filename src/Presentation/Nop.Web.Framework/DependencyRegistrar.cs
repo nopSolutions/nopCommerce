@@ -28,6 +28,7 @@ using Nop.Services.Configuration;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Discounts;
+using Nop.Services.Events;
 using Nop.Services.ExportImport;
 using Nop.Services.Forums;
 using Nop.Services.Helpers;

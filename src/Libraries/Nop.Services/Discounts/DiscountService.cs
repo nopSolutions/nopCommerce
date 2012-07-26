@@ -6,9 +6,9 @@ using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Discounts;
-using Nop.Core.Events;
 using Nop.Core.Plugins;
 using Nop.Services.Customers;
+using Nop.Services.Events;
 
 namespace Nop.Services.Discounts
 {

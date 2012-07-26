@@ -71,8 +71,6 @@
     <Compile Include="Domain\Shipping\Shipment.cs" />
     <Compile Include="Domain\Tasks\ScheduleTask.cs" />
     <Compile Include="Domain\Messages\Events.cs" />
-    <Compile Include="Events\EntityTokensAdded.cs" />
-    <Compile Include="Events\MessageTokensAdded.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Data\BaseDataProviderManager.cs" />
     <Compile Include="Data\IDataProvider.cs" />
@@ -93,15 +91,9 @@
     <Compile Include="Domain\Polls\PollAnswer.cs" />
     <Compile Include="Domain\Polls\Poll.cs" />
     <Compile Include="Domain\Orders\BestsellersReportLine.cs" />
-    <Compile Include="Events\EventPublisherExtensions.cs" />
     <Compile Include="Events\EntityDeleted.cs" />
     <Compile Include="Events\EntityInserted.cs" />
     <Compile Include="Events\EntityUpdated.cs" />
-    <Compile Include="Events\EventPublisher.cs" />
-    <Compile Include="Events\IConsumer.cs" />
-    <Compile Include="Events\IEventPublisher.cs" />
-    <Compile Include="Events\ISubscriptionService.cs" />
-    <Compile Include="Events\SubscriptionService.cs" />
     <Compile Include="Fakes\Extensions.cs" />
     <Compile Include="Fakes\FakeHttpContext.cs" />
     <Compile Include="Fakes\FakeHttpRequest.cs" />

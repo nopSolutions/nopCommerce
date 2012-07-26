@@ -4,28 +4,25 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Messages;
-using Nop.Core.Events;
+using Nop.Services.Events;
 
 namespace Nop.Services.Messages
 {
     public partial class EmailAccountService:IEmailAccountService
     {
         private readonly IRepository<EmailAccount> _emailAccountRepository;
-        private readonly EmailAccountSettings _emailAccountSettings;
         private readonly IEventPublisher _eventPublisher;
 
         /// <summary>
         /// Ctor
         /// </summary>
         /// <param name="emailAccountRepository">Email account repository</param>
-        /// <param name="emailAccountSettings"></param>
         /// <param name="eventPublisher">Event published</param>
         public EmailAccountService(IRepository<EmailAccount> emailAccountRepository,
-            EmailAccountSettings emailAccountSettings, IEventPublisher eventPublisher)
+            IEventPublisher eventPublisher)
         {
-            _emailAccountRepository = emailAccountRepository;
-            _emailAccountSettings = emailAccountSettings;
-            _eventPublisher = eventPublisher;
+            this._emailAccountRepository = emailAccountRepository;
+            this._eventPublisher = eventPublisher;
         }
 
         /// <summary>

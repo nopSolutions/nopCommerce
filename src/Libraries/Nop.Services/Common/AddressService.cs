@@ -2,8 +2,8 @@ using System;
 using System.Linq;
 using Nop.Core.Data;
 using Nop.Core.Domain.Common;
-using Nop.Core.Events;
 using Nop.Services.Directory;
+using Nop.Services.Events;
 
 namespace Nop.Services.Common
 {

@@ -4,8 +4,8 @@ using System.Linq;
 using System.Net.Mail;
 using Nop.Core.Data;
 using Nop.Core.Domain.Messages;
-using Nop.Core.Events;
 using Nop.Services.Customers;
+using Nop.Services.Events;
 
 namespace Nop.Services.Messages
 {

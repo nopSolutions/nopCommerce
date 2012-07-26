@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Nop.Core.Domain.Messages
 {
     public class EmailSubscribedEvent
@@ -68,5 +70,43 @@ namespace Nop.Core.Domain.Messages
         {
             return (_email != null ? _email.GetHashCode() : 0);
         }
+    }
+
+    /// <summary>
+    /// A container for tokens that are added.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public class EntityTokensAddedEvent<T, U> where T : BaseEntity
+    {
+        private readonly T _entity;
+        private readonly IList<U> _tokens;
+
+        public EntityTokensAddedEvent(T entity, IList<U> tokens)
+        {
+            _entity = entity;
+            _tokens = tokens;
+        }
+
+        public T Entity { get { return _entity; } }
+        public IList<U> Tokens { get { return _tokens; } }
+    }
+
+    /// <summary>
+    /// A container for tokens that are added.
+    /// </summary>
+    /// <typeparam name="U"></typeparam>
+    public class MessageTokensAddedEvent<U>
+    {
+        private readonly MessageTemplate _message;
+        private readonly IList<U> _tokens;
+
+        public MessageTokensAddedEvent(MessageTemplate message, IList<U> tokens)
+        {
+            _message = message;
+            _tokens = tokens;
+        }
+
+        public MessageTemplate Message { get { return _message; } }
+        public IList<U> Tokens { get { return _tokens; } }
     }
 }
