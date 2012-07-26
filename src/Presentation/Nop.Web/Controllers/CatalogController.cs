@@ -772,7 +772,12 @@ namespace Nop.Web.Controllers
         public ActionResult Category(int categoryId, CatalogPagingFilteringModel command)
         {
             var category = _categoryService.GetCategoryById(categoryId);
-            if (category == null || category.Deleted || !category.Published)
+            if (category == null || category.Deleted)
+                return RedirectToRoute("HomePage");
+
+            //Check whether the current user has a "Manage catalog" permission
+            //It allows him to preview a category before publishing
+            if (!category.Published && !_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return RedirectToRoute("HomePage");
 
             //'Continue shopping' URL
@@ -1088,7 +1093,12 @@ namespace Nop.Web.Controllers
         public ActionResult Manufacturer(int manufacturerId, CatalogPagingFilteringModel command)
         {
             var manufacturer = _manufacturerService.GetManufacturerById(manufacturerId);
-            if (manufacturer == null || manufacturer.Deleted || !manufacturer.Published)
+            if (manufacturer == null || manufacturer.Deleted)
+                return RedirectToRoute("HomePage");
+
+            //Check whether the current user has a "Manage catalog" permission
+            //It allows him to preview a manufacturer before publishing
+            if (!manufacturer.Published && !_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return RedirectToRoute("HomePage");
 
             //'Continue shopping' URL
@@ -1348,7 +1358,12 @@ namespace Nop.Web.Controllers
         public ActionResult Product(int productId)
         {
             var product = _productService.GetProductById(productId);
-            if (product == null || product.Deleted || !product.Published)
+            if (product == null || product.Deleted)
+                return RedirectToRoute("HomePage");
+
+            //Check whether the current user has a "Manage catalog" permission
+            //It allows him to preview a product before publishing
+            if (!product.Published && !_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return RedirectToRoute("HomePage");
 
             //prepare the model
