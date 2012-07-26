@@ -24,8 +24,6 @@ namespace Nop.Core.Infrastructure
 
         object Resolve(Type type);
 
-        Array ResolveAll(Type serviceType);
-
         T[] ResolveAll<T>();
     }
 }

@@ -85,12 +85,7 @@ namespace Nop.Core.Infrastructure
         {
             return ContainerManager.Resolve(type);
         }
-
-        public Array ResolveAll(Type serviceType)
-        {
-            throw new NotImplementedException();
-        }
-
+        
         public T[] ResolveAll<T>()
         {
             return ContainerManager.ResolveAll<T>();
