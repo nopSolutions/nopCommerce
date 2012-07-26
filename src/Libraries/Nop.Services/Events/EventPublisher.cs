@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using Nop.Core.Infrastructure;
+using Nop.Services.Logging;
 
 namespace Nop.Services.Events
 {
@@ -24,9 +26,19 @@ namespace Nop.Services.Events
             {
                 x.HandleEvent(eventMessage);
             }
-            catch (Exception)
+            catch (Exception exc)
             {
-                //TODO:Log this some how. We can't reference the ILogger because the interface exists in another assembly. Maybe we can move all interfaces to Nop.Core and all the implemntes to Nop.Services?
+                //log error
+                var logger = EngineContext.Current.Resolve<ILogger>();
+                //we put in to nested try-catch to prevent possible cyclic (if some error occurs)
+                try
+                {
+                    logger.Error(exc.Message, exc);
+                }
+                catch (Exception)
+                {
+                    //do nothing
+                }
             }
             finally
             {
