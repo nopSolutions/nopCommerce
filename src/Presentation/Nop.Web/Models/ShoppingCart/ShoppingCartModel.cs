@@ -14,6 +14,8 @@ namespace Nop.Web.Models.ShoppingCart
             Items = new List<ShoppingCartItemModel>();
             Warnings = new List<string>();
             EstimateShipping = new EstimateShippingModel();
+            DiscountBox = new DiscountBoxModel();
+            GiftCardBox = new GiftCardBoxModel();
             CheckoutAttributes = new List<CheckoutAttributeModel>();
 
             ButtonPaymentMethodActionNames = new List<string>();
@@ -37,14 +39,11 @@ namespace Nop.Web.Models.ShoppingCart
 
         public bool TermsOfServiceEnabled { get; set; }
 
-        public bool ShowDiscountBox { get; set; }
-        public string DiscountMessage { get; set; }
-        public string CurrentDiscountCode { get; set; }
-
-        public bool ShowGiftCardBox { get; set; }
-        public string GiftCardMessage { get; set; }
-
         public EstimateShippingModel EstimateShipping { get; set; }
+
+        public DiscountBoxModel DiscountBox { get; set; }
+
+        public GiftCardBoxModel GiftCardBox { get; set; }
 
         public IList<CheckoutAttributeModel> CheckoutAttributes { get; set; }
 
@@ -129,6 +128,19 @@ namespace Nop.Web.Models.ShoppingCart
             public string PriceAdjustment { get; set; }
 
             public bool IsPreSelected { get; set; }
+        }
+
+        public partial class DiscountBoxModel: BaseNopModel
+        {
+            public bool Display { get; set; }
+            public string Message { get; set; }
+            public string CurrentCode { get; set; }
+        }
+
+        public partial class GiftCardBoxModel : BaseNopModel
+        {
+            public bool Display { get; set; }
+            public string Message { get; set; }
         }
 		#endregion
     }

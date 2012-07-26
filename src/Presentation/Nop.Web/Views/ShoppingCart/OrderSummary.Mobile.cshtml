@@ -156,59 +156,8 @@
                 @if (Model.IsEditable)
                 {
                     <div class="deals">
-                        @if (Model.ShowDiscountBox)
-                        {
-                            using (Html.BeginRouteForm("ShoppingCart", FormMethod.Post))
-                            {
-                            <div class="coupon-box">
-                                <div>
-                                    <b>@T("ShoppingCart.DiscountCouponCode")</b></div>
-                                <div>@T("ShoppingCart.DiscountCouponCode.Tooltip")</div>
-                                <div>
-                                    <input name="discountcouponcode" type="text" id="discountcouponcode" class="discountcouponcode" />
-                                    <input type="submit" name="applydiscountcouponcode" value="@T("ShoppingCart.DiscountCouponCode.Button")" id="applydiscountcouponcode" />
-                                </div>
-                                @if (!String.IsNullOrEmpty(Model.DiscountMessage))
-                                {
-                                    <div class="clear">
-                                    </div>
-                                    <div class="message-error">
-                                        @Model.DiscountMessage
-                                    </div>
-                                }
-                                @if (!String.IsNullOrEmpty(Model.CurrentDiscountCode))
-                                {
-                                    <div class="clear">
-                                    </div>
-                                    <div class="current-code">
-                                        @string.Format(T("ShoppingCart.DiscountCouponCode.CurrentCode").Text, Model.CurrentDiscountCode)
-                                        <input id="removediscountcouponcode" type="submit" name="removediscountcouponcode" value="@T("Common.Remove")" title="@T("Common.Remove")" class="removediscountbutton" />
-                                    </div>
-                                }
-                            </div>
-                            }
-                        }
-                        @if (Model.ShowGiftCardBox)
-                        {
-                            using (Html.BeginRouteForm("ShoppingCart", FormMethod.Post))
-                            {
-                            <div class="giftcard-box">
-                                <div>
-                                    <b>@T("ShoppingCart.GiftCardCouponCode")</b></div>
-                                <div>@T("ShoppingCart.GiftCardCouponCode.Tooltip")</div>
-                                <input name="giftcardcouponcode" type="text" id="giftcardcouponcode" class="giftcardcouponcode" />
-                                <input type="submit" name="applygiftcardcouponcode" value="@T("ShoppingCart.GiftCardCouponCode.Button")" id="applygiftcardcouponcode" />
-                                @if (!String.IsNullOrEmpty(Model.GiftCardMessage))
-                                {
-                                    <div class="clear">
-                                    </div>
-                                    <div class="message-error">
-                                        @Model.GiftCardMessage
-                                    </div>
-                                }
-                            </div>
-                            }
-                        }
+                        @Html.Partial("_DiscountBox", Model.DiscountBox)
+                        @Html.Partial("_GiftCardBox", Model.GiftCardBox)
                         @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_order_summary_content_deals" })
                     </div>
                 }
@@ -264,13 +213,7 @@
                     </div>
                     <div class="addon-buttons">
                         @*Payment method buttons (e.g. GoogleCheckoutButton, Paypal Express)*@
-                        @if (Model.ButtonPaymentMethodActionNames != null && Model.ButtonPaymentMethodActionNames.Count > 0)
-                        {
-                            for (int i = 0; i < Model.ButtonPaymentMethodActionNames.Count; i++)
-                            {
-                            @Html.Action(Model.ButtonPaymentMethodActionNames[i], Model.ButtonPaymentMethodControllerNames[i], Model.ButtonPaymentMethodRouteValues[i])
-                            }
-                        }
+                        @Html.Partial("_ButtonPaymentMethod", Model)
                     </div>
                 }
             </div>

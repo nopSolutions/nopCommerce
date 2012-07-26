@@ -209,13 +209,13 @@ namespace Nop.Web.Controllers
             model.TermsOfServiceEnabled = _orderSettings.TermsOfServiceEnabled;
 
             //gift card and gift card boxes
-            model.ShowDiscountBox = _shoppingCartSettings.ShowDiscountBox;
+            model.DiscountBox.Display= _shoppingCartSettings.ShowDiscountBox;
             var discount = _discountService.GetDiscountByCouponCode(_workContext.CurrentCustomer.DiscountCouponCode);
             if (discount != null &&
                 discount.RequiresCouponCode &&
                 _discountService.IsDiscountValid(discount, _workContext.CurrentCustomer))
-                model.CurrentDiscountCode = discount.CouponCode;
-            model.ShowGiftCardBox = _shoppingCartSettings.ShowGiftCardBox;
+                model.DiscountBox.CurrentCode = discount.CouponCode;
+            model.GiftCardBox.Display = _shoppingCartSettings.ShowGiftCardBox;
 
             //cart warnings
             var cartWarnings = _shoppingCartService.GetShoppingCartWarnings(cart, _workContext.CurrentCustomer.CheckoutAttributes, validateCheckoutAttributes);
@@ -1575,15 +1575,15 @@ namespace Nop.Web.Controllers
                 {
                     _workContext.CurrentCustomer.DiscountCouponCode = discountcouponcode;
                     _customerService.UpdateCustomer(_workContext.CurrentCustomer);
-                    model.DiscountMessage = _localizationService.GetResource("ShoppingCart.DiscountCouponCode.Applied");
+                    model.DiscountBox.Message = _localizationService.GetResource("ShoppingCart.DiscountCouponCode.Applied");
                 }
                 else
                 {
-                    model.DiscountMessage = _localizationService.GetResource("ShoppingCart.DiscountCouponCode.WrongDiscount");
+                    model.DiscountBox.Message = _localizationService.GetResource("ShoppingCart.DiscountCouponCode.WrongDiscount");
                 }
             }
             else
-                model.DiscountMessage = _localizationService.GetResource("ShoppingCart.DiscountCouponCode.WrongDiscount");
+                model.DiscountBox.Message = _localizationService.GetResource("ShoppingCart.DiscountCouponCode.WrongDiscount");
 
             model = PrepareShoppingCartModel(model, cart, true, false, true, true);
             return View(model);
@@ -1607,16 +1607,16 @@ namespace Nop.Web.Controllers
                     {
                         _workContext.CurrentCustomer.ApplyGiftCardCouponCode(giftcardcouponcode);
                         _customerService.UpdateCustomer(_workContext.CurrentCustomer);
-                        model.GiftCardMessage = _localizationService.GetResource("ShoppingCart.GiftCardCouponCode.Applied");
+                        model.GiftCardBox.Message = _localizationService.GetResource("ShoppingCart.GiftCardCouponCode.Applied");
                     }
                     else
-                        model.GiftCardMessage = _localizationService.GetResource("ShoppingCart.GiftCardCouponCode.WrongGiftCard");
+                        model.GiftCardBox.Message = _localizationService.GetResource("ShoppingCart.GiftCardCouponCode.WrongGiftCard");
                 }
                 else
-                    model.GiftCardMessage = _localizationService.GetResource("ShoppingCart.GiftCardCouponCode.WrongGiftCard");
+                    model.GiftCardBox.Message = _localizationService.GetResource("ShoppingCart.GiftCardCouponCode.WrongGiftCard");
             }
             else
-                model.GiftCardMessage = _localizationService.GetResource("ShoppingCart.GiftCardCouponCode.DontWorkWithAutoshipProducts");
+                model.GiftCardBox.Message = _localizationService.GetResource("ShoppingCart.GiftCardCouponCode.DontWorkWithAutoshipProducts");
 
             model = PrepareShoppingCartModel(model, cart, true, false, true, true);
             return View(model);

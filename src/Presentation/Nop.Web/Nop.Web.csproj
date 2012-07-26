@@ -1782,6 +1782,11 @@
     <Content Include="Views\Topic\TopicBlock.Mobile.cshtml" />
     <Content Include="Views\Catalog\ProductTagsAll.cshtml" />
     <Content Include="Views\Catalog\ProductTagsAll.Mobile.cshtml" />
+    <Content Include="Views\ShoppingCart\_DiscountBox.cshtml" />
+    <Content Include="Views\ShoppingCart\_GiftCardBox.cshtml" />
+    <Content Include="Views\ShoppingCart\_DiscountBox.Mobile.cshtml" />
+    <Content Include="Views\ShoppingCart\_GiftCardBox.Mobile.cshtml" />
+    <Content Include="Views\ShoppingCart\_ButtonPaymentMethod.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
