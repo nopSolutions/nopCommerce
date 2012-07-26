@@ -119,6 +119,7 @@
 .checkout-data .confirm-order{text-align:left;height:auto;}
 .checkout-data .confirm-order .select-button{text-align:left;}
 .checkout-data .confirm-order .message-error{text-align:left;}
+.checkout-page .order-review-data-box{text-align:left;padding:10px;height:auto;}
 .checkout-data .order-completed{text-align:left;height:auto;}
 .checkout-data .order-completed .body{text-align:left;vertical-align:text-top;}
 .checkout-data .order-completed .select-button{text-align:left;}
@@ -126,7 +127,7 @@
 .order-details .info{}
 .order-details .section-title{padding:10px;font-weight:700;clear:both;}
 .order-details .order-overview{text-align:left;padding-bottom:10px;}
-.order-details .order-details-box{text-align:left;padding:10px;border:1px solid #d7d7d7;height:auto;}
+.order-details .order-details-box{text-align:left;padding:10px;height:auto;}
 .order-details .products-box,.order-details .shipments-box,.order-details .ordernotes-box{font-weight:normal;}
 .order-details .checkout-attributes{padding:10px;height:auto;}
 .order-details .products-box .product{}

@@ -3,6 +3,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using Nop.Core.Domain.Catalog;
 using Nop.Web.Framework.Mvc;
+using Nop.Web.Models.Common;
 using Nop.Web.Models.Media;
 
 namespace Nop.Web.Models.ShoppingCart
@@ -17,6 +18,7 @@ namespace Nop.Web.Models.ShoppingCart
             DiscountBox = new DiscountBoxModel();
             GiftCardBox = new GiftCardBoxModel();
             CheckoutAttributes = new List<CheckoutAttributeModel>();
+            OrderReviewData = new OrderReviewDataModel();
 
             ButtonPaymentMethodActionNames = new List<string>();
             ButtonPaymentMethodControllerNames = new List<string>();
@@ -24,28 +26,20 @@ namespace Nop.Web.Models.ShoppingCart
         }
 
         public bool ShowSku { get; set; }
-
         public bool ShowProductImages { get; set; }
-
         public bool IsEditable { get; set; }
-
         public IList<ShoppingCartItemModel> Items { get; set; }
 
-        public IList<string> Warnings { get; set; }
-
         public string CheckoutAttributeInfo { get; set; }
-
-        public string MinOrderSubtotalWarning { get; set; }
-
-        public bool TermsOfServiceEnabled { get; set; }
-
-        public EstimateShippingModel EstimateShipping { get; set; }
-
-        public DiscountBoxModel DiscountBox { get; set; }
-
-        public GiftCardBoxModel GiftCardBox { get; set; }
-
         public IList<CheckoutAttributeModel> CheckoutAttributes { get; set; }
+
+        public IList<string> Warnings { get; set; }
+        public string MinOrderSubtotalWarning { get; set; }
+        public bool TermsOfServiceEnabled { get; set; }
+        public EstimateShippingModel EstimateShipping { get; set; }
+        public DiscountBoxModel DiscountBox { get; set; }
+        public GiftCardBoxModel GiftCardBox { get; set; }
+        public OrderReviewDataModel OrderReviewData { get; set; }
 
         public IList<string> ButtonPaymentMethodActionNames { get; set; }
         public IList<string> ButtonPaymentMethodControllerNames { get; set; }
@@ -141,6 +135,19 @@ namespace Nop.Web.Models.ShoppingCart
         {
             public bool Display { get; set; }
             public string Message { get; set; }
+        }
+
+        public partial class OrderReviewDataModel : BaseNopModel
+        {
+            public bool Display { get; set; }
+
+            public AddressModel BillingAddress { get; set; }
+
+            public bool IsShippable { get; set; }
+            public AddressModel ShippingAddress { get; set; }
+            public string ShippingMethod { get; set; }
+
+            public string PaymentMethod { get; set; }
         }
 		#endregion
     }

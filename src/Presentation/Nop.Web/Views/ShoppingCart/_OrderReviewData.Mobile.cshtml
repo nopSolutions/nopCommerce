@@ -1,0 +1,96 @@
+﻿@model ShoppingCartModel.OrderReviewDataModel
+@using Nop.Web.Models.ShoppingCart;
+@if (Model.Display)
+{
+    <div class="order-review-data-box">
+        <div>
+            <div>
+                <b>
+                    @T("Order.BillingAddress")</b></div>
+            <div>@Model.BillingAddress.FirstName @Model.BillingAddress.LastName</div>
+            <div>
+                @T("Order.Email"): @Model.BillingAddress.Email</div>
+            <div>
+                @T("Order.Phone"): @Model.BillingAddress.PhoneNumber</div>
+            <div>
+                @T("Order.Fax"): @Model.BillingAddress.FaxNumber</div>
+            @if (!String.IsNullOrEmpty(Model.BillingAddress.Company))
+            {
+                <div>
+                    @Model.BillingAddress.Company
+                </div>
+            }
+            <div>
+                @Model.BillingAddress.Address1</div>
+            @if (!String.IsNullOrEmpty(Model.BillingAddress.Address2))
+            {
+                <div>
+                    @Model.BillingAddress.Address2
+                </div>
+            }
+            <div>
+                @Model.BillingAddress.City, @Model.BillingAddress.StateProvinceName @Model.BillingAddress.ZipPostalCode</div>
+            @if (!String.IsNullOrEmpty(Model.BillingAddress.CountryName))
+            {
+                <div>
+                    @Model.BillingAddress.CountryName
+                </div>
+            }
+            @if (!String.IsNullOrEmpty(Model.PaymentMethod))
+            {
+                <div>
+                    <b>@T("Order.PaymentMethod")</b>
+                </div>
+                <div>
+                    @Model.PaymentMethod
+                </div>
+            }
+        </div>
+        @if (Model.IsShippable)
+        {
+            <div>
+                <div>
+                    <b>@T("Order.ShippingAddress")</b>
+                </div>
+                <div>
+                    @Model.ShippingAddress.FirstName @Model.ShippingAddress.LastName
+                </div>
+                <div>
+                    @T("Order.Email"): @Model.ShippingAddress.Email</div>
+                <div>
+                    @T("Order.Phone"): @Model.ShippingAddress.PhoneNumber</div>
+                <div>
+                    @T("Order.Fax"): @Model.ShippingAddress.FaxNumber</div>
+                @if (!String.IsNullOrEmpty(Model.ShippingAddress.Company))
+                {
+                    <div>
+                        @Model.ShippingAddress.Company
+                    </div>
+                }
+                <div>
+                    @Model.ShippingAddress.Address1</div>
+                @if (!String.IsNullOrEmpty(Model.ShippingAddress.Address2))
+                {
+                    <div>
+                        @Model.ShippingAddress.Address2
+                    </div>
+                }
+                <div>
+                    @Model.ShippingAddress.City, @Model.ShippingAddress.StateProvinceName @Model.ShippingAddress.ZipPostalCode</div>
+                @if (!String.IsNullOrEmpty(Model.ShippingAddress.CountryName))
+                {
+                    <div>
+                        @Model.ShippingAddress.CountryName
+                    </div>
+                }
+                <div>
+                    <b>
+                        @T("Order.ShippingMethod")</b>
+                </div>
+                <div>
+                    @Model.ShippingMethod
+                </div>
+            </div>
+        }
+    </div>
+}

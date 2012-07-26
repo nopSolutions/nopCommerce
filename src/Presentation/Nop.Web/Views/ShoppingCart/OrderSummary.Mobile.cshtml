@@ -4,6 +4,9 @@
 @using Nop.Web.Models.ShoppingCart;
 <div class="order-summary-content">
     @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_order_summary_content_before" })
+    @Html.Partial("_OrderReviewData", Model.OrderReviewData)
+    <div class="clear">
+    </div>
     @if (Model.Items.Count > 0)
     {
         if (Model.Warnings.Count > 0)
@@ -73,7 +76,7 @@
                                     if (item.AllowedQuantities.Count > 0)
                                     {
                                         <select name="itemquantity@(item.Id)"  id="itemquantity@(item.Id)" class="qty-dropdown"  data-mini="true" data-inline="true">
-                                        @foreach(var qty in item.AllowedQuantities)
+                                        @foreach (var qty in item.AllowedQuantities)
                                         {
                                             <option @(qty.Selected ? Html.Raw(" selected=\"selected\"") : null) value="@qty.Value">@qty.Value</option>
                                         }

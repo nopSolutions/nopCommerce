@@ -31,6 +31,7 @@ using Nop.Services.Security;
 using Nop.Services.Seo;
 using Nop.Services.Shipping;
 using Nop.Services.Tax;
+using Nop.Web.Extensions;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Security;
 using Nop.Web.Framework.UI.Captcha;
@@ -498,9 +499,33 @@ namespace Nop.Web.Controllers
             #endregion
 
             #region Order review data
+
             if (prepareAndDisplayOrderReviewData)
             {
-                
+                model.OrderReviewData.Display = true;
+
+                //billing info
+                var billingAddress = _workContext.CurrentCustomer.BillingAddress;
+                if (billingAddress != null)
+                    model.OrderReviewData.BillingAddress = billingAddress.ToModel();
+               
+                //shipping info
+                if (cart.RequiresShipping())
+                {
+                    model.OrderReviewData.IsShippable = true;
+
+                    var shippingAddress = _workContext.CurrentCustomer.ShippingAddress;
+                    if (shippingAddress != null)
+                        model.OrderReviewData.ShippingAddress = shippingAddress.ToModel();
+                    
+                    //selected shipping method
+                    var shippingOption = _workContext.CurrentCustomer.GetAttribute<ShippingOption>(SystemCustomerAttributeNames.LastShippingOption);
+                    if (shippingOption != null)
+                        model.OrderReviewData.ShippingMethod = shippingOption.Name;
+                }
+                //payment info
+                var paymentMethod = _paymentService.LoadPaymentMethodBySystemName(_workContext.CurrentCustomer.SelectedPaymentMethodSystemName);
+                model.OrderReviewData.PaymentMethod = paymentMethod != null ? paymentMethod.GetLocalizedFriendlyName(_localizationService, _workContext.WorkingLanguage.Id) : "";
             }
             #endregion
         }
@@ -1248,11 +1273,14 @@ namespace Nop.Web.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult OrderSummary()
+        public ActionResult OrderSummary(bool? prepareAndDisplayOrderReviewData)
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
             var model = new ShoppingCartModel();
-            PrepareShoppingCartModel(model, cart, isEditable: false, prepareEstimateShippingIfEnabled: false);
+            PrepareShoppingCartModel(model, cart, 
+                isEditable: false, 
+                prepareEstimateShippingIfEnabled: false, 
+                prepareAndDisplayOrderReviewData: prepareAndDisplayOrderReviewData.HasValue ? prepareAndDisplayOrderReviewData.Value : false);
             return PartialView(model);
         }
 

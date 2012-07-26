@@ -303,6 +303,9 @@ ul.languagelist li:hover{cursor:pointer;}
 .checkout-data .confirm-order{text-align:right;margin:10px;border:1px solid #d7d7d7;height:auto;}
 .checkout-data .confirm-order .select-button{margin:10px;text-align:left;}
 .checkout-data .confirm-order .message-error{margin:10px;text-align:right;}
+.checkout-page .order-review-data-box{text-align:right;padding:10px;height:auto;direction:rtl;}
+.checkout-page .order-review-data-box .order-details-table{width:100%;border:0px;border-collapse:collapse;border-spacing:0;}
+.checkout-page .order-review-data-box .order-details-table .billinginfo,.checkout-page .order-review-data-box .order-details-table .shippinginfo{width:50%;vertical-align:top;}
 .checkout-data .order-completed{text-align:right;margin:10px;border:1px solid #d7d7d7;height:auto;}
 .checkout-data .order-completed .body{padding:10px;text-align:right;vertical-align:text-top;}
 .checkout-data .order-completed .select-button{margin:10px;text-align:left;}

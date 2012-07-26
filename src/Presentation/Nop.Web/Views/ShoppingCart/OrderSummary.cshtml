@@ -4,6 +4,9 @@
 @using Nop.Web.Models.ShoppingCart;
 <div class="order-summary-content">
     @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "order_summary_content_before" })
+    @Html.Partial("_OrderReviewData", Model.OrderReviewData)
+    <div class="clear">
+    </div>
     @if (Model.Items.Count > 0)
     {
         if (Model.Warnings.Count > 0)
@@ -128,16 +131,16 @@
                             {
                                 if (item.AllowedQuantities.Count > 0)
                                 {
-                                    <select name="itemquantity@(item.Id)"  id="itemquantity@(item.Id)" class="qty-dropdown">
+                                <select name="itemquantity@(item.Id)"  id="itemquantity@(item.Id)" class="qty-dropdown">
                                     @foreach (var qty in item.AllowedQuantities)
                                     {
                                         <option @(qty.Selected ? Html.Raw(" selected=\"selected\"") : null) value="@qty.Value">@qty.Value</option>
                                     }
-                                    </select>
+                                </select>
                                 }
                                 else
                                 {
-                                    <input name="itemquantity@(item.Id)" type="text" value="@(item.Quantity)" id="itemquantity@(item.Id)" class="qty-input" />
+                                <input name="itemquantity@(item.Id)" type="text" value="@(item.Quantity)" id="itemquantity@(item.Id)" class="qty-input" />
                                 }
 
                             }
@@ -158,7 +161,7 @@
                     </tr>
                 }
             </tbody>
-        </table>                
+        </table>
         <div class="clear">
         </div>
                 if (!String.IsNullOrEmpty(Model.CheckoutAttributeInfo))

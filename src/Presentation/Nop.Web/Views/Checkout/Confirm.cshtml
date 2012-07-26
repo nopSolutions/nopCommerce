@@ -62,13 +62,8 @@
         }
         <div class="clear">
         </div>
-        <div class="order-summary-title">
-            @T("Checkout.OrderSummary")
-        </div>
-        <div class="clear">
-        </div>
         <div class="order-summary-body">
-            @Html.Action("OrderSummary", "ShoppingCart")
+            @Html.Action("OrderSummary", "ShoppingCart", new { prepareAndDisplayOrderReviewData = true })
         </div>
     </div>
 </div>
