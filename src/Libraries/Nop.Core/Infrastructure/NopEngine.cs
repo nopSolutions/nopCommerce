@@ -95,11 +95,6 @@ namespace Nop.Core.Infrastructure
 
         #region Properties
 
-        public IContainer Container
-        {
-            get { return _containerManager.Container; }
-        }
-
         public ContainerManager ContainerManager
         {
             get { return _containerManager; }
