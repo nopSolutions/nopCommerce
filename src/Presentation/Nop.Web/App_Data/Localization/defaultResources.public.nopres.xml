@@ -1043,6 +1043,9 @@
 			<LocaleResource Name="BillToThisAddress">
 				<Value>Bill to this address</Value>
 			</LocaleResource>
+      <LocaleResource Name="Button">
+        <Value>Checkout</Value>
+      </LocaleResource>
 			<LocaleResource Name="ConfirmButton">
 				<Value>Confirm</Value>
 			</LocaleResource>

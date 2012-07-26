@@ -8,6 +8,9 @@ set @resources='
   <LocaleResource Name="ShoppingCart.QuantityShouldPositive">
     <Value>Quantity should be positive</Value>
   </LocaleResource>
+  <LocaleResource Name="Checkout.Button">
+    <Value>Checkout</Value>
+  </LocaleResource>
 </Language>
 '
 
