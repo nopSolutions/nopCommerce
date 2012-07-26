@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using Autofac;
 using Nop.Core.Infrastructure;
 
 namespace Nop.Core.Plugins
@@ -86,17 +85,10 @@ namespace Nop.Core.Plugins
         public virtual T Instance<T>() where T : class, IPlugin
         {
             object instance;
-            if (!EngineContext.Current.ContainerManager.Scope().TryResolve(PluginType, out instance))
+            if (!EngineContext.Current.ContainerManager.TryResolve(PluginType, out instance))
             {
                 //not resolved
-                try
-                {
-                    instance = Activator.CreateInstance(PluginType) as T;
-                }
-                catch (MissingMethodException)
-                {
-                    instance = EngineContext.Current.ContainerManager.ResolveUnregistered(PluginType) as T;
-                }
+                instance = EngineContext.Current.ContainerManager.ResolveUnregistered(PluginType);
             }
             var typedInstance = instance as T;
             if (typedInstance != null)

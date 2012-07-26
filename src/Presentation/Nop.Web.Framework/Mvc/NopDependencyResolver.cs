@@ -9,28 +9,13 @@ namespace Nop.Web.Framework.Mvc
     {
         public object GetService(Type serviceType)
         {
-            try
-            {
-                return EngineContext.Current.Resolve(serviceType);
-            }
-            catch
-            {
-                return null;
-            }
+            return EngineContext.Current.ContainerManager.ResolveOptional(serviceType);
         }
 
         public IEnumerable<object> GetServices(Type serviceType)
         {
-            try
-            {
-                var type = typeof(IEnumerable<>).MakeGenericType(serviceType);
-                return (IEnumerable<object>)EngineContext.Current.Resolve(type);
-            }
-            catch
-            {
-                return null;
-            }
-
+            var type = typeof(IEnumerable<>).MakeGenericType(serviceType);
+            return (IEnumerable<object>) EngineContext.Current.Resolve(type);
         }
     }
 }

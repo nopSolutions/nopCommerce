@@ -154,6 +154,22 @@ namespace Nop.Core.Infrastructure.DependencyManagement
             throw new NopException("No contructor was found that had all the dependencies satisfied.");
         }
 
+        public bool TryResolve(Type serviceType, out object instance)
+        {
+            return Scope().TryResolve(serviceType, out instance);
+        }
+
+        public bool IsRegistered(Type serviceType)
+        {
+            return Scope().IsRegistered(serviceType);
+        }
+
+        public object ResolveOptional(Type serviceType)
+        {
+            return Scope().ResolveOptional(serviceType);
+        }
+        
+
         public void UpdateContainer(Action<ContainerBuilder> action)
         {
             var builder = new ContainerBuilder();
