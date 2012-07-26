@@ -188,12 +188,14 @@ namespace Nop.Web.Controllers
         /// <param name="validateCheckoutAttributes">A value indicating whether we should validate checkout attributes when preparing the model</param>
         /// <param name="prepareEstimateShippingIfEnabled">A value indicating whether we should prepare "Estimate shipping" model</param>
         /// <param name="setEstimateShippingDefaultAddress">A value indicating whether we should prefill "Estimate shipping" model with the default customer address</param>
+        /// <param name="prepareAndDisplayOrderReviewData">A value indicating whether we should prepare review data (such as billing/shipping address, payment or shipping data entered during checkout)</param>
         /// <returns>Model</returns>
         [NonAction]
         protected void PrepareShoppingCartModel(ShoppingCartModel model, 
             IList<ShoppingCartItem> cart, bool isEditable = true, 
             bool validateCheckoutAttributes = false, 
-            bool prepareEstimateShippingIfEnabled = true, bool setEstimateShippingDefaultAddress = true)
+            bool prepareEstimateShippingIfEnabled = true, bool setEstimateShippingDefaultAddress = true,
+            bool prepareAndDisplayOrderReviewData = false)
         {
             if (cart == null)
                 throw new ArgumentNullException("cart");
