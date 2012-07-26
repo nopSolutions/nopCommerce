@@ -1232,10 +1232,10 @@ namespace Nop.Web.Controllers
         }
 
         [ChildActionOnly]
-        public ActionResult OrderSummary(bool isEditable)
+        public ActionResult OrderSummary()
         {
             var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
-            var model = PrepareShoppingCartModel(new ShoppingCartModel(), cart, isEditable, false, false, true);
+            var model = PrepareShoppingCartModel(new ShoppingCartModel(), cart, false, false, false, true);
             return PartialView(model);
         }
 
