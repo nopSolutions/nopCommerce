@@ -100,7 +100,11 @@ namespace Nop.Services.Orders
             if (resetCheckoutData)
             {
                 //reset checkout data
-                _customerService.ResetCheckoutData(shoppingCartItem.Customer, false);
+
+                //we also set "clearCheckoutAttributes parameter to true just in case if you we remove the last shippable product.
+                //in this case checkout attributes which require shippable products should also be removed
+                //to keep in simply we clear all attributes
+                _customerService.ResetCheckoutData(shoppingCartItem.Customer, clearCheckoutAttributes: true);
             }
 
             _sciRepository.Delete(shoppingCartItem);
@@ -747,7 +751,7 @@ namespace Nop.Services.Orders
             }
 
             //reset checkout info
-            _customerService.ResetCheckoutData(customer, false);
+            _customerService.ResetCheckoutData(customer);
 
             var cart = customer.ShoppingCartItems.Where(sci=>sci.ShoppingCartType == shoppingCartType).ToList();
 
@@ -842,7 +846,7 @@ namespace Nop.Services.Orders
                 if (resetCheckoutData)
                 {
                     //reset checkout data
-                    _customerService.ResetCheckoutData(customer, false);
+                    _customerService.ResetCheckoutData(customer);
                 }
                 if (newQuantity > 0)
                 {
@@ -864,11 +868,6 @@ namespace Nop.Services.Orders
                 else
                 {
                     //delete a shopping cart item
-                    //customer.ShoppingCartItems.Remove(shoppingCartItem);
-                    //_customerService.UpdateCustomer(customer);
-                    //_sciRepository.Delete(shoppingCartItem);
-                    //if (resetCheckoutData)
-                    //    _customerService.ResetCheckoutData(customer, false);
                     DeleteShoppingCartItem(shoppingCartItem, resetCheckoutData);
                 }
             }

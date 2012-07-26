@@ -144,13 +144,20 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customer">Customer</param>
         void UpdateCustomer(Customer customer);
-
+        
         /// <summary>
         /// Reset data required for checkout
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="clearCouponCodes">A value indicating whether to clear coupon code</param>
-        void ResetCheckoutData(Customer customer, bool clearCouponCodes = false);
+        /// <param name="clearCheckoutAttributes">A value indicating whether to clear selected checkout attributes</param>
+        /// <param name="clearRewardPoints">A value indicating whether to clear "Use reward points" flag</param>
+        /// <param name="clearShippingMethod">A value indicating whether to clear selected shipping method</param>
+        /// <param name="clearPaymentMethod">A value indicating whether to clear selected payment method</param>
+        void ResetCheckoutData(Customer customer,
+            bool clearCouponCodes = false, bool clearCheckoutAttributes = false,
+            bool clearRewardPoints = true, bool clearShippingMethod = true,
+            bool clearPaymentMethod = true);
 
         /// <summary>
         /// Delete guest customer records

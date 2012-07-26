@@ -367,7 +367,7 @@ namespace Nop.Web.Controllers
                 return new HttpUnauthorizedResult();
 
             //reset checkout data
-            _customerService.ResetCheckoutData(_workContext.CurrentCustomer, false);
+            _customerService.ResetCheckoutData(_workContext.CurrentCustomer);
 
             //validation (cart)
             var scWarnings = _shoppingCartService.GetShoppingCartWarnings(cart, _workContext.CurrentCustomer.CheckoutAttributes, true);

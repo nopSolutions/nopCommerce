@@ -1222,7 +1222,7 @@ namespace Nop.Services.Orders
 
                         //reset checkout data
                         if (!processPaymentRequest.IsRecurringPayment)
-                            _customerService.ResetCheckoutData(customer, true);
+                            _customerService.ResetCheckoutData(customer, clearCouponCodes: true);
 
                         if (!processPaymentRequest.IsRecurringPayment)
                         {

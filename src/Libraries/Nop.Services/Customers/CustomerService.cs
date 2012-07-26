@@ -502,19 +502,18 @@ namespace Nop.Services.Customers
         /// </summary>
         /// <param name="customer">Customer</param>
         /// <param name="clearCouponCodes">A value indicating whether to clear coupon code</param>
-        public virtual void ResetCheckoutData(Customer customer, bool clearCouponCodes = false)
+        /// <param name="clearCheckoutAttributes">A value indicating whether to clear selected checkout attributes</param>
+        /// <param name="clearRewardPoints">A value indicating whether to clear "Use reward points" flag</param>
+        /// <param name="clearShippingMethod">A value indicating whether to clear selected shipping method</param>
+        /// <param name="clearPaymentMethod">A value indicating whether to clear selected payment method</param>
+        public virtual void ResetCheckoutData(Customer customer, 
+            bool clearCouponCodes = false, bool clearCheckoutAttributes = false,
+            bool clearRewardPoints = true, bool clearShippingMethod = true,
+            bool clearPaymentMethod = true)
         {
             if (customer == null)
                 throw new ArgumentNullException();
-
-            //clear reward points flag
-            customer.UseRewardPointsDuringCheckout = false;
-
-            //clear selected shipping and payment methods
-            _genericAttributeService.SaveAttribute<ShippingOption>(customer, SystemCustomerAttributeNames.LastShippingOption, null);
-            _genericAttributeService.SaveAttribute<ShippingOption>(customer, SystemCustomerAttributeNames.OfferedShippingOptions, null);
-            customer.SelectedPaymentMethodSystemName = "";
-
+            
             //clear entered coupon codes
             if (clearCouponCodes)
             {
@@ -522,6 +521,32 @@ namespace Nop.Services.Customers
                 customer.GiftCardCouponCodes = "";
                 customer.CheckoutAttributes = "";
             }
+
+            //clear checkout attributes
+            if (clearCheckoutAttributes)
+            {
+                customer.CheckoutAttributes = "";
+            }
+
+            //clear reward points flag
+            if (clearRewardPoints)
+            {
+                customer.UseRewardPointsDuringCheckout = false;
+            }
+
+            //clear selected shipping method
+            if (clearShippingMethod)
+            {
+                _genericAttributeService.SaveAttribute<ShippingOption>(customer, SystemCustomerAttributeNames.LastShippingOption, null);
+                _genericAttributeService.SaveAttribute<ShippingOption>(customer, SystemCustomerAttributeNames.OfferedShippingOptions, null);
+            }
+
+            //clear selected payment method
+            if (clearPaymentMethod)
+            {
+                customer.SelectedPaymentMethodSystemName = "";
+            }
+            
             UpdateCustomer(customer);
         }
         
