@@ -1367,49 +1367,6 @@
     <Content Include="Themes\Mobile\Content\styles.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Themes\nopClassic\Content\images\ajax_loader_big.gif" />
-    <Content Include="Themes\nopClassic\Content\images\ajax_loader_large.gif" />
-    <Content Include="Themes\nopClassic\Content\images\ajax_loader_small.gif" />
-    <Content Include="Themes\nopClassic\Content\images\bbeditor-button-bg.gif" />
-    <Content Include="Themes\nopClassic\Content\images\bg_textbox.gif" />
-    <Content Include="Themes\nopClassic\Content\images\btn_download_bg.gif" />
-    <Content Include="Themes\nopClassic\Content\images\cart_line_x.gif" />
-    <Content Include="Themes\nopClassic\Content\images\cart_line_y.gif" />
-    <Content Include="Themes\nopClassic\Content\images\closelabel.gif" />
-    <Content Include="Themes\nopClassic\Content\images\EmptyStar.png" />
-    <Content Include="Themes\nopClassic\Content\images\FilledStar.png" />
-    <Content Include="Themes\nopClassic\Content\images\grey_button_bg.gif" />
-    <Content Include="Themes\nopClassic\Content\images\grid_header_back.png" />
-    <Content Include="Themes\nopClassic\Content\images\ico-account.gif" />
-    <Content Include="Themes\nopClassic\Content\images\ico-admin.gif" />
-    <Content Include="Themes\nopClassic\Content\images\ico-arrow-r.gif" />
-    <Content Include="Themes\nopClassic\Content\images\ico-cart.gif" />
-    <Content Include="Themes\nopClassic\Content\images\ico-delete.gif" />
-    <Content Include="Themes\nopClassic\Content\images\ico-edit.gif" />
-    <Content Include="Themes\nopClassic\Content\images\ico-forum-post-add.gif" />
-    <Content Include="Themes\nopClassic\Content\images\ico-forum-post-high.gif" />
-    <Content Include="Themes\nopClassic\Content\images\ico-forum-post.gif" />
-    <Content Include="Themes\nopClassic\Content\images\ico-forum-watch.gif" />
-    <Content Include="Themes\nopClassic\Content\images\ico-forum.gif" />
-    <Content Include="Themes\nopClassic\Content\images\ico-inbox.gif" />
-    <Content Include="Themes\nopClassic\Content\images\ico-login.gif" />
-    <Content Include="Themes\nopClassic\Content\images\ico-logout.gif" />
-    <Content Include="Themes\nopClassic\Content\images\ico-move-topic.gif" />
-    <Content Include="Themes\nopClassic\Content\images\ico-pm.png" />
-    <Content Include="Themes\nopClassic\Content\images\ico-register.gif" />
-    <Content Include="Themes\nopClassic\Content\images\ico-wishlist.gif" />
-    <Content Include="Themes\nopClassic\Content\images\arrow-up.png" />
-    <Content Include="Themes\nopClassic\Content\images\loading.gif" />
-    <Content Include="Themes\nopClassic\Content\images\logo.gif" />
-    <Content Include="Themes\nopClassic\Content\images\nextlabel.gif" />
-    <Content Include="Themes\nopClassic\Content\images\orange_button_bg.gif" />
-    <Content Include="Themes\nopClassic\Content\images\prevlabel.gif" />
-    <Content Include="Themes\nopClassic\Content\images\progress-step-active.gif" />
-    <Content Include="Themes\nopClassic\Content\images\progress-step-inactive.gif" />
-    <Content Include="Themes\nopClassic\Content\images\SavedStar.png" />
-    <Content Include="Themes\nopClassic\Content\images\star_x_active.gif" />
-    <Content Include="Themes\nopClassic\Content\images\star_x_inactive.gif" />
-    <Content Include="Themes\nopClassic\Content\styles.css" />
     <Content Include="Themes\print.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -1605,11 +1562,6 @@
     <Content Include="Themes\DarkOrange\theme.config" />
     <Content Include="Themes\DarkOrange\Views\Shared\Head.cshtml" />
     <Content Include="Themes\DarkOrange\Views\Web.config" />
-    <Content Include="Themes\nopClassic\theme.config">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Themes\nopClassic\Views\Shared\Head.cshtml" />
-    <Content Include="Themes\nopClassic\Views\Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Catalog\CategoryTemplate.ProductsInGridOrLines.cshtml" />
