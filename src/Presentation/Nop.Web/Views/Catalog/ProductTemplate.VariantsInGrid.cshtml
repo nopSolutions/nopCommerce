@@ -20,7 +20,6 @@
         Html.AddCanonicalUrlParts(productUrl);
     }
 }
-
 <!--product breadcrumb-->
 @Html.Action("ProductBreadcrumb", "Catalog", new { productId = Model.Id })
 <div class="clear">
@@ -53,7 +52,6 @@
                     @Html.Action("ProductReviewOverview", "Catalog", new { productId = Model.Id })
                     <div class="clear">
                     </div>
-                    <br />
                     @Html.Action("ProductEmailAFriendButton", "Catalog", new { productId = Model.Id })
                     @Html.Action("CompareProductsButton", "Catalog", new { productId = Model.Id })
                     <div class="clear">
@@ -80,24 +78,16 @@
             </div>
             <div class="clear">
             </div>
-            <div>
-                @Html.Action("ProductSpecifications", "Catalog", new { productId = Model.Id })
-            </div>
+            @Html.Action("ProductSpecifications", "Catalog", new { productId = Model.Id })
             <div class="clear">
             </div>
-            <div>
-                @Html.Action("ProductTags", "Catalog", new { productId = Model.Id })
-            </div>
+            @Html.Action("ProductTags", "Catalog", new { productId = Model.Id })
             <div class="clear">
             </div>
-            <div>
-                @Html.Action("ProductsAlsoPurchased", "Catalog", new { productId = Model.Id })
-            </div>
+            @Html.Action("ProductsAlsoPurchased", "Catalog", new { productId = Model.Id })
             <div class="clear">
             </div>
-            <div>
-                @Html.Action("RelatedProducts", "Catalog", new { productId = Model.Id })
-            </div>
+            @Html.Action("RelatedProducts", "Catalog", new { productId = Model.Id })
         </div>
     }
 </div>

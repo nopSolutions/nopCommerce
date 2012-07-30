@@ -667,6 +667,8 @@ ul.languagelist li:hover{cursor:pointer;}
 .product-details-info .overview .shortdescription,.product-details-info .overview .manufacturers,.product-details-info .overview .sku,.product-details-info .overview .manufacturerpartnumber,.product-details-info .overview .stock,.product-details-info .overview .gtin{color:#555;margin-bottom:.3em;font-size:1.1em;}
 .backinstocksubscription{margin-top:10px;margin-bottom:10px;}
 .product-details-info .fulldescription{border-top:solid 1px #d3d3d3;clear:both;color:#555;margin-bottom:.3em;}
+.product-details-info .email-a-friend{margin:10px 0px 10px 5px;float:right;}
+.product-details-info .compare-products{margin:10px 0 10px 0px;float:right;}
 .product-share-button{margin-top:10px;margin-bottom:10px;}
 .product-reviews-overview{margin-top:20px;margin-bottom:20px;}
 .product-reviews-overview .product-review-box{margin-left:5px;width:69px;height:13px;}

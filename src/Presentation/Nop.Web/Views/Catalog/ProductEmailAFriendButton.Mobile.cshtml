@@ -1,3 +1,5 @@
 ﻿@model ProductEmailAFriendModel
 @using Nop.Web.Models.Catalog;
-<a href="@Url.RouteUrl("ProductEmailAFriend", new { productId = Model.ProductId })" data-role="button" data-ajax="false">@T("Products.EmailAFriend")</a>
+<div class="email-a-friend">
+    <a href="@Url.RouteUrl("ProductEmailAFriend", new { productId = Model.ProductId })" data-role="button" data-ajax="false">@T("Products.EmailAFriend")</a>
+</div>
