@@ -26,16 +26,14 @@
             {
             <div class="clear">
             </div>
-                <div class="message-error">
+            <div class="message-error">
+                <ul>
                     @for (int i = 0; i < Model.Warnings.Count; i++)
                     {
-                        @Model.Warnings[i]
-                        if (i != Model.Warnings.Count - 1)
-                        {
-                        <br />
-                        }
+                        <li>@Model.Warnings[i]</li>
                     }
-                </div>
+                </ul>
+            </div>
             }
             <script type="text/javascript">
                 $(document).ready(function () {

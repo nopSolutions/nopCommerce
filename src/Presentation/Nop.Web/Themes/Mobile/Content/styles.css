@@ -26,6 +26,8 @@
 .user-agreement-page .page-body{}
 .clear{border:medium none;clear:both;float:none;font-size:0;height:0;line-height:0;}
 .message-error{font-family:Verdana, Arial, sans-serif;font-weight:700;color:red;}
+.message-error ul{padding:0px;}
+.message-error ul li{list-style:none;}
 .validation-summary-errors{font-family:Verdana, Arial, sans-serif;font-weight:700;color:red;}
 .field-validation-error{font-family:Verdana, Arial, sans-serif;font-weight:700;color:red;}
 .required{color:red;}
@@ -140,7 +142,7 @@
 .shipment-details .section-title{padding:10px;font-weight:700;clear:both;}
 .shipment-details .overview{text-align:left;padding-bottom:10px;}
 .shipment-details .trackingurl{}
-.shipment-details .products-box,.shipment-details .shipmentstatusevents-box{font-weight:normal;}
+.shipment-details .products-box,.shipment-details .shipment-status-events-box{font-weight:normal;}
 .shipment-details .products-box .product{}
 .shipment-details .products-box .sku{}
 .shipment-details .products-box .qty{}

@@ -53,8 +53,9 @@
                                     <a href="@Url.RouteUrl("Product", new { productId = item.ProductId, SeName = item.ProductSeName })" title="View details">@item.ProductName</a>
                                     @if (!String.IsNullOrEmpty(item.AttributeInfo))
                                     {
-                                        <br />
-                                        @Html.Raw(item.AttributeInfo)
+                                        <div class="attributes">
+                                            @Html.Raw(item.AttributeInfo)
+                                        </div>
                                     }
                                 </td>
                                 <td class="a-left">

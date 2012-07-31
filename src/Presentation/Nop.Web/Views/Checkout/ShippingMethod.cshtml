@@ -32,7 +32,7 @@
                             <div class="shipping-option-item">
                                 <div class="option-name">
                                     <input id="shippingoption_@(i)" type="radio" name="shippingoption" value="@(shippingMethod.Name)___@(shippingMethod.ShippingRateComputationMethodSystemName)"  @(shippingMethod.Selected ? Html.Raw(" checked=\"checked\"") : null) />
-                                    <label for="shippingoption_@(i)">@shippingMethod.Name (@shippingMethod.Fee)</label>                                    
+                                    <label for="shippingoption_@(i)">@shippingMethod.Name (@shippingMethod.Fee)</label>
                                 </div>
                                 @if (!String.IsNullOrEmpty(shippingMethod.Description))
                                 {
@@ -53,16 +53,14 @@
                 {
                     <div class="clear">
                     </div>
-                        <div class="message-error">
+                    <div class="message-error">
+                        <ul>
                             @for (int i = 0; i < Model.Warnings.Count; i++)
                             {
-                                @Model.Warnings[i]
-                                if (i != Model.Warnings.Count - 1)
-                                {
-                                <br />
-                                }
+                                <li>@Model.Warnings[i]</li>
                             }
-                        </div>
+                        </ul>
+                    </div>
                 }
             </div>
             @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "checkout_shipping_method_bottom" })

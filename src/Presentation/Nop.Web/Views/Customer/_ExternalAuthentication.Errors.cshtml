@@ -5,13 +5,11 @@
 @if (errors != null && errors.Count > 0)
 {
     <div class="external-auth-errors">
-        @for (int i = 0; i < errors.Count; i++)
-        {
-            @errors[i]
-            if (i != errors.Count - 1)
+        <ul>
+            @for (int i = 0; i < errors.Count; i++)
             {
-            <br />
+                <li>@errors[i]</li>
             }
-        }
+        </ul>
     </div>
 }

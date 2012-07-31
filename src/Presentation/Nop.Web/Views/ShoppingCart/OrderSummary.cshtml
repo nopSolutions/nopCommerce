@@ -12,14 +12,12 @@
         if (Model.Warnings.Count > 0)
         {
         <div class="message-error">
-            @for (int i = 0; i < Model.Warnings.Count; i++)
-            {
-                @Model.Warnings[i]
-                if (i != Model.Warnings.Count - 1)
+            <ul>
+                @for (int i = 0; i < Model.Warnings.Count; i++)
                 {
-                <br />
+                    <li>@Model.Warnings[i]</li>
                 }
-            }
+            </ul>
         </div>
         }
 @*we add enctype = "multipart/form-data" because "File upload" attribute control type requries it*@
@@ -101,25 +99,25 @@
                             <a href="@Url.RouteUrl("Product", new { productId = item.ProductId, SeName = item.ProductSeName })" title="View details">@item.ProductName</a>
                             @if (!String.IsNullOrEmpty(item.AttributeInfo))
                             {
-                                <br />
-                                @Html.Raw(item.AttributeInfo)
+                                <div class="attributes">
+                                    @Html.Raw(item.AttributeInfo)
+                                </div>
                             }
                             @if (!String.IsNullOrEmpty(item.RecurringInfo))
                             {
-                                <br />
-                                @Html.Raw(item.RecurringInfo)
+                                <div class="recurring-info">
+                                    @Html.Raw(item.RecurringInfo)
+                                </div>
                             }
                             @if (item.Warnings.Count > 0)
                             {
                                 <div class="message-error">
-                                    @for (int i = 0; i < item.Warnings.Count; i++)
-                                    {
-                                        @item.Warnings[i]
-                                        if (i != item.Warnings.Count - 1)
+                                    <ul>
+                                        @for (int i = 0; i < item.Warnings.Count; i++)
                                         {
-                                        <br />
+                                            <li>@item.Warnings[i]</li>
                                         }
-                                    }
+                                    </ul>
                                 </div>
                             }
                         </td>
@@ -153,9 +151,10 @@
                             <span class="product-subtotal">@item.SubTotal</span>
                             @if (!String.IsNullOrEmpty(item.Discount))
                             {
-                                <br />
-                                @T("ShoppingCart.ItemYouSave")<text>:</text>
-                                <text>&nbsp; &nbsp;</text>@item.Discount
+                                <div class="discount">
+                                    @T("ShoppingCart.ItemYouSave")<text>:</text>
+                                    <text>&nbsp; &nbsp;</text>@item.Discount
+                                </div>
                             }
                         </td>
                     </tr>

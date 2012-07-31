@@ -15,13 +15,13 @@
     </div>
     <div class="info">
         <div class="overview">
-            <div>
-                <b>@T("Order.Shipments.Order#")@Model.Order.Id</b>
+            <div class="order-id">
+                <strong>@T("Order.Shipments.Order#")@Model.Order.Id</strong>
             </div>
-            <div>
+            <div class="shipping-method">
                 @T("Order.Shipments.ShippingMethod"): @Model.Order.ShippingMethod
             </div>
-            <div>
+            <div class="shipped-date">
                 @T("Order.Shipments.ShippedDate"):
                 @if (Model.ShippedDate.HasValue)
                 {
@@ -32,7 +32,7 @@
                     @T("Order.Shipments.ShippedDate.NotYet")
                 }
             </div>
-            <div>
+            <div class="delivery-date">
                 @T("Order.Shipments.DeliveryDate"):
                 @if (Model.DeliveryDate.HasValue)
                 {
@@ -43,12 +43,12 @@
                     @T("Order.Shipments.DeliveryDate.NotYet")
                 }
             </div>
-            <div>
+            <div class="shipping-method">
                 @T("Order.Shipments.ShippingMethod"): @Model.Order.ShippingMethod
             </div>
             @if (!String.IsNullOrEmpty(Model.TrackingNumber))
             {
-                <div>
+                <div class="tracking-number">
                     @T("Order.Shipments.TrackingNumber"):
                     @if (!string.IsNullOrEmpty(Model.TrackingNumberUrl))
                     {
@@ -60,39 +60,39 @@
                     }
                 </div>
             }
-            <div>
-            <div class="section-title">
-                @T("Order.Shipments.ShippingAddress")
-            </div>
-                <div>
+            <div class="shipping-address">
+                <div class="section-title">
+                    @T("Order.Shipments.ShippingAddress")
+                </div>
+                <div class="name">
                     @Model.Order.ShippingAddress.FirstName @Model.Order.ShippingAddress.LastName
                 </div>
-                <div>
+                <div class="email">
                     @T("Order.Shipments.Email"): @Model.Order.ShippingAddress.Email</div>
-                <div>
+                <div class="phone">
                     @T("Order.Shipments.Phone"): @Model.Order.ShippingAddress.PhoneNumber</div>
-                <div>
+                <div class="fax">
                     @T("Order.Shipments.Fax"): @Model.Order.ShippingAddress.FaxNumber</div>
                 @if (!String.IsNullOrEmpty(Model.Order.ShippingAddress.Company))
                 {
-                    <div>
+                    <div class="company">
                         @Model.Order.ShippingAddress.Company
                     </div>
                 }
-                <div>
+                <div class="address1">
                     @Model.Order.ShippingAddress.Address1</div>
                 @if (!String.IsNullOrEmpty(Model.Order.ShippingAddress.Address2))
                 {
-                    <div>
+                    <div class="address2">
                         @Model.Order.ShippingAddress.Address2
                     </div>
                 }
-                <div>
+                <div class="city-state-zip">
                     @Model.Order.ShippingAddress.City, @Model.Order.ShippingAddress.StateProvinceName
                     @Model.Order.ShippingAddress.ZipPostalCode</div>
                 @if (!String.IsNullOrEmpty(Model.Order.ShippingAddress.CountryName))
                 {
-                    <div>
+                    <div class="country">
                         @Model.Order.ShippingAddress.CountryName
                     </div>
                 }
@@ -102,38 +102,40 @@
         </div>
         @if (Model.Items.Count > 0)
         {
-            <div class="section-title">
-                @T("Order.Shipments.Product(s)")
-            </div>
-            <div class="clear">
-            </div>
-            
-            <ul data-role="listview" data-inset="true" data-filter="false">
-                @foreach (var item in Model.Items)
-                {
-                    <li>
-                        <div class="products-box">
-                            <div class="product">
-                                <b><a href="@Url.RouteUrl("Product", new { productId = item.ProductId, SeName = item.ProductSeName })" title="View details">@item.ProductName</a></b>
-                                @if (!String.IsNullOrEmpty(item.AttributeInfo))
-                                {
-                                    <br />
-                                    @Html.Raw(item.AttributeInfo)
-                                }
-                            </div>
-                            @if (Model.ShowSku && !string.IsNullOrEmpty(item.Sku))
-                            {
-                                <div class="sku">
-                                    @T("Order.Shipments.Product(s).SKU"): @item.Sku
+            <div class="products">
+                <div class="section-title">
+                    @T("Order.Shipments.Product(s)")
+                </div>
+                <div class="clear">
+                </div>
+                <ul data-role="listview" data-inset="true" data-filter="false">
+                    @foreach (var item in Model.Items)
+                    {
+                        <li>
+                            <div class="products-box">
+                                <div class="product">
+                                    <strong><a href="@Url.RouteUrl("Product", new { productId = item.ProductId, SeName = item.ProductSeName })" title="View details">@item.ProductName</a></strong>
+                                    @if (!String.IsNullOrEmpty(item.AttributeInfo))
+                                    {
+                                        <div class="attributes">
+                                            @Html.Raw(item.AttributeInfo)
+                                        </div>
+                                    }
                                 </div>
-                            }
-                            <div class="qty">
-                                @T("Order.Shipments.Product(s).Quantity"): @item.QuantityShipped
+                                @if (Model.ShowSku && !string.IsNullOrEmpty(item.Sku))
+                                {
+                                    <div class="sku">
+                                        @T("Order.Shipments.Product(s).SKU"): @item.Sku
+                                    </div>
+                                }
+                                <div class="qty">
+                                    @T("Order.Shipments.Product(s).Quantity"): @item.QuantityShipped
+                                </div>
                             </div>
-                        </div>
-                    </li>
-                }
-            </ul>
+                        </li>
+                    }
+                </ul>
+            </div>
             <div class="clear">
             </div>
         }
@@ -141,25 +143,27 @@
         </div>
         @if (Model.ShipmentStatusEvents.Count > 0)
         {
-            <div class="section-title">
-                @T("Order.ShipmentStatusEvents")
-            </div>                
-            <ul data-role="listview" data-inset="true" data-filter="false">
-                @foreach (var item in Model.ShipmentStatusEvents)
-                {      
-                    <li>
-                        <div class="shipmentstatusevents-box">
-                            <div>@T("Order.ShipmentStatusEvents.Event"): @item.EventName</div>
-                            <div>@T("Order.ShipmentStatusEvents.Location"): @item.Location</div>
-                            <div>@T("Order.ShipmentStatusEvents.Country"): @item.Country</div>
-                            @if (item.Date.HasValue)
-                            {
-                                <div>@T("Order.ShipmentStatusEvents.Date"): @item.Date.Value.ToString("D")</div>
-                            }
-                        </div>
-                    </li>
-                }
-            </ul>
+            <div class="shipment-status-events">
+                <div class="section-title">
+                    @T("Order.ShipmentStatusEvents")
+                </div>
+                <ul data-role="listview" data-inset="true" data-filter="false">
+                    @foreach (var item in Model.ShipmentStatusEvents)
+                    {      
+                        <li>
+                            <div class="shipment-status-events-box">
+                                <div>@T("Order.ShipmentStatusEvents.Event"): @item.EventName</div>
+                                <div>@T("Order.ShipmentStatusEvents.Location"): @item.Location</div>
+                                <div>@T("Order.ShipmentStatusEvents.Country"): @item.Country</div>
+                                @if (item.Date.HasValue)
+                                {
+                                    <div>@T("Order.ShipmentStatusEvents.Date"): @item.Date.Value.ToString("D")</div>
+                                }
+                            </div>
+                        </li>
+                    }
+                </ul>
+            </div>
         }
     </div>
 </div>

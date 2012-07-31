@@ -14,7 +14,7 @@
     </div>
     <div class="clear">
     </div>
-    <div class="info">    
+    <div class="info">
         @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_orderdetails_page_top" })
         <div class="order-overview">
             <div>
@@ -34,123 +34,132 @@
         <div class="clear">
         </div>
         <div class="order-details-box">
-            <div>
-                <div>
-                    <b>
-                        @T("Order.BillingAddress")</b></div>
-                <div>@Model.BillingAddress.FirstName @Model.BillingAddress.LastName</div>
-                <div>
+            <div class="billing-info">
+                <div class="title">
+                    <strong>
+                        @T("Order.BillingAddress")</strong></div>
+                <div class="name">@Model.BillingAddress.FirstName @Model.BillingAddress.LastName</div>
+                <div class="email">
                     @T("Order.Email"): @Model.BillingAddress.Email</div>
-                <div>
+                <div class="phone">
                     @T("Order.Phone"): @Model.BillingAddress.PhoneNumber</div>
-                <div>
+                <div class="fax">
                     @T("Order.Fax"): @Model.BillingAddress.FaxNumber</div>
                 @if (!String.IsNullOrEmpty(Model.BillingAddress.Company))
                 {
-                    <div>
+                    <div class="company">
                         @Model.BillingAddress.Company
                     </div>
                 }
-                <div>
+                <div class="address1">
                     @Model.BillingAddress.Address1</div>
                 @if (!String.IsNullOrEmpty(Model.BillingAddress.Address2))
                 {
-                    <div>
+                    <div class="address2">
                         @Model.BillingAddress.Address2
                     </div>
                 }
-                <div>
+                <div class="city-state-zip">
                     @Model.BillingAddress.City, @Model.BillingAddress.StateProvinceName @Model.BillingAddress.ZipPostalCode</div>
                 @if (!String.IsNullOrEmpty(Model.BillingAddress.CountryName))
                 {
-                    <div>
+                    <div class="country">
                         @Model.BillingAddress.CountryName
                     </div>
                 }
                 @if (!String.IsNullOrEmpty(Model.VatNumber))
                 {
-                    <div>
-                        <b>@T("Order.VATNumber")</b>
-                    </div>
-                    <div>
-                        @Model.VatNumber
+                    <div class="vat">
+                        <div class="vat-label">
+                            <strong>@T("Order.VATNumber")</strong>
+                        </div>
+                        <div class="vat-value">
+                            @Model.VatNumber
+                        </div>
                     </div>
                 }
                 @if (!String.IsNullOrEmpty(Model.PaymentMethod))
                 {
-                    <div>
-                        <b>@T("Order.PaymentMethod")</b>
+                    <div class="payment-method">
+                        <div class="payment-method-label">
+                            <strong>@T("Order.PaymentMethod")</strong>
+                        </div>
+                        <div class="payment-method-value">
+                            @Model.PaymentMethod
+                        </div>
                     </div>
-                    <div>
-                        @Model.PaymentMethod
-                        @if (Model.CanRePostProcessPayment)
-                        {
+                    if (Model.CanRePostProcessPayment)
+                    {
 @*Completing payment support (for redirection payment methods)*
-@*set "data-ajax" attribute to "false"*@
-                            using (Html.BeginRouteForm("OrderDetails", FormMethod.Post,
+                            @*set "data-ajax" attribute to "false"*@
+                    <div class="repost">
+                        @using (Html.BeginRouteForm("OrderDetails", FormMethod.Post,
                                 new Dictionary<string, Object> { { "data-ajax", "false" } }))
-                            {
+                        {
                             <input type="submit" name="repost-payment" value="@T("Order.CompletePayment")" id="repost-payment" />
-                            <div>
-                                <i>@T("Order.CompletePayment.Hint")</i>
-                            </div>
-                            }
+                            <p class="hint">
+                                <em>@T("Order.CompletePayment.Hint")</em>
+                            </p>
                         }
                     </div>
+                    }
                 }
                 @if (Model.DisplayPurchaseOrderNumber)
                 {
-                    <div>
-                        <b>@T("Order.PurchaseOrderNumber")</b>
-                    </div>
-                    <div>
-                        @Model.PurchaseOrderNumber
+                    <div class="po">
+                        <div class="po-label">
+                            <strong>@T("Order.PurchaseOrderNumber")</strong>
+                        </div>
+                        <div class="po-value">
+                            @Model.PurchaseOrderNumber
+                        </div>
                     </div>
                 }
             </div>
             @if (Model.IsShippable)
             {
-                <div>
-                    <div>
-                        <b>@T("Order.ShippingAddress")</b>
+                <div class="shipping-info">
+                    <div class="title">
+                        <strong>@T("Order.ShippingAddress")</strong>
                     </div>
-                    <div>
+                    <div class="name">
                         @Model.ShippingAddress.FirstName @Model.ShippingAddress.LastName
                     </div>
-                    <div>
+                    <div class="email">
                         @T("Order.Email"): @Model.ShippingAddress.Email</div>
-                    <div>
+                    <div class="phone">
                         @T("Order.Phone"): @Model.ShippingAddress.PhoneNumber</div>
-                    <div>
+                    <div class="fax">
                         @T("Order.Fax"): @Model.ShippingAddress.FaxNumber</div>
                     @if (!String.IsNullOrEmpty(Model.ShippingAddress.Company))
                     {
-                        <div>
+                        <div class="company">
                             @Model.ShippingAddress.Company
                         </div>
                     }
-                    <div>
+                    <div class="address1">
                         @Model.ShippingAddress.Address1</div>
                     @if (!String.IsNullOrEmpty(Model.ShippingAddress.Address2))
                     {
-                        <div>
+                        <div class="address2">
                             @Model.ShippingAddress.Address2
                         </div>
                     }
-                    <div>
+                    <div class="city-state-zip">
                         @Model.ShippingAddress.City, @Model.ShippingAddress.StateProvinceName @Model.ShippingAddress.ZipPostalCode</div>
                     @if (!String.IsNullOrEmpty(Model.ShippingAddress.CountryName))
                     {
-                        <div>
+                        <div class="country">
                             @Model.ShippingAddress.CountryName
                         </div>
                     }
-                    <div>
-                        <b>
-                            @T("Order.ShippingMethod")</b>
-                    </div>
-                    <div>
-                        @Model.ShippingMethod
+                    <div class="shipping-method">
+                        <div class="shipping-method-label">
+                            <strong>@T("Order.ShippingMethod")</strong>
+                        </div>
+                        <div class="shipping-method-value">
+                            @Model.ShippingMethod
+                        </div>
                     </div>
                 </div>
             }
@@ -171,11 +180,12 @@
                     <li>
                         <div class="products-box">
                             <div class="product">
-                                <b><a href="@Url.RouteUrl("Product", new { productId = item.ProductId, SeName = item.ProductSeName })" title="View details">@item.ProductName</a></b>
+                                <strong><a href="@Url.RouteUrl("Product", new { productId = item.ProductId, SeName = item.ProductSeName })" title="View details">@item.ProductName</a></strong>
                                 @if (!String.IsNullOrEmpty(item.AttributeInfo))
                                 {
-                                    <br />
-                                    @Html.Raw(item.AttributeInfo)
+                                    <div class="attributes">
+                                        @Html.Raw(item.AttributeInfo)
+                                    </div>
                                 }
                             </div>
                             @if (Model.ShowSku && !string.IsNullOrEmpty(item.Sku))
@@ -422,7 +432,7 @@
                     </li>
                 }
             </ul>
-        }        
-    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_orderdetails_page_bottom" })
+        }
+        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_orderdetails_page_bottom" })
     </div>
 </div>

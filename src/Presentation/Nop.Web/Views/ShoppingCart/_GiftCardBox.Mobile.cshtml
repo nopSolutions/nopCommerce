@@ -5,15 +5,15 @@
     using (Html.BeginRouteForm("ShoppingCart", FormMethod.Post))
     {
     <div class="giftcard-box">
-        <div>
-            <b>@T("ShoppingCart.GiftCardCouponCode")</b></div>
-        <div>@T("ShoppingCart.GiftCardCouponCode.Tooltip")</div>
-        <input name="giftcardcouponcode" type="text" id="giftcardcouponcode" class="giftcardcouponcode" />
-        <input type="submit" name="applygiftcardcouponcode" value="@T("ShoppingCart.GiftCardCouponCode.Button")" id="applygiftcardcouponcode" />
+        <div class="title">
+            <strong>@T("ShoppingCart.GiftCardCouponCode")</strong></div>
+        <div class="hint">@T("ShoppingCart.GiftCardCouponCode.Tooltip")</div>
+        <div class="coupon-code">
+            <input name="giftcardcouponcode" type="text" id="giftcardcouponcode" class="giftcardcouponcode" />
+            <input type="submit" name="applygiftcardcouponcode" value="@T("ShoppingCart.GiftCardCouponCode.Button")" id="applygiftcardcouponcode" />
+        </div>
         @if (!String.IsNullOrEmpty(Model.Message))
         {
-            <div class="clear">
-            </div>
             <div class="message-error">
                 @Model.Message
             </div>

@@ -5,25 +5,21 @@
     using (Html.BeginRouteForm("ShoppingCart", FormMethod.Post))
     {
     <div class="coupon-box">
-        <div>
-            <b>@T("ShoppingCart.DiscountCouponCode")</b></div>
-        <div>@T("ShoppingCart.DiscountCouponCode.Tooltip")</div>
-        <div>
+        <div class="title">
+            <strong>@T("ShoppingCart.DiscountCouponCode")</strong></div>
+        <div class="hint">@T("ShoppingCart.DiscountCouponCode.Tooltip")</div>
+        <div class="coupon-code">
             <input name="discountcouponcode" type="text" id="discountcouponcode" class="discountcouponcode" />
             <input type="submit" name="applydiscountcouponcode" value="@T("ShoppingCart.DiscountCouponCode.Button")" id="applydiscountcouponcode" />
         </div>
         @if (!String.IsNullOrEmpty(Model.Message))
         {
-            <div class="clear">
-            </div>
             <div class="message-error">
                 @Model.Message
             </div>
         }
         @if (!String.IsNullOrEmpty(Model.CurrentCode))
         {
-            <div class="clear">
-            </div>
             <div class="current-code">
                 @string.Format(T("ShoppingCart.DiscountCouponCode.CurrentCode").Text, Model.CurrentCode)
                 <input id="removediscountcouponcode" type="submit" name="removediscountcouponcode" value="@T("Common.Remove")" title="@T("Common.Remove")" class="removediscountbutton" />

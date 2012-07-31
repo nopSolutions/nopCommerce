@@ -30,14 +30,12 @@
                 if (Model.Warnings.Count > 0)
                 {
                 <div class="message-error">
+                    <ul>
                         @for (int i = 0; i < Model.Warnings.Count; i++)
                         {
-                            @Model.Warnings[i]
-                            if (i != Model.Warnings.Count - 1)
-                            {
-                            <br />
-                            }
+                            <li>@Model.Warnings[i]</li>
                         }
+                    </ul>
                 </div>
                 }
 @*set "data-ajax" attribute to "false"*@
@@ -54,25 +52,25 @@
                                         <a href="@Url.RouteUrl("Product", new { productId = item.ProductId, SeName = item.ProductSeName })" title="View details">@item.ProductName</a>
                                         @if (!String.IsNullOrEmpty(item.AttributeInfo))
                                         {
-                                            <br />
-                                            @Html.Raw(item.AttributeInfo)
+                                            <div class="attributes">
+                                                @Html.Raw(item.AttributeInfo)
+                                            </div>
                                         }
                                         @if (!String.IsNullOrEmpty(item.RecurringInfo))
                                         {
-                                            <br />
-                                            @Html.Raw(item.RecurringInfo)
+                                            <div class="recurring-info">
+                                                @Html.Raw(item.RecurringInfo)
+                                            </div>
                                         }
                                         @if (item.Warnings.Count > 0)
                                         {
                                             <div class="message-error">
+                                                <ul>
                                                     @for (int i = 0; i < item.Warnings.Count; i++)
                                                     {
-                                                        @item.Warnings[i]
-                                                        if (i != item.Warnings.Count - 1)
-                                                        {
-                                                        <br />
-                                                        }
+                                                        <li>@item.Warnings[i]</li>
                                                     }
+                                                </ul>
                                             </div>
                                         }
                                     </div>
@@ -91,16 +89,16 @@
                                         {
                                             if (item.AllowedQuantities.Count > 0)
                                             {
-                                                <select name="itemquantity@(item.Id)"  id="itemquantity@(item.Id)" class="qty-dropdown"  data-mini="true" data-inline="true">
-                                                @foreach(var qty in item.AllowedQuantities)
+                                            <select name="itemquantity@(item.Id)"  id="itemquantity@(item.Id)" class="qty-dropdown"  data-mini="true" data-inline="true">
+                                                @foreach (var qty in item.AllowedQuantities)
                                                 {
                                                     <option @(qty.Selected ? Html.Raw(" selected=\"selected\"") : null) value="@qty.Value">@qty.Value</option>
                                                 }
-                                                </select>
+                                            </select>
                                             }
                                             else
                                             {
-                                                <input name="itemquantity@(item.Id)" type="text" value="@(item.Quantity)" id="itemquantity@(item.Id)" class="qty-input" />
+                                            <input name="itemquantity@(item.Id)" type="text" value="@(item.Quantity)" id="itemquantity@(item.Id)" class="qty-input" />
                                             }
                                         }
                                         else
@@ -112,8 +110,10 @@
                                         @T("ShoppingCart.ItemTotal"): @item.SubTotal
                                         @if (!String.IsNullOrEmpty(item.Discount))
                                         {
-                                            <br />
-                                            @T("ShoppingCart.ItemYouSave")<text>:</text> @item.Discount
+                                            <div class="discount">
+                                                @T("ShoppingCart.ItemYouSave")<text>:</text>
+                                                @item.Discount
+                                            </div>
                                         }
                                     </div>
                                     @if (Model.IsEditable)

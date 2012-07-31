@@ -19,7 +19,7 @@
     <script type="text/javascript">
         $(document).ready(function () {
             window.print();
-        });            
+        });
     </script>
 }
 <div class="order-details">
@@ -31,10 +31,10 @@
             </div>
             <div class="print-buttons">
                 <a href="@Url.RouteUrl("PrintOrderDetails", new { orderId = Model.Id })" target="_blank" class="orderdetailsprintbutton">@T("Order.Print")</a>
-                            @if (Model.DisplayPdfInvoice)
-                            {
-                                <a href="@Url.RouteUrl("GetOrderPdfInvoice", new { orderId = Model.Id })" class="orderdetailsprintbutton">@T("Order.GetPDFInvoice")</a>
-                            }
+                @if (Model.DisplayPdfInvoice)
+                {
+                    <a href="@Url.RouteUrl("GetOrderPdfInvoice", new { orderId = Model.Id })" class="orderdetailsprintbutton">@T("Order.GetPDFInvoice")</a>
+                }
             </div>
         </div>
         <div class="clear">
@@ -47,9 +47,9 @@
                 <tbody>
                     <tr>
                         <td colspan="2">
-                            <b>
+                            <strong>
                                 @T("Order.Order#")@Model.Id
-                            </b>
+                            </strong>
                         </td>
                     </tr>
                     <tr>
@@ -76,113 +76,135 @@
                 <tbody>
                     <tr>
                         <td class="billinginfo">
-                            <b>
-                                @T("Order.BillingAddress")</b>
-                            <br />
-                            @Model.BillingAddress.FirstName @Model.BillingAddress.LastName<br />
-                            <div>
+                            <div class="title">
+                                <strong>
+                                    @T("Order.BillingAddress")</strong>
+                            </div>
+                            <div class="name">
+                                @Model.BillingAddress.FirstName @Model.BillingAddress.LastName
+                            </div>
+                            <div class="email">
                                 @T("Order.Email"): @Model.BillingAddress.Email</div>
-                            <div>
+                            <div class="phone">
                                 @T("Order.Phone"): @Model.BillingAddress.PhoneNumber</div>
-                            <div>
+                            <div class="fax">
                                 @T("Order.Fax"): @Model.BillingAddress.FaxNumber</div>
                             @if (!String.IsNullOrEmpty(Model.BillingAddress.Company))
                             {
-                                <div>
+                                <div class="company">
                                     @Model.BillingAddress.Company
                                 </div>
                             }
-                            <div>
+                            <div class="address1">
                                 @Model.BillingAddress.Address1</div>
                             @if (!String.IsNullOrEmpty(Model.BillingAddress.Address2))
                             {
-                                <div>
+                                <div class="address2">
                                     @Model.BillingAddress.Address2
                                 </div>
                             }
-                            <div>
+                            <div class="city-state-zip">
                                 @Model.BillingAddress.City, @Model.BillingAddress.StateProvinceName @Model.BillingAddress.ZipPostalCode</div>
                             @if (!String.IsNullOrEmpty(Model.BillingAddress.CountryName))
                             {
-                                <div>
+                                <div class="country">
                                     @Model.BillingAddress.CountryName
                                 </div>
                             }
-                            <br />
                             @if (!String.IsNullOrEmpty(Model.VatNumber))
                             {
-                                <b>@T("Order.VATNumber")</b> <br />
-                                @Model.VatNumber
-                                <br />
-                                <br />
+                                <div class="vat">
+                                    <div class="vat-label">
+                                        <strong>@T("Order.VATNumber")</strong>
+                                    </div>
+                                    <div class="vat-value">
+                                        @Model.VatNumber
+                                    </div>
+                                </div>
                             }
                             @if (!String.IsNullOrEmpty(Model.PaymentMethod))
                             {
-                                <b>@T("Order.PaymentMethod")</b>
-                                <br />
-                                @Model.PaymentMethod
-                                
+                                <div class="payment-method">
+                                    <div class="payment-method-label">
+                                        <strong>@T("Order.PaymentMethod")</strong>
+                                    </div>
+                                    <div class="payment-method-value">
+                                        @Model.PaymentMethod
+                                    </div>
+                                </div>
                                 if (!Model.PrintMode && Model.CanRePostProcessPayment)
                                 {
-@*Completing payment support (for redirection payment methods*@
-                                <br />
-                                    using (Html.BeginRouteForm("OrderDetails", FormMethod.Post))
+                                @*Completing payment support (for redirection payment methods)*@
+                                <div class="repost">
+                                    @using (Html.BeginRouteForm("OrderDetails", FormMethod.Post))
                                     {
-                                <input type="submit" name="repost-payment" value="@T("Order.CompletePayment")" id="repost-payment" class="reorderbutton" />
-                                <br />
-                                <i>@T("Order.CompletePayment.Hint")</i>
+                                        <input type="submit" name="repost-payment" value="@T("Order.CompletePayment")" id="repost-payment" class="reorderbutton" />
+                                        <p class="hint">
+                                            <em>@T("Order.CompletePayment.Hint")</em>
+                                        </p>
                                     }
+                                </div>
                                 }
                             }
                             @if (Model.DisplayPurchaseOrderNumber)
                             {
-                                <br />
-                                <b>@T("Order.PurchaseOrderNumber")</b>
-                                <br />
-                                @Model.PurchaseOrderNumber
+                                <div class="po">
+                                    <div class="po-label">
+                                        <strong>@T("Order.PurchaseOrderNumber")</strong>
+                                    </div>
+                                    <div class="po-value">
+                                        @Model.PurchaseOrderNumber
+                                    </div>
+                                </div>
                             }
                         </td>
                         @if (Model.IsShippable)
                         {
                             <td class="shippinginfo">
-                                <b>
-                                    @T("Order.ShippingAddress")</b>
-                                <br />
-                                @Model.ShippingAddress.FirstName @Model.ShippingAddress.LastName<br />
-                                <div>
-                                    @T("Order.Email"): @Model.ShippingAddress.Email</div>
-                                <div>
+                                <div class="title">
+                                    <strong>
+                                        @T("Order.ShippingAddress")</strong>
+                                </div>
+                                <div class="name">
+                                    @Model.ShippingAddress.FirstName @Model.ShippingAddress.LastName
+                                </div>
+                                <div class="email">
+                                    @T("Order.Email"): @Model.ShippingAddress.Email
+                                </div>
+                                <div class="phone">
                                     @T("Order.Phone"): @Model.ShippingAddress.PhoneNumber</div>
-                                <div>
+                                <div class="fax">
                                     @T("Order.Fax"): @Model.ShippingAddress.FaxNumber</div>
                                 @if (!String.IsNullOrEmpty(Model.ShippingAddress.Company))
                                 {
-                                    <div>
+                                    <div class="company">
                                         @Model.ShippingAddress.Company
                                     </div>
                                 }
-                                <div>
+                                <div class="address1">
                                     @Model.ShippingAddress.Address1</div>
                                 @if (!String.IsNullOrEmpty(Model.ShippingAddress.Address2))
                                 {
-                                    <div>
+                                    <div class="address2">
                                         @Model.ShippingAddress.Address2
                                     </div>
                                 }
-                                <div>
+                                <div class="city-state-zip">
                                     @Model.ShippingAddress.City, @Model.ShippingAddress.StateProvinceName @Model.ShippingAddress.ZipPostalCode</div>
                                 @if (!String.IsNullOrEmpty(Model.ShippingAddress.CountryName))
                                 {
-                                    <div>
+                                    <div class="country">
                                         @Model.ShippingAddress.CountryName
                                     </div>
                                 }
-                                <br />
-                                <br />
-                                <b>
-                                    @T("Order.ShippingMethod")</b>
-                                <br />
-                                @Model.ShippingMethod
+                                <div class="shipping-method">
+                                    <div class="shipping-method-label">
+                                        <strong>@T("Order.ShippingMethod")</strong>
+                                    </div>
+                                    <div class="shipping-method-value">
+                                        @Model.ShippingMethod
+                                    </div>
+                                </div>
                             </td>
                         }
                     </tr>
@@ -251,8 +273,9 @@
                                     }
                                     @if (!String.IsNullOrEmpty(item.AttributeInfo))
                                     {
-                                        <br />
-                                        @Html.Raw(item.AttributeInfo)
+                                        <div class="attributes">
+                                            @Html.Raw(item.AttributeInfo)
+                                        </div>
                                     }
                                 </td>
                                 <td class="a-right">
@@ -280,17 +303,17 @@
                 }
                 @if (!Model.PrintMode)
                 {
-                    <br />
-@*Reorder support*@
-                    if (Model.IsReOrderAllowed)
-                    {
-                    <input type="button" name="reorder" value="@T("Order.Reorder")" id="reorder" class="reorderbutton" onclick="setLocation('@Url.RouteUrl("ReOrder", new { orderId = @Model.Id })')" />
-                    }
-                    if (Model.IsReturnRequestAllowed)
-                    {
-                    <text>&nbsp; &nbsp; &nbsp;</text>
-                    <input type="button" name="returnitems" value="@T("Order.ReturnItems")" id="returnitems" class="returnitemsbutton" onclick="setLocation('@Url.RouteUrl("ReturnRequest", new { orderId = @Model.Id })')" />
-                    }
+                    <div class="actions">
+                        @if (Model.IsReOrderAllowed)
+                        {
+                            <input type="button" name="reorder" value="@T("Order.Reorder")" id="reorder" class="reorderbutton" onclick="setLocation('@Url.RouteUrl("ReOrder", new { orderId = @Model.Id })')" />
+                        }
+                        @if (Model.IsReturnRequestAllowed)
+                        {
+                            <text>&nbsp; &nbsp; &nbsp;</text>
+                            <input type="button" name="returnitems" value="@T("Order.ReturnItems")" id="returnitems" class="returnitemsbutton" onclick="setLocation('@Url.RouteUrl("ReturnRequest", new { orderId = @Model.Id })')" />
+                        }
+                    </div>
                 }
             </div>
             <div class="clear">
@@ -531,7 +554,7 @@
             <div class="clear">
             </div>
             <div class="ordernotes-box">
-                    <table class="data-table">
+                <table class="data-table">
                     <col />
                     <col />
                     <thead>
@@ -560,7 +583,7 @@
                 </table>
             </div>
             }
-        }        
+        }
         @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "orderdetails_page_bottom" })
     </div>
 </div>

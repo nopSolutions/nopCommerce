@@ -111,6 +111,8 @@ td.fieldname{font-size:12px;}
 .user-agreement-page .page-body{}
 .clear{border:medium none;clear:both;float:none;font-size:0;height:0;line-height:0;}
 .message-error{font-family:Verdana, Arial, sans-serif;font-size:10px;font-weight:700;color:red;}
+.message-error ul{padding:0px;}
+.message-error ul li{list-style:none;}
 .validation-summary-errors{font-family:Verdana, Arial, sans-serif;font-size:10px;font-weight:700;color:red;}
 .field-validation-error{font-family:Verdana, Arial, sans-serif;font-size:10px;font-weight:700;color:red;}
 .required{color:red;}
@@ -222,7 +224,7 @@ ul.languagelist li:hover{cursor:pointer;}
 .order-summary-content .deals{display:inline;float:right;margin:0 0 0 20px;width:250px;}
 .order-summary-content .shipping{display:inline;float:right;margin:0;width:280px;}
 .order-summary-content .coupon-box,.order-summary-content .giftcard-box{padding:10px;font-size:11px;color:#555;background:#F7F5E8;margin:0 0 10px;border:dotted 1px #d3d3d3;}
-.order-summary-content .coupon-box .current-code{}
+.order-summary-content .coupon-box .current-code{padding: 10px 0px 0px 0px;}
 .order-summary-content .giftcard-box{position:relative;z-index:1;}
 .order-summary-content .coupon-box .discountcouponcode, .order-summary-content .giftcard-box .giftcardcouponcode{width:125px;}
 .order-summary-content .cart,.wishlist-content .cart{width:100%;border-collapse:collapse;text-align:center;vertical-align:middle;}
@@ -319,8 +321,11 @@ ul.languagelist li:hover{cursor:pointer;}
 .order-details .order-details-box{text-align:right;padding:10px;border:1px solid #d7d7d7;height:auto;direction:rtl;}
 .order-details .order-overview .order-overview-table, .order-details .order-details-box .order-details-table{width:100%;border:0px;border-collapse:collapse;border-spacing:0;}
 .order-details .order-details-box .order-details-table .billinginfo,.order-details .order-details-box .order-details-table .shippinginfo{width:50%;vertical-align:top;}
+.order-details .order-details-box .repost{margin:10px 0px 10px 0px;}
+.order-details .order-details-box .repost .hint{margin:0px;}
 .order-details .products-box,.order-details .shipments-box,.order-details .ordernotes-box{text-align:right;padding:10px;border:1px solid #d7d7d7;height:auto;}
 .order-details .checkout-attributes{text-align:right;vertical-align:middle;padding:10px;height:auto;}
+.order-details .actions{margin:10px 0px 10px 0px;}
 .order-details .cart_total_left{color:#000;}
 .shipment-details{text-align:right;direction:rtl;}
 .shipment-details .page-title{border-bottom:0 none;text-align:right;}
@@ -328,7 +333,7 @@ ul.languagelist li:hover{cursor:pointer;}
 .shipment-details .section-title{padding:10px 10px 5px 0;font-weight:700;clear:both;}
 .shipment-details .overview{text-align:right;padding-bottom:10px;direction:rtl;}
 .shipment-details .trackingurl{color:#f93;text-decoration:none;}
-.shipment-details .products-box,.shipment-details .shipmentstatusevents-box{text-align:right;padding:10px;border:1px solid #d7d7d7;height:auto;}
+.shipment-details .products-box,.shipment-details .shipment-status-events-box{text-align:right;padding:10px;border:1px solid #d7d7d7;height:auto;}
 .downloadable-products{margin:0;padding:5px;font-size:11px;color:#555;background-color:inherit;}
 .downloadable-products .info{padding:10px;}
 .order-progress{height:45px;margin:0 auto;text-align:center;border-bottom:solid 2px #f3f3f3;}
@@ -487,6 +492,8 @@ ul.languagelist li:hover{cursor:pointer;}
 .login-table-container .row .item-value{padding:10px 0;vertical-align:middle;}
 .login-page .forgot-password{font-weight:700;}
 .external-auth-errors{text-align:center;border:solid 1px #d3d3d3;vertical-align:top;width:100%;color:Red;}
+.external-auth-errors ul{padding:0px;}
+.external-auth-errors ul li{list-style:none;}
 .external-auth-association{text-align:center;border:solid 1px #d3d3d3;vertical-align:top;width:100%;}
 .external-auth-association .identifier{}
 .external-auth-association .remove{color:#F93;}

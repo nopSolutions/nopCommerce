@@ -34,16 +34,20 @@
             LoadingElementId = "authenticate-progress-" + @Model.Id
         }))
         {
-            @Html.HiddenFor(model => model.Id)           
-            @T("Topic.EnterPassword")
-            <br />
-            @Html.Password("password", null, new { id = "password-" + @Model.Id })
-            <input type="submit" id="btnPassword-@Model.Id" value="@T("Topic.Button")" class="useragreementbutton"/>            
-            <span id="authenticate-progress-@Model.Id" style="display: none;">@T("Common.Wait...")
-                <img src='@Url.Content("~/Content/Images/ajax_loader_small.gif")' alt="@T("Common.Wait...")" />
-            </span>
-            <br />
-            <span id="passworderror-@Model.Id"></span>
+            @Html.HiddenFor(model => model.Id)
+            <div class="enter-password-title">
+                @T("Topic.EnterPassword")
+            </div>
+            <div class="enter-password-form">
+                @Html.Password("password", null, new { id = "password-" + @Model.Id })
+                <input type="submit" id="btnPassword-@Model.Id" value="@T("Topic.Button")" class="useragreementbutton"/>
+                <span id="authenticate-progress-@Model.Id" style="display: none;">@T("Common.Wait...")
+                    <img src='@Url.Content("~/Content/Images/ajax_loader_small.gif")' alt="@T("Common.Wait...")" />
+                </span>
+            </div>
+            <div class="password-error">
+                <span id="passworderror-@Model.Id"></span>
+            </div>
         }
     </div>
     <div class="htmlcontent" id="phTopic-@Model.Id">

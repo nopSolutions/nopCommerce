@@ -5,24 +5,25 @@
     using (Html.BeginRouteForm("ShoppingCart", FormMethod.Post))
     {
     <div class="coupon-box">
-        <b>@T("ShoppingCart.DiscountCouponCode")</b>
-        <br />@T("ShoppingCart.DiscountCouponCode.Tooltip")<br />
-        <input name="discountcouponcode" type="text" id="discountcouponcode" class="discountcouponcode" />&nbsp;
-        <input type="submit" name="applydiscountcouponcode" value="@T("ShoppingCart.DiscountCouponCode.Button")" id="applydiscountcouponcode" class="applycouponcodebutton" />
+        <div class="title">
+            <strong>@T("ShoppingCart.DiscountCouponCode")</strong>
+        </div>
+        <div class="hint">
+            @T("ShoppingCart.DiscountCouponCode.Tooltip")
+        </div>
+        <div class="coupon-code">
+            <input name="discountcouponcode" type="text" id="discountcouponcode" class="discountcouponcode" />&nbsp;
+            <input type="submit" name="applydiscountcouponcode" value="@T("ShoppingCart.DiscountCouponCode.Button")" id="applydiscountcouponcode" class="applycouponcodebutton" />
+        </div>
         @if (!String.IsNullOrEmpty(Model.Message))
         {
-            <div class="clear">
-            </div>
             <div class="message-error">
                 @Model.Message
             </div>
         }
         @if (!String.IsNullOrEmpty(Model.CurrentCode))
         {
-            <div class="clear">
-            </div>
             <div class="current-code">
-                <br />
                 @string.Format(T("ShoppingCart.DiscountCouponCode.CurrentCode").Text, Model.CurrentCode)
                 @*empty value (little hack for FormValueExistsAttribute)*@
                 <input id="removediscountcouponcode" type="submit" name="removediscountcouponcode" value=" " title="@T("Common.Remove")" class="removediscountbutton" />

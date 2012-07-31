@@ -52,17 +52,17 @@
     <div id="phPassword">
         @using (Html.BeginRouteForm("TopicAuthenticate"))
         {
-            <div>
-                @Html.HiddenFor(model => model.Id)
+            @Html.HiddenFor(model => model.Id)
+            <div class="enter-password-title">
                 @T("Topic.EnterPassword")
             </div>
-            <div>
+            <div class="enter-password-label">
                 @Html.Password("password")
             </div>
-            <div>
+            <div class="enter-password-button">
                 <input type="submit" id="btnPassword" value="@T("Topic.Button")"/>
             </div>       
-            <div>
+            <div class="password-error">
                 <span id="passworderror"></span>
             </div>
         }
