@@ -436,7 +436,7 @@ namespace Nop.Web.Controllers
                 {
                     from = emailAccount.Email;
                     fromName = emailAccount.DisplayName;
-                    body = string.Format("<b>From</b>: {0} - {1}<br /><br />{2}", 
+                    body = string.Format("<strong>From</strong>: {0} - {1}<br /><br />{2}", 
                         Server.HtmlEncode(fullName), 
                         Server.HtmlEncode(email), body);
                 }

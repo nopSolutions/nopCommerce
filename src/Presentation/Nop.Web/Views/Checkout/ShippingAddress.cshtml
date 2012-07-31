@@ -36,33 +36,34 @@
                                 <input type="button" name="selectShippingAddress" value="@T("Checkout.ShipToThisAddress")" class="selectshippingaddressbutton"  onclick="setLocation('@Url.RouteUrl("CheckoutSelectShippingAddress", new { addressId = @item.Id })')" />
                             </div>
                             <div class="address-box">
-                                <div><b>@item.FirstName @item.LastName</b></div>
-                                <div>@T("Address.Fields.Email"): @item.Email</div>
-                                <div>
+                                <div class="name">
+                                    <strong>@item.FirstName @item.LastName</strong></div>
+                                <div class="email">@T("Address.Fields.Email"): @item.Email</div>
+                                <div class="phone">
                                     @T("Address.Fields.PhoneNumber"):
                                     @item.PhoneNumber</div>
-                                <div>
+                                <div class="fax">
                                     @T("Address.Fields.FaxNumber"):
                                     @item.FaxNumber</div>
                                 @if (!String.IsNullOrEmpty(item.Company))
                                 {
-                                    <div>
+                                    <div class="company">
                                         @item.Company
                                     </div>
                                 }
-                                <div>
+                                <div class="address1">
                                     @item.Address1</div>
                                 @if (!String.IsNullOrEmpty(item.Address2))
                                 {
-                                    <div>
+                                    <div class="address2">
                                         @item.Address2
                                     </div>
                                 }
-                                <div>
+                                <div class="city-state-zip">
                                     @item.City, @item.StateProvinceName @item.ZipPostalCode</div>
                                 @if (!String.IsNullOrEmpty(item.CountryName))
                                 {
-                                    <div>
+                                    <div class="country">
                                         @item.CountryName
                                     </div>
                                 }

@@ -19,8 +19,8 @@
         <div class="order-completed">
             @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_checkout_completed_top" })
             <div class="body">
-                <b>
-                    @T("Checkout.YourOrderHasBeenSuccessfullyProcessed")</b>
+                <strong>
+                    @T("Checkout.YourOrderHasBeenSuccessfullyProcessed")</strong>
                 <p>
                     @T("Checkout.OrderNumber"): @Model.OrderId
                 </p>
