@@ -52,26 +52,26 @@
                 <tr class="topic">
                     <td class="topicname">
                         @Html.RouteLink(topic.Subject, "TopicSlug", new { id = topic.Id, slug = topic.SeName }, new { @class = "topictitle" })
-                        <br />
                         @if (@topic.NumPosts > Model.PostsPageSize)
                         {
-                            <span class="topicspager">
+                            <div class="topicspager">
                                 @Html.ForumTopicSmallPager(topic)
-                            </span>
-                            <br />
-                        } <span class="topicstarter">
+                            </div>
+                        }
+                        <div class="topicstarter">
                             @if (@topic.CustomerId > 0)
                             {
                                 var authorText = @T("Forum.Author");
                                 if (topic.AllowViewingProfiles && !topic.IsCustomerGuest)
                                 {
-                                    @T("Forum.Author")<text>:</text> @Html.RouteLink(topic.CustomerName, "CustomerProfile", new { Id = topic.CustomerId })
+                                @T("Forum.Author")<text>:</text> @Html.RouteLink(topic.CustomerName, "CustomerProfile", new { Id = topic.CustomerId })
                                 }
                                 else
                                 {
-                                    @T("Forum.Author")<text>:</text> @topic.CustomerName
+                                @T("Forum.Author")<text>:</text> @topic.CustomerName
                                 }
-                            } </span>
+                            }
+                        </div>
                     </td>
                     <td class="replies">
                         @topic.NumReplies

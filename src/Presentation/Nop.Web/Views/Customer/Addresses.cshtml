@@ -30,7 +30,7 @@
                             <tbody>
                                 <tr>
                                     <td>
-                                        <b>@address.FirstName @address.LastName</b>
+                                        <strong>@address.FirstName @address.LastName</strong>
                                     </td>
                                     <td class="buttons">
                                         <input type="button" class="editaddressbutton" onclick="location.href='@Url.RouteUrl("CustomerAddressEdit", new { addressId = address.Id })'" value='@T("Common.Edit")' />
@@ -40,36 +40,38 @@
                                 <tr>
                                     <td colspan="2">
                                         <div>
-                                            @address.FirstName @address.LastName<br />
-                                            <div>
+                                            <div class="name">
+                                                @address.FirstName @address.LastName
+                                            </div>
+                                            <div class="email">
                                                 @Html.LabelFor(model => model.Addresses[i].Email):
                                                 @address.Email
                                             </div>
-                                            <div>
+                                            <div class="phone">
                                                 @Html.LabelFor(model => model.Addresses[i].PhoneNumber):
                                                 @address.PhoneNumber
                                             </div>
-                                            <div>
+                                            <div class="fax">
                                                 @Html.LabelFor(model => model.Addresses[i].FaxNumber):
                                                 @address.FaxNumber</div>
                                             @if (!String.IsNullOrEmpty(address.Company))
                                             {
-                                                <div>@address.Company</div>
+                                                <div class="company">@address.Company</div>
                                             }
-                                            <div>
+                                            <div class="address1">
                                                 @address.Address1</div>
                                             @if (!String.IsNullOrEmpty(address.Address2))
                                             {
-                                                <div>
+                                                <div class="address2">
                                                     @address.Address2</div>
                                             }
-                                            <div>
+                                            <div class="city-state-zip">
                                                 @address.City,
                                                 @address.StateProvinceName
                                                 @address.ZipPostalCode</div>
                                             @if (!String.IsNullOrEmpty(address.CountryName))
                                             {
-                                                <div>
+                                                <div class="country">
                                                     @address.CountryName
                                                 </div>
                                             }

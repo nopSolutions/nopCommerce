@@ -12,9 +12,12 @@
     <div class="prices">
         @if (!String.IsNullOrEmpty(Model.ProductPrice.OldPrice))
         {
-            <span class="oldproductPrice">@Model.ProductPrice.OldPrice</span>
-            <br />
+            <div class="old-product-price">
+                <span class="price">@Model.ProductPrice.OldPrice</span>
+            </div>
         }
-        <span class="productPrice">@Model.ProductPrice.Price</span>
+        <div class="product-price">
+            <span class="price">@Model.ProductPrice.Price</span>
+        </div>
     </div>
 </a>

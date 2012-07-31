@@ -392,8 +392,9 @@ ul.languagelist li:hover{cursor:pointer;}
 .product-grid .product-item .add-info{vertical-align:bottom;text-align:right;width:250px;height:85px;position:relative;}
 .product-grid .product-item .add-info .prices{text-align:right;vertical-align:middle;position:absolute;bottom:15px;right:10px;direction:rtl;}
 .product-grid .product-item .add-info .buttons{vertical-align:middle;position:absolute;bottom:15px;left:10px;text-align:left;}
-.product-grid .product-item .add-info .prices .productPrice{color:green;}
-.product-grid .product-item .add-info .prices .oldproductPrice{color:Red;text-decoration:line-through;}
+.product-grid .product-item .add-info .prices .product-price,.product-grid .product-item .add-info .prices .old-product-price{margin:0px;}
+.product-grid .product-item .add-info .prices .product-price .price{color:green;}
+.product-grid .product-item .add-info .prices .old-product-price .price{color:Red;text-decoration:line-through;}
 .product-grid .item-box{padding-bottom:10px;text-align:center;vertical-align:text-top;}
 .product-grid .small-product-item{text-align:center;margin:10px;width:150px;height:150px;}
 .product-grid .small-product-item .product-title{margin-bottom:5px;margin-top:5px;text-align:center;font-weight:700;font-size:12px;}
@@ -408,8 +409,9 @@ ul.languagelist li:hover{cursor:pointer;}
 .product-list .product-item .description{padding:0 0 0 10px;margin:10px 150px 0 140px;text-align:right;border-left:solid 1px #e3e3e3;color:#555;}
 .product-list .product-item .add-info{float:right;text-align:right;position:absolute;bottom:20px;right:5px;}
 .product-list .product-item .prices{direction:rtl;}
-.product-list .product-item .prices .productPrice{color:green;}
-.product-list .product-item .prices .oldproductPrice{color:Red;text-decoration:line-through;}
+.product-list .product-item .prices .product-price,.product-list .product-item .prices .old-product-price{margin:0px;}
+.product-list .product-item .prices .product-price .price{color:green;}
+.product-list .product-item .prices .old-product-price .price{color:Red;text-decoration:line-through;}
 .product-list .product-item .buttons{padding-top:20px;}
 /* FEATURED PRODUCTS */
 .featured-product-grid{margin-bottom:15px;margin-left:auto;margin-right:auto;width:520px;text-align:center;}
@@ -423,8 +425,9 @@ ul.languagelist li:hover{cursor:pointer;}
 .featured-product-grid .product-item .add-info{vertical-align:bottom;text-align:right;width:250px;height:85px;position:relative;}
 .featured-product-grid .product-item .add-info .prices{text-align:right;vertical-align:middle;position:absolute;bottom:15px;right:10px;}
 .featured-product-grid .product-item .add-info .buttons{vertical-align:middle;position:absolute;bottom:15px;left:10px;text-align:left;}
-.featured-product-grid .product-item .add-info .prices .productPrice{color:green;}
-.featured-product-grid .product-item .add-info .prices .oldproductPrice{color:Red;text-decoration:line-through;}
+.featured-product-grid .product-item .add-info .prices .product-price,.featured-product-grid .product-item .add-info .prices .old-product-price{margin:0px;}
+.featured-product-grid .product-item .add-info .prices .product-price .price{color:green;}
+.featured-product-grid .product-item .add-info .prices .old-product-price .price{color:Red;text-decoration:line-through;}
 /* PAGES */
 .category-page,.manufacturer-page,.manufacturerlist-page,.producttag-page,.producttagall-page{text-align:right;}
 .category-page .page-title,.manufacturerlist-page .page-title,.manufacturer-page .page-title,.producttag-page .page-title,.producttagall-page .page-title{border-bottom:0 none;}
@@ -462,7 +465,7 @@ ul.languagelist li:hover{cursor:pointer;}
 .compare-products{text-align:right;}
 .compare-products .page-title{border-bottom:0 none;}
 .compare-products .body{margin:0;padding:0;font-size:11px;color:#555;background-color:inherit;}
-.compare-products-table{width:100%;}
+.compare-products-table{width:100%;border:0px;border-collapse:collapse;border-spacing:0;empty-cells:show;}
 .compare-products-table .remove-button{margin:5px 5px 5px 0;}
 .compare-products-table tr.product-name{background-color:#CCC;font-weight:700;}
 .compare-products-table td{border-width:1px;border-color:#BFBFBF;border-style:solid;padding:3px;vertical-align:top;}
@@ -663,7 +666,7 @@ ul.languagelist li:hover{cursor:pointer;}
 .product-details-info .picture{float:right;width:300px;margin-top:25px;margin-bottom:15px;}
 .product-details-info .picture .picturethumbs{margin-top:10px;}
 .product-details-info .overview{float:left;width:230px;margin-right:15px;margin-top:25px;padding:5px;border:dashed 1px #d3d3d3;}
-.product-details-info .overview .productname{color:#f93;font-size:1.3em;margin-bottom:.3em;}
+.product-details-info .overview .product-name{color:#f93;font-size:1.3em;margin-bottom:1em;}
 .product-details-info .overview .shortdescription,.product-details-info .overview .manufacturers,.product-details-info .overview .sku,.product-details-info .overview .manufacturerpartnumber,.product-details-info .overview .stock,.product-details-info .overview .gtin{color:#555;margin-bottom:.3em;font-size:1.1em;}
 .backinstocksubscription{margin-top:10px;margin-bottom:10px;}
 .product-details-info .fulldescription{border-top:solid 1px #d3d3d3;clear:both;color:#555;margin-bottom:.3em;}
@@ -698,17 +701,17 @@ ul.languagelist li:hover{cursor:pointer;}
 .product-variant-line{clear:both;margin-bottom:20px;padding-bottom:20px;margin-top:10px;border-bottom:solid 1px #d3d3d3;}
 .product-variant-line .picture{float:right;width:300px;margin-bottom:15px;}
 .product-variant-line .overview{float:left;width:200px;margin-right:25px;}
-.product-variant-line .overview .productname{color:#f93;font-size:1.3em;margin-bottom:.3em;}
+.product-variant-line .overview .product-variant-name{color:#f93;font-size:1.3em;margin-bottom:.3em;}
 .product-variant-line .description{clear:both;color:#555;margin-bottom:.3em;}
 .product-details-page .downloadsample{clear:both;color:#555;margin-top:15px;margin-bottom:15px;}
 .product-details-page .downloadsample .downloadsamplebutton{-x-system-font:none!important;background:#F1F1F1 url(images/btn_download_bg.gif) repeat-x scroll 0 100%;border:1px solid #B5B5B5;color:#444;cursor:pointer;font-family:arial,sans-serif!important;font-size:11px!important;font-size-adjust:none!important;font-stretch:normal!important;font-style:normal!important;font-variant:normal!important;font-weight:700!important;line-height:normal!important;overflow:visible;padding:1px 5px;text-align:center;text-transform:uppercase;vertical-align:middle;width:auto;}
-.product-variant-line .price{float:right;padding-top:10px;margin-left:30px;}
-.product-essential .price{margin-top:15px;margin-bottom:15px;}
-.product-variant-line .price .productPrice,.product-essential .price .productPrice{color:green;}
-.product-variant-line .price .oldProductPrice,.product-essential .price .oldProductPrice{color:red;text-decoration:line-through;}
-.product-variant-line .add-info{padding-top:10px;}
-.product-variant-line .add-info .enter-price-input,.product-essential .add-info .enter-price-input{width:60px;}
-.product-variant-line .add-info .qty-input,.product-essential .add-info .qty-input{width:40px;}
+.product-variant-line .prices{float:right;padding-top:10px;margin-left:30px;}
+.product-essential .prices{margin-top:15px;margin-bottom:15px;}
+.product-variant-line .prices .product-price,.product-essential .prices .product-price{color:green;}
+.product-variant-line .prices .old-product-price,.product-essential .prices .old-product-price{color:red;text-decoration:line-through;}
+.product-variant-line .add-to-cart{padding-top:10px;}
+.product-variant-line .add-to-cart .enter-price-input,.product-essential .add-to-cart .enter-price-input{width:60px;}
+.product-variant-line .add-to-cart .qty-input,.product-essential .add-to-cart .qty-input{width:40px;}
 .product-variant-line .attributes{}
 .product-variant-line .attributes .textprompt{font-weight:bold;}
 .product-variant-line .attributes .textbox{width:300px;}
@@ -737,12 +740,12 @@ ul.languagelist li:hover{cursor:pointer;}
 .producttags-box .producttags-list .producttags-wrapper{float:right;}
 .tier-prices{text-align:center;margin-bottom:10px;}
 .tier-prices .prices-header{background:#3a3a3a;color:#FFF;padding:3px;font-weight:700;}
-.tier-prices .prices table{width:100%;border-collapse:collapse;text-align:center;vertical-align:middle;background:#f3f3f3;}
-.tier-prices .prices .prices-table td{padding:0;}
-.tier-prices .prices .item-table td{border-bottom:solid 3px #d7d7d7;padding-top:3px;padding-bottom:3px;font-weight:700;}
-.tier-prices .prices .item-table .item-price{color:Green;}
-.tier-prices .prices .header-table td{border-bottom:solid 3px #d7d7d7;padding-top:3px;padding-bottom:3px;font-weight:700;}
-.tier-prices .prices .prices-table .field-header{font-weight:700;text-align:center;}
+.tier-prices .prices-list table{width:100%;border-collapse:collapse;text-align:center;vertical-align:middle;background:#f3f3f3;}
+.tier-prices .prices-list .prices-table td{padding:0;}
+.tier-prices .prices-list .item-table td{border-bottom:solid 3px #d7d7d7;padding-top:3px;padding-bottom:3px;font-weight:700;}
+.tier-prices .prices-list .item-table .item-price{color:Green;}
+.tier-prices .prices-list .header-table td{border-bottom:solid 3px #d7d7d7;padding-top:3px;padding-bottom:3px;font-weight:700;}
+.tier-prices .prices-list .prices-table .field-header{font-weight:700;text-align:center;}
 /* SLIM BOX (PRODUCT IMAGES) */
 #lbOverlay{position:fixed;z-index:9999;left:0;top:0;width:100%;height:100%;background-color:#000;cursor:pointer;}
 #lbCenter,#lbBottomContainer{position:absolute;z-index:9999;overflow:hidden;background-color:#fff;}
@@ -842,8 +845,7 @@ ul.languagelist li:hover{cursor:pointer;}
 .forum table.topics tr.topic td.topicname{text-align:right;width:55%;}
 .forum table.topics tr.topic td.topicname .topictype{font-size:.9em;line-height:18px;}
 .forum table.topics tr.topic td.topicname .topictitle{font-weight:700;font-size:1.1em;line-height:18px;}
-.forum table.topics tr.topic td.topicname .topicstarter{font-size:.9em;color:#555;}
-.forum table.topics tr.topic td.topicname .topicspager{font-size:.9em;color:#555;}
+.forum table.topics tr.topic td.topicname .topicstarter,.forum table.topics tr.topic td.topicname .topicspager{font-size:.9em;color:#555;margin:1px 0px 1px 0px;}
 .forum table.topics tr.topic td.lastpost{font-size:.8em;color:#555;}
 .forum table.topics tr.topic .post{text-align:right;width:36px;height:36px;background:url(images/ico-forum-post.gif) no-repeat 40% 40%;}
 .forum table.topics tr.topic .postannoucement,.forum table.topics tr.topic .poststicky{text-align:right;width:36px;height:36px;background:url(images/ico-forum-post-high.gif) no-repeat 40% 40%;}
@@ -920,7 +922,7 @@ ul.languagelist li:hover{cursor:pointer;}
 .forumsearch table.topics tr.topic td.topicname{text-align:right;width:55%;}
 .forumsearch table.topics tr.topic td.topicname .topictype{font-size:.9em;line-height:18px;}
 .forumsearch table.topics tr.topic td.topicname .topictitle{font-weight:700;font-size:1.1em;line-height:18px;}
-.forumsearch table.topics tr.topic td.topicname .topicstarter{font-size:.9em;color:#555;}
+.forumsearch table.topics tr.topic td.topicname .topicstarter,.forumsearch table.topics tr.topic td.topicname .topicspager{font-size:.9em;color:#555;margin:1px 0px 1px 0px;}
 .forumsearch table.topics tr.topic td.lastpost{font-size:.8em;color:#555;}
 .forumsearch table.topics tr.topic .post{text-align:right;width:36px;height:36px;background:url(images/ico-forum-post.gif) no-repeat 40% 40%;}
 .forumsearch table.topics tr.topic .postannoucement,.forumsearch table.topics tr.topic .poststicky{text-align:right;width:36px;height:36px;background:url(images/ico-forum-post-high.gif) no-repeat 40% 40%;}
@@ -967,8 +969,7 @@ ul.languagelist li:hover{cursor:pointer;}
 .activediscussions table.topics tr.topic td{border-bottom:1px solid #c5c5c5;vertical-align:middle;padding-right:3px;}
 .activediscussions table.topics tr.topic td.topicname{text-align:right;width:55%;}
 .activediscussions table.topics tr.topic td.topicname .topictitle{font-weight:700;font-size:1.1em;line-height:18px;}
-.activediscussions table.topics tr.topic td.topicname .topicstarter{font-size:.9em;color:#555;}
-.activediscussions table.topics tr.topic td.topicname .topicspager{font-size:.9em;color:#555;}
+.activediscussions table.topics tr.topic td.topicname .topicstarter,.activediscussions table.topics tr.topic td.topicname .topicspager{font-size:.9em;color:#555;margin:1px 0px 1px 0px;}
 .activediscussions table.topics tr.topic td.lastpost{font-size:.8em;color:#555;}
 /* BBCODES */
 pre{white-space:pre-wrap;/* css-3 */white-space:0;/* Mozilla, since 1999 */white-space:0;/* Opera 4-6 */white-space:0;/* Opera 7 */word-wrap:break-word;/* Internet Explorer 5.5+ */}

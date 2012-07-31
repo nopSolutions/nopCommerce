@@ -37,9 +37,10 @@
         <div class="search-input">
             @using (Html.BeginRouteForm("Search", FormMethod.Get))
             {
-                @Html.TextBox("searchterms", null, new { @class = "forumsearchtext" })
-                <input type="submit" class="forumsearchbutton" value="@T("Forum.SearchButton")" />
-                <br />
+                <div>
+                    @Html.TextBox("searchterms", null, new { @class = "forumsearchtext" })
+                    <input type="submit" class="forumsearchbutton" value="@T("Forum.SearchButton")" />
+                </div>
                 <table class="basic-search">
                     <tbody>
                         <tr>
@@ -176,25 +177,25 @@
                                         <span class="topictype">@topicText</span>
                                     }
                                     @Html.RouteLink(@topic.Subject, "TopicSlug", new { id = @topic.Id, slug = @topic.SeName }, new { @class = "topictitle" })
-                                    <br />
                                     @if (@topic.NumPosts > Model.PostsPageSize)
                                     {
-                                        <span class="topicspager">
+                                        <div class="topicspager">
                                             @Html.ForumTopicSmallPager(topic)
-                                        </span>
-                                        <br />
-                                    } <span class="topicstarter">
+                                        </div>
+                                    }
+                                    <div class="topicstarter">
                                         @if (@topic.CustomerId > 0)
                                         {
                                             if (topic.AllowViewingProfiles && !topic.IsCustomerGuest)
                                             {
-                                                @T("Forum.Author")<text>:</text> @Html.RouteLink(topic.CustomerName, "CustomerProfile", new { Id = topic.CustomerId })
+                                            @T("Forum.Author")<text>:</text> @Html.RouteLink(topic.CustomerName, "CustomerProfile", new { Id = topic.CustomerId })
                                             }
                                             else
                                             {
-                                                @T("Forum.Author")<text>:</text> @topic.CustomerName
+                                            @T("Forum.Author")<text>:</text> @topic.CustomerName
                                             }
-                                        } </span>
+                                        }
+                                    </div>
                                 </td>
                                 <td class="replies">
                                     @topic.NumReplies

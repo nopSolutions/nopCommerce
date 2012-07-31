@@ -58,8 +58,9 @@
                                         <a href="@Url.RouteUrl("Product", new { productId = item.ProductId, SeName = item.ProductSeName })" title="View details">@item.ProductName</a>
                                         @if (!String.IsNullOrEmpty(item.ProductAttributes))
                                         {
-                                            <br />
-                                            @Html.Raw(item.ProductAttributes)
+                                            <div class="attributes">
+                                                @Html.Raw(item.ProductAttributes)
+                                            </div>
                                         }
                                     </td>
                                     <td class="a-center">
@@ -89,7 +90,9 @@
                 }
                 else
                 {
-                    @T("DownloadableProducts.NoItems")
+                    <div class="no-data">
+                        @T("DownloadableProducts.NoItems")
+                    </div>
                 }
             </div>
         </div>

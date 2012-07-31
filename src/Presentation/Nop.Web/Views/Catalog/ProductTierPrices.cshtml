@@ -15,7 +15,7 @@
         <div class="prices-header">
             @T("Products.TierPrices")
         </div>
-        <div class="prices">
+        <div class="prices-list">
             <table class="prices-table">
                 <tr>
                     <td>
@@ -38,8 +38,7 @@
                             <table class="item-table">
                                 <tr>
                                     <td class="item-quantity">
-                                        @tierPrice.Quantity
-                                        <text>+</text>
+                                        @(tierPrice.Quantity)+
                                     </td>
                                 </tr>
                                 <tr>

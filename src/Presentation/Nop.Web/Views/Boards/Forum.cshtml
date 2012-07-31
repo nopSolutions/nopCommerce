@@ -22,29 +22,30 @@
     @Html.Action("ForumBreadcrumb", new { forumId = Model.Id })
     <div class="top">
         <div class="foruminfo">
-            <span class="forumname">
-                @Model.Name</span>
-            <br />
-            <span class="forumdescription">
-                @Model.Description</span>
-            <br />
+            <div class="forumname">
+                @Model.Name</div>
+            <div class="forumdescription">
+                @Model.Description</div>
             @if (Model.ForumFeedsEnabled)
-            {            
-                <a href="@Url.RouteUrl("ForumRSS", new { id = @Model.Id })">
-                    <img title="@T("Forum.ForumRSSLinkTitle")" src="@Url.Content("~/content/images/icon_rss.gif")" alt="@T("Forum.RSS")" /></a>
+            {
+                <div class="rss">
+                    <a href="@Url.RouteUrl("ForumRSS", new { id = @Model.Id })">
+                        <img title="@T("Forum.ForumRSSLinkTitle")" src="@Url.Content("~/content/images/icon_rss.gif")" alt="@T("Forum.RSS")" /></a>
+                </div>
             }
         </div>
         <div class="actions">
-            @Html.RouteLink(@T("Forum.NewTopic").ToString(), "TopicCreate", new { id = @Model.Id }, new { @class = "newtopic" })
-            @if (Model.IsCustomerAllowedToSubscribe)
-            {
-                @Ajax.RouteLink(Model.WatchForumText,
+            <div>
+                @Html.RouteLink(@T("Forum.NewTopic").ToString(), "TopicCreate", new { id = @Model.Id }, new { @class = "newtopic" })
+                @if (Model.IsCustomerAllowedToSubscribe)
+                {
+                    @Ajax.RouteLink(Model.WatchForumText,
                                 "ForumWatch",
                                 new { id = @Model.Id },
                                 new AjaxOptions { HttpMethod = "Post", OnSuccess = "handleForumWatch" },
                                 new { id = "watchforum", @class = "watchforum" })
-            }
-            <br />
+                }
+            </div>
             @Html.Partial("_SearchBox")
         </div>
     </div>
@@ -120,27 +121,25 @@
                             <span class="topictype">@topicText</span>
                         }
                         @Html.RouteLink(@topic.Subject, "TopicSlug", new { id = @topic.Id, slug = @topic.SeName }, new { @class = "topictitle" })
-                        <br />
                         @if (@topic.NumPosts > Model.PostsPageSize)
                         {   
-                            <span class="topicspager">
+                            <div class="topicspager">
                                 @Html.ForumTopicSmallPager(topic)
-                            </span>
-                            <br />
+                            </div>
                         }
-                        <span class="topicstarter">
+                        <div class="topicstarter">
                             @if (@topic.CustomerId > 0)
                             {
                                 if (topic.AllowViewingProfiles && !topic.IsCustomerGuest)
                                 {
-                                    @T("Forum.Author")<text>:</text> @Html.RouteLink(topic.CustomerName, "CustomerProfile", new { Id = topic.CustomerId })
+                                @T("Forum.Author")<text>:</text> @Html.RouteLink(topic.CustomerName, "CustomerProfile", new { Id = topic.CustomerId })
                                 }
                                 else
                                 {
-                                    @T("Forum.Author")<text>:</text> @topic.CustomerName
+                                @T("Forum.Author")<text>:</text> @topic.CustomerName
                                 }
                             }
-                        </span>
+                        </div>
                     </td>
                     <td class="replies">
                         @topic.NumReplies

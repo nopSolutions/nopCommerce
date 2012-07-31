@@ -43,9 +43,8 @@
             {
                 if (!Model.AlreadySubscribed)
                 {
-                <div>@T("BackInStockSubscriptions.Tooltip")</div>
+                <div class="tooltip">@T("BackInStockSubscriptions.Tooltip")</div>
                 }
-                <br />
                 <input type="submit" id="backinstocknotifyme" name="backinstocknotifyme" value="@(Model.AlreadySubscribed ? @T("BackInStockSubscriptions.Unsubscribe").Text : @T("BackInStockSubscriptions.NotifyMe").Text)" />
 
                 <script type="text/javascript">

@@ -19,7 +19,7 @@
         <div class="forum-subscriptions-box">
             @if (Model.ForumSubscriptions.Count > 0)
             {
-                <div>
+                <div class="description">
                     @T("Account.ForumSubscriptions.Description")
                 </div>
                 <ul data-role="listview" data-inset="true" data-filter="false">
@@ -53,7 +53,9 @@
             }
             else
             {
-                @T("Account.ForumSubscriptions.NoSubscriptions")
+                <div class="no-data">
+                    @T("Account.ForumSubscriptions.NoSubscriptions")
+                </div>
             }
         </div>
     </div>

@@ -28,16 +28,19 @@
         <div class="prices">
             @if (!String.IsNullOrEmpty(Model.ProductPrice.OldPrice))
             {
-                <span class="oldproductPrice">@Model.ProductPrice.OldPrice</span>
-                <br />
+                <div class="old-product-price">
+                    <span class="price">@Model.ProductPrice.OldPrice</span>
+                </div>
             }
-            <span class="productPrice">@Model.ProductPrice.Price</span>
+            <div class="product-price">
+                <span class="price">@Model.ProductPrice.Price</span>
+            </div>
         </div>
         <div class="buttons">
             <input type="button" value="@T("Products.Details")" class="productlistproductdetailbutton" onclick="setLocation('@Url.RouteUrl("Product", new { productId = Model.Id, SeName = Model.SeName })')" />
             @if (!Model.ProductPrice.DisableBuyButton)
             {
-                <br />                
+                <br />
                 <input type="button" value="@(Model.ProductPrice.AvailableForPreOrder ? T("ShoppingCart.PreOrder") : T("ShoppingCart.AddToCart"))" class="productlistaddtocartbutton" onclick="AjaxCart.addproducttocart('@addtocartlink');return false;" />
             }
         </div>

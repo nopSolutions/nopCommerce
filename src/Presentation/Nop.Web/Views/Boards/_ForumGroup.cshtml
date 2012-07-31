@@ -28,12 +28,11 @@
                     <div />
                 </td>
                 <td class="forumname">
-                    <span class="forumtitle">
+                    <div class="forumtitle">
                         @Html.RouteLink(@forum.Name, "ForumSlug", new { id = @forum.Id, slug = @forum.SeName })
-                    </span>
-                    <br />
-                    <span class="forumdescription">@forum.Description
-                    </span>
+                    </div>
+                    <div class="forumdescription">@forum.Description
+                    </div>
                 </td>
                 <td class="topics">@forum.NumTopics
                 </td>

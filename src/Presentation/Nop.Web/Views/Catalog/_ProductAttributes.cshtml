@@ -139,7 +139,7 @@
                 @if (!string.IsNullOrEmpty(attribute.Description))
                 {
                     <br />
-                    <span>@Html.Raw(attribute.Description)</span>
+                    <span class="description">@Html.Raw(attribute.Description)</span>
                 }
                 @if (attribute.AttributeControlType == AttributeControlType.TextBox ||
                     attribute.AttributeControlType == AttributeControlType.FileUpload)

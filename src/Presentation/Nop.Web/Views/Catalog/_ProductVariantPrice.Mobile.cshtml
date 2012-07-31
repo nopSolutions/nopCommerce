@@ -8,21 +8,21 @@
 @using Nop.Web.Framework;
 @using Nop.Services.Customers;
 @using System.Text.RegularExpressions;
-<div class="price">
+<div class="prices">
     @if (Model.CustomerEntersPrice)
     {
         /*display nothing*/
     }
     else if (Model.CallForPrice)
     {
-        <span class="productPrice">@T("Products.CallForPrice")</span>
+        <span class="product-price">@T("Products.CallForPrice")</span>
     }
     else
     {
         if (!String.IsNullOrWhiteSpace(Model.OldPrice))
         {
         @T("Products.Price.OldPrice")<text>:</text>
-        <span class="oldProductPrice">@Model.OldPrice</span>
+        <span class="old-product-price">@Model.OldPrice</span>
         <br />
         }
         if (!String.IsNullOrWhiteSpace(Model.OldPrice) ||
@@ -35,7 +35,7 @@
         <span 
         @if (String.IsNullOrWhiteSpace(Model.PriceWithDiscount))
         {
-            <text>class="productPrice"</text>
+            <text>class="product-price"</text>
         }
         >
             @Html.Raw(Model.Price)
@@ -47,7 +47,7 @@
         {
         <br />
         @T("Products.Price.WithDiscount")<text>:</text>
-        <span class="productPrice">
+        <span class="product-price">
             @Html.Raw(Model.PriceWithDiscount)
         </span>
         }

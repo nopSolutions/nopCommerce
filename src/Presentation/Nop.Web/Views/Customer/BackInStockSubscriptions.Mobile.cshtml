@@ -18,7 +18,7 @@
         <div class="backinstock-subscriptions-box">
             @if (Model.Subscriptions.Count > 0)
             {
-                <div>
+                <div class="description">
                     @T("Account.BackInStockSubscriptions.Description")
                 </div>
                 <ul data-role="listview" data-inset="true" data-filter="false">
@@ -45,7 +45,9 @@
             }
             else
             {
-                @T("Account.BackInStockSubscriptions.NoSubscriptions")
+                <div class="no-data">
+                    @T("Account.BackInStockSubscriptions.NoSubscriptions")
+                </div>
             }
         </div>
     </div>

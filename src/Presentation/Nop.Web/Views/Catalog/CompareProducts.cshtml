@@ -39,9 +39,7 @@
         @if (Model.Products.Count > 0)
         {
             <a href="#" onclick="setLocation('@Url.RouteUrl("ClearCompareList")')">@T("Products.Compare.Clear")</a>
-            <br />
-            <br />
-            <table cellpadding="0" cellspacing="0" border="0" class="compare-products-table">
+            <table class="compare-products-table">
                 <tbody>
                     <tr>
                         <td>
@@ -53,8 +51,8 @@
                                 <div>
                                     <p class="a-center">
                                         <input type="submit" value="@T("Common.Remove")" title="@T("Common.Remove")" class="remove-button" onclick="setLocation('@Url.RouteUrl("RemoveProductFromCompareList", new { productId = product.Id })')" />
-                                        <br />
-                                        <br />
+                                    </p>
+                                    <p class="a-center">
                                         <img alt="@product.DefaultPictureModel.AlternateText" src="@product.DefaultPictureModel.ImageUrl" title="@product.DefaultPictureModel.Title" />
                                     </p>
                                 </div>
@@ -72,7 +70,7 @@
                             </td>
                         }
                     </tr>
-                    <tr class="productPrice">
+                    <tr class="product-price">
                         <td>
                             @T("Products.Compare.Price")
                         </td>

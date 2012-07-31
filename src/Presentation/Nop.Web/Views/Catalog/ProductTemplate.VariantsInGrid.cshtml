@@ -34,10 +34,9 @@
                 @Html.Partial("_ProductDetailsPictures", Model)
                 @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "productdetails_after_pictures" })
                 <div class="overview">
-                    <h1 class="productname">
+                    <h1 class="product-name">
                         @Model.Name
                     </h1>
-                    <br />
                     <div class="shortdescription">
                         @Html.Raw(Model.ShortDescription)
                     </div>

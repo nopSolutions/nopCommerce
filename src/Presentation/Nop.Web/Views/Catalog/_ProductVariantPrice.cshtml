@@ -22,21 +22,21 @@
     </script>
 
 }
-<div class="price">
+<div class="prices">
     @if (Model.CustomerEntersPrice)
     {
         /*display nothing*/
     }
     else if (Model.CallForPrice)
     {
-        <span class="productPrice">@T("Products.CallForPrice")</span>
+        <span class="product-price">@T("Products.CallForPrice")</span>
     }
     else
     {
         if (!String.IsNullOrWhiteSpace(Model.OldPrice))
         {
         @T("Products.Price.OldPrice")<text>:</text>
-        <span class="oldProductPrice">@Model.OldPrice</span>
+        <span class="old-product-price">@Model.OldPrice</span>
         <br />
         }
         if (!String.IsNullOrWhiteSpace(Model.OldPrice) ||
@@ -49,7 +49,7 @@
         <span 
         @if (String.IsNullOrWhiteSpace(Model.PriceWithDiscount))
         {
-            <text>class="productPrice"</text>
+            <text>class="product-price"</text>
         }
         >
             @if (Model.DynamicPriceUpdate && !Model.HidePrices && String.IsNullOrWhiteSpace(Model.PriceWithDiscount))
@@ -68,7 +68,7 @@
             {
         <br />
         @T("Products.Price.WithDiscount")<text>:</text>
-        <span class="productPrice">
+        <span class="product-price">
             @if (Model.DynamicPriceUpdate && !Model.HidePrices)
             {
                 @Html.Raw(Regex.Replace(Model.PriceWithDiscount, pattern, replacement))

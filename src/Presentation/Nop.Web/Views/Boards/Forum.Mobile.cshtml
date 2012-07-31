@@ -17,11 +17,10 @@
     @Html.Partial("_SearchBox")
     <div class="top">
         <div class="foruminfo">
-            <span class="forumname">
-                @Model.Name</span>
-            <br />
-            <span class="forumdescription">
-                @Model.Description</span>
+            <div class="forumname">
+                @Model.Name</div>
+            <div class="forumdescription">
+                @Model.Description</div>
         </div>
         <div class="actions">
             <a href="@Url.RouteUrl("TopicCreate", new { id = @Model.Id })" class="newtopic" data-role="button">@T("Forum.NewTopic")</a>

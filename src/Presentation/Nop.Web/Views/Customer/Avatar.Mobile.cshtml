@@ -27,8 +27,9 @@
                 <div class="section-body">
                     @if (!String.IsNullOrEmpty(Model.AvatarUrl))
                     {
-                        <img src="@(Model.AvatarUrl)" alt="avatar" />
-                        <br />
+                        <div class="image">
+                            <img src="@(Model.AvatarUrl)" alt="avatar" />
+                        </div>
                     }
                     <input name="uploadedFile" type="file" />
                 </div>

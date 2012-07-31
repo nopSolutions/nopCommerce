@@ -159,7 +159,7 @@
                                     }
                                 </td>
                                 <td class="nobr">
-                                    <span class="productPrice">@item.UnitPrice</span>
+                                    <span class="product-unit-price">@item.UnitPrice</span>
                                 </td>
                                 <td class="nobr">
                                     @if (Model.IsEditable)
@@ -184,7 +184,7 @@
                                     }
                                 </td>
                                 <td class="nobr end">
-                                    <span class="productPrice">@item.SubTotal</span>
+                                    <span class="product-subtotal">@item.SubTotal</span>
                                     @if (!String.IsNullOrEmpty(item.Discount))
                                     {
                                         <br />

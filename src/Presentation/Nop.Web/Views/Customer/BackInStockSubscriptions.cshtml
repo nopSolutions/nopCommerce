@@ -21,9 +21,9 @@
     <div class="body">
         @if (Model.Subscriptions.Count > 0)
         {
-            @T("Account.BackInStockSubscriptions.Description")
-            <br />
-            <br />
+            <div class="description">
+                @T("Account.BackInStockSubscriptions.Description")
+            </div>
             <script type="text/javascript">
                 $(document).ready(function () {
 
@@ -85,7 +85,9 @@
         }
         else
         {
-            @T("Account.BackInStockSubscriptions.NoSubscriptions")
+            <div class="no-data">
+                @T("Account.BackInStockSubscriptions.NoSubscriptions")
+            </div>
         }
     </div>
 </div>

@@ -8,24 +8,27 @@
 @using Nop.Services.Seo;
 @if (@Model.Id > 0)
 {
-    <div class="LastPost">
-        @Model.PostCreatedOnStr<br />
+    <div class="lastpost">
+        <div class="createdon">@Model.PostCreatedOnStr</div>
         @if (Model.ShowTopic)
         {
-            <text>@T("Forum.In"):</text>
-            @Html.RouteLink(Model.ForumTopicSubject, "TopicSlug", new { id = @Model.ForumTopicId, slug = @Model.ForumTopicSeName })
-            <br />
+            <div>
+                <text>@T("Forum.In"):</text>
+                @Html.RouteLink(Model.ForumTopicSubject, "TopicSlug", new { id = @Model.ForumTopicId, slug = @Model.ForumTopicSeName })
+            </div>
         }
         @if (@Model.CustomerId > 0)
         {
-            if (Model.AllowViewingProfiles && !Model.IsCustomerGuest)
-            {
-                @T("Forum.By")<text>:</text> @Html.RouteLink(Model.CustomerName, "CustomerProfile", new { Id = Model.CustomerId })
-            }
-            else
-            {
-                @T("Forum.By")<text>:</text> @Model.CustomerName
-            }
+            <div>
+                @if (Model.AllowViewingProfiles && !Model.IsCustomerGuest)
+                {
+                    @T("Forum.By")<text>:</text> @Html.RouteLink(Model.CustomerName, "CustomerProfile", new { Id = Model.CustomerId })
+                }
+                else
+                {
+                    @T("Forum.By")<text>:</text> @Model.CustomerName
+                }
+            </div>
         }
     </div>
 }
