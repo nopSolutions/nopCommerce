@@ -25,7 +25,7 @@
                         {
                             using (Html.BeginRouteForm("ShoppingCart", FormMethod.Post))
                             {
-                            <input id="removesubtotaldiscount" type="submit" name="removesubtotaldiscount" value="@T("Common.Remove")" />                                    
+                            <input type="submit" name="removesubtotaldiscount" value="@T("Common.Remove")" />                                    
                             }
                         }
                     </td>
@@ -110,7 +110,7 @@
                         {
                             using (Html.BeginRouteForm("ShoppingCart", FormMethod.Post))
                             {
-                                <input id="removeordertotaldiscount" type="submit" name="removeordertotaldiscount" value="@T("Common.Remove")" />
+                                <input type="submit" name="removeordertotaldiscount" value="@T("Common.Remove")" />
                             }
                         }
                     </td>
@@ -131,8 +131,8 @@
                         {
                             using (Html.BeginRouteForm("ShoppingCart", FormMethod.Post))
                             {
-                                <input id="removegiftcard" type="submit" name="removegiftcard" value="@T("Common.Remove")" />
-                                <input type="hidden" id="giftcardid" name="giftcardid" value="@gc.Id" />
+                                <input type="submit" name="removegiftcard" value="@T("Common.Remove")" />
+                                <input type="hidden" name="giftcardid" value="@gc.Id" />
                             }
                         }
                     </td>

@@ -175,8 +175,8 @@
             @if (Model.IsEditable)
             {
                 <div class="common-buttons">
-                    <input type="submit" name="updatecart" value="@T("ShoppingCart.UpdateCart")" id="updatecart" class="updatecartbutton" />
-                    <input type="submit" name="continueshopping" value="@T("ShoppingCart.ContinueShopping")" id="continueshopping" class="continueshoppingbutton" />
+                    <input type="submit" name="updatecart" value="@T("ShoppingCart.UpdateCart")" class="button-2 update-cart-button" />
+                    <input type="submit" name="continueshopping" value="@T("ShoppingCart.ContinueShopping")" class="button-2 continue-shopping-button" />
                     <input type="submit" name="startcheckout" value="startcheckout" id="startcheckout"
                         style="display: none;" />
                 </div>                    
@@ -269,7 +269,7 @@
                                             }
                                         }
                             </script>
-                            <input type="submit" name="checkout" value="@T("Checkout.Button")" id="checkout" class="checkoutbutton" onclick="startcheckout()" />
+                            <input type="submit" name="checkout" value="@T("Checkout.Button")" id="checkout" class="button-1 checkout-button" onclick="startcheckout()" />
                         }
                     </div>
                     <div class="addon-buttons">

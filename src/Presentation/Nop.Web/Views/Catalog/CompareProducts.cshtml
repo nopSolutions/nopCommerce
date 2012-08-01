@@ -50,7 +50,7 @@
                             <td style="width: @columnWidth;" class="a-center">
                                 <div>
                                     <p class="a-center">
-                                        <input type="submit" value="@T("Common.Remove")" title="@T("Common.Remove")" class="remove-button" onclick="setLocation('@Url.RouteUrl("RemoveProductFromCompareList", new { productId = product.Id })')" />
+                                        <input type="button" value="@T("Common.Remove")" title="@T("Common.Remove")" class="button-2 remove-button" onclick="setLocation('@Url.RouteUrl("RemoveProductFromCompareList", new { productId = product.Id })')" />
                                     </p>
                                     <p class="a-center">
                                         <img alt="@product.DefaultPictureModel.AlternateText" src="@product.DefaultPictureModel.ImageUrl" title="@product.DefaultPictureModel.Title" />

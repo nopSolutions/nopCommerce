@@ -30,10 +30,10 @@
                 <h1>@T("Order.OrderInformation")</h1>
             </div>
             <div class="print-buttons">
-                <a href="@Url.RouteUrl("PrintOrderDetails", new { orderId = Model.Id })" target="_blank" class="orderdetailsprintbutton">@T("Order.Print")</a>
+                <a href="@Url.RouteUrl("PrintOrderDetails", new { orderId = Model.Id })" target="_blank" class="button-2 print-order-button">@T("Order.Print")</a>
                 @if (Model.DisplayPdfInvoice)
                 {
-                    <a href="@Url.RouteUrl("GetOrderPdfInvoice", new { orderId = Model.Id })" class="orderdetailsprintbutton">@T("Order.GetPDFInvoice")</a>
+                    <a href="@Url.RouteUrl("GetOrderPdfInvoice", new { orderId = Model.Id })" class="button-2 pdf-order-button">@T("Order.GetPDFInvoice")</a>
                 }
             </div>
         </div>
@@ -138,7 +138,7 @@
                                 <div class="repost">
                                     @using (Html.BeginRouteForm("OrderDetails", FormMethod.Post))
                                     {
-                                        <input type="submit" name="repost-payment" value="@T("Order.CompletePayment")" id="repost-payment" class="reorderbutton" />
+                                        <input type="submit" name="repost-payment" value="@T("Order.CompletePayment")" class="button-1 re-order-button" />
                                         <p class="hint">
                                             <em>@T("Order.CompletePayment.Hint")</em>
                                         </p>
@@ -306,12 +306,12 @@
                     <div class="actions">
                         @if (Model.IsReOrderAllowed)
                         {
-                            <input type="button" name="reorder" value="@T("Order.Reorder")" id="reorder" class="reorderbutton" onclick="setLocation('@Url.RouteUrl("ReOrder", new { orderId = @Model.Id })')" />
+                            <input type="button" value="@T("Order.Reorder")" class="button-1 re-order-button" onclick="setLocation('@Url.RouteUrl("ReOrder", new { orderId = @Model.Id })')" />
                         }
                         @if (Model.IsReturnRequestAllowed)
                         {
                             <text>&nbsp; &nbsp; &nbsp;</text>
-                            <input type="button" name="returnitems" value="@T("Order.ReturnItems")" id="returnitems" class="returnitemsbutton" onclick="setLocation('@Url.RouteUrl("ReturnRequest", new { orderId = @Model.Id })')" />
+                            <input type="button" value="@T("Order.ReturnItems")" class="button-2 return-items-button" onclick="setLocation('@Url.RouteUrl("ReturnRequest", new { orderId = @Model.Id })')" />
                         }
                     </div>
                 }

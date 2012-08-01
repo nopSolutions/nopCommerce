@@ -9,7 +9,7 @@
                 value="@T("Search.SearchBox.Tooltip")" name="q"  onfocus="if(this.value=='@T("Search.SearchBox.Tooltip")')this.value=''" onblur="if(this.value=='') {this.value = '@T("Search.SearchBox.Tooltip")';}" />&nbsp;
             </li>
             <li>
-                <input type="submit" class="searchboxbutton" id="btn-small-search" value="@T("Search")" @(Model.AutoCompleteEnabled ? Html.Raw(" autocomplete=\"off\"") : null) />
+                <input type="submit" class="button-1 search-box-button" value="@T("Search")" @(Model.AutoCompleteEnabled ? Html.Raw(" autocomplete=\"off\"") : null) />
             </li>
         </ul>
         <script type="text/javascript">

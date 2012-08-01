@@ -44,7 +44,7 @@
                 <div class="tooltip">@T("BackInStockSubscriptions.Tooltip")</div>
                 }
                 <input type="submit" id="backinstocknotifyme" name="backinstocknotifyme" value="@(Model.AlreadySubscribed ? @T("BackInStockSubscriptions.Unsubscribe").Text : @T("BackInStockSubscriptions.NotifyMe").Text)"
-                    class="notifymebutton" />
+                    class="button-1 notify-me-button" />
                 <script type="text/javascript">
                     $(document).ready(function () {
                         $("#backinstocknotifyme").click(function () {

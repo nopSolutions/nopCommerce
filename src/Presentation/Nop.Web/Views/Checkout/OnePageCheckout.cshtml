@@ -41,7 +41,7 @@
 //]]>
                     </script>
                     <div class="buttons" id="billing-buttons-container">
-                        <input type="button" title="@T("Common.Continue")" class="newaddressnextstepbutton" onclick="Billing.save()" value="@T("Common.Continue")" />
+                        <input type="button" title="@T("Common.Continue")" class="button-1 new-address-next-step-button" onclick="Billing.save()" value="@T("Common.Continue")" />
                         <span class="please-wait" id="billing-please-wait" style="display: none;">
                             <img src="@Url.Content("~/Content/Images/ajax_loader_small.gif")"
                                 alt="@T("Common.LoadingNextStep")" title="@T("Common.LoadingNextStep")" />
@@ -74,7 +74,7 @@
                         <div class="buttons" id="shipping-buttons-container">
                             <p class="back-link">
                                 <a href="#" onclick="Checkout.back(); return false;"><small>&laquo; </small>@T("Common.Back")</a></p>
-                            <input type="button" class="newaddressnextstepbutton" title="@T("Common.Continue")" onclick="Shipping.save()" value="@T("Common.Continue")" />
+                            <input type="button" class="button-1 new-address-next-step-button" title="@T("Common.Continue")" onclick="Shipping.save()" value="@T("Common.Continue")" />
                             <span id="shipping-please-wait" class="please-wait" style="display: none;">
                                 <img src="@Url.Content("~/Content/Images/ajax_loader_small.gif")"
                                 alt="@T("Common.LoadingNextStep")" title="@T("Common.LoadingNextStep")" />
@@ -100,7 +100,7 @@
                         <div class="buttons" id="shipping-method-buttons-container">
                             <p class="back-link">
                                 <a href="#" onclick="Checkout.back(); return false;"><small>&laquo; </small>@T("Common.Back")</a></p>
-                            <input type="button" class="shippingmethodnextstepbutton" onclick="ShippingMethod.save()" value="@T("Common.Continue")" />
+                            <input type="button" class="button-1 shipping-method-next-step-button" onclick="ShippingMethod.save()" value="@T("Common.Continue")" />
                             <span id="shipping-method-please-wait" class="please-wait" style="display: none;">
                                 <img src="@Url.Content("~/Content/Images/ajax_loader_small.gif")"
                                 alt="@T("Common.LoadingNextStep")" title="@T("Common.LoadingNextStep")" />
@@ -130,7 +130,7 @@
                     <div class="buttons" id="payment-method-buttons-container">
                         <p class="back-link">
                             <a href="#" onclick="Checkout.back(); return false;"><small>&laquo; </small>@T("Common.Back")</a></p>
-                        <input type="button" class="paymentmethodnextstepbutton" onclick="PaymentMethod.save()" value="@T("Common.Continue")" />
+                        <input type="button" class="button-1 payment-method-next-step-button" onclick="PaymentMethod.save()" value="@T("Common.Continue")" />
                         <span class="please-wait" id="payment-method-please-wait" style="display: none;">
                             <img src="@Url.Content("~/Content/Images/ajax_loader_small.gif")"
                                 alt="@T("Common.LoadingNextStep")" title="@T("Common.LoadingNextStep")" />
@@ -157,7 +157,7 @@
                     <div class="buttons" id="payment-info-buttons-container">
                         <p class="back-link">
                             <a href="#" onclick="Checkout.back(); return false;"><small>&laquo; </small>@T("Common.Back")</a></p>
-                        <input type="button" class="paymentinfonextstepbutton" onclick="PaymentInfo.save()" value="@T("Common.Continue")" />
+                        <input type="button" class="button-1 payment-info-next-step-button" onclick="PaymentInfo.save()" value="@T("Common.Continue")" />
                         <span class="please-wait" id="payment-info-please-wait" style="display: none;">
                             <img src="@Url.Content("~/Content/Images/ajax_loader_small.gif")"
                                 alt="@T("Common.LoadingNextStep")" title="@T("Common.LoadingNextStep")" />
@@ -182,7 +182,7 @@
                     <div class="buttons" id="confirm-order-buttons-container">
                         <p class="back-link">
                             <a href="#" onclick="Checkout.back(); return false;"><small>&laquo; </small>@T("Common.Back")</a></p>
-                        <input type="submit" class="confirmordernextstepbutton" onclick="ConfirmOrder.save()" value="@T("Common.Confirm")" />
+                        <input type="button" class="button-1 confirm-order-next-step-button" onclick="ConfirmOrder.save()" value="@T("Common.Confirm")" />
                         <span class="please-wait" id="confirm-order-please-wait" style="display: none;">
                             <img src="@Url.Content("~/Content/Images/ajax_loader_small.gif")"
                                 alt="@T("Checkout.SubmittingOrder")" title="@T("Checkout.SubmittingOrder")" />

@@ -32,7 +32,7 @@
             <input id="agreementagree" type="checkbox" name="agreementagree" value="@T("DownloadableProducts.IAgree")" />
         </div>
         <div>
-            <input type="submit" id="continuedownloading" class="useragreementbutton" value="@T("Common.Continue")" onclick="setLocation('@Url.RouteUrl("GetDownload", new { opvId = Model.OrderProductVariantGuid, agree = true })')" />
+            <input type="submit" id="continuedownloading" class="button-1 user-agreement-button" value="@T("Common.Continue")" onclick="setLocation('@Url.RouteUrl("GetDownload", new { opvId = Model.OrderProductVariantGuid, agree = true })')" />
         </div>
     </div>
 </div>

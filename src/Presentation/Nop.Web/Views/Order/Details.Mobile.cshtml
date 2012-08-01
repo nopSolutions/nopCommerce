@@ -96,7 +96,7 @@
                         @using (Html.BeginRouteForm("OrderDetails", FormMethod.Post,
                                 new Dictionary<string, Object> { { "data-ajax", "false" } }))
                         {
-                            <input type="submit" name="repost-payment" value="@T("Order.CompletePayment")" id="repost-payment" />
+                            <input type="submit" name="repost-payment" value="@T("Order.CompletePayment")" />
                             <p class="hint">
                                 <em>@T("Order.CompletePayment.Hint")</em>
                             </p>

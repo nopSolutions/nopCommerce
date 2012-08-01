@@ -34,7 +34,7 @@
             <div class="clear">
             </div>
             <div class="select-button">
-                <input type="submit" name="nextstep" value="@T("Checkout.Continue")" id="nextstep" class="orderprocessedcontinuebutton" onclick="setLocation('@Url.RouteUrl("HomePage")')" />
+                <input type="button" value="@T("Checkout.Continue")" class="button-2 order-completed-continue-button" onclick="setLocation('@Url.RouteUrl("HomePage")')" />
             </div>
             @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "checkout_completed_bottom" })
         </div>

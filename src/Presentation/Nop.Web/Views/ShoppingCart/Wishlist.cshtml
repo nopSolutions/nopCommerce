@@ -201,15 +201,15 @@
                     <div class="common-buttons">
                         @if (Model.IsEditable)
                         {
-                            <input type="submit" name="updatecart" value="@T("Wishlist.UpdateCart")" id="updatecart" class="updatewishlistbutton" />
+                            <input type="submit" name="updatecart" value="@T("Wishlist.UpdateCart")" class="button-2 update-wishlist-button" />
                         }
                         @if (Model.DisplayAddToCart)
                         {
-                            <input type="submit" name="addtocartbutton" value="@T("ShoppingCart.AddToCart")" id="addtocartbutton" class="updatewishlistbutton" />
+                            <input type="submit" name="addtocartbutton" value="@T("ShoppingCart.AddToCart")" class="button-2 wishlist-add-to-cart-button" />
                         }
                         @if (Model.IsEditable && Model.EmailWishlistEnabled)
                         {
-                            <input type="button" name="emailafriend" value="@T("Wishlist.EmailAFriend")" id="emailafriend"  class="updatewishlistbutton" onclick="setLocation('@Url.RouteUrl("EmailWishlist")')" />
+                            <input type="button" name="emailafriend" value="@T("Wishlist.EmailAFriend")" class="button-2 email-a-friend-wishlist-button" onclick="setLocation('@Url.RouteUrl("EmailWishlist")')" />
                         }
                     </div>
                 </div>        

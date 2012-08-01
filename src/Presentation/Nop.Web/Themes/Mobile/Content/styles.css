@@ -354,8 +354,8 @@
 .product-variant-line .overview{}
 .product-variant-line .overview .product-variant-name{font-size:1.3em;margin-bottom:.3em;}
 .product-variant-line .description{clear:both;margin-bottom:.3em;}
-.product-details-page .downloadsample{clear:both;margin-top:15px;margin-bottom:15px;}
-.product-details-page .downloadsample .downloadsamplebutton{}
+.product-details-page .download-sample{clear:both;margin-top:15px;margin-bottom:15px;}
+.product-details-page .download-sample .download-sample-button{}
 .product-variant-line .prices{padding-top:10px;margin-right:30px;}
 .product-essential .prices{margin-top:15px;margin-bottom:15px;}
 .product-variant-line .prices .product-price,.product-essential .prices .product-price{color:green;}

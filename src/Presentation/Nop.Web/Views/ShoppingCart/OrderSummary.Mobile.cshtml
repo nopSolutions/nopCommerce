@@ -103,10 +103,10 @@
                             @if (Model.IsEditable)
                             {
                                 <div class="updateitem">
-                                    <input type="submit" name="updatecartitem-@(item.Id)" value="@T("ShoppingCart.UpdateCartItem")" id="updatecartitem" />
+                                    <input type="submit" name="updatecartitem-@(item.Id)" value="@T("ShoppingCart.UpdateCartItem")" />
                                 </div>
                                 <div class="remove">
-                                    <input type="submit" name="removefromcart-@(item.Id)" value="@T("ShoppingCart.Remove")" id="removefromcart" />
+                                    <input type="submit" name="removefromcart-@(item.Id)" value="@T("ShoppingCart.Remove")" />
                                 </div> 
                             }
                         </div>
@@ -128,7 +128,7 @@
             @if (Model.IsEditable)
             {
                 <div class="common-buttons">
-                    <input type="submit" name="continueshopping" value="@T("ShoppingCart.ContinueShopping")" id="continueshopping" />
+                    <input type="submit" name="continueshopping" value="@T("ShoppingCart.ContinueShopping")" />
                     <div style="display: none;">
                         <input type="submit" name="startcheckout" value="startcheckout" id="startcheckout" />
                     </div>
@@ -211,7 +211,7 @@
                                             }
                                         }
                             </script>
-                            <input type="submit" name="checkout" value="@T("Checkout.Button")" id="checkout" class="checkoutbutton" onclick="javascript:startcheckout()" />
+                            <input type="submit" name="checkout" value="@T("Checkout.Button")" id="checkout" onclick="javascript:startcheckout()" />
                         }
                     </div>
                     <div class="addon-buttons">

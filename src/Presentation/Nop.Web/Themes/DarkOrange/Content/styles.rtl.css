@@ -146,10 +146,10 @@ a.eu-cookie-privacyinfo-tag{color:#F93 !important;text-decoration:underline;}
 .deletepostlinkbutton{padding-left:5px;padding-right:18px;background:url(images/ico-delete.gif) no-repeat right;}
 .quotepostlinkbutton,.postlink{color:#555;float:left;padding:1px 3px;border:solid 1px #ccc;line-height:15px;font-size:11px;}
 .postlink{padding:1px 3px;margin-right:5px;border:none;}
-.searchboxbutton{background:url(images/orange_button_bg.gif) no-repeat 25% 50% #F80;border:1px solid #F80;color:#FFF;height:18px;padding:0 5px;width:auto;overflow:visible;}
-.productlistproductdetailbutton,.productgridproductdetailbutton{background:url(images/orange_button_bg.gif) no-repeat 25% 50% #F80;border:1px solid #F80;margin-bottom:3px;color:#FFF;height:20px;padding:0 5px;width:auto;overflow:visible;}
-.searchbutton,.contactusbutton,.newsitemaddcommentbutton,.blogpostaddcommentbutton,.productvariantaddtocartbutton,.productwritereviewbutton,.loginbutton,.registerbutton,.checkoutasguestbutton,.savecustomerinfobutton,.addaddressbutton,.changepasswordbutton,.registernextstepbutton,.completeregistrationbutton,.passwordrecoverybutton,.newpasswordbutton,.saveaddressbutton,.sendemailafriendbutton,.cartbutton,.checkoutbutton,.selectshippingaddressbutton,.newaddressnextstepbutton,.selectbillingaddressbutton,.sameasshippingaddressbutton,.shippingmethodnextstepbutton,.paymentmethodnextstepbutton,.paymentinfonextstepbutton,.confirmordernextstepbutton,.submitforumtopicbutton,.submitpmbutton,.replypmbutton,.deleteselectedpmbutton,.reorderbutton,.minicartcheckoutbutton,.newsletterbox-subscribebutton,.useragreementbutton,.deleteselectedfsbutton,.submitreturnrequestbutton,.uploadavatarbutton,.checkavailabilitybutton,.subscribebutton{background:url(images/orange_button_bg.gif) no-repeat 25% 50% #F80;border:1px solid #F80;color:#FFF;height:20px;padding:0 5px;width:auto;overflow:visible;}
-.productlistaddtocartbutton,.productgridaddtocartbutton,.productemailafriendbutton,.productaddtocomparelistbutton,.productvariantaddtowishlistbutton,.editaddressbutton,.deleteaddressbutton,.cancelrecurringorderbutton,.orderdetailsbutton,.returnitemsbutton,.orderdetailsprintbutton,.estimateshippingbutton,.updatewishlistbutton,.applycouponcodebutton,.updatecartbutton,.continueshoppingbutton,.orderprocessedcontinuebutton,.submitpollvotebutton,.cancelforumtopicbutton,.forumsearchbutton,.forumsearchboxbutton,.cancelpmbutton,.deletepmbutton,.backpmbutton,.removeavatarbutton{background:url(images/grey_button_bg.gif) no-repeat 25% 50% #333;border:1px solid #333;color:#FFF;height:20px;padding:0 5px;width:auto;overflow:visible;}
+.button-1{background:url(images/orange_button_bg.gif) no-repeat 25% 50% #F80;border:1px solid #F80;color:#FFF;height:20px;padding:0 5px;width:auto;overflow:visible;}
+.button-2{background:url(images/grey_button_bg.gif) no-repeat 25% 50% #333;border:1px solid #333;color:#FFF;height:20px;padding:0 5px;width:auto;overflow:visible;}
+.product-box-detail-button{margin-bottom:3px;}
+.search-box-button {height:18px;}
 ul.languagelist{display:inline;line-height:25px;}
 ul.languagelist li{list-style:none;display:inline;padding:0 5px;}
 ul.languagelist li .selected{border:solid 1px #ccc!important;}
@@ -202,8 +202,7 @@ ul.languagelist li:hover{cursor:pointer;}
 .minishoppingcart .items .item .quantity{font-size:10px;margin:0px}
 .minishoppingcart .totals{margin:10px 0px;text-align:right;}
 .minishoppingcart .buttons{margin:10px 0px;text-align:right;}
-.minishoppingcart .cartbutton{margin:0px 5px;}
-.minishoppingcart .checkoutbutton{margin:0px 5px;}
+.minishoppingcart .cart-button,.minishoppingcart .checkout-button{margin:0px 5px;}
 /* notifications */
 .bar-notification{display:none;left:0;position:fixed;top:0;width:100%;z-index:100000;}
 .bar-notification.success{background:none repeat scroll 0 0 #91BD09;border-bottom:3px solid #FFFFFF !important;color:#FFFFFF;margin: 0 0 10px;}
@@ -471,7 +470,6 @@ ul.languagelist li:hover{cursor:pointer;}
 .compare-products .page-title{border-bottom:0 none;}
 .compare-products .body{margin:0;padding:0;font-size:11px;color:#555;background-color:inherit;}
 .compare-products-table{width:100%;border:0px;border-collapse:collapse;border-spacing:0;empty-cells:show;}
-.compare-products-table .remove-button{margin:5px 5px 5px 0;}
 .compare-products-table tr.product-name{background-color:#CCC;font-weight:700;}
 .compare-products-table td{border-width:1px;border-color:#BFBFBF;border-style:solid;padding:3px;vertical-align:top;}
 .login-page{text-align:right;direction:rtl;}
@@ -710,8 +708,8 @@ ul.languagelist li:hover{cursor:pointer;}
 .product-variant-line .overview{float:left;width:200px;margin-right:25px;}
 .product-variant-line .overview .product-variant-name{color:#f93;font-size:1.3em;margin-bottom:.3em;}
 .product-variant-line .description{clear:both;color:#555;margin-bottom:.3em;}
-.product-details-page .downloadsample{clear:both;color:#555;margin-top:15px;margin-bottom:15px;}
-.product-details-page .downloadsample .downloadsamplebutton{-x-system-font:none!important;background:#F1F1F1 url(images/btn_download_bg.gif) repeat-x scroll 0 100%;border:1px solid #B5B5B5;color:#444;cursor:pointer;font-family:arial,sans-serif!important;font-size:11px!important;font-size-adjust:none!important;font-stretch:normal!important;font-style:normal!important;font-variant:normal!important;font-weight:700!important;line-height:normal!important;overflow:visible;padding:1px 5px;text-align:center;text-transform:uppercase;vertical-align:middle;width:auto;}
+.product-details-page .download-sample{clear:both;color:#555;margin-top:15px;margin-bottom:15px;}
+.product-details-page .download-sample .download-sample-button{-x-system-font:none!important;background:#F1F1F1 url(images/btn_download_bg.gif) repeat-x scroll 0 100%;border:1px solid #B5B5B5;color:#444;cursor:pointer;font-family:arial,sans-serif!important;font-size:11px!important;font-size-adjust:none!important;font-stretch:normal!important;font-style:normal!important;font-variant:normal!important;font-weight:700!important;line-height:normal!important;overflow:visible;padding:1px 5px;text-align:center;text-transform:uppercase;vertical-align:middle;width:auto;}
 .product-variant-line .prices{float:right;padding-top:10px;margin-left:30px;}
 .product-essential .prices{margin-top:15px;margin-bottom:15px;}
 .product-variant-line .prices .product-price,.product-essential .prices .product-price{color:green;}

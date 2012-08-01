@@ -33,7 +33,7 @@
                     @<div class="item-box">
                         <div class="address-item">
                             <div class="select-button">
-                                <input type="button" name="selectBillingAddress" value="@T("Checkout.BillToThisAddress")" class="selectbillingaddressbutton"  onclick="setLocation('@Url.RouteUrl("CheckoutSelectBillingAddress", new { addressId = @item.Id })')" />
+                                <input type="button" value="@T("Checkout.BillToThisAddress")" class="button-1 select-billing-address-button"  onclick="setLocation('@Url.RouteUrl("CheckoutSelectBillingAddress", new { addressId = @item.Id })')" />
                             </div>
                             <div class="address-box">
                                 <div class="name">
@@ -104,7 +104,7 @@
                 <div class="clear">
                 </div>
                 <div class="buttons">
-                    <input type="submit" name="nextstep" value="@T("Checkout.NextButton")" id="nextstep" class="newaddressnextstepbutton" />
+                    <input type="submit" name="nextstep" value="@T("Checkout.NextButton")" class="button-1 new-address-next-step-button" />
                 </div>
             }
         </div>

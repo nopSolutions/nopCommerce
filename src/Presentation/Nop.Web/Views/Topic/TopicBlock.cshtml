@@ -40,7 +40,7 @@
             </div>
             <div class="enter-password-form">
                 @Html.Password("password", null, new { id = "password-" + @Model.Id })
-                <input type="submit" id="btnPassword-@Model.Id" value="@T("Topic.Button")" class="useragreementbutton"/>
+                <input type="submit" id="btnPassword-@Model.Id" value="@T("Topic.Button")" class="button-1 topic-password-button"/>
                 <span id="authenticate-progress-@Model.Id" style="display: none;">@T("Common.Wait...")
                     <img src='@Url.Content("~/Content/Images/ajax_loader_small.gif")' alt="@T("Common.Wait...")" />
                 </span>

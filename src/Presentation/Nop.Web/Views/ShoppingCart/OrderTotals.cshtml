@@ -24,7 +24,7 @@
                                 @if (Model.AllowRemovingSubTotalDiscount)
                                 {
                                     /*empty value (little hack for FormValueExistsAttribute)*/
-                                    <input id="removesubtotaldiscount" type="submit" name="removesubtotaldiscount" value=" " title="@T("Common.Remove")" class="removediscountbutton" />                                    
+                                    <input type="submit" name="removesubtotaldiscount" value=" " title="@T("Common.Remove")" class="removediscountbutton" />                                    
                                 }
                                 : </span>
                         }
@@ -120,7 +120,7 @@
                                 @if (Model.AllowRemovingOrderTotalDiscount)
                                 {
                                     /*empty value (little hack for FormValueExistsAttribute)*/
-                                    <input id="removeordertotaldiscount" type="submit" name="removeordertotaldiscount" value=" " title="@T("Common.Remove")" class="removediscountbutton" />
+                                    <input type="submit" name="removeordertotaldiscount" value=" " title="@T("Common.Remove")" class="removediscountbutton" />
                                 }
                                 : </span>
                         }
@@ -144,10 +144,10 @@
                                 {
 
                                     /*empty value (little hack for FormValueExistsAttribute)*/
-                                    <input id="removegiftcard" type="submit" name="removegiftcard" value=" " title="@T("Common.Remove")" class="removegiftcardbutton" />
+                                    <input type="submit" name="removegiftcard" value=" " title="@T("Common.Remove")" class="removegiftcardbutton" />
                                 }
                                 : </span>
-                            <input type="hidden" id="giftcardid" name="giftcardid" value="@gc.Id" />
+                            <input type="hidden" name="giftcardid" value="@gc.Id" />
                         }
                     </td>
                     <td class="cart_total_right">

@@ -119,16 +119,16 @@
                                     @if (Model.IsEditable)
                                     {
                                         <div class="updateitem">
-                                            <input type="submit" name="updatecartitem-@(item.Id)" value="@T("ShoppingCart.UpdateCartItem")" id="updatecartitem" />
+                                            <input type="submit" name="updatecartitem-@(item.Id)" value="@T("ShoppingCart.UpdateCartItem")" />
                                         </div>
                                         <div class="remove">
-                                            <input type="submit" name="removefromcart-@(item.Id)" value="@T("ShoppingCart.Remove")" id="removefromcart" />
+                                            <input type="submit" name="removefromcart-@(item.Id)" value="@T("ShoppingCart.Remove")" />
                                         </div>
                                     }
                                     @if (Model.DisplayAddToCart)
                                     {
                                         <div class="addtocart">
-                                            <input type="submit" name="addtocart-@(item.Id)" value="@T("ShoppingCart.AddToCart")" id="addtocartbutton" />
+                                            <input type="submit" name="addtocart-@(item.Id)" value="@T("ShoppingCart.AddToCart")" />
                                         </div>
                                     }
                                 </div>
