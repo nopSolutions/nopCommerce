@@ -106,8 +106,8 @@ namespace Nop.Admin.Controllers
             model.Port = 25;
 			return View(model);
 		}
-        
-        [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
+
+        [HttpPost, ParameterBasedOnFormNameAttribute("save-continue", "continueEditing")]
 		public ActionResult Create(EmailAccountModel model, bool continueEditing)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageEmailAccounts))
@@ -138,8 +138,8 @@ namespace Nop.Admin.Controllers
 
 			return View(emailAccount.ToModel());
 		}
-        
-        [HttpPost, FormValueExists("save", "save-continue", "continueEditing")]
+
+        [HttpPost, ParameterBasedOnFormNameAttribute("save-continue", "continueEditing")]
         [FormValueRequired("save", "save-continue")]
         public ActionResult Edit(EmailAccountModel model, bool continueEditing)
         {

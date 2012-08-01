@@ -45,7 +45,7 @@
         </tr>
         <tr>
             <td colspan="2">
-                <button type="submit" name="delete-guests" value="delete-guests" class="t-button">@T("Admin.Common.Delete")</button>
+                <input type="submit" name="delete-guests" class="t-button" value="@T("Admin.Common.Delete")" />
             </td>
         </tr>
         @if (Model.DeleteGuests.NumberOfDeletedCustomers.HasValue)
@@ -78,7 +78,7 @@
         </tr>
         <tr>
             <td colspan="2">
-                <button type="submit" name="delete-abondoned-carts" value="delete-abondoned-carts" class="t-button">@T("Admin.Common.Delete")</button>
+                <input type="submit" name="delete-abondoned-carts" class="t-button" value="@T("Admin.Common.Delete")" />
             </td>
         </tr>
         @if (Model.DeleteAbandonedCarts.NumberOfDeletedItems.HasValue)
@@ -119,8 +119,7 @@
         </tr>
         <tr>
             <td colspan="2">
-                <button type="submit" name="delete-exported-files" value="delete-exported-files"
-                    class="t-button">@T("Admin.Common.Delete")</button>
+                <input type="submit" name="delete-exported-files" class="t-button" value="@T("Admin.Common.Delete")" />
             </td>
         </tr>
         @if (Model.DeleteExportedFiles.NumberOfDeletedFiles.HasValue)

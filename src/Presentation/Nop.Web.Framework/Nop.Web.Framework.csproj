@@ -88,6 +88,7 @@
   <ItemGroup>
     <Compile Include="CheckAffiliateAttribute.cs" />
     <Compile Include="Controllers\ContollerExtensions.cs" />
+    <Compile Include="Controllers\ParameterBasedOnFormNameAndValueAttribute.cs" />
     <Compile Include="Events\AdminTabStripCreated.cs" />
     <Compile Include="PublicStoreAllowNavigationAttribute.cs" />
     <Compile Include="Mvc\Routes\GuidConstraint.cs" />
@@ -110,7 +111,7 @@
     <Compile Include="Localization\LocalizedUrlExtenstions.cs" />
     <Compile Include="Mvc\BaseNopModel.cs" />
     <Compile Include="Controllers\AdminAuthorizeAttribute.cs" />
-    <Compile Include="Controllers\FormValueExistsAttribute.cs" />
+    <Compile Include="Controllers\ParameterBasedOnFormNameAttribute.cs" />
     <Compile Include="DependencyRegistrar.cs" />
     <Compile Include="Mvc\XmlDownloadResult.cs" />
     <Compile Include="Extensions.cs" />

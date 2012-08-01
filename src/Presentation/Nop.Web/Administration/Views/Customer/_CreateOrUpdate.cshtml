@@ -71,15 +71,15 @@
             tabInfo.Selected(true);
             break;
     }
-    
+
     //generate an event
     EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "customer-edit"));
 })
 @helper TabInfo()
     { 
-    if (Model.CountryEnabled && Model.StateProvinceEnabled)
-    {
-        <script type="text/javascript">
+        if (Model.CountryEnabled && Model.StateProvinceEnabled)
+        {
+    <script type="text/javascript">
              $(function() {
                     $("#@Html.FieldIdFor(model => model.CountryId)").change(function() {
                         var selectedItem = $(this).val();
@@ -101,8 +101,8 @@
                         });
                     });
                 });
-        </script>
-    }
+    </script>
+        }
     <table class="adminContent">
         @if (Model.UsernamesEnabled)
         {
@@ -149,8 +149,7 @@
                 @Html.ValidationMessageFor(model => model.Password)
                 @if (Model.Id > 0)
                 {
-                    <button type="submit" name="changepassword" value="changepassword" class="t-button">
-                        Change password</button>
+                    <input type="submit" name="changepassword" class="t-button" value="Change password" />
                 }
             </td>
         </tr>
@@ -377,9 +376,8 @@
                 <td class="adminData">
                     @Html.EditorFor(model => model.VatNumber)
                     (@string.Format(T("Admin.Customers.Customers.Fields.VatNumberStatus").Text, Model.VatNumberStatusNote))
-                    <button type="submit" name="markVatNumberAsValid" value="markVatNumberAsValid" class="t-button">@T("Admin.Customers.Customers.Fields.VatNumber.MarkAsValid")</button>
-                    <button type="submit" name="markVatNumberAsInvalid" value="markVatNumberAsInvalid"
-                        class="t-button">@T("Admin.Customers.Customers.Fields.VatNumber.MarkAsInvalid")</button>
+                    <input type="submit" name="markVatNumberAsValid" class="t-button" value="@T("Admin.Customers.Customers.Fields.VatNumber.MarkAsValid")" />
+                    <input type="submit" name="markVatNumberAsInvalid" class="t-button" value="@T("Admin.Customers.Customers.Fields.VatNumber.MarkAsInvalid")" />
                     @Html.ValidationMessageFor(model => model.VatNumber)
                 </td>
             </tr>
@@ -445,7 +443,7 @@
         {
             foreach (var customerRole in Model.AvailableCustomerRoles)
             {
-                <input type="checkbox" name="SelectedCustomerRoleIds" value="@customerRole.Id"
+    <input type="checkbox" name="SelectedCustomerRoleIds" value="@customerRole.Id"
                 @if (Model.SelectedCustomerRoleIds != null && Model.SelectedCustomerRoleIds.Contains(customerRole.Id))
                 {
                     <text> checked="checked"</text>
@@ -455,7 +453,7 @@
                 <text> disabled="disabled"</text>
                 }
                 />@customerRole.Name
-                <br />
+    <br />
             }
         }
         else
@@ -539,8 +537,7 @@
         </tr>
         <tr>
             <td colspan="2" align="left">
-                <button type="button" name="addRewardPoints" id="addRewardPoints" class="t-button">
-                    @T("Admin.Customers.Customers.RewardPoints.AddButton")</button>
+                <input type="button" id="addRewardPoints" class="t-button" value="@T("Admin.Customers.Customers.RewardPoints.AddButton")" />
             </td>
         </tr>
     </table>
@@ -699,12 +696,12 @@
     <table class="adminContent">
         <tr>
             <td>
-            @T("Admin.Customers.Customers.Impersonate.Description1")
+                @T("Admin.Customers.Customers.Impersonate.Description1")
                 <br />
                 @T("Admin.Customers.Customers.Impersonate.Description2")
-            <br /><br />
-            
-            <button type="submit" name="impersonate" value="impersonate" class="t-button">@T("Admin.Customers.Customers.Impersonate.Button")</button>
+                <br />
+                <br />
+                <input type="submit" name="impersonate" class="t-button" value="@T("Admin.Customers.Customers.Impersonate.Button")" />
             </td>
         </tr>
     </table>

@@ -118,11 +118,11 @@
                         {
                     @T("Admin.RecurringPayments.History.NextPaymentDate")
                     <text>:</text> @Model.NextPaymentDate
-                    <button type="submit" name="processnextpayment" value="processnextpayment" class="t-button">@T("Admin.RecurringPayments.History.ProcessNextPayment")</button>
+                    <input type="submit" name="processnextpayment" class="t-button" value="@T("Admin.RecurringPayments.History.ProcessNextPayment")" />
                         }
                 @if (Model.CanCancelRecurringPayment)
                         {
-                    <button type="submit" name="cancelpayment" value="cancelpayment" class="t-button">@T("Admin.RecurringPayments.History.CancelPayment")</button>
+                    <input type="submit" name="cancelpayment" class="t-button" value="@T("Admin.RecurringPayments.History.CancelPayment")" />
                         }
             </td>
         </tr>

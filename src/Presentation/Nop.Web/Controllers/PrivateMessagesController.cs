@@ -208,9 +208,8 @@ namespace Nop.Web.Controllers
             return PartialView(model);
         }
 
-        //updates inbox (deletes or marks PrivateMessages as unread)
-        [HttpPost, FormValueExists("inboxupdate", "delete", "deleteMessages")]
-        public ActionResult InboxUpdate(FormCollection formCollection, bool deleteMessages)
+        [HttpPost, FormValueRequired("delete-inbox"), ActionName("InboxUpdate")]
+        public ActionResult DeleteInboxPM(FormCollection formCollection)
         {
             foreach (var key in formCollection.AllKeys)
             {
@@ -228,15 +227,36 @@ namespace Nop.Web.Controllers
                         {
                             if (pm.ToCustomerId == _workContext.CurrentCustomer.Id)
                             {
-                                if (deleteMessages)
-                                {
-                                    pm.IsDeletedByRecipient = true;
-                                }
-                                else
-                                {
-                                    pm.IsRead = false;
-                                }
+                                pm.IsDeletedByRecipient = true;
+                                _forumService.UpdatePrivateMessage(pm);
+                            }
+                        }
+                    }
+                }
+            }
+            return RedirectToRoute("PrivateMessages");
+        }
 
+        [HttpPost, FormValueRequired("mark-unread"), ActionName("InboxUpdate")]
+        public ActionResult MarkUnread(FormCollection formCollection)
+        {
+            foreach (var key in formCollection.AllKeys)
+            {
+                var value = formCollection[key];
+
+                if (value.Equals("on") && key.StartsWith("pm", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    var id = key.Replace("pm", "").Trim();
+                    int privateMessageId = 0;
+
+                    if (Int32.TryParse(id, out privateMessageId))
+                    {
+                        var pm = _forumService.GetPrivateMessageById(privateMessageId);
+                        if (pm != null)
+                        {
+                            if (pm.ToCustomerId == _workContext.CurrentCustomer.Id)
+                            {
+                                pm.IsRead = false;
                                 _forumService.UpdatePrivateMessage(pm);
                             }
                         }
@@ -247,37 +267,34 @@ namespace Nop.Web.Controllers
         }
 
         //updates sent items (deletes PrivateMessages)
-        [HttpPost, FormValueExists("sentupdate", "delete", "deleteMessages")]
-        public ActionResult SentUpdate(FormCollection formCollection, bool deleteMessages)
+        [HttpPost, FormValueRequired("delete-sent"), ActionName("SentUpdate")]
+        public ActionResult DeleteSentPM(FormCollection formCollection)
         {
-            if (deleteMessages)
+            foreach (var key in formCollection.AllKeys)
             {
-                foreach (var key in formCollection.AllKeys)
+                var value = formCollection[key];
+
+                if (value.Equals("on") && key.StartsWith("si", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    var value = formCollection[key];
+                    var id = key.Replace("si", "").Trim();
+                    int privateMessageId = 0;
 
-                    if (value.Equals("on") && key.StartsWith("si", StringComparison.InvariantCultureIgnoreCase))
+                    if (Int32.TryParse(id, out privateMessageId))
                     {
-                        var id = key.Replace("si", "").Trim();
-                        int privateMessageId = 0;
-
-                        if (Int32.TryParse(id, out privateMessageId))
+                        PrivateMessage pm = _forumService.GetPrivateMessageById(privateMessageId);
+                        if (pm != null)
                         {
-                            PrivateMessage pm = _forumService.GetPrivateMessageById(privateMessageId);
-                            if (pm != null)
+                            if (pm.FromCustomerId == _workContext.CurrentCustomer.Id)
                             {
-                                if (pm.FromCustomerId == _workContext.CurrentCustomer.Id)
-                                {
-                                    pm.IsDeletedByAuthor = true;
-                                    _forumService.UpdatePrivateMessage(pm);
-                                }
+                                pm.IsDeletedByAuthor = true;
+                                _forumService.UpdatePrivateMessage(pm);
                             }
                         }
                     }
-
                 }
+
             }
-            return RedirectToRoute("PrivateMessages", new { tab = "sent" });
+            return RedirectToRoute("PrivateMessages", new {tab = "sent"});
         }
 
         public ActionResult SendPM(int toCustomerId, int? replyToMessageId)

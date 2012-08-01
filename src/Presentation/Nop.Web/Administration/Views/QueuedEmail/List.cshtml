@@ -13,8 +13,7 @@
             @T("Admin.System.QueuedEmails")
         </div>
         <div class="options">
-            <button type="submit" id="delete-selected" name="delete-selected" value="delete_selected"
-                class="t-button">@T("Admin.System.QueuedEmails.DeleteSelected")</button>
+            <input type="button" id="delete-selected" class="t-button" value="@T("Admin.System.QueuedEmails.DeleteSelected")" />
         </div>
     </div>
     <table width="100%">
@@ -72,13 +71,12 @@
             </td>
             <td class="adminData">
                 @Html.EditorFor(model => Model.GoDirectlyToNumber)
-                <button type="submit" name="go-to-email-by-number" value="go-to-email-by-number"
-                    class="t-button">@T("Admin.Common.Go")</button>
+                <input type="submit" name="go-to-email-by-number" class="t-button" value="@T("Admin.Common.Go")" />
             </td>
         </tr>
         <tr>
             <td colspan="2">
-                <button type="submit" id="btnSearch" class="t-button">@T("Admin.Common.Search")</button>
+                <input type="button" id="btnSearch" class="t-button" value="@T("Admin.Common.Search")" />
             </td>
         </tr>
     </table>

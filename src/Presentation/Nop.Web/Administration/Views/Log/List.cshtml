@@ -14,8 +14,8 @@
             @T("Admin.System.Log")
         </div>
         <div class="options">
-            <button type="submit" id="delete-selected" name="delete-selected" value="delete_selected" class="t-button">@T("Admin.System.Log.DeleteSelected")</button>
-            <button type="submit" name="clearall" value="clearall" class="t-button">@T("Admin.System.Log.ClearLog")</button>
+            <input type="button" id="delete-selected" class="t-button" value="@T("Admin.System.Log.DeleteSelected")" />
+            <input type="submit" name="clearall" class="t-button" value="@T("Admin.System.Log.ClearLog")" />
         </div>
     </div>
     <table width="100%">
@@ -53,7 +53,7 @@
         </tr>
         <tr>
             <td colspan="2">
-                <button type="submit" id="btnSearch" class="t-button">@T("Admin.Common.Search")</button>
+                <input type="button" id="btnSearch" class="t-button" value="@T("Admin.Common.Search")" />
             </td>
         </tr>
     </table>

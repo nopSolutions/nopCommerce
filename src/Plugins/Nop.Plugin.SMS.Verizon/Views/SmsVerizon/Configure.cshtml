@@ -26,8 +26,7 @@
         </tr>
         <tr>
             <td colspan="2" width="100%">
-                <button type="submit" name="save" value="save" class="t-button">
-                    @T("Admin.Common.Save")</button>
+                <input type="submit" name="save" class="t-button" value="@T("Admin.Common.Save")" />
             </td>
         </tr>
         <tr class="adminSeparator">
@@ -53,8 +52,7 @@
         </tr>
         <tr>
             <td colspan="2" width="100%">
-                <button type="submit" name="test-sms" value="test-sms" class="t-button">
-                    @T("Plugins.Sms.Verizon.SendTest")</button>
+                <input type="submit" name="test-sms" class="t-button" value="@T("Plugins.Sms.Verizon.SendTest")" />
             </td>
         </tr>
         @if (!String.IsNullOrEmpty(Model.TestSmsResult))

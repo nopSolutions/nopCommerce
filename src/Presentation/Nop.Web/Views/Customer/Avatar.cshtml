@@ -38,10 +38,10 @@
                 <div class="clear">
                 </div>
                 <div class="buttons">
-                    <button type="submit" name="upload-avatar" value="upload-avatar" class="uploadavatarbutton">@T("Common.Upload")</button>
+                    <input type="submit" name="upload-avatar" class="uploadavatarbutton" value="@T("Common.Upload")" />
                     @if (!String.IsNullOrEmpty(Model.AvatarUrl))
                     {
-                        <button type="submit" name="remove-avatar" value="remove-avatar" class="removeavatarbutton">@T("Account.Avatar.RemoveAvatar")</button>
+                        <input type="submit" name="remove-avatar" class="removeavatarbutton" value="@T("Account.Avatar.RemoveAvatar")" />
                     }
                 </div>
                 <div class="clear">

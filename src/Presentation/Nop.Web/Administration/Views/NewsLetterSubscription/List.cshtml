@@ -13,7 +13,7 @@
     </div>
     <div class="options">
         <a href="@Url.Action("ExportCsv")" class="t-button">@T("Admin.Common.ExportToCsv")</a>
-        <button type="submit" id="importcsv" name="importcsv" value="importcsv" class="t-button">@T("Admin.Common.ImportFromCsv")</button>
+        <input type="submit" id="importcsv" name="importcsv" class="t-button" value="@T("Admin.Common.ImportFromCsv")" />
     </div>
 </div>
 <table width="100%">
@@ -27,8 +27,7 @@
     </tr>
     <tr>
         <td colspan="2">
-            <button type="submit" id="search-newsLetterSubscriptions" value="search-newsLetterSubscriptions"
-                class="t-button">@T("Admin.Common.Search")</button>
+            <input type="button" id="search-newsLetterSubscriptions" class="t-button" value="@T("Admin.Common.Search")" />
         </td>
     </tr>
 </table>
@@ -111,7 +110,7 @@
             </tr>
             <tr>
                 <td colspan="2">
-                    <button type="submit" class="t-button t-state-default">@T("Admin.Common.ImportFromCsv")</button>
+                    <input type="submit" class="t-button" value="@T("Admin.Common.ImportFromCsv")" />
                 </td>
             </tr>
         </table>

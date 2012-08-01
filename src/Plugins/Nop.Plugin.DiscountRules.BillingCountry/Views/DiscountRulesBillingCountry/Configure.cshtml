@@ -37,7 +37,7 @@
                 @Html.NopLabelFor(model => model.CountryId):
             </td>
             <td class="adminData">
-                <div>@Html.DropDownListFor(model => model.CountryId, Model.AvailableCountries) <button type="button" name="savebillingcountryrequirement@(Model.RequirementId)" id="savebillingcountryrequirement@(Model.RequirementId)" class="t-button">@T("Admin.Common.Save")</button></div>
+                <div>@Html.DropDownListFor(model => model.CountryId, Model.AvailableCountries) <input type="button" id="savebillingcountryrequirement@(Model.RequirementId)" class="t-button" value="@T("Admin.Common.Save")" /></div>
                 <div id="pnl-save-requirement-result@(Model.RequirementId)" style="display:none;">@T("Admin.Promotions.Discounts.Requirements.Saved")</div>
             </td>
         </tr>

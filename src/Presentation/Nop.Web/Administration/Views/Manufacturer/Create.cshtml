@@ -11,8 +11,8 @@
             @T("Admin.Catalog.Manufacturers.AddNew") @Html.ActionLink("(" + T("Admin.Catalog.Manufacturers.BackToList") + ")", "List")
         </div>
         <div class="options">
-            <button type="submit" name="save" value="save" class="t-button">@T("Admin.Common.Save")</button>
-            <button type="submit" name="save" value="save-continue" class="t-button">@T("Admin.Common.SaveContinue")</button>
+            <input type="submit" name="save" class="t-button" value="@T("Admin.Common.Save")" />
+            <input type="submit" name="save-continue" class="t-button" value="@T("Admin.Common.SaveContinue")" />
         </div>
     </div>
     @Html.Partial("_CreateOrUpdate", Model)

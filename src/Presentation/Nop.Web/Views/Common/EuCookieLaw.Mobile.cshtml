@@ -59,8 +59,8 @@
             @Html.Action("TopicBlock", "Topic", new { systemName = "privacyinfo" })
         </div>
         <div>
-            <button id="eu-cookie-ok" onclick="EuDialogOkClick();">@T("EUCookieLaw.OK")</button>
-            <button id="eu-cookie-cancel" onclick="EuDialogCancelClick();">@T("EUCookieLaw.Cancel")</button>
+            <input type="button" id="eu-cookie-ok" onclick="EuDialogOkClick();" value="@T("EUCookieLaw.OK")" />
+            <input type="button" id="eu-cookie-cancel" onclick="EuDialogCancelClick();" value="@T("EUCookieLaw.Cancel")" />
         </div>
     </div>
 </div>

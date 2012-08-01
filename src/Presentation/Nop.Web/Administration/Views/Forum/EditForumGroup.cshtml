@@ -11,8 +11,8 @@
             @T("Admin.ContentManagement.Forums.ForumGroup.EditForumGroup") - @Model.Name  @Html.ActionLink(String.Format("({0})", T("Admin.ContentManagement.Forums.ForumGroup.BackToList")), "List")
         </div>
         <div class="options">
-            <button type="submit" name="save" value="save" class="t-button">@T("Admin.Common.Save")</button>
-            <button type="submit" name="save" value="save-continue" class="t-button">@T("Admin.Common.SaveContinue")</button>
+            <input type="submit" name="save" class="t-button" value="@T("Admin.Common.Save")" />
+            <input type="submit" name="save-continue" class="t-button" value="@T("Admin.Common.SaveContinue")" />
             <span id="forumgroup-delete" class="t-button">@T("Admin.Common.Delete")</span>
         </div>
     </div>

@@ -37,7 +37,7 @@
                 @Html.NopLabelFor(model => model.SpentAmount):
             </td>
             <td class="adminData">
-                <div>@Html.EditorFor(model => model.SpentAmount) <button type="button" name="savehadspentamountrequirement@(Model.RequirementId)" id="savehadspentamountrequirement@(Model.RequirementId)" class="t-button">@T("Admin.Common.Save")</button></div>
+                <div>@Html.EditorFor(model => model.SpentAmount) <input type="button" id="savehadspentamountrequirement@(Model.RequirementId)" class="t-button" value="@T("Admin.Common.Save")" /></div>
                 <div id="pnl-save-requirement-result@(Model.RequirementId)" style="display:none;">@T("Admin.Promotions.Discounts.Requirements.Saved")</div>
             </td>
         </tr>

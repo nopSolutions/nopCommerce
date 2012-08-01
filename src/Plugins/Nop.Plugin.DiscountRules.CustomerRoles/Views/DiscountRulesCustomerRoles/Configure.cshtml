@@ -37,7 +37,7 @@
                 @Html.NopLabelFor(model => model.CustomerRoleId):
             </td>
             <td class="adminData">
-                <div>@Html.DropDownListFor(model => model.CustomerRoleId, Model.AvailableCustomerRoles) <button type="button" name="savecustomerrolesrequirement@(Model.RequirementId)" id="savecustomerrolesrequirement@(Model.RequirementId)" class="t-button">@T("Admin.Common.Save")</button></div>
+                <div>@Html.DropDownListFor(model => model.CustomerRoleId, Model.AvailableCustomerRoles) <input type="button" id="savecustomerrolesrequirement@(Model.RequirementId)" class="t-button" value="@T("Admin.Common.Save")" /></div>
                 <div id="pnl-save-requirement-result@(Model.RequirementId)" style="display:none;">@T("Admin.Promotions.Discounts.Requirements.Saved")</div>
             </td>
         </tr>

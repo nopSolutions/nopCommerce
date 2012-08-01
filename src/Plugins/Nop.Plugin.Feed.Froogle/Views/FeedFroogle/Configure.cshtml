@@ -172,12 +172,9 @@
         }
         <tr>
             <td colspan="2" width="100%">
-                <button type="submit" name="save" value="save" class="t-button">
-                    @T("Admin.Common.Save")</button>
-                <button type="submit" name="generate" value="generate" class="t-button">
-                    @T("Plugins.Feed.Froogle.Generate")</button>
-                <button type="submit" name="uploadfeed" value="uploadfeed" class="t-button">
-                    @T("Plugins.Feed.Froogle.Upload")</button>
+                <input type="submit" name="save" class="t-button" value="@T("Admin.Common.Save")" />
+                <input type="submit" name="generate" class="t-button" value="@T("Plugins.Feed.Froogle.Generate")" />
+                <input type="submit" name="uploadfeed" class="t-button" value="@T("Plugins.Feed.Froogle.Upload")" />
             </td>
         </tr>
         @if (!String.IsNullOrEmpty(Model.GenerateFeedResult))

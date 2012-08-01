@@ -20,11 +20,11 @@
                 <a href="@Url.Action("DownloadCatalogAsPdf")" class="t-button">@T("Admin.Catalog.Products.List.DownloadPDF")</a>
             }
             <a href="@Url.Action("ExportXmlAll")" class="t-button">@T("Admin.Common.ExportToXml.All")</a>
-            <button type="submit" id="exportxml-selected" class="t-button">@T("Admin.Common.ExportToXml.Selected")</button>
+            <input type="button" id="exportxml-selected" class="t-button" value="@T("Admin.Common.ExportToXml.Selected")" />
             <a href="@Url.Action("ExportExcelAll")" class="t-button">@T("Admin.Common.ExportToExcel.All")</a>
-            <button type="submit" id="exportexcel-selected" class="t-button">@T("Admin.Common.ExportToExcel.Selected")</button>
-            <button type="submit" id="importexcel" name="importexcel" value="importexcel" class="t-button">@T("Admin.Common.ImportFromExcel")</button>
-            <button type="submit" id="delete-selected" class="t-button">@T("Admin.Common.Delete.Selected")</button>
+            <input type="button" id="exportexcel-selected" class="t-button" value="@T("Admin.Common.ExportToExcel.Selected")" />
+            <input type="button" id="importexcel" name="importexcel" class="t-button" value="@T("Admin.Common.ImportFromExcel")" />
+            <input type="button" id="delete-selected" class="t-button" value="@T("Admin.Common.Delete.Selected")" />
         </div>
     </div>
 
@@ -59,12 +59,12 @@
             </td>
             <td class="adminData">
                 @Html.EditorFor(model => Model.GoDirectlyToSku)
-                <button type="submit" id="go-to-product-by-sku" name="go-to-product-by-sku" value="go-to-product-by-sku" class="t-button">@T("Admin.Common.Go")</button>
+                <input type="submit" id="go-to-product-by-sku" name="go-to-product-by-sku" class="t-button" value="@T("Admin.Common.Go")" />
             </td>
         </tr>
         <tr>
             <td colspan="2">
-                <button type="submit" id="search-products" value="search-products" class="t-button">@T("Admin.Common.Search")</button>
+                <input type="button" id="search-products" class="t-button" value="@T("Admin.Common.Search")" />
             </td>
         </tr>
     </table>
@@ -292,7 +292,7 @@
             </tr>
             <tr>
                 <td colspan="2">
-                    <button type="submit" class="t-button t-state-default">@T("Admin.Common.ImportFromExcel")</button>
+                    <input type="submit" class="t-button" value="@T("Admin.Common.ImportFromExcel")" />
                 </td>
             </tr>
         </table>

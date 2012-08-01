@@ -12,7 +12,7 @@
             @T("Admin.Configuration.Settings.Media")
         </div>
         <div class="options">
-            <button type="submit" name="save" value="save" class="t-button">@T("Admin.Common.Save")</button>
+            <input type="submit" name="save" class="t-button" value="@T("Admin.Common.Save")" />
         </div>
     </div>
 @Html.ValidationSummary(false)
@@ -31,7 +31,7 @@
                     @T("Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.FileSystem")
                 }
                 
-            <button type="submit" name="change-picture-storage" value="change-picture-storage" class="t-button" onclick="return confirm('@T("Admin.Common.AreYouSure")');">@T("Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.Change")</button>
+            <input type="submit" name="change-picture-storage" class="t-button" onclick="return confirm('@T("Admin.Common.AreYouSure")');" value="@T("Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.Change")" />
             NOTE: Do not forget to backup your database before changing this option.
             </td>
         </tr>

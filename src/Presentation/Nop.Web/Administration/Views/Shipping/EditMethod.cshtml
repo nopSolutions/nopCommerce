@@ -11,8 +11,8 @@
             @T("Admin.Configuration.Shipping.Methods.EditMethodDetails") - @Model.Name @Html.ActionLink("(" + T("Admin.Configuration.Shipping.Methods.BackToList") + ")", "Methods")
         </div>
         <div class="options">
-            <button type="submit" name="save" value="save" class="t-button">@T("Admin.Common.Save")</button>
-            <button type="submit" name="save" value="save-continue" class="t-button">@T("Admin.Common.SaveContinue")</button>
+            <input type="submit" name="save" class="t-button" value="@T("Admin.Common.Save")" />
+            <input type="submit" name="save-continue" class="t-button" value="@T("Admin.Common.SaveContinue")" />
             <span id="method-delete" class="t-button">@T("Admin.Common.Delete")</span>
         </div>
     </div>

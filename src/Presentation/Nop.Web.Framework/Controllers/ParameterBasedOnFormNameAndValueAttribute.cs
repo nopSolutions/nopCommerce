@@ -2,17 +2,17 @@
 
 namespace Nop.Web.Framework.Controllers
 {
-    public class FormValueExistsAttribute : FilterAttribute, IActionFilter
+    public class ParameterBasedOnFormNameAndValueAttribute : FilterAttribute, IActionFilter
     {
         private readonly string _name;
         private readonly string _value;
         private readonly string _actionParameterName;
 
-        public FormValueExistsAttribute(string name, string value, string actionParameterName)
+        public ParameterBasedOnFormNameAndValueAttribute(string name, string value, string actionParameterName)
         {
-            _name = name;
-            _value = value;
-            _actionParameterName = actionParameterName;
+            this._name = name;
+            this._value = value;
+            this._actionParameterName = actionParameterName;
         }
 
         public void OnActionExecuted(ActionExecutedContext filterContext)

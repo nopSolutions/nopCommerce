@@ -19,9 +19,9 @@
         </div>
         <div class="options">
             <a href="@Url.Action("ExportXmlAll")" class="t-button">@T("Admin.Common.ExportToXml.All")</a>
-            <button type="submit" id="exportxml-selected" class="t-button">@T("Admin.Common.ExportToXml.Selected")</button>
+            <input type="button" id="exportxml-selected" class="t-button" value="@T("Admin.Common.ExportToXml.Selected")" />
             <a href="@Url.Action("ExportExcelAll")" class="t-button">@T("Admin.Common.ExportToExcel.All")</a>
-            <button type="submit" id="exportexcel-selected" class="t-button">@T("Admin.Common.ExportToExcel.Selected")</button>
+            <input type="button" id="exportexcel-selected" class="t-button" value="@T("Admin.Common.ExportToExcel.Selected")" />
         </div>
     </div>
     <table width="100%">
@@ -87,12 +87,12 @@
             </td>
             <td class="adminData">
                 @Html.EditorFor(model => Model.GoDirectlyToNumber)
-                <button type="submit" name="go-to-order-by-number" value="go-to-order-by-number" class="t-button">@T("Admin.Common.Go")</button>
+                <input type="submit" name="go-to-order-by-number" class="t-button" value="@T("Admin.Common.Go")" />
             </td>
         </tr>
         <tr>
             <td colspan="2">
-                <button type="submit" id="btnSearch" class="t-button">@T("Admin.Common.Search")</button>
+                <input type="button" id="btnSearch" class="t-button" value="@T("Admin.Common.Search")" />
             </td>
         </tr>
     </table>

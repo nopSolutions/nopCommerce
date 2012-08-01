@@ -13,9 +13,9 @@
         </div>
         <div class="options">
             <input type="submit" value="@T("Admin.Common.Preview")" onclick="javascript:OpenWindow('@Url.RouteUrl("Product", new { productId = Model.Id, SeName = "" })', 800, 600, true); return false;" class="t-button" />
-            <button type="submit" name="save" value="save" class="t-button">@T("Admin.Common.Save")</button>
-            <button type="submit" name="save" value="save-continue" class="t-button">@T("Admin.Common.SaveContinue")</button>
-            <button type="submit" id="copyproduct" name="copyproduct" value="copyproduct" class="t-button">@T("Admin.Catalog.Products.Copy")</button>
+            <input type="submit" name="save" class="t-button" value="@T("Admin.Common.Save")" />
+            <input type="submit" name="save-continue" class="t-button" value="@T("Admin.Common.SaveContinue")" />
+            <input type="submit" id="copyproduct" name="copyproduct" class="t-button" value="@T("Admin.Catalog.Products.Copy")" />
             <span id="product-delete" class="t-button">@T("Admin.Common.Delete")</span>
         </div>
     </div>
@@ -58,7 +58,7 @@
             </tr>
             <tr>
                 <td colspan="2">
-                    <button type="submit" class="t-button t-state-default">@T("Admin.Catalog.Products.Copy")</button>
+                    <input type="submit" class="t-button" value="@T("Admin.Catalog.Products.Copy")" />
                 </td>
             </tr>
         </table>
