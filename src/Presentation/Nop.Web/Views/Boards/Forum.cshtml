@@ -30,7 +30,7 @@
                 @Model.Description</div>
             @if (Model.ForumFeedsEnabled)
             {
-                <div class="rss">
+                <div class="link-rss">
                     <a href="@Url.RouteUrl("ForumRSS", new { id = @Model.Id })">
                         <img title="@T("Forum.ForumRSSLinkTitle")" src="@Url.Content("~/content/images/icon_rss.gif")" alt="@T("Forum.RSS")" /></a>
                 </div>

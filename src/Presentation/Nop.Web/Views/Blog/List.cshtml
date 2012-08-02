@@ -16,29 +16,25 @@
 }
 <div class="blog">
     <div class="page-title">
-        <div class="title">
-            <h1>
-                @if (String.IsNullOrEmpty(Model.PagingFilteringContext.Tag))
+        <a href="@Url.RouteUrl("BlogRSS", new { languageId = Model.WorkingLanguageId })" class="link-rss">
+            <img title="@T("Blog.RSS.Hint")" src="@Url.Content("~/content/images/icon_rss.gif")" alt="@T("Blog.RSS")" /></a>
+        <h1>
+            @if (String.IsNullOrEmpty(Model.PagingFilteringContext.Tag))
+            {
+                if (Model.PagingFilteringContext.GetParsedMonth().HasValue)
                 {
-                    if (Model.PagingFilteringContext.GetParsedMonth().HasValue)
-                    {
-                    @string.Format(T("Blog.FilteredByMonth").Text, Model.PagingFilteringContext.GetParsedMonth().Value.Year, Model.PagingFilteringContext.GetParsedMonth().Value.ToString("MMMM"));
-                    }
-                    else
-                    {
-                    @T("Blog")
-                    }
+                @string.Format(T("Blog.FilteredByMonth").Text, Model.PagingFilteringContext.GetParsedMonth().Value.Year, Model.PagingFilteringContext.GetParsedMonth().Value.ToString("MMMM"));
                 }
                 else
                 {
-                    @string.Format(T("Blog.TaggedWith").Text, Model.PagingFilteringContext.Tag);
+                @T("Blog")
                 }
-            </h1>
-        </div>
-        <div class="rss">
-            <a href="@Url.RouteUrl("BlogRSS", new { languageId = Model.WorkingLanguageId })">
-                <img title="@T("Blog.RSS.Hint")" src="@Url.Content("~/content/images/icon_rss.gif")" alt="@T("Blog.RSS")" /></a>
-        </div>
+            }
+            else
+            {
+                @string.Format(T("Blog.TaggedWith").Text, Model.PagingFilteringContext.Tag);
+            }
+        </h1>
     </div>
     <div class="clear">
     </div>

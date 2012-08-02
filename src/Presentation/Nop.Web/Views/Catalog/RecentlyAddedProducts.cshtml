@@ -11,13 +11,9 @@
 @using Nop.Web.Models.Catalog;
 <div class="recently-added-products">
     <div class="page-title">
-        <div class="title">
-            <h1>@T("Products.NewProducts")</h1>
-        </div>
-        <div class="rss">
-            <a href="@Url.RouteUrl("RecentlyAddedProductsRSS")">
-                <img title="@T("Products.NewProducts.RSS.Hint")" src="@Url.Content("~/content/images/icon_rss.gif")" alt="@T("Products.NewProducts.RSS")" /></a>
-        </div>
+        <a href="@Url.RouteUrl("RecentlyAddedProductsRSS")" class="link-rss">
+            <img title="@T("Products.NewProducts.RSS.Hint")" src="@Url.Content("~/content/images/icon_rss.gif")" alt="@T("Products.NewProducts.RSS")" /></a>
+        <h1>@T("Products.NewProducts")</h1>
     </div>
     <div class="clear">
     </div>
@@ -31,7 +27,6 @@
                         @Html.Partial("_ProductBox", @item)
                     </div>
                 ))
-        </div>
-        
+        </div>        
     }
 </div>
