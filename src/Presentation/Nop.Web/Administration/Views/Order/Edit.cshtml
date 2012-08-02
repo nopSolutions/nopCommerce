@@ -132,8 +132,8 @@
                     @Html.NopLabelFor(model => model.OrderStatus): </strong>
             </td>
             <td class="adminData">
-                <b>
-                    @Model.OrderStatus</b>&nbsp;
+                <strong>
+                    @Model.OrderStatus</strong>&nbsp;
                 @if (Model.CanCancelOrder)
                 {
                     <input type="submit" name="cancelorder" value="@T("Admin.Orders.Fields.OrderStatus.Cancel")" id="cancelorder" class="adminButton" onclick="return confirm('@T("Admin.Common.AreYouSure")');"  />
@@ -1104,8 +1104,8 @@
                                             </div>
                                             }
                                             <div>
-                                                <b>
-                                                    @T("Admin.Orders.Products.License")</b>
+                                                <strong>
+                                                    @T("Admin.Orders.Products.License")</strong>
                                                 <br />
                                                 @if (item.LicenseDownloadId.HasValue && item.LicenseDownloadId.Value > 0)
                                                 {

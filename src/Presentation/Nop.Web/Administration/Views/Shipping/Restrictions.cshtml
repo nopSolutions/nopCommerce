@@ -52,12 +52,12 @@
                         <tbody>
                             <tr class="headerstyle">
                                 <th scope="col">
-                                    <b>@T("Admin.Configuration.Shipping.Restrictions.Country")</b>
+                                    <strong>@T("Admin.Configuration.Shipping.Restrictions.Country")</strong>
                                 </th>
                                 @foreach (var sm in Model.AvailableShippingMethods)
                                 {
                                     <th scope="col">
-                                        <b>@sm.Name</b>
+                                        <strong>@sm.Name</strong>
                                         <input type="checkbox" id="selectall-@(sm.Id)" />
                                     </th>
                                 }

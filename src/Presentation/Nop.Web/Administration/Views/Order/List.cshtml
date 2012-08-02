@@ -124,7 +124,7 @@
                             columns.Bound(x => x.CreatedOn);
                             columns.Bound(x => x.OrderTotal)
                                  .FooterTemplate(
-                                 string.Format("<div><b>{0}:</b></div>" +
+                                 string.Format("<div><strong>{0}:</strong></div>" +
                                  (hideProfitReport ? "{1}" : "<div>{1}: <span id=\"aggregator-profit-block\"></span></div>") +
                                  "<div>{2}: <span id=\"aggregator-tax-block\"></span></div>" +
                                  "<div>{3}: <span id=\"aggregator-total-block\"></span></div>",

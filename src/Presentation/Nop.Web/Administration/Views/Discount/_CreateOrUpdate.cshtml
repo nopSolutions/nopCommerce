@@ -378,7 +378,7 @@
     <!-- Discount requirement template -->
     <script id="discountRequirementTemplate" type="text/html">
             <div id="editrequirement{{= discountRequirementId }}">
-                <div>@T("Admin.Promotions.Discounts.Requirements.DiscountRequirementType"): <b>{{= ruleName }}</b></div>
+                <div>@T("Admin.Promotions.Discounts.Requirements.DiscountRequirementType"): <strong>{{= ruleName }}</strong></div>
                 <div id="editrequirementplaceholder{{= discountRequirementId }}" style="float:left;"></div>
                 <div style="float:right;">
                     <input type="button" id="deleterequirement{{= discountRequirementId }}" onclick="deleteRequirement({{= discountRequirementId }})" class="t-button" value="@T("Admin.Promotions.Discounts.Requirements.Remove")" />
@@ -396,7 +396,7 @@
     <table class="adminContent">
         <tr>
             <td colspan="2">
-                <b>@T("Admin.Promotions.Discounts.Requirements.AddNew")</b>
+                <strong>@T("Admin.Promotions.Discounts.Requirements.AddNew")</strong>
             </td>
         </tr>
         <tr>
