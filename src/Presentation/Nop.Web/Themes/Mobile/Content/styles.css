@@ -80,7 +80,9 @@
 .order-summary-content .removegiftcardbutton{}
 .order-summary-content .selected-checkout-attributes{margin:0;padding:0;width:100%;text-align:right;vertical-align:middle;color:#353434;}
 .order-summary-content .checkout-attributes{margin:10px 0;padding:10px 20px;background:none repeat scroll 0 0 #F7F5E8;border:1px dotted #D3D3D3;}
-.order-summary-content .checkout-attributes .textprompt{font-weight:bold;}
+.order-summary-content .checkout-attributes .text-prompt{font-weight:bold;}
+.order-summary-content .checkout-attributes ul.option-list{padding:0px;margin:0px;}
+.order-summary-content .checkout-attributes ul.option-list li{list-style:none;}
 .order-summary-content .checkout-attributes .textbox{width:300px;}
 .order-summary-content .checkout-attributes textarea{width:300px;height:150px;}
 .order-summary-content .min-amount-warning{margin:0;padding:10px 0 10px 10px;}
@@ -367,7 +369,10 @@
 .product-variant-line .add-to-cart .qty-input{display:inline-block;width:40px;}
 .product-variant-line .add-to-cart .qty-dropdown{}
 .product-variant-line .attributes{}
-.product-variant-line .attributes .textprompt{font-weight:bold;}
+.product-variant-line .attributes .text-prompt{font-weight:bold;}
+.product-variant-line .attributes .attribute-description{}
+.product-variant-line .attributes ul.option-list{padding:0px;margin:0px;}
+.product-variant-line .attributes ul.option-list li{list-style:none;}
 .product-variant-line .attributes .textbox{width:300px;}
 .product-variant-line .attributes textarea{width:300px;height:150px;}
 .product-variant-line .stock,.product-variant-line .sku,.product-variant-line .manufacturerpartnumber,.product-variant-line .gtin{}

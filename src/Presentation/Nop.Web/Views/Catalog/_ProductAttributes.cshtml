@@ -120,6 +120,129 @@
     </script>
     }
     <div class="attributes">
+        <dl>
+            @foreach (var attribute in Model)
+            {
+                string controlId = string.Format("product_attribute_{0}_{1}_{2}", attribute.ProductVariantId, attribute.ProductAttributeId, attribute.Id);
+                string textPrompt = !string.IsNullOrEmpty(attribute.TextPrompt) ? attribute.TextPrompt : attribute.Name;
+                <div>
+                    <dt>
+                        <span class="text-prompt">
+                            @textPrompt
+                        </span>
+                        @if (attribute.IsRequired)
+                        {
+                            <span class="required">*</span>
+                        }
+                        @if (!string.IsNullOrEmpty(attribute.Description))
+                        {
+                            <div class="attribute-description">
+                                @Html.Raw(attribute.Description)
+                            </div>
+                        }
+                    </dt>
+                    <dd>
+                        @switch (attribute.AttributeControlType)
+                        {
+                            case AttributeControlType.DropdownList:
+                                {
+                            <select name="@(controlId)" id="@(controlId)">
+                                @if (!attribute.IsRequired)
+                                {
+                                    <option value="0">---</option>
+                                }
+                                @foreach (var pvaValue in attribute.Values)
+                                {
+                                    <option @(pvaValue.IsPreSelected ? Html.Raw(" selected=\"selected\"") : null) value="@pvaValue.Id">@pvaValue.Name
+                                        @(!String.IsNullOrEmpty(pvaValue.PriceAdjustment) ? " [" + pvaValue.PriceAdjustment + "]" : null)
+                                    </option>
+                                }
+                            </select>
+                                }
+                                break;
+                            case AttributeControlType.RadioList:
+                                {
+                            <ul class="option-list">
+                                @foreach (var pvaValue in attribute.Values)
+                                {
+                                    <li>
+                                        <input id="@(controlId)_@(pvaValue.Id)" type="radio" name="@(controlId)" value="@pvaValue.Id" @(pvaValue.IsPreSelected ? Html.Raw(" checked=\"checked\"") : null) />
+                                        <label for="@(controlId)_@(pvaValue.Id)">@pvaValue.Name @(!String.IsNullOrEmpty(pvaValue.PriceAdjustment) ? " [" + pvaValue.PriceAdjustment + "]" : null)</label>
+                                    </li>
+                                }
+                            </ul>
+                                }
+                                break;
+                            case AttributeControlType.Checkboxes:
+                                {
+                            <ul class="option-list">
+                                @foreach (var pvaValue in attribute.Values)
+                                {                                    
+                                    <li>
+                                        <input id="@(controlId)_@(pvaValue.Id)" type="checkbox" name="@(controlId)" value="@pvaValue.Id" @(pvaValue.IsPreSelected ? Html.Raw(" checked=\"checked\"") : null) />
+                                        <label for="@(controlId)_@(pvaValue.Id)">@pvaValue.Name @(!String.IsNullOrEmpty(pvaValue.PriceAdjustment) ? " [" + pvaValue.PriceAdjustment + "]" : null)</label>
+                                    </li>
+                                }
+                            </ul>
+                                }
+                                break;
+                            case AttributeControlType.TextBox:
+                                {
+                            <input name="@(controlId)" type="text" class="textbox" id="@(controlId)" value="@attribute.TextValue" />
+                                }
+                                break;
+                            case AttributeControlType.MultilineTextbox:
+                                {
+                            <textarea cols="20" id="@(controlId)" name="@(controlId)">@attribute.TextValue</textarea>
+                                }
+                                break;
+                            case AttributeControlType.Datepicker:
+                                {
+                            @Html.DatePickerDropDowns(controlId + "_day", controlId + "_month", controlId + "_year", DateTime.Now.Year, DateTime.Now.Year + 1, attribute.SelectedDay, attribute.SelectedMonth, attribute.SelectedYear)
+                                }
+                                break;
+                            case AttributeControlType.FileUpload:
+                                {
+                                    //register CSS and JS
+                                    Html.AddCssFileParts(@Url.Content("~/Content/fileuploader/fileuploader.css"));
+                                    Html.AddScriptParts(@Url.Content("~/Scripts/fileuploader.js"));
+
+                                    //ex. ['jpg', 'jpeg', 'png', 'gif'] or []
+                                    var allowedFileExtensions = string.Join(", ", attribute.AllowedFileExtensions.Select(x => "'" + x.Trim() + "'").ToList());
+                            
+                            <input id="@(controlId)" name="@(controlId)" type="hidden" />
+                            <div id="@(controlId)uploader">
+                            </div>
+                            <script type="text/javascript">
+                            $(function () {                   
+                                var @(controlId)uploader = new qq.FileUploader({
+                                    element: document.getElementById('@(controlId)uploader'),
+                                    action: '@(Url.RouteUrl("UploadFileProductAttribute", new { productVariantId = @attribute.ProductVariantId, productAttributeId = @attribute.ProductAttributeId }))',
+                                    onComplete: function(id, fileName, responseJSON){
+                                        $("#@(controlId)").val(responseJSON.downloadGuid);
+                                        if (responseJSON.message) {
+                                            alert(responseJSON.message);
+                                        }
+                                    },
+                                    allowedExtensions: [@Html.Raw(allowedFileExtensions)],
+                                    strings: {
+                                        upload: "@T("Common.FileUploader.Upload")",
+                                        drop: "@T("Common.FileUploader.DropFiles")",
+                                        cancel: "@T("Common.FileUploader.Cancel")",
+                                        failed: "@T("Common.FileUploader.Failed")"
+                                    }
+                                });
+                            });
+                            </script>
+                                }
+                                break;
+                        }
+                    </dd>
+                </div>
+            }
+        </dl>
+    </div>
+@*<div class="attributes">
         @foreach (var attribute in Model)
         {
             string controlId = string.Format("product_attribute_{0}_{1}_{2}", attribute.ProductVariantId, attribute.ProductAttributeId, attribute.Id);
@@ -239,5 +362,5 @@
                 }
             </div>
         }
-    </div>
+    </div>*@
 }

@@ -4,89 +4,90 @@
 @if (Model.Count > 0)
 {
     <div class="checkout-attributes">
-        @foreach (var attribute in Model)
-        {
-            string controlId = string.Format("checkout_attribute_{0}", attribute.Id);
-            <div>
-                @if (attribute.IsRequired)
-                {
-                    <span>*</span>
-                }
-                @if (!string.IsNullOrEmpty(attribute.TextPrompt))
-                {
-                    <span class="textprompt">@attribute.TextPrompt</span>
-                }
-                else
-                {
-                    <span class="textprompt">@attribute.Name</span>
-                }
-                @if (attribute.AttributeControlType == AttributeControlType.TextBox ||
-                    attribute.AttributeControlType == AttributeControlType.FileUpload)
-                {
-                    <text>&nbsp;&nbsp;&nbsp;</text>
-                }
-                else
-                {
-                    <br />
-                }
-                @switch (attribute.AttributeControlType)
-                {
-                    case AttributeControlType.DropdownList:
+        <dl>
+            @foreach (var attribute in Model)
+            {
+                string controlId = string.Format("checkout_attribute_{0}", attribute.Id);
+                string textPrompt = !string.IsNullOrEmpty(attribute.TextPrompt) ? attribute.TextPrompt : attribute.Name;
+                <div>
+                    <dt>
+                        <span class="text-prompt">
+                            @textPrompt
+                        </span>
+                        @if (attribute.IsRequired)
                         {
-                    <select name="@(controlId)" id="@(controlId)">
-                        @if (!attribute.IsRequired)
-                        {
-                            <option value="0">---</option>
+                            <span class="required">*</span>
                         }
-                        @foreach (var caValue in attribute.Values)
+                    </dt>
+                    <dd>
+                        @switch (attribute.AttributeControlType)
                         {
-                            <option @(caValue.IsPreSelected ? Html.Raw(" selected=\"selected\"") : null) value="@caValue.Id">@caValue.Name
-                                @(!String.IsNullOrEmpty(caValue.PriceAdjustment) ? " [" + caValue.PriceAdjustment + "]" : null)
-                            </option>
-                        }
-                    </select>
-                        }
-                        break;
-                    case AttributeControlType.RadioList:
-                        {
-                            foreach (var caValue in attribute.Values)
-                            {
-                    <input id="@(controlId)" type="radio" name="@(controlId)" value="@caValue.Id" @(caValue.IsPreSelected ? Html.Raw(" checked=\"checked\"") : null) />
-                    <label for="@(controlId)">@caValue.Name @(!String.IsNullOrEmpty(caValue.PriceAdjustment) ? " [" + caValue.PriceAdjustment + "]" : null)</label>
-                            }
-                        }
-                        break;
-                    case AttributeControlType.Checkboxes:
-                        {
-                            foreach (var caValue in attribute.Values)
-                            {
-                    <input id="@(controlId)" type="checkbox" name="@(controlId)" value="@caValue.Id" @(caValue.IsPreSelected ? Html.Raw(" checked=\"checked\"") : null) />
-                    <label for="@(controlId)">@caValue.Name @(!String.IsNullOrEmpty(caValue.PriceAdjustment) ? " [" + caValue.PriceAdjustment + "]" : null)</label>
-                            }
-                        }
-                        break;
-                    case AttributeControlType.TextBox:
-                        {
-                    <input name="@(controlId)" type="text" class="textbox" id="@(controlId)" @(!String.IsNullOrWhiteSpace(attribute.DefaultValue) ? " value=" + attribute.DefaultValue : null) />
-                        }
-                        break;
-                    case AttributeControlType.MultilineTextbox:
-                        {
-                    <textarea id="@(controlId)" name="@(controlId)">@(!String.IsNullOrWhiteSpace(attribute.DefaultValue) ? attribute.DefaultValue : null)</textarea>
-                        }
-                        break;
-                    case AttributeControlType.Datepicker:
-                        {
+                            case AttributeControlType.DropdownList:
+                                {
+                            <select name="@(controlId)" id="@(controlId)">
+                                @if (!attribute.IsRequired)
+                                {
+                                    <option value="0">---</option>
+                                }
+                                @foreach (var caValue in attribute.Values)
+                                {
+                                    <option @(caValue.IsPreSelected ? Html.Raw(" selected=\"selected\"") : null) value="@caValue.Id">@caValue.Name
+                                        @(!String.IsNullOrEmpty(caValue.PriceAdjustment) ? " [" + caValue.PriceAdjustment + "]" : null)
+                                    </option>
+                                }
+                            </select>
+                                }
+                                break;
+                            case AttributeControlType.RadioList:
+                                {
+                            <ul class="option-list">
+                                @foreach (var caValue in attribute.Values)
+                                {
+                                    <li>
+                                        <input id="@(controlId)" type="radio" name="@(controlId)" value="@caValue.Id" @(caValue.IsPreSelected ? Html.Raw(" checked=\"checked\"") : null) />
+                                        <label for="@(controlId)">@caValue.Name @(!String.IsNullOrEmpty(caValue.PriceAdjustment) ? " [" + caValue.PriceAdjustment + "]" : null)</label>
+                                    </li>
+                                }
+                            </ul>
+                                }
+                                break;
+                            case AttributeControlType.Checkboxes:
+                                {
+                            <ul class="option-list">
+                                @foreach (var caValue in attribute.Values)
+                                {
+                                    <li>
+                                        <input id="@(controlId)" type="checkbox" name="@(controlId)" value="@caValue.Id" @(caValue.IsPreSelected ? Html.Raw(" checked=\"checked\"") : null) />
+                                        <label for="@(controlId)">@caValue.Name @(!String.IsNullOrEmpty(caValue.PriceAdjustment) ? " [" + caValue.PriceAdjustment + "]" : null)</label>
+                                    </li>
+                                }
+                            </ul>
+                                }
+                                break;
+                            case AttributeControlType.TextBox:
+                                {
+                            <input name="@(controlId)" type="text" class="textbox" id="@(controlId)" @(!String.IsNullOrWhiteSpace(attribute.DefaultValue) ? " value=" + attribute.DefaultValue : null) />
+                                }
+                                break;
+                            case AttributeControlType.MultilineTextbox:
+                                {
+                            <textarea id="@(controlId)" name="@(controlId)">@(!String.IsNullOrWhiteSpace(attribute.DefaultValue) ? attribute.DefaultValue : null)</textarea>
+                                }
+                                break;
+                            case AttributeControlType.Datepicker:
+                                {
                             @Html.DatePickerDropDowns(controlId + "_day", controlId + "_month", controlId + "_year", DateTime.Now.Year, DateTime.Now.Year + 1, attribute.SelectedDay, attribute.SelectedMonth, attribute.SelectedYear)
+                                }
+                                break;
+                            case AttributeControlType.FileUpload:
+                                {
+                            <input type="file" id="@(controlId)" name="@(controlId)"></input>
+                                }
+                                break;
                         }
-                        break;
-                    case AttributeControlType.FileUpload:
-                        {
-                    <input type="file" id="@(controlId)" name="@(controlId)"></input>
-                        }
-                        break;
-                }
-            </div>
-        }
+                    </dd>
+                </div>
+            }
+        </dl>
     </div>
 }

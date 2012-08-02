@@ -58,14 +58,6 @@ label{padding-left:3px;}
 .headerstyle th a{font-weight:700;text-decoration:none;text-align:center;color:#fff;display:block;padding-right:10px;}
 .rowstyle td,.altrowstyle td{padding:4px 10px;border-right:solid 1px #A0C0E7;border-right-color:gray;}
 .PagerStyle{height:28px;background:url(Images/grid_header_back.png) repeat-x;background:#EEE;vertical-align:middle;}
-/* HOME PAGES */
-.homepage{}
-.homepage .intro{font-weight:700;padding:5px;background:#fcfabc;border:dashed 1px #dfdfdf;margin-bottom:10px;}
-.homepage .options{padding:10px;background:#e7efef;}
-.homepage .options ul{margin:0;padding:0;}
-.homepage .options ul li{margin-bottom:5px;padding-bottom:5px;list-style:none;}
-.homepage .options .title{}
-.homepage .options .description p{margin-top:5px;margin-bottom:5px;}
 /* MISC. CLASSES */
 .clear{border:medium none;clear:both;float:none;font-size:0;height:0;line-height:0;}
 .progress{position:absolute;top:20px;width:280px;height:40px;left:0;right:0;margin-left:auto;margin-right:auto;background:none repeat scroll 0 0 #FFF;padding:5px 10px;text-align:center;z-index:2147483647;}
@@ -114,9 +106,17 @@ table.stats td.bestsellers{width:50%;vertical-align:top;}
 .nop-news .newsitem .newsdetails{color:#333;margin-bottom:10px;}
 .nop-news .adv{border-top:solid 3px #dfdfdf;padding:1px 0;text-align:right;}
 .nop-news .adv a{color:#D16400;}
-/* ORDER EDITING */
+/* ORDER AND PRODUCT EDITING */
 table.order-edit{width:100%;border:solid 1px #000;padding:5px;}
 table.order-edit td{padding:1px 5px;border:medium none;}
+.product-attributes-input{}
+.product-attributes-input .text-prompt{font-weight:bold;}
+.product-attributes-input .required{color:Red;}
+.product-attributes-input .attribute-description{font-size:11px;}
+.product-attributes-input ul.option-list{padding:0px;margin:0px;}
+.product-attributes-input ul.option-list li{list-style:none;}
+.product-attributes-input .textbox{width:300px;}
+.product-attributes-input textarea{width:300px;height:150px;}
 /* WARNINGS */
 .system-warnings ul{padding-left:5px;}
 .system-warnings .inprogress,.system-warnings .pass,.system-warnings .fail,.system-warnings .warning{padding-left:40px;display:block;min-height:35px;font-size:120%;vertical-align:middle;}
