@@ -10,12 +10,12 @@
         function OnAuthenticateSuccess@(Model.Id)(context) {
             if (context.Authenticated)
             {
-                $('#ph-title-@Model.Id .htmlcontent-title h2.htmlcontent-header').html(context.Title);
-                if ($('#ph-title-@Model.Id .htmlcontent-title h2.htmlcontent-header').text().length == 0)
+                $('#ph-title-@Model.Id .topic-html-content-title h2.topic-html-content-header').html(context.Title);
+                if ($('#ph-title-@Model.Id .topic-html-content-title h2.topic-html-content-header').text().length == 0)
                 {
                     $('#ph-title-@Model.Id').hide();
                 }
-                $('#ph-topic-@Model.Id .htmlcontent-body').html(context.Body);
+                $('#ph-topic-@Model.Id .topic-html-content-body').html(context.Body);
                 $('#ph-password-@Model.Id').hide();
                 $('#ph-topic-@Model.Id').show();
             }
@@ -50,33 +50,33 @@
             </div>
         }
     </div>
-    <div class="htmlcontent" id="ph-topic-@Model.Id">
+    <div class="topic-html-content" id="ph-topic-@Model.Id">
         <div id="ph-title-@Model.Id">
-            <div class="htmlcontent-title">
-                <h2 class="htmlcontent-header">
+            <div class="topic-html-content-title">
+                <h2 class="topic-html-content-header">
                     @Model.Title</h2>
             </div>
             <div class="clear">
             </div>
         </div>
-        <div class="htmlcontent-body">
+        <div class="topic-html-content-body">
             @Html.Raw(Model.Body)
         </div>
     </div>
 }
 else
 {
-    <div class="htmlcontent">
+    <div class="topic-html-content">
         @if (!String.IsNullOrEmpty(Model.Title))
         {
-            <div class="htmlcontent-title">
-                <h2 class="htmlcontent-header">
+            <div class="topic-html-content-title">
+                <h2 class="topic-html-content-header">
                     @Model.Title</h2>
             </div>
             <div class="clear">
             </div>
         }
-        <div class="htmlcontent-body">
+        <div class="topic-html-content-body">
             @Html.Raw(Model.Body)
         </div>
     </div>

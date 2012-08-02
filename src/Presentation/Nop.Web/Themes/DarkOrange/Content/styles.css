@@ -1,5 +1,5 @@
 ﻿.foo{}
-/* Contributor(s): RetroViz Design. */
+/* Contributor(s): RetroViz Design */
 /* HTML GENERAL */
 body,h1,h2,h3,h4,h5,h6,address,blockquote,dd,dl,hr,form,input{margin:0;padding:0;}
 body{font-family:arial, verdana, helvetica, sans-serif;font-size:12px;background:#444 url(images/bg_body.gif) repeat-x;color:#f93;}
@@ -10,12 +10,6 @@ h1,h2,h3,h4,h5,h6{font-family:arial, helvetica, sans-serif;}
 h2,h3{font-size:16px;}
 textarea{width:100%;font-family:Verdana, Arial, sans-serif;font-size:11px;}
 checkbox,input,radio,select,button{font-size:11px;}
-/* fix ie button padding bug  - apply to all button classes
-input
-{
-	width: auto;
-	overflow: visible;
-}*/
 /* MASTER PAGE WRAPPERS */
 .master-wrapper-page{margin:10px auto;width:960px;}
 .master-wrapper-content{float:left;width:960px;margin:15px 0 0;text-align:left;background:#555 url(images/bg_container.gif) repeat-x;}
@@ -97,11 +91,11 @@ td.fieldname{font-size:12px;}
 .data-table th,.data-table td{border-bottom:1px solid;border-right:1px solid;}
 .data-table .odd{}
 .data-table .even{background-color: #F4FAFF;}
-.htmlcontent{padding-bottom:5px;}
-.htmlcontent-title{padding:0 0 5px;clear:both;}
-.htmlcontent-header{font-size:1.2em;font-weight:700;}
-.htmlcontent-body{}
-.htmlcontent-body a{text-decoration:underline;color:#f93;}
+.topic-html-content{padding-bottom:5px;}
+.topic-html-content-title{padding:0 0 5px;clear:both;}
+.topic-html-content-header{font-size:1.2em;font-weight:700;}
+.topic-html-content-body{}
+.topic-html-content-body a{text-decoration:underline;color:#f93;}
 .topic-page{}
 .topic-page .topic-page-body{}
 .topic-page .topic-page-body a{text-decoration:underline;color:#f93;}
