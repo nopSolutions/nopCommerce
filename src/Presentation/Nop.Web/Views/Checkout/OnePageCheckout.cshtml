@@ -19,7 +19,7 @@
     <div class="clear">
     </div>
     <div class="checkout-data">
-        <ol class="opc" id="checkoutSteps">
+        <ol class="opc" id="checkout-steps">
             <li id="opc-billing" class="section allow">
                 <div class="step-title">
                     <span class="number">1</span>
@@ -193,7 +193,7 @@
         </ol>
     </div>
     <script type="text/javascript">
-        Accordion.init('checkoutSteps', '.step-title', true);
+        Accordion.init('checkout-steps', '.step-title', true);
         Accordion.openSection('#opc-billing');
 
         Checkout.init('@(storeLocation)cart/');

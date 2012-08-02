@@ -9,11 +9,11 @@
         <div class="clear">
         </div>
         <div class="listbox">
-            <ul id="blog_month_list">
+            <ul id="blog-month-list">
                 @foreach (var yearItem in Model)
                 {
                     <li class="year">@(yearItem.Year)
-                        <ul id="blog_year_@(yearItem.Year)">
+                        <ul id="blog-year-@(yearItem.Year)">
                             @foreach (var monthItem in yearItem.Months)
                             {
                                 <li><a href="@Url.RouteUrl("BlogByMonth", new { month = yearItem.Year + "-" + monthItem.Month })">@(new DateTime(yearItem.Year, monthItem.Month, 1).ToString("MMMM"))

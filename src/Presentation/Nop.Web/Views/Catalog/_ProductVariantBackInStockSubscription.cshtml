@@ -8,10 +8,10 @@
             //use fancybox to how nice pop-up
             Html.AddScriptParts(@Url.Content("~/Scripts/jquery.fancybox-1.3.4.pack.js"));
             Html.AddCssFileParts(@Url.Content("~/Content/fancybox/jquery.fancybox-1.3.4.css"));
-            <input type="button" id="backinstocksubscribe-@Model.Id" class="button-1 subscribe-button" value="@T("BackInStockSubscriptions.NotifyMeWhenAvailable")" />
+            <input type="button" id="back-in-stock-subscribe-@Model.Id" class="button-1 subscribe-button" value="@T("BackInStockSubscriptions.NotifyMeWhenAvailable")" />
             <script type="text/javascript">
 
-                $("#backinstocksubscribe-@Model.Id").fancybox({
+                $("#back-in-stock-subscribe-@Model.Id").fancybox({
                     'href': '@Url.RouteUrl("BackInStockSubscribePopup", new { productVariantId = @Model.Id })',
                     'speedIn': 600,
                     'speedOut': 200,

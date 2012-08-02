@@ -6,14 +6,14 @@
     <script type="text/javascript">
         $(document).ready(function () {
 
-            $('#selectallsent').click(function () {
-                $('#pmsenttable .rowcheckbox').attr('checked', $(this).is(':checked')).change();
+            $('#selectall-sent').click(function () {
+                $('#pm-sent-table .rowcheckbox').attr('checked', $(this).is(':checked')).change();
             });
 
-            $('#pmsenttable .rowcheckbox').live('change', function (e) {
-                var numChkBoxes = $('#pmsenttable .rowcheckbox').length;
-                var numChkBoxesChecked = $('#pmsenttable .rowcheckbox:checked').length;
-                $('#selectallsent').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
+            $('#pm-sent-table .rowcheckbox').live('change', function (e) {
+                var numChkBoxes = $('#pm-sent-table .rowcheckbox').length;
+                var numChkBoxesChecked = $('#pm-sent-table .rowcheckbox:checked').length;
+                $('#selectall-sent').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
             });
         });
     </script>
@@ -23,7 +23,7 @@
         {
             
             
-        <table class="pm-grid-table-style" cellspacing="0" cellpadding="4" id="pmsenttable">
+        <table class="pm-grid-table-style" cellspacing="0" cellpadding="4" id="pm-sent-table">
             <col width="5%" />
             <col width="20%" />
             <col width="50%" />
@@ -31,7 +31,7 @@
             <thead>
                 <tr class="pm-grid-header-style">
                     <th class="a-center">
-                        <input type="checkbox" id="selectallsent" />
+                        <input type="checkbox" id="selectall-sent" />
                     </th>
                     <th class="a-center">
                         @T("PrivateMessages.Inbox.ToColumn")

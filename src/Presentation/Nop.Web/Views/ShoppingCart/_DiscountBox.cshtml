@@ -12,7 +12,7 @@
             @T("ShoppingCart.DiscountCouponCode.Tooltip")
         </div>
         <div class="coupon-code">
-            <input name="discountcouponcode" type="text" id="discountcouponcode" class="discountcouponcode" />&nbsp;
+            <input name="discountcouponcode" type="text" class="discount-coupon-code" />&nbsp;
             <input type="submit" name="applydiscountcouponcode" value="@T("ShoppingCart.DiscountCouponCode.Button")" class="button-2 apply-discount-coupon-code-button" />
         </div>
         @if (!String.IsNullOrEmpty(Model.Message))
@@ -26,7 +26,7 @@
             <div class="current-code">
                 @string.Format(T("ShoppingCart.DiscountCouponCode.CurrentCode").Text, Model.CurrentCode)
                 @*empty value (little hack for FormValueExistsAttribute)*@
-                <input type="submit" name="removediscountcouponcode" value=" " title="@T("Common.Remove")" class="removediscountbutton" />
+                <input type="submit" name="removediscountcouponcode" value=" " title="@T("Common.Remove")" class="remove-discount-button" />
             </div>
         }
     </div>

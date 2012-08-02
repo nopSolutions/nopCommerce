@@ -4,29 +4,29 @@
 {
     <script type="text/javascript">    
         $(document).ready(function () {
-            $('#phTopic-@Model.Id').hide();            
-            $('#phPassword-@Model.Id #password-@Model.Id').select().focus();
+            $('#ph-topic-@Model.Id').hide();            
+            $('#ph-password-@Model.Id #password-@Model.Id').select().focus();
         });    
         function OnAuthenticateSuccess@(Model.Id)(context) {
             if (context.Authenticated)
             {
-                $('#phTitle-@Model.Id .htmlcontent-title h2.htmlcontent-header').html(context.Title);
-                if ($('#phTitle-@Model.Id .htmlcontent-title h2.htmlcontent-header').text().length == 0)
+                $('#ph-title-@Model.Id .htmlcontent-title h2.htmlcontent-header').html(context.Title);
+                if ($('#ph-title-@Model.Id .htmlcontent-title h2.htmlcontent-header').text().length == 0)
                 {
-                    $('#phTitle-@Model.Id').hide();
+                    $('#ph-title-@Model.Id').hide();
                 }
-                $('#phTopic-@Model.Id .htmlcontent-body').html(context.Body);
-                $('#phPassword-@Model.Id').hide();
-                $('#phTopic-@Model.Id').show();
+                $('#ph-topic-@Model.Id .htmlcontent-body').html(context.Body);
+                $('#ph-password-@Model.Id').hide();
+                $('#ph-topic-@Model.Id').show();
             }
             else
             {
-                $('#passworderror-@Model.Id').text(context.Error);
-                $('#phPassword-@Model.Id #password-@Model.Id').select().focus();
+                $('#password-error-@Model.Id').text(context.Error);
+                $('#ph-password-@Model.Id #password-@Model.Id').select().focus();
             }
         }
     </script>
-    <div id="phPassword-@Model.Id">
+    <div id="ph-password-@Model.Id">
         @using (Ajax.BeginRouteForm("TopicAuthenticate", new AjaxOptions
         {
             HttpMethod = "Post",
@@ -46,12 +46,12 @@
                 </span>
             </div>
             <div class="password-error">
-                <span id="passworderror-@Model.Id"></span>
+                <span id="password-error-@Model.Id"></span>
             </div>
         }
     </div>
-    <div class="htmlcontent" id="phTopic-@Model.Id">
-        <div id="phTitle-@Model.Id">
+    <div class="htmlcontent" id="ph-topic-@Model.Id">
+        <div id="ph-title-@Model.Id">
             <div class="htmlcontent-title">
                 <h2 class="htmlcontent-header">
                     @Model.Title</h2>

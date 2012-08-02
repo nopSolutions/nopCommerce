@@ -5,7 +5,7 @@
     //we do not use Model.DefaultPictureModel in mobile version
     var defaultPicture = Model.PictureModels.FirstOrDefault();
     <div class="defaultpicture">
-        <img id="defaultimage" alt="@defaultPicture.AlternateText" src="@defaultPicture.FullSizeImageUrl" title="@defaultPicture.Title" />
+        <img id="default-image" alt="@defaultPicture.AlternateText" src="@defaultPicture.FullSizeImageUrl" title="@defaultPicture.Title" />
     </div>
 }
 @if (Model.PictureModels.Count > 1)
@@ -14,7 +14,7 @@
         function UpdateMainImage(url) {
             //show progress
             $.mobile.showPageLoadingMsg();
-            $('#defaultimage').attr("src", url);
+            $('#default-image').attr("src", url);
             //hide progress
             $.mobile.hidePageLoadingMsg();
         }

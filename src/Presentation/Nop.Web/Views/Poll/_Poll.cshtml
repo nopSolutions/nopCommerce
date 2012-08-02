@@ -1,7 +1,7 @@
 ﻿@model PollModel
 @using Nop.Web.Framework;
 @using Nop.Web.Models.Polls;
-<div class="poll-item" id="pollblock-@(Model.Id)">
+<div class="poll-item" id="poll-block-@(Model.Id)">
     <span class="poll-display-text">@Model.Name</span>
     @if (Model.AlreadyVoted)
     {
@@ -17,7 +17,7 @@
     }
     else
     {
-        <div id="pnl-poll-vote-@(Model.Id)" class="poll-take-poll">
+        <div class="poll-take-poll">
             @foreach (var item in Model.Answers)
             {
                 <div class="answer">
@@ -32,7 +32,7 @@
         </div>
         <div class="clear">
         </div>
-        <div id="pnl-poll-vote-error-@(Model.Id)">
+        <div id="block-poll-vote-error-@(Model.Id)">
         </div>
         
         <script type="text/javascript">
@@ -54,12 +54,12 @@
                             voteProgress.hide();
 
                             if (data.error) {
-                                $("#pnl-poll-vote-error-@(Model.Id)").html(data.error);
-                                $('#pnl-poll-vote-error-@(Model.Id)').fadeIn("slow").delay(2000).fadeOut("slow");
+                                $("#block-poll-vote-error-@(Model.Id)").html(data.error);
+                                $('#block-poll-vote-error-@(Model.Id)').fadeIn("slow").delay(2000).fadeOut("slow");
                             }
 
                             if (data.html) {
-                                $("#pollblock-@(Model.Id)").replaceWith(data.html);    
+                                $("#poll-block-@(Model.Id)").replaceWith(data.html);    
                             }
                         },
                         error:function (xhr, ajaxOptions, thrownError){

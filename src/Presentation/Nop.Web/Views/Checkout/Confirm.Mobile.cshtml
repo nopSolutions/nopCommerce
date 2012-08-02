@@ -18,7 +18,7 @@
     <div class="checkout-data">
         @*set "data-ajax" attribute to "false"*@
         @using (Html.BeginRouteForm("CheckoutConfirm", FormMethod.Post,
-                new Dictionary<string, Object> { { "data-ajax", "false" }, { "id", "confirmorderform" } }))
+                new Dictionary<string, Object> { { "data-ajax", "false" }, { "id", "confirm-order-form" } }))
         {
             @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_checkout_confirm_top" })
 
@@ -37,7 +37,7 @@
             }
             <script type="text/javascript">
                 $(document).ready(function () {
-                    $('#confirmorderform').submit(function () {
+                    $('#confirm-order-form').submit(function () {
                         $('#nextstep').addClass('ui-disabled');
                     });
                 });

@@ -23,10 +23,10 @@
     function toggleAdvancedSearch() {
 
         if ($('#@Html.FieldIdFor(model => model.As)').is(':checked')) {
-            $('#pnl-advanced-search').show();
+            $('#advanced-search-block').show();
         }
         else {
-            $('#pnl-advanced-search').hide();
+            $('#advanced-search-block').hide();
         }
     }
 
@@ -59,7 +59,7 @@
                 </tr>
                 <tr>
                     <td colspan="2">
-                        <table class="adv-search" id="pnl-advanced-search">
+                        <table class="adv-search" id="advanced-search-block">
                             <tbody>
                                 @if (Model.AvailableCategories.Count > 0)
                                 {

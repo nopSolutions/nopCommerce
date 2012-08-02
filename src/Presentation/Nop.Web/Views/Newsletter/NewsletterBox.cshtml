@@ -8,9 +8,9 @@
     <div class="clear">
     </div>
     <div class="listbox">
-        <div id="pnl-newsletter-subscribe">
+        <div id="newsletter-subscribe-block">
             @T("Newsletter.Email"):
-            @Html.TextBoxFor(x => x.NewsletterEmail, new { id = "newsletteremail" })
+            @Html.TextBoxFor(x => x.NewsletterEmail, new { id = "newsletter-email" })
             @Html.ValidationMessageFor(x => x.NewsletterEmail)
             <div class="options">
                 <input id="newsletter-subscribe" type="radio" name="newsletter-subscribe" value="newsletter-subscribe"
@@ -30,7 +30,7 @@
         </div>
         <div class="clear">
         </div>
-        <div id="pnl-newsletter-result">
+        <div id="newsletter-result-block">
         </div>
     </div>
     <script type="text/javascript">
@@ -41,7 +41,7 @@
                 if($('#newsletter-unsubscribe').is(':checked')) { 
                     subscribe = 'false';
                 }
-                var email = $("#newsletteremail").val();
+                var email = $("#newsletter-email").val();
                 var subscribeProgress = $("#subscribe-loading-progress");
                 subscribeProgress.show();
                 $.ajax({
@@ -51,13 +51,13 @@
                     data: { "subscribe": subscribe, "email": email },
                     success: function (data) {
                         subscribeProgress.hide();
-                        $("#pnl-newsletter-result").html(data.Result);
+                        $("#newsletter-result-block").html(data.Result);
                          if (data.Success) {
-                            $('#pnl-newsletter-subscribe').hide();
-                            $('#pnl-newsletter-result').show();
+                            $('#newsletter-subscribe-block').hide();
+                            $('#newsletter-result-block').show();
                          }
                          else {
-                            $('#pnl-newsletter-result').fadeIn("slow").delay(2000).fadeOut("slow");
+                            $('#newsletter-result-block').fadeIn("slow").delay(2000).fadeOut("slow");
                          }
                     },
                     error:function (xhr, ajaxOptions, thrownError){

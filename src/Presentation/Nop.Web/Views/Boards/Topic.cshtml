@@ -12,8 +12,8 @@
 }
 <script type="text/javascript">
     function handleTopicWatch(context) {
-        $('#watchtopic-top').text(context.Text);
-        $('#watchtopic-bottom').text(context.Text);
+        $('#watch-topic-top').text(context.Text);
+        $('#watch-topic-bottom').text(context.Text);
     }
 </script>
 <div class="forum-topic">
@@ -50,7 +50,7 @@
                                 "TopicWatch",
                                 new { id = @Model.Id },
                                 new AjaxOptions { HttpMethod = "Post", OnSuccess = "handleTopicWatch" },
-                                new { id = "watchtopic-top", @class = "watch-topic-link-button" })
+                                new { id = "watch-topic-top", @class = "watch-topic-link-button" })
             }
         </div>
         <div class="pager">
@@ -87,7 +87,7 @@
                             "TopicWatch",
                             new { id = @Model.Id },
                             new AjaxOptions { HttpMethod = "Post", OnSuccess = "handleTopicWatch" },
-                            new { id = "watchtopic-bottom", @class = "watch-topic-link-button" })
+                            new { id = "watch-topic-bottom", @class = "watch-topic-link-button" })
         }
     </div>
     <div class="pager">

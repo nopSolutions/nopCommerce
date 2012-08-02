@@ -15,7 +15,7 @@
 }
 <script type="text/javascript">
     function handleForumWatch(context) {
-        $('#watch_forum').text(context.Text);
+        $('#watch-forum').text(context.Text);
     }
 </script>
 <div class="forum">
@@ -43,7 +43,7 @@
                                 "ForumWatch",
                                 new { id = @Model.Id },
                                 new AjaxOptions { HttpMethod = "Post", OnSuccess = "handleForumWatch" },
-                                new { id = "watch_forum", @class = "watch-forum" })
+                                new { id = "watch-forum", @class = "watch-forum" })
                 }
             </div>
             @Html.Partial("_SearchBox")

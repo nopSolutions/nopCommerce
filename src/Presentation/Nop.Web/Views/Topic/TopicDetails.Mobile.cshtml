@@ -13,7 +13,7 @@
 {
     <script type="text/javascript">
         $(function () {
-            $('#btnPassword').click(function () {
+            $('#button-password').click(function () {
                 var topicId = $("#@Html.FieldIdFor(model => model.Id)").val();
                 var password = $('#password').val();
                 $.ajax({
@@ -24,17 +24,17 @@
                     dataType: 'json',
                     success: function (data) {
                         if (data.Authenticated) {
-                            $('#phTitle .page-title h1').html(data.Title);
-                            if ($('#phTitle .page-title h1').text().length == 0) {
-                                $('#phTitle').hide();
+                            $('#ph-title .page-title h1').html(data.Title);
+                            if ($('#ph-title .page-title h1').text().length == 0) {
+                                $('#ph-title').hide();
                             }
-                            $('#phTopic .topicpage-body').html(data.Body);
-                            $('#phPassword').hide();
-                            $('#phTopic').show();
+                            $('#ph-topic .topic-page-body').html(data.Body);
+                            $('#ph-password').hide();
+                            $('#ph-topic').show();
                         }
                         else {
-                            $('#passworderror').text(data.Error);
-                            $('#phPassword #password').select().focus();
+                            $('#password-error').text(data.Error);
+                            $('#ph-password #password').select().focus();
                         }
                     }
                 });
@@ -45,11 +45,11 @@
     
     <script type="text/javascript">
         $(document).ready(function () {
-            $('#phTopic').hide();
-            $('#phPassword #password').select().focus();
+            $('#ph-topic').hide();
+            $('#ph-password #password').select().focus();
         });
     </script>
-    <div id="phPassword">
+    <div id="ph-password">
         @using (Html.BeginRouteForm("TopicAuthenticate"))
         {
             @Html.HiddenFor(model => model.Id)
@@ -60,16 +60,16 @@
                 @Html.Password("password")
             </div>
             <div class="enter-password-button">
-                <input type="submit" id="btnPassword" value="@T("Topic.Button")"/>
+                <input type="submit" id="button-password" value="@T("Topic.Button")"/>
             </div>       
             <div class="password-error">
-                <span id="passworderror"></span>
+                <span id="password-error"></span>
             </div>
         }
     </div>
 }
-<div class="topicpage" id="phTopic">
-    <div id="phTitle">
+<div class="topic-page" id="ph-topic">
+    <div id="ph-title">
         <div class="page-title">
             <h1>
                 @Model.Title</h1>
@@ -77,7 +77,7 @@
         <div class="clear">
         </div>
     </div>
-    <div class="topicpage-body">
+    <div class="topic-page-body">
         @Html.Raw(Model.Body)
     </div>
 </div>

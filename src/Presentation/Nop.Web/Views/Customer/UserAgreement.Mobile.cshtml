@@ -7,19 +7,19 @@
 <script type="text/javascript">
     $(document).ready(function () {
 
-        $("#agreementagree").click(toggleContinueButton);
+        $("#agreement-agree").click(toggleContinueButton);
 
         toggleContinueButton();
     });
 
     //    function toggleContinueButton() {
-    //        if ($('#agreementagree').is(':checked')) {
-    //            $('#continuedownloading').removeAttr('disabled');
+    //        if ($('#agreement-agree').is(':checked')) {
+    //            $('#continue-downloading').removeAttr('disabled');
     //        } else {
-    //            $('#continuedownloading').attr('disabled', 'disabled');
+    //            $('#continue-downloading').attr('disabled', 'disabled');
     //        }
     //        //jQuery Mobile. If you manipulate a select via JavaScript, you must call the refresh method on it to update the visual styling.
-    //        $('#continuedownloading').button("refresh");
+    //        $('#continue-downloading').button("refresh");
     //    }
     /*
     Links styled like buttons have all the same visual options as true form-based buttons below, 
@@ -31,10 +31,10 @@
     */
 
     function toggleContinueButton() {
-        if ($('#agreementagree').is(':checked')) {
-            $('#continuedownloading').removeClass('ui-disabled');
+        if ($('#agreement-agree').is(':checked')) {
+            $('#continue-downloading').removeClass('ui-disabled');
         } else {
-            $('#continuedownloading').addClass('ui-disabled');
+            $('#continue-downloading').addClass('ui-disabled');
         }
     }
 
@@ -48,11 +48,11 @@
     <div class="page-body">
         @Html.Raw(Model.UserAgreementText)
         <div>
-            <input id="agreementagree" type="checkbox" name="agreementagree" value="@T("DownloadableProducts.IAgree")" />
-            <label for="agreementagree">@T("DownloadableProducts.IAgree")</label>
+            <input id="agreement-agree" type="checkbox" value="@T("DownloadableProducts.IAgree")" />
+            <label for="agreement-agree">@T("DownloadableProducts.IAgree")</label>
         </div>
         <div>
-            <a id="continuedownloading" data-ajax="false" data-role="button" href="@Url.RouteUrl("GetDownload", new { opvId = Model.OrderProductVariantGuid, agree = true })">@T("Common.Continue")</a>
+            <a id="continue-downloading" data-ajax="false" data-role="button" href="@Url.RouteUrl("GetDownload", new { opvId = Model.OrderProductVariantGuid, agree = true })">@T("Common.Continue")</a>
         </div>
     </div>
 </div>

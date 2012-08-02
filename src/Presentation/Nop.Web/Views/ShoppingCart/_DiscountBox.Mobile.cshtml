@@ -9,7 +9,7 @@
             <strong>@T("ShoppingCart.DiscountCouponCode")</strong></div>
         <div class="hint">@T("ShoppingCart.DiscountCouponCode.Tooltip")</div>
         <div class="coupon-code">
-            <input name="discountcouponcode" type="text" id="discountcouponcode" class="discountcouponcode" />
+            <input name="discountcouponcode" type="text" class="discount-coupon-code" />
             <input type="submit" name="applydiscountcouponcode" value="@T("ShoppingCart.DiscountCouponCode.Button")" />
         </div>
         @if (!String.IsNullOrEmpty(Model.Message))
@@ -22,7 +22,7 @@
         {
             <div class="current-code">
                 @string.Format(T("ShoppingCart.DiscountCouponCode.CurrentCode").Text, Model.CurrentCode)
-                <input type="submit" name="removediscountcouponcode" value="@T("Common.Remove")" title="@T("Common.Remove")" class="removediscountbutton" />
+                <input type="submit" name="removediscountcouponcode" value="@T("Common.Remove")" title="@T("Common.Remove")" class="remove-discount-button" />
             </div>
         }
     </div>

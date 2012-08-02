@@ -19,9 +19,9 @@
 .htmlcontent-body{}
 .htmlcontent-body a{text-decoration:underline;}
 .page-title{}
-.topicpage{padding-left:0;}
-.topicpage .topicpage-body{}
-.topicpage .topicpage-body a{text-decoration:underline;}
+.topic-page{padding-left:0;}
+.topic-page .topic-page-body{}
+.topic-page .topic-page-body a{text-decoration:underline;}
 .user-agreement-page{}
 .user-agreement-page .page-body{}
 .clear{border:medium none;clear:both;float:none;font-size:0;height:0;line-height:0;}
@@ -59,7 +59,7 @@
 .order-summary-content .coupon-box,.order-summary-content .giftcard-box{padding:10px;background:#F7F5E8;margin:0 0 10px;border:dotted 1px #d3d3d3;}
 .order-summary-content .coupon-box .current-code{}
 .order-summary-content .giftcard-box{}
-.order-summary-content .coupon-box .discountcouponcode, .order-summary-content .giftcard-box .giftcardcouponcode{}
+.order-summary-content .coupon-box .discount-coupon-code, .order-summary-content .giftcard-box .gift-card-coupon-code{}
 .order-summary-content .cart,.wishlist-content .cart{}
 .wishlist-content .cart{margin-bottom:10px;}
 .order-summary-content .cart .cart-item-row,.wishlist-content .cart .cart-item-row{font-weight:normal;}
@@ -76,8 +76,8 @@
 .cart-total-left{text-align:left;vertical-align:top;font-weight:700;color:#353434;}
 .cart-total-left-below{text-align:left;vertical-align:top;height:30px;}
 .cart-total-right{text-align:left;vertical-align:middle;padding-left:5px;}
-.order-summary-content .removediscountbutton{}
-.order-summary-content .removegiftcardbutton{}
+.order-summary-content .remove-discount-button{}
+.order-summary-content .remove-gift-card-button{}
 .order-summary-content .selected-checkout-attributes{margin:0;padding:0;width:100%;text-align:right;vertical-align:middle;color:#353434;}
 .order-summary-content .checkout-attributes{margin:10px 0;padding:10px 20px;background:none repeat scroll 0 0 #F7F5E8;border:1px dotted #D3D3D3;}
 .order-summary-content .checkout-attributes .text-prompt{font-weight:bold;}

@@ -102,9 +102,9 @@ td.fieldname{font-size:12px;}
 .htmlcontent-header{font-size:1.2em;font-weight:700;}
 .htmlcontent-body{}
 .htmlcontent-body a{text-decoration:underline;color:#f93;}
-.topicpage{}
-.topicpage .topicpage-body{}
-.topicpage .topicpage-body a{text-decoration:underline;color:#f93;}
+.topic-page{}
+.topic-page .topic-page-body{}
+.topic-page .topic-page-body a{text-decoration:underline;color:#f93;}
 .user-agreement-page{}
 .user-agreement-page .page-title{}
 .user-agreement-page .page-body{}
@@ -222,7 +222,7 @@ ul.language-list li:hover{cursor:pointer;}
 .order-summary-content .coupon-box,.order-summary-content .giftcard-box{padding:10px;font-size:11px;color:#555;background:#F7F5E8;margin:0 0 10px;border:dotted 1px #d3d3d3;}
 .order-summary-content .coupon-box .current-code{padding: 10px 0px 0px 0px;}
 .order-summary-content .giftcard-box{position:relative;z-index:1;}
-.order-summary-content .coupon-box .discountcouponcode, .order-summary-content .giftcard-box .giftcardcouponcode{width:125px;}
+.order-summary-content .coupon-box .discount-coupon-code, .order-summary-content .giftcard-box .gift-card-coupon-code{width:125px;}
 .order-summary-content .cart,.wishlist-content .cart{width:100%;border-collapse:collapse;text-align:center;vertical-align:middle;}
 .wishlist-content .cart{margin-bottom:10px;}
 .order-summary-content .cart td,.wishlist-content .cart td{padding:10px;}
@@ -242,8 +242,8 @@ ul.language-list li:hover{cursor:pointer;}
 .cart-total-left{width:100%;text-align:right;vertical-align:middle;height:21px;font-weight:700;color:#353434;}
 .cart-total-left-below{width:100%;text-align:right;vertical-align:top;height:30px;}
 .cart-total-right{text-align:right;vertical-align:middle;padding-left:5px;}
-.order-summary-content .removegiftcardbutton,.order-summary-content .removediscountbutton{padding-right:5px;padding-left:18px;background:url(images/ico-delete.gif) no-repeat;border:0;width:32px;height:15px;}
-.order-summary-content .removegiftcardbutton:hover,.order-summary-content .removediscountbutton:hover{cursor:pointer;}
+.order-summary-content .remove-gift-card-button,.order-summary-content .remove-discount-button{padding-right:5px;padding-left:18px;background:url(images/ico-delete.gif) no-repeat;border:0;width:32px;height:15px;}
+.order-summary-content .remove-gift-card-button:hover,.order-summary-content .remove-discount-button:hover{cursor:pointer;}
 .order-summary-content .selected-checkout-attributes{margin:0;padding:10px 5px 10px 0;width:100%;text-align:right;vertical-align:middle;color:#353434;}
 .order-summary-content .checkout-attributes{margin:10px 0;padding:10px 20px;background:none repeat scroll 0 0 #F7F5E8;border:1px dotted #D3D3D3;}
 .order-summary-content .checkout-attributes .text-prompt{font-weight:bold;}

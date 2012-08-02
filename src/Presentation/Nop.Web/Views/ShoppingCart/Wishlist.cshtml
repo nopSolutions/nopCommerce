@@ -109,13 +109,13 @@
                                 @if (Model.IsEditable)
                                 {
                                     <td>
-                                        <input id="removefromcart" type="checkbox" name="removefromcart" value="@(item.Id)" />
+                                        <input type="checkbox" name="removefromcart" value="@(item.Id)" />
                                     </td>
                                 }
                                 @if (Model.DisplayAddToCart)
                                 {
                                     <td>
-                                        <input id="addtocart" type="checkbox" name="addtocart" value="@(item.Id)" />
+                                        <input type="checkbox" name="addtocart" value="@(item.Id)" />
                                     </td>
                                 }
                                 @if (Model.ShowSku)
@@ -164,7 +164,7 @@
                                     {
                                         if (item.AllowedQuantities.Count > 0)
                                         {
-                                        <select name="itemquantity@(item.Id)"  id="itemquantity@(item.Id)" class="qty-dropdown">
+                                        <select name="itemquantity@(item.Id)" class="qty-dropdown">
                                             @foreach (var qty in item.AllowedQuantities)
                                             {
                                                 <option @(qty.Selected ? Html.Raw(" selected=\"selected\"") : null) value="@qty.Value">@qty.Value</option>
@@ -173,7 +173,7 @@
                                         }
                                         else
                                         {
-                                        <input name="itemquantity@(item.Id)" type="text" value="@(item.Quantity)" id="itemquantity@(item.Id)" class="qty-input"/>
+                                        <input name="itemquantity@(item.Id)" type="text" value="@(item.Quantity)" class="qty-input"/>
                                         }
                                     }
                                     else

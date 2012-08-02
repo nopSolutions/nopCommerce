@@ -2,7 +2,7 @@
 @using Nop.Web.Models.Common;
 @if (Model.AvailableStoreThemes.Count > 1)
 {
-    using (Ajax.BeginForm("StoreThemeSelected", "Common", null, new AjaxOptions { OnComplete = "onStoreThemeChangedRequestCompleted();" }, new { id = "form-storethemeselector" }))
+    using (Ajax.BeginForm("StoreThemeSelected", "Common", null, new AjaxOptions { OnComplete = "onStoreThemeChangedRequestCompleted();" }, new { id = "form-store-theme-selector" }))
     {
         var themes = Model.AvailableStoreThemes.Select(x => new SelectListItem
         {
@@ -19,7 +19,7 @@
         });
 
         function onStoreThemeChanged() {
-            $("#form-storethemeselector").submit();
+            $("#form-store-theme-selector").submit();
         }
         function onStoreThemeChangedRequestCompleted() {
             location.reload();

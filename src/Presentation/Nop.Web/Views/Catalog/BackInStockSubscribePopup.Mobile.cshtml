@@ -5,7 +5,7 @@
 }
 @using (Html.BeginForm())
 {
-    <div class="backinstocksubscriptionpage">
+    <div class="back-in-stock-subscription-page">
         <div>
             <div class="page-title">
                 <h1>
@@ -23,7 +23,7 @@
         <div>
             <a href="@Url.RouteUrl("Product", new { productId = Model.ProductId, SeName = Model.ProductSeName })">@Model.ProductName</a>
         </div>
-        <div class="backinstocksubscriptionpage-body">
+        <div class="back-in-stock-subscription-page-body">
             @if (!Model.SubscriptionAllowed)
             {
                 <div>
@@ -45,11 +45,11 @@
                 {
                 <div class="tooltip">@T("BackInStockSubscriptions.Tooltip")</div>
                 }
-                <input type="submit" id="backinstocknotifyme" name="backinstocknotifyme" value="@(Model.AlreadySubscribed ? @T("BackInStockSubscriptions.Unsubscribe").Text : @T("BackInStockSubscriptions.NotifyMe").Text)" />
+                <input type="submit" id="back-in-stock-notify-me" value="@(Model.AlreadySubscribed ? @T("BackInStockSubscriptions.Unsubscribe").Text : @T("BackInStockSubscriptions.NotifyMe").Text)" />
 
                 <script type="text/javascript">
                     $(function () {
-                        $('#backinstocknotifyme').click(function () {
+                        $('#back-in-stock-notify-me').click(function () {
                             //show progress
                             $.mobile.showPageLoadingMsg();
                             $.ajax({

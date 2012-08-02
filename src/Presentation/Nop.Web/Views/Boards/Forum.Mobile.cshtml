@@ -94,7 +94,7 @@
             {
                 <script type="text/javascript">
                     $(function () {
-                        $('#watch_forum').click(function () {
+                        $('#watch-forum').click(function () {
                             //show progress
                             $.mobile.showPageLoadingMsg();
                             $.ajax({
@@ -103,8 +103,8 @@
                                 url: '@Url.RouteUrl("ForumWatch", new { id = @Model.Id })',
                                 dataType: 'json',
                                 success: function (data) {
-                                    $('#watch_forum').val(data.Text);
-                                    $('#watch_forum').button("refresh");
+                                    $('#watch-forum').val(data.Text);
+                                    $('#watch-forum').button("refresh");
                                 },
                                 complete: function (data) {
                                     //hide progress
@@ -115,7 +115,7 @@
                         });
                     });
                 </script>
-                <input type="button" id="watch_forum" value="@Model.WatchForumText" />
+                <input type="button" id="watch-forum" value="@Model.WatchForumText" />
         }
         </div>
         <div class="pager">

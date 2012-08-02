@@ -28,13 +28,13 @@
     <script src="@Url.Content("~/Scripts/public.common.js")" type="text/javascript"></script>
 </head>
 <body class="container-main">
-    @using (Html.BeginForm("Index", "Install", FormMethod.Post, new { id = "installationform" }))
+    @using (Html.BeginForm("Index", "Install", FormMethod.Post, new { id = "installation-form" }))
     {
         //Contributor : The orchard project. Thanks a lot!
         <script type="text/javascript">
             $(document).ready(function () {
-                $('#installationform').submit(function () {
-                    if ($('#installationform').valid()) {
+                $('#installation-form').submit(function () {
+                    if ($('#installation-form').valid()) {
                         window.setTimeout(function () {
                             $(".throbber").show();
                         }, 1000);

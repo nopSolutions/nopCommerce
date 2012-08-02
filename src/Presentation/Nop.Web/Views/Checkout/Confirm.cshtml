@@ -19,13 +19,13 @@
     <div class="clear">
     </div>
     <div class="checkout-data">
-        @using (Html.BeginRouteForm("CheckoutConfirm", FormMethod.Post, new { id = "confirmorderform" }))
+        @using (Html.BeginRouteForm("CheckoutConfirm", FormMethod.Post, new { id = "confirm-order-form" }))
         {
             @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "checkout_confirm_top" })
             
             <script type="text/javascript">
                 $(document).ready(function () {
-                    $('#confirmorderform').submit(function () {
+                    $('#confirm-order-form').submit(function () {
                         $('input[type=submit]', this).attr('disabled', 'disabled');
                     });
                 });

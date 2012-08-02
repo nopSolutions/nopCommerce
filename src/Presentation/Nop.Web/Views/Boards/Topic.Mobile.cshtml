@@ -67,7 +67,7 @@
         {
             <script type="text/javascript">
                 $(function () {
-                    $('#watchtopic').click(function () {
+                    $('#watch-topic').click(function () {
                         //show progress
                         $.mobile.showPageLoadingMsg();
                         $.ajax({
@@ -76,8 +76,8 @@
                             url: '@Url.RouteUrl("TopicWatch", new { id = @Model.Id })',
                             dataType: 'json',
                             success: function (data) {
-                                $('#watchtopic').val(data.Text);
-                                $('#watchtopic').button("refresh");
+                                $('#watch-topic').val(data.Text);
+                                $('#watch-topic').button("refresh");
                             },
                             complete: function (data) {
                                 //hide progress
@@ -88,7 +88,7 @@
                     });
                 });
             </script>
-            <input type="button" id="watchtopic" value="@Model.WatchTopicText" />
+            <input type="button" id="watch-topic" value="@Model.WatchTopicText" />
         }
     </div>
     <div class="pager">
