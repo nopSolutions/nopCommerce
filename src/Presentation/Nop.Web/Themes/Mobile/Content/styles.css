@@ -475,20 +475,20 @@
 .forum-topic .posts{}
 .topic-footer{}
 .forum-topic .pager,.topic-footer .pager{padding:10px 0 10px 0;}
-.forumpost{border:1px solid #878787;margin:10px 0;}
-.forumpost .postinfo{padding:5px;border-bottom:solid 1px #F3F3F3;}
-.forumpost .postinfo .manage{}
-.forumpost .postinfo .user-info{font-weight:700;line-height:20px;padding:3px;background:#e3f3f3;}
-.forumpost .postinfo .user-info a.username{font-weight:700;margin-bottom:5px;}
-.forumpost .postinfo .user-info span.username{font-weight:700;margin-bottom:5px;}
-.forumpost .postinfo .posttime{padding:3px;background:#e3f3f3;}
-.forumpost .postinfo .posttime .stat-value{}
-.forumpost .postcontent{}
-.forumpost .postcontent .post-body{padding:3px;}
-.forumpost .postcontent .post-body a{text-decoration:underline;}
-.forumpost .postcontent .post-body .posttext{}
-.forumpost .postcontent .post-body .posttext .quote{padding:5px;border:dashed 1px #000;background-color:#fff;}
-.forumpost .postcontent .signature{border-color:#DDD;border-style:solid;border-width:1px 0 0;font-size:90%;margin:1em 8px 8px;padding:1em 0 20px;text-align:left;font-style:italic;}
+.forum-post{border:1px solid #878787;margin:10px 0;}
+.forum-post .post-info{padding:5px;border-bottom:solid 1px #F3F3F3;}
+.forum-post .post-info .manage{}
+.forum-post .post-info .user-info{font-weight:700;line-height:20px;padding:3px;background:#e3f3f3;}
+.forum-post .post-info .user-info a.username{font-weight:700;margin-bottom:5px;}
+.forum-post .post-info .user-info span.username{font-weight:700;margin-bottom:5px;}
+.forum-post .post-info .posttime{padding:3px;background:#e3f3f3;}
+.forum-post .post-info .posttime .stat-value{}
+.forum-post .post-content{}
+.forum-post .post-content .post-body{padding:3px;}
+.forum-post .post-content .post-body a{text-decoration:underline;}
+.forum-post .post-content .post-body .posttext{}
+.forum-post .post-content .post-body .posttext .quote{padding:5px;border:dashed 1px #000;background-color:#fff;}
+.forum-post .post-content .signature{border-color:#DDD;border-style:solid;border-width:1px 0 0;font-size:90%;margin:1em 8px 8px;padding:1em 0 20px;text-align:left;font-style:italic;}
 /* FORUM SEARCH */
 .forum-search-box{padding:5px 0 15px 0;}
 .forum-search{}

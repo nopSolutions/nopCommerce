@@ -5,8 +5,8 @@
 @using Nop.Web.Framework;
 @using Nop.Web.Models.Boards;
 @Html.Raw(String.Format("<a name=\"{0}\"></a>", @Model.Id))
-<div class="forumpost" id="@Html.Encode(String.Format("post{0}", @Model.Id))">
-    <div class="postinfo">
+<div class="forum-post" id="@Html.Encode(String.Format("post{0}", @Model.Id))">
+    <div class="post-info">
         <div class="manage">
             @if (Model.IsCurrentCustomerAllowedToEditPost)
             {                
@@ -70,7 +70,7 @@
             </div>
         </div>
     </div>
-    <div class="postcontent">
+    <div class="post-content">
         <div class="posttime">
             @T("Forum.Posted"): <span class="stat-value">@Model.PostCreatedOnStr</span>
             @Html.RouteLink(@T("Forum.QuotePost").Text, "PostCreateQuote", new { id = @Model.ForumTopicId, quote = @Model.Id }, new { @class = "quote-post-link-button" })

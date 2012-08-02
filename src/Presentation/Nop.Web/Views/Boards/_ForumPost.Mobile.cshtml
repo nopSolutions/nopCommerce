@@ -4,8 +4,8 @@
 @using Nop.Services.Seo;
 @using Nop.Web.Framework;
 @using Nop.Web.Models.Boards;
-<div class="forumpost">
-    <div class="postinfo">
+<div class="forum-post">
+    <div class="post-info">
         <div class="user-info">
             @if (@Model.CustomerId > 0)
             {
@@ -33,7 +33,7 @@
             }
         </div>
     </div>
-    <div class="postcontent">
+    <div class="post-content">
         <div class="post-body">
             <div class="posttext">
                 @Html.Raw(@Model.FormattedText)
