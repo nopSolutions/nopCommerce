@@ -2,14 +2,17 @@
 @using Nop.Web.Framework.UI;
 @using Nop.Web.Models.Catalog;
 <div class="breadcrumb">
-    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "productbreadcrumb_before" })
-    <a href="@Url.RouteUrl("HomePage")">@T("Products.Breadcrumb.Top")</a> /
-    @for (int i = 0; i < Model.CategoryBreadcrumb.Count; i++)
-    {
-        var catBr = Model.CategoryBreadcrumb[i];
-        <a href="@Url.RouteUrl("Category", new { categoryId = catBr.Id, SeName = catBr.SeName })">@catBr.Name</a>
-        <text>/</text>
-    }
-    <a href="@Url.RouteUrl("Product", new { productId = Model.ProductId, SeName = Model.ProductSeName })">@Model.ProductName</a>
-    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "productbreadcrumb_after" })
+    <ul>
+        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "productbreadcrumb_before" })
+        <li><a href="@Url.RouteUrl("HomePage")" title="@T("Categories.Breadcrumb.Top")">@T("Products.Breadcrumb.Top")</a>
+            <span class="delimiter">/</span> </li>
+        @for (int i = 0; i < Model.CategoryBreadcrumb.Count; i++)
+        {
+            var catBr = Model.CategoryBreadcrumb[i];
+            <li><a href="@Url.RouteUrl("Category", new { categoryId = catBr.Id, SeName = catBr.SeName })" title="@catBr.Name">@catBr.Name</a>
+                <span class="delimiter">/</span></li>
+        }
+        <strong>@Model.ProductName</strong> @*<a href="@Url.RouteUrl("Product", new { productId = Model.ProductId, SeName = Model.ProductSeName })">@Model.ProductName</a>*@
+        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "productbreadcrumb_after" })
+    </ul>
 </div>

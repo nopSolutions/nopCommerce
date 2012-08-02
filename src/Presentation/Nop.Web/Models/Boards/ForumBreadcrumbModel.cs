@@ -15,7 +15,5 @@
         public string ForumTopicSeName { get; set; }
 
         public string Separator { get; set; }
-
-        public string StoreLocation { get; set; }
     }
 }

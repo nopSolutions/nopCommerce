@@ -9,6 +9,8 @@
 {
     <div class="post-edit">
         @Html.Action("ForumBreadcrumb", new { forumId = Model.ForumId, forumTopicId = Model.Id })
+    <div class="clear">
+    </div>
         <div class="title">
             @if (Model.IsEdit)
             {

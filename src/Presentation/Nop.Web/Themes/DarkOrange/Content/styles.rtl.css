@@ -527,9 +527,13 @@ ul.language-list li:hover{cursor:pointer;}
 .contact-form .send-email .fullname{width:250px;}
 .contact-form .send-email .email{width:250px;}
 .contact-form .send-email .enquiry{width:350px;height:150px;}
-.breadcrumb{float:right;padding:0;margin:10px 0 0;font-weight:700;text-transform:uppercase;font-size:1.1em;margin-bottom:10px;direction:rtl;}
+/* breadcrumbs */
+.breadcrumb {float:right;direction:rtl;font-size:1.1em;font-weight:bold;margin:10px 0 10px;padding:0;text-transform:uppercase;}
+.breadcrumb ul{direction:rtl;text-align:right;margin:0px;padding:0px;}
+.breadcrumb li{list-style:none;display:inline;}
+.breadcrumb li strong{font-weight:bold;}
 .breadcrumb a{text-decoration:none;color:#3a3a3a;direction:rtl;text-align:right;}
-.breadcrumb a:hover{text-decoration:none;color:#f93;}
+/* news */
 .news-list, .news-list-homepage{margin-bottom:15px;padding-bottom:5px;padding-left:0;direction:rtl;text-align:right;}
 .news-list-homepage .page-title{padding:10px 0 1px;margin:0 5px 10px;font-weight:700;text-transform:uppercase;clear:both;font-size:1.1em;color:#3a3a3a;border-bottom:solid 1px #999;}
 .news-items{margin:0 5px;padding:0;}
@@ -796,9 +800,6 @@ ul.language-list li:hover{cursor:pointer;}
 .forums-main .forums-main-header .current-time{padding-top:20px;font-size:.9em;color:#555;float:right;}
 .forums-main .forums-main-header .forum-search-box{float:left;text-align:left;}
 .forums-main .active-discussions{margin-top:50px;}
-.forum-breadcrumb{padding:0;margin-bottom:10px;font-weight:700;text-transform:uppercase;font-size:1.1em;}
-.forum-breadcrumb a{text-decoration:none;color:#3a3a3a;}
-.forum-breadcrumb a:hover{text-decoration:none;color:#f93;}
 .forum-group-page .forum-search-box{text-align:left;}
 .forum-group{background:url(images/forum-footer-bg.gif) repeat-x bottom;}
 .forum-group .group-title a{font-weight:700;}

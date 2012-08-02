@@ -1638,7 +1638,6 @@ namespace Nop.Web.Controllers
         {
             var model = new ForumBreadcrumbModel();
             model.Separator = " / ";
-            model.StoreLocation = _webHelper.GetStoreLocation();
 
             ForumTopic forumTopic = null;
             if (forumTopicId.HasValue)
