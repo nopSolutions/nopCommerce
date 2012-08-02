@@ -222,12 +222,12 @@
         </div>
         @if (Model.IsEditable && Model.Items.Count > 0)
         {
-            <div class="shareinfo">
+            <div class="share-info">
                 <p>
-                    <span class="sharelabel">@T("Wishlist.YourWishlistURL"):</span>
+                    <span class="share-label">@T("Wishlist.YourWishlistURL"):</span>
                 </p>
                 <p>
-                    <a href="@Url.RouteUrl("Wishlist", new { customerGuid = Model.CustomerGuid })" class="sharelink">@Url.RouteUrl("Wishlist", new { customerGuid = Model.CustomerGuid }, "http")</a>
+                    <a href="@Url.RouteUrl("Wishlist", new { customerGuid = Model.CustomerGuid })" class="share-link">@Url.RouteUrl("Wishlist", new { customerGuid = Model.CustomerGuid }, "http")</a>
                 </p>
             </div>
         }

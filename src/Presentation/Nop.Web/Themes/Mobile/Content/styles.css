@@ -46,11 +46,11 @@
 .block{margin-bottom:15px;padding-bottom:5px;padding-left:0;color:#FFF;}
 .block .title{font-size:.9em;font-weight:700;text-transform:uppercase;padding:7px 10px;color:#333;}
 /* ORDER SUMMARY, SHOPPING CART, WISHLIST */
-.shoppingcart-page,.wishlist-page{}
-.shoppingcart-page .body,.wishlist-page .body{}
-.wishlist .shareinfo{}
-.wishlist .shareinfo .sharelabel{}
-.wishlist .shareinfo .sharelink{}
+.shopping-cart-page,.wishlist-page{}
+.shopping-cart-page .body,.wishlist-page .body{}
+.wishlist .share-info{}
+.wishlist .share-info .share-label{}
+.wishlist .share-info .share-link{}
 .order-summary-content{}
 .wishlist-content{}
 .order-summary-content .totals{padding:23px 0 0 0;}

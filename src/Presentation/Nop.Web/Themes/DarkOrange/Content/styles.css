@@ -201,12 +201,12 @@ ul.language-list li:hover{cursor:pointer;}
 .bar-notification .close{float:right;margin:9px 9px 0px 0px;cursor:pointer;}
 .bar-notification p.content{padding:0px 10px;}
 /* ORDER SUMMARY, SHOPPING CART, WISHLIST */
-.shoppingcart-page,.wishlist-page{}
-.shoppingcart-page .page-title,.wishlist-page .page-title{border-bottom:0 none;}
-.shoppingcart-page .body,.wishlist-page .body{margin:0;padding:0;font-size:11px;color:#555;}
-.wishlist .shareinfo{background:url(images/cart-footer-bg.gif) repeat-x bottom;font-size:1.2em;height:50px;padding:0 0 5px 5px;}
-.wishlist .shareinfo .sharelabel{font-weight:700;}
-.wishlist .shareinfo .sharelink{}
+.shopping-cart-page,.wishlist-page{}
+.shopping-cart-page .page-title,.wishlist-page .page-title{border-bottom:0 none;}
+.shopping-cart-page .body,.wishlist-page .body{margin:0;padding:0;font-size:11px;color:#555;}
+.wishlist .share-info{background:url(images/cart-footer-bg.gif) repeat-x bottom;font-size:1.2em;height:50px;padding:0 0 5px 5px;}
+.wishlist .share-info .share-label{font-weight:700;}
+.wishlist .share-info .share-link{}
 .order-summary-content{margin:0;padding:10px;font-size:11px;color:#555;}
 .wishlist-content{margin:0;font-size:11px;color:#555;background-color:inherit;}
 .order-summary-content .totals{float:right;padding:23px 5px 0;width:330px;}
