@@ -6,25 +6,25 @@
         <dl>
             <dt>@Html.LabelFor(model => model.RecipientName):</dt>
             <dd>
-                @Html.TextBoxFor(model => model.RecipientName, new { @class = "recipientname" })
+                @Html.TextBoxFor(model => model.RecipientName, new { @class = "recipient-name" })
             </dd>
             @if (Model.GiftCardType == Nop.Core.Domain.Catalog.GiftCardType.Virtual)
             {
             <dt>@Html.LabelFor(model => model.RecipientEmail): </dt>
             <dd>
-                @Html.TextBoxFor(model => model.RecipientEmail, new { @class = "recipientemail" })
+                @Html.TextBoxFor(model => model.RecipientEmail, new { @class = "recipient-email" })
             </dd>
             }
             <dt>
                 @Html.LabelFor(model => model.SenderName): </dt>
             <dd>
-                @Html.TextBoxFor(model => model.SenderName, new { @class = "sendername" })
+                @Html.TextBoxFor(model => model.SenderName, new { @class = "sender-name" })
             </dd>
             @if (Model.GiftCardType == Nop.Core.Domain.Catalog.GiftCardType.Virtual)
             {
             <dt>@Html.LabelFor(model => model.SenderEmail):</dt>
             <dd>
-                @Html.TextBoxFor(model => model.SenderEmail, new { @class = "senderemail" })</dd>
+                @Html.TextBoxFor(model => model.SenderEmail, new { @class = "sender-email" })</dd>
             }
             <dt>
                 @Html.LabelFor(model => model.Message): </dt>

@@ -24,7 +24,7 @@
             @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_checkout_payment_method_top" })
             if (Model.DisplayRewardPoints && Model.PaymentMethods.Count > 0)
             {
-            <div class="userewardpoints">
+            <div class="use-reward-points">
                 @Html.EditorFor(model => model.UseRewardPoints)
                 <label for="@Html.FieldIdFor(model => model.UseRewardPoints)">@string.Format(T("Checkout.UseRewardPoints").Text, Model.RewardPointsBalance, Model.RewardPointsAmount)</label>                
             </div>

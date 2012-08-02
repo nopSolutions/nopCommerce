@@ -7,7 +7,7 @@
 @using Nop.Web.Models.Boards;
 @using (Html.BeginForm())
 {
-    <div class="postedit">
+    <div class="post-edit">
         <div class="page-title">
             @if (Model.IsEdit)
             {
@@ -26,7 +26,7 @@
             @Html.HiddenFor(model => model.ForumId)
             <div class="clear">
             </div>
-            <div class="posttopic">
+            <div class="post-topic">
                 <div>
                     @T("Forum.ForumName"): @Model.ForumName
                 </div>

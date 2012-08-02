@@ -12,8 +12,8 @@
     <div class="clear">
     </div>    
 }
-<div class="activediscussions">
-    <div class="activediscussionstitle">
+<div class="active-discussions">
+    <div class="active-discussions-title">
         @T("Forum.ActiveDiscussions")
         @if (Model.ViewAllLinkEnabled == false)
         {        
@@ -31,7 +31,7 @@
                     <li>
                         <div class="topic">
                             <a href="@Url.RouteUrl("TopicSlug", new { id = @topic.Id, slug = @topic.SeName })"><span
-                                class="topicname">@topic.Subject</span> <span class="replies">@T("Forum.Replies.Count", topic.NumReplies)</span>
+                                class="topic-name">@topic.Subject</span> <span class="replies">@T("Forum.Replies.Count", topic.NumReplies)</span>
                             </a>
                         </div>
                     </li>

@@ -10,7 +10,7 @@
 
     Html.AddTitleParts(Model.Subject);
 }
-<div class="forumtopic">
+<div class="forum-topic">
     <div class="page-title">
         <h2>@Model.Subject</h2>
     </div>
@@ -32,8 +32,8 @@
     </div>
     <div class="clear">
     </div>
-    <div class="topicheader">
-        <div class="topicoptions">
+    <div class="topic-header">
+        <div class="topic-options">
             <a href="@Url.RouteUrl("PostCreate", new { id = @Model.Id })" data-role="button">@T("Forum.Reply")</a>
         </div>
         <div class="pager">
@@ -61,8 +61,8 @@
         }
     </div>
 </div>
-<div class="topicfooter">
-    <div class="topicoptions">
+<div class="topic-footer">
+    <div class="topic-options">
         @if (Model.IsCustomerAllowedToSubscribe)
         {
             <script type="text/javascript">

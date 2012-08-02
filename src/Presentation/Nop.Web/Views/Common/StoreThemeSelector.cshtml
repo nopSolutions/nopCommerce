@@ -11,7 +11,7 @@
             Selected = x.Name.Equals(Model.CurrentStoreTheme.Name, StringComparison.InvariantCultureIgnoreCase)
         });
     
-        @T("StoreTheme")<text>:</text> @Html.DropDownList("themeName", themes, new { @class = "storethemelist" })
+        @T("StoreTheme")<text>:</text> @Html.DropDownList("themeName", themes, new { @class = "store-theme-list" })
     }
     <script type="text/javascript">
         $(document).ready(function () {

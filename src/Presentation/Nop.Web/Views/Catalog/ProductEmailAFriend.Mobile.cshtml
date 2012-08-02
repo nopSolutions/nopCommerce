@@ -8,7 +8,7 @@
     Html.AddTitleParts(Model.ProductName);
     Html.AddTitleParts(T("PageTitle.ProductEmailAFriend").Text);
 }
-<div class="emailafriend-page">
+<div class="email-a-friend-page">
     <div class="page-title">
         <a href="@Url.RouteUrl("Product", new { productId = Model.ProductId, SeName = Model.ProductSeName })" class="product">@Model.ProductName</a>
     </div>
@@ -26,17 +26,17 @@
                 </div>
                 <div>
                     @Html.LabelFor(model => model.FriendEmail)
-                    @Html.TextBoxFor(model => model.FriendEmail, new { @class = "friendemail" })
+                    @Html.TextBoxFor(model => model.FriendEmail, new { @class = "friend-email" })
                     @Html.ValidationMessageFor(model => model.FriendEmail)
                 </div>
                 <div>
                     @Html.LabelFor(model => model.YourEmailAddress)
-                    @Html.TextBoxFor(model => model.YourEmailAddress, new { @class = "youremail" })
+                    @Html.TextBoxFor(model => model.YourEmailAddress, new { @class = "your-email" })
                     @Html.ValidationMessageFor(model => model.YourEmailAddress)
                 </div>
                 <div>
                     @Html.LabelFor(model => model.PersonalMessage)
-                    @Html.TextAreaFor(model => model.PersonalMessage, new { @class = "personalmessage" })
+                    @Html.TextAreaFor(model => model.PersonalMessage, new { @class = "personal-message" })
                     @Html.ValidationMessageFor(model => model.PersonalMessage)
                 </div>
                 if (Model.DisplayCaptcha)

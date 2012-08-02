@@ -13,11 +13,11 @@
     </div>
     <div class="clear">
     </div>
-    <div class="postdate">
+    <div class="post-date">
         @Model.CreatedOn.ToString("D")
     </div>
     @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_blogpost_page_before_body" })
-    <div class="postbody">
+    <div class="post-body">
         @Html.Raw(Model.Body)
     </div>
     <div class="clear">
@@ -43,16 +43,16 @@
     {
         <div class="clear">
         </div>
-        <div class="blogcomments">
+        <div class="blog-comments">
             <div class="title">
                 @T("Blog.Comments")
             </div>
             <div class="clear">
             </div>
-            <div class="newcomment">
+            <div class="new-comment">
                 @using (Html.BeginForm())
                 {
-                    <div class="leavetitle">
+                    <div class="leave-title">
                         <strong>
                             @T("Blog.Comments.LeaveYourComment")
                         </strong>
@@ -85,16 +85,16 @@
             </div>
             <div class="clear">
             </div>
-            <div class="commentlist">
+            <div class="comment-list">
                 @if (Model.Comments.Count > 0)
                 {
                     <ul data-role="listview" data-inset="true" data-filter="false">
                         @foreach (var comment in Model.Comments)
                         {
                             <li>
-                                <div class="blogcomment">
-                                    <div class="commentinfo">
-                                        <div class="userinfo">
+                                <div class="blog-comment">
+                                    <div class="comment-info">
+                                        <div class="user-info">
                                             @if (comment.AllowViewingProfiles)
                                             {
                                                 <a href="@Url.RouteUrl("CustomerProfile", new { id = comment.CustomerId })" class="username">@(comment.CustomerName)</a>
@@ -104,13 +104,13 @@
                                                 <span class="username">@(comment.CustomerName)</span>
                                             }
                                         </div>
-                                        <div class="commenttime">
-                                            @T("Blog.Comments.CreatedOn"): <span class="statvalue">@comment.CreatedOn.ToString("g")</span>
+                                        <div class="comment-time">
+                                            @T("Blog.Comments.CreatedOn"): <span class="stat-value">@comment.CreatedOn.ToString("g")</span>
                                         </div>
                                     </div>
-                                    <div class="commentcontent">
-                                        <div class="commentbody">
-                                            <span class="commenttext">
+                                    <div class="comment-content">
+                                        <div class="comment-body">
+                                            <span class="comment-text">
                                                 @Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(comment.CommentText, false, true, false, false, false, false))
                                             </span>
                                         </div>

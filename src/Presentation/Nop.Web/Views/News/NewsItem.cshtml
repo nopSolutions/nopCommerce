@@ -7,34 +7,34 @@
     //title
     Html.AddTitleParts(Model.Title);
 }
-<div class="newsitem">
+<div class="news-item">
     <div class="page-title">
         <h1>@Model.Title</h1>
     </div>
     <div class="clear">
     </div>
-    <div class="newsdate">
+    <div class="news-date">
         @Model.CreatedOn.ToString("D")
     </div>
     @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "newsitem_page_before_body" })
-    <div class="newsbody">
+    <div class="news-body">
         @Html.Raw(Model.Full)
     </div>
     @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "newsitem_page_before_comments" })
     @if (Model.AllowComments)
     {
-        <div class="newscomments">
+        <div class="news-comments">
             <div class="title">
                 @T("News.Comments")
             </div>
             <div class="clear">
             </div>
-            <div class="newcomment">
+            <div class="new-comment">
                 @using (Html.BeginForm())
                 {
                     <table>
                         <tr>
-                            <td colspan="2" class="leavetitle">
+                            <td colspan="2" class="leave-title">
                                 <strong>
                                     @T("News.Comments.LeaveYourComment")
                                 </strong>
@@ -45,7 +45,7 @@
                                 @Html.LabelFor(model => model.AddNewComment.CommentTitle):
                             </td>
                             <td>
-                                @Html.TextBoxFor(model => model.AddNewComment.CommentTitle, new { @class = "commenttitle" })
+                                @Html.TextBoxFor(model => model.AddNewComment.CommentTitle, new { @class = "comment-title" })
                                 @Html.ValidationMessageFor(model => model.AddNewComment.CommentTitle)
                             </td>
                         </tr>
@@ -54,7 +54,7 @@
                                 @Html.LabelFor(model => model.AddNewComment.CommentText):
                             </td>
                             <td>
-                                @Html.TextAreaFor(model => model.AddNewComment.CommentText, new { @class = "commenttext" })
+                                @Html.TextAreaFor(model => model.AddNewComment.CommentText, new { @class = "comment-text" })
                                 @Html.ValidationMessageFor(model => model.AddNewComment.CommentText)
                             </td>
                         </tr>
@@ -97,12 +97,12 @@
             </div>
             <div class="clear">
             </div>
-            <div class="commentlist">
+            <div class="comment-list">
                 @foreach (var comment in Model.Comments)
                 {
-                    <div class="newscomment">
-                        <div class="commentinfo">
-                            <div class="userinfo">
+                    <div class="news-comment">
+                        <div class="comment-info">
+                            <div class="user-info">
                                 @if (comment.AllowViewingProfiles)
                                 {
                                     <a href="@Url.RouteUrl("CustomerProfile", new { id = comment.CustomerId })" class="username">@(comment.CustomerName)</a>
@@ -119,15 +119,15 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="commentcontent">
-                            <div class="commenttime">
-                                @T("News.Comments.CreatedOn"): <span class="statvalue">@comment.CreatedOn.ToString("g")</span>
+                        <div class="comment-content">
+                            <div class="comment-time">
+                                @T("News.Comments.CreatedOn"): <span class="stat-value">@comment.CreatedOn.ToString("g")</span>
                             </div>
-                            <div class="commenttitle">
-                                <span class="commenttext">@comment.CommentTitle</span>
+                            <div class="comment-title">
+                                <span class="comment-text">@comment.CommentTitle</span>
                             </div>
-                            <div class="commentbody">
-                                <span class="commenttext">@Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(comment.CommentText, false, true, false, false, false, false))</span>
+                            <div class="comment-body">
+                                <span class="comment-text">@Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(comment.CommentText, false, true, false, false, false, false))</span>
                             </div>
                         </div>
                         @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "newsitem_page_inside_comment" })

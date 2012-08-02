@@ -8,7 +8,7 @@
     Html.AddTitleParts(Model.ProductName);
     Html.AddTitleParts(T("PageTitle.ProductEmailAFriend").Text);
 }
-<div class="emailafriend-page">
+<div class="email-a-friend-page">
     <div class="page-title">
         <h1>@T("Products.EmailAFriend.Title")</h1>
     </div>
@@ -31,7 +31,7 @@
                             @Html.LabelFor(model => model.FriendEmail):
                         </td>
                         <td>
-                            @Html.TextBoxFor(model => model.FriendEmail, new { @class = "friendemail" })
+                            @Html.TextBoxFor(model => model.FriendEmail, new { @class = "friend-email" })
                             @Html.ValidationMessageFor(model => model.FriendEmail)
                         </td>
                     </tr>
@@ -40,7 +40,7 @@
                             @Html.LabelFor(model => model.YourEmailAddress):
                         </td>
                         <td>
-                            @Html.TextBoxFor(model => model.YourEmailAddress, new { @class = "youremail" })
+                            @Html.TextBoxFor(model => model.YourEmailAddress, new { @class = "your-email" })
                             @Html.ValidationMessageFor(model => model.YourEmailAddress)
                         </td>
                     </tr>
@@ -49,7 +49,7 @@
                             @Html.LabelFor(model => model.PersonalMessage):
                         </td>
                         <td>
-                            @Html.TextAreaFor(model => model.PersonalMessage, new { @class = "personalmessage" })
+                            @Html.TextAreaFor(model => model.PersonalMessage, new { @class = "personal-message" })
                             @Html.ValidationMessageFor(model => model.PersonalMessage)
                         </td>
                     </tr>

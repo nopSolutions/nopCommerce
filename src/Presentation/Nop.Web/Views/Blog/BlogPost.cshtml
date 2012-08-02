@@ -19,11 +19,11 @@
     </div>
     <div class="clear">
     </div>
-    <div class="postdate">
+    <div class="post-date">
         @Model.CreatedOn.ToString("D")
     </div>
     @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "blogpost_page_before_body" })
-    <div class="postbody">
+    <div class="post-body">
         @Html.Raw(Model.Body)
     </div>
     <div class="clear">
@@ -49,18 +49,18 @@
     {
         <div class="clear">
         </div>
-        <div class="blogcomments">
+        <div class="blog-comments">
             <div class="title">
                 @T("Blog.Comments")
             </div>
             <div class="clear">
             </div>
-            <div class="newcomment">
+            <div class="new-comment">
                 @using (Html.BeginForm())
                 {
                     <table>
                         <tr>
-                            <td colspan="2" class="leavetitle">
+                            <td colspan="2" class="leave-title">
                                 <strong>
                                     @T("Blog.Comments.LeaveYourComment")
                                 </strong>
@@ -71,7 +71,7 @@
                                 @Html.LabelFor(model => model.AddNewComment.CommentText):
                             </td>
                             <td>
-                                @Html.TextAreaFor(model => model.AddNewComment.CommentText, new { @class = "commenttext" })
+                                @Html.TextAreaFor(model => model.AddNewComment.CommentText, new { @class = "comment-text" })
                                 @Html.ValidationMessageFor(model => model.AddNewComment.CommentText)
                             </td>
                         </tr>
@@ -114,12 +114,12 @@
             </div>
             <div class="clear">
             </div>
-            <div class="commentlist">
+            <div class="comment-list">
                 @foreach (var comment in Model.Comments)
                 {
-                    <div class="blogcomment">
-                        <div class="commentinfo">
-                            <div class="userinfo">
+                    <div class="blog-comment">
+                        <div class="comment-info">
+                            <div class="user-info">
                                 @if (comment.AllowViewingProfiles)
                                 {
                                     <a href="@Url.RouteUrl("CustomerProfile", new { id = comment.CustomerId })" class="username">@(comment.CustomerName)</a>
@@ -136,11 +136,11 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="commentcontent">
-                            <div class="commenttime">
-                                @T("Blog.Comments.CreatedOn"): <span class="statvalue">@comment.CreatedOn.ToString("g")</span>
+                        <div class="comment-content">
+                            <div class="comment-time">
+                                @T("Blog.Comments.CreatedOn"): <span class="stat-value">@comment.CreatedOn.ToString("g")</span>
                             </div>
-                            <div class="commentbody">
+                            <div class="comment-body">
                                 @Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(comment.CommentText, false, true, false, false, false, false))
                             </div>
                         </div>

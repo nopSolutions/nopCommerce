@@ -6,17 +6,17 @@
     <table class="cart-total">
         <tbody>
             <tr>
-                <td class="cart_total_left">
+                <td class="cart-total-left">
                     <span class="nobr">@T("ShoppingCart.Totals.SubTotal"):</span>
                 </td>
-                <td class="cart_total_right">
+                <td class="cart-total-right">
                     <span class="nobr"><span class="productPrice">@Model.SubTotal</span> </span>
                 </td>
             </tr>
             @if (!String.IsNullOrEmpty(Model.SubTotalDiscount))
             {
                 <tr>
-                    <td class="cart_total_left">
+                    <td class="cart-total-left">
                         @using (Html.BeginRouteForm("ShoppingCart", FormMethod.Post))
                         {
                             <span class="nobr">
@@ -29,13 +29,13 @@
                                 : </span>
                         }
                     </td>
-                    <td class="cart_total_right">
+                    <td class="cart-total-right">
                         <span class="nobr"><span class="productPrice">@Model.SubTotalDiscount</span> </span>
                     </td>
                 </tr>
             }
             <tr>
-                <td class="cart_total_left">
+                <td class="cart-total-left">
                     <span class="nobr">
                         @T("ShoppingCart.Totals.Shipping"):</span>
                     @if (Model.RequiresShipping && !String.IsNullOrEmpty(Model.SelectedShippingMethod))
@@ -47,7 +47,7 @@
                         </span>
                     }
                 </td>
-                <td class="cart_total_right">
+                <td class="cart-total-right">
                     <span class="nobr">
                         @if (Model.RequiresShipping)
                         {
@@ -71,10 +71,10 @@
             @if (!String.IsNullOrEmpty(Model.PaymentMethodAdditionalFee))
             {
                 <tr>
-                    <td class="cart_total_left">
+                    <td class="cart-total-left">
                         <span class="nobr">@T("ShoppingCart.Totals.PaymentMethodAdditionalFee"):</span>
                     </td>
-                    <td class="cart_total_right">
+                    <td class="cart-total-right">
                         <span class="nobr"><span class="productPrice">@Model.PaymentMethodAdditionalFee</span>
                         </span>
                     </td>
@@ -85,12 +85,12 @@
                 foreach (var taxRate in Model.TaxRates)
                 {
                 <tr>
-                    <td class="cart_total_left">
+                    <td class="cart-total-left">
                         <span class="nobr">
                             @string.Format(T("ShoppingCart.Totals.TaxRateLine").Text, taxRate.Rate)
                             :</span>
                     </td>
-                    <td class="cart_total_right">
+                    <td class="cart-total-right">
                         <span class="nobr">
                             @taxRate.Value
                         </span>
@@ -101,10 +101,10 @@
             @if (Model.DisplayTax)
             {
                 <tr>
-                    <td class="cart_total_left">
+                    <td class="cart-total-left">
                         <span class="nobr">@T("ShoppingCart.Totals.Tax"): </span>
                     </td>
-                    <td class="cart_total_right">
+                    <td class="cart-total-right">
                         <span class="nobr"><span class="productPrice">@Model.Tax</span> </span>
                     </td>
                 </tr>
@@ -112,7 +112,7 @@
             @if (!String.IsNullOrEmpty(Model.OrderTotalDiscount))
             {
                 <tr>
-                    <td class="cart_total_left">
+                    <td class="cart-total-left">
                         @using (Html.BeginRouteForm("ShoppingCart", FormMethod.Post))
                         {
                             <span class="nobr">
@@ -125,7 +125,7 @@
                                 : </span>
                         }
                     </td>
-                    <td class="cart_total_right">
+                    <td class="cart-total-right">
                         <span class="nobr"><span class="productPrice">@Model.OrderTotalDiscount</span> </span>
                     </td>
                 </tr>
@@ -135,7 +135,7 @@
                 foreach (var gc in Model.GiftCards)
                 {
                 <tr>
-                    <td class="cart_total_left">
+                    <td class="cart-total-left">
                         @using (Html.BeginRouteForm("ShoppingCart", FormMethod.Post))
                         {
                             <span class="nobr">
@@ -150,12 +150,12 @@
                             <input type="hidden" name="giftcardid" value="@gc.Id" />
                         }
                     </td>
-                    <td class="cart_total_right">
+                    <td class="cart-total-right">
                         <span class="nobr"><span class="productPrice">@gc.Amount</span> </span>
                     </td>
                 </tr>
                 <tr>
-                    <td class="cart_total_left_below">
+                    <td class="cart-total-left-below">
                         <span class="nobr"><span>
                             @string.Format(T("ShoppingCart.Totals.GiftCardInfo.Remaining").Text, gc.Remaining)
                         </span></span>
@@ -168,22 +168,22 @@
             @if (Model.RedeemedRewardPoints > 0)
             {
                 <tr>
-                    <td class="cart_total_left">
+                    <td class="cart-total-left">
                         <span class="nobr">
                             @string.Format(T("ShoppingCart.Totals.RewardPoints").Text, Model.RedeemedRewardPoints):</span>
                     </td>
-                    <td class="cart_total_right">
+                    <td class="cart-total-right">
                         <span class="nobr"><span class="productPrice">@Model.RedeemedRewardPointsAmount</span>
                         </span>
                     </td>
                 </tr>
             }
             <tr>
-                <td class="cart_total_left">
+                <td class="cart-total-left">
                     <span class="nobr">
                         @T("ShoppingCart.Totals.OrderTotal"):</span>
                 </td>
-                <td class="cart_total_right">
+                <td class="cart-total-right">
                     <span class="nobr">
                         @if (!String.IsNullOrEmpty(Model.OrderTotal))
                         {

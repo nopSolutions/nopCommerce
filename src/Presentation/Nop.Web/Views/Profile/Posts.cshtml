@@ -15,13 +15,13 @@
                         <tr>
                             <td class="a-left">
                                 <div class="topic">
-                                    <div class="topictitle">
+                                    <div class="topic-title">
                                         <span>@T("Profile.Topic")</span>:
                                         @Html.RouteLink(item.ForumTopicTitle, "TopicSlug", new { id = item.ForumTopicId, slug = item.ForumTopicSlug })
                                     </div>
-                                    <div class="topicbody">
+                                    <div class="topic-body">
                                         <span>@Html.Raw(item.ForumPostText)</span></div>
-                                    <div class="topicdata">
+                                    <div class="topic-data">
                                         <span>
                                             @T("Profile.PostedOn")</span>: <span>@item.Posted</span></div>
                                 </div>
@@ -37,7 +37,7 @@
         }
         @if (Model.PagerModel.TotalPages > 1)
         {
-            <div class="latestpostsgridpagerstyle">
+            <div class="latest-posts-grid-pager-style">
                 @Html.Pager(Model.PagerModel)
             </div>
         }

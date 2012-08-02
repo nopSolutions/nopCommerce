@@ -15,16 +15,16 @@
 }
 <script type="text/javascript">
     function handleForumWatch(context) {
-        $('#watchforum').text(context.Text);
+        $('#watch_forum').text(context.Text);
     }
 </script>
 <div class="forum">
     @Html.Action("ForumBreadcrumb", new { forumId = Model.Id })
     <div class="top">
-        <div class="foruminfo">
-            <div class="forumname">
+        <div class="forum-info">
+            <div class="forum-name">
                 @Model.Name</div>
-            <div class="forumdescription">
+            <div class="forum-description">
                 @Model.Description</div>
             @if (Model.ForumFeedsEnabled)
             {
@@ -43,7 +43,7 @@
                                 "ForumWatch",
                                 new { id = @Model.Id },
                                 new AjaxOptions { HttpMethod = "Post", OnSuccess = "handleForumWatch" },
-                                new { id = "watchforum", @class = "watchforum" })
+                                new { id = "watch_forum", @class = "watch-forum" })
                 }
             </div>
             @Html.Partial("_SearchBox")
@@ -68,12 +68,12 @@
     </div>
     <div class="clear">
     </div>
-    <div class="topicsgroup">
+    <div class="topics-group">
         <table class="topics">
             @if (Model.ForumTopics.Count > 0)
             {
-                <tr class="forumheader">
-                    <td class="topicname" colspan="2">
+                <tr class="forum-header">
+                    <td class="topic-name" colspan="2">
                         @T("Forum.TopicTitle")
                     </td>
                     <td class="replies">
@@ -82,7 +82,7 @@
                     <td class="views">
                         @T("Forum.Views")
                     </td>
-                    <td class="lastpost">
+                    <td class="last-post">
                         @T("Forum.LatestPost")
                     </td>
                 </tr>
@@ -104,7 +104,7 @@
                         topicText = string.Format("[{0}]", @T("Forum.Sticky").ToString());
                         break;
                     case ForumTopicType.Announcement:
-                        topicType = "postannoucement";
+                        topicType = "post-annoucement";
                         topicText = string.Format("[{0}]", @T("Forum.Announcement").ToString());
                         break;
                     default:
@@ -115,19 +115,19 @@
                             </div>
                         }
                     </td>
-                    <td class="topicname">
+                    <td class="topic-name">
                         @if (!String.IsNullOrEmpty(@topicText))
                         {
                             <span class="topictype">@topicText</span>
                         }
-                        @Html.RouteLink(@topic.Subject, "TopicSlug", new { id = @topic.Id, slug = @topic.SeName }, new { @class = "topictitle" })
+                        @Html.RouteLink(@topic.Subject, "TopicSlug", new { id = @topic.Id, slug = @topic.SeName }, new { @class = "topic-title" })
                         @if (@topic.NumPosts > Model.PostsPageSize)
                         {   
                             <div class="topicspager">
                                 @Html.ForumTopicSmallPager(topic)
                             </div>
                         }
-                        <div class="topicstarter">
+                        <div class="topic-starter">
                             @if (@topic.CustomerId > 0)
                             {
                                 if (topic.AllowViewingProfiles && !topic.IsCustomerGuest)
@@ -147,7 +147,7 @@
                     <td class="views">
                         @topic.Views
                     </td>
-                    <td class="lastpost">
+                    <td class="last-post">
                         @Html.Action("LastPost", new { forumPostId = @topic.LastPostId, showTopic = false })
                     </td>
                 </tr>

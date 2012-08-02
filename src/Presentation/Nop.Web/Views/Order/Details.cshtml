@@ -324,11 +324,11 @@
             <table class="cart-total">
                 <tbody>
                     <tr>
-                        <td class="cart_total_left">
+                        <td class="cart-total-left">
                             <strong>
                                 @T("Order.SubTotal"):</strong>
                         </td>
-                        <td class="cart_total_right">
+                        <td class="cart-total-right">
                             <span class="nobr">
                                 @Model.OrderSubtotal
                             </span>
@@ -337,11 +337,11 @@
                     @if (!string.IsNullOrEmpty(Model.OrderSubTotalDiscount))
                     {
                         <tr>
-                            <td class="cart_total_left">
+                            <td class="cart-total-left">
                                 <strong>
                                     @T("Order.SubTotalDiscount"):</strong>
                             </td>
-                            <td class="cart_total_right">
+                            <td class="cart-total-right">
                                 <span class="nobr">
                                     @Model.OrderSubTotalDiscount
                                 </span>
@@ -351,11 +351,11 @@
                     @if (Model.IsShippable)
                     {
                         <tr>
-                            <td class="cart_total_left">
+                            <td class="cart-total-left">
                                 <strong>
                                     @T("Order.Shipping"):</strong>
                             </td>
-                            <td class="cart_total_right">
+                            <td class="cart-total-right">
                                 <span class="nobr">
                                     @Model.OrderShipping
                                 </span>
@@ -365,11 +365,11 @@
                     @if (!string.IsNullOrEmpty(Model.PaymentMethodAdditionalFee))
                     {
                         <tr>
-                            <td class="cart_total_left">
+                            <td class="cart-total-left">
                                 <strong>
                                     @T("Order.PaymentMethodAdditionalFee"):</strong>
                             </td>
-                            <td class="cart_total_right">
+                            <td class="cart-total-right">
                                 <span class="nobr">
                                     @Model.PaymentMethodAdditionalFee
                                 </span>
@@ -381,11 +381,11 @@
                         foreach (var taxRate in Model.TaxRates)
                         {
                         <tr>
-                            <td class="cart_total_left">
+                            <td class="cart-total-left">
                                 <strong>
                                     @string.Format(T("Order.TaxRateLine").Text, taxRate.Rate):</strong>
                             </td>
-                            <td class="cart_total_right">
+                            <td class="cart-total-right">
                                 <span class="nobr">
                                     @taxRate.Value
                                 </span>
@@ -396,11 +396,11 @@
                     @if (Model.DisplayTax)
                     {
                         <tr>
-                            <td class="cart_total_left">
+                            <td class="cart-total-left">
                                 <strong>
                                     @T("Order.Tax"):</strong>
                             </td>
-                            <td class="cart_total_right">
+                            <td class="cart-total-right">
                                 <span class="nobr">
                                     @Model.Tax
                                 </span>
@@ -410,11 +410,11 @@
                     @if (!string.IsNullOrEmpty(Model.OrderTotalDiscount))
                     {
                         <tr>
-                            <td class="cart_total_left">
+                            <td class="cart-total-left">
                                 <strong>
                                     @T("Order.TotalDiscount"):</strong>
                             </td>
-                            <td class="cart_total_right">
+                            <td class="cart-total-right">
                                 <span class="nobr">
                                     @Model.OrderTotalDiscount
                                 </span>
@@ -426,11 +426,11 @@
                         foreach (var gc in Model.GiftCards)
                         {
                         <tr>
-                            <td class="cart_total_left">
+                            <td class="cart-total-left">
                                 <strong>
                                     @string.Format(T("Order.GiftCardInfo").Text, gc.CouponCode):</strong>
                             </td>
-                            <td class="cart_total_right">
+                            <td class="cart-total-right">
                                 <span class="nobr">
                                     @gc.Amount
                                 </span>
@@ -441,10 +441,10 @@
                     @if (Model.RedeemedRewardPoints > 0)
                     {
                         <tr>
-                            <td class="cart_total_left">
+                            <td class="cart-total-left">
                                 <strong>@string.Format(T("Order.RewardPoints").Text, Model.RedeemedRewardPoints):</strong>
                             </td>
-                            <td class="cart_total_right">
+                            <td class="cart-total-right">
                                 <span class="nobr">
                                     @Model.RedeemedRewardPointsAmount
                                 </span>
@@ -452,11 +452,11 @@
                         </tr>
                     }
                     <tr>
-                        <td class="cart_total_left">
+                        <td class="cart-total-left">
                             <strong>
                                 @T("Order.OrderTotal"):</strong>
                         </td>
-                        <td class="cart_total_right">
+                        <td class="cart-total-right">
                             <strong><span class="nobr">
                                 @Model.OrderTotal
                             </span></strong>

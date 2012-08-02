@@ -7,14 +7,14 @@
 
     Html.AddTitleParts(T("Forum.PageTitle.Default").Text);
 }
-<div class="forumsmain">
+<div class="forums-main">
     <div>
         @Html.Action("TopicBlock", "Topic", new { systemName = "ForumWelcomeMessage" })
     </div>
     <div class="clear">
     </div>
-    <div class="forumsmainheader">
-        <div class="currenttime">
+    <div class="forums-main-header">
+        <div class="current-time">
             @Model.CurrentTime.ToString("F")
         </div>
         @Html.Partial("_SearchBox")

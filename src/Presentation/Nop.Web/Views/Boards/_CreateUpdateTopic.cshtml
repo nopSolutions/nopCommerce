@@ -7,7 +7,7 @@
 @using Nop.Web.Models.Boards;
 @using (Html.BeginForm())
 {
-    <div class="postedit">
+    <div class="post-edit">
         @Html.Action("ForumBreadcrumb", new { forumId = Model.ForumId, forumTopicId = Model.Id })
         <div class="title">
             @if (Model.IsEdit)
@@ -27,7 +27,7 @@
             @Html.HiddenFor(model => model.ForumId)
             <div class="clear">
             </div>
-            <table class="posttopic">
+            <table class="post-topic">
                 <tr>
                     <td class="fieldname">
                         @T("Forum.ForumName"):
@@ -41,7 +41,7 @@
                         @T("Forum.TopicTitle"):
                     </td>
                     <td>
-                        @Html.TextBoxFor(model => model.Subject, new { @class = "forumtopictitletext" })
+                        @Html.TextBoxFor(model => model.Subject, new { @class = "forum-topic-title-text" })
                         @Html.ValidationMessageFor(model => model.Subject)
                     </td>
                 </tr>
@@ -53,7 +53,7 @@
                         {
                             @Html.BBCodeEditor("Text");
                         }
-                        @Html.TextAreaFor(model => model.Text, new { @class = "forumposttext", TextMode = "MultiLine" })
+                        @Html.TextAreaFor(model => model.Text, new { @class = "forum-post-text", TextMode = "MultiLine" })
                         @Html.ValidationMessageFor(model => model.Text)
                     </td>
                 </tr>

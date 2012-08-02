@@ -47,11 +47,11 @@
         @foreach (var item in Model.BlogPosts)
         {
             <div class="post">
-                <a class="blogtitle" href="@Url.RouteUrl("BlogPost", new { blogPostId = item.Id, SeName = item.SeName })">
-                    @item.Title</a><span class="blogdate">-
+                <a class="blog-title" href="@Url.RouteUrl("BlogPost", new { blogPostId = item.Id, SeName = item.SeName })">
+                    @item.Title</a><span class="blog-date">-
                         @item.CreatedOn.ToString("D")
                     </span>
-                <div class="blogbody">
+                <div class="blog-body">
                     @Html.Raw(item.Body)
                 </div>
                 <div class="clear">
@@ -74,7 +74,7 @@
                 </div>
                 @if (item.AllowComments)
                 {
-                    <a href="@Url.RouteUrl("BlogPost", new { blogPostId = item.Id, SeName = item.SeName })" class="blogdetails">
+                    <a href="@Url.RouteUrl("BlogPost", new { blogPostId = item.Id, SeName = item.SeName })" class="blog-details">
                         @string.Format(@T("Blog.CommentsLink").Text, item.NumberOfComments)
                     </a>
                 }

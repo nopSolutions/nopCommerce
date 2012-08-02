@@ -10,14 +10,14 @@
         <div class="manage">
             @if (Model.IsCurrentCustomerAllowedToEditPost)
             {                
-                @Html.RouteLink(@T("Forum.EditPost").Text, "PostEdit", new { id = @Model.Id }, new { @class = "editpostlinkbutton" })
+                @Html.RouteLink(@T("Forum.EditPost").Text, "PostEdit", new { id = @Model.Id }, new { @class = "edit-post-link-button" })
             }
             @if (Model.IsCurrentCustomerAllowedToDeletePost)
             {
-                @Html.RouteLink(@T("Forum.DeletePost").Text, "PostDelete", new { id = @Model.Id }, new { onClick = String.Format("return confirm('{0}');", @T("Common.AreYouSure").Text), @class = "deletepostlinkbutton" })
+                @Html.RouteLink(@T("Forum.DeletePost").Text, "PostDelete", new { id = @Model.Id }, new { onClick = String.Format("return confirm('{0}');", @T("Common.AreYouSure").Text), @class = "delete-post-link-button" })
             }
         </div>
-        <div class="userinfo">
+        <div class="user-info">
             @if (@Model.CustomerId > 0)
             {
                 if (Model.AllowViewingProfiles && !Model.IsCustomerGuest)
@@ -35,36 +35,36 @@
                     <img src="@(Model.CustomerAvatarUrl)" class="avatar-img" alt="Avatar" />
                 </div>
             }
-            <div class="userstats">
+            <div class="user-stats">
                 @if (Model.IsCustomerForumModerator)
                 {
                     <div class="status">
-                        @T("Forum.Status"): <span class="statvalue">@T("Forum.Moderator")</span>
+                        @T("Forum.Status"): <span class="stat-value">@T("Forum.Moderator")</span>
                     </div>
                 }
                 @if (Model.ShowCustomersPostCount)
                 {
                     <div class="totalposts">
-                        @T("Forum.TotalPosts"): <span class="statvalue">
+                        @T("Forum.TotalPosts"): <span class="stat-value">
                             @Model.ForumPostCount</span>
                     </div>
                 }
                 @if (Model.ShowCustomersJoinDate && !Model.IsCustomerGuest)
                 {
                     <div class="joined">
-                        @T("Forum.Joined"): <span class="statvalue">@Model.CustomerJoinDate.ToString("d")</span>
+                        @T("Forum.Joined"): <span class="stat-value">@Model.CustomerJoinDate.ToString("d")</span>
                     </div>
                 }
                 @if (Model.ShowCustomersLocation && !Model.IsCustomerGuest & !String.IsNullOrEmpty(Model.CustomerLocation))
                 {
                     <div class="location">
-                        @T("Forum.Location"): <span class="statvalue">@Model.CustomerLocation</span>
+                        @T("Forum.Location"): <span class="stat-value">@Model.CustomerLocation</span>
                     </div>
                 }
                 @if (Model.AllowPrivateMessages && !Model.IsCustomerGuest)
                 {
-                    <div class="sendpmbox">
-                        @Html.RouteLink(T("Forum.PrivateMessages.PM").Text, "SendPM", new { toCustomerId = @Model.CustomerId }, new { @class = "pmlinkbutton" })
+                    <div class="send-pm-box">
+                        @Html.RouteLink(T("Forum.PrivateMessages.PM").Text, "SendPM", new { toCustomerId = @Model.CustomerId }, new { @class = "pm-link-button" })
                     </div>
                 }
             </div>
@@ -72,18 +72,18 @@
     </div>
     <div class="postcontent">
         <div class="posttime">
-            @T("Forum.Posted"): <span class="statvalue">@Model.PostCreatedOnStr</span>
-            @Html.RouteLink(@T("Forum.QuotePost").Text, "PostCreateQuote", new { id = @Model.ForumTopicId, quote = @Model.Id }, new { @class = "quotepostlinkbutton" })
+            @T("Forum.Posted"): <span class="stat-value">@Model.PostCreatedOnStr</span>
+            @Html.RouteLink(@T("Forum.QuotePost").Text, "PostCreateQuote", new { id = @Model.ForumTopicId, quote = @Model.Id }, new { @class = "quote-post-link-button" })
             @if (@Model.CurrentTopicPage > 1)
             {                
-                @Html.RouteLink(String.Format("#{0}", @Model.Id.ToString()), "TopicSlugPaged", "http", string.Empty, @Model.Id.ToString(), new { id = @Model.ForumTopicId, slug = @Model.ForumTopicSeName, page = @Model.CurrentTopicPage }, new { @class = "postlink", title = @T("Forum.PostLinkTitle") })
+                @Html.RouteLink(String.Format("#{0}", @Model.Id.ToString()), "TopicSlugPaged", "http", string.Empty, @Model.Id.ToString(), new { id = @Model.ForumTopicId, slug = @Model.ForumTopicSeName, page = @Model.CurrentTopicPage }, new { @class = "post-link", title = @T("Forum.PostLinkTitle") })
             }
             else
             {                
-                @Html.RouteLink(String.Format("#{0}", @Model.Id.ToString()), "TopicSlug", "http", string.Empty, @Model.Id.ToString(), new { id = @Model.ForumTopicId, slug = @Model.ForumTopicSeName }, new { @class = "postlink", title = @T("Forum.PostLinkTitle") })
+                @Html.RouteLink(String.Format("#{0}", @Model.Id.ToString()), "TopicSlug", "http", string.Empty, @Model.Id.ToString(), new { id = @Model.ForumTopicId, slug = @Model.ForumTopicSeName }, new { @class = "post-link", title = @T("Forum.PostLinkTitle") })
             }
         </div>
-        <div class="postbody">
+        <div class="post-body">
             <div class="posttext">
                 @Html.Raw(@Model.FormattedText)
             </div>

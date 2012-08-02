@@ -2,8 +2,8 @@
 @using Nop.Services.Forums;
 @using Nop.Services.Seo;
 @using Nop.Web.Models.Boards;
-<div class="forumgroup">
-    <div class="grouptitle">
+<div class="forum-group">
+    <div class="group-title">
         @Html.RouteLink(Model.Name, "ForumGroupSlug", new { id = Model.Id, slug = Model.SeName })
     </div>
     <div>
@@ -16,7 +16,7 @@
                         <div class="forum">
                             <a href="@Url.RouteUrl("ForumSlug", new { id = @forum.Id, slug = @forum.SeName })">
                                 <div class="image"></div>
-                                <span class="forumname">@forum.Name</span> <span class="topics">@T("Forum.Topics.Count", forum.NumTopics)</span>
+                                <span class="forum-name">@forum.Name</span> <span class="topics">@T("Forum.Topics.Count", forum.NumTopics)</span>
                             </a>
                         </div>
                     </li>

@@ -20,7 +20,7 @@
                     success: function (data) {
                         $('#check-availability-button').removeAttr('disabled');
                         $('#availability-check-progress').hide();
-                        $('#username-availabilty').removeAttr('class').attr('class', ((data.Available) ? 'availablestatus' : 'notavailablestatus'));
+                        $('#username-availabilty').removeAttr('class').attr('class', ((data.Available) ? 'available-status' : 'not-available-status'));
                         $('#username-availabilty').text(data.Text);
                     },
                     failure: function () {
@@ -29,7 +29,7 @@
                     }
                 });
             } else {
-                $('#username-availabilty').attr('class', 'notavailablestatus');
+                $('#username-availabilty').attr('class', 'not-available-status');
                 $('#username-availabilty').text('*');
             }
             return false;

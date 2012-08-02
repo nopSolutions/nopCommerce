@@ -23,13 +23,13 @@
         {
             
             
-        <table class="pmgridtablestyle" cellspacing="0" cellpadding="4" id="pmsenttable">
+        <table class="pm-grid-table-style" cellspacing="0" cellpadding="4" id="pmsenttable">
             <col width="5%" />
             <col width="20%" />
             <col width="50%" />
             <col width="25%" />
             <thead>
-                <tr class="pmgridheaderstyle">
+                <tr class="pm-grid-header-style">
                     <th class="a-center">
                         <input type="checkbox" id="selectallsent" />
                     </th>
@@ -48,7 +48,7 @@
                 @for (int i = 0; i < Model.Messages.Count; i++)
                 {
                     var item = Model.Messages[i];
-                    <tr @(i % 2 == 0 ? Html.Raw(" class=\"pmgridrowstyle\"") : Html.Raw(" class=\"pmgridaltrowstyle\""))>
+                    <tr @(i % 2 == 0 ? Html.Raw(" class=\"pm-grid-row-style\"") : Html.Raw(" class=\"pm-grid-alt-row-style\""))>
                         <td class="a-center">
                             <input type="checkbox" name="si@(item.Id)" class="rowcheckbox" />
                         </td>
@@ -63,7 +63,7 @@
                             }
                         </td>
                         <td class="a-left">
-                            @Html.RouteLink(item.Subject, "ViewPM", new { privateMessageId = item.Id }, new { @class = "pmread" })
+                            @Html.RouteLink(item.Subject, "ViewPM", new { privateMessageId = item.Id }, new { @class = "pm-read" })
                         </td>
                         <td class="a-left">
                             @item.CreatedOn
@@ -74,7 +74,7 @@
         </table>
                 if (Model.PagerModel.TotalPages > 1)
                 {
-        <div class="pmgridpagerstyle">
+        <div class="pm-grid-pager-style">
             @Html.Pager(Model.PagerModel)
         </div>
                 }

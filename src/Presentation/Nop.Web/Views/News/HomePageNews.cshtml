@@ -5,7 +5,7 @@
 @using Nop.Web.Models.News;
 @if (Model.NewsItems.Count > 0)
 {
-    <div class="newslist-homepage">
+    <div class="news-list-homepage">
         <div class="page-title">
             <div class="title">
                 @T("News")
@@ -17,18 +17,18 @@
         </div>
         <div class="clear">
         </div>
-        <div class="newsitems">
+        <div class="news-items">
             @foreach (var item in Model.NewsItems)
             {
                 <div class="item">
-                    <a class="newstitle" href="@Url.RouteUrl("NewsItem", new { newsItemId = item.Id, SeName = item.SeName })">
-                        @item.Title</a> <span class="newsdate">-
+                    <a class="news-title" href="@Url.RouteUrl("NewsItem", new { newsItemId = item.Id, SeName = item.SeName })">
+                        @item.Title</a> <span class="news-date">-
                             @item.CreatedOn.ToString("D")
                         </span>
-                    <div class="newsdetails">
+                    <div class="news-details">
                         @Html.Raw(item.Short)
                     </div>
-                    <a href="@Url.RouteUrl("NewsItem", new { newsItemId = item.Id, SeName = item.SeName })" class="readmore">
+                    <a href="@Url.RouteUrl("NewsItem", new { newsItemId = item.Id, SeName = item.SeName })" class="read-more">
                         @T("News.MoreInfo")</a>
                 </div>
             }

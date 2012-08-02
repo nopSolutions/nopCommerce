@@ -2,13 +2,13 @@
 @using Nop.Services.Forums;
 @using Nop.Services.Seo;
 @using Nop.Web.Models.Boards;
-<div class="forumgroup">
-    <div class="grouptitle">
+<div class="forum-group">
+    <div class="group-title">
         @Html.RouteLink(Model.Name, "ForumGroupSlug", new { id = Model.Id, slug = Model.SeName })
     </div>
     <table class="groups">
-        <tr class="groupheader">
-            <td class="forumname" colspan="2">
+        <tr class="group-header">
+            <td class="forum-name" colspan="2">
                 @T("Forum.Forum")
             </td>
             <td class="topics">
@@ -17,7 +17,7 @@
             <td class="posts">
                 @T("Forum.Posts")
             </td>
-            <td class="lastpost">
+            <td class="last-post">
                 @T("Forum.LatestPost")
             </td>
         </tr>
@@ -27,18 +27,18 @@
                 <td class="image">
                     <div />
                 </td>
-                <td class="forumname">
-                    <div class="forumtitle">
+                <td class="forum-name">
+                    <div class="forum-title">
                         @Html.RouteLink(@forum.Name, "ForumSlug", new { id = @forum.Id, slug = @forum.SeName })
                     </div>
-                    <div class="forumdescription">@forum.Description
+                    <div class="forum-description">@forum.Description
                     </div>
                 </td>
                 <td class="topics">@forum.NumTopics
                 </td>
                 <td class="posts">@forum.NumPosts
                 </td>
-                <td class="lastpost">
+                <td class="last-post">
                     @Html.Action("LastPost", new { forumPostId = @forum.LastPostId, showTopic = true })
                 </td>
             </tr>            

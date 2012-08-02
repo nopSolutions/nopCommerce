@@ -6,20 +6,20 @@
     <table class="cart-total">
         <tbody>
             <tr>
-                <td class="cart_total_left">
+                <td class="cart-total-left">
                     <strong>@T("ShoppingCart.Totals.SubTotal"):</strong>
                 </td>
-                <td class="cart_total_right">
+                <td class="cart-total-right">
                     <span class="productPrice">@Model.SubTotal</span>
                 </td>
             </tr>
             @if (!String.IsNullOrEmpty(Model.SubTotalDiscount))
             {
                 <tr>
-                    <td class="cart_total_left">
+                    <td class="cart-total-left">
                         <strong>@T("ShoppingCart.Totals.SubTotalDiscount"):</strong>
                     </td>
-                    <td class="cart_total_right">
+                    <td class="cart-total-right">
                         <span class="productPrice">@Model.SubTotalDiscount</span>
                         @if (Model.AllowRemovingSubTotalDiscount)
                         {
@@ -32,7 +32,7 @@
                 </tr>
             }
             <tr>
-                <td class="cart_total_left">
+                <td class="cart-total-left">
                     <strong>
                         @T("ShoppingCart.Totals.Shipping")
                         @if (Model.RequiresShipping && !String.IsNullOrEmpty(Model.SelectedShippingMethod))
@@ -41,7 +41,7 @@
                         }
                         :</strong>
                 </td>
-                <td class="cart_total_right">
+                <td class="cart-total-right">
                     @if (Model.RequiresShipping)
                     {
                         if (!String.IsNullOrEmpty(Model.Shipping))
@@ -63,10 +63,10 @@
             @if (!String.IsNullOrEmpty(Model.PaymentMethodAdditionalFee))
             {
                 <tr>
-                    <td class="cart_total_left">
+                    <td class="cart-total-left">
                         <strong>@T("ShoppingCart.Totals.PaymentMethodAdditionalFee"):</strong>
                     </td>
-                    <td class="cart_total_right">
+                    <td class="cart-total-right">
                         <span class="productPrice">@Model.PaymentMethodAdditionalFee</span>
                     </td>
                 </tr>
@@ -76,10 +76,10 @@
                 foreach (var taxRate in Model.TaxRates)
                 {
                 <tr>
-                    <td class="cart_total_left">
+                    <td class="cart-total-left">
                         <strong>@string.Format(T("ShoppingCart.Totals.TaxRateLine").Text, taxRate.Rate):</strong>
                     </td>
-                    <td class="cart_total_right">
+                    <td class="cart-total-right">
                         <span class="productPrice">
                             @taxRate.Value
                         </span>
@@ -90,10 +90,10 @@
             @if (Model.DisplayTax)
             {
                 <tr>
-                    <td class="cart_total_left">
+                    <td class="cart-total-left">
                         <strong>@T("ShoppingCart.Totals.Tax"):</strong>
                     </td>
-                    <td class="cart_total_right">
+                    <td class="cart-total-right">
                         <span class="productPrice">@Model.Tax</span>
                     </td>
                 </tr>
@@ -101,10 +101,10 @@
             @if (!String.IsNullOrEmpty(Model.OrderTotalDiscount))
             {
                 <tr>
-                    <td class="cart_total_left">
+                    <td class="cart-total-left">
                         <strong>@T("ShoppingCart.Totals.OrderTotalDiscount"):</strong>
                     </td>
-                    <td class="cart_total_right">
+                    <td class="cart-total-right">
                         <span class="productPrice">@Model.OrderTotalDiscount</span>
                         @if (Model.AllowRemovingOrderTotalDiscount)
                         {
@@ -121,11 +121,11 @@
                 foreach (var gc in Model.GiftCards)
                 {
                 <tr>
-                    <td class="cart_total_left">
+                    <td class="cart-total-left">
                         <strong>
                             @string.Format(T("ShoppingCart.Totals.GiftCardInfo").Text, gc.CouponCode):</strong>
                     </td>
-                    <td class="cart_total_right">
+                    <td class="cart-total-right">
                         <span class="productPrice">@gc.Amount</span>
                         @if (Model.IsEditable)
                         {
@@ -138,7 +138,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="cart_total_left_below">
+                    <td class="cart-total-left-below">
                         @string.Format(T("ShoppingCart.Totals.GiftCardInfo.Remaining").Text, gc.Remaining)
                     </td>
                     <td>
@@ -149,19 +149,19 @@
             @if (Model.RedeemedRewardPoints > 0)
             {
                 <tr>
-                    <td class="cart_total_left">
+                    <td class="cart-total-left">
                         <strong>@string.Format(T("ShoppingCart.Totals.RewardPoints").Text, Model.RedeemedRewardPoints):</strong>
                     </td>
-                    <td class="cart_total_right">
+                    <td class="cart-total-right">
                         <span class="productPrice">@Model.RedeemedRewardPointsAmount</span>
                     </td>
                 </tr>
             }
             <tr>
-                <td class="cart_total_left">
+                <td class="cart-total-left">
                     <strong>@T("ShoppingCart.Totals.OrderTotal"):</strong>
                 </td>
-                <td class="cart_total_right">
+                <td class="cart-total-right">
                     @if (!String.IsNullOrEmpty(Model.OrderTotal))
                     {
                         <span class="productPrice">@Model.OrderTotal</span>

@@ -17,8 +17,8 @@
         @if (Model.PMEnabled)
         {
             <div class="profile-stat">
-                <div class="sendpmbox">
-                    @Html.RouteLink(T("Forum.PrivateMessages.PM").Text, "SendPM", new { toCustomerId = @Model.CustomerProfileId }, new { @class = "pmlinkbutton" })
+                <div class="send-pm-box">
+                    @Html.RouteLink(T("Forum.PrivateMessages.PM").Text, "SendPM", new { toCustomerId = @Model.CustomerProfileId }, new { @class = "pm-link-button" })
                 </div>
             </div>  
         }

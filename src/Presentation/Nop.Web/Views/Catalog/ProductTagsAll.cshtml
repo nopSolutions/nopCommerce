@@ -6,7 +6,7 @@
     Html.AddTitleParts(T("PageTitle.AllProductTags").Text);
 }
 @using Nop.Web.Models.Catalog;
-<div class="producttagall-page">
+<div class="product-tags-all-page">
     <div class="page-title">
         <h1>@T("Products.Tags.All")</h1>
     </div>
@@ -15,7 +15,7 @@
     <div class="body">
         @if (Model.Tags.Count > 0)
         {
-            <ul class="producttags-list">
+            <ul class="product-tags-list">
                 @foreach (var item in Model.Tags)
                 {
                     <li><a href="@Url.RouteUrl("ProductsByTag", new { productTagId = item.Id, SeName = item.SeName })" class="producttag"  style="font-size:@(Model.GetFontSize(item))%;">

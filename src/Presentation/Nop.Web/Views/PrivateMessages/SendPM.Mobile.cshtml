@@ -9,7 +9,7 @@
 }
 @using (Html.BeginForm())
 {
-    <div class="privatemessagesend">
+    <div class="private-message-send">
         <div class="page-title">
             <h1>@T("PrivateMessages.Send.PostMessage")</h1>
         </div>
@@ -21,7 +21,7 @@
             @Html.HiddenFor(model => model.ReplyToMessageId)
             <div class="clear">
             </div>
-            <div class="postmessage">
+            <div class="post-message">
                 <div>
                     @T("PrivateMessages.Send.To") 
                     @if (Model.AllowViewingToProfile)
@@ -35,7 +35,7 @@
                 </div>
                 <div>
                     @T("PrivateMessages.Send.Subject")
-                    @Html.TextBoxFor(model => model.Subject, new { @class = "pmtitletext" })
+                    @Html.TextBoxFor(model => model.Subject, new { @class = "pm-title-text" })
                         @Html.ValidationMessageFor(model => model.Subject)
                 </div>
                 <div>

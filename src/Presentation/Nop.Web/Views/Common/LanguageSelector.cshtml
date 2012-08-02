@@ -4,7 +4,7 @@
 {
     if (Model.UseImages)
     {
-    <ul class="languagelist">
+    <ul class="language-list">
         @foreach (var lang in Model.AvailableLanguages)
         {
             <li><a href="@Url.RouteUrl("ChangeLanguage", new { langid = lang.Id })" title="@lang.Name">

@@ -9,7 +9,7 @@
 }
 @using (Html.BeginForm())
 {
-    <div class="privatemessagesend">
+    <div class="private-message-send">
         <div class="title">
             @T("PrivateMessages.Send.PostMessage")
         </div>
@@ -21,7 +21,7 @@
             @Html.HiddenFor(model => model.ReplyToMessageId)
             <div class="clear">
             </div>
-            <table class="postmessage">
+            <table class="post-message">
                 <tr>
                     <td class="fieldname">
                         @T("PrivateMessages.Send.To")
@@ -42,7 +42,7 @@
                         @T("PrivateMessages.Send.Subject")
                     </td>
                     <td>
-                        @Html.TextBoxFor(model => model.Subject, new { @class = "pmtitletext" })
+                        @Html.TextBoxFor(model => model.Subject, new { @class = "pm-title-text" })
                         @Html.ValidationMessageFor(model => model.Subject)
                     </td>
                 </tr>
@@ -52,7 +52,7 @@
                     </td>
                     <td>
                         @Html.BBCodeEditor("Message")
-                        @Html.TextAreaFor(model => model.Message, new { @class = "bbeditortext", TextMode = "MultiLine" })
+                        @Html.TextAreaFor(model => model.Message, new { @class = "bb-editor-text", TextMode = "MultiLine" })
                         @Html.ValidationMessageFor(model => model.Message)
                     </td>
                 </tr>

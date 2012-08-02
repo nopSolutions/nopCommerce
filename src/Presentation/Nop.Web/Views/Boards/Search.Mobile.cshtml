@@ -10,7 +10,7 @@
 
     Html.AddTitleParts(T("Forum.PageTitle.Search").Text);    
 }
-<div class="forumsearch">
+<div class="forum-search">
     <div class="forum-search-panel">
         <div class="page-title">
             <h1>@T("Forum.Search")</h1>
@@ -83,7 +83,7 @@
                                     topicType = "poststicky";
                                     break;
                                 case ForumTopicType.Announcement:
-                                    topicType = "postannoucement";
+                                    topicType = "post-annoucement";
                                     break;
                                 default:
                                     topicType = "post";
@@ -92,7 +92,7 @@
                                             <div class="@topicType">
                                             </div>
                                         }
-                                        <span class="topicname">@topic.Subject</span> <span class="replies">@T("Forum.Replies.Count", topic.NumReplies)</span>
+                                        <span class="topic-name">@topic.Subject</span> <span class="replies">@T("Forum.Replies.Count", topic.NumReplies)</span>
                                     </a>
                                 </div>
                             </li>

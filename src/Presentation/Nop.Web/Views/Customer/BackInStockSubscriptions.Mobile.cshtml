@@ -15,7 +15,7 @@
     <div class="clear">
     </div>
     <div class="body">
-        <div class="backinstock-subscriptions-box">
+        <div class="back-in-stock-subscriptions-box">
             @if (Model.Subscriptions.Count > 0)
             {
                 <div class="description">
@@ -38,7 +38,7 @@
                 </ul>
                     if (Model.PagerModel.TotalPages > 1)
                     {
-                <div class="bissgridpagerstyle">
+                <div class="biss-grid-pager-style">
                     @Html.Pager(Model.PagerModel)
                 </div>
                     }

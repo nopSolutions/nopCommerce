@@ -16,10 +16,10 @@
 <div class="forum">
     @Html.Partial("_SearchBox")
     <div class="top">
-        <div class="foruminfo">
-            <div class="forumname">
+        <div class="forum-info">
+            <div class="forum-name">
                 @Model.Name</div>
-            <div class="forumdescription">
+            <div class="forum-description">
                 @Model.Description</div>
         </div>
         <div class="actions">
@@ -66,7 +66,7 @@
                             topicType = "poststicky";
                             break;
                         case ForumTopicType.Announcement:
-                            topicType = "postannoucement";
+                            topicType = "post-annoucement";
                             break;
                         default:
                             topicType = "post";
@@ -75,7 +75,7 @@
                                     <div class="@topicType">
                                     </div>
                                 }
-                                <span class="topicname">@topic.Subject</span> <span class="replies">@T("Forum.Replies.Count", topic.NumReplies)</span>
+                                <span class="topic-name">@topic.Subject</span> <span class="replies">@T("Forum.Replies.Count", topic.NumReplies)</span>
                             </a>
                         </div>
                     </li>
@@ -94,7 +94,7 @@
             {
                 <script type="text/javascript">
                     $(function () {
-                        $('#watchforum').click(function () {
+                        $('#watch_forum').click(function () {
                             //show progress
                             $.mobile.showPageLoadingMsg();
                             $.ajax({
@@ -103,8 +103,8 @@
                                 url: '@Url.RouteUrl("ForumWatch", new { id = @Model.Id })',
                                 dataType: 'json',
                                 success: function (data) {
-                                    $('#watchforum').val(data.Text);
-                                    $('#watchforum').button("refresh");
+                                    $('#watch_forum').val(data.Text);
+                                    $('#watch_forum').button("refresh");
                                 },
                                 complete: function (data) {
                                     //hide progress
@@ -115,7 +115,7 @@
                         });
                     });
                 </script>
-                <input type="button" id="watchforum" value="@Model.WatchForumText" />
+                <input type="button" id="watch_forum" value="@Model.WatchForumText" />
         }
         </div>
         <div class="pager">

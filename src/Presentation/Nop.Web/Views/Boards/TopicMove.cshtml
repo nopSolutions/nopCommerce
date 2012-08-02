@@ -9,7 +9,7 @@
 @using (Html.BeginForm())
 {
     @Html.HiddenFor(model => model.Id)
-    <div class="moveforumtopic">
+    <div class="move-forum-topic">
         @Html.Action("ForumBreadcrumb", new { forumTopicId = Model.Id })
         <div class="title">
             @T("Forum.MoveTopic")
@@ -17,7 +17,7 @@
         <div class="wrapper">
             <div class="clear">
             </div>
-            <table class="movetopic">
+            <table class="move-topic">
                 <tr>
                     <td class="fieldname">
                         @T("Forum.SelectTheForumToMoveTopic"):

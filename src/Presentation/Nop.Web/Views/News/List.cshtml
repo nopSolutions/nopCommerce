@@ -8,7 +8,7 @@
     //title
     Html.AddTitleParts(T("PageTitle.NewsArchive").Text);
 }
-<div class="newslist">
+<div class="news-list">
     <div class="page-title">
         <div class="title">
             <h1>@T("News")</h1>
@@ -21,18 +21,18 @@
     <div class="clear">
     </div>
     @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "newslist_page_before_items" })
-    <div class="newsitems">
+    <div class="news-items">
         @foreach (var item in Model.NewsItems)
         {
             <div class="item">
-                <a class="newstitle" href="@Url.RouteUrl("NewsItem", new { newsItemId = item.Id, SeName = item.SeName })">
-                    @item.Title</a> <span class="newsdate">-
+                <a class="news-title" href="@Url.RouteUrl("NewsItem", new { newsItemId = item.Id, SeName = item.SeName })">
+                    @item.Title</a> <span class="news-date">-
                         @item.CreatedOn.ToString("D")
                     </span>
-                <div class="newsdetails">
+                <div class="news-details">
                     @Html.Raw(item.Short)
                 </div>
-                <a href="@Url.RouteUrl("NewsItem", new { newsItemId = item.Id, SeName = item.SeName })" class="readmore">
+                <a href="@Url.RouteUrl("NewsItem", new { newsItemId = item.Id, SeName = item.SeName })" class="read-more">
                     @T("News.MoreInfo")</a>
                 @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "newslist_page_inside_item" })
             </div>

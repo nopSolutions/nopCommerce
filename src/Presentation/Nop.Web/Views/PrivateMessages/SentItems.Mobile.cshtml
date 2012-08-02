@@ -11,7 +11,7 @@
                 <li>
                     <div class="item">
                         <div>
-                            @T("PrivateMessages.Inbox.SubjectColumn"): @Html.RouteLink(pm.Subject, "ViewPM", new { privateMessageId = pm.Id }, new { @class = "pmread" })
+                            @T("PrivateMessages.Inbox.SubjectColumn"): @Html.RouteLink(pm.Subject, "ViewPM", new { privateMessageId = pm.Id }, new { @class = "pm-read" })
                         </div>
                         <div>
                             @T("PrivateMessages.Inbox.ToColumn"): 
@@ -33,7 +33,7 @@
         </ul>
             if (Model.PagerModel.TotalPages > 1)
             {
-        <div class="pmgridpagerstyle">
+        <div class="pm-grid-pager-style">
             @Html.Pager(Model.PagerModel)
         </div>
             }

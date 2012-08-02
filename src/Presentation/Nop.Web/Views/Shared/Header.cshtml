@@ -7,13 +7,13 @@
         @Html.Action("FlyoutShoppingCart", "ShoppingCart")
     </div>
     <div class="header-selectors-wrapper">
-        <div class="header-taxdisplaytypeselector">
+        <div class="tax-display-type-selector">
             @Html.Action("TaxTypeSelector", "Common")
         </div>
-        <div class="header-currencyselector">
+        <div class="currency-selector">
             @Html.Action("CurrencySelector", "Common")
         </div>
-        <div class="header-languageselector">
+        <div class="language-selector">
             @Html.Action("LanguageSelector", "Common")
         </div>
         @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "header_selectors" })
