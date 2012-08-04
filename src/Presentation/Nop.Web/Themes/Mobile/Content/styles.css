@@ -278,23 +278,33 @@
 .search-panel .warning{text-decoration:underline;}
 .searchbox{margin: 0 0 15px 0px;}
 
-/* MISC. PAGES */
-.category-page .category-description,.manufacturer-page .manufacturer-description{font-size:1.1em;}
+/* USER-AGREEMENT PAGE */
 .user-agreement-page{}
 .user-agreement-page .page-body{}
+
+/* PASSWORD RECOVERY AND NEWSLETTER PAGES */
 .password-recovery-page,newsletter-page{}
 .password-recovery-page .body,newsletter-page .body{margin:0;padding:0;background-color:inherit;}
 .password-recovery-page .email{}
+
+/* ACCOUNT ACTIVATION */
 .account-activation-page{}
 .account-activation-page .body{margin:0;padding:0;background-color:inherit;}
+
+/* CONTACTS */
 .contact-form{}
 .contact-form .buttons{text-align:right;}
 .contact-form .send-email{}
 .contact-form .send-email .fullname{}
 .contact-form .send-email .email{}
 .contact-form .send-email .enquiry{}
+
+/* RECENTLY VIEWED AND ADDED PRODUCTS */
 .recently-added-products{margin:0;padding:0;}
 .recently-viewed-products{margin:0;padding:0;}
+
+/* CATALOG PAGES */
+.category-page .category-description,.manufacturer-page .manufacturer-description{font-size:1.1em;}
 
 /* CUSTOMER ACCOUNT */
 .account-page{}
