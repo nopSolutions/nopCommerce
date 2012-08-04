@@ -92,6 +92,7 @@ td.fieldname{font-size:12px;}
 .button-2{background:url(images/grey_button_bg.gif) no-repeat 25% 50% #333;border:1px solid #333;color:#FFF;height:20px;padding:0 5px;width:auto;overflow:visible;}
 .product-box-detail-button{margin-bottom:3px;}
 .noscript{border:1px solid #ddd;border-width:0 0 1px;background:#ffff90;font-size:12px;line-height:1.25;text-align:center;color:#2f2f2f;}
+.clear{border:medium none;clear:both;float:none;font-size:0;height:0;line-height:0;}
 
 /* AJAX LOADING INDICATOR */
 .ajax-loading-block-window{position:fixed;top:50%;left:50%;width:128px;height:128px;overflow:hidden;z-index:1104;}
@@ -127,7 +128,6 @@ td.fieldname{font-size:12px;}
 .user-agreement-page{}
 .user-agreement-page .page-title{}
 .user-agreement-page .page-body{}
-.clear{border:medium none;clear:both;float:none;font-size:0;height:0;line-height:0;}
 
 /* COPYRIGHT INFO */
 .copyright{float:right;padding-right:10px;font-family:Verdana, Arial, Helvetica, sans-serif;font-size:10px;}
