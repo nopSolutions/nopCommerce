@@ -374,8 +374,8 @@
 .product-details-info .full-description{border-top:solid 1px #d3d3d3;clear:both;margin-bottom:.3em;}
 .product-reviews-overview{margin-top:20px;margin-bottom:20px;}
 .product-reviews-overview .product-review-box{margin-right:5px;width:69px;height:13px;}
-.product-review-box .rating{height:13px;width:55px;background:url(images/star_x_inactive.gif) 0 0 repeat-x;}
-.product-review-box .rating div{height:12px;background:url(images/star_x_active.gif) 0 0 repeat-x;}
+.product-review-box .rating{height:13px;width:55px;background:url(images/star-x-inactive.gif) 0 0 repeat-x;}
+.product-review-box .rating div{height:12px;background:url(images/star-x-active.gif) 0 0 repeat-x;}
 .product-reviews-overview .product-review-links{margin:0;}
 .product-no-reviews{margin-top:20px;margin-bottom:20px;}
 .product-variant-list{margin-bottom:15px;padding:0;}

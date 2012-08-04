@@ -1290,28 +1290,26 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Themes\DarkOrange\Content\images\bbeditor-button-bg.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\bg_textbox.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\bg_body.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\bg_container.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\bg_maincolumn_1.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\bg_maincolumn_2.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\bg_maincolumn_3.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\bg_sidebar_block.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\bg_sidebar_title.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\btn_download_bg.gif" />
+    <Content Include="Themes\DarkOrange\Content\images\bg-body.gif" />
+    <Content Include="Themes\DarkOrange\Content\images\bg-container.gif" />
+    <Content Include="Themes\DarkOrange\Content\images\bg-maincolumn-1.gif" />
+    <Content Include="Themes\DarkOrange\Content\images\bg-maincolumn-2.gif" />
+    <Content Include="Themes\DarkOrange\Content\images\bg-maincolumn-3.gif" />
+    <Content Include="Themes\DarkOrange\Content\images\bg-sidebar-block.gif" />
+    <Content Include="Themes\DarkOrange\Content\images\bg-sidebar-title.gif" />
+    <Content Include="Themes\DarkOrange\Content\images\download-sample-bg.gif" />
     <Content Include="Themes\DarkOrange\Content\images\cart-footer-bg.gif" />
     <Content Include="Themes\DarkOrange\Content\images\cart-header-bg.gif" />
     <Content Include="Themes\DarkOrange\Content\images\closelabel.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\deal_box_hl.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\deal_box_hr.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\fb_s_bg.gif" />
+    <Content Include="Themes\DarkOrange\Content\images\box-header-left.gif" />
+    <Content Include="Themes\DarkOrange\Content\images\box-header-right.gif" />
+    <Content Include="Themes\DarkOrange\Content\images\filterbox-bg.gif" />
     <Content Include="Themes\DarkOrange\Content\images\forum-footer-bg.gif" />
     <Content Include="Themes\DarkOrange\Content\images\forum-header-bg.gif" />
     <Content Include="Themes\DarkOrange\Content\images\grey_button_bg.gif" />
     <Content Include="Themes\DarkOrange\Content\images\grid-bg.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\grid_header_back.png" />
-    <Content Include="Themes\DarkOrange\Content\images\home-cat-bg.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\home-cat-title.gif" />
+    <Content Include="Themes\DarkOrange\Content\images\category-bg.gif" />
+    <Content Include="Themes\DarkOrange\Content\images\category-title.gif" />
     <Content Include="Themes\DarkOrange\Content\images\ico-account.gif" />
     <Content Include="Themes\DarkOrange\Content\images\ico-admin.gif" />
     <Content Include="Themes\DarkOrange\Content\images\ico-arrow-r.gif" />
@@ -1334,16 +1332,16 @@
     <Content Include="Themes\DarkOrange\Content\images\loading.gif" />
     <Content Include="Themes\DarkOrange\Content\images\logo.gif" />
     <Content Include="Themes\DarkOrange\Content\images\nextlabel.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\orange_button_bg.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\pb_s_bg.gif" />
+    <Content Include="Themes\DarkOrange\Content\images\orange-button-bg.gif" />
+    <Content Include="Themes\DarkOrange\Content\images\productbox-list-bg.gif" />
     <Content Include="Themes\DarkOrange\Content\images\pm-footer-bg.gif" />
     <Content Include="Themes\DarkOrange\Content\images\pm-header-bg.gif" />
     <Content Include="Themes\DarkOrange\Content\images\prevlabel.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\prod_grid_box_bg.gif" />
+    <Content Include="Themes\DarkOrange\Content\images\productbox-grid-bg.gif" />
     <Content Include="Themes\DarkOrange\Content\images\progress-step-active.gif" />
     <Content Include="Themes\DarkOrange\Content\images\progress-step-inactive.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\star_x_active.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\star_x_inactive.gif" />
+    <Content Include="Themes\DarkOrange\Content\images\star-x-active.gif" />
+    <Content Include="Themes\DarkOrange\Content\images\star-x-inactive.gif" />
     <Content Include="Themes\DarkOrange\Content\styles.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -1356,8 +1354,8 @@
     <Content Include="Themes\Mobile\Content\images\icons-18-white.png" />
     <Content Include="Themes\Mobile\Content\images\icons-36-black.png" />
     <Content Include="Themes\Mobile\Content\images\icons-36-white.png" />
-    <Content Include="Themes\Mobile\Content\images\star_x_active.gif" />
-    <Content Include="Themes\Mobile\Content\images\star_x_inactive.gif" />
+    <Content Include="Themes\Mobile\Content\images\star-x-active.gif" />
+    <Content Include="Themes\Mobile\Content\images\star-x-inactive.gif" />
     <Content Include="Themes\Mobile\Content\jquery.mobile-1.1.1.css" />
     <Content Include="Themes\Mobile\Content\jquery.mobile-1.1.1.min.css" />
     <Content Include="Themes\Mobile\Content\jquery.mobile.structure-1.1.1.css" />
