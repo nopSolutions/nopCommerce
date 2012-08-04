@@ -707,11 +707,11 @@ a.eu-cookie-privacyinfo-tag{color:#F93 !important;text-decoration:underline;}
 .product-essential{}
 .product-details-info{}
 .product-details-info .picture{float:right;width:300px;margin-top:25px;margin-bottom:15px;}
-.product-details-info .picture .picturethumbs{margin-top:10px;}
+.product-details-info .picture .picture-thumbs{margin-top:10px;}
 .product-details-info .overview{float:left;width:230px;margin-right:15px;margin-top:25px;padding:5px;border:dashed 1px #d3d3d3;}
 .product-details-info .overview .product-name{color:#f93;font-size:1.3em;margin-bottom:1em;}
 .product-details-info .overview .shortdescription,.product-details-info .overview .manufacturers,.product-details-info .overview .sku,.product-details-info .overview .manufacturer-part-number,.product-details-info .overview .stock,.product-details-info .overview .gtin{color:#555;margin-bottom:.3em;font-size:1.1em;}
-.backinstocksubscription{margin-top:10px;margin-bottom:10px;}
+.back-in-stock-subscription{margin-top:10px;margin-bottom:10px;}
 .product-details-info .full-description{border-top:solid 1px #d3d3d3;clear:both;color:#555;margin-bottom:.3em;}
 .product-details-info .email-a-friend{margin:10px 0px 10px 5px;float:right;}
 .product-details-info .compare-products{margin:10px 0 10px 0px;float:right;}

@@ -352,15 +352,15 @@
 .product-collateral{margin-top:10px;margin-bottom:10px;clear:both;}
 .product-essential{}
 .product-details-info{}
-.product-details-info .defaultpicture{margin:5px;}
-.product-details-info .defaultpicture img{max-width:100%;}
+.product-details-info .default-picture{margin:5px;}
+.product-details-info .default-picture img{max-width:100%;}
 .product-details-info .picture{margin:5px;display:inline !important;}
 .product-details-info .picture img{max-width:100%;}
-.product-details-info .picturethumbs{}
+.product-details-info .picture-thumbs{}
 .product-details-info .overview{margin-right:15px;margin-top:25px;padding:5px;}
 .product-details-info .overview .product-name{color:#f93;font-size:1.3em;margin-bottom:1em;}
 .product-details-info .overview .shortdescription,.product-details-info .overview .manufacturers,.product-details-info .overview .sku,.product-details-info .overview .manufacturer-part-number,.product-details-info .overview .stock,.product-details-info .overview .gtin{margin-bottom:.3em;font-size:1.1em;}
-.backinstocksubscription{}
+.back-in-stock-subscription{}
 .product-details-info .full-description{border-top:solid 1px #d3d3d3;clear:both;margin-bottom:.3em;}
 .product-reviews-overview{margin-top:20px;margin-bottom:20px;}
 .product-reviews-overview .product-review-box{margin-right:5px;width:69px;height:13px;}
@@ -477,8 +477,8 @@
 /* FORUM PAGE */
 .forum{}
 .forum .forum-header{}
-.forum .forum-header .forumoptions,.forumfooter .forumoptions{}
-.forum .forum-header .forumoptions a,.forumfooter .forumoptions a{}
+.forum .forum-header .forum-options,.forum-footer .forum-options{}
+.forum .forum-header .forum-options a,.forum-footer .forum-options a{}
 .forum .top .forum-info{}
 .forum .top .forum-info .forum-name{font-weight:700;font-size:1.2em;}
 .forum .top .forum-info .forum-description{color:#555;}

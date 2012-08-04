@@ -4,7 +4,7 @@
 {
     //we do not use Model.DefaultPictureModel in mobile version
     var defaultPicture = Model.PictureModels.FirstOrDefault();
-    <div class="defaultpicture">
+    <div class="default-picture">
         <img id="default-image" alt="@defaultPicture.AlternateText" src="@defaultPicture.FullSizeImageUrl" title="@defaultPicture.Title" />
     </div>
 }
@@ -19,7 +19,7 @@
             $.mobile.hidePageLoadingMsg();
         }
     </script>
-    <ul class="picturethumbs">
+    <ul class="picture-thumbs">
         @foreach (var picture in Model.PictureModels)
         {
             <li class="picture">
