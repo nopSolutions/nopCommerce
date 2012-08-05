@@ -11,6 +11,8 @@ h1,h2,h3,h4,h5,h6{font-family:arial, helvetica, sans-serif;}
 h2,h3{font-size:16px;}
 textarea{width:100%;font-family:Verdana, Arial, sans-serif;font-size:11px;}
 checkbox,input,radio,select,button{font-size:11px;}
+fieldset{margin:0px 0px 15px;border:1px solid #c9c9c9;padding:10px 15px 15px 15px;}
+legend{font-weight: bold;line-height:20px;font-size:16px;}
 
 /* MASTER PAGE WRAPPERS */
 .master-wrapper-page{margin:10px auto;width:960px;}
@@ -622,8 +624,6 @@ a.eu-cookie-privacyinfo-tag{color:#F93 !important;text-decoration:underline;}
 
 /* CONTACTS */
 .contact-page{}
-.contact-page fieldset{margin:0px 0px 15px;border:1px solid #c9c9c9;padding:10px 15px 15px 15px;}
-.contact-page legend{font-weight: bold;line-height:20px;font-size: 16px;}
 .contact-page .contacts-left{float:left;}
 .contact-page .contacts-right{float:right;}
 .contact-page .inputs{margin-bottom:12px;}
