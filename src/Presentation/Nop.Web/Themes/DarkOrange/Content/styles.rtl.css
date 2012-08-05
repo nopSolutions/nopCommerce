@@ -231,6 +231,7 @@ a.eu-cookie-privacyinfo-tag{color:#F93 !important;text-decoration:underline;}
 .order-summary-content .cart-footer{width:100%;background:url(images/cart-footer-bg.gif) repeat-x bottom;}
 .order-summary-content .total-info{margin:0;font-size:12px;}
 .order-summary-content .total-info .selected-shipping-method{font-weight:normal;font-size:11px;}
+.order-summary-content .total-info .order-total{color:#353434;}
 .cart-total-left{width:100%;text-align:right;vertical-align:middle;height:21px;font-weight:700;color:#353434;}
 .cart-total-left-below{width:100%;text-align:left;vertical-align:top;height:30px;}
 .cart-total-right{text-align:right;vertical-align:middle;padding-left:5px;}

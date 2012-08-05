@@ -93,7 +93,7 @@
 .order-summary-content .cart .cart-item-row .qty-input,.wishlist-content .cart .cart-item-row .qty-input{width:100px;}
 .order-summary-content .cart-footer{}
 .order-summary-content .total-info{margin:0;}
-.cart-total-left{text-align:left;vertical-align:top;font-weight:700;color:#353434;}
+.cart-total-left{text-align:left;vertical-align:top;font-weight:700;}
 .cart-total-left-below{text-align:left;vertical-align:top;height:30px;}
 .cart-total-right{text-align:left;vertical-align:middle;padding-left:5px;}
 .order-summary-content .remove-discount-button{}
