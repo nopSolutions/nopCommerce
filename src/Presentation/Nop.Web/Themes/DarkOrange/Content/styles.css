@@ -628,8 +628,8 @@ a.eu-cookie-privacyinfo-tag{color:#F93 !important;text-decoration:underline;}
 .contact-page .contacts-right{float:right;}
 .contact-page .inputs{margin-bottom:12px;}
 .contact-page .captcha-box{margin-bottom:12px;}
-.contact-page .fullname{width:250px;}
-.contact-page .email{width:250px;}
+.contact-page .fullname{width:250px;padding:1px;}
+.contact-page .email{width:250px;padding:1px;}
 .contact-page .enquiry{width:350px;height:150px;}
 .contact-page .buttons{text-align:left;}
 
