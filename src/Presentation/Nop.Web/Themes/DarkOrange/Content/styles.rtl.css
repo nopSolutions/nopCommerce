@@ -161,7 +161,7 @@ a.eu-cookie-privacyinfo-tag{color:#F93 !important;text-decoration:underline;}
 .block-category-navigation .active a,.block-manufacturer-navigation .active a{color:#f93;font-weight:700;text-decoration:none;}
 .block-category-navigation .listbox ul .active,.block-manufacturer-navigation .listbox ul .active{font-weight:700;}
 .block-category-navigation .listbox ul .inactive,.block-manufacturer-navigation .listbox ul .inactive{}
-.block-manufacturer-navigation .listbox .viewall a{color:#f93;}
+.block-manufacturer-navigation .listbox .view-all a{color:#f93;}
 .block-account-navigation a.active{color:#f93;font-weight:700;text-decoration:none;}
 .block-account-navigation a{white-space:nowrap;}
 .block-account-navigation a.inactive{color:#FFF;font-weight:700;text-decoration:none;}
@@ -169,7 +169,7 @@ a.eu-cookie-privacyinfo-tag{color:#F93 !important;text-decoration:underline;}
 .block-newsletter .buttons{margin-top:5px;text-align:left;}
 .block-recently-viewed-products a:hover{font-weight:700;text-decoration:none;color:#f93;}
 .block-popular-tags li,.block-popular-blogtags li{display:inline!important;}
-.block-popular-tags .listbox .viewall a{color:#f93;}
+.block-popular-tags .listbox .view-all a{color:#f93;}
 .block-blog-archive .year{color:#f93;font-weight:700;text-decoration:none;}
 
 /* MINI-SHOPPING CART */
@@ -355,7 +355,7 @@ a.eu-cookie-privacyinfo-tag{color:#F93 !important;text-decoration:underline;}
 .shipment-details .info{border:1px solid #d7d7d7;padding:10px;}
 .shipment-details .section-title{padding:10px 10px 5px 0;font-weight:700;clear:both;}
 .shipment-details .overview{text-align:right;padding-bottom:10px;direction:rtl;}
-.shipment-details .trackingurl{color:#f93;text-decoration:none;}
+.shipment-details .tracking-url{color:#f93;text-decoration:none;}
 .shipment-details .products-box,.shipment-details .shipment-status-events-box{text-align:right;padding:10px;border:1px solid #d7d7d7;height:auto;}
 
 /* HOME PAGE */
@@ -1014,7 +1014,7 @@ a.eu-cookie-privacyinfo-tag{color:#F93 !important;text-decoration:underline;}
 /* ACTIVE DISCUSSIONS */
 .active-discussions-page{}
 .active-discussions .active-discussions-title{font-size:1.1em;padding-bottom:5px;font-weight:700;}
-.active-discussions .active-discussions-title .viewall{float:left;text-align:left;}
+.active-discussions .active-discussions-title .view-all{float:left;text-align:left;}
 .active-discussions .topics-group{background:url(images/forum-footer-bg.gif) repeat-x bottom;}
 .active-discussions table.topics{width:100%;border-collapse:collapse;vertical-align:middle;text-align:center;}
 .active-discussions table.topics td{padding:3px 0;}

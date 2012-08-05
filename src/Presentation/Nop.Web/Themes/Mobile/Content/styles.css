@@ -168,7 +168,7 @@
 .shipment-details .info{}
 .shipment-details .section-title{padding:10px;font-weight:700;clear:both;}
 .shipment-details .overview{text-align:left;padding-bottom:10px;}
-.shipment-details .trackingurl{}
+.shipment-details .tracking-url{}
 .shipment-details .products-box,.shipment-details .shipment-status-events-box{font-weight:normal;}
 .shipment-details .products-box .product{}
 .shipment-details .products-box .sku{}
@@ -571,7 +571,7 @@
 /* ACTIVE DISCUSSIONS */
 .active-discussions-page{}
 .active-discussions .active-discussions-title{font-size:1.1em;padding-bottom:5px;font-weight:700;}
-.active-discussions .active-discussions-title .viewall{float:right;text-align:right;}
+.active-discussions .active-discussions-title .view-all{float:right;text-align:right;}
 .active-discussions .topics{}
 .active-discussions .topics .topic {vertical-align:middle;padding-left:3px;min-height:40px;}
 .active-discussions .topics .topic .topic-name{font-weight:700;color:#555;float:left;margin:11px 0 0 7px;}
