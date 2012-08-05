@@ -623,7 +623,19 @@ a.eu-cookie-privacyinfo-tag{color:#F93 !important;text-decoration:underline;}
 .account-activation-page .body{margin:0;padding:0;font-size:11px;color:#555;background-color:inherit;}
 
 /* CONTACTS */
-.contact-form{text-align:right;direction:rtl;}
+.contact-page{text-align:right;direction:rtl;}
+.contact-page fieldset{margin:0px 0px 15px;border:1px solid #c9c9c9;padding:10px 15px 15px 15px;}
+.contact-page legend{font-weight: bold;line-height:20px;font-size: 16px;}
+.contact-page .contacts-left{float:right;}
+.contact-page .contacts-right{float:left;}
+.contact-page .inputs{margin-bottom:12px;}
+.contact-page .captcha-box{margin-bottom:12px;}
+.contact-page .fullname{width:250px;}
+.contact-page .email{width:250px;}
+.contact-page .enquiry{width:350px;height:150px;}
+.contact-page .buttons{text-align:right;}
+
+.contact-form{}
 .contact-form .buttons{text-align:left;}
 .contact-form .send-email{}
 .contact-form .send-email .fullname{width:250px;}

@@ -7,7 +7,7 @@
     //title
     Html.AddTitleParts(T("PageTitle.ContactUs").Text);
 }
-<div class="contact-form">
+<div class="contact-page">
     @Html.Action("TopicBlock", "Topic", new { systemName = "ContactUs" })
     <div class="clear">
     </div>
@@ -21,60 +21,48 @@
     {
         using (Html.BeginForm())
         {    
-        <div class="send-email">
-            <table class="table-container">
-                <tr>
-                    <td class="message-error" colspan="2">
-                        @Html.ValidationSummary(true)
-                    </td>
-                </tr>
-                <tr class="row">
-                    <td class="item-name">
+        <fieldset class="send-email">
+            <legend>@T("PageTitle.ContactUs")</legend>
+            <p class="message-error">
+                @Html.ValidationSummary(true)
+            </p>
+            <div>
+                <div class="contacts-left">
+                    <div class="inputs">
                         @Html.LabelFor(model => model.FullName):
-                    </td>
-                    <td class="item-value">
-                        @Html.TextBoxFor(model => model.FullName, new { @class = "fullname" })
+                        <div class="input-box">
+                            @Html.TextBoxFor(model => model.FullName, new { @class = "fullname", placeholder = T("ContactUs.FullName.Hint") })
+                        </div>
                         @Html.ValidationMessageFor(model => model.FullName)
-                    </td>
-                </tr>
-                <tr class="row">
-                    <td class="item-name">
+                    </div>
+                    <div class="inputs">
                         @Html.LabelFor(model => model.Email):
-                    </td>
-                    <td class="item-value">
-                        @Html.TextBoxFor(model => model.Email, new { @class = "email", id = "contactusemail" })
+                        <div class="input-box">
+                            @Html.TextBoxFor(model => model.Email, new { @class = "email", placeholder = T("ContactUs.Email.Hint") })
+                        </div>
                         @Html.ValidationMessageFor(model => model.Email)
-                    </td>
-                </tr>
-                <tr class="row">
-                    <td class="item-name">
-                        @Html.LabelFor(model => model.Enquiry):
-                    </td>
-                    <td class="item-value">
-                        @Html.TextAreaFor(model => model.Enquiry, new { @class = "enquiry" })
-                        @Html.ValidationMessageFor(model => model.Enquiry)
-                    </td>
-                </tr>
-                @if (Model.DisplayCaptcha)
-                {
-                    <tr class="row">
-                        <td class="item-name">
-                            &nbsp;
-                        </td>
-                        <td class="item-value captcha-box">
+                    </div>
+                    @if (Model.DisplayCaptcha)
+                    {
+                        <div class="captcha-box">
                             @Html.Raw(Html.GenerateCaptcha())
-                        </td>
-                    </tr>
-                }
-                <tr class="row">
-                    <td class="item-name">
-                    </td>
-                    <td class="buttons">
-                        <input type="submit" name="send-email" class="button-1 contact-us-button" value="@T("ContactUs.Button")" />
-                    </td>
-                </tr>
-            </table>
-        </div>  
+                        </div>
+                    }
+                </div>
+                <div class="contacts-right inputs">
+                    @Html.LabelFor(model => model.Enquiry):
+                    <div class="input-box">
+                        @Html.TextAreaFor(model => model.Enquiry, new { @class = "enquiry", placeholder = T("ContactUs.Enquiry.Hint") })
+                    </div>
+                    @Html.ValidationMessageFor(model => model.Enquiry)
+                </div>
+            </div>
+            <div class="clear">
+            </div>
+            <div class="buttons">
+                <input type="submit" name="send-email" class="button-1 contact-us-button" value="@T("ContactUs.Button")" />
+            </div>
+        </fieldset> 
         }
     }
 </div>

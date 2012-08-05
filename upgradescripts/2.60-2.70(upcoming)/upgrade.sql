@@ -11,6 +11,15 @@ set @resources='
   <LocaleResource Name="Checkout.Button">
     <Value>Checkout</Value>
   </LocaleResource>
+  <LocaleResource Name="ContactUs.FullName.Hint">
+    <Value>Enter your name</Value>
+  </LocaleResource>
+  <LocaleResource Name="ContactUs.Email.Hint">
+    <Value>Enter your email address</Value>
+  </LocaleResource>
+  <LocaleResource Name="ContactUs.Enquiry.Hint">
+    <Value>Enter your enquiry</Value>
+  </LocaleResource>
 </Language>
 '
 

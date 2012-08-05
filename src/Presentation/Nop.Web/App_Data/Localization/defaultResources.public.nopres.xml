@@ -1314,6 +1314,9 @@
 			<LocaleResource Name="Email">
 				<Value>Your email</Value>
 				<Children>
+          <LocaleResource Name="Hint">
+            <Value>Enter your email address</Value>
+          </LocaleResource>
 					<LocaleResource Name="Required">
 						<Value>Enter email</Value>
 					</LocaleResource>
@@ -1325,6 +1328,9 @@
 			<LocaleResource Name="Enquiry">
 				<Value>Enquiry</Value>
 				<Children>
+          <LocaleResource Name="Hint">
+            <Value>Enter your enquiry</Value>
+          </LocaleResource>
 					<LocaleResource Name="Required">
 						<Value>Enter enquiry</Value>
 					</LocaleResource>
@@ -1333,6 +1339,9 @@
 			<LocaleResource Name="FullName">
 				<Value>Your name</Value>
 				<Children>
+          <LocaleResource Name="Hint">
+            <Value>Enter your name</Value>
+          </LocaleResource>
 					<LocaleResource Name="Required">
 						<Value>Enter your name</Value>
 					</LocaleResource>
