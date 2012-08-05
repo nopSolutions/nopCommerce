@@ -43,20 +43,6 @@
             <li id="topcartlink"><a href="@Url.RouteUrl("ShoppingCart")" class="ico-cart">@T("ShoppingCart")</a>
                 <a href="@Url.RouteUrl("ShoppingCart")" class="cart-qty">(@Model.ShoppingCartItems)</a>
             </li>
-            <script type="text/javascript">
-                $('#topcartlink').live('mouseenter', function () {
-                    $('#flyout-cart').addClass('active');
-                });
-                $('#topcartlink').live('mouseleave', function () {
-                    $('#flyout-cart').removeClass('active');
-                });
-                $('#flyout-cart').live('mouseenter', function () {
-                    $('#flyout-cart').addClass('active');
-                });
-                $('#flyout-cart').live('mouseleave', function () {
-                    $('#flyout-cart').removeClass('active');
-                });
-            </script>
         }
         @if (Model.WishlistEnabled)
         {
@@ -65,4 +51,21 @@
         }
         @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "header_links_after" })
     </ul>
+    @if (Model.ShoppingCartEnabled)
+    {
+        <script type="text/javascript">
+            $('#topcartlink').live('mouseenter', function () {
+                $('#flyout-cart').addClass('active');
+            });
+            $('#topcartlink').live('mouseleave', function () {
+                $('#flyout-cart').removeClass('active');
+            });
+            $('#flyout-cart').live('mouseenter', function () {
+                $('#flyout-cart').addClass('active');
+            });
+            $('#flyout-cart').live('mouseleave', function () {
+                $('#flyout-cart').removeClass('active');
+            });
+        </script>
+    }
 </div>
