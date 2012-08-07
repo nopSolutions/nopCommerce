@@ -46,13 +46,13 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    <div class="registration-page">
+    <div class="page registration-page">
         <div class="page-title">
             <h1>@T("Account.Register")</h1>
         </div>
         <div class="clear">
         </div>
-        <div class="body">
+        <div class="page-body">
             <div class="message-error">
                 @Html.ValidationSummary(true)
             </div>

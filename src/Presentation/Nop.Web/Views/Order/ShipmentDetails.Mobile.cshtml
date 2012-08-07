@@ -7,13 +7,13 @@
     //title
     Html.AddTitleParts(T("PageTitle.ShipmentDetails").Text);
 }
-<div class="shipment-details">
+<div class="page shipment-details">
     <div class="page-title">
         <h1>@string.Format(T("Order.Shipments.Information").Text, Model.Id)</h1>
     </div>
     <div class="clear">
     </div>
-    <div class="info">
+    <div class="page-body">
         <div class="overview">
             <div class="order-id">
                 <strong>@T("Order.Shipments.Order#")@Model.Order.Id</strong>

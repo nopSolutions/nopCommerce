@@ -4,6 +4,10 @@
     //title
     Html.AddTitleParts(T("Common.Config").Text);
 }
-@Html.Action("TaxTypeSelector", "Common")
-@Html.Action("CurrencySelector", "Common")
-@Html.Action("LanguageSelector", "Common")
+<div class="page config-page">
+    <div class="page-body">
+        @Html.Action("TaxTypeSelector", "Common")
+        @Html.Action("CurrencySelector", "Common")
+        @Html.Action("LanguageSelector", "Common")
+    </div>
+</div>

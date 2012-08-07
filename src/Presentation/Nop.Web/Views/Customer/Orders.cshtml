@@ -11,13 +11,13 @@
 {
     @Html.Partial("MyAccountNavigation", Model.NavigationModel, new ViewDataDictionary())
 }
-<div class="account-page">
+<div class="page account-page">
     <div class="page-title">
         <h1>@T("Account.MyAccount") - @T("Account.CustomerOrders")</h1>
     </div>
     <div class="clear">
     </div>
-    <div class="body">
+    <div class="page-body">
         <div class="customer-orders">
             @if (Model.RecurringOrders.Count > 0)
             {

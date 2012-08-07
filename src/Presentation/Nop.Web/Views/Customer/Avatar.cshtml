@@ -13,13 +13,13 @@
 }
 @using (Html.BeginRouteForm("CustomerAvatar", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
-    <div class="account-page">
+    <div class="page account-page">
         <div class="page-title">
             <h1>@T("Account.MyAccount") - @T("Account.Avatar")</h1>
         </div>
         <div class="clear">
         </div>
-        <div class="body">
+        <div class="page-body">
             <div class="customer-avatar">
                 <div class="message-error">
                     @Html.ValidationSummary(true)

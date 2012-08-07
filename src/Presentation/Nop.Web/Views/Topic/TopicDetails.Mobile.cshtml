@@ -28,7 +28,7 @@
                             if ($('#ph-title .page-title h1').text().length == 0) {
                                 $('#ph-title').hide();
                             }
-                            $('#ph-topic .topic-page-body').html(data.Body);
+                            $('#ph-topic .page-body').html(data.Body);
                             $('#ph-password').hide();
                             $('#ph-topic').show();
                         }
@@ -68,7 +68,7 @@
         }
     </div>
 }
-<div class="topic-page" id="ph-topic">
+<div class="page topic-page" id="ph-topic">
     <div id="ph-title">
         <div class="page-title">
             <h1>
@@ -77,7 +77,7 @@
         <div class="clear">
         </div>
     </div>
-    <div class="topic-page-body">
+    <div class="page-body">
         @Html.Raw(Model.Body)
     </div>
 </div>

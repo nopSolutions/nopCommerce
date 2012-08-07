@@ -1662,7 +1662,6 @@
     <Content Include="Views\Common\HeaderLinks.cshtml" />
     <Content Include="Views\Common\InfoBlock.cshtml" />
     <Content Include="Views\Common\LanguageSelector.cshtml" />
-    <Content Include="Views\Common\List.cshtml" />
     <Content Include="Views\Common\Menu.cshtml" />
     <Content Include="Views\Common\TaxTypeSelector.cshtml" />
     <Content Include="Views\Blog\List.cshtml" />

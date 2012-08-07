@@ -7,74 +7,76 @@
     //title
     Html.AddTitleParts(T("PageTitle.WishlistEmailAFriend").Text);
 }
-<div class="email-a-friend-page">
+<div class="page email-a-friend-page">
     <div class="page-title">
         <h1>@T("Wishlist.EmailAFriend.Title")</h1>
     </div>
     <div class="clear">
     </div>
-    @if (Model.SuccessfullySent)
-    {
+    <div class="page-body">
+        @if (Model.SuccessfullySent)
+        {<div class="result">
         @Model.Result
-    }
-    else
-    {
-        <div class="send-email">
-            @using (Html.BeginForm())
-            {
-                <table>
-                    <tr>
-                        <td>
-                            @Html.LabelFor(model => model.FriendEmail):
-                        </td>
-                        <td>
-                            @Html.TextBoxFor(model => model.FriendEmail, new { @class = "friend-email" })
-                            @Html.ValidationMessageFor(model => model.FriendEmail)
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            @Html.LabelFor(model => model.YourEmailAddress):
-                        </td>
-                        <td>
-                            @Html.TextBoxFor(model => model.YourEmailAddress, new { @class = "your-email" })
-                            @Html.ValidationMessageFor(model => model.YourEmailAddress)
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            @Html.LabelFor(model => model.PersonalMessage):
-                        </td>
-                        <td>@Html.TextAreaFor(model => model.PersonalMessage, new { @class = "personal-message" })
-                            @Html.ValidationMessageFor(model => model.PersonalMessage)
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="message-error" colspan="2">
-                            @Html.ValidationSummary(true)
-                        </td>
-                    </tr>
-                    @if (Model.DisplayCaptcha)
-                    {
-                        <tr class="row">
-                            <td class="item-name">
-                                &nbsp;
+    </div>
+        }
+        else
+        {
+            <div class="send-email">
+                @using (Html.BeginForm())
+                {
+                    <table>
+                        <tr>
+                            <td>
+                                @Html.LabelFor(model => model.FriendEmail):
                             </td>
-                            <td class="item-value captcha-box">
-                                @Html.Raw(Html.GenerateCaptcha())
+                            <td>
+                                @Html.TextBoxFor(model => model.FriendEmail, new { @class = "friend-email" })
+                                @Html.ValidationMessageFor(model => model.FriendEmail)
                             </td>
                         </tr>
-                    }
-                    <tr>
-                        <td>
-                            &nbsp;
-                        </td>
-                        <td>
-                            <input type="submit" name="send-email" class="button-1 send-email-a-friend-button" value="@T("Wishlist.EmailAFriend.Button")" />
-                        </td>
-                    </tr>
-                </table>
-            }
-        </div>
-    }
+                        <tr>
+                            <td>
+                                @Html.LabelFor(model => model.YourEmailAddress):
+                            </td>
+                            <td>
+                                @Html.TextBoxFor(model => model.YourEmailAddress, new { @class = "your-email" })
+                                @Html.ValidationMessageFor(model => model.YourEmailAddress)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                @Html.LabelFor(model => model.PersonalMessage):
+                            </td>
+                            <td>@Html.TextAreaFor(model => model.PersonalMessage, new { @class = "personal-message" })
+                                @Html.ValidationMessageFor(model => model.PersonalMessage)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="message-error" colspan="2">
+                                @Html.ValidationSummary(true)
+                            </td>
+                        </tr>
+                        @if (Model.DisplayCaptcha)
+                        {
+                            <tr class="row">
+                                <td class="item-name">
+                                    &nbsp;
+                                </td>
+                                <td class="item-value captcha-box">
+                                    @Html.Raw(Html.GenerateCaptcha())
+                                </td>
+                            </tr>
+                        }
+                        <tr>
+                            <td>
+                                &nbsp;
+                            </td>
+                            <td>
+                                <input type="submit" name="send-email" class="button-1 send-email-a-friend-button" value="@T("Wishlist.EmailAFriend.Button")" />
+                            </td>
+                        </tr>
+                    </table>
+                }
+            </div>
+        }</div>
 </div>

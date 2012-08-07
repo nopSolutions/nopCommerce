@@ -11,15 +11,14 @@
 {
     @Html.Partial("MyAccountNavigation", Model.NavigationModel, new ViewDataDictionary())
 }
-<div class="account-page">
+<div class="page account-page">
     <div class="page-title">
         <h1>@T("Account.MyAccount") - @T("Account.DownloadableProducts")</h1>
     </div>
     <div class="clear">
     </div>
-    <div class="body">
+    <div class="page-body">
         <div class="downloadable-products">
-            <div class="info">
                 @if (Model.Items.Count > 0)
                 {
                     <table class="data-table">
@@ -94,7 +93,6 @@
                         @T("DownloadableProducts.NoItems")
                     </div>
                 }
-            </div>
         </div>
     </div>
 </div>

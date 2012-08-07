@@ -22,7 +22,7 @@
         });
     </script>
 }
-<div class="order-details">
+<div class="page order-details">
     @if (!Model.PrintMode)
     {
         <div class="page-title">
@@ -40,7 +40,7 @@
         <div class="clear">
         </div>
     }
-    <div class="info">
+    <div class="page-body">
         @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "orderdetails_page_top" })
         <div class="order-overview">
             <table class="order-overview-table">

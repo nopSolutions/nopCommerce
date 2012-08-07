@@ -9,7 +9,7 @@
     //title
     Html.AddTitleParts(T("PageTitle.Checkout").Text);
 }
-<div class="checkout-page">
+<div class="page checkout-page">
     @Html.Action("CheckoutProgress", "Checkout", new { step = CheckoutProgressStep.Confirm })
     <div class="clear">
     </div>
@@ -18,7 +18,7 @@
     </div>
     <div class="clear">
     </div>
-    <div class="checkout-data">
+    <div class="page-body checkout-data">
         @using (Html.BeginRouteForm("CheckoutConfirm", FormMethod.Post, new { id = "confirm-order-form" }))
         {
             @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "checkout_confirm_top" })

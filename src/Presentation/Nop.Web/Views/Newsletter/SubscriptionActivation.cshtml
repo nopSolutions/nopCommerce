@@ -3,17 +3,15 @@
 @{
     Layout = "~/Views/Shared/_ColumnsThree.cshtml";
 }
-<div class="newsletter-page">
+<div class="page newsletter-page">
     <div class="page-title">
         <h1>@T("Newsletter.Title")</h1>
     </div>
     <div class="clear">
     </div>
-    <div class="body">
-        <div>
-            <strong>
-                @Model.Result
-            </strong>
-        </div>
+    <div class="page-body">
+        <strong>
+            @Model.Result
+        </strong>
     </div>
 </div>

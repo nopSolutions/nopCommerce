@@ -7,4 +7,8 @@
     //title
     Html.AddTitleParts(T("PageTitle.Account").Text);
 }
-@Html.Partial("MyAccountNavigation", Model, new ViewDataDictionary())
+<div class="page">
+    <div class="page-body">
+        @Html.Partial("MyAccountNavigation", Model, new ViewDataDictionary())
+    </div>
+</div>

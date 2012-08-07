@@ -5,13 +5,13 @@
 
     Html.AddTitleParts(T("PageTitle.Profile").Text);
 }
-<div class="profile-page">
-    <div class="title">
+<div class="page profile-page">
+    <div class="page-title">
         @Model.ProfileTitle
     </div>
     <div class="clear">
     </div>
-    <div class="body">
+    <div class="page-body">
         @{
             var selectPostsTab = String.Empty;
             if (@Model.ForumsEnabled && @Model.PagingPosts)

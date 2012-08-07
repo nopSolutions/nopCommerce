@@ -21,7 +21,7 @@ body{font-family:arial, verdana, helvetica, sans-serif;font-size:12px;text-align
 .cart-total-right{text-align:right;vertical-align:middle;padding-left:5px;}
 
 .order-details{margin-bottom:15px;padding:0;}
-.order-details .info{border:1px solid #d7d7d7;padding:10px;}
+.order-details .page-body{border:1px solid #d7d7d7;padding:10px;}
 .order-details .section-title{padding:10px 10px 5px 0;font-weight:700;clear:both;}
 .order-details .order-overview{text-align:left;padding-bottom:10px;}
 .order-details .order-overview .order-total-top{text-align:right;}

@@ -1,21 +1,25 @@
 ﻿@{
     Layout = "~/Views/Shared/_ColumnsThree.cshtml";
 }
-@Html.Action("WidgetsByZone", "Widget", new { widgetZone = "home_page_top" })
-@Html.Action("TopicBlock", "Topic", new { systemName = "HomePageText" })
-<div class="clear">
+<div class="page home-page">
+    <div class="page-body">
+        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "home_page_top" })
+        @Html.Action("TopicBlock", "Topic", new { systemName = "HomePageText" })
+        <div class="clear">
+        </div>
+        @Html.Action("HomepageCategories", "Catalog")
+        <div class="clear">
+        </div>
+        @Html.Action("HomepageProducts", "Catalog")
+        <div class="clear">
+        </div>
+        @Html.Action("HomepageBestSellers", "Catalog")
+        <div class="clear">
+        </div>
+        @Html.Action("HomePageNews", "News")
+        <div class="clear">
+        </div>
+        @Html.Action("HomePagePolls", "Poll")
+        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "home_page_bottom" })
+    </div>
 </div>
-@Html.Action("HomepageCategories", "Catalog")
-<div class="clear">
-</div>
-@Html.Action("HomepageProducts", "Catalog")
-<div class="clear">
-</div>
-@Html.Action("HomepageBestSellers", "Catalog")
-<div class="clear">
-</div>
-@Html.Action("HomePageNews", "News")
-<div class="clear">
-</div>
-@Html.Action("HomePagePolls", "Poll")
-@Html.Action("WidgetsByZone", "Widget", new { widgetZone = "home_page_bottom" })

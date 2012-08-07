@@ -7,13 +7,13 @@
     //title
     Html.AddTitleParts(T("PageTitle.Login").Text);
 }
-<div class="login-page">
+<div class="page login-page">
     <div class="page-title">
         <h1>@T("Account.Login.Welcome")</h1>
     </div>
     <div class="clear">
     </div>
-    <div class="wrapper">
+    <div class="page-body">
         <div class="returning-wrapper">
             <span class="login-title">@T("Account.Login.ReturningCustomer")</span>
             <div class="login-block">
@@ -49,9 +49,9 @@
                     </div>
                     if (Model.DisplayCaptcha)
                     {
-                        <div class="captcha-box">
-                            @Html.Raw(Html.GenerateCaptcha())
-                        </div>
+                    <div class="captcha-box">
+                        @Html.Raw(Html.GenerateCaptcha())
+                    </div>
                     }
                     <div class="buttons">
                         <input type="submit" value="@T("Account.Login.LoginButton")" />
@@ -85,7 +85,5 @@
                 </div>
             </div>
         }
-    </div>
-    <div class="clear">
     </div>
 </div>

@@ -1,16 +1,20 @@
 ﻿@{
     Layout = "~/Views/Shared/_Root.cshtml";
 }
-@Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_home_page_top" })
-@*product search box*@
-@Html.Action("SearchBox", "Catalog")
-@*logo*@
-<div class="homepage-logo">&nbsp;</div>
-@*categories*@
-@Html.Action("CategoryNavigation", "Catalog", new { currentCategoryId = 0, currentProductId = 0 })
-@*manufacturers*@
-@Html.Action("ManufacturerNavigation", "Catalog", new { currentManufacturerId = 0 })
-@*home page products*@
-@*uncomment the line below to show home page featured products*@
-@*@Html.Action("HomepageProducts", "Catalog")*@
-@Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_home_page_bottom" })
+<div class="page home-page">
+    <div class="page-body">
+        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_home_page_top" })
+        @*product search box*@
+        @Html.Action("SearchBox", "Catalog")
+        @*logo*@
+        <div class="homepage-logo">
+            &nbsp;</div>
+        @*categories*@
+        @Html.Action("CategoryNavigation", "Catalog", new { currentCategoryId = 0, currentProductId = 0 })
+        @*manufacturers*@
+        @Html.Action("ManufacturerNavigation", "Catalog", new { currentManufacturerId = 0 })
+        @*home page products*@ @*uncomment the line below to show home page featured products*@
+        @*@Html.Action("HomepageProducts", "Catalog")*@
+        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_home_page_bottom" })
+    </div>
+</div>

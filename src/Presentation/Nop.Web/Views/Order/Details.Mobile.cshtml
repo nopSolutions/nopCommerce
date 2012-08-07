@@ -7,14 +7,14 @@
     //title
     Html.AddTitleParts(T("PageTitle.OrderDetails").Text);
 }
-<div class="order-details">
+<div class="page order-details">
     <div class="page-title">
         <h1>
             @T("Order.OrderInformation")</h1>
     </div>
     <div class="clear">
     </div>
-    <div class="info">
+    <div class="page-body">
         @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_orderdetails_page_top" })
         <div class="order-overview">
             <div>

@@ -9,67 +9,69 @@
     //title
     Html.AddTitleParts(T("PageTitle.Sitemap").Text);
 }
-<div class="sitemap-page">
+<div class="page sitemap-page">
     <div class="page-title">
         <h1>@T("Sitemap")</h1>
     </div>
-    @if (Model.Topics.Count > 0)
-    {
-        <div class="entity">
-            @foreach (var item in Model.Topics)
-            {
-                <div class="topic-box">
-                    <div class="item">
-                        <a href="@Url.RouteUrl("Topic", new { SystemName = @item.SystemName.ToLowerInvariant() })">@item.Title</a>
+    <div class="page-body">
+        @if (Model.Topics.Count > 0)
+        {
+            <div class="entity">
+                @foreach (var item in Model.Topics)
+                {
+                    <div class="topic-box">
+                        <div class="item">
+                            <a href="@Url.RouteUrl("Topic", new { SystemName = @item.SystemName.ToLowerInvariant() })">@item.Title</a>
+                        </div>
                     </div>
+                }
+            </div>
+        }
+        @if (Model.Categories.Count > 0)
+        {
+            <div class="entity">
+                <h2>
+                    @T("Sitemap.Categories")</h2>
+                @foreach (var item in Model.Categories)
+                {<div class="category-box">
+                <div class="item">
+                    <a href="@Url.RouteUrl("Category", new { categoryId = item.Id, SeName = item.SeName })">@item.Name</a>
                 </div>
-            }
-        </div>
-    }
-    @if (Model.Categories.Count > 0)
-    {
-        <div class="entity">
-            <h2>
-                @T("Sitemap.Categories")</h2>
-            @foreach (var item in Model.Categories)
-            {<div class="category-box">
-            <div class="item">
-                <a href="@Url.RouteUrl("Category", new { categoryId = item.Id, SeName = item.SeName })">@item.Name</a>
             </div>
-        </div>
-            }
-        </div>
-        <div class="clear">
-        </div>
-    }
-    @if (Model.Manufacturers.Count > 0)
-    {
-        <div class="entity">
-            <h2>
-                @T("Sitemap.Manufacturers")</h2>
-            @foreach (var item in Model.Manufacturers)
-            {<div class="manufacturer-box">
-            <div class="item">
-                <a href="@Url.RouteUrl("Manufacturer", new { manufacturerId = item.Id, SeName = item.SeName })">@item.Name</a>
+                }
             </div>
-        </div>
-            }
-        </div>
-        <div class="clear">
-        </div>
-    }
-    @if (Model.Products.Count > 0)
-    {
-        <div class="entity">
-            <h2>
-                @T("Sitemap.Products")</h2>
-            @foreach (var item in Model.Products)
-            {<div class="product-box">
-            <div class="item">
-                <a href="@Url.RouteUrl("Product", new { productId = item.Id, SeName = item.SeName })">@item.Name</a>
+            <div class="clear">
             </div>
-        </div>
-            }
-        </div>
-    }
+        }
+        @if (Model.Manufacturers.Count > 0)
+        {
+            <div class="entity">
+                <h2>
+                    @T("Sitemap.Manufacturers")</h2>
+                @foreach (var item in Model.Manufacturers)
+                {<div class="manufacturer-box">
+                <div class="item">
+                    <a href="@Url.RouteUrl("Manufacturer", new { manufacturerId = item.Id, SeName = item.SeName })">@item.Name</a>
+                </div>
+            </div>
+                }
+            </div>
+            <div class="clear">
+            </div>
+        }
+        @if (Model.Products.Count > 0)
+        {
+            <div class="entity">
+                <h2>
+                    @T("Sitemap.Products")</h2>
+                @foreach (var item in Model.Products)
+                {<div class="product-box">
+                <div class="item">
+                    <a href="@Url.RouteUrl("Product", new { productId = item.Id, SeName = item.SeName })">@item.Name</a>
+                </div>
+            </div>
+                }
+            </div>
+        }
+    </div>
 </div>

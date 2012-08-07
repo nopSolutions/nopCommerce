@@ -7,7 +7,7 @@
     //title
     Html.AddTitleParts(T("PageTitle.Login").Text);
 }
-<div class="login-page">
+<div class="page login-page">
     <div class="page-title">
         <h1>@T("Account.Login.Welcome")</h1>
     </div>
@@ -19,7 +19,7 @@
     @Html.Partial("_ExternalAuthentication.Errors")
     <div class="clear">
     </div>
-    <div class="wrapper">
+    <div class="page-body">
         @if (Model.CheckoutAsGuest)
         {
             <div class="new-wrapper">
@@ -82,7 +82,7 @@
                                         @Html.LabelFor(m => m.Username):
                                     </td>
                                     <td class="item-value">
-                                        @Html.TextBoxFor(m => m.Username) 
+                                        @Html.TextBoxFor(m => m.Username)
                                         @Html.ValidationMessageFor(m => m.Username)
                                     </td>
                                 </tr>
@@ -121,11 +121,11 @@
                             </tr>
                             @if (Model.DisplayCaptcha)
                             {
-                            <tr class="row">
-                                <td class="captcha-box" colspan="2">
-                                    @Html.Raw(Html.GenerateCaptcha())
-                                </td>
-                            </tr>
+                                <tr class="row">
+                                    <td class="captcha-box" colspan="2">
+                                        @Html.Raw(Html.GenerateCaptcha())
+                                    </td>
+                                </tr>
                             }
                             <tr class="row">
                                 <td colspan="2">
@@ -144,8 +144,8 @@
         <div class="externalauthentication">
             @Html.Action("ExternalMethods", "ExternalAuthentication")
         </div>
+        <div class="clear">
+        </div>
+        @Html.Action("TopicBlock", "Topic", new { systemName = "LoginRegistrationInfo" })
     </div>
-    <div class="clear">
-    </div>
-    @Html.Action("TopicBlock", "Topic", new { systemName = "LoginRegistrationInfo" })
 </div>

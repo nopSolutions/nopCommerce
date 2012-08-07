@@ -9,11 +9,11 @@
 }
 @using (Html.BeginForm())
 {
-    <div class="private-message-send">
+    <div class="page private-message-send-page">
         <div class="page-title">
             <h1>@T("PrivateMessages.Send.PostMessage")</h1>
         </div>
-        <div class="wrapper">
+        <div class="page-body">
             <div class="message-error">
                 @Html.ValidationSummary(true)
             </div>
