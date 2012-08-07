@@ -28,98 +28,100 @@
 <div class="clear">
 </div>
 <div class="page product-details-page">
-    @using (Html.BeginRouteForm("Product", new { productId = Model.Id, SeName = Model.SeName }, FormMethod.Post, new { id = "product-details-form" }))
-    {
-        <div class="product-essential">
-            <div class="product-details-info">
-                @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "productdetails_before_pictures" })
-                <!--product pictures-->
-                @Html.Partial("_ProductDetailsPictures", Model)
-                @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "productdetails_after_pictures" })
-                <div class="overview">
-                    <h1 class="product-name">
-                        @Model.Name
-                    </h1>
-                    <div class="shortdescription">
-                        @Html.Raw(Model.ShortDescription)
+    <div class="page-body">
+        @using (Html.BeginRouteForm("Product", new { productId = Model.Id, SeName = Model.SeName }, FormMethod.Post, new { id = "product-details-form" }))
+        {
+            <div class="product-essential">
+                <div class="product-details-info">
+                    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "productdetails_before_pictures" })
+                    <!--product pictures-->
+                    @Html.Partial("_ProductDetailsPictures", Model)
+                    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "productdetails_after_pictures" })
+                    <div class="overview">
+                        <h1 class="product-name">
+                            @Model.Name
+                        </h1>
+                        <div class="shortdescription">
+                            @Html.Raw(Model.ShortDescription)
+                        </div>
+                        <div class="clear">
+                        </div>
+                        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "productdetails_overview_top" })
+                        <!--product SKU, manufacturer part number, stock info-->
+                        @Html.Partial("_ProductVariant_SKU_Man_Stock", defaultProductVariant)
+                        <div class="clear">
+                        </div>
+                        <!--Back in stock subscription-->
+                        @Html.Partial("_ProductVariantBackInStockSubscription", defaultProductVariant)
+                        <div class="clear">
+                        </div>
+                        <!--product manufacturers-->
+                        @Html.Action("ProductManufacturers", "Catalog", new { productId = Model.Id })
+                        <div class="clear">
+                        </div>
+                        <!--product reviews-->
+                        @Html.Action("ProductReviewOverview", "Catalog", new { productId = Model.Id })
+                        <div class="clear">
+                        </div>
+                        <!--sample download-->
+                        @Html.Partial("_DownloadSample", defaultProductVariant)
+                        <div class="clear">
+                        </div>
+                        @{
+            var dataDictPrice = new ViewDataDictionary();
+            dataDictPrice.TemplateInfo.HtmlFieldPrefix = string.Format("price_{0}", defaultProductVariant.Id);
+                            @Html.Partial("_ProductVariantPrice", defaultProductVariant.ProductVariantPrice, dataDictPrice)
+                            
+            var dataDictAddToCart = new ViewDataDictionary();
+            dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", defaultProductVariant.Id);
+                            @Html.Partial("_ProductVariantAddToCart", defaultProductVariant.AddToCart, dataDictAddToCart)                    
+                        }
+                        <div class="clear">
+                        </div>
+                        @Html.Action("ProductEmailAFriendButton", "Catalog", new { productId = Model.Id })
+                        @Html.Action("CompareProductsButton", "Catalog", new { productId = Model.Id })
+                        <div class="clear">
+                        </div>
+                        @Html.Action("ShareButton", "Catalog")
+                        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "productdetails_overview_bottom" })
                     </div>
-                    <div class="clear">
+                    <div class="full-description">
+                        @Html.Raw(Model.FullDescription)
                     </div>
-                    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "productdetails_overview_top" })
-                    <!--product SKU, manufacturer part number, stock info-->
-                    @Html.Partial("_ProductVariant_SKU_Man_Stock", defaultProductVariant)
-                    <div class="clear">
-                    </div>
-                    <!--Back in stock subscription-->
-                    @Html.Partial("_ProductVariantBackInStockSubscription", defaultProductVariant)
-                    <div class="clear">
-                    </div>
-                    <!--product manufacturers-->
-                    @Html.Action("ProductManufacturers", "Catalog", new { productId = Model.Id })
-                    <div class="clear">
-                    </div>
-                    <!--product reviews-->
-                    @Html.Action("ProductReviewOverview", "Catalog", new { productId = Model.Id })
-                    <div class="clear">
-                    </div>
-                    <!--sample download-->
-                    @Html.Partial("_DownloadSample", defaultProductVariant)
+                </div>
+            </div>
+            <div class="clear">
+            </div>
+            <div class="product-collateral">
+                <div class="product-variant-line">
+                    <!--product tier prices-->
+                    @Html.Action("ProductTierPrices", "Catalog", new { productVariantId = defaultProductVariant.Id })
                     <div class="clear">
                     </div>
                     @{
-        var dataDictPrice = new ViewDataDictionary();
-        dataDictPrice.TemplateInfo.HtmlFieldPrefix = string.Format("price_{0}", defaultProductVariant.Id);
-                        @Html.Partial("_ProductVariantPrice", defaultProductVariant.ProductVariantPrice, dataDictPrice)
-                            
-        var dataDictAddToCart = new ViewDataDictionary();
-        dataDictAddToCart.TemplateInfo.HtmlFieldPrefix = string.Format("addtocart_{0}", defaultProductVariant.Id);
-                        @Html.Partial("_ProductVariantAddToCart", defaultProductVariant.AddToCart, dataDictAddToCart)                    
+            var dataDictAttributes = new ViewDataDictionary();
+            dataDictAttributes.TemplateInfo.HtmlFieldPrefix = string.Format("attributes_{0}", defaultProductVariant.Id);
+                        @Html.Partial("_ProductAttributes", defaultProductVariant.ProductVariantAttributes, dataDictAttributes)                  
                     }
                     <div class="clear">
                     </div>
-                    @Html.Action("ProductEmailAFriendButton", "Catalog", new { productId = Model.Id })
-                    @Html.Action("CompareProductsButton", "Catalog", new { productId = Model.Id })
-                    <div class="clear">
-                    </div>
-                    @Html.Action("ShareButton", "Catalog")
-                    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "productdetails_overview_bottom" })
+                    @{
+            var dataDictGiftCard = new ViewDataDictionary();
+            dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = string.Format("giftcard_{0}", defaultProductVariant.Id);
+                        @Html.Partial("_GiftCardInfo", defaultProductVariant.GiftCard, dataDictGiftCard)
+                    }
                 </div>
-                <div class="full-description">
-                    @Html.Raw(Model.FullDescription)
-                </div>
-            </div>
-        </div>
-        <div class="clear">
-        </div>
-        <div class="product-collateral">
-            <div class="product-variant-line">
-                <!--product tier prices-->
-                @Html.Action("ProductTierPrices", "Catalog", new { productVariantId = defaultProductVariant.Id })
+                @Html.Action("ProductSpecifications", "Catalog", new { productId = Model.Id })
                 <div class="clear">
                 </div>
-                @{
-        var dataDictAttributes = new ViewDataDictionary();
-        dataDictAttributes.TemplateInfo.HtmlFieldPrefix = string.Format("attributes_{0}", defaultProductVariant.Id);
-                    @Html.Partial("_ProductAttributes", defaultProductVariant.ProductVariantAttributes, dataDictAttributes)                  
-                }
+                @Html.Action("ProductTags", "Catalog", new { productId = Model.Id })
                 <div class="clear">
                 </div>
-                @{
-        var dataDictGiftCard = new ViewDataDictionary();
-        dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = string.Format("giftcard_{0}", defaultProductVariant.Id);
-                    @Html.Partial("_GiftCardInfo", defaultProductVariant.GiftCard, dataDictGiftCard)
-                }
+                @Html.Action("ProductsAlsoPurchased", "Catalog", new { productId = Model.Id })
+                <div class="clear">
+                </div>
+                @Html.Action("RelatedProducts", "Catalog", new { productId = Model.Id })
             </div>
-            @Html.Action("ProductSpecifications", "Catalog", new { productId = Model.Id })
-            <div class="clear">
-            </div>
-            @Html.Action("ProductTags", "Catalog", new { productId = Model.Id })
-            <div class="clear">
-            </div>
-            @Html.Action("ProductsAlsoPurchased", "Catalog", new { productId = Model.Id })
-            <div class="clear">
-            </div>
-            @Html.Action("RelatedProducts", "Catalog", new { productId = Model.Id })
-        </div>
-    }
+        }
+    </div>
 </div>
