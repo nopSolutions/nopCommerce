@@ -512,8 +512,8 @@
 .post-edit .post-topic{}
 .post-edit .post-topic .options{}
 .move-forum-topic{}
-.move-forum-topic .body{}
-.move-forum-topic .body .options{}
+.move-forum-topic .page-body{}
+.move-forum-topic .page-body .options{}
 
 /* FORUM TOPIC */
 .forum-topic{}

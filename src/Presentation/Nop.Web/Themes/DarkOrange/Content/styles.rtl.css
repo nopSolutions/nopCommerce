@@ -919,7 +919,7 @@ a.eu-cookie-privacyinfo-tag{color:#F93 !important;text-decoration:underline;}
 .post-edit table.post-topic td.options{text-align:left;}
 .move-forum-topic{background:url(images/forum-footer-bg.gif) repeat-x bottom;}
 .move-forum-topic .title{background:url(images/forum-header-bg.gif) repeat-x 50%;color:#FFF;border:solid 1px #6a6a6a;height:28px;line-height:28px;font-weight:700;padding-right:3px;}
-.move-forum-topic .wrapper{padding:5px;}
+.move-forum-topic .page-body{padding:5px;}
 .move-forum-topic table.move-topic{width:100%;vertical-align:middle;border-collapse:collapse;}
 .move-forum-topic table.move-topic td{padding:4px;}
 .move-forum-topic table.move-topic td.fieldname{font-weight:700;width:30%;color:#555;white-space:nowrap;}

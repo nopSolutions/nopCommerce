@@ -11,11 +11,11 @@
             new Dictionary<string, Object> { { "data-ajax", "false" } }))
 {
     @Html.HiddenFor(model => model.Id)
-    <div class="move-forum-topic">
+    <div class="page move-forum-topic">
         <div class="page-title">
             <h1>@T("Forum.MoveTopic")</h1>
         </div>
-        <div class="body">
+        <div class="page-body">
             @T("Forum.SelectTheForumToMoveTopic"):
             @Html.DropDownList("ForumSelected", new SelectList(Model.ForumList, "Value", "Text"))
             <div class="options">
