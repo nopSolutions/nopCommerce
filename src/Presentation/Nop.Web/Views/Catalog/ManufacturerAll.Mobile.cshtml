@@ -9,20 +9,22 @@
 @using Nop.Core.Infrastructure;
 @using Nop.Web.Framework.UI;
 @using Nop.Web.Models.Catalog;
-<div class="manufacturerlist-page">
+<div class="page manufacturer-list-page">
     <div class="page-title">
         <h1>@T("Manufacturers.List")</h1>
     </div>
     <div class="clear">
     </div>
-    @if (Model.Count > 0)
-    {
-        <ul data-role="listview" data-inset="true" data-filter="false">
-            @foreach (var item in Model)
-            {
-                <li><a href="@Url.RouteUrl("Manufacturer", new { manufacturerId = item.Id, SeName = item.SeName })">
-                    @item.Name</a></li>
-            }
-        </ul>
-    }
+    <div class="page-body">
+        @if (Model.Count > 0)
+        {
+            <ul data-role="listview" data-inset="true" data-filter="false">
+                @foreach (var item in Model)
+                {
+                    <li><a href="@Url.RouteUrl("Manufacturer", new { manufacturerId = item.Id, SeName = item.SeName })">
+                        @item.Name</a></li>
+                }
+            </ul>
+        }
+    </div>
 </div>

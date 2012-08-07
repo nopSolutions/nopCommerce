@@ -8,15 +8,18 @@
     Html.AddTitleParts(Model.ProductName);
     Html.AddTitleParts(T("PageTitle.ProductEmailAFriend").Text);
 }
-<div class="email-a-friend-page">
+<div class="page email-a-friend-page">
     <div class="page-title">
         <h1>@T("Products.EmailAFriend.Title")</h1>
     </div>
     <div class="clear">
     </div>
+    <div class="page-body">
     @if (Model.SuccessfullySent)
     {
-        @Model.Result
+        <div class="result">
+            @Model.Result
+        </div>
     }
     else
     {
@@ -81,4 +84,5 @@
             }
         </div>
     }
+    </div>
 </div>

@@ -5,49 +5,48 @@
 }
 @using (Html.BeginForm())
 {
-    <div class="back-in-stock-subscription-page">
-        <div>
-            <div class="page-title">
-                <h1>
-                    @if (Model.AlreadySubscribed)
-                    {
-                        @T("BackInStockSubscriptions.AlreadySubscribed")
-                    }
-                    else
-                    {
-                        @T("BackInStockSubscriptions.PopupTitle")
-                    }
-                </h1>
-            </div>
-        </div>
-        <div>
-            <a href="@Url.RouteUrl("Product", new { productId = Model.ProductId, SeName = Model.ProductSeName })">@Model.ProductName</a>
-        </div>
-        <div class="back-in-stock-subscription-page-body">
-            @if (!Model.SubscriptionAllowed)
-            {
-                <div>
-                    @T("BackInStockSubscriptions.NotAllowed")</div>
-            }
-            else if (!Model.IsCurrentCustomerRegistered)
-            {
-                <div>
-                    @("BackInStockSubscriptions.OnlyRegistered")</div>
-            }
-            else if (!Model.AlreadySubscribed && Model.CurrentNumberOfBackInStockSubscriptions >= Model.MaximumBackInStockSubscriptions)
-            {
-                <div>
-                    @string.Format(T("BackInStockSubscriptions.MaxSubscriptions").Text, Model.MaximumBackInStockSubscriptions)</div>
-            }
-            else
-            {
-                if (!Model.AlreadySubscribed)
+    <div class="page back-in-stock-subscription-page">
+        <div class="page-title">
+            <h1>
+                @if (Model.AlreadySubscribed)
                 {
-                <div class="tooltip">@T("BackInStockSubscriptions.Tooltip")</div>
+                    @T("BackInStockSubscriptions.AlreadySubscribed")
                 }
-                <input type="submit" id="back-in-stock-notify-me" value="@(Model.AlreadySubscribed ? @T("BackInStockSubscriptions.Unsubscribe").Text : @T("BackInStockSubscriptions.NotifyMe").Text)" />
+                else
+                {
+                    @T("BackInStockSubscriptions.PopupTitle")
+                }
+            </h1>
+        </div>
+        <div class="page-body">
+            <div>
+                <a href="@Url.RouteUrl("Product", new { productId = Model.ProductId, SeName = Model.ProductSeName })">@Model.ProductName</a>
+            </div>
+            <div>
+                @if (!Model.SubscriptionAllowed)
+                {
+                    <div>
+                        @T("BackInStockSubscriptions.NotAllowed")</div>
+                }
+                else if (!Model.IsCurrentCustomerRegistered)
+                {
+                    <div>
+                        @("BackInStockSubscriptions.OnlyRegistered")</div>
+                }
+                else if (!Model.AlreadySubscribed && Model.CurrentNumberOfBackInStockSubscriptions >= Model.MaximumBackInStockSubscriptions)
+                {
+                    <div>
+                        @string.Format(T("BackInStockSubscriptions.MaxSubscriptions").Text, Model.MaximumBackInStockSubscriptions)</div>
+                }
+                else
+                {
+                    if (!Model.AlreadySubscribed)
+                    {
+                    <div class="tooltip">@T("BackInStockSubscriptions.Tooltip")</div>
+                    }
+                    <input type="submit" id="back-in-stock-notify-me" value="@(Model.AlreadySubscribed ? @T("BackInStockSubscriptions.Unsubscribe").Text : @T("BackInStockSubscriptions.NotifyMe").Text)" />
 
-                <script type="text/javascript">
+                    <script type="text/javascript">
                     $(function () {
                         $('#back-in-stock-notify-me').click(function () {
                             //show progress
@@ -69,8 +68,9 @@
                             return false;
                         });
                     });
-                </script>
-            }
+                    </script>
+                }
+            </div>
         </div>
     </div>
 }

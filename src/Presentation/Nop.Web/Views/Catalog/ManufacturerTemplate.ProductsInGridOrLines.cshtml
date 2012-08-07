@@ -19,90 +19,91 @@
 @using Nop.Web.Framework.UI;
 @using Nop.Web.Models.Catalog;
 @using Nop.Web.Extensions;
-<div class="manufacturer-page">
+<div class="page manufacturer-page">
     <div class="page-title">
         <h1>@Model.Name</h1>
     </div>
     <div class="clear">
     </div>
-    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "manufacturerdetails_top" })
-    @*description*@
-    @if (!String.IsNullOrWhiteSpace(Model.Description))
-    {
-        <div class="manufacturer-description">
-            @Html.Raw(Model.Description)
-        </div>
-        <div class="clear">
-        </div>
-    }
-    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "manufacturerdetails_before_featured_products" })
-    @*featured products*@
-    @if (Model.FeaturedProducts.Count > 0)
-    {
-        <div class="product-grid featured-product-grid">
-            <div class="title">
-                @T("Products.FeaturedProducts")
+    <div class="page-body">
+        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "manufacturerdetails_top" })
+        @*description*@
+        @if (!String.IsNullOrWhiteSpace(Model.Description))
+        {
+            <div class="manufacturer-description">
+                @Html.Raw(Model.Description)
             </div>
-            <div>
-                @(Html.DataList<ProductOverviewModel>(Model.FeaturedProducts, 2,
+            <div class="clear">
+            </div>
+        }
+        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "manufacturerdetails_before_featured_products" })
+        @*featured products*@
+        @if (Model.FeaturedProducts.Count > 0)
+        {
+            <div class="product-grid featured-product-grid">
+                <div class="title">
+                    @T("Products.FeaturedProducts")
+                </div>
+                <div>
+                    @(Html.DataList<ProductOverviewModel>(Model.FeaturedProducts, 2,
                     @<div class="item-box">
                         @Html.Partial("_ProductBox", @item)
                     </div>
                 ))
+                </div>
             </div>
-        </div>
-        <div class="clear">
-        </div>
-    }
-    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "manufacturerdetails_after_featured_products" })
-    @*view mode*@
-    @if (Model.PagingFilteringContext.AllowProductViewModeChanging && Model.Products.Count > 0)
-    {
-        <div class="product-viewmode">
-            <span>@T("Categories.ViewMode")</span>
-            @Html.DropDownList("products-viewmode", Model.PagingFilteringContext.AvailableViewModes, new { onchange = "setLocation(this.value);" })
-        </div>
-    }
-    @*sorting*@
-    @if (Model.PagingFilteringContext.AllowProductSorting && Model.Products.Count > 0)
-    {
-        <div class="product-sorting">
-            <span>@T("Categories.OrderBy")</span>
-            @Html.DropDownList("products-orderby", Model.PagingFilteringContext.AvailableSortOptions, new { onchange = "setLocation(this.value);" })
-        </div>
-    }
-    
-@*page size*@
-    @if (Model.PagingFilteringContext.AllowCustomersToSelectPageSize && Model.Products.Count > 0)
-    {
-        <div class="product-page-size">
-            <span>@T("Manufacturers.PageSize")</span> <span>@Html.DropDownList("products-pagesize", Model.PagingFilteringContext.PageSizeOptions, new { onchange = "setLocation(this.value);" })</span>
-            <span>@T("Manufacturers.PageSize.PerPage")</span>
-        </div>
-    }
-    <div class="clear">
-    </div>
-    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "manufacturerdetails_before_filters" })
-    @*filtering*@
-    @if (Model.PagingFilteringContext.PriceRangeFilter.Enabled)
-    {
-        <div class="product-filters">
-            <div class="filter-title">
-                <span>@T("Filtering.FilterResults")</span>
+            <div class="clear">
             </div>
-            <div class="filter-item">
-                @Html.Partial("_FilterPriceBox", Model.PagingFilteringContext.PriceRangeFilter, new ViewDataDictionary())
-            </div>
-        </div>
-        <div class="clear">
-        </div>
-    }
-    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "manufacturerdetails_before_product_list" })
-    @*product list*@
-    @if (Model.Products.Count > 0)
-    {
-        if (Model.PagingFilteringContext.ViewMode == "list")
+        }
+        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "manufacturerdetails_after_featured_products" })
+        @*view mode*@
+        @if (Model.PagingFilteringContext.AllowProductViewModeChanging && Model.Products.Count > 0)
         {
+            <div class="product-viewmode">
+                <span>@T("Categories.ViewMode")</span>
+                @Html.DropDownList("products-viewmode", Model.PagingFilteringContext.AvailableViewModes, new { onchange = "setLocation(this.value);" })
+            </div>
+        }
+        @*sorting*@
+        @if (Model.PagingFilteringContext.AllowProductSorting && Model.Products.Count > 0)
+        {
+            <div class="product-sorting">
+                <span>@T("Categories.OrderBy")</span>
+                @Html.DropDownList("products-orderby", Model.PagingFilteringContext.AvailableSortOptions, new { onchange = "setLocation(this.value);" })
+            </div>
+        }
+    
+        @*page size*@
+        @if (Model.PagingFilteringContext.AllowCustomersToSelectPageSize && Model.Products.Count > 0)
+        {
+            <div class="product-page-size">
+                <span>@T("Manufacturers.PageSize")</span> <span>@Html.DropDownList("products-pagesize", Model.PagingFilteringContext.PageSizeOptions, new { onchange = "setLocation(this.value);" })</span>
+                <span>@T("Manufacturers.PageSize.PerPage")</span>
+            </div>
+        }
+        <div class="clear">
+        </div>
+        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "manufacturerdetails_before_filters" })
+        @*filtering*@
+        @if (Model.PagingFilteringContext.PriceRangeFilter.Enabled)
+        {
+            <div class="product-filters">
+                <div class="filter-title">
+                    <span>@T("Filtering.FilterResults")</span>
+                </div>
+                <div class="filter-item">
+                    @Html.Partial("_FilterPriceBox", Model.PagingFilteringContext.PriceRangeFilter, new ViewDataDictionary())
+                </div>
+            </div>
+            <div class="clear">
+            </div>
+        }
+        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "manufacturerdetails_before_product_list" })
+        @*product list*@
+        @if (Model.Products.Count > 0)
+        {
+            if (Model.PagingFilteringContext.ViewMode == "list")
+            {
             @*list mode*@
             <div class="product-list">
                 @foreach (var product in Model.Products)
@@ -112,9 +113,9 @@
                     </div>
                 }
             </div>
-        }
-        else
-        {
+            }
+            else
+            {
             @*grid mode*@
             <div class="product-grid">
                 @(Html.DataList<ProductOverviewModel>(Model.Products, 2,
@@ -123,12 +124,13 @@
                         </div>
                     ))
             </div>
+            }
         }
-    }
-    <div class="clear">
+        <div class="clear">
+        </div>
+        <div class="pager">
+            @Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber")
+        </div>
+        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "manufacturerdetails_bottom" })
     </div>
-    <div class="pager">
-        @Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber")
-    </div>
-    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "manufacturerdetails_bottom" })
 </div>

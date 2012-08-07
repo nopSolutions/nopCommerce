@@ -29,13 +29,13 @@
         }
     }
 }
-<div class="compare-products">
+<div class="page compare-products-page">
     <div class="page-title">
         <h1>@T("Products.Compare.Title")</h1>
     </div>
     <div class="clear">
     </div>
-    <div class="body">
+    <div class="page-body">
         @if (Model.Products.Count > 0)
         {
             <a href="@Url.RouteUrl("ClearCompareList")" data-role="button" data-ajax="false">@T("Products.Compare.Clear")</a>

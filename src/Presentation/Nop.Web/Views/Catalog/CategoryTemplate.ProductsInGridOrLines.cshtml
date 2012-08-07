@@ -51,7 +51,7 @@
     </div>
     @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "categorydetails_after_breadcrumb" })
 }
-<div class="category-page">
+<div class="page category-page">
     @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "categorydetails_top" })
     @*description*@
     @if (!String.IsNullOrWhiteSpace(Model.Description))

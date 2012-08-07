@@ -9,16 +9,17 @@
 @using Nop.Core.Infrastructure;
 @using Nop.Web.Framework.UI;
 @using Nop.Web.Models.Catalog;
-<div class="manufacturerlist-page">
+<div class="page manufacturer-list-page">
     <div class="page-title">
         <h1>@T("Manufacturers.List")</h1>
     </div>
     <div class="clear">
     </div>
-    <div class="manufacturer-grid">
-        @if (Model.Count > 0)
-        {
-            @(Html.DataList<ManufacturerModel>(Model, 3,
+    <div class="page-body">
+        <div class="manufacturer-grid">
+            @if (Model.Count > 0)
+            {
+                @(Html.DataList<ManufacturerModel>(Model, 3,
                     @<div class="manufacturer-item">
                         <h2 class="man-title">
                             <a href="@Url.RouteUrl("Manufacturer", new { manufacturerId = item.Id, SeName = item.SeName })" title="@item.PictureModel.Title">
@@ -30,6 +31,7 @@
                         </div>
                     </div>
                 ))
-        }
+            }
+        </div>
     </div>
 </div>

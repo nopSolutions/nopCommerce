@@ -14,31 +14,33 @@
 @using Nop.Web.Extensions;
 @*product search box*@
 @Html.Action("SearchBox", "Catalog")
-<div class="producttag-page">
-
-    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_productsbytag_top" })
-
-    @*product list*@
-    @if (Model.Products.Count > 0)
-    {
-        <div class="product-list">
-            <ul data-role="listview" data-inset="true" data-filter="false" data-theme="c">
-                @foreach (var product in Model.Products)
-                {
-                    <li>
-                        @Html.Partial("_ProductBox", product)
-                    </li>
-                }
-            </ul>
-        </div>
-    }
-    
+<div class="page product-tag-page">
+    <div class="page-title">
+        <h1>@String.Format(T("Products.Tags.ProductsTaggedWith").Text, Model.TagName)</h1>
+    </div>
     <div class="clear">
     </div>
-    
-    <div class="pager">
-    @Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber")
+    <div class="page-body">
+        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_productsbytag_top" })
+        @*product list*@
+        @if (Model.Products.Count > 0)
+        {
+            <div class="product-list">
+                <ul data-role="listview" data-inset="true" data-filter="false" data-theme="c">
+                    @foreach (var product in Model.Products)
+                    {
+                        <li>
+                            @Html.Partial("_ProductBox", product)
+                        </li>
+                    }
+                </ul>
+            </div>
+        }
+        <div class="clear">
+        </div>
+        <div class="pager">
+            @Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber")
+        </div>
+        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_productsbytag_bottom" })
     </div>
-
-    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_productsbytag_bottom" })
 </div>

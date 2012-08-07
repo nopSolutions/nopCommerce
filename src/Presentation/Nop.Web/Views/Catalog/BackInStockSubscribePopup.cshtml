@@ -6,22 +6,20 @@
 }
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "back-in-stock-subscription-form" }))
 {
-    <div class="back-in-stock-subscription-page">
-        <div>
-            <div class="page-title">
-                <h2>
-                    @if (Model.AlreadySubscribed)
-                    {
-                        @T("BackInStockSubscriptions.AlreadySubscribed")
-                    }
-                    else
-                    {
-                        @T("BackInStockSubscriptions.PopupTitle")
-                    }
-                </h2>
-            </div>
+    <div class="page back-in-stock-subscription-page">
+        <div class="page-title">
+            <h2>
+                @if (Model.AlreadySubscribed)
+                {
+                    @T("BackInStockSubscriptions.AlreadySubscribed")
+                }
+                else
+                {
+                    @T("BackInStockSubscriptions.PopupTitle")
+                }
+            </h2>
         </div>
-        <div class="back-in-stock-subscription-page-body">
+        <div class="page-body">
             @if (!Model.SubscriptionAllowed)
             {
                 <div>
