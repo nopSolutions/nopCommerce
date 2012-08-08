@@ -255,7 +255,7 @@ a.eu-cookie-privacyinfo-tag{color:#F93 !important;text-decoration:underline;}
 .order-summary-content .common-buttons{margin:0;padding:10px 10px 10px 0;float:left;}
 .order-summary-content .checkout-buttons{float:right;margin:0;padding:10px 0 10px 10px;}
 .order-summary-content .addon-buttons{clear:both;float:right;margin:0;padding:10px 0 10px 10px;text-align:right;}
-.order-summary-content .crosssells-title{color:#000;font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:700;padding:5px 5px 5px 0;border-bottom:0 none;margin:0 0 10px;width:100%;}
+.order-summary-content .cross-sells-title{color:#000;font-family:Arial,Helvetica,sans-serif;font-size:15px;font-weight:700;padding:5px 5px 5px 0;border-bottom:0 none;margin:0 0 10px;width:100%;}
 .estimate-shipping{margin:0;padding:10px;font-size:11px;color:#555;background:#F7F5E8;border:dotted 1px #d3d3d3;}
 .estimate-shipping .country-input,.estimate-shipping .state-input{width:137px;}
 .estimate-shipping .zip-input{}
