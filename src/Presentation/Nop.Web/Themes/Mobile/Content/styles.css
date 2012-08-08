@@ -288,6 +288,7 @@
 .password-recovery-page,newsletter-page{}
 .password-recovery-page .page-body,newsletter-page .page-body{}
 .password-recovery-page .email{}
+.password-recovery-page .result{font-family:Verdana, Arial, sans-serif;font-weight:700;color:red;}
 
 /* ACCOUNT ACTIVATION */
 .account-activation-page{}
@@ -302,50 +303,61 @@
 .contact-page .send-email .enquiry{}
 
 /* RECENTLY VIEWED AND ADDED PRODUCTS */
-.recently-added-products{margin:0;padding:0;}
-.recently-viewed-products{margin:0;padding:0;}
+.recently-added-products-page{margin:0;padding:0;}
+.recently-viewed-products-page{margin:0;padding:0;}
 
 /* CATALOG PAGES */
 .category-page .category-description,.manufacturer-page .manufacturer-description{font-size:1.1em;}
 
-/* CUSTOMER ACCOUNT */
+/* CUSTOMER ACCOUNT PAGES */
 .account-page{}
+.account-page .page-title{}
 .account-page .page-body{margin:0;padding:0;}
-.customer-info-box{margin:0;padding:0;}
-.customer-info-box .section-title{padding:10px;font-weight:700;clear:both;}
-.customer-info-box .section-body{text-align:left;padding:10px;border:1px solid #d7d7d7;height:auto;}
-.customer-info-box .buttons{margin-bottom:5px;margin-top:5px;text-align:center;}
-.customer-addresses{margin:0;padding:0px;background-color:inherit;}
-.customer-addresses .section-title{padding:10px;font-weight:700;clear:both;}
-.customer-addresses .address-list{}
-.customer-addresses .address-list .buttons {}
-.customer-addresses .address-list .address-item{font-weight:normal;}
-.customer-addresses .add-button{}
-.customer-orders{margin:0;padding:0px;background-color:inherit;}
-.customer-orders .recurring-payments{}
-.customer-orders .recurring-payments .section-title{padding:10px;font-weight:700;clear:both;}
-.customer-orders .recurring-payments .recurring-payments-box{font-weight:normal;}
-.customer-orders .order-list{}
-.customer-orders .order-list .order-item{font-weight:normal}
-.customer-orders .order-list .order-item .buttons{}
-.customer-pass-recovery{padding:0px;background-color:inherit;}
-.customer-pass-recovery .result{font-family:Verdana, Arial, sans-serif;font-weight:700;color:red;}
-.customer-reward-points{margin:0;padding:0px;background-color:inherit;}
-.customer-reward-points .section-title{padding:10px;font-weight:700;clear:both;}
-.customer-reward-points .reward-points-overview{}
-.customer-reward-points .reward-points-history{}
-.customer-reward-points .reward-points-history .item{font-weight:normal;}
-.back-in-stock-subscriptions-box{margin:0;padding:0;}
-.back-in-stock-subscriptions-box .buttons{}
-.biss-grid-pager-style{padding:5px;background:#eee;vertical-align:middle;}
-.biss-grid-pager-style span{font-weight:700;font-size:1.1em;}
-.downloadable-products{}
-.downloadable-products .item{font-weight:normal;}
-.customer-return-request-list{}
-.customer-return-request-list .section-title{padding:10px;font-weight:700;clear:both;}
-.customer-return-request-list .request-item{font-weight:normal;}
-.customer-avatar{padding:10px;}
-.customer-avatar .buttons{margin:5px 0;}
+.account-page .section-title{padding:10px;font-weight:700;clear:both;}
+.account-page .section-body{text-align:left;padding:10px;border:1px solid #d7d7d7;height:auto;}
+.address-list-page{}
+.address-list-page .address-list{}
+.address-list-page .address-list .buttons{}
+.address-list-page .address-list .address-item{font-weight:normal;}
+.address-list-page .add-button{}
+.address-edit-page{}
+.address-edit-page .buttons{}
+.avatar-page{padding:10px;}
+.avatar-page .buttons{}
+.back-in-stock-subscription-list-page{}
+.back-in-stock-subscription-list-page .subscription-list{}
+.back-in-stock-subscription-list-page .subscription-list .item{font-weight:normal;}
+.back-in-stock-subscription-list-page .description{}
+.back-in-stock-subscription-list-page .no-data{}
+.back-in-stock-subscription-list-page .buttons{}
+.back-in-stock-subscription-list-page .biss-grid-pager-style{padding:5px;background:#eee;vertical-align:middle;}
+.back-in-stock-subscription-list-page .biss-grid-pager-style span{font-weight:700;font-size:1.1em;}
+.change-password-page{}
+.change-password-page .buttons{}
+.downloadable-products-page{}
+.downloadable-products-page .item{font-weight:normal;}
+.downloadable-products-page .no-data{}
+.forum-subscriptions-page{}
+.forum-subscriptions-page .subscription-list{}
+.forum-subscriptions-page .subscription-list .item{font-weight:normal;}
+.forum-subscriptions-page .description{}
+.forum-subscriptions-page .no-data{}
+.forum-subscriptions-page .buttons{}
+.customer-info-page{}
+.customer-info-page .buttons{}
+.my-account-home-page{}
+.order-list-page{}
+.order-list-page .recurring-payments{}
+.order-list-page .recurring-payments .recurring-payments-box{font-weight:normal;}
+.order-list-page .order-list{}
+.order-list-page .order-list .order-item{font-weight:normal}
+.order-list-page .order-list .order-item .buttons{}
+.return-request-list-page{}
+.return-request-list-page .request-item{font-weight:normal;}
+.reward-points-page{}
+.reward-points-page .reward-points-overview{}
+.reward-points-page .reward-points-history{}
+.reward-points-page .reward-points-history .item{font-weight:normal;}
 
 /* RETURN REQUEST */
 .return-request-page{}
@@ -502,9 +514,6 @@
 .forum .topics .topic .post{float:left;width:36px;height:36px;background:url(images/ico-forum-post.gif) no-repeat 40% 40%;}
 .forum .topics .topic .post-annoucement,.forum .topics .topic .poststicky{float:left;width:36px;height:36px;background:url(images/ico-forum-post-high.gif) no-repeat 40% 40%;}
 .forum .pager{padding:5px 3px 5px 0;}
-.forum-subscriptions-box{}
-.forum-subscriptions-box .item{font-weight:normal;}
-.forum-subscriptions-box .buttons{}
 
 /* FORUM TOPIC EDIT */
 .post-edit{}

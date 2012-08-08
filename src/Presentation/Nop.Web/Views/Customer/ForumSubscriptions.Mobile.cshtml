@@ -8,7 +8,7 @@
 
     Html.AddTitleParts(T("PageTitle.ForumSubscriptions").Text);
 }
-<div class="page account-page">
+<div class="page account-page forum-subscriptions-page">
     <div class="page-title">
         <h1>
             @T("Account.ForumSubscriptions")</h1>
@@ -16,12 +16,12 @@
     <div class="clear">
     </div>
     <div class="page-body">
-        <div class="forum-subscriptions-box">
-            @if (Model.ForumSubscriptions.Count > 0)
-            {
-                <div class="description">
-                    @T("Account.ForumSubscriptions.Description")
-                </div>
+        @if (Model.ForumSubscriptions.Count > 0)
+        {
+            <div class="description">
+                @T("Account.ForumSubscriptions.Description")
+            </div>
+            <div class="subscription-list">
                 <ul data-role="listview" data-inset="true" data-filter="false">
                     @foreach (var fs in Model.ForumSubscriptions)
                     {
@@ -44,19 +44,19 @@
                         </li>
                     }
                 </ul>
-                    if (Model.PagerModel.TotalPages > 1)
-                    {
-                <div class="fs-grid-pager-style">
-                    @Html.Pager(Model.PagerModel)
-                </div>
-                    }
-            }
-            else
-            {
-                <div class="no-data">
-                    @T("Account.ForumSubscriptions.NoSubscriptions")
-                </div>
-            }
-        </div>
+                @if (Model.PagerModel.TotalPages > 1)
+                {
+                    <div class="fs-grid-pager-style">
+                        @Html.Pager(Model.PagerModel)
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="no-data">
+                @T("Account.ForumSubscriptions.NoSubscriptions")
+            </div>
+        }
     </div>
 </div>

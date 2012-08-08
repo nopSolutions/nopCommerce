@@ -11,94 +11,92 @@
 {
     @Html.Partial("MyAccountNavigation", Model.NavigationModel, new ViewDataDictionary())
 }
-<div class="page account-page">
+<div class="page account-page address-list-page">
     <div class="page-title">
         <h1>@T("Account.MyAccount") - @T("Account.CustomerAddresses")</h1>
     </div>
     <div class="clear">
     </div>
     <div class="page-body">
-        <div class="customer-addresses">
-            <div class="address-list">
-                @if (Model.Addresses.Count > 0)
+        <div class="address-list">
+            @if (Model.Addresses.Count > 0)
+            {
+                for (int i = 0; i < Model.Addresses.Count; i++)
                 {
-                    for (int i = 0; i < Model.Addresses.Count; i++)
-                    {
-                        var address = Model.Addresses[i];
-                    <div class="address-item">
-                        <table width="100%" cellspacing="0" cellpadding="2" border="0">
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <strong>@address.FirstName @address.LastName</strong>
-                                    </td>
-                                    <td class="buttons">
-                                        <input type="button" class="button-2 edit-address-button" onclick="location.href='@Url.RouteUrl("CustomerAddressEdit", new { addressId = address.Id })'" value='@T("Common.Edit")' />
-                                        <input type="button" class="button-2 delete-address-button" onclick="location.href='@Url.RouteUrl("CustomerAddressDelete", new { addressId = address.Id })'" value="@T("Common.Delete")" />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2">
-                                        <div>
-                                            <div class="name">
-                                                @address.FirstName @address.LastName
-                                            </div>
-                                            <div class="email">
-                                                @Html.LabelFor(model => model.Addresses[i].Email):
-                                                @address.Email
-                                            </div>
-                                            <div class="phone">
-                                                @Html.LabelFor(model => model.Addresses[i].PhoneNumber):
-                                                @address.PhoneNumber
-                                            </div>
-                                            <div class="fax">
-                                                @Html.LabelFor(model => model.Addresses[i].FaxNumber):
-                                                @address.FaxNumber</div>
-                                            @if (!String.IsNullOrEmpty(address.Company))
-                                            {
-                                                <div class="company">@address.Company</div>
-                                            }
-                                            <div class="address1">
-                                                @address.Address1</div>
-                                            @if (!String.IsNullOrEmpty(address.Address2))
-                                            {
-                                                <div class="address2">
-                                                    @address.Address2</div>
-                                            }
-                                            <div class="city-state-zip">
-                                                @address.City,
-                                                @address.StateProvinceName
-                                                @address.ZipPostalCode</div>
-                                            @if (!String.IsNullOrEmpty(address.CountryName))
-                                            {
-                                                <div class="country">
-                                                    @address.CountryName
-                                                </div>
-                                            }
+                    var address = Model.Addresses[i];
+                <div class="address-item">
+                    <table width="100%" cellspacing="0" cellpadding="2" border="0">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <strong>@address.FirstName @address.LastName</strong>
+                                </td>
+                                <td class="buttons">
+                                    <input type="button" class="button-2 edit-address-button" onclick="location.href='@Url.RouteUrl("CustomerAddressEdit", new { addressId = address.Id })'" value='@T("Common.Edit")' />
+                                    <input type="button" class="button-2 delete-address-button" onclick="location.href='@Url.RouteUrl("CustomerAddressDelete", new { addressId = address.Id })'" value="@T("Common.Delete")" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <div>
+                                        <div class="name">
+                                            @address.FirstName @address.LastName
                                         </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                                        <div class="email">
+                                            @Html.LabelFor(model => model.Addresses[i].Email):
+                                            @address.Email
+                                        </div>
+                                        <div class="phone">
+                                            @Html.LabelFor(model => model.Addresses[i].PhoneNumber):
+                                            @address.PhoneNumber
+                                        </div>
+                                        <div class="fax">
+                                            @Html.LabelFor(model => model.Addresses[i].FaxNumber):
+                                            @address.FaxNumber</div>
+                                        @if (!String.IsNullOrEmpty(address.Company))
+                                        {
+                                            <div class="company">@address.Company</div>
+                                        }
+                                        <div class="address1">
+                                            @address.Address1</div>
+                                        @if (!String.IsNullOrEmpty(address.Address2))
+                                        {
+                                            <div class="address2">
+                                                @address.Address2</div>
+                                        }
+                                        <div class="city-state-zip">
+                                            @address.City,
+                                            @address.StateProvinceName
+                                            @address.ZipPostalCode</div>
+                                        @if (!String.IsNullOrEmpty(address.CountryName))
+                                        {
+                                            <div class="country">
+                                                @address.CountryName
+                                            </div>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             
-                                            if (i != Model.Addresses.Count - 1)
-                                            {
-                    <div class="clear">
-                    </div>
-                                            }
-                    }
+                                        if (i != Model.Addresses.Count - 1)
+                                        {
+                <div class="clear">
+                </div>
+                                        }
                 }
-                else
-                {
-                    @T("Account.CustomerAddresses.NoAddresses")
-                }
-            </div>
-            <div class="clear">
-            </div>
-            <div class="add-button">
-                <input type="button" class="button-1 add-address-button" onclick="location.href='@Url.RouteUrl("CustomerAddressAdd")'" value="@T("Common.AddNew")" />
-            </div>
+            }
+            else
+            {
+                @T("Account.CustomerAddresses.NoAddresses")
+            }
+        </div>
+        <div class="clear">
+        </div>
+        <div class="add-button">
+            <input type="button" class="button-1 add-address-button" onclick="location.href='@Url.RouteUrl("CustomerAddressAdd")'" value="@T("Common.AddNew")" />
         </div>
     </div>
 </div>

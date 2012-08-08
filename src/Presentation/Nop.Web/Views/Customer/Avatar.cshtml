@@ -13,42 +13,40 @@
 }
 @using (Html.BeginRouteForm("CustomerAvatar", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
-    <div class="page account-page">
+    <div class="page account-page avatar-page">
         <div class="page-title">
             <h1>@T("Account.MyAccount") - @T("Account.Avatar")</h1>
         </div>
         <div class="clear">
         </div>
         <div class="page-body">
-            <div class="customer-avatar">
-                <div class="message-error">
-                    @Html.ValidationSummary(true)
-                </div>
-                <div class="clear">
-                </div>
-                <div class="section-body">
-                    @if (!String.IsNullOrEmpty(Model.AvatarUrl))
-                    {
-                        <div class="image">
-                            <img src="@(Model.AvatarUrl)" alt="avatar" />
-                        </div>
-                    }
-                    <input name="uploadedFile" type="file" />
-                </div>
-                <div class="clear">
-                </div>
-                <div class="buttons">
-                    <input type="submit" name="upload-avatar" class="button-1 upload-avatar-button" value="@T("Common.Upload")" />
-                    @if (!String.IsNullOrEmpty(Model.AvatarUrl))
-                    {
-                        <input type="submit" name="remove-avatar" class="button-2 remove-avatar-button" value="@T("Account.Avatar.RemoveAvatar")" />
-                    }
-                </div>
-                <div class="clear">
-                </div>
-                <div>
-                    @T("Account.Avatar.UploadRules")</div>
+            <div class="message-error">
+                @Html.ValidationSummary(true)
             </div>
+            <div class="clear">
+            </div>
+            <div class="section-body">
+                @if (!String.IsNullOrEmpty(Model.AvatarUrl))
+                {
+                    <div class="image">
+                        <img src="@(Model.AvatarUrl)" alt="avatar" />
+                    </div>
+                }
+                <input name="uploadedFile" type="file" />
+            </div>
+            <div class="clear">
+            </div>
+            <div class="buttons">
+                <input type="submit" name="upload-avatar" class="button-1 upload-avatar-button" value="@T("Common.Upload")" />
+                @if (!String.IsNullOrEmpty(Model.AvatarUrl))
+                {
+                    <input type="submit" name="remove-avatar" class="button-2 remove-avatar-button" value="@T("Account.Avatar.RemoveAvatar")" />
+                }
+            </div>
+            <div class="clear">
+            </div>
+            <div>
+                @T("Account.Avatar.UploadRules")</div>
         </div>
     </div>
 }

@@ -8,24 +8,24 @@
 
     Html.AddTitleParts(T("PageTitle.BackInStockSubscriptions").Text);
 }
-<div class="page account-page">
+<div class="page account-page back-in-stock-subscription-list-page">
     <div class="page-title">
         <h1>@T("Account.BackInStockSubscriptions")</h1>
     </div>
     <div class="clear">
     </div>
     <div class="page-body">
-        <div class="back-in-stock-subscriptions-box">
-            @if (Model.Subscriptions.Count > 0)
-            {
-                <div class="description">
-                    @T("Account.BackInStockSubscriptions.Description")
-                </div>
+        @if (Model.Subscriptions.Count > 0)
+        {
+            <div class="description">
+                @T("Account.BackInStockSubscriptions.Description")
+            </div>
+            <div class="subscription-list">
                 <ul data-role="listview" data-inset="true" data-filter="false">
                     @foreach (var biss in Model.Subscriptions)
                     {
                         <li>
-                            <div>
+                            <div class="item">
                                 <div>
                                     @Html.RouteLink(biss.ProductName, "Product", new { productId = biss.ProductId, SeName = biss.SeName })
                                 </div>
@@ -36,19 +36,19 @@
                         </li>
                     }
                 </ul>
-                    if (Model.PagerModel.TotalPages > 1)
-                    {
-                <div class="biss-grid-pager-style">
-                    @Html.Pager(Model.PagerModel)
-                </div>
-                    }
-            }
-            else
-            {
-                <div class="no-data">
-                    @T("Account.BackInStockSubscriptions.NoSubscriptions")
-                </div>
-            }
-        </div>
+                @if (Model.PagerModel.TotalPages > 1)
+                {
+                    <div class="biss-grid-pager-style">
+                        @Html.Pager(Model.PagerModel)
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="no-data">
+                @T("Account.BackInStockSubscriptions.NoSubscriptions")
+            </div>
+        }
     </div>
 </div>

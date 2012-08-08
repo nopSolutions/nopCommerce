@@ -488,9 +488,6 @@ a.eu-cookie-privacyinfo-tag{color:#F93 !important;text-decoration:underline;}
 .registration-page .section-title{padding:10px 10px 5px 0;font-weight:700;clear:both;font-size:12px;}
 .registration-page .section-body{text-align:right;padding:10px;border:1px solid #d7d7d7;height:auto;}
 .registration-page .buttons{float:left;margin-bottom:5px;margin-top:5px;text-align:center;clear:both;}
-.available-status{color:green;padding-left:5px;}
-.not-available-status{color:red;padding-left:5px;}
-
 
 /* BREADCRUMB */
 .breadcrumb {float:right;direction:rtl;font-size:1.1em;font-weight:bold;margin:10px 0 10px;padding:0;text-transform:uppercase;}
@@ -620,6 +617,7 @@ a.eu-cookie-privacyinfo-tag{color:#F93 !important;text-decoration:underline;}
 .password-recovery-page .page-title,newsletter-page .page-title{border-bottom:0 none;}
 .password-recovery-page .page-body,newsletter-page .page-body{margin:0;padding:0;font-size:11px;color:#555;background-color:inherit;}
 .password-recovery-page .email{width:250px;}
+.password-recovery-page .result{font-family:Verdana, Arial, sans-serif;font-size:10px;font-weight:700;color:red;}
 
 /* ACCOUNT ACTIVATION */
 .account-activation-page{direction:rtl;text-align:right;}
@@ -638,49 +636,58 @@ a.eu-cookie-privacyinfo-tag{color:#F93 !important;text-decoration:underline;}
 .contact-page .buttons{text-align:right;}
 
 /* RECENTLY VIEWED AND ADDED PRODUCTS */
-.recently-added-products{}
-.recently-added-products .page-title{}
-.recently-viewed-products{}
-.recently-viewed-products .page-title{}
+.recently-added-products-page{}
+.recently-added-products-page .page-title{}
+.recently-viewed-products-page{}
+.recently-viewed-products-page .page-title{}
 
-/* CUSTOMER ACCOUNT */
+/* CUSTOMER ACCOUNT PAGES */
 .account-page{direction:rtl;text-align:right;}
 .account-page .page-title{border-bottom:0 none;}
 .account-page .page-body{margin:0;padding:0;font-size:11px;color:#555;}
-.customer-info-box{margin:0;padding:5px;font-size:11px;color:#555;}
-.customer-info-box .section-title{padding:10px 10px 5px 0;font-weight:700;clear:both;font-size:12px;}
-.customer-info-box .section-body{text-align:right;padding:10px;border:1px solid #d7d7d7;height:auto;}
-.customer-info-box .buttons{margin-bottom:5px;margin-top:5px;text-align:center;}
+.account-page .section-title{padding:10px 10px 5px 0;font-weight:700;clear:both;font-size:12px;}
+.account-page .section-body{text-align:right;padding:10px;border:1px solid #d7d7d7;height:auto;}
+.address-list-page{}
+.address-list-page .address-list{}
+.address-list-page .address-list .buttons{text-align:left;}
+.address-list-page .address-list .address-item{text-align:right;margin-bottom:10px;padding:10px;border:1px solid #d7d7d7;height:auto;}
+.address-list-page .add-button{margin-bottom:5px;margin-top:5px;float:left;text-align:left;}
+.address-edit-page{}
+.address-edit-page .buttons{}
+.avatar-page{padding:10px;}
+.avatar-page .buttons{margin:5px 0;}
+.back-in-stock-subscription-list-page{}
+.back-in-stock-subscription-list-page .subscription-list{}
+.back-in-stock-subscription-list-page .description{}
+.back-in-stock-subscription-list-page .no-data{}
+.back-in-stock-subscription-list-page .buttons{margin-bottom:5px;margin-top:5px;text-align:right;}
+.back-in-stock-subscription-list-page .biss-grid-pager-style{padding:5px;background:#eee;vertical-align:middle;}
+.back-in-stock-subscription-list-page .biss-grid-pager-style span{font-weight:700;font-size:1.1em;}
+.change-password-page{}
+.change-password-page .buttons{margin-bottom:5px;margin-top:5px;}
+.downloadable-products-page{}
+.downloadable-products-page .no-data{}
+.forum-subscriptions-page{}
+.forum-subscriptions-page .subscription-list{}
+.forum-subscriptions-page .description{}
+.forum-subscriptions-page .no-data{}
+.forum-subscriptions-page .buttons{margin-bottom:5px;margin-top:5px;text-align:right;}
+.customer-info-page{}
+.customer-info-page .buttons{margin-bottom:5px;margin-top:5px;text-align:center;}
+.username-available-status{color:green;padding-left:5px;}
+.username-not-available-status{color:red;padding-left:5px;}
 .account-signature-text{height:100px;width:500px;border:solid 1px #E3E3E3;vertical-align:top;}
-.customer-addresses{margin:0;padding:5px;font-size:11px;color:#555;background-color:inherit;}
-.customer-addresses .section-title{padding:10px 10px 5px 0;font-weight:700;clear:both;font-size:12px;}
-.customer-addresses .address-list{}
-.customer-addresses .address-list .buttons {text-align:right;}
-.customer-addresses .address-list .address-item{text-align:right;margin-bottom:10px;padding:10px;border:1px solid #d7d7d7;height:auto;}
-.customer-addresses .add-button{margin-bottom:5px;margin-top:5px;float:left;text-align:left;}
-.customer-avatar{padding:10px;}
-.customer-avatar .buttons{margin:5px 0;}
-.customer-orders{margin:0;padding:5px;font-size:11px;color:#555;background-color:inherit;}
-.customer-orders .recurring-payments{padding:10px 10px 5px 0;width:100%;clear:both;}
-.customer-orders .recurring-payments .section-title{padding:10px 10px 5px 0;font-weight:700;clear:both;font-size:12px;}
-.customer-orders .recurring-payments .recurring-payments-box{text-align:right;padding:10px;border:1px solid #d7d7d7;height:auto;}
-.customer-orders .order-list{}
-.customer-orders .order-list .order-item{text-align:right;margin-bottom:10px;padding:10px;border:1px solid #d7d7d7;height:auto;}
-.customer-orders .order-list .order-item .buttons{text-align:left;}
-.customer-pass-recovery{padding:5px;font-size:11px;color:#555;background-color:inherit;}
-.customer-pass-recovery .result{font-family:Verdana, Arial, sans-serif;font-size:10px;font-weight:700;color:red;}
-.customer-reward-points{margin:0;padding:5px;font-size:11px;color:#555;background-color:inherit;}
-.customer-reward-points .section-title{padding:10px 10px 5px 0;font-weight:700;clear:both;font-size:12px;}
-.customer-reward-points .reward-points-overview{padding:10px 10px 5px 10px;width:100%;}
-.customer-reward-points .reward-points-history{margin:0;padding:5px;font-size:11px;color:#555;background-color:inherit;}
-.back-in-stock-subscriptions-box{margin:0;padding:5px;font-size:11px;color:#555;}
-.back-in-stock-subscriptions-box .buttons{margin-bottom:5px;margin-top:5px;text-align:right;}
-.biss-grid-pager-style{padding:5px;background:#eee;vertical-align:middle;}
-.biss-grid-pager-style span{font-weight:700;font-size:1.1em;}
-.downloadable-products{margin:0;padding:5px;font-size:11px;color:#555;background-color:inherit;}
-.customer-return-request-list{margin:0;padding:5px;font-size:11px;color:#555;background-color:inherit;}
-.customer-return-request-list .section-title{padding:10px 10px 5px 0;font-weight:700;clear:both;font-size:12px;}
-.customer-return-request-list .request-item{text-align:right;margin-bottom:10px;padding:10px;border:1px solid #d7d7d7;height:auto;}
+.order-list-page{margin:0;padding:5px;font-size:11px;color:#555;background-color:inherit;}
+.order-list-page .recurring-payments{padding:10px 10px 5px 0;width:100%;clear:both;}
+.order-list-page .recurring-payments .recurring-payments-box{text-align:right;padding:10px;border:1px solid #d7d7d7;height:auto;}
+.order-list-page .order-list{}
+.order-list-page .order-list .order-item{text-align:right;margin-bottom:10px;padding:10px;border:1px solid #d7d7d7;height:auto;}
+.order-list-page .order-list .order-item .buttons{text-align:left;}
+.return-request-list-page{}
+.return-request-list-page .request-item{text-align:right;margin-bottom:10px;padding:10px;border:1px solid #d7d7d7;height:auto;}
+.reward-points-page{}
+.reward-points-page .reward-points-overview{padding:10px 10px 5px 10px;width:100%;}
+.reward-points-page .reward-points-history{}
 
 /* RETURN REQUEST */
 .return-request-page{}
@@ -876,8 +883,6 @@ a.eu-cookie-privacyinfo-tag{color:#F93 !important;text-decoration:underline;}
 .forum-group tr.forum td.forum-name .forum-title{font-weight:700;font-size:1.1em;line-height:18px;}
 .forum-group tr.forum td.forum-name .forum-description{font-size:.9em;color:#555;}
 .forum-group tr.forum td.last-post{font-size:.8em;color:#555;}
-.forum-subscriptions-box{margin:0;padding:5px;font-size:11px;color:#555;}
-.forum-subscriptions-box .buttons{margin-bottom:5px;margin-top:5px;text-align:right;}
 
 /* FORUM PAGE */
 .forum{}

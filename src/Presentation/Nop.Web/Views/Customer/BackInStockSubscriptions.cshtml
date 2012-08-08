@@ -12,7 +12,7 @@
 {
     @Html.Partial("MyAccountNavigation", Model.NavigationModel, new ViewDataDictionary())
 }
-<div class="page account-page">
+<div class="page account-page back-in-stock-subscription-list-page">
     <div class="page-title">
         <h1>@T("Account.MyAccount") - @T("Account.BackInStockSubscriptions")</h1>
     </div>
@@ -28,19 +28,19 @@
                 $(document).ready(function () {
 
                     $('#selectall').click(function () {
-                        $('.back-in-stock-subscriptions-box .rowcheckbox').attr('checked', $(this).is(':checked')).change();
+                        $('.subscription-list .rowcheckbox').attr('checked', $(this).is(':checked')).change();
                     });
 
-                    $('.back-in-stock-subscriptions-box .rowcheckbox').live('change', function (e) {
-                        var numChkBoxes = $('.back-in-stock-subscriptions-box .rowcheckbox').length;
-                        var numChkBoxesChecked = $('.back-in-stock-subscriptions-box .rowcheckbox:checked').length;
+                    $('.subscription-list .rowcheckbox').live('change', function (e) {
+                        var numChkBoxes = $('.subscription-list .rowcheckbox').length;
+                        var numChkBoxesChecked = $('.subscription-list .rowcheckbox:checked').length;
                         $('#selectall').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
                     });
                 });
             </script>        
             using (Html.BeginRouteForm("CustomerBackInStockSubscriptions", FormMethod.Post))
             {
-            <div class="back-in-stock-subscriptions-box">
+            <div class="subscription-list">
                 <table class="data-table">
                     <col width="1" />
                     <col />
