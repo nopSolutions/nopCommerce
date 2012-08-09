@@ -210,14 +210,11 @@
 .news-item-page .news-body{margin:0;padding:0;}
 .news-item-page .news-body a{text-decoration:underline;}
 .news-item-page .result{font-family:Verdana, Arial, sans-serif;font-weight:700;color:red;}
-.news-comments{}
-.news-comments .title{padding:10px;font-weight:700;text-transform:uppercase;font-size:1.1em;color:#3a3a3a;}
-.news-comments .new-comment{margin:0;padding:0;}
-.news-comments .new-comment .leave-title{padding:0 10px 10px 0;font-weight:700;font-size:1.1em;color:#3a3a3a;}
-.news-comments .new-comment .buttons{}
-.news-comments .new-comment .comment-title{}
-.news-comments .new-comment .comment-text{}
-.news-comments .comment-list{}
+.news-item-page .new-comment{}
+.news-item-page .new-comment .title{padding:10px 0px 10px 0px;font-weight:700;font-size:1.1em;color:#3a3a3a;}
+.news-item-page .new-comment .buttons{}
+.news-item-page .comment-list{}
+.news-item-page .comment-list .title{padding:10px 0px 10px 0px;font-weight:700;font-size:1.1em;color:#3a3a3a;}
 .news-comment{font-weight:normal;}
 .news-comment .comment-info{}
 .news-comment .comment-info .user-info{}
@@ -245,12 +242,11 @@
 .blogpost-page .post-body,.blogpost-page .tags{margin:0;padding:0;}
 .blogpost-page .post-body a,.blogpost-page .tags a{text-decoration:underline;}
 .blogpost-page .result{font-family:Verdana, Arial, sans-serif;font-weight:700;color:red;}
-.blog-comments{}
-.blog-comments .title{padding:10px;font-weight:700;text-transform:uppercase;font-size:1.1em;color:#3a3a3a;}
-.blog-comments .new-comment{margin:0;padding:0;}
-.blog-comments .new-comment .leave-title{padding:0 10px 10px 0;font-weight:700;font-size:1.1em;color:#3a3a3a;}
-.blog-comments .new-comment .buttons{}
-.blog-comments .comment-list{}
+.blogpost-page .new-comment{}
+.blogpost-page .new-comment .title{padding:10px 0px 10px 0px;font-weight:700;font-size:1.1em;color:#3a3a3a;}
+.blogpost-page .new-comment .buttons{}
+.blogpost-page .comment-list{}
+.blogpost-page .comment-list .title{padding:10px 0px 10px 0px;font-weight:700;font-size:1.1em;color:#3a3a3a;}
 .blog-comment{font-weight:normal;}
 .blog-comment .comment-info{}
 .blog-comment .comment-info .user-info{}
@@ -301,6 +297,7 @@
 .contact-page .send-email .fullname{}
 .contact-page .send-email .email{}
 .contact-page .send-email .enquiry{}
+.contact-page .captcha-box{}
 
 /* RECENTLY VIEWED AND ADDED PRODUCTS */
 .recently-added-products-page{margin:0;padding:0;}

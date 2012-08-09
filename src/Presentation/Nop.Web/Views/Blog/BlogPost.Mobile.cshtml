@@ -42,88 +42,82 @@
         @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_blogpost_page_before_comments" })
         @if (Model.AllowComments)
         {
-            <div class="clear">
+            <div class="new-comment">
+                @using (Html.BeginForm())
+                {
+                    <div class="title">
+                        <strong>
+                            @T("Blog.Comments.LeaveYourComment")
+                        </strong>
+                    </div>
+                    <div>
+                        @Html.LabelFor(model => model.AddNewComment.CommentText)
+                        @Html.TextAreaFor(model => model.AddNewComment.CommentText)
+                        @Html.ValidationMessageFor(model => model.AddNewComment.CommentText)
+                    </div>
+                    string result = TempData["nop.blog.addcomment.result"] as string;
+                    if (!String.IsNullOrEmpty(result))
+                    {
+                    <div class="result">
+                        @result
+                    </div>
+                    }
+                    <div class="message-error">
+                        @Html.ValidationSummary(true)
+                    </div>
+                    if (Model.AddNewComment.DisplayCaptcha)
+                    {
+                    <div class="captcha-box">
+                        @Html.Raw(Html.GenerateCaptcha())
+                    </div>
+                    }
+                    <div class="buttons">
+                        <input type="submit" name="add-comment" value="@T("Blog.Comments.SubmitButton")" />
+                    </div>
+                }
             </div>
-            <div class="blog-comments">
+            if (Model.Comments.Count > 0)
+            {
+            <div class="comment-list">
                 <div class="title">
                     @T("Blog.Comments")
                 </div>
                 <div class="clear">
                 </div>
-                <div class="new-comment">
-                    @using (Html.BeginForm())
+                <ul data-role="listview" data-inset="true" data-filter="false">
+                    @foreach (var comment in Model.Comments)
                     {
-                        <div class="leave-title">
-                            <strong>
-                                @T("Blog.Comments.LeaveYourComment")
-                            </strong>
-                        </div>
-                        <div>
-                            @Html.LabelFor(model => model.AddNewComment.CommentText)
-                            @Html.TextAreaFor(model => model.AddNewComment.CommentText)
-                            @Html.ValidationMessageFor(model => model.AddNewComment.CommentText)
-                        </div>
-                        string result = TempData["nop.blog.addcomment.result"] as string;
-                        if (!String.IsNullOrEmpty(result))
-                        {
-                        <div class="result">
-                            @result
-                        </div>
-                        }
-                        <div class="message-error">
-                            @Html.ValidationSummary(true)
-                        </div>
-                        if (Model.AddNewComment.DisplayCaptcha)
-                        {
-                        <div class="captcha-box">
-                            @Html.Raw(Html.GenerateCaptcha())
-                        </div>
-                        }
-                        <div class="buttons">
-                            <input type="submit" name="add-comment" value="@T("Blog.Comments.SubmitButton")" />
-                        </div>
-                    }
-                </div>
-                <div class="clear">
-                </div>
-                <div class="comment-list">
-                    @if (Model.Comments.Count > 0)
-                    {
-                        <ul data-role="listview" data-inset="true" data-filter="false">
-                            @foreach (var comment in Model.Comments)
-                            {
-                                <li>
-                                    <div class="blog-comment">
-                                        <div class="comment-info">
-                                            <div class="user-info">
-                                                @if (comment.AllowViewingProfiles)
-                                                {
-                                                    <a href="@Url.RouteUrl("CustomerProfile", new { id = comment.CustomerId })" class="username">@(comment.CustomerName)</a>
-                                                }
-                                                else
-                                                {
-                                                    <span class="username">@(comment.CustomerName)</span>
-                                                }
-                                            </div>
-                                            <div class="comment-time">
-                                                @T("Blog.Comments.CreatedOn"): <span class="stat-value">@comment.CreatedOn.ToString("g")</span>
-                                            </div>
-                                        </div>
-                                        <div class="comment-content">
-                                            <div class="comment-body">
-                                                <span class="comment-text">
-                                                    @Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(comment.CommentText, false, true, false, false, false, false))
-                                                </span>
-                                            </div>
-                                        </div>
-                                        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_blogpost_page_inside_comment" })
+                        <li>
+                            <div class="blog-comment">
+                                <div class="comment-info">
+                                    <div class="user-info">
+                                        @if (comment.AllowViewingProfiles)
+                                        {
+                                            <a href="@Url.RouteUrl("CustomerProfile", new { id = comment.CustomerId })" class="username">@(comment.CustomerName)</a>
+                                        }
+                                        else
+                                        {
+                                            <span class="username">@(comment.CustomerName)</span>
+                                        }
                                     </div>
-                                </li>
-                            }
-                        </ul>
+                                    <div class="comment-time">
+                                        @T("Blog.Comments.CreatedOn"): <span class="stat-value">@comment.CreatedOn.ToString("g")</span>
+                                    </div>
+                                </div>
+                                <div class="comment-content">
+                                    <div class="comment-body">
+                                        <span class="comment-text">
+                                            @Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(comment.CommentText, false, true, false, false, false, false))
+                                        </span>
+                                    </div>
+                                </div>
+                                @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_blogpost_page_inside_comment" })
+                            </div>
+                        </li>
                     }
-                </div>
+                </ul>
             </div>
+            }
         }
         @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_blogpost_page_after_comments" })
     </div>
