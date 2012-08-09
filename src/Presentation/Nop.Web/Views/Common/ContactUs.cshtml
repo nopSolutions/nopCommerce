@@ -15,7 +15,7 @@
         @if (Model.SuccessfullySent)
         {
             <div class="result">
-                <strong>@Model.Result</strong>
+                @Model.Result
             </div>        
         }
         else
@@ -28,16 +28,16 @@
                     @Html.ValidationSummary(true)
                 </p>
                 <div class="forms-box">
-                    <div class="contacts-left">
+                    <div class="inputs-left">
                         <div class="inputs">
-                            @Html.LabelFor(model => model.FullName):
+                            @Html.LabelFor(model => model.FullName)
                             <div class="input-box">
                                 @Html.TextBoxFor(model => model.FullName, new { @class = "fullname", placeholder = T("ContactUs.FullName.Hint") })
                             </div>
                             @Html.ValidationMessageFor(model => model.FullName)
                         </div>
                         <div class="inputs">
-                            @Html.LabelFor(model => model.Email):
+                            @Html.LabelFor(model => model.Email)
                             <div class="input-box">
                                 @Html.TextBoxFor(model => model.Email, new { @class = "email", placeholder = T("ContactUs.Email.Hint") })
                             </div>
@@ -50,8 +50,8 @@
                             </div>
                         }
                     </div>
-                    <div class="contacts-right inputs">
-                        @Html.LabelFor(model => model.Enquiry):
+                    <div class="inputs-right inputs">
+                        @Html.LabelFor(model => model.Enquiry)
                         <div class="input-box">
                             @Html.TextAreaFor(model => model.Enquiry, new { @class = "enquiry", placeholder = T("ContactUs.Enquiry.Hint") })
                         </div>

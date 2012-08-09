@@ -20,6 +20,24 @@ set @resources='
   <LocaleResource Name="ContactUs.Enquiry.Hint">
     <Value>Enter your enquiry</Value>
   </LocaleResource>
+  <LocaleResource Name="Products.EmailAFriend.FriendEmail.Hint">
+    <Value>Enter friend''s email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.EmailAFriend.YourEmailAddress.Hint">
+    <Value>Enter your email address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.EmailAFriend.PersonalMessage.Hint">
+    <Value>Enter personal message (optional)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Wishlist.EmailAFriend.FriendEmail.Hint">
+    <Value>Enter friend''s email</Value>
+  </LocaleResource>
+  <LocaleResource Name="Wishlist.EmailAFriend.YourEmailAddress.Hint">
+    <Value>Enter your email address</Value>
+  </LocaleResource>
+  <LocaleResource Name="Wishlist.EmailAFriend.PersonalMessage.Hint">
+    <Value>Enter personal message (optional)</Value>
+  </LocaleResource>
 </Language>
 '
 

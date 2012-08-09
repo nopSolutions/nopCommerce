@@ -262,6 +262,7 @@
 
 /* EMAIL A FRIEND */
 .email-a-friend-page{margin:0;padding:0;}
+.email-a-friend-page .result{font-weight:bold;}
 .email-a-friend-page .send-email{}
 .email-a-friend-page .send-email .product{font-weight:700;}
 .email-a-friend-page .send-email .friend-email{}
@@ -292,6 +293,7 @@
 
 /* CONTACTS */
 .contact-page{}
+.contact-page .result{font-weight:bold;}
 .contact-page .buttons{text-align:right;}
 .contact-page .send-email{}
 .contact-page .send-email .fullname{}

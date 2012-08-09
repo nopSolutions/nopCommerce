@@ -20,7 +20,7 @@
         @if (Model.SuccessfullySent)
         {
             <div class="result">
-                <strong>@Model.Result</strong>
+                @Model.Result
             </div>   
         }
         else
@@ -52,7 +52,9 @@
                         @Html.Raw(Html.GenerateCaptcha())
                     </div>
                 }
-                <input type="submit" name="send-email" value="@T("ContactUs.Button")" />
+                <div class="button">
+                    <input type="submit" name="send-email" value="@T("ContactUs.Button")" />
+                </div>
             </div>
             }
         }

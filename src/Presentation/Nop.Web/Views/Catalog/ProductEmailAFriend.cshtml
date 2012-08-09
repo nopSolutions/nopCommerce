@@ -15,74 +15,62 @@
     <div class="clear">
     </div>
     <div class="page-body">
-    @if (Model.SuccessfullySent)
-    {
-        <div class="result">
-            @Model.Result
-        </div>
-    }
-    else
-    {
-        <div class="send-email">
-            @using (Html.BeginForm())
+        @if (Model.SuccessfullySent)
+        {
+            <div class="result">
+                @Model.Result
+            </div>
+        }
+        else
+        {
+            using (Html.BeginForm())
             {
+                               
+            <fieldset class="send-email">
                 <p>
-                    <a href="@Url.RouteUrl("Product", new { productId = Model.ProductId, SeName = Model.ProductSeName })" class="product">@Model.ProductName</a></p>
-                <table>
-                    <tr>
-                        <td>
-                            @Html.LabelFor(model => model.FriendEmail):
-                        </td>
-                        <td>
-                            @Html.TextBoxFor(model => model.FriendEmail, new { @class = "friend-email" })
+                    <a href="@Url.RouteUrl("Product", new { productId = Model.ProductId, SeName = Model.ProductSeName })" class="product">@Model.ProductName</a>
+                </p>
+                <p class="message-error">
+                    @Html.ValidationSummary(true)
+                </p>
+                <div class="forms-box">
+                    <div class="inputs-left">
+                        <div class="inputs">
+                            @Html.LabelFor(model => model.FriendEmail)
+                            <div class="input-box">
+                                @Html.TextBoxFor(model => model.FriendEmail, new { @class = "friend-email", placeholder = T("Products.EmailAFriend.FriendEmail.Hint") })
+                            </div>
                             @Html.ValidationMessageFor(model => model.FriendEmail)
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            @Html.LabelFor(model => model.YourEmailAddress):
-                        </td>
-                        <td>
-                            @Html.TextBoxFor(model => model.YourEmailAddress, new { @class = "your-email" })
+                        </div>
+                        <div class="inputs">
+                            @Html.LabelFor(model => model.YourEmailAddress)
+                            <div class="input-box">
+                                @Html.TextBoxFor(model => model.YourEmailAddress, new { @class = "your-email", placeholder = T("Products.EmailAFriend.YourEmailAddress.Hint") })
+                            </div>
                             @Html.ValidationMessageFor(model => model.YourEmailAddress)
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            @Html.LabelFor(model => model.PersonalMessage):
-                        </td>
-                        <td>
-                            @Html.TextAreaFor(model => model.PersonalMessage, new { @class = "personal-message" })
-                            @Html.ValidationMessageFor(model => model.PersonalMessage)
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="message-error" colspan="2">
-                            @Html.ValidationSummary(true)
-                        </td>
-                    </tr>
-                    @if (Model.DisplayCaptcha)
-                    {
-                        <tr class="row">
-                            <td class="item-name">
-                                &nbsp;
-                            </td>
-                            <td class="item-value captcha-box">
+                        </div>
+                        @if (Model.DisplayCaptcha)
+                        {
+                            <div class="captcha-box">
                                 @Html.Raw(Html.GenerateCaptcha())
-                            </td>
-                        </tr>
-                    }
-                    <tr>
-                        <td>
-                            &nbsp;
-                        </td>
-                        <td>
-                            <input type="submit" name="send-email" class="button-1 send-email-a-friend-button" value="@T("Products.EmailAFriend.Button")" />
-                        </td>
-                    </tr>
-                </table>
+                            </div>
+                        }
+                    </div>
+                    <div class="inputs-right inputs">
+                        @Html.LabelFor(model => model.PersonalMessage)
+                        <div class="input-box">
+                            @Html.TextAreaFor(model => model.PersonalMessage, new { @class = "personal-message", placeholder = T("Products.EmailAFriend.PersonalMessage.Hint") })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.PersonalMessage)
+                    </div>
+                </div>
+                <div class="clear">
+                </div>
+                <div class="buttons">
+                    <input type="submit" name="send-email" class="button-1 send-email-a-friend-button" value="@T("Products.EmailAFriend.Button")" />
+                </div>
+            </fieldset>
             }
-        </div>
-    }
+        }
     </div>
 </div>

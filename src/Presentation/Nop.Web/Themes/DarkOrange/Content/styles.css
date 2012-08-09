@@ -585,11 +585,15 @@ a.eu-cookie-privacyinfo-tag{color:#F93 !important;text-decoration:underline;}
 /* EMAIL A FRIEND */
 .email-a-friend-page{}
 .email-a-friend-page .page-title{border-bottom:0 none;}
-.email-a-friend-page .send-email{border:1px solid #d7d7d7;margin-top:10px;padding:0 0 10px 10px;}
-.email-a-friend-page .send-email .product{font-weight:700;}
-.email-a-friend-page .send-email .friend-email{width:350px;}
-.email-a-friend-page .send-email .your-email{width:350px;}
-.email-a-friend-page .send-email .personal-message{width:350px;height:150px;}
+.email-a-friend-page .product{font-weight:bold;}
+.email-a-friend-page .result{font-weight:bold;}
+.email-a-friend-page .inputs-left{float:left;}
+.email-a-friend-page .inputs-right{float:right;}
+.email-a-friend-page .inputs{margin-bottom:12px;}
+.email-a-friend-page .captcha-box{margin-bottom:12px;}
+.email-a-friend-page .friend-email, .email-a-friend-page .your-email{width:250px;padding:1px;}
+.email-a-friend-page .personal-message{width:350px;height:150px;}
+.email-a-friend-page .buttons{text-align:left;}
 
 /* SEARCH */
 .search-page{}
@@ -627,8 +631,9 @@ a.eu-cookie-privacyinfo-tag{color:#F93 !important;text-decoration:underline;}
 
 /* CONTACTS */
 .contact-page{}
-.contact-page .contacts-left{float:left;}
-.contact-page .contacts-right{float:right;}
+.contact-page .result{font-weight:bold;}
+.contact-page .inputs-left{float:left;}
+.contact-page .inputs-right{float:right;}
 .contact-page .inputs{margin-bottom:12px;}
 .contact-page .captcha-box{margin-bottom:12px;}
 .contact-page .fullname{width:250px;padding:1px;}

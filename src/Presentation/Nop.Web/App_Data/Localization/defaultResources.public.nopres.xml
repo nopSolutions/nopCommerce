@@ -3231,6 +3231,9 @@
 					<LocaleResource Name="FriendEmail">
 						<Value>Friend's email</Value>
 						<Children>
+              <LocaleResource Name="Hint">
+                <Value>Enter friend's email</Value>
+              </LocaleResource>
 							<LocaleResource Name="Required">
 								<Value>Enter friend's email</Value>
 							</LocaleResource>
@@ -3238,6 +3241,11 @@
 					</LocaleResource>
 					<LocaleResource Name="PersonalMessage">
 						<Value>Personal message</Value>
+            <Children>
+              <LocaleResource Name="Hint">
+                <Value>Enter personal message (optional)</Value>
+              </LocaleResource>
+            </Children>
 					</LocaleResource>
 					<LocaleResource Name="OnlyRegisteredUsers">
 						<Value>Only registered customers can use email a friend feature</Value>
@@ -3251,6 +3259,9 @@
 					<LocaleResource Name="YourEmailAddress">
 						<Value>Your email address</Value>
 						<Children>
+              <LocaleResource Name="Hint">
+                <Value>Enter your email address</Value>
+              </LocaleResource>
 							<LocaleResource Name="Required">
 								<Value>Enter your email</Value>
 							</LocaleResource>
@@ -3987,6 +3998,9 @@
 					</LocaleResource>
 					<LocaleResource Name="FriendEmail">
 						<Value>Friend's email</Value>
+            <LocaleResource Name="Hint">
+              <Value>Enter friend's email</Value>
+            </LocaleResource>
 						<Children>
 							<LocaleResource Name="Required">
 								<Value>Enter friend's email</Value>
@@ -3995,6 +4009,11 @@
 					</LocaleResource>
 					<LocaleResource Name="PersonalMessage">
 						<Value>Personal message</Value>
+            <Children>
+              <LocaleResource Name="Hint">
+                <Value>Enter personal message (optional)</Value>
+              </LocaleResource>
+            </Children>
 					</LocaleResource>
 					<LocaleResource Name="OnlyRegisteredUsers">
 						<Value>Only registered customers can use email a friend feature</Value>
@@ -4008,6 +4027,9 @@
 					<LocaleResource Name="YourEmailAddress">
 						<Value>Your email address</Value>
 						<Children>
+              <LocaleResource Name="Hint">
+                <Value>Enter your email address</Value>
+              </LocaleResource>
 							<LocaleResource Name="Required">
 								<Value>Enter your email</Value>
 							</LocaleResource>

@@ -584,11 +584,15 @@ a.eu-cookie-privacyinfo-tag{color:#F93 !important;text-decoration:underline;}
 /* EMAIL A FRIEND */
 .email-a-friend-page{text-align:right;direction:rtl;}
 .email-a-friend-page .page-title{border-bottom:0 none;}
-.email-a-friend-page .send-email{border:1px solid #d7d7d7;margin-top:10px;padding:0 10px 10px 0px;text-align:right;}
-.email-a-friend-page .send-email .product{font-weight:700;text-align:right;direction:rtl;}
-.email-a-friend-page .send-email .friend-email{width:350px;}
-.email-a-friend-page .send-email .your-email{width:350px;}
-.email-a-friend-page .send-email .personal-message{width:350px;height:150px;}
+.email-a-friend-page .product{font-weight:bold;text-align:right;direction:rtl;}
+.email-a-friend-page .result{font-weight:bold;}
+.email-a-friend-page .inputs-left{float:right;}
+.email-a-friend-page .inputs-right{float:left;}
+.email-a-friend-page .inputs{margin-bottom:12px;}
+.email-a-friend-page .captcha-box{margin-bottom:12px;}
+.email-a-friend-page .friend-email, .email-a-friend-page .your-email{width:250px;padding:1px;}
+.email-a-friend-page .personal-message{width:350px;height:150px;}
+.email-a-friend-page .buttons{text-align:right;}
 
 /* SEARCH */
 .search-page{direction:rtl;text-align:right;}
@@ -626,8 +630,9 @@ a.eu-cookie-privacyinfo-tag{color:#F93 !important;text-decoration:underline;}
 
 /* CONTACTS */
 .contact-page{text-align:right;direction:rtl;}
-.contact-page .contacts-left{float:right;}
-.contact-page .contacts-right{float:left;}
+.contact-page .result{font-weight:bold;}
+.contact-page .inputs-left{float:right;}
+.contact-page .inputs-right{float:left;}
 .contact-page .inputs{margin-bottom:12px;}
 .contact-page .captcha-box{margin-bottom:12px;}
 .contact-page .fullname{width:250px;padding:1px;}
