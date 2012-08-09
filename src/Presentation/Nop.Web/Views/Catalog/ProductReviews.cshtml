@@ -24,97 +24,75 @@
         }
         else
         {
-            <div class="write-review" id="review-form">
+            <fieldset class="write-review" id="review-form">
+                <legend class="title">@T("Reviews.Write")</legend>
                 @using (Html.BeginForm())
                 {
-                    <table>
-                        <tr>
-                            <td colspan="2">
-                                <strong>@T("Reviews.Write")</strong>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                @Html.LabelFor(model => model.AddProductReview.Title):
-                            </td>
-                            <td>
-                                @Html.TextBoxFor(model => model.AddProductReview.Title, Model.AddProductReview.CanCurrentCustomerLeaveReview ? (object)(new { @class = "review-title" }) : (object)(new { @class = "review-title", disabled = "disabled" }))
-                                @Html.ValidationMessageFor(model => model.AddProductReview.Title)
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                @Html.LabelFor(model => model.AddProductReview.ReviewText):
-                            </td>
-                            <td>
-                                @Html.TextAreaFor(model => model.AddProductReview.ReviewText, Model.AddProductReview.CanCurrentCustomerLeaveReview ? (object)(new { @class = "review-text" }) : (object)(new { @class = "review-text", disabled = "disabled" }))
-                                @Html.ValidationMessageFor(model => model.AddProductReview.ReviewText)
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                @Html.LabelFor(model => model.AddProductReview.Rating):
-                            </td>
-                            <td>
-                                <table>
-                                    <tr>
-                                        <td>
-                                            @T("Reviews.Fields.Rating.Bad")
-                                        </td>
-                                        <td>
-                                            @Html.RadioButtonFor(model => model.AddProductReview.Rating, "1")
-                                            @Html.RadioButtonFor(model => model.AddProductReview.Rating, "2")
-                                            @Html.RadioButtonFor(model => model.AddProductReview.Rating, "3")
-                                            @Html.RadioButtonFor(model => model.AddProductReview.Rating, "4")
-                                            @Html.RadioButtonFor(model => model.AddProductReview.Rating, "5")
-                                        </td>
-                                        <td>
-                                            @T("Reviews.Fields.Rating.Excellent")
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="message-error" colspan="2">
-                                @Html.ValidationSummary(true)
-                            </td>
-                        </tr>
-                        @if (Model.AddProductReview.DisplayCaptcha)
-                        {
-                            <tr>
-                                <td>
-                                    &nbsp;
-                                </td>
-                                <td class="captcha-box">
-                                    @Html.Raw(Html.GenerateCaptcha())
-                                </td>
-                            </tr>
+                    <div>
+                        <div class="message-error">@Html.ValidationSummary(true)</div>
+                        @{
+                    string result = TempData["nop.blog.addcomment.result"] as string;
                         }
-                        <tr>
-                            <td>
-                                &nbsp;
-                            </td>
-                            <td>
-                                <input type="submit" name="add-review" class="button-1 write-product-review-button" value="@T("Reviews.SubmitButton")" />
-                            </td>
-                        </tr>
-                    </table>
+                        @if (!String.IsNullOrEmpty(result))
+                        {
+                            <div class="result">@result</div>
+                        }
+                        <div class="forms-box">
+                            <div class="inputs">
+                                @Html.LabelFor(model => model.AddProductReview.Title)
+                                <div class="input-box">
+                                    @Html.TextBoxFor(model => model.AddProductReview.Title, Model.AddProductReview.CanCurrentCustomerLeaveReview ? (object)(new { @class = "review-title" }) : (object)(new { @class = "review-title", disabled = "disabled" }))
+                                </div>
+                                @Html.ValidationMessageFor(model => model.AddProductReview.Title)
+                            </div>
+                            <div class="inputs">
+                                @Html.LabelFor(model => model.AddProductReview.ReviewText)
+                                <div class="input-box">
+                                    @Html.TextAreaFor(model => model.AddProductReview.ReviewText, Model.AddProductReview.CanCurrentCustomerLeaveReview ? (object)(new { @class = "review-text" }) : (object)(new { @class = "review-text", disabled = "disabled" }))
+                                </div>
+                                @Html.ValidationMessageFor(model => model.AddProductReview.ReviewText)
+                            </div>
+                            <div class="inputs">
+                                @Html.LabelFor(model => model.AddProductReview.Rating):
+                                <div class="input-box review-rating">
+                                    @T("Reviews.Fields.Rating.Bad")
+                                    @Html.RadioButtonFor(model => model.AddProductReview.Rating, "1")
+                                    @Html.RadioButtonFor(model => model.AddProductReview.Rating, "2")
+                                    @Html.RadioButtonFor(model => model.AddProductReview.Rating, "3")
+                                    @Html.RadioButtonFor(model => model.AddProductReview.Rating, "4")
+                                    @Html.RadioButtonFor(model => model.AddProductReview.Rating, "5")
+                                    @T("Reviews.Fields.Rating.Excellent")
+                                </div>
+                            </div>
+                            @if (Model.AddProductReview.DisplayCaptcha)
+                            {
+                                <div class="captcha-box">
+                                    @Html.Raw(Html.GenerateCaptcha())
+                                </div>
+                                <div class="clear">
+                                </div>
+                            }
+                        </div>
+                        <div class="clear">
+                        </div>
+                        <div class="buttons">
+                            <input type="submit" name="add-review" class="button-1 write-product-review-button" value="@T("Reviews.SubmitButton")" />
+                        </div>
+                    </div>
                 }
-            </div>
+            </fieldset>
         }
-        <div class="clear">
-        </div>
         @if (Model.Items.Count > 0)
         {
+            <div class="clear">
+            </div>
             <div class="product-review-list">
-                <div>
-                    <strong>@T("Reviews.ExistingReviews")</strong>
+                <div class="title">
+                    @T("Reviews.ExistingReviews")
                 </div>
                 @foreach (var review in Model.Items)
                 {
-                    int ratingPercent = review.Rating * 20;
-                
+                    int ratingPercent = review.Rating * 20;                
                     <div class="product-review-item">
                         <div class="review-title">
                             @review.Title

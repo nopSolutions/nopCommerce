@@ -28,9 +28,7 @@
                 @using (Html.BeginForm())
                 {
                     <div class="title">
-                        <strong>
-                            @T("News.Comments.LeaveYourComment")
-                        </strong>
+                        @T("News.Comments.LeaveYourComment")
                     </div>
                     <div>
                         @Html.LabelFor(model => model.AddNewComment.CommentTitle)
@@ -69,8 +67,6 @@
             <div class="comment-list">
                 <div class="title">
                     @T("News.Comments")
-                </div>
-                <div class="clear">
                 </div>
                 <ul data-role="listview" data-inset="true" data-filter="false">
                     @foreach (var comment in Model.Comments)

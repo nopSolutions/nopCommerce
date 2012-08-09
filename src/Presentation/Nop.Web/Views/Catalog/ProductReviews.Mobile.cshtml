@@ -28,7 +28,9 @@
             <div class="write-review" id="review-form">
                 @using (Html.BeginForm())
                 {
-                    <strong>@T("Reviews.Write")</strong>
+                    <div class="title">
+                        <strong>@T("Reviews.Write")</strong>
+                    </div>
                     <div>
                         @Html.LabelFor(model => model.AddProductReview.Title)
                         @Html.TextBoxFor(model => model.AddProductReview.Title, new { @class = "review-title" })
@@ -38,8 +40,7 @@
                         @Html.LabelFor(model => model.AddProductReview.ReviewText)
                         @Html.TextAreaFor(model => model.AddProductReview.ReviewText, new { @class = "review-text" })
                         @Html.ValidationMessageFor(model => model.AddProductReview.ReviewText)
-                    </div>   
-                
+                    </div>
                     <div data-role="fieldcontain">
                         <fieldset data-role="controlgroup" data-type="horizontal">
                             <legend>@Html.LabelFor(model => model.AddProductReview.Rating)</legend>
@@ -60,24 +61,25 @@
                     <div class="captcha-box">
                         @Html.Raw(Html.GenerateCaptcha())
                     </div>
-                            }                 
-                    <input type="submit" name="add-review" value="@T("Reviews.SubmitButton")" />                    
+                            }
+                    <div class="buttons">             
+                        <input type="submit" name="add-review" value="@T("Reviews.SubmitButton")" />   
+                    </div>                 
                 }
             </div>
         }
-        <div class="clear">
-        </div>
         @if (Model.Items.Count > 0)
         {
             <div class="product-review-list">
-                <div>
-                    <strong>@T("Reviews.ExistingReviews")</strong>
+                <div class="title">
+                    <strong>
+                        @T("Reviews.ExistingReviews")
+                    </strong>
                 </div>
                 <ul data-role="listview" data-inset="true" data-filter="false">
                     @foreach (var review in Model.Items)
                     {
-                        int ratingPercent = review.Rating * 20;
-                
+                        int ratingPercent = review.Rating * 20;                
                         <li>
                             <div class="product-review-item">
                                 <div class="review-title">
@@ -89,12 +91,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="clear">
-                                </div>
                                 <div class="review-text">
                                     @Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(review.ReviewText, false, true, false, false, false, false))
-                                </div>
-                                <div class="clear">
                                 </div>
                                 <div class="review-info">
                                     <div>
