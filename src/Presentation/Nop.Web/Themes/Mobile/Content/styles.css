@@ -342,6 +342,8 @@
 .forum-subscriptions-page .description{}
 .forum-subscriptions-page .no-data{}
 .forum-subscriptions-page .buttons{}
+.fs-grid-pager-style{padding:5px;background:#eee;vertical-align:middle;}
+.fs-grid-pager-style span{font-weight:700;}
 .customer-info-page{}
 .customer-info-page .buttons{}
 .my-account-home-page{}
@@ -477,10 +479,9 @@
 .private-messages-page{}
 .private-messages-page .page-body{margin:0;padding:0;}
 .private-messages-box{}
-.private-messages-box .section-body{text-align:left;padding:10px;height:auto;}
 .private-messages-box .item{font-weight:normal;}
-.pm-grid-pager-style,.latest-posts-grid-pager-style,.fs-grid-pager-style{padding:5px;background:#eee;vertical-align:middle;}
-.pm-grid-pager-style span,.latest-posts-grid-pager-style span,.fs-grid-pager-style span{font-weight:700;}
+.pm-grid-pager-style{padding:5px;background:#eee;vertical-align:middle;}
+.pm-grid-pager-style span{font-weight:700;}
 .pm-read{}
 .pm-unread{font-size:16px;}
 
@@ -579,6 +580,8 @@
 .profile-page .profile-info-box .user-details .avatar .avatar-img{border:solid 2px #CEDBE1!important;}
 .profile-page .profile-info-box .user-stats{padding:10px;}
 .profile-page .profile-info-box .user-stats .section-title{text-transform:uppercase;margin-bottom:10px;}
+.latest-posts-grid-pager-style{padding:5px;background:#eee;vertical-align:middle;}
+.latest-posts-grid-pager-style span{font-weight:700;}
 
 /* ACTIVE DISCUSSIONS */
 .active-discussions-page{}

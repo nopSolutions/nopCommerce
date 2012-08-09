@@ -678,6 +678,8 @@ a.eu-cookie-privacyinfo-tag{color:#F93 !important;text-decoration:underline;}
 .forum-subscriptions-page .description{}
 .forum-subscriptions-page .no-data{}
 .forum-subscriptions-page .buttons{margin-bottom:5px;margin-top:5px;text-align:left;}
+.fs-grid-pager-style{padding:5px;background:#eee;vertical-align:middle;}
+.fs-grid-pager-style span{font-weight:700;font-size:1.1em;}
 .customer-info-page{}
 .customer-info-page .buttons{margin-bottom:5px;margin-top:5px;text-align:center;}
 .username-available-status{color:green;padding-left:5px;}
@@ -844,15 +846,14 @@ a.eu-cookie-privacyinfo-tag{color:#F93 !important;text-decoration:underline;}
 .private-messages-page .page-title{border-bottom:0 none;}
 .private-messages-page .page-body{margin:0;padding:0;font-size:11px;color:#555;}
 .private-messages-box{margin:0;padding:5px;font-size:11px;color:#555;}
-.private-messages-box .section-body{text-align:left;padding:10px;height:auto;}
 .private-messages-box .buttons{margin-bottom:5px;margin-top:5px;text-align:left;}
 .pm-grid-table-style{font-family:arial;font-size:11px;border:1px solid gray;border-collapse:collapse;background-color:#FFF;margin-left:0;width:100%;}
 .pm-grid-table-style td a{text-decoration:none;display:block;}
 .pm-grid-alt-row-style{background-color:#F4FAFF;}
 .pm-grid-header-style th{background:url(images/grid-bg.gif) repeat-x 50%;color:#fff;padding:5px 10px;text-align:center;vertical-align:middle;font-weight:700;border:solid 1px #676767;}
 .pm-grid-row-style td,.pm-grid-alt-row-style td{padding:4px 10px;border-right:solid 1px #A0C0E7;border-right-color:gray;}
-.pm-grid-pager-style,.latest-posts-grid-pager-style,.fs-grid-pager-style{padding:5px;background:#eee;vertical-align:middle;}
-.pm-grid-pager-style span,.latest-posts-grid-pager-style span,.fs-grid-pager-style span{font-weight:700;font-size:1.1em;}
+.pm-grid-pager-style{padding:5px;background:#eee;vertical-align:middle;}
+.pm-grid-pager-style span{font-weight:700;font-size:1.1em;}
 .pm-read{}
 .pm-unread{font-weight:700;}
 
@@ -1029,6 +1030,9 @@ a.eu-cookie-privacyinfo-tag{color:#F93 !important;text-decoration:underline;}
 .profile-page .user-last-posts .topic-body .quote{padding:5px;border:dashed 1px #000;background-color:#fff;}
 .profile-page .user-last-posts .topic-data{background:#f3f3f3;padding:3px;color:#555;font-size:.9em;}
 .profile-page .user-last-posts .posts-table{width:100%;border:0px;border-collapse:collapse;border-spacing:0;empty-cells:show;}
+.latest-posts-grid-pager-style{padding:5px;background:#eee;vertical-align:middle;}
+.latest-posts-grid-pager-style span{font-weight:700;font-size:1.1em;}
+
 /* BB CODE EDITOR */
 .toolbar{padding:2px;display:inline;}
 .toolbar .button{background:url(images/bbeditor-button-bg.gif) repeat-x;padding:2px;margin-right:2px;border:#cec6b5 1px solid;}
