@@ -362,7 +362,7 @@
 
 /* RETURN REQUEST */
 .return-request-page{}
-.return-request-page .section-addinfo{padding:10px;font-weight:700;}
+.return-request-page .section-title{padding:10px;font-weight:700;}
 .return-request-page .products-box{font-weight:normal;}
 .return-request-page .why{}
 .return-request-page .why .return-reasons{}
