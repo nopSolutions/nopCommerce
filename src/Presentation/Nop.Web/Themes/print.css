@@ -8,6 +8,7 @@ body{font-family:arial, verdana, helvetica, sans-serif;font-size:12px;text-align
 .a-left{text-align:left!important;}
 .a-center{text-align:center!important;}
 .a-right{text-align:right!important;}
+.section-title{padding:10px 10px 5px 0;font-weight:700;clear:both;}
 /* data table */
 .data-table{width:100%;border:1px solid;border-collapse:collapse;border-spacing:0;empty-cells:show;}
 .data-table th{font-weight:bold;padding:3px 8px;white-space:nowrap;vertical-align:middle;}
@@ -22,7 +23,6 @@ body{font-family:arial, verdana, helvetica, sans-serif;font-size:12px;text-align
 
 .order-details{margin-bottom:15px;padding:0;}
 .order-details .page-body{border:1px solid #d7d7d7;padding:10px;}
-.order-details .section-title{padding:10px 10px 5px 0;font-weight:700;clear:both;}
 .order-details .order-overview{text-align:left;padding-bottom:10px;}
 .order-details .order-overview .order-total-top{text-align:right;}
 .order-details .order-details-box{text-align:left;padding:10px;border:1px solid #d7d7d7;height:auto;}

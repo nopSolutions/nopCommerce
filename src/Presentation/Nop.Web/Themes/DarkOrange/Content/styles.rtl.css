@@ -88,6 +88,7 @@ ul.language-list li:hover{cursor:pointer;}
 td{vertical-align:middle;}
 td.fieldname{font-size:12px;}
 .captcha-box{direction:ltr;text-align:left;}
+.section-title{padding:10px 10px 5px 0;font-weight:700;clear:both;font-size:12px;}
 .button-1{background:url(images/orange-button-bg.gif) no-repeat 25% 50% #F80;border:1px solid #F80;color:#FFF;height:20px;padding:0 5px;width:auto;overflow:visible;}
 .button-2{background:url(images/grey-button-bg.gif) no-repeat 25% 50% #333;border:1px solid #333;color:#FFF;height:20px;padding:0 5px;width:auto;overflow:visible;}
 .product-box-detail-button{margin-bottom:3px;}
@@ -342,7 +343,6 @@ a.eu-cookie-privacyinfo-tag{color:#F93 !important;text-decoration:underline;}
 .order-details .page-title{border-bottom:0 none;text-align:right;}
 .order-details .page-title .print-buttons{text-align:left;}
 .order-details .page-body{border:1px solid #d7d7d7;padding:10px;}
-.order-details .section-title{padding:10px 10px 5px 0;font-weight:700;clear:both;}
 .order-details .order-overview{text-align:right;padding-bottom:10px;direction:rtl;}
 .order-details .order-overview .order-total-top{text-align:left;}
 .order-details .order-details-box{text-align:right;padding:10px;border:1px solid #d7d7d7;height:auto;direction:rtl;}
@@ -359,7 +359,6 @@ a.eu-cookie-privacyinfo-tag{color:#F93 !important;text-decoration:underline;}
 .shipment-details{text-align:right;direction:rtl;}
 .shipment-details .page-title{border-bottom:0 none;text-align:right;}
 .shipment-details .page-body{border:1px solid #d7d7d7;padding:10px;}
-.shipment-details .section-title{padding:10px 10px 5px 0;font-weight:700;clear:both;}
 .shipment-details .overview{text-align:right;padding-bottom:10px;direction:rtl;}
 .shipment-details .tracking-url{color:#f93;text-decoration:none;}
 .shipment-details .products-box,.shipment-details .shipment-status-events-box{text-align:right;padding:10px;border:1px solid #d7d7d7;height:auto;}
@@ -649,7 +648,6 @@ a.eu-cookie-privacyinfo-tag{color:#F93 !important;text-decoration:underline;}
 .account-page .result{font-family:Verdana, Arial, sans-serif;font-size:10px;font-weight:700;color:red;}
 .account-page .page-title{border-bottom:0 none;}
 .account-page .page-body{margin:0;padding:0;font-size:11px;color:#555;}
-.account-page .section-title{padding:10px 10px 5px 0;font-weight:700;clear:both;font-size:12px;}
 .account-page .section-body{text-align:right;padding:10px;border:1px solid #d7d7d7;height:auto;}
 .address-list-page{}
 .address-list-page .address-list{}
@@ -1021,7 +1019,7 @@ a.eu-cookie-privacyinfo-tag{color:#F93 !important;text-decoration:underline;}
 .profile-page .profile-info-box .user-details .avatar{margin-bottom:5px;}
 .profile-page .profile-info-box .user-details .avatar .avatar-img{border:solid 2px #CEDBE1!important;}
 .profile-page .profile-info-box .user-stats{margin-left:200px;border-left:solid 1px #F3F3F3;padding:10px;}
-.profile-page .profile-info-box .user-stats .section-title{text-transform:uppercase;margin-bottom:10px;}
+.profile-page .profile-info-box .user-stats .title{text-transform:uppercase;margin-bottom:10px;}
 .profile-page .user-last-posts{}
 .profile-page .user-last-posts .topic{border:solid 1px #F3F3F3;margin-bottom:10px;}
 .profile-page .user-last-posts .topic-title{font-weight:700;line-height:20px;background:#e3f3f3;padding:3px;}

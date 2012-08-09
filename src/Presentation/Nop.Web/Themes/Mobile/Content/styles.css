@@ -16,6 +16,7 @@
 .currency-selector .title,.tax-display-type-selector .title,.language-selector .title{font-weight:700;}
 .homepage-logo{}
 .captcha-box{}
+.section-title{padding:10px;font-weight:700;clear:both;}
 
 /* DATA TABLE */
 .data-table{width:100%;border:1px solid;border-collapse:collapse;border-spacing:0;empty-cells:show;}
@@ -154,7 +155,6 @@
 /* ORDER DETAILS */
 .order-details{margin:0;padding:0;}
 .order-details .page-body{}
-.order-details .section-title{padding:10px;font-weight:700;clear:both;}
 .order-details .order-overview{text-align:left;padding-bottom:10px;}
 .order-details .order-details-box{text-align:left;padding:10px;height:auto;}
 .order-details .products-box,.order-details .shipments-box,.order-details .ordernotes-box{font-weight:normal;}
@@ -168,7 +168,6 @@
 /* SHIPMENTS */
 .shipment-details{margin:0;padding:0;}
 .shipment-details .page-body{}
-.shipment-details .section-title{padding:10px;font-weight:700;clear:both;}
 .shipment-details .overview{text-align:left;padding-bottom:10px;}
 .shipment-details .tracking-url{}
 .shipment-details .products-box,.shipment-details .shipment-status-events-box{font-weight:normal;}
@@ -193,7 +192,6 @@
 /* REGISTRATION */
 .registration-page{}
 .registration-page .page-body{}
-.registration-page .section-title{padding:10px;font-weight:700;clear:both;}
 .registration-page .section-body{text-align:left;padding:10px;border:1px solid #d7d7d7;height:auto;}
 .registration-page .buttons{float:right;margin-bottom:5px;margin-top:5px;text-align:center;clear:both;}
 
@@ -312,7 +310,6 @@
 .account-page{}
 .account-page .page-title{}
 .account-page .page-body{margin:0;padding:0;}
-.account-page .section-title{padding:10px;font-weight:700;clear:both;}
 .account-page .section-body{text-align:left;padding:10px;border:1px solid #d7d7d7;height:auto;}
 .address-list-page{}
 .address-list-page .address-list{}
@@ -362,7 +359,6 @@
 
 /* RETURN REQUEST */
 .return-request-page{}
-.return-request-page .section-title{padding:10px;font-weight:700;}
 .return-request-page .products-box{font-weight:normal;}
 .return-request-page .why{}
 .return-request-page .why .return-reasons{}
@@ -579,7 +575,7 @@
 .profile-page .profile-info-box .user-details .avatar{margin-bottom:5px;}
 .profile-page .profile-info-box .user-details .avatar .avatar-img{border:solid 2px #CEDBE1!important;}
 .profile-page .profile-info-box .user-stats{padding:10px;}
-.profile-page .profile-info-box .user-stats .section-title{text-transform:uppercase;margin-bottom:10px;}
+.profile-page .profile-info-box .user-stats .title{text-transform:uppercase;margin-bottom:10px;}
 .profile-page .latest-posts-grid-pager-style{padding:5px;background:#eee;vertical-align:middle;}
 .profile-page .latest-posts-grid-pager-style span{font-weight:700;}
 
