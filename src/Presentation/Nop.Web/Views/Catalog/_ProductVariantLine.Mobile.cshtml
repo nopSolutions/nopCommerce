@@ -3,22 +3,20 @@
 <div class="product-variant-line">
     @if (!String.IsNullOrWhiteSpace(Model.PictureModel.ImageUrl))
     {
-        <div class="picture">
+        <div class="variant-picture">
             <img alt="@Model.PictureModel.AlternateText" src="@Model.PictureModel.ImageUrl"
                                     title="@Model.PictureModel.Title" />
         </div>
     }
     @if (!String.IsNullOrWhiteSpace(Model.Name))
     {
-        <div class="overview">
-            <div class="product-variant-name">
-                @Model.Name
-            </div>
+        <div class="variant-name">
+            @Model.Name
         </div>
     }
     @if (!String.IsNullOrWhiteSpace(Model.Description))
     {
-        <div class="description">
+        <div class="variant-description">
             @Html.Raw(Model.Description)
         </div>
     }
@@ -42,14 +40,14 @@
     <!--Back in stock subscription-->
     @Html.Partial("_ProductVariantBackInStockSubscription", Model)
     <div class="clear">
-    </div>   
+    </div>
     @{
         var dataDictGiftCard = new ViewDataDictionary();
         dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = string.Format("giftcard_{0}", Model.Id);
         @Html.Partial("_GiftCardInfo", Model.GiftCard, dataDictGiftCard)
     }
     <div class="clear">
-    </div> 
+    </div>
     @{
         var dataDictPrice = new ViewDataDictionary();
         dataDictPrice.TemplateInfo.HtmlFieldPrefix = string.Format("price_{0}", Model.Id);

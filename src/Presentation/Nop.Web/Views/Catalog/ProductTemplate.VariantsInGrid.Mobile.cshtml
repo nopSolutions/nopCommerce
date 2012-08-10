@@ -28,53 +28,51 @@
         @using (Html.BeginRouteForm("Product", new { productId = Model.Id, SeName = Model.SeName }, FormMethod.Post, new { enctype = "multipart/form-data" }))
         {
             <div class="product-essential">
-                <div class="product-details-info">
-                    <div class="overview">
-                        <h1 class="product-name">
-                            @Model.Name
-                        </h1>
-                        <div class="clear">
-                        </div>
-                        @if (errors.Count > 0)
-                        { 
-                            <div class="message-error">
-                                <ul>
-                                    @for (int i = 0; i < errors.Count; i++)
-                                    {
-                                        <li>@errors[i]</li>
-                                    }
-                                </ul>
-                            </div>
-                        }
-                        <div class="clear">
-                        </div>
-                        <div class="shortdescription">
-                            @Html.Raw(Model.ShortDescription)
-                        </div>
-                        <div class="clear">
-                        </div>
-                        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_productdetails_before_pictures" })
-                        <!--product pictures-->
-                        @Html.Partial("_ProductDetailsPictures", Model)
-                        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_productdetails_after_pictures" })
-                        <div class="clear">
-                        </div>
-                        <!--product manufacturers-->
-                        @Html.Action("ProductManufacturers", "Catalog", new { productId = Model.Id })
-                        <div class="clear">
-                        </div>
-                        <!--product reviews-->
-                        @Html.Action("ProductReviewOverview", "Catalog", new { productId = Model.Id })
-                        <div class="clear">
-                        </div>
-                        @Html.Action("ProductEmailAFriendButton", "Catalog", new { productId = Model.Id })
-                        <div class="clear">
-                        </div>
-                        @Html.Action("CompareProductsButton", "Catalog", new { productId = Model.Id })
+                <div class="overview">
+                    <h1 class="product-name">
+                        @Model.Name
+                    </h1>
+                    <div class="clear">
                     </div>
-                    <div class="full-description">
-                        @Html.Raw(Model.FullDescription)
+                    @if (errors.Count > 0)
+                    { 
+                        <div class="message-error">
+                            <ul>
+                                @for (int i = 0; i < errors.Count; i++)
+                                {
+                                    <li>@errors[i]</li>
+                                }
+                            </ul>
+                        </div>
+                    }
+                    <div class="clear">
                     </div>
+                    <div class="short-description">
+                        @Html.Raw(Model.ShortDescription)
+                    </div>
+                    <div class="clear">
+                    </div>
+                    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_productdetails_before_pictures" })
+                    <!--product pictures-->
+                    @Html.Partial("_ProductDetailsPictures", Model)
+                    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_productdetails_after_pictures" })
+                    <div class="clear">
+                    </div>
+                    <!--product manufacturers-->
+                    @Html.Action("ProductManufacturers", "Catalog", new { productId = Model.Id })
+                    <div class="clear">
+                    </div>
+                    <!--product reviews-->
+                    @Html.Action("ProductReviewOverview", "Catalog", new { productId = Model.Id })
+                    <div class="clear">
+                    </div>
+                    @Html.Action("ProductEmailAFriendButton", "Catalog", new { productId = Model.Id })
+                    <div class="clear">
+                    </div>
+                    @Html.Action("CompareProductsButton", "Catalog", new { productId = Model.Id })
+                </div>
+                <div class="full-description">
+                    @Html.Raw(Model.FullDescription)
                 </div>
             </div>
             <div class="clear">
