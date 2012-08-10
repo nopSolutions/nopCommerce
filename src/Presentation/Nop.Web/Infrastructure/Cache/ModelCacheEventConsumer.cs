@@ -471,6 +471,7 @@ namespace Nop.Web.Infrastructure.Cache
         }
         public void HandleEvent(EntityUpdated<Product> eventMessage)
         {
+            _cacheManager.RemoveByPattern(PRODUCT_BREADCRUMB_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_NAVIGATION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCT_DEFAULTPICTURE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CART_PICTURE_PATTERN_KEY);
