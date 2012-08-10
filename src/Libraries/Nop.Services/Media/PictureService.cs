@@ -11,6 +11,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Media;
 using Nop.Services.Configuration;
 using Nop.Services.Events;
+using Nop.Services.Seo;
 
 namespace Nop.Services.Media
 {
@@ -202,25 +203,28 @@ namespace Nop.Services.Media
         /// <returns>Result</returns>
         public virtual string GetPictureSeName(string name)
         {
-            if (String.IsNullOrEmpty(name))
-                return name;
+            //if (String.IsNullOrEmpty(name))
+            //    return name;
 
-            string okChars = "abcdefghijklmnopqrstuvwxyz1234567890 _-";
-            name = name.Trim().ToLowerInvariant();
+            //string okChars = "abcdefghijklmnopqrstuvwxyz1234567890 _-";
+            //name = name.Trim().ToLowerInvariant();
 
-            var sb = new StringBuilder();
-            foreach (char c in name.ToCharArray())
-            {
-                string c2 = c.ToString();
-                if (okChars.Contains(c2))
-                    sb.Append(c2);
-            }
-            string name2 = sb.ToString();
-            name2 = name2.Replace(" ", "_");
-            name2 = name2.Replace("-", "_");
-            while (name2.Contains("__"))
-                name2 = name2.Replace("__", "_");
-            return name2.ToLowerInvariant();
+            //var sb = new StringBuilder();
+            //foreach (char c in name.ToCharArray())
+            //{
+            //    string c2 = c.ToString();
+            //    if (okChars.Contains(c2))
+            //        sb.Append(c2);
+            //}
+            //string name2 = sb.ToString();
+            //name2 = name2.Replace(" ", "_");
+            //name2 = name2.Replace("-", "_");
+            //while (name2.Contains("__"))
+            //    name2 = name2.Replace("__", "_");
+            //return name2.ToLowerInvariant();
+
+            //use SeoExtensions implementation
+            return SeoExtensions.GetSeName(name, true, false, false);
         }
 
         /// <summary>
