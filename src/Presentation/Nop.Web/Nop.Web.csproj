@@ -1306,7 +1306,7 @@
     <Content Include="Themes\DarkOrange\Content\images\filterbox-bg.gif" />
     <Content Include="Themes\DarkOrange\Content\images\forum-footer-bg.gif" />
     <Content Include="Themes\DarkOrange\Content\images\forum-header-bg.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\grey_button_bg.gif" />
+    <Content Include="Themes\DarkOrange\Content\images\grey-button-bg.gif" />
     <Content Include="Themes\DarkOrange\Content\images\grid-bg.gif" />
     <Content Include="Themes\DarkOrange\Content\images\category-bg.gif" />
     <Content Include="Themes\DarkOrange\Content\images\category-title.gif" />
