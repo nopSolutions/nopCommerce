@@ -2829,18 +2829,32 @@ namespace Nop.Web.Controllers
             var categories = _categoryService.GetAllCategories();
             if (categories.Count > 0)
             {
+                //first empty entry
                 model.AvailableCategories.Add(new SelectListItem()
                     {
                          Value = "0",
                          Text = _localizationService.GetResource("Common.All")
                     });
-                foreach(var c in categories)
+                //all other categories
+                foreach (var c in categories)
+                {
+                    //generate full category name (breadcrumb)
+                    string fullCategoryBreadcrumbName = "";
+                    var breadcrumb = GetCategoryBreadCrumb(c);
+                    for (int i = 0; i <= breadcrumb.Count - 1; i++)
+                    {
+                        fullCategoryBreadcrumbName += breadcrumb[i].GetLocalized(x => x.Name);
+                        if (i != breadcrumb.Count - 1)
+                            fullCategoryBreadcrumbName += " >> ";
+                    }
+                    
                     model.AvailableCategories.Add(new SelectListItem()
-                        {
-                            Value = c.Id.ToString(),
-                            Text = c.GetCategoryBreadCrumb(_categoryService),
-                            Selected = model.Cid == c.Id
-                        });
+                    {
+                        Value = c.Id.ToString(),
+                        Text = fullCategoryBreadcrumbName,
+                        Selected = model.Cid == c.Id
+                    });
+                }
             }
 
             var manufacturers = _manufacturerService.GetAllManufacturers();
@@ -2855,7 +2869,7 @@ namespace Nop.Web.Controllers
                     model.AvailableManufacturers.Add(new SelectListItem()
                     {
                         Value = m.Id.ToString(),
-                        Text = m.Name,
+                        Text = m.GetLocalized(x => x.Name),
                         Selected = model.Mid == m.Id
                     });
             }
