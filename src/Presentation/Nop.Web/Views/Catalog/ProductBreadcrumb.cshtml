@@ -12,7 +12,9 @@
             <li><a href="@Url.RouteUrl("Category", new { categoryId = catBr.Id, SeName = catBr.SeName })" title="@catBr.Name">@catBr.Name</a>
                 <span class="delimiter">/</span></li>
         }
-        <strong>@Model.ProductName</strong> @*<a href="@Url.RouteUrl("Product", new { productId = Model.ProductId, SeName = Model.ProductSeName })">@Model.ProductName</a>*@
+        @*uncomment to disable clickable link
+        <strong>@Model.ProductName</strong>*@
+        <strong><a href="@Url.RouteUrl("Product", new { productId = Model.ProductId, SeName = Model.ProductSeName })">@Model.ProductName</a></strong>
         @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "productbreadcrumb_after" })
     </ul>
 </div>
