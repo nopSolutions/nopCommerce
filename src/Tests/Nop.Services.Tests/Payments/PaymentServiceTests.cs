@@ -23,7 +23,7 @@ namespace Nop.Services.Tests.Payments
             _paymentSettings.ActivePaymentMethodSystemNames = new List<string>();
             _paymentSettings.ActivePaymentMethodSystemNames.Add("Payments.TestMethod");
 
-            var pluginFinder = new PluginFinder(new AppDomainTypeFinder());
+            var pluginFinder = new PluginFinder();
 
             _shoppingCartSettings = new ShoppingCartSettings();
 

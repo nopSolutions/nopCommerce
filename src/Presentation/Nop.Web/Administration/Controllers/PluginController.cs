@@ -283,7 +283,9 @@ namespace Nop.Admin.Controllers
                 pluginDescriptor.FriendlyName = model.FriendlyName;
                 pluginDescriptor.DisplayOrder = model.DisplayOrder;
                 PluginFileParser.SavePluginDescriptionFile(pluginDescriptor);
-                //locales
+                //reset plugin cache
+                _pluginFinder.ReloadPlugins();
+                //locales)
                 foreach (var localized in model.Locales)
                 {
                     pluginDescriptor.Instance().SaveLocalizedFriendlyName(_localizationService, localized.LanguageId, localized.FriendlyName);

@@ -31,6 +31,7 @@ namespace Nop.Admin.Controllers
         private readonly IPermissionService _permissionService;
         private readonly ILocalizedEntityService _localizedEntityService;
         private readonly ILanguageService _languageService;
+        private readonly IPluginFinder _pluginFinder;
 
 		#endregion
 
@@ -39,7 +40,8 @@ namespace Nop.Admin.Controllers
         public ShippingController(IShippingService shippingService, ShippingSettings shippingSettings,
             ISettingService settingService, ICountryService countryService,
             ILocalizationService localizationService, IPermissionService permissionService,
-             ILocalizedEntityService localizedEntityService, ILanguageService languageService)
+             ILocalizedEntityService localizedEntityService, ILanguageService languageService,
+            IPluginFinder pluginFinder)
 		{
             this._shippingService = shippingService;
             this._shippingSettings = shippingSettings;
@@ -49,6 +51,7 @@ namespace Nop.Admin.Controllers
             this._permissionService = permissionService;
             this._localizedEntityService = localizedEntityService;
             this._languageService = languageService;
+            this._pluginFinder = pluginFinder;
 		}
 
 		#endregion 
@@ -152,7 +155,8 @@ namespace Nop.Admin.Controllers
             //display order
             pluginDescriptor.DisplayOrder = model.DisplayOrder;
             PluginFileParser.SavePluginDescriptionFile(pluginDescriptor);
-
+            //reset plugin cache
+            _pluginFinder.ReloadPlugins();
 
             return Providers(command);
         }

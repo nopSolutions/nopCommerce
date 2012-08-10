@@ -85,7 +85,7 @@ namespace Nop.Services.Tests.Directory
             _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
             _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));
             
-            var pluginFinder = new PluginFinder(new AppDomainTypeFinder());
+            var pluginFinder = new PluginFinder();
             _currencyService = new CurrencyService(cacheManager,
                 _currencyRepository, _customerService,
                 _currencySettings, pluginFinder, _eventPublisher);

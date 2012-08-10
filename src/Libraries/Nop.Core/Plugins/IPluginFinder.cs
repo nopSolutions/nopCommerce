@@ -16,5 +16,10 @@ namespace Nop.Core.Plugins
         PluginDescriptor GetPluginDescriptorBySystemName(string systemName, bool installedOnly = true);
 
         PluginDescriptor GetPluginDescriptorBySystemName<T>(string systemName, bool installedOnly = true) where T : class, IPlugin;
+
+        /// <summary>
+        /// Reload plugins
+        /// </summary>
+        void ReloadPlugins();
     }
 }

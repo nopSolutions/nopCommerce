@@ -45,7 +45,7 @@ namespace Nop.Services.Tests.Shipping
 
             var cacheManager = new NopNullCache();
 
-            var pluginFinder = new PluginFinder(new AppDomainTypeFinder());
+            var pluginFinder = new PluginFinder();
 
             _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
             _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));

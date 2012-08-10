@@ -36,7 +36,7 @@ namespace Nop.Services.Tests.Tax
             //default tax address
             _addressService.Expect(x => x.GetAddressById(_taxSettings.DefaultTaxAddressId)).Return(new Address() { Id = _taxSettings.DefaultTaxAddressId });
 
-            var pluginFinder = new PluginFinder(new AppDomainTypeFinder());
+            var pluginFinder = new PluginFinder();
 
             _eventPublisher = MockRepository.GenerateMock<IEventPublisher>();
             _eventPublisher.Expect(x => x.Publish(Arg<object>.Is.Anything));

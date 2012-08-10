@@ -70,7 +70,7 @@ namespace Nop.Services.Tests.Catalog
 
             _customerService = MockRepository.GenerateMock<ICustomerService>();
 
-            var pluginFinder = new PluginFinder(new AppDomainTypeFinder());
+            var pluginFinder = new PluginFinder();
             _currencyService = new CurrencyService(cacheManager, _currencyRepo,
                 _customerService, _currencySettings, pluginFinder, null);
             

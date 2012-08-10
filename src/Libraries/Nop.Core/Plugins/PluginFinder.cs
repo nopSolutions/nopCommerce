@@ -1,31 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Nop.Core.Infrastructure;
-using Nop.Core.Infrastructure.DependencyManagement;
 
 namespace Nop.Core.Plugins
 {
     /// <summary>
     /// Investigates the execution environment to find plugins.
     /// </summary>
-    [Dependency(typeof(IPluginFinder))]
     public class PluginFinder : IPluginFinder
     {
         private IList<PluginDescriptor> _plugins;
         private bool _arePluginsLoaded = false;
-        private readonly ITypeFinder _typeFinder;
+        //private readonly ITypeFinder _typeFinder;
+        //public PluginFinder(ITypeFinder typeFinder)
+        //{
+        //    this._typeFinder = typeFinder;
+        //}
 
-        public PluginFinder(ITypeFinder typeFinder)
-        {
-            this._typeFinder = typeFinder;
-        }
-        
         public virtual IEnumerable<T> GetPlugins<T>(bool installedOnly = true) where T : class, IPlugin
         {
             EnsurePluginsAreLoaded();
 
-            foreach (var plugin in _plugins.OrderBy(x => x.DisplayOrder))
+            foreach (var plugin in _plugins)
                 if (typeof(T).IsAssignableFrom(plugin.PluginType))
                     if (!installedOnly || plugin.Installed)
                         yield return plugin.Instance<T>();
@@ -35,7 +31,7 @@ namespace Nop.Core.Plugins
         {
             EnsurePluginsAreLoaded();
 
-            foreach (var plugin in _plugins.OrderBy(x => x.DisplayOrder))
+            foreach (var plugin in _plugins)
                 if (!installedOnly || plugin.Installed)
                     yield return plugin;
         }
@@ -44,7 +40,7 @@ namespace Nop.Core.Plugins
         {
             EnsurePluginsAreLoaded();
 
-            foreach (var plugin in _plugins.OrderBy(x => x.DisplayOrder))
+            foreach (var plugin in _plugins)
                 if (typeof(T).IsAssignableFrom(plugin.PluginType))
                     if (!installedOnly || plugin.Installed)
                         yield return plugin;
@@ -61,28 +57,26 @@ namespace Nop.Core.Plugins
             return GetPluginDescriptors<T>(installedOnly)
                 .SingleOrDefault(p => p.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
         }
-
-        /// <summary>
-        /// Finds and sorts plugin defined in known assemblies.
-        /// </summary>
-        /// <returns>
-        /// A sorted list of plugins.
-        /// </returns>
-        protected virtual IList<PluginDescriptor> FindAllPlugins()
-        {
-            var foundPlugins = PluginManager.ReferencedPlugins.ToList();
-            //sort
-            foundPlugins.Sort();
-            return foundPlugins.ToList();
-        }
-
+        
         protected virtual void EnsurePluginsAreLoaded()
         {
             if (!_arePluginsLoaded)
             {
-                _plugins = FindAllPlugins();
+                var foundPlugins = PluginManager.ReferencedPlugins.ToList();
+                foundPlugins.Sort(); //sort
+                _plugins = foundPlugins.ToList();
+
                 _arePluginsLoaded = true;
             }
+        }
+
+        /// <summary>
+        /// Reload plugins
+        /// </summary>
+        public virtual void ReloadPlugins()
+        {
+            _arePluginsLoaded = false;
+            EnsurePluginsAreLoaded();
         }
     }
 }

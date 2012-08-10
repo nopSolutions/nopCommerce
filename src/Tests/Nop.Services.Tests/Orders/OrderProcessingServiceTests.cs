@@ -84,7 +84,7 @@ namespace Nop.Services.Tests.Orders
         {
             _workContext = null;
 
-            var pluginFinder = new PluginFinder(new AppDomainTypeFinder());
+            var pluginFinder = new PluginFinder();
             var cacheManager = new NopNullCache();
 
             _shoppingCartSettings = new ShoppingCartSettings();

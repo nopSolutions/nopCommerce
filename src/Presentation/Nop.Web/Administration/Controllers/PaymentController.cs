@@ -23,18 +23,21 @@ namespace Nop.Admin.Controllers
         private readonly PaymentSettings _paymentSettings;
         private readonly ISettingService _settingService;
         private readonly IPermissionService _permissionService;
+        private readonly IPluginFinder _pluginFinder;
 
 		#endregion
 
 		#region Constructors
 
         public PaymentController(IPaymentService paymentService, PaymentSettings paymentSettings,
-            ISettingService settingService, IPermissionService permissionService)
+            ISettingService settingService, IPermissionService permissionService,
+            IPluginFinder pluginFinder)
 		{
             this._paymentService = paymentService;
             this._paymentSettings = paymentSettings;
             this._settingService = settingService;
             this._permissionService = permissionService;
+            this._pluginFinder = pluginFinder;
 		}
 
 		#endregion 
@@ -117,6 +120,8 @@ namespace Nop.Admin.Controllers
             //display order
             pluginDescriptor.DisplayOrder = model.DisplayOrder;
             PluginFileParser.SavePluginDescriptionFile(pluginDescriptor);
+            //reset plugin cache
+            _pluginFinder.ReloadPlugins();
             
             return Methods(command);
         }

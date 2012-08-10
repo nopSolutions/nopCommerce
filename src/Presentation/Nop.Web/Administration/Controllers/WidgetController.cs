@@ -23,6 +23,7 @@ namespace Nop.Admin.Controllers
         private readonly IPermissionService _permissionService;
         private readonly ISettingService _settingService;
         private readonly WidgetSettings _widgetSettings;
+	    private readonly IPluginFinder _pluginFinder;
 
 	    #endregion
 
@@ -30,12 +31,13 @@ namespace Nop.Admin.Controllers
 
         public WidgetController(IWidgetService widgetService,
             IPermissionService permissionService, ISettingService settingService,
-            WidgetSettings widgetSettings)
+            WidgetSettings widgetSettings, IPluginFinder pluginFinder)
 		{
             this._widgetService = widgetService;
             this._permissionService = permissionService;
             this._settingService = settingService;
             this._widgetSettings = widgetSettings;
+            this._pluginFinder = pluginFinder;
 		}
 
 		#endregion 
@@ -123,6 +125,8 @@ namespace Nop.Admin.Controllers
             //display order
             pluginDescriptor.DisplayOrder = model.DisplayOrder;
             PluginFileParser.SavePluginDescriptionFile(pluginDescriptor);
+            //reset plugin cache
+            _pluginFinder.ReloadPlugins();
 
             return List(command);
         }
