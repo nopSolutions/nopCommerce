@@ -119,45 +119,26 @@
             {
                 foreach (var order in Model.Orders)
                 {
-                <div class="order-item">
-                    <table width="100%" cellspacing="0" cellpadding="2" border="0">
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <strong>
-                                        @T("Account.CustomerOrders.OrderNumber"): @order.Id</strong>
-                                </td>
-                                <td class="buttons">
-                                    @if (order.IsReturnRequestAllowed)
-                                    {
-                                        <input type="button" value="@T("Account.CustomerOrders.ReturnItems")" class="button-2 return-items-button" onclick="setLocation('@Url.RouteUrl("ReturnRequest", new { orderId = @order.Id })')" />
-                                        <text>&nbsp;&nbsp;&nbsp;</text>
-                                    }
-                                    <input type="button" value="@T("Account.CustomerOrders.OrderDetails")" class="button-2 order-details-button" onclick="setLocation('@Url.RouteUrl("OrderDetails", new { orderId = @order.Id })')" />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="2">
-                                    <table cellspacing="0" cellpadding="2" border="0">
-                                        <tbody>
-                                            <tr>
-                                                <td>
-                                                    <div>
-                                                        @T("Account.CustomerOrders.OrderStatus"): @order.OrderStatus</div>
-                                                    <div>
-                                                        @T("Account.CustomerOrders.OrderDate"): @order.CreatedOn.ToString()</div>
-                                                    <div>
-                                                        @T("Account.CustomerOrders.OrderTotal"): @order.OrderTotal
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                <fieldset class="order-item">
+                    <legend class="title">@T("Account.CustomerOrders.OrderNumber"): @order.Id</legend>
+                    <div class="info">
+                        <div>
+                            @T("Account.CustomerOrders.OrderStatus"): @order.OrderStatus</div>
+                        <div>
+                            @T("Account.CustomerOrders.OrderDate"): @order.CreatedOn.ToString()</div>
+                        <div>
+                            @T("Account.CustomerOrders.OrderTotal"): @order.OrderTotal
+                        </div>
+                    </div>
+                    <div class="buttons">
+                        @if (order.IsReturnRequestAllowed)
+                        {
+                            <input type="button" value="@T("Account.CustomerOrders.ReturnItems")" class="button-2 return-items-button" onclick="setLocation('@Url.RouteUrl("ReturnRequest", new { orderId = @order.Id })')" />
+                            <text>&nbsp;&nbsp;&nbsp;</text>
+                        }
+                        <input type="button" value="@T("Account.CustomerOrders.OrderDetails")" class="button-2 order-details-button" onclick="setLocation('@Url.RouteUrl("OrderDetails", new { orderId = @order.Id })')" />
+                    </div>
+                </fieldset>
                 <div class="clear">
                 </div>
                 }

@@ -651,8 +651,10 @@ a.eu-cookie-privacyinfo-tag{color:#F93 !important;text-decoration:underline;}
 .account-page .section-body{text-align:left;padding:10px;border:1px solid #d7d7d7;height:auto;}
 .address-list-page{}
 .address-list-page .address-list{}
-.address-list-page .address-list .buttons{text-align:right;}
-.address-list-page .address-list .address-item{text-align:left;margin-bottom:10px;padding:10px;border:1px solid #d7d7d7;height:auto;}
+.address-list-page .address-list .address-item{}
+.address-list-page .address-list .address-item .title{font-size:13px;}
+.address-list-page .address-list .address-item .info{float:left;}
+.address-list-page .address-list .address-item .buttons{float:right;}
 .address-list-page .add-button{margin-bottom:5px;margin-top:5px;float:right;text-align:right;}
 .address-edit-page{}
 .address-edit-page .buttons{}
@@ -682,14 +684,18 @@ a.eu-cookie-privacyinfo-tag{color:#F93 !important;text-decoration:underline;}
 .username-available-status{color:green;padding-left:5px;}
 .username-not-available-status{color:red;padding-left:5px;}
 .account-signature-text{height:100px;width:500px;border:solid 1px #E3E3E3;vertical-align:top;}
-.order-list-page{margin:0;padding:5px;font-size:11px;color:#555;background-color:inherit;}
+.order-list-page{}
 .order-list-page .recurring-payments{padding:10px 10px 5px 0;width:100%;clear:both;}
 .order-list-page .recurring-payments .recurring-payments-box{text-align:left;padding:10px;border:1px solid #d7d7d7;height:auto;}
 .order-list-page .order-list{}
-.order-list-page .order-list .order-item{text-align:left;margin-bottom:10px;padding:10px;border:1px solid #d7d7d7;height:auto;}
-.order-list-page .order-list .order-item .buttons{text-align:right;}
+.order-list-page .order-list .order-item{}
+.order-list-page .order-list .order-item .title{font-size:13px;}
+.order-list-page .order-list .order-item .info{float:left;}
+.order-list-page .order-list .order-item .buttons{float:right;}
 .return-request-list-page{}
-.return-request-list-page .request-item{text-align:left;margin-bottom:10px;padding:10px;border:1px solid #d7d7d7;height:auto;}
+.return-request-list-page .request-item{}
+.return-request-list-page .request-item .title{font-size:13px;}
+.return-request-list-page .request-item .info{}
 .reward-points-page{}
 .reward-points-page .reward-points-overview{padding:10px 10px 5px 0;width:100%;}
 .reward-points-page .reward-points-history{}
