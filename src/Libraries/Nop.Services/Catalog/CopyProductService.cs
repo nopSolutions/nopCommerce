@@ -24,6 +24,7 @@ namespace Nop.Services.Catalog
         private readonly ISpecificationAttributeService _specificationAttributeService;
         private readonly IDownloadService _downloadService;
         private readonly IProductAttributeParser _productAttributeParser;
+        private readonly IProductTagService _productTagService;
 
         #endregion
 
@@ -34,7 +35,7 @@ namespace Nop.Services.Catalog
             ILocalizedEntityService localizedEntityService, IPictureService pictureService,
             ICategoryService categoryService, IManufacturerService manufacturerService,
             ISpecificationAttributeService specificationAttributeService, IDownloadService downloadService,
-            IProductAttributeParser productAttributeParser)
+            IProductAttributeParser productAttributeParser, IProductTagService productTagService)
         {
             this._productService = productService;
             this._productAttributeService = productAttributeService;
@@ -46,6 +47,7 @@ namespace Nop.Services.Catalog
             this._specificationAttributeService = specificationAttributeService;
             this._downloadService = downloadService;
             this._productAttributeParser = productAttributeParser;
+            this._productTagService = productTagService;
         }
 
         #endregion
@@ -123,6 +125,18 @@ namespace Nop.Services.Catalog
                     var seName = product.GetLocalized(x => x.SeName, lang.Id, false, false);
                     if (!String.IsNullOrEmpty(seName))
                         _localizedEntityService.SaveLocalizedValue(productCopy, x => x.SeName, seName, lang.Id);
+                }
+
+                //product tags
+                foreach (var productTag in product.ProductTags)
+                {
+                    productCopy.ProductTags.Add(productTag);
+                }
+                //ensure product is saved before updating totals
+                _productService.UpdateProduct(product);
+                foreach (var productTag in product.ProductTags)
+                {
+                    _productTagService.UpdateProductTagTotals(productTag);
                 }
 
                 // product pictures
@@ -317,6 +331,7 @@ namespace Nop.Services.Catalog
                         LowStockActivityId = productVariant.LowStockActivityId,
                         NotifyAdminForQuantityBelow = productVariant.NotifyAdminForQuantityBelow,
                         BackorderMode = productVariant.BackorderMode,
+                        AllowBackInStockSubscriptions = productVariant.AllowBackInStockSubscriptions,
                         OrderMinimumQuantity = productVariant.OrderMinimumQuantity,
                         OrderMaximumQuantity = productVariant.OrderMaximumQuantity,
                         AllowedQuantities = productVariant.AllowedQuantities,
