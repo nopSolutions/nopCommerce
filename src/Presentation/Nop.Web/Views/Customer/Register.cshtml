@@ -276,15 +276,12 @@
                 <fieldset class="form-fields">
                     <legend>@T("Account.Options")</legend>
                     <dl>
-                        @if (Model.PhoneEnabled)
-                        {
-                            <dt>
-                                @Html.LabelFor(model => model.Newsletter): </dt>
-                            <dd>
-                                @Html.EditorFor(model => model.Newsletter)
-                                @Html.ValidationMessageFor(model => model.Newsletter)
-                            </dd>
-                        }
+                        <dt>
+                            @Html.LabelFor(model => model.Newsletter): </dt>
+                        <dd>
+                            @Html.EditorFor(model => model.Newsletter)
+                            @Html.ValidationMessageFor(model => model.Newsletter)
+                        </dd>
                     </dl>
                 </fieldset>
             }
