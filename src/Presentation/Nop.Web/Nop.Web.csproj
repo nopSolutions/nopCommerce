@@ -253,7 +253,7 @@
     <Compile Include="Models\Customer\ChangePasswordModel.cs" />
     <Compile Include="Models\Customer\PasswordRecoveryConfirmModel.cs" />
     <Compile Include="Models\Customer\PaswordRecoveryModel.cs" />
-    <Compile Include="Models\Customer\CustomeReturnRequestsModel.cs" />
+    <Compile Include="Models\Customer\CustomerReturnRequestsModel.cs" />
     <Compile Include="Models\Customer\CustomerDownloadableProductsModel.cs" />
     <Compile Include="Models\Customer\CustomerOrderListModel.cs" />
     <Compile Include="Models\Customer\CustomerAvatarModel.cs" />

@@ -1283,7 +1283,7 @@ namespace Nop.Web.Controllers
 
             var customer = _workContext.CurrentCustomer;
 
-            var model = new CustomeReturnRequestsModel();
+            var model = new CustomerReturnRequestsModel();
             model.NavigationModel = GetCustomerNavigationModel(customer);
             model.NavigationModel.SelectedTab = CustomerNavigationEnum.ReturnRequests;
             var returnRequests = _orderService.SearchReturnRequests(customer.Id, 0, null);
@@ -1294,7 +1294,7 @@ namespace Nop.Web.Controllers
                 {
                     var pv = opv.ProductVariant;
 
-                    var itemModel = new CustomeReturnRequestsModel.ReturnRequestModel()
+                    var itemModel = new CustomerReturnRequestsModel.ReturnRequestModel()
                     {
                         Id = returnRequest.Id,
                         ReturnRequestStatus = returnRequest.ReturnRequestStatus.GetLocalizedEnum(_localizationService, _workContext),

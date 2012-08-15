@@ -4,9 +4,9 @@ using Nop.Web.Framework.Mvc;
 
 namespace Nop.Web.Models.Customer
 {
-    public partial class CustomeReturnRequestsModel : BaseNopModel
+    public partial class CustomerReturnRequestsModel : BaseNopModel
     {
-        public CustomeReturnRequestsModel()
+        public CustomerReturnRequestsModel()
         {
             Items = new List<ReturnRequestModel>();
         }
