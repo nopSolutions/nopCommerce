@@ -22,7 +22,7 @@
         <div class="post-date">
             @Model.CreatedOn.ToString("D")
         </div>
-        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "blogpost_page_before_body" })
+        @Html.Widget("blogpost_page_before_body")
         <div class="post-body">
             @Html.Raw(Model.Body)
         </div>
@@ -44,7 +44,7 @@
                 }
             }
         </div>
-        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "blogpost_page_before_comments" })
+        @Html.Widget("blogpost_page_before_comments")
         @if (Model.AllowComments)
         {
             <div class="clear">
@@ -126,7 +126,7 @@
                                 @Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(comment.CommentText, false, true, false, false, false, false))
                             </div>
                         </div>
-                        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "blogpost_page_inside_comment" })
+                        @Html.Widget("blogpost_page_inside_comment")
                     </div>
                     <div class="clear">
                     </div>
@@ -134,6 +134,6 @@
             </div>
                 }
         }
-        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "blogpost_page_after_comments" })
+        @Html.Widget("blogpost_page_after_comments")
     </div>
 </div>

@@ -18,7 +18,7 @@
     <div class="clear">
     </div>
     <div class="page-body checkout-data">
-        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "checkout_shipping_address_top" })
+        @Html.Widget("checkout_shipping_address_top")
         @if (Model.ExistingAddresses.Count > 0)
         {
             <div>
@@ -75,7 +75,7 @@
             <div class="clear">
             </div>
         }
-        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "checkout_shipping_address_middle" })
+        @Html.Widget("checkout_shipping_address_middle")
         <div class="enter-address-title">
             @if (Model.ExistingAddresses.Count > 0)
             {
@@ -107,7 +107,7 @@
                 </div>
             }
         </div>
-        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "checkout_shipping_address_bottom" })
+        @Html.Widget("checkout_shipping_address_bottom")
     </div>
     <div class="clear">
     </div>

@@ -1,7 +1,7 @@
 ﻿@{
     Layout = "~/Views/Shared/_Root.Head.Mobile.cshtml";
 }
-@Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_body_start_html_tag_after" })
+@Html.Widget("mobile_body_start_html_tag_after")
 <div data-role="page" data-theme="b" id="mainpage">
     <div data-role="header" data-position="inline">
         @*do not use @Html.Partial("Header")
@@ -36,12 +36,12 @@
             @Html.Action("HeaderLinks", "Common")
         </div>
     }
-    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_content_before" })
+    @Html.Widget("mobile_content_before")
     <div data-role="content">
         @Html.Partial("_Notifications")
         @RenderBody()
     </div>
-    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_content_after" })
+    @Html.Widget("mobile_content_after")
     @if (IsSectionDefined("footer"))
     {
         @RenderSection("footer")
@@ -54,4 +54,4 @@
     }
 </div>
 @Html.Action("EuCookieLaw", "Common")
-@Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_body_end_html_tag_after" })
+@Html.Widget("mobile_body_end_html_tag_after")

@@ -28,10 +28,10 @@
         @using (Html.BeginRouteForm("Product", new { productId = Model.Id, SeName = Model.SeName }, FormMethod.Post, new { id = "product-details-form" }))
         {
             <div class="product-essential">
-                @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "productdetails_before_pictures" })
+                @Html.Widget("productdetails_before_pictures")
                 <!--product pictures-->
                 @Html.Partial("_ProductDetailsPictures", Model)
-                @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "productdetails_after_pictures" })
+                @Html.Widget("productdetails_after_pictures")
                 <div class="overview">
                     <h1 class="product-name">
                         @Model.Name
@@ -41,7 +41,7 @@
                     </div>
                     <div class="clear">
                     </div>
-                    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "productdetails_overview_top" })
+                    @Html.Widget("productdetails_overview_top")
                     <!--product manufacturers-->
                     @Html.Action("ProductManufacturers", "Catalog", new { productId = Model.Id })
                     <div class="clear">
@@ -55,7 +55,7 @@
                     <div class="clear">
                     </div>
                     @Html.Action("ShareButton", "Catalog")
-                    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "productdetails_overview_bottom" })
+                    @Html.Widget("productdetails_overview_bottom")
                 </div>
                 <div class="full-description">
                     @Html.Raw(Model.FullDescription)

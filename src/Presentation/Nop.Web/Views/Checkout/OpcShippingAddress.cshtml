@@ -5,7 +5,7 @@
 <div class="checkout-data">
     <div class="enter-address">
         <div class="enter-address-body">
-            @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "op_checkout_shipping_address_top" })
+            @Html.Widget("op_checkout_shipping_address_top")
             @if (Model.ExistingAddresses.Count > 0)
             {
                 <div>
@@ -35,7 +35,7 @@
                 <div class="clear">
                 </div>
             }
-            @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "op_checkout_shipping_address_middle" })
+            @Html.Widget("op_checkout_shipping_address_middle")
             <div id="shipping-new-address-form">
                 @{
                     var dataDictAddress = new ViewDataDictionary();
@@ -45,7 +45,7 @@
                     @Html.Partial("_CreateOrUpdateAddress", Model.NewAddress, dataDictAddress)              
                 }
             </div>
-            @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "op_checkout_shipping_address_bottom" })
+            @Html.Widget("op_checkout_shipping_address_bottom")
         </div>
     </div>
 </div>

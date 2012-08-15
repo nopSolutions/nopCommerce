@@ -1,7 +1,7 @@
 ﻿@{
     Layout = "~/Views/Shared/_Root.Head.cshtml";
 }
-@Html.Action("WidgetsByZone", "Widget", new { widgetZone = "body_start_html_tag_after" })
+@Html.Widget("body_start_html_tag_after")
 @Html.Partial("_Notifications")
 <div class="master-wrapper-page">
     @Html.Action("JavaScriptDisabledWarning", "Common")
@@ -14,16 +14,16 @@
         </script>
         @Html.Partial("Header")
         @Html.Partial("HeaderMenu")
-        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "content_before" })
+        @Html.Widget("content_before")
         @*ajax loading window*@
         <div class="ajax-loading-block-window" style="display: none">
             <div class="loading-image">
             </div>
         </div>
         @RenderBody()
-        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "content_after" })
+        @Html.Widget("content_after")
         @Html.Action("EuCookieLaw", "Common")
     </div>
     @Html.Action("Footer", "Common")
 </div>
-@Html.Action("WidgetsByZone", "Widget", new { widgetZone = "body_end_html_tag_before" })
+@Html.Widget("body_end_html_tag_before")

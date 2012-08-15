@@ -51,10 +51,10 @@
                     </div>
                     <div class="clear">
                     </div>
-                    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_productdetails_before_pictures" })
+                    @Html.Widget("mobile_productdetails_before_pictures")
                     <!--product pictures-->
                     @Html.Partial("_ProductDetailsPictures", Model)
-                    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_productdetails_after_pictures" })
+                    @Html.Widget("mobile_productdetails_after_pictures")
                     <div class="clear">
                     </div>
                     <!--product manufacturers-->

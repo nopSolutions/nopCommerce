@@ -3,7 +3,7 @@
 @using Nop.Web.Models.Checkout;
 @using Nop.Web.Models.Common;
 <div class="checkout-data">
-    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "op_checkout_confirm_top" })
+    @Html.Widget("op_checkout_confirm_top")
     <div>
         @if (!String.IsNullOrEmpty(Model.MinOrderTotalWarning))
         {
@@ -23,7 +23,7 @@
             </ul>
         </div>
     }
-    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "op_checkout_confirm_bottom" })
+    @Html.Widget("op_checkout_confirm_bottom")
     <div class="clear">
     </div>
     <div class="order-summary-body">

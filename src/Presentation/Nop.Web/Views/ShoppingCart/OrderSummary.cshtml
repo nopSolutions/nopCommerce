@@ -2,7 +2,7 @@
 @using Nop.Core.Domain.Orders;
 @using Nop.Web.Models.ShoppingCart;
 <div class="order-summary-content">
-    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "order_summary_content_before" })
+    @Html.Widget("order_summary_content_before")
     @Html.Partial("_OrderReviewData", Model.OrderReviewData)
     <div class="clear">
     </div>
@@ -283,7 +283,7 @@
                     <div class="deals">
                         @Html.Partial("_DiscountBox", Model.DiscountBox)
                         @Html.Partial("_GiftCardBox", Model.GiftCardBox)
-                        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "order_summary_content_deals" })
+                        @Html.Widget("order_summary_content_deals")
                     </div>
                     @Html.Partial("EstimateShipping", Model.EstimateShipping)
                 }
@@ -300,5 +300,5 @@
     {
         @T("ShoppingCart.CartIsEmpty")
     }
-    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "order_summary_content_after" })
+    @Html.Widget("order_summary_content_after")
 </div>

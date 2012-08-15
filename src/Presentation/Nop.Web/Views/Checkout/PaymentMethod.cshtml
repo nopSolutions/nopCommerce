@@ -20,7 +20,7 @@
     <div class="page-body checkout-data">
         @using (Html.BeginRouteForm("CheckoutPaymentMethod", FormMethod.Post))
         {
-            @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "checkout_payment_method_top" })
+            @Html.Widget("checkout_payment_method_top")
             if (Model.DisplayRewardPoints && Model.PaymentMethods.Count > 0)
             {
             <div class="use-reward-points">
@@ -66,7 +66,7 @@
                     </div>
                 }
             </div>
-            @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "checkout_payment_method_bottom" })
+            @Html.Widget("checkout_payment_method_bottom")
         }
         <div class="clear">
         </div>

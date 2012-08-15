@@ -19,7 +19,7 @@
     </div>
     <div class="page-body checkout-data">
         <div class="order-completed">
-            @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "checkout_completed_top" })
+            @Html.Widget("checkout_completed_top")
             <div class="body">
                 <strong>
                     @T("Checkout.YourOrderHasBeenSuccessfullyProcessed")</strong>
@@ -35,7 +35,7 @@
             <div class="select-button">
                 <input type="button" value="@T("Checkout.Continue")" class="button-2 order-completed-continue-button" onclick="setLocation('@Url.RouteUrl("HomePage")')" />
             </div>
-            @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "checkout_completed_bottom" })
+            @Html.Widget("checkout_completed_bottom")
         </div>
     </div>
 </div>

@@ -18,12 +18,12 @@
     @Html.NopCanonicalUrls()
     @*Favicon - upload favicon.ico file to the root directory*@
     @Html.Action("Favicon", "Common")
-    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "head_html_tag" })
+    @Html.Widget("head_html_tag")
 </head>
 <body>
-    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "body_start_html_tag_after" })
+    @Html.Widget("body_start_html_tag_after")
     @RenderBody()
-    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "body_end_html_tag_before" })
+    @Html.Widget("body_end_html_tag_before")
     @Html.NopCssFiles(ResourceLocation.Foot)
     @Html.NopScripts(ResourceLocation.Foot)
 </body>

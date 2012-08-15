@@ -17,7 +17,7 @@
     <div class="clear">
     </div>
     <div class="page-body">
-        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "newslist_page_before_items" })
+        @Html.Widget("newslist_page_before_items")
         <div class="news-items">
             @foreach (var item in Model.NewsItems)
             {
@@ -31,13 +31,13 @@
                     </div>
                     <a href="@Url.RouteUrl("NewsItem", new { newsItemId = item.Id, SeName = item.SeName })" class="read-more">
                         @T("News.MoreInfo")</a>
-                    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "newslist_page_inside_item" })
+                    @Html.Widget("newslist_page_inside_item")
                 </div>
             }
         </div>
         <div class="pager">
             @Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber")
         </div>
-        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "newslist_page_after_items" })
+        @Html.Widget("newslist_page_after_items")
     </div>
 </div>

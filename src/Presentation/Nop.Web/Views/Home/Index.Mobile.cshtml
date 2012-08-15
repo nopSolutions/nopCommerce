@@ -3,7 +3,7 @@
 }
 <div class="page home-page">
     <div class="page-body">
-        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_home_page_top" })
+        @Html.Widget("mobile_home_page_top")
         @*product search box*@
         @Html.Action("SearchBox", "Catalog")
         @*logo*@
@@ -15,6 +15,6 @@
         @Html.Action("ManufacturerNavigation", "Catalog", new { currentManufacturerId = 0 })
         @*home page products*@ @*uncomment the line below to show home page featured products*@
         @*@Html.Action("HomepageProducts", "Catalog")*@
-        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_home_page_bottom" })
+        @Html.Widget("mobile_home_page_bottom")
     </div>
 </div>

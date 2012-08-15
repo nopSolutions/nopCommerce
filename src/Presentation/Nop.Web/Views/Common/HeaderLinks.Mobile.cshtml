@@ -1,6 +1,6 @@
 ﻿@model HeaderLinksModel
 @using Nop.Web.Models.Common;
-@Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_header_links_before" })
+@Html.Widget("mobile_header_links_before")
 <div data-role="navbar">
     <ul>
         @if (Model.IsAuthenticated)
@@ -29,4 +29,4 @@
         }
     </ul>
 </div>
-@Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_header_links_after" })
+@Html.Widget("mobile_header_links_after")

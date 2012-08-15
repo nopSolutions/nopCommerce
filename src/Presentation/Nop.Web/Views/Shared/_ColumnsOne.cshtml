@@ -3,8 +3,8 @@
 }
 <div class="master-wrapper-center-1">
     <div class="master-wrapper-cph-1">
-        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "main_column_before" })
+        @Html.Widget("main_column_before")
         @RenderBody()
-        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "main_column_after" })
+        @Html.Widget("main_column_after")
     </div>
 </div>

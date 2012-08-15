@@ -14,7 +14,7 @@
     <div class="clear">
     </div>
     <div class="page-body">
-        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_productreviews_page_top" })
+        @Html.Widget("mobile_productreviews_page_top")
         @if (Model.AddProductReview.SuccessfullyAdded)
         {
             <div class="result">
@@ -110,13 +110,13 @@
                                     </div>
                                 </div>
                                 @Html.Partial("_ProductReviewHelpfulness", review.Helpfulness, new ViewDataDictionary())
-                                @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_productreviews_page_inside_review" })
+                                @Html.Widget("mobile_productreviews_page_inside_review")
                             </div>
                         </li>
                     }
                 </ul>
             </div>
         }
-        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_productreviews_page_bottom" })
+        @Html.Widget("mobile_productreviews_page_bottom")
     </div>
 </div>

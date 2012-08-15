@@ -2,7 +2,7 @@
 @using Nop.Web.Models.Common;
 <div class="header-links">
     <ul>
-        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "header_links_before" })
+        @Html.Widget("header_links_before")
         @if (Model.IsCustomerImpersonated)
         {
             <li><span class="impersonate">(@(string.Format(T("Account.ImpersonatedAs").Text, Model.CustomerEmailUsername)))
@@ -49,7 +49,7 @@
             <li><a href="@Url.RouteUrl("Wishlist")" class="ico-wishlist">@T("Wishlist")</a> <a href="@Url.RouteUrl("Wishlist")" class="wishlist-qty">
                 (@Model.WishlistItems)</a> </li>
         }
-        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "header_links_after" })
+        @Html.Widget("header_links_after")
     </ul>
     @if (Model.ShoppingCartEnabled)
     {

@@ -20,7 +20,7 @@
     <div class="page-body checkout-data">
         @using (Html.BeginRouteForm("CheckoutPaymentInfo", FormMethod.Post))
         {
-            @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "checkout_payment_info_top" })
+            @Html.Widget("checkout_payment_info_top")
             <div class="payment-info">
                 <div class="body">
                     @Html.Action(Model.PaymentInfoActionName, Model.PaymentInfoControllerName, Model.PaymentInfoRouteValues)
@@ -37,7 +37,7 @@
             <div class="message-error">
                 @Html.ValidationSummary(false)
             </div>
-            @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "checkout_payment_info_bottom" })
+            @Html.Widget("checkout_payment_info_bottom")
         }
         <div class="clear">
         </div>

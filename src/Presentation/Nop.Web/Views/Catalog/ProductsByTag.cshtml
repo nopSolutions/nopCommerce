@@ -18,7 +18,7 @@
     <div class="clear">
     </div>
     <div class="page-body">
-        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "productsbytag_top" })
+        @Html.Widget("productsbytag_top")
         @*view mode*@
         @if (Model.PagingFilteringContext.AllowProductViewModeChanging && Model.Products.Count > 0)
         {
@@ -46,7 +46,7 @@
         }
         <div class="clear">
         </div>
-        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "productsbytag_before_product_list" })
+        @Html.Widget("productsbytag_before_product_list")
         @*product list*@
         @if (Model.Products.Count > 0)
         {
@@ -79,6 +79,6 @@
         <div class="pager">
             @Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber")
         </div>
-        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "productsbytag_bottom" })
+        @Html.Widget("productsbytag_bottom")
     </div>
 </div>

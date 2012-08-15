@@ -36,7 +36,7 @@
     }
     else
     {
-        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "left_side_column_before" })
+        @Html.Widget("left_side_column_before")
         <div class="clear">
         </div>
         @Html.Action("CategoryNavigation", "Catalog", new { currentCategoryId = currentCategoryId, currentProductId = currentProductId })
@@ -54,14 +54,14 @@
         @Html.Action("PollBlock", "Poll", new { systemKeyword = "LeftColumnPoll" })
         <div class="clear">
         </div>
-        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "left_side_column_after" })
+        @Html.Widget("left_side_column_after")
     }
 </div>
 <div class="master-wrapper-center-3">
     <div class="master-wrapper-cph-3">        
-        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "main_column_before" })
+        @Html.Widget("main_column_before")
         @RenderBody()
-        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "main_column_after" })
+        @Html.Widget("main_column_after")
     </div>
 </div>
 <div class="master-wrapper-rightside-3">
@@ -71,7 +71,7 @@
     }
     else
     {
-        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "right_side_column_before" })
+        @Html.Widget("right_side_column_before")
         <div class="clear">
         </div>
         @Html.Action("NewsletterBox", "Newsletter")
@@ -83,6 +83,6 @@
         @Html.Action("PollBlock", "Poll", new { systemKeyword = "RightColumnPoll" })
         <div class="clear">
         </div>
-        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "right_side_column_after" })
+        @Html.Widget("right_side_column_after")
     }
 </div>

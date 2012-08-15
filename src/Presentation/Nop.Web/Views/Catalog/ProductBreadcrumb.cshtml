@@ -2,7 +2,7 @@
 @using Nop.Web.Models.Catalog;
 <div class="breadcrumb">
     <ul>
-        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "productbreadcrumb_before" })
+        @Html.Widget("productbreadcrumb_before")
         <li><a href="@Url.RouteUrl("HomePage")" title="@T("Categories.Breadcrumb.Top")">@T("Products.Breadcrumb.Top")</a>
             <span class="delimiter">/</span> </li>
         @for (int i = 0; i < Model.CategoryBreadcrumb.Count; i++)
@@ -14,6 +14,6 @@
         @*uncomment to disable clickable link
         <strong>@Model.ProductName</strong>*@
         <strong><a href="@Url.RouteUrl("Product", new { productId = Model.ProductId, SeName = Model.ProductSeName })">@Model.ProductName</a></strong>
-        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "productbreadcrumb_after" })
+        @Html.Widget("productbreadcrumb_after")
     </ul>
 </div>

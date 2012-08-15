@@ -47,7 +47,7 @@
     </div>
     <div class="clear">
     </div>
-    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "categorydetails_after_breadcrumb" })
+    @Html.Widget("categorydetails_after_breadcrumb")
 }
 <div class="page category-page">
     @*uncomment to display title
@@ -57,7 +57,7 @@
     <div class="clear">
     </div>*@
     <div class="page-body">
-        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "categorydetails_top" })
+        @Html.Widget("categorydetails_top")
         @*description*@
         @if (!String.IsNullOrWhiteSpace(Model.Description))
         {
@@ -67,7 +67,7 @@
             <div class="clear">
             </div>
         }
-        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "categorydetails_before_subcategories" })
+        @Html.Widget("categorydetails_before_subcategories")
         @*subcategories*@
         @if (Model.SubCategories.Count > 0)
         {
@@ -91,7 +91,7 @@
             <div class="clear">
             </div>
         }
-        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "categorydetails_before_featured_products" })
+        @Html.Widget("categorydetails_before_featured_products")
         @*featured products*@
         @if (Model.FeaturedProducts.Count > 0)
         {
@@ -110,7 +110,7 @@
             <div class="clear">
             </div>
         }
-        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "categorydetails_after_featured_products" })
+        @Html.Widget("categorydetails_after_featured_products")
         @*view mode*@
         @if (Model.PagingFilteringContext.AllowProductViewModeChanging && Model.Products.Count > 0)
         {
@@ -137,7 +137,7 @@
         }
         <div class="clear">
         </div>
-        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "categorydetails_before_filters" })
+        @Html.Widget("categorydetails_before_filters")
         @*filtering*@
         @if (Model.PagingFilteringContext.PriceRangeFilter.Enabled ||
         Model.PagingFilteringContext.SpecificationFilter.Enabled)
@@ -162,7 +162,7 @@
             <div class="clear">
             </div>
         }
-        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "categorydetails_before_product_list" })
+        @Html.Widget("categorydetails_before_product_list")
         @*product list*@
         @if (Model.Products.Count > 0)
         {
@@ -195,6 +195,6 @@
         <div class="pager">
             @Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber")
         </div>
-        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "categorydetails_bottom" })
+        @Html.Widget("categorydetails_bottom")
     </div>
 </div>

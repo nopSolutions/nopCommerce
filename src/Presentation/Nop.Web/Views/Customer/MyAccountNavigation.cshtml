@@ -14,7 +14,7 @@
     </div>
     <div class="listbox">
         <ul>
-            @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "account_navigation_before" })
+            @Html.Widget("account_navigation_before")
             @if (!Model.HideInfo)
             {
                 <li><a href="@Url.RouteUrl("CustomerInfo")" class="@if (Model.SelectedTab == CustomerNavigationEnum.Info)
@@ -85,7 +85,7 @@
                                                                                  else
                                                                                  {<text>inactive</text>}">@T("Account.ForumSubscriptions")</a></li>
             }
-            @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "account_navigation_after" })
+            @Html.Widget("account_navigation_after")
         </ul>
     </div>
 </div>

@@ -35,7 +35,7 @@
     }
     else
     {
-        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "left_side_column_before" })
+        @Html.Widget("left_side_column_before")
         <div class="clear">
         </div>  
         @Html.Action("CategoryNavigation", "Catalog", new { currentCategoryId = currentCategoryId, currentProductId = currentProductId })
@@ -47,13 +47,13 @@
         @Html.Action("NewsletterBox", "Newsletter")
         <div class="clear">
         </div>
-        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "left_side_column_after" })
+        @Html.Widget("left_side_column_after")
     }
 </div>
 <div class="master-wrapper-center-2">
     <div class="master-wrapper-cph-2">
-        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "main_column_before" })
+        @Html.Widget("main_column_before")
         @RenderBody()
-        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "main_column_after" })
+        @Html.Widget("main_column_after")
     </div>
 </div>

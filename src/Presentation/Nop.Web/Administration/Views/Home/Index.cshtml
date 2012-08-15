@@ -7,7 +7,7 @@
     @T("Admin.Dashboard")
 </div>
 <table class="dashboard">
-    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "admin_dashboard_top" })
+    @Html.Widget("admin_dashboard_top")
     <tr>
         <td class="maincol">
             <div class="section-header">
@@ -67,5 +67,5 @@
             @Html.Action("NopCommerceNews", "Home")
         </td>
     </tr>
-    @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "admin_dashboard_bottom" })
+    @Html.Widget("admin_dashboard_bottom")
 </table>

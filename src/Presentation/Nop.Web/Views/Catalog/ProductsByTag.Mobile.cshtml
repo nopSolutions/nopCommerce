@@ -20,7 +20,7 @@
     <div class="clear">
     </div>
     <div class="page-body">
-        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_productsbytag_top" })
+        @Html.Widget("mobile_productsbytag_top")
         @*product list*@
         @if (Model.Products.Count > 0)
         {
@@ -40,6 +40,6 @@
         <div class="pager">
             @Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber")
         </div>
-        @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "mobile_productsbytag_bottom" })
+        @Html.Widget("mobile_productsbytag_bottom")
     </div>
 </div>

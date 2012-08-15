@@ -20,7 +20,7 @@
     <div class="page-body checkout-data">
         @using (Html.BeginRouteForm("CheckoutConfirm", FormMethod.Post, new { id = "confirm-order-form" }))
         {
-            @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "checkout_confirm_top" })
+            @Html.Widget("checkout_confirm_top")
             
             <script type="text/javascript">
                 $(document).ready(function () {
@@ -55,7 +55,7 @@
                     </div>
                 }
             </div>  
-            @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "checkout_confirm_bottom" })
+            @Html.Widget("checkout_confirm_bottom")
         }
         <div class="clear">
         </div>

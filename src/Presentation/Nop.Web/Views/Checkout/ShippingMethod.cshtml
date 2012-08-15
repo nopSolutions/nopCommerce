@@ -20,7 +20,7 @@
     <div class="page-body checkout-data">
         @using (Html.BeginRouteForm("CheckoutShippingMethod", FormMethod.Post))
         {
-            @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "checkout_shipping_method_top" })
+            @Html.Widget("checkout_shipping_method_top")
             <div class="shipping-options">
                 @if (Model.Warnings.Count == 0)
                 {
@@ -62,7 +62,7 @@
                     </div>
                 }
             </div>
-            @Html.Action("WidgetsByZone", "Widget", new { widgetZone = "checkout_shipping_method_bottom" })
+            @Html.Widget("checkout_shipping_method_bottom")
         }
         <div class="clear">
         </div>
