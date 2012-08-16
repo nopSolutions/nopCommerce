@@ -1,48 +1,5 @@
 ﻿.foo{}
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
-
-	FACEBOOK
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-
-.oauth-login-facebook
-{
-    display: inline;
-    float: left;
-}
-
-.facebook_large_btn {
-	width: 100px;
-	height: 40px;
-/* fix for IE 6 only: http://en.wikipedia.org/wiki/CSS_filter#Underscore_hack */
-	_width: 102px;
-	_height: 42px;
-
-	border: 1px solid #DDD;
-	margin: 3px;
-	float: left;
-}
-
-.facebook_small_btn {
-	width: 24px;
-	height: 24px;
-/* fix for IE 6 only: http://en.wikipedia.org/wiki/CSS_filter#Underscore_hack */
-	_width: 26px;
-	_height: 26px;
-
-	border: 1px solid #DDD;
-	margin: 3px;
-	float: left;
-}
-
-a.facebook_large_btn:focus {
-	outline: none;
-}
-
-a.facebook_large_btn:focus {
-	-moz-outline-style: none;
-}
-
-.facebook_selected {
-	border: 4px solid #DDD;
-}
+fieldset.facebook-login-block{display:inline;float:left;margin:5px;}
+.facebook-btn{float:left;background-image:url('images/facebook-signing.png');background-repeat:no-repeat;width:150px;height:23px;margin:5px;}
+.facebook-btn:hover{background-position:0px -24px;}
+.facebook-btn:active{background-position:0px -48px;}

@@ -1,48 +1,5 @@
 ﻿.foo{}
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*
-
-	TWITTER
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-
-.oauth-login-twitter
-{
-    display: inline;
-    float: left;
-}
-
-.twitter_large_btn {
-	width: 100px;
-	height: 40px;
-/* fix for IE 6 only: http://en.wikipedia.org/wiki/CSS_filter#Underscore_hack */
-	_width: 102px;
-	_height: 42px;
-
-	border: 1px solid #DDD;
-	margin: 3px;
-	float: left;
-}
-
-.twitter_small_btn {
-	width: 24px;
-	height: 24px;
-/* fix for IE 6 only: http://en.wikipedia.org/wiki/CSS_filter#Underscore_hack */
-	_width: 26px;
-	_height: 26px;
-
-	border: 1px solid #DDD;
-	margin: 3px;
-	float: left;
-}
-
-a.twitter_large_btn:focus {
-	outline: none;
-}
-
-a.twitter_large_btn:focus {
-	-moz-outline-style: none;
-}
-
-.twitter_selected {
-	border: 4px solid #DDD;
-}
+fieldset.twitter-login-block{display:inline;float:left;margin:5px;}
+.twitter-btn{float:left;background-image:url('images/twitter-signing.png');background-repeat:no-repeat;width:150px;height:23px;margin:5px;}
+.twitter-btn:hover{background-position:0px -24px;}
+.twitter-btn:active{background-position:0px -48px;}

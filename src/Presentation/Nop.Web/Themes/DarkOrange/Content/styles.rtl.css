@@ -462,9 +462,9 @@ a.eu-cookie-privacyinfo-tag{color:#F93 !important;text-decoration:underline;}
 .login-page .page-body{font-size:11px;color:#555;}
 .login-page fieldset{margin:0px;padding:10px;}
 .login-page fieldset legend{font-size:12px;}
-.login-page .new-wrapper{float:left;width:45%;min-height:240px;vertical-align:top;}
+.login-page .new-wrapper{float:left;width:46%;min-height:240px;vertical-align:top;}
 .login-page .new-wrapper .buttons{float:right;margin:30px 30px 5px 30px;}
-.login-page .returning-wrapper{float:right;width:45%;min-height:240px;vertical-align:top;}
+.login-page .returning-wrapper{float:right;width:46%;min-height:240px;vertical-align:top;}
 .login-page .returning-wrapper .message-error{padding:0px;}
 .login-page .returning-wrapper .buttons{float:right;margin:5px 30px;}
 .login-page .returning-wrapper dl dt{width:100px;padding:10px 0 10px 10px;display:block;white-space:nowrap;vertical-align:middle;font-weight:700;}

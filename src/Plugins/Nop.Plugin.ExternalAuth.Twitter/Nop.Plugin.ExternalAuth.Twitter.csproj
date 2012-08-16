@@ -100,13 +100,7 @@
     <None Include="web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Images\oauth\twitter-logo-large.jpg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Images\oauth\twitter-logo.jpg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\Images\oauth\twitter_logo_75x17.jpg">
+    <Content Include="Content\Images\twitter-signing.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\twitterstyles.css">

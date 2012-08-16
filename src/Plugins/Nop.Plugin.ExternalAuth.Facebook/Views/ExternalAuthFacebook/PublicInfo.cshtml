@@ -4,9 +4,8 @@
 
     Html.AddCssFileParts(@Url.Content("~/Plugins/ExternalAuth.Facebook/Content/facebookstyles.css"));    
 }
-<fieldset class="oauth-login-facebook">
+<fieldset class="facebook-login-block">
     <legend>@T("Plugins.ExternalAuth.Facebook.Login")</legend>
-    <a href="@Url.RouteUrl("Plugin.ExternalAuth.Facebook.Login", new { ReturnUrl = HttpContext.Current.Request.QueryString["ReturnUrl"] })">
-        <img src="@Url.Content("~/Plugins/ExternalAuth.Facebook/Content/images/oauth/facebook-logo.jpg")" alt="Facebook" class="oauth_btn facebook_large_btn" />
-    </a>
+    <a href="@Url.RouteUrl("Plugin.ExternalAuth.Facebook.Login", new { ReturnUrl = HttpContext.Current.Request.QueryString["ReturnUrl"] })" class="facebook-btn">
+        &nbsp;</a>
 </fieldset>
