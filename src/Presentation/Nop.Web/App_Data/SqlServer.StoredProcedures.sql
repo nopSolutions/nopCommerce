@@ -72,7 +72,8 @@ CREATE PROCEDURE [ProductLoadAllPaged]
 	@PriceMin			decimal(18, 4) = null,
 	@PriceMax			decimal(18, 4) = null,
 	@Keywords			nvarchar(4000) = null,
-	@SearchDescriptions bit = 0,
+	@SearchDescriptions bit = 0, --a value indicating whether to search by a specified "keyword" in product descriptions
+	@SearchProductTags  bit = 0, --a value indicating whether to search by a specified "keyword" in product tags
 	@UseFullTextSearch  bit = 0,
 	@FullTextMode		int = 0, --0 using CONTAINS with <prefix_term>, 5 - using CONTAINS and OR with <prefix_term>, 10 - using CONTAINS and AND with <prefix_term>
 	@FilteredSpecs		nvarchar(MAX) = null,	--filter by attributes (comma-separated list). e.g. 14,15,16
@@ -229,9 +230,9 @@ BEGIN
 			SET @sql = @sql + ' AND PATINDEX(@Keywords, lp.[LocaleValue]) > 0 '
 	
 
-		--product short description
 		IF @SearchDescriptions = 1
 		BEGIN
+			--product short description
 			SET @sql = @sql + '
 			UNION
 			SELECT p.Id
@@ -291,6 +292,36 @@ BEGIN
 				lp.LocaleKeyGroup = N''Product''
 				AND lp.LanguageId = ' + ISNULL(CAST(@LanguageId AS nvarchar(max)), '0') + '
 				AND lp.LocaleKey = N''FullDescription'''
+			IF @UseFullTextSearch = 1
+				SET @sql = @sql + ' AND CONTAINS(lp.[LocaleValue], @Keywords) '
+			ELSE
+				SET @sql = @sql + ' AND PATINDEX(@Keywords, lp.[LocaleValue]) > 0 '
+		END
+
+
+
+		IF @SearchProductTags = 1
+		BEGIN
+			--product tag
+			SET @sql = @sql + '
+			UNION
+			SELECT pptm.Product_Id
+			FROM Product_ProductTag_Mapping pptm with(NOLOCK) INNER JOIN ProductTag pt with(NOLOCK) ON pt.Id = pptm.ProductTag_Id
+			WHERE '
+			IF @UseFullTextSearch = 1
+				SET @sql = @sql + 'CONTAINS(pt.[Name], @Keywords) '
+			ELSE
+				SET @sql = @sql + 'PATINDEX(@Keywords, pt.[Name]) > 0 '
+
+			--localized product tag
+			SET @sql = @sql + '
+			UNION
+			SELECT pptm.Product_Id
+			FROM LocalizedProperty lp with (NOLOCK) INNER JOIN Product_ProductTag_Mapping pptm with(NOLOCK) ON lp.EntityId = pptm.ProductTag_Id
+			WHERE
+				lp.LocaleKeyGroup = N''ProductTag''
+				AND lp.LanguageId = ' + ISNULL(CAST(@LanguageId AS nvarchar(max)), '0') + '
+				AND lp.LocaleKey = N''Name'''
 			IF @UseFullTextSearch = 1
 				SET @sql = @sql + ' AND CONTAINS(lp.[LocaleValue], @Keywords) '
 			ELSE
@@ -629,6 +660,12 @@ BEGIN
 		CREATE FULLTEXT INDEX ON [LocalizedProperty]([LocaleValue])
 		KEY INDEX [' + dbo.[nop_getprimarykey_indexname] ('LocalizedProperty') +  '] ON [nopCommerceFullTextCatalog] WITH CHANGE_TRACKING AUTO'
 	EXEC(@create_index_text)
+
+	SET @create_index_text = '
+	IF NOT EXISTS (SELECT 1 FROM sys.fulltext_indexes WHERE object_id = object_id(''[ProductTag]''))
+		CREATE FULLTEXT INDEX ON [ProductTag]([Name])
+		KEY INDEX [' + dbo.[nop_getprimarykey_indexname] ('ProductTag') +  '] ON [nopCommerceFullTextCatalog] WITH CHANGE_TRACKING AUTO'
+	EXEC(@create_index_text)
 END
 GO
 
@@ -651,6 +688,11 @@ BEGIN
 	EXEC('
 	IF EXISTS (SELECT 1 FROM sys.fulltext_indexes WHERE object_id = object_id(''[LocalizedProperty]''))
 		DROP FULLTEXT INDEX ON [LocalizedProperty]
+	')
+
+	EXEC('
+	IF EXISTS (SELECT 1 FROM sys.fulltext_indexes WHERE object_id = object_id(''[ProductTag]''))
+		DROP FULLTEXT INDEX ON [ProductTag]
 	')
 
 	--drop catalog

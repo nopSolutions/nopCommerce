@@ -23,7 +23,7 @@ namespace Nop.Core.Domain.Common
         public bool DisplayJavaScriptDisabledWarning { get; set; }
 
         /// <summary>
-        /// Gets a sets a value indicating whether to full-text search is supported
+        /// Gets a sets a value indicating whether full-text search is supported
         /// </summary>
         public bool UseFullTextSearch { get; set; }
 

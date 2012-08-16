@@ -260,7 +260,8 @@ namespace Nop.Services.Catalog
         /// <param name="priceMax">Maximum price; null to load all records</param>
         /// <param name="productTagId">Product tag identifier; 0 to load all records</param>
         /// <param name="keywords">Keywords</param>
-        /// <param name="searchDescriptions">A value indicating whether to search in descriptions</param>
+        /// <param name="searchDescriptions">A value indicating whether to search by a specified "keyword" in product descriptions</param>
+        /// <param name="searchProductTags">A value indicating whether to search by a specified "keyword" in product tags</param>
         /// <param name="languageId">Language identifier</param>
         /// <param name="filteredSpecs">Filtered product specification identifiers</param>
         /// <param name="orderBy">Order by</param>
@@ -272,7 +273,7 @@ namespace Nop.Services.Catalog
         /// <returns>Product collection</returns>
         public virtual IPagedList<Product> SearchProducts(int categoryId, int manufacturerId, bool? featuredProducts,
             decimal? priceMin, decimal? priceMax, int productTagId,
-            string keywords, bool searchDescriptions, int languageId,
+            string keywords, bool searchDescriptions, bool searchProductTags, int languageId,
             IList<int> filteredSpecs, ProductSortingEnum orderBy,
             int pageIndex, int pageSize,
             bool loadFilterableSpecificationAttributeOptionIds, out IList<int> filterableSpecificationAttributeOptionIds,
@@ -281,10 +282,11 @@ namespace Nop.Services.Catalog
             var categoryIds = new List<int>();
             if (categoryId > 0)
                 categoryIds.Add(categoryId);
+
             return SearchProducts(categoryIds, manufacturerId, featuredProducts,
-                priceMin, priceMax, productTagId, keywords, searchDescriptions, languageId,
-                filteredSpecs, orderBy,
-                pageIndex, pageSize,
+                priceMin, priceMax, productTagId, 
+                keywords, searchDescriptions,searchProductTags, languageId,
+                filteredSpecs, orderBy, pageIndex, pageSize,
                 loadFilterableSpecificationAttributeOptionIds, out filterableSpecificationAttributeOptionIds, 
                 showHidden);
         }
@@ -299,7 +301,8 @@ namespace Nop.Services.Catalog
         /// <param name="priceMax">Maximum price; null to load all records</param>
         /// <param name="productTagId">Product tag identifier; 0 to load all records</param>
         /// <param name="keywords">Keywords</param>
-        /// <param name="searchDescriptions">A value indicating whether to search in descriptions</param>
+        /// <param name="searchDescriptions">A value indicating whether to search by a specified "keyword" in product descriptions</param>
+        /// <param name="searchProductTags">A value indicating whether to search by a specified "keyword" in product tags</param>
         /// <param name="languageId">Language identifier</param>
         /// <param name="filteredSpecs">Filtered product specification identifiers</param>
         /// <param name="orderBy">Order by</param>
@@ -312,7 +315,7 @@ namespace Nop.Services.Catalog
         public virtual IPagedList<Product> SearchProducts(IList<int> categoryIds, 
             int manufacturerId, bool? featuredProducts,
             decimal? priceMin, decimal? priceMax, int productTagId,
-            string keywords, bool searchDescriptions, int languageId,
+            string keywords, bool searchDescriptions, bool searchProductTags, int languageId,
             IList<int> filteredSpecs, ProductSortingEnum orderBy,
             int pageIndex, int pageSize,
             bool loadFilterableSpecificationAttributeOptionIds, out IList<int> filterableSpecificationAttributeOptionIds,
@@ -417,6 +420,11 @@ namespace Nop.Services.Catalog
                 pSearchDescriptions.Value = searchDescriptions;
                 pSearchDescriptions.DbType = DbType.Boolean;
 
+                var pSearchProductTags = _dataProvider.GetParameter();
+                pSearchProductTags.ParameterName = "SearchProductTags";
+                pSearchProductTags.Value = searchDescriptions;
+                pSearchProductTags.DbType = DbType.Boolean;
+
                 var pUseFullTextSearch = _dataProvider.GetParameter();
                 pUseFullTextSearch.ParameterName = "UseFullTextSearch";
                 pUseFullTextSearch.Value = _commonSettings.UseFullTextSearch;
@@ -484,6 +492,7 @@ namespace Nop.Services.Catalog
                     pPriceMax,
                     pKeywords,
                     pSearchDescriptions,
+                    pSearchProductTags,
                     pUseFullTextSearch,
                     pFullTextMode,
                     pFilteredSpecs,
@@ -532,15 +541,18 @@ namespace Nop.Services.Catalog
                             join lp in _localizedPropertyRepository.Table on p.Id equals lp.EntityId into p_lp
                             from lp in p_lp.DefaultIfEmpty()
                             from pv in p.ProductVariants.DefaultIfEmpty()
+                            from pt in p.ProductTags.DefaultIfEmpty()
                             where (p.Name.Contains(keywords)) ||
                                   (searchDescriptions && p.ShortDescription.Contains(keywords)) ||
                                   (searchDescriptions && p.FullDescription.Contains(keywords)) ||
                                   (pv.Name.Contains(keywords)) ||
                                   (searchDescriptions && pv.Description.Contains(keywords)) ||
+                                  (searchProductTags && pt.Name.Contains(keywords)) ||
                                   //localized values
                                   (searchLocalizedValue && lp.LanguageId == languageId && lp.LocaleKeyGroup == "Product" && lp.LocaleKey == "Name" && lp.LocaleValue.Contains(keywords)) ||
                                   (searchDescriptions && searchLocalizedValue && lp.LanguageId == languageId && lp.LocaleKeyGroup == "Product" && lp.LocaleKey == "ShortDescription" && lp.LocaleValue.Contains(keywords)) ||
                                   (searchDescriptions && searchLocalizedValue && lp.LanguageId == languageId && lp.LocaleKeyGroup == "Product" && lp.LocaleKey == "FullDescription" && lp.LocaleValue.Contains(keywords))
+                                  //UNDONE search localized values in associated product tags
                             select p;
                 }
 

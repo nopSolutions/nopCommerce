@@ -429,7 +429,7 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             IList<int> filterableSpecificationAttributeOptionIds = null;
-            var products = _productService.SearchProducts(0, 0, null, null, null, 0, string.Empty, false,
+            var products = _productService.SearchProducts(0, 0, null, null, null, 0, string.Empty, false, false,
                 _workContext.WorkingLanguage.Id, new List<int>(),
                 ProductSortingEnum.Position, 0, _adminAreaSettings.GridPageSize,
                 false, out filterableSpecificationAttributeOptionIds, true);
@@ -470,7 +470,7 @@ namespace Nop.Admin.Controllers
             var gridModel = new GridModel();
             IList<int> filterableSpecificationAttributeOptionIds = null;
             var products = _productService.SearchProducts(model.SearchCategoryId,
-                model.SearchManufacturerId, null, null, null, 0, model.SearchProductName, false,
+                model.SearchManufacturerId, null, null, null, 0, model.SearchProductName, false, false,
                 _workContext.WorkingLanguage.Id, new List<int>(),
                 ProductSortingEnum.Position, command.Page - 1, command.PageSize,
                 false, out filterableSpecificationAttributeOptionIds, true);
@@ -987,7 +987,7 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             IList<int> filterableSpecificationAttributeOptionIds = null;
-            var products = _productService.SearchProducts(0, 0, null, null, null, 0, string.Empty, false,
+            var products = _productService.SearchProducts(0, 0, null, null, null, 0, string.Empty, false, false,
                 _workContext.WorkingLanguage.Id, new List<int>(),
                 ProductSortingEnum.Position, 0, _adminAreaSettings.GridPageSize,
                 false, out filterableSpecificationAttributeOptionIds, true);
@@ -1020,7 +1020,7 @@ namespace Nop.Admin.Controllers
             var gridModel = new GridModel();
             IList<int> filterableSpecificationAttributeOptionIds = null;
             var products = _productService.SearchProducts(model.SearchCategoryId, model.SearchManufacturerId, 
-                null, null, null, 0, model.SearchProductName, false,
+                null, null, null, 0, model.SearchProductName, false, false,
                 _workContext.WorkingLanguage.Id, new List<int>(),
                 ProductSortingEnum.Position, command.Page - 1, command.PageSize,
                 false, out filterableSpecificationAttributeOptionIds, true);
@@ -1126,7 +1126,7 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             IList<int> filterableSpecificationAttributeOptionIds = null;
-            var products = _productService.SearchProducts(0, 0, null, null, null, 0, string.Empty, false,
+            var products = _productService.SearchProducts(0, 0, null, null, null, 0, string.Empty, false, false,
                 _workContext.WorkingLanguage.Id, new List<int>(),
                 ProductSortingEnum.Position, 0, _adminAreaSettings.GridPageSize,
                 false, out filterableSpecificationAttributeOptionIds, true);
@@ -1159,7 +1159,7 @@ namespace Nop.Admin.Controllers
             var gridModel = new GridModel();
             IList<int> filterableSpecificationAttributeOptionIds = null;
             var products = _productService.SearchProducts(model.SearchCategoryId,
-                model.SearchManufacturerId, null, null, null, 0, model.SearchProductName, false,
+                model.SearchManufacturerId, null, null, null, 0, model.SearchProductName, false, false,
                 _workContext.WorkingLanguage.Id, new List<int>(),
                 ProductSortingEnum.Position, command.Page - 1, command.PageSize,
                 false, out filterableSpecificationAttributeOptionIds, true);
@@ -1528,7 +1528,7 @@ namespace Nop.Admin.Controllers
             try
             {
                 IList<int> filterableSpecificationAttributeOptionIds = null;
-                var products = _productService.SearchProducts(0, 0, null, null, null, 0, string.Empty, false,
+                var products = _productService.SearchProducts(0, 0, null, null, null, 0, string.Empty, false, false,
                     _workContext.WorkingLanguage.Id, new List<int>(),
                     ProductSortingEnum.Position, 0, int.MaxValue,
                     false, out filterableSpecificationAttributeOptionIds, true);
@@ -1553,7 +1553,7 @@ namespace Nop.Admin.Controllers
             try
             {
                 IList<int> filterableSpecificationAttributeOptionIds = null;
-                var products = _productService.SearchProducts(0, 0, null, null, null, 0, string.Empty, false,
+                var products = _productService.SearchProducts(0, 0, null, null, null, 0, string.Empty, false, false,
                     _workContext.WorkingLanguage.Id, new List<int>(),
                     ProductSortingEnum.Position, 0, int.MaxValue,
                     false, out filterableSpecificationAttributeOptionIds, true);
@@ -1597,7 +1597,7 @@ namespace Nop.Admin.Controllers
             try
             {
                 IList<int> filterableSpecificationAttributeOptionIds = null;
-                var products = _productService.SearchProducts(0, 0, null, null, null, 0, string.Empty, false,
+                var products = _productService.SearchProducts(0, 0, null, null, null, 0, string.Empty, false, false,
                     _workContext.WorkingLanguage.Id, new List<int>(),
                     ProductSortingEnum.Position, 0, int.MaxValue,
                     false, out filterableSpecificationAttributeOptionIds, true);

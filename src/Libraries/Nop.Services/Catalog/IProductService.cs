@@ -67,7 +67,8 @@ namespace Nop.Services.Catalog
         /// <param name="priceMax">Maximum price; null to load all records</param>
         /// <param name="productTagId">Product tag identifier; 0 to load all records</param>
         /// <param name="keywords">Keywords</param>
-        /// <param name="searchDescriptions">A value indicating whether to search in descriptions</param>
+        /// <param name="searchDescriptions">A value indicating whether to search by a specified "keyword" in product descriptions</param>
+        /// <param name="searchProductTags">A value indicating whether to search by a specified "keyword" in product tags</param>
         /// <param name="languageId">Language identifier</param>
         /// <param name="filteredSpecs">Filtered product specification identifiers</param>
         /// <param name="orderBy">Order by</param>
@@ -79,7 +80,7 @@ namespace Nop.Services.Catalog
         /// <returns>Product collection</returns>
         IPagedList<Product> SearchProducts(int categoryId, int manufacturerId, bool? featuredProducts,
             decimal? priceMin, decimal? priceMax, int productTagId,
-            string keywords, bool searchDescriptions, int languageId,
+            string keywords, bool searchDescriptions, bool searchProductTags, int languageId,
             IList<int> filteredSpecs, ProductSortingEnum orderBy,
             int pageIndex, int pageSize,
             bool loadFilterableSpecificationAttributeOptionIds, out IList<int> filterableSpecificationAttributeOptionIds,
@@ -95,7 +96,8 @@ namespace Nop.Services.Catalog
         /// <param name="priceMax">Maximum price; null to load all records</param>
         /// <param name="productTagId">Product tag identifier; 0 to load all records</param>
         /// <param name="keywords">Keywords</param>
-        /// <param name="searchDescriptions">A value indicating whether to search in descriptions</param>
+        /// <param name="searchDescriptions">A value indicating whether to search by a specified "keyword" in product descriptions</param>
+        /// <param name="searchProductTags">A value indicating whether to search by a specified "keyword" in product tags</param>
         /// <param name="languageId">Language identifier</param>
         /// <param name="filteredSpecs">Filtered product specification identifiers</param>
         /// <param name="orderBy">Order by</param>
@@ -107,7 +109,7 @@ namespace Nop.Services.Catalog
         /// <returns>Product collection</returns>
         IPagedList<Product> SearchProducts(IList<int> categoryIds, int manufacturerId, bool? featuredProducts,
             decimal? priceMin, decimal? priceMax, int productTagId,
-            string keywords, bool searchDescriptions, int languageId,
+            string keywords, bool searchDescriptions, bool searchProductTags, int languageId,
             IList<int> filteredSpecs, ProductSortingEnum orderBy,
             int pageIndex, int pageSize,
             bool loadFilterableSpecificationAttributeOptionIds, out IList<int> filterableSpecificationAttributeOptionIds,
