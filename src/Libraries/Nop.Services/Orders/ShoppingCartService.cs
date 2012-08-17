@@ -91,23 +91,33 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="shoppingCartItem">Shopping cart item</param>
         /// <param name="resetCheckoutData">A value indicating whether to reset checkout data</param>
-        public virtual void DeleteShoppingCartItem(ShoppingCartItem shoppingCartItem, bool resetCheckoutData = true)
+        /// <param name="ensureOnlyActiveCheckoutAttributes">A value indicating whether to ensure that only active checkout attributes are attached to the current customer</param>
+        public virtual void DeleteShoppingCartItem(ShoppingCartItem shoppingCartItem, bool resetCheckoutData = true, 
+            bool ensureOnlyActiveCheckoutAttributes = false)
         {
             if (shoppingCartItem == null)
                 throw new ArgumentNullException("shoppingCartItem");
 
+            var customer = shoppingCartItem.Customer;
 
+            //reset checkout data
             if (resetCheckoutData)
             {
-                //reset checkout data
-
-                //we also set "clearCheckoutAttributes parameter to true just in case if you we remove the last shippable product.
-                //in this case checkout attributes which require shippable products should also be removed
-                //to keep in simply we clear all attributes
-                _customerService.ResetCheckoutData(shoppingCartItem.Customer, clearCheckoutAttributes: true);
+                _customerService.ResetCheckoutData(shoppingCartItem.Customer);
             }
 
+            //delete item
             _sciRepository.Delete(shoppingCartItem);
+
+            //validate checkout attributes
+            if (ensureOnlyActiveCheckoutAttributes &&
+                //only for shopping cart items (ignore wishlist)
+                shoppingCartItem.ShoppingCartType == ShoppingCartType.ShoppingCart)
+            {
+                var cart = customer.ShoppingCartItems.Where(x => x.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
+                customer.CheckoutAttributes = _checkoutAttributeParser.EnsureOnlyActiveAttributes(customer.CheckoutAttributes, cart);
+                _customerService.UpdateCustomer(customer);
+            }
 
             //event notification
             _eventPublisher.EntityDeleted(shoppingCartItem);
@@ -868,7 +878,7 @@ namespace Nop.Services.Orders
                 else
                 {
                     //delete a shopping cart item
-                    DeleteShoppingCartItem(shoppingCartItem, resetCheckoutData);
+                    DeleteShoppingCartItem(shoppingCartItem, resetCheckoutData, true);
                 }
             }
 

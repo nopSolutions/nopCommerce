@@ -1303,7 +1303,7 @@ namespace Nop.Web.Controllers
             {
                 bool remove = allIdsToRemove.Contains(sci.Id);
                 if (remove)
-                    _shoppingCartService.DeleteShoppingCartItem(sci, true);
+                    _shoppingCartService.DeleteShoppingCartItem(sci, ensureOnlyActiveCheckoutAttributes: true);
                 else
                 {
                     foreach (string formKey in form.AllKeys)
@@ -1417,7 +1417,7 @@ namespace Nop.Web.Controllers
             }
 
             //remove the cart item
-            _shoppingCartService.DeleteShoppingCartItem(sci);
+            _shoppingCartService.DeleteShoppingCartItem(sci, ensureOnlyActiveCheckoutAttributes: true);
 
 
             //updated cart
@@ -1978,7 +1978,7 @@ namespace Nop.Web.Controllers
             {
                 bool remove = allIdsToRemove.Contains(sci.Id);
                 if (remove)
-                    _shoppingCartService.DeleteShoppingCartItem(sci, true);
+                    _shoppingCartService.DeleteShoppingCartItem(sci);
                 else
                 {
                     foreach (string formKey in form.AllKeys)
@@ -2092,7 +2092,7 @@ namespace Nop.Web.Controllers
             }
 
             //remove the wishlist cart item
-            _shoppingCartService.DeleteShoppingCartItem(sci, true);
+            _shoppingCartService.DeleteShoppingCartItem(sci);
 
 
             //updated wishlist

@@ -23,7 +23,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="attributes">Attributes</param>
         /// <returns>Selected checkout attribute identifiers</returns>
-        public IList<int> ParseCheckoutAttributeIds(string attributes)
+        protected virtual IList<int> ParseCheckoutAttributeIds(string attributes)
         {
             var ids = new List<int>();
             if (String.IsNullOrEmpty(attributes))
@@ -34,12 +34,11 @@ namespace Nop.Services.Orders
                 var xmlDoc = new XmlDocument();
                 xmlDoc.LoadXml(attributes);
 
-                var nodeList1 = xmlDoc.SelectNodes(@"//Attributes/CheckoutAttribute");
-                foreach (XmlNode node1 in nodeList1)
+                foreach (XmlNode node in xmlDoc.SelectNodes(@"//Attributes/CheckoutAttribute"))
                 {
-                    if (node1.Attributes != null && node1.Attributes["ID"] != null)
+                    if (node.Attributes != null && node.Attributes["ID"] != null)
                     {
-                        string str1 = node1.Attributes["ID"].InnerText.Trim();
+                        string str1 = node.Attributes["ID"].InnerText.Trim();
                         int id = 0;
                         if (int.TryParse(str1, out id))
                         {
@@ -60,7 +59,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="attributes">Attributes</param>
         /// <returns>Selected checkout attributes</returns>
-        public IList<CheckoutAttribute> ParseCheckoutAttributes(string attributes)
+        public virtual IList<CheckoutAttribute> ParseCheckoutAttributes(string attributes)
         {
             var caCollection = new List<CheckoutAttribute>();
             var ids = ParseCheckoutAttributeIds(attributes);
@@ -80,7 +79,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="attributes">Attributes</param>
         /// <returns>Checkout attribute values</returns>
-        public IList<CheckoutAttributeValue> ParseCheckoutAttributeValues(string attributes)
+        public virtual IList<CheckoutAttributeValue> ParseCheckoutAttributeValues(string attributes)
         {
             var caValues = new List<CheckoutAttributeValue>();
             var caCollection = ParseCheckoutAttributes(attributes);
@@ -113,7 +112,7 @@ namespace Nop.Services.Orders
         /// <param name="attributes">Attributes</param>
         /// <param name="checkoutAttributeId">Checkout attribute identifier</param>
         /// <returns>Checkout attribute value</returns>
-        public IList<string> ParseValues(string attributes, int checkoutAttributeId)
+        public virtual IList<string> ParseValues(string attributes, int checkoutAttributeId)
         {
             var selectedCheckoutAttributeValues = new List<string>();
             try
@@ -157,7 +156,7 @@ namespace Nop.Services.Orders
         /// <param name="ca">Checkout attribute</param>
         /// <param name="value">Value</param>
         /// <returns>Attributes</returns>
-        public string AddCheckoutAttribute(string attributes, CheckoutAttribute ca, string value)
+        public virtual string AddCheckoutAttribute(string attributes, CheckoutAttribute ca, string value)
         {
             string result = string.Empty;
             try
@@ -214,6 +213,68 @@ namespace Nop.Services.Orders
             catch (Exception exc)
             {
                 Debug.Write(exc.ToString());
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Removes checkout attributes which cannot be applied to the current cart and returns an update attributes in XML format
+        /// </summary>
+        /// <param name="attributes">Attributes in XML format</param>
+        /// <param name="cart">Shopping cart items</param>
+        /// <returns>Updated attributes in XML format</returns>
+        public virtual string EnsureOnlyActiveAttributes(string attributes, IList<ShoppingCartItem> cart)
+        {
+            if (String.IsNullOrEmpty(attributes))
+                return attributes;
+
+            var result = attributes;
+
+            //removing "shippable" checkout attributes if there's no any shippable products in the cart
+            if (!cart.RequiresShipping())
+            {
+                //find attrbiute IDs to remove
+                var checkoutAttributeIdsToRemove = new List<int>();
+                var caCollection = ParseCheckoutAttributes(attributes);
+                for (int i = 0; i < caCollection.Count; i++)
+                {
+                    var ca = caCollection[i];
+                    if (ca.ShippableProductRequired)
+                        checkoutAttributeIdsToRemove.Add(ca.Id);
+                }
+
+                //remove them from XML
+                try
+                {
+                    var xmlDoc = new XmlDocument();
+                    xmlDoc.LoadXml(attributes);
+
+                    var nodesToRemove = new List<XmlNode>();
+                    foreach (XmlNode node in xmlDoc.SelectNodes(@"//Attributes/CheckoutAttribute"))
+                    {
+                        if (node.Attributes != null && node.Attributes["ID"] != null)
+                        {
+                            string str1 = node.Attributes["ID"].InnerText.Trim();
+                            int id = 0;
+                            if (int.TryParse(str1, out id))
+                            {
+                                if (checkoutAttributeIdsToRemove.Contains(id))
+                                {
+                                    nodesToRemove.Add(node);
+                                }
+                            }
+                        }
+                    }
+                    foreach(var node in nodesToRemove)
+                    {
+                        node.ParentNode.RemoveChild(node);
+                    }
+                    result = xmlDoc.OuterXml;
+                }
+                catch (Exception exc)
+                {
+                    Debug.Write(exc.ToString());
+                }
             }
             return result;
         }
