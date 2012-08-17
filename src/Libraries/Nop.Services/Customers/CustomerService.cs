@@ -519,7 +519,6 @@ namespace Nop.Services.Customers
             {
                 customer.DiscountCouponCode = "";
                 customer.GiftCardCouponCodes = "";
-                customer.CheckoutAttributes = "";
             }
 
             //clear checkout attributes
