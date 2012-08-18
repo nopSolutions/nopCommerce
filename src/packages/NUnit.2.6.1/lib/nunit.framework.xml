@@ -551,14 +551,17 @@
         </member>
         <member name="T:NUnit.Framework.SetUpAttribute">
             <summary>
-            Attribute used to mark a class that contains one-time SetUp 
-            and/or TearDown methods that apply to all the tests in a
-            namespace or an assembly.
+            SetUpAttribute is used in a TestFixture to identify a method
+            that is called immediately before each test is run. It is 
+            also used in a SetUpFixture to identify the method that is
+            called once, before any of the subordinate tests are run.
             </summary>
         </member>
         <member name="T:NUnit.Framework.SetUpFixtureAttribute">
             <summary>
-            SetUpFixtureAttribute is used to identify a SetUpFixture
+            Attribute used to mark a class that contains one-time SetUp 
+            and/or TearDown methods that apply to all the tests in a
+            namespace or an assembly.
             </summary>
         </member>
         <member name="T:NUnit.Framework.SuiteAttribute">
@@ -569,9 +572,11 @@
         </member>
         <member name="T:NUnit.Framework.TearDownAttribute">
             <summary>
-            Attribute used to identify a method that is called 
-            immediately after each test is run. The method is 
-            guaranteed to be called, even if an exception is thrown.
+            Attribute used in a TestFixture to identify a method that is 
+            called immediately after each test is run. It is also used
+            in a SetUpFixture to identify the method that is called once,
+            after all subordinate tests have run. In either case, the method 
+            is guaranteed to be called, even if an exception is thrown.
             </summary>
         </member>
         <member name="T:NUnit.Framework.TestActionAttribute">
@@ -4545,7 +4550,7 @@
         </member>
         <member name="M:NUnit.Framework.Constraints.NoItemConstraint.#ctor(NUnit.Framework.Constraints.Constraint)">
             <summary>
-            Construct a SomeItemsConstraint on top of an existing constraint
+            Construct a NoItemConstraint on top of an existing constraint
             </summary>
             <param name="itemConstraint"></param>
         </member>
@@ -4727,6 +4732,48 @@
         <member name="M:NUnit.Framework.Constraints.ResolvableConstraintExpression.NUnit#Framework#Constraints#IResolveConstraint#Resolve">
             <summary>
             Resolve the current expression to a Constraint
+            </summary>
+        </member>
+        <member name="M:NUnit.Framework.Constraints.ResolvableConstraintExpression.op_BitwiseAnd(NUnit.Framework.Constraints.ResolvableConstraintExpression,NUnit.Framework.Constraints.ResolvableConstraintExpression)">
+            <summary>
+            This operator creates a constraint that is satisfied only if both 
+            argument constraints are satisfied.
+            </summary>
+        </member>
+        <member name="M:NUnit.Framework.Constraints.ResolvableConstraintExpression.op_BitwiseAnd(NUnit.Framework.Constraints.Constraint,NUnit.Framework.Constraints.ResolvableConstraintExpression)">
+            <summary>
+            This operator creates a constraint that is satisfied only if both 
+            argument constraints are satisfied.
+            </summary>
+        </member>
+        <member name="M:NUnit.Framework.Constraints.ResolvableConstraintExpression.op_BitwiseAnd(NUnit.Framework.Constraints.ResolvableConstraintExpression,NUnit.Framework.Constraints.Constraint)">
+            <summary>
+            This operator creates a constraint that is satisfied only if both 
+            argument constraints are satisfied.
+            </summary>
+        </member>
+        <member name="M:NUnit.Framework.Constraints.ResolvableConstraintExpression.op_BitwiseOr(NUnit.Framework.Constraints.ResolvableConstraintExpression,NUnit.Framework.Constraints.ResolvableConstraintExpression)">
+            <summary>
+            This operator creates a constraint that is satisfied if either 
+            of the argument constraints is satisfied.
+            </summary>
+        </member>
+        <member name="M:NUnit.Framework.Constraints.ResolvableConstraintExpression.op_BitwiseOr(NUnit.Framework.Constraints.ResolvableConstraintExpression,NUnit.Framework.Constraints.Constraint)">
+            <summary>
+            This operator creates a constraint that is satisfied if either 
+            of the argument constraints is satisfied.
+            </summary>
+        </member>
+        <member name="M:NUnit.Framework.Constraints.ResolvableConstraintExpression.op_BitwiseOr(NUnit.Framework.Constraints.Constraint,NUnit.Framework.Constraints.ResolvableConstraintExpression)">
+            <summary>
+            This operator creates a constraint that is satisfied if either 
+            of the argument constraints is satisfied.
+            </summary>
+        </member>
+        <member name="M:NUnit.Framework.Constraints.ResolvableConstraintExpression.op_LogicalNot(NUnit.Framework.Constraints.ResolvableConstraintExpression)">
+            <summary>
+            This operator creates a constraint that is satisfied if the 
+            argument constraint is not satisfied.
             </summary>
         </member>
         <member name="P:NUnit.Framework.Constraints.ResolvableConstraintExpression.And">
