@@ -92,7 +92,7 @@
 
 
         <!--Lets copy SQL Compact native binaries-->
-        <CreateItem Include="$(RootFolder)\packages\SqlServerCompact.4.0.8852.1\NativeBinaries\**\*.*">
+        <CreateItem Include="$(RootFolder)\packages\Microsoft.SqlServer.Compact.4.0.8876.1\NativeBinaries\**\*.*">
             <Output TaskParameter="Include" ItemName="sqlServerCompact" />
         </CreateItem>
         <Copy SourceFiles="@(sqlServerCompact)"
