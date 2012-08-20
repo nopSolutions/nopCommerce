@@ -152,11 +152,16 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCurrencies))
                 return AccessDeniedView();
 
-            var currencies = _currencyService.GetAllCurrencies(true);
+            var currenciesModel = _currencyService.GetAllCurrencies(true).Select(x => x.ToModel()).ToList();
+            foreach (var currency in currenciesModel)
+                currency.IsPrimaryExchangeRateCurrency = currency.Id == _currencySettings.PrimaryExchangeRateCurrencyId ? true : false;
+            foreach (var currency in currenciesModel)
+                currency.IsPrimaryStoreCurrency = currency.Id == _currencySettings.PrimaryStoreCurrencyId ? true : false;
+            
             var gridModel = new GridModel<CurrencyModel>
             {
-                Data = currencies.Select(x => x.ToModel()),
-                Total = currencies.Count()
+                Data = currenciesModel,
+                Total = currenciesModel.Count
             };
             return new JsonResult
             {
