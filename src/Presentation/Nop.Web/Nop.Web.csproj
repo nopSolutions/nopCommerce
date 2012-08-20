@@ -1293,11 +1293,6 @@
     <Content Include="Themes\DarkOrange\Content\images\bbeditor-button-bg.gif" />
     <Content Include="Themes\DarkOrange\Content\images\bg-body.gif" />
     <Content Include="Themes\DarkOrange\Content\images\bg-container.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\bg-maincolumn-1.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\bg-maincolumn-2.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\bg-maincolumn-3.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\bg-sidebar-block.gif" />
-    <Content Include="Themes\DarkOrange\Content\images\bg-sidebar-title.gif" />
     <Content Include="Themes\DarkOrange\Content\images\download-sample-bg.gif" />
     <Content Include="Themes\DarkOrange\Content\images\cart-footer-bg.gif" />
     <Content Include="Themes\DarkOrange\Content\images\cart-header-bg.gif" />
