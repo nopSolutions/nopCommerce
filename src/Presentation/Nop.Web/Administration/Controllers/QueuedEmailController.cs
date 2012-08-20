@@ -166,8 +166,8 @@ namespace Nop.Admin.Controllers
             return RedirectToAction("Edit", requeuedEmail.Id);
         }
 
-	    [HttpPost, ActionName("Delete")]
-		public ActionResult DeleteConfirmed(int id)
+	    [HttpPost]
+        public ActionResult Delete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageMessageQueue))
                 return AccessDeniedView();
