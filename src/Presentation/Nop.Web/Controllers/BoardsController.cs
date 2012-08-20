@@ -226,7 +226,7 @@ namespace Nop.Web.Controllers
                 var topicModel = PrepareForumTopicRowModel(topic);
                 model.ForumTopics.Add(topicModel);
             }
-            model.ViewAllLinkEnabled = false;
+            model.ViewAllLinkEnabled = true;
             model.ActiveDiscussionsFeedEnabled = _forumSettings.ActiveDiscussionsFeedEnabled;
             model.PostsPageSize = _forumSettings.PostsPageSize;
 
@@ -249,7 +249,7 @@ namespace Nop.Web.Controllers
                 var topicModel = PrepareForumTopicRowModel(topic);
                 model.ForumTopics.Add(topicModel);
             }
-            model.ViewAllLinkEnabled = true;
+            model.ViewAllLinkEnabled = false;
             model.ActiveDiscussionsFeedEnabled = _forumSettings.ActiveDiscussionsFeedEnabled;
             model.PostsPageSize = _forumSettings.PostsPageSize;
             return View(model);

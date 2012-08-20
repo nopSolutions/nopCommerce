@@ -6,7 +6,7 @@
 @using Nop.Web.Extensions;
 @using Nop.Web.Models.Boards;
 @using Nop.Web.Models.Common;
-@if (Model.ViewAllLinkEnabled == true)
+@if (!Model.ViewAllLinkEnabled)
 {
     Html.RenderPartial("_SearchBox");
     <div class="clear">
@@ -20,7 +20,7 @@
             <a href="@Url.RouteUrl("ActiveDiscussionsRSS")" class="link-rss">
                 <img title="@T("Forum.ActiveDiscussionsRSSLinkTitle")" src="@Url.Content("~/content/images/icon_rss.gif")" alt="@T("Forum.RSS")" /></a> 
         }
-        @if (Model.ViewAllLinkEnabled == false)
+        @if (Model.ViewAllLinkEnabled)
         {        
             <div class="view-all">
                 [@Html.RouteLink(@T("Forum.ActiveDiscussions.ViewAll").Text, "ActiveDiscussions")]
