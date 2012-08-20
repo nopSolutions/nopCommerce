@@ -25,6 +25,7 @@
 </div>
 <div class="page product-details-page">
     <div class="page-body">
+        @Html.Widget("productdetails_top")
         @using (Html.BeginRouteForm("Product", new { productId = Model.Id, SeName = Model.SeName }, FormMethod.Post, new { id = "product-details-form" }))
         {
             <div class="product-essential">
@@ -87,5 +88,6 @@
                 @Html.Action("RelatedProducts", "Catalog", new { productId = Model.Id })
             </div>
         }
+        @Html.Widget("productdetails_bottom")
     </div>
 </div>
