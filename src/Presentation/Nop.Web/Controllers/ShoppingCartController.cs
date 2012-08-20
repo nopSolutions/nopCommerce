@@ -246,7 +246,7 @@ namespace Nop.Web.Controllers
                 {
                     Id = attribute.Id,
                     Name = attribute.GetLocalized(x => x.Name),
-                    TextPrompt = attribute.TextPrompt,
+                    TextPrompt = attribute.GetLocalized(x => x.TextPrompt),
                     IsRequired = attribute.IsRequired,
                     AttributeControlType = attribute.AttributeControlType
                 };
