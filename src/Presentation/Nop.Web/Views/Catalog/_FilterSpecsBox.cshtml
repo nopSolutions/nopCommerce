@@ -6,55 +6,45 @@
 @if (Model.Enabled)
 {
     <div class="product-spec-filter">
-            <div class="title">
-                @T("Filtering.SpecificationFilter")
-            </div>
-            <div class="clear">
-            </div>
-            @if (Model.NotFilteredItems.Count > 0)
-            {
-                <div>
-                    <table class="filter">
-                        @foreach (var item in Model.NotFilteredItems)
-                        {
-                            if (!renderedAttributeNames.Contains(item.SpecificationAttributeName))
-                            {
-                                renderedAttributeNames.Add(item.SpecificationAttributeName);
-                                <tr class="group">
-                                    <td>
-                                        @item.SpecificationAttributeName
-                                    </td>
-                                </tr>
-                            }
-                            <tr class="item">
-                                <td>
-                                    <a href="@item.FilterUrl">@item.SpecificationAttributeOptionName</a>
-                                </td>
-                            </tr>
-                        }
-                    </table>
-                </div>
-            }
-            @if (Model.AlreadyFilteredItems.Count > 0)
-            {
-                <div>
-                    <div class="title">
-                        @T("Filtering.SpecificationFilter.CurrentlyFilteredBy")
-                    </div>
-                    <table class="filter">
-                        @foreach (var item in Model.AlreadyFilteredItems)
-                        {
-                            <tr class="filtereditem">
-                                <td>
-                                    <strong>@(item.SpecificationAttributeName):</strong> @item.SpecificationAttributeOptionName
-                                </td>
-                            </tr>
-                        }
-                    </table>
-                </div>
-                <div class="remove-filter">
-                    <a href="@Model.RemoveFilterUrl" class="remove-product-spec-filter">@T("Filtering.SpecificationFilter.Remove")</a>
-                </div>
-            }
+        <div class="title">
+            @T("Filtering.SpecificationFilter")
         </div>
+        <div class="clear">
+        </div>
+        @if (Model.NotFilteredItems.Count > 0)
+        {
+            <div class="available-items">
+                @foreach (var item in Model.NotFilteredItems)
+                {
+                    if (!renderedAttributeNames.Contains(item.SpecificationAttributeName))
+                    {
+                        renderedAttributeNames.Add(item.SpecificationAttributeName);
+                    <div class="group">
+                        @item.SpecificationAttributeName
+                    </div>
+                    }
+                    <div class="item">
+                        <a href="@item.FilterUrl">@item.SpecificationAttributeOptionName</a>
+                    </div>
+                }
+            </div>
+        }
+        @if (Model.AlreadyFilteredItems.Count > 0)
+        {
+            <div class="already-filtered-items">
+                <div class="title">
+                    @T("Filtering.SpecificationFilter.CurrentlyFilteredBy")
+                </div>
+                @foreach (var item in Model.AlreadyFilteredItems)
+                {
+                    <div class="item">
+                        <strong>@(item.SpecificationAttributeName):</strong> @item.SpecificationAttributeOptionName
+                    </div>
+                }
+            </div>
+            <div class="remove-filter">
+                <a href="@Model.RemoveFilterUrl">@T("Filtering.SpecificationFilter.Remove")</a>
+            </div>
+        }
+    </div>
 }

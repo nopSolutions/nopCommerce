@@ -441,12 +441,11 @@ a.eu-cookie-privacyinfo-tag{color:#F93 !important;text-decoration:underline;}
 .price-range-filter .remove-price-range-filter{font-weight:700;}
 .product-spec-filter{text-align:right;}
 .product-spec-filter .title{color:#555;font-weight:700;background:url(images/ico-arrow-r.gif) no-repeat;padding:1px 20px 5px 0px;}
-.product-spec-filter table.filter{width:100%;}
-.product-spec-filter table.filter tr.group{font-weight:700;}
-.product-spec-filter table.filter tr.item td{padding:2px 16px 2px 2px;}
-.product-spec-filter table.filter tr.filtereditem{}
-.product-spec-filter .remove-filter{padding-top:5px;padding-left:20px;}
-.product-spec-filter .remove-product-spec-filter{font-weight:700;}
+.product-spec-filter .available-items,.product-spec-filter .already-filtered-items{width:100%;}
+.product-spec-filter .group{font-weight:700;}
+.product-spec-filter .available-items .item{padding:2px 16px 2px 2px;}
+.product-spec-filter .already-filtered-items .item{}
+.product-spec-filter .remove-filter{padding-top:5px;padding-left:20px;font-weight:700;}
 
 /* COMPARE PRODUCTS */
 .compare-products-page{text-align:right;}
