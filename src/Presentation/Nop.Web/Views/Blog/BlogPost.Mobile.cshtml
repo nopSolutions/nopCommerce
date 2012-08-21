@@ -10,8 +10,6 @@
     <div class="page-title">
         <h1>@Model.Title</h1>
     </div>
-    <div class="clear">
-    </div>
     <div class="page-body">
         <div class="post-date">
             @Model.CreatedOn.ToString("D")
@@ -19,8 +17,6 @@
         @Html.Widget("mobile_blogpost_page_before_body")
         <div class="post-body">
             @Html.Raw(Model.Body)
-        </div>
-        <div class="clear">
         </div>
         <div class="tags">
             @if (Model.Tags.Count > 0)
@@ -38,7 +34,7 @@
                 }
             }
         </div>
-        @Html.Widget(widgetZone = "mobile_blogpost_page_before_comments")
+        @Html.Widget("mobile_blogpost_page_before_comments")
         @if (Model.AllowComments)
         {
             <div class="new-comment">
