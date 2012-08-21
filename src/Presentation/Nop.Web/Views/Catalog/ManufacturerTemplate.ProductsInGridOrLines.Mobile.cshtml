@@ -15,8 +15,6 @@
     <div class="page-title">
         <h1>@Model.Name</h1>
     </div>
-    <div class="clear">
-    </div>
     <div class="page-body">
         @Html.Widget("mobile_manufacturerdetails_top")
         @*description*@
@@ -24,8 +22,6 @@
         {
             <div class="manufacturer-description">
                 @Html.Raw(Model.Description)
-            </div>
-            <div class="clear">
             </div>
         }
         @Html.Widget("mobile_manufacturerdetails_before_featured_products")
@@ -47,8 +43,6 @@
                     </ul>
                 </div>
             </div>
-            <div class="clear">
-            </div>
         }
         @Html.Widget("mobile_manufacturerdetails_before_product_list")
         @*product list*@
@@ -65,8 +59,6 @@
                 </ul>
             </div>
         }
-        <div class="clear">
-        </div>
         <div class="pager">
             @Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber")
         </div>

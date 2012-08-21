@@ -14,8 +14,6 @@
     <div class="page-title">
         <h2>@Model.Subject</h2>
     </div>
-    <div class="clear">
-    </div>
     <div class="manage">
         @if (Model.IsCustomerAllowedToEditTopic)
         {
@@ -29,8 +27,6 @@
         {
             <a href="@Url.RouteUrl("TopicMove", new { id = @Model.Id })" data-inline="true" data-role="button">@T("Forum.MoveTopic")</a>
         }
-    </div>
-    <div class="clear">
     </div>
     <div class="topic-header">
         <div class="topic-options">
@@ -51,8 +47,6 @@
             }
             @pager
         </div>
-    </div>
-    <div class="clear">
     </div>
     <div class="posts">
         @foreach (var post in @Model.ForumPostModels)

@@ -4,8 +4,6 @@
 <div class="order-summary-content">
     @Html.Widget("mobile_order_summary_content_before")
     @Html.Partial("_OrderReviewData", Model.OrderReviewData)
-    <div class="clear">
-    </div>
     @if (Model.Items.Count > 0)
     {
         if (Model.Warnings.Count > 0)
@@ -113,14 +111,10 @@
                 }
             </ul>
         </div>
-        <div class="clear">
-        </div>
                 if (!String.IsNullOrEmpty(Model.CheckoutAttributeInfo))
                 {
         <div class="selected-checkout-attributes">
             @Html.Raw(Model.CheckoutAttributeInfo)
-        </div>
-        <div class="clear">
         </div>
                 }
         <div>
@@ -131,15 +125,9 @@
                     <div style="display: none;">
                         <input type="submit" name="startcheckout" value="startcheckout" id="startcheckout" />
                     </div>
-                </div>                    
-                <div class="clear">
                 </div>
                 @Html.Partial("_CheckoutAttributes", Model.CheckoutAttributes, new ViewDataDictionary())
-                <div class="clear">
-                </div>
             }
-        </div>
-        <div class="clear">
         </div>
         }
         <div class="cart-footer">
@@ -164,14 +152,10 @@
                     </div>
                 }
             </div>
-            <div class="clear">
-            </div>
             <div class="totals">
                 @Html.Action("OrderTotals", "ShoppingCart", new { isEditable = Model.IsEditable })
                 @if (Model.IsEditable)
                 {
-                    <div class="clear">
-                    </div>
                     if (Model.TermsOfServiceEnabled)
                     {
                     <script language="javascript" type="text/javascript">
@@ -188,9 +172,7 @@
                         <input id="termsofservice" type="checkbox" name="termsofservice" />
                         <label for="termsofservice">@T("Checkout.TermsOfService.IAccept")</label>
                     </div>
-                    }    
-                    <div class="clear">
-                    </div>
+                    }
                     <div class="checkout-buttons">
                         @if (String.IsNullOrEmpty(Model.MinOrderSubtotalWarning))
                         {

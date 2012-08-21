@@ -28,8 +28,6 @@
             }
         </h1>
     </div>
-    <div class="clear">
-    </div>
     <div class="page-body">
         @Html.Widget("mobile_bloglist_page_before_posts")
         <div class="blogposts">
@@ -42,8 +40,6 @@
                         </span>
                     <div class="blog-body">
                         @Html.Raw(item.Body)
-                    </div>
-                    <div class="clear">
                     </div>
                     <div class="tags">
                         @if (item.Tags.Count > 0)

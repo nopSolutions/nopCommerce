@@ -12,8 +12,6 @@
         <h1>
             @T("Order.OrderInformation")</h1>
     </div>
-    <div class="clear">
-    </div>
     <div class="page-body">
         @Html.Widget("mobile_orderdetails_page_top")
         <div class="order-overview">
@@ -30,8 +28,6 @@
                 @T("Order.OrderStatus"): @Model.OrderStatus
             </div>
             @Html.Widget("mobile_orderdetails_page_overview")
-        </div>
-        <div class="clear">
         </div>
         <div class="order-details-box">
             <div class="billing-info">
@@ -164,16 +160,11 @@
                 </div>
             }
         </div>
-        <div class="clear">
-        </div>
         @Html.Widget("mobile_orderdetails_page_beforeproducts")
         @if (Model.Items.Count > 0)
         {
             <div class="section-title">
                 @T("Order.Product(s)")</div>
-            <div class="clear">
-            </div>
-            
             <ul data-role="listview" data-inset="true" data-filter="false">
                 @foreach (var item in Model.Items)
                 {
@@ -212,8 +203,6 @@
             <div class="checkout-attributes">
                 @Html.Raw(Model.CheckoutAttributeInfo)
             </div>
-            <div class="clear">
-            </div>
                 }
 @*Reorder support*@
                 if (Model.IsReOrderAllowed)
@@ -224,8 +213,6 @@
                 {
             <a href="@Url.RouteUrl("ReturnRequest", new { orderId = @Model.Id })" data-role="button">@T("Order.ReturnItems")</a>
                 }
-            <div class="clear">
-            </div>
         }
         @Html.Widget("mobile_orderdetails_page_afterproducts")
         <div class="total-info">
@@ -366,14 +353,11 @@
                         </td>
                         <td class="cart-total-right">
                             <span class="nobr"><strong>
-                                @Model.OrderTotal</strong>
-                            </span>
+                                @Model.OrderTotal</strong> </span>
                         </td>
                     </tr>
                 </tbody>
             </table>
-        </div>
-        <div class="clear">
         </div>
         @if (Model.Shipments.Count > 0)
         {
@@ -414,8 +398,6 @@
                 }
             </ul>
         }
-        <div class="clear">
-        </div>
         @if (Model.OrderNotes.Count > 0)
         {
             <div class="section-title">

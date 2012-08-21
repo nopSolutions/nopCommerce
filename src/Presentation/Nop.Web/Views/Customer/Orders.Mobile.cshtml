@@ -10,8 +10,6 @@
     <div class="page-title">
         <h1>@T("Account.CustomerOrders")</h1>
     </div>
-    <div class="clear">
-    </div>
     <div class="page-body">
         @if (Model.RecurringOrders.Count > 0)
         {
@@ -25,16 +23,12 @@
                     }
                 </ul>
             </div>
-            <div class="clear">
-            </div>
             }
             using (Html.BeginForm())
             {
             <div class="recurring-payments">
                 <div class="section-title">
                     @T("Account.CustomerOrders.RecurringOrders")
-                </div>
-                <div class="clear">
                 </div>
                 <div>
                     <ul data-role="listview" data-inset="true" data-filter="false">
@@ -71,8 +65,6 @@
                 </div>
             </div>
             }
-            <div class="clear">
-            </div>
         }
         <div class="order-list">
             @if (Model.Orders.Count > 0)

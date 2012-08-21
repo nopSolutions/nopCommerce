@@ -32,8 +32,6 @@
                     <h1 class="product-name">
                         @Model.Name
                     </h1>
-                    <div class="clear">
-                    </div>
                     @if (errors.Count > 0)
                     { 
                         <div class="message-error">
@@ -45,40 +43,22 @@
                             </ul>
                         </div>
                     }
-                    <div class="clear">
-                    </div>
                     <div class="short-description">
                         @Html.Raw(Model.ShortDescription)
                     </div>
-                    <div class="clear">
-                    </div>
                     @Html.Widget("mobile_productdetails_before_pictures")
-                    <!--product pictures-->
                     @Html.Partial("_ProductDetailsPictures", Model)
                     @Html.Widget("mobile_productdetails_after_pictures")
-                    <div class="clear">
-                    </div>
-                    <!--product manufacturers-->
                     @Html.Action("ProductManufacturers", "Catalog", new { productId = Model.Id })
-                    <div class="clear">
-                    </div>
-                    <!--product reviews-->
                     @Html.Action("ProductReviewOverview", "Catalog", new { productId = Model.Id })
-                    <div class="clear">
-                    </div>
                     @Html.Action("ProductEmailAFriendButton", "Catalog", new { productId = Model.Id })
-                    <div class="clear">
-                    </div>
                     @Html.Action("CompareProductsButton", "Catalog", new { productId = Model.Id })
                 </div>
                 <div class="full-description">
                     @Html.Raw(Model.FullDescription)
                 </div>
             </div>
-            <div class="clear">
-            </div>
             <div class="product-collateral">
-                <!--product variants-->
                 <div class="product-variant-list">
                     @foreach (var variant in Model.ProductVariantModels)
                     {
@@ -87,8 +67,6 @@
                         @Html.Partial("_ProductVariantLine", variant, dataDictVariant)
                     }
                 </div>
-                <div class="clear">
-                </div>
                 @Html.Action("ProductSpecifications", "Catalog", new { productId = Model.Id })
                 <div class="clear">
                 </div>
@@ -96,8 +74,6 @@
                 <div class="clear">
                 </div>
                 @Html.Action("ProductsAlsoPurchased", "Catalog", new { productId = Model.Id })
-                <div class="clear">
-                </div>
                 @Html.Action("RelatedProducts", "Catalog", new { productId = Model.Id })
             </div>
         }

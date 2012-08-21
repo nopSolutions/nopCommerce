@@ -9,8 +9,6 @@
         <div class="title">
             @T("Manufacturers")
         </div>
-        <div class="clear">
-        </div>
         <ul data-role="listview" data-inset="true" data-filter="false">
             @foreach (var manufacturer in Model.Manufacturers)
             {
@@ -19,8 +17,6 @@
                     @manufacturer.Name</a></li>
             }
         </ul>
-        <div class="clear">
-        </div>
         @if (Model.TotalManufacturers > Model.Manufacturers.Count)
         {
             <div class="view-all">

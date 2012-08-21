@@ -11,12 +11,8 @@
     <div>
         @Html.Action("TopicBlock", "Topic", new { systemName = "ForumWelcomeMessage" })
     </div>
-    <div class="clear">
-    </div>
     <div class="forums-main-header">
         @Html.Partial("_SearchBox")
-    </div>
-    <div class="clear">
     </div>
     @foreach (var forumGroup in Model.ForumGroups)
     {

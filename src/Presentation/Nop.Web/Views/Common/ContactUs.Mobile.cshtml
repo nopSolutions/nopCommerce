@@ -10,11 +10,7 @@
     <div class="page-title">
         <h1>@T("PageTitle.ContactUs")</h1>
     </div>
-    <div class="clear">
-    </div>
     @Html.Action("TopicBlock", "Topic", new { systemName = "ContactUs" })
-    <div class="clear">
-    </div>
     <div class="page-body">
         @if (Model.SuccessfullySent)
         {

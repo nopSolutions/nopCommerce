@@ -48,18 +48,12 @@
         <div class="page-title">
             <h1>@T("Account.Register")</h1>
         </div>
-        <div class="clear">
-        </div>
         <div class="page-body">
             <div class="message-error">
                 @Html.ValidationSummary(true)
             </div>
-            <div class="clear">
-            </div>
             <div class="section-title">
                 @T("Account.YourPersonalDetails")
-            </div>
-            <div class="clear">
             </div>
             <div class="section-body">
                 @if (Model.GenderEnabled)
@@ -121,14 +115,10 @@
                     </div>
                 }
             </div>
-            <div class="clear">
-            </div>
             @if (Model.CompanyEnabled || Model.DisplayVatNumber)
             {
                 <div class="section-title">
                     @T("Account.CompanyDetails")
-                </div>
-                <div class="clear">
                 </div>
                 <div class="section-body">
                     @if (Model.CompanyEnabled)
@@ -148,8 +138,6 @@
                             <em>@T("Account.Fields.VatNumber.Note")</em>
                         </div>
                     }
-                </div>                       
-                <div class="clear">
                 </div>
             }
             @if (Model.StreetAddressEnabled ||
@@ -160,8 +148,6 @@
             {
                 <div class="section-title">
                     @T("Account.YourAddress")
-                </div>
-                <div class="clear">
                 </div>
                 <div class="section-body">
                     @if (Model.StreetAddressEnabled)
@@ -211,15 +197,11 @@
                         </div>
                     }
                 </div>
-                <div class="clear">
-                </div>
             }
             @if (Model.PhoneEnabled || Model.FaxEnabled)
             {
                 <div class="section-title">
                     @T("Account.YourContactInformation")
-                </div>
-                <div class="clear">
                 </div>
                 <div class="section-body">
                     @if (Model.PhoneEnabled)
@@ -239,15 +221,11 @@
                         </div>
                     }
                 </div>
-                <div class="clear">
-                </div>
             }
             @if (Model.NewsletterEnabled)
             {
                 <div class="section-title">
                     @T("Account.Options")
-                </div>
-                <div class="clear">
                 </div>
                 <div class="section-body">
                     <div>
@@ -256,15 +234,11 @@
                         @Html.ValidationMessageFor(model => model.Newsletter)
                     </div>
                 </div>
-                <div class="clear">
-                </div>
             }
             @if (Model.AllowCustomersToSetTimeZone)
             {
                 <div class="section-title">
                     @T("Account.Preferences")
-                </div>
-                <div class="clear">
                 </div>
                 <div class="section-body">
                     @if (Model.AllowCustomersToSetTimeZone)
@@ -276,13 +250,9 @@
                         </div>
                     }
                 </div>
-                <div class="clear">
-                </div>
             }
             <div class="section-title">
                 @T("Account.YourPassword")
-            </div>
-            <div class="clear">
             </div>
             <div class="section-body">
                 <div>
@@ -301,8 +271,6 @@
                         @Html.Raw(Html.GenerateCaptcha())
                     </div>
                 }
-            </div>
-            <div class="clear">
             </div>
             <div class="buttons">
                 <input type="submit" value="@T("Account.Register.Button")" name="register-button" />

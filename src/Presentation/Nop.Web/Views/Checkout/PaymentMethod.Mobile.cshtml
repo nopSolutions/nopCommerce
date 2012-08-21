@@ -12,8 +12,6 @@
     <div class="page-title">
         <h1>@T("Checkout.SelectPaymentMethod")</h1>
     </div>
-    <div class="clear">
-    </div>
     <div class="page-body checkout-data">
         @*set "data-ajax" attribute to "false"*@
         @using (Html.BeginRouteForm("CheckoutPaymentMethod", FormMethod.Post,
@@ -24,9 +22,7 @@
             {
             <div class="use-reward-points">
                 @Html.EditorFor(model => model.UseRewardPoints)
-                <label for="@Html.FieldIdFor(model => model.UseRewardPoints)">@string.Format(T("Checkout.UseRewardPoints").Text, Model.RewardPointsBalance, Model.RewardPointsAmount)</label>                
-            </div>
-            <div class="clear">
+                <label for="@Html.FieldIdFor(model => model.UseRewardPoints)">@string.Format(T("Checkout.UseRewardPoints").Text, Model.RewardPointsBalance, Model.RewardPointsAmount)</label>
             </div>
             }
             <div class="payment-methods">
@@ -48,8 +44,6 @@
                                 </div>
                             </div>
                         }
-                        <div class="clear">
-                        </div>
                         <div class="select-button">
                             <input type="submit" name="nextstep" value="@T("Checkout.NextButton")" />
                         </div>
@@ -57,11 +51,9 @@
                 }
                 else
                 {
-                    <div class="clear">
+                    <div class="message-error">
+                        @T("Checkout.NoPaymentMethods")
                     </div>
-                        <div class="message-error">
-                            @T("Checkout.NoPaymentMethods")
-                        </div>
                 }
             </div>
             @Html.Widget("mobile_checkout_payment_method_bottom")

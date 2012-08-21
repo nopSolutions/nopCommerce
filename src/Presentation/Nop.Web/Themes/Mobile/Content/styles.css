@@ -450,7 +450,9 @@
 .product-review-list .product-review-item{font-weight:normal;}
 .product-review-list .product-review-item .review-title{font-weight:700;float:left;margin-bottom:5px;}
 .product-review-list .product-review-item .product-review-box{float:right;margin-right:5px;width:69px;height:13px;}
-.product-review-list .product-review-item .review-text{margin-bottom:5px;}
+.product-review-list .product-review-item .product-review-box .rating{height:13px;width:55px;background:url(images/star-x-inactive.gif) 0 0 repeat-x;}
+.product-review-list .product-review-item .product-review-box .rating div{height:12px;background:url(images/star-x-active.gif) 0 0 repeat-x;}
+.product-review-list .product-review-item .review-text{margin-bottom:5px;clear:both;}
 .product-review-list .product-review-item .review-info{margin-bottom:5px;}
 .product-review-list .product-review-item .review-info .separator{margin:0 2px;}
 .product-review-helpfulness{color:#333;}

@@ -12,8 +12,6 @@
     <div class="page-title">
         <h1>@T("Checkout.ConfirmYourOrder")</h1>
     </div>
-    <div class="clear">
-    </div>
     <div class="page-body checkout-data">
         @*set "data-ajax" attribute to "false"*@
         @using (Html.BeginRouteForm("CheckoutConfirm", FormMethod.Post,
@@ -23,8 +21,6 @@
 
             if (Model.Warnings.Count > 0)
             {
-            <div class="clear">
-            </div>
             <div class="message-error">
                 <ul>
                     @for (int i = 0; i < Model.Warnings.Count; i++)
@@ -56,8 +52,6 @@
             </div>  
             @Html.Widget("mobile_checkout_confirm_bottom")
         }
-        <div class="clear">
-        </div>
         <div class="order-summary-body">
             @Html.Action("OrderSummary", "ShoppingCart", new { prepareAndDisplayOrderReviewData = true })
         </div>

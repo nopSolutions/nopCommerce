@@ -10,13 +10,9 @@
     <div class="page-title">
         <h1>@T("Account.CustomerAddresses")</h1>
     </div>
-    <div class="clear">
-    </div>
     <div class="page-body">
         <div class="add-button">
             <a href="@Url.RouteUrl("CustomerAddressAdd")" data-role="button">@T("Common.AddNew")</a>
-        </div>
-        <div class="clear">
         </div>
         <div class="address-list">
             @if (Model.Addresses.Count > 0)

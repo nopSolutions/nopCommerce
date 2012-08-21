@@ -21,33 +21,21 @@
         </div>
     }
     @Html.Partial("_DownloadSample", Model)
-    <div class="clear">
-    </div>
     @Html.Action("ProductTierPrices", "Catalog", new { productVariantId = Model.Id })
-    <div class="clear">
-    </div>
     @{
         var dataDictAttributes = new ViewDataDictionary();
         dataDictAttributes.TemplateInfo.HtmlFieldPrefix = string.Format("attributes_{0}", Model.Id);
         @Html.Partial("_ProductAttributes", Model.ProductVariantAttributes, dataDictAttributes)                  
     }
-    <div class="clear">
-    </div>
     <!--product SKU, manufacturer part number, stock info-->
     @Html.Partial("_ProductVariant_SKU_Man_Stock", Model)
-    <div class="clear">
-    </div>
     <!--Back in stock subscription-->
     @Html.Partial("_ProductVariantBackInStockSubscription", Model)
-    <div class="clear">
-    </div>
     @{
         var dataDictGiftCard = new ViewDataDictionary();
         dataDictGiftCard.TemplateInfo.HtmlFieldPrefix = string.Format("giftcard_{0}", Model.Id);
         @Html.Partial("_GiftCardInfo", Model.GiftCard, dataDictGiftCard)
     }
-    <div class="clear">
-    </div>
     @{
         var dataDictPrice = new ViewDataDictionary();
         dataDictPrice.TemplateInfo.HtmlFieldPrefix = string.Format("price_{0}", Model.Id);

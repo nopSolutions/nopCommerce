@@ -12,8 +12,6 @@
     <div class="page-title">
         <h1>@T("Checkout.BillingAddress")</h1>
     </div>
-    <div class="clear">
-    </div>
     <div class="page-body checkout-data">
         @Html.Widget("mobile_checkout_billing_address_top")
         @if (Model.ExistingAddresses.Count > 0)
@@ -21,8 +19,6 @@
             <div>
                 <div class="select-address-title">
                     @T("Checkout.SelectBillingAddress")
-                </div>
-                <div class="clear">
                 </div>
                 <div class="address-grid">
                     <ul data-role="listview" data-inset="true" data-filter="false">
@@ -74,8 +70,6 @@
                     </ul>
                 </div>
             </div>
-            <div class="clear">
-            </div>
         }
         @Html.Widget("mobile_checkout_billing_address_middle")
         <div class="enter-address-title">
@@ -87,8 +81,6 @@
             {
                 @T("Checkout.EnterBillingAddress")
             }
-        </div>
-        <div class="clear">
         </div>
         <div class="enter-address">
             @*set "data-ajax" attribute to "false"*@
@@ -103,8 +95,6 @@
                 dataDictAddress.TemplateInfo.HtmlFieldPrefix = "NewAddress";
                         @Html.Partial("_CreateOrUpdateAddress", Model.NewAddress, dataDictAddress)              
                     }
-                </div>
-                <div class="clear">
                 </div>
                 <div class="buttons">
                     <input type="submit" name="nextstep" value="@T("Checkout.NextButton")" />

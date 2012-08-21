@@ -10,8 +10,6 @@
     <div class="page-title">
         <h1>@string.Format(@T("ReturnRequests.Title").Text, Model.OrderId)</h1>
     </div>
-    <div class="clear">
-    </div>
     <div class="page-body">
         @if (!String.IsNullOrEmpty(Model.Result))
         {
@@ -22,8 +20,6 @@
         {
             
             <div class="section-title">@T("ReturnRequests.SelectProduct(s)")</div>
-            <div class="clear">
-            </div>
             using (Html.BeginForm())
             {
 
@@ -63,12 +59,8 @@
                 }
             </ul>
                 }
-            <div class="clear">
-            </div>
             <div class="section-title">
                 @T("ReturnRequests.WhyReturning")</div>
-            <div class="clear">
-            </div>
             <div class="why">
                 <div>
                     @Html.LabelFor(model => model.ReturnReason)

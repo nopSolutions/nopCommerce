@@ -11,8 +11,6 @@
     <div class="page-title">
         <a href="@Url.RouteUrl("Product", new { productId = Model.ProductId, SeName = Model.ProductSeName })">@Model.ProductName</a>
     </div>
-    <div class="clear">
-    </div>
     <div class="page-body">
         @Html.Widget("mobile_productreviews_page_top")
         @if (Model.AddProductReview.SuccessfullyAdded)
