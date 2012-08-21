@@ -2,6 +2,7 @@
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Configuration;
+using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Media;
 using Nop.Core.Domain.News;
@@ -106,10 +107,14 @@ namespace Nop.Web.Infrastructure.Cache
         IConsumer<EntityInserted<BlogPost>>,
         IConsumer<EntityUpdated<BlogPost>>,
         IConsumer<EntityDeleted<BlogPost>>,
-        //news itesm
+        //news items
         IConsumer<EntityInserted<NewsItem>>,
         IConsumer<EntityUpdated<NewsItem>>,
-        IConsumer<EntityDeleted<NewsItem>>
+        IConsumer<EntityDeleted<NewsItem>>,
+        //states/province
+        IConsumer<EntityInserted<StateProvince>>,
+        IConsumer<EntityUpdated<StateProvince>>,
+        IConsumer<EntityDeleted<StateProvince>>
     {
         /// <summary>
         /// Key for ManufacturerNavigationModel caching
@@ -325,7 +330,18 @@ namespace Nop.Web.Infrastructure.Cache
         /// </remarks>
         public const string HOMEPAGE_NEWSMODEL_KEY = "nop.pres.news.homepage-{0}";
         public const string NEWS_PATTERN_KEY = "nop.pres.news.";
-
+        
+        /// <summary>
+        /// Key for states by country id
+        /// </summary>
+        /// <remarks>
+        /// {0} : country ID
+        /// {0} : addEmptyStateIfRequired value
+        /// {0} : language ID
+        /// </remarks>
+        public const string STATEPROVINCES_BY_COUNTRY_MODEL_KEY = "nop.pres.stateprovinces.bycountry-{0}-{1}-{2}";
+        public const string STATEPROVINCES_PATTERN_KEY = "nop.pres.stateprovinces.";
+        
         private readonly ICacheManager _cacheManager;
         
         public ModelCacheEventConsumer()
@@ -344,6 +360,7 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(PRODUCT_BREADCRUMB_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_NAVIGATION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCT_MANUFACTURERS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
         }
         public void HandleEvent(EntityUpdated<Language> eventMessage)
         {
@@ -354,6 +371,7 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(PRODUCT_BREADCRUMB_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_NAVIGATION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCT_MANUFACTURERS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
         }
         public void HandleEvent(EntityDeleted<Language> eventMessage)
         {
@@ -364,6 +382,7 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(PRODUCT_BREADCRUMB_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CATEGORY_NAVIGATION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCT_MANUFACTURERS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
         }
 
         //settings
@@ -714,6 +733,20 @@ namespace Nop.Web.Infrastructure.Cache
         public void HandleEvent(EntityDeleted<NewsItem> eventMessage)
         {
             _cacheManager.RemoveByPattern(NEWS_PATTERN_KEY);
+        }
+
+        //State/province
+        public void HandleEvent(EntityInserted<StateProvince> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityUpdated<StateProvince> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityDeleted<StateProvince> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
         }
     }
 }
