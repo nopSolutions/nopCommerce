@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Nop.Core;
+using Nop.Core.Caching;
 using Nop.Core.Domain;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
@@ -30,6 +31,7 @@ using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Security;
 using Nop.Web.Framework.Themes;
 using Nop.Web.Framework.UI.Captcha;
+using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Catalog;
 using Nop.Web.Models.Common;
 
@@ -58,6 +60,7 @@ namespace Nop.Web.Controllers
         private readonly IPermissionService _permissionService;
         private readonly IMobileDeviceHelper _mobileDeviceHelper;
         private readonly HttpContextBase _httpContext;
+        private readonly ICacheManager _cacheManager;
 
         private readonly CustomerSettings _customerSettings;
         private readonly TaxSettings _taxSettings;
@@ -84,7 +87,8 @@ namespace Nop.Web.Controllers
             IThemeProvider themeProvider, IForumService forumService,
             IGenericAttributeService genericAttributeService, IWebHelper webHelper,
             IPermissionService permissionService, IMobileDeviceHelper mobileDeviceHelper,
-            HttpContextBase httpContext, CustomerSettings customerSettings, 
+            HttpContextBase httpContext, ICacheManager cacheManager,
+            CustomerSettings customerSettings, 
             TaxSettings taxSettings, CatalogSettings catalogSettings,
             StoreInformationSettings storeInformationSettings, EmailAccountSettings emailAccountSettings,
             CommonSettings commonSettings, BlogSettings blogSettings, ForumSettings forumSettings,
@@ -109,6 +113,7 @@ namespace Nop.Web.Controllers
             this._permissionService = permissionService;
             this._mobileDeviceHelper = mobileDeviceHelper;
             this._httpContext = httpContext;
+            this._cacheManager = cacheManager;
 
             this._customerSettings = customerSettings;
             this._taxSettings = taxSettings;
@@ -129,10 +134,19 @@ namespace Nop.Web.Controllers
         [NonAction]
         protected LanguageSelectorModel PrepareLanguageSelectorModel()
         {
+            var availableLanguages = _cacheManager.Get(ModelCacheEventConsumer.AVAILABLE_LANGUAGES_MODEL_KEY, () =>
+            {
+                var result = _languageService
+                    .GetAllLanguages()
+                    .Select(x => x.ToModel())
+                    .ToList();
+                return result;
+            });
+
             var model = new LanguageSelectorModel()
             {
                 CurrentLanguage = _workContext.WorkingLanguage.ToModel(),
-                AvailableLanguages = _languageService.GetAllLanguages().Select(x => x.ToModel()).ToList(),
+                AvailableLanguages = availableLanguages,
                 UseImages = _localizationSettings.UseImagesForLanguageSelection
             };
             return model;
@@ -141,10 +155,19 @@ namespace Nop.Web.Controllers
         [NonAction]
         protected CurrencySelectorModel PrepareCurrencySelectorModel()
         {
+            var availableCurrencies = _cacheManager.Get(string.Format(ModelCacheEventConsumer.AVAILABLE_CURRENCIES_MODEL_KEY, _workContext.WorkingLanguage.Id), () =>
+            {
+                var result = _currencyService
+                    .GetAllCurrencies()
+                    .Select(x => x.ToModel())
+                    .ToList();
+                return result;
+            });
+
             var model = new CurrencySelectorModel()
             {
                 CurrentCurrency = _workContext.WorkingCurrency.ToModel(),
-                AvailableCurrencies = _currencyService.GetAllCurrencies().Select(x => x.ToModel()).ToList()
+                AvailableCurrencies = availableCurrencies
             };
             return model;
         }

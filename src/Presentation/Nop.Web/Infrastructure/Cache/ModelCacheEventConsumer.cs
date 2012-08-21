@@ -23,6 +23,10 @@ namespace Nop.Web.Infrastructure.Cache
         IConsumer<EntityInserted<Language>>,
         IConsumer<EntityUpdated<Language>>,
         IConsumer<EntityDeleted<Language>>,
+        //currencies
+        IConsumer<EntityInserted<Currency>>,
+        IConsumer<EntityUpdated<Currency>>,
+        IConsumer<EntityDeleted<Currency>>,
         //settings
         IConsumer<EntityInserted<Setting>>,
         IConsumer<EntityUpdated<Setting>>,
@@ -341,7 +345,22 @@ namespace Nop.Web.Infrastructure.Cache
         /// </remarks>
         public const string STATEPROVINCES_BY_COUNTRY_MODEL_KEY = "nop.pres.stateprovinces.bycountry-{0}-{1}-{2}";
         public const string STATEPROVINCES_PATTERN_KEY = "nop.pres.stateprovinces.";
-        
+
+        /// <summary>
+        /// Key for available languages
+        /// </summary>
+        public const string AVAILABLE_LANGUAGES_MODEL_KEY = "nop.pres.languages.all";
+        public const string AVAILABLE_LANGUAGES_PATTERN_KEY = "nop.pres.languages.";
+
+        /// <summary>
+        /// Key for available currencies
+        /// </summary>
+        /// <remarks>
+        /// {0} : language ID
+        /// </remarks>
+        public const string AVAILABLE_CURRENCIES_MODEL_KEY = "nop.pres.currencies.all-{0}";
+        public const string AVAILABLE_CURRENCIES_PATTERN_KEY = "nop.pres.currencies.";
+
         private readonly ICacheManager _cacheManager;
         
         public ModelCacheEventConsumer()
@@ -349,7 +368,7 @@ namespace Nop.Web.Infrastructure.Cache
             //TODO inject static cache manager using constructor
             this._cacheManager = EngineContext.Current.ContainerManager.Resolve<ICacheManager>("nop_cache_static");
         }
-        
+
         //languages
         public void HandleEvent(EntityInserted<Language> eventMessage)
         {
@@ -361,6 +380,8 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(CATEGORY_NAVIGATION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCT_MANUFACTURERS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(AVAILABLE_LANGUAGES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(AVAILABLE_CURRENCIES_PATTERN_KEY);
         }
         public void HandleEvent(EntityUpdated<Language> eventMessage)
         {
@@ -372,6 +393,8 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(CATEGORY_NAVIGATION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCT_MANUFACTURERS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(AVAILABLE_LANGUAGES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(AVAILABLE_CURRENCIES_PATTERN_KEY);
         }
         public void HandleEvent(EntityDeleted<Language> eventMessage)
         {
@@ -383,6 +406,22 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(CATEGORY_NAVIGATION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCT_MANUFACTURERS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(STATEPROVINCES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(AVAILABLE_LANGUAGES_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(AVAILABLE_CURRENCIES_PATTERN_KEY);
+        }
+        
+        //currencies
+        public void HandleEvent(EntityInserted<Currency> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(AVAILABLE_CURRENCIES_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityUpdated<Currency> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(AVAILABLE_CURRENCIES_PATTERN_KEY);
+        }
+        public void HandleEvent(EntityDeleted<Currency> eventMessage)
+        {
+            _cacheManager.RemoveByPattern(AVAILABLE_CURRENCIES_PATTERN_KEY);
         }
 
         //settings
