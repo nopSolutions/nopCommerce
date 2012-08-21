@@ -24,7 +24,7 @@
         {
             item.Text = category.Name;
             item.Value = category.Id.ToString();
-            item.LoadOnDemand = categoryService.GetAllCategoriesByParentCategoryId(category.Id).Count > 0;
+            item.LoadOnDemand = categoryService.GetAllCategoriesByParentCategoryId(category.Id, true).Count > 0;
             item.Enabled = true;
             item.ImageUrl = Url.Content("~/Administration/Content/images/ico-content.png");
         })
