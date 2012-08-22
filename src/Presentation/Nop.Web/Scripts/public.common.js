@@ -52,6 +52,7 @@ function displayPopupNotification(message, messagetype, modal) {
         container = $('#dialog-notifications-success');
     }
 
+    //we do not encode displayed message
     var htmlcode = '';
     if ((typeof message) == 'string') {
         htmlcode = '<p>' + message + '</p>';
@@ -85,6 +86,8 @@ function displayBarNotification(message, messagetype, timeout) {
         .removeClass('success')
         .removeClass('error');
     $('#bar-notification .content').remove();
+
+    //we do not encode displayed message
 
     //add new notifications
     var htmlcode = '';

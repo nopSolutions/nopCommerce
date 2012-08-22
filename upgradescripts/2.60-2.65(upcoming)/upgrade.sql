@@ -38,6 +38,18 @@ set @resources='
   <LocaleResource Name="Wishlist.EmailAFriend.PersonalMessage.Hint">
     <Value>Enter personal message (optional)</Value>
   </LocaleResource>
+  <LocaleResource Name="Products.ProductHasBeenAddedToTheCart">
+    <Value>The product has been added to your shopping cart</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.ProductHasBeenAddedToTheCart.Link">
+    <Value><![CDATA[The product has been added to your <a href="{0}">shopping cart</a>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.ProductHasBeenAddedToTheWishlist">
+    <Value>The product has been added to your wishlist</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.ProductHasBeenAddedToTheWishlist.Link">
+    <Value><![CDATA[The product has been added to your <a href="{0}">wishlist</a>]]></Value>
+  </LocaleResource>
 </Language>
 '
 

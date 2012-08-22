@@ -7,10 +7,7 @@
     @Html.Action("JavaScriptDisabledWarning", "Common")
     <div class="master-wrapper-content">
         <script type="text/javascript">
-        //<![CDATA[
-            //replace the first parameter with "true" to use popup notifications
             AjaxCart.init(false, '.header-links .cart-qty', '.header-links .wishlist-qty', '#flyout-cart');
-          //]]>
         </script>
         @Html.Partial("Header")
         @Html.Partial("HeaderMenu")

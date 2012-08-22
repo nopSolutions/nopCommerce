@@ -11,7 +11,6 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
 using Nop.Core.Data;
-using Nop.Core.Events;
 using Nop.Core.Fakes;
 using Nop.Core.Infrastructure;
 using Nop.Core.Infrastructure.DependencyManagement;

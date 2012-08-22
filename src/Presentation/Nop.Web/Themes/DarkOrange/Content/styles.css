@@ -200,6 +200,8 @@ a.eu-cookie-privacyinfo-tag{color:#F93 !important;text-decoration:underline;}
 .bar-notification.error{background:none repeat scroll 0 0 #CC0000;border-bottom:3px solid #FFFFFF !important;color:#FFFFFF;margin: 0 0 10px;}
 .bar-notification .close{float:right;margin:9px 9px 0px 0px;cursor:pointer;}
 .bar-notification p.content{padding:0px 10px;}
+.bar-notification p.content a{text-decoration:underline;color:#FFFFFF;}
+.bar-notification p.content a:hover{text-decoration:none;color:#FFFFFF;}
 
 /* ORDER SUMMARY, SHOPPING CART, WISHLIST */
 .shopping-cart-page,.wishlist-page{}

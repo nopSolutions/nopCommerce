@@ -866,7 +866,7 @@ namespace Nop.Web.Controllers
             return Json(new
             {
                 success = true,
-                message = _localizationService.GetResource("Products.ProductHasBeenAddedToTheCart"),
+                message = string.Format(_localizationService.GetResource("Products.ProductHasBeenAddedToTheCart.Link"), Url.RouteUrl("ShoppingCart")),
                 updatetopcartsectionhtml = updatetopcartsectionhtml,
                 updateflyoutcartsectionhtml = updateflyoutcartsectionhtml,
             });
@@ -1116,7 +1116,7 @@ namespace Nop.Web.Controllers
                             return Json(new
                             {
                                 success = true,
-                                message = _localizationService.GetResource("Products.ProductHasBeenAddedToTheWishlist"),
+                                message = string.Format(_localizationService.GetResource("Products.ProductHasBeenAddedToTheWishlist.Link"), Url.RouteUrl("Wishlist")),
                                 updatetopwishlistsectionhtml = updatetopwishlistsectionhtml,
                             });
                         }
@@ -1150,7 +1150,7 @@ namespace Nop.Web.Controllers
                             return Json(new
                             {
                                 success = true,
-                                message = _localizationService.GetResource("Products.ProductHasBeenAddedToTheCart"),
+                                message = string.Format(_localizationService.GetResource("Products.ProductHasBeenAddedToTheCart.Link"), Url.RouteUrl("ShoppingCart")),
                                 updatetopcartsectionhtml = updatetopcartsectionhtml,
                                 updateflyoutcartsectionhtml = updateflyoutcartsectionhtml
                             });
