@@ -2,7 +2,7 @@
 FriendlyName: Facebook
 SystemName: ExternalAuth.Facebook
 Version: 1.13
-SupportedVersions: 2.60
+SupportedVersions: 2.65
 Author: nopCommerce team
 DisplayOrder: 5
 FileName: Nop.Plugin.ExternalAuth.Facebook.dll
