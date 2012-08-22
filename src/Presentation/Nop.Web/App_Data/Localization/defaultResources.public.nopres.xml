@@ -3356,11 +3356,13 @@
 			</LocaleResource>
 			<LocaleResource Name="ProductHasBeenAddedToTheWishlist">
 				<Value>The product has been added to your wishlist</Value>
-        <LocaleResource Name="Link">
-          <Value>
-            <![CDATA[The product has been added to your <a href="{0}">wishlist</a>]]>
-          </Value>
-        </LocaleResource>
+        <Children>
+          <LocaleResource Name="Link">
+            <Value>
+              <![CDATA[The product has been added to your <a href="{0}">wishlist</a>]]>
+            </Value>
+          </LocaleResource>
+        </Children>
 			</LocaleResource>
 			<LocaleResource Name="Qty">
 				<Value>Qty</Value>
