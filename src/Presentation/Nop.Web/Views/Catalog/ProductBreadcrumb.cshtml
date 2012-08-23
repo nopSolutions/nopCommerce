@@ -13,7 +13,9 @@
         }
         @*uncomment to disable clickable link
         <strong>@Model.ProductName</strong>*@
-        <strong><a href="@Url.RouteUrl("Product", new { productId = Model.ProductId, SeName = Model.ProductSeName })">@Model.ProductName</a></strong>
-        @Html.Widget("productbreadcrumb_after")
+        <li>
+            <strong><a href="@Url.RouteUrl("Product", new { productId = Model.ProductId, SeName = Model.ProductSeName })">@Model.ProductName</a></strong>
+            @Html.Widget("productbreadcrumb_after")
+        </li>
     </ul>
 </div>
