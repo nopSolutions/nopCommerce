@@ -1,4 +1,4 @@
-﻿--upgrade scripts from nopCommerce 2.60 to nopCommerce 2.70
+﻿--upgrade scripts from nopCommerce 2.60 to nopCommerce 2.65
 
 --new locale resources
 declare @resources xml
