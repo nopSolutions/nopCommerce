@@ -254,7 +254,7 @@ namespace Nop.Services.Catalog
                         {
                             var downloadCopy = new Download()
                             {
-                                DownloadGuid = download.DownloadGuid,
+                                DownloadGuid = Guid.NewGuid(),
                                 UseDownloadUrl = download.UseDownloadUrl,
                                 DownloadUrl = download.DownloadUrl,
                                 DownloadBinary = download.DownloadBinary,
@@ -274,7 +274,7 @@ namespace Nop.Services.Catalog
                             {
                                 var sampleDownloadCopy = new Download()
                                 {
-                                    DownloadGuid = download.DownloadGuid,
+                                    DownloadGuid = Guid.NewGuid(),
                                     UseDownloadUrl = sampleDownload.UseDownloadUrl,
                                     DownloadUrl = sampleDownload.DownloadUrl,
                                     DownloadBinary = sampleDownload.DownloadBinary,
