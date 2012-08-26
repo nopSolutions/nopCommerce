@@ -422,6 +422,7 @@ namespace Nop.Admin.Infrastructure
             Mapper.CreateMap<GiftCardModel, GiftCard>()
                 .ForMember(dest => dest.PurchasedWithOrderProductVariantId, mo => mo.Ignore())
                 .ForMember(dest => dest.GiftCardTypeId, mo => mo.Ignore())
+                .ForMember(dest => dest.GiftCardType, mo => mo.Ignore())
                 .ForMember(dest => dest.GiftCardUsageHistory, mo => mo.Ignore())
                 .ForMember(dest => dest.PurchasedWithOrderProductVariant, mo => mo.Ignore())
                 .ForMember(dest => dest.IsRecipientNotified, mo => mo.Ignore())
