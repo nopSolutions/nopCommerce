@@ -143,6 +143,15 @@ namespace Nop.Services.Payments
             if (paymentMethod.PaymentMethodType != PaymentMethodType.Redirection)
                 return false;   //this option is available only for redirection payment methods
 
+            if (order.Deleted)
+                return false;  //do not allow for deleted orders
+
+            if (order.OrderStatus == OrderStatus.Cancelled)
+                return false;  //do not allow for cancelled orders
+
+            if (order.PaymentStatus != PaymentStatus.Pending)
+                return false;  //payment status should be Pending
+
             return paymentMethod.CanRePostProcessPayment(order);
         }
 

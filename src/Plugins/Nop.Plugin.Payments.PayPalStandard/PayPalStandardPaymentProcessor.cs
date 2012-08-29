@@ -424,14 +424,7 @@ namespace Nop.Plugin.Payments.PayPalStandard
         {
             if (order == null)
                 throw new ArgumentNullException("order");
-
-            //PayPal Standard is the redirection payment method
-            //It also validates whether order is also paid (after redirection) so customers will not be able to pay twice
             
-            //payment status should be Pending
-            if (order.PaymentStatus != PaymentStatus.Pending)
-                return false;
-
             //let's ensure that at least 1 minute passed after order is placed
             if ((DateTime.UtcNow - order.CreatedOnUtc).TotalMinutes < 1)
                 return false;
