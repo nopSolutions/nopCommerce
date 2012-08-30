@@ -35,8 +35,10 @@ namespace Nop.Web.Framework
 
             var permissionService = EngineContext.Current.Resolve<IPermissionService>();
             var publicStoreAllowNavigation = permissionService.Authorize(StandardPermissionProvider.PublicStoreAllowNavigation);
-            if (!publicStoreAllowNavigation &&
-                //ensure it's not the Login page
+            if (publicStoreAllowNavigation)
+                return;
+
+            if (//ensure it's not the Login page
                 !(controllerName.Equals("Nop.Web.Controllers.CustomerController", StringComparison.InvariantCultureIgnoreCase) && actionName.Equals("Login", StringComparison.InvariantCultureIgnoreCase)) &&
                 //ensure it's not the Logout page
                 !(controllerName.Equals("Nop.Web.Controllers.CustomerController", StringComparison.InvariantCultureIgnoreCase) && actionName.Equals("Logout", StringComparison.InvariantCultureIgnoreCase)) &&
@@ -50,7 +52,9 @@ namespace Nop.Web.Framework
                 //ensure it's not the Register page
                 !(controllerName.Equals("Nop.Web.Controllers.CustomerController", StringComparison.InvariantCultureIgnoreCase) && actionName.Equals("CheckUsernameAvailability", StringComparison.InvariantCultureIgnoreCase)) &&
                 //ensure it's not the GetStatesByCountryId ajax method (can be used during registration)
-                !(controllerName.Equals("Nop.Web.Controllers.CountryController", StringComparison.InvariantCultureIgnoreCase) && actionName.Equals("GetStatesByCountryId", StringComparison.InvariantCultureIgnoreCase)))
+                !(controllerName.Equals("Nop.Web.Controllers.CountryController", StringComparison.InvariantCultureIgnoreCase) && actionName.Equals("GetStatesByCountryId", StringComparison.InvariantCultureIgnoreCase)) &&
+                //ensure it's not the method (AJAX) for accepting EU Cookie law
+                !(controllerName.Equals("Nop.Web.Controllers.CommonController", StringComparison.InvariantCultureIgnoreCase) && actionName.Equals("EuCookieLawAccept", StringComparison.InvariantCultureIgnoreCase)))
             {
                 //var webHelper = EngineContext.Current.Resolve<IWebHelper>();
                 //var loginPageUrl = webHelper.GetStoreLocation() + "login";

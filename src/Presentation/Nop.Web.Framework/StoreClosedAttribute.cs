@@ -36,11 +36,15 @@ namespace Nop.Web.Framework
                 return;
 
             var storeInformationSettings = EngineContext.Current.Resolve<StoreInformationSettings>();
-            if (storeInformationSettings.StoreClosed &&
-                //ensure it's not the Login page
+            if (!storeInformationSettings.StoreClosed)
+                return;
+
+            if (//ensure it's not the Login page
                 !(controllerName.Equals("Nop.Web.Controllers.CustomerController", StringComparison.InvariantCultureIgnoreCase) && actionName.Equals("Login", StringComparison.InvariantCultureIgnoreCase)) &&
                 //ensure it's not the Logout page
-                !(controllerName.Equals("Nop.Web.Controllers.CustomerController", StringComparison.InvariantCultureIgnoreCase) && actionName.Equals("Logout", StringComparison.InvariantCultureIgnoreCase)))
+                !(controllerName.Equals("Nop.Web.Controllers.CustomerController", StringComparison.InvariantCultureIgnoreCase) && actionName.Equals("Logout", StringComparison.InvariantCultureIgnoreCase)) &&
+                //ensure it's not the method (AJAX) for accepting EU Cookie law
+                !(controllerName.Equals("Nop.Web.Controllers.CommonController", StringComparison.InvariantCultureIgnoreCase) && actionName.Equals("EuCookieLawAccept", StringComparison.InvariantCultureIgnoreCase)))
             {
                 if (storeInformationSettings.StoreClosedAllowForAdmins && EngineContext.Current.Resolve<IWorkContext>().CurrentCustomer.IsAdmin())
                 {
