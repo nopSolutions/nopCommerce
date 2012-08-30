@@ -1,7 +1,6 @@
 ﻿@model GiftCardModel
-
 @using Telerik.Web.Mvc.UI;
-
+@using Nop.Core.Domain.Catalog;
 @Html.ValidationSummary(false)
 @Html.HiddenFor(model => model.Id)
 @Html.Telerik().TabStrip().Name("giftcard-edit").Items(x =>
@@ -16,14 +15,36 @@
     EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "giftcard-edit"));
 })
 @helper TabInfo()
-    { 
+    { <script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#@Html.FieldIdFor(model => model.GiftCardTypeId)").change(toggleGiftCardType);
+        
+        toggleGiftCardType();
+    });
+
+    function toggleGiftCardType() {
+        var selectedGiftCardTypeId = $("#@Html.FieldIdFor(model => model.GiftCardTypeId)").val();
+        if (selectedGiftCardTypeId == @(((int)GiftCardType.Virtual).ToString())) {
+            $('#pnlRecipientEmail').show();
+            $('#pnlSenderEmail').show();
+            $('#pnlNotifyRecipient').show();
+        }
+        else {
+            $('#pnlRecipientEmail').hide();
+            $('#pnlSenderEmail').hide();
+            $('#pnlNotifyRecipient').hide();
+        }
+    }
+    </script>
     <table class="adminContent">
         <tr>
             <td class="adminTitle">
-                @Html.NopLabelFor(model => model.GiftCardType):
+                @Html.NopLabelFor(model => model.GiftCardTypeId):
             </td>
             <td class="adminData">
-                @Model.GiftCardType.ToString()
+                @Html.DropDownListFor(model => model.GiftCardTypeId, ((GiftCardType)Model.GiftCardTypeId).ToSelectList())
+                @Html.ValidationMessageFor(model => model.GiftCardTypeId)
             </td>
         </tr>
         @if (Model.PurchasedWithOrderId.HasValue)
@@ -42,7 +63,7 @@
                 @Html.NopLabelFor(model => model.Amount):
             </td>
             <td class="adminData">
-                @Html.EditorFor(model => model.Amount)  [@Model.PrimaryStoreCurrencyCode]
+                @Html.EditorFor(model => model.Amount) [@Model.PrimaryStoreCurrencyCode]
                 @Html.ValidationMessageFor(model => model.Amount)
             </td>
         </tr>
@@ -102,18 +123,15 @@
                 @Html.ValidationMessageFor(model => model.RecipientName)
             </td>
         </tr>
-        @if (Model.GiftCardType == Nop.Core.Domain.Catalog.GiftCardType.Virtual)
-        {
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.RecipientEmail):
-                </td>
-                <td class="adminData">
-                    @Html.EditorFor(model => model.RecipientEmail)
-                    @Html.ValidationMessageFor(model => model.RecipientEmail)
-                </td>
-            </tr>
-        }
+        <tr id="pnlRecipientEmail">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.RecipientEmail):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.RecipientEmail)
+                @Html.ValidationMessageFor(model => model.RecipientEmail)
+            </td>
+        </tr>
         <tr>
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.SenderName):
@@ -123,18 +141,15 @@
                 @Html.ValidationMessageFor(model => model.SenderName)
             </td>
         </tr>
-        @if (Model.GiftCardType == Nop.Core.Domain.Catalog.GiftCardType.Virtual)
-        {
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.SenderEmail):
-                </td>
-                <td class="adminData">
-                    @Html.EditorFor(model => model.SenderEmail)
-                    @Html.ValidationMessageFor(model => model.SenderEmail)
-                </td>
-            </tr>
-        }
+        <tr id="pnlSenderEmail">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SenderEmail):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SenderEmail)
+                @Html.ValidationMessageFor(model => model.SenderEmail)
+            </td>
+        </tr>
         <tr>
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.Message):
@@ -144,9 +159,9 @@
                 @Html.ValidationMessageFor(model => model.Message)
             </td>
         </tr>
-        @if (Model.GiftCardType == Nop.Core.Domain.Catalog.GiftCardType.Virtual && Model.Id > 0)
+        @if (Model.Id > 0)
         {
-            <tr>
+            <tr id="pnlNotifyRecipient">
                 <td class="adminTitle">
                     @Html.NopLabelFor(model => model.IsRecipientNotified):
                 </td>

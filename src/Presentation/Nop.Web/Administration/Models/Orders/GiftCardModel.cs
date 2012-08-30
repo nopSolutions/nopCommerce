@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Web.Mvc;
-using Nop.Core.Domain.Catalog;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
 
@@ -9,7 +8,7 @@ namespace Nop.Admin.Models.Orders
     public partial class GiftCardModel: BaseNopEntityModel
     {
         [NopResourceDisplayName("Admin.GiftCards.Fields.GiftCardType")]
-        public GiftCardType GiftCardType { get; set; }
+        public int GiftCardTypeId { get; set; }
 
         [NopResourceDisplayName("Admin.GiftCards.Fields.Order")]
         public int? PurchasedWithOrderId { get; set; }
