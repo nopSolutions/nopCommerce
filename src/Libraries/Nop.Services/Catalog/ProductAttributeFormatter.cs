@@ -204,20 +204,29 @@ namespace Nop.Services.Catalog
                     _productAttributeParser.GetGiftCardAttribute(attributes, out giftCardRecipientName, out giftCardRecipientEmail,
                         out giftCardSenderName, out giftCardSenderEmail, out giftCardMessage);
 
+                    //sender
+                    var giftCardFrom = productVariant.GiftCardType == GiftCardType.Virtual ?
+                        string.Format(_localizationService.GetResource("GiftCardAttribute.From.Virtual"), giftCardSenderName, giftCardSenderEmail) :
+                        string.Format(_localizationService.GetResource("GiftCardAttribute.From.Physical"), giftCardSenderName);
+                    //recipient
+                    var giftCardFor = productVariant.GiftCardType == GiftCardType.Virtual ?
+                        string.Format(_localizationService.GetResource("GiftCardAttribute.For.Virtual"), giftCardRecipientName, giftCardRecipientEmail) :
+                        string.Format(_localizationService.GetResource("GiftCardAttribute.For.Physical"), giftCardRecipientName);
+
+                    //encode (if required)
+                    if (htmlEncode)
+                    {
+                        giftCardFrom = HttpUtility.HtmlEncode(giftCardFrom);
+                        giftCardFor = HttpUtility.HtmlEncode(giftCardFor);
+                    }
+
                     if (!String.IsNullOrEmpty(result.ToString()))
                     {
                         result.Append(serapator);
                     }
-                    //encode (if required)
-                    if (htmlEncode)
-                    {
-                        giftCardRecipientName = HttpUtility.HtmlEncode(giftCardRecipientName);
-                        giftCardSenderName = HttpUtility.HtmlEncode(giftCardSenderName);
-                    }
-
-                    result.Append(string.Format(_localizationService.GetResource("GiftCardAttribute.For"), giftCardRecipientName));
+                    result.Append(giftCardFrom);
                     result.Append(serapator);
-                    result.Append(string.Format(_localizationService.GetResource("GiftCardAttribute.From"), giftCardSenderName));
+                    result.Append(giftCardFor);
                 }
             }
             return result.ToString();

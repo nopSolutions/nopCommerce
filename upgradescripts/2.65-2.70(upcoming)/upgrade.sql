@@ -5,8 +5,23 @@ declare @resources xml
 --a resource will be delete if its value is empty
 set @resources='
 <Language>
-  <LocaleResource Name="">
+  <LocaleResource Name="GiftCardAttribute.For">
     <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="GiftCardAttribute.From">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="GiftCardAttribute.For.Virtual">
+    <Value><![CDATA[For: {0} <{1}>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="GiftCardAttribute.From.Virtual">
+    <Value><![CDATA[From: {0} <{1}>]]></Value>
+  </LocaleResource>
+  <LocaleResource Name="GiftCardAttribute.For.Physical">
+    <Value>For: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="GiftCardAttribute.From.Physical">
+    <Value>From: {0}</Value>
   </LocaleResource>
 </Language>
 '
