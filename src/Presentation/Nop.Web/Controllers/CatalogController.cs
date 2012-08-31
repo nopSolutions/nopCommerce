@@ -2134,6 +2134,8 @@ namespace Nop.Web.Controllers
             //load and cache report
             var report = _cacheManager.Get(ModelCacheEventConsumer.HOMEPAGE_BESTSELLERS_IDS_KEY, 
                 () => _orderReportService.BestSellersReport(null, null, null, null, null, _catalogSettings.NumberOfBestsellersOnHomepage));
+            //we loaded product variants on the previous step.
+            //now we need to get appopriate DISTINCT products
             var products = new List<Product>();
             foreach (var line in report)
             {
