@@ -2133,34 +2133,18 @@ namespace Nop.Web.Controllers
 
             //load and cache report
             var report = _cacheManager.Get(ModelCacheEventConsumer.HOMEPAGE_BESTSELLERS_IDS_KEY, 
-                () => _orderReportService.BestSellersReport(null, null, null, null, null, _catalogSettings.NumberOfBestsellersOnHomepage));
-            //we loaded product variants on the previous step.
-            //now we need to get appopriate DISTINCT products
+                () =>
+                    //group by products (not product variants)
+                    _orderReportService
+                    .BestSellersReport(null, null, null, null, null, _catalogSettings.NumberOfBestsellersOnHomepage, groupBy: 2));
             var products = new List<Product>();
             foreach (var line in report)
             {
-                var productVariant = _productService.GetProductVariantById(line.ProductVariantId);
-                if (productVariant != null)
-                {
-                    var product = productVariant.Product;
-                    if (product != null)
-                    {
-                        bool contains = false;
-                        foreach (var p in products)
-                        {
-                            if (p.Id == product.Id)
-                            {
-                                contains = true;
-                                break;
-                            }
-                        }
-                        if (!contains)
-                            products.Add(product);
-                    }
-                }
+                var product = _productService.GetProductById(line.EntityId);
+                if (product != null)
+                    products.Add(product);
             }
-
-
+            
             var model = new HomePageBestsellersModel()
             {
                 UseSmallProductBox = _catalogSettings.UseSmallProductBoxOnHomePage,

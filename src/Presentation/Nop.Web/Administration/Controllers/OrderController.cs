@@ -2230,18 +2230,19 @@ namespace Nop.Admin.Controllers
         [NonAction]
         protected IList<BestsellersReportLineModel> GetBestsellersBriefReportModel(int recordsToReturn, int orderBy)
         {
+            //group by product variants (not products)
             var report = _orderReportService.BestSellersReport(null, null,
-                null, null, null, recordsToReturn, orderBy, true);
+                null, null, null, recordsToReturn, orderBy, 1, true);
 
             var model = report.Select(x =>
             {
                 var m = new BestsellersReportLineModel()
                 {
-                    ProductVariantId = x.ProductVariantId,
+                    ProductVariantId = x.EntityId,
                     TotalAmount = _priceFormatter.FormatPrice(x.TotalAmount, true, false),
                     TotalQuantity = x.TotalQuantity,
                 };
-                var productVariant = _productService.GetProductVariantById(x.ProductVariantId);
+                var productVariant = _productService.GetProductVariantById(x.EntityId);
                 if (productVariant != null)
                     m.ProductVariantFullName = productVariant.Product.Name + " " + productVariant.Name;
                 return m;
@@ -2316,19 +2317,21 @@ namespace Nop.Admin.Controllers
 
 
             //return first 100 records
+
+            //group by product variants (not products)
             var items = _orderReportService.BestSellersReport(startDateValue, endDateValue,
-                orderStatus, paymentStatus, null, 100, 2, true);
+                orderStatus, paymentStatus, null, 100, 2, 1, true);
             var gridModel = new GridModel<BestsellersReportLineModel>
             {
                 Data = items.Select(x =>
                 {
                     var m = new BestsellersReportLineModel()
                     {
-                        ProductVariantId = x.ProductVariantId,
+                        ProductVariantId = x.EntityId,
                         TotalAmount = _priceFormatter.FormatPrice(x.TotalAmount, true, false),
                         TotalQuantity = x.TotalQuantity,
                     };
-                    var productVariant = _productService.GetProductVariantById(x.ProductVariantId);
+                    var productVariant = _productService.GetProductVariantById(x.EntityId);
                     if (productVariant != null)
                         m.ProductVariantFullName = productVariant.Product.Name + " " + productVariant.Name;
                     return m;
