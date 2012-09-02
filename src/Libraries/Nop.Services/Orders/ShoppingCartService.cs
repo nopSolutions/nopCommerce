@@ -294,14 +294,17 @@ namespace Nop.Services.Orders
                 }
             }
 
+            var hasQtyWarnings = false;
             if (quantity < productVariant.OrderMinimumQuantity)
             {
                 warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.MinimumQuantity"), productVariant.OrderMinimumQuantity));
+                hasQtyWarnings = true;
             }
 
             if (quantity > productVariant.OrderMaximumQuantity)
             {
                 warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.MaximumQuantity"), productVariant.OrderMaximumQuantity));
+                hasQtyWarnings = true;
             }
 
             var allowedQuantities = productVariant.ParseAllowedQuatities();
@@ -312,7 +315,7 @@ namespace Nop.Services.Orders
 
             var validateOutOfStock = shoppingCartType == ShoppingCartType.ShoppingCart ||
                                      !_shoppingCartSettings.AllowOutOfStockItemsToBeAddedToWishlist;
-            if (validateOutOfStock)
+            if (validateOutOfStock && !hasQtyWarnings)
             {
                 switch (productVariant.ManageInventoryMethod)
                 {
