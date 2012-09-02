@@ -4201,7 +4201,7 @@ namespace Nop.Services.Installation
                                    new MessageTemplate
                                        {
                                            Name = "NewCustomer.Notification",
-                                           Subject = "New customer registration",
+                                           Subject = "%Store.Name%. New customer registration",
                                            Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />A new customer registered with your store. Below are the customer's details:<br />Full name: %Customer.FullName%<br />Email: %Customer.Email%</p>",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,
@@ -4241,7 +4241,7 @@ namespace Nop.Services.Installation
                                    new MessageTemplate
                                        {
                                            Name = "NewVATSubmitted.StoreOwnerNotification",
-                                           Subject = "New VAT number is submitted.",
+                                           Subject = "%Store.Name%. New VAT number is submitted.",
                                            Body = "<p><a href=\"%Store.URL%\">%Store.Name%</a> <br /><br />%Customer.FullName% (%Customer.Email%) has just submitted a new VAT number. Details are below:<br />VAT number: %Customer.VatNumber%<br />VAT number status: %Customer.VatNumberStatus%<br />Received name: %VatValidationResult.Name%<br />Received address: %VatValidationResult.Address%</p>",
                                            IsActive = true,
                                            EmailAccountId = eaGeneral.Id,

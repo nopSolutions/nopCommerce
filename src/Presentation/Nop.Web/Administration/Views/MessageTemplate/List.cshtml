@@ -19,8 +19,8 @@
                     .Name("templates-grid")
                     .Columns(columns =>
                     {
-                        columns.Bound(x => x.Name)
-                            .Width(400);
+                        columns.Bound(x => x.Name);
+                        columns.Bound(x => x.Subject);
                         columns.Bound(x => x.IsActive)
                             .Width(100)
                             .Template(x => x.IsActive.ToString().ToLower())
