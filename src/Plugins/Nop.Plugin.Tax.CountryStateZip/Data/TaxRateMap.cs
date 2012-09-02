@@ -8,7 +8,8 @@ namespace Nop.Plugin.Tax.CountryStateZip.Data
         public TaxRateMap()
         {
             this.ToTable("TaxRate");
-            this.HasKey(bp => bp.Id);
+            this.HasKey(tr => tr.Id);
+            this.Property(tr => tr.Percentage).HasPrecision(18, 4);
         }
     }
 }

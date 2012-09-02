@@ -97,3 +97,14 @@ DEALLOCATE cur_existinglanguage
 DROP TABLE #LocaleStringResourceTmp
 GO
 
+
+
+
+
+
+
+IF EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[TaxRate]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+BEGIN
+	EXEC('ALTER TABLE [TaxRate] ALTER COLUMN [Percentage] decimal(18, 4) NOT NULL')
+END
+GO
