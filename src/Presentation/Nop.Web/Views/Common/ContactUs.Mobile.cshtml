@@ -12,6 +12,7 @@
     </div>
     @Html.Action("TopicBlock", "Topic", new { systemName = "ContactUs" })
     <div class="page-body">
+        @Html.Widget("mobile_contactus_top")
         @if (Model.SuccessfullySent)
         {
             <div class="result">
@@ -53,5 +54,6 @@
             </div>
             }
         }
+        @Html.Widget("mobile_contactus_bottom")
     </div>
 </div>

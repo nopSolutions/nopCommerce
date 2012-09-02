@@ -11,6 +11,7 @@
     <div class="clear">
     </div>
     <div class="page-body">
+        @Html.Widget("contactus_top")
         @if (Model.SuccessfullySent)
         {
             <div class="result">
@@ -65,5 +66,6 @@
             </fieldset> 
             }
         }
+        @Html.Widget("contactus_bottom")
     </div>
 </div>
