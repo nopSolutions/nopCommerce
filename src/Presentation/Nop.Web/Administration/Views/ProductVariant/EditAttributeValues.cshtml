@@ -33,10 +33,12 @@
                                 //TODO display localized values here
                                 columns.Bound(x => x.PriceAdjustment)
                                     .Width(100)
-                                    .Centered();
+                                    .Centered()
+                                    .Format("{0:G29}");
                                 columns.Bound(x => x.WeightAdjustment)
                                     .Width(100)
-                                    .Centered();
+                                    .Centered()
+                                    .Format("{0:G29}");
                                 columns.Bound(x => x.IsPreSelected)
                                     .Width(100)
                                     .Template(x => x.IsPreSelected.ToString().ToLower())

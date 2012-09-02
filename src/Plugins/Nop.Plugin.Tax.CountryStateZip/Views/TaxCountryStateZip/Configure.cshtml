@@ -17,7 +17,7 @@
                         columns.Bound(x => x.StateProvinceName).Width(200).ReadOnly();
                         columns.Bound(x => x.Zip).Width(100);
                         columns.Bound(x => x.TaxCategoryName).Width(200).ReadOnly();
-                        columns.Bound(x => x.Percentage).Width(100);
+                        columns.Bound(x => x.Percentage).Width(100).Format("{0:G29}");
                         columns.Command(commands =>
                         {
                             commands.Edit();

@@ -249,7 +249,7 @@
     {
         columns.Bound(x => x.Name);
         columns.Bound(x => x.Sku);
-        columns.Bound(x => x.Price);
+        columns.Bound(x => x.Price).Format("{0:G29}");
         columns.Bound(x => x.DisplayOrder)
             .Centered();
         columns.Bound(x => x.Published)

@@ -13,7 +13,7 @@
                     .Columns(columns =>
                     {
                         columns.Bound(x => x.TaxCategoryName).Width(300).ReadOnly();
-                        columns.Bound(x => x.Rate).Width(100);
+                        columns.Bound(x => x.Rate).Width(100).Format("{0:G29}");
                         columns.Command(commands =>
                         {
                             commands.Edit();

@@ -29,7 +29,7 @@
                     {
                         columns.Bound(x => x.Name).Width(200);
                         columns.Bound(x => x.SystemKeyword).Width(150);
-                        columns.Bound(x => x.Ratio).Width(100);
+                        columns.Bound(x => x.Ratio).Width(100).Format("{0:G29}");
                         columns.Bound(x => x.DisplayOrder).Width(100);
                         columns.Bound(x => x.IsPrimaryDimension).Width(100)
                             .Template(x => x.IsPrimaryDimension.ToString().ToLower()).ReadOnly();

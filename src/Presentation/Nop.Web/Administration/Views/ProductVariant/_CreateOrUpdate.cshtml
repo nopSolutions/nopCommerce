@@ -46,7 +46,8 @@
                         .Width(200)
                         .Centered();
                     columns.Bound(x => x.Price1)
-                        .Width(100);
+                        .Width(100)
+                        .Format("{0:G29}");
                     columns.Command(commands =>
                     {
                         commands.Edit();

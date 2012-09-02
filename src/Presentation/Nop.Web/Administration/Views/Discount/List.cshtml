@@ -28,9 +28,11 @@
                             .Centered();
                         columns.Bound(x => x.DiscountPercentage)
                             .Width(100)
+                            .Format("{0:G29}")
                             .Centered();
                         columns.Bound(x => x.DiscountAmount)
                             .Width(100)
+                            .Format("{0:G29}")
                             .Centered();
                         columns.Bound(x => x.StartDateUtc)
                             //.Format("{0:d}")

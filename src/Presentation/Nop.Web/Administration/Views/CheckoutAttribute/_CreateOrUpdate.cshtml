@@ -164,9 +164,11 @@
                                 //TODO display localized values here
                                 columns.Bound(x => x.PriceAdjustment)
                                     .Width(100)
+                                    .Format("{0:G29}")
                                     .Centered();
                                 columns.Bound(x => x.WeightAdjustment)
                                     .Width(100)
+                                    .Format("{0:G29}")
                                     .Centered();
                                 columns.Bound(x => x.IsPreSelected)
                                     .Width(100)
