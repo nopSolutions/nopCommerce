@@ -2121,22 +2121,40 @@ namespace Nop.Web.Controllers
 
             var pageCart = pageCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist).ToList();
 
+            var allWarnings = new List<string>();
+            var numberOfAddedItems = 0;
             var allIdsToAdd = form["addtocart"] != null ? form["addtocart"].Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => int.Parse(x)).ToList() : new List<int>();
             foreach (var sci in pageCart)
             {
                 if (allIdsToAdd.Contains(sci.Id))
                 {
-                    _shoppingCartService.AddToCart(_workContext.CurrentCustomer,
+                    var warnings = _shoppingCartService.AddToCart(_workContext.CurrentCustomer,
                         sci.ProductVariant, ShoppingCartType.ShoppingCart,
                         sci.AttributesXml, sci.CustomerEnteredPrice, sci.Quantity, true);
+                    if (warnings.Count == 0)
+                        numberOfAddedItems++;
+                    if (!customerGuid.HasValue && warnings.Count == 0)
+                    {
+                        //own wishlist. let's remove the item from wishlist (already in the cart)
+                        _shoppingCartService.DeleteShoppingCartItem(sci);
+                    }
+                    allWarnings.AddRange(warnings);
                 }
             }
 
-            //updated wishlist
-            var cart = pageCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist).ToList();
-            var model = new WishlistModel();
-            PrepareWishlistModel(model, cart, !customerGuid.HasValue);
-            return View(model);
+            if (numberOfAddedItems > 0)
+            {
+                //redirect to the shopping cart page
+                return RedirectToRoute("ShoppingCart");
+            }
+            else
+            {
+                //no items added. redisplay the wishlist page
+                var cart = pageCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.Wishlist).ToList();
+                var model = new WishlistModel();
+                PrepareWishlistModel(model, cart, !customerGuid.HasValue);
+                return View(model);
+            }
         }
 
         //add a certain wishlist cart item on the page to the shopping cart
@@ -2170,16 +2188,28 @@ namespace Nop.Web.Controllers
             {
                 return RedirectToRoute("Wishlist");
             }
-            _shoppingCartService.AddToCart(_workContext.CurrentCustomer,
+            var warnings = _shoppingCartService.AddToCart(_workContext.CurrentCustomer,
                                            sci.ProductVariant, ShoppingCartType.ShoppingCart,
                                            sci.AttributesXml, sci.CustomerEnteredPrice, sci.Quantity, true);
+            if (!customerGuid.HasValue && warnings.Count == 0)
+            {
+                //own wishlist. let's remove the item from wishlist (already in the cart)
+                _shoppingCartService.DeleteShoppingCartItem(sci);
+            }
 
-
-            //updated wishlist
-            var cart = pageCustomer.ShoppingCartItems.Where(x => x.ShoppingCartType == ShoppingCartType.Wishlist).ToList();
-            var model = new WishlistModel();
-            PrepareWishlistModel(model, cart, !customerGuid.HasValue);
-            return View(model);
+            if (warnings.Count == 0)
+            {
+                //redirect to the shopping cart page
+                return RedirectToRoute("ShoppingCart");
+            }
+            else
+            {
+                //no items added. redisplay the wishlist page
+                var cart = pageCustomer.ShoppingCartItems.Where(x => x.ShoppingCartType == ShoppingCartType.Wishlist).ToList();
+                var model = new WishlistModel();
+                PrepareWishlistModel(model, cart, !customerGuid.HasValue);
+                return View(model);
+            }
         }
 
         [NopHttpsRequirement(SslRequirement.Yes)]
