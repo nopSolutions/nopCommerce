@@ -184,8 +184,10 @@ namespace Nop.Services.Tests.Catalog
             _workContext.Expect(x => x.WorkingLanguage).Return(workingLanguage);
             _currencyService = MockRepository.GenerateMock<ICurrencyService>();
             _localizationService = MockRepository.GenerateMock<ILocalizationService>();
-            _localizationService.Expect(x => x.GetResource("GiftCardAttribute.For")).Return("For: {0}");
-            _localizationService.Expect(x => x.GetResource("GiftCardAttribute.From")).Return("From: {0}");
+            _localizationService.Expect(x => x.GetResource("GiftCardAttribute.For.Virtual")).Return("For: {0} <{1}>");
+            _localizationService.Expect(x => x.GetResource("GiftCardAttribute.From.Virtual")).Return("From: {0} <{1}>");
+            _localizationService.Expect(x => x.GetResource("GiftCardAttribute.For.Physical")).Return("For: {0}");
+            _localizationService.Expect(x => x.GetResource("GiftCardAttribute.From.Physical")).Return("From: {0}");
             _taxService = MockRepository.GenerateMock<ITaxService>();
             _priceFormatter = MockRepository.GenerateMock<IPriceFormatter>();
             _downloadService = MockRepository.GenerateMock<IDownloadService>();
@@ -250,7 +252,43 @@ namespace Nop.Services.Tests.Catalog
         }
 
         [Test]
-        public void Can_add_render_attributes_withoutPrices()
+        public void Can_render_virtual_gift_cart()
+        {
+            string attributes = _productAttributeParser.AddGiftCardAttribute("",
+                "recipientName 1", "recipientEmail@gmail.com",
+                "senderName 1", "senderEmail@gmail.com", "custom message");
+
+            var productVariant = new ProductVariant()
+            {
+                IsGiftCard = true,
+                GiftCardType = GiftCardType.Virtual,
+            };
+            var customer = new Customer();
+            string formattedAttributes = _productAttributeFormatter.FormatAttributes(productVariant,
+                attributes, customer, "<br />", false, false, true, true);
+            formattedAttributes.ShouldEqual("From: senderName 1 <senderEmail@gmail.com><br />For: recipientName 1 <recipientEmail@gmail.com>");
+        }
+
+        [Test]
+        public void Can_render_physical_gift_cart()
+        {
+            string attributes = _productAttributeParser.AddGiftCardAttribute("",
+                "recipientName 1", "recipientEmail@gmail.com",
+                "senderName 1", "senderEmail@gmail.com", "custom message");
+
+            var productVariant = new ProductVariant()
+            {
+                IsGiftCard = true,
+                GiftCardType = GiftCardType.Physical,
+            };
+            var customer = new Customer();
+            string formattedAttributes = _productAttributeFormatter.FormatAttributes(productVariant,
+                attributes, customer, "<br />", false, false, true, true);
+            formattedAttributes.ShouldEqual("From: senderName 1<br />For: recipientName 1");
+        }
+
+        [Test]
+        public void Can_render_attributes_withoutPrices()
         {
             string attributes = "";
             //color: green
@@ -268,12 +306,13 @@ namespace Nop.Services.Tests.Catalog
 
             var productVariant = new ProductVariant()
             {
-                IsGiftCard = true
+                IsGiftCard = true,
+                GiftCardType = GiftCardType.Virtual,
             };
             var customer = new Customer();
             string formattedAttributes = _productAttributeFormatter.FormatAttributes(productVariant,
                 attributes, customer, "<br />", false, false, true, true);
-            formattedAttributes.ShouldEqual("Color: Green<br />Some custom option: Option 1<br />Some custom option: Option 2<br />Color: Some custom text goes here<br />For: recipientName 1<br />From: senderName 1");
+            formattedAttributes.ShouldEqual("Color: Green<br />Some custom option: Option 1<br />Some custom option: Option 2<br />Color: Some custom text goes here<br />From: senderName 1 <senderEmail@gmail.com><br />For: recipientName 1 <recipientEmail@gmail.com>");
         }
     }
 }
