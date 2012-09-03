@@ -23,6 +23,12 @@ set @resources='
   <LocaleResource Name="GiftCardAttribute.From.Physical">
     <Value>From: {0}</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.MoveItemsFromWishlistToCart">
+    <Value>Move items from wishlist to cart</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.MoveItemsFromWishlistToCart.Hint">
+    <Value>Check to move products from wishlist to the cart when clicking "Add to cart" button. Otherwise, they are copied.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -106,5 +112,13 @@ GO
 IF EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[TaxRate]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
 BEGIN
 	EXEC('ALTER TABLE [TaxRate] ALTER COLUMN [Percentage] decimal(18, 4) NOT NULL')
+END
+GO
+
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'shoppingcartsettings.moveitemsfromwishlisttocart')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'shoppingcartsettings.moveitemsfromwishlisttocart', N'true')
 END
 GO

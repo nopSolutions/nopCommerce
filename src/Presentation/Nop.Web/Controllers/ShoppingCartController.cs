@@ -2133,9 +2133,11 @@ namespace Nop.Web.Controllers
                         sci.AttributesXml, sci.CustomerEnteredPrice, sci.Quantity, true);
                     if (warnings.Count == 0)
                         numberOfAddedItems++;
-                    if (!customerGuid.HasValue && warnings.Count == 0)
+                    if (_shoppingCartSettings.MoveItemsFromWishlistToCart && //settings enabled
+                        !customerGuid.HasValue && //own wishlist
+                        warnings.Count == 0) //no warnings ( already in the cart)
                     {
-                        //own wishlist. let's remove the item from wishlist (already in the cart)
+                        //let's remove the item from wishlist
                         _shoppingCartService.DeleteShoppingCartItem(sci);
                     }
                     allWarnings.AddRange(warnings);
@@ -2191,9 +2193,11 @@ namespace Nop.Web.Controllers
             var warnings = _shoppingCartService.AddToCart(_workContext.CurrentCustomer,
                                            sci.ProductVariant, ShoppingCartType.ShoppingCart,
                                            sci.AttributesXml, sci.CustomerEnteredPrice, sci.Quantity, true);
-            if (!customerGuid.HasValue && warnings.Count == 0)
+            if (_shoppingCartSettings.MoveItemsFromWishlistToCart && //settings enabled
+                        !customerGuid.HasValue && //own wishlist
+                        warnings.Count == 0) //no warnings ( already in the cart)
             {
-                //own wishlist. let's remove the item from wishlist (already in the cart)
+                //let's remove the item from wishlist
                 _shoppingCartService.DeleteShoppingCartItem(sci);
             }
 

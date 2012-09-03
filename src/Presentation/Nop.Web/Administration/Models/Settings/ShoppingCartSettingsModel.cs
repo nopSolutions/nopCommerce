@@ -19,6 +19,9 @@ namespace Nop.Admin.Models.Settings
         [NopResourceDisplayName("Admin.Configuration.Settings.ShoppingCart.AllowOutOfStockItemsToBeAddedToWishlist")]
         public bool AllowOutOfStockItemsToBeAddedToWishlist { get; set; }
 
+        [NopResourceDisplayName("Admin.Configuration.Settings.ShoppingCart.MoveItemsFromWishlistToCart")]
+        public bool MoveItemsFromWishlistToCart { get; set; }
+        
         [NopResourceDisplayName("Admin.Configuration.Settings.ShoppingCart.ShowProductImagesOnShoppingCart")]
         public bool ShowProductImagesOnShoppingCart { get; set; }
 

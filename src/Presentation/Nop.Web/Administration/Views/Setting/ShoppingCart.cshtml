@@ -96,6 +96,15 @@
         </tr>
         <tr>
             <td class="adminTitle">
+                @Html.NopLabelFor(model => model.MoveItemsFromWishlistToCart):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.MoveItemsFromWishlistToCart)
+                @Html.ValidationMessageFor(model => model.MoveItemsFromWishlistToCart)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
                 @Html.NopLabelFor(model => model.ShowProductImagesOnShoppingCart):
             </td>
             <td class="adminData">

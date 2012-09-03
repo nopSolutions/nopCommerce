@@ -5141,6 +5141,14 @@
                       </LocaleResource>
                     </Children>
                   </LocaleResource>
+                                    <LocaleResource Name="MoveItemsFromWishlistToCart">
+                                        <Value>Move items from wishlist to cart</Value>
+                                        <Children>
+                                            <LocaleResource Name="Hint">
+                                                <Value>Check to move products from wishlist to the cart when clicking "Add to cart" button. Otherwise, they are copied.</Value>
+                                            </LocaleResource>
+                                        </Children>
+                                    </LocaleResource>
 									<LocaleResource Name="ShowProductImagesOnShoppingCart">
 										<Value>Show product images on cart</Value>
 										<Children>
