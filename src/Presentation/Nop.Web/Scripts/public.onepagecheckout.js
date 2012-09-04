@@ -70,7 +70,7 @@ var Checkout = {
 
     back: function () {
         if (this.loadWaiting) return;
-        Accordion.openPrevSection(true);
+        Accordion.openPrevSection(true, true);
     },
 
     setStepResponse: function (response) {

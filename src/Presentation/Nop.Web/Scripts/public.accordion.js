@@ -72,9 +72,18 @@ var Accordion = {
         }
     },
 
-    openPrevSection: function (setAllow) {
+    openPrevSection: function (setAllow, onlyAllowed) {
+        var prevIndex = 0;
         for (section in this.sections) {
-            var prevIndex = parseInt(section) - 1;
+            if (onlyAllowed) {
+                //ensure that the section is allowed
+                var tmp = parseInt(section) - 1;
+                if (!isNaN(tmp) && $(this.sections[tmp]).hasClass('allow')) {
+                    prevIndex = tmp;
+                }
+            } else {
+                prevIndex = parseInt(section) - 1;
+            }
             if (this.sections[section].id == this.currentSectionId && this.sections[prevIndex]) {
                 if (setAllow) {
                     $(this.sections[prevIndex]).addClass('allow')
