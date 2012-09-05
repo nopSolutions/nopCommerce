@@ -135,6 +135,14 @@ namespace Nop.Admin.Controllers
         }
 
         [NonAction]
+        protected void UpdateProductTagTotals(Product product)
+        {
+            var productTags = product.ProductTags;
+            foreach (var productTag in productTags)
+                _productTagService.UpdateProductTagTotals(productTag);
+        }
+
+        [NonAction]
         private void PrepareTemplatesModel(ProductModel model)
         {
             if (model == null)
@@ -655,6 +663,8 @@ namespace Nop.Admin.Controllers
 
             var product = _productService.GetProductById(id);
             _productService.DeleteProduct(product);
+            //update product tag totals
+            UpdateProductTagTotals(product);
 
             //activity log
             _customerActivityService.InsertActivity("DeleteProduct", _localizationService.GetResource("ActivityLog.DeleteProduct"), product.Name);
@@ -678,7 +688,12 @@ namespace Nop.Admin.Controllers
                 products.AddRange(_productService.GetProductsByIds(ids));
 
                 for (int i = 0; i < products.Count; i++)
-                    _productService.DeleteProduct(products[i]);
+                {
+                    var product = products[i];
+                    _productService.DeleteProduct(product);
+                    //update product tag totals
+                    UpdateProductTagTotals(product);
+                }
             }
 
             return RedirectToAction("List");
