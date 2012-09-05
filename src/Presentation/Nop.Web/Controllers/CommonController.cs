@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using Nop.Core;
@@ -212,7 +213,7 @@ namespace Nop.Web.Controllers
             var model = PrepareLanguageSelectorModel();
             return PartialView(model);
         }
-        public ActionResult SetLanguage(int langid)
+        public ActionResult SetLanguage(int langid, string returnUrl = "")
         {
             var language = _languageService.GetLanguageById(langid);
             if (language != null && language.Published)
@@ -220,20 +221,23 @@ namespace Nop.Web.Controllers
                 _workContext.WorkingLanguage = language;
             }
 
-            string redirectUrl = _webHelper.GetUrlReferrer();
-            if (String.IsNullOrEmpty(redirectUrl))
-                redirectUrl = Url.RouteUrl("HomePage");
+            //url referrer
+            if (String.IsNullOrEmpty(returnUrl))
+                returnUrl = _webHelper.GetUrlReferrer();
+            //home page
+            if (String.IsNullOrEmpty(returnUrl))
+                returnUrl = Url.RouteUrl("HomePage");
             if (_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
             {
                 string applicationPath = HttpContext.Request.ApplicationPath;
-                if (redirectUrl.IsLocalizedUrl(applicationPath, true))
+                if (returnUrl.IsLocalizedUrl(applicationPath, true))
                 {
                     //already localized URL
-                    redirectUrl = redirectUrl.RemoveLocalizedPathFromRawUrl(applicationPath);
+                    returnUrl = returnUrl.RemoveLocalizedPathFromRawUrl(applicationPath);
                 }
-                redirectUrl = redirectUrl.AddLocalizedPathToRawUrl(applicationPath, _workContext.WorkingLanguage);
+                returnUrl = returnUrl.AddLocalizedPathToRawUrl(applicationPath, _workContext.WorkingLanguage);
             }
-            return Redirect(redirectUrl);
+            return Redirect(returnUrl);
         }
 
         //currency
@@ -243,16 +247,19 @@ namespace Nop.Web.Controllers
             var model = PrepareCurrencySelectorModel();
             return PartialView(model);
         }
-        public ActionResult CurrencySelected(int customerCurrency)
+        public ActionResult CurrencySelected(int customerCurrency, string returnUrl = "")
         {
             var currency = _currencyService.GetCurrencyById(customerCurrency);
             if (currency != null)
                 _workContext.WorkingCurrency = currency;
 
-            string redirectUrl = _webHelper.GetUrlReferrer();
-            if (String.IsNullOrEmpty(redirectUrl))
-                redirectUrl = Url.RouteUrl("HomePage");
-            return Redirect(redirectUrl);
+            //url referrer
+            if (String.IsNullOrEmpty(returnUrl))
+                returnUrl = _webHelper.GetUrlReferrer();
+            //home page
+            if (String.IsNullOrEmpty(returnUrl))
+                returnUrl = Url.RouteUrl("HomePage");
+            return Redirect(returnUrl);
         }
 
         //tax type
@@ -262,15 +269,18 @@ namespace Nop.Web.Controllers
             var model = PrepareTaxTypeSelectorModel();
             return PartialView(model);
         }
-        public ActionResult TaxTypeSelected(int customerTaxType)
+        public ActionResult TaxTypeSelected(int customerTaxType, string returnUrl = "")
         {
             var taxDisplayType = (TaxDisplayType)Enum.ToObject(typeof(TaxDisplayType), customerTaxType);
             _workContext.TaxDisplayType = taxDisplayType;
 
-            string redirectUrl = _webHelper.GetUrlReferrer();
-            if (String.IsNullOrEmpty(redirectUrl))
-                redirectUrl = Url.RouteUrl("HomePage");
-            return Redirect(redirectUrl);
+            //url referrer
+            if (String.IsNullOrEmpty(returnUrl))
+                returnUrl = _webHelper.GetUrlReferrer();
+            //home page
+            if (String.IsNullOrEmpty(returnUrl))
+                returnUrl = Url.RouteUrl("HomePage");
+            return Redirect(returnUrl);
         }
 
         //Configuration page (used on mobile devices)
@@ -591,10 +601,10 @@ namespace Nop.Web.Controllers
             _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
                 SystemCustomerAttributeNames.DontUseMobileVersion, dontUseMobileVersion);
 
-            string redirectUrl = _webHelper.GetUrlReferrer();
-            if (String.IsNullOrEmpty(redirectUrl))
-                redirectUrl = Url.RouteUrl("HomePage");
-            return Redirect(redirectUrl);
+            string returnurl = _webHelper.GetUrlReferrer();
+            if (String.IsNullOrEmpty(returnurl))
+                returnurl = Url.RouteUrl("HomePage");
+            return Redirect(returnurl);
         }
         [ChildActionOnly]
         public ActionResult ChangeDeviceBlock()

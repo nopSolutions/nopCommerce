@@ -1,19 +1,24 @@
 ﻿@model TaxTypeSelectorModel
+@using Nop.Core;
 @using Nop.Core.Domain.Tax;
+@using Nop.Core.Infrastructure;
+@using Nop.Core.Infrastructure.DependencyManagement;
 @using Nop.Web.Models.Common;
 @if (Model.Enabled)
 {
+    var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+
     var taxTypes = new List<SelectListItem>();
     taxTypes.Add(new SelectListItem()
     {
         Text = T("Tax.Inclusive").Text,
-        Value = @Url.RouteUrl("ChangeTaxType", new { customertaxtype = ((int)TaxDisplayType.IncludingTax) }),
+        Value = webHelper.ModifyQueryString(Url.RouteUrl("ChangeTaxType", new { customertaxtype = ((int)TaxDisplayType.IncludingTax) }), "returnurl=" + HttpUtility.UrlEncode(HttpContext.Current.Request.RawUrl), null),
         Selected = Model.CurrentTaxType == TaxDisplayType.IncludingTax
     });
     taxTypes.Add(new SelectListItem()
     {
         Text = T("Tax.Exclusive").Text,
-        Value = @Url.RouteUrl("ChangeTaxType", new { customertaxtype = ((int)TaxDisplayType.ExcludingTax) }),
+        Value = webHelper.ModifyQueryString(Url.RouteUrl("ChangeTaxType", new { customertaxtype = ((int)TaxDisplayType.ExcludingTax) }), "returnurl=" + HttpUtility.UrlEncode(HttpContext.Current.Request.RawUrl), null),
         Selected = Model.CurrentTaxType == TaxDisplayType.ExcludingTax
     });
     

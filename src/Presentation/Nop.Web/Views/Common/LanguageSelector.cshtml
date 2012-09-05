@@ -1,13 +1,18 @@
 ﻿@model LanguageSelectorModel
 @using Nop.Web.Models.Common;
+@using Nop.Core;
+@using Nop.Core.Infrastructure;
+@using Nop.Core.Infrastructure.DependencyManagement;
 @if (Model.AvailableLanguages.Count > 1)
 {
+    var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+
     if (Model.UseImages)
     {
     <ul class="language-list">
         @foreach (var lang in Model.AvailableLanguages)
         {
-            <li><a href="@Url.RouteUrl("ChangeLanguage", new { langid = lang.Id })" title="@lang.Name">
+            <li><a href="@webHelper.ModifyQueryString(Url.RouteUrl("ChangeLanguage", new { langid = lang.Id }), "returnurl=" + HttpUtility.UrlEncode(HttpContext.Current.Request.RawUrl), null)" title="@lang.Name">
                 <img title='@lang.Name' alt='@lang.Name' @(lang.Id == Model.CurrentLanguage.Id ? " class=selected" : null)
                  src="@Url.Content("~/Content/Images/flags/" + @lang.FlagImageFileName) " />
             </a></li>
@@ -16,11 +21,11 @@
     }
     else
     {
-        var languages = Model.AvailableLanguages.Select(x => new SelectListItem
+        var languages = Model.AvailableLanguages.Select(lang => new SelectListItem
         {
-            Text = x.Name,
-            Value = @Url.RouteUrl("ChangeLanguage", new { langid = x.Id }),
-            Selected = x.Id.Equals(Model.CurrentLanguage.Id)
+            Text = lang.Name,
+            Value = webHelper.ModifyQueryString(Url.RouteUrl("ChangeLanguage", new { langid = lang.Id }), "returnurl=" + HttpUtility.UrlEncode(HttpContext.Current.Request.RawUrl), null),
+            Selected = lang.Id.Equals(Model.CurrentLanguage.Id)
         });
     
     @Html.DropDownList("customerlanguage", languages, new { onchange = "setLocation(this.value);" })

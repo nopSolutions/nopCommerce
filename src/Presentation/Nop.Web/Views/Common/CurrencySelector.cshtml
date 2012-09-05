@@ -1,13 +1,18 @@
 ﻿@model CurrencySelectorModel
 @using Nop.Web.Models.Common;
+@using Nop.Core;
+@using Nop.Core.Infrastructure;
+@using Nop.Core.Infrastructure.DependencyManagement;
 @if (Model.AvailableCurrencies.Count > 1)
 {
+    var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+    
     var currencies = Model.AvailableCurrencies.Select(x => new SelectListItem
-    {
-        Text = x.Name,
-        Value = @Url.RouteUrl("ChangeCurrency", new { customercurrency = x.Id }),
-        Selected = x.Id.Equals(Model.CurrentCurrency.Id)
-    });
+        {
+            Text = x.Name,
+            Value = webHelper.ModifyQueryString(Url.RouteUrl("ChangeCurrency", new { customercurrency = x.Id }), "returnurl=" + HttpUtility.UrlEncode(HttpContext.Current.Request.RawUrl), null),
+            Selected = x.Id.Equals(Model.CurrentCurrency.Id)
+        });
     
     @Html.DropDownList("customerCurrency", currencies, new { onchange = "setLocation(this.value);" })
 }
