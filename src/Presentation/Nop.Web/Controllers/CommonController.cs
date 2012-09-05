@@ -220,40 +220,20 @@ namespace Nop.Web.Controllers
                 _workContext.WorkingLanguage = language;
             }
 
-
+            string redirectUrl = _webHelper.GetUrlReferrer();
+            if (String.IsNullOrEmpty(redirectUrl))
+                redirectUrl = Url.RouteUrl("HomePage");
             if (_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
             {
                 string applicationPath = HttpContext.Request.ApplicationPath;
-                if (HttpContext.Request.UrlReferrer != null)
+                if (redirectUrl.IsLocalizedUrl(applicationPath, true))
                 {
-                    string redirectUrl = HttpContext.Request.UrlReferrer.PathAndQuery;
-                    if (redirectUrl.IsLocalizedUrl(applicationPath, true))
-                    {
-                        //already localized URL
-                        redirectUrl = redirectUrl.RemoveLocalizedPathFromRawUrl(applicationPath);
-                    }
-                    redirectUrl = redirectUrl.AddLocalizedPathToRawUrl(applicationPath, _workContext.WorkingLanguage);
-                    return Redirect(redirectUrl);
+                    //already localized URL
+                    redirectUrl = redirectUrl.RemoveLocalizedPathFromRawUrl(applicationPath);
                 }
-                else
-                {
-                    string redirectUrl = Url.RouteUrl("HomePage");
-                    redirectUrl = redirectUrl.AddLocalizedPathToRawUrl(applicationPath, _workContext.WorkingLanguage);
-                    return Redirect(redirectUrl);
-                }
+                redirectUrl = redirectUrl.AddLocalizedPathToRawUrl(applicationPath, _workContext.WorkingLanguage);
             }
-            else
-            {
-                //TODO: URL referrer is null in IE 8. Fix it
-                if (HttpContext.Request.UrlReferrer != null)
-                {
-                    return Redirect(HttpContext.Request.UrlReferrer.PathAndQuery);
-                }
-                else
-                {
-                    return RedirectToRoute("HomePage");
-                }
-            }
+            return Redirect(redirectUrl);
         }
 
         //currency
@@ -269,15 +249,10 @@ namespace Nop.Web.Controllers
             if (currency != null)
                 _workContext.WorkingCurrency = currency;
 
-            //TODO: URL referrer is null in IE 8. Fix it
-            if (HttpContext.Request.UrlReferrer != null)
-            {
-                return Redirect(HttpContext.Request.UrlReferrer.PathAndQuery);
-            }
-            else
-            {
-                return RedirectToRoute("HomePage");
-            }
+            string redirectUrl = _webHelper.GetUrlReferrer();
+            if (String.IsNullOrEmpty(redirectUrl))
+                redirectUrl = Url.RouteUrl("HomePage");
+            return Redirect(redirectUrl);
         }
 
         //tax type
@@ -292,15 +267,10 @@ namespace Nop.Web.Controllers
             var taxDisplayType = (TaxDisplayType)Enum.ToObject(typeof(TaxDisplayType), customerTaxType);
             _workContext.TaxDisplayType = taxDisplayType;
 
-            //TODO: URL referrer is null in IE 8. Fix it
-            if (HttpContext.Request.UrlReferrer != null)
-            {
-                return Redirect(HttpContext.Request.UrlReferrer.PathAndQuery);
-            }
-            else
-            {
-                return RedirectToRoute("HomePage");
-            }
+            string redirectUrl = _webHelper.GetUrlReferrer();
+            if (String.IsNullOrEmpty(redirectUrl))
+                redirectUrl = Url.RouteUrl("HomePage");
+            return Redirect(redirectUrl);
         }
 
         //Configuration page (used on mobile devices)
@@ -621,15 +591,10 @@ namespace Nop.Web.Controllers
             _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
                 SystemCustomerAttributeNames.DontUseMobileVersion, dontUseMobileVersion);
 
-            //TODO: URL referrer is null in IE 8. Fix it
-            if (HttpContext.Request.UrlReferrer != null)
-            {
-                return Redirect(HttpContext.Request.UrlReferrer.PathAndQuery);
-            }
-            else
-            {
-                return RedirectToRoute("HomePage");
-            }
+            string redirectUrl = _webHelper.GetUrlReferrer();
+            if (String.IsNullOrEmpty(redirectUrl))
+                redirectUrl = Url.RouteUrl("HomePage");
+            return Redirect(redirectUrl);
         }
         [ChildActionOnly]
         public ActionResult ChangeDeviceBlock()

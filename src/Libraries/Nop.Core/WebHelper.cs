@@ -35,10 +35,11 @@ namespace Nop.Core
         {
             string referrerUrl = string.Empty;
 
+            //TODO: URL referrer is null in IE 8. Fix it
             if (_httpContext != null &&
                 _httpContext.Request != null &&
                 _httpContext.Request.UrlReferrer != null)
-                referrerUrl = _httpContext.Request.UrlReferrer.ToString();
+                referrerUrl = _httpContext.Request.UrlReferrer.PathAndQuery;
 
             return referrerUrl;
         }
