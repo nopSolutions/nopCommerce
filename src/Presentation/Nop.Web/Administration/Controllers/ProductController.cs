@@ -1454,7 +1454,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
 
-            var tag = _productTagService.GetProductById(id);
+            var tag = _productTagService.GetProductTagById(id);
             if (tag == null)
                 throw new ArgumentException("No product tag found with the specified id");
             _productTagService.DeleteProductTag(tag);
@@ -1468,7 +1468,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
 
-            var productTag = _productTagService.GetProductById(id);
+            var productTag = _productTagService.GetProductTagById(id);
             if (productTag == null)
                 //No product tag found with the specified id
                 return RedirectToAction("List");
@@ -1494,7 +1494,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
 
-            var productTag = _productTagService.GetProductById(model.Id);
+            var productTag = _productTagService.GetProductTagById(model.Id);
             if (productTag == null)
                 //No product tag found with the specified id
                 return RedirectToAction("List");

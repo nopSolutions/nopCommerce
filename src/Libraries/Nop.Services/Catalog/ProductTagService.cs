@@ -70,7 +70,7 @@ namespace Nop.Services.Catalog
         /// </summary>
         /// <param name="productTagId">Product tag identifier</param>
         /// <returns>Product tag</returns>
-        public virtual ProductTag GetProductById(int productTagId)
+        public virtual ProductTag GetProductTagById(int productTagId)
         {
             if (productTagId == 0)
                 return null;

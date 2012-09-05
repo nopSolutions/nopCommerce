@@ -186,7 +186,7 @@ namespace Nop.Web.Controllers
         {
             //we can't use dash in MVC
             var tagId = idIncludesSename ? Convert.ToInt32(id.Split(new char[] { '-' })[0]) : Convert.ToInt32(id);
-            var tag = _productTagService.GetProductById(tagId);
+            var tag = _productTagService.GetProductTagById(tagId);
             if (tag == null)
                 return RedirectToRoutePermanent("HomePage");
 

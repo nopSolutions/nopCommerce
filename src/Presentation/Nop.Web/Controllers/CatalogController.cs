@@ -2317,7 +2317,7 @@ namespace Nop.Web.Controllers
         [NopHttpsRequirement(SslRequirement.No)]
         public ActionResult ProductsByTag(int productTagId, CatalogPagingFilteringModel command)
         {
-            var productTag = _productTagService.GetProductById(productTagId);
+            var productTag = _productTagService.GetProductTagById(productTagId);
             if (productTag == null)
                 return RedirectToRoute("HomePage");
                         
