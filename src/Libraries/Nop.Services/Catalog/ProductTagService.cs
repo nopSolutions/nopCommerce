@@ -133,7 +133,9 @@ namespace Nop.Services.Catalog
             if (productTag == null)
                 throw new ArgumentNullException("productTag");
 
-            int newTotal = productTag.Products.Where(p => !p.Deleted && p.Published).Count();
+            int newTotal = productTag.Products
+                .Where(p => !p.Deleted && p.Published && p.ProductVariants.Where(pv => !pv.Deleted && pv.Published).Count() > 0)
+                .Count();
             if (newTotal > 0)
             {
                 productTag.ProductCount = newTotal;

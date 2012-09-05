@@ -32,6 +32,7 @@ namespace Nop.Admin.Controllers
         #region Fields
 
         private readonly IProductService _productService;
+        private readonly IProductTagService _productTagService;
         private readonly IPictureService _pictureService;
         private readonly ILanguageService _languageService;
         private readonly ILocalizedEntityService _localizedEntityService;
@@ -61,7 +62,8 @@ namespace Nop.Admin.Controllers
 
         #region Constructors
 
-        public ProductVariantController(IProductService productService, IPictureService pictureService,
+        public ProductVariantController(IProductService productService,
+            IProductTagService productTagService, IPictureService pictureService,
             ILanguageService languageService, ILocalizedEntityService localizedEntityService,
             IDiscountService discountService, ICustomerService customerService,
             ILocalizationService localizationService, IProductAttributeService productAttributeService,
@@ -78,6 +80,7 @@ namespace Nop.Admin.Controllers
         {
             this._localizedEntityService = localizedEntityService;
             this._pictureService = pictureService;
+            this._productTagService = productTagService;
             this._languageService = languageService;
             this._productService = productService;
             this._discountService = discountService;
@@ -254,7 +257,16 @@ namespace Nop.Admin.Controllers
                 model.ProductVariantAttributes.Add(pvaModel);
             }
         }
-        
+
+        [NonAction]
+        protected void UpdateProductTagTotals(ProductVariant variant)
+        {
+            var product = variant.Product;
+            var productTags = product.ProductTags;
+            foreach (var productTag in productTags)
+                _productTagService.UpdateProductTagTotals(productTag);
+        }
+
         #endregion
 
         #region List / Create / Edit / Delete
@@ -312,6 +324,8 @@ namespace Nop.Admin.Controllers
                 _productService.UpdateHasDiscountsApplied(variant);
                 //update picture seo file name
                 UpdatePictureSeoNames(variant);
+                //update product tag totals
+                UpdateProductTagTotals(variant);
 
                 //activity log
                 _customerActivityService.InsertActivity("AddNewProductVariant", _localizationService.GetResource("ActivityLog.AddNewProductVariant"), variant.Name);
@@ -412,6 +426,8 @@ namespace Nop.Admin.Controllers
                 }
                 //update picture seo file name
                 UpdatePictureSeoNames(variant);
+                //update product tag totals
+                UpdateProductTagTotals(variant);
                 //back in stock notifications
                 if (variant.ManageInventoryMethod == ManageInventoryMethod.ManageStock &&
                     variant.BackorderMode == BackorderMode.NoBackorders &&
@@ -454,6 +470,8 @@ namespace Nop.Admin.Controllers
 
             var productId = variant.ProductId;
             _productService.DeleteProductVariant(variant);
+            //update product tag totals
+            UpdateProductTagTotals(variant);
 
             //activity log
             _customerActivityService.InsertActivity("DeleteProductVariant", _localizationService.GetResource("ActivityLog.DeleteProductVariant"), variant.Name);
