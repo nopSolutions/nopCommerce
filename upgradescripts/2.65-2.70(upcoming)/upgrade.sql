@@ -29,6 +29,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.ShoppingCart.MoveItemsFromWishlistToCart.Hint">
     <Value>Check to move products from wishlist to the cart when clicking "Add to cart" button. Otherwise, they are copied.</Value>
   </LocaleResource>
+  <LocaleResource Name="Account.Register.Result.Continue">
+    <Value>Continue</Value>
+  </LocaleResource>
 </Language>
 '
 

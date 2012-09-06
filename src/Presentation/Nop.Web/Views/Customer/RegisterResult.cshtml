@@ -1,12 +1,26 @@
 ﻿@model RegisterResultModel
 @using Nop.Web.Models.Customer;
+@using Nop.Core;
+@using Nop.Core.Infrastructure;
+@using Nop.Core.Infrastructure.DependencyManagement;
 @{
     Layout = "~/Views/Shared/_ColumnsThree.cshtml";
 
     //title
     Html.AddTitleParts(T("PageTitle.Register").Text);
+
+    //continue URL
+    var continueUrl = "";
+    if (!String.IsNullOrEmpty(this.Context.Request.QueryString["returnUrl"]))
+    {
+        continueUrl = this.Context.Request.QueryString["returnUrl"];
+    }
+    else
+    {
+        continueUrl = Url.RouteUrl("HomePage");
+    }
 }
-<div class="page registration-page">
+<div class="page registration-result-page">
     <div class="page-title">
         <h1>@T("Account.Register")</h1>
     </div>
@@ -15,6 +29,11 @@
     <div class="page-body">
         <div class="section-body">
             @Model.Result
+        </div>
+        <div class="clear">
+        </div>
+        <div class="buttons">
+            <input type="button" class="button-1 register-continue-button" onclick="location.href='@continueUrl'" value="@T("Account.Register.Result.Continue")" />
         </div>
     </div>
 </div>

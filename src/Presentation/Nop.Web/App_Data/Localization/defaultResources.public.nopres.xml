@@ -617,6 +617,9 @@
 							<LocaleResource Name="AdminApproval">
 								<Value>Your account will be activated after approving by administrator.</Value>
 							</LocaleResource>
+              <LocaleResource Name="Continue">
+                <Value>Continue</Value>
+              </LocaleResource>
 							<LocaleResource Name="Disabled">
 								<Value>Registration not allowed. You can edit this in the admin area.</Value>
 							</LocaleResource>

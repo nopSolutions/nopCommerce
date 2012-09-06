@@ -1,10 +1,21 @@
 ﻿@model LoginModel
 @using Nop.Web.Models.Customer;
+@using Nop.Core;
+@using Nop.Core.Infrastructure;
+@using Nop.Core.Infrastructure.DependencyManagement;
 @{
     Layout = "~/Views/Shared/_Root.cshtml";
 
     //title
     Html.AddTitleParts(T("PageTitle.Login").Text);
+
+    //register URL with return URL (if specified)
+    var registerUrl = Url.RouteUrl("Register");
+    if (!String.IsNullOrEmpty(this.Context.Request.QueryString["returnUrl"]))
+    {
+        var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+        registerUrl = webHelper.ModifyQueryString(registerUrl, "returnurl=" + HttpUtility.UrlEncode(this.Context.Request.QueryString["returnUrl"]), null);
+    }
 }
 <div class="page login-page">
     <div class="page-title">
@@ -66,7 +77,7 @@
                 <div class="checkout-as-guest-or-register-block">
                     <div class="buttons">
                         <a href="@(Url.RouteUrl("Checkout"))" data-role="button">@T("Account.Login.CheckoutAsGuest")</a>
-                        <a href="@(Url.RouteUrl("Register"))" data-role="button">@T("Account.Register")</a>
+                        <a href="@registerUrl" data-role="button">@T("Account.Register")</a>
                     </div>
                 </div>
             </div>
@@ -77,7 +88,7 @@
                 <span class="register-title">@T("Account.Login.NewCustomer")</span>
                 <div class="register-block">
                     <div class="buttons">
-                        <a href="@(Url.RouteUrl("Register"))" data-role="button">@T("Account.Register")</a>
+                        <a href="@registerUrl" data-role="button">@T("Account.Register")</a>
                     </div>
                 </div>
             </div>

@@ -1,10 +1,21 @@
 ﻿@model LoginModel
 @using Nop.Web.Models.Customer;
+@using Nop.Core;
+@using Nop.Core.Infrastructure;
+@using Nop.Core.Infrastructure.DependencyManagement;
 @{
     Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
 
     //title
     Html.AddTitleParts(T("PageTitle.Login").Text);
+    
+    //register URL with return URL (if specified)
+    var registerUrl = Url.RouteUrl("Register");
+    if (!String.IsNullOrEmpty(this.Context.Request.QueryString["returnUrl"]))
+    {
+        var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+        registerUrl = webHelper.ModifyQueryString(registerUrl, "returnurl=" + HttpUtility.UrlEncode(this.Context.Request.QueryString["returnUrl"]), null);
+    }
 }
 <div class="page login-page">
     <div class="page-title">
@@ -29,7 +40,7 @@
                     </dd>
                     <dd class="buttons">
                         <input type="button" class="button-1 checkout-as-guest-button" onclick="location.href='@Url.RouteUrl("Checkout")'" value="@T("Account.Login.CheckoutAsGuest")" />
-                        <input type="button" class="button-1 register-button" onclick="location.href='@Url.RouteUrl("Register")'" value="@T("Account.Register")" />
+                        <input type="button" class="button-1 register-button" onclick="location.href='@registerUrl'" value="@T("Account.Register")" />
                     </dd>
                 </dl>
             </fieldset>
@@ -43,7 +54,7 @@
                         @T("Account.Login.NewCustomerText")
                     </dd>
                     <dd class="buttons">
-                        <input type="button" class="button-1 register-button" onclick="location.href='@Url.RouteUrl("Register")'" value="@T("Account.Register")" />
+                        <input type="button" class="button-1 register-button" onclick="location.href='@registerUrl'" value="@T("Account.Register")" />
                     </dd>
                 </dl>
             </fieldset>

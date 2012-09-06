@@ -68,6 +68,7 @@ namespace Nop.Web.Controllers
         private readonly IOpenAuthenticationService _openAuthenticationService;
         private readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
         private readonly IDownloadService _downloadService;
+        private readonly IWebHelper _webHelper;
 
         private readonly MediaSettings _mediaSettings;
         private readonly IWorkflowMessageService _workflowMessageService;
@@ -97,7 +98,8 @@ namespace Nop.Web.Controllers
             IForumService forumService, IShoppingCartService shoppingCartService,
             IOpenAuthenticationService openAuthenticationService, 
             IBackInStockSubscriptionService backInStockSubscriptionService, 
-            IDownloadService downloadService, MediaSettings mediaSettings,
+            IDownloadService downloadService, IWebHelper webHelper,
+            MediaSettings mediaSettings,
             IWorkflowMessageService workflowMessageService, LocalizationSettings localizationSettings,
             CaptchaSettings captchaSettings, ExternalAuthenticationSettings externalAuthenticationSettings)
         {
@@ -130,6 +132,7 @@ namespace Nop.Web.Controllers
             this._openAuthenticationService = openAuthenticationService;
             this._backInStockSubscriptionService = backInStockSubscriptionService;
             this._downloadService = downloadService;
+            this._webHelper = webHelper;
 
             this._mediaSettings = mediaSettings;
             this._workflowMessageService = workflowMessageService;
@@ -484,7 +487,7 @@ namespace Nop.Web.Controllers
         [HttpPost]
         [CaptchaValidator]
         [ValidateAntiForgeryToken]
-        public ActionResult Register(RegisterModel model, bool captchaValid)
+        public ActionResult Register(RegisterModel model, string returnUrl, bool captchaValid)
         {
             //check whether registration is allowed
             if (_customerSettings.UserRegistrationType == UserRegistrationType.Disabled)
@@ -669,7 +672,10 @@ namespace Nop.Web.Controllers
                                 //send customer welcome message
                                 _workflowMessageService.SendCustomerWelcomeMessage(customer, _workContext.WorkingLanguage.Id);
 
-                                return RedirectToRoute("RegisterResult", new { resultId = (int)UserRegistrationType.Standard });
+                                var redirectUrl = Url.RouteUrl("RegisterResult", new { resultId = (int)UserRegistrationType.Standard });
+                                if (!String.IsNullOrEmpty(returnUrl))
+                                    redirectUrl = _webHelper.ModifyQueryString(redirectUrl, "returnurl=" + HttpUtility.UrlEncode(returnUrl), null);
+                                return Redirect(redirectUrl);
                             }
                         default:
                             {

@@ -194,7 +194,11 @@
 .registration-page{}
 .registration-page .page-body{}
 .registration-page .section-body{text-align:left;padding:10px;border:1px solid #d7d7d7;height:auto;}
-.registration-page .buttons{float:right;margin-bottom:5px;margin-top:5px;text-align:center;clear:both;}
+.registration-page .buttons{}
+.registration-result-page{}
+.registration-result-page .page-body{}
+.registration-result-page .section-body{text-align:left;padding:10px;border:1px solid #d7d7d7;height:auto;}
+.registration-result-page .buttons{}
 
 /* NEWS */
 .news-list-page{}
