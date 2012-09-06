@@ -156,7 +156,7 @@ namespace Nop.Web.Framework
             builder.RegisterType<CustomerRegistrationService>().As<ICustomerRegistrationService>().InstancePerHttpRequest();
             builder.RegisterType<CustomerReportService>().As<ICustomerReportService>().InstancePerHttpRequest();
 
-            //pass MemoryCacheManager to SettingService as cacheManager (cache settngs between requests)
+            //pass MemoryCacheManager to SettingService as cacheManager (cache settings between requests)
             builder.RegisterType<PermissionService>().As<IPermissionService>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
                 .InstancePerHttpRequest();
@@ -170,7 +170,7 @@ namespace Nop.Web.Framework
             builder.RegisterType<DiscountService>().As<IDiscountService>().InstancePerHttpRequest();
 
 
-            //pass MemoryCacheManager to SettingService as cacheManager (cache settngs between requests)
+            //pass MemoryCacheManager to SettingService as cacheManager (cache settings between requests)
             builder.RegisterType<SettingService>().As<ISettingService>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
                 .InstancePerHttpRequest();
