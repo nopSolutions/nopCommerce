@@ -45,13 +45,11 @@ namespace Nop.Services.ExportImport
         /// <summary>
         /// Import products from XLSX file
         /// </summary>
-        /// <param name="filePath">Excel file path</param>
-        public virtual void ImportProductsFromXlsx(string filePath)
+        /// <param name="stream">Stream</param>
+        public virtual void ImportProductsFromXlsx(Stream stream)
         {
-            
-            var newFile = new FileInfo(filePath);
             // ok, we can run the real code of the sample now
-            using (var xlPackage = new ExcelPackage(newFile))
+            using (var xlPackage = new ExcelPackage(stream))
             {
                 // get the first worksheet in the workbook
                 var worksheet = xlPackage.Workbook.Worksheets.FirstOrDefault();

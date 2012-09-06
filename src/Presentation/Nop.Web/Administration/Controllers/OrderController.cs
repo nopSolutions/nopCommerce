@@ -660,14 +660,14 @@ namespace Nop.Admin.Controllers
             {
                 var orders = _orderService.SearchOrders(null, null, null,
                     null, null, null, null, 0, int.MaxValue);
-
-                string fileName = string.Format("orders_{0}_{1}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
-                string filePath = System.IO.Path.Combine(Request.PhysicalApplicationPath, "content\\files\\ExportImport", fileName);
-
-                _exportManager.ExportOrdersToXlsx(filePath, orders);
-
-                var bytes = System.IO.File.ReadAllBytes(filePath);
-                return File(bytes, "text/xls", fileName);
+                
+                byte[] bytes = null;
+                using (var stream = new MemoryStream())
+                {
+                    _exportManager.ExportOrdersToXlsx(stream, orders);
+                    bytes = stream.ToArray();
+                }
+                return File(bytes, "text/xls", "orders.xlsx");
             }
             catch (Exception exc)
             {
@@ -691,13 +691,13 @@ namespace Nop.Admin.Controllers
                 orders.AddRange(_orderService.GetOrdersByIds(ids));
             }
 
-            string fileName = string.Format("orders_{0}_{1}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
-            string filePath = System.IO.Path.Combine(Request.PhysicalApplicationPath, "content\\files\\ExportImport", fileName);
-
-            _exportManager.ExportOrdersToXlsx(filePath, orders);
-
-            var bytes = System.IO.File.ReadAllBytes(filePath);
-            return File(bytes, "text/xls", fileName);
+            byte[] bytes = null;
+            using (var stream = new MemoryStream())
+            {
+                _exportManager.ExportOrdersToXlsx(stream, orders);
+                bytes = stream.ToArray();
+            }
+            return File(bytes, "text/xls", "orders.xlsx");
         }
 
         #endregion

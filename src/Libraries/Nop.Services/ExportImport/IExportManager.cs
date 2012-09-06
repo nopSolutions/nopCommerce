@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
@@ -34,9 +35,9 @@ namespace Nop.Services.ExportImport
         /// <summary>
         /// Export products to XLSX
         /// </summary>
-        /// <param name="filePath">File path to use</param>
+        /// <param name="stream">Stream</param>
         /// <param name="products">Products</param>
-        void ExportProductsToXlsx(string filePath, IList<Product> products);
+        void ExportProductsToXlsx(Stream stream, IList<Product> products);
 
         /// <summary>
         /// Export order list to xml
@@ -48,16 +49,16 @@ namespace Nop.Services.ExportImport
         /// <summary>
         /// Export orders to XLSX
         /// </summary>
-        /// <param name="filePath">File path to use</param>
+        /// <param name="stream">Stream</param>
         /// <param name="orders">Orders</param>
-        void ExportOrdersToXlsx(string filePath, IList<Order> orders);
+        void ExportOrdersToXlsx(Stream stream, IList<Order> orders);
         
         /// <summary>
         /// Export customer list to XLSX
         /// </summary>
-        /// <param name="filePath">File path to use</param>
+        /// <param name="stream">Stream</param>
         /// <param name="customers">Customers</param>
-        void ExportCustomersToXlsx(string filePath, IList<Customer> customers);
+        void ExportCustomersToXlsx(Stream stream, IList<Customer> customers);
         
         /// <summary>
         /// Export customer list to xml

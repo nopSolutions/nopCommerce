@@ -1621,14 +1621,14 @@ namespace Nop.Admin.Controllers
                     _workContext.WorkingLanguage.Id, new List<int>(),
                     ProductSortingEnum.Position, 0, int.MaxValue,
                     false, out filterableSpecificationAttributeOptionIds, true);
-
-                string fileName = string.Format("products_{0}_{1}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
-                string filePath = System.IO.Path.Combine(Request.PhysicalApplicationPath, "content\\files\\ExportImport", fileName);
-
-                _exportManager.ExportProductsToXlsx(filePath, products);
-
-                var bytes = System.IO.File.ReadAllBytes(filePath);
-                return File(bytes, "text/xls", fileName);
+                
+                byte[] bytes = null;
+                using (var stream = new MemoryStream())
+                {
+                    _exportManager.ExportProductsToXlsx(stream, products);
+                    bytes = stream.ToArray();
+                }
+                return File(bytes, "text/xls", "products.xlsx");
             }
             catch (Exception exc)
             {
@@ -1652,13 +1652,13 @@ namespace Nop.Admin.Controllers
                 products.AddRange(_productService.GetProductsByIds(ids));
             }
 
-            string fileName = string.Format("products_{0}_{1}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
-            string filePath = System.IO.Path.Combine(Request.PhysicalApplicationPath, "content\\files\\ExportImport", fileName);
-
-            _exportManager.ExportProductsToXlsx(filePath, products);
-
-            var bytes = System.IO.File.ReadAllBytes(filePath);
-            return File(bytes, "text/xls", fileName);
+            byte[] bytes = null;
+            using (var stream = new MemoryStream())
+            {
+                _exportManager.ExportProductsToXlsx(stream, products);
+                bytes = stream.ToArray();
+            }
+            return File(bytes, "text/xls", "products.xlsx");
         }
 
         [HttpPost]
@@ -1672,14 +1672,7 @@ namespace Nop.Admin.Controllers
                 var file = Request.Files["importexcelfile"];
                 if (file != null && file.ContentLength > 0)
                 {
-                    var fileBytes = new byte[file.ContentLength];
-                    file.InputStream.Read(fileBytes, 0, file.ContentLength);
-                    //do stuff with the bytes
-                    string fileName = string.Format("products_{0}_{1}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
-                    string filePath = System.IO.Path.Combine(Request.PhysicalApplicationPath, "content\\files\\ExportImport", fileName);
-
-                    System.IO.File.WriteAllBytes(filePath, fileBytes);
-                    _importManager.ImportProductsFromXlsx(filePath);
+                    _importManager.ImportProductsFromXlsx(file.InputStream);
                 }
                 else
                 {

@@ -440,13 +440,15 @@ public partial class ExportManager : IExportManager
         /// <summary>
         /// Export products to XLSX
         /// </summary>
-        /// <param name="filePath">File path to use</param>
+        /// <param name="stream">Stream</param>
         /// <param name="products">Products</param>
-        public virtual void ExportProductsToXlsx(string filePath, IList<Product> products)
+        public virtual void ExportProductsToXlsx(Stream stream, IList<Product> products)
         {
-            var newFile = new FileInfo(filePath);
+            if (stream == null)
+                throw new ArgumentNullException("stream");
+
             // ok, we can run the real code of the sample now
-            using (var xlPackage = new ExcelPackage(newFile))
+            using (var xlPackage = new ExcelPackage(stream))
             {
                 // uncomment this line if you want the XML written out to the outputDir
                 //xlPackage.DebugMode = true; 
@@ -958,13 +960,15 @@ public partial class ExportManager : IExportManager
         /// <summary>
         /// Export orders to XLSX
         /// </summary>
-        /// <param name="filePath">File path to use</param>
+        /// <param name="stream">Stream</param>
         /// <param name="orders">Orders</param>
-        public virtual void ExportOrdersToXlsx(string filePath, IList<Order> orders)
+        public virtual void ExportOrdersToXlsx(Stream stream, IList<Order> orders)
         {
-            var newFile = new FileInfo(filePath);
+            if (stream == null)
+                throw new ArgumentNullException("stream");
+
             // ok, we can run the real code of the sample now
-            using (var xlPackage = new ExcelPackage(newFile))
+            using (var xlPackage = new ExcelPackage(stream))
             {
                 // uncomment this line if you want the XML written out to the outputDir
                 //xlPackage.DebugMode = true; 
@@ -1237,13 +1241,15 @@ public partial class ExportManager : IExportManager
         /// <summary>
         /// Export customer list to XLSX
         /// </summary>
-        /// <param name="filePath">File path to use</param>
+        /// <param name="stream">Stream</param>
         /// <param name="customers">Customers</param>
-        public virtual void ExportCustomersToXlsx(string filePath, IList<Customer> customers)
+        public virtual void ExportCustomersToXlsx(Stream stream, IList<Customer> customers)
         {
-            var newFile = new FileInfo(filePath);
+            if (stream == null)
+                throw new ArgumentNullException("stream");
+
             // ok, we can run the real code of the sample now
-            using (var xlPackage = new ExcelPackage(newFile))
+            using (var xlPackage = new ExcelPackage(stream))
             {
                 // uncomment this line if you want the XML written out to the outputDir
                 //xlPackage.DebugMode = true; 

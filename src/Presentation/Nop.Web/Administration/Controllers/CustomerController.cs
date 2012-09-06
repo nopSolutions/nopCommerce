@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
@@ -1540,13 +1541,13 @@ namespace Nop.Admin.Controllers
                     null, null, null, 0, 0, null, null, null, 
                     false, null, 0, int.MaxValue);
 
-                string fileName = string.Format("customers_{0}_{1}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
-                string filePath = System.IO.Path.Combine(Request.PhysicalApplicationPath, "content\\files\\ExportImport", fileName);
-
-                _exportManager.ExportCustomersToXlsx(filePath, customers);
-
-                var bytes = System.IO.File.ReadAllBytes(filePath);
-                return File(bytes, "text/xls", fileName);
+                byte[] bytes = null;
+                using (var stream = new MemoryStream())
+                {
+                    _exportManager.ExportCustomersToXlsx(stream, customers);
+                    bytes = stream.ToArray();
+                }
+                return File(bytes, "text/xls", "customers.xlsx");
             }
             catch (Exception exc)
             {
@@ -1570,13 +1571,13 @@ namespace Nop.Admin.Controllers
                 customers.AddRange(_customerService.GetCustomersByIds(ids));
             }
 
-            string fileName = string.Format("customers_{0}_{1}.xlsx", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
-            string filePath = System.IO.Path.Combine(Request.PhysicalApplicationPath, "content\\files\\ExportImport", fileName);
-
-            _exportManager.ExportCustomersToXlsx(filePath, customers);
-
-            var bytes = System.IO.File.ReadAllBytes(filePath);
-            return File(bytes, "text/xls", fileName);
+            byte[] bytes = null;
+            using (var stream = new MemoryStream())
+            {
+                _exportManager.ExportCustomersToXlsx(stream, customers);
+                bytes = stream.ToArray();
+            }
+            return File(bytes, "text/xls", "customers.xlsx");
         }
 
         public ActionResult ExportXmlAll()
