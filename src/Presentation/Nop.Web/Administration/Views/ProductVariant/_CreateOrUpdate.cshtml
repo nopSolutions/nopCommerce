@@ -143,9 +143,12 @@
                         .Width(150)
                         .Centered();
                     columns.Bound(x => x.IsRequired)
-                        .Width(100)
-                        .Centered()
-                        .Template(x => x.IsRequired.ToString().ToLower());
+                            .Template(
+                                @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.IsRequired.ToString().ToLowerInvariant() + ".gif")" />
+                            )
+                            .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= IsRequired #>.gif' />")
+                            .Centered()
+                            .Width(100);
                     columns.Bound(x => x.AttributeControlType)
                         .Width(150)
                         .Centered();
@@ -164,9 +167,9 @@
                     })
                     .Width(180);
                 })
-                .ToolBar(commands => commands.Insert())
-                .ClientEvents(events => events.OnEdit("onProductVariantAttributeEdit"))
-                .EnableCustomBinding(true))
+                                                                                        .ToolBar(commands => commands.Insert())
+                                                                                        .ClientEvents(events => events.OnEdit("onProductVariantAttributeEdit"))
+                                                                                        .EnableCustomBinding(true))
     
     <script type="text/javascript">
         function onProductVariantAttributeEdit(e) {
@@ -181,7 +184,7 @@
     </script>
 }
 @helper TabAttributeCombinations()
-    {
+{
     <div style="margin: 10px 0px 10px 0px;">
         <strong>@T("Admin.Catalog.Products.Variants.ProductVariantAttributes.AttributeCombinations.Description")</strong>
     </div>
@@ -209,8 +212,12 @@
                     columns.Bound(x => x.StockQuantity1)
                         .Centered();
                     columns.Bound(x => x.AllowOutOfStockOrders1)
-                        .Centered()
-                        .Template(x => x.AllowOutOfStockOrders1.ToString().ToLower());
+                            .Template(
+                                @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.AllowOutOfStockOrders1.ToString().ToLowerInvariant() + ".gif")" />
+                            )
+                            .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= AllowOutOfStockOrders1 #>.gif' />")
+                            .Centered()
+                            .Width(100);
                     columns.Command(commands =>
                     {
                         commands.Edit();

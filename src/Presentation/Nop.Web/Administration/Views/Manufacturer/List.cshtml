@@ -43,9 +43,12 @@
                     {
                         columns.Bound(x => x.Name).Width(300);
                         columns.Bound(x => x.Published)
-                            .Width(100)
-                            .Template(x => x.Published.ToString().ToLower())
-                            .Centered();
+                            .Template(
+                                @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.Published.ToString().ToLowerInvariant() + ".gif")" />
+                            )
+                            .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= Published #>.gif' />")
+                            .Centered()
+                            .Width(100);
                         columns.Bound(x => x.DisplayOrder)
                             .Width(100)
                             .Centered();
@@ -56,9 +59,9 @@
                             .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
                             .Title(T("Admin.Common.Edit").Text);
                     })
-                    .Pageable(settings => settings.Total(Model.Manufacturers.Total).PageSize(gridPageSize).Position(GridPagerPosition.Both))
-                    .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "Manufacturer"))
-                    .EnableCustomBinding(true))
+                                                .Pageable(settings => settings.Total(Model.Manufacturers.Total).PageSize(gridPageSize).Position(GridPagerPosition.Both))
+                                                .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "Manufacturer"))
+                                                .EnableCustomBinding(true))
         </td>
     </tr>
 </table>

@@ -25,21 +25,25 @@
                     .Columns(columns =>
                     {
                         columns.Bound(x => x.Name)
-                            .Width(350)
                             .Centered();
-                        columns.Bound(x => x.LanguageName)
-                             .Width(150);
+                        columns.Bound(x => x.LanguageName);
                         columns.Bound(x => x.DisplayOrder)
                             .Width(100)
                             .Centered();
                         columns.Bound(x => x.Published)
-                            .Width(100)
-                            .Template(x => x.Published.ToString().ToLower())
-                            .Centered();
+                            .Template(
+                                @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.Published.ToString().ToLowerInvariant() + ".gif")" />
+                            )
+                            .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= Published #>.gif' />")
+                            .Centered()
+                            .Width(100);
                         columns.Bound(x => x.ShowOnHomePage)
-                            .Width(100)
-                            .Template(x => x.ShowOnHomePage.ToString().ToLower())
-                            .Centered();
+                            .Template(
+                                @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.ShowOnHomePage.ToString().ToLowerInvariant() + ".gif")" />
+                            )
+                            .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= ShowOnHomePage #>.gif' />")
+                            .Centered()
+                            .Width(100);
                         columns.Bound(x => x.StartDate)
                             .Centered();
                         columns.Bound(x => x.EndDate)

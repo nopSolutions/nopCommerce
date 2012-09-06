@@ -39,8 +39,12 @@
                         columns.Bound(x => x.EndDate)
                             .Centered();
                         columns.Bound(x => x.Published)
-                            .Template(x => x.Published.ToString().ToLower())
-                            .Centered();
+                            .Template(
+                                @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.Published.ToString().ToLowerInvariant() + ".gif")" />
+                            )
+                            .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= Published #>.gif' />")
+                            .Centered()
+                            .Width(100);
                         columns.Bound(x => x.CreatedOn)
                             .Centered();
                         columns.Bound(x => x.Id)

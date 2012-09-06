@@ -53,7 +53,13 @@
                             columns.Bound(x => x.AmountStr);
                             columns.Bound(x => x.RemainingAmountStr);
                             columns.Bound(x => x.GiftCardCouponCode);
-                            columns.Bound(x => x.IsGiftCardActivated);
+                            columns.Bound(x => x.IsGiftCardActivated)
+                                .Template(
+                                    @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.IsGiftCardActivated.ToString().ToLowerInvariant() + ".gif")" />
+                                )
+                                .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= IsGiftCardActivated #>.gif' />")
+                                .Centered()
+                                .Width(100);
                             columns.Bound(x => x.CreatedOn);
                             columns.Bound(x => x.Id)
                                 .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "Edit", new { id = x.Id }))
@@ -63,9 +69,9 @@
                                 .HeaderTemplate(T("Admin.Common.Edit").Text)
                                 .Filterable(false);
                         })
-                        .Pageable(settings => settings.PageSize(gridPageSize).Position(GridPagerPosition.Both))
-                        .DataBinding(dataBinding => dataBinding.Ajax().Select("GiftCardList", "GiftCard", Model))
-                        .EnableCustomBinding(true))
+                                                .Pageable(settings => settings.PageSize(gridPageSize).Position(GridPagerPosition.Both))
+                                                .DataBinding(dataBinding => dataBinding.Ajax().Select("GiftCardList", "GiftCard", Model))
+                                                .EnableCustomBinding(true))
             </td>
         </tr>
     </table>

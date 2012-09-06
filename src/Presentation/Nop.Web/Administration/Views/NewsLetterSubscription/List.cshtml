@@ -47,8 +47,12 @@
                             columns.Bound(x => x.Email)
                                 .Width(300);
                             columns.Bound(x => x.Active)
-                                .Template(x => x.Active.ToString().ToLower())
-                                .Width(100);
+                            .Template(
+                                @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.Active.ToString().ToLowerInvariant() + ".gif")" />
+                            )
+                            .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= Active #>.gif' />")
+                            .Centered()
+                            .Width(100);
                             columns.Bound(x => x.CreatedOn)
                                 .ReadOnly()
                                 .Width(150);
@@ -59,14 +63,14 @@
                             }).Width(180);
 
                         })
-                        .Pageable(settings => settings.Total(Model.NewsLetterSubscriptions.Total).PageSize(gridPageSize).Position(GridPagerPosition.Both))
-                        .DataBinding(dataBinding => dataBinding.Ajax()
-                            .Select("SubscriptionList", "NewsLetterSubscription")
-                            .Update("SubscriptionUpdate", "NewsLetterSubscription")
-                            .Delete("SubscriptionDelete", "NewsLetterSubscription"))
-                            .ClientEvents(events => events.OnDataBinding("onDataBinding"))
-                            .ClientEvents(x => x.OnError("grid_onError"))
-                        .EnableCustomBinding(true))
+                                                    .Pageable(settings => settings.Total(Model.NewsLetterSubscriptions.Total).PageSize(gridPageSize).Position(GridPagerPosition.Both))
+                                                    .DataBinding(dataBinding => dataBinding.Ajax()
+                                                        .Select("SubscriptionList", "NewsLetterSubscription")
+                                                        .Update("SubscriptionUpdate", "NewsLetterSubscription")
+                                                        .Delete("SubscriptionDelete", "NewsLetterSubscription"))
+                                                        .ClientEvents(events => events.OnDataBinding("onDataBinding"))
+                                                        .ClientEvents(x => x.OnError("grid_onError"))
+                                                    .EnableCustomBinding(true))
         </td>
     </tr>
 </table>

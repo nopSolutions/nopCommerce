@@ -79,9 +79,12 @@
                         .Width(50);
                         columns.Bound(x => x.Name);
                         columns.Bound(x => x.Published)
-                            .Width("100px")
-                            .Template(x => x.Published.ToString().ToLower())
-                            .Centered();
+                            .Template(
+                                @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.Published.ToString().ToLowerInvariant() + ".gif")" />
+                            )
+                            .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= Published #>.gif' />")
+                            .Centered()
+                            .Width(100);
                     })
                     .Pageable(settings => settings.Total(Model.Products.Total).PageSize(gridPageSize).Position(GridPagerPosition.Both))
                     .DataBinding(dataBinding => dataBinding.Ajax().Select("CrossSellProductAddPopupList", "Product"))

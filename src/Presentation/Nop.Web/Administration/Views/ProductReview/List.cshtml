@@ -73,8 +73,12 @@
                             .Width(50)
                             .Centered();
                         columns.Bound(x => x.IsApproved)
-                            .Width(50)
-                            .Centered();
+                            .Template(
+                                @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.IsApproved.ToString().ToLowerInvariant() + ".gif")" />
+                            )
+                            .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= IsApproved #>.gif' />")
+                            .Centered()
+                            .Width(100);
                         columns.Bound(x => x.CreatedOn)
                             .Width(100)
                             .Centered();
@@ -85,9 +89,9 @@
                             .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
                             .Title(T("Admin.Common.Edit").Text);
                     })
-                    .Pageable(settings => settings.PageSize(gridPageSize).Position(GridPagerPosition.Both))
-                    .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "ProductReview"))
-                    .EnableCustomBinding(true))
+                                                .Pageable(settings => settings.PageSize(gridPageSize).Position(GridPagerPosition.Both))
+                                                .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "ProductReview"))
+                                                .EnableCustomBinding(true))
         </td>
     </tr>
 </table>

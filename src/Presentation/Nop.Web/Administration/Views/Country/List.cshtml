@@ -25,13 +25,19 @@
                             .Width(150)
                             .Centered();
                         columns.Bound(x => x.AllowsBilling)
-                             .Width(50)
-                             .Template(x => x.AllowsBilling.ToString().ToLower())
-                             .Centered();
+                            .Template(
+                                @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.AllowsBilling.ToString().ToLowerInvariant() + ".gif")" />
+                            )
+                            .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= AllowsBilling #>.gif' />")
+                            .Centered()
+                            .Width(100);
                         columns.Bound(x => x.AllowsShipping)
-                             .Width(50)
-                             .Template(x => x.AllowsShipping.ToString().ToLower())
-                             .Centered();
+                            .Template(
+                                @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.AllowsShipping.ToString().ToLowerInvariant() + ".gif")" />
+                            )
+                            .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= AllowsShipping #>.gif' />")
+                            .Centered()
+                            .Width(100);
                         columns.Bound(x => x.TwoLetterIsoCode)
                             .Width(50)
                             .Centered();
@@ -42,9 +48,12 @@
                             .Width(50)
                             .Centered();
                         columns.Bound(x => x.SubjectToVat)
-                             .Width(50)
-                             .Template(x => x.SubjectToVat.ToString().ToLower())
-                             .Centered();
+                            .Template(
+                                @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.SubjectToVat.ToString().ToLowerInvariant() + ".gif")" />
+                            )
+                            .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= SubjectToVat #>.gif' />")
+                            .Centered()
+                            .Width(100);
                         columns.Bound(x => x.NumberOfStates)
                             .Width(50)
                             .Centered();
@@ -52,9 +61,12 @@
                             .Width(50)
                             .Centered();
                         columns.Bound(x => x.Published)
-                             .Width(50)
-                             .Template(x => x.Published.ToString().ToLower())
-                             .Centered();
+                            .Template(
+                                @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.Published.ToString().ToLowerInvariant() + ".gif")" />
+                            )
+                            .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= Published #>.gif' />")
+                            .Centered()
+                            .Width(100);
                         columns.Bound(x => x.Id)
                             .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "Edit", new { id = x.Id }))
                             .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")

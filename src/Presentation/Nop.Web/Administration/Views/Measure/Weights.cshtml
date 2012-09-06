@@ -31,8 +31,14 @@
                         columns.Bound(x => x.SystemKeyword).Width(150);
                         columns.Bound(x => x.Ratio).Width(100).Format("{0:G29}");
                         columns.Bound(x => x.DisplayOrder).Width(100);
-                        columns.Bound(x => x.IsPrimaryWeight).Width(100)
-                            .Template(x => x.IsPrimaryWeight.ToString().ToLower()).ReadOnly();
+                        columns.Bound(x => x.IsPrimaryWeight)
+                            .Template(
+                                @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.IsPrimaryWeight.ToString().ToLowerInvariant() + ".gif")" />
+                            )
+                            .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= IsPrimaryWeight #>.gif' />")
+                            .Centered()
+                            .Width(100)
+                            .ReadOnly();
                         columns.Command(commands => commands.Select())
                             .Title(T("Admin.Configuration.Measures.Weights.Fields.MarkAsPrimaryWeight").Text).Width(100);
                         columns.Command(commands =>

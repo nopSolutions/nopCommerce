@@ -98,9 +98,12 @@
                         }
                         columns.Bound(x => x.Name);
                         columns.Bound(x => x.Published)
-                            .Width(100)
-                            .Template(x => x.Published.ToString().ToLower())
-                            .Centered();
+                            .Template(
+                                @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.Published.ToString().ToLowerInvariant() + ".gif")" />
+                            )
+                            .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= Published #>.gif' />")
+                            .Centered()
+                            .Width(100);
                         columns.Bound(x => x.Id)
                             .Width(50)
                             .Centered()
@@ -108,41 +111,41 @@
                             .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
                             .Title(T("Admin.Common.Edit").Text);
                     })
-                    .DetailView(details => details.ClientTemplate(
-                            Html.Telerik().Grid<ProductVariantModel>()
-                            .Name("variants-grid-<#= Id #>")
-                            .Columns(columns =>
-                            {
-                                columns.Bound(pv => pv.Name)
-                                .Template(pv => Html.ActionLink(pv.Name, "Edit", "ProductVariant", new { id = pv.Id }, new { }))
-                                .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/ProductVariant/Edit/") + "<#= Id #>\"><#= Name #></a>");
-                                columns.Bound(pv => pv.Sku).Width(100);
-                                columns.Bound(pv => pv.Price).Width(100);
-                                columns.Bound(pv => pv.StockQuantity).Width(100);
-                                columns.Bound(pv => pv.Published)
-                                .Width(100)
-                                .Template(pv => pv.Published.ToString().ToLower())
-                                .Centered();
-                            })
-                            .DataBinding(dataBinding => dataBinding.Ajax()
-                                .Select("GetVariants", "Product", new
-                                {
-                                    productId =
-                                        "<#= Id #>"
-                                }))
-                            .ToHtmlString()
-                        )
-                        .Template(
+                                            .DetailView(details => details.ClientTemplate(
+                                                    Html.Telerik().Grid<ProductVariantModel>()
+                                                    .Name("variants-grid-<#= Id #>")
+                                                    .Columns(columns =>
+                                                    {
+                                                        columns.Bound(pv => pv.Name)
+                                                        .Template(pv => Html.ActionLink(pv.Name, "Edit", "ProductVariant", new { id = pv.Id }, new { }))
+                                                        .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/ProductVariant/Edit/") + "<#= Id #>\"><#= Name #></a>");
+                                                        columns.Bound(pv => pv.Sku).Width(100);
+                                                        columns.Bound(pv => pv.Price).Width(100);
+                                                        columns.Bound(pv => pv.StockQuantity).Width(100);
+                                                        columns.Bound(pv => pv.Published)
+                                                        .Width(100)
+                                                        .Template(pv => pv.Published.ToString().ToLower())
+                                                        .Centered();
+                                                    })
+                                                    .DataBinding(dataBinding => dataBinding.Ajax()
+                                                        .Select("GetVariants", "Product", new
+                                                        {
+                                                            productId =
+                                                                "<#= Id #>"
+                                                        }))
+                                                    .ToHtmlString()
+                                                )
+                                                .Template(
 
 
-                            @<text>
+                                                    @<text>
                 @(Html.Telerik().Grid(item.ProductVariantModels)
                                     .Name("variants-grid-" + item.Id)
                                     .Columns(columns =>
                                     {
                                         columns.Bound(pv => pv.Name)
                                         .Template(pv => Html.ActionLink(pv.Name, "Edit", "ProductVariant", new { id = pv.Id }, new { }))
-                                        .ClientTemplate("<a href=\""+ @Url.Content("~/Admin/ProductVariant/Edit/") + "<#= Id #>\"><#= Name #></a>");
+                                        .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/ProductVariant/Edit/") + "<#= Id #>\"><#= Name #></a>");
                                         columns.Bound(pv => pv.Sku).Width(100);
                                         columns.Bound(pv => pv.Price).Width(100);
                                         columns.Bound(pv => pv.StockQuantity).Width(100);
@@ -155,12 +158,12 @@
                 </text>
 
 
-                                            )
-                                            )
-                                            .Pageable(settings => settings.Total(Model.Products.Total).PageSize(gridPageSize).Position(GridPagerPosition.Both))
-                                            .DataBinding(dataBinding => dataBinding.Ajax().Select("ProductList", "Product"))
-                                            .ClientEvents(events => events.OnDataBinding("onDataBinding").OnDataBound("onDataBound"))
-                                            .EnableCustomBinding(true))
+                                                    )
+                                                    )
+                                                    .Pageable(settings => settings.Total(Model.Products.Total).PageSize(gridPageSize).Position(GridPagerPosition.Both))
+                                                    .DataBinding(dataBinding => dataBinding.Ajax().Select("ProductList", "Product"))
+                                                    .ClientEvents(events => events.OnDataBinding("onDataBinding").OnDataBound("onDataBound"))
+                                                    .EnableCustomBinding(true))
             </td>
         </tr>
     </table>

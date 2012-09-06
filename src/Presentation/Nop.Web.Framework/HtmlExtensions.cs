@@ -15,6 +15,7 @@ using Nop.Services.Localization;
 using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Mvc;
 using Telerik.Web.Mvc.UI;
+using Telerik.Web.Mvc.UI.Fluent;
 
 namespace Nop.Web.Framework
 {
@@ -78,8 +79,6 @@ namespace Nop.Web.Framework
         {
             return DeleteConfirmation<T>(helper, "", buttonsSelector);
         }
-
-        // Adds an action name parameter for using other delete action names
         public static MvcHtmlString DeleteConfirmation<T>(this HtmlHelper<T> helper, string actionName, string buttonsSelector = null) where T : BaseNopEntityModel
         {
             if (String.IsNullOrEmpty(actionName))
@@ -183,12 +182,10 @@ namespace Nop.Web.Framework
             return MvcHtmlString.Create(builder.ToString());
         }
 
-
         public static string FieldNameFor<T, TResult>(this HtmlHelper<T> html, Expression<Func<T, TResult>> expression)
         {
             return html.ViewData.TemplateInfo.GetFullHtmlFieldName(ExpressionHelper.GetExpressionText(expression));
         }
-
         public static string FieldIdFor<T, TResult>(this HtmlHelper<T> html, Expression<Func<T, TResult>> expression)
         {
             var id = html.ViewData.TemplateInfo.GetFullHtmlFieldId(ExpressionHelper.GetExpressionText(expression));
@@ -276,7 +273,6 @@ namespace Nop.Web.Framework
 
             return MvcHtmlString.Create(string.Concat(daysList, monthsList, yearsList));
         }
-
 
         public static MvcHtmlString Widget(this HtmlHelper helper, string widgetZone)
         {

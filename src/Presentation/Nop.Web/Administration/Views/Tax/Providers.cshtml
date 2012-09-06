@@ -24,7 +24,11 @@
                     {
                         columns.Bound(x => x.FriendlyName).Width(250);
                         columns.Bound(x => x.IsPrimaryTaxProvider)
-                            .Template(x => x.IsPrimaryTaxProvider.ToString().ToLower())
+                            .Template(
+                                @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.IsPrimaryTaxProvider.ToString().ToLowerInvariant() + ".gif")" />
+                            )
+                            .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= IsPrimaryTaxProvider #>.gif' />")
+                            .Centered()
                             .Width(100)
                             .ReadOnly();
                         columns.Command(commands => commands.Select())

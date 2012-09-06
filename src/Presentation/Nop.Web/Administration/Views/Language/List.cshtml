@@ -36,9 +36,12 @@
                             .Width(100)
                             .Centered();
                         columns.Bound(x => x.Published)
-                            .Width(100)
+                            .Template(
+                                @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.Published.ToString().ToLowerInvariant() + ".gif")" />
+                            )
+                            .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= Published #>.gif' />")
                             .Centered()
-                            .Template(x => x.Published.ToString().ToLower());
+                            .Width(100);
                         columns.Bound(x => x.Id)
                             .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "Edit", new { id = x.Id }))
                             .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")

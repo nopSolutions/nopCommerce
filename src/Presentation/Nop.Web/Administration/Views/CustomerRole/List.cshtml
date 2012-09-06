@@ -23,21 +23,33 @@
                     {
                         columns.Bound(x => x.Name).Width(150);
                         columns.Bound(x => x.FreeShipping)
-                            .Width(100)
+                            .Template(
+                                @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.FreeShipping.ToString().ToLowerInvariant() + ".gif")" />
+                            )
+                            .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= FreeShipping #>.gif' />")
                             .Centered()
-                            .Template(x => x.FreeShipping.ToString().ToLower());
+                            .Width(100);
                         columns.Bound(x => x.TaxExempt)
-                            .Width(100)
+                            .Template(
+                                @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.TaxExempt.ToString().ToLowerInvariant() + ".gif")" />
+                            )
+                            .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= TaxExempt #>.gif' />")
                             .Centered()
-                            .Template(x => x.TaxExempt.ToString().ToLower());
+                            .Width(100);
                         columns.Bound(x => x.Active)
-                            .Width(100)
+                            .Template(
+                                @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.Active.ToString().ToLowerInvariant() + ".gif")" />
+                            )
+                            .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= Active #>.gif' />")
                             .Centered()
-                            .Template(x => x.Active.ToString().ToLower());
+                            .Width(100);
                         columns.Bound(x => x.IsSystemRole)
-                            .Width(100)
+                            .Template(
+                                @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.IsSystemRole.ToString().ToLowerInvariant() + ".gif")" />
+                            )
+                            .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= IsSystemRole #>.gif' />")
                             .Centered()
-                            .Template(x => x.IsSystemRole.ToString().ToLower());
+                            .Width(100);
                         columns.Bound(x => x.Id)
                             .Template(x => Html.ActionLink(T("Admin.Common.Edit").Text, "Edit", new { id = x.Id }))
                             .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
