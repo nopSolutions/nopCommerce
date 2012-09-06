@@ -123,9 +123,12 @@
                                                         columns.Bound(pv => pv.Price).Width(100);
                                                         columns.Bound(pv => pv.StockQuantity).Width(100);
                                                         columns.Bound(pv => pv.Published)
-                                                        .Width(100)
-                                                        .Template(pv => pv.Published.ToString().ToLower())
-                                                        .Centered();
+                                                        .Template(
+                                                            @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.Published.ToString().ToLowerInvariant() + ".gif")" />
+                                                        )
+                                                        .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= Published #>.gif' />")
+                                                        .Centered()
+                                                        .Width(100);
                                                     })
                                                     .DataBinding(dataBinding => dataBinding.Ajax()
                                                         .Select("GetVariants", "Product", new
