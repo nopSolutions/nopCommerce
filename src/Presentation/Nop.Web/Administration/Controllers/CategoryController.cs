@@ -504,9 +504,8 @@ namespace Nop.Admin.Controllers
 
             try
             {
-                var fileName = string.Format("categories_{0}.xml", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
                 var xml = _exportManager.ExportCategoriesToXml();
-                return new XmlDownloadResult(xml, fileName);
+                return new XmlDownloadResult(xml, "categories.xml");
             }
             catch (Exception exc)
             {

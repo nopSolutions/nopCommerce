@@ -620,9 +620,8 @@ namespace Nop.Admin.Controllers
                 var orders = _orderService.SearchOrders(null, null, null,
                     null, null, null, null, 0, int.MaxValue);
 
-                var fileName = string.Format("orders_{0}.xml", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
                 var xml = _exportManager.ExportOrdersToXml(orders);
-                return new XmlDownloadResult(xml, fileName);
+                return new XmlDownloadResult(xml, "orders.xml");
             }
             catch (Exception exc)
             {
@@ -646,9 +645,8 @@ namespace Nop.Admin.Controllers
                 orders.AddRange(_orderService.GetOrdersByIds(ids));
             }
 
-            var fileName = string.Format("orders_{0}.xml", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
             var xml = _exportManager.ExportOrdersToXml(orders);
-            return new XmlDownloadResult(xml, fileName);
+            return new XmlDownloadResult(xml, "orders.xml");
         }
 
 	    public ActionResult ExportExcelAll()

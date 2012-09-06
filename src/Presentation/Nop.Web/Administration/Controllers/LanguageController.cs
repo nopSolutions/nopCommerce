@@ -341,9 +341,8 @@ namespace Nop.Admin.Controllers
 
             try
             {
-                var fileName = string.Format("language_{0}.xml", id);
                 var xml = _localizationService.ExportResourcesToXml(language);
-                return new XmlDownloadResult(xml, fileName);
+                return new XmlDownloadResult(xml, "language_pack.xml");
             }
             catch (Exception exc)
             {

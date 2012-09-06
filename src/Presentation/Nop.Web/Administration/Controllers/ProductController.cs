@@ -1578,9 +1578,8 @@ namespace Nop.Admin.Controllers
                     ProductSortingEnum.Position, 0, int.MaxValue,
                     false, out filterableSpecificationAttributeOptionIds, true);
 
-                var fileName = string.Format("products_{0}.xml", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
                 var xml = _exportManager.ExportProductsToXml(products);
-                return new XmlDownloadResult(xml, fileName);
+                return new XmlDownloadResult(xml, "products.xml");
             }
             catch (Exception exc)
             {
@@ -1604,9 +1603,8 @@ namespace Nop.Admin.Controllers
                 products.AddRange(_productService.GetProductsByIds(ids));
             }
 
-            var fileName = string.Format("products_{0}.xml", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
             var xml = _exportManager.ExportProductsToXml(products);
-            return new XmlDownloadResult(xml, fileName);
+            return new XmlDownloadResult(xml, "products.xml");
         }
 
         public ActionResult ExportExcelAll()

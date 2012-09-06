@@ -1591,9 +1591,8 @@ namespace Nop.Admin.Controllers
                     null, null, null, 0, 0, null, null, null, 
                     false, null, 0, int.MaxValue);
                 
-                var fileName = string.Format("customers_{0}.xml", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
                 var xml = _exportManager.ExportCustomersToXml(customers);
-                return new XmlDownloadResult(xml, fileName);
+                return new XmlDownloadResult(xml, "customers.xml");
             }
             catch (Exception exc)
             {
@@ -1617,9 +1616,8 @@ namespace Nop.Admin.Controllers
                 customers.AddRange(_customerService.GetCustomersByIds(ids));
             }
 
-            var fileName = string.Format("customers_{0}.xml", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
             var xml = _exportManager.ExportCustomersToXml(customers);
-            return new XmlDownloadResult(xml, fileName);
+            return new XmlDownloadResult(xml, "customers.xml");
         }
 
         #endregion

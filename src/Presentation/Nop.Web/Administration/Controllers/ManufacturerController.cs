@@ -331,10 +331,9 @@ namespace Nop.Admin.Controllers
 
             try
             {
-                var fileName = string.Format("manufacturers_{0}.xml", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
                 var manufacturers = _manufacturerService.GetAllManufacturers(true);
                 var xml = _exportManager.ExportManufacturersToXml(manufacturers);
-                return new XmlDownloadResult(xml, fileName);
+                return new XmlDownloadResult(xml, "manufacturers.xml");
             }
             catch (Exception exc)
             {
