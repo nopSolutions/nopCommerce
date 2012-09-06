@@ -15,17 +15,14 @@
             {
                 <tr>
                     <td class="cart-total-left">
-                        @using (Html.BeginRouteForm("ShoppingCart", FormMethod.Post))
-                        {
-                            <span class="nobr">
-                                @T("ShoppingCart.Totals.SubTotalDiscount")
-                                @if (Model.AllowRemovingSubTotalDiscount)
-                                {
-                                    /*empty value (little hack for FormValueExistsAttribute)*/
-                                    <input type="submit" name="removesubtotaldiscount" value=" " title="@T("Common.Remove")" class="remove-discount-button" />                                    
-                                }
-                                : </span>
-                        }
+                        <span class="nobr">
+                            @T("ShoppingCart.Totals.SubTotalDiscount")
+                            @if (Model.AllowRemovingSubTotalDiscount)
+                            {
+                                /*empty value (little hack for FormValueExistsAttribute)*/
+                                <input type="submit" name="removesubtotaldiscount" value=" " title="@T("Common.Remove")" class="remove-discount-button" />                                    
+                            }
+                            : </span>
                     </td>
                     <td class="cart-total-right">
                         <span class="nobr"><span class="product-price">@Model.SubTotalDiscount</span> </span>
@@ -111,17 +108,14 @@
             {
                 <tr>
                     <td class="cart-total-left">
-                        @using (Html.BeginRouteForm("ShoppingCart", FormMethod.Post))
-                        {
-                            <span class="nobr">
-                                @T("ShoppingCart.Totals.OrderTotalDiscount")
-                                @if (Model.AllowRemovingOrderTotalDiscount)
-                                {
-                                    /*empty value (little hack for FormValueExistsAttribute)*/
-                                    <input type="submit" name="removeordertotaldiscount" value=" " title="@T("Common.Remove")" class="remove-discount-button" />
-                                }
-                                : </span>
-                        }
+                        <span class="nobr">
+                            @T("ShoppingCart.Totals.OrderTotalDiscount")
+                            @if (Model.AllowRemovingOrderTotalDiscount)
+                            {
+                                /*empty value (little hack for FormValueExistsAttribute)*/
+                                <input type="submit" name="removeordertotaldiscount" value=" " title="@T("Common.Remove")" class="remove-discount-button" />
+                            }
+                            : </span>
                     </td>
                     <td class="cart-total-right">
                         <span class="nobr"><span class="product-price">@Model.OrderTotalDiscount</span> </span>
@@ -134,19 +128,16 @@
                 {
                 <tr>
                     <td class="cart-total-left">
-                        @using (Html.BeginRouteForm("ShoppingCart", FormMethod.Post))
-                        {
-                            <span class="nobr">
-                                @string.Format(T("ShoppingCart.Totals.GiftCardInfo").Text, gc.CouponCode)
-                                @if (Model.IsEditable)
-                                {
+                        <span class="nobr">
+                            @string.Format(T("ShoppingCart.Totals.GiftCardInfo").Text, gc.CouponCode)
+                            @if (Model.IsEditable)
+                            {
 
-                                    /*empty value (little hack for FormValueExistsAttribute)*/
-                                    <input type="submit" name="removegiftcard" value=" " title="@T("Common.Remove")" class="remove-gift-card-button" />
-                                }
-                                : </span>
-                            <input type="hidden" name="giftcardid" value="@gc.Id" />
-                        }
+                                /*empty value (little hack for FormValueExistsAttribute)*/
+                                <input type="submit" name="removegiftcard" value=" " title="@T("Common.Remove")" class="remove-gift-card-button" />
+                            }
+                            : </span>
+                        <input type="hidden" name="giftcardid" value="@gc.Id" />
                     </td>
                     <td class="cart-total-right">
                         <span class="nobr"><span class="product-price">@gc.Amount</span> </span>
@@ -158,8 +149,7 @@
                             @string.Format(T("ShoppingCart.Totals.GiftCardInfo.Remaining").Text, gc.Remaining)
                         </span></span>
                     </td>
-                    <td>
-                    </td>
+                    <td></td>
                 </tr>
                 }
             }

@@ -2,8 +2,6 @@
 @using Nop.Web.Models.ShoppingCart;
 @if (Model.Display)
 {
-    using (Html.BeginRouteForm("ShoppingCart", FormMethod.Post))
-    {
     <div class="coupon-box">
         <div class="title">
             <strong>@T("ShoppingCart.DiscountCouponCode")</strong></div>
@@ -26,5 +24,4 @@
             </div>
         }
     </div>
-    }
 }

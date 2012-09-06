@@ -21,10 +21,7 @@
                         <span class="product-price">@Model.SubTotalDiscount</span>
                         @if (Model.AllowRemovingSubTotalDiscount)
                         {
-                            using (Html.BeginRouteForm("ShoppingCart", FormMethod.Post))
-                            {
-                            <input type="submit" name="removesubtotaldiscount" value="@T("Common.Remove")" />                                    
-                            }
+                            <input type="submit" name="removesubtotaldiscount" value="@T("Common.Remove")" />
                         }
                     </td>
                 </tr>
@@ -106,10 +103,7 @@
                         <span class="product-price">@Model.OrderTotalDiscount</span>
                         @if (Model.AllowRemovingOrderTotalDiscount)
                         {
-                            using (Html.BeginRouteForm("ShoppingCart", FormMethod.Post))
-                            {
-                                <input type="submit" name="removeordertotaldiscount" value="@T("Common.Remove")" />
-                            }
+                            <input type="submit" name="removeordertotaldiscount" value="@T("Common.Remove")" />
                         }
                     </td>
                 </tr>
@@ -127,11 +121,8 @@
                         <span class="product-price">@gc.Amount</span>
                         @if (Model.IsEditable)
                         {
-                            using (Html.BeginRouteForm("ShoppingCart", FormMethod.Post))
-                            {
-                                <input type="submit" name="removegiftcard" value="@T("Common.Remove")" />
-                                <input type="hidden" name="giftcardid" value="@gc.Id" />
-                            }
+                            <input type="submit" name="removegiftcard" value="@T("Common.Remove")" />
+                            <input type="hidden" name="giftcardid" value="@gc.Id" />
                         }
                     </td>
                 </tr>
