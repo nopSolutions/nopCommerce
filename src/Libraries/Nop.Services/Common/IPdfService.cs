@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
@@ -14,26 +15,26 @@ namespace Nop.Services.Common
         /// <summary>
         /// Print an order to PDF
         /// </summary>
+        /// <param name="stream">Stream</param>
         /// <param name="orders">Orders</param>
         /// <param name="lang">Language</param>
-        /// <param name="filePath">File path</param>
-        void PrintOrdersToPdf(IList<Order> orders, Language lang, string filePath);
+        void PrintOrdersToPdf(Stream stream, IList<Order> orders, Language lang);
 
         /// <summary>
         /// Print packaging slips to PDF
         /// </summary>
+        /// <param name="stream">Stream</param>
         /// <param name="shipments">Shipments</param>
         /// <param name="lang">Language</param>
-        /// <param name="filePath">File path</param>
-        void PrintPackagingSlipsToPdf(IList<Shipment> shipments, Language lang, string filePath);
+        void PrintPackagingSlipsToPdf(Stream stream, IList<Shipment> shipments, Language lang);
 
         
         /// <summary>
         /// Print product collection to PDF
         /// </summary>
+        /// <param name="stream">Stream</param>
         /// <param name="products">Products</param>
         /// <param name="lang">Language</param>
-        /// <param name="filePath">File path</param>
-        void PrintProductsToPdf(IList<Product> products, Language lang, string filePath);
+        void PrintProductsToPdf(Stream stream, IList<Product> products, Language lang);
     }
 }

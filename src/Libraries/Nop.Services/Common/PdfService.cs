@@ -104,19 +104,20 @@ namespace Nop.Services.Common
         /// <summary>
         /// Print an order to PDF
         /// </summary>
+        /// <param name="stream">Stream</param>
         /// <param name="orders">Orders</param>
         /// <param name="lang">Language</param>
-        /// <param name="filePath">File path</param>
-        public virtual void PrintOrdersToPdf(IList<Order> orders, Language lang, string filePath)
+        public virtual void PrintOrdersToPdf(Stream stream, IList<Order> orders, Language lang)
         {
+            if (stream == null)
+                throw new ArgumentNullException("stream");
+
             if (orders == null)
                 throw new ArgumentNullException("orders");
 
             if (lang == null)
                 throw new ArgumentNullException("lang");
 
-            if (String.IsNullOrEmpty(filePath))
-                throw new ArgumentNullException("filePath");
 
             var pageSize = PageSize.A4;
 
@@ -127,7 +128,7 @@ namespace Nop.Services.Common
 
 
             var doc = new Document(pageSize);
-            PdfWriter.GetInstance(doc, new FileStream(filePath, FileMode.Create));
+            PdfWriter.GetInstance(doc, stream);
             doc.Open();
 
             //fonts
@@ -656,21 +657,21 @@ namespace Nop.Services.Common
             }
             doc.Close();
         }
-
+        
         /// <summary>
         /// Print packaging slips to PDF
         /// </summary>
+        /// <param name="stream">Stream</param>
         /// <param name="shipments">Shipments</param>
         /// <param name="lang">Language</param>
-        /// <param name="filePath">File path</param>
-        public virtual void PrintPackagingSlipsToPdf(IList<Shipment> shipments, Language lang, string filePath)
+        public virtual void PrintPackagingSlipsToPdf(Stream stream, IList<Shipment> shipments, Language lang)
         {
+            if (stream == null)
+                throw new ArgumentNullException("stream");
+
             if (shipments == null)
                 throw new ArgumentNullException("shipments");
-
-            if (String.IsNullOrEmpty(filePath))
-                throw new ArgumentNullException("filePath");
-
+            
             var pageSize = PageSize.A4;
 
             if (_pdfSettings.LetterPageSizeEnabled)
@@ -679,7 +680,7 @@ namespace Nop.Services.Common
             }
 
             var doc = new Document(pageSize);
-            PdfWriter.GetInstance(doc, new FileStream(filePath, FileMode.Create));
+            PdfWriter.GetInstance(doc, stream);
             doc.Open();
 
             //fonts
@@ -788,20 +789,19 @@ namespace Nop.Services.Common
         /// <summary>
         /// Print product collection to PDF
         /// </summary>
+        /// <param name="stream">Stream</param>
         /// <param name="products">Products</param>
         /// <param name="lang">Language</param>
-        /// <param name="filePath">File path</param>
-        public virtual void PrintProductsToPdf(IList<Product> products, Language lang, string filePath)
+        public virtual void PrintProductsToPdf(Stream stream, IList<Product> products, Language lang)
         {
+            if (stream == null)
+                throw new ArgumentNullException("stream");
+
             if (products == null)
                 throw new ArgumentNullException("products");
 
             if (lang == null)
                 throw new ArgumentNullException("lang");
-
-            if (String.IsNullOrEmpty(filePath))
-                throw new ArgumentNullException("filePath");
-
 
             var pageSize = PageSize.A4;
 
@@ -811,7 +811,7 @@ namespace Nop.Services.Common
             }
 
             var doc = new Document(pageSize);
-            PdfWriter.GetInstance(doc, new FileStream(filePath, FileMode.Create));
+            PdfWriter.GetInstance(doc, stream);
             doc.Open();
 
             //fonts

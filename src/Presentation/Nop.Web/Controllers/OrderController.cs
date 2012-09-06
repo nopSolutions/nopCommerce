@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using Nop.Core;
@@ -440,11 +441,13 @@ namespace Nop.Web.Controllers
 
             var orders = new List<Order>();
             orders.Add(order);
-            string fileName = string.Format("order_{0}_{1}.pdf", order.OrderGuid, DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
-            string filePath = System.IO.Path.Combine(this.Request.PhysicalApplicationPath, "content\\files\\ExportImport", fileName);
-            _pdfService.PrintOrdersToPdf(orders, _workContext.WorkingLanguage, filePath);
-            var pdfBytes = System.IO.File.ReadAllBytes(filePath);
-            return File(pdfBytes, "application/pdf", fileName);
+            byte[] bytes = null;
+            using (var stream = new MemoryStream())
+            {
+                _pdfService.PrintOrdersToPdf(stream, orders, _workContext.WorkingLanguage);
+                bytes = stream.ToArray();
+            }
+            return File(bytes, "application/pdf", string.Format("order_{0}.pdf", order.Id));
         }
 
         public ActionResult ReOrder(int orderId)

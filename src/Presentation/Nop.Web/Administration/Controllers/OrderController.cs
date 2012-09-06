@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using Nop.Admin.Models.Orders;
@@ -1030,11 +1031,13 @@ namespace Nop.Admin.Controllers
             var order = _orderService.GetOrderById(orderId);
             var orders = new List<Order>();
             orders.Add(order);
-            string fileName = string.Format("order_{0}_{1}.pdf", order.OrderGuid, DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
-            string filePath = System.IO.Path.Combine(this.Request.PhysicalApplicationPath, "content\\files\\ExportImport", fileName);
-            _pdfService.PrintOrdersToPdf(orders, _workContext.WorkingLanguage, filePath);
-            var bytes = System.IO.File.ReadAllBytes(filePath);
-            return File(bytes, "application/pdf", fileName);
+            byte[] bytes = null;
+            using (var stream = new MemoryStream())
+            {
+                _pdfService.PrintOrdersToPdf(stream, orders, _workContext.WorkingLanguage);
+                bytes = stream.ToArray();
+            }
+            return File(bytes, "application/pdf", string.Format("order_{0}.pdf", order.Id));
         }
 
         [HttpPost, ActionName("Edit")]
@@ -2090,11 +2093,14 @@ namespace Nop.Admin.Controllers
 
             var shipments = new List<Shipment>();
             shipments.Add(shipment);
-            string fileName = string.Format("packagingslip_{0}_{1}_{2}.pdf", order.OrderGuid, shipment.Id, DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
-            string filePath = System.IO.Path.Combine(this.Request.PhysicalApplicationPath, "content\\files\\ExportImport", fileName);
-            _pdfService.PrintPackagingSlipsToPdf(shipments, _workContext.WorkingLanguage, filePath);
-            var bytes = System.IO.File.ReadAllBytes(filePath);
-            return File(bytes, "application/pdf", fileName);
+            
+            byte[] bytes = null;
+            using (var stream = new MemoryStream())
+            {
+                _pdfService.PrintPackagingSlipsToPdf(stream, shipments, _workContext.WorkingLanguage);
+                bytes = stream.ToArray();
+            }
+            return File(bytes, "application/pdf", string.Format("packagingslip_{0}.pdf", shipment.Id));
         }
 
         public ActionResult PdfPackagingSlipAll()
@@ -2103,11 +2109,14 @@ namespace Nop.Admin.Controllers
                 return AccessDeniedView();
 
             var shipments = _shipmentService.GetAllShipments(null, null, 0, int.MaxValue);
-            string fileName = string.Format("packagingslips_{0}.pdf", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
-            string filePath = System.IO.Path.Combine(this.Request.PhysicalApplicationPath, "content\\files\\ExportImport", fileName);
-            _pdfService.PrintPackagingSlipsToPdf(shipments, _workContext.WorkingLanguage, filePath);
-            var bytes = System.IO.File.ReadAllBytes(filePath);
-            return File(bytes, "application/pdf", fileName);
+            
+            byte[] bytes = null;
+            using (var stream = new MemoryStream())
+            {
+                _pdfService.PrintPackagingSlipsToPdf(stream, shipments, _workContext.WorkingLanguage);
+                bytes = stream.ToArray();
+            }
+            return File(bytes, "application/pdf", "packagingslips.pdf");
         }
 
         public ActionResult PdfPackagingSlipSelected(string selectedIds)
@@ -2125,11 +2134,13 @@ namespace Nop.Admin.Controllers
                 shipments.AddRange(_shipmentService.GetShipmentsByIds(ids));
             }
 
-            string fileName = string.Format("packagingslips_{0}.pdf", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"));
-            string filePath = System.IO.Path.Combine(this.Request.PhysicalApplicationPath, "content\\files\\ExportImport", fileName);
-            _pdfService.PrintPackagingSlipsToPdf(shipments, _workContext.WorkingLanguage, filePath);
-            var bytes = System.IO.File.ReadAllBytes(filePath);
-            return File(bytes, "application/pdf", fileName);
+            byte[] bytes = null;
+            using (var stream = new MemoryStream())
+            {
+                _pdfService.PrintPackagingSlipsToPdf(stream, shipments, _workContext.WorkingLanguage);
+                bytes = stream.ToArray();
+            }
+            return File(bytes, "application/pdf", "packagingslips.pdf");
         }
 
         #endregion

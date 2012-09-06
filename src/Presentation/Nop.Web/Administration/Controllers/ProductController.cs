@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
@@ -1547,11 +1548,15 @@ namespace Nop.Admin.Controllers
                     _workContext.WorkingLanguage.Id, new List<int>(),
                     ProductSortingEnum.Position, 0, int.MaxValue,
                     false, out filterableSpecificationAttributeOptionIds, true);
-                string fileName = string.Format("pdfcatalog_{0}_{1}.pdf", DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss"), CommonHelper.GenerateRandomDigitCode(4));
-                string filePath = System.IO.Path.Combine(this.Request.PhysicalApplicationPath, "content\\files\\ExportImport", fileName);
-                _pdfService.PrintProductsToPdf(products, _workContext.WorkingLanguage, filePath);
-                var bytes = System.IO.File.ReadAllBytes(filePath);
-                return File(bytes, "application/pdf", fileName);
+
+
+                byte[] bytes = null;
+                using (var stream = new MemoryStream())
+                {
+                    _pdfService.PrintProductsToPdf(stream, products, _workContext.WorkingLanguage);
+                    bytes = stream.ToArray();
+                }
+                return File(bytes, "application/pdf", "pdfcatalog.pdf");
             }
             catch (Exception exc)
             {
