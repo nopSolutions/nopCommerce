@@ -8,6 +8,11 @@ namespace Nop.Web.Framework.Localization
     {
         private static int _seoCodeLength = 2;
         
+        /// <summary>
+        /// Returns a value indicating whether nopCommerce is run in virtual directory
+        /// </summary>
+        /// <param name="applicationPath">Application path</param>
+        /// <returns>Result</returns>
         private static bool IsVirtualDirectory(this string applicationPath)
         {
             if (string.IsNullOrEmpty(applicationPath))
@@ -16,6 +21,12 @@ namespace Nop.Web.Framework.Localization
             return applicationPath != "/";
         }
 
+        /// <summary>
+        /// Remove application path from raw URL
+        /// </summary>
+        /// <param name="rawUrl">Raw URL</param>
+        /// <param name="applicationPath">Application path</param>
+        /// <returns>Result</returns>
         public static string RemoveApplicationPathFromRawUrl(this string rawUrl, string applicationPath)
         {
             if (string.IsNullOrEmpty(applicationPath))
@@ -32,6 +43,13 @@ namespace Nop.Web.Framework.Localization
             return result;
         }
 
+        /// <summary>
+        /// Get language SEO code from URL
+        /// </summary>
+        /// <param name="url">URL</param>
+        /// <param name="applicationPath">Application path</param>
+        /// <param name="isRawPath">A value indicating whether war URL is passed</param>
+        /// <returns>Result</returns>
         public static string GetLanguageSeoCodeFromUrl(this string url, string applicationPath, bool isRawPath)
         {
             if (isRawPath)
@@ -50,6 +68,13 @@ namespace Nop.Web.Framework.Localization
             }
         }
 
+        /// <summary>
+        /// Get a value indicating whether URL is localized (contains SEO code)
+        /// </summary>
+        /// <param name="url">URL</param>
+        /// <param name="applicationPath">Application path</param>
+        /// <param name="isRawPath">A value indicating whether war URL is passed</param>
+        /// <returns>Result</returns>
         public static bool IsLocalizedUrl(this string url, string applicationPath, bool isRawPath)
         {
             if (string.IsNullOrEmpty(url))
@@ -90,7 +115,13 @@ namespace Nop.Web.Framework.Localization
             }
         }
 
-        public static string RemoveLocalizedPathFromRawUrl(this string url, string applicationPath)
+        /// <summary>
+        /// Remove language SEO code from URL
+        /// </summary>
+        /// <param name="url">Raw URL</param>
+        /// <param name="applicationPath">Application path</param>
+        /// <returns>Result</returns>
+        public static string RemoveLanguageSeoCodeFromRawUrl(this string url, string applicationPath)
         {
             if (string.IsNullOrEmpty(url))
                 return url;
@@ -115,7 +146,14 @@ namespace Nop.Web.Framework.Localization
             return result;
         }
 
-        public static string AddLocalizedPathToRawUrl(this string url, string applicationPath,
+        /// <summary>
+        /// Add language SEO code from URL
+        /// </summary>
+        /// <param name="url">Raw URL</param>
+        /// <param name="applicationPath">Application path</param>
+        /// <param name="language">Language</param>
+        /// <returns>Result</returns>
+        public static string AddLanguageSeoCodeToRawUrl(this string url, string applicationPath,
             Language language)
         {
             if (language == null)

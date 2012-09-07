@@ -93,7 +93,7 @@ namespace Nop.Web.Framework.Localization
 
                     //Question: should we do path rewriting right here?
                     string rawUrl = httpContext.Request.RawUrl;
-                    var newVirtualPath = rawUrl.RemoveLocalizedPathFromRawUrl(applicationPath);
+                    var newVirtualPath = rawUrl.RemoveLanguageSeoCodeFromRawUrl(applicationPath);
                     if (string.IsNullOrEmpty(newVirtualPath))
                         newVirtualPath = "/";
                     newVirtualPath = newVirtualPath.RemoveApplicationPathFromRawUrl(applicationPath);

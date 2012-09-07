@@ -233,9 +233,9 @@ namespace Nop.Web.Controllers
                 if (returnUrl.IsLocalizedUrl(applicationPath, true))
                 {
                     //already localized URL
-                    returnUrl = returnUrl.RemoveLocalizedPathFromRawUrl(applicationPath);
+                    returnUrl = returnUrl.RemoveLanguageSeoCodeFromRawUrl(applicationPath);
                 }
-                returnUrl = returnUrl.AddLocalizedPathToRawUrl(applicationPath, _workContext.WorkingLanguage);
+                returnUrl = returnUrl.AddLanguageSeoCodeToRawUrl(applicationPath, _workContext.WorkingLanguage);
             }
             return Redirect(returnUrl);
         }
