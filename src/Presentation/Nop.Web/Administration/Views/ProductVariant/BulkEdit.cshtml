@@ -77,7 +77,7 @@
             columns.Bound(pv => pv.ManageInventoryMethod).ReadOnly().Width(150);
             columns.Bound(pv => pv.StockQuantity).Width(100);
             columns.Bound(pv => pv.Published).Width(100);
-            columns.Command(commands => commands.Delete()).Width(50);
+            columns.Command(commands => commands.Delete().Text(T("Admin.Common.Delete").Text)).Title(T("Admin.Common.Delete").Text).Width(50);
             columns.Bound(x => x.Id)
                 .ReadOnly()
                 .Width(50)

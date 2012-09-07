@@ -443,7 +443,7 @@
                         columns.Bound(x => x.CreatedOn).Width(200);
                         columns.Command(commands =>
                         {
-                            commands.Delete();
+                            commands.Delete().Text(T("Admin.Common.Delete").Text);
                         }).Width(100).Title(T("Admin.Common.Delete").Text);
 
                     })

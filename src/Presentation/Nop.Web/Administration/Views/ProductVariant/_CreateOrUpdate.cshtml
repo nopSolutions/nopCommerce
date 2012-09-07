@@ -50,8 +50,8 @@
                         .Format("{0:G29}");
                     columns.Command(commands =>
                     {
-                        commands.Edit();
-                        commands.Delete();
+                        commands.Edit().Text(T("Admin.Common.Edit").Text);
+                        commands.Delete().Text(T("Admin.Common.Delete").Text);
                     })
                     .Width(180);
                 })
@@ -162,14 +162,14 @@
                         .Title(T("Admin.Catalog.Products.Variants.ProductVariantAttributes.Attributes.Values").Text);
                     columns.Command(commands =>
                     {
-                        commands.Edit();
-                        commands.Delete();
+                        commands.Edit().Text(T("Admin.Common.Edit").Text);
+                        commands.Delete().Text(T("Admin.Common.Delete").Text);
                     })
                     .Width(180);
                 })
-                                                                                        .ToolBar(commands => commands.Insert())
-                                                                                        .ClientEvents(events => events.OnEdit("onProductVariantAttributeEdit"))
-                                                                                        .EnableCustomBinding(true))
+                .ToolBar(commands => commands.Insert())
+                .ClientEvents(events => events.OnEdit("onProductVariantAttributeEdit"))
+                .EnableCustomBinding(true))
     
     <script type="text/javascript">
         function onProductVariantAttributeEdit(e) {
@@ -206,7 +206,6 @@
                 {
                     columns.Bound(x => x.AttributesXml)
                         .ClientTemplate("<#= AttributesXml #><br /><span style=\"color: red\"><#= Warnings #></span>")
-                        .Width(350)
                         .Encoded(false)
                         .ReadOnly();
                     columns.Bound(x => x.StockQuantity1)
@@ -216,12 +215,11 @@
                                 @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.AllowOutOfStockOrders1.ToString().ToLowerInvariant() + ".gif")" />
                             )
                             .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= AllowOutOfStockOrders1 #>.gif' />")
-                            .Centered()
-                            .Width(100);
+                            .Centered();
                     columns.Command(commands =>
                     {
-                        commands.Edit();
-                        commands.Delete();
+                        commands.Edit().Text(T("Admin.Common.Edit").Text);
+                        commands.Delete().Text(T("Admin.Common.Delete").Text);
                     })
                     .Width(180);
                 })

@@ -56,16 +56,16 @@
                                     .Title(T("Admin.Common.Edit").Text);
                                 columns.Command(commands =>
                                 {
-                                    commands.Delete();
+                                    commands.Delete().Text(T("Admin.Common.Delete").Text);
                                 })
                                 .Width(50)
                                 .Title(T("Admin.Common.Delete").Text);
                             })
-                                                        .DataBinding(dataBinding =>
-                                                            dataBinding.Ajax()
-                                                            .Select("ProductAttributeValueList", "ProductVariant", new { productVariantAttributeId = Model.ProductVariantAttributeId })
-                                                            .Delete("ProductAttributeValueDelete", "ProductVariant"))
-                                                        .EnableCustomBinding(true))
+                            .DataBinding(dataBinding =>
+                                dataBinding.Ajax()
+                                .Select("ProductAttributeValueList", "ProductVariant", new { productVariantAttributeId = Model.ProductVariantAttributeId })
+                                .Delete("ProductAttributeValueDelete", "ProductVariant"))
+                            .EnableCustomBinding(true))
         </td>
     </tr>
     <tr>

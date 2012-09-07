@@ -17,8 +17,8 @@
                         columns.Bound(x => x.Rate).Width(100);
                         columns.Command(commands =>
                         {
-                            commands.Edit();
-                        }).Width(100);
+                            commands.Edit().Text(T("Admin.Common.Edit").Text);
+                        }).Title(T("Admin.Common.Edit").Text).Width(100);
 
                     })
                     .Editable(x =>

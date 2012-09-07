@@ -120,8 +120,8 @@
                         columns.Bound(x => x.DisplayOrder1).Width(100);
                         columns.Command(commands =>
                         {
-                            commands.Edit();
-                            commands.Delete();
+                            commands.Edit().Text(T("Admin.Common.Edit").Text);
+                            commands.Delete().Text(T("Admin.Common.Delete").Text);
                         }).Width(180);
 
                     })

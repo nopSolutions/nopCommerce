@@ -1325,7 +1325,7 @@
             columns.Bound(x => x.DisplayToCustomer).Width(100);
             columns.Command(commands =>
             {
-                commands.Delete();
+                commands.Delete().Text(T("Admin.Common.Delete").Text);
             }).Width(180).Title(T("Admin.Common.Delete").Text);
         })
         .EnableCustomBinding(true))

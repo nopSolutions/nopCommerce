@@ -52,8 +52,8 @@
                             .Centered();
                         columns.Command(commands =>
                         {
-                            commands.Delete();                            
-                        }).Width(90);
+                            commands.Delete().Text(T("Admin.Common.Delete").Text);
+                        }).Title(T("Admin.Common.Delete").Text).Width(50);
                     })
                     .Pageable(settings => settings.Total(Model.Total).PageSize(gridPageSize).Position(GridPagerPosition.Both))
                     .DataBinding(dataBinding => {

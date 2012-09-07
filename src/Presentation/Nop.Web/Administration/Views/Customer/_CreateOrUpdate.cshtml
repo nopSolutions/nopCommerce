@@ -593,9 +593,9 @@
             .ClientTemplate("<a href=\"" + @Url.Content("~/Admin/Customer/AddressEdit?customerId=") + @Model.Id + "&addressid=<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
             .Title(T("Admin.Common.Edit").Text);
         columns.Command(commands =>
-        {
-            commands.Delete();
-        })
+            {
+                commands.Delete().Text(T("Admin.Common.Delete").Text);
+            })
             .Title(T("Admin.Common.Delete").Text);
     }))
     <div class="clear">
