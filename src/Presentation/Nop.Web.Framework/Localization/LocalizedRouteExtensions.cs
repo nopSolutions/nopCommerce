@@ -38,7 +38,7 @@ namespace Nop.Web.Framework.Localization
                 throw new ArgumentNullException("url");
             }
 
-            LocalizedRoute route = new LocalizedRoute(url, new MvcRouteHandler())
+            var route = new LocalizedRoute(url, new MvcRouteHandler())
             {
                 Defaults = new RouteValueDictionary(defaults),
                 Constraints = new RouteValueDictionary(constraints),

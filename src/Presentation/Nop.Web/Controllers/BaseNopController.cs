@@ -14,6 +14,7 @@ namespace Nop.Web.Controllers
     [CheckAffiliate]
     [StoreClosedAttribute]
     [PublicStoreAllowNavigation]
+    [LanguageSeoCodeAttribute]
     [NopHttpsRequirement(SslRequirement.NoMatter)]
     public abstract partial class BaseNopController : Controller
     {
