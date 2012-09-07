@@ -61,10 +61,9 @@
                                 .Centered()
                                 .Width(100);
                         columns.Bound(x => x.Id)
-                            .Template(x => Html.ActionLink(T("Admin.Telerik.GridLocalization.Select").Text, "MarkAsPrimaryExchangeRateCurrency", new { id = x.Id }, new { @class = "t-button" }))
+                            .Template(x => Html.ActionLink(T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryExchangeRateCurrency").Text, "MarkAsPrimaryExchangeRateCurrency", new { id = x.Id }, new { @class = "t-button" }))
                             .Centered()
-                            .HeaderTemplate(T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryExchangeRateCurrency").Text)
-                            .Width("100px");
+                            .HeaderTemplate(T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryExchangeRateCurrency").Text);
                         columns.Bound(x => x.IsPrimaryStoreCurrency)
                                 .Template(
                                     @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.IsPrimaryStoreCurrency.ToString().ToLowerInvariant() + ".gif")" />
@@ -73,10 +72,9 @@
                                 .Centered()
                                 .Width(100);
                         columns.Bound(x => x.Id)
-                            .Template(x => Html.ActionLink(T("Admin.Telerik.GridLocalization.Select").Text, "MarkAsPrimaryStoreCurrency", new { id = x.Id }, new { @class = "t-button" }))
+                            .Template(x => Html.ActionLink(T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryStoreCurrency").Text, "MarkAsPrimaryStoreCurrency", new { id = x.Id }, new { @class = "t-button" }))
                             .Centered()
-                            .HeaderTemplate(T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryStoreCurrency").Text)
-                            .Width(100);
+                            .HeaderTemplate(T("Admin.Configuration.Currencies.Fields.MarkAsPrimaryStoreCurrency").Text);
                         columns.Bound(x => x.Published)
                                 .Template(
                                     @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.Published.ToString().ToLowerInvariant() + ".gif")" />

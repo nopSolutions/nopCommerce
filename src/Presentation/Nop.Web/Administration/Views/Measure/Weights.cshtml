@@ -39,7 +39,7 @@
                             .Centered()
                             .Width(100)
                             .ReadOnly();
-                        columns.Command(commands => commands.Select())
+                        columns.Command(commands => commands.Select().Text(T("Admin.Configuration.Measures.Weights.Fields.MarkAsPrimaryWeight").Text))
                             .Title(T("Admin.Configuration.Measures.Weights.Fields.MarkAsPrimaryWeight").Text).Width(100);
                         columns.Command(commands =>
                         {
