@@ -32,6 +32,18 @@ set @resources='
   <LocaleResource Name="Account.Register.Result.Continue">
     <Value>Continue</Value>
   </LocaleResource>
+  <LocaleResource Name="Telerik.GridLocalization.FilterForeignKeyEq">
+    <Value>Is equal to</Value>
+  </LocaleResource>
+  <LocaleResource Name="Telerik.GridLocalization.FilterForeignKeyNe">
+    <Value>Is not equal to</Value>
+  </LocaleResource>
+  <LocaleResource Name="Telerik.GridLocalization.FilterOr">
+    <Value>Or</Value>
+  </LocaleResource>
+  <LocaleResource Name="Telerik.GridLocalization.FilterStringNotSubstringOf">
+    <Value>Does not contain</Value>
+  </LocaleResource>
 </Language>
 '
 

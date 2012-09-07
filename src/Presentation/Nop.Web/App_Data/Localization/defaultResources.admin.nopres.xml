@@ -9853,6 +9853,12 @@
 							<LocaleResource Name="FilterEnumEq">
 								<Value>Is equal to</Value>
 							</LocaleResource>
+              <LocaleResource Name="FilterForeignKeyEq">
+                <Value>Is equal to</Value>
+              </LocaleResource>
+              <LocaleResource Name="FilterForeignKeyNe">
+                <Value>Is not equal to</Value>
+              </LocaleResource>
 							<LocaleResource Name="FilterNumberEq">
 								<Value>Is equal to</Value>
 							</LocaleResource>
@@ -9871,6 +9877,9 @@
 							<LocaleResource Name="FilterNumberNe">
 								<Value>Is not equal to</Value>
 							</LocaleResource>
+              <LocaleResource Name="FilterOr">
+                <Value>Or</Value>
+              </LocaleResource>
 							<LocaleResource Name="FilterSelectValue">
 								<Value>-Select value-</Value>
 							</LocaleResource>
@@ -9886,6 +9895,9 @@
 							<LocaleResource Name="FilterStringNe">
 								<Value>Is not equal to</Value>
 							</LocaleResource>
+              <LocaleResource Name="FilterStringNotSubstringOf">
+                <Value>Does not contain</Value>
+              </LocaleResource>
 							<LocaleResource Name="FilterStringStartsWith">
 								<Value>Starts with</Value>
 							</LocaleResource>
