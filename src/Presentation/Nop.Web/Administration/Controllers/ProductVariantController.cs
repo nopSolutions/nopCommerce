@@ -261,7 +261,8 @@ namespace Nop.Admin.Controllers
         [NonAction]
         protected void UpdateProductTagTotals(ProductVariant variant)
         {
-            var product = variant.Product;
+            //we do not use variant.Product property because it's null when creating a new product variant
+            var product = _productService.GetProductById(variant.ProductId);
             var productTags = product.ProductTags;
             foreach (var productTag in productTags)
                 _productTagService.UpdateProductTagTotals(productTag);
