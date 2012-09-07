@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
-
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
 	<!-- GENERAL -->
-
 	<Target Name="Echo">
 		<Message Text="Hello from $(MSBuildProjectDirectory)" />
 	</Target>
@@ -19,16 +17,21 @@
 		<Platform Condition="'$(Platform)' == ''">Any CPU</Platform>
 		<Platform Condition="'$(Platform)' == 'MCD'">Any CPU</Platform>
 		<MSBuildCommunityTasksPath>$(RootFolder)\lib</MSBuildCommunityTasksPath>
+		<VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+		<VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
 	</PropertyGroup>
+
+	<!--Transform support-->
+	<UsingTask TaskName="TransformXml" AssemblyFile="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Web\Microsoft.Web.Publishing.Tasks.dll"/>
 
 	<Import Project="$(RootFolder)\build\lib\MSBuild.Community.Tasks.targets"/>
 	<Import Project="nop.framework.targets"/>
-    <Import Project="nop.plugins.targets"/>
+    	<Import Project="nop.plugins.targets"/>
 
 	<Target Name="Build">
 		<Message Text="Building Everything"/>
 		<CallTarget Targets="Framework-Build"/>
-        <CallTarget Targets="Plugins-CopyToWeb"/>
+        	<CallTarget Targets="Plugins-CopyToWeb"/>
 	</Target>
 
     <Target Name="Deploy" DependsOnTargets="Build">
@@ -36,7 +39,9 @@
         <RemoveDir Directories="$(DeployFolder)" />
         <MakeDir Directories="$(DeployFolder)" />
         <MakeDir Directories="$(DeployFolder)\$(DeployPrefix)" />
+        <!--Ensure \Plugins\bin\ directory is created-->
 	<MakeDir Directories="$(DeployFolder)\$(DeployPrefix)\Plugins\bin\" />
+
 
         <!--Lets publish Nop.Web-->
         <MSBuild Projects="$(RootFolder)\Presentation\Nop.Web\Nop.Web.csproj"
@@ -44,17 +49,20 @@
            Properties="WebProjectOutputDir=$(DeployFolder)\$(DeployPrefix)\;
            OutDir=$(DeployFolder)\$(DeployPrefix)\bin\;Configuration=$(Configuration)" />
         
+
         <!--Lets copy the plugins to the deployed directory-->
         <MSBuild Projects ="$(MSBuildProjectFullPath)"
                         Targets="Plugins-CopyToWeb"
                         Properties="
                         PluginOutput=$(DeployFolder)\$(DeployPrefix)\Plugins\"/>
         
+
         <!--Now lets publish Nop.Admin-->
         <MSBuild Projects="$(RootFolder)\Presentation\Nop.Web\Administration\Nop.Admin.csproj"
            Targets="ResolveReferences;_CopyWebApplication"
            Properties="WebProjectOutputDir=$(DeployFolder)\$(DeployPrefix)\Administration\;
            OutDir=$(DeployFolder)\$(DeployPrefix)\Administration\bin\;Configuration=$(Configuration)" />
+
 
         <!--Now lets move the Nop.Admin/bin/ to the root bin/-->
         <CreateItem Include="$(DeployFolder)\$(DeployPrefix)\Administration\bin\*.dll">
@@ -63,13 +71,6 @@
         <Copy SourceFiles="@(CompileOutput)"
                 DestinationFolder="$(DeployFolder)\$(DeployPrefix)\bin\" />
 
-
-        <!--Lets move the deployable-bin directory to the /bin-->        
-        <!--<CreateItem Include="$(RootFolder)\Presentation\Nop.Web\_bin_deployableAssemblies\**\*.dll">
-            <Output TaskParameter="Include" ItemName="deployableAssemblies" />
-        </CreateItem>
-        <Copy SourceFiles="@(deployableAssemblies)"
-                DestinationFolder="$(DeployFolder)\$(DeployPrefix)\bin\%(RecursiveDir)" />-->
 
         <!--Lets delete the bin in Nop.Admin-->
         <RemoveDir Directories="$(DeployFolder)\$(DeployPrefix)\Administration\bin\" />
@@ -99,6 +100,7 @@
                 DestinationFolder="$(DeployFolder)\$(DeployPrefix)\bin\%(RecursiveDir)"
 		SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
 
+	<!--Transform root web.config file-->
+	<TransformXml Condition="Exists('$(WebFolder)\Web.$(Configuration).config')" Source="$(WebFolder)\Web.config" Transform="$(WebFolder)\Web.$(Configuration).config" Destination="$(DeployFolder)\$(DeployPrefix)\Web.config" />
     </Target>
-
 </Project>
