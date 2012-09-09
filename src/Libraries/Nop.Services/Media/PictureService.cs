@@ -372,7 +372,10 @@ namespace Nop.Services.Media
         public virtual string GetPictureUrl(Picture picture, int targetSize = 0, bool showDefaultPicture = true, bool? useSsl = null)
         {
             string url = string.Empty;
-            if (picture == null || LoadPictureBinary(picture).Length == 0)
+            byte[] pictureBinary = null;
+            if (picture != null)
+                pictureBinary = LoadPictureBinary(picture);
+            if (picture == null || pictureBinary == null || pictureBinary.Length == 0)
             {
                 if(showDefaultPicture)
                 {
@@ -387,7 +390,7 @@ namespace Nop.Services.Media
             {
                 DeletePictureThumbs(picture);
 
-                picture = UpdatePicture(picture.Id, LoadPictureBinary(picture), picture.MimeType, picture.SeoFilename, false);
+                picture = UpdatePicture(picture.Id, pictureBinary, picture.MimeType, picture.SeoFilename, false);
             }
             lock (s_lock)
             {
@@ -404,7 +407,7 @@ namespace Nop.Services.Media
                         {
                             System.IO.Directory.CreateDirectory(this.LocalThumbImagePath);
                         }
-                        File.WriteAllBytes(Path.Combine(this.LocalThumbImagePath, localFilename), LoadPictureBinary(picture));
+                        File.WriteAllBytes(Path.Combine(this.LocalThumbImagePath, localFilename), pictureBinary);
                     }
                 }
                 else
@@ -418,7 +421,7 @@ namespace Nop.Services.Media
                         {
                             System.IO.Directory.CreateDirectory(this.LocalThumbImagePath);
                         }
-                        using (var stream = new MemoryStream(LoadPictureBinary(picture)))
+                        using (var stream = new MemoryStream(pictureBinary))
                         {
                             var b = new Bitmap(stream);
 
