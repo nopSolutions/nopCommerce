@@ -13,43 +13,40 @@ namespace Nop.Services.Tasks
     {
         private Timer _timer;
         private bool _disposed;
-        private DateTime _startedUtc;
-        private bool _isRunning;
         private readonly Dictionary<string, Task> _tasks;
-        private int _seconds;
 
         internal TaskThread()
         {
             this._tasks = new Dictionary<string, Task>();
-            this._seconds = 10 * 60;
-        }
-
-        internal TaskThread(ScheduleTask scheduleTask)
-        {
-            this._tasks = new Dictionary<string, Task>();
-            this._seconds = scheduleTask.Seconds;
-            this._isRunning = false;
+            this.Seconds = 10 * 60;
         }
 
         private void Run()
         {
-            if (_seconds <=0)
+            if (Seconds <= 0)
                 return;
 
-            this._startedUtc = DateTime.UtcNow;
-            this._isRunning = true;
+            this.StartedUtc = DateTime.UtcNow;
+            this.IsRunning = true;
             foreach (Task task in this._tasks.Values)
             {
                 task.Execute();
             }
-            this._isRunning = false;
+            this.IsRunning = false;
         }
 
         private void TimerHandler(object state)
         {
             this._timer.Change(-1, -1);
             this.Run();
-            this._timer.Change(this.Interval, this.Interval);
+            if (this.RunOnlyOnce)
+            {
+                this.Dispose();
+            }
+            else
+            {
+                this._timer.Change(this.Interval, this.Interval);
+            }
         }
 
         /// <summary>
@@ -95,39 +92,17 @@ namespace Nop.Services.Tasks
         /// <summary>
         /// Gets or sets the interval in seconds at which to run the tasks
         /// </summary>
-        public int Seconds
-        {
-            get
-            {
-                return this._seconds;
-            }
-            internal set
-            {
-                this._seconds = value;
-            }
-        }
+        public int Seconds { get; set; }
 
         /// <summary>
-        /// Get a datetime when thread has been started
+        /// Get or sets a datetime when thread has been started
         /// </summary>
-        public DateTime Started
-        {
-            get
-            {
-                return this._startedUtc;
-            }
-        }
+        public DateTime StartedUtc { get; private set; }
 
         /// <summary>
-        /// Get a value indicating whether thread is running
+        /// Get or sets a value indicating whether thread is running
         /// </summary>
-        public bool IsRunning
-        {
-            get
-            {
-                return this._isRunning;
-            }
-        }
+        public bool IsRunning { get; private set; }
 
         /// <summary>
         /// Get a list of tasks
@@ -152,8 +127,13 @@ namespace Nop.Services.Tasks
         {
             get
             {
-                return this._seconds * 1000;
+                return this.Seconds * 1000;
             }
         }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the thread whould be run only once (per appliction start)
+        /// </summary>
+        public bool RunOnlyOnce { get; set; }
     }
 }

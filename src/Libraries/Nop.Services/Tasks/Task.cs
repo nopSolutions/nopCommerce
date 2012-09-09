@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using Nop.Core.Domain.Tasks;
 using Nop.Core.Infrastructure;
 using Nop.Services.Logging;
@@ -11,21 +10,12 @@ namespace Nop.Services.Tasks
     /// </summary>
     public partial class Task
     {
-        private bool _enabled;
-        private readonly string _type;
-        private readonly string _name;
-        private readonly bool _stopOnError;
-        private DateTime? _lastStartUtc;
-        private DateTime? _lastSuccessUtc;
-        private DateTime? _lastEndUtc;
-        private bool _isRunning;
-
         /// <summary>
         /// Ctor for Task
         /// </summary>
         private Task()
         {
-            this._enabled = true;
+            this.Enabled = true;
         }
 
         /// <summary>
@@ -34,10 +24,10 @@ namespace Nop.Services.Tasks
         /// <param name="task">Task </param>
         public Task(ScheduleTask task)
         {
-            this._type = task.Type;
-            this._enabled = task.Enabled;
-            this._stopOnError = task.StopOnError;
-            this._name = task.Name;
+            this.Type = task.Type;
+            this.Enabled = task.Enabled;
+            this.StopOnError = task.StopOnError;
+            this.Name = task.Name;
         }
 
         private ITask CreateTask()
@@ -45,7 +35,7 @@ namespace Nop.Services.Tasks
             ITask task = null;
             if (this.Enabled)
             {
-                var type2 = System.Type.GetType(this._type);
+                var type2 = System.Type.GetType(this.Type);
                 if (type2 != null)
                 {
                     object instance;
@@ -65,133 +55,88 @@ namespace Nop.Services.Tasks
         /// </summary>
         public void Execute()
         {
-            this._isRunning = true;
+            this.IsRunning = true;
+
+            var scheduleTaskService = EngineContext.Current.Resolve<IScheduleTaskService>();
+            var scheduleTask = scheduleTaskService.GetTaskByType(this.Type);
+
             try
             {
                 var task = this.CreateTask();
                 if (task != null)
                 {
-                    this._lastStartUtc = DateTime.UtcNow;
+                    this.LastStartUtc = DateTime.UtcNow;
+                    if (scheduleTask != null)
+                    {
+                        //update appropriate datetime properties
+                        scheduleTask.LastStartUtc = this.LastStartUtc;
+                        scheduleTaskService.UpdateTask(scheduleTask);
+                    }
+
+                    //execute task
                     task.Execute();
-                    this._lastEndUtc = this._lastSuccessUtc = DateTime.UtcNow;
+                    this.LastEndUtc = this.LastSuccessUtc = DateTime.UtcNow;
                 }
             }
             catch (Exception exc)
             {
-                this._enabled = !this.StopOnError;
-                this._lastEndUtc = DateTime.UtcNow;
-                
+                this.Enabled = !this.StopOnError;
+                this.LastEndUtc = DateTime.UtcNow;
+
                 //log error
                 var logger = EngineContext.Current.Resolve<ILogger>();
-                logger.Error(string.Format("Error while running the '{0}' schedule task. {1}", this._name, exc.Message), exc);
+                logger.Error(string.Format("Error while running the '{0}' schedule task. {1}", this.Name, exc.Message), exc);
             }
-            
-            try
+
+            if (scheduleTask != null)
             {
-                //find current schedule task
-                var scheduleTaskService = EngineContext.Current.Resolve<IScheduleTaskService>();
-                var scheduleTask = scheduleTaskService.GetTaskByType(this._type);
-                if (scheduleTask != null)
-                {
-                    scheduleTask.LastStartUtc = this.LastStartUtc;
-                    scheduleTask.LastEndUtc = this.LastEndUtc;
-                    scheduleTask.LastSuccessUtc = this.LastSuccessUtc;
-                    scheduleTaskService.UpdateTask(scheduleTask);
-                }
+                //update appropriate datetime properties
+                scheduleTask.LastEndUtc = this.LastEndUtc;
+                scheduleTask.LastSuccessUtc = this.LastSuccessUtc;
+                scheduleTaskService.UpdateTask(scheduleTask);
             }
-            catch (Exception exc)
-            {
-                Debug.WriteLine(string.Format("Error saving schedule task datetimes. Exception: {0}", exc));
-            }
-            this._isRunning = false;
+
+            this.IsRunning = false;
         }
 
         /// <summary>
         /// A value indicating whether a task is running
         /// </summary>
-        public bool IsRunning
-        {
-            get
-            {
-                return this._isRunning;
-            }
-        }
+        public bool IsRunning { get; private set; }
 
         /// <summary>
         /// Datetime of the last start
         /// </summary>
-        public DateTime? LastStartUtc
-        {
-            get
-            {
-                return this._lastStartUtc;
-            }
-        }
+        public DateTime? LastStartUtc { get; private set; }
 
         /// <summary>
         /// Datetime of the last end
         /// </summary>
-        public DateTime? LastEndUtc
-        {
-            get
-            {
-                return this._lastEndUtc;
-            }
-        }
+        public DateTime? LastEndUtc { get; private set; }
 
         /// <summary>
         /// Datetime of the last success
         /// </summary>
-        public DateTime? LastSuccessUtc
-        {
-            get
-            {
-                return this._lastSuccessUtc;
-            }
-        }
+        public DateTime? LastSuccessUtc { get; private set; }
 
         /// <summary>
         /// A value indicating type of the task
         /// </summary>
-        public string Type
-        {
-            get
-            {
-                return this._type;
-            }
-        }
+        public string Type { get; private set; }
 
         /// <summary>
         /// A value indicating whether to stop task on error
         /// </summary>
-        public bool StopOnError
-        {
-            get
-            {
-                return this._stopOnError;
-            }
-        }
+        public bool StopOnError { get; private set; }
 
         /// <summary>
         /// Get the task name
         /// </summary>
-        public string Name
-        {
-            get
-            {
-                return this._name;
-            }
-        }
+        public string Name { get; private set; }
 
         /// <summary>
         /// A value indicating whether the task is enabled
         /// </summary>
-        public bool Enabled
-        {
-            get
-            {
-                return this._enabled;
-            }
-        }
+        public bool Enabled { get; private set; }
     }
 }
