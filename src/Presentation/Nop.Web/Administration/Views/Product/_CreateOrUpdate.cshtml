@@ -525,7 +525,7 @@
                     .Columns(columns =>
                     {
                         columns.Bound(x => x.PictureUrl)
-                            .ClientTemplate("<a href='<#= PictureUrl #>' target='_blank'><img alt='<#= Id #>' src='<#= PictureUrl #>' width='150' /><a/>")
+                            .ClientTemplate("<a href='<#= PictureUrl #>' target='_blank'><img alt='<#= PictureId #>' src='<#= PictureUrl #>' width='150' /><a/>")
                             .ReadOnly();
                         columns.Bound(x => x.DisplayOrder);
                         columns.Command(commands =>

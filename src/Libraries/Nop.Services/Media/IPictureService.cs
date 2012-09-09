@@ -93,14 +93,6 @@ namespace Nop.Services.Media
         void DeletePicture(Picture picture);
 
         /// <summary>
-        /// Validates input picture dimensions
-        /// </summary>
-        /// <param name="pictureBinary">Picture binary</param>
-        /// <param name="mimeType">MIME type</param>
-        /// <returns>Picture binary or throws an exception</returns>
-        byte[] ValidatePicture(byte[] pictureBinary, string mimeType);
-
-        /// <summary>
         /// Gets a collection of pictures
         /// </summary>
         /// <param name="pageIndex">Current page</param>
@@ -130,8 +122,9 @@ namespace Nop.Services.Media
         /// <param name="mimeType">The picture MIME type</param>
         /// <param name="seoFilename">The SEO filename</param>
         /// <param name="isNew">A value indicating whether the picture is new</param>
+        /// <param name="validateBinary">A value indicating whether to validated provided picture binary</param>
         /// <returns>Picture</returns>
-        Picture InsertPicture(byte[] pictureBinary, string mimeType, string seoFilename, bool isNew);
+        Picture InsertPicture(byte[] pictureBinary, string mimeType, string seoFilename, bool isNew, bool validateBinary = true);
 
         /// <summary>
         /// Updates the picture
@@ -141,8 +134,9 @@ namespace Nop.Services.Media
         /// <param name="mimeType">The picture MIME type</param>
         /// <param name="seoFilename">The SEO filename</param>
         /// <param name="isNew">A value indicating whether the picture is new</param>
+        /// <param name="validateBinary">A value indicating whether to validated provided picture binary</param>
         /// <returns>Picture</returns>
-        Picture UpdatePicture(int pictureId, byte[] pictureBinary, string mimeType, string seoFilename, bool isNew);
+        Picture UpdatePicture(int pictureId, byte[] pictureBinary, string mimeType, string seoFilename, bool isNew, bool validateBinary = true);
 
         /// <summary>
         /// Updates a SEO filename of a picture

@@ -11,6 +11,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Media;
 using Nop.Services.Configuration;
 using Nop.Services.Events;
+using Nop.Services.Logging;
 using Nop.Services.Seo;
 
 namespace Nop.Services.Media
@@ -28,6 +29,7 @@ namespace Nop.Services.Media
         private readonly IRepository<ProductPicture> _productPictureRepository;
         private readonly ISettingService _settingService;
         private readonly IWebHelper _webHelper;
+        private readonly ILogger _logger;
         private readonly IEventPublisher _eventPublisher;
         private readonly MediaSettings _mediaSettings;
 
@@ -42,18 +44,20 @@ namespace Nop.Services.Media
         /// <param name="productPictureRepository">Product picture repository</param>
         /// <param name="settingService">Setting service</param>
         /// <param name="webHelper">Web helper</param>
+        /// <param name="logger">Logger</param>
         /// <param name="eventPublisher">Event publisher</param>
         /// <param name="mediaSettings">Media settings</param>
         public PictureService(IRepository<Picture> pictureRepository,
             IRepository<ProductPicture> productPictureRepository,
             ISettingService settingService, IWebHelper webHelper,
-            IEventPublisher eventPublisher,
+            ILogger logger, IEventPublisher eventPublisher,
             MediaSettings mediaSettings)
         {
             this._pictureRepository = pictureRepository;
             this._productPictureRepository = productPictureRepository;
             this._settingService = settingService;
             this._webHelper = webHelper;
+            this._logger = logger;
             this._eventPublisher = eventPublisher;
             this._mediaSettings = mediaSettings;
         }
@@ -192,6 +196,50 @@ namespace Nop.Services.Media
                 File.Delete(Path.Combine(this.LocalThumbImagePath, currentFileName));
         }
 
+        /// <summary>
+        /// Validates input picture dimensions
+        /// </summary>
+        /// <param name="pictureBinary">Picture binary</param>
+        /// <param name="mimeType">MIME type</param>
+        /// <returns>Picture binary or throws an exception</returns>
+        protected virtual byte[] ValidatePicture(byte[] pictureBinary, string mimeType)
+        {
+            using (var stream = new MemoryStream(pictureBinary))
+            {
+                var b = new Bitmap(stream);
+                int maxSize = _mediaSettings.MaximumImageSize;
+
+                if ((b.Height > maxSize) || (b.Width > maxSize))
+                {
+                    var newSize = CalculateDimensions(b.Size, maxSize);
+                    var newBitMap = new Bitmap(newSize.Width, newSize.Height);
+                    var g = Graphics.FromImage(newBitMap);
+                    g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+                    g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                    g.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
+                    g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
+                    g.DrawImage(b, 0, 0, newSize.Width, newSize.Height);
+
+                    var m = new MemoryStream();
+                    var ep = new EncoderParameters();
+                    ep.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, this.ImageQuality);
+                    ImageCodecInfo ici = GetImageCodecInfoFromMimeType(mimeType);
+                    if (ici == null)
+                        ici = GetImageCodecInfoFromMimeType("image/jpeg");
+                    newBitMap.Save(m, ici, ep);
+                    newBitMap.Dispose();
+                    b.Dispose();
+
+                    return m.GetBuffer();
+                }
+                else
+                {
+                    b.Dispose();
+                    return pictureBinary;
+                }
+            }
+        }
+        
         #endregion
 
         #region Methods
@@ -390,7 +438,13 @@ namespace Nop.Services.Media
             {
                 DeletePictureThumbs(picture);
 
-                picture = UpdatePicture(picture.Id, pictureBinary, picture.MimeType, picture.SeoFilename, false);
+                //we do not validate picture binary here to ensure that no exception ("Parameter is not valid") will be thrown
+                picture = UpdatePicture(picture.Id, 
+                    pictureBinary, 
+                    picture.MimeType, 
+                    picture.SeoFilename, 
+                    false, 
+                    false);
             }
             lock (s_lock)
             {
@@ -423,8 +477,21 @@ namespace Nop.Services.Media
                         }
                         using (var stream = new MemoryStream(pictureBinary))
                         {
-                            var b = new Bitmap(stream);
-
+                            Bitmap b = null;
+                            try
+                            {
+                                //try-catch to ensure that picture binary is really OK. Otherwise, we can get "Parameter is not valid" exception if binary is corrupted for some reasons
+                                b = new Bitmap(stream);
+                            }
+                            catch (ArgumentException exc)
+                            {
+                                _logger.Error(string.Format("Error generating picture thumb. ID={0}", picture.Id), exc);
+                            }
+                            if (b == null)
+                            {
+                                //bitmap could not be loaded for some reasons
+                                return url;
+                            }
                             var newSize = CalculateDimensions(b.Size, targetSize);
 
                             if (newSize.Width < 1)
@@ -512,50 +579,6 @@ namespace Nop.Services.Media
         }
 
         /// <summary>
-        /// Validates input picture dimensions
-        /// </summary>
-        /// <param name="pictureBinary">Picture binary</param>
-        /// <param name="mimeType">MIME type</param>
-        /// <returns>Picture binary or throws an exception</returns>
-        public virtual byte[] ValidatePicture(byte[] pictureBinary, string mimeType)
-        {
-            using (var stream = new MemoryStream(pictureBinary))
-            {
-                var b = new Bitmap(stream);
-                int maxSize = _mediaSettings.MaximumImageSize;
-
-                if ((b.Height > maxSize) || (b.Width > maxSize))
-                {
-                    var newSize = CalculateDimensions(b.Size, maxSize);
-                    var newBitMap = new Bitmap(newSize.Width, newSize.Height);
-                    var g = Graphics.FromImage(newBitMap);
-                    g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-                    g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-                    g.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
-                    g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
-                    g.DrawImage(b, 0, 0, newSize.Width, newSize.Height);
-
-                    var m = new MemoryStream();
-                    var ep = new EncoderParameters();
-                    ep.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, this.ImageQuality);
-                    ImageCodecInfo ici = GetImageCodecInfoFromMimeType(mimeType);
-                    if (ici == null)
-                        ici = GetImageCodecInfoFromMimeType("image/jpeg");
-                    newBitMap.Save(m, ici, ep);
-                    newBitMap.Dispose();
-                    b.Dispose();
-
-                    return m.GetBuffer();
-                }
-                else
-                {
-                    b.Dispose();
-                    return pictureBinary;
-                }
-            }
-        }
-        
-        /// <summary>
         /// Gets a collection of pictures
         /// </summary>
         /// <param name="pageIndex">Current page</param>
@@ -612,23 +635,26 @@ namespace Nop.Services.Media
         /// <param name="mimeType">The picture MIME type</param>
         /// <param name="seoFilename">The SEO filename</param>
         /// <param name="isNew">A value indicating whether the picture is new</param>
+        /// <param name="validateBinary">A value indicating whether to validated provided picture binary</param>
         /// <returns>Picture</returns>
-        public virtual Picture InsertPicture(byte[] pictureBinary, string mimeType, string seoFilename, bool isNew)
+        public virtual Picture InsertPicture(byte[] pictureBinary, string mimeType, string seoFilename,
+            bool isNew, bool validateBinary = true)
         {
             mimeType = CommonHelper.EnsureNotNull(mimeType);
             mimeType = CommonHelper.EnsureMaximumLength(mimeType, 20);
 
             seoFilename = CommonHelper.EnsureMaximumLength(seoFilename, 100);
 
-            pictureBinary = ValidatePicture(pictureBinary, mimeType);
+            if (validateBinary)
+                pictureBinary = ValidatePicture(pictureBinary, mimeType);
 
-            
-            var picture = new Picture();
-            picture.PictureBinary = (this.StoreInDb ? pictureBinary : new byte[0]);
-            picture.MimeType = mimeType;
-            picture.SeoFilename = seoFilename;
-            picture.IsNew = isNew;
-
+            var picture = new Picture()
+                              {
+                                  PictureBinary = this.StoreInDb ? pictureBinary : new byte[0],
+                                  MimeType = mimeType,
+                                  SeoFilename = seoFilename,
+                                  IsNew = isNew,
+                              };
             _pictureRepository.Insert(picture);
 
             if(!this.StoreInDb)
@@ -648,15 +674,18 @@ namespace Nop.Services.Media
         /// <param name="mimeType">The picture MIME type</param>
         /// <param name="seoFilename">The SEO filename</param>
         /// <param name="isNew">A value indicating whether the picture is new</param>
+        /// <param name="validateBinary">A value indicating whether to validated provided picture binary</param>
         /// <returns>Picture</returns>
-        public virtual Picture UpdatePicture(int pictureId, byte[] pictureBinary, string mimeType, string seoFilename, bool isNew)
+        public virtual Picture UpdatePicture(int pictureId, byte[] pictureBinary, string mimeType,
+            string seoFilename, bool isNew, bool validateBinary = true)
         {
             mimeType = CommonHelper.EnsureNotNull(mimeType);
             mimeType = CommonHelper.EnsureMaximumLength(mimeType, 20);
 
             seoFilename = CommonHelper.EnsureMaximumLength(seoFilename, 100);
 
-            ValidatePicture(pictureBinary, mimeType);
+            if (validateBinary)
+                pictureBinary = ValidatePicture(pictureBinary, mimeType);
 
             var picture = GetPictureById(pictureId);
             if (picture == null)
@@ -756,26 +785,27 @@ namespace Nop.Services.Media
                 //check whether it's a new value
                 if (this.StoreInDb != value)
                 {
-                    //save the nwe setting value
+                    //save the new setting value
                     _settingService.SetSetting<bool>("Media.Images.StoreInDB", value);
 
                     //update all picture objects
                     var pictures = this.GetPictures(0, int.MaxValue);
-                    for (int i = 0; i < pictures.Count; i++)
+                    foreach (var picture in pictures)
                     {
-                        var picture = pictures[i];
                         var pictureBinary = LoadPictureBinary(picture, !value);
-                        
+
                         //delete from file system
                         if (value)
                             DeletePictureOnFileSystem(picture);
 
                         //just update a picture (all required logic is in UpdatePicture method)
-                        picture = UpdatePicture(picture.Id,
-                            pictureBinary,
-                            picture.MimeType,
-                            picture.SeoFilename,
-                            true);
+                        UpdatePicture(picture.Id,
+                                      pictureBinary,
+                                      picture.MimeType,
+                                      picture.SeoFilename,
+                                      true,
+                                      false);
+                        //we do not validate picture binary here to ensure that no exception ("Parameter is not valid") will be thrown when "moving" pictures
                     }
                 }
             }
