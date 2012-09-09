@@ -43,16 +43,6 @@ namespace Nop.Services.Tasks
                     taskThread.AddTask(task);
                 }
             }
-
-
-            //one thread, one task
-            //foreach (var scheduleTask in scheduleTasks)
-            //{
-            //    var taskThread = new TaskThread(scheduleTask);
-            //    this._taskThreads.Add(taskThread);
-            //    var task = new Task(scheduleTask);
-            //    taskThread.AddTask(task);
-            //}
         }
 
         /// <summary>

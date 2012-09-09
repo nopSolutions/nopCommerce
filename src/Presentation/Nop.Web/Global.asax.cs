@@ -75,40 +75,24 @@ namespace Nop.Web
             //Add some functionality on top of the default ModelMetadataProvider
             ModelMetadataProviders.Current = new NopMetadataProvider();
 
-            //Registering some regular mvc stuf
+            //Registering some regular mvc stuff
             AreaRegistration.RegisterAllAreas();
-            if (databaseInstalled &&
-                EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerInPublicStore)
+            RegisterGlobalFilters(GlobalFilters.Filters);
+            RegisterRoutes(RouteTable.Routes);
+            //StackExchange profiler
+            if (databaseInstalled && EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerInPublicStore)
             {
                 GlobalFilters.Filters.Add(new ProfilingActionFilter());
             }
-            RegisterGlobalFilters(GlobalFilters.Filters);
-            RegisterRoutes(RouteTable.Routes);
             
+            //fluent validation
             DataAnnotationsModelValidatorProvider.AddImplicitRequiredAttributeForValueTypes = false;
-
             ModelValidatorProviders.Providers.Add(new FluentValidationModelValidatorProvider(new NopValidatorFactory()));
 
             //register virtual path provider for embedded views
             var embeddedViewResolver = EngineContext.Current.Resolve<IEmbeddedViewResolver>();
             var embeddedProvider = new EmbeddedViewVirtualPathProvider(embeddedViewResolver.GetEmbeddedViews());
             HostingEnvironment.RegisterVirtualPathProvider(embeddedProvider);
-
-            //mobile device support
-            //if (databaseInstalled)
-            //{
-            //    if (EngineContext.Current.Resolve<StoreInformationSettings>().MobileDevicesSupported)
-            //    {
-            //        //Enable the mobile detection provider (if enabled)
-            //        HttpCapabilitiesBase.BrowserCapabilitiesProvider = new FiftyOne.Foundation.Mobile.Detection.MobileCapabilitiesProvider();
-            //    }
-            //    else
-            //    {
-            //        //set BrowserCapabilitiesProvider to null because 51Degrees assembly always sets it to MobileCapabilitiesProvider
-            //        //which does not support our browserCaps.config file
-            //        HttpCapabilitiesBase.BrowserCapabilitiesProvider = null;
-            //    }
-            //}
 
             //start scheduled tasks
             if (databaseInstalled)
