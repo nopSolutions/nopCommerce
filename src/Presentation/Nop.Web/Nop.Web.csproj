@@ -1223,7 +1223,6 @@
     <Content Include="Content\samples\product_PokerFace_2.txt" />
     <Content Include="Content\samples\product_productPanasonic.jpeg" />
     <Content Include="Content\samples\product_RockabillyPolka.jpg" />
-    <Content Include="Content\Images\sp.gif" />
     <Content Include="Content\Images\Thumbs\placeholder.txt" />
     <Content Include="Content\samples\product_SamsungPhone_1.jpeg" />
     <Content Include="Content\samples\product_SamsungPhone_2.jpeg" />
