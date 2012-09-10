@@ -1250,7 +1250,6 @@
     <Content Include="FileNotFound.htm" />
     <Content Include="Global.asax" />
     <Content Include="license.txt" />
-    <Content Include="robots.txt" />
     <Content Include="Scripts\2012.2.607\jquery-1.7.1.min.js" />
     <Content Include="Scripts\2012.2.607\jquery.validate.min.js" />
     <Content Include="Scripts\2012.2.607\telerik.all.min.js" />

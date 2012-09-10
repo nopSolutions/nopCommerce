@@ -647,6 +647,12 @@ namespace Nop.Web.Infrastructure
                             new { controller = "Topic", action = "Authenticate" },
                             new[] { "Nop.Web.Controllers" });
 
+            //robots.txt
+            routes.MapRoute("robots.txt",
+                            "robots.txt",
+                            new { controller = "Common", action = "RobotsTextFile" },
+                            new[] { "Nop.Web.Controllers" });
+
         }
 
         public int Priority

@@ -298,7 +298,6 @@ namespace Nop.Web.Controllers
             else
                 return Content("");
         }
-
         public ActionResult Config()
         {
             return View();
@@ -410,7 +409,6 @@ namespace Nop.Web.Controllers
             };
             return View(model);
         }
-
         [HttpPost, ActionName("ContactUs")]
         [CaptchaValidator]
         public ActionResult ContactUsSend(ContactUsModel model, bool captchaValid)
@@ -551,7 +549,6 @@ namespace Nop.Web.Controllers
                 .ToList();
             return PartialView(model);
         }
-
         public ActionResult StoreThemeSelected(string themeName)
         {
             _themeContext.WorkingDesktopTheme = themeName;
@@ -620,10 +617,7 @@ namespace Nop.Web.Controllers
             return View();
         }
 
-
-
-
-
+        //EU Cookie law
         [ChildActionOnly]
         public ActionResult EuCookieLaw()
         {
@@ -637,7 +631,6 @@ namespace Nop.Web.Controllers
 
             return PartialView();
         }
-
         [HttpPost]
         public ActionResult EuCookieLawAccept()
         {
@@ -648,6 +641,104 @@ namespace Nop.Web.Controllers
             //save setting
             _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, "EuCookieLaw.Accepted", true);
             return Json(new { stored = true });
+        }
+
+        public ActionResult RobotsTextFile()
+        {
+            var disallowPaths = new List<string>()
+                                    {
+                                        "/bin/",
+                                        "/content/files/",
+                                        "/content/files/exportimport/",
+                                        "/country/getstatesbycountryid",
+                                        "/install",
+                                        "/setproductreviewhelpfulness",
+                                    };
+            var localizableDisallowPaths = new List<string>()
+                                               {
+                                                   "/boards/forumwatch",
+                                                   "/boards/postedit",
+                                                   "/boards/postdelete",
+                                                   "/boards/postcreate",
+                                                   "/boards/topicedit",
+                                                   "/boards/topicdelete",
+                                                   "/boards/topiccreate",
+                                                   "/boards/topicmove",
+                                                   "/boards/topicwatch",
+                                                   "/cart",
+                                                   "/checkout",
+                                                   "/checkout/billingaddress",
+                                                   "/checkout/completed",
+                                                   "/checkout/confirm",
+                                                   "/checkout/shippingaddress",
+                                                   "/checkout/shippingmethod",
+                                                   "/checkout/paymentinfo",
+                                                   "/checkout/paymentmethod",
+                                                   "/clearcomparelist",
+                                                   "/compareproducts",
+                                                   "/customer/avatar",
+                                                   "/customer/activation",
+                                                   "/customer/addresses",
+                                                   "/customer/backinstocksubscriptions",
+                                                   "/customer/changepassword",
+                                                   "/customer/checkusernameavailability",
+                                                   "/customer/downloadableproducts",
+                                                   "/customer/forumsubscriptions",
+                                                   "/customer/info",
+                                                   "/customer/orders",
+                                                   "/customer/returnrequests",
+                                                   "/customer/rewardpoints",
+                                                   "/deletepm",
+                                                   "/emailwishlist",
+                                                   "/inboxupdate",
+                                                   "/newsletter/subscriptionactivation",
+                                                   "/onepagecheckout",
+                                                   "/orderdetails",
+                                                   "/passwordrecovery/confirm",
+                                                   "/poll/vote",
+                                                   "/privatemessages",
+                                                   "/returnrequest",
+                                                   "/sendpm",
+                                                   "/sentupdate",
+                                                   "/subscribenewsletter",
+                                                   "/topic/authenticate",
+                                                   "/viewpm",
+                                                   "/wishlist",
+                                               };
+
+
+            const string newLine = "\r\n"; //Environment.NewLine
+            var sb = new StringBuilder();
+            sb.Append("User-agent: *");
+            sb.Append(newLine);
+            //usual paths
+            foreach (var path in disallowPaths)
+            {
+                sb.AppendFormat("Disallow: {0}", path);
+                sb.Append(newLine);
+            }
+            //localizable paths (without SEO code)
+            foreach (var path in localizableDisallowPaths)
+            {
+                sb.AppendFormat("Disallow: {0}", path);
+                sb.Append(newLine);
+            }
+            if (_localizationSettings.SeoFriendlyUrlsForLanguagesEnabled)
+            {
+                //URLs are localizable. Append SEO code
+                foreach (var language in _languageService.GetAllLanguages())
+                {
+                    foreach (var path in localizableDisallowPaths)
+                    {
+                        sb.AppendFormat("Disallow: {0}{1}", language.UniqueSeoCode, path);
+                        sb.Append(newLine);
+                    }
+                }
+            }
+
+            Response.ContentType = "text/plain";
+            Response.Write(sb.ToString());
+            return null;
         }
 
         #endregion
