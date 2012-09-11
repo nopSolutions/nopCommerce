@@ -44,6 +44,18 @@ set @resources='
   <LocaleResource Name="Telerik.GridLocalization.FilterStringNotSubstringOf">
     <Value>Does not contain</Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Feed.Froogle.Products.Gender">
+    <Value>Gender</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Feed.Froogle.Products.AgeGroup">
+    <Value>Age group</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Feed.Froogle.Products.Color">
+    <Value>Color</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Feed.Froogle.Products.Size">
+    <Value>Size</Value>
+  </LocaleResource>
 </Language>
 '
 

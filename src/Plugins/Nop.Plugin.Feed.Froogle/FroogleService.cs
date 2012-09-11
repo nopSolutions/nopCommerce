@@ -332,7 +332,47 @@ namespace Nop.Plugin.Feed.Froogle
                         }
 
                         #endregion
+
+                        #region Apparel Products
+
+                        /* Apparel includes all products that fall under 'Apparel & Accessories' (including all sub-categories)
+                         * in Google’s product taxonomy.
+                        */
+
+                        //gender [gender] - Gender of the item
+                        if (googleProduct != null && !String.IsNullOrEmpty(googleProduct.Gender))
+                        {
+                            writer.WriteStartElement("g", "gender", googleBaseNamespace);
+                            writer.WriteCData(googleProduct.Gender);
+                            writer.WriteFullEndElement(); // g:gender
+                        }
+
+                        //age group [age_group] - Target age group of the item
+                        if (googleProduct != null && !String.IsNullOrEmpty(googleProduct.AgeGroup))
+                        {
+                            writer.WriteStartElement("g", "age_group", googleBaseNamespace);
+                            writer.WriteCData(googleProduct.AgeGroup);
+                            writer.WriteFullEndElement(); // g:age_group
+                        }
+
+                        //color [color] - Color of the item
+                        if (googleProduct != null && !String.IsNullOrEmpty(googleProduct.Color))
+                        {
+                            writer.WriteStartElement("g", "color", googleBaseNamespace);
+                            writer.WriteCData(googleProduct.Color);
+                            writer.WriteFullEndElement(); // g:color
+                        }
+
+                        //size [size] - Size of the item
+                        if (googleProduct != null && !String.IsNullOrEmpty(googleProduct.Size))
+                        {
+                            writer.WriteStartElement("g", "size", googleBaseNamespace);
+                            writer.WriteCData(googleProduct.Size);
+                            writer.WriteFullEndElement(); // g:size
+                        }
                         
+                        #endregion
+
                         #region Tax & Shipping
                         
                         //tax [tax]
@@ -424,6 +464,10 @@ namespace Nop.Plugin.Feed.Froogle
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.ProductPictureSize.Hint", "The default size (pixels) for product thumbnail images.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Products.ProductName", "Product");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Products.GoogleCategory", "Google Category");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Products.Gender", "Gender");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Products.AgeGroup", "Age group");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Products.Color", "Color");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Products.Size", "Size");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.SuccessResult", "Froogle feed has been successfully generated. {0} to see generated feed");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Upload", "Upload feed to Google FTP server");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.TaskEnabled", "Automatically generate a file");
@@ -486,6 +530,10 @@ namespace Nop.Plugin.Feed.Froogle
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.ProductPictureSize.Hint");
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Products.ProductName");
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Products.GoogleCategory");
+            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Products.Gender");
+            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Products.AgeGroup");
+            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Products.Color");
+            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Products.Size");
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.SuccessResult");
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Upload");
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.TaskEnabled");

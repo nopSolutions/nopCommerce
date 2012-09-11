@@ -1,0 +1,12 @@
+﻿.foo{}
+.froogle .product-info{float:left;width:30%;}
+.froogle .google-info{float:left;width:50%;padding:0 20px;}
+.froogle .google-info dt,.froogle .google-info dd{float:left;display:inline;}
+.froogle .google-info dt{clear:left;font-weight:bold;margin:0px 10px 0px 0px;}
+.froogle .commands{float:left;width:10%;}
+
+.t-edit-form-container{width: 350px;}
+.t-edit-form-container .editor-label,.t-edit-form-container .editor-field{padding-bottom:1em;float:left;}
+.t-edit-form-container .editor-label{width:30%;text-align:right;padding-right: 3%;clear:left;}
+.t-edit-form-container .editor-field{width:60%;}
+.t-edit-form-container .editor-field .text-box{width:200px;}

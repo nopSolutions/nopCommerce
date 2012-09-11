@@ -322,11 +322,6 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
         }
 
 
-
-
-
-
-
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult GoogleProductList(GridCommand command)
         {
@@ -339,10 +334,17 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
                                 {
                                     ProductVariantId = x.Id,
                                     FullProductVariantName = x.FullProductName
+
                                 };
                                 var googleProduct = _googleService.GetByProductVariantId(x.Id);
                                 if (googleProduct != null)
+                                {
                                     gModel.GoogleCategory = googleProduct.Taxonomy;
+                                    gModel.Gender = googleProduct.Gender;
+                                    gModel.AgeGroup = googleProduct.AgeGroup;
+                                    gModel.Color = googleProduct.Color;
+                                    gModel.GoogleSize = googleProduct.Size;
+                                }
 
                                 return gModel;
                             })
@@ -366,8 +368,12 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
             var googleProduct = _googleService.GetByProductVariantId(model.ProductVariantId);
             if (googleProduct != null)
             {
-                //update
+
                 googleProduct.Taxonomy = model.GoogleCategory;
+                googleProduct.Gender = model.Gender;
+                googleProduct.AgeGroup = model.AgeGroup;
+                googleProduct.Color = model.Color;
+                googleProduct.Size = model.GoogleSize;
                 _googleService.UpdateGoogleProductRecord(googleProduct);
             }
             else
@@ -376,7 +382,11 @@ namespace Nop.Plugin.Feed.Froogle.Controllers
                 googleProduct = new GoogleProductRecord()
                 {
                     ProductVariantId = model.ProductVariantId,
-                    Taxonomy = model.GoogleCategory
+                    Taxonomy = model.GoogleCategory,
+                    Gender = model.Gender,
+                    AgeGroup = model.AgeGroup,
+                    Color = model.Color,
+                    Size = model.GoogleSize
                 };
                 _googleService.InsertGoogleProductRecord(googleProduct);
             }

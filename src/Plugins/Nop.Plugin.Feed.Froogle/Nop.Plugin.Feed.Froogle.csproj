@@ -108,6 +108,9 @@
     <EmbeddedResource Include="Views\FeedFroogle\Configure.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\styles.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Description.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
