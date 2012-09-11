@@ -68,14 +68,15 @@ namespace Nop.Services.Polls
         /// Gets a poll
         /// </summary>
         /// <param name="systemKeyword">The poll system keyword</param>
+        /// <param name="languageId">Language identifier. 0 if you want to get all polls</param>
         /// <returns>Poll</returns>
-        public virtual Poll GetPollBySystemKeyword(string systemKeyword)
+        public virtual Poll GetPollBySystemKeyword(string systemKeyword, int languageId)
         {
             if (String.IsNullOrWhiteSpace(systemKeyword))
                 return null;
 
             var query = from p in _pollRepository.Table
-                        where p.SystemKeyword == systemKeyword
+                        where p.SystemKeyword == systemKeyword && p.LanguageId == languageId
                         select p;
             var poll = query.FirstOrDefault();
             return poll;

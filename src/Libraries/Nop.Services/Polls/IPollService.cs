@@ -19,8 +19,9 @@ namespace Nop.Services.Polls
         /// Gets a poll
         /// </summary>
         /// <param name="systemKeyword">The poll system keyword</param>
+        /// <param name="languageId">Language identifier. 0 if you want to get all polls</param>
         /// <returns>Poll</returns>
-        Poll GetPollBySystemKeyword(string systemKeyword);
+        Poll GetPollBySystemKeyword(string systemKeyword, int languageId);
         
         /// <summary>
         /// Gets poll collection
