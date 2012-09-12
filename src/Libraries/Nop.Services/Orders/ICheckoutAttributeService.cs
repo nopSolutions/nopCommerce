@@ -19,9 +19,8 @@ namespace Nop.Services.Orders
         /// <summary>
         /// Gets all checkout attributes
         /// </summary>
-        /// <param name="dontLoadShippableProductRequired">Value indicating whether to do not load attributes for checkout attibutes which require shippable products</param>
         /// <returns>Checkout attribute collection</returns>
-        IList<CheckoutAttribute> GetAllCheckoutAttributes(bool dontLoadShippableProductRequired);
+        IList<CheckoutAttribute> GetAllCheckoutAttributes();
 
         /// <summary>
         /// Gets a checkout attribute 

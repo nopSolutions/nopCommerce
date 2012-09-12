@@ -78,6 +78,7 @@
     <Compile Include="Messages\TokenizerTests.cs" />
     <Compile Include="Messages\NewsLetterSubscriptionServiceTests.cs" />
     <Compile Include="Orders\CheckoutAttributeParserAndFormatterTests.cs" />
+    <Compile Include="Orders\CheckoutAttributeExtensionsTests.cs" />
     <Compile Include="Orders\OrderProcessingServiceTests.cs" />
     <Compile Include="Orders\OrderTotalCalculationServiceTests.cs" />
     <Compile Include="Payments\TestPaymentMethod.cs" />

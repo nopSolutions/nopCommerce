@@ -239,7 +239,12 @@ namespace Nop.Web.Controllers
 
             #region Checkout attributes
 
-            var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes(!cart.RequiresShipping());
+            var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes();
+            if (!cart.RequiresShipping())
+            {
+                //remove attributes which require shippable products
+                checkoutAttributes = checkoutAttributes.RemoveShippableAttributes();
+            }
             foreach (var attribute in checkoutAttributes)
             {
                 var caModel = new ShoppingCartModel.CheckoutAttributeModel()
@@ -690,7 +695,12 @@ namespace Nop.Web.Controllers
                 //1. "terms of services" are enabled
                 //2. we have at least one checkout attribute
                 //3. min order sub-total is OK
-                var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes(!cart.RequiresShipping());
+                var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes();
+                if (!cart.RequiresShipping())
+                {
+                    //remove attributes which require shippable products
+                    checkoutAttributes = checkoutAttributes.RemoveShippableAttributes();
+                }
                 bool minOrderSubtotalAmountOk = _orderProcessingService.ValidateMinOrderSubtotalAmount(cart);
                 model.DisplayCheckoutButton = !_orderSettings.TermsOfServiceEnabled && 
                     checkoutAttributes.Count == 0 &&
@@ -748,7 +758,12 @@ namespace Nop.Web.Controllers
         protected void ParseAndSaveCheckoutAttributes(List<ShoppingCartItem> cart, FormCollection form)
         {
             string selectedAttributes = "";
-            var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes(!cart.RequiresShipping());
+            var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes();
+            if (!cart.RequiresShipping())
+            {
+                //remove attributes which require shippable products
+                checkoutAttributes = checkoutAttributes.RemoveShippableAttributes();
+            }
             foreach (var attribute in checkoutAttributes)
             {
                 string controlId = string.Format("checkout_attribute_{0}", attribute.Id);

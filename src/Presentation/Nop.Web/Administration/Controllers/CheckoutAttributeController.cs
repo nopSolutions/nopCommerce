@@ -121,7 +121,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
 
-            var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes(false);
+            var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes();
             var gridModel = new GridModel<CheckoutAttributeModel>
             {
                 Data = checkoutAttributes.Select(x => 
@@ -141,7 +141,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
 
-            var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes(false);
+            var checkoutAttributes = _checkoutAttributeService.GetAllCheckoutAttributes();
             var gridModel = new GridModel<CheckoutAttributeModel>
             {
                 Data = checkoutAttributes.Select(x =>

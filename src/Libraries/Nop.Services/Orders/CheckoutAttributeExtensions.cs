@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Orders;
 
@@ -9,7 +12,7 @@ namespace Nop.Services.Orders
     public static class CheckoutAttributeExtensions
     {
         /// <summary>
-        /// A value indicating whether this product variant attribute should have values
+        /// Gets a value indicating whether this checkout variant attribute should have values
         /// </summary>
         /// <param name="checkoutAttribute">Checkout attribute</param>
         /// <returns>Result</returns>
@@ -26,6 +29,19 @@ namespace Nop.Services.Orders
             
             //other attribute controle types support values
             return true;
+        }
+
+        /// <summary>
+        /// Remove attributes which require shippable products
+        /// </summary>
+        /// <param name="checkoutAttributes">Checkout attributes</param>
+        /// <returns>Result</returns>
+        public static IList<CheckoutAttribute> RemoveShippableAttributes(this IList<CheckoutAttribute> checkoutAttributes)
+        {
+            if (checkoutAttributes == null)
+                throw new ArgumentNullException("checkoutAttributes");
+
+            return checkoutAttributes.Where(x => !x.ShippableProductRequired).ToList();
         }
     }
 }

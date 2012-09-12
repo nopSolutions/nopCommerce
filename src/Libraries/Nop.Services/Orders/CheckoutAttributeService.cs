@@ -14,7 +14,7 @@ namespace Nop.Services.Orders
     public partial class CheckoutAttributeService : ICheckoutAttributeService
     {
         #region Constants
-        private const string CHECKOUTATTRIBUTES_ALL_KEY = "Nop.checkoutattribute.all-{0}";
+        private const string CHECKOUTATTRIBUTES_ALL_KEY = "Nop.checkoutattribute.all";
         private const string CHECKOUTATTRIBUTES_BY_ID_KEY = "Nop.checkoutattribute.id-{0}";
         private const string CHECKOUTATTRIBUTEVALUES_ALL_KEY = "Nop.checkoutattributevalue.all-{0}";
         private const string CHECKOUTATTRIBUTEVALUES_BY_ID_KEY = "Nop.checkoutattributevalue.id-{0}";
@@ -78,16 +78,13 @@ namespace Nop.Services.Orders
         /// <summary>
         /// Gets all checkout attributes
         /// </summary>
-        /// <param name="dontLoadShippableProductRequired">Value indicating whether to do not load attributes for checkout attibutes which require shippable products</param>
         /// <returns>Checkout attribute collection</returns>
-        public virtual IList<CheckoutAttribute> GetAllCheckoutAttributes(bool dontLoadShippableProductRequired)
+        public virtual IList<CheckoutAttribute> GetAllCheckoutAttributes()
         {
-            string key = string.Format(CHECKOUTATTRIBUTES_ALL_KEY, dontLoadShippableProductRequired);
-            return _cacheManager.Get(key, () =>
+            return _cacheManager.Get(CHECKOUTATTRIBUTES_ALL_KEY, () =>
             {
                 var query = from ca in _checkoutAttributeRepository.Table
                             orderby ca.DisplayOrder
-                            where !dontLoadShippableProductRequired || !ca.ShippableProductRequired
                             select ca;
                 var checkoutAttributes = query.ToList();
                 return checkoutAttributes;
