@@ -472,7 +472,9 @@ namespace Nop.Services.Orders
             var query1 = from rp in _recurringPaymentRepository.Table
                          join c in _customerRepository.Table on rp.InitialOrder.CustomerId equals c.Id
                          where
-                         (!rp.Deleted && !rp.InitialOrder.Deleted && !c.Deleted) &&
+                         (!rp.Deleted) &&
+                         (showHidden || !rp.InitialOrder.Deleted) &&
+                         (showHidden || !c.Deleted) &&
                          (showHidden || rp.IsActive) &&
                          (customerId == 0 || rp.InitialOrder.CustomerId == customerId) &&
                          (initialOrderId == 0 || rp.InitialOrder.Id == initialOrderId) &&
