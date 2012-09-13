@@ -56,6 +56,12 @@ set @resources='
   <LocaleResource Name="Plugins.Feed.Froogle.Products.Size">
     <Value>Size</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.RecurringPayment">
+    <Value>Recurring payment</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Orders.Fields.RecurringPayment.Hint">
+    <Value>This is a recurring order. See the appropriate recurring payment record.</Value>
+  </LocaleResource>
 </Language>
 '
 

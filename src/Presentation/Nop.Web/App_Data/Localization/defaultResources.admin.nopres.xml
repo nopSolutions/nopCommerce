@@ -7861,6 +7861,14 @@
 									</LocaleResource>
 								</Children>
 							</LocaleResource>
+							<LocaleResource Name="RecurringPayment">
+								<Value>Recurring payment</Value>
+								<Children>
+									<LocaleResource Name="Hint">
+										<Value>This is a recurring order. See the appropriate recurring payment record.</Value>
+									</LocaleResource>
+								</Children>
+							</LocaleResource>						
 							<LocaleResource Name="RedeemedRewardPoints">
 								<Value>Reward points</Value>
 								<Children>

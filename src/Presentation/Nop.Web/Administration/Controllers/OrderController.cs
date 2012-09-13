@@ -302,6 +302,12 @@ namespace Nop.Admin.Controllers
             model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
             model.MaxAmountToRefund = order.OrderTotal - order.RefundedAmount;
 
+            //recurring payment record
+            var recurringPayment = _orderService.SearchRecurringPayments(0, order.Id, null, true).FirstOrDefault();
+            if (recurringPayment != null)
+            {
+                model.RecurringPaymentId = recurringPayment.Id;
+            }
             #endregion
 
             #region Billing & shipping info

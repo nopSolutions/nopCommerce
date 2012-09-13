@@ -177,6 +177,17 @@
                 @Model.CustomerIp
             </td>
         </tr>
+        @if (Model.RecurringPaymentId > 0)
+        {
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.RecurringPaymentId):
+                </td>
+                <td class="adminData">
+                    <a href="@Url.Action("Edit", "RecurringPayment", new { id = Model.RecurringPaymentId })">@T("Admin.Common.View")</a>
+                </td>
+            </tr>
+        }
         @if (!String.IsNullOrEmpty(Model.VatNumber))
         {
             <tr>
