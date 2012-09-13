@@ -23,6 +23,7 @@
                     .Columns(columns =>
                     {
                         columns.Bound(x => x.FriendlyName);
+                        columns.Bound(x => x.SystemName).Width(150);
                         columns.Bound(x => x.IsPrimaryTaxProvider)
                             .Template(
                                 @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.IsPrimaryTaxProvider.ToString().ToLowerInvariant() + ".gif")" />
@@ -42,7 +43,6 @@
                             .Width(100)
                             .Centered()
                             .Title(T("Admin.Configuration.Tax.Providers.Configure").Text);
-                        columns.Bound(x => x.SystemName).Width(250);
                     })
                     .DataBinding(dataBinding =>
                     {
