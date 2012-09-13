@@ -1298,11 +1298,12 @@ namespace Nop.Services.Orders
             _orderService.UpdateOrder(order);
 
             //cancel recurring payments
-            //var recurringPayments = _orderService.SearchRecurringPayments(0, order.Id, null);
-            //foreach (var rp in recurringPayments)
-            //{
-            //    var errors = CancelRecurringPayment(rp);
-            //}
+            var recurringPayments = _orderService.SearchRecurringPayments(0, order.Id, null);
+            foreach (var rp in recurringPayments)
+            {
+                //use errors?
+                var errors = CancelRecurringPayment(rp);
+            }
 
             //Adjust inventory
             foreach (var opv in order.OrderProductVariants)
