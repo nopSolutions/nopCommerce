@@ -23,8 +23,7 @@
                     .Columns(columns =>
                     {
                         columns.Bound(x => x.FriendlyName)
-                            .Width(150)
-                            .ReadOnly();
+                            .Width(150);
                         columns.Template(
                                 @<div>
                                     @Html.ActionLink(T("Admin.Configuration.Payment.Methods.Configure").Text, "ConfigureMethod", new { systemName = @item.SystemName })
