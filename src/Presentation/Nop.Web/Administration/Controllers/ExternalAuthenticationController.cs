@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using Nop.Admin.Models.ExternalAuthentication;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Plugins;
 using Nop.Services.Authentication.External;
 using Nop.Services.Configuration;
 using Nop.Services.Security;
@@ -22,6 +23,7 @@ namespace Nop.Admin.Controllers
         private readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
         private readonly ISettingService _settingService;
         private readonly IPermissionService _permissionService;
+        private readonly IPluginFinder _pluginFinder;
 
 		#endregion
 
@@ -29,12 +31,14 @@ namespace Nop.Admin.Controllers
 
         public ExternalAuthenticationController(IOpenAuthenticationService openAuthenticationService, 
             ExternalAuthenticationSettings externalAuthenticationSettings,
-            ISettingService settingService, IPermissionService permissionService)
+            ISettingService settingService, IPermissionService permissionService,
+            IPluginFinder pluginFinder)
 		{
             this._openAuthenticationService = openAuthenticationService;
             this._externalAuthenticationSettings = externalAuthenticationSettings;
             this._settingService = settingService;
             this._permissionService = permissionService;
+            this._pluginFinder = pluginFinder;
 		}
 
 		#endregion 
@@ -113,6 +117,11 @@ namespace Nop.Admin.Controllers
                     _settingService.SaveSetting(_externalAuthenticationSettings);
                 }
             }
+            var pluginDescriptor = eam.PluginDescriptor;
+            pluginDescriptor.DisplayOrder = model.DisplayOrder;
+            PluginFileParser.SavePluginDescriptionFile(pluginDescriptor);
+            //reset plugin cache
+            _pluginFinder.ReloadPlugins();
             
             return Methods(command);
         }
