@@ -134,9 +134,8 @@ namespace Nop.Admin.Controllers
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
                 return AccessDeniedView();
-
-            var model = PreparePluginListModel();
-            return View(model);
+            
+            return View();
         }
 
         public ActionResult ListSelect(GridCommand command)
