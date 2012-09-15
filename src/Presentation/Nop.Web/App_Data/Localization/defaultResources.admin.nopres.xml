@@ -3416,7 +3416,15 @@
                         <Value>Uninstalling plugin...</Value>
                       </LocaleResource>
                     </Children>
-									</LocaleResource>
+									</LocaleResource>                                    
+                                    <LocaleResource Name="IsEnabled">
+                                        <Value>Is enabled</Value>
+                                        <Children>
+                                            <LocaleResource Name="Hint">
+                                                <Value>Indicates whether the plugin is enabled/active.</Value>
+                                            </LocaleResource>
+                                        </Children>
+                                    </LocaleResource>                                  
 								</Children>
 							</LocaleResource>
 							<LocaleResource Name="Installed">

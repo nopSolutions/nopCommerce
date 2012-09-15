@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using Nop.Admin.Models.Plugins;
 using Nop.Core;
+using Nop.Core.Domain.Payments;
 using Nop.Core.Plugins;
 using Nop.Services.Authentication.External;
 using Nop.Services.Cms;
@@ -16,6 +17,11 @@ using Nop.Services.Shipping;
 using Nop.Services.Tax;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
+using Nop.Core.Domain.Shipping;
+using Nop.Core.Domain.Tax;
+using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Cms;
+using Nop.Services.Configuration;
 
 namespace Nop.Admin.Controllers
 {
@@ -29,8 +35,12 @@ namespace Nop.Admin.Controllers
         private readonly IWebHelper _webHelper;
         private readonly IPermissionService _permissionService;
         private readonly ILanguageService _languageService;
-        private readonly ILocalizedEntityService _localizedEntityService;
-
+	    private readonly ISettingService _settingService;
+        private readonly PaymentSettings _paymentSettings;
+        private readonly ShippingSettings _shippingSettings;
+        private readonly TaxSettings _taxSettings;
+        private readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
+        private readonly WidgetSettings _widgetSettings;
 	    #endregion
 
 		#region Constructors
@@ -38,14 +48,22 @@ namespace Nop.Admin.Controllers
         public PluginController(IPluginFinder pluginFinder,
             ILocalizationService localizationService, IWebHelper webHelper,
             IPermissionService permissionService, ILanguageService languageService,
-            ILocalizedEntityService localizedEntityService)
+            ISettingService settingService,
+            PaymentSettings paymentSettings,ShippingSettings shippingSettings,
+            TaxSettings taxSettings, ExternalAuthenticationSettings externalAuthenticationSettings, 
+            WidgetSettings widgetSettings)
 		{
             this._pluginFinder = pluginFinder;
             this._localizationService = localizationService;
             this._webHelper = webHelper;
             this._permissionService = permissionService;
             this._languageService = languageService;
-            this._localizedEntityService = localizedEntityService;
+            this._settingService = settingService;
+            this._paymentSettings = paymentSettings;
+            this._shippingSettings = shippingSettings;
+            this._taxSettings = taxSettings;
+            this._externalAuthenticationSettings = externalAuthenticationSettings;
+            this._widgetSettings = widgetSettings;
 		}
 
 		#endregion 
@@ -103,6 +121,42 @@ namespace Nop.Admin.Controllers
                     configurationUrl = Url.Action("ConfigureMiscPlugin", "Plugin", new { systemName = pluginDescriptor.SystemName });
                 }
                 pluginModel.ConfigurationUrl = configurationUrl;
+
+
+
+
+                //enabled/disabled (only for some plugin types)
+                if (pluginInstance is IPaymentMethod)
+                {
+                    //payment plugin
+                    pluginModel.CanChangeEnabled = true;
+                    pluginModel.IsEnabled = ((IPaymentMethod)pluginInstance).IsPaymentMethodActive(_paymentSettings);
+                }
+                else if (pluginInstance is IShippingRateComputationMethod)
+                {
+                    //shipping rate computation method
+                    pluginModel.CanChangeEnabled = true;
+                    pluginModel.IsEnabled = ((IShippingRateComputationMethod)pluginInstance).IsShippingRateComputationMethodActive(_shippingSettings);
+                }
+                else if (pluginInstance is ITaxProvider)
+                {
+                    //tax provider
+                    pluginModel.CanChangeEnabled = true;
+                    pluginModel.IsEnabled = pluginDescriptor.SystemName.Equals(_taxSettings.ActiveTaxProviderSystemName, StringComparison.InvariantCultureIgnoreCase);
+                }
+                else if (pluginInstance is IExternalAuthenticationMethod)
+                {
+                    //external auth method
+                    pluginModel.CanChangeEnabled = true;
+                    pluginModel.IsEnabled = ((IExternalAuthenticationMethod)pluginInstance).IsMethodActive(_externalAuthenticationSettings);
+                }
+                else if (pluginInstance is IWidgetPlugin)
+                {
+                    //Misc plugins
+                    pluginModel.CanChangeEnabled = true;
+                    pluginModel.IsEnabled = ((IWidgetPlugin)pluginInstance).IsWidgetActive(_widgetSettings);
+                }
+
             }
             return pluginModel;
         }
@@ -182,7 +236,6 @@ namespace Nop.Admin.Controllers
              
             return RedirectToAction("List");
         }
-
         public ActionResult Uninstall(string systemName)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManagePlugins))
@@ -264,7 +317,6 @@ namespace Nop.Admin.Controllers
 
             return View(model);
         }
-
         [HttpPost]
         public ActionResult EditPopup(string btnId, string formId, PluginModel model)
         {
@@ -284,10 +336,121 @@ namespace Nop.Admin.Controllers
                 PluginFileParser.SavePluginDescriptionFile(pluginDescriptor);
                 //reset plugin cache
                 _pluginFinder.ReloadPlugins();
-                //locales)
+                //locales
                 foreach (var localized in model.Locales)
                 {
                     pluginDescriptor.Instance().SaveLocalizedFriendlyName(_localizationService, localized.LanguageId, localized.FriendlyName);
+                }
+                //enabled/disabled
+                if (pluginDescriptor.Installed)
+                {
+                    var pluginInstance = pluginDescriptor.Instance();
+                    if (pluginInstance is IPaymentMethod)
+                    {
+                        //payment plugin
+                        var pm = (IPaymentMethod)pluginInstance;
+                        if (pm.IsPaymentMethodActive(_paymentSettings))
+                        {
+                            if (!model.IsEnabled)
+                            {
+                                //mark as disabled
+                                _paymentSettings.ActivePaymentMethodSystemNames.Remove(pm.PluginDescriptor.SystemName);
+                                _settingService.SaveSetting(_paymentSettings);
+                            }
+                        }
+                        else
+                        {
+                            if (model.IsEnabled)
+                            {
+                                //mark as active
+                                _paymentSettings.ActivePaymentMethodSystemNames.Add(pm.PluginDescriptor.SystemName);
+                                _settingService.SaveSetting(_paymentSettings);
+                            }
+                        }
+                    }
+                    else if (pluginInstance is IShippingRateComputationMethod)
+                    {
+                        //shipping rate computation method
+                        var srcm = (IShippingRateComputationMethod)pluginInstance;
+                        if (srcm.IsShippingRateComputationMethodActive(_shippingSettings))
+                        {
+                            if (!model.IsEnabled)
+                            {
+                                //mark as disabled
+                                _shippingSettings.ActiveShippingRateComputationMethodSystemNames.Remove(srcm.PluginDescriptor.SystemName);
+                                _settingService.SaveSetting(_shippingSettings);
+                            }
+                        }
+                        else
+                        {
+                            if (model.IsEnabled)
+                            {
+                                //mark as active
+                                _shippingSettings.ActiveShippingRateComputationMethodSystemNames.Add(srcm.PluginDescriptor.SystemName);
+                                _settingService.SaveSetting(_shippingSettings);
+                            }
+                        }
+                    }
+                    else if (pluginInstance is ITaxProvider)
+                    {
+                        //tax provider
+                        if (model.IsEnabled)
+                        {
+                            _taxSettings.ActiveTaxProviderSystemName = model.SystemName;
+                            _settingService.SaveSetting(_taxSettings);
+                        }
+                        else
+                        {
+                            _taxSettings.ActiveTaxProviderSystemName = "";
+                            _settingService.SaveSetting(_taxSettings);
+                        }
+                    }
+                    else if (pluginInstance is IExternalAuthenticationMethod)
+                    {
+                        //external auth method
+                        var eam = (IExternalAuthenticationMethod)pluginInstance;
+                        if (eam.IsMethodActive(_externalAuthenticationSettings))
+                        {
+                            if (!model.IsEnabled)
+                            {
+                                //mark as disabled
+                                _externalAuthenticationSettings.ActiveAuthenticationMethodSystemNames.Remove(eam.PluginDescriptor.SystemName);
+                                _settingService.SaveSetting(_externalAuthenticationSettings);
+                            }
+                        }
+                        else
+                        {
+                            if (model.IsEnabled)
+                            {
+                                //mark as active
+                                _externalAuthenticationSettings.ActiveAuthenticationMethodSystemNames.Add(eam.PluginDescriptor.SystemName);
+                                _settingService.SaveSetting(_externalAuthenticationSettings);
+                            }
+                        }
+                    }
+                    else if (pluginInstance is IWidgetPlugin)
+                    {
+                        //Misc plugins
+                        var widget = (IWidgetPlugin)pluginInstance;
+                        if (widget.IsWidgetActive(_widgetSettings))
+                        {
+                            if (!model.IsEnabled)
+                            {
+                                //mark as disabled
+                                _widgetSettings.ActiveWidgetSystemNames.Remove(widget.PluginDescriptor.SystemName);
+                                _settingService.SaveSetting(_widgetSettings);
+                            }
+                        }
+                        else
+                        {
+                            if (model.IsEnabled)
+                            {
+                                //mark as active
+                                _widgetSettings.ActiveWidgetSystemNames.Add(widget.PluginDescriptor.SystemName);
+                                _settingService.SaveSetting(_widgetSettings);
+                            }
+                        }
+                    }
                 }
 
                 ViewBag.RefreshPage = true;

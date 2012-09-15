@@ -44,6 +44,10 @@ namespace Nop.Admin.Models.Plugins
         [NopResourceDisplayName("Admin.Configuration.Plugins.Fields.Installed")]
         public bool Installed { get; set; }
 
+        public bool CanChangeEnabled { get; set; }
+        [NopResourceDisplayName("Admin.Configuration.Plugins.Fields.IsEnabled")]
+        public bool IsEnabled { get; set; }
+
         public IList<PluginLocalizedModel> Locales { get; set; }
     }
     public partial class PluginLocalizedModel : ILocalizedModelLocal

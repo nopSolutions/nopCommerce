@@ -62,6 +62,12 @@ set @resources='
   <LocaleResource Name="Admin.Orders.Fields.RecurringPayment.Hint">
     <Value>This is a recurring order. See the appropriate recurring payment record.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Fields.IsEnabled">
+    <Value>Is enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Plugins.Fields.IsEnabled.Hint">
+    <Value>Indicates whether the plugin is enabled/active.</Value>
+  </LocaleResource>
 </Language>
 '
 

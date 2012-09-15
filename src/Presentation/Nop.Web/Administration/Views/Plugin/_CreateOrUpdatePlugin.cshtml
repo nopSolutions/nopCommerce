@@ -50,4 +50,16 @@
             @Html.ValidationMessageFor(model => model.DisplayOrder)
         </td>
     </tr>
+    @if (Model.CanChangeEnabled)
+    {
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.IsEnabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.IsEnabled)
+                @Html.ValidationMessageFor(model => model.IsEnabled)
+            </td>
+        </tr>
+    }
 </table>

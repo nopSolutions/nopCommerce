@@ -54,28 +54,22 @@
                                 " <br />" + T("Admin.Configuration.Plugins.Fields.Version").Text + ": <#= Version #>" +
                                 " <br />" + T("Admin.Configuration.Plugins.Fields.Author").Text + ": <#= Author #>" +
                                 " <br />" + T("Admin.Configuration.Plugins.Fields.SystemName").Text + ": <#= SystemName #>" +
-                                " <br />" + T("Admin.Configuration.Plugins.Fields.DisplayOrder").Text + ": <#= DisplayOrder #>");
+                                " <br />" + T("Admin.Configuration.Plugins.Fields.DisplayOrder").Text + ": <#= DisplayOrder #>" +
+                                " <br />" + "<# if (CanChangeEnabled)  { #>" + T("Admin.Configuration.Plugins.Fields.IsEnabled").Text + ": <img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= IsEnabled #>.gif' />" +
+                                    "<# } #>");
                         columns.Bound(x => x.Installed)
-                            .Template(
-                                @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.Installed.ToString().ToLowerInvariant() + ".gif")" />
-                            )
                             .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= Installed #>.gif' />")
                             .Centered();
                         columns.Bound(x => x.SystemName)
-                            .Template(x =>
-                                Html.ActionLink(x.Installed ? T("Admin.Configuration.Plugins.Fields.Uninstall").Text : T("Admin.Configuration.Plugins.Fields.Install").Text,
-                                x.Installed ? "Uninstall" : "Install", new { systemName = x.SystemName }, new { @class = x.Installed ? "uninstall" : "install" }))
                             .ClientTemplate("<# if (Installed)  { #> <a href=\"" + @Url.Content("~/Admin/Plugin/Uninstall/") + "?systemName=<#= SystemName #>\" class=\"uninstall\">" + T("Admin.Configuration.Plugins.Fields.Uninstall").Text + "</a> <# } else { #> <a href=\"" + @Url.Content("~/Admin/Plugin/Install/") + "?systemName=<#= SystemName #>\" class=\"install\">" + T("Admin.Configuration.Plugins.Fields.Install").Text + "</a> <# } #>")
                             .Centered()
                             .HeaderTemplate(T("Admin.Configuration.Plugins.Fields.Installation").Text);
                         columns.Bound(x => x.ConfigurationUrl)
                             //allow configuration only when a plugin has a configuration URL specified
-                            .Template(x => (!String.IsNullOrEmpty(x.ConfigurationUrl)) ? string.Format("<a href=\"{0}\">{1}</a>", x.ConfigurationUrl, T("Admin.Configuration.Plugins.Fields.Configure").Text) : "")
                             .ClientTemplate("<# if (ConfigurationUrl && ConfigurationUrl.length > 0)  { #> <a href=\"<#= ConfigurationUrl #>\">" + T("Admin.Configuration.Plugins.Fields.Configure").Text + "</a> <# } else { #>  <# } #>")
                             .Centered();
                         columns.Bound(x => x.SystemName)
                             .Centered()
-                            .Template(x => "<a href=\"" + "javascript:OpenWindow('" + @Url.Content("~/Admin/Plugin/EditPopup") + "?systemName=" + x.SystemName + "&btnId=btnRefresh&formId=plugins-form', 800, 250, true);\" >" + T("Admin.Common.Edit").Text + "</a>")
                             .ClientTemplate("<a href=\"" + "javascript:OpenWindow('" + @Url.Content("~/Admin/Plugin/EditPopup") + "?systemName=<#= SystemName #>&btnId=btnRefresh&formId=plugins-form', 800, 250, true);\" >" + T("Admin.Common.Edit").Text + "</a>")
                             .Title(T("Admin.Common.Edit").Text);
                     })
