@@ -48,47 +48,32 @@
                     })
                     .Columns(columns =>
                     {
-                        columns.Bound(x => x.Group)
-                            .Width(150)
-                            .Centered();
+                        columns.Bound(x => x.Group);
                         columns.Bound(x => x.FriendlyName)
-                            .Width(150)
-                            .Centered();
-                        columns.Bound(x => x.SystemName)
-                            .Width(150)
-                            .Centered();
-                        columns.Bound(x => x.Version)
-                            .Width(50)
-                            .Centered();
-                        columns.Bound(x => x.Author)
-                            .Width(100)
-                            .Centered();
-                        columns.Bound(x => x.DisplayOrder)
-                            .Width(50)
-                            .Centered();
+                            .ClientTemplate("<b><#= FriendlyName #></b>" +
+                                " <br />" + T("Admin.Configuration.Plugins.Fields.Version").Text + ": <#= Version #>" +
+                                " <br />" + T("Admin.Configuration.Plugins.Fields.Author").Text + ": <#= Author #>" +
+                                " <br />" + T("Admin.Configuration.Plugins.Fields.SystemName").Text + ": <#= SystemName #>" +
+                                " <br />" + T("Admin.Configuration.Plugins.Fields.DisplayOrder").Text + ": <#= DisplayOrder #>");
                         columns.Bound(x => x.Installed)
                             .Template(
                                 @<img alt="" src="@Url.Content("~/Administration/Content/images/active-" + item.Installed.ToString().ToLowerInvariant() + ".gif")" />
                             )
                             .ClientTemplate("<img alt='' src='" + Url.Content("~/Administration/Content/images/") + "active-<#= Installed #>.gif' />")
-                            .Centered()
-                            .Width(100);
-                        columns.Bound(x => x.ConfigurationUrl)
-                            .Width(50)
-                            //allow configuration only when a plugin has a configuration URL specified
-                            .Template(x => (!String.IsNullOrEmpty(x.ConfigurationUrl)) ? string.Format("<a href=\"{0}\">{1}</a>", x.ConfigurationUrl, T("Admin.Configuration.Plugins.Fields.Configure").Text) : "")
-                            .ClientTemplate("<# if (ConfigurationUrl && ConfigurationUrl.length > 0)  { #> <a href=\"<#= ConfigurationUrl #>\">" + T("Admin.Configuration.Plugins.Fields.Configure").Text + "</a> <# } else { #>  <# } #>")
                             .Centered();
                         columns.Bound(x => x.SystemName)
                             .Template(x =>
                                 Html.ActionLink(x.Installed ? T("Admin.Configuration.Plugins.Fields.Uninstall").Text : T("Admin.Configuration.Plugins.Fields.Install").Text,
                                 x.Installed ? "Uninstall" : "Install", new { systemName = x.SystemName }, new { @class = x.Installed ? "uninstall" : "install" }))
                             .ClientTemplate("<# if (Installed)  { #> <a href=\"" + @Url.Content("~/Admin/Plugin/Uninstall/") + "?systemName=<#= SystemName #>\" class=\"uninstall\">" + T("Admin.Configuration.Plugins.Fields.Uninstall").Text + "</a> <# } else { #> <a href=\"" + @Url.Content("~/Admin/Plugin/Install/") + "?systemName=<#= SystemName #>\" class=\"install\">" + T("Admin.Configuration.Plugins.Fields.Install").Text + "</a> <# } #>")
-                            .Width(50)
                             .Centered()
                             .HeaderTemplate(T("Admin.Configuration.Plugins.Fields.Installation").Text);
+                        columns.Bound(x => x.ConfigurationUrl)
+                            //allow configuration only when a plugin has a configuration URL specified
+                            .Template(x => (!String.IsNullOrEmpty(x.ConfigurationUrl)) ? string.Format("<a href=\"{0}\">{1}</a>", x.ConfigurationUrl, T("Admin.Configuration.Plugins.Fields.Configure").Text) : "")
+                            .ClientTemplate("<# if (ConfigurationUrl && ConfigurationUrl.length > 0)  { #> <a href=\"<#= ConfigurationUrl #>\">" + T("Admin.Configuration.Plugins.Fields.Configure").Text + "</a> <# } else { #>  <# } #>")
+                            .Centered();
                         columns.Bound(x => x.SystemName)
-                            .Width(50)
                             .Centered()
                             .Template(x => "<a href=\"" + "javascript:OpenWindow('" + @Url.Content("~/Admin/Plugin/EditPopup") + "?systemName=" + x.SystemName + "&btnId=btnRefresh&formId=plugins-form', 800, 250, true);\" >" + T("Admin.Common.Edit").Text + "</a>")
                             .ClientTemplate("<a href=\"" + "javascript:OpenWindow('" + @Url.Content("~/Admin/Plugin/EditPopup") + "?systemName=<#= SystemName #>&btnId=btnRefresh&formId=plugins-form', 800, 250, true);\" >" + T("Admin.Common.Edit").Text + "</a>")
