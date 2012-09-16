@@ -12,12 +12,10 @@ using System.Web.Hosting;
 using Nop.Core.ComponentModel;
 using Nop.Core.Plugins;
 
-//Contributor: Umbraco (http://www.umbraco.com). Thanks a lot!
-//SEE THIS POST for full details of what this does
-//http://shazwazza.com/post/Developing-a-plugin-framework-in-ASPNET-with-medium-trust.aspx
+//Contributor: Umbraco (http://www.umbraco.com). Thanks a lot! 
+//SEE THIS POST for full details of what this does - http://shazwazza.com/post/Developing-a-plugin-framework-in-ASPNET-with-medium-trust.aspx
 
 [assembly: PreApplicationStartMethod(typeof(PluginManager), "Initialize")]
-
 namespace Nop.Core.Plugins
 {
     /// <summary>
@@ -324,7 +322,7 @@ namespace Nop.Core.Plugins
         {
             if (plug.Directory.Parent == null)
                 throw new InvalidOperationException("The plugin directory for the " + plug.Name +
-                                                    " file exists in a folder outside of the allowed Umbraco folder heirarchy");
+                                                    " file exists in a folder outside of the allowed nopCommerce folder heirarchy");
 
             FileInfo shadowCopiedPlug;
 
@@ -333,9 +331,6 @@ namespace Nop.Core.Plugins
                 //all plugins will need to be copied to ~/Plugins/bin/
                 //this is aboslutely required because all of this relies on probingPaths being set statically in the web.config
                 
-                //var shadowCopyPlugFolderName = "Packages";
-                //Debug.WriteLine(plug.FullName + " to " + shadowCopyPlugFolderName);
-
                 //were running in med trust, so copy to custom bin folder
                 var shadowCopyPlugFolder = Directory.CreateDirectory(_shadowCopyFolder.FullName);
                 shadowCopiedPlug = InitializeMediumTrust(plug, shadowCopyPlugFolder);
