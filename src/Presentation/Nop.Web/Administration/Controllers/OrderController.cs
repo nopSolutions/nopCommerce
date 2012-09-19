@@ -2247,7 +2247,7 @@ namespace Nop.Admin.Controllers
         {
             //group by product variants (not products)
             var report = _orderReportService.BestSellersReport(null, null,
-                null, null, null, recordsToReturn, orderBy, 1, true);
+                null, null, null, 0, recordsToReturn, orderBy, 1, true);
 
             var model = report.Select(x =>
             {
@@ -2310,11 +2310,21 @@ namespace Nop.Admin.Controllers
         public ActionResult BestsellersReport()
         {
             var model = new BestsellersReportModel();
+
+            //order statuses
             model.AvailableOrderStatuses = OrderStatus.Pending.ToSelectList(false).ToList();
             model.AvailableOrderStatuses.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
 
+            //payment statuses
             model.AvailablePaymentStatuses = PaymentStatus.Pending.ToSelectList(false).ToList();
             model.AvailablePaymentStatuses.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
+
+            //billing countries
+            foreach (var c in _countryService.GetAllCountriesForBilling())
+            {
+                model.AvailableCountries.Add(new SelectListItem() { Text = c.Name, Value = c.Id.ToString() });
+            }
+            model.AvailableCountries.Insert(0, new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
 
             return View(model);
         }
@@ -2335,7 +2345,7 @@ namespace Nop.Admin.Controllers
 
             //group by product variants (not products)
             var items = _orderReportService.BestSellersReport(startDateValue, endDateValue,
-                orderStatus, paymentStatus, null, 100, 2, 1, true);
+                orderStatus, paymentStatus, null, model.BillingCountryId, 100, 2, 1, true);
             var gridModel = new GridModel<BestsellersReportLineModel>
             {
                 Data = items.Select(x =>

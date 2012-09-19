@@ -101,6 +101,12 @@ set @resources='
   <LocaleResource Name="Admin.System.ScheduleTasks.RestartApplication">
     <Value>Do not forgot to restart the application once a task has been modified.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Bestsellers.BillingCountry">
+    <Value>Billing country</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.SalesReport.Bestsellers.BillingCountry.Hint">
+    <Value>Filter by order billing country</Value>
+  </LocaleResource>
 </Language>
 '
 

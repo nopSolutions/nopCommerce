@@ -13,6 +13,7 @@ namespace Nop.Admin.Models.Orders
         {
             AvailableOrderStatuses = new List<SelectListItem>();
             AvailablePaymentStatuses = new List<SelectListItem>();
+            AvailableCountries = new List<SelectListItem>();
         }
 
         [NopResourceDisplayName("Admin.SalesReport.Bestsellers.StartDate")]
@@ -23,6 +24,9 @@ namespace Nop.Admin.Models.Orders
         [UIHint("DateNullable")]
         public DateTime? EndDate { get; set; }
 
+        [NopResourceDisplayName("Admin.SalesReport.Bestsellers.BillingCountry")]
+        public int BillingCountryId { get; set; }
+
         [NopResourceDisplayName("Admin.SalesReport.Bestsellers.OrderStatus")]
         public int OrderStatusId { get; set; }
         [NopResourceDisplayName("Admin.SalesReport.Bestsellers.PaymentStatus")]
@@ -30,5 +34,6 @@ namespace Nop.Admin.Models.Orders
 
         public IList<SelectListItem> AvailableOrderStatuses { get; set; }
         public IList<SelectListItem> AvailablePaymentStatuses { get; set; }
+        public IList<SelectListItem> AvailableCountries { get; set; }
     }
 }

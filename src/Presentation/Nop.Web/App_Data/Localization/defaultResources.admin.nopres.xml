@@ -9017,6 +9017,14 @@
                                     </LocaleResource>
                                 </Children>
                             </LocaleResource>
+                            <LocaleResource Name="BillingCountry">
+                                <Value>Billing country</Value>
+                                <Children>
+                                    <LocaleResource Name="Hint">
+                                        <Value>Filter by order billing country</Value>
+                                    </LocaleResource>
+                                </Children>
+                            </LocaleResource>
                             <LocaleResource Name="Fields">
                                 <Children>
                                     <LocaleResource Name="Name">

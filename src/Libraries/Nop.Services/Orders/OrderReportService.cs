@@ -188,6 +188,7 @@ namespace Nop.Services.Orders
         /// <param name="os">Order status; null to load all records</param>
         /// <param name="ps">Order payment status; null to load all records</param>
         /// <param name="ss">Shipping status; null to load all records</param>
+        /// <param name="billingCountryId">Billing country identifier; 0 to load all records</param>
         /// <param name="recordsToReturn">Records to return</param>
         /// <param name="orderBy">1 - order by quantity, 2 - order by total amount</param>
         /// <param name="groupBy">1 - group by product variants, 2 - group by products</param>
@@ -195,6 +196,7 @@ namespace Nop.Services.Orders
         /// <returns>Result</returns>
         public virtual IList<BestsellersReportLine> BestSellersReport(DateTime? startTime,
             DateTime? endTime, OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss,
+            int billingCountryId = 0,
             int recordsToReturn = 5, int orderBy = 1, int groupBy = 1, bool showHidden = false)
         {
             int? orderStatusId = null;
@@ -222,6 +224,7 @@ namespace Nop.Services.Orders
                          (!o.Deleted) &&
                          (!p.Deleted) &&
                          (!pv.Deleted) &&
+                         (billingCountryId == 0 || o.BillingAddress.CountryId == billingCountryId) &&
                          (showHidden || p.Published) &&
                          (showHidden || pv.Published)
                          select opv;

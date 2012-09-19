@@ -2136,7 +2136,7 @@ namespace Nop.Web.Controllers
                 () =>
                     //group by products (not product variants)
                     _orderReportService
-                    .BestSellersReport(null, null, null, null, null, _catalogSettings.NumberOfBestsellersOnHomepage, groupBy: 2));
+                    .BestSellersReport(null, null, null, null, null, 0, _catalogSettings.NumberOfBestsellersOnHomepage, groupBy: 2));
             var products = new List<Product>();
             foreach (var line in report)
             {
