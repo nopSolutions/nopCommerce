@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Data;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Logging;
+using Nop.Data;
 
 namespace Nop.Services.Logging
 {
@@ -17,6 +19,9 @@ namespace Nop.Services.Logging
 
         private readonly IRepository<Log> _logRepository;
         private readonly IWebHelper _webHelper;
+        private readonly IDbContext _dbContext;
+        private readonly IDataProvider _dataProvider;
+        private readonly CommonSettings _commonSettings;
         
         #endregion
         
@@ -27,10 +32,14 @@ namespace Nop.Services.Logging
         /// </summary>
         /// <param name="logRepository">Log repository</param>
         /// <param name="webHelper">Web helper</param>
-        public DefaultLogger(IRepository<Log> logRepository, IWebHelper webHelper)
+        public DefaultLogger(IRepository<Log> logRepository, IWebHelper webHelper,
+            IDbContext dbContext, IDataProvider dataProvider, CommonSettings commonSettings)
         {
             this._logRepository = logRepository;
             this._webHelper = webHelper;
+            this._dbContext = dbContext;
+            this._dataProvider = dataProvider;
+            this._commonSettings = commonSettings;
         }
 
         #endregion
@@ -70,9 +79,22 @@ namespace Nop.Services.Logging
         /// </summary>
         public virtual void ClearLog()
         {
-            var log = _logRepository.Table.ToList();
-            foreach (var logItem in log)
-                _logRepository.Delete(logItem);
+            if (_commonSettings.UseStoredProceduresIfSupported && _dataProvider.StoredProceduredSupported)
+            {
+                //although it's a stored procedure we use it to ensure that a database supports them
+                //we cannot wait until EF team has it implemented - http://data.uservoice.com/forums/72025-entity-framework-feature-suggestions/suggestions/1015357-batch-cud-support
+
+
+                //do all databases support "Truncate command"?
+                //we also should not hard-code the table name
+                _dbContext.ExecuteSqlCommand("TRUNCATE TABLE [Log]");
+            }
+            else
+            {
+                var log = _logRepository.Table.ToList();
+                foreach (var logItem in log)
+                    _logRepository.Delete(logItem);
+            }
         }
 
         /// <summary>
