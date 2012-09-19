@@ -68,6 +68,39 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Plugins.Fields.IsEnabled.Hint">
     <Value>Indicates whether the plugin is enabled/active.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.System.ScheduleTasks">
+    <Value>Schedule tasks</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ScheduleTasks.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ScheduleTasks.Name.Required">
+    <Value>Name is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ScheduleTasks.Seconds">
+    <Value>Seconds (run period)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ScheduleTasks.Seconds.Positive">
+    <Value>Seconds should be positive</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ScheduleTasks.Enabled">
+    <Value>Enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ScheduleTasks.StopOnError">
+    <Value>Stop on error</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ScheduleTasks.LastStart">
+    <Value>Last start date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ScheduleTasks.LastEnd">
+    <Value>Last end date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ScheduleTasks.LastSuccess">
+    <Value>Last success date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.System.ScheduleTasks.RestartApplication">
+    <Value>Do not forgot to restart the application once a task has been modified.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -159,5 +192,30 @@ IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'shoppingcartsettings.mov
 BEGIN
 	INSERT [Setting] ([Name], [Value])
 	VALUES (N'shoppingcartsettings.moveitemsfromwishlisttocart', N'true')
+END
+GO
+
+
+--new permission
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[PermissionRecord]
+		WHERE [SystemName] = N'ManageScheduleTasks')
+BEGIN
+	INSERT [dbo].[PermissionRecord] ([Name], [SystemName], [Category])
+	VALUES (N'Admin area. Manage Schedule Tasks', N'ManageScheduleTasks', N'Configuration')
+
+	DECLARE @PermissionRecordId INT 
+	SET @PermissionRecordId = @@IDENTITY
+
+
+	--add it to admin role be default
+	DECLARE @AdminCustomerRoleId int
+	SELECT @AdminCustomerRoleId = Id
+	FROM [CustomerRole]
+	WHERE IsSystemRole=1 and [SystemName] = N'Administrators'
+
+	INSERT [dbo].[PermissionRecord_Role_Mapping] ([PermissionRecord_Id], [CustomerRole_Id])
+	VALUES (@PermissionRecordId, @AdminCustomerRoleId)
 END
 GO

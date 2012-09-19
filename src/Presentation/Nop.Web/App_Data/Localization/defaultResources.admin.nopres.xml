@@ -9533,6 +9533,45 @@
 							</LocaleResource>
 						</Children>
 					</LocaleResource>
+                    <LocaleResource Name="ScheduleTasks">
+                        <Value>Schedule tasks</Value>
+                        <Children>
+                            <LocaleResource Name="Name">
+                                <Value>Name</Value>
+                                <Children>
+                                    <LocaleResource Name="Required">
+                                        <Value>Name is required</Value>
+                                    </LocaleResource>
+                                </Children>
+                            </LocaleResource>
+                            <LocaleResource Name="Seconds">
+                                <Value>Seconds (run period)</Value>
+                                <Children>
+                                    <LocaleResource Name="Positive">
+                                        <Value>Seconds should be positive</Value>
+                                    </LocaleResource>
+                                </Children>
+                            </LocaleResource>
+                            <LocaleResource Name="Enabled">
+                                <Value>Enabled</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="StopOnError">
+                                <Value>Stop on error</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="LastStart">
+                                <Value>Last start date</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="LastEnd">
+                                <Value>Last end date</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="LastSuccess">
+                                <Value>Last success date</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="RestartApplication">
+                                <Value>Restart application</Value>
+                            </LocaleResource>
+                        </Children>
+                    </LocaleResource>
 					<LocaleResource Name="SystemInfo">
 						<Value>System information</Value>
 						<Children>

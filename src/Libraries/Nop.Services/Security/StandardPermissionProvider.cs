@@ -43,7 +43,8 @@ namespace Nop.Services.Security
         public static readonly PermissionRecord ManageMessageQueue = new PermissionRecord { Name = "Admin area. Manage Message Queue", SystemName = "ManageMessageQueue", Category = "Configuration" };
         public static readonly PermissionRecord ManageMaintenance = new PermissionRecord { Name = "Admin area. Manage Maintenance", SystemName = "ManageMaintenance", Category = "Configuration" };
         public static readonly PermissionRecord UploadPictures = new PermissionRecord { Name = "Admin area. Upload Pictures", SystemName = "UploadPictures", Category = "Configuration" };
-
+        public static readonly PermissionRecord ManageScheduleTasks = new PermissionRecord { Name = "Admin area. Manage Schedule Tasks", SystemName = "ManageScheduleTasks", Category = "Configuration" };
+        
 
         //public store permissions
         public static readonly PermissionRecord DisplayPrices = new PermissionRecord { Name = "Public store. Display Prices", SystemName = "DisplayPrices", Category = "PublicStore" };
@@ -92,6 +93,7 @@ namespace Nop.Services.Security
                 ManageMessageQueue,
                 ManageMaintenance,
                 UploadPictures,
+                ManageScheduleTasks,
                 DisplayPrices,
                 EnableShoppingCart,
                 EnableWishlist,
@@ -144,6 +146,7 @@ namespace Nop.Services.Security
                         ManageMessageQueue,
                         ManageMaintenance,
                         UploadPictures,
+                        ManageScheduleTasks,
                         DisplayPrices,
                         EnableShoppingCart,
                         EnableWishlist,

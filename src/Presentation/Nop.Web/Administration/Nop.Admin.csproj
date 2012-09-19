@@ -103,6 +103,7 @@
     <Compile Include="Controllers\CampaignController.cs" />
     <Compile Include="Controllers\BlogController.cs" />
     <Compile Include="Controllers\CommonController.cs" />
+    <Compile Include="Controllers\ScheduleTaskController.cs" />
     <Compile Include="Controllers\ImageBrowserController.cs" />
     <Compile Include="Controllers\ExternalAuthenticationController.cs" />
     <Compile Include="Controllers\NetAdvImageController.cs" />
@@ -207,6 +208,7 @@
     <Compile Include="Models\Settings\RewardPointsSettingsModel.cs" />
     <Compile Include="Models\ShoppingCart\ShoppingCartItemModel.cs" />
     <Compile Include="Models\ShoppingCart\ShoppingCartModel.cs" />
+    <Compile Include="Models\Tasks\ScheduleTaskModel.cs" />
     <Compile Include="Models\Topics\TopicModel.cs" />
     <Compile Include="Models\Shipping\ShippingMethodRestrictionModel.cs" />
     <Compile Include="Models\News\NewsCommentModel.cs" />
@@ -261,6 +263,7 @@
     <Compile Include="Validators\Catalog\ProductTagValidator.cs" />
     <Compile Include="Validators\Catalog\ManufacturerValidator.cs" />
     <Compile Include="Validators\Common\AddressValidator.cs" />
+    <Compile Include="Validators\Tasks\ScheduleTaskValidator.cs" />
     <Compile Include="Validators\Messages\NewsLetterSubscriptionValidator.cs" />
     <Compile Include="Validators\Orders\CheckoutAttributeValueValidator.cs" />
     <Compile Include="Validators\Orders\CheckoutAttributeValidator.cs" />
@@ -1023,6 +1026,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Widget\WidgetsByZone.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ScheduleTask\List.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
