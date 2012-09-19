@@ -300,6 +300,8 @@ namespace Nop.Admin.Infrastructure
             //plugins
             Mapper.CreateMap<PluginDescriptor, PluginModel>()
                 .ForMember(dest => dest.ConfigurationUrl, mo => mo.Ignore())
+                .ForMember(dest => dest.CanChangeEnabled, mo => mo.Ignore())
+                .ForMember(dest => dest.IsEnabled, mo => mo.Ignore())
                 .ForMember(dest => dest.Locales, mo => mo.Ignore());
             //newsLetter subscriptions
             Mapper.CreateMap<NewsLetterSubscription, NewsLetterSubscriptionModel>()
