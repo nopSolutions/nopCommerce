@@ -78,9 +78,9 @@ namespace Nop.Web.MVC.Tests.Public.Infrastructure
             "~/productreviews/7/".ShouldMapTo<CatalogController>(c => c.ProductReviews(7));
             "~/backinstocksubscribe/8/".ShouldMapTo<CatalogController>(c => c.BackInStockSubscribePopup(8));
 
-            "~/productag/9/".ShouldMapTo<CatalogController>(c => c.ProductsByTag(9, null));
-            "~/productag/9/se-name/".ShouldMapTo<CatalogController>(c => c.ProductsByTag(9, null));
-            "~/productag/all/".ShouldMapTo<CatalogController>(c => c.ProductTagsAll());
+            "~/producttag/9/".ShouldMapTo<CatalogController>(c => c.ProductsByTag(9, null));
+            "~/producttag/9/se-name/".ShouldMapTo<CatalogController>(c => c.ProductsByTag(9, null));
+            "~/producttag/all/".ShouldMapTo<CatalogController>(c => c.ProductTagsAll());
 
             "~/search/".ShouldMapTo<CatalogController>(c => c.Search(null,null));
         }

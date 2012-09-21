@@ -585,14 +585,27 @@ namespace Nop.Web.Infrastructure
 
             //product tags
             routes.MapLocalizedRoute("ProductsByTag",
-                            "productag/{productTagId}/{SeName}",
+                            "producttag/{productTagId}/{SeName}",
                             new { controller = "Catalog", action = "ProductsByTag", SeName = UrlParameter.Optional },
                             new { productTagId = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
             routes.MapLocalizedRoute("ProductTagsAll",
-                            "productag/all/",
+                            "producttag/all/",
                             new { controller = "Catalog", action = "ProductTagsAll" },
                             new[] { "Nop.Web.Controllers" });
+            #region Product tag URL fix
+            //in versions 2.00-2.65 we had typo in producttag URLs ("productag" instead of "producttag")
+            //we should support old "buggy" URLs
+            routes.MapLocalizedRoute("ProductsByTag_Fix1",
+                            "productag/{productTagId}/{SeName}",
+                            new { controller = "BackwardCompatibility2X", action = "RedirectProductsByTag", SeName = UrlParameter.Optional },
+                            new { productTagId = @"\d+" },
+                            new[] { "Nop.Web.Controllers" });
+            routes.MapLocalizedRoute("ProductTagsAll_Fix1",
+                            "productag/all/",
+                            new { controller = "BackwardCompatibility2X", action = "RedirectProductTagsAll" },
+                            new[] { "Nop.Web.Controllers" });
+            #endregion
 
             //product search
             routes.MapLocalizedRoute("ProductSearch",
