@@ -7,10 +7,6 @@ namespace Nop.Core.Domain.Logging
     /// </summary>
     public partial class ActivityLogType : BaseEntity
     {
-        private ICollection<ActivityLog> _activityLog;
-        
-        #region Properties
-
         /// <summary>
         /// Gets or sets the system keyword
         /// </summary>
@@ -25,20 +21,5 @@ namespace Nop.Core.Domain.Logging
         /// Gets or sets a value indicating whether the activity log type is enabled
         /// </summary>
         public virtual bool Enabled { get; set; }
-
-        #endregion
-
-        #region Navigation Properties
-
-        /// <summary>
-        /// Gets the activity log
-        /// </summary>
-        public virtual ICollection<ActivityLog> ActivityLog
-        {
-            get { return _activityLog ?? (_activityLog = new List<ActivityLog>()); }
-            protected set { _activityLog = value; }
-        }
-
-        #endregion
     }
 }

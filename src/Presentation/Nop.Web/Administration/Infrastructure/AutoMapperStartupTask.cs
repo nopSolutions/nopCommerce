@@ -220,8 +220,7 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.Customer, mo => mo.Ignore());
             //ActivityLogType
             Mapper.CreateMap<ActivityLogTypeModel, ActivityLogType>()
-                .ForMember(dest => dest.SystemKeyword, mo => mo.Ignore())
-                .ForMember(dest => dest.ActivityLog, mo => mo.Ignore());
+                .ForMember(dest => dest.SystemKeyword, mo => mo.Ignore());
             Mapper.CreateMap<ActivityLogType, ActivityLogTypeModel>();
             Mapper.CreateMap<ActivityLog, ActivityLogModel>()
                 .ForMember(dest => dest.ActivityLogTypeName, mo => mo.MapFrom(src => src.ActivityLogType.Name))
