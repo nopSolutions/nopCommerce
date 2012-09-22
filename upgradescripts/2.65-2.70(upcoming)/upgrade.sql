@@ -225,3 +225,10 @@ BEGIN
 	VALUES (@PermissionRecordId, @AdminCustomerRoleId)
 END
 GO
+
+--more SQL indexes
+IF NOT EXISTS (SELECT 1 from sysindexes WHERE [NAME]=N'IX_ActivityLog_CreatedOnUtc' and id=object_id(N'[ActivityLog]'))
+BEGIN
+	CREATE NONCLUSTERED INDEX [IX_ActivityLog_CreatedOnUtc] ON [ActivityLog] ([CreatedOnUtc] ASC)
+END
+GO
