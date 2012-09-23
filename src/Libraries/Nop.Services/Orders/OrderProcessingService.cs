@@ -184,6 +184,65 @@ namespace Nop.Services.Orders
         #region Utilities
 
         /// <summary>
+        /// Award reward points
+        /// </summary>
+        /// <param name="order">Order</param>
+        protected void AwardRewardPoints(Order order)
+        {
+            if (!_rewardPointsSettings.Enabled)
+                return;
+
+            if (_rewardPointsSettings.PointsForPurchases_Amount <= decimal.Zero)
+                return;
+
+            //Ensure that reward points are applied only to registered users
+            if (order.Customer == null || order.Customer.IsGuest())
+                return;
+
+            int points = (int)Math.Truncate(order.OrderTotal / _rewardPointsSettings.PointsForPurchases_Amount * _rewardPointsSettings.PointsForPurchases_Points);
+            if (points == 0)
+                return;
+
+            //Ensure that reward points were not added before. We should not add reward points if they were already earned for this order
+            if (order.RewardPointsWereAdded)
+                return;
+
+            //add reward points
+            order.Customer.AddRewardPointsHistoryEntry(points, string.Format(_localizationService.GetResource("RewardPoints.Message.EarnedForOrder"), order.Id));
+            order.RewardPointsWereAdded = true;
+            _orderService.UpdateOrder(order);
+        }
+
+        /// <summary>
+        /// Award reward points
+        /// </summary>
+        /// <param name="order">Order</param>
+        protected void ReduceRewardPoints(Order order)
+        {
+            if (!_rewardPointsSettings.Enabled)
+                return;
+
+            if (_rewardPointsSettings.PointsForPurchases_Amount <= decimal.Zero)
+                return;
+
+            //Ensure that reward points are applied only to registered users
+            if (order.Customer == null || order.Customer.IsGuest())
+                return;
+
+            int points = (int)Math.Truncate(order.OrderTotal / _rewardPointsSettings.PointsForPurchases_Amount * _rewardPointsSettings.PointsForPurchases_Points);
+            if (points == 0)
+                return;
+
+            //ensure that reward points were already earned for this order before
+            if (!order.RewardPointsWereAdded)
+                return;
+
+            //reduce reward points
+            order.Customer.AddRewardPointsHistoryEntry(-points, string.Format(_localizationService.GetResource("RewardPoints.Message.ReducedForOrder"), order.Id));
+            _orderService.UpdateOrder(order);
+        }
+
+        /// <summary>
         /// Sets an order status
         /// </summary>
         /// <param name="order">Order</param>
@@ -250,46 +309,13 @@ namespace Nop.Services.Orders
             }
 
             //reward points
-            if (_rewardPointsSettings.Enabled)
+            if (_rewardPointsSettings.PointsForPurchases_Awarded == order.OrderStatus)
             {
-                if (_rewardPointsSettings.PointsForPurchases_Amount > decimal.Zero)
-                {
-                    //Ensure that reward points are applied only to registered users
-                    if (order.Customer != null && !order.Customer.IsGuest())
-                    {
-                        int points = (int)Math.Truncate(order.OrderTotal / _rewardPointsSettings.PointsForPurchases_Amount * _rewardPointsSettings.PointsForPurchases_Points);
-                        if (points != 0)
-                        {
-                            if (_rewardPointsSettings.PointsForPurchases_Awarded == order.OrderStatus)
-                            {
-                                //Ensure that reward points were not added before. We should not add reward points if they were already earned for this order
-                                if (!order.RewardPointsWereAdded)
-                                {
-                                    //add reward points
-                                    order.Customer.AddRewardPointsHistoryEntry(points,
-                                        string.Format(_localizationService.GetResource("RewardPoints.Message.EarnedForOrder"),
-                                        order.Id));
-                                    order.RewardPointsWereAdded = true;
-                                    _orderService.UpdateOrder(order);
-                                }
-                            }
-
-
-                            if (_rewardPointsSettings.PointsForPurchases_Canceled == order.OrderStatus)
-                            {
-                                //ensure that reward points were added before. We should not reduce reward points if they were already earned for this order
-                                if (order.RewardPointsWereAdded)
-                                {
-                                    //reduce reward points
-                                    order.Customer.AddRewardPointsHistoryEntry(-points,
-                                        string.Format(_localizationService.GetResource("RewardPoints.Message.ReducedForOrder"),
-                                        order.Id));
-                                    _orderService.UpdateOrder(order);
-                                }
-                            }
-                        }
-                    }
-                }
+                AwardRewardPoints(order);
+            }
+            if (_rewardPointsSettings.PointsForPurchases_Canceled == order.OrderStatus)
+            {
+                ReduceRewardPoints(order);
             }
 
             //gift cards activation
@@ -1288,14 +1314,8 @@ namespace Nop.Services.Orders
             if (order == null)
                 throw new ArgumentNullException("order");
 
-            //add a note
-            order.OrderNotes.Add(new OrderNote()
-            {
-                Note = "Order has been deleted",
-                DisplayToCustomer = false,
-                CreatedOnUtc = DateTime.UtcNow
-            });
-            _orderService.UpdateOrder(order);
+            //reward points
+            ReduceRewardPoints(order);
 
             //cancel recurring payments
             var recurringPayments = _orderService.SearchRecurringPayments(0, order.Id, null);
@@ -1309,6 +1329,15 @@ namespace Nop.Services.Orders
             foreach (var opv in order.OrderProductVariants)
                 _productService.AdjustInventory(opv.ProductVariant, false, opv.Quantity, opv.AttributesXml);
 
+            //add a note
+            order.OrderNotes.Add(new OrderNote()
+            {
+                Note = "Order has been deleted",
+                DisplayToCustomer = false,
+                CreatedOnUtc = DateTime.UtcNow
+            });
+            _orderService.UpdateOrder(order);
+            
             //now delete an order
             _orderService.DeleteOrder(order);
         }
