@@ -243,6 +243,47 @@ namespace Nop.Services.Orders
         }
 
         /// <summary>
+        /// Set IsActivated value for purchase gift cards for particular order
+        /// </summary>
+        /// <param name="order">Order</param>
+        /// <param name="activate">A value indicating whether to activate gift cards; true - actuvate, false - deactivate</param>
+        protected void SetActivatedValueForPurchasedGiftCards(Order order, bool activate)
+        {
+            var giftCards = _giftCardService.GetAllGiftCards(order.Id, null, null, !activate);
+            foreach (var gc in giftCards)
+            {
+                if (activate)
+                {
+                    //activate
+                    bool isRecipientNotified = gc.IsRecipientNotified;
+                    if (gc.GiftCardType == GiftCardType.Virtual)
+                    {
+                        //send email for virtual gift card
+                        if (!String.IsNullOrEmpty(gc.RecipientEmail) &&
+                            !String.IsNullOrEmpty(gc.SenderEmail))
+                        {
+                            var customerLang = _languageService.GetLanguageById(order.CustomerLanguageId);
+                            if (customerLang == null)
+                                customerLang = _workContext.WorkingLanguage;
+                            int queuedEmailId = _workflowMessageService.SendGiftCardNotification(gc, customerLang.Id);
+                            if (queuedEmailId > 0)
+                                isRecipientNotified = true;
+                        }
+                    }
+                    gc.IsGiftCardActivated = true;
+                    gc.IsRecipientNotified = isRecipientNotified;
+                    _giftCardService.UpdateGiftCard(gc);
+                }
+                else
+                {
+                    //deactivate
+                    gc.IsGiftCardActivated = false;
+                    _giftCardService.UpdateGiftCard(gc);
+                }
+            }
+        }
+
+        /// <summary>
         /// Sets an order status
         /// </summary>
         /// <param name="order">Order</param>
@@ -322,41 +363,14 @@ namespace Nop.Services.Orders
             if (_orderSettings.GiftCards_Activated_OrderStatusId > 0 &&
                _orderSettings.GiftCards_Activated_OrderStatusId == (int)order.OrderStatus)
             {
-                var giftCards = _giftCardService.GetAllGiftCards(order.Id, null, null, false);
-                foreach (var gc in giftCards)
-                {
-                    bool isRecipientNotified = gc.IsRecipientNotified;
-                    if (gc.GiftCardType == GiftCardType.Virtual)
-                    {
-                        //send email for virtual gift card
-                        if (!String.IsNullOrEmpty(gc.RecipientEmail) &&
-                            !String.IsNullOrEmpty(gc.SenderEmail))
-                        {
-                            var customerLang = _languageService.GetLanguageById(order.CustomerLanguageId);
-                            if (customerLang == null)
-                                customerLang = _workContext.WorkingLanguage;
-                            int queuedEmailId = _workflowMessageService.SendGiftCardNotification(gc, customerLang.Id);
-                            if (queuedEmailId > 0)
-                                isRecipientNotified = true;
-                        }
-                    }
-
-                    gc.IsGiftCardActivated = true;
-                    gc.IsRecipientNotified = isRecipientNotified;
-                    _giftCardService.UpdateGiftCard(gc);
-                }
+                SetActivatedValueForPurchasedGiftCards(order, true);
             }
 
             //gift cards deactivation
             if (_orderSettings.GiftCards_Deactivated_OrderStatusId > 0 &&
                _orderSettings.GiftCards_Deactivated_OrderStatusId == (int)order.OrderStatus)
             {
-                var giftCards = _giftCardService.GetAllGiftCards(order.Id, null, null, true);
-                foreach (var gc in giftCards)
-                {
-                    gc.IsGiftCardActivated = false;
-                    _giftCardService.UpdateGiftCard(gc);
-                }
+                SetActivatedValueForPurchasedGiftCards(order, false);
             }
         }
 
