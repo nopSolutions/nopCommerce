@@ -138,7 +138,7 @@
                            @Html.NopLabelFor(model => model.Locales[item].MetaTitle):
                        </td>
                        <td class="adminData">
-                           @Html.TextAreaFor(model => model.Locales[item].MetaTitle)
+                           @Html.EditorFor(model => model.Locales[item].MetaTitle)
                            @Html.ValidationMessageFor(model => model.Locales[item].MetaTitle)
                        </td>
                    </tr>
@@ -147,7 +147,7 @@
                            @Html.NopLabelFor(model => model.Locales[item].SeName):
                        </td>
                        <td class="adminData">
-                           @Html.TextAreaFor(model => model.Locales[item].SeName)
+                           @Html.EditorFor(model => model.Locales[item].SeName)
                            @Html.ValidationMessageFor(model => model.Locales[item].SeName)
                        </td>
                    </tr>
@@ -182,7 +182,7 @@
                            @Html.NopLabelFor(model => model.MetaTitle):
                        </td>
                        <td class="adminData">
-                           @Html.TextAreaFor(x => x.MetaTitle)
+                           @Html.EditorFor(x => x.MetaTitle)
                            @Html.ValidationMessageFor(model => model.MetaTitle)
                        </td>
                    </tr>
@@ -191,7 +191,7 @@
                            @Html.NopLabelFor(model => model.SeName):
                        </td>
                        <td class="adminData">
-                           @Html.TextAreaFor(x => x.SeName)
+                           @Html.EditorFor(x => x.SeName)
                            @Html.ValidationMessageFor(model => model.SeName)
                        </td>
                    </tr>
