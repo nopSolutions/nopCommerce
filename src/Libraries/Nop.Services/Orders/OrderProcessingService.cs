@@ -264,7 +264,7 @@ namespace Nop.Services.Orders
                         {
                             var customerLang = _languageService.GetLanguageById(order.CustomerLanguageId);
                             if (customerLang == null)
-                                customerLang = _workContext.WorkingLanguage;
+                                customerLang = _languageService.GetAllLanguages().FirstOrDefault();
                             int queuedEmailId = _workflowMessageService.SendGiftCardNotification(gc, customerLang.Id);
                             if (queuedEmailId > 0)
                                 isRecipientNotified = true;
