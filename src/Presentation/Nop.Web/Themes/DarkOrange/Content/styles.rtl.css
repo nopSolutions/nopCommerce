@@ -494,6 +494,7 @@ a.eu-cookie-privacyinfo-tag{color:#F93 !important;text-decoration:underline;}
 .breadcrumb li{list-style:none;display:inline;}
 .breadcrumb li strong{font-weight:bold;}
 .breadcrumb a{text-decoration:none;color:#3a3a3a;direction:rtl;text-align:right;}
+.breadcrumb .delimiter{}
 
 /* NEWS */
 .news-list-page, .news-list-homepage{margin-bottom:15px;padding-bottom:5px;padding-left:0;direction:rtl;text-align:right;}
