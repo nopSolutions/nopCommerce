@@ -9,7 +9,7 @@ namespace Nop.Data.Mapping.Forums
         {
             this.ToTable("Forums_Post");
             this.HasKey(fp => fp.Id);
-            this.Property(fp => fp.Text).IsRequired().IsMaxLength();
+            this.Property(fp => fp.Text).IsRequired();
             this.Property(fp => fp.IPAddress).HasMaxLength(100);
 
             this.HasRequired(fp => fp.ForumTopic)

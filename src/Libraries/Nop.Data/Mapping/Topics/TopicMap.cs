@@ -11,11 +11,11 @@ namespace Nop.Data.Mapping.Topics
             this.HasKey(t => t.Id);
             this.Property(t => t.SystemName);
             this.Property(t => t.Password);
-            this.Property(t => t.Title).IsMaxLength();
-            this.Property(t => t.Body).IsMaxLength();
-            this.Property(t => t.MetaKeywords).IsMaxLength();
-            this.Property(t => t.MetaDescription).IsMaxLength();
-            this.Property(t => t.MetaTitle).IsMaxLength();
+            this.Property(t => t.Title);
+            this.Property(t => t.Body);
+            this.Property(t => t.MetaKeywords);
+            this.Property(t => t.MetaDescription);
+            this.Property(t => t.MetaTitle);
         }
     }
 }

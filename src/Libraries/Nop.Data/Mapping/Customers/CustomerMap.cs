@@ -13,9 +13,9 @@ namespace Nop.Data.Mapping.Customers
             this.Property(u => u.Username).HasMaxLength(1000);
             this.Property(u => u.Email).HasMaxLength(1000);
             this.Property(u => u.Password);
-            this.Property(c => c.AdminComment).IsMaxLength();
-            this.Property(c => c.CheckoutAttributes).IsMaxLength();
-            this.Property(c => c.GiftCardCouponCodes).IsMaxLength();
+            this.Property(c => c.AdminComment);
+            this.Property(c => c.CheckoutAttributes);
+            this.Property(c => c.GiftCardCouponCodes);
 
             this.Ignore(u => u.PasswordFormat);
             this.Ignore(c => c.TaxDisplayType);

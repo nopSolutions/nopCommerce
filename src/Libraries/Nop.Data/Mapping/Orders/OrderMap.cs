@@ -23,11 +23,11 @@ namespace Nop.Data.Mapping.Orders
             this.Property(o => o.OrderTotal).HasPrecision(18, 4);
             this.Property(o => o.RefundedAmount).HasPrecision(18, 4);
 
-            this.Property(o => o.TaxRates).IsMaxLength();
-            this.Property(o => o.AuthorizationTransactionCode).IsMaxLength();
-            this.Property(o => o.AuthorizationTransactionResult).IsMaxLength();
-            this.Property(o => o.CaptureTransactionResult).IsMaxLength();
-            this.Property(o => o.PurchaseOrderNumber).IsMaxLength();
+            this.Property(o => o.TaxRates);
+            this.Property(o => o.AuthorizationTransactionCode);
+            this.Property(o => o.AuthorizationTransactionResult);
+            this.Property(o => o.CaptureTransactionResult);
+            this.Property(o => o.PurchaseOrderNumber);
 
             this.Ignore(o => o.OrderStatus);
             this.Ignore(o => o.PaymentStatus);

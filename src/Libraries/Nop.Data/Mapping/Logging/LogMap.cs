@@ -9,8 +9,8 @@ namespace Nop.Data.Mapping.Logging
         {
             this.ToTable("Log");
             this.HasKey(l => l.Id);
-            this.Property(l => l.ShortMessage).IsRequired().IsMaxLength();
-            this.Property(l => l.FullMessage).IsMaxLength();
+            this.Property(l => l.ShortMessage).IsRequired();
+            this.Property(l => l.FullMessage);
             this.Property(l => l.IpAddress).HasMaxLength(200);
 
             this.Ignore(l => l.LogLevel);

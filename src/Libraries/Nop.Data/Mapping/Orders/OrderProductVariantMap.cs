@@ -9,8 +9,8 @@ namespace Nop.Data.Mapping.Orders
         {
             this.ToTable("OrderProductVariant");
             this.HasKey(opv => opv.Id);
-            this.Property(opv => opv.AttributeDescription).IsMaxLength();
-            this.Property(opv => opv.AttributesXml).IsMaxLength();
+            this.Property(opv => opv.AttributeDescription);
+            this.Property(opv => opv.AttributesXml);
 
             this.Property(opv => opv.UnitPriceInclTax).HasPrecision(18, 4);
             this.Property(opv => opv.UnitPriceExclTax).HasPrecision(18, 4);

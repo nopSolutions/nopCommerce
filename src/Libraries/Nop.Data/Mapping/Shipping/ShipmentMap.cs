@@ -10,7 +10,7 @@ namespace Nop.Data.Mapping.Shipping
             this.ToTable("Shipment");
             this.HasKey(s => s.Id);
 
-            this.Property(s => s.TrackingNumber).IsMaxLength();
+            this.Property(s => s.TrackingNumber);
             this.Property(s => s.TotalWeight).HasPrecision(18, 4);
             
             this.HasRequired(s => s.Order)

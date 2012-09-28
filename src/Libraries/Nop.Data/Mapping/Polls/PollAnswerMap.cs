@@ -9,7 +9,7 @@ namespace Nop.Data.Mapping.Polls
         {
             this.ToTable("PollAnswer");
             this.HasKey(pa => pa.Id);
-            this.Property(pa => pa.Name).IsRequired().IsMaxLength();
+            this.Property(pa => pa.Name).IsRequired();
 
             this.HasRequired(pa => pa.Poll)
                 .WithMany(p => p.PollAnswers)

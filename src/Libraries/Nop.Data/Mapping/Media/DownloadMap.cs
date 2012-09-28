@@ -9,7 +9,7 @@ namespace Nop.Data.Mapping.Media
         {
             this.ToTable("Download");
             this.HasKey(p => p.Id);
-            this.Property(p => p.DownloadBinary).IsMaxLength();
+            this.Property(p => p.DownloadBinary);
         }
     }
 }

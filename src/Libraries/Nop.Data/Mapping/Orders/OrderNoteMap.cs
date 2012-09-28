@@ -9,7 +9,7 @@ namespace Nop.Data.Mapping.Orders
         {
             this.ToTable("OrderNote");
             this.HasKey(on => on.Id);
-            this.Property(on => on.Note).IsRequired().IsMaxLength();
+            this.Property(on => on.Note).IsRequired();
 
             this.HasRequired(on => on.Order)
                 .WithMany(o => o.OrderNotes)

@@ -17,7 +17,7 @@ namespace Nop.Data.Mapping.Messages
             this.Property(qe => qe.CC).HasMaxLength(500);
             this.Property(qe => qe.Bcc).HasMaxLength(500);
             this.Property(qe => qe.Subject).HasMaxLength(1000);
-            this.Property(qe => qe.Body).IsMaxLength();
+            this.Property(qe => qe.Body);
 
 
             this.HasRequired(qe => qe.EmailAccount)

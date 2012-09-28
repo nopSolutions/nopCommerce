@@ -9,10 +9,10 @@ namespace Nop.Data.Mapping.Orders
         {
             this.ToTable("ReturnRequest");
             this.HasKey(rr => rr.Id);
-            this.Property(rr => rr.ReasonForReturn).IsRequired().IsMaxLength();
-            this.Property(rr => rr.RequestedAction).IsRequired().IsMaxLength();
-            this.Property(rr => rr.CustomerComments).IsMaxLength();
-            this.Property(rr => rr.StaffNotes).IsMaxLength();
+            this.Property(rr => rr.ReasonForReturn).IsRequired();
+            this.Property(rr => rr.RequestedAction).IsRequired();
+            this.Property(rr => rr.CustomerComments);
+            this.Property(rr => rr.StaffNotes);
 
             this.Ignore(rr => rr.ReturnRequestStatus);
 

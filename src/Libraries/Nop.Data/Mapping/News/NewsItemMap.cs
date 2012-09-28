@@ -9,9 +9,9 @@ namespace Nop.Data.Mapping.News
         {
             this.ToTable("News");
             this.HasKey(bp => bp.Id);
-            this.Property(bp => bp.Title).IsRequired().IsMaxLength();
-            this.Property(bp => bp.Short).IsRequired().IsMaxLength();
-            this.Property(bp => bp.Full).IsRequired().IsMaxLength();
+            this.Property(bp => bp.Title).IsRequired();
+            this.Property(bp => bp.Short).IsRequired();
+            this.Property(bp => bp.Full).IsRequired();
             
             this.HasRequired(bp => bp.Language)
                 .WithMany()
