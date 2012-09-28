@@ -140,9 +140,20 @@ namespace Nop.Admin.Controllers
 
             if (ModelState.IsValid)
             {
+                //ensure we have at least one published language
+                var allLanguages = _languageService.GetAllLanguages();
+                if (allLanguages.Count == 1 && allLanguages[0].Id == language.Id &&
+                    !model.Published)
+                {
+                    ErrorNotification("At least one published language is required.");
+                    return RedirectToAction("Edit", new { id = language.Id });
+                }
+
+                //update
                 language = model.ToEntity(language);
                 _languageService.UpdateLanguage(language);
 
+                //notification
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.Languages.Updated"));
                 return continueEditing ? RedirectToAction("Edit", new { id = language.Id }) : RedirectToAction("List");
             }
@@ -151,22 +162,32 @@ namespace Nop.Admin.Controllers
             return View(model);
 		}
 
-		[HttpPost]
+        [HttpPost]
         public ActionResult Delete(int id)
         {
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageLanguages))
                 return AccessDeniedView();
 
-			var language = _languageService.GetLanguageById(id);
+            var language = _languageService.GetLanguageById(id);
             if (language == null)
                 //No language found with the specified id
                 return RedirectToAction("List");
 
-			_languageService.DeleteLanguage(language);
+            //ensure we have at least one published language
+            var allLanguages = _languageService.GetAllLanguages();
+            if (allLanguages.Count == 1 && allLanguages[0].Id == language.Id)
+            {
+                ErrorNotification("At least one published language is required.");
+                return RedirectToAction("Edit", new { id = language.Id });
+            }
+            
+            //delete
+            _languageService.DeleteLanguage(language);
 
+            //notification
             SuccessNotification(_localizationService.GetResource("Admin.Configuration.Languages.Deleted"));
-			return RedirectToAction("List");
-		}
+            return RedirectToAction("List");
+        }
 
 		#endregion
 
