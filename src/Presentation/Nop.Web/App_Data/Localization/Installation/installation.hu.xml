@@ -1,0 +1,140 @@
+﻿<Language Name="Magyar" IsDefault="false" IsRightToLeft="false">
+  <LocaleResource Name="AdminEmail">
+    <Value>Admin felhasználó e-mail</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminEmailRequired">
+    <Value>Adja meg a rendszergazda emailt</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPassword">
+    <Value>Rendszergazda felhasználó jelszó</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPasswordRequired">
+    <Value>Írja be rendszergazdai jelszót</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureDirectoryPermissions">
+    <Value>A '{0}' fiókot nem biztosították a :Módosítás engedély mappában "{1}". Kérjük, adja meg ezeket az engedélyeket.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureFilePermissions">
+    <Value>A '{0}' fiókot nem biztosították a: Módosítás engedély a fájlban '{1}'. Kérjük, adja meg ezeket az engedélyeket.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPassword">
+    <Value>Erősítse meg a jelszót</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPasswordRequired">
+    <Value>Adja meg a a jelszó megerősítését</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionString">
+    <Value>Csatlakozási szöveg</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringRequired">
+    <Value>A SQL kapcsolat string szükséges</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringValues">
+    <Value>Adja meg az SQL kapcsolat értékeket</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringWrongFormat">
+    <Value>Hibás az  SQL kapcsolat string formátuma</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateDatabaseIfDoesNotExist">
+    <Value>Hozzon létre adatbázist, ha nem létezik</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateSampleData">
+    <Value>Mintaadat létrehozása</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomCollation">
+    <Value>Határozza meg az egyéni SQL Server egyeztetést</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>Hiba történt az adatbázis megteremtésekor: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseInformation">
+    <Value>Adatbázis információk</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseName">
+    <Value>Adatbázis neve</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNameRequired">
+    <Value>Adatbázis név szükséges</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNotExists">
+    <Value>Adatbázis nem létezik, vagy nem rendelkezik engedéllyel a csatlakozáshoz</Value>
+  </LocaleResource>
+  <LocaleResource Name="DataProviderRequired">
+    <Value>Válassza az adatszolgáltatót</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation1">
+    <Value>Ha információra van szüksége, hogyan kell használni nopCommerce-t, látogasson el a</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation2">
+    <Value>A dokumentáció szakasz nopCommerce.com-on</Value>
+  </LocaleResource>
+  <LocaleResource Name="Example">
+    <Value>Példa</Value>
+  </LocaleResource>
+  <LocaleResource Name="Install">
+    <Value>Telepítse</Value>
+  </LocaleResource>
+  <LocaleResource Name="Installing">
+    <Value>nopCommerce telepítése ...</Value>
+  </LocaleResource>
+  <LocaleResource Name="PasswordsDoNotMatch">
+    <Value>A jelszavak nem egyeznek</Value>
+  </LocaleResource>
+  <LocaleResource Name="RawConnectionString">
+    <Value>Adja meg a nyers kapcsolati karakter láncot (haladó)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Recommended">
+    <Value>[Ajánlott]</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallation">
+    <Value>A  telepítés újraindítása</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallationTooltip">
+    <Value>Ide kattintva indítsa újra a telepítést (törli az összes tárolt értékeket)</Value>
+  </LocaleResource>
+  <LocaleResource Name="SetupFailed">
+    <Value>A telepítés sikertelen: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlAuthentication">
+    <Value>Használja az SQL Server fiókot</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlCompact">
+    <Value>Használja a beépített adattárolást (SQL Server Compact)</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerName">
+    <Value>SQL Server neve</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerNameRequired">
+    <Value>SQL Server neve szükséges</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerPassword">
+    <Value>SQL Jelszó</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerPasswordRequired">
+    <Value>SQL Jelszó szükséges</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerUsername">
+    <Value>SQL Felhasználónév</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerUsernameRequired">
+    <Value>SQL Felhasználónév szükséges</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlStandard">
+    <Value>Használja az SQL Server (vagy SQL Express) adatbázist</Value>
+  </LocaleResource>
+  <LocaleResource Name="StoreInformation">
+    <Value>Áruház információk</Value>
+  </LocaleResource>
+  <LocaleResource Name="Title">
+    <Value>nopCommerce telepítés</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip1">
+    <Value> A nopCommerce vezető ASP.NET online bolt, elektronikus kereskedelmi megoldás. Ez a varázsló végigvezeti a  nopCommerce konfigurálása  folyamatában</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip2">
+    <Value> A varázsló befejezéséhez, tudnia kell néhány információt az adatbázis szerver ("kapcsolat string"). Kérjük, lépjen kapcsolatba az internetszolgáltatóval, ha szükséges. Ha a telepítés helyi gépen vagy a szerveren, akkor szüksége lehet információkra a Rendszer Admin-tol.</Value>
+  </LocaleResource>
+  <LocaleResource Name="WindowsAuthentication">
+    <Value>Használja a beépített Windows-hitelesítést</Value>
+  </LocaleResource>
+</Language>
