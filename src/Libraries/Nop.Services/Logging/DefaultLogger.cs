@@ -31,7 +31,10 @@ namespace Nop.Services.Logging
         /// Ctor
         /// </summary>
         /// <param name="logRepository">Log repository</param>
-        /// <param name="webHelper">Web helper</param>
+        /// <param name="webHelper">Web helper</param>>
+        /// <param name="dbContext">DB context</param>>
+        /// <param name="dataProvider">WeData provider</param>
+        /// <param name="commonSettings">Common settings</param>
         public DefaultLogger(IRepository<Log> logRepository, IWebHelper webHelper,
             IDbContext dbContext, IDataProvider dataProvider, CommonSettings commonSettings)
         {
@@ -81,12 +84,12 @@ namespace Nop.Services.Logging
         {
             if (_commonSettings.UseStoredProceduresIfSupported && _dataProvider.StoredProceduredSupported)
             {
-                //although it's a stored procedure we use it to ensure that a database supports them
+                //although it's not a stored procedure we use it to ensure that a database supports them
                 //we cannot wait until EF team has it implemented - http://data.uservoice.com/forums/72025-entity-framework-feature-suggestions/suggestions/1015357-batch-cud-support
 
 
                 //do all databases support "Truncate command"?
-                //we also should not hard-code the table name
+                //TODO: do not hard-code the table name
                 _dbContext.ExecuteSqlCommand("TRUNCATE TABLE [Log]");
             }
             else

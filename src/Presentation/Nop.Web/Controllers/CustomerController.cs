@@ -33,6 +33,7 @@ using Nop.Web.Framework.Security;
 using Nop.Web.Framework.UI.Captcha;
 using Nop.Web.Models.Common;
 using Nop.Web.Models.Customer;
+using Nop.Services.Logging;
 
 namespace Nop.Web.Controllers
 {
@@ -69,6 +70,7 @@ namespace Nop.Web.Controllers
         private readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
         private readonly IDownloadService _downloadService;
         private readonly IWebHelper _webHelper;
+        private readonly ICustomerActivityService _customerActivityService;
 
         private readonly MediaSettings _mediaSettings;
         private readonly IWorkflowMessageService _workflowMessageService;
@@ -99,7 +101,7 @@ namespace Nop.Web.Controllers
             IOpenAuthenticationService openAuthenticationService, 
             IBackInStockSubscriptionService backInStockSubscriptionService, 
             IDownloadService downloadService, IWebHelper webHelper,
-            MediaSettings mediaSettings,
+            ICustomerActivityService customerActivityService, MediaSettings mediaSettings,
             IWorkflowMessageService workflowMessageService, LocalizationSettings localizationSettings,
             CaptchaSettings captchaSettings, ExternalAuthenticationSettings externalAuthenticationSettings)
         {
@@ -133,6 +135,7 @@ namespace Nop.Web.Controllers
             this._backInStockSubscriptionService = backInStockSubscriptionService;
             this._downloadService = downloadService;
             this._webHelper = webHelper;
+            this._customerActivityService = customerActivityService;
 
             this._mediaSettings = mediaSettings;
             this._workflowMessageService = workflowMessageService;
@@ -405,6 +408,8 @@ namespace Nop.Web.Controllers
                     //sign in new customer
                     _authenticationService.SignIn(customer, model.RememberMe);
 
+                    //activity log
+                    _customerActivityService.InsertActivity("PublicStore.Login", _localizationService.GetResource("ActivityLog.PublicStore.Login"), customer);
 
                     if (!String.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
                         return Redirect(returnUrl);
@@ -823,6 +828,10 @@ namespace Nop.Web.Controllers
             else
             {
                 //standard logout 
+
+                //activity log
+                _customerActivityService.InsertActivity("PublicStore.Logout", _localizationService.GetResource("ActivityLog.PublicStore.Logout"));
+
                 _authenticationService.SignOut();
                 return RedirectToRoute("HomePage");
             }

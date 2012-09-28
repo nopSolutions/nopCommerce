@@ -1823,6 +1823,10 @@ namespace Nop.Web.Controllers
                                 this.SuccessNotification(_localizationService.GetResource("Products.ProductHasBeenAddedToTheWishlist"), false);
                                 //set already entered values (quantity, customer entered price, gift card attributes, product attributes)
                                 setEnteredValues(model);
+
+                                //activity log
+                                _customerActivityService.InsertActivity("PublicStore.AddToWishlist", _localizationService.GetResource("ActivityLog.PublicStore.AddToWishlist"), productVariant.FullProductName);
+
                                 return View(model.ProductTemplateViewPath, model);
                             }
                         }
@@ -1841,6 +1845,10 @@ namespace Nop.Web.Controllers
                                 this.SuccessNotification(_localizationService.GetResource("Products.ProductHasBeenAddedToTheCart"), false);
                                 //set already entered values (quantity, customer entered price, gift card attributes, product attributes)
                                 setEnteredValues(model);
+
+                                //activity log
+                                _customerActivityService.InsertActivity("PublicStore.AddToShoppingCart", _localizationService.GetResource("ActivityLog.PublicStore.AddToShoppingCart"), productVariant.FullProductName);
+
                                 return View(model.ProductTemplateViewPath, model);
                             }
                         }
@@ -2549,6 +2557,9 @@ namespace Nop.Web.Controllers
                 if (_catalogSettings.NotifyStoreOwnerAboutNewProductReviews)
                     _workflowMessageService.SendProductReviewNotificationMessage(productReview, _localizationSettings.DefaultAdminLanguageId);
 
+                //activity log
+                _customerActivityService.InsertActivity("PublicStore.AddProductReview", _localizationService.GetResource("ActivityLog.PublicStore.AddProductReview"), product.Name);
+
 
                 PrepareProductReviewsModel(model, product);
                 model.AddProductReview.Title = null;
@@ -2732,6 +2743,9 @@ namespace Nop.Web.Controllers
                 return RedirectToRoute("HomePage");
 
             _compareProductsService.AddProductToCompareList(productId);
+
+            //activity log
+            _customerActivityService.InsertActivity("PublicStore.AddToCompareList", _localizationService.GetResource("ActivityLog.PublicStore.AddToCompareList"), product.Name);
 
             return RedirectToRoute("CompareProducts");
         }

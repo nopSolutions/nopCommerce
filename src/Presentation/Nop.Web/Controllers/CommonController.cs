@@ -22,6 +22,7 @@ using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Forums;
 using Nop.Services.Localization;
+using Nop.Services.Logging;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
 using Nop.Services.Security;
@@ -62,6 +63,7 @@ namespace Nop.Web.Controllers
         private readonly IMobileDeviceHelper _mobileDeviceHelper;
         private readonly HttpContextBase _httpContext;
         private readonly ICacheManager _cacheManager;
+        private readonly ICustomerActivityService _customerActivityService;
 
         private readonly CustomerSettings _customerSettings;
         private readonly TaxSettings _taxSettings;
@@ -89,7 +91,7 @@ namespace Nop.Web.Controllers
             IGenericAttributeService genericAttributeService, IWebHelper webHelper,
             IPermissionService permissionService, IMobileDeviceHelper mobileDeviceHelper,
             HttpContextBase httpContext, ICacheManager cacheManager,
-            CustomerSettings customerSettings, 
+            ICustomerActivityService customerActivityService, CustomerSettings customerSettings, 
             TaxSettings taxSettings, CatalogSettings catalogSettings,
             StoreInformationSettings storeInformationSettings, EmailAccountSettings emailAccountSettings,
             CommonSettings commonSettings, BlogSettings blogSettings, ForumSettings forumSettings,
@@ -115,6 +117,7 @@ namespace Nop.Web.Controllers
             this._mobileDeviceHelper = mobileDeviceHelper;
             this._httpContext = httpContext;
             this._cacheManager = cacheManager;
+            this._customerActivityService = customerActivityService;
 
             this._customerSettings = customerSettings;
             this._taxSettings = taxSettings;
@@ -461,6 +464,10 @@ namespace Nop.Web.Controllers
                 
                 model.SuccessfullySent = true;
                 model.Result = _localizationService.GetResource("ContactUs.YourEnquiryHasBeenSent");
+
+                //activity log
+                _customerActivityService.InsertActivity("PublicStore.ContactUs", _localizationService.GetResource("ActivityLog.PublicStore.ContactUs"));
+
                 return View(model);
             }
 

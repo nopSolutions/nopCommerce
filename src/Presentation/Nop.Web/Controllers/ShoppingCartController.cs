@@ -38,6 +38,7 @@ using Nop.Web.Framework.UI.Captcha;
 using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Media;
 using Nop.Web.Models.ShoppingCart;
+using Nop.Services.Logging;
 
 namespace Nop.Web.Controllers
 {
@@ -74,6 +75,7 @@ namespace Nop.Web.Controllers
         private readonly IDownloadService _downloadService;
         private readonly ICacheManager _cacheManager;
         private readonly IWebHelper _webHelper;
+        private readonly ICustomerActivityService _customerActivityService;
 
         private readonly MediaSettings _mediaSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
@@ -104,7 +106,7 @@ namespace Nop.Web.Controllers
             IWorkflowMessageService workflowMessageService,
             IPermissionService permissionService, 
             IDownloadService downloadService, ICacheManager cacheManager,
-            IWebHelper webHelper,
+            IWebHelper webHelper, ICustomerActivityService customerActivityService,
             MediaSettings mediaSettings, ShoppingCartSettings shoppingCartSettings,
             CatalogSettings catalogSettings, OrderSettings orderSettings,
             ShippingSettings shippingSettings, TaxSettings taxSettings,
@@ -139,6 +141,7 @@ namespace Nop.Web.Controllers
             this._downloadService = downloadService;
             this._cacheManager = cacheManager;
             this._webHelper = webHelper;
+            this._customerActivityService = customerActivityService;
             
             this._mediaSettings = mediaSettings;
             this._shoppingCartSettings = shoppingCartSettings;
@@ -987,7 +990,11 @@ namespace Nop.Web.Controllers
                 });
             }
 
-            //added to the cart
+            //now product is in the cart
+
+            //activity log
+            _customerActivityService.InsertActivity("PublicStore.AddToShoppingCart", _localizationService.GetResource("ActivityLog.PublicStore.AddToShoppingCart"), defaultProductVariant.FullProductName);
+
             if (_shoppingCartSettings.DisplayCartAfterAddingProduct ||
                 forceredirection)
             {
@@ -1242,6 +1249,9 @@ namespace Nop.Web.Controllers
             {
                 case ShoppingCartType.Wishlist:
                     {
+                        //activity log
+                        _customerActivityService.InsertActivity("PublicStore.AddToWishlist", _localizationService.GetResource("ActivityLog.PublicStore.AddToWishlist"), productVariant.FullProductName);
+
                         if (_shoppingCartSettings.DisplayWishlistAfterAddingProduct)
                         {
                             //redirect to the wishlist page
@@ -1271,6 +1281,9 @@ namespace Nop.Web.Controllers
                 case ShoppingCartType.ShoppingCart:
                 default:
                     {
+                        //activity log
+                        _customerActivityService.InsertActivity("PublicStore.AddToShoppingCart", _localizationService.GetResource("ActivityLog.PublicStore.AddToShoppingCart"), productVariant.FullProductName);
+
                         if (_shoppingCartSettings.DisplayCartAfterAddingProduct)
                         {
                             //redirect to the shopping cart page

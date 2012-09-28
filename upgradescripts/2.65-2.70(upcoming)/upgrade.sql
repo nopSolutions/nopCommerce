@@ -128,6 +128,36 @@ set @resources='
   <LocaleResource Name="Nop.Core.Domain.Seo.PageTitleSeoAdjustment.StorenameAfterPagename">
     <Value>Store name comes after page name</Value>
   </LocaleResource>
+  <LocaleResource Name="ActivityLog.PublicStore.SendPM">
+    <Value>Sent PM to customer (''{0}'')</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.PublicStore.ContactUs">
+    <Value>Used contact us form</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.PublicStore.AddToCompareList">
+    <Value>Added a product to compare list (''{0}'')</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.PublicStore.AddToShoppingCart">
+    <Value>Added a product to shopping cart (''{0}'')</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.PublicStore.AddToWishlist">
+    <Value>Added a product to wishlist (''{0}'')</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.PublicStore.Login">
+    <Value>Login</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.PublicStore.Logout">
+    <Value>Logout</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.PublicStore.AddProductReview">
+    <Value>Added a product review (''{0}'')</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.PublicStore.AddNewsComment">
+    <Value>Added a news comment</Value>
+  </LocaleResource>
+  <LocaleResource Name="ActivityLog.PublicStore.AddBlogComment">
+    <Value>Added a blog comment</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -695,11 +725,84 @@ BEGIN
 	EXEC('ALTER TABLE [Manufacturer] DROP COLUMN [SeName]')
 END
 GO
-
 --drop temporary procedures & functions
 IF EXISTS (
 		SELECT *
 		FROM sysobjects
 		WHERE id = OBJECT_ID(N'[temp_generate_sename]') AND OBJECTPROPERTY(id,N'IsProcedure') = 1)
 DROP PROCEDURE [temp_generate_sename]
+GO
+
+
+
+
+--new activity types
+IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'PublicStore.SendPM')
+BEGIN
+	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
+	VALUES (N'PublicStore.SendPM', N'Public store. Send PM', N'false')
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'PublicStore.ContactUs')
+BEGIN
+	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
+	VALUES (N'PublicStore.ContactUs', N'Public store. Use contact us form', N'false')
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'PublicStore.AddToCompareList')
+BEGIN
+	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
+	VALUES (N'PublicStore.AddToCompareList', N'Public store. Add to compare list', N'false')
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'PublicStore.AddToShoppingCart')
+BEGIN
+	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
+	VALUES (N'PublicStore.AddToShoppingCart', N'Public store. Add to shopping cart', N'false')
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'PublicStore.AddToWishlist')
+BEGIN
+	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
+	VALUES (N'PublicStore.AddToWishlist', N'Public store. Add to wishlist', N'false')
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'PublicStore.Login')
+BEGIN
+	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
+	VALUES (N'PublicStore.Login', N'Public store. Login', N'false')
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'PublicStore.Logout')
+BEGIN
+	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
+	VALUES (N'PublicStore.Logout', N'Public store. Logout', N'false')
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'PublicStore.AddProductReview')
+BEGIN
+	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
+	VALUES (N'PublicStore.AddProductReview', N'Public store. Add product review', N'false')
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'PublicStore.AddNewsComment')
+BEGIN
+	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
+	VALUES (N'PublicStore.AddNewsComment', N'Public store. Add news comment', N'false')
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'PublicStore.AddBlogComment')
+BEGIN
+	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
+	VALUES (N'PublicStore.AddBlogComment', N'Public store. Add blog comment', N'false')
+END
 GO

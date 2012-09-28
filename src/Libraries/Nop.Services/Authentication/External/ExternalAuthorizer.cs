@@ -6,6 +6,8 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Localization;
 using Nop.Services.Common;
 using Nop.Services.Customers;
+using Nop.Services.Localization;
+using Nop.Services.Logging;
 using Nop.Services.Messages;
 using Nop.Services.Orders;
 
@@ -19,6 +21,8 @@ namespace Nop.Services.Authentication.External
         private readonly IOpenAuthenticationService _openAuthenticationService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly ICustomerRegistrationService _customerRegistrationService;
+        private readonly ICustomerActivityService _customerActivityService;
+        private readonly ILocalizationService _localizationService;
         private readonly IWorkContext _workContext;
         private readonly CustomerSettings _customerSettings;
         private readonly ExternalAuthenticationSettings _externalAuthenticationSettings;
@@ -33,6 +37,7 @@ namespace Nop.Services.Authentication.External
             IOpenAuthenticationService openAuthenticationService,
             IGenericAttributeService genericAttributeService,
             ICustomerRegistrationService customerRegistrationService, 
+            ICustomerActivityService customerActivityService, ILocalizationService localizationService,
             IWorkContext workContext, CustomerSettings customerSettings,
             ExternalAuthenticationSettings externalAuthenticationSettings,
             IShoppingCartService shoppingCartService,
@@ -42,6 +47,8 @@ namespace Nop.Services.Authentication.External
             this._openAuthenticationService = openAuthenticationService;
             this._genericAttributeService = genericAttributeService;
             this._customerRegistrationService = customerRegistrationService;
+            this._customerActivityService = customerActivityService;
+            this._localizationService = localizationService;
             this._workContext = workContext;
             this._customerSettings = customerSettings;
             this._externalAuthenticationSettings = externalAuthenticationSettings;
@@ -203,7 +210,10 @@ namespace Nop.Services.Authentication.External
             _shoppingCartService.MigrateShoppingCart(_workContext.CurrentCustomer, userFound ?? userLoggedIn);
             //authenticate
             _authenticationService.SignIn(userFound ?? userLoggedIn, false);
-
+            //activity log
+            _customerActivityService.InsertActivity("PublicStore.Login", _localizationService.GetResource("ActivityLog.PublicStore.Login"), 
+                userFound ?? userLoggedIn);
+            
             return new AuthorizationResult(OpenAuthenticationStatus.Authenticated);
         }
 

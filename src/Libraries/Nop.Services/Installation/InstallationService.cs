@@ -9479,6 +9479,102 @@ namespace Nop.Services.Installation
                                                   Enabled = false,
                                                   Name = "Public store. Place an order"
                                               },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "PublicStore.SendPM",
+                                                  Enabled = false,
+                                                  Name = "Public store. Send PM"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "PublicStore.ContactUs",
+                                                  Enabled = false,
+                                                  Name = "Public store. Use contact us form"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "PublicStore.AddToCompareList",
+                                                  Enabled = false,
+                                                  Name = "Public store. Add to compare list"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "PublicStore.AddToShoppingCart",
+                                                  Enabled = false,
+                                                  Name = "Public store. Add to shopping cart"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "PublicStore.AddToWishlist",
+                                                  Enabled = false,
+                                                  Name = "Public store. Add to wishlist"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "PublicStore.Login",
+                                                  Enabled = false,
+                                                  Name = "Public store. Login"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "PublicStore.Logout",
+                                                  Enabled = false,
+                                                  Name = "Public store. Logout"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "PublicStore.AddProductReview",
+                                                  Enabled = false,
+                                                  Name = "Public store. Add product review"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "PublicStore.AddNewsComment",
+                                                  Enabled = false,
+                                                  Name = "Public store. Add news comment"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "PublicStore.AddBlogComment",
+                                                  Enabled = false,
+                                                  Name = "Public store. Add blog comment"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "PublicStore.AddForumTopic",
+                                                  Enabled = false,
+                                                  Name = "Public store. Add forum topic"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "PublicStore.EditForumTopic",
+                                                  Enabled = false,
+                                                  Name = "Public store. Edit forum topic"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "PublicStore.DeleteForumTopic",
+                                                  Enabled = false,
+                                                  Name = "Public store. Delete forum topic"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "PublicStore.AddForumPost",
+                                                  Enabled = false,
+                                                  Name = "Public store. Add forum post"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "PublicStore.EditForumPost",
+                                                  Enabled = false,
+                                                  Name = "Public store. Edit forum post"
+                                              },
+                                          new ActivityLogType
+                                              {
+                                                  SystemKeyword = "PublicStore.DeleteForumPost",
+                                                  Enabled = false,
+                                                  Name = "Public store. Delete forum post"
+                                              },
                                       };
             activityLogTypes.ForEach(alt => _activityLogTypeRepository.Insert(alt));
         }

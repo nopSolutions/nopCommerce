@@ -14,6 +14,7 @@ using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
+using Nop.Services.Logging;
 using Nop.Services.Media;
 using Nop.Services.Messages;
 using Nop.Services.News;
@@ -41,6 +42,7 @@ namespace Nop.Web.Controllers
         private readonly IWorkflowMessageService _workflowMessageService;
         private readonly IWebHelper _webHelper;
         private readonly ICacheManager _cacheManager;
+        private readonly ICustomerActivityService _customerActivityService;
 
         private readonly MediaSettings _mediaSettings;
         private readonly NewsSettings _newsSettings;
@@ -57,7 +59,7 @@ namespace Nop.Web.Controllers
             IWorkContext workContext, IPictureService pictureService, ILocalizationService localizationService,
             ICustomerContentService customerContentService, IDateTimeHelper dateTimeHelper,
             IWorkflowMessageService workflowMessageService, IWebHelper webHelper,
-            ICacheManager cacheManager,
+            ICacheManager cacheManager, ICustomerActivityService customerActivityService,
             MediaSettings mediaSettings, NewsSettings newsSettings,
             LocalizationSettings localizationSettings, CustomerSettings customerSettings,
             StoreInformationSettings storeInformationSettings, CaptchaSettings captchaSettings)
@@ -71,6 +73,7 @@ namespace Nop.Web.Controllers
             this._workflowMessageService = workflowMessageService;
             this._webHelper = webHelper;
             this._cacheManager = cacheManager;
+            this._customerActivityService = customerActivityService;
 
             this._mediaSettings = mediaSettings;
             this._newsSettings = newsSettings;
@@ -275,9 +278,12 @@ namespace Nop.Web.Controllers
                 //update totals
                 _newsService.UpdateCommentTotals(newsItem);
 
-                //notify store owner);
+                //notify a store owner;
                 if (_newsSettings.NotifyAboutNewNewsComments)
                     _workflowMessageService.SendNewsCommentNotificationMessage(comment, _localizationSettings.DefaultAdminLanguageId);
+
+                //activity log
+                _customerActivityService.InsertActivity("PublicStore.AddNewsComment", _localizationService.GetResource("ActivityLog.PublicStore.AddNewsComment"));
 
                 //The text boxes should be cleared after a comment has been posted
                 //That' why we reload the page

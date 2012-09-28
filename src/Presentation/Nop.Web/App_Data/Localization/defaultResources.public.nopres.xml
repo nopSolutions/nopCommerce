@@ -783,17 +783,47 @@
             </LocaleResource>
             <LocaleResource Name="PublicStore">
                 <Children>
+                    <LocaleResource Name="AddBlogComment">
+                        <Value>Added a blog comment</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="AddNewsComment">
+                        <Value>Added a news comment</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="AddProductReview">
+                        <Value>Added a product review ('{0}')</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="AddToCompareList">
+                        <Value>Added a product to compare list ('{0}')</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="AddToShoppingCart">
+                        <Value>Added a product to shopping cart ('{0}')</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="AddToWishlist">
+                        <Value>Added a product to wishlist ('{0}')</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="ContactUs">
+                        <Value>Used contact us form</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Login">
+                        <Value>Login</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="Logout">
+                        <Value>Logout</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="PlaceOrder">
+                        <Value>Placed a new order (ID = {0})</Value>
+                    </LocaleResource>
+                    <LocaleResource Name="SendPM">
+                        <Value>Sent PM to customer ('{0}')</Value>
+                    </LocaleResource>
                     <LocaleResource Name="ViewCategory">
                         <Value>Public store. Viewed a category details page ('{0}')</Value>
                     </LocaleResource>
                     <LocaleResource Name="ViewManufacturer">
-                        <Value>Public store. Viewed a manufacturer details page (''{0}'')</Value>
+                        <Value>Public store. Viewed a manufacturer details page ('{0}')</Value>
                     </LocaleResource>
                     <LocaleResource Name="ViewProduct">
-                        <Value>Public store. Viewed a product details page (''{0}'')</Value>
-                    </LocaleResource>
-                    <LocaleResource Name="PlaceOrder">
-                        <Value>Placed a new order (ID = {0})</Value>
+                        <Value>Public store. Viewed a product details page ('{0}')</Value>
                     </LocaleResource>
                 </Children>
             </LocaleResource>

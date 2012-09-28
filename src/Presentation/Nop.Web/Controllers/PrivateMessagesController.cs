@@ -7,10 +7,12 @@ using Nop.Core.Domain.Forums;
 using Nop.Services.Customers;
 using Nop.Services.Forums;
 using Nop.Services.Helpers;
+using Nop.Services.Localization;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Security;
 using Nop.Web.Models.Common;
 using Nop.Web.Models.PrivateMessages;
+using Nop.Services.Logging;
 
 namespace Nop.Web.Controllers
 {
@@ -21,6 +23,8 @@ namespace Nop.Web.Controllers
 
         private readonly IForumService _forumService;
         private readonly ICustomerService _customerService;
+        private readonly ICustomerActivityService _customerActivityService;
+        private readonly ILocalizationService _localizationService;
         private readonly IWorkContext _workContext;
         private readonly IDateTimeHelper _dateTimeHelper;
         private readonly ForumSettings _forumSettings;
@@ -31,12 +35,15 @@ namespace Nop.Web.Controllers
         #region Constructors
 
         public PrivateMessagesController(IForumService forumService,
-            ICustomerService customerService,
-            IWorkContext workContext, IDateTimeHelper dateTimeHelper,
+            ICustomerService customerService, ICustomerActivityService customerActivityService,
+            ILocalizationService localizationService, IWorkContext workContext, 
+            IDateTimeHelper dateTimeHelper,
             ForumSettings forumSettings, CustomerSettings customerSettings)
         {
             this._forumService = forumService;
             this._customerService = customerService;
+            this._customerActivityService = customerActivityService;
+            this._localizationService = localizationService;
             this._workContext = workContext;
             this._dateTimeHelper = dateTimeHelper;
             this._forumSettings = forumSettings;
@@ -412,6 +419,9 @@ namespace Nop.Web.Controllers
                     };
 
                     _forumService.InsertPrivateMessage(privateMessage);
+
+                    //activity log
+                    _customerActivityService.InsertActivity("PublicStore.SendPM", _localizationService.GetResource("ActivityLog.PublicStore.SendPM"), toCustomer.Email);
 
                     return RedirectToRoute("PrivateMessages", new { tab = "sent" });
                 }

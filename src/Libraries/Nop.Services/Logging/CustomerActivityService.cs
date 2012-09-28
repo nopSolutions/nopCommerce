@@ -4,7 +4,10 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
+using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Logging;
+using Nop.Data;
 
 namespace Nop.Services.Logging
 {
@@ -28,6 +31,9 @@ namespace Nop.Services.Logging
         private readonly IRepository<ActivityLog> _activityLogRepository;
         private readonly IRepository<ActivityLogType> _activityLogTypeRepository;
         private readonly IWorkContext _workContext;
+        private readonly IDbContext _dbContext;
+        private readonly IDataProvider _dataProvider;
+        private readonly CommonSettings _commonSettings;
         #endregion
         
         #region Ctor
@@ -38,15 +44,22 @@ namespace Nop.Services.Logging
         /// <param name="activityLogRepository">Activity log repository</param>
         /// <param name="activityLogTypeRepository">Activity log type repository</param>
         /// <param name="workContext">Work context</param>
+        /// <param name="dbContext">DB context</param>>
+        /// <param name="dataProvider">WeData provider</param>
+        /// <param name="commonSettings">Common settings</param>
         public CustomerActivityService(ICacheManager cacheManager,
             IRepository<ActivityLog> activityLogRepository,
             IRepository<ActivityLogType> activityLogTypeRepository,
-            IWorkContext workContext)
+            IWorkContext workContext,
+            IDbContext dbContext, IDataProvider dataProvider, CommonSettings commonSettings)
         {
             this._cacheManager = cacheManager;
             this._activityLogRepository = activityLogRepository;
             this._activityLogTypeRepository = activityLogTypeRepository;
             this._workContext = workContext;
+            this._dbContext = dbContext;
+            this._dataProvider = dataProvider;
+            this._commonSettings = commonSettings;
         }
 
         #endregion
@@ -133,10 +146,25 @@ namespace Nop.Services.Logging
         /// <param name="comment">The activity comment</param>
         /// <param name="commentParams">The activity comment parameters for string.Format() function.</param>
         /// <returns>Activity log item</returns>
-        public virtual ActivityLog InsertActivity(string systemKeyword, 
+        public virtual ActivityLog InsertActivity(string systemKeyword,
             string comment, params object[] commentParams)
         {
-            if (_workContext.CurrentCustomer == null)
+            return InsertActivity(systemKeyword, comment, _workContext.CurrentCustomer, commentParams);
+        }
+        
+
+        /// <summary>
+        /// Inserts an activity log item
+        /// </summary>
+        /// <param name="systemKeyword">The system keyword</param>
+        /// <param name="comment">The activity comment</param>
+        /// <param name="customer">The customer</param>
+        /// <param name="commentParams">The activity comment parameters for string.Format() function.</param>
+        /// <returns>Activity log item</returns>
+        public virtual ActivityLog InsertActivity(string systemKeyword, 
+            string comment, Customer customer, params object[] commentParams)
+        {
+            if (customer == null)
                 return null;
 
             var activityTypes = GetAllActivityTypes();
@@ -152,7 +180,7 @@ namespace Nop.Services.Logging
 
             var activity = new ActivityLog();
             activity.ActivityLogType = activityType;
-            activity.Customer = _workContext.CurrentCustomer;
+            activity.Customer = customer;
             activity.Comment = comment;
             activity.CreatedOnUtc = DateTime.UtcNow;
 
@@ -226,10 +254,22 @@ namespace Nop.Services.Logging
         /// </summary>
         public virtual void ClearAllActivities()
         {
-            
-            var activityLog = _activityLogRepository.Table.ToList();
-            foreach (var activityLogItem in activityLog)
-                _activityLogRepository.Delete(activityLogItem);
+            if (_commonSettings.UseStoredProceduresIfSupported && _dataProvider.StoredProceduredSupported)
+            {
+                //although it's not a stored procedure we use it to ensure that a database supports them
+                //we cannot wait until EF team has it implemented - http://data.uservoice.com/forums/72025-entity-framework-feature-suggestions/suggestions/1015357-batch-cud-support
+
+
+                //do all databases support "Truncate command"?
+                //TODO: do not hard-code the table name
+                _dbContext.ExecuteSqlCommand("TRUNCATE TABLE [ActivityLog]");
+            }
+            else
+            {
+                var activityLog = _activityLogRepository.Table.ToList();
+                foreach (var activityLogItem in activityLog)
+                    _activityLogRepository.Delete(activityLogItem);
+            }
         }
         #endregion
 
