@@ -23,7 +23,7 @@
                 <legend class="title">@string.Format(T("Account.CustomerReturnRequests.Title").Text, item.Id, item.ReturnRequestStatus)</legend>
                 <div class="info">
                     <div class="product">
-                        @T("Account.CustomerReturnRequests.Item") <a href="@Url.RouteUrl("Product", new { productId = item.ProductId, SeName = item.ProductSeName })" title="View details">@item.ProductName</a>
+                        @T("Account.CustomerReturnRequests.Item") <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })" title="View details">@item.ProductName</a>
                         x @item.Quantity
                     </div>
                     <div class="reason">

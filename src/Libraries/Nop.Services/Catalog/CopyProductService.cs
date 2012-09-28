@@ -4,6 +4,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Media;
 using Nop.Services.Localization;
 using Nop.Services.Media;
+using Nop.Services.Seo;
 
 namespace Nop.Services.Catalog
 {
@@ -25,6 +26,7 @@ namespace Nop.Services.Catalog
         private readonly IDownloadService _downloadService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IProductTagService _productTagService;
+        private readonly IUrlRecordService _urlRecordService;
 
         #endregion
 
@@ -35,7 +37,8 @@ namespace Nop.Services.Catalog
             ILocalizedEntityService localizedEntityService, IPictureService pictureService,
             ICategoryService categoryService, IManufacturerService manufacturerService,
             ISpecificationAttributeService specificationAttributeService, IDownloadService downloadService,
-            IProductAttributeParser productAttributeParser, IProductTagService productTagService)
+            IProductAttributeParser productAttributeParser, IProductTagService productTagService,
+            IUrlRecordService urlRecordService)
         {
             this._productService = productService;
             this._productAttributeService = productAttributeService;
@@ -48,6 +51,7 @@ namespace Nop.Services.Catalog
             this._downloadService = downloadService;
             this._productAttributeParser = productAttributeParser;
             this._productTagService = productTagService;
+            this._urlRecordService = urlRecordService;
         }
 
         #endregion
@@ -84,15 +88,19 @@ namespace Nop.Services.Catalog
                     MetaKeywords = product.MetaKeywords,
                     MetaDescription = product.MetaDescription,
                     MetaTitle = product.MetaTitle,
-                    SeName = product.SeName,
                     AllowCustomerReviews = product.AllowCustomerReviews,
                     Published = isPublished,
                     Deleted = product.Deleted,
                     CreatedOnUtc = DateTime.UtcNow,
                     UpdatedOnUtc = DateTime.UtcNow
                 };
+
+                //validate search engine name
                 _productService.InsertProduct(productCopy);
 
+                //search engine name
+                _urlRecordService.SaveSlug(productCopy, productCopy.ValidateSeName("", productCopy.Name, true), 0);
+                
                 var languages = _languageService.GetAllLanguages(true);
 
                 //localization
@@ -122,9 +130,8 @@ namespace Nop.Services.Catalog
                     if (!String.IsNullOrEmpty(metaTitle))
                         _localizedEntityService.SaveLocalizedValue(productCopy, x => x.MetaTitle, metaTitle, lang.Id);
 
-                    var seName = product.GetLocalized(x => x.SeName, lang.Id, false, false);
-                    if (!String.IsNullOrEmpty(seName))
-                        _localizedEntityService.SaveLocalizedValue(productCopy, x => x.SeName, seName, lang.Id);
+                    //search engine name
+                    _urlRecordService.SaveSlug(productCopy, productCopy.ValidateSeName("", name, false), lang.Id);
                 }
 
                 //product tags

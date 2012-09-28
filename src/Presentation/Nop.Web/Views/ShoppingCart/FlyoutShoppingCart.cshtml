@@ -35,14 +35,14 @@
                                 @if (Model.ShowProductImages)
                                 {
                                     <td class="picture">
-                                        <a href="@Url.RouteUrl("Product", new { productId = item.ProductId, SeName = item.ProductSeName })" title="@item.Picture.Title">
+                                        <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })" title="@item.Picture.Title">
                                             <img alt="@item.Picture.AlternateText" src="@item.Picture.ImageUrl" title="@item.Picture.Title" />
                                         </a>
                                     </td>
                                 }
                                 <td class="product">
                                     <div class="name">
-                                        <a href="@Url.RouteUrl("Product", new { productId = item.ProductId, SeName = item.ProductSeName })">@item.ProductName</a>
+                                        <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })">@item.ProductName</a>
                                     </div>
                                     @if (!String.IsNullOrEmpty(item.AttributeInfo))
                                     {

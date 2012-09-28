@@ -14,6 +14,7 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Media;
 using Nop.Services.Security;
+using Nop.Services.Seo;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
 using Telerik.Web.Mvc;
@@ -30,6 +31,7 @@ namespace Nop.Admin.Controllers
         private readonly ICategoryTemplateService _categoryTemplateService;
         private readonly IManufacturerService _manufacturerService;
         private readonly IProductService _productService;
+        private readonly IUrlRecordService _urlRecordService;
         private readonly IPictureService _pictureService;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
@@ -48,7 +50,7 @@ namespace Nop.Admin.Controllers
 
         public CategoryController(ICategoryService categoryService, ICategoryTemplateService categoryTemplateService,
             IManufacturerService manufacturerService, IProductService productService, 
-            IPictureService pictureService, ILanguageService languageService,
+            IUrlRecordService urlRecordService, IPictureService pictureService, ILanguageService languageService,
             ILocalizationService localizationService, ILocalizedEntityService localizedEntityService,
             IDiscountService discountService, IPermissionService permissionService,
             IExportManager exportManager, IWorkContext workContext,
@@ -59,6 +61,7 @@ namespace Nop.Admin.Controllers
             this._categoryTemplateService = categoryTemplateService;
             this._manufacturerService = manufacturerService;
             this._productService = productService;
+            this._urlRecordService = urlRecordService;
             this._pictureService = pictureService;
             this._languageService = languageService;
             this._localizationService = localizationService;
@@ -106,10 +109,9 @@ namespace Nop.Admin.Controllers
                                                            localized.MetaTitle,
                                                            localized.LanguageId);
 
-                _localizedEntityService.SaveLocalizedValue(category,
-                                                           x => x.SeName,
-                                                           localized.SeName,
-                                                           localized.LanguageId);
+                //search engine name
+                var seName = category.ValidateSeName(localized.SeName, localized.Name, false);
+                _urlRecordService.SaveSlug(category, seName, localized.LanguageId);
             }
         }
 
@@ -318,6 +320,9 @@ namespace Nop.Admin.Controllers
                 category.CreatedOnUtc = DateTime.UtcNow;
                 category.UpdatedOnUtc = DateTime.UtcNow;
                 _categoryService.InsertCategory(category);
+                //search engine name
+                model.SeName = category.ValidateSeName(model.SeName, category.Name, true);
+                _urlRecordService.SaveSlug(category, model.SeName, 0);
                 //locales
                 UpdateLocales(category, model);
                 //disounts
@@ -387,7 +392,7 @@ namespace Nop.Admin.Controllers
                 locale.MetaKeywords = category.GetLocalized(x => x.MetaKeywords, languageId, false, false);
                 locale.MetaDescription = category.GetLocalized(x => x.MetaDescription, languageId, false, false);
                 locale.MetaTitle = category.GetLocalized(x => x.MetaTitle, languageId, false, false);
-                locale.SeName = category.GetLocalized(x => x.SeName, languageId, false, false);
+                locale.SeName = category.GetSeName(languageId, false, false);
             });
             //templates
             PrepareTemplatesModel(model);
@@ -414,6 +419,9 @@ namespace Nop.Admin.Controllers
                 category = model.ToEntity(category);
                 category.UpdatedOnUtc = DateTime.UtcNow;
                 _categoryService.UpdateCategory(category);
+                //search engine name
+                model.SeName = category.ValidateSeName(model.SeName, category.Name, true);
+                _urlRecordService.SaveSlug(category, model.SeName, 0);
                 //locales
                 UpdateLocales(category, model);
                 //discounts

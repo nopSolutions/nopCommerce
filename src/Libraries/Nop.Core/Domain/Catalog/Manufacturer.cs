@@ -1,12 +1,13 @@
 using System;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Seo;
 
 namespace Nop.Core.Domain.Catalog
 {
     /// <summary>
     /// Represents a manufacturer
     /// </summary>
-    public partial class Manufacturer : BaseEntity, ILocalizedEntity
+    public partial class Manufacturer : BaseEntity, ILocalizedEntity, ISlugSupported
     {
         /// <summary>
         /// Gets or sets the name
@@ -37,11 +38,6 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the meta title
         /// </summary>
         public virtual string MetaTitle { get; set; }
-
-        /// <summary>
-        /// Gets or sets the search-engine name
-        /// </summary>
-        public virtual string SeName { get; set; }
 
         /// <summary>
         /// Gets or sets the parent picture identifier

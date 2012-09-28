@@ -139,7 +139,7 @@
                                         </td>
                                     }
                                     <td class="a-left">
-                                        <em><a href="@Url.RouteUrl("Product", new { productId = item.ProductId, SeName = item.ProductSeName })" title="View details">@item.ProductName</a></em>
+                                        <em><a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })" title="View details">@item.ProductName</a></em>
                                         @if (!String.IsNullOrEmpty(item.AttributeInfo))
                                         {
                                             <div class="attributes">

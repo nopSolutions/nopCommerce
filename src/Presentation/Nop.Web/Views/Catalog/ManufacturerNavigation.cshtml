@@ -15,7 +15,7 @@
             <ul>
                 @foreach (var manufacturer in Model.Manufacturers)
                 {
-                    <li class="@(manufacturer.IsActive ? "active" : "inactive")"><a href="@Url.RouteUrl("Manufacturer", new { manufacturerId = manufacturer.Id, SeName = manufacturer.SeName })">@manufacturer.Name</a>
+                    <li class="@(manufacturer.IsActive ? "active" : "inactive")"><a href="@Url.RouteUrl("Manufacturer", new { SeName = manufacturer.SeName })">@manufacturer.Name</a>
                     </li>
                 }
             </ul>

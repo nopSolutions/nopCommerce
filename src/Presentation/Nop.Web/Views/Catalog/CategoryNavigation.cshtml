@@ -30,7 +30,7 @@
                         <text>style="margin-left: @(category.NumberOfParentCategories * categoryPadding)px"</text>
                         }
                     }
-                    ><a href="@Url.RouteUrl("Category", new { categoryId = category.Id, SeName = category.SeName })">@category.Name
+                    ><a href="@Url.RouteUrl("Category", new { SeName = category.SeName })">@category.Name
                         @if (category.DisplayNumberOfProducts)
                         {
                             <text> (@(category.NumberOfProducts))</text>

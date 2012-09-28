@@ -15,7 +15,7 @@
         @for (int i = 0; i < Model.Count; i++)
         {
             var item = Model[i];
-            <a href="@Url.RouteUrl("Manufacturer", new { manufacturerId = item.Id, SeName = item.SeName })">@item.Name</a>
+            <a href="@Url.RouteUrl("Manufacturer", new { SeName = item.SeName })">@item.Name</a>
             if (i != Model.Count - 1)
             {
             <text>,</text>

@@ -17,7 +17,8 @@ namespace Nop.Services.Localization
     {
         #region Constants
 
-        private const string LOCALIZEDPROPERTY_KEY = "Nop.localizedproperty.{0}-{1}-{2}-{3}";
+        private const string LOCALIZEDPROPERTY_KEY = "Nop.localizedproperty.value-{0}-{1}-{2}-{3}";
+        private const string LOCALIZEDPROPERTY_ENTITYID_KEY = "Nop.localizedproperty.entityid-{0}-{1}-{2}";
         private const string LOCALIZEDPROPERTY_PATTERN_KEY = "Nop.localizedproperty.";
 
         #endregion
@@ -104,6 +105,28 @@ namespace Nop.Services.Localization
         }
 
         /// <summary>
+        /// Find localized values
+        /// </summary>
+        /// <param name="localeKeyGroup">Locale key group</param>
+        /// <param name="localeKey">Locale key</param>
+        /// <param name="localeValue">Locale key</param>
+        /// <returns>Found localized values</returns>
+        public virtual int GetEntityIdByLocalizedValue(string localeKeyGroup, string localeKey, string localeValue)
+        {
+            string key = string.Format(LOCALIZEDPROPERTY_ENTITYID_KEY, localeKeyGroup, localeKey, localeValue);
+            return _cacheManager.Get(key, () =>
+            {
+                var query = from lp in _localizedPropertyRepository.Table
+                            where lp.LocaleKeyGroup == localeKeyGroup &&
+                            lp.LocaleKey == localeKey &&
+                            lp.LocaleValue == localeValue
+                            select lp.EntityId;
+                var result = query.FirstOrDefault();
+                return result;
+            });
+        }
+
+        /// <summary>
         /// Gets localized properties
         /// </summary>
         /// <param name="entityId">Entity identifier</param>
@@ -158,7 +181,7 @@ namespace Nop.Services.Localization
         /// </summary>
         /// <typeparam name="T">Type</typeparam>
         /// <param name="entity">Entity</param>
-        /// <param name="keySelector">Ley selector</param>
+        /// <param name="keySelector">Key selector</param>
         /// <param name="localeValue">Locale value</param>
         /// <param name="languageId">Language ID</param>
         public virtual void SaveLocalizedValue<T>(T entity,

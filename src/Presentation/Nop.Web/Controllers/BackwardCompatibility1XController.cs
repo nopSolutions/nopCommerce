@@ -5,6 +5,7 @@ using Nop.Services.Blogs;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Forums;
+using Nop.Services.Localization;
 using Nop.Services.News;
 using Nop.Services.Seo;
 using Nop.Services.Topics;
@@ -157,7 +158,7 @@ namespace Nop.Web.Controllers
             if (product == null)
                 return RedirectToRoutePermanent("HomePage");
 
-            return RedirectToRoutePermanent("Product", new { productId = product.Id, SeName = product.GetSeName() });
+            return RedirectToRoutePermanent("Product", new { SeName = product.GetSeName() });
         }
 
         public ActionResult RedirectCategory(string id, bool idIncludesSename = true)
@@ -168,7 +169,7 @@ namespace Nop.Web.Controllers
             if (category == null)
                 return RedirectToRoutePermanent("HomePage");
 
-            return RedirectToRoutePermanent("Category", new { categoryId = category.Id, SeName = category.GetSeName() });
+            return RedirectToRoutePermanent("Category", new { SeName = category.GetSeName() });
         }
 
         public ActionResult RedirectManufacturer(string id, bool idIncludesSename = true)
@@ -179,7 +180,7 @@ namespace Nop.Web.Controllers
             if (manufacturer == null)
                 return RedirectToRoutePermanent("HomePage");
 
-            return RedirectToRoutePermanent("Manufacturer", new { manufacturerId = manufacturer.Id, SeName = manufacturer.GetSeName() });
+            return RedirectToRoutePermanent("Manufacturer", new { SeName = manufacturer.GetSeName() });
         }
 
         public ActionResult RedirectProductTag(string id, bool idIncludesSename = true)

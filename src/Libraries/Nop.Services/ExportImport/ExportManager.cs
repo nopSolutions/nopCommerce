@@ -15,6 +15,7 @@ using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Media;
 using Nop.Services.Messages;
+using Nop.Services.Seo;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 
@@ -72,7 +73,7 @@ public partial class ExportManager : IExportManager
                     xmlWriter.WriteElementString("MetaKeywords", null, category.MetaKeywords);
                     xmlWriter.WriteElementString("MetaDescription", null, category.MetaDescription);
                     xmlWriter.WriteElementString("MetaTitle", null, category.MetaTitle);
-                    xmlWriter.WriteElementString("SeName", null, category.SeName);
+                    xmlWriter.WriteElementString("SeName", null, category.GetSeName(0));
                     xmlWriter.WriteElementString("ParentCategoryId", null, category.ParentCategoryId.ToString());
                     xmlWriter.WriteElementString("PictureId", null, category.PictureId.ToString());
                     xmlWriter.WriteElementString("PageSize", null, category.PageSize.ToString());
@@ -141,7 +142,7 @@ public partial class ExportManager : IExportManager
                 xmlWriter.WriteElementString("MetaKeywords", null, manufacturer.MetaKeywords);
                 xmlWriter.WriteElementString("MetaDescription", null, manufacturer.MetaDescription);
                 xmlWriter.WriteElementString("MetaTitle", null, manufacturer.MetaTitle);
-                xmlWriter.WriteElementString("SEName", null, manufacturer.SeName);
+                xmlWriter.WriteElementString("SEName", null, manufacturer.GetSeName(0));
                 xmlWriter.WriteElementString("PictureId", null, manufacturer.PictureId.ToString());
                 xmlWriter.WriteElementString("PageSize", null, manufacturer.PageSize.ToString());
                 xmlWriter.WriteElementString("AllowCustomersToSelectPageSize", null, manufacturer.AllowCustomersToSelectPageSize.ToString());
@@ -230,7 +231,7 @@ public partial class ExportManager : IExportManager
                 xmlWriter.WriteElementString("MetaKeywords", null, product.MetaKeywords);
                 xmlWriter.WriteElementString("MetaDescription", null, product.MetaDescription);
                 xmlWriter.WriteElementString("MetaTitle", null, product.MetaTitle);
-                xmlWriter.WriteElementString("SEName", null, product.SeName);
+                xmlWriter.WriteElementString("SEName", null, product.GetSeName(0));
                 xmlWriter.WriteElementString("AllowCustomerReviews", null, product.AllowCustomerReviews.ToString());
                 xmlWriter.WriteElementString("Published", null, product.Published.ToString());
                 xmlWriter.WriteElementString("CreatedOnUtc", null, product.CreatedOnUtc.ToString());
@@ -572,7 +573,7 @@ public partial class ExportManager : IExportManager
                         worksheet.Cells[row, col].Value = p.MetaTitle;
                         col++;
 
-                        worksheet.Cells[row, col].Value = p.SeName;
+                        worksheet.Cells[row, col].Value = p.GetSeName(0);
                         col++;
 
                         worksheet.Cells[row, col].Value = p.AllowCustomerReviews;

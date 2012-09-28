@@ -12,6 +12,7 @@ using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Media;
 using Nop.Services.Security;
+using Nop.Services.Seo;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
 using Telerik.Web.Mvc;
@@ -27,6 +28,7 @@ namespace Nop.Admin.Controllers
         private readonly IManufacturerService _manufacturerService;
         private readonly IManufacturerTemplateService _manufacturerTemplateService;
         private readonly IProductService _productService;
+        private readonly IUrlRecordService _urlRecordService;
         private readonly IPictureService _pictureService;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
@@ -44,8 +46,8 @@ namespace Nop.Admin.Controllers
 
         public ManufacturerController(ICategoryService categoryService, IManufacturerService manufacturerService,
             IManufacturerTemplateService manufacturerTemplateService, IProductService productService,
-            IPictureService pictureService, ILanguageService languageService,
-            ILocalizationService localizationService, ILocalizedEntityService localizedEntityService,
+            IUrlRecordService urlRecordService, IPictureService pictureService,
+            ILanguageService languageService, ILocalizationService localizationService, ILocalizedEntityService localizedEntityService,
             IExportManager exportManager, IWorkContext workContext,
             ICustomerActivityService customerActivityService, IPermissionService permissionService,
             AdminAreaSettings adminAreaSettings, CatalogSettings catalogSettings)
@@ -54,6 +56,7 @@ namespace Nop.Admin.Controllers
             this._manufacturerTemplateService = manufacturerTemplateService;
             this._manufacturerService = manufacturerService;
             this._productService = productService;
+            this._urlRecordService = urlRecordService;
             this._pictureService = pictureService;
             this._languageService = languageService;
             this._localizationService = localizationService;
@@ -100,10 +103,9 @@ namespace Nop.Admin.Controllers
                                                            localized.MetaTitle,
                                                            localized.LanguageId);
 
-                _localizedEntityService.SaveLocalizedValue(manufacturer,
-                                                           x => x.SeName,
-                                                           localized.SeName,
-                                                           localized.LanguageId);
+                //search engine name
+                var seName = manufacturer.ValidateSeName(localized.SeName, localized.Name, false);
+                _urlRecordService.SaveSlug(manufacturer, seName, localized.LanguageId);
             }
         }
 
@@ -211,6 +213,9 @@ namespace Nop.Admin.Controllers
                 manufacturer.CreatedOnUtc = DateTime.UtcNow;
                 manufacturer.UpdatedOnUtc = DateTime.UtcNow;
                 _manufacturerService.InsertManufacturer(manufacturer);
+                //search engine name
+                model.SeName = manufacturer.ValidateSeName(model.SeName, manufacturer.Name, true);
+                _urlRecordService.SaveSlug(manufacturer, model.SeName, 0);
                 //locales
                 UpdateLocales(manufacturer, model);
                 //update picture seo file name
@@ -248,7 +253,7 @@ namespace Nop.Admin.Controllers
                 locale.MetaKeywords = manufacturer.GetLocalized(x => x.MetaKeywords, languageId, false, false);
                 locale.MetaDescription = manufacturer.GetLocalized(x => x.MetaDescription, languageId, false, false);
                 locale.MetaTitle = manufacturer.GetLocalized(x => x.MetaTitle, languageId, false, false);
-                locale.SeName = manufacturer.GetLocalized(x => x.SeName, languageId, false, false);
+                locale.SeName = manufacturer.GetSeName(languageId, false, false);
             });
             //templates
             PrepareTemplatesModel(model);
@@ -273,6 +278,9 @@ namespace Nop.Admin.Controllers
                 manufacturer = model.ToEntity(manufacturer);
                 manufacturer.UpdatedOnUtc = DateTime.UtcNow;
                 _manufacturerService.UpdateManufacturer(manufacturer);
+                //search engine name
+                model.SeName = manufacturer.ValidateSeName(model.SeName, manufacturer.Name, true);
+                _urlRecordService.SaveSlug(manufacturer, model.SeName, 0);
                 //locales
                 UpdateLocales(manufacturer, model);
                 //delete an old picture (if deleted or updated)

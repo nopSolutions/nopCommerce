@@ -5,6 +5,7 @@ using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Services.Catalog;
 using Nop.Services.Media;
+using Nop.Services.Seo;
 using OfficeOpenXml;
 
 namespace Nop.Services.ExportImport
@@ -18,14 +19,17 @@ namespace Nop.Services.ExportImport
         private readonly ICategoryService _categoryService;
         private readonly IManufacturerService _manufacturerService;
         private readonly IPictureService _pictureService;
+        private readonly IUrlRecordService _urlRecordService;
 
         public ImportManager(IProductService productService, ICategoryService categoryService,
-            IManufacturerService manufacturerService, IPictureService pictureService)
+            IManufacturerService manufacturerService, IPictureService pictureService,
+            IUrlRecordService urlRecordService)
         {
             this._productService = productService;
             this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
             this._pictureService = pictureService;
+            this._urlRecordService = urlRecordService;
         }
 
         protected virtual int GetColumnIndex(string[] properties, string columnName)
@@ -235,6 +239,7 @@ namespace Nop.Services.ExportImport
                     var productVariant = _productService.GetProductVariantBySku(sku);
                     if (productVariant != null)
                     {
+                        //product
                         var product = productVariant.Product;
                         product.Name = name;
                         product.ShortDescription = shortDescription;
@@ -244,14 +249,16 @@ namespace Nop.Services.ExportImport
                         product.MetaKeywords = metaKeywords;
                         product.MetaDescription = metaDescription;
                         product.MetaTitle = metaTitle;
-                        product.SeName = seName;
                         product.AllowCustomerReviews = allowCustomerReviews;
                         product.Published = published;
                         product.CreatedOnUtc = createdOnUtc;
                         product.UpdatedOnUtc = DateTime.UtcNow;
-
                         _productService.UpdateProduct(product);
 
+                        //search engine name
+                        _urlRecordService.SaveSlug(product, product.ValidateSeName(seName, product.Name, true), 0);
+
+                        //variant
                         productVariant.Name = productVariantName;
                         productVariant.Sku = sku;
                         productVariant.ManufacturerPartNumber = manufacturerPartNumber;
@@ -315,6 +322,7 @@ namespace Nop.Services.ExportImport
                     }
                     else
                     {
+                        //product
                         var product = new Product()
                         {
                             Name = name,
@@ -324,7 +332,6 @@ namespace Nop.Services.ExportImport
                             MetaKeywords = metaKeywords,
                             MetaDescription = metaDescription,
                             MetaTitle = metaTitle,
-                            SeName = seName,
                             AllowCustomerReviews = allowCustomerReviews,
                             Published = published,
                             CreatedOnUtc = createdOnUtc,
@@ -332,6 +339,10 @@ namespace Nop.Services.ExportImport
                         };
                         _productService.InsertProduct(product);
 
+                        //search engine name
+                        _urlRecordService.SaveSlug(product, product.ValidateSeName(seName, product.Name, true), 0);
+
+                        //vairant
                         productVariant = new ProductVariant()
                         {
                             ProductId = product.Id,

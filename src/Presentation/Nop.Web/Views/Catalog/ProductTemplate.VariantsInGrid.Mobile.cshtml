@@ -25,7 +25,7 @@
     <div class="page-body">
         @Html.Widget("mobile_productdetails_top")
         @*we add enctype = "multipart/form-data" because "File upload" attribute control type requries it*@
-        @using (Html.BeginRouteForm("Product", new { productId = Model.Id, SeName = Model.SeName }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+        @using (Html.BeginRouteForm("Product", new { SeName = Model.SeName }, FormMethod.Post, new { enctype = "multipart/form-data" }))
         {
             <div class="product-essential">
                 <div class="overview">

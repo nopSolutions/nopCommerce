@@ -20,6 +20,7 @@ using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
 using Telerik.Web.Mvc;
+using Nop.Services.Seo;
 
 namespace Nop.Admin.Controllers
 {
@@ -32,6 +33,7 @@ namespace Nop.Admin.Controllers
         private readonly IProductTemplateService _productTemplateService;
         private readonly ICategoryService _categoryService;
         private readonly IManufacturerService _manufacturerService;
+        private readonly IUrlRecordService _urlRecordService;
         private readonly IWorkContext _workContext;
         private readonly ILanguageService _languageService;
         private readonly ILocalizationService _localizationService;
@@ -56,7 +58,7 @@ namespace Nop.Admin.Controllers
         public ProductController(IProductService productService, 
             IProductTemplateService productTemplateService,
             ICategoryService categoryService, IManufacturerService manufacturerService,
-            IWorkContext workContext, ILanguageService languageService, 
+            IUrlRecordService urlRecordService, IWorkContext workContext, ILanguageService languageService, 
             ILocalizationService localizationService, ILocalizedEntityService localizedEntityService,
             ISpecificationAttributeService specificationAttributeService, IPictureService pictureService,
             ITaxCategoryService taxCategoryService, IProductTagService productTagService,
@@ -70,6 +72,7 @@ namespace Nop.Admin.Controllers
             this._productTemplateService = productTemplateService;
             this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
+            this._urlRecordService = urlRecordService;
             this._workContext = workContext;
             this._languageService = languageService;
             this._localizationService = localizationService;
@@ -121,10 +124,10 @@ namespace Nop.Admin.Controllers
                                                                x => x.MetaTitle,
                                                                localized.MetaTitle,
                                                                localized.LanguageId);
-                _localizedEntityService.SaveLocalizedValue(product,
-                                                               x => x.SeName,
-                                                               localized.SeName,
-                                                               localized.LanguageId);
+
+                //search engine name
+                var seName = product.ValidateSeName(localized.SeName, localized.Name, false);
+                _urlRecordService.SaveSlug(product, seName, localized.LanguageId);
             }
         }
 
@@ -549,7 +552,12 @@ namespace Nop.Admin.Controllers
                 product.CreatedOnUtc = DateTime.UtcNow;
                 product.UpdatedOnUtc = DateTime.UtcNow;
                 _productService.InsertProduct(product);
+                //search engine name
+                model.SeName = product.ValidateSeName(model.SeName, product.Name, true);
+                _urlRecordService.SaveSlug(product, model.SeName, 0);
+                //locales
                 UpdateLocales(product, model);
+                //tags
                 SaveProductTags(product, ParseProductTags(model.ProductTags));
 
                 //default product variant
@@ -602,7 +610,7 @@ namespace Nop.Admin.Controllers
                     locale.MetaKeywords = product.GetLocalized(x => x.MetaKeywords, languageId, false, false);
                     locale.MetaDescription = product.GetLocalized(x => x.MetaDescription, languageId, false, false);
                     locale.MetaTitle = product.GetLocalized(x => x.MetaTitle, languageId, false, false);
-                    locale.SeName = product.GetLocalized(x => x.SeName, languageId, false, false);
+                    locale.SeName = product.GetSeName(languageId, false, false);
                 });
 
             PrepareTags(model, product);
@@ -629,11 +637,18 @@ namespace Nop.Admin.Controllers
 
             if (ModelState.IsValid)
             {
+                //product
                 product = model.ToEntity(product);
                 product.UpdatedOnUtc = DateTime.UtcNow;
                 _productService.UpdateProduct(product);
+                //search engine name
+                model.SeName = product.ValidateSeName(model.SeName, product.Name, true);
+                _urlRecordService.SaveSlug(product, model.SeName, 0);
+                //locales
                 UpdateLocales(product, model);
+                //tags
                 SaveProductTags(product, ParseProductTags(model.ProductTags));
+                //picture seo names
                 UpdatePictureSeoNames(product);
 
                 //activity log

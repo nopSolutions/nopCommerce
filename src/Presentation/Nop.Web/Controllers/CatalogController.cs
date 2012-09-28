@@ -2118,7 +2118,7 @@ namespace Nop.Web.Controllers
                 false, out filterableSpecificationAttributeOptionIds);
             foreach (var product in products)
             {
-                string productUrl = Url.RouteUrl("Product", new { productId = product.Id, SeName = product.GetSeName() }, "http");
+                string productUrl = Url.RouteUrl("Product", new { SeName = product.GetSeName() }, "http");
                 items.Add(new SyndicationItem(product.GetLocalized(x => x.Name), product.GetLocalized(x => x.ShortDescription), new Uri(productUrl), String.Format("RecentlyAddedProduct:{0}", product.Id), product.CreatedOnUtc));
             }
             feed.Items = items;
@@ -2961,7 +2961,7 @@ namespace Nop.Web.Controllers
                           select new
                           {
                               label = p.Name,
-                              producturl = Url.RouteUrl("Product", new { productId = p.Id, SeName = p.SeName }),
+                              producturl = Url.RouteUrl("Product", new { SeName = p.SeName }),
                               productpictureurl = p.DefaultPictureModel.ImageUrl
                           })
                           .ToList();

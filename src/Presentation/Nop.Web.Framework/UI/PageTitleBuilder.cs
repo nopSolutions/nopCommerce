@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Seo;
 
 namespace Nop.Web.Framework.UI
 {

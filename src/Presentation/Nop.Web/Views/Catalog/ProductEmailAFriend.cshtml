@@ -27,7 +27,7 @@
                                
             <fieldset>
                 <p>
-                    <a href="@Url.RouteUrl("Product", new { productId = Model.ProductId, SeName = Model.ProductSeName })" class="product">@Model.ProductName</a>
+                    <a href="@Url.RouteUrl("Product", new { SeName = Model.ProductSeName })" class="product">@Model.ProductName</a>
                 </p>
                 <p class="message-error">
                     @Html.ValidationSummary(true)

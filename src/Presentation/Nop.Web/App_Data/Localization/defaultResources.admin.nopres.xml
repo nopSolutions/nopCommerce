@@ -720,7 +720,7 @@
                                         <Value>Search engine friendly page name</Value>
                                         <Children>
                                             <LocaleResource Name="Hint">
-                                                <Value>Set a search engine friendly page name e.g. 'The Best Computers' to make your page name '##-the-best-computers.aspx' (## represents the category ID). The default is the name of category.</Value>
+                                                <Value>Set a search engine friendly page name e.g. 'the-best-category' to make your page URL 'http://www.yourStore.com/the-best-category'. Leave empty to generate it automatically based on the name of the category.</Value>
                                             </LocaleResource>
                                         </Children>
                                     </LocaleResource>
@@ -919,7 +919,7 @@
                                         <Value>Search engine friendly page name</Value>
                                         <Children>
                                             <LocaleResource Name="Hint">
-                                                <Value>Set a search engine friendly page name e.g. 'The Best Computers' to make your page name '##-the-best-computers.aspx' (## represents the manufacturer ID). The default is the name of manufacturer.</Value>
+                                                <Value>Set a search engine friendly page name e.g. 'the-best-manufacturer' to make your page URL 'http://www.yourStore.com/the-best-manufacturer'. Leave empty to generate it automatically based on the name of the manufacturer.</Value>
                                             </LocaleResource>
                                         </Children>
                                     </LocaleResource>
@@ -1321,7 +1321,7 @@
                                         <Value>Search engine friendly page name</Value>
                                         <Children>
                                             <LocaleResource Name="Hint">
-                                                <Value>Set a search engine friendly page name e.g. 'The Best Product' to make your page name '##\the-best-product' (## represents the product ID). The default is the name of the product.</Value>
+                                                <Value>Set a search engine friendly page name e.g. 'the-best-product' to make your page URL 'http://www.yourStore.com/the-best-product'. Leave empty to generate it automatically based on the name of the product.</Value>
                                             </LocaleResource>
                                         </Children>
                                     </LocaleResource>

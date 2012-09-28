@@ -65,8 +65,10 @@
     <Compile Include="Domain\Cms\WidgetSettings.cs" />
     <Compile Include="Domain\Common\FulltextSearchMode.cs" />
     <Compile Include="Domain\Common\GenericAttribute.cs" />
-    <Compile Include="Domain\Common\PageTitleSeoAdjustment.cs" />
+    <Compile Include="Domain\Seo\PageTitleSeoAdjustment.cs" />
     <Compile Include="Domain\Orders\Events.cs" />
+    <Compile Include="Domain\Seo\ISlugSupported.cs" />
+    <Compile Include="Domain\Seo\UrlRecord.cs" />
     <Compile Include="Domain\Shipping\ShipmentOrderProductVariant.cs" />
     <Compile Include="Domain\Shipping\Shipment.cs" />
     <Compile Include="Domain\Tasks\ScheduleTask.cs" />
@@ -83,7 +85,7 @@
     <Compile Include="Domain\Catalog\CategoryTemplate.cs" />
     <Compile Include="Domain\Catalog\ProductTemplate.cs" />
     <Compile Include="Domain\Common\AdminAreaSettings.cs" />
-    <Compile Include="Domain\Common\SeoSettings.cs" />
+    <Compile Include="Domain\Seo\SeoSettings.cs" />
     <Compile Include="Domain\Customers\ExternalAuthenticationSettings.cs" />
     <Compile Include="Domain\Customers\ExternalAuthenticationRecord.cs" />
     <Compile Include="Domain\Customers\SystemCustomerNames.cs" />

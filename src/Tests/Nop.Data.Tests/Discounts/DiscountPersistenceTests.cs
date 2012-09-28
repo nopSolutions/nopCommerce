@@ -162,7 +162,6 @@ namespace Nop.Data.Tests.Discounts
                 MetaKeywords = "Meta keywords",
                 MetaDescription = "Meta description",
                 MetaTitle = "Meta title",
-                SeName = "SE name",
                 ParentCategoryId = 2,
                 PictureId = 3,
                 PageSize = 4,

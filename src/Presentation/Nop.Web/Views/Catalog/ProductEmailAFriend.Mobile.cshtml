@@ -9,7 +9,7 @@
 }
 <div class="page email-a-friend-page">
     <div class="page-title">
-        <a href="@Url.RouteUrl("Product", new { productId = Model.ProductId, SeName = Model.ProductSeName })" class="product">@Model.ProductName</a>
+        <a href="@Url.RouteUrl("Product", new { SeName = Model.ProductSeName })" class="product">@Model.ProductName</a>
     </div>
     <div class="page-body">
         @if (Model.SuccessfullySent)

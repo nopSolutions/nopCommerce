@@ -14,13 +14,13 @@ namespace Nop.Web.Infrastructure
                             "",
                             new { controller = "Home", action = "Index"},
                             new[] { "Nop.Web.Controllers" });
+            //install
+            routes.MapRoute("Installation",
+                            "install",
+                            new { controller = "Install", action = "Index" },
+                            new[] { "Nop.Web.Controllers" });
 
             //products
-            routes.MapLocalizedRoute("Product",
-                            "p/{productId}/{SeName}",
-                            new { controller = "Catalog", action = "Product", SeName = UrlParameter.Optional },
-                            new { productId = @"\d+" },
-                            new[] { "Nop.Web.Controllers" });
             routes.MapLocalizedRoute("RecentlyViewedProducts",
                             "recentlyviewedproducts/",
                             new { controller = "Catalog", action = "RecentlyViewedProducts" },
@@ -61,19 +61,9 @@ namespace Nop.Web.Infrastructure
                             new[] { "Nop.Web.Controllers" });
 
             //catalog
-            routes.MapLocalizedRoute("Category",
-                            "c/{categoryId}/{SeName}",
-                            new { controller = "Catalog", action = "Category", SeName = UrlParameter.Optional },
-                            new { categoryId = @"\d+" },
-                            new[] { "Nop.Web.Controllers" });
             routes.MapLocalizedRoute("ManufacturerList",
                             "manufacturer/all/",
                             new { controller = "Catalog", action = "ManufacturerAll" },
-                            new[] { "Nop.Web.Controllers" });
-            routes.MapLocalizedRoute("Manufacturer",
-                            "m/{manufacturerId}/{SeName}",
-                            new { controller = "Catalog", action = "Manufacturer", SeName = UrlParameter.Optional },
-                            new { manufacturerId = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
             //downloads
             routes.MapRoute("GetSampleDownload",
@@ -665,7 +655,6 @@ namespace Nop.Web.Infrastructure
                             "robots.txt",
                             new { controller = "Common", action = "RobotsTextFile" },
                             new[] { "Nop.Web.Controllers" });
-
         }
 
         public int Priority

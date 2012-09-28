@@ -272,7 +272,7 @@ namespace Nop.Services.Media
             //return name2.ToLowerInvariant();
 
             //use SeoExtensions implementation
-            return SeoExtensions.GetSeName(name, true, false, false);
+            return SeoExtensions.GetSeName(name, true, false);
         }
 
         /// <summary>

@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Seo;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
 

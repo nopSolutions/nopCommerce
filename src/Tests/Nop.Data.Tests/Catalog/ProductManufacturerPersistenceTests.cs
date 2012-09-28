@@ -30,7 +30,6 @@ namespace Nop.Data.Tests.Catalog
                                                                           MetaKeywords = "Meta keywords",
                                                                           MetaDescription = "Meta description",
                                                                           MetaTitle = "Meta title",
-                                                                          SeName = "SE name",
                                                                           PictureId = 3,
                                                                           PageSize = 4,
                                                                           PriceRanges = "1-3;",

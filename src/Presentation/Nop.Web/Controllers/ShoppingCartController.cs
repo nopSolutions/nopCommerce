@@ -918,7 +918,7 @@ namespace Nop.Web.Controllers
                 //we can add a product to the cart only if it has exactly one product variant
                 return Json(new
                 {
-                    redirect = Url.RouteUrl("Product", new { productId = product.Id, SeName = product.GetSeName() }),
+                    redirect = Url.RouteUrl("Product", new { SeName = product.GetSeName() }),
                 });
             }
 
@@ -929,7 +929,7 @@ namespace Nop.Web.Controllers
                 //cannot be added to the cart (requires a customer to enter price)
                 return Json(new
                 {
-                    redirect = Url.RouteUrl("Product", new { productId = product.Id, SeName = product.GetSeName() }),
+                    redirect = Url.RouteUrl("Product", new { SeName = product.GetSeName() }),
                 });
             }
 
@@ -943,7 +943,7 @@ namespace Nop.Web.Controllers
                 //cannot be added to the cart (requires a customer to select a quantity from dropdownlist)
                 return Json(new
                 {
-                    redirect = Url.RouteUrl("Product", new { productId = product.Id, SeName = product.GetSeName() }),
+                    redirect = Url.RouteUrl("Product", new { SeName = product.GetSeName() }),
                 });
             }
 
@@ -983,7 +983,7 @@ namespace Nop.Web.Controllers
                 //but we do not display attribute and gift card warnings here. let's do it on the product details page
                 return Json(new
                 {
-                    redirect = Url.RouteUrl("Product", new { productId = product.Id, SeName = product.GetSeName() }),
+                    redirect = Url.RouteUrl("Product", new { SeName = product.GetSeName() }),
                 });
             }
 

@@ -48,7 +48,7 @@
                                 <img alt="@product.DefaultPictureModel.AlternateText" src="@product.DefaultPictureModel.ImageUrl" title="@product.DefaultPictureModel.Title" />
                             </div>
                             <div class="product-name">
-                                <a class="link" href="@Url.RouteUrl("Product", new { productId = product.Id, SeName = product.SeName })">@product.Name</a>
+                                <a class="link" href="@Url.RouteUrl("Product", new { SeName = product.SeName })">@product.Name</a>
                             </div>
                             <div class="product-price">
                                 @T("Products.Compare.Price"): @product.ProductPrice.Price

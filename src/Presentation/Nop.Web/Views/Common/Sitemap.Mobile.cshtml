@@ -35,7 +35,7 @@
                 {
                     <div class="category-box">
                         <div class="item">
-                            <a href="@Url.RouteUrl("Category", new { categoryId = item.Id, SeName = item.SeName })">@item.Name</a>
+                            <a href="@Url.RouteUrl("Category", new { SeName = item.SeName })">@item.Name</a>
                         </div>
                     </div>
                 }
@@ -50,7 +50,7 @@
                 {
                     <div class="manufacturer-box">
                         <div class="item">
-                            <a href="@Url.RouteUrl("Manufacturer", new { manufacturerId = item.Id, SeName = item.SeName })">@item.Name</a>
+                            <a href="@Url.RouteUrl("Manufacturer", new { SeName = item.SeName })">@item.Name</a>
                         </div>
                     </div>
                 }
@@ -65,7 +65,7 @@
                 {
                     <div class="product-box">
                         <div class="item">
-                            <a href="@Url.RouteUrl("Product", new { productId = item.Id, SeName = item.SeName })">@item.Name</a>
+                            <a href="@Url.RouteUrl("Product", new { SeName = item.SeName })">@item.Name</a>
                         </div>
                     </div>
                 }

@@ -1546,7 +1546,7 @@
                     </LocaleResource>
                 </Children>
             </LocaleResource>
-            <LocaleResource Name="Nop.Core.Domain.Common.PageTitleSeoAdjustment">
+            <LocaleResource Name="Nop.Core.Domain.Seo.PageTitleSeoAdjustment">
                 <Children>
                     <LocaleResource Name="PagenameAfterStorename">
                         <Value>Page name comes after store name</Value>

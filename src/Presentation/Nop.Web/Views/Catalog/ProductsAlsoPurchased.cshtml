@@ -13,11 +13,11 @@
             @<div class="item-box">
                 <div class="item">
                     <div class="product-title">
-                        <a href="@Url.RouteUrl("Product", new { productId = item.Id, SeName = item.SeName })" title="@item.DefaultPictureModel.Title">
+                        <a href="@Url.RouteUrl("Product", new { SeName = item.SeName })" title="@item.DefaultPictureModel.Title">
                             @item.Name</a>
                     </div>
                     <div class="picture">
-                        <a href="@Url.RouteUrl("Product", new { productId = item.Id, SeName = item.SeName })" title="@item.DefaultPictureModel.Title">
+                        <a href="@Url.RouteUrl("Product", new { SeName = item.SeName })" title="@item.DefaultPictureModel.Title">
                             <img alt="@item.DefaultPictureModel.AlternateText" src="@item.DefaultPictureModel.ImageUrl" title="@item.DefaultPictureModel.Title" /></a>
                     </div>
                 </div>

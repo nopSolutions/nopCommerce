@@ -41,9 +41,9 @@ using Nop.Core.Infrastructure;
 using Nop.Core.Plugins;
 using Nop.Services.Authentication.External;
 using Nop.Services.Cms;
-using Nop.Services.Messages;
 using Nop.Services.Payments;
 using Nop.Services.Shipping;
+using Nop.Services.Seo;
 using Nop.Services.Tax;
 
 namespace Nop.Admin.Infrastructure
@@ -136,7 +136,8 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.Breadcrumb, mo => mo.Ignore())
                 .ForMember(dest => dest.ParentCategories, mo => mo.Ignore())
                 .ForMember(dest => dest.AvailableDiscounts, mo => mo.Ignore())
-                .ForMember(dest => dest.SelectedDiscountIds, mo => mo.Ignore());
+                .ForMember(dest => dest.SelectedDiscountIds, mo => mo.Ignore())
+                .ForMember(dest => dest.SeName, mo => mo.MapFrom(src => src.GetSeName(0, true, false)));
             Mapper.CreateMap<CategoryModel, Category>()
                 .ForMember(dest => dest.HasDiscountsApplied, mo => mo.Ignore())
                 .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
@@ -146,7 +147,8 @@ namespace Nop.Admin.Infrastructure
             //manufacturer
             Mapper.CreateMap<Manufacturer, ManufacturerModel>()
                 .ForMember(dest => dest.AvailableManufacturerTemplates, mo => mo.Ignore())
-                .ForMember(dest => dest.Locales, mo => mo.Ignore());
+                .ForMember(dest => dest.Locales, mo => mo.Ignore())
+                .ForMember(dest => dest.SeName, mo => mo.MapFrom(src => src.GetSeName(0, true, false)));
             Mapper.CreateMap<ManufacturerModel, Manufacturer>()
                 .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())
                 .ForMember(dest => dest.UpdatedOnUtc, mo => mo.Ignore())
@@ -164,7 +166,8 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.AddPictureModel, mo => mo.Ignore())
                 .ForMember(dest => dest.ProductPictureModels, mo => mo.Ignore())
                 .ForMember(dest => dest.AddSpecificationAttributeModel, mo => mo.Ignore())
-                .ForMember(dest => dest.CopyProductModel, mo => mo.Ignore());
+                .ForMember(dest => dest.CopyProductModel, mo => mo.Ignore())
+                .ForMember(dest => dest.SeName, mo => mo.MapFrom(src => src.GetSeName(0, true, false)));
             Mapper.CreateMap<ProductModel, Product>()
                 .ForMember(dest => dest.ProductTags, mo => mo.Ignore())
                 .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())

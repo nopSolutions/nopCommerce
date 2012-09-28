@@ -8,12 +8,13 @@
     var canonicalUrlsEnabled = EngineContext.Current.Resolve<SeoSettings>().CanonicalUrlsEnabled;
     if (canonicalUrlsEnabled)
     {
-        var categoryUrl = Url.RouteUrl("Category", new { categoryId = Model.Id, SeName = Model.SeName }, this.Request.Url.Scheme);
+        var categoryUrl = Url.RouteUrl("Category", new { SeName = Model.SeName }, this.Request.Url.Scheme);
         Html.AddCanonicalUrlParts(categoryUrl);
     }
 }
 @using Nop.Core;
 @using Nop.Core.Domain.Common;
+@using Nop.Core.Domain.Seo;
 @using Nop.Core.Infrastructure;
 @using Nop.Web;
 @using Nop.Web.Models.Catalog;
@@ -34,11 +35,11 @@
                     {
                         @*uncomment to disable clickable link
                         <strong>@cat.Name</strong>*@
-                        <strong><a href="@Url.RouteUrl("Category", new { categoryId = cat.Id, SeName = cat.SeName })" title="@cat.Name">@cat.Name</a></strong>
+                        <strong><a href="@Url.RouteUrl("Category", new { SeName = cat.SeName })" title="@cat.Name">@cat.Name</a></strong>
                     }
                     else
                     {
-                        <a href="@Url.RouteUrl("Category", new { categoryId = cat.Id, SeName = cat.SeName })" title="@cat.Name">@cat.Name</a>
+                        <a href="@Url.RouteUrl("Category", new { SeName = cat.SeName })" title="@cat.Name">@cat.Name</a>
                         <span class="delimiter">/</span>
                     }
                 </li>
@@ -76,11 +77,11 @@
                 @<div class="item-box">
                     <div class="sub-category-item">
                         <h2 class="category-title">
-                            <a href="@Url.RouteUrl("Category", new { categoryId = item.Id, SeName = item.SeName })" title="@item.PictureModel.Title">
+                            <a href="@Url.RouteUrl("Category", new { SeName = item.SeName })" title="@item.PictureModel.Title">
                                 @item.Name</a>
                         </h2>
                         <div class="picture">
-                            <a href="@Url.RouteUrl("Category", new { categoryId = item.Id, SeName = item.SeName })" title="@item.PictureModel.Title">
+                            <a href="@Url.RouteUrl("Category", new { SeName = item.SeName })" title="@item.PictureModel.Title">
                                 <img alt="@item.PictureModel.AlternateText" src="@item.PictureModel.ImageUrl"
                                     title="@item.PictureModel.Title" /></a>
                         </div>

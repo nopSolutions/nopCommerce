@@ -236,8 +236,7 @@ namespace Nop.Plugin.Feed.Froogle
                         }
 
                         //link [link] - URL directly linking to your item's page on your website
-                        var productUrl = string.Format("{0}p/{1}/{2}", _webHelper.GetStoreLocation(false), product.Id,
-                                                       product.GetSeName(_workContext.WorkingLanguage.Id));
+                        var productUrl = string.Format("{0}{1}", _webHelper.GetStoreLocation(false), product.GetSeName(_workContext.WorkingLanguage.Id));
                         writer.WriteElementString("link", productUrl);
 
                         //image link [image_link] - URL of an image of the item

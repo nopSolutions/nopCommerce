@@ -24,7 +24,7 @@
                         <li>
                             <div class="item">
                                 <div>
-                                    @Html.RouteLink(biss.ProductName, "Product", new { productId = biss.ProductId, SeName = biss.SeName })
+                                    @Html.RouteLink(biss.ProductName, "Product", new { SeName = biss.SeName })
                                 </div>
                                 <div class="buttons">
                                     <a href="@Url.RouteUrl("DeleteBackInStockSubscription", new { subscriptionId = @biss.Id })" data-role="button">@T("Common.Delete")</a>

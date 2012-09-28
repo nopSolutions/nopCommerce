@@ -741,6 +741,11 @@ namespace Nop.Web.Controllers
             return null;
         }
 
+        public ActionResult GenericUrl()
+        {
+            //seems that no entity was found
+            return RedirectToRoute("HomePage");
+        }
         #endregion
     }
 }

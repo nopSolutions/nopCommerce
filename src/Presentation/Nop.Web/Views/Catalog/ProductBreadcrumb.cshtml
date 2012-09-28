@@ -8,13 +8,13 @@
         @for (int i = 0; i < Model.CategoryBreadcrumb.Count; i++)
         {
             var catBr = Model.CategoryBreadcrumb[i];
-            <li><a href="@Url.RouteUrl("Category", new { categoryId = catBr.Id, SeName = catBr.SeName })" title="@catBr.Name">@catBr.Name</a>
+            <li><a href="@Url.RouteUrl("Category", new { SeName = catBr.SeName })" title="@catBr.Name">@catBr.Name</a>
                 <span class="delimiter">/</span></li>
         }
         @*uncomment to disable clickable link
         <strong>@Model.ProductName</strong>*@
         <li>
-            <strong><a href="@Url.RouteUrl("Product", new { productId = Model.ProductId, SeName = Model.ProductSeName })">@Model.ProductName</a></strong>
+            <strong><a href="@Url.RouteUrl("Product", new { SeName = Model.ProductSeName })">@Model.ProductName</a></strong>
             @Html.Widget("productbreadcrumb_after")
         </li>
     </ul>

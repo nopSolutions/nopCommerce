@@ -1,7 +1,8 @@
 ﻿
+using System.Collections.Generic;
 using Nop.Core.Configuration;
 
-namespace Nop.Core.Domain.Common
+namespace Nop.Core.Domain.Seo
 {
     public class SeoSettings : ISettings
     {
@@ -15,5 +16,10 @@ namespace Nop.Core.Domain.Common
         public bool AllowUnicodeCharsInUrls { get; set; }
 
         public bool CanonicalUrlsEnabled { get; set; }
+
+        /// <summary>
+        /// Slugs (sename) reserved for some other needs
+        /// </summary>
+        public List<string> ReservedUrlRecordSlugs { get; set; }
     }
 }

@@ -62,7 +62,7 @@
                                     <input type="checkbox" name="biss@(item.Id)" class="rowcheckbox" />
                                 </td>
                                 <td class="a-left">
-                                    @Html.RouteLink(item.ProductName, "Product", new { productId = item.ProductId, SeName = item.SeName })
+                                    @Html.RouteLink(item.ProductName, "Product", new { SeName = item.SeName })
                                 </td>
                             </tr>
                         }

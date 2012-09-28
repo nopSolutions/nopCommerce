@@ -36,6 +36,8 @@ using Nop.Services.Customers;
 using Nop.Services.Helpers;
 using Nop.Services.Media;
 using Nop.Services.Localization;
+using Nop.Services.Seo;
+using Nop.Core.Domain.Seo;
 
 namespace Nop.Services.Installation
 {
@@ -55,6 +57,7 @@ namespace Nop.Services.Installation
         private readonly IRepository<Category> _categoryRepository;
         private readonly IRepository<Manufacturer> _manufacturerRepository;
         private readonly IRepository<Product> _productRepository;
+        private readonly IRepository<UrlRecord> _urlRecordRepository;
         private readonly IRepository<RelatedProduct> _relatedProductRepository;
         private readonly IRepository<EmailAccount> _emailAccountRepository;
         private readonly IRepository<MessageTemplate> _messageTemplateRepository;
@@ -93,6 +96,7 @@ namespace Nop.Services.Installation
             IRepository<Category> categoryRepository,
             IRepository<Manufacturer> manufacturerRepository,
             IRepository<Product> productRepository,
+            IRepository<UrlRecord> urlRecordRepository,
             IRepository<RelatedProduct> relatedProductRepository,
             IRepository<EmailAccount> emailAccountRepository,
             IRepository<MessageTemplate> messageTemplateRepository,
@@ -127,6 +131,7 @@ namespace Nop.Services.Installation
             this._categoryRepository = categoryRepository;
             this._manufacturerRepository = manufacturerRepository;
             this._productRepository = productRepository;
+            this._urlRecordRepository = urlRecordRepository;
             this._relatedProductRepository = relatedProductRepository;
             this._emailAccountRepository = emailAccountRepository;
             this._messageTemplateRepository = messageTemplateRepository;
@@ -4472,6 +4477,7 @@ namespace Nop.Services.Installation
                     DefaultMetaDescription = "",
                     ConvertNonWesternChars = false,
                     AllowUnicodeCharsInUrls = true,
+                    ReservedUrlRecordSlugs = new List<string>() { "admin", "install", "recentlyviewedproducts", "newproducts", "compareproducts", "clearcomparelist", "setproductreviewhelpfulness", "login", "register", "logout", "cart", "wishlist", "emailwishlist", "checkout", "onepagecheckout", "contactus", "passwordrecovery", "subscribenewsletter", "blog", "boards", "inboxupdate", "sentupdate", "news", "sitemap", "sitemapseo", "search", "config", "eucookielawaccept" },
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<AdminAreaSettings>>()
@@ -4969,6 +4975,7 @@ namespace Nop.Services.Installation
 
 
             //categories
+            var allCategories = new List<Category>();
             var categoryBooks = new Category
             {
                 Name = "Books",
@@ -4985,8 +4992,8 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allCategories.Add(categoryBooks);
             _categoryRepository.Insert(categoryBooks);
-
 
             var categoryComputers = new Category
             {
@@ -5001,6 +5008,7 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allCategories.Add(categoryComputers);
             _categoryRepository.Insert(categoryComputers);
 
 
@@ -5019,6 +5027,7 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allCategories.Add(categoryDesktops);
             _categoryRepository.Insert(categoryDesktops);
 
 
@@ -5036,6 +5045,7 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allCategories.Add(categoryNotebooks);
             _categoryRepository.Insert(categoryNotebooks);
 
 
@@ -5054,6 +5064,7 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allCategories.Add(categoryAccessories);
             _categoryRepository.Insert(categoryAccessories);
 
 
@@ -5071,6 +5082,7 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allCategories.Add(categorySoftware);
             _categoryRepository.Insert(categorySoftware);
 
 
@@ -5088,6 +5100,7 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allCategories.Add(categoryGames);
             _categoryRepository.Insert(categoryGames);
 
 
@@ -5105,6 +5118,7 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allCategories.Add(categoryElectronics);
             _categoryRepository.Insert(categoryElectronics);
 
 
@@ -5123,6 +5137,7 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allCategories.Add(categoryCameraPhoto);
             _categoryRepository.Insert(categoryCameraPhoto);
 
 
@@ -5140,6 +5155,7 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allCategories.Add(categoryCellPhones);
             _categoryRepository.Insert(categoryCellPhones);
 
 
@@ -5156,6 +5172,7 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allCategories.Add(categoryApparelShoes);
             _categoryRepository.Insert(categoryApparelShoes);
 
 
@@ -5174,6 +5191,7 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allCategories.Add(categoryShirts);
             _categoryRepository.Insert(categoryShirts);
 
 
@@ -5192,6 +5210,7 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allCategories.Add(categoryJeans);
             _categoryRepository.Insert(categoryJeans);
 
 
@@ -5210,6 +5229,7 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allCategories.Add(categoryShoes);
             _categoryRepository.Insert(categoryShoes);
 
 
@@ -5228,6 +5248,7 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allCategories.Add(categoryAccessoriesShoes);
             _categoryRepository.Insert(categoryAccessoriesShoes);
 
 
@@ -5244,6 +5265,7 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allCategories.Add(categoryDigitalDownloads);
             _categoryRepository.Insert(categoryDigitalDownloads);
 
 
@@ -5261,6 +5283,7 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allCategories.Add(categoryJewelry);
             _categoryRepository.Insert(categoryJewelry);
 
             var categoryGiftCards = new Category
@@ -5276,7 +5299,22 @@ namespace Nop.Services.Installation
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allCategories.Add(categoryGiftCards);
             _categoryRepository.Insert(categoryGiftCards);
+
+
+
+            //search engine names
+            foreach (var category in allCategories)
+            {
+                _urlRecordRepository.Insert(new UrlRecord()
+                {
+                    EntityId = category.Id,
+                    EntityName = "Category",
+                    LanguageId = 0,
+                    Slug = category.ValidateSeName("", category.Name, true)
+                });
+            }
         }
 
         protected virtual void InstallManufacturers()
@@ -5284,7 +5322,7 @@ namespace Nop.Services.Installation
             var manufacturerTemplateInGridAndLines =
                 _manufacturerTemplateRepository.Table.Where(pt => pt.Name == "Products in Grid or Lines").FirstOrDefault();
 
-
+            var allManufacturers = new List<Manufacturer>();
             var manufacturerAsus = new Manufacturer
             {
                 Name = "ASUS",
@@ -5298,6 +5336,8 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             _manufacturerRepository.Insert(manufacturerAsus);
+            allManufacturers.Add(manufacturerAsus);
+
 
             var manufacturerHp = new Manufacturer
             {
@@ -5312,6 +5352,20 @@ namespace Nop.Services.Installation
                 UpdatedOnUtc = DateTime.UtcNow
             };
             _manufacturerRepository.Insert(manufacturerHp);
+            allManufacturers.Add(manufacturerHp);
+
+
+            //search engine names
+            foreach (var manufacturer in allManufacturers)
+            {
+                _urlRecordRepository.Insert(new UrlRecord()
+                {
+                    EntityId = manufacturer.Id,
+                    EntityName = "Manufacturer",
+                    LanguageId = 0,
+                    Slug = manufacturer.ValidateSeName("", manufacturer.Name, true)
+                });
+            }
         }
 
         protected virtual void InstallProducts()
@@ -5331,17 +5385,20 @@ namespace Nop.Services.Installation
 
 
             //products
+            var allProducts = new List<Product>();
             var product5GiftCard = new Product()
             {
                 Name = "$5 Virtual Gift Card",
                 ShortDescription = "$5 Gift Card. Gift Cards must be redeemed through our site Web site toward the purchase of eligible products.",
                 FullDescription = "<p>Gift Cards must be redeemed through our site Web site toward the purchase of eligible products. Purchases are deducted from the GiftCard balance. Any unused balance will be placed in the recipient's GiftCard account when redeemed. If an order exceeds the amount of the GiftCard, the balance must be paid with a credit card or other available payment method.</p>",
                 ProductTemplateId = productTemplateSingleVariant.Id,
+                //SeName = "5-virtual-gift-card",
                 AllowCustomerReviews = true,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allProducts.Add(product5GiftCard);
             product5GiftCard.ProductVariants.Add(new ProductVariant()
             {
                 Price = 5M,
@@ -5372,19 +5429,20 @@ namespace Nop.Services.Installation
 
 
 
-
             var product25GiftCard = new Product()
             {
                 Name = "$25 Virtual Gift Card",
                 ShortDescription = "$25 Gift Card. Gift Cards must be redeemed through our site Web site toward the purchase of eligible products.",
                 FullDescription = "<p>Gift Cards must be redeemed through our site Web site toward the purchase of eligible products. Purchases are deducted from the GiftCard balance. Any unused balance will be placed in the recipient's GiftCard account when redeemed. If an order exceeds the amount of the GiftCard, the balance must be paid with a credit card or other available payment method.</p>",
                 ProductTemplateId = productTemplateSingleVariant.Id,
+                //SeName = "25-virtual-gift-card",
                 AllowCustomerReviews = true,
                 Published = true,
                 ShowOnHomePage = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allProducts.Add(product25GiftCard);
             product25GiftCard.ProductVariants.Add(new ProductVariant()
             {
                 Price = 25M,
@@ -5423,11 +5481,13 @@ namespace Nop.Services.Installation
                 ShortDescription = "$50 Gift Card. Gift Cards must be redeemed through our site Web site toward the purchase of eligible products.",
                 FullDescription = "<p>Gift Cards must be redeemed through our site Web site toward the purchase of eligible products. Purchases are deducted from the GiftCard balance. Any unused balance will be placed in the recipient's GiftCard account when redeemed. If an order exceeds the amount of the GiftCard, the balance must be paid with a credit card or other available payment method.</p>",
                 ProductTemplateId = productTemplateSingleVariant.Id,
+                //SeName = "50-physical-gift-card",
                 AllowCustomerReviews = true,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allProducts.Add(product50GiftCard);
             product50GiftCard.ProductVariants.Add(new ProductVariant()
             {
                 Price = 50M,
@@ -5471,11 +5531,13 @@ namespace Nop.Services.Installation
                 ShortDescription = "$100 Gift Card. Gift Cards must be redeemed through our site Web site toward the purchase of eligible products.",
                 FullDescription = "<p>Gift Cards must be redeemed through our site Web site toward the purchase of eligible products. Purchases are deducted from the GiftCard balance. Any unused balance will be placed in the recipient's GiftCard account when redeemed. If an order exceeds the amount of the GiftCard, the balance must be paid with a credit card or other available payment method.</p>",
                 ProductTemplateId = productTemplateSingleVariant.Id,
+                //SeName = "100-physical-gift-card",
                 AllowCustomerReviews = true,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allProducts.Add(product100GiftCard);
             product100GiftCard.ProductVariants.Add(new ProductVariant()
             {
                 Price = 100M,
@@ -5519,11 +5581,13 @@ namespace Nop.Services.Installation
                 ShortDescription = "",
                 FullDescription = "<p>Fitted polkadot print cotton top with tie cap sleeves.</p>",
                 ProductTemplateId = productTemplateInGrid.Id,
+                //SeName = "50s-rockabilly-polka-dot-top-jr-plus-size",
                 AllowCustomerReviews = true,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allProducts.Add(productRockabillyPolka);
             productRockabillyPolka.ProductVariants.Add(new ProductVariant()
             {
                 Price = 15M,
@@ -5606,11 +5670,13 @@ namespace Nop.Services.Installation
                 ShortDescription = "Acer Aspire One 8.9\" Mini-Notebook and 6 Cell Battery model (AOA150-1447)",
                 FullDescription = "<p>Acer Aspire One 8.9&quot; Memory Foam Pouch is the perfect fit for Acer Aspire One 8.9&quot;. This pouch is made out of premium quality shock absorbing memory form and it provides extra protection even though case is very light and slim. This pouch is water resistant and has internal supporting bands for Acer Aspire One 8.9&quot;. Made In Korea.</p>",
                 ProductTemplateId = productTemplateSingleVariant.Id,
+                //SeName = "acer-aspire-one-89-mini-notebook-case-black",
                 AllowCustomerReviews = true,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allProducts.Add(productAcerAspireOne);
             productAcerAspireOne.ProductVariants.Add(new ProductVariant()
             {
                 Price = 21.6M,
@@ -5678,11 +5744,13 @@ namespace Nop.Services.Installation
                 ShortDescription = "Now there are even more reasons to love this training favorite. An improved last, new step-in sockliner and the smooth control of 3-D ForMotion™ deliver a natural, balanced touchdown that feels better than ever.",
                 FullDescription = "<p>Built to take you far and fast, Adidas Supernova Cushion 7 road-running shoes offer incredible cushioning and comfort with low weight. * Abrasion-resistant nylon mesh uppers are lightweight and highly breathable; synthetic leather overlays create structure and support * GeoFit construction at ankles provides an anatomically correct fit and extra comfort * Nylon linings and molded, antimicrobial dual-layer EVA footbeds dry quickly and fight odor * adiPRENE&reg; midsoles absorb shock in the heels and help maximize heel protection and stability * adiPRENE&reg;+ under forefeet retains natural propulsive forces for improved efficiency * Torsion&reg; system at the midfoot allows natural rotation between the rearfoot and the forefoot, helping improve surface adaptability * ForMotion&reg; freely moving, decoupled heel system allows your feet to adapt to the ground strike and adjust for forward momentum * adiWEAR&reg; rubber outsoles give ample durability in high-wear areas and offer lightweight grip and cushion Mens shoes , men's shoes , running shoes , adidas shoes , adidas running shoes , mens running shoes , snova running shoes , snova mens adidas , snova adidas running , snova shoes , sport shoes mens , sport shoes adidas , mens shoes , men's shoes , running , adidas</p>",
                 ProductTemplateId = productTemplateInGrid.Id,
+                //SeName = "adidas-womens-supernova-csh-7-running-shoe",
                 AllowCustomerReviews = true,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allProducts.Add(productAdidasShoe);
             productAdidasShoe.ProductVariants.Add(new ProductVariant()
             {
                 Price = 40M,
@@ -5777,11 +5845,13 @@ namespace Nop.Services.Installation
                 ShortDescription = "Easily find and view all your photos",
                 FullDescription = "<p>Adobe Photoshop Elements 7 software combines power and simplicity so you can make ordinary photos extraordinary; tell engaging stories in beautiful, personalized creations for print and web; and easily find and view all your photos. New Photoshop.com membership* works with Photoshop Elements so you can protect your photos with automatic online backup and 2 GB of storage; view your photos anywhere you are; and share your photos in fun, interactive ways with invitation-only Online Albums.</p>",
                 ProductTemplateId = productTemplateSingleVariant.Id,
+                //SeName = "adobe-photoshop-elements-7",
                 AllowCustomerReviews = true,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allProducts.Add(productAdobePhotoshop);
             productAdobePhotoshop.ProductVariants.Add(new ProductVariant()
             {
                 Price = 75M,
@@ -5827,11 +5897,13 @@ namespace Nop.Services.Installation
                 ShortDescription = "APC Back-UPS RS, 800VA/540W, Input 120V/Output 120V, Interface Port USB. ",
                 FullDescription = "<p>The Back-UPS RS offers high performance protection for your business and office computer systems. It provides abundant battery backup power, allowing you to work through medium and extended length power outages. It also safeguards your equipment from damaging surges and spikes that travel along utility, phone and network lines. A distinguishing feature of the Back-UPS RS is automatic voltage regulation (AVR). AVR instantly adjusts both low and high voltages to safe levels, so you can work indefinitely during brownouts and overvoltage situations, saving the battery for power outages when you need it most. Award-winning shutdown software automatically powers down your computer system in the event of an extended power outage.</p>",
                 ProductTemplateId = productTemplateSingleVariant.Id,
+                //SeName = "apc-back-ups-rs-800va-ups-800-va-ups-battery-lead-acid-br800blk",
                 AllowCustomerReviews = true,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allProducts.Add(productApcUps);
             productApcUps.ProductVariants.Add(new ProductVariant()
             {
                 Price = 75M,
@@ -5877,11 +5949,13 @@ namespace Nop.Services.Installation
                 ShortDescription = "",
                 FullDescription = "<p>This Wrinkle Free Pinpoint Long Sleeve Dress Shirt needs minimum ironing. It is a great product at a great value!</p>",
                 ProductTemplateId = productTemplateSingleVariant.Id,
+                //SeName = "arrow-mens-wrinkle-free-pinpoint-solid-long-sleeve",
                 AllowCustomerReviews = true,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allProducts.Add(productArrow);
             productArrow.ProductVariants.Add(new ProductVariant()
             {
                 Price = 24M,
@@ -5944,11 +6018,13 @@ namespace Nop.Services.Installation
                 ShortDescription = "Super Hybrid Engine offers a choice of performance and power consumption modes for easy adjustments according to various needs",
                 FullDescription = "<p>Much more compact than a standard-sized notebook and weighing just over 3 pounds, the Eee PC 1000HA is perfect for students toting to school or road warriors packing away to Wi-Fi hotspots. The Eee PC 1000HA also features a 160 GB hard disk drive (HDD), 1 GB of RAM, 1.3-megapixel webcam integrated into the bezel above the LCD, 54g Wi-Fi networking (802.11b/g), Secure Digital memory card slot, multiple USB ports, a VGA output for connecting to a monitor.</p><p>It comes preinstalled with the Microsoft Windows XP Home operating system, which offers more experienced users an enhanced and innovative experience that incorporates Windows Live features like Windows Live Messenger for instant messaging and Windows Live Mail for consolidated email accounts on your desktop. Complementing this is Microsoft Works, which equips the user with numerous office applications to work efficiently.</p><p>The new Eee PC 1000HA has a customized, cutting-edge Infusion casing technology in Fine Ebony. Inlaid within the chassis itself, the motifs are an integral part of the entire cover and will not fade with time. The Infusion surface also provides a new level of resilience, providing scratch resistance and a beautiful style while out and about.</p>",
                 ProductTemplateId = productTemplateSingleVariant.Id,
+                //SeName = "asus-eee-pc-1000ha-10-inch-netbook",
                 AllowCustomerReviews = true,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allProducts.Add(productAsusPc1000);
             productAsusPc1000.ProductVariants.Add(new ProductVariant()
             {
                 Price = 2600M,
@@ -6027,11 +6103,13 @@ namespace Nop.Services.Installation
                 ShortDescription = "High Speed Connectivity Anywhere with Wi-Fi 802.11b/g.",
                 FullDescription = "<p>Much more compact than a standard-sized notebook and weighing just 2.5 pounds, the Eee PC 900HA is perfect for students toting to school or road warriors packing away to Wi-Fi hotspots. In addition to the 160 GB hard disk drive (HDD), the Eee PC 900HA also features 1 GB of RAM, VGA-resolution webcam integrated into the bezel above the LCD, 54g Wi-Fi networking (802.11b/g), multiple USB ports, SD memory card slot, a VGA output for connecting to a monitor, and up to 10 GB of online storage (complimentary for 18 months).</p><p>It comes preinstalled with the Microsoft Windows XP Home operating system, which offers more experienced users an enhanced and innovative experience that incorporates Windows Live features like Windows Live Messenger for instant messaging and Windows Live Mail for consolidated email accounts on your desktop. Complementing this is Microsoft Works, which equips the user with numerous office applications to work efficiently.</p>",
                 ProductTemplateId = productTemplateSingleVariant.Id,
+                //SeName = "asus-eee-pc-900ha-89-inch-netbook-black",
                 AllowCustomerReviews = true,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allProducts.Add(productAsusPc900);
             productAsusPc900.ProductVariants.Add(new ProductVariant()
             {
                 Price = 1500M,
@@ -6103,11 +6181,13 @@ namespace Nop.Services.Installation
                 ShortDescription = "More Than 100 Regional Favorites Tested and Perfected for the Outdoor Cook (Hardcover)",
                 FullDescription = "<p>Take a winding cross-country trip and you'll discover barbecue shacks with offerings like tender-smoky Baltimore pit beef and saucy St. Louis pork steaks. To bring you the best of these hidden gems, along with all the classics, the editors of Cook's Country magazine scoured the country, then tested and perfected their favorites. HEre traditions large and small are brought into the backyard, from Hawaii's rotisserie favorite, the golden-hued Huli Huli Chicken, to fall-off-the-bone Chicago Barbecued Ribs. In Kansas City, they're all about the sauce, and for our saucy Kansas City Sticky Ribs, we found a surprise ingredient-root beer. We also tackle all the best sides. <br /><br />Not sure where or how to start? This cookbook kicks off with an easy-to-follow primer that will get newcomers all fired up. Whether you want to entertain a crowd or just want to learn to make perfect burgers, Best Grilling Recipes shows you the way.</p>",
                 ProductTemplateId = productTemplateSingleVariant.Id,
+                //SeName = "best-grilling-recipes",
                 AllowCustomerReviews = true,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allProducts.Add(productBestGrillingRecipes);
             productBestGrillingRecipes.ProductVariants.Add(new ProductVariant()
             {
                 Price = 27M,
@@ -6154,11 +6234,13 @@ namespace Nop.Services.Installation
                 ShortDescription = "Heart Pendant 1/4 Carat (ctw) in Sterling Silver",
                 FullDescription = "<p>Bold black diamonds alternate with sparkling white diamonds along a crisp sterling silver heart to create a look that is simple and beautiful. This sleek and stunning 1/4 carat (ctw) diamond heart pendant which includes an 18 inch silver chain, and a free box of godiva chocolates makes the perfect Valentine's Day gift.</p>",
                 ProductTemplateId = productTemplateSingleVariant.Id,
+                //SeName = "black-white-diamond-heart",
                 AllowCustomerReviews = true,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allProducts.Add(productDiamondHeart);
             productDiamondHeart.ProductVariants.Add(new ProductVariant()
             {
                 Price = 130M,
@@ -6204,11 +6286,13 @@ namespace Nop.Services.Installation
                 ShortDescription = "Global Blackberry messaging smartphone with quad-band GSM",
                 FullDescription = "<p>Keep yourself on track for your next meeting with turn-by-turn directions via the AT&amp;T Navigator service, which is powered by TeleNav and provides spoken or text-based turn-by-turn directions with automatic missed turn rerouting and a local business finder service in 20 countries. It also supports AT&amp;T mobile music services and access to thousands of video clips via Cellular Video. Other features include a 2-megapixel camera/camcorder, Bluetooth for handsfree communication, 1 GB of internal memory with MicroSD expansion (up to 32 GB), multi-format audio/video playback, and up to 4.5 hours of talk time.</p><p>The Blackberry Bold also comes with free access to AT&amp;T Wi-Fi Hotspots, available at more than 17,000 locations nationwide including Starbucks. The best part is that you do'nt need to sign up for anything new to use this service--Wi-Fi access for is included in all Blackberry Personal and Enterprise Rate Plans. (You must subscribe to a Blackberry Data Rate Plan to access AT&amp;T Wi-Fi Hotspots.) Additionally, the Blackberry Bold is the first RIM device that supports AT&amp;T Cellular Video (CV).</p>",
                 ProductTemplateId = productTemplateSingleVariant.Id,
+                //SeName = "blackberry-bold-9000-phone-black-att",
                 AllowCustomerReviews = true,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allProducts.Add(productBlackBerry);
             productBlackBerry.ProductVariants.Add(new ProductVariant()
             {
                 Price = 245M,
@@ -6253,12 +6337,14 @@ namespace Nop.Services.Installation
                 ShortDescription = "Build it",
                 FullDescription = "<p>Fight back against cluttered workspaces with the stylish Sony VAIO JS All-in-One desktop PC, featuring powerful computing resources and a stunning 20.1-inch widescreen display with stunning XBRITE-HiColor LCD technology. The silver Sony VAIO VGC-JS110J/S has a built-in microphone and MOTION EYE camera with face-tracking technology that allows for easy communication with friends and family. And it has a built-in DVD burner and Sony's Movie Store software so you can create a digital entertainment library for personal viewing at your convenience. Easy to setup and even easier to use, this JS-series All-in-One includes an elegantly designed keyboard and a USB mouse.</p>",
                 ProductTemplateId = productTemplateInGrid.Id,
+                //SeName = "build-your-own-computer",
                 AllowCustomerReviews = true,
                 Published = true,
                 ShowOnHomePage = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allProducts.Add(productBuildComputer);
             productBuildComputer.ProductVariants.Add(new ProductVariant()
             {
                 Price = 1200M,
@@ -6420,11 +6506,13 @@ namespace Nop.Services.Installation
                 ShortDescription = "12.2-megapixel CMOS sensor captures enough detail for poster-size, photo-quality prints",
                 FullDescription = "<p>For stunning photography with point and shoot ease, look no further than Canon&rsquo;s EOS Rebel XSi. The EOS Rebel XSi brings staggering technological innovation to the masses. It features Canon&rsquo;s EOS Integrated Cleaning System, Live View Function, a powerful DIGIC III Image Processor, plus a new 12.2-megapixel CMOS sensor and is available in a kit with the new EF-S 18-55mm f/3.5-5.6 IS lens with Optical Image Stabilizer. The EOS Rebel XSi&rsquo;s refined, ergonomic design includes a new 3.0-inch LCD monitor, compatibility with SD and SDHC memory cards and new accessories that enhance every aspect of the photographic experience.</p>",
                 ProductTemplateId = productTemplateInGrid.Id,
+                //SeName = "canon-digital-rebel-xsi-122-mp-digital-slr-camera",
                 AllowCustomerReviews = true,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allProducts.Add(productCanonCamera);
             productCanonCamera.ProductVariants.Add(new ProductVariant()
             {
                 Name = "Black",
@@ -6502,11 +6590,13 @@ namespace Nop.Services.Installation
                 ShortDescription = "12x optical zoom; SuperRange Optical Image Stabilizer",
                 FullDescription = "<p>From Canon's long history of optical excellence, advanced image processing, superb performance and technological innovation in photographic and broadcast television cameras comes the latest in high definition camcorders. <br /><br />Now, with the light, compact Canon VIXIA HF100, you can have stunning AVCHD (Advanced Video Codec High Definition) format recording with the ease and numerous benefits of Flash Memory. It's used in some of the world's most innovative electronic products such as laptop computers, MP3 players, PDAs and cell phones. <br /><br />Add to that the VIXIA HF100's Canon Exclusive features such as our own 3.3 Megapixel Full HD CMOS sensor and advanced DIGIC DV II Image Processor, SuperRange Optical Image Stabilization, Instant Auto Focus, our 2.7-inch Widescreen Multi-Angle Vivid LCD and the Genuine Canon 12x HD video zoom lens and you have a Flash Memory camcorder that's hard to beat.</p>",
                 ProductTemplateId = productTemplateSingleVariant.Id,
+                //SeName = "canon-vixia-hf100-camcorder",
                 AllowCustomerReviews = true,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allProducts.Add(productCanonCamcoder);
             productCanonCamcoder.ProductVariants.Add(new ProductVariant()
             {
                 Price = 530M,
@@ -6552,11 +6642,13 @@ namespace Nop.Services.Installation
                 ShortDescription = "Compaq Presario Desktop PC",
                 FullDescription = "<p>Compaq Presario PCs give you solid performance, ease of use, and deliver just what you need so you can do more with less effort. Whether you are e-mailing family, balancing your online checkbook or creating school projects, the Presario is the right PC for you.</p>",
                 ProductTemplateId = productTemplateSingleVariant.Id,
+                //SeName = "compaq-presario-sr1519x-pentium-4-desktop-pc-with-cdrw",
                 AllowCustomerReviews = true,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allProducts.Add(productCompaq);
             productCompaq.ProductVariants.Add(new ProductVariant()
             {
                 Price = 500M,
@@ -6602,11 +6694,13 @@ namespace Nop.Services.Installation
                 ShortDescription = "More Than 200 Foolproof Recipes for Weeknights and Special Occasions (Hardcover)",
                 FullDescription = "<p>Hardcover: 352 pages<br />Publisher: America's Test Kitchen (May 2009)<br />Language: English<br />ISBN-10: 1933615435<br />ISBN-13: 978-1933615431</p>",
                 ProductTemplateId = productTemplateSingleVariant.Id,
+                //SeName = "cooking-for-two",
                 AllowCustomerReviews = true,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allProducts.Add(productCookingForTwo);
             productCookingForTwo.ProductVariants.Add(new ProductVariant()
             {
                 Price = 19M,
@@ -6653,11 +6747,13 @@ namespace Nop.Services.Installation
                 ShortDescription = "The ideal choice for any aspiring photographer's digital darkroom",
                 FullDescription = "<p>Corel Paint Shop Pro Photo X2 is the ideal choice for any aspiring photographer's digital darkroom. Fix brightness, color, and photo flaws in a few clicks; use precision editing tools to create the picture you want; give photos a unique, exciting look using hundreds of special effects, and much more! Plus, the NEW one-of-a-kind Express Lab helps you quickly view and fix dozens of photos in the time it used to take to edit a few. Paint Shop Pro Photo X2 even includes a built-in Learning Center to help you get started, it's the easiest way to get professional-looking photos - fast!</p>",
                 ProductTemplateId = productTemplateSingleVariant.Id,
+                //SeName = "corel-paint-shop-pro-photo-x2",
                 AllowCustomerReviews = true,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allProducts.Add(productCorel);
             productCorel.ProductVariants.Add(new ProductVariant()
             {
                 Price = 65M,
@@ -6703,11 +6799,13 @@ namespace Nop.Services.Installation
                 ShortDescription = "T-Shirt - Add Your Content",
                 FullDescription = "<p>Comfort comes in all shapes and forms, yet this tee out does it all. Rising above the rest, our classic cotton crew provides the simple practicality you need to make it through the day. Tag-free, relaxed fit wears well under dress shirts or stands alone in laid-back style. Reinforced collar and lightweight feel give way to long-lasting shape and breathability. One less thing to worry about, rely on this tee to provide comfort and ease with every wear.</p>",
                 ProductTemplateId = productTemplateInGrid.Id,
+                //SeName = "custom-t-shirt",
                 AllowCustomerReviews = true,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allProducts.Add(productCustomTShirt);
             productCustomTShirt.ProductVariants.Add(new ProductVariant()
             {
                 Price = 15M,
@@ -6761,11 +6859,13 @@ namespace Nop.Services.Installation
                 ShortDescription = "1/2 Carat (ctw) in White Gold",
                 FullDescription = "<p>Perfect for both a professional look as well as perhaps something more sensual, these 10 karat white gold huggie earrings boast 86 sparkling round diamonds set in a pave arrangement that total 1/2 carat (ctw).</p>",
                 ProductTemplateId = productTemplateSingleVariant.Id,
+                //SeName = "diamond-pave-earrings",
                 AllowCustomerReviews = true,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allProducts.Add(productDiamondEarrings);
             productDiamondEarrings.ProductVariants.Add(new ProductVariant()
             {
                 Price = 569M,
@@ -6811,11 +6911,13 @@ namespace Nop.Services.Installation
                 ShortDescription = "1.0 Carat (ctw) in White Gold",
                 FullDescription = "<p>Jazz up any outfit with this classic diamond tennis bracelet. This piece has one full carat of diamonds uniquely set in brilliant 10 karat white gold.</p>",
                 ProductTemplateId = productTemplateSingleVariant.Id,
+                //SeName = "diamond-tennis-bracelet",
                 AllowCustomerReviews = true,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allProducts.Add(productDiamondBracelet);
             productDiamondBracelet.ProductVariants.Add(new ProductVariant()
             {
                 Price = 360M,
@@ -6866,11 +6968,13 @@ namespace Nop.Services.Installation
                 ShortDescription = "A Farmers' Market Cookbook (Hardcover)",
                 FullDescription = "<p>Trying to get big chocolate flavor into a crisp holiday cookie is no easy feat. Any decent baker can get a soft, chewy cookie to scream &ldquo;chocolate,&rdquo; but a dough that can withstand a rolling pin and cookie cutters simply can&rsquo;t be too soft. Most chocolate butter cookies skimp on the gooey chocolate and their chocolate flavor is quite modest.</p>",
                 ProductTemplateId = productTemplateSingleVariant.Id,
+                //SeName = "eatingwell-in-season",
                 AllowCustomerReviews = true,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allProducts.Add(productEatingWell);
             productEatingWell.ProductVariants.Add(new ProductVariant()
             {
                 Price = 51M,
@@ -6916,12 +7020,14 @@ namespace Nop.Services.Installation
                 ShortDescription = "This sleek shoe has all you need--from the padded tongue and collar and internal EVA midsole, to the STI Level 2 cushioning for impact absorption and stability.",
                 FullDescription = "<p>Established in 1986, etnies is the first skateboarder-owned and skateboarder-operated global action sports footwear and apparel company. etnies not only pushed the envelope by creating the first pro model skate shoe, but it pioneered technological advances and changed the face of skateboard footwear forever. Today, etnies' vision is to remain the leading action sports company committed to creating functional products that provide the most style, comfort, durability and protection possible. etnies stays true to its roots by sponsoring a world-class team of skateboarding, surfing, snowboarding, moto-x, and BMX athletes and continues its dedication by giving back to each of these communities.</p>",
                 ProductTemplateId = productTemplateInGrid.Id,
+                //SeName = "etnies-mens-digit-sneaker",
                 AllowCustomerReviews = true,
                 Published = true,
                 ShowOnHomePage = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allProducts.Add(productEtnies);
             productEtnies.ProductVariants.Add(new ProductVariant()
             {
                 Price = 17.56M,
@@ -7011,11 +7117,13 @@ namespace Nop.Services.Installation
                 ShortDescription = "Classic Leather Handbag",
                 FullDescription = "<p>This fine leather handbag will quickly become your favorite bag. It has a zipper organizer on the front that includes a notepad pocket, pen holder, credit card slots and zipper pocket divider. On top of this is a zipper pocket and another flap closure pocket. The main compartment is fully lined and includes a side zipper pocket. On the back is another zipper pocket. And don't forget the convenient built in cell phone holder on the side! The long strap is fully adjustable so you can wear it crossbody or over the shoulder. This is a very well-made, quality leather bag that is not too big, but not too small.</p>",
                 ProductTemplateId = productTemplateSingleVariant.Id,
+                //SeName = "genuine-leather-handbag-with-cell-phone-holder-many-pockets",
                 AllowCustomerReviews = true,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allProducts.Add(productLeatherHandbag);
             productLeatherHandbag.ProductVariants.Add(new ProductVariant()
             {
                 Price = 35M,
@@ -7066,11 +7174,13 @@ namespace Nop.Services.Installation
                 ShortDescription = "",
                 FullDescription = "<p>Redesigned with a next-generation, touch-enabled 22-inch high-definition LCD screen, the HP TouchSmart IQ506 all-in-one desktop PC is designed to fit wherever life happens: in the kitchen, family room, or living room. With one touch you can check the weather, download your e-mail, or watch your favorite TV show. It's also designed to maximize energy, with a power-saving Intel Core 2 Duo processor and advanced power management technology, as well as material efficiency--right down to the packaging. It has a sleek piano black design with elegant espresso side-panel highlights, and the HP Ambient Light lets you set a mood--or see your keyboard in the dark.</p>",
                 ProductTemplateId = productTemplateSingleVariant.Id,
+                //SeName = "hp-iq506-touchsmart-desktop-pc",
                 AllowCustomerReviews = true,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allProducts.Add(productHp506);
             productHp506.ProductVariants.Add(new ProductVariant()
             {
                 Price = 1199M,
@@ -7121,11 +7231,13 @@ namespace Nop.Services.Installation
                 ShortDescription = "Unique Asian-influenced HP imprint wraps the laptop both inside and out",
                 FullDescription = "<p>Optimize your mobility with a BrightView 14.1-inch display that has the same viewable area as a 15.4-inch screen--in a notebook that weighs a pound less. Encouraging more direct interaction, the backlit media control panel responds to the touch or sweep of a finger. Control settings for audio and video playback from up to 10 feet away with the included HP remote, then store it conveniently in the PC card slot. Enjoy movies or music in seconds with the external DVD or music buttons to launch HP QuickPlay (which bypasses the boot process).</p><p>It's powered by the 1.83 GHz Intel Core 2 Duo T5550 processor, which provides an optimized, multithreaded architecture for improved gaming and multitasking performance, as well as excellent battery management. It also includes Intel's 4965 AGN wireless LAN, which will connect to draft 802.11n routers and offers compatibility with 802.11a/b/g networks as well. It also features a 250 GB hard drive, 3 GB of installed RAM (4 GB maximum), LighScribe dual-layer DVD&plusmn;R burner, HDMI port for connecting to an HDTV, and Nvidia GeForce Go 8400M GS video/graphics card with up to 1407 MB of total allocated video memory (128 MB dedicated). It also includes an integrated Webcam in the LCD's bezel and an omnidirectional microphone for easy video chats.</p>",
                 ProductTemplateId = productTemplateSingleVariant.Id,
+                //SeName = "hp-pavilion-artist-edition-dv2890nr-141-inch-laptop",
                 AllowCustomerReviews = true,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allProducts.Add(productHpPavilion1);
             productHpPavilion1.ProductVariants.Add(new ProductVariant()
             {
                 Price = 1590M,
@@ -7204,11 +7316,13 @@ namespace Nop.Services.Installation
                 ShortDescription = "Top-of-the-line multimedia desktop featuring 2.4 GHz Intel Core 2 Quad Processor Q6600 with four lightning fast execution cores",
                 FullDescription = "<p>The updated chassis with sleek piano black paneling and components is far from the most significant improvements in the multimedia powerhouse HP Pavilion Elite m9150f desktop PC. It's powered by Intel's newest processor--the 2.4 GHz Intel Core 2 Quad Q6600--which delivers four complete execution cores within a single processor for unprecedented performance and responsiveness in multi-threaded and multi-tasking business/home environments. You can also go wireless and clutter-free with wireless keyboard, mouse, and remote control, and it includes the next step in Wi-Fi networking with a 54g wireless LAN (802.11b/g).</p>",
                 ProductTemplateId = productTemplateSingleVariant.Id,
+                //SeName = "hp-pavilion-elite-m9150f-desktop-pc",
                 AllowCustomerReviews = true,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allProducts.Add(productHpPavilion2);
             productHpPavilion2.ProductVariants.Add(new ProductVariant()
             {
                 Price = 1350M,
@@ -7264,11 +7378,13 @@ namespace Nop.Services.Installation
                 ShortDescription = "Streamlined multimedia laptop with 16-inch screen for basic computing, entertainment and online communication",
                 FullDescription = "<p>Chat face to face, or take pictures and video clips with the webcam and integrated digital microphone. Play games and enhance multimedia with the Intel GMA 4500M with up to 1309 MB of total available graphics memory. And enjoy movies or music in seconds with the external DVD or music buttons to launch HP QuickPlay (which bypasses the boot process).  It offers dual-core productivity from its 2.0 GHz Intel Pentium T4200 processor for excellent multitasking. Other features include a 320 GB hard drive, 3 GB of installed RAM (4 GB maximum capacity), dual-layer DVD&plusmn;RW drive (which also burns CDs), quad-mode Wi-Fi (802.11a/b/g/n), 5-in-1 memory card reader, and pre-installed Windows Vista Home Premium (SP1).</p>",
                 ProductTemplateId = productTemplateSingleVariant.Id,
+                //SeName = "hp-pavilion-g60-230us-160-inch-laptop",
                 AllowCustomerReviews = true,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allProducts.Add(productHpPavilion3);
             productHpPavilion3.ProductVariants.Add(new ProductVariant()
             {
                 Price = 1460M,
@@ -7347,11 +7463,13 @@ namespace Nop.Services.Installation
                 ShortDescription = "Wear some adventure with the same hat Indiana Jones&reg; wears in his movies.",
                 FullDescription = "<p>Wear some adventure with the same hat Indiana Jones&reg; wears in his movies. Easy to shape to fit your personal style. Wool. Import. Please Note - Due to new UPS shipping rules and the size of the box, if you choose to expedite your hat order (UPS 3-day, 2-day or Overnight), an additional non-refundable $20 shipping charge per hat will be added at the time your order is processed.</p>",
                 ProductTemplateId = productTemplateInGrid.Id,
+                //SeName = "indiana-jones-shapeable-wool-hat",
                 AllowCustomerReviews = true,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allProducts.Add(productHat);
             productHat.ProductVariants.Add(new ProductVariant()
             {
                 Price = 30M,
@@ -7424,11 +7542,13 @@ namespace Nop.Services.Installation
                 ShortDescription = "Includes plug adapters for use in more than 150 countries",
                 FullDescription = "<p>The Kensington 33117 Travel Plug Adapter is a pocket-sized power adapter for go-anywhere convenience. This all-in-one unit provides plug adapters for use in more than 150 countries, so you never need to be at a loss for power again. The Kensington 33117 is easy to use, with slide-out power plugs that ensure you won't lose any vital pieces, in a compact, self-contained unit that eliminates any hassles. This all-in-one plug adapts power outlets for laptops, chargers, and similar devices, and features a safety release button and built-in fuse to ensure safe operation. The Kensington 33117 does not reduce or convert electrical voltage, is suitable for most consumer electronics ranging from 110-volts to Mac 275-watts, to 220-volts to Mac 550-watts. Backed by Kensington's one-year warranty, this unit weighs 0.5, and measures 1.875 x 2 x 2.25 inches (WxDxH). Please note that this adapter is not designed for use with high-watt devices such as hairdryers and irons, so users should check electronic device specifications before using.</p>",
                 ProductTemplateId = productTemplateSingleVariant.Id,
+                //SeName = "kensington-33117-international-all-in-one-travel-plug-adapter",
                 AllowCustomerReviews = true,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allProducts.Add(productKensington);
             productKensington.ProductVariants.Add(new ProductVariant()
             {
                 Price = 35M,
@@ -7474,11 +7594,13 @@ namespace Nop.Services.Installation
                 ShortDescription = "Levi's Faded Black Skinny 511 Jeans ",
                 FullDescription = "",
                 ProductTemplateId = productTemplateSingleVariant.Id,
+                //SeName = "levis-skinny-511-jeans",
                 AllowCustomerReviews = true,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allProducts.Add(productLeviJeans);
             productLeviJeans.ProductVariants.Add(new ProductVariant()
             {
                 Price = 43.5M,
@@ -7547,11 +7669,13 @@ namespace Nop.Services.Installation
                 ShortDescription = "Take charge of your franchise and enjoy the all-new MLB.com presentation style",
                 FullDescription = "<p>Major League Baseball 2K9 captures the essence of baseball down to some of the most minute, player- specific details including batting stances, pitching windups and signature swings. 2K Sports has gone above and beyond the call of duty to deliver this in true major league fashion. Additionally, gameplay enhancements in pitching, batting, fielding and base running promise this year's installment to be user-friendly and enjoyable for rookies or veterans. New commentary and presentation provide the icing to this ultimate baseball experience. If you really want to Play Ball this is the game for you.</p>",
                 ProductTemplateId = productTemplateSingleVariant.Id,
+                //SeName = "major-league-baseball-2k9",
                 AllowCustomerReviews = true,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allProducts.Add(productBaseball);
             productBaseball.ProductVariants.Add(new ProductVariant()
             {
                 Price = 14.99M,
@@ -7597,11 +7721,13 @@ namespace Nop.Services.Installation
                 ShortDescription = "One of the great pioneers in military simulations returns to gaming as the Medal of Honor series depicts modern warfare for the first time, with a harrowing tour of duty in current day Afghanistan.",
                 FullDescription = "You'll take control of both ordinary U.S. Army Rangers and Tier 1 Elite Ops Special Forces as you fight enemy insurgents in the most dangerous theatre of war of the modern age. The intense first person combat has been created with input from U.S. military consultants and based on real-life descriptions from veteran soldiers. This allows you to use genuine military tactics and advanced technology including combat drones and targeted air strikes.",
                 ProductTemplateId = productTemplateSingleVariant.Id,
+                //SeName = "medal-of-honor-limited-edition-xbox-360",
                 AllowCustomerReviews = true,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allProducts.Add(productMedalOfHonor);
             productMedalOfHonor.ProductVariants.Add(new ProductVariant()
             {
                 Price = 37M,
@@ -7647,11 +7773,13 @@ namespace Nop.Services.Installation
                 ShortDescription = "Enjoy reliable, transceiver-free wireless connection to your PC with Bluetooth Technology",
                 FullDescription = "<p>Enjoy wireless freedom with the Microsoft&reg; Bluetooth&reg; Notebook Mouse 5000 &mdash; no transceiver to connect or lose! Keep USB ports free for other devices. And, take it with you in a convenient carrying case (included)</p>",
                 ProductTemplateId = productTemplateInGrid.Id,
+                //SeName = "microsoft-bluetooth-notebook-mouse-5000-macwindows",
                 AllowCustomerReviews = true,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allProducts.Add(productMouse);
             productMouse.ProductVariants.Add(new ProductVariant()
             {
                 Price = 37M,
@@ -7697,11 +7825,13 @@ namespace Nop.Services.Installation
                 ShortDescription = "NIKE Golf Casual Belt is a great look for in the clubhouse after a round of golf.",
                 FullDescription = "<p>NIKE Golf Casual Belt is a great look for in the clubhouse after a round of golf. The belt strap is made of full grain oil tanned leather. The buckle is made of antique brushed metal with an embossed Swoosh design on it. This belt features an English beveled edge with rivets on the tab and tip of the 38mm wide strap. Size: 32; Color: Black.</p>",
                 ProductTemplateId = productTemplateSingleVariant.Id,
+                //SeName = "nike-golf-casual-belt",
                 AllowCustomerReviews = true,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allProducts.Add(productGolfBelt);
             productGolfBelt.ProductVariants.Add(new ProductVariant()
             {
                 Price = 45M,
@@ -7747,11 +7877,13 @@ namespace Nop.Services.Installation
                 ShortDescription = "World's first 3D Shooting Camcorder",
                 FullDescription = "<p>Unlike previous 3D images that required complex, professional equipment to create, now you can shoot your own. Simply attach the 3D Conversion Lens to the SDT750 for quick and easy 3D shooting. And because the SDT750 features the Advanced 3MOS System, which has gained worldwide popularity, colors are vivid and 3D images are extremely realistic. Let the SDT750 save precious moments for you in true-to-life images.</p>",
                 ProductTemplateId = productTemplateSingleVariant.Id,
+                //SeName = "panasonic-hdc-sdt750k-high-definition-3d-camcorder",
                 AllowCustomerReviews = true,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allProducts.Add(productPanasonic);
             productPanasonic.ProductVariants.Add(new ProductVariant()
             {
                 Price = 1300M,
@@ -7797,11 +7929,13 @@ namespace Nop.Services.Installation
                 ShortDescription = "Aviator sunglasses are one of the first widely popularized styles of modern day sunwear.",
                 FullDescription = "<p>Since 1937, Ray-Ban can genuinely claim the title as the world's leading sunglasses and optical eyewear brand. Combining the best of fashion and sports performance, the Ray-Ban line of Sunglasses delivers a truly classic style that will have you looking great today and for years to come.</p>",
                 ProductTemplateId = productTemplateSingleVariant.Id,
+                //SeName = "ray-ban-aviator-sunglasses-rb-3025",
                 AllowCustomerReviews = true,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allProducts.Add(productSunglasses);
             productSunglasses.ProductVariants.Add(new ProductVariant()
             {
                 Price = 25M,
@@ -7847,11 +7981,13 @@ namespace Nop.Services.Installation
                 ShortDescription = "Ruggedized 3G handset in black great for outdoor workforces",
                 FullDescription = "<p>Ideal for on-site field services, the ruggedized Samsung Rugby for AT&amp;T can take just about anything you can throw at it. This highly durable handset is certified to Military Standard MIL-STD 810F standards that's perfect for users like construction foremen and landscape designers. In addition to access to AT&amp;T Navigation turn-by-turn direction service, the Rugby also features compatibility with Push to Talk communication, Enterprise Paging, and AT&amp;T's breakthrough Video Share calling services. This quad-band GSM phone runs on AT&amp;T's dual-band 3G (HSDPA/UMTS) network, for fast downloads and seamless video calls. It also offers a 1.3-megapixel camera, microSD memory expansion to 8 GB, Bluetooth for handsfree communication and stereo music streaming, access to personal email and instant messaging, and up to 5 hours of talk time.</p>",
                 ProductTemplateId = productTemplateSingleVariant.Id,
+                //SeName = "samsung-rugby-a837-phone-black-att",
                 AllowCustomerReviews = true,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allProducts.Add(productSamsungPhone);
             productSamsungPhone.ProductVariants.Add(new ProductVariant()
             {
                 Price = 100M,
@@ -7902,11 +8038,13 @@ namespace Nop.Services.Installation
                 ShortDescription = "Capture video to hard disk drive; 60 GB storage",
                 FullDescription = "<p>You&rsquo;ll never miss a moment because of switching tapes or discs with the DCR-SR85. Its built-in 60GB hard disk drive offers plenty of storage as you zero in on your subjects with the professional-quality Carl Zeiss Vario-Tessar lens and a powerful 25x optical/2000x digital zoom. Compose shots using the 2.7-inch wide (16:9) touch-panel LCD display, and maintain total control and clarity with the Super SteadyShot image stabilization system. Hybrid recording technology even gives you the choice to record video to either the internal hard disk drive or removable Memory Stick Pro Duo media.</p>",
                 ProductTemplateId = productTemplateSingleVariant.Id,
+                //SeName = "sony-dcr-sr85-1mp-60gb-hard-drive-handycam-camcorder",
                 AllowCustomerReviews = true,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allProducts.Add(productSonyCamcoder);
             productSonyCamcoder.ProductVariants.Add(new ProductVariant()
             {
                 Price = 349M,
@@ -7952,11 +8090,13 @@ namespace Nop.Services.Installation
                 ShortDescription = "What's the Best Way to Make Lasagna With Rich, Meaty Flavor, Chunks of Tomato, and Gooey Cheese, Without Ever Turning on the Oven or Boiling a Pot of (Hardcover)",
                 FullDescription = "<p>In this latest addition of the Best Recipe Classic series, <i>Cooks Illustrated</i> editor Christopher Kimball and his team of kitchen scientists celebrate the untold versatility of that ordinary workhorse, the 12-inch skillet. An indispensable tool for eggs, pan-seared meats and saut&eacute;ed vegetables, the skillet can also be used for stovetop-to-oven dishes such as All-American Mini Meatloaves; layered dishes such as tamale pie and Tuscan bean casserole; and even desserts such as hot fudge pudding cake. In the trademark style of other America's Test Kitchen publications, the cookbook contains plenty of variations on basic themes (you can make chicken and rice with peas and scallions, broccoli and cheddar, or coconut milk and pistachios); ingredient and equipment roundups; and helpful illustrations for preparing mango and stringing snowpeas. Yet the true strength of the series lies in the sheer thoughtfulness and detail of the recipes. Whether or not you properly appreciate your skillet, this book will at least teach you to wield it gracefully. <i>(Mar.)</i>   <br />Copyright &copy; Reed Business Information, a division of Reed Elsevier Inc. All rights reserved.</p>",
                 ProductTemplateId = productTemplateSingleVariant.Id,
+                //SeName = "the-best-skillet-recipes",
                 AllowCustomerReviews = true,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allProducts.Add(productBestSkilletRecipes);
             productBestSkilletRecipes.ProductVariants.Add(new ProductVariant()
             {
                 Price = 24M,
@@ -8003,11 +8143,13 @@ namespace Nop.Services.Installation
                 ShortDescription = "Stylish, highly versatile laptop with 15.4-inch LCD, webcam integrated into bezel, and high-gloss finish",
                 FullDescription = "<p>It's powered by the 2.0 GHz Intel Core 2 Duo T6400 processor, which boosts speed, reduces power requirements, and saves on battery life. It also offers a fast 800 MHz front-side bus speed and 2 MB L2 cache. It also includes Intel's 5100AGN wireless LAN, which will connect to draft 802.11n routers and offers compatibility with 802.11a/b/g networks as well. Other features include an enormous 250 GB hard drive,&nbsp;1 GB of installed RAM (max capacity), dual-layer DVD&plusmn;RW burner (with Labelflash disc printing), ExpressCard 54/34 slot, a combo USB/eSATA port, SPDIF digital audio output for surround sound, and a 5-in-1 memory card adapter.</p><p>This PC comes preinstalled with the 64-bit version of Microsoft Windows Vista Home Premium (SP1), which includes all of the Windows Media Center capabilities for turning your PC into an all-in-one home entertainment center. In addition to easily playing your DVD movies and managing your digital audio library, you'll be able to record and watch your favorite TV shows (even HDTV). Vista also integrates new search tools throughout the operating system, includes new parental control features, and offers new tools that can warn you of impending hardware failures</p>",
                 ProductTemplateId = productTemplateSingleVariant.Id,
+                //SeName = "toshiba-satellite-a305-s6908-154-inch-laptop",
                 AllowCustomerReviews = true,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allProducts.Add(productSatellite);
             productSatellite.ProductVariants.Add(new ProductVariant()
             {
                 Price = 1360M,
@@ -8081,11 +8223,13 @@ namespace Nop.Services.Installation
                 ShortDescription = "Superior construction and reinforced seams",
                 FullDescription = "",
                 ProductTemplateId = productTemplateSingleVariant.Id,
+                //SeName = "v-blue-juniors-cuffed-denim-short-with-rhinestones",
                 AllowCustomerReviews = true,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allProducts.Add(productDenimShort);
             productDenimShort.ProductVariants.Add(new ProductVariant()
             {
                 Price = 10M,
@@ -8131,11 +8275,13 @@ namespace Nop.Services.Installation
                 ShortDescription = "1.24 Carat (ctw) in 14K White Gold (Certified)",
                 FullDescription = "<p>Dazzle her with this gleaming 14 karat white gold vintage proposal. A ravishing collection of 11 decadent diamonds come together to invigorate a superbly ornate gold shank. Total diamond weight on this antique style engagement ring equals 1 1/4 carat (ctw). Item includes diamond certificate.</p>",
                 ProductTemplateId = productTemplateSingleVariant.Id,
+                //SeName = "vintage-style-three-stone-diamond-engagement-ring",
                 AllowCustomerReviews = true,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allProducts.Add(productEngagementRing);
             productEngagementRing.ProductVariants.Add(new ProductVariant()
             {
                 Price = 2100M,
@@ -8186,11 +8332,13 @@ namespace Nop.Services.Installation
                 ShortDescription = "This expansion pack REQUIRES the original World of Warcraft game in order to run",
                 FullDescription = "<p>Fans of World of Warcraft, prepare for Blizzard Entertainment's next installment -- World of Warcraft: Wrath of King Lich. In this latest expansion, something is afoot in the cold, harsh northlands. The Lich King Arthas has set in motion events that could lead to the extinction of all life on Azeroth. The necromantic power of the plague and legions of undead armies threaten to sweep across the land. Only the mightiest heroes can oppose the Lich King and end his reign of terror.</p><p>This expansion adds a host of content to the already massive existing game world. Players will achieve soaring levels of power, explore Northrend (the vast icy continent of the Lich King), and battle high-level heroes to determine the ultimate fate of Azeroth. As you face the dangers of the frigid, harsh north, prepare to master the dark necromantic powers of the Death Night -- World of Warcraft's first Hero class. No longer servants of the Lich King, the Death Knights begin their new calling as experienced, formidable adversaries. Each is heavily armed, armored, and in possession of a deadly arsenal of forbidden magic.</p><p>If you have a World of Warcraft account with a character of at least level 55, you will be able to create a new level-55 Death Knight of any race (if on a PvP realm, the Death Knight must be the same faction as your existing character). And upon entering the new world, your Death Knight will begin to quest to level 80, gaining potent new abilities and talents along the way. This expansion allows for only one Death Knight per realm, per account.</p>",
                 ProductTemplateId = productTemplateSingleVariant.Id,
+                //SeName = "world-of-warcraft-wrath-of-the-lich-king-expansion-pack",
                 AllowCustomerReviews = true,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allProducts.Add(productWoW);
             productWoW.ProductVariants.Add(new ProductVariant()
             {
                 Price = 29.5M,
@@ -8236,11 +8384,13 @@ namespace Nop.Services.Installation
                 ShortDescription = "Worldwide Soccer Manager 2009 from Sega for the PC or Mac is an in-depth soccer management game",
                 FullDescription = "<p>Worldwide Soccer Manager 2009 from Sega for the PC or Mac is an in-depth soccer management game. At the helm, you'll enter the new season with a wide array of all-new features. The most impressive update is the first-time-ever, real-time 3D match engine with motion captured animations. With over 5,000 playable teams and every management decision in the palm of your hand, you'll love watching your matches and decisions unfold from multiple camera angles as you compete in leagues around the world and major international tournaments.</p><p>Watch your match in real-time, or use the Match Time Bar to fast-forward through sluggish minutes or rewind key moments in the game. With this customization at your fingertips you can also choose the information you'd like to see during the match, such as latest scores or player performance stats for the match.</p>",
                 ProductTemplateId = productTemplateSingleVariant.Id,
+                //SeName = "world-wide-soccer-manager-2009",
                 AllowCustomerReviews = true,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allProducts.Add(productSoccer);
             productSoccer.ProductVariants.Add(new ProductVariant()
             {
                 Price = 25.99M,
@@ -8286,11 +8436,13 @@ namespace Nop.Services.Installation
                 ShortDescription = "Poker Face by Lady GaGa",
                 FullDescription = "<p>Original Release Date: October 28, 2008</p><p>Release Date: October 28, 2008</p><p>Label: Streamline/Interscoope/KonLive/Cherrytree</p><p>Copyright: (C) 2008 Interscope Records</p>",
                 ProductTemplateId = productTemplateSingleVariant.Id,
+                //SeName = "poker-face",
                 AllowCustomerReviews = true,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allProducts.Add(productPokerFace);
             var downloadPokerFace1 = new Download()
             {
                 DownloadGuid = Guid.NewGuid(),
@@ -8359,11 +8511,13 @@ namespace Nop.Services.Installation
                 ShortDescription = "Single Ladies (Put A Ring On It) by Beyonce",
                 FullDescription = "<p>Original Release Date: November 18, 2008</p><p>Label: Music World Music/Columbia</p><p>Copyright: (P) 2008 SONY BMG MUSIC ENTERTAINMENT</p><p>Song Length: 3:13 minutes</p>",
                 ProductTemplateId = productTemplateSingleVariant.Id,
+                //SeName = "single-ladies-put-a-ring-on-it",
                 AllowCustomerReviews = true,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allProducts.Add(productSingleLadies);
             var downloadSingleLadies1 = new Download()
             {
                 DownloadGuid = Guid.NewGuid(),
@@ -8432,11 +8586,13 @@ namespace Nop.Services.Installation
                 ShortDescription = "The Battle Of Los Angeles by Rage Against The Machine",
                 FullDescription = "<p># Original Release Date: November 2, 1999<br /># Label: Epic<br /># Copyright: 1999 Sony Music Entertainment Inc. (c) 1999 Sony Music Entertainment Inc.</p>",
                 ProductTemplateId = productTemplateSingleVariant.Id,
+                //SeName = "the-battle-of-los-angeles",
                 AllowCustomerReviews = true,
                 Published = true,
                 CreatedOnUtc = DateTime.UtcNow,
                 UpdatedOnUtc = DateTime.UtcNow
             };
+            allProducts.Add(productBattleOfLa);
             var downloadBattleOfLa = new Download()
             {
                 DownloadGuid = Guid.NewGuid(),
@@ -8484,7 +8640,17 @@ namespace Nop.Services.Installation
             _productRepository.Insert(productBattleOfLa);
 
 
-
+            //search engine names
+            foreach (var product in allProducts)
+            {
+                _urlRecordRepository.Insert(new UrlRecord()
+                {
+                    EntityId = product.Id,
+                    EntityName = "Product",
+                    LanguageId = 0,
+                    Slug = product.ValidateSeName("", product.Name, true)
+                });
+            }
 
 
 

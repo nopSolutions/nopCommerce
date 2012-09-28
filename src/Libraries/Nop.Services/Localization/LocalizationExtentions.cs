@@ -83,7 +83,7 @@ namespace Nop.Services.Localization
             string localeKeyGroup = typeof(T).Name;
             string localeKey = propInfo.Name;
 
-            if (languageId != 0)
+            if (languageId > 0)
             {
                 //ensure that we have at least two published languages
                 bool loadLocalizedValue = true;
@@ -98,18 +98,6 @@ namespace Nop.Services.Localization
                 if (loadLocalizedValue)
                 {
                     var leService = EngineContext.Current.Resolve<ILocalizedEntityService>();
-                    //old approach (commented)
-                    //var props = leService.GetLocalizedProperties(entity.Id, localeKeyGroup);
-                    //var prop = props.FirstOrDefault(lp => lp.LanguageId == languageId &&
-                    //    lp.LocaleKeyGroup.Equals(localeKeyGroup, StringComparison.InvariantCultureIgnoreCase) && //should be culture invariant
-                    //    lp.LocaleKey.Equals(localeKey, StringComparison.InvariantCultureIgnoreCase));//should be culture invariant
-                    //if (prop != null)
-                    //{
-                    //    resultStr = prop.LocaleValue;
-                    //    result = CommonHelper.To<TPropType>(resultStr);
-                    //}
-
-                    //new approach
                     resultStr = leService.GetLocalizedValue(languageId, entity.Id, localeKeyGroup, localeKey);
                     if (!String.IsNullOrEmpty(resultStr))
                         result = CommonHelper.To<TPropType>(resultStr);

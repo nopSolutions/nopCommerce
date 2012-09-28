@@ -65,7 +65,7 @@
                         @foreach (var product in Model.Products)
                         {
                             <td style="width: @columnWidth;" class="a-center">
-                                <a class="link" href="@Url.RouteUrl("Product", new { productId = product.Id, SeName = product.SeName })">@product.Name</a>
+                                <a class="link" href="@Url.RouteUrl("Product", new { SeName = product.SeName })">@product.Name</a>
                             </td>
                         }
                     </tr>

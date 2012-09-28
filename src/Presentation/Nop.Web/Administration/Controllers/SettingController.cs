@@ -38,6 +38,7 @@ using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Themes;
 using Nop.Web.Framework.UI.Captcha;
 using Telerik.Web.Mvc;
+using Nop.Core.Domain.Seo;
 
 namespace Nop.Admin.Controllers
 {

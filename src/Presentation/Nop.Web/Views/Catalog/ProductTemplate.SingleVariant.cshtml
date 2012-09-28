@@ -1,6 +1,7 @@
 ﻿@model ProductDetailsModel
 @using Nop.Core;
 @using Nop.Core.Domain.Common;
+@using Nop.Core.Domain.Seo;
 @using Nop.Core.Infrastructure;
 @using Nop.Web;
 @using Nop.Web.Models.Catalog;
@@ -15,7 +16,7 @@
     var canonicalUrlsEnabled = EngineContext.Current.Resolve<SeoSettings>().CanonicalUrlsEnabled;
     if (canonicalUrlsEnabled)
     {
-        var productUrl = Url.RouteUrl("Product", new { productId = Model.Id, SeName = Model.SeName }, this.Request.Url.Scheme);
+        var productUrl = Url.RouteUrl("Product", new { SeName = Model.SeName }, this.Request.Url.Scheme);
         Html.AddCanonicalUrlParts(productUrl);
     }
 }
@@ -29,7 +30,7 @@
 <div class="page product-details-page">
     <div class="page-body">
         @Html.Widget("productdetails_top")
-        @using (Html.BeginRouteForm("Product", new { productId = Model.Id, SeName = Model.SeName }, FormMethod.Post, new { id = "product-details-form" }))
+        @using (Html.BeginRouteForm("Product", new { SeName = Model.SeName }, FormMethod.Post, new { id = "product-details-form" }))
         {
             <div class="product-essential">
                 @Html.Widget("productdetails_before_pictures")

@@ -52,7 +52,7 @@
                                 @item.CreatedOn.ToString("d")
                             </td>
                             <td class="a-center">
-                                <a href="@Url.RouteUrl("Product", new { productId = item.ProductId, SeName = item.ProductSeName })" title="View details">@item.ProductName</a>
+                                <a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })" title="View details">@item.ProductName</a>
                                 @if (!String.IsNullOrEmpty(item.ProductAttributes))
                                 {
                                     <div class="attributes">

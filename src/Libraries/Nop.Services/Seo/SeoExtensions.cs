@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
-using System.Web;
 using Nop.Core;
 using Nop.Core.Domain.Blogs;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Forums;
 using Nop.Core.Domain.News;
+using Nop.Core.Domain.Seo;
 using Nop.Core.Infrastructure;
 using Nop.Services.Localization;
 
@@ -19,99 +20,6 @@ namespace Nop.Services.Seo
 
         private static Dictionary<string, string> _seoCharacterTable;
         private static readonly object s_lock = new object();
-
-        #endregion
-
-        #region Category
-
-        /// <summary>
-        /// Gets category SE (search engine) name
-        /// </summary>
-        /// <param name="category">Category</param>
-        /// <returns>Category SE (search engine) name</returns>
-        public static string GetSeName(this Category category)
-        {
-            var workContext = EngineContext.Current.Resolve<IWorkContext>();
-            return GetSeName(category, workContext.WorkingLanguage.Id);
-        }
-
-        /// <summary>
-        /// Gets category SE (search engine) name
-        /// </summary>
-        /// <param name="category">Category</param>
-        /// <param name="languageId">Language identifier</param>
-        /// <returns>Category SE (search engine) name</returns>
-        public static string GetSeName(this Category category, int languageId)
-        {
-            if (category == null)
-                throw new ArgumentNullException("category");
-            string seName = GetSeName(category.GetLocalized(x => x.SeName, languageId));
-            if (String.IsNullOrEmpty(seName))
-                seName = GetSeName(category.GetLocalized(x => x.Name, languageId));
-            return seName;
-        }
-
-        #endregion
-
-        #region Manufacturer
-
-        /// <summary>
-        /// Gets manufacturer SE (search engine) name
-        /// </summary>
-        /// <param name="manufacturer">Manufacturer</param>
-        /// <returns>Manufacturer SE (search engine) name</returns>
-        public static string GetSeName(this Manufacturer manufacturer)
-        {
-            var workContext = EngineContext.Current.Resolve<IWorkContext>();
-            return GetSeName(manufacturer, workContext.WorkingLanguage.Id);
-        }
-
-        /// <summary>
-        /// Gets manufacturer SE (search engine) name
-        /// </summary>
-        /// <param name="manufacturer">Manufacturer</param>
-        /// <param name="languageId">Language identifier</param>
-        /// <returns>Manufacturer SE (search engine) name</returns>
-        public static string GetSeName(this Manufacturer manufacturer, int languageId)
-        {
-            if (manufacturer == null)
-                throw new ArgumentNullException("manufacturer");
-            string seName = GetSeName(manufacturer.GetLocalized(x => x.SeName, languageId));
-            if (String.IsNullOrEmpty(seName))
-                seName = GetSeName(manufacturer.GetLocalized(x => x.Name, languageId));
-            return seName;
-        }
-
-        #endregion
-
-        #region Product
-
-        /// <summary>
-        /// Gets product SE (search engine) name
-        /// </summary>
-        /// <param name="product">Product</param>
-        /// <returns>Product SE (search engine) name</returns>
-        public static string GetSeName(this Product product)
-        {
-            var workContext = EngineContext.Current.Resolve<IWorkContext>();
-            return GetSeName(product, workContext.WorkingLanguage.Id);
-        }
-
-        /// <summary>
-        /// Gets product SE (search engine) name
-        /// </summary>
-        /// <param name="product">Product</param>
-        /// <param name="languageId">Language identifier</param>
-        /// <returns>Product SE (search engine) name</returns>
-        public static string GetSeName(this Product product, int languageId)
-        {
-            if (product == null)
-                throw new ArgumentNullException("product");
-            string seName = GetSeName(product.GetLocalized(x => x.SeName, languageId));
-            if (String.IsNullOrEmpty(seName))
-                seName = GetSeName(product.GetLocalized(x => x.Name, languageId));
-            return seName;
-        }
 
         #endregion
         
@@ -225,19 +133,138 @@ namespace Nop.Services.Seo
 
         #endregion
 
-        #region Utility
+        #region General
+
+        /// <summary>
+        /// Get search engine name
+        /// </summary>
+        /// <typeparam name="T">Entity type</typeparam>
+        /// <param name="entity">Entity</param>
+        /// <returns>Search engine name</returns>
+        public static string GetSeName<T>(this T entity)
+            where T : BaseEntity, ISlugSupported
+        {
+            var workContext = EngineContext.Current.Resolve<IWorkContext>();
+            return GetSeName(entity, workContext.WorkingLanguage.Id);
+        }
+
+        /// <summary>
+        ///  Get search engine name
+        /// </summary>
+        /// <typeparam name="T">Entity type</typeparam>
+        /// <param name="entity">Entity</param>
+        /// <param name="languageId">Language identifier</param>
+        /// <param name="returnDefaultValue">A value indicating whether to return default value (if language specified one is not found)</param>
+        /// <param name="ensureTwoPublishedLanguages">A value indicating whether to ensure that we have at least two published languages; otherwise, load only default value</param>
+        /// <returns>Search engine name</returns>
+        public static string GetSeName<T>(this T entity, int languageId, bool returnDefaultValue = true,
+            bool ensureTwoPublishedLanguages = true)
+            where T : BaseEntity, ISlugSupported
+        {
+            if (entity == null)
+                throw new ArgumentNullException("entity");
+
+            string result = string.Empty;
+            string entityName = typeof(T).Name;
+
+            var urlRecordService = EngineContext.Current.Resolve<IUrlRecordService>();
+            if (languageId > 0)
+            {
+                //ensure that we have at least two published languages
+                bool loadLocalizedValue = true;
+                if (ensureTwoPublishedLanguages)
+                {
+                    var lService = EngineContext.Current.Resolve<ILanguageService>();
+                    var totalPublishedLanguages = lService.GetAllLanguages(false).Count;
+                    loadLocalizedValue = totalPublishedLanguages >= 2;
+                }
+                //localized value
+                if (loadLocalizedValue)
+                {
+                    result = urlRecordService.FindSlug(entity.Id, entityName, languageId);
+                }
+            }
+            //set default value if required
+            if (String.IsNullOrEmpty(result) && returnDefaultValue)
+            {
+                result = urlRecordService.FindSlug(entity.Id, entityName, 0);
+            }
+
+            return result;
+        }
+        
+        /// <summary>
+        /// Validate search engine name
+        /// </summary>
+        /// <param name="entity">Entity</param>
+        /// <param name="seName">Search engine name to validate</param>
+        /// <param name="name">User-friendly name used to generate sename</param>
+        /// <param name="ensureNotEmpty">Ensreu that sename is not empty</param>
+        /// <returns>Valid sename</returns>
+        public static string ValidateSeName<T>(this T entity, string seName, string name, bool ensureNotEmpty)
+             where T : BaseEntity, ISlugSupported
+        {
+            if (entity == null)
+                throw new ArgumentNullException("entity");
+
+            //use name if sename is not specified
+            if (String.IsNullOrWhiteSpace(seName) && !String.IsNullOrWhiteSpace(name))
+                seName = name;
+            
+            //validation
+            seName = GetSeName(seName);
+
+            //max length
+            seName = CommonHelper.EnsureMaximumLength(seName, 400);
+
+            if (String.IsNullOrWhiteSpace(seName))
+            {
+                if (ensureNotEmpty)
+                {
+                    //use entity identifier as sename if empty
+                    seName = entity.Id.ToString();
+                }
+                else
+                {
+                    //return. no need for further processing
+                    return seName;
+                }
+            }
+
+            //ensure this sename is not reserved yet
+            string entityName = typeof(T).Name;
+            var urlRecordService = EngineContext.Current.Resolve<IUrlRecordService>();
+            var seoSettings = EngineContext.Current.Resolve<SeoSettings>();
+            int i = 2;
+            var tempSeName = seName;
+            while (true)
+            {
+                //check whether such slug already exists (and that is not the current product)
+                var urlRecord = urlRecordService.GetBySlug(tempSeName);
+                var reserved1 = urlRecord != null && !(urlRecord.EntityId == entity.Id && urlRecord.EntityName.Equals(entityName, StringComparison.InvariantCultureIgnoreCase));
+                //and it's not in the list of reserved slugs
+                var reserved2 = seoSettings.ReservedUrlRecordSlugs.Contains(tempSeName, StringComparer.InvariantCultureIgnoreCase);
+                if (!reserved1 && !reserved2)
+                    break;
+
+                tempSeName = string.Format("{0}-{1}", seName, i);
+                i++;
+            }
+            seName = tempSeName;
+
+            return seName;
+        }
+
 
         /// <summary>
         /// Get SE name
         /// </summary>
         /// <param name="name">Name</param>
-        /// <param name="urlEncode">A value indicating whether encode URL</param>
         /// <returns>Result</returns>
-        public static string GetSeName(string name, bool urlEncode = false)
+        public static string GetSeName(string name)
         {
             var seoSettings = EngineContext.Current.Resolve<SeoSettings>();
-            return GetSeName(name, seoSettings.ConvertNonWesternChars,
-                             seoSettings.AllowUnicodeCharsInUrls, urlEncode);
+            return GetSeName(name, seoSettings.ConvertNonWesternChars, seoSettings.AllowUnicodeCharsInUrls);
         }
 
         /// <summary>
@@ -246,10 +273,8 @@ namespace Nop.Services.Seo
         /// <param name="name">Name</param>
         /// <param name="convertNonWesternChars">A value indicating whether non western chars should be converted</param>
         /// <param name="allowUnicodeCharsInUrls">A value indicating whether Unicode chars are allowed</param>
-        /// <param name="urlEncode">A value indicating whether encode URL</param>
         /// <returns>Result</returns>
-        public static string GetSeName(string name, bool convertNonWesternChars, 
-            bool allowUnicodeCharsInUrls, bool urlEncode = false)
+        public static string GetSeName(string name, bool convertNonWesternChars, bool allowUnicodeCharsInUrls)
         {
             if (String.IsNullOrEmpty(name))
                 return name;
@@ -288,10 +313,6 @@ namespace Nop.Services.Seo
                 name2 = name2.Replace("--", "-");
             while (name2.Contains("__"))
                 name2 = name2.Replace("__", "_");
-            if (urlEncode)
-            {
-                name2 = HttpUtility.UrlEncode(name2);
-            }
             return name2;
         }
 

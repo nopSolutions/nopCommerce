@@ -1,6 +1,6 @@
 ﻿@model ProductOverviewModel
 @using Nop.Web.Models.Catalog;
-<a href="@Url.RouteUrl("Product", new { productId = Model.Id, SeName = Model.SeName })">
+<a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })">
     <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" />
     <div class="product-title">@Model.Name</div>
     @if (!String.IsNullOrEmpty(Model.ShortDescription))

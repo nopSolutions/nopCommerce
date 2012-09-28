@@ -213,6 +213,12 @@ namespace Nop.Web.Framework
             builder.RegisterType<EncryptionService>().As<IEncryptionService>().InstancePerHttpRequest();
             builder.RegisterType<FormsAuthenticationService>().As<IAuthenticationService>().InstancePerHttpRequest();
 
+
+            //pass MemoryCacheManager to UrlRecordService as cacheManager (cache settings between requests)
+            builder.RegisterType<UrlRecordService>().As<IUrlRecordService>()
+                .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
+                .InstancePerHttpRequest();
+
             builder.RegisterType<ShipmentService>().As<IShipmentService>().InstancePerHttpRequest();
             builder.RegisterType<ShippingService>().As<IShippingService>().InstancePerHttpRequest();
 

@@ -13,6 +13,7 @@ using Nop.Data;
 using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
+using Nop.Services.Seo;
 
 namespace Nop.Services.Catalog
 {
@@ -118,7 +119,7 @@ namespace Nop.Services.Catalog
         }
 
         #endregion
-
+        
         #region Methods
 
         #region Products
@@ -225,12 +226,14 @@ namespace Nop.Services.Catalog
             if (product == null)
                 throw new ArgumentNullException("product");
 
+            //insert
             _productRepository.Insert(product);
 
+            //clear cache
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(TIERPRICES_PATTERN_KEY);
-
+            
             //event notification
             _eventPublisher.EntityInserted(product);
         }
@@ -244,8 +247,10 @@ namespace Nop.Services.Catalog
             if (product == null)
                 throw new ArgumentNullException("product");
 
+            //update
             _productRepository.Update(product);
 
+            //cache
             _cacheManager.RemoveByPattern(PRODUCTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCTVARIANTS_PATTERN_KEY);
             _cacheManager.RemoveByPattern(TIERPRICES_PATTERN_KEY);

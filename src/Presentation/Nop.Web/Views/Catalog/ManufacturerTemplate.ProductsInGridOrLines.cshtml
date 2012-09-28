@@ -8,12 +8,13 @@
     var canonicalUrlsEnabled = EngineContext.Current.Resolve<SeoSettings>().CanonicalUrlsEnabled;
     if (canonicalUrlsEnabled)
     {
-        var manufacturerUrl = Url.RouteUrl("Manufacturer", new { manufacturerId = Model.Id, SeName = Model.SeName }, this.Request.Url.Scheme);
+        var manufacturerUrl = Url.RouteUrl("Manufacturer", new { SeName = Model.SeName }, this.Request.Url.Scheme);
         Html.AddCanonicalUrlParts(manufacturerUrl);
     }
 }
 @using Nop.Core;
 @using Nop.Core.Domain.Common;
+@using Nop.Core.Domain.Seo;
 @using Nop.Core.Infrastructure;
 @using Nop.Web;
 @using Nop.Web.Models.Catalog;

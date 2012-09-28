@@ -47,13 +47,6 @@ namespace Nop.Services.Tests.Seo
             SeoExtensions.GetSeName("testтест", true, true).ShouldEqual("testтест");
             SeoExtensions.GetSeName("testтест", true, false).ShouldEqual("test");
         }
-
-        [Test]
-        public void Can_encode_for_url()
-        {
-            //russian letters т should be encoded as "%d1%82"
-            SeoExtensions.GetSeName("testт", true, true, true).ShouldEqual("test%d1%82");
-        }
     }
 }
 

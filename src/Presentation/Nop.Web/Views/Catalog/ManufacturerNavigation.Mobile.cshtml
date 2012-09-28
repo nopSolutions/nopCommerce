@@ -13,7 +13,7 @@
             @foreach (var manufacturer in Model.Manufacturers)
             {
                 //we display all manufacturers in mobile version (do not use @Model.ManufacturersToDisplay)
-                <li><a href="@Url.RouteUrl("Manufacturer", new { manufacturerId = manufacturer.Id, SeName = manufacturer.SeName })">
+                <li><a href="@Url.RouteUrl("Manufacturer", new { SeName = manufacturer.SeName })">
                     @manufacturer.Name</a></li>
             }
         </ul>

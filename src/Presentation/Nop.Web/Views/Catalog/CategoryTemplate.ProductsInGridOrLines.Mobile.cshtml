@@ -32,7 +32,7 @@
                 <ul data-role="listview" data-inset="true" data-filter="false">
                     @foreach (var category in Model.SubCategories)
                     {
-                        <li><a href="@Url.RouteUrl("Category", new { categoryId = category.Id, SeName = category.SeName })">
+                        <li><a href="@Url.RouteUrl("Category", new { SeName = category.SeName })">
                             @category.Name</a></li>
                     }
                 </ul>

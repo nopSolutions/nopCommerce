@@ -18,7 +18,6 @@ namespace Nop.Data.Tests.Catalog
                                    MetaKeywords = "Meta keywords",
                                    MetaDescription = "Meta description",
                                    MetaTitle = "Meta title",
-                                   SeName = "SE name",
                                    ParentCategoryId = 2,
                                    PictureId = 3,
                                    PageSize = 4,
@@ -40,7 +39,6 @@ namespace Nop.Data.Tests.Catalog
             fromDb.Description.ShouldEqual("Description 1");
             fromDb.MetaKeywords.ShouldEqual("Meta keywords");
             fromDb.MetaDescription.ShouldEqual("Meta description");
-            fromDb.SeName.ShouldEqual("SE name");
             fromDb.ParentCategoryId.ShouldEqual(2);
             fromDb.PictureId.ShouldEqual(3);
             fromDb.PageSize.ShouldEqual(4);

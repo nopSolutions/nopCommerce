@@ -16,7 +16,6 @@ namespace Nop.Data.Mapping.Catalog
             this.Property(p => p.MetaKeywords).HasMaxLength(400);
             this.Property(p => p.MetaDescription);
             this.Property(p => p.MetaTitle).HasMaxLength(400);
-            this.Property(p => p.SeName).HasMaxLength(200);
         }
     }
 }

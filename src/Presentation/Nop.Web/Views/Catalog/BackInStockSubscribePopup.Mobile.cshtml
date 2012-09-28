@@ -20,7 +20,7 @@
         </div>
         <div class="page-body">
             <div>
-                <a href="@Url.RouteUrl("Product", new { productId = Model.ProductId, SeName = Model.ProductSeName })">@Model.ProductName</a>
+                <a href="@Url.RouteUrl("Product", new { SeName = Model.ProductSeName })">@Model.ProductName</a>
             </div>
             <div>
                 @if (!Model.SubscriptionAllowed)
@@ -62,7 +62,7 @@
                                     $.mobile.hidePageLoadingMsg();
 
                                     //redirect to product details page
-                                    document.location.href = "@Url.RouteUrl("Product", new { productId = Model.ProductId, SeName = Model.ProductSeName })";
+                                    document.location.href = "@Url.RouteUrl("Product", new { SeName = Model.ProductSeName })";
                                 }
                             });
                             return false;

@@ -14,10 +14,10 @@
 }
 <div class="product-item">
     <h2 class="product-title">
-        <a href="@Url.RouteUrl("Product", new { productId = Model.Id, SeName = Model.SeName })">@Model.Name</a>
+        <a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })">@Model.Name</a>
     </h2>
     <div class="picture">
-        <a href="@Url.RouteUrl("Product", new { productId = Model.Id, SeName = Model.SeName })" title="@Model.DefaultPictureModel.Title">
+        <a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })" title="@Model.DefaultPictureModel.Title">
             <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" />
         </a>
     </div>
@@ -37,7 +37,7 @@
             </div>
         </div>
         <div class="buttons">
-            <input type="button" value="@T("Products.Details")" class="button-1 product-box-detail-button" onclick="setLocation('@Url.RouteUrl("Product", new { productId = Model.Id, SeName = Model.SeName })')" />
+            <input type="button" value="@T("Products.Details")" class="button-1 product-box-detail-button" onclick="setLocation('@Url.RouteUrl("Product", new { SeName = Model.SeName })')" />
             @if (!Model.ProductPrice.DisableBuyButton)
             {
                 <br />

@@ -5,7 +5,7 @@ using Nop.Web.Framework.Mvc.Routes;
 namespace Nop.Web.Infrastructure
 {
     //Routes used for backward compatibility with 1.x versions of nopCommerce
-    public partial class UpgradeRouteProvider : IRouteProvider
+    public partial class BackwardCompatibility1XRouteProvider : IRouteProvider
     {
         public void RegisterRoutes(RouteCollection routes)
         {
@@ -66,7 +66,7 @@ namespace Nop.Web.Infrastructure
             get
             {
                 //register it after all other IRouteProvider are processed
-                return -1;
+                return -1000;
             }
         }
     }
