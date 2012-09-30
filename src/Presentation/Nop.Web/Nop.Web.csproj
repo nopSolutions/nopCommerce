@@ -1125,7 +1125,7 @@
     <Content Include="Content\Images\ico-close-notification-bar.png" />
     <Content Include="Themes\DarkOrange\Content\images\ico-rss.gif" />
     <Content Include="Content\Images\noDefaultImage.gif" />
-    <Content Include="Content\Images\install-synchronizing.gif" />
+    <Content Include="Content\install\images\install-synchronizing.gif" />
     <Content Include="Content\Images\uploaded\placeholder.txt" />
     <Content Include="Content\install\images\bg.gif" />
     <Content Include="Content\install\images\bodybg.gif" />
