@@ -873,9 +873,7 @@
     <Content Include="Content\files\Index.htm" />
     <Content Include="Content\fileuploader\fileuploader.css" />
     <Content Include="Content\fileuploader\images\fileuploader-loading.gif" />
-    <Content Include="Content\Images\ajax_loader_large.gif" />
     <Content Include="Content\Images\ajax_loader_small.gif" />
-    <Content Include="Content\Images\ajax_loader_big.gif" />
     <Content Include="Content\Images\defaultAvatar.jpg" />
     <Content Include="Content\Images\flags\ad.png" />
     <Content Include="Content\Images\flags\ae.png" />
@@ -1127,16 +1125,6 @@
     <Content Include="Content\Images\ico-close-notification-bar.png" />
     <Content Include="Content\Images\icon_rss.gif" />
     <Content Include="Content\Images\noDefaultImage.gif" />
-    <Content Include="Content\Images\noDefaultImage1.gif" />
-    <Content Include="Content\Images\noDefaultImage10.gif" />
-    <Content Include="Content\Images\noDefaultImage2.gif" />
-    <Content Include="Content\Images\noDefaultImage3.gif" />
-    <Content Include="Content\Images\noDefaultImage4.gif" />
-    <Content Include="Content\Images\noDefaultImage5.gif" />
-    <Content Include="Content\Images\noDefaultImage6.gif" />
-    <Content Include="Content\Images\noDefaultImage7.gif" />
-    <Content Include="Content\Images\noDefaultImage8.gif" />
-    <Content Include="Content\Images\noDefaultImage9.gif" />
     <Content Include="Content\Images\install-synchronizing.gif" />
     <Content Include="Content\Images\uploaded\placeholder.txt" />
     <Content Include="Content\install\images\bg.gif" />
@@ -1297,7 +1285,6 @@
     <Content Include="Scripts\public.common.js" />
     <Content Include="Scripts\slimbox2.js" />
     <Content Include="StoreClosed.htm" />
-    <Content Include="Themes\DarkOrange\Content\images\ajax_loader_big.gif" />
     <Content Include="Themes\DarkOrange\Content\images\ajax_loader_large.gif" />
     <Content Include="Themes\DarkOrange\Content\images\ajax_loader_small.gif" />
     <Content Include="Themes\DarkOrange\Content\styles.rtl.css">
