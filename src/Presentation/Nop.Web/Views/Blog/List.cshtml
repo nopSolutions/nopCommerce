@@ -16,8 +16,7 @@
 }
 <div class="page blog-page">
     <div class="page-title">
-        <a href="@Url.RouteUrl("BlogRSS", new { languageId = Model.WorkingLanguageId })" class="link-rss">
-            <img title="@T("Blog.RSS.Hint")" src="@Url.Content("~/content/images/icon_rss.gif")" alt="@T("Blog.RSS")" /></a>
+        <a href="@Url.RouteUrl("BlogRSS", new { languageId = Model.WorkingLanguageId })" class="link-rss" title="@T("Blog.RSS.Hint")">@T("Blog.RSS")</a>
         <h1>
             @if (String.IsNullOrEmpty(Model.PagingFilteringContext.Tag))
             {

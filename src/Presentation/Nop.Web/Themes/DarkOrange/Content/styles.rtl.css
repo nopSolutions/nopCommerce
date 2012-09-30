@@ -81,7 +81,7 @@ ul.language-list li:hover{cursor:pointer;}
 .page-body{}
 .page-title{border-bottom:1px solid;margin:0 0 10px;overflow:hidden;width:100%;}
 .page-title h1,.page-title h2{padding:5px 5px 5px 0;font-size:20px;margin:0;font-family:Arial,Helvetica,sans-serif;font-weight:400;}
-.page-title .link-rss{float:left;text-align:left;margin:10px 10px 0 0;}
+.page-title .link-rss{float:left;margin:10px 0 0 10px;background-image:url(images/ico-rss.gif);background-repeat:no-repeat;display:block;height:14px;width:14px;text-indent:-9999px;}
 td{vertical-align:middle;}
 td.fieldname{font-size:12px;}
 .captcha-box{direction:ltr;text-align:left;}
@@ -911,6 +911,7 @@ a.eu-cookie-privacyinfo-tag{color:#F93 !important;text-decoration:underline;}
 .forum .top .forum-info{float:right;}
 .forum .top .forum-info .forum-name{font-weight:700;font-size:1.2em;line-height:25px;}
 .forum .top .forum-info .forum-description{color:#555;}
+.forum .top .rss .link-rss{float:right;margin:10px 0 0 10px;background-image:url(images/ico-rss.gif);background-repeat:no-repeat;display:block;height:14px;width:14px;text-indent:-9999px;}
 .forum .top .actions{float:left;text-align:left;}
 .forum .top .actions .newtopic{background:url(images/ico-forum-post-add.gif) no-repeat right;padding:0 20px 3px 10px;}
 .forum .top .actions .watch-forum{background:url(images/ico-forum-watch.gif) no-repeat right;padding-right:20px;}
@@ -1048,6 +1049,7 @@ a.eu-cookie-privacyinfo-tag{color:#F93 !important;text-decoration:underline;}
 /* ACTIVE DISCUSSIONS */
 .active-discussions-page{}
 .active-discussions .active-discussions-title{font-size:1.1em;padding-bottom:5px;font-weight:700;}
+.active-discussions .active-discussions-title .link-rss{float:left;margin:0px 10px 0px 0px;background-image:url(images/ico-rss.gif);background-repeat:no-repeat;display:inline;height:14px;width:14px;text-indent:-9999px;}
 .active-discussions .active-discussions-title .view-all{float:left;text-align:left;}
 .active-discussions .topics-group{background:url(images/forum-footer-bg.gif) repeat-x bottom;}
 .active-discussions table.topics{width:100%;border-collapse:collapse;vertical-align:middle;text-align:center;}
