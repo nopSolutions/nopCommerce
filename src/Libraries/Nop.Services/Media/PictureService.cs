@@ -288,13 +288,13 @@ namespace Nop.Services.Media
             switch (defaultPictureType)
             {
                 case PictureType.Entity:
-                    defaultImageName = _settingService.GetSettingByKey("Media.DefaultImageName", "noDefaultImage.gif");
+                    defaultImageName = _settingService.GetSettingByKey("Media.DefaultImageName", "default-image.gif");
                     break;
                 case PictureType.Avatar:
-                    defaultImageName = _settingService.GetSettingByKey("Media.Customer.DefaultAvatarImageName", "defaultAvatar.jpg");
+                    defaultImageName = _settingService.GetSettingByKey("Media.Customer.DefaultAvatarImageName", "default-avatar.jpg");
                     break;
                 default:
-                    defaultImageName = _settingService.GetSettingByKey("Media.DefaultImageName", "noDefaultImage.gif");
+                    defaultImageName = _settingService.GetSettingByKey("Media.DefaultImageName", "default-image.gif");
                     break;
             }
 

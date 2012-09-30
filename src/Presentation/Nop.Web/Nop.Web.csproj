@@ -874,7 +874,7 @@
     <Content Include="Content\fileuploader\fileuploader.css" />
     <Content Include="Content\fileuploader\images\fileuploader-loading.gif" />
     <Content Include="Content\Images\ajax_loader_small.gif" />
-    <Content Include="Content\Images\defaultAvatar.jpg" />
+    <Content Include="Content\Images\default-avatar.jpg" />
     <Content Include="Content\Images\flags\ad.png" />
     <Content Include="Content\Images\flags\ae.png" />
     <Content Include="Content\Images\flags\af.png" />
@@ -1124,7 +1124,7 @@
     <Content Include="Content\Images\flags\zw.png" />
     <Content Include="Content\Images\ico-close-notification-bar.png" />
     <Content Include="Themes\DarkOrange\Content\images\ico-rss.gif" />
-    <Content Include="Content\Images\noDefaultImage.gif" />
+    <Content Include="Content\Images\default-image.gif" />
     <Content Include="Content\install\images\install-synchronizing.gif" />
     <Content Include="Content\Images\uploaded\placeholder.txt" />
     <Content Include="Content\install\images\bg.gif" />
