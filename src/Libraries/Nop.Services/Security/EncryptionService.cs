@@ -15,6 +15,11 @@ namespace Nop.Services.Security
             this._securitySettings = securitySettings;
         }
 
+        /// <summary>
+        /// Create salt key
+        /// </summary>
+        /// <param name="size">Key size</param>
+        /// <returns>Salt key</returns>
         public virtual string CreateSaltKey(int size) 
         {
             // Generate a cryptographic random number
@@ -26,17 +31,34 @@ namespace Nop.Services.Security
             return Convert.ToBase64String(buff);
         }
 
+        /// <summary>
+        /// Create a password hash
+        /// </summary>
+        /// <param name="password">{assword</param>
+        /// <param name="saltkey">Salk key</param>
+        /// <param name="passwordFormat">Password format (hash algorithm)</param>
+        /// <returns>Password hash</returns>
         public virtual string CreatePasswordHash(string password, string saltkey, string passwordFormat = "SHA1")
         {
             if (String.IsNullOrEmpty(passwordFormat))
                 passwordFormat = "SHA1";
             string saltAndPassword = String.Concat(password, saltkey);
-            string hashedPassword =
-                FormsAuthentication.HashPasswordForStoringInConfigFile(
-                    saltAndPassword, passwordFormat);
-            return hashedPassword;
+
+            //return FormsAuthentication.HashPasswordForStoringInConfigFile(saltAndPassword, passwordFormat);
+            var algorithm = HashAlgorithm.Create(passwordFormat);
+            if (algorithm == null)
+                throw new ArgumentException("Unrecognized hash name", "hashName");
+
+            var hashByteArray = algorithm.ComputeHash(Encoding.UTF8.GetBytes(saltAndPassword));
+            return BitConverter.ToString(hashByteArray).Replace("-", "");
         }
 
+        /// <summary>
+        /// Encrypt text
+        /// </summary>
+        /// <param name="plainText">Text to encrypt</param>
+        /// <param name="encryptionPrivateKey">Encryption private key</param>
+        /// <returns>Encrypted text</returns>
         public virtual string EncryptText(string plainText, string encryptionPrivateKey = "") 
         {
             if (string.IsNullOrEmpty(plainText))
@@ -53,6 +75,12 @@ namespace Nop.Services.Security
             return Convert.ToBase64String(encryptedBinary);
         }
 
+        /// <summary>
+        /// Decrypt text
+        /// </summary>
+        /// <param name="cipherText">Text to decrypt</param>
+        /// <param name="encryptionPrivateKey">Encryption private key</param>
+        /// <returns>Decrypted text</returns>
         public virtual string DecryptText(string cipherText, string encryptionPrivateKey = "") 
         {
             if (String.IsNullOrEmpty(cipherText))
