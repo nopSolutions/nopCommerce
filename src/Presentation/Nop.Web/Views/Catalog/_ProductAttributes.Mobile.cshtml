@@ -44,7 +44,7 @@
                             }
                             @foreach (var pvaValue in attribute.Values)
                             {
-                                <option @(pvaValue.IsPreSelected ? Html.Raw(" selected=\"selected\"") : null) value="@pvaValue.Id">@pvaValue.Name
+                                <option selected="@pvaValue.IsPreSelected" value="@pvaValue.Id">@pvaValue.Name
                                     @(!String.IsNullOrEmpty(pvaValue.PriceAdjustment) ? " [" + pvaValue.PriceAdjustment + "]" : null)
                                 </option>
                             }
@@ -57,7 +57,7 @@
                             @foreach (var pvaValue in attribute.Values)
                             {
                                 <li>
-                                    <input id="@(controlId)_@(pvaValue.Id)" type="radio" name="@(controlId)" value="@pvaValue.Id" @(pvaValue.IsPreSelected ? Html.Raw(" checked=\"checked\"") : null) />
+                                    <input id="@(controlId)_@(pvaValue.Id)" type="radio" name="@(controlId)" value="@pvaValue.Id" checked="@pvaValue.IsPreSelected" />
                                     <label for="@(controlId)_@(pvaValue.Id)">@pvaValue.Name @(!String.IsNullOrEmpty(pvaValue.PriceAdjustment) ? " [" + pvaValue.PriceAdjustment + "]" : null)</label>
                                 </li>
                             }
@@ -70,7 +70,7 @@
                             @foreach (var pvaValue in attribute.Values)
                             {
                                 <li>
-                                    <input id="@(controlId)_@(pvaValue.Id)" type="checkbox" name="@(controlId)" value="@pvaValue.Id" @(pvaValue.IsPreSelected ? Html.Raw(" checked=\"checked\"") : null) />
+                                    <input id="@(controlId)_@(pvaValue.Id)" type="checkbox" name="@(controlId)" value="@pvaValue.Id" checked="@pvaValue.IsPreSelected" />
                                     <label for="@(controlId)_@(pvaValue.Id)">@pvaValue.Name @(!String.IsNullOrEmpty(pvaValue.PriceAdjustment) ? " [" + pvaValue.PriceAdjustment + "]" : null)</label>
                                 </li>
                             }

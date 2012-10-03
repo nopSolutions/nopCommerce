@@ -28,7 +28,7 @@
                             }
                             @foreach (var caValue in attribute.Values)
                             {
-                                <option @(caValue.IsPreSelected ? Html.Raw(" selected=\"selected\"") : null) value="@caValue.Id">@caValue.Name
+                                <option selected="@caValue.IsPreSelected" value="@caValue.Id">@caValue.Name
                                     @(!String.IsNullOrEmpty(caValue.PriceAdjustment) ? " [" + caValue.PriceAdjustment + "]" : null)
                                 </option>
                             }
@@ -41,7 +41,7 @@
                             @foreach (var caValue in attribute.Values)
                             {
                                 <li>
-                                    <input id="@(controlId)_@(caValue.Id)" type="radio" name="@(controlId)" value="@caValue.Id" @(caValue.IsPreSelected ? Html.Raw(" checked=\"checked\"") : null) />
+                                    <input id="@(controlId)_@(caValue.Id)" type="radio" name="@(controlId)" value="@caValue.Id" checked="@caValue.IsPreSelected" />
                                     <label for="@(controlId)_@(caValue.Id)">@caValue.Name @(!String.IsNullOrEmpty(caValue.PriceAdjustment) ? " [" + caValue.PriceAdjustment + "]" : null)</label>
                                 </li>
                             }
@@ -54,7 +54,7 @@
                             @foreach (var caValue in attribute.Values)
                             {
                                 <li>
-                                    <input id="@(controlId)_@(caValue.Id)" type="checkbox" name="@(controlId)" value="@caValue.Id" @(caValue.IsPreSelected ? Html.Raw(" checked=\"checked\"") : null) />
+                                    <input id="@(controlId)_@(caValue.Id)" type="checkbox" name="@(controlId)" value="@caValue.Id" checked="@caValue.IsPreSelected" />
                                     <label for="@(controlId)_@(caValue.Id)">@caValue.Name @(!String.IsNullOrEmpty(caValue.PriceAdjustment) ? " [" + caValue.PriceAdjustment + "]" : null)</label>
                                 </li>
                             }

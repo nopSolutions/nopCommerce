@@ -59,7 +59,7 @@
                 <div style="height: 250px; width: 300px; overflow: auto; border: solid 1px #bbb;">
                     @foreach (var csd in Model.AvailableCarrierServicesDomestic)
                     {
-                        <input type="checkbox" name="CheckedCarrierServicesDomestic" value="@(csd)" @(Model.CarrierServicesOfferedDomestic.Contains(csd) ? Html.Raw(" checked=\"checked\"") : null) />
+                        <input type="checkbox" name="CheckedCarrierServicesDomestic" value="@(csd)" checked="@Model.CarrierServicesOfferedDomestic.Contains(csd)" />
                         <label>@csd</label>
                         <br />
                     }
@@ -74,7 +74,7 @@
                 <div style="height: 250px; width: 300px; overflow: auto; border: solid 1px #bbb;">
                     @foreach (var csi in Model.AvailableCarrierServicesInternational)
                     {
-                        <input type="checkbox" name="CheckedCarrierServicesInternational" value="@(csi)" @(Model.CarrierServicesOfferedInternational.Contains(csi) ? Html.Raw(" checked=\"checked\"") : null) />
+                        <input type="checkbox" name="CheckedCarrierServicesInternational" value="@(csi)" checked="@Model.CarrierServicesOfferedInternational.Contains(csi)" />
                         <label>@csi</label>
                         <br />
                     }

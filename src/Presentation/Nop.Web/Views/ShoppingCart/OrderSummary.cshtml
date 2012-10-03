@@ -130,7 +130,7 @@
                                 <select name="itemquantity@(item.Id)" class="qty-dropdown">
                                     @foreach (var qty in item.AllowedQuantities)
                                     {
-                                        <option @(qty.Selected ? Html.Raw(" selected=\"selected\"") : null) value="@qty.Value">@qty.Value</option>
+                                        <option selected="@qty.Selected" value="@qty.Value">@qty.Value</option>
                                     }
                                 </select>
                                 }
