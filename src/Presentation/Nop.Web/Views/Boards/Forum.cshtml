@@ -54,7 +54,7 @@
     </div>
     <div class="pager">
         @{
-            var pager = @Html.Pager(new PagerModel()
+            var pager = Html.Pager(new PagerModel()
             {
                 PageSize = Model.TopicPageSize,
                 TotalRecords = Model.TopicTotalRecords,

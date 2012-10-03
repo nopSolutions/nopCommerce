@@ -59,7 +59,7 @@
                         <div class="topic-starter">
                             @if (@topic.CustomerId > 0)
                             {
-                                var authorText = @T("Forum.Author");
+                                var authorText = T("Forum.Author");
                                 if (topic.AllowViewingProfiles && !topic.IsCustomerGuest)
                                 {
                                 @T("Forum.Author")<text>:</text> @Html.RouteLink(topic.CustomerName, "CustomerProfile", new { Id = topic.CustomerId })
