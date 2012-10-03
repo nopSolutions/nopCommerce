@@ -22,7 +22,7 @@
             {
                 if (Model.PagingFilteringContext.GetParsedMonth().HasValue)
                 {
-                @string.Format(T("Blog.FilteredByMonth").Text, Model.PagingFilteringContext.GetParsedMonth().Value.Year, Model.PagingFilteringContext.GetParsedMonth().Value.ToString("MMMM"));
+                @String.Format(T("Blog.FilteredByMonth").Text, Model.PagingFilteringContext.GetParsedMonth().Value.Year, Model.PagingFilteringContext.GetParsedMonth().Value.ToString("MMMM"));
                 }
                 else
                 {
@@ -31,7 +31,7 @@
             }
             else
             {
-                @string.Format(T("Blog.TaggedWith").Text, Model.PagingFilteringContext.Tag);
+                @String.Format(T("Blog.TaggedWith").Text, Model.PagingFilteringContext.Tag);
             }
         </h1>
     </div>

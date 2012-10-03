@@ -66,8 +66,8 @@
                     <div class="login-info">
                         @if (currentCustomer != null && currentCustomer.IsRegistered())
                         {
-                            @string.Format(T("Admin.Header.LoggedInAs").Text, usernamesEnabled ? currentCustomer.Username : currentCustomer.Email)
-                            <text>, @Html.ActionLink(T("Admin.Header.Logout").Text, "Logout", "Customer", new { area = "" }, null)</text> 
+                            @String.Format(T("Admin.Header.LoggedInAs").Text, usernamesEnabled ? currentCustomer.Username : currentCustomer.Email)
+                            <text>, </text> @Html.ActionLink(T("Admin.Header.Logout").Text, "Logout", "Customer", new { area = "" }, null)
                         }
                     </div>
                     <div class="version">
