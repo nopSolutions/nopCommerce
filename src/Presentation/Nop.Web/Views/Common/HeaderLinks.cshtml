@@ -5,7 +5,7 @@
         @Html.Widget("header_links_before")
         @if (Model.IsCustomerImpersonated)
         {
-            <li><span class="impersonate">(@(string.Format(T("Account.ImpersonatedAs").Text, Model.CustomerEmailUsername)))
+            <li><span class="impersonate">(@string.Format(T("Account.ImpersonatedAs").Text, Model.CustomerEmailUsername))
                 - <a href="@Url.RouteUrl("Logout")" class="finish-impersonation" title="@T("Account.ImpersonatedAs.Finish.Hint")">@T("Account.ImpersonatedAs.Finish")</a>
                 ) </span></li>
         }
