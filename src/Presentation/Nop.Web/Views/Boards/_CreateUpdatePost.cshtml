@@ -66,7 +66,7 @@
                         </td>
                         <td>
                             @Html.EditorFor(model => model.Subscribed)
-                            @Html.LabelFor(model => model.Subscribed, @T("Forum.NotifyWhenSomeonePostsInThisTopic").Text)
+                            @Html.LabelFor(model => model.Subscribed, T("Forum.NotifyWhenSomeonePostsInThisTopic").Text)
                         </td>
                     </tr>
                 }
@@ -74,7 +74,7 @@
                     <td colspan="2" class="options">
                         <input type="submit" value="@T("Forum.Submit")" class="button-1 submit-forum-topic-button" />
                         <input type="button" class="button-2 cancel-forum-topic-button" value="@T("Forum.Cancel")" 
-                        onclick="setLocation('@Url.RouteUrl("TopicSlug", new { id = @Model.ForumTopicId, slug = @Model.ForumTopicSeName })')" />
+                        onclick="setLocation('@Url.RouteUrl("TopicSlug", new { id = Model.ForumTopicId, slug = Model.ForumTopicSeName })')" />
                     </td>
                 </tr>
             </table>

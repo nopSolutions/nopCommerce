@@ -2,7 +2,7 @@
 @using Telerik.Web.Mvc.UI
 @{
     //page title
-    ViewBag.Title = @T("Admin.Configuration.Languages").Text;
+    ViewBag.Title = T("Admin.Configuration.Languages").Text;
 }
 <div class="section-header">
     <div class="title">
@@ -27,7 +27,7 @@
                             .Centered();
                         columns.Template(
                                 @<div>
-                                    @Html.ActionLink(T("Admin.Configuration.Languages.Resources.View").Text, "Resources", new { languageId = @item.Id })
+                                    @Html.ActionLink(T("Admin.Configuration.Languages.Resources.View").Text, "Resources", new { languageId = item.Id })
                                 </div>
                             ).Width(200)
                             .Centered()

@@ -306,12 +306,12 @@
                     <div class="actions">
                         @if (Model.IsReOrderAllowed)
                         {
-                            <input type="button" value="@T("Order.Reorder")" class="button-1 re-order-button" onclick="setLocation('@Url.RouteUrl("ReOrder", new { orderId = @Model.Id })')" />
+                            <input type="button" value="@T("Order.Reorder")" class="button-1 re-order-button" onclick="setLocation('@Url.RouteUrl("ReOrder", new { orderId = Model.Id })')" />
                         }
                         @if (Model.IsReturnRequestAllowed)
                         {
                             <text>&nbsp; &nbsp; &nbsp;</text>
-                            <input type="button" value="@T("Order.ReturnItems")" class="button-2 return-items-button" onclick="setLocation('@Url.RouteUrl("ReturnRequest", new { orderId = @Model.Id })')" />
+                            <input type="button" value="@T("Order.ReturnItems")" class="button-2 return-items-button" onclick="setLocation('@Url.RouteUrl("ReturnRequest", new { orderId = Model.Id })')" />
                         }
                     </div>
                 }

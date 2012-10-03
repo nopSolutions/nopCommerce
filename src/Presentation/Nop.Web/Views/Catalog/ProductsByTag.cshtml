@@ -68,7 +68,7 @@
             <div class="product-grid">
                 @(Html.DataList<ProductOverviewModel>(Model.Products, 2,
                     @<div class="item-box">
-                        @Html.Partial("_ProductBox", @item)
+                        @Html.Partial("_ProductBox", item)
                     </div>
                 ))
             </div>

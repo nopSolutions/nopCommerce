@@ -14,7 +14,7 @@
                 {
                     <li>
                         <div class="forum">
-                            <a href="@Url.RouteUrl("ForumSlug", new { id = @forum.Id, slug = @forum.SeName })">
+                            <a href="@Url.RouteUrl("ForumSlug", new { id = forum.Id, slug = forum.SeName })">
                                 <div class="image"></div>
                                 <span class="forum-name">@forum.Name</span> <span class="topics">@T("Forum.Topics.Count", forum.NumTopics)</span>
                             </a>

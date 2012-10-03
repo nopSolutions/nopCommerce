@@ -47,8 +47,8 @@
                     <tbody>
                         <tr>
                             <td class="title">
-                                @Html.CheckBox("adv", @Model.ShowAdvancedSearch)
-                                @Html.Label("adv", @T("Forum.Search.AdvancedSearch").Text)
+                                @Html.CheckBox("adv", Model.ShowAdvancedSearch)
+                                @Html.Label("adv", T("Forum.Search.AdvancedSearch").Text)
                             </td>
                         </tr>
                         <tr>
@@ -159,11 +159,11 @@
                                     break;
                                 case ForumTopicType.Sticky:
                                     topicType = "poststicky";
-                                    topicText = string.Format("[{0}]", @T("Forum.Sticky"));
+                                    topicText = string.Format("[{0}]", T("Forum.Sticky"));
                                     break;
                                 case ForumTopicType.Announcement:
                                     topicType = "post-annoucement";
-                                    topicText = string.Format("[{0}]", @T("Forum.Announcement"));
+                                    topicText = string.Format("[{0}]", T("Forum.Announcement"));
                                     break;
                                 default:
                                     topicType = "post";
@@ -206,7 +206,7 @@
                                     @topic.Views
                                 </td>
                                 <td class="last-post">
-                                    @Html.Action("LastPost", new { forumPostId = @topic.LastPostId, showTopic = false })
+                                    @Html.Action("LastPost", new { forumPostId = topic.LastPostId, showTopic = false })
                                 </td>
                             </tr>
                         }

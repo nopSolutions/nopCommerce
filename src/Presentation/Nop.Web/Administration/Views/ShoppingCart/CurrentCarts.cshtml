@@ -4,7 +4,7 @@
     var gridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSize;
     
     //page title
-    ViewBag.Title = @T("Admin.CurrentCarts").Text;
+    ViewBag.Title = T("Admin.CurrentCarts").Text;
 }
 @using (Html.BeginForm())
 {

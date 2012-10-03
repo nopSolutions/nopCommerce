@@ -12,7 +12,7 @@
             <script type="text/javascript">
 
                 $("#back-in-stock-subscribe-@Model.Id").fancybox({
-                    'href': '@Url.RouteUrl("BackInStockSubscribePopup", new { productVariantId = @Model.Id })',
+                    'href': '@Url.RouteUrl("BackInStockSubscribePopup", new { productVariantId = Model.Id })',
                     'speedIn': 600,
                     'speedOut': 200,
                     'width': 450,

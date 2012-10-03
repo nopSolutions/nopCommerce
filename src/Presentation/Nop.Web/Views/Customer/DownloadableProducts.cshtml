@@ -46,7 +46,7 @@
                         var item = Model.Items[i];
                         <tr @(i % 2 == 0 ? Html.Raw(" class=\"odd\"") : Html.Raw(" class=\"even\""))>
                             <td class="a-center">
-                                <a class="link" href="@Url.RouteUrl("OrderDetails", new { orderId = @item.OrderId })">@item.OrderId</a>
+                                <a class="link" href="@Url.RouteUrl("OrderDetails", new { orderId = item.OrderId })">@item.OrderId</a>
                             </td>
                             <td class="a-center">
                                 @item.CreatedOn.ToString("d")

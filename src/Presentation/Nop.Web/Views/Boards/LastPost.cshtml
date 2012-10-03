@@ -13,7 +13,7 @@
         {
             <div>
                 <text>@T("Forum.In"):</text>
-                @Html.RouteLink(Model.ForumTopicSubject, "TopicSlug", new { id = @Model.ForumTopicId, slug = @Model.ForumTopicSeName })
+                @Html.RouteLink(Model.ForumTopicSubject, "TopicSlug", new { id = Model.ForumTopicId, slug = Model.ForumTopicSeName })
             </div>
         }
         @if (Model.CustomerId > 0)

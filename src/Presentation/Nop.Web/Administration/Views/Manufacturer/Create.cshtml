@@ -1,7 +1,7 @@
 ﻿@model ManufacturerModel
 @{
     //page title
-    ViewBag.Title = @T("Admin.Catalog.Manufacturers.AddNew").Text;
+    ViewBag.Title = T("Admin.Catalog.Manufacturers.AddNew").Text;
 }
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "manufacturer-form" }))
 {

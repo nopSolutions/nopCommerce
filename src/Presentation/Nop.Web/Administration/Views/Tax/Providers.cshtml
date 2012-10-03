@@ -2,7 +2,7 @@
 @using Telerik.Web.Mvc.UI
 @{    
     //page title
-    ViewBag.Title = @T("Admin.Configuration.Tax.Providers").Text;
+    ViewBag.Title = T("Admin.Configuration.Tax.Providers").Text;
 }
 <div class="section-header">
     <div class="title">
@@ -36,7 +36,7 @@
                             .Title(T("Admin.Configuration.Tax.Providers.Fields.MarkAsPrimaryProvider").Text).Width(100);
                         columns.Template(
                                 @<div>
-                                    @Html.ActionLink(T("Admin.Configuration.Tax.Providers.Configure").Text, "ConfigureProvider", new { systemName = @item.SystemName })
+                                    @Html.ActionLink(T("Admin.Configuration.Tax.Providers.Configure").Text, "ConfigureProvider", new { systemName = item.SystemName })
                                 </div>
                             )
                             .ClientTemplate("<a href=\"ConfigureProvider?systemName=<#= SystemName #>\">" + T("Admin.Configuration.Tax.Providers.Configure").Text + "</a>")

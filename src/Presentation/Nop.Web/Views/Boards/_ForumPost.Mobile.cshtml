@@ -28,7 +28,7 @@
             }
             @if (Model.IsCurrentCustomerAllowedToDeletePost)
             {
-                <a href="@Url.RouteUrl("PostDelete", new { id = @Model.Id })" data-inline="true" data-role="button">@T("Forum.DeletePost")</a>
+                <a href="@Url.RouteUrl("PostDelete", new { id = Model.Id })" data-inline="true" data-role="button">@T("Forum.DeletePost")</a>
             }
         </div>
     </div>

@@ -214,7 +214,7 @@
                             $(function () {                   
                                 var @(controlId)uploader = new qq.FileUploader({
                                     element: document.getElementById('@(controlId)uploader'),
-                                    action: '@(Url.RouteUrl("UploadFileProductAttribute", new { productVariantId = @attribute.ProductVariantId, productAttributeId = @attribute.ProductAttributeId }))',
+                                    action: '@(Url.RouteUrl("UploadFileProductAttribute", new { productVariantId = attribute.ProductVariantId, productAttributeId = attribute.ProductAttributeId }))',
                                     onComplete: function(id, fileName, responseJSON){
                                         $("#@(controlId)").val(responseJSON.downloadGuid);
                                         if (responseJSON.message) {

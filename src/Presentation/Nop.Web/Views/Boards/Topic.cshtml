@@ -31,7 +31,7 @@
             }
             @if (Model.IsCustomerAllowedToDeleteTopic)
             {                
-                @Html.RouteLink(T("Forum.DeleteTopic").Text, "TopicDelete", new { id = Model.Id }, new { onClick = String.Format("return confirm('{0}');", @T("Common.AreYouSure").Text), @class = "delete-topic-link-button" })
+                @Html.RouteLink(T("Forum.DeleteTopic").Text, "TopicDelete", new { id = Model.Id }, new { onClick = String.Format("return confirm('{0}');", T("Common.AreYouSure").Text), @class = "delete-topic-link-button" })
             }
             @if (Model.IsCustomerAllowedToMoveTopic)
             {
@@ -48,7 +48,7 @@
             {
                 @Ajax.RouteLink(Model.WatchTopicText,
                                 "TopicWatch",
-                                new { id = @Model.Id },
+                                new { id = Model.Id },
                                 new AjaxOptions { HttpMethod = "Post", OnSuccess = "handleTopicWatch" },
                                 new { id = "watch-topic-top", @class = "watch-topic-link-button" })
             }

@@ -10,7 +10,7 @@
     <div class="section-header">
         <div class="title">
             <img src="@Url.Content("~/Administration/Content/images/ico-sales.png")" alt="" />
-            @string.Format(T("Admin.Orders.Shipments.AddNew.Title").Text, Model.OrderId) @Html.ActionLink("(" + T("Admin.Orders.Shipments.BackToOrder") + ")", "Edit", new { id = @Model.OrderId })
+            @string.Format(T("Admin.Orders.Shipments.AddNew.Title").Text, Model.OrderId) @Html.ActionLink("(" + T("Admin.Orders.Shipments.BackToOrder") + ")", "Edit", new { id = Model.OrderId })
         </div>
         <div class="options">
             <input type="submit" name="save" class="t-button" value="@T("Admin.Common.Save")" />
@@ -75,7 +75,7 @@
                             <tr>
                                 <td style="width: 50%;">
                                     <div style="padding-left: 10px; padding-right: 10px; text-align: left;">
-                                        <em><a href="@Url.Action("Edit", "ProductVariant", new { id = @item.ProductVariantId })">@item.FullProductName</a></em>
+                                        <em><a href="@Url.Action("Edit", "ProductVariant", new { id = item.ProductVariantId })">@item.FullProductName</a></em>
                                         @if (!String.IsNullOrEmpty(item.AttributeInfo))
                                         {
                                             <br />

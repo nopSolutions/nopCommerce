@@ -13,7 +13,7 @@
             }
             @if (Model.IsCurrentCustomerAllowedToDeletePost)
             {
-                @Html.RouteLink(T("Forum.DeletePost").Text, "PostDelete", new { id = Model.Id }, new { onClick = String.Format("return confirm('{0}');", @T("Common.AreYouSure").Text), @class = "delete-post-link-button" })
+                @Html.RouteLink(T("Forum.DeletePost").Text, "PostDelete", new { id = Model.Id }, new { onClick = String.Format("return confirm('{0}');", T("Common.AreYouSure").Text), @class = "delete-post-link-button" })
             }
         </div>
         <div class="user-info">
@@ -63,7 +63,7 @@
                 @if (Model.AllowPrivateMessages && !Model.IsCustomerGuest)
                 {
                     <div class="send-pm-box">
-                        @Html.RouteLink(T("Forum.PrivateMessages.PM").Text, "SendPM", new { toCustomerId = @Model.CustomerId }, new { @class = "pm-link-button" })
+                        @Html.RouteLink(T("Forum.PrivateMessages.PM").Text, "SendPM", new { toCustomerId = Model.CustomerId }, new { @class = "pm-link-button" })
                     </div>
                 }
             </div>
@@ -75,11 +75,11 @@
             @Html.RouteLink(T("Forum.QuotePost").Text, "PostCreateQuote", new { id = Model.ForumTopicId, quote = Model.Id }, new { @class = "quote-post-link-button" })
             @if (Model.CurrentTopicPage > 1)
             {                
-                @Html.RouteLink(String.Format("#{0}", @Model.Id.ToString()), "TopicSlugPaged", "http", string.Empty, Model.Id.ToString(), new { id = Model.ForumTopicId, slug = Model.ForumTopicSeName, page = Model.CurrentTopicPage }, new { @class = "post-link", title = T("Forum.PostLinkTitle") })
+                @Html.RouteLink(String.Format("#{0}", Model.Id.ToString()), "TopicSlugPaged", "http", string.Empty, Model.Id.ToString(), new { id = Model.ForumTopicId, slug = Model.ForumTopicSeName, page = Model.CurrentTopicPage }, new { @class = "post-link", title = T("Forum.PostLinkTitle") })
             }
             else
             {                
-                @Html.RouteLink(String.Format("#{0}", @Model.Id.ToString()), "TopicSlug", "http", string.Empty, Model.Id.ToString(), new { id = Model.ForumTopicId, slug = Model.ForumTopicSeName }, new { @class = "post-link", title = T("Forum.PostLinkTitle") })
+                @Html.RouteLink(String.Format("#{0}", Model.Id.ToString()), "TopicSlug", "http", string.Empty, Model.Id.ToString(), new { id = Model.ForumTopicId, slug = Model.ForumTopicSeName }, new { @class = "post-link", title = T("Forum.PostLinkTitle") })
             }
         </div>
         <div class="post-body">

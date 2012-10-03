@@ -19,7 +19,7 @@
                 @(Html.DataList<TopicModel>(Model.Topics, 4,
                 @<div class="topic-box">
                     <div class="item">
-                        <a href="@Url.RouteUrl("Topic", new { SystemName = @item.SystemName.ToLowerInvariant() })">@item.Title</a>
+                        <a href="@Url.RouteUrl("Topic", new { SystemName = item.SystemName.ToLowerInvariant() })">@item.Title</a>
                     </div>
                 </div>
             ))

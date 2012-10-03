@@ -12,7 +12,7 @@
         {
             @(Html.DataList<ProductOverviewModel>(Model.Products, 3,
             @<div class="item-box">
-                @Html.Partial("_ProductSmallBox", @item)
+                @Html.Partial("_ProductSmallBox", item)
             </div>
                 ))
         }
@@ -20,7 +20,7 @@
         {
         @(Html.DataList<ProductOverviewModel>(Model.Products, 2,
             @<div class="item-box">
-                @Html.Partial("_ProductBox", @item)
+                @Html.Partial("_ProductBox", item)
             </div>
                 ))
         }

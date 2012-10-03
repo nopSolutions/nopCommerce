@@ -206,7 +206,7 @@
             @Html.NopLabelFor(model => model.AffiliateId):
         </td>
         <td class="adminData">
-            <a href="@Url.Action("Edit", "Affiliate", new { id = @Model.AffiliateId.Value })">@Model.AffiliateId.Value - @T("Admin.Common.View")</a>
+            <a href="@Url.Action("Edit", "Affiliate", new { id = Model.AffiliateId.Value })">@Model.AffiliateId.Value - @T("Admin.Common.View")</a>
         </td>
     </tr>
     }
@@ -1048,7 +1048,7 @@
                             <tr>
                                 <td style="width: 25%;">
                                     <div style="padding-left: 10px; padding-right: 10px; text-align: left;">
-                                        <em><a href="@Url.Action("Edit", "ProductVariant", new { id = @item.ProductVariantId })">@item.FullProductName</a></em>
+                                        <em><a href="@Url.Action("Edit", "ProductVariant", new { id = item.ProductVariantId })">@item.FullProductName</a></em>
                                         @if (!String.IsNullOrEmpty(item.AttributeInfo))
                                         {
                                             <br />

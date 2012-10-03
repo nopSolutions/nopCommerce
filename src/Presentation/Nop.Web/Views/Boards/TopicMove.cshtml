@@ -31,7 +31,7 @@
                 <tr>
                     <td colspan="2" class="options">
                         <input type="submit" value="@T("Forum.Submit")" class="button-1 submit-forum-topic-button" />
-                        <input type="button" class="button-2 cancel-forum-topic-button" value="@T("Forum.Cancel")" onclick="setLocation('@Url.RouteUrl("TopicSlug", new { id = @Model.Id, slug = @Model.TopicSeName })')" />
+                        <input type="button" class="button-2 cancel-forum-topic-button" value="@T("Forum.Cancel")" onclick="setLocation('@Url.RouteUrl("TopicSlug", new { id = Model.Id, slug = Model.TopicSeName })')" />
                     </td>
                 </tr>
             </table>

@@ -1,7 +1,7 @@
 ﻿@model CountryModel
 @{
     //page title
-    ViewBag.Title = @T("Admin.Configuration.Countries.EditCountryDetails").Text;
+    ViewBag.Title = T("Admin.Configuration.Countries.EditCountryDetails").Text;
 }
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "country-form" }))
 {
