@@ -28,7 +28,7 @@
             else if (!Model.IsCurrentCustomerRegistered)
             {
                 <div>
-                    @("BackInStockSubscriptions.OnlyRegistered")</div>
+                    @T("BackInStockSubscriptions.OnlyRegistered")</div>
             }
             else if (!Model.AlreadySubscribed && Model.CurrentNumberOfBackInStockSubscriptions >= Model.MaximumBackInStockSubscriptions)
             {
