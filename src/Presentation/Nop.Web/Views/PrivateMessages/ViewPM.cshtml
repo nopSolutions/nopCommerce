@@ -40,15 +40,15 @@
                     @T("PrivateMessages.View.Message")
                 </td>
                 <td class="message">
-                    @Html.Raw(@Model.Message)
+                    @Html.Raw(Model.Message)
                 </td>
             </tr>
             <tr>
                 <td colspan="2" class="options">
                     <input type="button" class="button-1 reply-pm-button" value="@T("PrivateMessages.View.ReplyButton")" 
-                        onclick="setLocation('@Url.RouteUrl("SendPMReply", new { toCustomerId = @Model.FromCustomerId, replyToMessageId = @Model.Id })')" />
+                        onclick="setLocation('@Url.RouteUrl("SendPMReply", new { toCustomerId = Model.FromCustomerId, replyToMessageId = Model.Id })')" />
                     <input type="button" class="button-2 delete-pm-button" value="@T("PrivateMessages.View.DeleteButton")" 
-                        onclick="setLocation('@Url.RouteUrl("DeletePM", new { privateMessageId = @Model.Id })')" />
+                        onclick="setLocation('@Url.RouteUrl("DeletePM", new { privateMessageId = Model.Id })')" />
                     <input type="button" class="button-2 back-pm-button" value="@T("PrivateMessages.View.BackButton")" 
                         onclick="setLocation('@Url.RouteUrl("PrivateMessages")')" />
                 </td>

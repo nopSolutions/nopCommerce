@@ -54,12 +54,12 @@
             @pager
         </div>
         <div class="search-results">
-            @if (@Model.NoResultsVisisble == true)
+            @if (Model.NoResultsVisisble == true)
             {   
                 <span class="result">@T("Forum.SearchNoResultsText")</span>                
             }
             <div class="topics">
-                @if (@Model.SearchResultsVisible == true)
+                @if (Model.SearchResultsVisible == true)
                 {
                     <ul data-role="listview" data-inset="true" data-filter="false">
                         @foreach (var topic in Model.ForumTopics)

@@ -31,18 +31,18 @@
             @if (Model.ForumFeedsEnabled)
             {
                 <div class="rss">
-                    <a href="@Url.RouteUrl("ForumRSS", new { id = @Model.Id })" class="link-rss" title="@T("Forum.ForumRSSLinkTitle")">@T("Forum.RSS")</a>
+                    <a href="@Url.RouteUrl("ForumRSS", new { id = Model.Id })" class="link-rss" title="@T("Forum.ForumRSSLinkTitle")">@T("Forum.RSS")</a>
                 </div>
             }
         </div>
         <div class="actions">
             <div>
-                @Html.RouteLink(@T("Forum.NewTopic").ToString(), "TopicCreate", new { id = @Model.Id }, new { @class = "newtopic" })
+                @Html.RouteLink(T("Forum.NewTopic").ToString(), "TopicCreate", new { id = Model.Id }, new { @class = "newtopic" })
                 @if (Model.IsCustomerAllowedToSubscribe)
                 {
                     @Ajax.RouteLink(Model.WatchForumText,
                                 "ForumWatch",
-                                new { id = @Model.Id },
+                                new { id = Model.Id },
                                 new AjaxOptions { HttpMethod = "Post", OnSuccess = "handleForumWatch" },
                                 new { id = "watch-forum", @class = "watch-forum" })
                 }
@@ -117,19 +117,19 @@
                         }
                     </td>
                     <td class="topic-name">
-                        @if (!String.IsNullOrEmpty(@topicText))
+                        @if (!String.IsNullOrEmpty(topicText))
                         {
                             <span class="topictype">@topicText</span>
                         }
-                        @Html.RouteLink(@topic.Subject, "TopicSlug", new { id = @topic.Id, slug = @topic.SeName }, new { @class = "topic-title" })
-                        @if (@topic.NumPosts > Model.PostsPageSize)
+                        @Html.RouteLink(topic.Subject, "TopicSlug", new { id = topic.Id, slug = topic.SeName }, new { @class = "topic-title" })
+                        @if (topic.NumPosts > Model.PostsPageSize)
                         {   
                             <div class="topicspager">
                                 @Html.ForumTopicSmallPager(topic)
                             </div>
                         }
                         <div class="topic-starter">
-                            @if (@topic.CustomerId > 0)
+                            @if (topic.CustomerId > 0)
                             {
                                 if (topic.AllowViewingProfiles && !topic.IsCustomerGuest)
                                 {

@@ -13,7 +13,7 @@
             {
                 <div class="product-tags-wrapper">
                     <a href="@Url.RouteUrl("ProductsByTag", new { productTagId = Model[i].Id, SeName = Model[i].SeName })" class="producttag">
-                        @Model[i].Name</a> (@(Model[i].ProductCount))</div>
+                        @Model[i].Name</a> (@Model[i].ProductCount)</div>
                 if (i != Model.Count - 1)
                 {
                 <div class="product-tags-wrapper">

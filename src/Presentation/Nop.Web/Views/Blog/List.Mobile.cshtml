@@ -60,7 +60,7 @@
                     @if (item.AllowComments)
                     {
                         <a href="@Url.RouteUrl("BlogPost", new { blogPostId = item.Id, SeName = item.SeName })" class="blog-details">
-                            @string.Format(@T("Blog.CommentsLink").Text, item.NumberOfComments)
+                            @string.Format(T("Blog.CommentsLink").Text, item.NumberOfComments)
                         </a>
                     }
                     @Html.Widget("mobile_bloglist_page_inside_post")

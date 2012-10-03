@@ -22,7 +22,7 @@
         @if (Model.ViewAllLinkEnabled)
         {        
             <div class="view-all">
-                [@Html.RouteLink(@T("Forum.ActiveDiscussions.ViewAll").Text, "ActiveDiscussions")]
+                [@Html.RouteLink(T("Forum.ActiveDiscussions.ViewAll").Text, "ActiveDiscussions")]
             </div>
         }
     </div>
@@ -50,14 +50,14 @@
                 <tr class="topic">
                     <td class="topic-name">
                         @Html.RouteLink(topic.Subject, "TopicSlug", new { id = topic.Id, slug = topic.SeName }, new { @class = "topic-title" })
-                        @if (@topic.NumPosts > Model.PostsPageSize)
+                        @if (topic.NumPosts > Model.PostsPageSize)
                         {
                             <div class="topicspager">
                                 @Html.ForumTopicSmallPager(topic)
                             </div>
                         }
                         <div class="topic-starter">
-                            @if (@topic.CustomerId > 0)
+                            @if (topic.CustomerId > 0)
                             {
                                 var authorText = T("Forum.Author");
                                 if (topic.AllowViewingProfiles && !topic.IsCustomerGuest)

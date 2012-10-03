@@ -123,12 +123,12 @@
             @pager
         </div>
         <div class="search-results">
-            @if (@Model.NoResultsVisisble == true)
+            @if (Model.NoResultsVisisble == true)
             {   
                 <span class="result">@T("Forum.SearchNoResultsText")</span>                
             }
             <div class="topics-group">
-                @if (@Model.SearchResultsVisible == true)
+                @if (Model.SearchResultsVisible == true)
                 {   
                     <table class="topics">
                         <tr class="forum-header">
@@ -174,19 +174,19 @@
                                     }
                                 </td>
                                 <td class="topic-name">
-                                    @if (!String.IsNullOrEmpty(@topicText))
+                                    @if (!String.IsNullOrEmpty(topicText))
                                     {
                                         <span class="topictype">@topicText</span>
                                     }
-                                    @Html.RouteLink(@topic.Subject, "TopicSlug", new { id = @topic.Id, slug = @topic.SeName }, new { @class = "topic-title" })
-                                    @if (@topic.NumPosts > Model.PostsPageSize)
+                                    @Html.RouteLink(topic.Subject, "TopicSlug", new { id = topic.Id, slug = topic.SeName }, new { @class = "topic-title" })
+                                    @if (topic.NumPosts > Model.PostsPageSize)
                                     {
                                         <div class="topicspager">
                                             @Html.ForumTopicSmallPager(topic)
                                         </div>
                                     }
                                     <div class="topic-starter">
-                                        @if (@topic.CustomerId > 0)
+                                        @if (topic.CustomerId > 0)
                                         {
                                             if (topic.AllowViewingProfiles && !topic.IsCustomerGuest)
                                             {

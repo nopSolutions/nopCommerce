@@ -42,14 +42,14 @@
                 @if (Model.IsCustomerAllowedToSetTopicPriority)
                 {
                     <div>
-                        @Html.DropDownList("TopicTypeId", new SelectList(@Model.TopicPriorities, "Value", "Text", @Model.TopicTypeId))
+                        @Html.DropDownList("TopicTypeId", new SelectList(Model.TopicPriorities, "Value", "Text", Model.TopicTypeId))
                     </div>
                 }
                 @if (Model.IsCustomerAllowedToSubscribe)
                 {
                     <div>
                         @Html.EditorFor(model => model.Subscribed)
-                        @Html.LabelFor(model => model.Subscribed, @T("Forum.NotifyWhenSomeonePostsInThisTopic").Text)
+                        @Html.LabelFor(model => model.Subscribed, T("Forum.NotifyWhenSomeonePostsInThisTopic").Text)
                     </div>
                 }
                 <div class="options">

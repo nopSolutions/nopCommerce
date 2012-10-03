@@ -17,7 +17,7 @@
                 @foreach (var item in Model.Tags)
                 {
                     <li><a href="@Url.RouteUrl("ProductsByTag", new { productTagId = item.Id, SeName = item.SeName })">
-                        @item.Name (@(item.ProductCount))</a></li>
+                        @item.Name (@item.ProductCount)</a></li>
                 }
             </ul>
         }

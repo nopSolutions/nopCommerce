@@ -5,8 +5,8 @@
 @{
     Layout = "~/Views/Shared/_ColumnsOne.cshtml";
 
-    Html.AddScriptParts(@Url.Content("~/Scripts/public.accordion.js"));
-    Html.AddScriptParts(@Url.Content("~/Scripts/public.onepagecheckout.js"));
+    Html.AddScriptParts(Url.Content("~/Scripts/public.accordion.js"));
+    Html.AddScriptParts(Url.Content("~/Scripts/public.onepagecheckout.js"));
 
     var storeLocation = EngineContext.Current.Resolve<Nop.Core.IWebHelper>().GetStoreLocation();
 }

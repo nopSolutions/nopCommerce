@@ -82,7 +82,7 @@
                                         @item.CyclesRemaining
                                     </td>
                                     <td class="a-center">
-                                        <a class="link" href="@Url.RouteUrl("OrderDetails", new { orderId = @item.InitialOrderId })">@string.Format(@T("Account.CustomerOrders.RecurringOrders.ViewInitialOrder").Text, item.InitialOrderId)</a>
+                                        <a class="link" href="@Url.RouteUrl("OrderDetails", new { orderId = @item.InitialOrderId })">@string.Format(T("Account.CustomerOrders.RecurringOrders.ViewInitialOrder").Text, item.InitialOrderId)</a>
                                     </td>
                                     <td class="a-center">
                                         @if (item.CanCancel)
