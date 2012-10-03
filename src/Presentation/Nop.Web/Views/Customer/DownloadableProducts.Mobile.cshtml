@@ -19,7 +19,7 @@
                     <li>
                         <div class="item">
                             <div>
-                                @T("DownloadableProducts.Fields.Order"): <a class="link" href="@Url.RouteUrl("OrderDetails", new { orderId = @item.OrderId })">@item.OrderId</a>
+                                @T("DownloadableProducts.Fields.Order"): <a class="link" href="@Url.RouteUrl("OrderDetails", new { orderId = item.OrderId })">@item.OrderId</a>
                             </div>
                             <div>
                                 @T("DownloadableProducts.Fields.Date"): @item.CreatedOn.ToString("d")

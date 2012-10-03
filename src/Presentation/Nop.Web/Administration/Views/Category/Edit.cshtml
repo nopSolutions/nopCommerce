@@ -1,7 +1,7 @@
 ﻿@model CategoryModel
 @{
     //page title
-    ViewBag.Title = @T("Admin.Catalog.Categories.EditCategoryDetails").Text;
+    ViewBag.Title = T("Admin.Catalog.Categories.EditCategoryDetails").Text;
 }
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "category-form" }))
 {

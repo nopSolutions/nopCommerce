@@ -3,7 +3,7 @@
 @{
     var gridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSize;
     //page title
-    ViewBag.Title = @T("Admin.System.QueuedEmails").Text;
+    ViewBag.Title = T("Admin.System.QueuedEmails").Text;
 }
 @using (Html.BeginForm())
 {

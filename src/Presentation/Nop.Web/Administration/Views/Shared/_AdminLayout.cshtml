@@ -9,12 +9,12 @@
     var currentVersion = NopVersion.CurrentVersion;
     
     //resources
-    Html.AppendCssFileParts(@Url.Content("~/Administration/Content/styles.css"));
-    Html.AppendScriptParts(@Url.Content("~/Administration/Scripts/admin.common.js"));
-    Html.AppendScriptParts(@Url.Content("~/Administration/Scripts/jquery.validate.unobtrusive.min.js"));
-    Html.AppendScriptParts(@Url.Content("~/Administration/Scripts/jquery.validate.min.js"));
-    Html.AppendScriptParts(@Url.Content("~/Administration/Scripts/jquery.unobtrusive-ajax.min.js"));
-    Html.AppendScriptParts(@Url.Content("~/Administration/Scripts/jquery-1.7.1.min.js"));
+    Html.AppendCssFileParts(Url.Content("~/Administration/Content/styles.css"));
+    Html.AppendScriptParts(Url.Content("~/Administration/Scripts/admin.common.js"));
+    Html.AppendScriptParts(Url.Content("~/Administration/Scripts/jquery.validate.unobtrusive.min.js"));
+    Html.AppendScriptParts(Url.Content("~/Administration/Scripts/jquery.validate.min.js"));
+    Html.AppendScriptParts(Url.Content("~/Administration/Scripts/jquery.unobtrusive-ajax.min.js"));
+    Html.AppendScriptParts(Url.Content("~/Administration/Scripts/jquery-1.7.1.min.js"));
 
     //page title
     string adminPageTitle = "";
@@ -22,7 +22,7 @@
     {
         adminPageTitle = ViewBag.Title + " / ";
     }
-    adminPageTitle += @T("Admin.PageTitle").Text;
+    adminPageTitle += T("Admin.PageTitle").Text;
 }
 <!DOCTYPE html>
 <html>
@@ -66,8 +66,8 @@
                     <div class="login-info">
                         @if (currentCustomer != null && currentCustomer.IsRegistered())
                         {
-                            @string.Format(T("Admin.Header.LoggedInAs").Text, usernamesEnabled ? currentCustomer.Username : currentCustomer.Email)
-                            <text>, @Html.ActionLink(T("Admin.Header.Logout").Text, "Logout", "Customer", new { area = "" }, null)</text> 
+                            @String.Format(T("Admin.Header.LoggedInAs").Text, usernamesEnabled ? currentCustomer.Username : currentCustomer.Email)
+                            <text>, </text> @Html.ActionLink(T("Admin.Header.Logout").Text, "Logout", "Customer", new { area = "" }, null)
                         }
                     </div>
                     <div class="version">

@@ -12,7 +12,7 @@
     <div class="section-header">
         <div class="title">
             <img src="@Url.Content("~/Administration/Content/images/ico-sales.png")" alt="" />
-            @T("Admin.Orders.Shipments.ViewDetails") - @Model.Id @Html.ActionLink("(" + T("Admin.Orders.Shipments.BackToOrder") + ")", "Edit", new { id = @Model.OrderId })
+            @T("Admin.Orders.Shipments.ViewDetails") - @Model.Id @Html.ActionLink("(" + T("Admin.Orders.Shipments.BackToOrder") + ")", "Edit", new { id = Model.OrderId })
         </div>
         <div class="options">
             @if (Model.DisplayPdfPackagingSlip)
@@ -105,7 +105,7 @@
                             <tr>
                                 <td style="width: 70%;">
                                     <div style="padding-left: 10px; padding-right: 10px; text-align: left;">
-                                        <em><a href="@Url.Action("Edit", "ProductVariant", new { id = @item.ProductVariantId })">@item.FullProductName</a></em>
+                                        <em><a href="@Url.Action("Edit", "ProductVariant", new { id = item.ProductVariantId })">@item.FullProductName</a></em>
                                         @if (!String.IsNullOrEmpty(item.AttributeInfo))
                                         {
                                             <br />

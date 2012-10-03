@@ -1,7 +1,7 @@
 ﻿@model MaintenanceModel
 @{
     //page title
-    ViewBag.Title = @T("Admin.System.Maintenance").Text;
+    ViewBag.Title = T("Admin.System.Maintenance").Text;
 }
 <div class="section-header">
     <div class="title">
@@ -52,7 +52,7 @@
         {
             <tr>
                 <td colspan="2">
-                    <strong>@string.Format(@T("Admin.System.Maintenance.DeleteGuests.TotalDeleted").Text, Model.DeleteGuests.NumberOfDeletedCustomers.Value)</strong>
+                    <strong>@string.Format(T("Admin.System.Maintenance.DeleteGuests.TotalDeleted").Text, Model.DeleteGuests.NumberOfDeletedCustomers.Value)</strong>
                 </td>
             </tr>
         }
@@ -85,7 +85,7 @@
         {
             <tr>
                 <td colspan="2">
-                    <strong>@string.Format(@T("Admin.System.Maintenance.DeleteAbandonedCarts.TotalDeleted").Text, Model.DeleteAbandonedCarts.NumberOfDeletedItems.Value)</strong>
+                    <strong>@string.Format(T("Admin.System.Maintenance.DeleteAbandonedCarts.TotalDeleted").Text, Model.DeleteAbandonedCarts.NumberOfDeletedItems.Value)</strong>
                 </td>
             </tr>
         }
@@ -126,7 +126,7 @@
         {
             <tr>
                 <td colspan="2">
-                    <strong>@string.Format(@T("Admin.System.Maintenance.DeleteExportedFiles.TotalDeleted").Text, Model.DeleteExportedFiles.NumberOfDeletedFiles.Value)</strong>
+                    <strong>@string.Format(T("Admin.System.Maintenance.DeleteExportedFiles.TotalDeleted").Text, Model.DeleteExportedFiles.NumberOfDeletedFiles.Value)</strong>
                 </td>
             </tr>
         }

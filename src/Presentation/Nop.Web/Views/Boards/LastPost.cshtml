@@ -5,7 +5,7 @@
 @using Nop.Services.Forums;
 @using Nop.Services.Helpers;
 @using Nop.Services.Seo;
-@if (@Model.Id > 0)
+@if (Model.Id > 0)
 {
     <div class="last-post">
         <div class="createdon">@Model.PostCreatedOnStr</div>
@@ -13,10 +13,10 @@
         {
             <div>
                 <text>@T("Forum.In"):</text>
-                @Html.RouteLink(Model.ForumTopicSubject, "TopicSlug", new { id = @Model.ForumTopicId, slug = @Model.ForumTopicSeName })
+                @Html.RouteLink(Model.ForumTopicSubject, "TopicSlug", new { id = Model.ForumTopicId, slug = Model.ForumTopicSeName })
             </div>
         }
-        @if (@Model.CustomerId > 0)
+        @if (Model.CustomerId > 0)
         {
             <div>
                 @if (Model.AllowViewingProfiles && !Model.IsCustomerGuest)

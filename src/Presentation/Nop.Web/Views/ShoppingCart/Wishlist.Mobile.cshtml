@@ -17,7 +17,7 @@
             }
             else
             {
-                @string.Format(T("Wishlist.WishlistOf").Text, Model.CustomerFullname);
+                @String.Format(T("Wishlist.WishlistOf").Text, Model.CustomerFullname);
             }
         </h1>
     </div>
@@ -90,7 +90,7 @@
                                             <select name="itemquantity@(item.Id)" class="qty-dropdown"  data-mini="true" data-inline="true">
                                                 @foreach (var qty in item.AllowedQuantities)
                                                 {
-                                                    <option @(qty.Selected ? Html.Raw(" selected=\"selected\"") : null) value="@qty.Value">@qty.Value</option>
+                                                    <option selected="@qty.Selected" value="@qty.Value">@qty.Value</option>
                                                 }
                                             </select>
                                             }

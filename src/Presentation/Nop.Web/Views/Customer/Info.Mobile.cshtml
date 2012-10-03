@@ -62,9 +62,9 @@
                         @Html.LabelFor(model => model.Gender)
                         <div data-role="fieldcontain">
                             <fieldset data-role="controlgroup" data-type="horizontal" data-mini="true">
-                                <input type="radio" name="Gender" id="gender-male" value="M" @(Model.Gender == "M" ? Html.Raw(" checked=\"checked\"") : null)  />
+                                <input type="radio" name="Gender" id="gender-male" value="M" checked="@(Model.Gender == "M")" />
                                 <label for="gender-male">@T("Account.Fields.Gender.Male")</label>
-                                <input type="radio" name="Gender" id="gender-female" value="F" @(Model.Gender == "F" ? Html.Raw(" checked=\"checked\"") : null) />
+                                <input type="radio" name="Gender" id="gender-female" value="F" checked="@(Model.Gender == "F")" />
                                 <label for="gender-female">@T("Account.Fields.Gender.Female")</label>
                             </fieldset>
                         </div>

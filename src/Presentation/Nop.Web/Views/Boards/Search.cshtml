@@ -47,8 +47,8 @@
                     <tbody>
                         <tr>
                             <td class="title">
-                                @Html.CheckBox("adv", @Model.ShowAdvancedSearch)
-                                @Html.Label("adv", @T("Forum.Search.AdvancedSearch").Text)
+                                @Html.CheckBox("adv", Model.ShowAdvancedSearch)
+                                @Html.Label("adv", T("Forum.Search.AdvancedSearch").Text)
                             </td>
                         </tr>
                         <tr>
@@ -110,7 +110,7 @@
                     forumId = Model.ForumIdSelected.ToString();
                 }
 
-                var pager = @Html.Pager(new PagerModel()
+                var pager = Html.Pager(new PagerModel()
                 {
                     PageSize = Model.TopicPageSize,
                     TotalRecords = Model.TopicTotalRecords,
@@ -123,12 +123,12 @@
             @pager
         </div>
         <div class="search-results">
-            @if (@Model.NoResultsVisisble == true)
+            @if (Model.NoResultsVisisble == true)
             {   
                 <span class="result">@T("Forum.SearchNoResultsText")</span>                
             }
             <div class="topics-group">
-                @if (@Model.SearchResultsVisible == true)
+                @if (Model.SearchResultsVisible == true)
                 {   
                     <table class="topics">
                         <tr class="forum-header">
@@ -159,11 +159,11 @@
                                     break;
                                 case ForumTopicType.Sticky:
                                     topicType = "poststicky";
-                                    topicText = string.Format("[{0}]", @T("Forum.Sticky"));
+                                    topicText = string.Format("[{0}]", T("Forum.Sticky"));
                                     break;
                                 case ForumTopicType.Announcement:
                                     topicType = "post-annoucement";
-                                    topicText = string.Format("[{0}]", @T("Forum.Announcement"));
+                                    topicText = string.Format("[{0}]", T("Forum.Announcement"));
                                     break;
                                 default:
                                     topicType = "post";
@@ -174,19 +174,19 @@
                                     }
                                 </td>
                                 <td class="topic-name">
-                                    @if (!String.IsNullOrEmpty(@topicText))
+                                    @if (!String.IsNullOrEmpty(topicText))
                                     {
                                         <span class="topictype">@topicText</span>
                                     }
-                                    @Html.RouteLink(@topic.Subject, "TopicSlug", new { id = @topic.Id, slug = @topic.SeName }, new { @class = "topic-title" })
-                                    @if (@topic.NumPosts > Model.PostsPageSize)
+                                    @Html.RouteLink(topic.Subject, "TopicSlug", new { id = topic.Id, slug = topic.SeName }, new { @class = "topic-title" })
+                                    @if (topic.NumPosts > Model.PostsPageSize)
                                     {
                                         <div class="topicspager">
                                             @Html.ForumTopicSmallPager(topic)
                                         </div>
                                     }
                                     <div class="topic-starter">
-                                        @if (@topic.CustomerId > 0)
+                                        @if (topic.CustomerId > 0)
                                         {
                                             if (topic.AllowViewingProfiles && !topic.IsCustomerGuest)
                                             {
@@ -206,7 +206,7 @@
                                     @topic.Views
                                 </td>
                                 <td class="last-post">
-                                    @Html.Action("LastPost", new { forumPostId = @topic.LastPostId, showTopic = false })
+                                    @Html.Action("LastPost", new { forumPostId = topic.LastPostId, showTopic = false })
                                 </td>
                             </tr>
                         }

@@ -6,7 +6,7 @@
 <div class="forum-post">
     <div class="post-info">
         <div class="user-info">
-            @if (@Model.CustomerId > 0)
+            @if (Model.CustomerId > 0)
             {
                 if (Model.AllowViewingProfiles && !Model.IsCustomerGuest)
                 {
@@ -19,30 +19,30 @@
             }
         </div>
         <div class="posttime">
-            @T("Forum.Posted"): <span class="stat-value">@Model.PostCreatedOnStr</span> @*@Html.RouteLink(@T("Forum.QuotePost").Text, "PostCreateQuote", new { id = @Model.ForumTopicId, quote = @Model.Id })*@
+            @T("Forum.Posted"): <span class="stat-value">@Model.PostCreatedOnStr</span>
         </div>
         <div class="manage">
             @if (Model.IsCurrentCustomerAllowedToEditPost)
             {          
-                <a href="@Url.RouteUrl("PostEdit", new { id = @Model.Id })" data-inline="true" data-role="button">@T("Forum.EditPost")</a>         
+                <a href="@Url.RouteUrl("PostEdit", new { id = Model.Id })" data-inline="true" data-role="button">@T("Forum.EditPost")</a>         
             }
             @if (Model.IsCurrentCustomerAllowedToDeletePost)
             {
-                <a href="@Url.RouteUrl("PostDelete", new { id = @Model.Id })" data-inline="true" data-role="button">@T("Forum.DeletePost")</a>
+                <a href="@Url.RouteUrl("PostDelete", new { id = Model.Id })" data-inline="true" data-role="button">@T("Forum.DeletePost")</a>
             }
         </div>
     </div>
     <div class="post-content">
         <div class="post-body">
             <div class="posttext">
-                @Html.Raw(@Model.FormattedText)
+                @Html.Raw(Model.FormattedText)
             </div>
-            @Html.Hidden("Id", @Model.Id)
+            @Html.Hidden("Id", Model.Id)
         </div>
         @if (Model.SignaturesEnabled & !String.IsNullOrEmpty(Model.FormattedSignature))
         {            
             <div class="signature">
-                @Html.Raw(@Model.FormattedSignature)
+                @Html.Raw(Model.FormattedSignature)
             </div>
         }
     </div>

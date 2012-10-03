@@ -207,11 +207,11 @@
 @*Reorder support*@
                 if (Model.IsReOrderAllowed)
                 {
-            <a href="@Url.RouteUrl("ReOrder", new { orderId = @Model.Id })" data-role="button">@T("Order.Reorder")</a>
+            <a href="@Url.RouteUrl("ReOrder", new { orderId = Model.Id })" data-role="button">@T("Order.Reorder")</a>
                 }
                 if (Model.IsReturnRequestAllowed)
                 {
-            <a href="@Url.RouteUrl("ReturnRequest", new { orderId = @Model.Id })" data-role="button">@T("Order.ReturnItems")</a>
+            <a href="@Url.RouteUrl("ReturnRequest", new { orderId = Model.Id })" data-role="button">@T("Order.ReturnItems")</a>
                 }
         }
         @Html.Widget("mobile_orderdetails_page_afterproducts")

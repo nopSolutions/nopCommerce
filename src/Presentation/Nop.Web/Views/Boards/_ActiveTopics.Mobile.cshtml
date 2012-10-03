@@ -16,7 +16,7 @@
         @if (Model.ViewAllLinkEnabled)
         {        
             <div class="view-all">
-                [@Html.RouteLink(@T("Forum.ActiveDiscussions.ViewAll").Text, "ActiveDiscussions")]
+                [@Html.RouteLink(T("Forum.ActiveDiscussions.ViewAll").Text, "ActiveDiscussions")]
             </div>
         }
     </div>
@@ -28,7 +28,7 @@
                 {
                     <li>
                         <div class="topic">
-                            <a href="@Url.RouteUrl("TopicSlug", new { id = @topic.Id, slug = @topic.SeName })"><span
+                            <a href="@Url.RouteUrl("TopicSlug", new { id = topic.Id, slug = topic.SeName })"><span
                                 class="topic-name">@topic.Subject</span> <span class="replies">@T("Forum.Replies.Count", topic.NumReplies)</span>
                             </a>
                         </div>

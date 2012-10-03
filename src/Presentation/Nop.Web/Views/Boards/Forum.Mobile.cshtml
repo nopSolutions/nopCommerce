@@ -23,14 +23,14 @@
                 @Model.Description</div>
         </div>
         <div class="actions">
-            <a href="@Url.RouteUrl("TopicCreate", new { id = @Model.Id })" class="newtopic" data-role="button">@T("Forum.NewTopic")</a>
+            <a href="@Url.RouteUrl("TopicCreate", new { id = Model.Id })" class="newtopic" data-role="button">@T("Forum.NewTopic")</a>
         </div>
     </div>
     <div class="clear">
     </div>
     <div class="pager">
         @{
-            var pager = @Html.Pager(new PagerModel()
+            var pager = Html.Pager(new PagerModel()
             {
                 PageSize = Model.TopicPageSize,
                 TotalRecords = Model.TopicTotalRecords,
@@ -53,7 +53,7 @@
                 {
                     <li>
                         <div class="topic">
-                            <a href="@Url.RouteUrl("TopicSlug", new { id = @topic.Id, slug = @topic.SeName })">
+                            <a href="@Url.RouteUrl("TopicSlug", new { id = topic.Id, slug = topic.SeName })">
                                 @{
                     var topicType = "post";
                     var topicText = String.Empty;
@@ -100,7 +100,7 @@
                             $.ajax({
                                 cache: false,
                                 type: 'POST',
-                                url: '@Url.RouteUrl("ForumWatch", new { id = @Model.Id })',
+                                url: '@Url.RouteUrl("ForumWatch", new { id = Model.Id })',
                                 dataType: 'json',
                                 success: function (data) {
                                     $('#watch-forum').val(data.Text);

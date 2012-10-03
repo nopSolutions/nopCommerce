@@ -7,7 +7,7 @@
             <input type="submit" value="@T("Forum.SearchButton")" class="button-2 forum-search-box-button" />
         </div>
         <div class="advanced">
-            @Html.RouteLink(@T("Forum.AdvancedSearch").Text, "Search", new { adv = true }, new { title = @T("Forum.AdvancedSearch").Text })
+            @Html.RouteLink(T("Forum.AdvancedSearch").Text, "Search", new { adv = true }, new { title = T("Forum.AdvancedSearch").Text })
         </div>
     }
 </div>

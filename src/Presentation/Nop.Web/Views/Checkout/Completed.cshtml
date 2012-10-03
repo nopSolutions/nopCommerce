@@ -27,7 +27,7 @@
                     @T("Checkout.OrderNumber"): @Model.OrderId
                 </p>
                 <p>
-                    <a href="@Url.RouteUrl("OrderDetails", new { orderID = @Model.OrderId})">@T("Checkout.PlacedOrderDetails")</a>
+                    <a href="@Url.RouteUrl("OrderDetails", new { orderID = Model.OrderId})">@T("Checkout.PlacedOrderDetails")</a>
                 </p>
             </div>
             <div class="clear">

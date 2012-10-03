@@ -7,7 +7,7 @@
     Html.AddTitleParts(T("Forum.PageTitle.MoveTopic").Text);
 }
 @*set "data-ajax" attribute to "false"*@
-@using (Html.BeginRouteForm("TopicMove", new RouteValueDictionary(new { id = @Model.Id }), FormMethod.Post,
+@using (Html.BeginRouteForm("TopicMove", new RouteValueDictionary(new { id = Model.Id }), FormMethod.Post,
             new Dictionary<string, Object> { { "data-ajax", "false" } }))
 {
     @Html.HiddenFor(model => model.Id)
@@ -20,7 +20,7 @@
             @Html.DropDownList("ForumSelected", new SelectList(Model.ForumList, "Value", "Text"))
             <div class="options">
                 <input type="submit" value="@T("Forum.Submit")" data-inline="true" />
-                <a href="@Url.RouteUrl("TopicSlug", new { id = @Model.Id, slug = @Model.TopicSeName })" data-inline="true" data-role="button">@T("Forum.Cancel")</a>
+                <a href="@Url.RouteUrl("TopicSlug", new { id = Model.Id, slug = Model.TopicSeName })" data-inline="true" data-role="button">@T("Forum.Cancel")</a>
             </div>
         </div>
     </div>

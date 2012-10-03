@@ -17,24 +17,24 @@
     <div class="manage">
         @if (Model.IsCustomerAllowedToEditTopic)
         {
-            <a href="@Url.RouteUrl("TopicEdit", new { id = @Model.Id })" data-inline="true" data-role="button">@T("Forum.EditTopic")</a>   
+            <a href="@Url.RouteUrl("TopicEdit", new { id = Model.Id })" data-inline="true" data-role="button">@T("Forum.EditTopic")</a>   
         }
         @if (Model.IsCustomerAllowedToDeleteTopic)
         {
-            <a href="@Url.RouteUrl("TopicDelete", new { id = @Model.Id })" data-inline="true" data-role="button">@T("Forum.DeleteTopic")</a>
+            <a href="@Url.RouteUrl("TopicDelete", new { id = Model.Id })" data-inline="true" data-role="button">@T("Forum.DeleteTopic")</a>
         }
         @if (Model.IsCustomerAllowedToMoveTopic)
         {
-            <a href="@Url.RouteUrl("TopicMove", new { id = @Model.Id })" data-inline="true" data-role="button">@T("Forum.MoveTopic")</a>
+            <a href="@Url.RouteUrl("TopicMove", new { id = Model.Id })" data-inline="true" data-role="button">@T("Forum.MoveTopic")</a>
         }
     </div>
     <div class="topic-header">
         <div class="topic-options">
-            <a href="@Url.RouteUrl("PostCreate", new { id = @Model.Id })" data-role="button">@T("Forum.Reply")</a>
+            <a href="@Url.RouteUrl("PostCreate", new { id = Model.Id })" data-role="button">@T("Forum.Reply")</a>
         </div>
         <div class="pager">
             @{
-                var pager = @Html.Pager(new PagerModel()
+                var pager = Html.Pager(new PagerModel()
                 {
                     PageSize = Model.PostsPageSize,
                     TotalRecords = Model.PostsTotalRecords,
@@ -67,7 +67,7 @@
                         $.ajax({
                             cache: false,
                             type: 'POST',
-                            url: '@Url.RouteUrl("TopicWatch", new { id = @Model.Id })',
+                            url: '@Url.RouteUrl("TopicWatch", new { id = Model.Id })',
                             dataType: 'json',
                             success: function (data) {
                                 $('#watch-topic').val(data.Text);

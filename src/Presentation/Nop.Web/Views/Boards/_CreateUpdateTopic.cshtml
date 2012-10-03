@@ -66,7 +66,7 @@
                             @T("Forum.Priority"):
                         </td>
                         <td>
-                            @Html.DropDownList("TopicTypeId", new SelectList(@Model.TopicPriorities, "Value", "Text", @Model.TopicTypeId))
+                            @Html.DropDownList("TopicTypeId", new SelectList(Model.TopicPriorities, "Value", "Text", Model.TopicTypeId))
                         </td>
                     </tr>
                 }
@@ -78,7 +78,7 @@
                         </td>
                         <td>
                             @Html.EditorFor(model => model.Subscribed)
-                            @Html.LabelFor(model => model.Subscribed, @T("Forum.NotifyWhenSomeonePostsInThisTopic").Text)
+                            @Html.LabelFor(model => model.Subscribed, T("Forum.NotifyWhenSomeonePostsInThisTopic").Text)
                         </td>
                     </tr>
                 }
@@ -86,7 +86,7 @@
                     <td colspan="2" class="options">
                         <input type="submit" value="@T("Forum.Submit")" class="button-1 submit-forum-topic-button" />
                         <input type="button" class="button-2 cancel-forum-topic-button" value="@T("Forum.Cancel")" 
-                        onclick="setLocation('@Url.RouteUrl("ForumSlug", new { id = @Model.ForumId, slug = @Model.ForumSeName })')" />
+                        onclick="setLocation('@Url.RouteUrl("ForumSlug", new { id = Model.ForumId, slug = Model.ForumSeName })')" />
                     </td>
                 </tr>
             </table>

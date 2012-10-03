@@ -29,7 +29,7 @@
                 </td>
                 <td class="forum-name">
                     <div class="forum-title">
-                        @Html.RouteLink(@forum.Name, "ForumSlug", new { id = @forum.Id, slug = @forum.SeName })
+                        @Html.RouteLink(forum.Name, "ForumSlug", new { id = forum.Id, slug = forum.SeName })
                     </div>
                     <div class="forum-description">@forum.Description
                     </div>
@@ -39,7 +39,7 @@
                 <td class="posts">@forum.NumPosts
                 </td>
                 <td class="last-post">
-                    @Html.Action("LastPost", new { forumPostId = @forum.LastPostId, showTopic = true })
+                    @Html.Action("LastPost", new { forumPostId = forum.LastPostId, showTopic = true })
                 </td>
             </tr>            
         }

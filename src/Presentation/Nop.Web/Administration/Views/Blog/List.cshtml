@@ -5,7 +5,7 @@
     var gridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSize;
     
     //page title
-    ViewBag.Title = @T("Admin.ContentManagement.Blog.BlogPosts").Text;
+    ViewBag.Title = T("Admin.ContentManagement.Blog.BlogPosts").Text;
 }
 <div class="section-header">
     <div class="title">
@@ -30,7 +30,7 @@
                             .Centered()
                             .Template(
                             @<div>
-                                    @Html.ActionLink(T("Admin.ContentManagement.Blog.BlogPosts.Fields.Comments").Text + " - " + @item.Comments, "Comments", new { filterByBlogPostId = @item.Id })
+                                    @Html.ActionLink(T("Admin.ContentManagement.Blog.BlogPosts.Fields.Comments").Text + " - " + @item.Comments, "Comments", new { filterByBlogPostId = item.Id })
                                 </div>
                             )
                             .ClientTemplate("<div><a href=\"Comments?filterByBlogPostId=<#= Id #>\">" + T("Admin.ContentManagement.Blog.BlogPosts.Fields.Comments").Text + " - <#= Comments #>" + "</a></div>");

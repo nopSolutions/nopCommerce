@@ -37,7 +37,7 @@
                             .Width(100);
                         columns.Template(
                                 @<div>
-                                    @Html.ActionLink(T("Admin.ContentManagement.Widgets.Configure").Text, "ConfigureWidget", new { systemName = @item.SystemName })
+                                    @Html.ActionLink(T("Admin.ContentManagement.Widgets.Configure").Text, "ConfigureWidget", new { systemName = item.SystemName })
                                 </div>
                             )
                             .ClientTemplate("<a href=\"ConfigureWidget?systemName=<#= SystemName #>\">" + T("Admin.ContentManagement.Widgets.Configure").Text + "</a>")

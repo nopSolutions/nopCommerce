@@ -31,18 +31,18 @@
             @if (Model.ForumFeedsEnabled)
             {
                 <div class="rss">
-                    <a href="@Url.RouteUrl("ForumRSS", new { id = @Model.Id })" class="link-rss" title="@T("Forum.ForumRSSLinkTitle")">@T("Forum.RSS")</a>
+                    <a href="@Url.RouteUrl("ForumRSS", new { id = Model.Id })" class="link-rss" title="@T("Forum.ForumRSSLinkTitle")">@T("Forum.RSS")</a>
                 </div>
             }
         </div>
         <div class="actions">
             <div>
-                @Html.RouteLink(@T("Forum.NewTopic").ToString(), "TopicCreate", new { id = @Model.Id }, new { @class = "newtopic" })
+                @Html.RouteLink(T("Forum.NewTopic").ToString(), "TopicCreate", new { id = Model.Id }, new { @class = "newtopic" })
                 @if (Model.IsCustomerAllowedToSubscribe)
                 {
                     @Ajax.RouteLink(Model.WatchForumText,
                                 "ForumWatch",
-                                new { id = @Model.Id },
+                                new { id = Model.Id },
                                 new AjaxOptions { HttpMethod = "Post", OnSuccess = "handleForumWatch" },
                                 new { id = "watch-forum", @class = "watch-forum" })
                 }
@@ -54,7 +54,7 @@
     </div>
     <div class="pager">
         @{
-            var pager = @Html.Pager(new PagerModel()
+            var pager = Html.Pager(new PagerModel()
             {
                 PageSize = Model.TopicPageSize,
                 TotalRecords = Model.TopicTotalRecords,
@@ -102,11 +102,11 @@
                         break;
                     case ForumTopicType.Sticky:
                         topicType = "poststicky";
-                        topicText = string.Format("[{0}]", @T("Forum.Sticky").ToString());
+                        topicText = string.Format("[{0}]", T("Forum.Sticky").ToString());
                         break;
                     case ForumTopicType.Announcement:
                         topicType = "post-annoucement";
-                        topicText = string.Format("[{0}]", @T("Forum.Announcement").ToString());
+                        topicText = string.Format("[{0}]", T("Forum.Announcement").ToString());
                         break;
                     default:
                         topicType = "post";
@@ -117,19 +117,19 @@
                         }
                     </td>
                     <td class="topic-name">
-                        @if (!String.IsNullOrEmpty(@topicText))
+                        @if (!String.IsNullOrEmpty(topicText))
                         {
                             <span class="topictype">@topicText</span>
                         }
-                        @Html.RouteLink(@topic.Subject, "TopicSlug", new { id = @topic.Id, slug = @topic.SeName }, new { @class = "topic-title" })
-                        @if (@topic.NumPosts > Model.PostsPageSize)
+                        @Html.RouteLink(topic.Subject, "TopicSlug", new { id = topic.Id, slug = topic.SeName }, new { @class = "topic-title" })
+                        @if (topic.NumPosts > Model.PostsPageSize)
                         {   
                             <div class="topicspager">
                                 @Html.ForumTopicSmallPager(topic)
                             </div>
                         }
                         <div class="topic-starter">
-                            @if (@topic.CustomerId > 0)
+                            @if (topic.CustomerId > 0)
                             {
                                 if (topic.AllowViewingProfiles && !topic.IsCustomerGuest)
                                 {
@@ -149,7 +149,7 @@
                         @topic.Views
                     </td>
                     <td class="last-post">
-                        @Html.Action("LastPost", new { forumPostId = @topic.LastPostId, showTopic = false })
+                        @Html.Action("LastPost", new { forumPostId = topic.LastPostId, showTopic = false })
                     </td>
                 </tr>
             }

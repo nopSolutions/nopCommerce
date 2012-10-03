@@ -130,7 +130,7 @@
                                 <select name="itemquantity@(item.Id)" class="qty-dropdown">
                                     @foreach (var qty in item.AllowedQuantities)
                                     {
-                                        <option @(qty.Selected ? Html.Raw(" selected=\"selected\"") : null) value="@qty.Value">@qty.Value</option>
+                                        <option selected="@qty.Selected" value="@qty.Value">@qty.Value</option>
                                     }
                                 </select>
                                 }
@@ -217,8 +217,8 @@
                         @*uncomment below to how simple pop-up*@ @*<span class="read" onclick="javascript:OpenWindow('@Url.RouteUrl("TopicPopup", new { SystemName = "conditionsofUse" })', 450, 500, true)">@T("Checkout.TermsOfService.Read")</span>*@
                         @*use fancybox to how nice pop-up*@
                         @{
-                        Html.AddScriptParts(@Url.Content("~/Scripts/jquery.fancybox-1.3.4.pack.js"));
-                        Html.AddCssFileParts(@Url.Content("~/Content/fancybox/jquery.fancybox-1.3.4.css"));
+                        Html.AddScriptParts(Url.Content("~/Scripts/jquery.fancybox-1.3.4.pack.js"));
+                        Html.AddCssFileParts(Url.Content("~/Content/fancybox/jquery.fancybox-1.3.4.css"));
                         }
                         <a class="read" href='@Url.RouteUrl("TopicPopup", new { SystemName = "conditionsofUse" })'>@T("Checkout.TermsOfService.Read")</a>
                         <script type="text/javascript">

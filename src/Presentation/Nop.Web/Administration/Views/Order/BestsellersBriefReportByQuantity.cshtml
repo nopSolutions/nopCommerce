@@ -11,7 +11,7 @@
                             columns.Bound(x => x.TotalQuantity);
                             columns.Bound(x => x.TotalAmount);
                             columns.Bound(x => x.ProductVariantId)
-                                .Template(x => Html.ActionLink(@T("Admin.Common.View").Text, "Edit", "ProductVariant", new { id = x.ProductVariantId }, new { }))
+                                .Template(x => Html.ActionLink(T("Admin.Common.View").Text, "Edit", "ProductVariant", new { id = x.ProductVariantId }, new { }))
                                 .ClientTemplate("<a href=\""+ @Url.Content("~/Admin/ProductVariant/Edit/") + "<#= ProductVariantId #>\">" + T("Admin.Common.View").Text + "</a>")
                                 .Width(50)
                                 .Centered()

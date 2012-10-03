@@ -27,15 +27,15 @@
         <div class="manage">
             @if (Model.IsCustomerAllowedToEditTopic)
             {
-                @Html.RouteLink(@T("Forum.EditTopic").Text, "TopicEdit", new { id = @Model.Id }, new { @class = "edit-topic-link-button" })
+                @Html.RouteLink(T("Forum.EditTopic").Text, "TopicEdit", new { id = Model.Id }, new { @class = "edit-topic-link-button" })
             }
             @if (Model.IsCustomerAllowedToDeleteTopic)
             {                
-                @Html.RouteLink(@T("Forum.DeleteTopic").Text, "TopicDelete", new { id = @Model.Id }, new { onClick = String.Format("return confirm('{0}');", @T("Common.AreYouSure").Text), @class = "delete-topic-link-button" })
+                @Html.RouteLink(T("Forum.DeleteTopic").Text, "TopicDelete", new { id = Model.Id }, new { onClick = String.Format("return confirm('{0}');", T("Common.AreYouSure").Text), @class = "delete-topic-link-button" })
             }
             @if (Model.IsCustomerAllowedToMoveTopic)
             {
-                @Html.RouteLink(@T("Forum.MoveTopic").Text, "TopicMove", new { id = @Model.Id }, new { @class = "move-topic-link-button" })
+                @Html.RouteLink(T("Forum.MoveTopic").Text, "TopicMove", new { id = Model.Id }, new { @class = "move-topic-link-button" })
             }
         </div>
     </div>
@@ -43,19 +43,19 @@
     </div>
     <div class="topic-header">
         <div class="topic-options">
-            @Html.RouteLink(@T("Forum.Reply").Text, "PostCreate", new { id = @Model.Id }, new { @class = "reply-topic-link-button" })
+            @Html.RouteLink(T("Forum.Reply").Text, "PostCreate", new { id = Model.Id }, new { @class = "reply-topic-link-button" })
             @if (Model.IsCustomerAllowedToSubscribe)
             {
                 @Ajax.RouteLink(Model.WatchTopicText,
                                 "TopicWatch",
-                                new { id = @Model.Id },
+                                new { id = Model.Id },
                                 new AjaxOptions { HttpMethod = "Post", OnSuccess = "handleTopicWatch" },
                                 new { id = "watch-topic-top", @class = "watch-topic-link-button" })
             }
         </div>
         <div class="pager">
             @{
-                var pager = @Html.Pager(new PagerModel()
+                var pager = Html.Pager(new PagerModel()
                 {
                     PageSize = Model.PostsPageSize,
                     TotalRecords = Model.PostsTotalRecords,
@@ -80,12 +80,12 @@
 </div>
 <div class="topic-footer">
     <div class="topic-options">
-        @Html.RouteLink(@T("Forum.Reply").Text, "PostCreate", new { id = @Model.Id }, new { @class = "reply-topic-link-button" })
+        @Html.RouteLink(T("Forum.Reply").Text, "PostCreate", new { id = Model.Id }, new { @class = "reply-topic-link-button" })
         @if (Model.IsCustomerAllowedToSubscribe)
         {
             @Ajax.RouteLink(Model.WatchTopicText,
                             "TopicWatch",
-                            new { id = @Model.Id },
+                            new { id = Model.Id },
                             new AjaxOptions { HttpMethod = "Post", OnSuccess = "handleTopicWatch" },
                             new { id = "watch-topic-bottom", @class = "watch-topic-link-button" })
         }

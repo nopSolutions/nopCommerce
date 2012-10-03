@@ -14,7 +14,7 @@
     <div class="page-body">
         @{
             var selectPostsTab = String.Empty;
-            if (@Model.ForumsEnabled && @Model.PagingPosts)
+            if (Model.ForumsEnabled && Model.PagingPosts)
             {
                 selectPostsTab = ".tabs('select', 1)";
             }

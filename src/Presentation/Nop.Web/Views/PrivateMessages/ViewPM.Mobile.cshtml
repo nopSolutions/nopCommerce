@@ -27,12 +27,12 @@
                 @T("PrivateMessages.View.Message")
             </div>
             <div>
-                @Html.Raw(@Model.Message)
+                @Html.Raw(Model.Message)
             </div>
             <div>
                 <div class="options">
-                    <a href="@Url.RouteUrl("SendPMReply", new { toCustomerId = @Model.FromCustomerId, replyToMessageId = @Model.Id })" data-role="button" data-inline="true">@T("PrivateMessages.View.ReplyButton")</a>
-                    <a href="@Url.RouteUrl("DeletePM", new { privateMessageId = @Model.Id })" data-role="button" data-inline="true">@T("PrivateMessages.View.DeleteButton")</a>
+                    <a href="@Url.RouteUrl("SendPMReply", new { toCustomerId = Model.FromCustomerId, replyToMessageId = Model.Id })" data-role="button" data-inline="true">@T("PrivateMessages.View.ReplyButton")</a>
+                    <a href="@Url.RouteUrl("DeletePM", new { privateMessageId = Model.Id })" data-role="button" data-inline="true">@T("PrivateMessages.View.DeleteButton")</a>
                     <a href="@Url.RouteUrl("PrivateMessages")" data-role="button" data-inline="true">@T("PrivateMessages.View.BackButton")</a>
                 </div>
             </div>

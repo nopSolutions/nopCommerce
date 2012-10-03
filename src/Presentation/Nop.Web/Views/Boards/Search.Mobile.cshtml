@@ -41,7 +41,7 @@
                     forumId = Model.ForumIdSelected.ToString();
                 }
 
-                var pager = @Html.Pager(new PagerModel()
+                var pager = Html.Pager(new PagerModel()
                 {
                     PageSize = Model.TopicPageSize,
                     TotalRecords = Model.TopicTotalRecords,
@@ -54,19 +54,19 @@
             @pager
         </div>
         <div class="search-results">
-            @if (@Model.NoResultsVisisble == true)
+            @if (Model.NoResultsVisisble == true)
             {   
                 <span class="result">@T("Forum.SearchNoResultsText")</span>                
             }
             <div class="topics">
-                @if (@Model.SearchResultsVisible == true)
+                @if (Model.SearchResultsVisible == true)
                 {
                     <ul data-role="listview" data-inset="true" data-filter="false">
                         @foreach (var topic in Model.ForumTopics)
                         {
                             <li>
                                 <div class="topic">
-                                    <a href="@Url.RouteUrl("TopicSlug", new { id = @topic.Id, slug = @topic.SeName })">
+                                    <a href="@Url.RouteUrl("TopicSlug", new { id = topic.Id, slug = topic.SeName })">
                                         @{
                             var topicType = "post";
                             var topicText = String.Empty;

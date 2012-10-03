@@ -39,12 +39,12 @@
                 {
                     <div>
                         @Html.EditorFor(model => model.Subscribed)
-                        @Html.LabelFor(model => model.Subscribed, @T("Forum.NotifyWhenSomeonePostsInThisTopic").Text)
+                        @Html.LabelFor(model => model.Subscribed, T("Forum.NotifyWhenSomeonePostsInThisTopic").Text)
                     </div>
                 }
                 <div class="options">
                     <input type="submit" value="@T("Forum.Submit")" data-inline="true" />
-                    <a href="@Url.RouteUrl("TopicSlug", new { id = @Model.ForumTopicId, slug = @Model.ForumTopicSeName })" data-inline="true" data-role="button">@T("Forum.Cancel")</a>
+                    <a href="@Url.RouteUrl("TopicSlug", new { id = Model.ForumTopicId, slug = Model.ForumTopicSeName })" data-inline="true" data-role="button">@T("Forum.Cancel")</a>
                 </div>
             </div>
         </div>

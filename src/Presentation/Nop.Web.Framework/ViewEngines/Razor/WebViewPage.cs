@@ -22,6 +22,9 @@ namespace Nop.Web.Framework.ViewEngines.Razor
         private Localizer _localizer;
         private IWorkContext _workContext;
 
+        /// <summary>
+        /// Get a localized resources
+        /// </summary>
         public Localizer T
         {
             get

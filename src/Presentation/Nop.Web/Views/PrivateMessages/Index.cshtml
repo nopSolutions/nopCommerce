@@ -14,7 +14,7 @@
     </div>
     <div class="page-body">
         @{
-            var selectSentTab = (@Model.SentItemsTabSelected) ? ".tabs('select', 1)" : "";
+            var selectSentTab = Model.SentItemsTabSelected ? ".tabs('select', 1)" : "";
         }
         <script type="text/javascript">
             $(document).ready(function () {
