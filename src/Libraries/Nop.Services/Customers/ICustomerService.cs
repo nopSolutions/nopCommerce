@@ -38,6 +38,15 @@ namespace Nop.Services.Customers
            string firstName, string lastName, int dayOfBirth, int monthOfBirth,
            string company, string phone, string zipPostalCode,
            bool loadOnlyWithShoppingCart, ShoppingCartType? sct, int pageIndex, int pageSize);
+        
+        /// <summary>
+        /// Gets all customers by affiliate identifier
+        /// </summary>
+        /// <param name="affiliateId">Affiliate identifier</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>Customers</returns>
+        IPagedList<Customer> GetAllCustomers(int affiliateId, int pageIndex, int pageSize);
 
         /// <summary>
         /// Gets all customers by customer format (including deleted ones)

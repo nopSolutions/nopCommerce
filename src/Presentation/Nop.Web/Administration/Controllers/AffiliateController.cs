@@ -8,9 +8,11 @@ using Nop.Core.Domain.Affiliates;
 using Nop.Core.Domain.Directory;
 using Nop.Services.Affiliates;
 using Nop.Services.Catalog;
+using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Helpers;
 using Nop.Services.Localization;
+using Nop.Services.Orders;
 using Nop.Services.Security;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
@@ -31,6 +33,8 @@ namespace Nop.Admin.Controllers
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IPriceFormatter _priceFormatter;
         private readonly IAffiliateService _affiliateService;
+        private readonly ICustomerService _customerService;
+        private readonly IOrderService _orderService;
         private readonly IPermissionService _permissionService;
 
         #endregion
@@ -41,6 +45,7 @@ namespace Nop.Admin.Controllers
             IWorkContext workContext, IDateTimeHelper dateTimeHelper, IWebHelper webHelper,
             ICountryService countryService, IStateProvinceService stateProvinceService,
             IPriceFormatter priceFormatter, IAffiliateService affiliateService,
+            ICustomerService customerService, IOrderService orderService,
             IPermissionService permissionService)
         {
             this._localizationService = localizationService;
@@ -51,6 +56,8 @@ namespace Nop.Admin.Controllers
             this._stateProvinceService = stateProvinceService;
             this._priceFormatter = priceFormatter;
             this._affiliateService = affiliateService;
+            this._customerService = customerService;
+            this._orderService = orderService;
             this._permissionService = permissionService;
         }
 
@@ -250,14 +257,10 @@ namespace Nop.Admin.Controllers
             if (affiliate == null)
                 throw new ArgumentException("No affiliate found with the specified id");
 
-            var orders = affiliate.AffiliatedOrders
-                .Where(o => !o.Deleted)
-                .OrderBy(x => x.CreatedOnUtc)
-                .ToList();
+            var orders = _orderService.GetAllOrders(affiliate.Id, command.Page - 1, command.PageSize);
             var model = new GridModel<AffiliateModel.AffiliatedOrderModel>
             {
-                Data = orders.PagedForCommand(command)
-                    .Select(order =>
+                Data = orders.Select(order =>
                     {
                         var orderModel = new AffiliateModel.AffiliatedOrderModel();
                         orderModel.Id = order.Id;
@@ -268,7 +271,7 @@ namespace Nop.Admin.Controllers
                         orderModel.CreatedOn = _dateTimeHelper.ConvertToUserTime(order.CreatedOnUtc, DateTimeKind.Utc);
                         return orderModel;
                     }),
-                Total = orders.Count
+                Total = orders.TotalCount
             };
 
             return new JsonResult
@@ -286,22 +289,18 @@ namespace Nop.Admin.Controllers
             var affiliate = _affiliateService.GetAffiliateById(affiliateId);
             if (affiliate == null)
                 throw new ArgumentException("No affiliate found with the specified id");
-
-            var customers = affiliate.AffiliatedCustomers
-                .Where(c => !c.Deleted)
-                .OrderBy(x => x.CreatedOnUtc)
-                .ToList();
+            
+            var customers = _customerService.GetAllCustomers(affiliate.Id, command.Page - 1, command.PageSize);
             var model = new GridModel<AffiliateModel.AffiliatedCustomerModel>
             {
-                Data = customers.PagedForCommand(command)
-                    .Select(customer =>
+                Data = customers.Select(customer =>
                     {
                         var customerModel = new AffiliateModel.AffiliatedCustomerModel();
                         customerModel.Id = customer.Id;
                         customerModel.Name = customer.Email;
                         return customerModel;
                     }),
-                Total = customers.Count
+                Total = customers.TotalCount
             };
 
             return new JsonResult

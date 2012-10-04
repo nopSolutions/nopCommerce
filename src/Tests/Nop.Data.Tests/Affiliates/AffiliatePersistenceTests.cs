@@ -32,44 +32,6 @@ namespace Nop.Data.Tests.Affiliates
             fromDb.Address.FirstName.ShouldEqual("FirstName 1");
         }
 
-        [Test]
-        public void Can_save_and_load_affiliate_with_customers()
-        {
-            var affiliate = new Affiliate
-            {
-                Deleted = true,
-                Active = true,
-                Address = GetTestAddress(),
-            };
-            affiliate.AffiliatedCustomers.Add(GetTestCustomer());
-
-            var fromDb = SaveAndLoadEntity(affiliate);
-            fromDb.ShouldNotBeNull();
-
-            fromDb.AffiliatedCustomers.ShouldNotBeNull();
-            (fromDb.AffiliatedCustomers.Count == 1).ShouldBeTrue();
-            fromDb.AffiliatedCustomers.First().Active.ShouldEqual(true);
-        }
-
-        [Test]
-        public void Can_save_and_load_affiliate_with_orders()
-        {
-            var affiliate = new Affiliate
-            {
-                Deleted = true,
-                Active = true,
-                Address = GetTestAddress(),
-            };
-            affiliate.AffiliatedOrders.Add(GetTestOrder());
-
-            var fromDb = SaveAndLoadEntity(affiliate);
-            fromDb.ShouldNotBeNull();
-
-            fromDb.AffiliatedOrders.ShouldNotBeNull();
-            (fromDb.AffiliatedOrders.Count == 1).ShouldBeTrue();
-            fromDb.AffiliatedOrders.First().Deleted.ShouldEqual(true);
-        }
-
         protected Address GetTestAddress()
         {
             return new Address()

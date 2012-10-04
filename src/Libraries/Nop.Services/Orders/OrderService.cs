@@ -191,6 +191,24 @@ namespace Nop.Services.Orders
         }
 
         /// <summary>
+        /// Gets all orders by affiliate identifier
+        /// </summary>
+        /// <param name="affiliateId">Affiliate identifier</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>Orders</returns>
+        public virtual IPagedList<Order> GetAllOrders(int affiliateId, int pageIndex, int pageSize)
+        {
+            var query = _orderRepository.Table;
+            query = query.Where(o => !o.Deleted);
+            query = query.Where(o => o.AffiliateId.HasValue && o.AffiliateId == affiliateId);
+            query = query.OrderByDescending(o => o.CreatedOnUtc);
+
+            var orders = new PagedList<Order>(query, pageIndex, pageSize);
+            return orders;
+        }
+
+        /// <summary>
         /// Load all orders
         /// </summary>
         /// <returns>Order collection</returns>

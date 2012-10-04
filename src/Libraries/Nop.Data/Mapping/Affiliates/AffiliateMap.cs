@@ -11,15 +11,6 @@ namespace Nop.Data.Mapping.Affiliates
             this.HasKey(a => a.Id);
 
             this.HasRequired(a => a.Address).WithMany().HasForeignKey(x => x.AddressId).WillCascadeOnDelete(false);
-
-            this.HasMany(a => a.AffiliatedCustomers)
-                .WithOptional(c => c.Affiliate)
-                .HasForeignKey(c => c.AffiliateId);
-
-
-            this.HasMany(a => a.AffiliatedOrders)
-                .WithOptional(o => o.Affiliate)
-                .HasForeignKey(o => o.AffiliateId);
         }
     }
 }

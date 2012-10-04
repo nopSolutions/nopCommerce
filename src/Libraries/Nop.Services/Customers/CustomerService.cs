@@ -224,6 +224,24 @@ namespace Nop.Services.Customers
         }
 
         /// <summary>
+        /// Gets all customers by affiliate identifier
+        /// </summary>
+        /// <param name="affiliateId">Affiliate identifier</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>Customers</returns>
+        public virtual IPagedList<Customer> GetAllCustomers(int affiliateId, int pageIndex, int pageSize)
+        {
+            var query = _customerRepository.Table;
+            query = query.Where(c => !c.Deleted);
+            query = query.Where(c => c.AffiliateId.HasValue && c.AffiliateId == affiliateId);
+            query = query.OrderByDescending(c => c.CreatedOnUtc);
+
+            var customers = new PagedList<Customer>(query, pageIndex, pageSize);
+            return customers;
+        }
+
+        /// <summary>
         /// Gets all customers by customer format (including deleted ones)
         /// </summary>
         /// <param name="passwordFormat">Password format</param>

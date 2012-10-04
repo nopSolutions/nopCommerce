@@ -33,6 +33,10 @@ namespace Nop.Data.Mapping.Customers
                 .WithMany()
                 .Map(m => m.ToTable("Customer_CustomerRole_Mapping"));
 
+            this.HasOptional(c => c.Affiliate)
+                .WithMany()
+                .HasForeignKey(c => c.AffiliateId);
+
             this.HasMany<Address>(c => c.Addresses)
                 .WithMany()
                 .Map(m => m.ToTable("CustomerAddresses"));

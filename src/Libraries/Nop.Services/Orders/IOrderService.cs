@@ -57,6 +57,15 @@ namespace Nop.Services.Orders
         IPagedList<Order> SearchOrders(DateTime? startTime, DateTime? endTime,
             OrderStatus? os, PaymentStatus? ps, ShippingStatus? ss, string billingEmail,
             string orderGuid, int pageIndex, int pageSize);
+        
+        /// <summary>
+        /// Gets all orders by affiliate identifier
+        /// </summary>
+        /// <param name="affiliateId">Affiliate identifier</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
+        /// <returns>Orders</returns>
+        IPagedList<Order> GetAllOrders(int affiliateId, int pageIndex, int pageSize);
 
         /// <summary>
         /// Load all orders
