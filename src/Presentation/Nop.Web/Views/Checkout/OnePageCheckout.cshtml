@@ -9,6 +9,9 @@
     Html.AddScriptParts(Url.Content("~/Scripts/public.onepagecheckout.js"));
 
     var storeLocation = EngineContext.Current.Resolve<Nop.Core.IWebHelper>().GetStoreLocation();
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Checkout").Text);
 }
 <div class="page checkout-page">
     <div class="page-title">
