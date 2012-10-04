@@ -1,0 +1,140 @@
+﻿<Language Name="Română" IsDefault="false" IsRightToLeft="false">
+  <LocaleResource Name="AdminEmail">
+    <Value>Email-ul utilizatorului admin</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminEmailRequired">
+    <Value>Introduce-ți email-ul administratorului</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPassword">
+    <Value>Parola utilizatorului admin</Value>
+  </LocaleResource>
+  <LocaleResource Name="AdminPasswordRequired">
+    <Value>Introduce-ți parola administratorului</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureDirectoryPermissions">
+    <Value>Contul '{0}' nu are drepturi de modificare pentru directorul '{1}'. Va rugăm configurați aceaste drepturi.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfigureFilePermissions">
+    <Value>Contul '{0}' nu are drepturi de modificare pentru fișierul '{1}'. Va rugăm configurați aceaste drepturi.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPassword">
+    <Value>Confirmă parola</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConfirmPasswordRequired">
+    <Value>Introduce-ți confirmarea parolei</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionString">
+    <Value>Șirul de conectare</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringRequired">
+    <Value>Șirul de conectare SQL este obligatoriu</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringValues">
+    <Value>Introduce-ți valorile șirului de conectare SQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="ConnectionStringWrongFormat">
+    <Value>Șirul de conectare SQL este format greșit</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateDatabaseIfDoesNotExist">
+    <Value>Creează baza de date dacă aceasta nu există</Value>
+  </LocaleResource>
+  <LocaleResource Name="CreateSampleData">
+    <Value>Creează date eșantion</Value>
+  </LocaleResource>
+  <LocaleResource Name="CustomCollation">
+    <Value>Specificați colaționarea personalizată pentru SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseCreationError">
+    <Value>A apărut o eroare la crearea bazei de date: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseInformation">
+    <Value>Infomații bază de date</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseName">
+    <Value>Nume bază de date</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNameRequired">
+    <Value>Numele bazei de date este obligatoriu</Value>
+  </LocaleResource>
+  <LocaleResource Name="DatabaseNotExists">
+    <Value>Baza de date nu există sau nu aveți dreptul de a vă conecta la ea</Value>
+  </LocaleResource>
+  <LocaleResource Name="DataProviderRequired">
+    <Value>Selectați furnizorul de date</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation1">
+    <Value>Daca aveți nevoie de informații cum să folosiți nopCommerce, vizitați</Value>
+  </LocaleResource>
+  <LocaleResource Name="Documentation2">
+    <Value>secțiunea de documente pe nopCommerce.com</Value>
+  </LocaleResource>
+  <LocaleResource Name="Example">
+    <Value>Exemplu</Value>
+  </LocaleResource>
+  <LocaleResource Name="Install">
+    <Value>Instalare</Value>
+  </LocaleResource>
+  <LocaleResource Name="Installing">
+    <Value>nopCommerce se instalează...</Value>
+  </LocaleResource>
+  <LocaleResource Name="PasswordsDoNotMatch">
+    <Value>Parolele nu se potrivesc</Value>
+  </LocaleResource>
+  <LocaleResource Name="RawConnectionString">
+    <Value>Introduce-ți șirul de conectare în formă brută (avansat)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Recommended">
+    <Value>[Recomandat]</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallation">
+    <Value>Reporniți instalarea</Value>
+  </LocaleResource>
+  <LocaleResource Name="RestartInstallationTooltip">
+    <Value>Clic pentru a reporni instalarea (șterge toate valorile din cache)</Value>
+  </LocaleResource>
+  <LocaleResource Name="SetupFailed">
+    <Value>Configurarea a eșuat: {0}</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlAuthentication">
+    <Value>Folosește contul SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlCompact">
+    <Value>Folosiți mediul de stocare intern (SQL Server Compact)</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerName">
+    <Value>Nume SQL Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerNameRequired">
+    <Value>Numele SQL Server este obligatoriu</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerPassword">
+    <Value>Parola SQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerPasswordRequired">
+    <Value>Parola SQL este obligatorie</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerUsername">
+    <Value>Nume user SQL</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlServerUsernameRequired">
+    <Value>Numele user-ului SQL este obligatoriu</Value>
+  </LocaleResource>
+  <LocaleResource Name="SqlStandard">
+    <Value>Folosiți baza de date SQL Server (sau SQL Express)</Value>
+  </LocaleResource>
+  <LocaleResource Name="StoreInformation">
+    <Value>Informații magazin</Value>
+  </LocaleResource>
+  <LocaleResource Name="Title">
+    <Value>Instalare nopCommerce</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip1">
+    <Value>nopCommerce este soluția lider, de magazin online, pe platforma ASP.NET. Acestă pagină vă va ghida prin procesul de configurare al nopCommerce</Value>
+  </LocaleResource>
+  <LocaleResource Name="Tooltip2">
+    <Value>Pentru a completa toți pașii, trebuie să cunoașteți câteva infomații referitoare la serverul de baze de date ("șirul de conectare"). Vă rugăm să contactați ISP-ul dumneavoastră dacă este necesar. Dacă instalați pe o mașină locală sau server local, este posibil sa aveți nevoie de informații din partea administratului dumneavoastră de sistem.</Value>
+  </LocaleResource>
+  <LocaleResource Name="WindowsAuthentication">
+    <Value>Folosește autentificare integrată Windows</Value>
+  </LocaleResource>
+</Language>

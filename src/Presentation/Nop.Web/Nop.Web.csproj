@@ -342,6 +342,7 @@
     <Content Include="App_Data\Localization\Installation\installation.nl.xml" />
     <Content Include="App_Data\Localization\Installation\installation.pl.xml" />
     <Content Include="App_Data\Localization\Installation\installation.pt-br.xml" />
+    <Content Include="App_Data\Localization\Installation\installation.ro.xml" />
     <Content Include="App_Data\Localization\Installation\installation.ru.xml">
       <SubType>Designer</SubType>
     </Content>
