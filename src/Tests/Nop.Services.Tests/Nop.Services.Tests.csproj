@@ -72,6 +72,7 @@
     <Compile Include="Directory\CurrencyServiceTests.cs" />
     <Compile Include="Directory\TestExchangeRateProvider.cs" />
     <Compile Include="Directory\MeasureServiceTests.cs" />
+    <Compile Include="Discounts\DiscountExtensionsTests.cs" />
     <Compile Include="Discounts\DiscountServiceTests.cs" />
     <Compile Include="Discounts\TestDiscountRequirementRule.cs" />
     <Compile Include="ExportImport\ExportManagerTests.cs" />

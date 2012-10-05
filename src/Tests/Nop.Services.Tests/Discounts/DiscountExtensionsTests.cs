@@ -1,11 +1,13 @@
-﻿using Nop.Core.Domain.Discounts;
+﻿using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Discounts;
+using Nop.Services.Discounts;
 using Nop.Tests;
 using NUnit.Framework;
 
-namespace Nop.Core.Tests.Domain.Discounts
+namespace Nop.Services.Tests.Discounts
 {
     [TestFixture]
-    public class DiscountTests
+    public class DiscountExtensionsTests : ServiceTest
     {
         [Test]
         public void Can_calculate_discount_amount_percentage()
@@ -13,7 +15,7 @@ namespace Nop.Core.Tests.Domain.Discounts
             var discount = new Discount()
             {
                 UsePercentage = true,
-                DiscountPercentage= 30
+                DiscountPercentage = 30
             };
 
             discount.GetDiscountAmount(100).ShouldEqual(30);

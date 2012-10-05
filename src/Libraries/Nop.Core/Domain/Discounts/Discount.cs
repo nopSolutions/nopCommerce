@@ -124,28 +124,5 @@ namespace Nop.Core.Domain.Discounts
             get { return _appliedToProductVariants ?? (_appliedToProductVariants = new List<ProductVariant>()); }
             protected set { _appliedToProductVariants = value; }
         }
-
-        #region Methods
-
-        /// <summary>
-        /// Gets the discount amount for the specified value
-        /// </summary>
-        /// <param name="amount">Amount</param>
-        /// <returns>The discount amount</returns>
-        public virtual decimal GetDiscountAmount(decimal amount)
-        {
-            decimal result = decimal.Zero;
-            if (this.UsePercentage)
-                result = (decimal)((((float)amount) * ((float)this.DiscountPercentage)) / 100f);
-            else
-                result = this.DiscountAmount;
-
-            if (result < decimal.Zero)
-                result = decimal.Zero;
-
-            return result;
-        }
-
-        #endregion
     }
 }
