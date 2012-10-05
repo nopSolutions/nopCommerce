@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Globalization;
+using System.Linq;
 using System.Threading;
 using System.Web.Hosting;
 using System.Web.Mvc;
 using System.Web.Routing;
+using System.Web.WebPages;
 using FluentValidation.Mvc;
 using Nop.Core;
 using Nop.Core.Data;
@@ -51,6 +53,15 @@ namespace Nop.Web
 
         protected void Application_Start()
         {
+            //we use our own mobile devices support (".Mobile" is reserved). that's why we disable it.
+            var mobileDisplayMode = DisplayModeProvider
+                .Instance
+                .Modes
+                .Where(x => x.DisplayModeId == DisplayModeProvider.MobileDisplayModeId)
+                .FirstOrDefault();
+            if (mobileDisplayMode != null)
+                DisplayModeProvider.Instance.Modes.Remove(mobileDisplayMode);
+
             //initialize engine context
             EngineContext.Initialize(false);
 
