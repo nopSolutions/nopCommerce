@@ -486,17 +486,17 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
 
-            var variants = _productService.GetLowStockProductVariants().Take(_adminAreaSettings.GridPageSize).ToList();
+            var allVariants = _productService.GetLowStockProductVariants();
             var model = new GridModel<ProductVariantModel>()
             {
-                Data = variants.Select(x =>
+                Data = allVariants.Take(_adminAreaSettings.GridPageSize).Select(x =>
                 {
                     var variantModel = x.ToModel();
                     //Full product variant name
                     variantModel.Name = !String.IsNullOrEmpty(x.Name) ? string.Format("{0} ({1})", x.Product.Name, x.Name) : x.Product.Name;
                     return variantModel;
                 }),
-                Total = variants.Count
+                Total = allVariants.Count
             };
 
             return View(model);
@@ -507,18 +507,17 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
 
-            var variants = _productService.GetLowStockProductVariants();
-
+            var allVariants = _productService.GetLowStockProductVariants();
             var model = new GridModel<ProductVariantModel>()
             {
-                Data = variants.PagedForCommand(command).Select(x =>
+                Data = allVariants.PagedForCommand(command).Select(x =>
                 {
                     var variantModel = x.ToModel();
                     //Full product variant name
                     variantModel.Name = !String.IsNullOrEmpty(x.Name) ? string.Format("{0} ({1})", x.Product.Name, x.Name) : x.Product.Name;
                     return variantModel;
                 }),
-                Total = variants.Count
+                Total = allVariants.Count
             };
             return new JsonResult
             {
