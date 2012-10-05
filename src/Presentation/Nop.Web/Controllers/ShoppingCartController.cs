@@ -1830,7 +1830,7 @@ namespace Nop.Web.Controllers
                 }
 
                 //payment method fee
-                decimal paymentMethodAdditionalFee = _paymentService.GetAdditionalHandlingFee(paymentMethodSystemName);
+                decimal paymentMethodAdditionalFee = _paymentService.GetAdditionalHandlingFee(cart, paymentMethodSystemName);
                 decimal paymentMethodAdditionalFeeWithTaxBase = _taxService.GetPaymentMethodAdditionalFee(paymentMethodAdditionalFee, _workContext.CurrentCustomer);
                 if (paymentMethodAdditionalFeeWithTaxBase > decimal.Zero)
                 {

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Globalization;
 using System.Net;
@@ -210,8 +211,9 @@ namespace Nop.Plugin.Payments.AuthorizeNet
         /// <summary>
         /// Gets additional handling fee
         /// </summary>
+        /// <param name="cart">Shoping cart</param>
         /// <returns>Additional handling fee</returns>
-        public decimal GetAdditionalHandlingFee()
+        public decimal GetAdditionalHandlingFee(IList<ShoppingCartItem> cart)
         {
             return _authorizeNetPaymentSettings.AdditionalFee;
         }

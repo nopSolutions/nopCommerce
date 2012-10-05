@@ -1,11 +1,14 @@
 using System;
+using System.Collections.Generic;
 using System.Web.Routing;
+using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Plugins;
 using Nop.Plugin.Payments.Manual.Controllers;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
+using Nop.Services.Orders;
 using Nop.Services.Payments;
 
 namespace Nop.Plugin.Payments.Manual
@@ -19,16 +22,18 @@ namespace Nop.Plugin.Payments.Manual
 
         private readonly ManualPaymentSettings _manualPaymentSettings;
         private readonly ISettingService _settingService;
+        private readonly IOrderTotalCalculationService _orderTotalCalculationService;
 
         #endregion
 
         #region Ctor
 
         public ManualPaymentProcessor(ManualPaymentSettings manualPaymentSettings,
-            ISettingService settingService)
+            ISettingService settingService, IOrderTotalCalculationService orderTotalCalculationService)
         {
             this._manualPaymentSettings = manualPaymentSettings;
             this._settingService = settingService;
+            this._orderTotalCalculationService = orderTotalCalculationService;
         }
 
         #endregion
@@ -79,9 +84,21 @@ namespace Nop.Plugin.Payments.Manual
         /// Gets additional handling fee
         /// </summary>
         /// <returns>Additional handling fee</returns>
-        public decimal GetAdditionalHandlingFee()
+        public decimal GetAdditionalHandlingFee(IList<ShoppingCartItem> cart)
         {
-            return _manualPaymentSettings.AdditionalFee;
+            var result = decimal.Zero;
+            if (_manualPaymentSettings.AdditionalFeePercentage)
+            {
+                //percentage
+                var orderTotalWithoutPaymentFee = _orderTotalCalculationService.GetShoppingCartTotal(cart, usePaymentMethodAdditionalFee: false);
+                result = (decimal)((((float)orderTotalWithoutPaymentFee) * ((float)_manualPaymentSettings.AdditionalFee)) / 100f);
+            }
+            else
+            {
+                //fixed value
+                result = _manualPaymentSettings.AdditionalFee;
+            }
+            return result;
         }
 
         /// <summary>
@@ -219,6 +236,8 @@ namespace Nop.Plugin.Payments.Manual
             //locales
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFee", "Additional fee");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFee.Hint", "Enter additional fee to charge your customers.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFeePercentage", "Additinal fee. Use percentage");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFeePercentage.Hint", "Determines whether to apply a percentage additional fee to the order total. If not enabled, a fixed value is used.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Manual.Fields.TransactMode", "After checkout mark payment as");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.Manual.Fields.TransactMode.Hint", "Specify transaction mode.");
             
@@ -234,6 +253,8 @@ namespace Nop.Plugin.Payments.Manual
             //locales
             this.DeletePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFee");
             this.DeletePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFee.Hint");
+            this.DeletePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFeePercentage");
+            this.DeletePluginLocaleResource("Plugins.Payments.Manual.Fields.AdditionalFeePercentage.Hint");
             this.DeletePluginLocaleResource("Plugins.Payments.Manual.Fields.TransactMode");
             this.DeletePluginLocaleResource("Plugins.Payments.Manual.Fields.TransactMode.Hint");
             

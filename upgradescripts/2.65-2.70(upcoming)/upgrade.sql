@@ -158,6 +158,12 @@ set @resources='
   <LocaleResource Name="ActivityLog.PublicStore.AddBlogComment">
     <Value>Added a blog comment</Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Manual.Fields.AdditionalFeePercentage">
+    <Value>Additinal fee. Use percentage</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Payments.Manual.Fields.AdditionalFeePercentage.Hint">
+    <Value>Determines whether to apply a percentage additional fee to the order total. If not enabled, a fixed value is used.</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -804,5 +810,13 @@ IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'PublicS
 BEGIN
 	INSERT [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
 	VALUES (N'PublicStore.AddBlogComment', N'Public store. Add blog comment', N'false')
+END
+GO
+
+--additional fee percentage support
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'manualpaymentsettings.additionalfeepercentage')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'manualpaymentsettings.additionalfeepercentage', N'false')
 END
 GO

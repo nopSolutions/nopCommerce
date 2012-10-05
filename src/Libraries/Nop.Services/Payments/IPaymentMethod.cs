@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Web.Routing;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Plugins;
@@ -28,8 +29,9 @@ namespace Nop.Services.Payments
         /// <summary>
         /// Gets additional handling fee
         /// </summary>
+        /// <param name="cart">Shoping cart</param>
         /// <returns>Additional handling fee</returns>
-        decimal GetAdditionalHandlingFee();
+        decimal GetAdditionalHandlingFee(IList<ShoppingCartItem> cart);
         
         /// <summary>
         /// Captures payment

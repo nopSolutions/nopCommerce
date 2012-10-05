@@ -6,6 +6,9 @@ namespace Nop.Plugin.Payments.Manual.Models
 {
     public class ConfigurationModel : BaseNopModel
     {
+        [NopResourceDisplayName("Plugins.Payments.Manual.Fields.AdditionalFeePercentage")]
+        public bool AdditionalFeePercentage { get; set; }
+
         [NopResourceDisplayName("Plugins.Payments.Manual.Fields.AdditionalFee")]
         public decimal AdditionalFee { get; set; }
 

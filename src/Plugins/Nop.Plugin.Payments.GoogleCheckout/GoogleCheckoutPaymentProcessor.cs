@@ -429,8 +429,9 @@ namespace Nop.Plugin.Payments.GoogleCheckout
         /// <summary>
         /// Gets additional handling fee
         /// </summary>
+        /// <param name="cart">Shoping cart</param>
         /// <returns>Additional handling fee</returns>
-        public decimal GetAdditionalHandlingFee()
+        public decimal GetAdditionalHandlingFee(IList<Nop.Core.Domain.Orders.ShoppingCartItem> cart)
         {
             return decimal.Zero;
         }

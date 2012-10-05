@@ -265,7 +265,7 @@ namespace Nop.Web.Controllers
                     PaymentMethodSystemName = pm.PluginDescriptor.SystemName,
                 };
                 //payment method additional fee
-                decimal paymentMethodAdditionalFee = _paymentService.GetAdditionalHandlingFee(pm.PluginDescriptor.SystemName);
+                decimal paymentMethodAdditionalFee = _paymentService.GetAdditionalHandlingFee(cart, pm.PluginDescriptor.SystemName);
                 decimal rateBase = _taxService.GetPaymentMethodAdditionalFee(paymentMethodAdditionalFee, _workContext.CurrentCustomer);
                 decimal rate = _currencyService.ConvertFromPrimaryStoreCurrency(rateBase, _workContext.WorkingCurrency);
                 if (rate > decimal.Zero)

@@ -719,7 +719,7 @@ namespace Nop.Services.Orders
                 decimal paymentAdditionalFeeInclTax, paymentAdditionalFeeExclTax;
                 if (!processPaymentRequest.IsRecurringPayment)
                 {
-                    decimal paymentAdditionalFee = _paymentService.GetAdditionalHandlingFee(processPaymentRequest.PaymentMethodSystemName);
+                    decimal paymentAdditionalFee = _paymentService.GetAdditionalHandlingFee(cart, processPaymentRequest.PaymentMethodSystemName);
                     paymentAdditionalFeeInclTax = _taxService.GetPaymentMethodAdditionalFee(paymentAdditionalFee, true, customer);
                     paymentAdditionalFeeExclTax = _taxService.GetPaymentMethodAdditionalFee(paymentAdditionalFee, false, customer);
                 }

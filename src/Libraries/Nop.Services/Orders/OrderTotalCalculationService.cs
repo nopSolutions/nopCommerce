@@ -616,14 +616,15 @@ namespace Nop.Services.Orders
         /// Gets tax
         /// </summary>
         /// <param name="cart">Shopping cart</param>
+        /// <param name="usePaymentMethodAdditionalFee">A value indicating whether we should use payment method additional fee when calculating tax</param>
         /// <returns>Tax total</returns>
-        public virtual decimal GetTaxTotal(IList<ShoppingCartItem> cart)
+        public virtual decimal GetTaxTotal(IList<ShoppingCartItem> cart, bool usePaymentMethodAdditionalFee = true)
         {
             if (cart == null)
                 throw new ArgumentNullException("cart");
 
             SortedDictionary<decimal, decimal> taxRates = null;
-            return GetTaxTotal(cart, out taxRates);
+            return GetTaxTotal(cart, out taxRates, usePaymentMethodAdditionalFee);
         }
 
         /// <summary>
@@ -631,9 +632,10 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="cart">Shopping cart</param>
         /// <param name="taxRates">Tax rates</param>
+        /// <param name="usePaymentMethodAdditionalFee">A value indicating whether we should use payment method additional fee when calculating tax</param>
         /// <returns>Tax total</returns>
         public virtual decimal GetTaxTotal(IList<ShoppingCartItem> cart,
-            out SortedDictionary<decimal, decimal> taxRates)
+            out SortedDictionary<decimal, decimal> taxRates, bool usePaymentMethodAdditionalFee = true)
         {
             if (cart == null)
                 throw new ArgumentNullException("cart");
@@ -698,11 +700,11 @@ namespace Nop.Services.Orders
 
             //payment method additional fee
             decimal paymentMethodAdditionalFeeTax = decimal.Zero;
-            if (_taxSettings.PaymentMethodAdditionalFeeIsTaxable)
+            if (usePaymentMethodAdditionalFee && _taxSettings.PaymentMethodAdditionalFeeIsTaxable)
             {
                 decimal taxRate = decimal.Zero;
 
-                decimal paymentMethodAdditionalFee = _paymentService.GetAdditionalHandlingFee(paymentMethodSystemName);
+                decimal paymentMethodAdditionalFee = _paymentService.GetAdditionalHandlingFee(cart, paymentMethodSystemName);
                 decimal paymentMethodAdditionalFeeExclTax = _taxService.GetPaymentMethodAdditionalFee(paymentMethodAdditionalFee, false, customer, out taxRate);
                 decimal paymentMethodAdditionalFeeInclTax = _taxService.GetPaymentMethodAdditionalFee(paymentMethodAdditionalFee, true, customer, out taxRate);
 
@@ -745,9 +747,10 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="cart">Cart</param>
         /// <param name="ignoreRewardPonts">A value indicating whether we should ignore reward points (if enabled and a customer is going to use them)</param>
+        /// <param name="usePaymentMethodAdditionalFee">A value indicating whether we should use payment method additional fee when calculating order total</param>
         /// <returns>Shopping cart total;Null if shopping cart total couldn't be calculated now</returns>
         public virtual decimal? GetShoppingCartTotal(IList<ShoppingCartItem> cart,
-            bool ignoreRewardPonts = false)
+            bool ignoreRewardPonts = false, bool usePaymentMethodAdditionalFee = true)
         {
             decimal discountAmount = decimal.Zero;
             Discount appliedDiscount = null;
@@ -757,7 +760,7 @@ namespace Nop.Services.Orders
             List<AppliedGiftCard> appliedGiftCards = null;
             return GetShoppingCartTotal(cart, out discountAmount, out appliedDiscount,
                 out appliedGiftCards,
-                out redeemedRewardPoints, out redeemedRewardPointsAmount, ignoreRewardPonts);
+                out redeemedRewardPoints, out redeemedRewardPointsAmount, ignoreRewardPonts, usePaymentMethodAdditionalFee);
         }
 
         /// <summary>
@@ -770,12 +773,13 @@ namespace Nop.Services.Orders
         /// <param name="redeemedRewardPoints">Reward points to redeem</param>
         /// <param name="redeemedRewardPointsAmount">Reward points amount in primary store currency to redeem</param>
         /// <param name="ignoreRewardPonts">A value indicating whether we should ignore reward points (if enabled and a customer is going to use them)</param>
+        /// <param name="usePaymentMethodAdditionalFee">A value indicating whether we should use payment method additional fee when calculating order total</param>
         /// <returns>Shopping cart total;Null if shopping cart total couldn't be calculated now</returns>
         public virtual decimal? GetShoppingCartTotal(IList<ShoppingCartItem> cart,
             out decimal discountAmount, out Discount appliedDiscount,
             out List<AppliedGiftCard> appliedGiftCards,
             out int redeemedRewardPoints, out decimal redeemedRewardPointsAmount,
-            bool ignoreRewardPonts = false)
+            bool ignoreRewardPonts = false, bool usePaymentMethodAdditionalFee = true)
         {
             redeemedRewardPoints = 0;
             redeemedRewardPointsAmount = decimal.Zero;
@@ -807,9 +811,9 @@ namespace Nop.Services.Orders
 
             //payment method additional fee without tax
             decimal paymentMethodAdditionalFeeWithoutTax = decimal.Zero;
-            if (!String.IsNullOrEmpty(paymentMethodSystemName))
+            if (usePaymentMethodAdditionalFee && !String.IsNullOrEmpty(paymentMethodSystemName))
             {
-                decimal paymentMethodAdditionalFee = _paymentService.GetAdditionalHandlingFee(paymentMethodSystemName);
+                decimal paymentMethodAdditionalFee = _paymentService.GetAdditionalHandlingFee(cart, paymentMethodSystemName);
                 paymentMethodAdditionalFeeWithoutTax = _taxService.GetPaymentMethodAdditionalFee(paymentMethodAdditionalFee,
                     false, customer);
             }
@@ -818,7 +822,7 @@ namespace Nop.Services.Orders
 
 
             //tax
-            decimal shoppingCartTax = GetTaxTotal(cart);
+            decimal shoppingCartTax = GetTaxTotal(cart, usePaymentMethodAdditionalFee);
 
 
 

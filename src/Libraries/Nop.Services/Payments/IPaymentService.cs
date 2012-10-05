@@ -54,9 +54,10 @@ namespace Nop.Services.Payments
         /// <summary>
         /// Gets an additional handling fee of a payment method
         /// </summary>
+        /// <param name="cart">Shoping cart</param>
         /// <param name="paymentMethodSystemName">Payment method system name</param>
         /// <returns>Additional handling fee</returns>
-        decimal GetAdditionalHandlingFee(string paymentMethodSystemName);
+        decimal GetAdditionalHandlingFee(IList<ShoppingCartItem> cart, string paymentMethodSystemName);
 
 
 

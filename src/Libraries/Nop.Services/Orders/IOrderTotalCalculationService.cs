@@ -144,16 +144,19 @@ namespace Nop.Services.Orders
         /// Gets tax
         /// </summary>
         /// <param name="cart">Shopping cart</param>
+        /// <param name="usePaymentMethodAdditionalFee">A value indicating whether we should use payment method additional fee when calculating tax</param>
         /// <returns>Tax total</returns>
-        decimal GetTaxTotal(IList<ShoppingCartItem> cart);
+        decimal GetTaxTotal(IList<ShoppingCartItem> cart, bool usePaymentMethodAdditionalFee = true);
 
         /// <summary>
         /// Gets tax
         /// </summary>
         /// <param name="cart">Shopping cart</param>
         /// <param name="taxRates">Tax rates</param>
+        /// <param name="usePaymentMethodAdditionalFee">A value indicating whether we should use payment method additional fee when calculating tax</param>
         /// <returns>Tax total</returns>
-        decimal GetTaxTotal(IList<ShoppingCartItem> cart, out SortedDictionary<decimal, decimal> taxRates);
+        decimal GetTaxTotal(IList<ShoppingCartItem> cart, out SortedDictionary<decimal, decimal> taxRates, 
+            bool usePaymentMethodAdditionalFee = true);
 
 
 
@@ -164,7 +167,9 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="cart">Cart</param>
         /// <param name="ignoreRewardPonts">A value indicating whether we should ignore reward points (if enabled and a customer is going to use them)</param>
-        decimal? GetShoppingCartTotal(IList<ShoppingCartItem> cart, bool ignoreRewardPonts = false);
+        /// <param name="usePaymentMethodAdditionalFee">A value indicating whether we should use payment method additional fee when calculating order total</param>
+        decimal? GetShoppingCartTotal(IList<ShoppingCartItem> cart, bool ignoreRewardPonts = false, 
+            bool usePaymentMethodAdditionalFee = true);
 
         /// <summary>
         /// Gets shopping cart total
@@ -176,12 +181,13 @@ namespace Nop.Services.Orders
         /// <param name="redeemedRewardPoints">Reward points to redeem</param>
         /// <param name="redeemedRewardPointsAmount">Reward points amount in primary store currency to redeem</param>
         /// <param name="ignoreRewardPonts">A value indicating whether we should ignore reward points (if enabled and a customer is going to use them)</param>
+        /// <param name="usePaymentMethodAdditionalFee">A value indicating whether we should use payment method additional fee when calculating order total</param>
         /// <returns>Shopping cart total;Null if shopping cart total couldn't be calculated now</returns>
         decimal? GetShoppingCartTotal(IList<ShoppingCartItem> cart,
             out decimal discountAmount, out Discount appliedDiscount,
             out List<AppliedGiftCard> appliedGiftCards,
             out int redeemedRewardPoints, out decimal redeemedRewardPointsAmount,
-            bool ignoreRewardPonts = false);
+            bool ignoreRewardPonts = false, bool usePaymentMethodAdditionalFee = true);
 
         /// <summary>
         /// Gets an order discount (applied to order total)

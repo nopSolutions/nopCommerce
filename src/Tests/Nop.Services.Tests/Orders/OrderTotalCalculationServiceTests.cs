@@ -970,7 +970,7 @@ namespace Nop.Services.Tests.Orders
             
             SortedDictionary<decimal, decimal> taxRates;
             customer.SelectedPaymentMethodSystemName = "test1";
-            _paymentService.Expect(ps => ps.GetAdditionalHandlingFee("test1")).Return(20);
+            _paymentService.Expect(ps => ps.GetAdditionalHandlingFee(cart, "test1")).Return(20);
             //56 - items, 10 - shipping (fixed), 20 - payment fee
 
             //1. shipping is taxable, payment fee is taxable
@@ -1065,7 +1065,7 @@ namespace Nop.Services.Tests.Orders
 
 
             customer.SelectedPaymentMethodSystemName = "test1";
-            _paymentService.Expect(ps => ps.GetAdditionalHandlingFee("test1")).Return(20);
+            _paymentService.Expect(ps => ps.GetAdditionalHandlingFee(cart, "test1")).Return(20);
 
 
             decimal discountAmount;
@@ -1140,7 +1140,7 @@ namespace Nop.Services.Tests.Orders
 
 
             customer.SelectedPaymentMethodSystemName = "test1";
-            _paymentService.Expect(ps => ps.GetAdditionalHandlingFee("test1")).Return(20);
+            _paymentService.Expect(ps => ps.GetAdditionalHandlingFee(cart, "test1")).Return(20);
 
 
             decimal discountAmount;
@@ -1215,7 +1215,7 @@ namespace Nop.Services.Tests.Orders
 
 
             customer.SelectedPaymentMethodSystemName = "test1";
-            _paymentService.Expect(ps => ps.GetAdditionalHandlingFee("test1")).Return(20);
+            _paymentService.Expect(ps => ps.GetAdditionalHandlingFee(cart, "test1")).Return(20);
 
 
             decimal discountAmount;
@@ -1306,7 +1306,7 @@ namespace Nop.Services.Tests.Orders
             _discountService.Expect(ds => ds.GetAllDiscounts(DiscountType.AssignedToOrderTotal)).Return(new List<Discount>() { discount1 });
             
             customer.SelectedPaymentMethodSystemName = "test1";
-            _paymentService.Expect(ps => ps.GetAdditionalHandlingFee("test1")).Return(20);
+            _paymentService.Expect(ps => ps.GetAdditionalHandlingFee(cart, "test1")).Return(20);
 
 
             decimal discountAmount;

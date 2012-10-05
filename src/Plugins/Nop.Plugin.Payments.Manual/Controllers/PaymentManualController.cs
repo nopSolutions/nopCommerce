@@ -33,6 +33,7 @@ namespace Nop.Plugin.Payments.Manual.Controllers
             var model = new ConfigurationModel();
             model.TransactModeId = Convert.ToInt32(_manualPaymentSettings.TransactMode);
             model.AdditionalFee = _manualPaymentSettings.AdditionalFee;
+            model.AdditionalFeePercentage = _manualPaymentSettings.AdditionalFeePercentage;
             model.TransactModeValues = _manualPaymentSettings.TransactMode.ToSelectList();
             
             return View("Nop.Plugin.Payments.Manual.Views.PaymentManual.Configure", model);
@@ -49,6 +50,7 @@ namespace Nop.Plugin.Payments.Manual.Controllers
             //save settings
             _manualPaymentSettings.TransactMode = (TransactMode)model.TransactModeId;
             _manualPaymentSettings.AdditionalFee = model.AdditionalFee;
+            _manualPaymentSettings.AdditionalFeePercentage = model.AdditionalFeePercentage;
             _settingService.SaveSetting(_manualPaymentSettings);
             
             model.TransactModeValues = _manualPaymentSettings.TransactMode.ToSelectList();
