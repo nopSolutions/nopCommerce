@@ -12,5 +12,8 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Models
 
         [NopResourceDisplayName("Plugins.Payment.CheckMoneyOrder.AdditionalFee")]
         public decimal AdditionalFee { get; set; }
+
+        [NopResourceDisplayName("Plugins.Payment.CheckMoneyOrder.AdditionalFeePercentage")]
+        public bool AdditionalFeePercentage { get; set; }
     }
 }

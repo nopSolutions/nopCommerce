@@ -24,5 +24,8 @@ namespace Nop.Plugin.Payments.PayPalDirect.Models
 
         [NopResourceDisplayName("Plugins.Payments.PayPalDirect.Fields.AdditionalFee")]
         public decimal AdditionalFee { get; set; }
+
+        [NopResourceDisplayName("Plugins.Payments.PayPalDirect.Fields.AdditionalFeePercentage")]
+        public bool AdditionalFeePercentage { get; set; }
     }
 }

@@ -20,6 +20,9 @@ namespace Nop.Plugin.Payments.PayPalStandard.Models
         [NopResourceDisplayName("Plugins.Payments.PayPalStandard.Fields.AdditionalFee")]
         public decimal AdditionalFee { get; set; }
 
+        [NopResourceDisplayName("Plugins.Payments.PayPalStandard.Fields.AdditionalFeePercentage")]
+        public bool AdditionalFeePercentage { get; set; }
+
         [NopResourceDisplayName("Plugins.Payments.PayPalStandard.Fields.PassProductNamesAndTotals")]
         public bool PassProductNamesAndTotals { get; set; }
 

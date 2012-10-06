@@ -25,6 +25,7 @@ namespace Nop.Plugin.Payments.PayInStore.Controllers
             var model = new ConfigurationModel();
             model.DescriptionText = _payInStorePaymentSettings.DescriptionText;
             model.AdditionalFee = _payInStorePaymentSettings.AdditionalFee;
+            model.AdditionalFeePercentage = _payInStorePaymentSettings.AdditionalFeePercentage;
             
             return View("Nop.Plugin.Payments.PayInStore.Views.PaymentPayInStore.Configure", model);
         }
@@ -40,6 +41,7 @@ namespace Nop.Plugin.Payments.PayInStore.Controllers
             //save settings
             _payInStorePaymentSettings.DescriptionText = model.DescriptionText;
             _payInStorePaymentSettings.AdditionalFee = model.AdditionalFee;
+            _payInStorePaymentSettings.AdditionalFeePercentage = model.AdditionalFeePercentage;
             _settingService.SaveSetting(_payInStorePaymentSettings);
             
             return View("Nop.Plugin.Payments.PayInStore.Views.PaymentPayInStore.Configure", model);

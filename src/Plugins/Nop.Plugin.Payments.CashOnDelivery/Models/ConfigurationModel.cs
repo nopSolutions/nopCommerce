@@ -12,5 +12,8 @@ namespace Nop.Plugin.Payments.CashOnDelivery.Models
 
         [NopResourceDisplayName("Plugins.Payment.CashOnDelivery.AdditionalFee")]
         public decimal AdditionalFee { get; set; }
+
+        [NopResourceDisplayName("Plugins.Payment.CashOnDelivery.AdditionalFeePercentage")]
+        public bool AdditionalFeePercentage { get; set; }
     }
 }

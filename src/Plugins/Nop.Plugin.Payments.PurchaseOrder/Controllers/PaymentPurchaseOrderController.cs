@@ -24,6 +24,7 @@ namespace Nop.Plugin.Payments.PurchaseOrder.Controllers
         {
             var model = new ConfigurationModel();
             model.AdditionalFee = _purchaseOrderPaymentSettings.AdditionalFee;
+            model.AdditionalFeePercentage = _purchaseOrderPaymentSettings.AdditionalFeePercentage;
             
             return View("Nop.Plugin.Payments.PurchaseOrder.Views.PaymentPurchaseOrder.Configure", model);
         }
@@ -38,6 +39,7 @@ namespace Nop.Plugin.Payments.PurchaseOrder.Controllers
             
             //save settings
             _purchaseOrderPaymentSettings.AdditionalFee = model.AdditionalFee;
+            _purchaseOrderPaymentSettings.AdditionalFeePercentage = model.AdditionalFeePercentage;
             _settingService.SaveSetting(_purchaseOrderPaymentSettings);
             
             return View("Nop.Plugin.Payments.PurchaseOrder.Views.PaymentPurchaseOrder.Configure", model);

@@ -20,6 +20,7 @@ using Nop.Services.Configuration;
 using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
+using Nop.Services.Orders;
 using Nop.Services.Payments;
 using Nop.Services.Tax;
 
@@ -40,6 +41,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
         private readonly ICustomerService _customerService;
         private readonly CurrencySettings _currencySettings;
         private readonly IWebHelper _webHelper;
+        private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly StoreInformationSettings _storeInformationSettings;
         #endregion
 
@@ -49,8 +51,8 @@ namespace Nop.Plugin.Payments.PayPalDirect
             ISettingService settingService, 
             ITaxService taxService, IPriceCalculationService priceCalculationService,
             ICurrencyService currencyService, ICustomerService customerService,
-            CurrencySettings currencySettings, IWebHelper webHelper,
-            StoreInformationSettings storeInformationSettings)
+            CurrencySettings currencySettings, IWebHelper webHelper, 
+            IOrderTotalCalculationService orderTotalCalculationService, StoreInformationSettings storeInformationSettings)
         {
             this._paypalDirectPaymentSettings = paypalDirectPaymentSettings;
             this._settingService = settingService;
@@ -60,6 +62,7 @@ namespace Nop.Plugin.Payments.PayPalDirect
             this._customerService = customerService;
             this._currencySettings = currencySettings;
             this._webHelper = webHelper;
+            this._orderTotalCalculationService = orderTotalCalculationService;
             this._storeInformationSettings = storeInformationSettings;
         }
 
@@ -357,7 +360,9 @@ namespace Nop.Plugin.Payments.PayPalDirect
         /// <returns>Additional handling fee</returns>
         public decimal GetAdditionalHandlingFee(IList<ShoppingCartItem> cart)
         {
-            return _paypalDirectPaymentSettings.AdditionalFee;
+            var result = this.CalculateAdditionalFee(_orderTotalCalculationService, cart,
+                _paypalDirectPaymentSettings.AdditionalFee, _paypalDirectPaymentSettings.AdditionalFeePercentage);
+            return result;
         }
 
         /// <summary>
@@ -741,6 +746,8 @@ namespace Nop.Plugin.Payments.PayPalDirect
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.Signature.Hint", "Specify signature.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.AdditionalFee", "Additional fee");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.AdditionalFee.Hint", "Enter additional fee to charge your customers.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.AdditionalFeePercentage", "Additinal fee. Use percentage");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.AdditionalFeePercentage.Hint", "Determines whether to apply a percentage additional fee to the order total. If not enabled, a fixed value is used.");
            
             base.Install();
         }
@@ -763,6 +770,8 @@ namespace Nop.Plugin.Payments.PayPalDirect
             this.DeletePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.Signature.Hint");
             this.DeletePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.AdditionalFee");
             this.DeletePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.AdditionalFee.Hint");
+            this.DeletePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.AdditionalFeePercentage");
+            this.DeletePluginLocaleResource("Plugins.Payments.PayPalDirect.Fields.AdditionalFeePercentage.Hint");
            
             base.Uninstall();
         }

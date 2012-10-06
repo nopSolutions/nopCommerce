@@ -25,6 +25,7 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Controllers
             var model = new ConfigurationModel();
             model.DescriptionText = _checkMoneyOrderPaymentSettings.DescriptionText;
             model.AdditionalFee = _checkMoneyOrderPaymentSettings.AdditionalFee;
+            model.AdditionalFeePercentage = _checkMoneyOrderPaymentSettings.AdditionalFeePercentage;
             
             return View("Nop.Plugin.Payments.CheckMoneyOrder.Views.PaymentCheckMoneyOrder.Configure", model);
         }
@@ -40,6 +41,7 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder.Controllers
             //save settings
             _checkMoneyOrderPaymentSettings.DescriptionText = model.DescriptionText;
             _checkMoneyOrderPaymentSettings.AdditionalFee = model.AdditionalFee;
+            _checkMoneyOrderPaymentSettings.AdditionalFeePercentage = model.AdditionalFeePercentage;
             _settingService.SaveSetting(_checkMoneyOrderPaymentSettings);
             
             return View("Nop.Plugin.Payments.CheckMoneyOrder.Views.PaymentCheckMoneyOrder.Configure", model);

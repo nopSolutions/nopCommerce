@@ -12,5 +12,8 @@ namespace Nop.Plugin.Payments.PayInStore.Models
 
         [NopResourceDisplayName("Plugins.Payment.PayInStore.AdditionalFee")]
         public decimal AdditionalFee { get; set; }
+
+        [NopResourceDisplayName("Plugins.Payment.PayInStore.AdditionalFeePercentage")]
+        public bool AdditionalFeePercentage { get; set; }
     }
 }

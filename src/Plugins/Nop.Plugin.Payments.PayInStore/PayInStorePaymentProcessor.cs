@@ -7,6 +7,7 @@ using Nop.Core.Plugins;
 using Nop.Plugin.Payments.PayInStore.Controllers;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
+using Nop.Services.Orders;
 using Nop.Services.Payments;
 
 namespace Nop.Plugin.Payments.PayInStore
@@ -19,15 +20,17 @@ namespace Nop.Plugin.Payments.PayInStore
         #region Fields
         private readonly PayInStorePaymentSettings _payInStorePaymentSettings;
         private readonly ISettingService _settingService;
+        private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         #endregion
 
         #region Ctor
 
         public PayInStorePaymentProcessor(PayInStorePaymentSettings payInStorePaymentSettings,
-            ISettingService settingService)
+            ISettingService settingService, IOrderTotalCalculationService orderTotalCalculationService)
         {
             this._payInStorePaymentSettings = payInStorePaymentSettings;
             this._settingService = settingService;
+            this._orderTotalCalculationService = orderTotalCalculationService;
         }
 
         #endregion
@@ -62,7 +65,9 @@ namespace Nop.Plugin.Payments.PayInStore
         /// <returns>Additional handling fee</returns>
         public decimal GetAdditionalHandlingFee(IList<ShoppingCartItem> cart)
         {
-            return _payInStorePaymentSettings.AdditionalFee;
+            var result = this.CalculateAdditionalFee(_orderTotalCalculationService, cart,
+                _payInStorePaymentSettings.AdditionalFee, _payInStorePaymentSettings.AdditionalFeePercentage);
+            return result;
         }
 
         /// <summary>
@@ -182,6 +187,9 @@ namespace Nop.Plugin.Payments.PayInStore
             this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PayInStore.DescriptionText.Hint", "Enter info that will be shown to customers during checkout");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PayInStore.AdditionalFee", "Additional fee");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PayInStore.AdditionalFee.Hint", "The additional fee.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PayInStore.AdditionalFeePercentage", "Additinal fee. Use percentage");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PayInStore.AdditionalFeePercentage.Hint", "Determines whether to apply a percentage additional fee to the order total. If not enabled, a fixed value is used.");
+
             
             base.Install();
         }
@@ -196,6 +204,8 @@ namespace Nop.Plugin.Payments.PayInStore
             this.DeletePluginLocaleResource("Plugins.Payment.PayInStore.DescriptionText.Hint");
             this.DeletePluginLocaleResource("Plugins.Payment.PayInStore.AdditionalFee");
             this.DeletePluginLocaleResource("Plugins.Payment.PayInStore.AdditionalFee.Hint");
+            this.DeletePluginLocaleResource("Plugins.Payment.PayInStore.AdditionalFeePercentage");
+            this.DeletePluginLocaleResource("Plugins.Payment.PayInStore.AdditionalFeePercentage.Hint");
             
             base.Uninstall();
         }

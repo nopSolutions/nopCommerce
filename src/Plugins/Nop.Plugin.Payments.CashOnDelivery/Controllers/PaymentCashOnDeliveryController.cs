@@ -25,6 +25,7 @@ namespace Nop.Plugin.Payments.CashOnDelivery.Controllers
             var model = new ConfigurationModel();
             model.DescriptionText = _cashOnDeliveryPaymentSettings.DescriptionText;
             model.AdditionalFee = _cashOnDeliveryPaymentSettings.AdditionalFee;
+            model.AdditionalFeePercentage = _cashOnDeliveryPaymentSettings.AdditionalFeePercentage;
             
             return View("Nop.Plugin.Payments.CashOnDelivery.Views.PaymentCashOnDelivery.Configure", model);
         }
@@ -40,6 +41,7 @@ namespace Nop.Plugin.Payments.CashOnDelivery.Controllers
             //save settings
             _cashOnDeliveryPaymentSettings.DescriptionText = model.DescriptionText;
             _cashOnDeliveryPaymentSettings.AdditionalFee = model.AdditionalFee;
+            _cashOnDeliveryPaymentSettings.AdditionalFeePercentage = model.AdditionalFeePercentage;
             _settingService.SaveSetting(_cashOnDeliveryPaymentSettings);
             
             return View("Nop.Plugin.Payments.CashOnDelivery.Views.PaymentCashOnDelivery.Configure", model);

@@ -7,6 +7,7 @@ using Nop.Core.Plugins;
 using Nop.Plugin.Payments.CheckMoneyOrder.Controllers;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
+using Nop.Services.Orders;
 using Nop.Services.Payments;
 
 namespace Nop.Plugin.Payments.CheckMoneyOrder
@@ -19,15 +20,17 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder
         #region Fields
         private readonly CheckMoneyOrderPaymentSettings _checkMoneyOrderPaymentSettings;
         private readonly ISettingService _settingService;
+        private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         #endregion
 
         #region Ctor
 
         public CheckMoneyOrderPaymentProcessor(CheckMoneyOrderPaymentSettings checkMoneyOrderPaymentSettings,
-            ISettingService settingService)
+            ISettingService settingService, IOrderTotalCalculationService orderTotalCalculationService)
         {
             this._checkMoneyOrderPaymentSettings = checkMoneyOrderPaymentSettings;
             this._settingService = settingService;
+            this._orderTotalCalculationService = orderTotalCalculationService;
         }
 
         #endregion
@@ -62,7 +65,9 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder
         /// <returns>Additional handling fee</returns>
         public decimal GetAdditionalHandlingFee(IList<ShoppingCartItem> cart)
         {
-            return _checkMoneyOrderPaymentSettings.AdditionalFee;
+            var result = this.CalculateAdditionalFee(_orderTotalCalculationService, cart,
+                _checkMoneyOrderPaymentSettings.AdditionalFee, _checkMoneyOrderPaymentSettings.AdditionalFeePercentage);
+            return result;
         }
 
         /// <summary>
@@ -184,6 +189,9 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder
             this.AddOrUpdatePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.DescriptionText.Hint", "Enter info that will be shown to customers during checkout");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.AdditionalFee", "Additional fee");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.AdditionalFee.Hint", "The additional fee.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.AdditionalFeePercentage", "Additinal fee. Use percentage");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.AdditionalFeePercentage.Hint", "Determines whether to apply a percentage additional fee to the order total. If not enabled, a fixed value is used.");
+
             
             base.Install();
         }
@@ -198,6 +206,8 @@ namespace Nop.Plugin.Payments.CheckMoneyOrder
             this.DeletePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.DescriptionText.Hint");
             this.DeletePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.AdditionalFee");
             this.DeletePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.AdditionalFee.Hint");
+            this.DeletePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.AdditionalFeePercentage");
+            this.DeletePluginLocaleResource("Plugins.Payment.CheckMoneyOrder.AdditionalFeePercentage.Hint");
             
             base.Uninstall();
         }

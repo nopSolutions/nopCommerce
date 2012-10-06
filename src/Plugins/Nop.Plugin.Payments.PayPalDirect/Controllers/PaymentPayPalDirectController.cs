@@ -57,6 +57,7 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
             model.ApiAccountPassword = _paypalDirectPaymentSettings.ApiAccountPassword;
             model.Signature = _paypalDirectPaymentSettings.Signature;
             model.AdditionalFee = _paypalDirectPaymentSettings.AdditionalFee;
+            model.AdditionalFeePercentage = _paypalDirectPaymentSettings.AdditionalFeePercentage;
             model.TransactModeValues = _paypalDirectPaymentSettings.TransactMode.ToSelectList();
 
             return View("Nop.Plugin.Payments.PayPalDirect.Views.PaymentPayPalDirect.Configure", model);
@@ -77,6 +78,7 @@ namespace Nop.Plugin.Payments.PayPalDirect.Controllers
             _paypalDirectPaymentSettings.ApiAccountPassword = model.ApiAccountPassword;
             _paypalDirectPaymentSettings.Signature = model.Signature;
             _paypalDirectPaymentSettings.AdditionalFee = model.AdditionalFee;
+            _paypalDirectPaymentSettings.AdditionalFeePercentage = model.AdditionalFeePercentage;
             _settingService.SaveSetting(_paypalDirectPaymentSettings);
 
             model.TransactModeValues = _paypalDirectPaymentSettings.TransactMode.ToSelectList();

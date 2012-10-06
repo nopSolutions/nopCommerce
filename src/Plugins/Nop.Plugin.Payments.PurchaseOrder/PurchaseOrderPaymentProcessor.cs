@@ -7,6 +7,7 @@ using Nop.Core.Plugins;
 using Nop.Plugin.Payments.PurchaseOrder.Controllers;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
+using Nop.Services.Orders;
 using Nop.Services.Payments;
 
 namespace Nop.Plugin.Payments.PurchaseOrder
@@ -20,16 +21,18 @@ namespace Nop.Plugin.Payments.PurchaseOrder
 
         private readonly PurchaseOrderPaymentSettings _purchaseOrderPaymentSettings;
         private readonly ISettingService _settingService;
+        private readonly IOrderTotalCalculationService _orderTotalCalculationService;
 
         #endregion
 
         #region Ctor
 
         public PurchaseOrderPaymentProcessor(PurchaseOrderPaymentSettings purchaseOrderPaymentSettings,
-            ISettingService settingService)
+            ISettingService settingService, IOrderTotalCalculationService orderTotalCalculationService)
         {
             this._purchaseOrderPaymentSettings = purchaseOrderPaymentSettings;
             this._settingService = settingService;
+            this._orderTotalCalculationService = orderTotalCalculationService;
         }
 
         #endregion
@@ -64,7 +67,9 @@ namespace Nop.Plugin.Payments.PurchaseOrder
         /// <returns>Additional handling fee</returns>
         public decimal GetAdditionalHandlingFee(IList<ShoppingCartItem> cart)
         {
-            return _purchaseOrderPaymentSettings.AdditionalFee;
+            var result = this.CalculateAdditionalFee(_orderTotalCalculationService, cart,
+                _purchaseOrderPaymentSettings.AdditionalFee, _purchaseOrderPaymentSettings.AdditionalFeePercentage);
+            return result;
         }
 
         /// <summary>
@@ -189,6 +194,8 @@ namespace Nop.Plugin.Payments.PurchaseOrder
             this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PurchaseOrder.PurchaseOrderNumber", "PO Number");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PurchaseOrder.AdditionalFee", "Additional fee");
             this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PurchaseOrder.AdditionalFee.Hint", "The additional fee.");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PurchaseOrder.AdditionalFeePercentage", "Additinal fee. Use percentage");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Payment.PurchaseOrder.AdditionalFeePercentage.Hint", "Determines whether to apply a percentage additional fee to the order total. If not enabled, a fixed value is used.");
 
             base.Install();
         }
@@ -202,6 +209,8 @@ namespace Nop.Plugin.Payments.PurchaseOrder
             this.DeletePluginLocaleResource("Plugins.Payment.PurchaseOrder.PurchaseOrderNumber");
             this.DeletePluginLocaleResource("Plugins.Payment.PurchaseOrder.AdditionalFee");
             this.DeletePluginLocaleResource("Plugins.Payment.PurchaseOrder.AdditionalFee.Hint");
+            this.DeletePluginLocaleResource("Plugins.Payment.PurchaseOrder.AdditionalFeePercentage");
+            this.DeletePluginLocaleResource("Plugins.Payment.PurchaseOrder.AdditionalFeePercentage.Hint");
 
             base.Uninstall();
         }

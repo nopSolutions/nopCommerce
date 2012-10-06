@@ -53,6 +53,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             model.PdtToken = _paypalStandardPaymentSettings.PdtToken;
             model.PdtValidateOrderTotal = _paypalStandardPaymentSettings.PdtValidateOrderTotal;
             model.AdditionalFee = _paypalStandardPaymentSettings.AdditionalFee;
+            model.AdditionalFeePercentage = _paypalStandardPaymentSettings.AdditionalFeePercentage;
             model.PassProductNamesAndTotals = _paypalStandardPaymentSettings.PassProductNamesAndTotals;
             model.EnableIpn = _paypalStandardPaymentSettings.EnableIpn;
             model.IpnUrl = _paypalStandardPaymentSettings.IpnUrl;
@@ -74,6 +75,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
             _paypalStandardPaymentSettings.PdtToken = model.PdtToken;
             _paypalStandardPaymentSettings.PdtValidateOrderTotal = model.PdtValidateOrderTotal;
             _paypalStandardPaymentSettings.AdditionalFee = model.AdditionalFee;
+            _paypalStandardPaymentSettings.AdditionalFeePercentage = model.AdditionalFeePercentage;
             _paypalStandardPaymentSettings.PassProductNamesAndTotals = model.PassProductNamesAndTotals;
             _paypalStandardPaymentSettings.EnableIpn = model.EnableIpn;
             _paypalStandardPaymentSettings.IpnUrl = model.IpnUrl;

@@ -36,6 +36,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.Controllers
             model.TransactionKey = _authorizeNetPaymentSettings.TransactionKey;
             model.LoginId = _authorizeNetPaymentSettings.LoginId;
             model.AdditionalFee = _authorizeNetPaymentSettings.AdditionalFee;
+            model.AdditionalFeePercentage = _authorizeNetPaymentSettings.AdditionalFeePercentage;
             model.TransactModeValues = _authorizeNetPaymentSettings.TransactMode.ToSelectList();
             
             return View("Nop.Plugin.Payments.AuthorizeNet.Views.PaymentAuthorizeNet.Configure", model);
@@ -55,6 +56,7 @@ namespace Nop.Plugin.Payments.AuthorizeNet.Controllers
             _authorizeNetPaymentSettings.TransactionKey = model.TransactionKey;
             _authorizeNetPaymentSettings.LoginId = model.LoginId;
             _authorizeNetPaymentSettings.AdditionalFee = model.AdditionalFee;
+            _authorizeNetPaymentSettings.AdditionalFeePercentage = model.AdditionalFeePercentage;
             _settingService.SaveSetting(_authorizeNetPaymentSettings);
             
             model.TransactModeValues = _authorizeNetPaymentSettings.TransactMode.ToSelectList();

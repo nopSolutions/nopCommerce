@@ -21,5 +21,8 @@ namespace Nop.Plugin.Payments.AuthorizeNet.Models
 
         [NopResourceDisplayName("Plugins.Payments.AuthorizeNet.Fields.AdditionalFee")]
         public decimal AdditionalFee { get; set; }
+
+        [NopResourceDisplayName("Plugins.Payments.AuthorizeNet.Fields.AdditionalFeePercentage")]
+        public bool AdditionalFeePercentage { get; set; }
     }
 }

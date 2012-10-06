@@ -86,18 +86,8 @@ namespace Nop.Plugin.Payments.Manual
         /// <returns>Additional handling fee</returns>
         public decimal GetAdditionalHandlingFee(IList<ShoppingCartItem> cart)
         {
-            var result = decimal.Zero;
-            if (_manualPaymentSettings.AdditionalFeePercentage)
-            {
-                //percentage
-                var orderTotalWithoutPaymentFee = _orderTotalCalculationService.GetShoppingCartTotal(cart, usePaymentMethodAdditionalFee: false);
-                result = (decimal)((((float)orderTotalWithoutPaymentFee) * ((float)_manualPaymentSettings.AdditionalFee)) / 100f);
-            }
-            else
-            {
-                //fixed value
-                result = _manualPaymentSettings.AdditionalFee;
-            }
+            var result = this.CalculateAdditionalFee(_orderTotalCalculationService,  cart,
+                _manualPaymentSettings.AdditionalFee, _manualPaymentSettings.AdditionalFeePercentage);
             return result;
         }
 

@@ -7,5 +7,8 @@ namespace Nop.Plugin.Payments.PurchaseOrder.Models
     {
         [NopResourceDisplayName("Plugins.Payment.PurchaseOrder.AdditionalFee")]
         public decimal AdditionalFee { get; set; }
+
+        [NopResourceDisplayName("Plugins.Payment.PurchaseOrder.AdditionalFeePercentage")]
+        public bool AdditionalFeePercentage { get; set; }
     }
 }
