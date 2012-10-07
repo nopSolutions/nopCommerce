@@ -2,7 +2,7 @@
 FriendlyName: Tax By Country & State & Zip
 SystemName: Tax.CountryStateZip
 Version: 1.22
-SupportedVersions: 2.65
+SupportedVersions: 2.70
 Author: nopCommerce team
 DisplayOrder: 1
 FileName: Nop.Plugin.Tax.CountryStateZip.dll
