@@ -291,6 +291,7 @@
     </Compile>
     <Compile Include="Customers\ChangePasswordRequest.cs" />
     <Compile Include="Customers\PasswordChangeResult.cs" />
+    <Compile Include="Security\IAclService.cs" />
     <Compile Include="Security\EncryptionService.cs" />
     <Compile Include="Security\IEncryptionService.cs" />
     <Compile Include="Security\PermissionService.cs" />
@@ -300,6 +301,7 @@
     <Compile Include="Customers\CustomerRegistrationResult.cs" />
     <Compile Include="Directory\StateProvinceService.cs" />
     <Compile Include="Security\StandardPermissionProvider.cs" />
+    <Compile Include="Security\AclService.cs" />
     <Compile Include="Seo\BaseSitemapGenerator.cs" />
     <Compile Include="Seo\IUrlRecordService.cs" />
     <Compile Include="Seo\UrlRecordService.cs" />

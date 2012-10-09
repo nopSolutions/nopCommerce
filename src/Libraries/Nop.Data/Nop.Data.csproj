@@ -75,6 +75,7 @@
     <Compile Include="Mapping\Catalog\CategoryTemplateMap.cs" />
     <Compile Include="Mapping\Catalog\ProductTemplateMap.cs" />
     <Compile Include="Mapping\Common\GenericAttributeMap.cs" />
+    <Compile Include="Mapping\Security\AclRecordMap.cs" />
     <Compile Include="Mapping\Seo\UrlRecordMap.cs" />
     <Compile Include="Mapping\Customers\ExternalAuthenticationRecordMap.cs" />
     <Compile Include="Mapping\Shipping\ShipmentMap.cs" />

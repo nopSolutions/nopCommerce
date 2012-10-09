@@ -21,12 +21,13 @@
     x.Add().Text(T("Admin.Catalog.Products.CrossSells").Text).Content(TabCrossSells().ToHtmlString());
     x.Add().Text(T("Admin.Catalog.Products.Pictures").Text).Content(TabPictures().ToHtmlString());
     x.Add().Text(T("Admin.Catalog.Products.SpecificationAttributes").Text).Content(TabSpecificationAttributes().ToHtmlString());
+    x.Add().Text(T("Admin.Catalog.Products.Acl").Text).Content(TabAcl().ToHtmlString());
 
     //generate an event
     EngineContext.Current.Resolve<IEventPublisher>().Publish(new AdminTabStripCreated(x, "product-edit"));
 })
 @helper TabInfo()
-    { 
+{ 
     @(Html.LocalizedEditor<ProductModel, ProductLocalizedModel>("product-info-localized",
                 @<table class="adminContent">
                     <tr>
@@ -151,13 +152,13 @@
     </table>
 }
 @helper TabFirstVariantInfo()
-    {
-        var dataDictFpv = new ViewDataDictionary();
-        dataDictFpv.TemplateInfo.HtmlFieldPrefix = "FirstProductVariantModel";
-        @Html.Partial("_ProductVariantInfo", Model.FirstProductVariantModel, dataDictFpv)
+{
+    var dataDictFpv = new ViewDataDictionary();
+    dataDictFpv.TemplateInfo.HtmlFieldPrefix = "FirstProductVariantModel";
+    @Html.Partial("_ProductVariantInfo", Model.FirstProductVariantModel, dataDictFpv)
 }
 @helper TabSeo()
-    {
+{
     @(Html.LocalizedEditor<ProductModel, ProductLocalizedModel>("product-seo-localized",
                @<table class="adminContent">
                    <tr>
@@ -243,7 +244,7 @@
                </table>))
 }
 @helper TabVariants()
-    {
+{
     @(Html.Telerik().Grid(Model.ProductVariantModels).Name("product-variants")
     .Columns(columns =>
     {
@@ -267,12 +268,12 @@
     <a href="@Url.Action("Create", "ProductVariant", new { productId = Model.Id })" class="t-button">@T("Admin.Catalog.Products.Variants.AddNew")</a>
 }
 @helper TabCategories()
+{
+    if (Model.Id > 0)
     {
-        if (Model.Id > 0)
+        if (Model.NumberOfAvailableCategories > 0)
         {
-            if (Model.NumberOfAvailableCategories > 0)
-            {
-                @(Html.Telerik().Grid<ProductModel.ProductCategoryModel>()
+    @(Html.Telerik().Grid<ProductModel.ProductCategoryModel>()
                     .Name("productcategories-grid")
                        .DataKeys(keys =>
                        {
@@ -307,32 +308,32 @@
                        .ClientEvents(events => events.OnEdit("onProductCategoryEdit"))
                        .EnableCustomBinding(true))
     
-                <script type="text/javascript">
-                    function onProductCategoryEdit(e) {
-                        $(e.form).find('#Category').data('tDropDownList').select(function (dataItem) {
-                            return dataItem.Value == e.dataItem['CategoryId'];
-                        });
-                    }
-                </script>
-            }
-            else
-            {
-                    @T("Admin.Catalog.Products.Categories.NoCategoriesAvailable")
-            }
+    <script type="text/javascript">
+        function onProductCategoryEdit(e) {
+            $(e.form).find('#Category').data('tDropDownList').select(function (dataItem) {
+                return dataItem.Value == e.dataItem['CategoryId'];
+            });
+        }
+    </script>
         }
         else
         {
-            @T("Admin.Catalog.Products.Categories.SaveBeforeEdit")
+    @T("Admin.Catalog.Products.Categories.NoCategoriesAvailable")
         }
+    }
+    else
+    {
+    @T("Admin.Catalog.Products.Categories.SaveBeforeEdit")
+    }
         
 }
 @helper TabManufacturers()
+{
+    if (Model.Id > 0)
     {
-        if (Model.Id > 0)
+        if (Model.NumberOfAvailableManufacturers > 0)
         {
-            if (Model.NumberOfAvailableManufacturers > 0)
-            {
-                @(Html.Telerik().Grid<ProductModel.ProductManufacturerModel>()
+    @(Html.Telerik().Grid<ProductModel.ProductManufacturerModel>()
                     .Name("productmanufacturers-grid")
                        .DataKeys(keys =>
                        {
@@ -367,34 +368,34 @@
                        .ClientEvents(events => events.OnEdit("onProductManufacturerEdit"))
                        .EnableCustomBinding(true))
     
-                <script type="text/javascript">
-                    function onProductManufacturerEdit(e) {
-                        $(e.form).find('#Manufacturer').data('tDropDownList').select(function (dataItem) {
-                            return dataItem.Value == e.dataItem['ManufacturerId'];
-                        });
-                    }
-                </script>
-            }
-            else
-            {
-                @T("Admin.Catalog.Products.Manufacturers.NoManufacturersAvailable")
-            }
+    <script type="text/javascript">
+        function onProductManufacturerEdit(e) {
+            $(e.form).find('#Manufacturer').data('tDropDownList').select(function (dataItem) {
+                return dataItem.Value == e.dataItem['ManufacturerId'];
+            });
+        }
+    </script>
         }
         else
         {
-            @T("Admin.Catalog.Products.Manufacturers.SaveBeforeEdit")
+    @T("Admin.Catalog.Products.Manufacturers.NoManufacturersAvailable")
         }
+    }
+    else
+    {
+    @T("Admin.Catalog.Products.Manufacturers.SaveBeforeEdit")
+    }
         
 }
 @helper TabRelatedProducts()
+{
+    if (Model.Id > 0)
     {
-        if (Model.Id > 0)
-        {
             
-            <table class="adminContent">
-                <tr>
-                    <td>
-            @(Html.Telerik().Grid<ProductModel.RelatedProductModel>()
+    <table class="adminContent">
+        <tr>
+            <td>
+                @(Html.Telerik().Grid<ProductModel.RelatedProductModel>()
                 .Name("relatedproducts-grid")
                     .DataKeys(keys =>
                     {
@@ -423,43 +424,43 @@
                         .Width(180);
                     })
                     .EnableCustomBinding(true))
-                    </td>
-                </tr>
-                <tr>
-                    <td width="100%">
-                        <input type="submit" id="btnAddNewRelatedProduct" name="btnAddNewRelatedProduct" value="@T("Admin.Catalog.Products.RelatedProducts.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("RelatedProductAddPopup", "Product", new { productId = Model.Id, btnId = "btnRefreshRelatedProducts", formId = "product-form" }))', 800, 700, true); return false;" class="t-button" />
-                        <input type="submit" id="btnRefreshRelatedProducts" name="btnRefreshRelatedProducts" style="display: none" />
-                        <script type="text/javascript">
-                            $(document).ready(function () {
-                                $('#btnRefreshRelatedProducts').click(function () {
-                                    //refresh grid
-                                    var optionsGrid = $("#relatedproducts-grid");
-                                    optionsGrid.data('tGrid').ajaxRequest();
+            </td>
+        </tr>
+        <tr>
+            <td width="100%">
+                <input type="submit" id="btnAddNewRelatedProduct" name="btnAddNewRelatedProduct" value="@T("Admin.Catalog.Products.RelatedProducts.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("RelatedProductAddPopup", "Product", new { productId = Model.Id, btnId = "btnRefreshRelatedProducts", formId = "product-form" }))    ', 800, 700, true); return false;" class="t-button" />
+                <input type="submit" id="btnRefreshRelatedProducts" name="btnRefreshRelatedProducts" style="display: none" />
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $('#btnRefreshRelatedProducts').click(function () {
+                            //refresh grid
+                            var optionsGrid = $("#relatedproducts-grid");
+                            optionsGrid.data('tGrid').ajaxRequest();
 
-                                    //return false to don't reload a page
-                                    return false;
-                                });
-                            });
-                        </script>
-                    </td>
-                </tr>
-            </table>
-        }
-        else
-        {
-            @T("Admin.Catalog.Products.RelatedProducts.SaveBeforeEdit")
-        }
+                            //return false to don't reload a page
+                            return false;
+                        });
+                    });
+                </script>
+            </td>
+        </tr>
+    </table>
+    }
+    else
+    {
+    @T("Admin.Catalog.Products.RelatedProducts.SaveBeforeEdit")
+    }
         
 }
 @helper TabCrossSells()
+{
+    if (Model.Id > 0)
     {
-        if (Model.Id > 0)
-        {
             
-            <table class="adminContent">
-                <tr>
-                    <td>
-            @(Html.Telerik().Grid<ProductModel.CrossSellProductModel>()
+    <table class="adminContent">
+        <tr>
+            <td>
+                @(Html.Telerik().Grid<ProductModel.CrossSellProductModel>()
                 .Name("crosssellproducts-grid")
                     .DataKeys(keys =>
                     {
@@ -483,40 +484,40 @@
                         .Title(T("Admin.Common.Delete").Text).Width(50);
                     })
                     .EnableCustomBinding(true))
-                    </td>
-                </tr>
-                <tr>
-                    <td width="100%">
-                        <input type="submit" id="btnAddNewCrossSellProduct" name="btnAddNewCrossSellProduct" value="@T("Admin.Catalog.Products.CrossSells.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("CrossSellProductAddPopup", "Product", new { productId = Model.Id, btnId = "btnRefreshCrossSellProducts", formId = "product-form" }))', 800, 700, true); return false;" class="t-button" />
-                        <input type="submit" id="btnRefreshCrossSellProducts" name="btnRefreshCrossSellProducts" style="display: none" />
-                        <script type="text/javascript">
-                            $(document).ready(function () {
-                                $('#btnRefreshCrossSellProducts').click(function () {
-                                    //refresh grid
-                                    var optionsGrid = $("#crosssellproducts-grid");
-                                    optionsGrid.data('tGrid').ajaxRequest();
+            </td>
+        </tr>
+        <tr>
+            <td width="100%">
+                <input type="submit" id="btnAddNewCrossSellProduct" name="btnAddNewCrossSellProduct" value="@T("Admin.Catalog.Products.CrossSells.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("CrossSellProductAddPopup", "Product", new { productId = Model.Id, btnId = "btnRefreshCrossSellProducts", formId = "product-form" }))    ', 800, 700, true); return false;" class="t-button" />
+                <input type="submit" id="btnRefreshCrossSellProducts" name="btnRefreshCrossSellProducts" style="display: none" />
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $('#btnRefreshCrossSellProducts').click(function () {
+                            //refresh grid
+                            var optionsGrid = $("#crosssellproducts-grid");
+                            optionsGrid.data('tGrid').ajaxRequest();
 
-                                    //return false to don't reload a page
-                                    return false;
-                                });
-                            });
-                        </script>
-                    </td>
-                </tr>
-            </table>
-        }
-        else
-        {
-            @T("Admin.Catalog.Products.CrossSells.SaveBeforeEdit")
-        }
+                            //return false to don't reload a page
+                            return false;
+                        });
+                    });
+                </script>
+            </td>
+        </tr>
+    </table>
+    }
+    else
+    {
+    @T("Admin.Catalog.Products.CrossSells.SaveBeforeEdit")
+    }
         
 }
 @helper TabPictures()
+{
+    if (Model.Id > 0)
     {
-        if (Model.Id > 0)
-        {
-            <div>
-            @(Html.Telerik().Grid<ProductModel.ProductPictureModel>()
+    <div>
+        @(Html.Telerik().Grid<ProductModel.ProductPictureModel>()
                     .Name("productpictures-grid")
                     .DataKeys(x =>
                     {
@@ -546,11 +547,11 @@
                             .Delete("ProductPictureDelete", "Product");
                     })
                     .EnableCustomBinding(true))
-        </div>
-            <p>
-                <strong>@T("Admin.Catalog.Products.Pictures.AddNew")</strong>
-            </p>
-            <script type="text/javascript">
+    </div>
+    <p>
+        <strong>@T("Admin.Catalog.Products.Pictures.AddNew")</strong>
+    </p>
+    <script type="text/javascript">
      
         $(document).ready(function () {
             $('#addProductPicture').click(function () {
@@ -569,9 +570,9 @@
                     url: "@(Url.Action("ProductPictureAdd", "Product"))",
                     data: { "pictureId": pictureId, "displayOrder": displayOrder, "productId": @Model.Id },
                     success: function (data) {
-                         var productpicturesGrid = $("#productpictures-grid");
-                         productpicturesGrid.data('tGrid').ajaxRequest();
-                         $('#addProductPicture').attr('disabled', false);
+                        var productpicturesGrid = $("#productpictures-grid");
+                        productpicturesGrid.data('tGrid').ajaxRequest();
+                        $('#addProductPicture').attr('disabled', false);
                     },
                     error:function (xhr, ajaxOptions, thrownError){
                         alert('Failed to add product picture.');
@@ -580,48 +581,48 @@
                 });
             });
         });
-        </script>        
-            <table class="adminContent">
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.AddPictureModel.PictureId):
-                </td>
-                <td class="adminData">
-                    @Html.EditorFor(model => model.AddPictureModel.PictureId)
-                    @Html.ValidationMessageFor(model => model.AddPictureModel.PictureId)
-                </td>
-            </tr>
-            <tr>
-                <td class="adminTitle">
-                    @Html.NopLabelFor(model => model.AddPictureModel.DisplayOrder):
-                </td>
-                <td class="adminData">
-                    @Html.EditorFor(model => model.AddPictureModel.DisplayOrder)
-                    @Html.ValidationMessageFor(model => model.AddPictureModel.DisplayOrder)
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2" align="left">
-                    <input type="button" id="addProductPicture" class="t-button" value="@T("Admin.Catalog.Products.Pictures.AddButton")" />
-                </td>
-            </tr>
-        </table>
-        }
-        else
-        {
-            @T("Admin.Catalog.Products.Pictures.SaveBeforeEdit")
-        }
+    </script>        
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AddPictureModel.PictureId):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AddPictureModel.PictureId)
+                @Html.ValidationMessageFor(model => model.AddPictureModel.PictureId)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AddPictureModel.DisplayOrder):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AddPictureModel.DisplayOrder)
+                @Html.ValidationMessageFor(model => model.AddPictureModel.DisplayOrder)
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" align="left">
+                <input type="button" id="addProductPicture" class="t-button" value="@T("Admin.Catalog.Products.Pictures.AddButton")" />
+            </td>
+        </tr>
+    </table>
     }
+    else
+    {
+    @T("Admin.Catalog.Products.Pictures.SaveBeforeEdit")
+    }
+}
 
 @helper TabSpecificationAttributes()
+{
+    if (Model.Id > 0)
     {
-        if (Model.Id > 0)
-        {
 
-            /*hide "add spec" table if no attributes are defined*/
-            if (Model.AddSpecificationAttributeModel.AvailableAttributes.Count > 0)
-            {
-                <div>
+        /*hide "add spec" table if no attributes are defined*/
+        if (Model.AddSpecificationAttributeModel.AvailableAttributes.Count > 0)
+        {
+    <div>
         @(Html.Telerik().Grid<ProductSpecificationAttributeModel>()
                     .Name("specificationattributes-grid")
                     .DataKeys(x =>
@@ -654,11 +655,11 @@
                     })
                     .EnableCustomBinding(true))
     </div>
-                <p>
-                    <strong>@T("Admin.Catalog.Products.SpecificationAttributes.AddNew")</strong>
-                </p>
-                <script type="text/javascript">
-     $(function() {
+    <p>
+        <strong>@T("Admin.Catalog.Products.SpecificationAttributes.AddNew")</strong>
+    </p>
+    <script type="text/javascript">
+        $(function() {
             $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeId)").change(function() {
                 var selectedItem = $(this).val();
                 var ddlSpecOptions = $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeOptionId)")
@@ -683,30 +684,30 @@
         $(document).ready(function () {
             $('#addProductSpec').click(function () {
                 var specificationAttributeOptionId = $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeOptionId)").val();
-                var allowFiltering = $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.AllowFiltering)").is(':checked');
-                var showOnProductPage = $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.ShowOnProductPage)").is(':checked');
-                var displayOrder = $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.DisplayOrder)").val();
+             var allowFiltering = $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.AllowFiltering)").is(':checked');
+             var showOnProductPage = $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.ShowOnProductPage)").is(':checked');
+             var displayOrder = $("#@Html.FieldIdFor(model => model.AddSpecificationAttributeModel.DisplayOrder)").val();
                 
-                $('#addProductSpec').attr('disabled', true);
-                $.ajax({
-                    cache:false,
-                    type: "POST",
-                    url: "@(Url.Action("ProductSpecificationAttributeAdd", "Product"))",
+             $('#addProductSpec').attr('disabled', true);
+             $.ajax({
+                 cache:false,
+                 type: "POST",
+                 url: "@(Url.Action("ProductSpecificationAttributeAdd", "Product"))",
                     data: { "specificationAttributeOptionId": specificationAttributeOptionId, "allowFiltering": allowFiltering, "showOnProductPage": showOnProductPage, "displayOrder": displayOrder, "productId": @Model.Id },
                     success: function (data) {
-                         var specificationAttributesGrid = $("#specificationattributes-grid");
-                         specificationAttributesGrid.data('tGrid').ajaxRequest();
-                         $('#addProductSpec').attr('disabled', false);
+                        var specificationAttributesGrid = $("#specificationattributes-grid");
+                        specificationAttributesGrid.data('tGrid').ajaxRequest();
+                        $('#addProductSpec').attr('disabled', false);
                     },
                     error:function (xhr, ajaxOptions, thrownError){
                         alert('Failed to add specification attribute.');
                         $('#addProductSpec').attr('disabled', false);
                     }  
                 });
-            });
-        });
+         });
+     });
     </script>
-                <table class="adminContent">
+    <table class="adminContent">
         <tr>
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.AddSpecificationAttributeModel.SpecificationAttributeId):
@@ -758,14 +759,67 @@
             </td>
         </tr>
     </table>
-            }
-            else
-            {
-                @T("Admin.Catalog.Products.SpecificationAttributes.NoAttributes")
-            }
         }
         else
         {
-            @T("Admin.Catalog.Products.SpecificationAttributes.SaveBeforeEdit")
+    @T("Admin.Catalog.Products.SpecificationAttributes.NoAttributes")
         }
+    }
+    else
+    {
+    @T("Admin.Catalog.Products.SpecificationAttributes.SaveBeforeEdit")
+    }
+}
+@helper TabAcl()
+{
+    
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#@Html.FieldIdFor(model => model.SubjectToAcl)").click(toggleAcl);
+        
+            toggleAcl();
+        });
+
+
+        function toggleAcl() {
+            if ($('#@Html.FieldIdFor(model => model.SubjectToAcl)').is(':checked')) {
+                $('#pnl-acl').show();
+            }
+            else {
+                $('#pnl-acl').hide();
+            }
+        }
+
+    </script>
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SubjectToAcl):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SubjectToAcl)
+                @Html.ValidationMessageFor(model => model.SubjectToAcl)
+            </td>
+        </tr>
+        <tr id="pnl-acl">
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AvailableCustomerRoles):
+            </td>
+            <td class="adminData">
+                @if (Model.AvailableCustomerRoles != null && Model.AvailableCustomerRoles.Count > 0)
+                {
+                    foreach (var customerRole in Model.AvailableCustomerRoles)
+                    {
+                    <div>
+                        <input type="checkbox" name="SelectedCustomerRoleIds" value="@customerRole.Id" checked="@(Model.SelectedCustomerRoleIds != null && Model.SelectedCustomerRoleIds.Contains(customerRole.Id))" />@customerRole.Name
+                    </div>
+                    }
+                }
+                else
+                {
+                    <div>No customer roles defined</div>
+                }</td>
+        </tr>
+    </table>
 }

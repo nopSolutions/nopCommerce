@@ -1154,6 +1154,9 @@
                     <LocaleResource Name="Products">
                         <Value>Products</Value>
                         <Children>
+                            <LocaleResource Name="Acl">
+                              <Value>ACL</Value>
+                            </LocaleResource>
                             <LocaleResource Name="AddNew">
                                 <Value>Add a new product</Value>
                             </LocaleResource>
@@ -1341,6 +1344,22 @@
                                             </LocaleResource>
                                         </Children>
                                     </LocaleResource>
+                                    <LocaleResource Name="SubjectToAcl">
+                                      <Value>Subject to ACL</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Determines whether the product is subject to ACL (access control list).</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                  <LocaleResource Name="AclCustomerRoles">
+                                    <Value>Customer roles</Value>
+                                    <Children>
+                                      <LocaleResource Name="Hint">
+                                        <Value>Select customer roles for which the product will be shown.</Value>
+                                      </LocaleResource>
+                                    </Children>
+                                  </LocaleResource>
                                     <LocaleResource Name="Published">
                                         <Value>Published</Value>
                                         <Children>

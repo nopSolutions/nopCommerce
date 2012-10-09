@@ -167,7 +167,9 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.ProductPictureModels, mo => mo.Ignore())
                 .ForMember(dest => dest.AddSpecificationAttributeModel, mo => mo.Ignore())
                 .ForMember(dest => dest.CopyProductModel, mo => mo.Ignore())
-                .ForMember(dest => dest.SeName, mo => mo.MapFrom(src => src.GetSeName(0, true, false)));
+                .ForMember(dest => dest.SeName, mo => mo.MapFrom(src => src.GetSeName(0, true, false)))
+                .ForMember(dest => dest.AvailableCustomerRoles, mo => mo.Ignore())
+                .ForMember(dest => dest.SelectedCustomerRoleIds, mo => mo.Ignore());
             Mapper.CreateMap<ProductModel, Product>()
                 .ForMember(dest => dest.ProductTags, mo => mo.Ignore())
                 .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())

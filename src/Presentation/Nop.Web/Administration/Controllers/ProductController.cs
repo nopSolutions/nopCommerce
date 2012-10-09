@@ -21,6 +21,8 @@ using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc;
 using Telerik.Web.Mvc;
 using Nop.Services.Seo;
+using Nop.Services.Customers;
+using Nop.Core.Domain.Customers;
 
 namespace Nop.Admin.Controllers
 {
@@ -33,6 +35,7 @@ namespace Nop.Admin.Controllers
         private readonly IProductTemplateService _productTemplateService;
         private readonly ICategoryService _categoryService;
         private readonly IManufacturerService _manufacturerService;
+        private readonly ICustomerService _customerService;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IWorkContext _workContext;
         private readonly ILanguageService _languageService;
@@ -48,6 +51,7 @@ namespace Nop.Admin.Controllers
         private readonly IImportManager _importManager;
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IPermissionService _permissionService;
+        private readonly IAclService _aclService;
         private readonly PdfSettings _pdfSettings;
         private readonly AdminAreaSettings _adminAreaSettings;
 
@@ -58,6 +62,7 @@ namespace Nop.Admin.Controllers
         public ProductController(IProductService productService, 
             IProductTemplateService productTemplateService,
             ICategoryService categoryService, IManufacturerService manufacturerService,
+            ICustomerService customerService,
             IUrlRecordService urlRecordService, IWorkContext workContext, ILanguageService languageService, 
             ILocalizationService localizationService, ILocalizedEntityService localizedEntityService,
             ISpecificationAttributeService specificationAttributeService, IPictureService pictureService,
@@ -65,13 +70,14 @@ namespace Nop.Admin.Controllers
             ICopyProductService copyProductService, IPdfService pdfService,
             IExportManager exportManager, IImportManager importManager,
             ICustomerActivityService customerActivityService,
-            IPermissionService permissionService, 
+            IPermissionService permissionService, IAclService aclService,
             PdfSettings pdfSettings, AdminAreaSettings adminAreaSettings)
         {
             this._productService = productService;
             this._productTemplateService = productTemplateService;
             this._categoryService = categoryService;
             this._manufacturerService = manufacturerService;
+            this._customerService = customerService;
             this._urlRecordService = urlRecordService;
             this._workContext = workContext;
             this._languageService = languageService;
@@ -87,6 +93,7 @@ namespace Nop.Admin.Controllers
             this._importManager = importManager;
             this._customerActivityService = customerActivityService;
             this._permissionService = permissionService;
+            this._aclService = aclService;
             this._pdfSettings = pdfSettings;
             this._adminAreaSettings = adminAreaSettings;
         }
@@ -145,7 +152,7 @@ namespace Nop.Admin.Controllers
             foreach (var productTag in productTags)
                 _productTagService.UpdateProductTagTotals(productTag);
         }
-
+        
         [NonAction]
         private void PrepareTemplatesModel(ProductModel model)
         {
@@ -213,6 +220,52 @@ namespace Nop.Admin.Controllers
                 throw new ArgumentNullException("model");
 
             model.NumberOfAvailableManufacturers = _manufacturerService.GetAllManufacturers(true).Count;
+        }
+
+        [NonAction]
+        private void PrepareAclModel(ProductModel model, Product product, bool excludeProperties)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            model.AvailableCustomerRoles = _customerService
+                .GetAllCustomerRoles(true)
+                .Select(cr => cr.ToModel())
+                .ToList();
+            if (!excludeProperties)
+            {
+                if (product != null)
+                {
+                    model.SelectedCustomerRoleIds = _aclService.GetCustomerRoleIdsWithAccess(product);
+                }
+                else
+                {
+                    model.SelectedCustomerRoleIds = new int[0];
+                }
+            }
+        }
+
+        [NonAction]
+        protected void SaveProductAcl(Product product, ProductModel model)
+        {
+            var existingAclRecords = _aclService.GetAclRecords(product);
+            var allCustomerRoles = _customerService.GetAllCustomerRoles(true);
+            foreach (var customerRole in allCustomerRoles)
+            {
+                if (model.SelectedCustomerRoleIds != null && model.SelectedCustomerRoleIds.Contains(customerRole.Id))
+                {
+                    //new role
+                    if (existingAclRecords.Where(acl => acl.CustomerRoleId == customerRole.Id).Count() == 0)
+                        _aclService.InsertAclRecord(product, customerRole.Id);
+                }
+                else
+                {
+                    //removed role
+                    var aclRecordToDelete = existingAclRecords.Where(acl => acl.CustomerRoleId == customerRole.Id).FirstOrDefault();
+                    if (aclRecordToDelete != null)
+                        _aclService.DeleteAclRecord(aclRecordToDelete);
+                }
+            }
         }
 
         [NonAction]
@@ -527,11 +580,10 @@ namespace Nop.Admin.Controllers
             PrepareAddProductPictureModel(model);
             PrepareCategoryMapping(model);
             PrepareManufacturerMapping(model);
+            PrepareAclModel(model, null, false);
             //default values
             model.Published = true;
             model.AllowCustomerReviews = true;
-
-
             //first product variant
             model.FirstProductVariantModel = new ProductVariantModel();
             AddLocales(_languageService, model.FirstProductVariantModel.Locales);
@@ -559,6 +611,8 @@ namespace Nop.Admin.Controllers
                 UpdateLocales(product, model);
                 //tags
                 SaveProductTags(product, ParseProductTags(model.ProductTags));
+                //ACL (customer roles)
+                SaveProductAcl(product, model);
 
                 //default product variant
                 var variant = model.FirstProductVariantModel.ToEntity();
@@ -585,6 +639,7 @@ namespace Nop.Admin.Controllers
             PrepareAddProductPictureModel(model);
             PrepareCategoryMapping(model);
             PrepareManufacturerMapping(model);
+            PrepareAclModel(model, null, true);
             //first product variant
             FirstVariant_PrepareProductVariantModel(model.FirstProductVariantModel, null, false);
             return View(model);
@@ -621,6 +676,7 @@ namespace Nop.Admin.Controllers
             PrepareAddProductPictureModel(model);
             PrepareCategoryMapping(model);
             PrepareManufacturerMapping(model);
+            PrepareAclModel(model, product, false);
             return View(model);
         }
 
@@ -648,6 +704,8 @@ namespace Nop.Admin.Controllers
                 UpdateLocales(product, model);
                 //tags
                 SaveProductTags(product, ParseProductTags(model.ProductTags));
+                //ACL (customer roles)
+                SaveProductAcl(product, model);
                 //picture seo names
                 UpdatePictureSeoNames(product);
 
@@ -667,6 +725,7 @@ namespace Nop.Admin.Controllers
             PrepareAddProductPictureModel(model);
             PrepareCategoryMapping(model);
             PrepareManufacturerMapping(model);
+            PrepareAclModel(model, product, true);
             return View(model);
         }
 

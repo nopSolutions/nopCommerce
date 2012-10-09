@@ -79,6 +79,7 @@ CREATE PROCEDURE [ProductLoadAllPaged]
 	@FilteredSpecs		nvarchar(MAX) = null,	--filter by attributes (comma-separated list). e.g. 14,15,16
 	@LanguageId			int = 0,
 	@OrderBy			int = 0, --0 position, 5 - Name: A to Z, 6 - Name: Z to A, 10 - Price: Low to High, 11 - Price: High to Low, 15 - creation date
+	@AllowedCustomerRoleIds	nvarchar(MAX) = null,	--a list of customer role IDs (comma-separated list) for which a product should be shown (if a subjet to ACL)
 	@PageIndex			int = 0, 
 	@PageSize			int = 2147483644,
 	@ShowHidden			bit = 0,
@@ -355,10 +356,19 @@ BEGIN
 		SpecificationAttributeOptionId int not null
 	)
 	INSERT INTO #FilteredSpecs (SpecificationAttributeOptionId)
-	SELECT CAST(data as int) FROM [nop_splitstring_to_table](@FilteredSpecs, ',')	
+	SELECT CAST(data as int) FROM [nop_splitstring_to_table](@FilteredSpecs, ',')
 	DECLARE @SpecAttributesCount int	
 	SET @SpecAttributesCount = (SELECT COUNT(1) FROM #FilteredSpecs)
 
+	--filter by customer role IDs (access control list)
+	SET @AllowedCustomerRoleIds = isnull(@AllowedCustomerRoleIds, '')	
+	CREATE TABLE #FilteredCustomerRoleIds
+	(
+		CustomerRoleId int not null
+	)
+	INSERT INTO #FilteredCustomerRoleIds (CustomerRoleId)
+	SELECT CAST(data as int) FROM [nop_splitstring_to_table](@AllowedCustomerRoleIds, ',')
+	
 	--paging
 	DECLARE @PageLowerBound int
 	DECLARE @PageUpperBound int
@@ -456,6 +466,7 @@ BEGIN
 		AND pptm.ProductTag_Id = ' + CAST(@ProductTagId AS nvarchar(max))
 	END
 	
+	--show hidden
 	IF @ShowHidden = 0
 	BEGIN
 		SET @sql = @sql + '
@@ -507,14 +518,27 @@ BEGIN
 			)'
 	END
 	
+	--show hidden and ACL
+	IF @ShowHidden = 0
+	BEGIN
+		SET @sql = @sql + '
+		AND (p.SubjectToAcl = 0 OR EXISTS (
+			SELECT 1 FROM #FilteredCustomerRoleIds [fcr]
+			WHERE
+				[fcr].CustomerRoleId IN (
+					SELECT [acl].CustomerRoleId
+					FROM [AclRecord] acl
+					WHERE [acl].EntityId = p.Id AND [acl].EntityName = ''Product''
+				)
+			))'
+	END
+	
 	--filter by specs
 	IF @SpecAttributesCount > 0
 	BEGIN
 		SET @sql = @sql + '
 		AND NOT EXISTS (
-			SELECT 1 
-			FROM
-				#FilteredSpecs [fs]
+			SELECT 1 FROM #FilteredSpecs [fs]
 			WHERE
 				[fs].SpecificationAttributeOptionId NOT IN (
 					SELECT psam.SpecificationAttributeOptionId
@@ -561,6 +585,7 @@ BEGIN
 
 	DROP TABLE #FilteredCategoryIds
 	DROP TABLE #FilteredSpecs
+	DROP TABLE #FilteredCustomerRoleIds
 
 	CREATE TABLE #PageIndex 
 	(

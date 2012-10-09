@@ -67,6 +67,7 @@ namespace Nop.Web.Controllers
         private readonly IOrderReportService _orderReportService;
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IBackInStockSubscriptionService _backInStockSubscriptionService;
+        private readonly IAclService _aclService;
         private readonly IPermissionService _permissionService;
         private readonly IDownloadService _downloadService;
         private readonly ICustomerActivityService _customerActivityService;
@@ -99,7 +100,7 @@ namespace Nop.Web.Controllers
             IRecentlyViewedProductsService recentlyViewedProductsService, ICompareProductsService compareProductsService,
             IWorkflowMessageService workflowMessageService, IProductTagService productTagService,
             IOrderReportService orderReportService, IGenericAttributeService genericAttributeService,
-            IBackInStockSubscriptionService backInStockSubscriptionService,
+            IBackInStockSubscriptionService backInStockSubscriptionService, IAclService aclService,
             IPermissionService permissionService, IDownloadService downloadService,
             ICustomerActivityService customerActivityService,
             MediaSettings mediaSettings, CatalogSettings catalogSettings,
@@ -135,6 +136,7 @@ namespace Nop.Web.Controllers
             this._orderReportService = orderReportService;
             this._genericAttributeService = genericAttributeService;
             this._backInStockSubscriptionService = backInStockSubscriptionService;
+            this._aclService = aclService;
             this._permissionService = permissionService;
             this._downloadService = downloadService;
             this._customerActivityService = customerActivityService;
@@ -1361,9 +1363,14 @@ namespace Nop.Web.Controllers
             if (product == null || product.Deleted)
                 return RedirectToRoute("HomePage");
 
+            //Is published?
             //Check whether the current user has a "Manage catalog" permission
             //It allows him to preview a product before publishing
             if (!product.Published && !_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
+                return RedirectToRoute("HomePage");
+
+            //ACL (access control list)
+            if (!_aclService.Authorize(product))
                 return RedirectToRoute("HomePage");
 
             //prepare the model
@@ -2002,12 +2009,14 @@ namespace Nop.Web.Controllers
         public ActionResult RelatedProducts(int productId, int? productThumbPictureSize)
         {
             var products = new List<Product>();
-            var relatedProducts = _productService.GetRelatedProductsByProductId1(productId);
+            var relatedProducts = _productService
+                .GetRelatedProductsByProductId1(productId);
             foreach (var product in _productService.GetProductsByIds(relatedProducts.Select(x => x.ProductId2).ToArray()))
             {
-                //ensure that a product has at least one available variant
                 var variants = _productService.GetProductVariantsByProductId(product.Id);
-                if (variants.Count > 0)
+                //ensure that a product has at least one available variant
+                //and has ACL permission
+                if (variants.Count > 0 && _aclService.Authorize(product))
                     products.Add(product);
             }
             var model = PrepareProductOverviewModels(products, true, true, productThumbPictureSize).ToList();
@@ -2023,6 +2032,8 @@ namespace Nop.Web.Controllers
 
             var products = _orderReportService.GetProductsAlsoPurchasedById(productId,
                 _catalogSettings.ProductsAlsoPurchasedNumber);
+            //ACL
+            products = products.Where(p => _aclService.Authorize(p)).ToList();
 
             var model = PrepareProductOverviewModels(products, true, true, productThumbPictureSize).ToList();
 
@@ -2053,7 +2064,11 @@ namespace Nop.Web.Controllers
             var cart = _workContext.CurrentCustomer.ShoppingCartItems.Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart).ToList();
 
             var products = _productService.GetCrosssellProductsByShoppingCart(cart, _shoppingCartSettings.CrossSellsNumber);
-            //Cross-sell products are dispalyed on the shoppnig cart page.
+            //ACL
+            products = products.Where(p => _aclService.Authorize(p)).ToList();
+
+
+            //Cross-sell products are dispalyed on the shopping cart page.
             //We know that the entire shopping cart page is not refresh
             //even if "ShoppingCartSettings.DisplayCartAfterAddingProduct" setting  is enabled.
             //That's why we force page refresh (redirect) in this case
@@ -2149,7 +2164,8 @@ namespace Nop.Web.Controllers
             foreach (var line in report)
             {
                 var product = _productService.GetProductById(line.EntityId);
-                if (product != null)
+                //Product founbd and has ACL permission
+                if (product != null && _aclService.Authorize(product))
                     products.Add(product);
             }
             
@@ -2166,13 +2182,17 @@ namespace Nop.Web.Controllers
         [ChildActionOnly]
         public ActionResult HomepageProducts(int? productThumbPictureSize)
         {
+            var products = _productService.GetAllProductsDisplayedOnHomePage();
+            //ACL
+            products = products.Where(p => _aclService.Authorize(p)).ToList();
+
             var model = new HomePageProductsModel()
             {
-                UseSmallProductBox = _catalogSettings.UseSmallProductBoxOnHomePage
+                UseSmallProductBox = _catalogSettings.UseSmallProductBoxOnHomePage,
+                Products = PrepareProductOverviewModels(products, 
+                    !_catalogSettings.UseSmallProductBoxOnHomePage, true, productThumbPictureSize)
+                    .ToList()
             };
-            model.Products = PrepareProductOverviewModels(_productService.GetAllProductsDisplayedOnHomePage(), 
-                !_catalogSettings.UseSmallProductBoxOnHomePage, true, productThumbPictureSize)
-                .ToList();
 
             return PartialView(model);
         }

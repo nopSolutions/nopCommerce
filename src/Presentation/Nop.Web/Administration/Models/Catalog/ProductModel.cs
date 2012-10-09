@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using FluentValidation.Attributes;
+using Nop.Admin.Models.Customers;
 using Nop.Admin.Validators.Catalog;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Localization;
@@ -80,6 +81,12 @@ namespace Nop.Admin.Models.Catalog
         public IList<ProductLocalizedModel> Locales { get; set; }
 
 
+        //ACL (customer roles)
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.SubjectToAcl")]
+        public bool SubjectToAcl { get; set; }
+        [NopResourceDisplayName("Admin.Catalog.Products.Fields.AclCustomerRoles")]
+        public List<CustomerRoleModel> AvailableCustomerRoles { get; set; }
+        public int[] SelectedCustomerRoleIds { get; set; }
 
         //existing product variants
         public IList<ProductVariantModel> ProductVariantModels { get; set; }

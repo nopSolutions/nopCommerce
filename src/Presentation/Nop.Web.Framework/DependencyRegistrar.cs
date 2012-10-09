@@ -160,6 +160,10 @@ namespace Nop.Web.Framework
             builder.RegisterType<PermissionService>().As<IPermissionService>()
                 .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
                 .InstancePerHttpRequest();
+            //pass MemoryCacheManager to SettingService as cacheManager (cache settings between requests)
+            builder.RegisterType<AclService>().As<IAclService>()
+                .WithParameter(ResolvedParameter.ForNamed<ICacheManager>("nop_cache_static"))
+                .InstancePerHttpRequest();
 
             builder.RegisterType<GeoCountryLookup>().As<IGeoCountryLookup>().InstancePerHttpRequest();
             builder.RegisterType<CountryService>().As<ICountryService>().InstancePerHttpRequest();

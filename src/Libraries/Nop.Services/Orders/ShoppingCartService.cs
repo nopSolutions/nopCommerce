@@ -12,6 +12,7 @@ using Nop.Services.Directory;
 using Nop.Services.Events;
 using Nop.Services.Localization;
 using Nop.Services.Security;
+using Nop.Services.Seo;
 
 namespace Nop.Services.Orders
 {
@@ -35,6 +36,7 @@ namespace Nop.Services.Orders
         private readonly ShoppingCartSettings _shoppingCartSettings;
         private readonly IEventPublisher _eventPublisher;
         private readonly IPermissionService _permissionService;
+        private readonly IAclService _aclService;
         #endregion
 
         #region Ctor
@@ -55,6 +57,7 @@ namespace Nop.Services.Orders
         /// <param name="shoppingCartSettings">Shopping cart settings</param>
         /// <param name="eventPublisher">Event publisher</param>
         /// <param name="permissionService">Permission service</param>
+        /// <param name="aclService">ACL service</param>
         public ShoppingCartService(IRepository<ShoppingCartItem> sciRepository,
             IWorkContext workContext, ICurrencyService currencyService,
             IProductService productService, ILocalizationService localizationService,
@@ -65,21 +68,23 @@ namespace Nop.Services.Orders
             ICustomerService customerService,
             ShoppingCartSettings shoppingCartSettings,
             IEventPublisher eventPublisher,
-            IPermissionService permissionService)
+            IPermissionService permissionService, 
+            IAclService aclService)
         {
-            _sciRepository = sciRepository;
-            _workContext = workContext;
-            _currencyService = currencyService;
-            _productService = productService;
-            _localizationService = localizationService;
-            _productAttributeParser = productAttributeParser;
-            _checkoutAttributeService = checkoutAttributeService;
-            _checkoutAttributeParser = checkoutAttributeParser;
-            _priceFormatter = priceFormatter;
-            _customerService = customerService;
-            _shoppingCartSettings = shoppingCartSettings;
-            _eventPublisher = eventPublisher;
-            _permissionService = permissionService;
+            this._sciRepository = sciRepository;
+            this._workContext = workContext;
+            this._currencyService = currencyService;
+            this._productService = productService;
+            this._localizationService = localizationService;
+            this._productAttributeParser = productAttributeParser;
+            this._checkoutAttributeService = checkoutAttributeService;
+            this._checkoutAttributeParser = checkoutAttributeParser;
+            this._priceFormatter = priceFormatter;
+            this._customerService = customerService;
+            this._shoppingCartSettings = shoppingCartSettings;
+            this._eventPublisher = eventPublisher;
+            this._permissionService = permissionService;
+            this._aclService = aclService;
         }
 
         #endregion
@@ -254,33 +259,44 @@ namespace Nop.Services.Orders
                 return warnings;
             }
 
+            //deleted?
             if (product.Deleted || productVariant.Deleted)
             {
                 warnings.Add(_localizationService.GetResource("ShoppingCart.ProductDeleted"));
                 return warnings;
             }
 
+            //published?
             if (!product.Published || !productVariant.Published)
             {
                 warnings.Add(_localizationService.GetResource("ShoppingCart.ProductUnpublished"));
             }
+            
+            //ACL
+            if (!_aclService.Authorize(product, customer))
+            {
+                warnings.Add(_localizationService.GetResource("ShoppingCart.ProductUnpublished"));
+            }
 
+            //disabled "add to cart" button
             if (shoppingCartType == ShoppingCartType.ShoppingCart && productVariant.DisableBuyButton)
             {
                 warnings.Add(_localizationService.GetResource("ShoppingCart.BuyingDisabled"));
             }
 
+            //disabled "add to wishlist" button
             if (shoppingCartType == ShoppingCartType.Wishlist && productVariant.DisableWishlistButton)
             {
                 warnings.Add(_localizationService.GetResource("ShoppingCart.WishlistDisabled"));
             }
 
-            if (shoppingCartType == ShoppingCartType.ShoppingCart &&
-                productVariant.CallForPrice)
+            //call for price
+            if (shoppingCartType == ShoppingCartType.ShoppingCart && productVariant.CallForPrice)
             {
                 warnings.Add(_localizationService.GetResource("Products.CallForPrice"));
             }
 
+            //customer entered price
             if (productVariant.CustomerEntersPrice)
             {
                 if (customerEnteredPrice < productVariant.MinimumCustomerEnteredPrice ||
@@ -294,27 +310,25 @@ namespace Nop.Services.Orders
                 }
             }
 
+            //quantity validation
             var hasQtyWarnings = false;
             if (quantity < productVariant.OrderMinimumQuantity)
             {
                 warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.MinimumQuantity"), productVariant.OrderMinimumQuantity));
                 hasQtyWarnings = true;
             }
-
             if (quantity > productVariant.OrderMaximumQuantity)
             {
                 warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.MaximumQuantity"), productVariant.OrderMaximumQuantity));
                 hasQtyWarnings = true;
             }
-
             var allowedQuantities = productVariant.ParseAllowedQuatities();
             if (allowedQuantities.Length > 0 && !allowedQuantities.Contains(quantity))
             {
                 warnings.Add(string.Format(_localizationService.GetResource("ShoppingCart.AllowedQuantities"), string.Join(", ", allowedQuantities)));
             }
 
-            var validateOutOfStock = shoppingCartType == ShoppingCartType.ShoppingCart ||
-                                     !_shoppingCartSettings.AllowOutOfStockItemsToBeAddedToWishlist;
+            var validateOutOfStock = shoppingCartType == ShoppingCartType.ShoppingCart || !_shoppingCartSettings.AllowOutOfStockItemsToBeAddedToWishlist;
             if (validateOutOfStock && !hasQtyWarnings)
             {
                 switch (productVariant.ManageInventoryMethod)
@@ -558,7 +572,7 @@ namespace Nop.Services.Orders
             //required product variants
             if (getRequiredProductVariantWarnings)
                 warnings.AddRange(GetRequiredProductVariantWarnings(customer, shoppingCartType, productVariant, automaticallyAddRequiredProductVariantsIfEnabled));
-
+            
             return warnings;
         }
 
