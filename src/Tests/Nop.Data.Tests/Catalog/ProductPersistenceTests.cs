@@ -29,6 +29,7 @@ namespace Nop.Data.Tests.Catalog
                 NotApprovedRatingSum = 3,
                 ApprovedTotalReviews = 4,
                 NotApprovedTotalReviews = 5,
+                SubjectToAcl = true,
                 Published = true,
                 Deleted = false,
                 CreatedOnUtc = new DateTime(2010, 01, 01),
@@ -50,6 +51,7 @@ namespace Nop.Data.Tests.Catalog
             fromDb.NotApprovedRatingSum.ShouldEqual(3);
             fromDb.ApprovedTotalReviews.ShouldEqual(4);
             fromDb.NotApprovedTotalReviews.ShouldEqual(5);
+            fromDb.SubjectToAcl.ShouldEqual(true);
             fromDb.Published.ShouldEqual(true);
             fromDb.Deleted.ShouldEqual(false);
             fromDb.CreatedOnUtc.ShouldEqual(new DateTime(2010, 01, 01));
