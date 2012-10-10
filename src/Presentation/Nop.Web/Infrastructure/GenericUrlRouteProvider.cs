@@ -44,7 +44,7 @@ namespace Nop.Web.Infrastructure
             get
             {
                 //it should be the last route
-                return -500;
+                return -int.MaxValue;
             }
         }
     }
