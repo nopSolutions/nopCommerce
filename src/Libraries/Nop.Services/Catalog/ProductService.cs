@@ -597,7 +597,7 @@ namespace Nop.Services.Catalog
                 }
 
                 //ACL
-                if (showHidden)
+                if (!showHidden)
                 {
                     query = from p in query
                             join acl in _aclRepository.Table on p.Id equals acl.EntityId into p_acl
