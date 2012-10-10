@@ -1492,21 +1492,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
 
-            var tags = _productTagService.GetAllProductTags();
-            var model = new GridModel<ProductTagModel>
-            {
-                Data = tags.Take(_adminAreaSettings.GridPageSize).Select(x =>
-                {
-                    return new ProductTagModel()
-                    {
-                        Id = x.Id,
-                        Name = x.Name,
-                        ProductCount = x.ProductCount
-                    };
-                }),
-                Total = tags.Count
-            };
-            return View(model);
+            return View();
         }
 
         [HttpPost, GridAction(EnableCustomBinding = true)]
