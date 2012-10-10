@@ -597,11 +597,14 @@ namespace Nop.Services.Catalog
                 }
 
                 //ACL
-                query = from p in query
-                        join acl in _aclRepository.Table on p.Id equals acl.EntityId into p_acl
-                        from acl in p_acl.DefaultIfEmpty()
-                        where !p.SubjectToAcl || (acl.EntityName == "Product" && allowedCustomerRolesIds.Contains(acl.CustomerRoleId))
-                        select p;
+                if (showHidden)
+                {
+                    query = from p in query
+                            join acl in _aclRepository.Table on p.Id equals acl.EntityId into p_acl
+                            from acl in p_acl.DefaultIfEmpty()
+                            where !p.SubjectToAcl || (acl.EntityName == "Product" && allowedCustomerRolesIds.Contains(acl.CustomerRoleId))
+                            select p;
+                }
 
                 //product variants
                 //The function 'CurrentUtcDateTime' is not supported by SQL Server Compact. 
