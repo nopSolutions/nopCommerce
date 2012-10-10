@@ -82,8 +82,8 @@ namespace Nop.Web.Framework.Seo
                 if (urlRecord == null)
                 {
                     //no record found
-                    //data.Values["controller"] = "Home";
-                    //data.Values["action"] = "Index";
+                    data.Values["controller"] = "Common";
+                    data.Values["action"] = "PageNotFound";
                     return data;
                 }
 
@@ -117,8 +117,8 @@ namespace Nop.Web.Framework.Seo
                     default:
                         {
                             //no record found
-                            //data.Values["controller"] = "Home";
-                            //data.Values["action"] = "Index";
+                            data.Values["controller"] = "Common";
+                            data.Values["action"] = "PageNotFound";
                             return data;
                         }
                 }

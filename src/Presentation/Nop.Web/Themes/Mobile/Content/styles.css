@@ -284,6 +284,11 @@
 .user-agreement-page{}
 .user-agreement-page .page-body{}
 
+/* PAGE NOT FOUND */
+.not-found-page{}
+.not-found-page .page-title{}
+.not-found-page .page-body{}
+
 /* PASSWORD RECOVERY AND NEWSLETTER PAGES */
 .password-recovery-page,newsletter-page{}
 .password-recovery-page .page-body,newsletter-page .page-body{}

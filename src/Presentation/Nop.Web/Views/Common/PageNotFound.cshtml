@@ -1,0 +1,22 @@
+﻿@model ContactUsModel
+@using Nop.Web.Models.Common;
+@{
+    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.PageNotFound").Text);
+}
+<div class="page not-found-page">
+    <div class="page-title">
+        <h1>@T("PageTitle.PageNotFound")</h1>
+    </div>
+    <div class="clear">
+    </div>
+    <div class="page-body">
+        <strong>The page you requested was not found, and we have a fine guess why.</strong>
+        <ul>
+            <li>If you typed the URL directly, please make sure the spelling is correct.</li>
+            <li>The page no longer exists. In this case, we profusely apologize for the inconvenience and for any damage this may cause.</li>
+        </ul>
+    </div>
+</div>

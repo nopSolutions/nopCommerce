@@ -1,4 +1,5 @@
-﻿using System.Web.Routing;
+﻿using System.Web.Mvc;
+using System.Web.Routing;
 using Nop.Web.Framework.Localization;
 using Nop.Web.Framework.Mvc.Routes;
 using Nop.Web.Framework.Seo;
@@ -28,12 +29,21 @@ namespace Nop.Web.Infrastructure
                             "{SeName}",
                             new { controller = "Catalog", action = "Manufacturer" },
                             new[] { "Nop.Web.Controllers" });
+
+
+
+            routes.MapLocalizedRoute(
+                "404-PageNotFound",
+                "{*url}",
+                new { controller = "Common", action = "PageNotFound" },
+                new[] { "Nop.Web.Controllers" });
         }
 
         public int Priority
         {
             get
             {
+                //it should be the last route
                 return -500;
             }
         }

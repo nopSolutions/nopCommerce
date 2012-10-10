@@ -753,6 +753,15 @@ namespace Nop.Web.Controllers
             //seems that no entity was found
             return RedirectToRoute("HomePage");
         }
+
+        //page not found
+        public ActionResult PageNotFound()
+        {
+            this.Response.StatusCode = 404;
+            this.Response.TrySkipIisCustomErrors = true;
+
+            return View();
+        }
         #endregion
     }
 }

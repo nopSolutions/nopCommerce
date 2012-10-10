@@ -1741,6 +1741,8 @@
     <Content Include="Views\ShoppingCart\_ButtonPaymentMethod.cshtml" />
     <Content Include="Views\ShoppingCart\_OrderReviewData.cshtml" />
     <Content Include="Views\ShoppingCart\_OrderReviewData.Mobile.cshtml" />
+    <Content Include="Views\Common\PageNotFound.cshtml" />
+    <Content Include="Views\Common\PageNotFound.Mobile.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
