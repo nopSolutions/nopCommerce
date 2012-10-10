@@ -74,24 +74,17 @@ namespace Nop.Services.Catalog
             category.Deleted = true;
             UpdateCategory(category);
         }
-
-        /// <summary>
-        /// Gets all categories
-        /// </summary>
-        /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Categories</returns>
-        public virtual IList<Category> GetAllCategories(bool showHidden = false)
-        {
-            return GetAllCategories(null, showHidden);
-        }
-
+        
         /// <summary>
         /// Gets all categories
         /// </summary>
         /// <param name="categoryName">Category name</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Categories</returns>
-        public virtual IList<Category> GetAllCategories(string categoryName, bool showHidden = false)
+        public virtual IPagedList<Category> GetAllCategories(string categoryName = "", 
+            int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false)
         {
             var query = _categoryRepository.Table;
             if (!showHidden)
@@ -104,23 +97,9 @@ namespace Nop.Services.Catalog
 
             //sort categories
             var sortedCategories = unsortedCategories.SortCategoriesForTree();
-            return sortedCategories;
-        }
-        
-        /// <summary>
-        /// Gets all categories
-        /// </summary>
-        /// <param name="categoryName">Category name</param>
-        /// <param name="pageIndex">Page index</param>
-        /// <param name="pageSize">Page size</param>
-        /// <param name="showHidden">A value indicating whether to show hidden records</param>
-        /// <returns>Categories</returns>
-        public virtual IPagedList<Category> GetAllCategories(string categoryName, 
-            int pageIndex, int pageSize, bool showHidden = false)
-        {
-            var categories = GetAllCategories(categoryName, showHidden);
-            //filter
-            return new PagedList<Category>(categories, pageIndex, pageSize);
+
+            //paging
+            return new PagedList<Category>(sortedCategories, pageIndex, pageSize);
         }
 
         /// <summary>

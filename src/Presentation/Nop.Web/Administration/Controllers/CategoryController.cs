@@ -211,7 +211,7 @@ namespace Nop.Admin.Controllers
         //ajax
         public ActionResult AllCategories(string text, int selectedId)
         {
-            var categories = _categoryService.GetAllCategories(true);
+            var categories = _categoryService.GetAllCategories(showHidden: true);
             categories.Insert(0, new Category { Name = "[None]", Id = 0 });
             var selectList = new List<SelectListItem>();
             foreach (var c in categories)
@@ -610,7 +610,7 @@ namespace Nop.Admin.Controllers
             };
             //categories
             model.AvailableCategories.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-            foreach (var c in _categoryService.GetAllCategories(true))
+            foreach (var c in _categoryService.GetAllCategories(showHidden: true))
                 model.AvailableCategories.Add(new SelectListItem() { Text = c.GetCategoryNameWithPrefix(_categoryService), Value = c.Id.ToString() });
 
             //manufacturers

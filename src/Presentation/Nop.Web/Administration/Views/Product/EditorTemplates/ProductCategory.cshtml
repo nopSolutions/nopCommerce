@@ -5,7 +5,7 @@
 
 @{    
     var _categoryService = EngineContext.Current.Resolve<ICategoryService>();
-    var allCategories = _categoryService.GetAllCategories(true);
+    var allCategories = _categoryService.GetAllCategories(showHidden: true);
     
 
     var categoryList = new List<SelectListItem>();

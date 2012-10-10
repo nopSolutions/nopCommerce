@@ -537,7 +537,7 @@ namespace Nop.Admin.Controllers
             var model = new BulkEditListModel();
             //categories
             model.AvailableCategories.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-            foreach (var c in _categoryService.GetAllCategories(true))
+            foreach (var c in _categoryService.GetAllCategories(showHidden: true))
                 model.AvailableCategories.Add(new SelectListItem() { Text = c.GetCategoryNameWithPrefix(_categoryService), Value = c.Id.ToString() });
 
             //manufacturers

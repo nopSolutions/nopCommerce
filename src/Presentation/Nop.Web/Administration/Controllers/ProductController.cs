@@ -210,7 +210,7 @@ namespace Nop.Admin.Controllers
             if (model == null)
                 throw new ArgumentNullException("model");
 
-            model.NumberOfAvailableCategories = _categoryService.GetAllCategories(true).Count;
+            model.NumberOfAvailableCategories = _categoryService.GetAllCategories(showHidden: true).Count;
         }
 
         [NonAction]
@@ -515,7 +515,7 @@ namespace Nop.Admin.Controllers
             };
             //categories
             model.AvailableCategories.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-            foreach (var c in _categoryService.GetAllCategories(true))
+            foreach (var c in _categoryService.GetAllCategories(showHidden: true))
                 model.AvailableCategories.Add(new SelectListItem() { Text = c.GetCategoryNameWithPrefix(_categoryService), Value = c.Id.ToString() });
 
             //manufacturers
@@ -1090,7 +1090,7 @@ namespace Nop.Admin.Controllers
             };
             //categories
             model.AvailableCategories.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-            foreach (var c in _categoryService.GetAllCategories(true))
+            foreach (var c in _categoryService.GetAllCategories(showHidden: true))
                 model.AvailableCategories.Add(new SelectListItem() { Text = c.GetCategoryNameWithPrefix(_categoryService), Value = c.Id.ToString() });
 
             //manufacturers
@@ -1229,7 +1229,7 @@ namespace Nop.Admin.Controllers
             };
             //categories
             model.AvailableCategories.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Common.All"), Value = "0" });
-            foreach (var c in _categoryService.GetAllCategories(true))
+            foreach (var c in _categoryService.GetAllCategories(showHidden: true))
                 model.AvailableCategories.Add(new SelectListItem() { Text = c.GetCategoryNameWithPrefix(_categoryService), Value = c.Id.ToString() });
 
             //manufacturers
