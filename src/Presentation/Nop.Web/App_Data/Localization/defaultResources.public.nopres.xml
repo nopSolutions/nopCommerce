@@ -2809,6 +2809,9 @@
             <LocaleResource Name="Sitemap">
                 <Value>Sitemap</Value>
             </LocaleResource>
+            <LocaleResource Name="StoreClosed">
+              <Value>Store closed</Value>
+            </LocaleResource>
             <LocaleResource Name="ViewPM">
                 <Value>View the private message</Value>
             </LocaleResource>
@@ -4029,6 +4032,14 @@
     </LocaleResource>
     <LocaleResource Name="StoreTheme">
         <Value>Select store theme</Value>
+    </LocaleResource>
+    <LocaleResource Name="StoreClosed">
+      <Value>This store is currently closed</Value>
+      <Children>
+        <LocaleResource Name="Hint">
+          <Value>Please check back in a little while.</Value>
+        </LocaleResource>
+      </Children>
     </LocaleResource>
     <LocaleResource Name="Tax">
         <Children>

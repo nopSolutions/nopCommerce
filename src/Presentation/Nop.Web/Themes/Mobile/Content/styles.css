@@ -289,6 +289,11 @@
 .not-found-page .page-title{}
 .not-found-page .page-body{}
 
+/* STORE CLOSED */
+.store-closed-page{}
+.store-closed-page .page-title{}
+.store-closed-page .page-body{}
+
 /* PASSWORD RECOVERY AND NEWSLETTER PAGES */
 .password-recovery-page,newsletter-page{}
 .password-recovery-page .page-body,newsletter-page .page-body{}

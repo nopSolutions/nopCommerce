@@ -44,7 +44,9 @@ namespace Nop.Web.Framework
                 //ensure it's not the Logout page
                 !(controllerName.Equals("Nop.Web.Controllers.CustomerController", StringComparison.InvariantCultureIgnoreCase) && actionName.Equals("Logout", StringComparison.InvariantCultureIgnoreCase)) &&
                 //ensure it's not the method (AJAX) for accepting EU Cookie law
-                !(controllerName.Equals("Nop.Web.Controllers.CommonController", StringComparison.InvariantCultureIgnoreCase) && actionName.Equals("EuCookieLawAccept", StringComparison.InvariantCultureIgnoreCase)))
+                !(controllerName.Equals("Nop.Web.Controllers.CommonController", StringComparison.InvariantCultureIgnoreCase) && actionName.Equals("EuCookieLawAccept", StringComparison.InvariantCultureIgnoreCase)) &&
+                //ensure it's not the method (AJAX) for accepting EU Cookie law
+                !(controllerName.Equals("Nop.Web.Controllers.CommonController", StringComparison.InvariantCultureIgnoreCase) && actionName.Equals("StoreClosed", StringComparison.InvariantCultureIgnoreCase)))
             {
                 if (storeInformationSettings.StoreClosedAllowForAdmins && EngineContext.Current.Resolve<IWorkContext>().CurrentCustomer.IsAdmin())
                 {
@@ -52,8 +54,8 @@ namespace Nop.Web.Framework
                 }
                 else
                 {
-                    var webHelper = EngineContext.Current.Resolve<IWebHelper>();
-                    filterContext.Result = new RedirectResult(webHelper.GetStoreLocation() + "StoreClosed.htm");
+                    var storeClosedUrl = new UrlHelper(filterContext.RequestContext).RouteUrl("StoreClosed");
+                    filterContext.Result = new RedirectResult(storeClosedUrl);
                 }
             }
         }

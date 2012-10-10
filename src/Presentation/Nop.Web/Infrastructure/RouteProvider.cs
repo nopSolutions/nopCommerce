@@ -251,6 +251,13 @@ namespace Nop.Web.Infrastructure
                             new { controller = "Common", action = "ContactUs" },
                             new[] { "Nop.Web.Controllers" });
 
+
+            //store closed
+            routes.MapLocalizedRoute("StoreClosed",
+                            "storeclosed",
+                            new { controller = "Common", action = "StoreClosed" },
+                            new[] { "Nop.Web.Controllers" });
+
             //passwordrecovery
             routes.MapLocalizedRoute("PasswordRecovery",
                             "passwordrecovery",

@@ -1291,7 +1291,6 @@
     <Content Include="Scripts\public.onepagecheckout.js" />
     <Content Include="Scripts\public.common.js" />
     <Content Include="Scripts\slimbox2.js" />
-    <Content Include="StoreClosed.htm" />
     <Content Include="Themes\DarkOrange\Content\images\ajax_loader_large.gif" />
     <Content Include="Themes\DarkOrange\Content\images\ajax_loader_small.gif" />
     <Content Include="Themes\DarkOrange\Content\styles.rtl.css">
@@ -1743,6 +1742,8 @@
     <Content Include="Views\ShoppingCart\_OrderReviewData.Mobile.cshtml" />
     <Content Include="Views\Common\PageNotFound.cshtml" />
     <Content Include="Views\Common\PageNotFound.Mobile.cshtml" />
+    <Content Include="Views\Common\StoreClosed.cshtml" />
+    <Content Include="Views\Common\StoreClosed.Mobile.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

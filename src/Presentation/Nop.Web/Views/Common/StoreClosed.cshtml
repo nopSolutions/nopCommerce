@@ -1,0 +1,16 @@
+﻿@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.StoreClosed").Text);
+}
+<div class="page store-closed-page">
+    <div class="page-title">
+        <h1>@T("StoreClosed")</h1>
+    </div>
+    <div class="clear">
+    </div>
+    <div class="page-body">
+        @T("StoreClosed.Hint")
+    </div>
+</div>

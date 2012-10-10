@@ -762,6 +762,13 @@ namespace Nop.Web.Controllers
 
             return View();
         }
+
+        //store is closed
+        public ActionResult StoreClosed()
+        {
+            return View();
+        }
+
         #endregion
     }
 }

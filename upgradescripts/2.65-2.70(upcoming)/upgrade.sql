@@ -239,6 +239,15 @@ set @resources='
   <LocaleResource Name="PageTitle.PageNotFound">
     <Value>Page not found</Value>
   </LocaleResource>
+  <LocaleResource Name="PageTitle.StoreClosed">
+    <Value>Store closed</Value>
+  </LocaleResource>
+  <LocaleResource Name="StoreClosed">
+    <Value>This store is currently closed</Value>
+  </LocaleResource>
+  <LocaleResource Name="StoreClosed.Hint">
+    <Value>Please check back in a little while.</Value>
+  </LocaleResource>
 </Language>
 '
 
