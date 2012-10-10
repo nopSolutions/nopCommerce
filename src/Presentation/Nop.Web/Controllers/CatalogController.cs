@@ -160,21 +160,16 @@ namespace Nop.Web.Controllers
         [NonAction]
         protected List<int> GetChildCategoryIds(int parentCategoryId, bool showHidden = false)
         {
-            string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_CHILD_IDENTIFIERS_MODEL_KEY, parentCategoryId, showHidden);
-            var cacheModel = _cacheManager.Get(cacheKey, () =>
+            var categoriesIds = new List<int>();
+            var categories = _categoryService.GetAllCategoriesByParentCategoryId(parentCategoryId, showHidden);
+            foreach (var category in categories)
             {
-                var categoriesIds = new List<int>();
-                var categories = _categoryService.GetAllCategoriesByParentCategoryId(parentCategoryId, showHidden);
-                foreach (var category in categories)
-                {
-                    categoriesIds.Add(category.Id);
-                    categoriesIds.AddRange(GetChildCategoryIds(category.Id, showHidden));
-                }
-                return categoriesIds;
-            });
-            return cacheModel;
+                categoriesIds.Add(category.Id);
+                categoriesIds.AddRange(GetChildCategoryIds(category.Id, showHidden));
+            }
+            return categoriesIds;
         }
-        
+
         [NonAction]
         protected IList<Category> GetCategoryBreadCrumb(Category category)
         {
@@ -185,7 +180,8 @@ namespace Nop.Web.Controllers
             
             while (category != null && //category is not null
                 !category.Deleted && //category is not deleted
-                category.Published) //category is published
+                category.Published && //category is published
+                _aclService.Authorize(category)) //ACL
             {
                 breadCrumb.Add(category);
                 category = _categoryService.GetCategoryById(category.ParentCategoryId);
@@ -782,6 +778,10 @@ namespace Nop.Web.Controllers
             if (!category.Published && !_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return RedirectToRoute("HomePage");
 
+            //ACL (access control list)
+            if (!_aclService.Authorize(category))
+                return RedirectToRoute("HomePage");
+
             //'Continue shopping' URL
             _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.LastContinueShoppingPage, _webHelper.GetThisPageUrl(false));
 
@@ -1035,29 +1035,22 @@ namespace Nop.Web.Controllers
         }
 
         [ChildActionOnly]
-        //[OutputCache(Duration = 120, VaryByCustom = "WorkingLanguage")]
         public ActionResult CategoryNavigation(int currentCategoryId, int currentProductId)
         {
-            string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_NAVIGATION_MODEL_KEY, currentCategoryId, currentProductId, _workContext.WorkingLanguage.Id);
-            var cacheModel = _cacheManager.Get(cacheKey, () =>
+            var currentCategory = _categoryService.GetCategoryById(currentCategoryId);
+            if (currentCategory == null && currentProductId > 0)
             {
-                var currentCategory = _categoryService.GetCategoryById(currentCategoryId);
-                if (currentCategory == null && currentProductId > 0)
-                {
-                    var productCategories = _categoryService.GetProductCategoriesByProductId(currentProductId);
-                    if (productCategories.Count > 0)
-                        currentCategory = productCategories[0].Category;
-                }
-                var breadCrumb = currentCategory != null ? GetCategoryBreadCrumb(currentCategory) : new List<Category>();
-                var model = GetChildCategoryNavigationModel(breadCrumb, 0, currentCategory, 0);
-                return model;
-            });
+                var productCategories = _categoryService.GetProductCategoriesByProductId(currentProductId);
+                if (productCategories.Count > 0)
+                    currentCategory = productCategories[0].Category;
+            }
+            var breadCrumb = currentCategory != null ? GetCategoryBreadCrumb(currentCategory) : new List<Category>();
+            var model = GetChildCategoryNavigationModel(breadCrumb, 0, currentCategory, 0);
 
-            return PartialView(cacheModel);
+            return PartialView(model);
         }
 
         [ChildActionOnly]
-        //[OutputCache(Duration = 120, VaryByCustom = "WorkingLanguage")]
         public ActionResult HomepageCategories()
         {
             var listModel = _categoryService.GetAllCategoriesDisplayedOnHomePage()
@@ -1320,7 +1313,6 @@ namespace Nop.Web.Controllers
         }
 
         [ChildActionOnly]
-        //[OutputCache(Duration = 120, VaryByCustom = "WorkingLanguage")]
         public ActionResult ManufacturerNavigation(int currentManufacturerId)
         {
             string cacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURER_NAVIGATION_MODEL_KEY, currentManufacturerId, _workContext.WorkingLanguage.Id);
@@ -1878,7 +1870,6 @@ namespace Nop.Web.Controllers
         }
 
         [ChildActionOnly]
-        //[OutputCache(Duration = 120, VaryByCustom = "WorkingLanguage")]
         public ActionResult ProductBreadcrumb(int productId)
         {
             var product = _productService.GetProductById(productId);
@@ -1888,40 +1879,34 @@ namespace Nop.Web.Controllers
             if (!_catalogSettings.CategoryBreadcrumbEnabled)
                 return Content("");
 
-            var cacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_BREADCRUMB_MODEL_KEY, product.Id, _workContext.WorkingLanguage.Id);
-            var cacheModel = _cacheManager.Get(cacheKey, () =>
+            var model = new ProductDetailsModel.ProductBreadcrumbModel()
                 {
-                    var model = new ProductDetailsModel.ProductBreadcrumbModel()
+                    ProductId = product.Id,
+                    ProductName = product.GetLocalized(x => x.Name),
+                    ProductSeName = product.GetSeName()
+                };
+            var productCategories = _categoryService.GetProductCategoriesByProductId(product.Id);
+            if (productCategories.Count > 0)
+            {
+                var category = productCategories[0].Category;
+                if (category != null)
+                {
+                    foreach (var catBr in GetCategoryBreadCrumb(category))
+                    {
+                        model.CategoryBreadcrumb.Add(new CategoryModel()
                         {
-                            ProductId = product.Id,
-                            ProductName = product.GetLocalized(x => x.Name),
-                            ProductSeName = product.GetSeName()
-                        };
-                        var productCategories = _categoryService.GetProductCategoriesByProductId(product.Id);
-                        if (productCategories.Count > 0)
-                        {
-                            var category = productCategories[0].Category;
-                            if (category != null)
-                            {
-                                foreach (var catBr in GetCategoryBreadCrumb(category))
-                                {
-                                    model.CategoryBreadcrumb.Add(new CategoryModel()
-                                    {
-                                        Id = catBr.Id,
-                                        Name = catBr.GetLocalized(x => x.Name),
-                                        SeName = catBr.GetSeName()
-                                    });
-                                }
-                            }
-                        }
-                    return model;
-                });
-            
-            return PartialView(cacheModel);
+                            Id = catBr.Id,
+                            Name = catBr.GetLocalized(x => x.Name),
+                            SeName = catBr.GetSeName()
+                        });
+                    }
+                }
+            }
+
+            return PartialView(model);
         }
 
         [ChildActionOnly]
-        //[OutputCache(Duration = 120, VaryByCustom = "WorkingLanguage")]
         public ActionResult ProductManufacturers(int productId)
         {
             string cacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_MANUFACTURERS_MODEL_KEY, productId, _workContext.WorkingLanguage.Id);
@@ -2308,7 +2293,6 @@ namespace Nop.Web.Controllers
         }
 
         [ChildActionOnly]
-        //[OutputCache(Duration = 120, VaryByCustom = "WorkingLanguage")]
         public ActionResult PopularProductTags()
         {
             var cacheKey = string.Format(ModelCacheEventConsumer.PRODUCTTAG_POPULAR_MODEL_KEY, _workContext.WorkingLanguage.Id);

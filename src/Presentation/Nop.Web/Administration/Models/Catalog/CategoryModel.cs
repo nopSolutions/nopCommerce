@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using FluentValidation.Attributes;
+using Nop.Admin.Models.Customers;
 using Nop.Admin.Validators.Catalog;
 using Nop.Core.Domain.Discounts;
 using Nop.Web.Framework;
@@ -90,6 +91,12 @@ namespace Nop.Admin.Models.Catalog
 
         public string Breadcrumb { get; set; }
 
+        //ACL
+        [NopResourceDisplayName("Admin.Catalog.Categories.Fields.SubjectToAcl")]
+        public bool SubjectToAcl { get; set; }
+        [NopResourceDisplayName("Admin.Catalog.Categories.Fields.AclCustomerRoles")]
+        public List<CustomerRoleModel> AvailableCustomerRoles { get; set; }
+        public int[] SelectedCustomerRoleIds { get; set; }
 
 
         public IList<DropDownItem> ParentCategories { get; set; }

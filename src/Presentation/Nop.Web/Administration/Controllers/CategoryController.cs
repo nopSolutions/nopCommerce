@@ -8,6 +8,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Discounts;
 using Nop.Services.Catalog;
+using Nop.Services.Customers;
 using Nop.Services.Discounts;
 using Nop.Services.ExportImport;
 using Nop.Services.Localization;
@@ -30,7 +31,8 @@ namespace Nop.Admin.Controllers
         private readonly ICategoryService _categoryService;
         private readonly ICategoryTemplateService _categoryTemplateService;
         private readonly IManufacturerService _manufacturerService;
-        private readonly IProductService _productService;
+        private readonly IProductService _productService; 
+        private readonly ICustomerService _customerService;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IPictureService _pictureService;
         private readonly ILanguageService _languageService;
@@ -38,6 +40,7 @@ namespace Nop.Admin.Controllers
         private readonly ILocalizedEntityService _localizedEntityService;
         private readonly IDiscountService _discountService;
         private readonly IPermissionService _permissionService;
+        private readonly IAclService _aclService;
         private readonly IExportManager _exportManager;
         private readonly IWorkContext _workContext;
         private readonly ICustomerActivityService _customerActivityService;
@@ -50,9 +53,11 @@ namespace Nop.Admin.Controllers
 
         public CategoryController(ICategoryService categoryService, ICategoryTemplateService categoryTemplateService,
             IManufacturerService manufacturerService, IProductService productService, 
+            ICustomerService customerService,
             IUrlRecordService urlRecordService, IPictureService pictureService, ILanguageService languageService,
             ILocalizationService localizationService, ILocalizedEntityService localizedEntityService,
             IDiscountService discountService, IPermissionService permissionService,
+            IAclService aclService,
             IExportManager exportManager, IWorkContext workContext,
             ICustomerActivityService customerActivityService, AdminAreaSettings adminAreaSettings,
             CatalogSettings catalogSettings)
@@ -61,6 +66,7 @@ namespace Nop.Admin.Controllers
             this._categoryTemplateService = categoryTemplateService;
             this._manufacturerService = manufacturerService;
             this._productService = productService;
+            this._customerService = customerService;
             this._urlRecordService = urlRecordService;
             this._pictureService = pictureService;
             this._languageService = languageService;
@@ -68,6 +74,7 @@ namespace Nop.Admin.Controllers
             this._localizedEntityService = localizedEntityService;
             this._discountService = discountService;
             this._permissionService = permissionService;
+            this._aclService = aclService;
             this._exportManager = exportManager;
             this._workContext = workContext;
             this._customerActivityService = customerActivityService;
@@ -154,7 +161,53 @@ namespace Nop.Admin.Controllers
                 model.SelectedDiscountIds = category.AppliedDiscounts.Select(d => d.Id).ToArray();
             }
         }
-        
+
+        [NonAction]
+        private void PrepareAclModel(CategoryModel model, Category category, bool excludeProperties)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            model.AvailableCustomerRoles = _customerService
+                .GetAllCustomerRoles(true)
+                .Select(cr => cr.ToModel())
+                .ToList();
+            if (!excludeProperties)
+            {
+                if (category != null)
+                {
+                    model.SelectedCustomerRoleIds = _aclService.GetCustomerRoleIdsWithAccess(category);
+                }
+                else
+                {
+                    model.SelectedCustomerRoleIds = new int[0];
+                }
+            }
+        }
+
+        [NonAction]
+        protected void SaveCategoryAcl(Category category, CategoryModel model)
+        {
+            var existingAclRecords = _aclService.GetAclRecords(category);
+            var allCustomerRoles = _customerService.GetAllCustomerRoles(true);
+            foreach (var customerRole in allCustomerRoles)
+            {
+                if (model.SelectedCustomerRoleIds != null && model.SelectedCustomerRoleIds.Contains(customerRole.Id))
+                {
+                    //new role
+                    if (existingAclRecords.Where(acl => acl.CustomerRoleId == customerRole.Id).Count() == 0)
+                        _aclService.InsertAclRecord(category, customerRole.Id);
+                }
+                else
+                {
+                    //removed role
+                    var aclRecordToDelete = existingAclRecords.Where(acl => acl.CustomerRoleId == customerRole.Id).FirstOrDefault();
+                    if (aclRecordToDelete != null)
+                        _aclService.DeleteAclRecord(aclRecordToDelete);
+                }
+            }
+        }
+
         #endregion
         
         #region List / tree
@@ -298,6 +351,8 @@ namespace Nop.Admin.Controllers
             PrepareTemplatesModel(model);
             //discounts
             PrepareDiscountModel(model, null, true);
+            //ACL
+            PrepareAclModel(model, null, false);
             //default values
             model.PageSize = 4;
             model.Published = true;
@@ -337,6 +392,8 @@ namespace Nop.Admin.Controllers
                 _categoryService.UpdateHasDiscountsApplied(category);
                 //update picture seo file name
                 UpdatePictureSeoNames(category);
+                //ACL (customer roles)
+                SaveCategoryAcl(category, model);
 
                 //activity log
                 _customerActivityService.InsertActivity("AddNewCategory", _localizationService.GetResource("ActivityLog.AddNewCategory"), category.Name);
@@ -360,6 +417,8 @@ namespace Nop.Admin.Controllers
             }
             //discounts
             PrepareDiscountModel(model, null, true);
+            //ACL
+            PrepareAclModel(model, null, true);
             return View(model);
         }
 
@@ -398,6 +457,8 @@ namespace Nop.Admin.Controllers
             PrepareTemplatesModel(model);
             //discounts
             PrepareDiscountModel(model, category, false);
+            //ACL
+            PrepareAclModel(model, category, false);
 
             return View(model);
         }
@@ -453,6 +514,8 @@ namespace Nop.Admin.Controllers
                 }
                 //update picture seo file name
                 UpdatePictureSeoNames(category);
+                //ACL
+                SaveCategoryAcl(category, model);
 
                 //activity log
                 _customerActivityService.InsertActivity("EditCategory", _localizationService.GetResource("ActivityLog.EditCategory"), category.Name);
@@ -477,6 +540,8 @@ namespace Nop.Admin.Controllers
             PrepareTemplatesModel(model);
             //discounts
             PrepareDiscountModel(model, category, true);
+            //ACL
+            PrepareAclModel(model, category, true);
             return View(model);
         }
 

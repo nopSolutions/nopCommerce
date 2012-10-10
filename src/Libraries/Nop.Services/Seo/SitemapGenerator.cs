@@ -60,7 +60,7 @@ namespace Nop.Services.Seo
 
         private void WriteCategories(int parentCategoryId)
         {
-            var categories = _categoryService.GetAllCategoriesByParentCategoryId(parentCategoryId, false);
+            var categories = _categoryService.GetAllCategoriesByParentCategoryId(parentCategoryId);
             foreach (var category in categories)
             {
                 //TODO add a method for getting URL (use routing because it handles all SEO friendly URLs)

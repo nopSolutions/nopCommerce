@@ -221,6 +221,21 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Products.Fields.AclCustomerRoles.Hint">
     <Value>Select customer roles for which the product will be shown.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Acl">
+    <Value>ACL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.AclCustomerRoles">
+    <Value>Customer roles</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.AclCustomerRoles.Hint">
+    <Value>Select customer roles for which the category will be shown.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.SubjectToAcl">
+    <Value>Subject to ACL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Categories.Fields.SubjectToAcl.Hint">
+    <Value>Determines whether the category is subject to ACL (access control list).</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1492,4 +1507,22 @@ BEGIN
 	
 	DROP TABLE #PageIndex
 END
+GO
+
+
+
+--ACL for categories
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[Category]') and NAME='SubjectToAcl')
+BEGIN
+	ALTER TABLE [Category]
+	ADD [SubjectToAcl] bit NULL
+END
+GO
+
+UPDATE [Category]
+SET [SubjectToAcl] = 0
+WHERE [SubjectToAcl] IS NULL
+GO
+
+ALTER TABLE [Category] ALTER COLUMN [SubjectToAcl] bit NOT NULL
 GO

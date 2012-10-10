@@ -619,8 +619,8 @@
                     <LocaleResource Name="Categories">
                         <Value>Categories</Value>
                         <Children>
-                            <LocaleResource Name="Info">
-                                <Value>Category Info</Value>
+                            <LocaleResource Name="Acl">
+                              <Value>ACL</Value>
                             </LocaleResource>
                             <LocaleResource Name="AddNew">
                                 <Value>Add a new category</Value>
@@ -641,6 +641,9 @@
                             </LocaleResource>
                             <LocaleResource Name="EditCategoryDetails">
                                 <Value>Edit category details</Value>
+                            </LocaleResource>
+                            <LocaleResource Name="Info">
+                                <Value>Category Info</Value>
                             </LocaleResource>
                             <LocaleResource Name="List">
                                 <Children>
@@ -801,6 +804,22 @@
                                                 <Value>The category picture.</Value>
                                             </LocaleResource>
                                         </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="SubjectToAcl">
+                                      <Value>Subject to ACL</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Determines whether the category is subject to ACL (access control list).</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="AclCustomerRoles">
+                                      <Value>Customer roles</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Select customer roles for which the category will be shown.</Value>
+                                        </LocaleResource>
+                                      </Children>
                                     </LocaleResource>
                                 </Children>
                             </LocaleResource>
