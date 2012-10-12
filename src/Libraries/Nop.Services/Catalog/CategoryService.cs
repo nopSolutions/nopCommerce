@@ -114,6 +114,13 @@ namespace Nop.Services.Catalog
                         from acl in c_acl.DefaultIfEmpty()
                         where !c.SubjectToAcl || (acl.EntityName == "Category" && allowedCustomerRolesIds.Contains(acl.CustomerRoleId))
                         select c;
+
+                //only distinct categories (group by ID)
+                query = from c in query
+                        group c by c.Id
+                        into cGroup
+                        orderby cGroup.Key
+                        select cGroup.FirstOrDefault();
             }
 
             var unsortedCategories = query.ToList();
@@ -155,6 +162,13 @@ namespace Nop.Services.Catalog
                             from acl in c_acl.DefaultIfEmpty()
                             where !c.SubjectToAcl || (acl.EntityName == "Category" && allowedCustomerRolesIds.Contains(acl.CustomerRoleId))
                             select c;
+
+                    //only distinct categories (group by ID)
+                    query = from c in query
+                            group c by c.Id
+                            into cGroup
+                            orderby cGroup.Key
+                            select cGroup.FirstOrDefault();
                 }
 
                 var categories = query.ToList();
@@ -166,9 +180,8 @@ namespace Nop.Services.Catalog
         /// <summary>
         /// Gets all categories displayed on the home page
         /// </summary>
-        /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Categories</returns>
-        public virtual IList<Category> GetAllCategoriesDisplayedOnHomePage(bool showHidden = false)
+        public virtual IList<Category> GetAllCategoriesDisplayedOnHomePage()
         {
             var query = from c in _categoryRepository.Table
                         orderby c.DisplayOrder
@@ -176,21 +189,6 @@ namespace Nop.Services.Catalog
                         !c.Deleted && 
                         c.ShowOnHomePage
                         select c;
-
-            //ACL (access control list)
-            if (!showHidden)
-            {
-                var allowedCustomerRolesIds = _workContext.CurrentCustomer.CustomerRoles
-                    .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
-
-                query = from c in query
-                        join acl in _aclRepository.Table on c.Id equals acl.EntityId into c_acl
-                        from acl in c_acl.DefaultIfEmpty()
-                        where
-                            !c.SubjectToAcl ||
-                            (acl.EntityName == "Category" && allowedCustomerRolesIds.Contains(acl.CustomerRoleId))
-                        select c;
-            }
 
             var categories = query.ToList();
             return categories;
@@ -330,10 +328,15 @@ namespace Nop.Services.Catalog
                             join c in _categoryRepository.Table on pc.CategoryId equals c.Id
                             join acl in _aclRepository.Table on c.Id equals acl.EntityId into c_acl
                             from acl in c_acl.DefaultIfEmpty()
-                            where
-                                !c.SubjectToAcl ||
-                                (acl.EntityName == "Category" && allowedCustomerRolesIds.Contains(acl.CustomerRoleId))
+                            where !c.SubjectToAcl || (acl.EntityName == "Category" && allowedCustomerRolesIds.Contains(acl.CustomerRoleId))
                             select pc;
+
+                    //only distinct categories (group by ID)
+                    query = from c in query
+                            group c by c.Id
+                            into cGroup
+                            orderby cGroup.Key
+                            select cGroup.FirstOrDefault();
                 }
 
                 var productCategories = new PagedList<ProductCategory>(query, pageIndex, pageSize);
@@ -373,10 +376,15 @@ namespace Nop.Services.Catalog
                             join c in _categoryRepository.Table on pc.CategoryId equals c.Id
                             join acl in _aclRepository.Table on c.Id equals acl.EntityId into c_acl
                             from acl in c_acl.DefaultIfEmpty()
-                            where
-                                !c.SubjectToAcl ||
-                                (acl.EntityName == "Category" && allowedCustomerRolesIds.Contains(acl.CustomerRoleId))
+                            where !c.SubjectToAcl || (acl.EntityName == "Category" && allowedCustomerRolesIds.Contains(acl.CustomerRoleId))
                             select pc;
+
+                    //only distinct categories (group by ID)
+                    query = from c in query
+                            group c by c.Id
+                            into cGroup
+                            orderby cGroup.Key
+                            select cGroup.FirstOrDefault();
                 }
 
                 var productCategories = query.ToList();

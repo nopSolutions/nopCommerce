@@ -1053,7 +1053,11 @@ namespace Nop.Web.Controllers
         [ChildActionOnly]
         public ActionResult HomepageCategories()
         {
-            var listModel = _categoryService.GetAllCategoriesDisplayedOnHomePage()
+            var categories = _categoryService.GetAllCategoriesDisplayedOnHomePage();
+            //ACL
+            categories = categories.Where(c => _aclService.Authorize(c)).ToList();
+
+            var listModel = categories
                 .Select(x =>
                 {
                     var catModel = x.ToModel();
