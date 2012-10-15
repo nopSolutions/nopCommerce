@@ -248,6 +248,9 @@ set @resources='
   <LocaleResource Name="StoreClosed.Hint">
     <Value>Please check back in a little while.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.FormFields">
+    <Value>Form fields</Value>
+  </LocaleResource>
 </Language>
 '
 
