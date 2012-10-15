@@ -236,9 +236,6 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Categories.Fields.SubjectToAcl.Hint">
     <Value>Determines whether the category is subject to ACL (access control list).</Value>
   </LocaleResource>
-  <LocaleResource Name="PageTitle.PageNotFound">
-    <Value>Page not found</Value>
-  </LocaleResource>
   <LocaleResource Name="PageTitle.StoreClosed">
     <Value>Store closed</Value>
   </LocaleResource>

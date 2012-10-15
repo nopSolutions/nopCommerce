@@ -29,14 +29,6 @@ namespace Nop.Web.Infrastructure
                             "{SeName}",
                             new { controller = "Catalog", action = "Manufacturer" },
                             new[] { "Nop.Web.Controllers" });
-
-
-
-            routes.MapLocalizedRoute(
-                "404-PageNotFound",
-                "{*url}",
-                new { controller = "Common", action = "PageNotFound" },
-                new[] { "Nop.Web.Controllers" });
         }
 
         public int Priority

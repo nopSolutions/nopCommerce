@@ -1740,8 +1740,6 @@
     <Content Include="Views\ShoppingCart\_ButtonPaymentMethod.cshtml" />
     <Content Include="Views\ShoppingCart\_OrderReviewData.cshtml" />
     <Content Include="Views\ShoppingCart\_OrderReviewData.Mobile.cshtml" />
-    <Content Include="Views\Common\PageNotFound.cshtml" />
-    <Content Include="Views\Common\PageNotFound.Mobile.cshtml" />
     <Content Include="Views\Common\StoreClosed.cshtml" />
     <Content Include="Views\Common\StoreClosed.Mobile.cshtml" />
   </ItemGroup>

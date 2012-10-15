@@ -2761,9 +2761,6 @@
             <LocaleResource Name="OrderDetails">
                 <Value>Order Details</Value>
             </LocaleResource>
-            <LocaleResource Name="PageNotFound">
-              <Value>Page not found</Value>
-            </LocaleResource>
             <LocaleResource Name="PasswordRecovery">
                 <Value>Password Recovery</Value>
             </LocaleResource>

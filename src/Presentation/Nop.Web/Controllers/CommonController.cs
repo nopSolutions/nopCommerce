@@ -754,15 +754,6 @@ namespace Nop.Web.Controllers
             return RedirectToRoute("HomePage");
         }
 
-        //page not found
-        public ActionResult PageNotFound()
-        {
-            this.Response.StatusCode = 404;
-            this.Response.TrySkipIisCustomErrors = true;
-
-            return View();
-        }
-
         //store is closed
         public ActionResult StoreClosed()
         {
