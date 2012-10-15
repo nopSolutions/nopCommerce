@@ -3881,7 +3881,12 @@
                                         <Value>Customer settings</Value>
                                     </LocaleResource>
                                       <LocaleResource Name="FormFields">
-                                        <Value>Form fields</Value>
+                                        <Value>Customer form fields</Value>
+                                        <Children>
+                                            <LocaleResource Name="Description">
+                                                <Value>You can create and manage the customer form fields available during registration below.</Value>
+                                            </LocaleResource>
+                                        </Children>
                                     </LocaleResource>
                                     <LocaleResource Name="DateTimeSettings">
                                         <Value>DateTime settings</Value>

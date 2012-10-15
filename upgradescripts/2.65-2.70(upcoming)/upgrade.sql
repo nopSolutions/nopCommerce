@@ -249,7 +249,10 @@ set @resources='
     <Value>Please check back in a little while.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.FormFields">
-    <Value>Form fields</Value>
+    <Value>Customer form fields</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.FormFields.Description">
+    <Value>You can create and manage the customer form fields available during registration below.</Value>
   </LocaleResource>
 </Language>
 '
