@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Nop.Core;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Discounts;
@@ -58,6 +59,7 @@ namespace Nop.Web.Controllers
         private readonly OrderSettings _orderSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
         private readonly PaymentSettings _paymentSettings;
+        private readonly AddressSettings _addressSettings;
 
         #endregion
 
@@ -74,7 +76,7 @@ namespace Nop.Web.Controllers
             ILogger logger, IOrderService orderService, IWebHelper webHelper,
             HttpContextBase httpContext, IMobileDeviceHelper mobileDeviceHelper,
             OrderSettings orderSettings, RewardPointsSettings rewardPointsSettings,
-            PaymentSettings paymentSettings)
+            PaymentSettings paymentSettings, AddressSettings addressSettings)
         {
             this._workContext = workContext;
             this._shoppingCartService = shoppingCartService;
@@ -99,6 +101,7 @@ namespace Nop.Web.Controllers
             this._orderSettings = orderSettings;
             this._rewardPointsSettings = rewardPointsSettings;
             this._paymentSettings = paymentSettings;
+            this._addressSettings = addressSettings;
         }
 
         #endregion
@@ -124,24 +127,22 @@ namespace Nop.Web.Controllers
             //existing addresses
             var addresses = _workContext.CurrentCustomer.Addresses.Where(a => a.Country == null || a.Country.AllowsBilling).ToList();
             foreach (var address in addresses)
-                model.ExistingAddresses.Add(address.ToModel());
-
-            //new address model
-            model.NewAddress = new AddressModel();
-            //countries
-            model.NewAddress.AvailableCountries.Add(new SelectListItem() { Text = _localizationService.GetResource("Address.SelectCountry"), Value = "0" });
-            foreach (var c in _countryService.GetAllCountriesForBilling())
-                model.NewAddress.AvailableCountries.Add(new SelectListItem() { Text = c.GetLocalized(x => x.Name), Value = c.Id.ToString(), Selected = (selectedCountryId.HasValue && c.Id == selectedCountryId.Value) });
-            //states
-            var states = selectedCountryId.HasValue ? _stateProvinceService.GetStateProvincesByCountryId(selectedCountryId.Value).ToList() : new List<StateProvince>();
-            if (states.Count > 0)
             {
-                foreach (var s in states)
-                    model.NewAddress.AvailableStates.Add(new SelectListItem() { Text = s.GetLocalized(x => x.Name), Value = s.Id.ToString() });
+                var addressModel = new AddressModel();
+                addressModel.PrepareModel(address, 
+                    false, 
+                    _addressSettings);
+                model.ExistingAddresses.Add(addressModel);
             }
-            else
-                model.NewAddress.AvailableStates.Add(new SelectListItem() { Text = _localizationService.GetResource("Address.OtherNonUS"), Value = "0" });
 
+            //new address
+            model.NewAddress.CountryId = selectedCountryId;
+            model.NewAddress.PrepareModel(null,
+                false,
+                _addressSettings,
+                _localizationService,
+                _stateProvinceService,
+                () => _countryService.GetAllCountriesForBilling());
             return model;
         }
 
@@ -152,24 +153,22 @@ namespace Nop.Web.Controllers
             //existing addresses
             var addresses = _workContext.CurrentCustomer.Addresses.Where(a => a.Country == null || a.Country.AllowsShipping).ToList();
             foreach (var address in addresses)
-                model.ExistingAddresses.Add(address.ToModel());
-
-            //new address model
-            model.NewAddress = new AddressModel();
-            //countries
-            model.NewAddress.AvailableCountries.Add(new SelectListItem() { Text = _localizationService.GetResource("Address.SelectCountry"), Value = "0" });
-            foreach (var c in _countryService.GetAllCountriesForShipping())
-                model.NewAddress.AvailableCountries.Add(new SelectListItem() { Text = c.GetLocalized(x => x.Name), Value = c.Id.ToString(), Selected = (selectedCountryId.HasValue && c.Id == selectedCountryId.Value) });
-            //states
-            var states = selectedCountryId.HasValue ? _stateProvinceService.GetStateProvincesByCountryId(selectedCountryId.Value).ToList() : new List<StateProvince>();
-            if (states.Count > 0)
             {
-                foreach (var s in states)
-                    model.NewAddress.AvailableStates.Add(new SelectListItem() { Text = s.GetLocalized(x => x.Name), Value = s.Id.ToString() });
+                var addressModel = new AddressModel();
+                addressModel.PrepareModel(address,
+                    false,
+                    _addressSettings);
+                model.ExistingAddresses.Add(addressModel);
             }
-            else
-                model.NewAddress.AvailableStates.Add(new SelectListItem() { Text = _localizationService.GetResource("Address.OtherNonUS"), Value = "0" });
 
+            //new address
+            model.NewAddress.CountryId = selectedCountryId;
+            model.NewAddress.PrepareModel(null,
+                false,
+                _addressSettings,
+                _localizationService,
+                _stateProvinceService,
+                () => _countryService.GetAllCountriesForShipping());
             return model;
         }
 

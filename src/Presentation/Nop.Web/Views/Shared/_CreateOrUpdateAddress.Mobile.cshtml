@@ -1,8 +1,10 @@
 ﻿@model AddressModel
 @using Nop.Web.Models.Common;
-<script type="text/javascript">
-     $(function() {
-            $("#@Html.FieldIdFor(model => model.CountryId)").change(function() {
+@if (Model.CountryEnabled && Model.StateProvinceEnabled)
+{
+    <script type="text/javascript">
+        $(function () {
+            $("#@Html.FieldIdFor(model => model.CountryId)").change(function () {
                 var selectedItem = $(this).val();
                 var ddlStates = $("#@Html.FieldIdFor(model => model.StateProvinceId)");
                 //show progress
@@ -14,7 +16,7 @@
                     data: { "countryId": selectedItem, "addEmptyStateIfRequired": "true" },
                     success: function (data) {
                         ddlStates.html('');
-                        $.each(data, function(id, option) {
+                        $.each(data, function (id, option) {
                             ddlStates.append($('<option></option>').val(option.id).html(option.name));
                         });
                         //hide progress
@@ -23,15 +25,16 @@
                         //jQuery Mobile. If you manipulate a select via JavaScript, you must call the refresh method on it to update the visual styling.
                         ddlStates.selectmenu("refresh");
                     },
-                    error:function (xhr, ajaxOptions, thrownError){
+                    error: function (xhr, ajaxOptions, thrownError) {
                         alert('Failed to retrieve states.');
                         //hide progress
                         $.mobile.hidePageLoadingMsg();
-                    }  
+                    }
                 });
             });
         });
-</script>
+    </script>
+}
 @Html.HiddenFor(model => model.Id)
 <div>
     @Html.LabelFor(model => model.FirstName)
@@ -48,48 +51,76 @@
     @Html.EditorFor(model => model.Email)
     @Html.ValidationMessageFor(model => model.Email)
 </div>
-<div>
-    @Html.LabelFor(model => model.Company)
-    @Html.EditorFor(model => model.Company)
-    @Html.ValidationMessageFor(model => model.Company)
-</div>
-<div>
-    @Html.LabelFor(model => model.CountryId)
-    @Html.DropDownListFor(model => model.CountryId, Model.AvailableCountries)
-    @Html.ValidationMessageFor(model => model.CountryId)
-</div>
-<div>
-    @Html.LabelFor(model => model.StateProvinceId)
-    @Html.DropDownListFor(model => model.StateProvinceId, Model.AvailableStates)
-    @Html.ValidationMessageFor(model => model.StateProvinceId)
-</div>
-<div>
-    @Html.LabelFor(model => model.City)
-    @Html.EditorFor(model => model.City)
-    @Html.ValidationMessageFor(model => model.City)
-</div>
-<div>
-    @Html.LabelFor(model => model.Address1)
-    @Html.EditorFor(model => model.Address1)
-    @Html.ValidationMessageFor(model => model.Address1)
-</div>
-<div>
-    @Html.LabelFor(model => model.Address2)
-    @Html.EditorFor(model => model.Address2)
-    @Html.ValidationMessageFor(model => model.Address2)
-</div>
-<div>
-    @Html.LabelFor(model => model.ZipPostalCode)
-    @Html.EditorFor(model => model.ZipPostalCode)
-    @Html.ValidationMessageFor(model => model.ZipPostalCode)
-</div>
-<div>
-    @Html.LabelFor(model => model.PhoneNumber)
-    @Html.EditorFor(model => model.PhoneNumber)
-    @Html.ValidationMessageFor(model => model.PhoneNumber)
-</div>
-<div>
-    @Html.LabelFor(model => model.FaxNumber)
-    @Html.EditorFor(model => model.FaxNumber)
-    @Html.ValidationMessageFor(model => model.FaxNumber)
-</div>
+@if (Model.CompanyEnabled)
+{
+    <div>
+        @Html.LabelFor(model => model.Company)
+        @Html.EditorFor(model => model.Company)
+        @Html.ValidationMessageFor(model => model.Company)
+    </div>
+}
+@if (Model.CountryEnabled)
+{
+    <div>
+        @Html.LabelFor(model => model.CountryId)
+        @Html.DropDownListFor(model => model.CountryId, Model.AvailableCountries)
+        @Html.ValidationMessageFor(model => model.CountryId)
+    </div>
+}
+
+@if (Model.CountryEnabled && Model.StateProvinceEnabled)
+{
+    <div>
+        @Html.LabelFor(model => model.StateProvinceId)
+        @Html.DropDownListFor(model => model.StateProvinceId, Model.AvailableStates)
+        @Html.ValidationMessageFor(model => model.StateProvinceId)
+    </div>
+}
+@if (Model.CityEnabled)
+{
+    <div>
+        @Html.LabelFor(model => model.City)
+        @Html.EditorFor(model => model.City)
+        @Html.ValidationMessageFor(model => model.City)
+    </div>
+}
+@if (Model.StreetAddressEnabled)
+{
+    <div>
+        @Html.LabelFor(model => model.Address1)
+        @Html.EditorFor(model => model.Address1)
+        @Html.ValidationMessageFor(model => model.Address1)
+    </div>
+}
+@if (Model.StreetAddress2Enabled)
+{
+    <div>
+        @Html.LabelFor(model => model.Address2)
+        @Html.EditorFor(model => model.Address2)
+        @Html.ValidationMessageFor(model => model.Address2)
+    </div>
+}
+@if (Model.ZipPostalCodeEnabled)
+{
+    <div>
+        @Html.LabelFor(model => model.ZipPostalCode)
+        @Html.EditorFor(model => model.ZipPostalCode)
+        @Html.ValidationMessageFor(model => model.ZipPostalCode)
+    </div>
+}
+@if (Model.PhoneEnabled)
+{
+    <div>
+        @Html.LabelFor(model => model.PhoneNumber)
+        @Html.EditorFor(model => model.PhoneNumber)
+        @Html.ValidationMessageFor(model => model.PhoneNumber)
+    </div>
+}
+@if (Model.FaxEnabled)
+{
+    <div>
+        @Html.LabelFor(model => model.FaxNumber)
+        @Html.EditorFor(model => model.FaxNumber)
+        @Html.ValidationMessageFor(model => model.FaxNumber)
+    </div>
+}

@@ -1,7 +1,5 @@
 ﻿@model CheckoutBillingAddressModel
-@using Nop.Core.Domain.Orders;
 @using Nop.Web.Models.Checkout;
-@using Nop.Web.Models.Common;
 <div class="checkout-data">
     <div class="enter-address">
         <div class="enter-address-body">
@@ -18,11 +16,23 @@
                                 var addressLine = "";
                                 addressLine += address.FirstName;
                                 addressLine += " " + address.LastName;
-                                addressLine += ", " + address.Address1;
-                                addressLine += ", " + address.City;
-                                addressLine += ", " + address.StateProvinceName;
-                                addressLine += " " + address.ZipPostalCode;
-                                if (!String.IsNullOrWhiteSpace(address.CountryName))
+                                if (address.StreetAddressEnabled && !String.IsNullOrEmpty(address.Address1))
+                                {
+                                    addressLine += ", " + address.Address1;
+                                }
+                                if (address.CityEnabled && !String.IsNullOrEmpty(address.City))
+                                {
+                                    addressLine += ", " + address.City;
+                                }
+                                if (address.StateProvinceEnabled && !String.IsNullOrEmpty(address.StateProvinceName))
+                                {
+                                    addressLine += ", " + address.StateProvinceName;
+                                }
+                                if (address.ZipPostalCodeEnabled && !String.IsNullOrEmpty(address.ZipPostalCode))
+                                {
+                                    addressLine += " " + address.ZipPostalCode;
+                                }
+                                if (address.CountryEnabled && !String.IsNullOrWhiteSpace(address.CountryName))
                                 {
                                     addressLine += ", " + address.CountryName;
                                 }

@@ -139,6 +139,11 @@ namespace Nop.Web.Models.ShoppingCart
 
         public partial class OrderReviewDataModel : BaseNopModel
         {
+            public OrderReviewDataModel()
+            {
+                this.BillingAddress = new AddressModel();
+                this.ShippingAddress = new AddressModel();
+            }
             public bool Display { get; set; }
 
             public AddressModel BillingAddress { get; set; }

@@ -6,7 +6,6 @@ using System.Web.Mvc;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
-using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
@@ -49,6 +48,7 @@ namespace Nop.Web.Controllers
         private readonly CatalogSettings _catalogSettings;
         private readonly PdfSettings _pdfSettings;
         private readonly ShippingSettings _shippingSettings;
+        private readonly AddressSettings _addressSettings;
 
         #endregion
 
@@ -63,7 +63,7 @@ namespace Nop.Web.Controllers
             ICountryService countryService, IWebHelper webHelper, 
             CatalogSettings catalogSettings, OrderSettings orderSettings,
             TaxSettings taxSettings, PdfSettings pdfSettings,
-            ShippingSettings shippingSettings)
+            ShippingSettings shippingSettings, AddressSettings addressSettings)
         {
             this._orderService = orderService;
             this._shipmentService = shipmentService;
@@ -84,6 +84,7 @@ namespace Nop.Web.Controllers
             this._taxSettings = taxSettings;
             this._pdfSettings = pdfSettings;
             this._shippingSettings = shippingSettings;
+            this._addressSettings = addressSettings;
         }
 
         #endregion
@@ -109,7 +110,7 @@ namespace Nop.Web.Controllers
             if (order.ShippingStatus != ShippingStatus.ShippingNotRequired)
             {
                 model.IsShippable = true;
-                model.ShippingAddress = order.ShippingAddress.ToModel();
+                model.ShippingAddress.PrepareModel(order.ShippingAddress, false, _addressSettings);
                 model.ShippingMethod = order.ShippingMethod;
    
 
@@ -132,7 +133,7 @@ namespace Nop.Web.Controllers
 
 
             //billing info
-            model.BillingAddress = order.BillingAddress.ToModel();
+            model.BillingAddress.PrepareModel(order.BillingAddress, false, _addressSettings);
 
             //VAT number
             model.VatNumber = order.VatNumber;

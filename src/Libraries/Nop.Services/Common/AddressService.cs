@@ -18,6 +18,7 @@ namespace Nop.Services.Common
         private readonly ICountryService _countryService;
         private readonly IStateProvinceService _stateProvinceService;
         private readonly IEventPublisher _eventPublisher;
+        private readonly AddressSettings _addressSettings;
 
         #endregion
 
@@ -30,14 +31,16 @@ namespace Nop.Services.Common
         /// <param name="countryService">Country service</param>
         /// <param name="stateProvinceService">State/province service</param>
         /// <param name="eventPublisher">Event publisher</param>
+        /// <param name="addressSettings">Address settings</param>
         public AddressService(IRepository<Address> addressRepository,
-            ICountryService countryService, IStateProvinceService stateProvinceService, 
-            IEventPublisher eventPublisher)
+            ICountryService countryService, IStateProvinceService stateProvinceService,
+            IEventPublisher eventPublisher, AddressSettings addressSettings)
         {
             this._addressRepository = addressRepository;
             this._countryService = countryService;
             this._stateProvinceService = stateProvinceService;
             this._eventPublisher = eventPublisher;
+            this._addressSettings = addressSettings;
         }
 
         #endregion
@@ -165,38 +168,63 @@ namespace Nop.Services.Common
             if (String.IsNullOrWhiteSpace(address.LastName))
                 return false;
 
-            if (String.IsNullOrWhiteSpace(address.PhoneNumber))
-                return false;
-
             if (String.IsNullOrWhiteSpace(address.Email))
                 return false;
 
-            if (String.IsNullOrWhiteSpace(address.Address1))
+            if (_addressSettings.CompanyEnabled &&
+                _addressSettings.CompanyRequired &&
+                String.IsNullOrWhiteSpace(address.Company))
                 return false;
 
-            if (String.IsNullOrWhiteSpace(address.City))
+            if (_addressSettings.StreetAddressEnabled &&
+                _addressSettings.StreetAddressRequired &&
+                String.IsNullOrWhiteSpace(address.Address1))
                 return false;
 
-            if (String.IsNullOrWhiteSpace(address.ZipPostalCode))
+            if (_addressSettings.StreetAddress2Enabled &&
+                _addressSettings.StreetAddress2Required &&
+                String.IsNullOrWhiteSpace(address.Address2))
                 return false;
 
-            if (address.CountryId == null || address.CountryId.Value == 0)
+            if (_addressSettings.ZipPostalCodeEnabled &&
+                _addressSettings.ZipPostalCodeRequired &&
+                String.IsNullOrWhiteSpace(address.ZipPostalCode))
                 return false;
 
-            var country = _countryService.GetCountryById(address.CountryId.Value);
-            if (country == null)
-                return false;
 
-            var states = _stateProvinceService.GetStateProvincesByCountryId(country.Id);
-            if (states.Count > 0)
+            if (_addressSettings.CountryEnabled)
             {
-                if (address.StateProvinceId == null || address.StateProvinceId.Value == 0)
+                if (address.CountryId == null || address.CountryId.Value == 0)
                     return false;
 
-                var state = _stateProvinceService.GetStateProvinceById(address.StateProvinceId.Value);
-                if (state == null)
+                var country = _countryService.GetCountryById(address.CountryId.Value);
+                if (country == null)
                     return false;
+
+                if (_addressSettings.StateProvinceEnabled)
+                {
+                    var states = _stateProvinceService.GetStateProvincesByCountryId(country.Id);
+                    if (states.Count > 0)
+                    {
+                        if (address.StateProvinceId == null || address.StateProvinceId.Value == 0)
+                            return false;
+
+                        var state = _stateProvinceService.GetStateProvinceById(address.StateProvinceId.Value);
+                        if (state == null)
+                            return false;
+                    }
+                }
             }
+
+            if (_addressSettings.PhoneEnabled &&
+                _addressSettings.PhoneRequired &&
+                String.IsNullOrWhiteSpace(address.PhoneNumber))
+                return false;
+
+            if (_addressSettings.FaxEnabled &&
+                _addressSettings.FaxRequired &&
+                String.IsNullOrWhiteSpace(address.FaxNumber))
+                return false;
 
             return true;
         }

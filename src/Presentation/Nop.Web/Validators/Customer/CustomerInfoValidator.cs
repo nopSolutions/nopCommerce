@@ -15,20 +15,34 @@ namespace Nop.Web.Validators.Customer
             RuleFor(x => x.LastName).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.LastName.Required"));
 
             //form fields
-            RuleFor(x => x.Company).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.Company.Required"))
-                .When(x => customerSettings.CompanyRequired && customerSettings.CompanyEnabled);
-            RuleFor(x => x.StreetAddress).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.StreetAddress.Required"))
-                .When(x => customerSettings.StreetAddressRequired && customerSettings.StreetAddressEnabled);
-            RuleFor(x => x.StreetAddress2).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.StreetAddress2.Required"))
-                .When(x => customerSettings.StreetAddress2Required && customerSettings.StreetAddress2Enabled);
-            RuleFor(x => x.ZipPostalCode).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.ZipPostalCode.Required"))
-                .When(x => customerSettings.ZipPostalCodeRequired && customerSettings.ZipPostalCodeEnabled);
-            RuleFor(x => x.City).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.City.Required"))
-                .When(x => customerSettings.CityRequired && customerSettings.CityEnabled);
-            RuleFor(x => x.Phone).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.Phone.Required"))
-                .When(x => customerSettings.PhoneRequired && customerSettings.PhoneEnabled);
-            RuleFor(x => x.Fax).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.Fax.Required"))
-                .When(x => customerSettings.FaxRequired && customerSettings.FaxEnabled);
-            
-        }}
+            if (customerSettings.CompanyRequired && customerSettings.CompanyEnabled)
+            {
+                RuleFor(x => x.Company).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.Company.Required"));
+            }
+            if (customerSettings.StreetAddressRequired && customerSettings.StreetAddressEnabled)
+            {
+                RuleFor(x => x.StreetAddress).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.StreetAddress.Required"));
+            }
+            if (customerSettings.StreetAddress2Required && customerSettings.StreetAddress2Enabled)
+            {
+                RuleFor(x => x.StreetAddress2).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.StreetAddress2.Required"));
+            }
+            if (customerSettings.ZipPostalCodeRequired && customerSettings.ZipPostalCodeEnabled)
+            {
+                RuleFor(x => x.ZipPostalCode).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.ZipPostalCode.Required"));
+            }
+            if (customerSettings.CityRequired && customerSettings.CityEnabled)
+            {
+                RuleFor(x => x.City).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.City.Required"));
+            }
+            if (customerSettings.PhoneRequired && customerSettings.PhoneEnabled)
+            {
+                RuleFor(x => x.Phone).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.Phone.Required"));
+            }
+            if (customerSettings.FaxRequired && customerSettings.FaxEnabled)
+            {
+                RuleFor(x => x.Fax).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.Fax.Required"));
+            }
+        }
+    }
 }

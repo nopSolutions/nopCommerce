@@ -14,6 +14,9 @@ namespace Nop.Web.Models.Order
             Items = new List<OrderProductVariantModel>();
             OrderNotes = new List<OrderNote>();
             Shipments = new List<ShipmentBriefModel>();
+
+            BillingAddress = new AddressModel();
+            ShippingAddress = new AddressModel();
         }
 
         public bool PrintMode { get; set; }

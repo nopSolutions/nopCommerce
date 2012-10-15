@@ -84,6 +84,7 @@ namespace Nop.Web.Controllers
         private readonly ShippingSettings _shippingSettings;
         private readonly TaxSettings _taxSettings;
         private readonly CaptchaSettings _captchaSettings;
+        private readonly AddressSettings _addressSettings;
 
         #endregion
 
@@ -110,7 +111,7 @@ namespace Nop.Web.Controllers
             MediaSettings mediaSettings, ShoppingCartSettings shoppingCartSettings,
             CatalogSettings catalogSettings, OrderSettings orderSettings,
             ShippingSettings shippingSettings, TaxSettings taxSettings,
-            CaptchaSettings captchaSettings)
+            CaptchaSettings captchaSettings, AddressSettings addressSettings)
         {
             this._productService = productService;
             this._workContext = workContext;
@@ -150,6 +151,7 @@ namespace Nop.Web.Controllers
             this._shippingSettings = shippingSettings;
             this._taxSettings = taxSettings;
             this._captchaSettings = captchaSettings;
+            this._addressSettings = addressSettings;
         }
 
         #endregion
@@ -515,7 +517,7 @@ namespace Nop.Web.Controllers
                 //billing info
                 var billingAddress = _workContext.CurrentCustomer.BillingAddress;
                 if (billingAddress != null)
-                    model.OrderReviewData.BillingAddress = billingAddress.ToModel();
+                    model.OrderReviewData.BillingAddress.PrepareModel(billingAddress, false, _addressSettings);
                
                 //shipping info
                 if (cart.RequiresShipping())
@@ -524,7 +526,7 @@ namespace Nop.Web.Controllers
 
                     var shippingAddress = _workContext.CurrentCustomer.ShippingAddress;
                     if (shippingAddress != null)
-                        model.OrderReviewData.ShippingAddress = shippingAddress.ToModel();
+                        model.OrderReviewData.ShippingAddress.PrepareModel(shippingAddress, false, _addressSettings);
                     
                     //selected shipping method
                     var shippingOption = _workContext.CurrentCustomer.GetAttribute<ShippingOption>(SystemCustomerAttributeNames.LastShippingOption);

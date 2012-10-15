@@ -32,31 +32,63 @@
                                         </div>
                                         <div class="address-box">
                                             <div class="name">
-                                                <strong>@item.FirstName @item.LastName</strong></div>
+                                                <strong>@item.FirstName @item.LastName</strong>
+                                            </div>
                                             <div class="email">@T("Address.Fields.Email"): @item.Email</div>
-                                            <div class="phone">
-                                                @T("Address.Fields.PhoneNumber"):
-                                                @item.PhoneNumber</div>
-                                            <div class="fax">
-                                                @T("Address.Fields.FaxNumber"):
-                                                @item.FaxNumber</div>
-                                            @if (!String.IsNullOrEmpty(item.Company))
+                                            @if (item.PhoneEnabled)
+                                            {
+                                                <div class="phone">
+                                                    @T("Address.Fields.PhoneNumber"):
+                                         @item.PhoneNumber
+                                                </div>
+                                            }
+                                            @if (item.FaxEnabled)
+                                            {
+                                                <div class="fax">
+                                                    @T("Address.Fields.FaxNumber"):
+                                         @item.FaxNumber
+                                                </div>
+                                            }
+                                            @if (item.CompanyEnabled && !String.IsNullOrEmpty(item.Company))
                                             {
                                                 <div class="company">
                                                     @item.Company
                                                 </div>
                                             }
-                                            <div class="address1">
-                                                @item.Address1</div>
-                                            @if (!String.IsNullOrEmpty(item.Address2))
+                                            @if (item.StreetAddressEnabled)
                                             {
-                                               <div class="address2">
+                                                <div class="address1">
+                                                    @item.Address1
+                                                </div>
+                                            }
+                                            @if (item.StreetAddress2Enabled && !String.IsNullOrEmpty(item.Address2))
+                                            {
+                                                <div class="address2">
                                                     @item.Address2
                                                 </div>
                                             }
-                                            <div class="city-state-zip">
-                                                @item.City, @item.StateProvinceName @item.ZipPostalCode</div>
-                                            @if (!String.IsNullOrEmpty(item.CountryName))
+                                            @if (item.CityEnabled || item.StateProvinceEnabled || item.ZipPostalCodeEnabled)
+                                            {
+                                                <div class="city-state-zip">
+                                                    @if (item.CityEnabled)
+                                                    {
+                                                        @item.City
+                                                    }
+                                                    @if (item.CityEnabled && (item.StateProvinceEnabled || item.ZipPostalCodeEnabled))
+                                                    {
+                                                        <text>,</text>
+                                                    }
+                                                    @if (item.StateProvinceEnabled)
+                                                    {
+                                                        @item.StateProvinceName
+                                                    }
+                                                    @if (item.ZipPostalCodeEnabled)
+                                                    {
+                                                        @item.ZipPostalCode
+                                                    }
+                                                </div>
+                                            }
+                                            @if (item.CountryEnabled && !String.IsNullOrEmpty(item.CountryName))
                                             {
                                                 <div class="country">
                                                     @item.CountryName

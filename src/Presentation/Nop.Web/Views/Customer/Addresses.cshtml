@@ -34,29 +34,58 @@
                             @Html.LabelFor(model => model.Addresses[i].Email):
                             @address.Email
                         </div>
-                        <div class="phone">
-                            @Html.LabelFor(model => model.Addresses[i].PhoneNumber):
-                            @address.PhoneNumber
-                        </div>
-                        <div class="fax">
-                            @Html.LabelFor(model => model.Addresses[i].FaxNumber):
-                            @address.FaxNumber</div>
-                        @if (!String.IsNullOrEmpty(address.Company))
+                        @if (address.PhoneEnabled)
+                        {
+                            <div class="phone">
+                                @Html.LabelFor(model => model.Addresses[i].PhoneNumber):
+            @address.PhoneNumber
+                            </div>
+                        }
+                        @if (address.FaxEnabled)
+                        {
+                            <div class="fax">
+                                @Html.LabelFor(model => model.Addresses[i].FaxNumber):
+            @address.FaxNumber
+                            </div>
+                        }
+                        @if (address.CompanyEnabled && !String.IsNullOrEmpty(address.Company))
                         {
                             <div class="company">@address.Company</div>
                         }
-                        <div class="address1">
-                            @address.Address1</div>
-                        @if (!String.IsNullOrEmpty(address.Address2))
+                        @if (address.StreetAddressEnabled)
+                        {
+                            <div class="address1">
+                                @address.Address1
+                            </div>
+                        }
+                        @if (address.StreetAddress2Enabled && !String.IsNullOrEmpty(address.Address2))
                         {
                             <div class="address2">
-                                @address.Address2</div>
+                                @address.Address2
+                            </div>
                         }
-                        <div class="city-state-zip">
-                            @address.City,
-                            @address.StateProvinceName
-                            @address.ZipPostalCode</div>
-                        @if (!String.IsNullOrEmpty(address.CountryName))
+                        @if (address.CityEnabled || address.StateProvinceEnabled || address.ZipPostalCodeEnabled)
+                        {
+                            <div class="city-state-zip">
+                                @if (address.CityEnabled)
+                                {
+                                    @address.City
+                                }
+                                @if (address.CityEnabled && (address.StateProvinceEnabled || address.ZipPostalCodeEnabled))
+                                {
+                                    <text>,</text>
+                                }
+                                @if (address.StateProvinceEnabled)
+                                {
+                                    @address.StateProvinceName
+                                }
+                                @if (address.ZipPostalCodeEnabled)
+                                {
+                                    @address.ZipPostalCode
+                                }
+                            </div>
+                        }
+                        @if (address.CountryEnabled && !String.IsNullOrEmpty(address.CountryName))
                         {
                             <div class="country">
                                 @address.CountryName
@@ -64,8 +93,8 @@
                         }
                     </div>
                     <div class="buttons">
-                        <input type="button" class="button-2 edit-address-button" onclick="location.href='@Url.RouteUrl("CustomerAddressEdit", new { addressId = address.Id })'" value='@T("Common.Edit")' />
-                        <input type="button" class="button-2 delete-address-button" onclick="location.href='@Url.RouteUrl("CustomerAddressDelete", new { addressId = address.Id })'" value="@T("Common.Delete")" />
+                        <input type="button" class="button-2 edit-address-button" onclick="location.href='@Url.RouteUrl("CustomerAddressEdit", new { addressId = address.Id })    '" value='@T("Common.Edit")' />
+                        <input type="button" class="button-2 delete-address-button" onclick="location.href='@Url.RouteUrl("CustomerAddressDelete", new { addressId = address.Id })    '" value="@T("Common.Delete")" />
                     </div>
                 </fieldset>
                 <div class="clear">
@@ -78,7 +107,7 @@
             }
         </div>
         <div class="add-button">
-            <input type="button" class="button-1 add-address-button" onclick="location.href='@Url.RouteUrl("CustomerAddressAdd")'" value="@T("Common.AddNew")" />
+            <input type="button" class="button-1 add-address-button" onclick="location.href='@Url.RouteUrl("CustomerAddressAdd")    '" value="@T("Common.AddNew")" />
         </div>
     </div>
 </div>
