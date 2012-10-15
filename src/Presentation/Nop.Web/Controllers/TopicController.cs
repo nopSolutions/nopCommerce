@@ -43,12 +43,18 @@ namespace Nop.Web.Controllers
             if (topic == null)
                 return null;
 
-            var model = topic.ToModel();
-            if (model.IsPasswordProtected)
+            var model = new TopicModel()
             {
-                model.Title = string.Empty;
-                model.Body = string.Empty;
-            }
+                Id = topic.Id,
+                SystemName = topic.SystemName,
+                IncludeInSitemap = topic.IncludeInSitemap,
+                IsPasswordProtected = topic.IsPasswordProtected,
+                Title = topic.IsPasswordProtected ? "" : topic.GetLocalized(x => x.Title),
+                Body = topic.IsPasswordProtected ? "" : topic.GetLocalized(x => x.Body),
+                MetaKeywords = topic.GetLocalized(x => x.MetaKeywords),
+                MetaDescription = topic.GetLocalized(x => x.MetaDescription),
+                MetaTitle = topic.GetLocalized(x => x.MetaTitle),
+            };
             return model;
         }
 

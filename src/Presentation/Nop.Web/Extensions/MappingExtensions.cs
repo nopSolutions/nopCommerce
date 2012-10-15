@@ -106,26 +106,5 @@ namespace Nop.Web.Extensions
 
             return destination;
         }
-
-        //topics
-        public static TopicModel ToModel(this Topic entity)
-        {
-            if (entity == null)
-                return null;
-
-            var model = new TopicModel()
-            {
-                Id = entity.Id,
-                SystemName = entity.SystemName,
-                IncludeInSitemap = entity.IncludeInSitemap,
-                IsPasswordProtected = entity.IsPasswordProtected,
-                Title = entity.GetLocalized(x => x.Title),
-                Body = entity.GetLocalized(x => x.Body),
-                MetaKeywords = entity.GetLocalized(x => x.MetaKeywords),
-                MetaDescription = entity.GetLocalized(x => x.MetaDescription),
-                MetaTitle = entity.GetLocalized(x => x.MetaTitle),
-            };
-            return model;
-        }
     }
 }

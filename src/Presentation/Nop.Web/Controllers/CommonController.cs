@@ -36,6 +36,7 @@ using Nop.Web.Framework.UI.Captcha;
 using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Catalog;
 using Nop.Web.Models.Common;
+using Nop.Web.Models.Topics;
 
 namespace Nop.Web.Controllers
 {
@@ -521,7 +522,15 @@ namespace Nop.Web.Controllers
             if (_commonSettings.SitemapIncludeTopics)
             {
                 var topics = _topicService.GetAllTopics().ToList().FindAll(t => t.IncludeInSitemap);
-                model.Topics = topics.Select(x => x.ToModel()).ToList();
+                model.Topics = topics.Select(topic => new TopicModel()
+                {
+                    Id = topic.Id,
+                    SystemName = topic.SystemName,
+                    IncludeInSitemap = topic.IncludeInSitemap,
+                    IsPasswordProtected = topic.IsPasswordProtected,
+                    Title = topic.GetLocalized(x => x.Title),
+                })
+                .ToList();
             }
             return View(model);
         }
