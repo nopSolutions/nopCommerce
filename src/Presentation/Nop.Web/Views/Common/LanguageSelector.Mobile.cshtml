@@ -9,7 +9,7 @@
         <ul data-role="listview" data-inset="true" data-filter="false">
             @foreach (var lang in Model.AvailableLanguages)
             {
-                <li @(lang.Id == Model.CurrentLanguage.Id ? " data-icon=false" : null)><a href="@Url.RouteUrl("ChangeLanguage", new { langid = lang.Id })" data-ajax="false">
+                <li @(lang.Id == Model.CurrentLanguageId ? " data-icon=false" : null)><a href="@Url.RouteUrl("ChangeLanguage", new { langid = lang.Id })" data-ajax="false">
                     @lang.Name</a></li>
             }
         </ul>

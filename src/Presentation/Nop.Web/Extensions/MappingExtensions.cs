@@ -51,36 +51,6 @@ namespace Nop.Web.Extensions
             return model;
         }
 
-        //language
-        public static LanguageModel ToModel(this Language entity)
-        {
-            if (entity == null)
-                return null;
-
-            var model = new LanguageModel()
-            {
-                Id = entity.Id,
-                Name = entity.Name,
-                FlagImageFileName = entity.FlagImageFileName,
-            };
-            return model;
-        }
-
-
-        //currency
-        public static CurrencyModel ToModel(this Currency entity)
-        {
-            if (entity == null)
-                return null;
-
-            var model = new CurrencyModel()
-            {
-                Id = entity.Id,
-                Name = entity.GetLocalized(x => x.Name),
-            };
-            return model;
-        }
-
         //address
         public static AddressModel ToModel(this Address entity)
         {

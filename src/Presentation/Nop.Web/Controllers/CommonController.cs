@@ -142,14 +142,19 @@ namespace Nop.Web.Controllers
             {
                 var result = _languageService
                     .GetAllLanguages()
-                    .Select(x => x.ToModel())
+                    .Select(x => new LanguageModel()
+                    {
+                        Id = x.Id,
+                        Name = x.Name,
+                        FlagImageFileName = x.FlagImageFileName,
+                    })
                     .ToList();
                 return result;
             });
 
             var model = new LanguageSelectorModel()
             {
-                CurrentLanguage = _workContext.WorkingLanguage.ToModel(),
+                CurrentLanguageId = _workContext.WorkingLanguage.Id,
                 AvailableLanguages = availableLanguages,
                 UseImages = _localizationSettings.UseImagesForLanguageSelection
             };
@@ -163,14 +168,18 @@ namespace Nop.Web.Controllers
             {
                 var result = _currencyService
                     .GetAllCurrencies()
-                    .Select(x => x.ToModel())
+                    .Select(x => new CurrencyModel()
+                    {
+                        Id = x.Id,
+                        Name = x.GetLocalized(y => y.Name),
+                    })
                     .ToList();
                 return result;
             });
 
             var model = new CurrencySelectorModel()
             {
-                CurrentCurrency = _workContext.WorkingCurrency.ToModel(),
+                CurrentCurrencyId = _workContext.WorkingCurrency.Id,
                 AvailableCurrencies = availableCurrencies
             };
             return model;
