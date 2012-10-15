@@ -78,6 +78,7 @@ namespace Nop.Admin.Controllers
         private ShoppingCartSettings _shoppingCartSettings;
         private MediaSettings _mediaSettings;
         private CustomerSettings _customerSettings;
+        private AddressSettings _addressSettings;
         private readonly DateTimeSettings _dateTimeSettings;
         private readonly StoreInformationSettings _storeInformationSettings;
         private readonly SeoSettings _seoSettings;
@@ -108,7 +109,7 @@ namespace Nop.Admin.Controllers
             CatalogSettings catalogSettings, RewardPointsSettings rewardPointsSettings,
             CurrencySettings currencySettings, OrderSettings orderSettings,
             ShoppingCartSettings shoppingCartSettings, MediaSettings mediaSettings,
-            CustomerSettings customerSettings,
+            CustomerSettings customerSettings, AddressSettings addressSettings,
             DateTimeSettings dateTimeSettings, StoreInformationSettings storeInformationSettings,
             SeoSettings seoSettings,SecuritySettings securitySettings, PdfSettings pdfSettings,
             LocalizationSettings localizationSettings, AdminAreaSettings adminAreaSettings,
@@ -145,6 +146,7 @@ namespace Nop.Admin.Controllers
             this._shoppingCartSettings = shoppingCartSettings;
             this._mediaSettings = mediaSettings;
             this._customerSettings = customerSettings;
+            this._addressSettings = addressSettings;
             this._dateTimeSettings = dateTimeSettings;
             this._storeInformationSettings = storeInformationSettings;
             this._seoSettings = seoSettings;
@@ -612,6 +614,7 @@ namespace Nop.Admin.Controllers
             //merge settings
             var model = new CustomerUserSettingsModel();
             model.CustomerSettings = _customerSettings.ToModel();
+            model.AddressSettings = _addressSettings.ToModel();
 
             model.DateTimeSettings.AllowCustomersToSetTimeZone = _dateTimeSettings.AllowCustomersToSetTimeZone;
             model.DateTimeSettings.DefaultStoreTimeZoneId = _dateTimeHelper.DefaultStoreTimeZone.Id;
@@ -637,7 +640,10 @@ namespace Nop.Admin.Controllers
 
             _customerSettings = model.CustomerSettings.ToEntity(_customerSettings);
             _settingService.SaveSetting(_customerSettings);
-            
+
+            _addressSettings = model.AddressSettings.ToEntity(_addressSettings);
+            _settingService.SaveSetting(_addressSettings);
+
             _dateTimeSettings.DefaultStoreTimeZoneId = model.DateTimeSettings.DefaultStoreTimeZoneId;
             _dateTimeSettings.AllowCustomersToSetTimeZone = model.DateTimeSettings.AllowCustomersToSetTimeZone;
             _settingService.SaveSetting(_dateTimeSettings);

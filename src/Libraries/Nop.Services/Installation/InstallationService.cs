@@ -4585,6 +4585,24 @@ namespace Nop.Services.Installation
                     StoreLastVisitedPage = true,
                 });
 
+            EngineContext.Current.Resolve<IConfigurationProvider<AddressSettings>>()
+                .SaveSettings(new AddressSettings()
+                {
+                    CompanyEnabled = true,
+                    StreetAddressEnabled = true,
+                    StreetAddressRequired = true,
+                    StreetAddress2Enabled = true,
+                    ZipPostalCodeEnabled = true,
+                    ZipPostalCodeRequired = true,
+                    CityEnabled = true,
+                    CityRequired = true,
+                    CountryEnabled = true,
+                    StateProvinceEnabled = true,
+                    PhoneEnabled = true,
+                    PhoneRequired = true,
+                    FaxEnabled = true,
+                });
+
             EngineContext.Current.Resolve<IConfigurationProvider<MediaSettings>>()
                 .SaveSettings(new MediaSettings()
                 {

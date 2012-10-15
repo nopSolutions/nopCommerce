@@ -249,10 +249,118 @@ set @resources='
     <Value>Please check back in a little while.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.FormFields">
-    <Value>Customer form fields</Value>
+    <Value></Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.FormFields.Description">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.CustomerFormFields">
+    <Value>Customer form fields</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.CustomerFormFields.Description">
     <Value>You can create and manage the customer form fields available during registration below.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields">
+    <Value>Address form fields</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.Description">
+    <Value>You can create and manage the address form fields available during checkout.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.CompanyEnabled">
+    <Value>''Company'' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.CompanyEnabled.Hint">
+    <Value>Set if ''Company'' is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.CompanyRequired">
+    <Value>''Company'' required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.CompanyRequired.Hint">
+    <Value>Check if ''Company'' is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.StreetAddressEnabled">
+    <Value>''Street address'' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.StreetAddressEnabled.Hint">
+    <Value>''Street address'' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.StreetAddressRequired">
+    <Value>''Street address'' required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.StreetAddressRequired.Hint">
+    <Value>Check if ''Street address'' is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.StreetAddress2Enabled">
+    <Value>''Street address 2'' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.StreetAddress2Enabled.Hint">
+    <Value>Set if ''Street address 2'' is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.StreetAddress2Required">
+    <Value>''Street address 2'' required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.StreetAddress2Required.Hint">
+    <Value>Check if ''Street address 2'' is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.ZipPostalCodeEnabled">
+    <Value>''Zip / postal code'' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.ZipPostalCodeEnabled.Hint">
+    <Value>Set if ''Zip / postal code'' is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.ZipPostalCodeRequired">
+    <Value>''Zip / postal code'' required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.ZipPostalCodeRequired.Hint">
+    <Value>Check if ''Zip / postal code'' is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.CityEnabled">
+    <Value>''City'' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.CityEnabled.Hint">
+    <Value>Set if ''City'' is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.CityRequired">
+    <Value>''City'' required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.CityRequired.Hint">
+    <Value>Check if ''City'' is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.CountryEnabled">
+    <Value>''Country'' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.CountryEnabled.Hint">
+    <Value>Set if ''Country'' is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.StateProvinceEnabled">
+    <Value>''State/province'' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.StateProvinceEnabled.Hint">
+    <Value>Set if ''State/province'' is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.PhoneEnabled">
+    <Value>''Phone number'' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.PhoneEnabled.Hint">
+    <Value>Set if ''Phone number'' is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.PhoneRequired">
+    <Value>''Phone number'' required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.PhoneRequired.Hint">
+    <Value>Check if ''Phone number'' is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.FaxEnabled">
+    <Value>''Fax number'' enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.FaxEnabled.Hint">
+    <Value>Set if ''Fax number'' is enabled.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.FaxRequired">
+    <Value>''Fax number'' required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.FaxRequired.Hint">
+    <Value>Check if ''Fax number'' is required.</Value>
   </LocaleResource>
 </Language>
 '
@@ -1543,4 +1651,97 @@ WHERE [SubjectToAcl] IS NULL
 GO
 
 ALTER TABLE [Category] ALTER COLUMN [SubjectToAcl] bit NOT NULL
+GO
+
+
+--address form fields
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'addresssettings.companyenabled')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'addresssettings.companyenabled', N'true')
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'addresssettings.streetaddressenabled')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'addresssettings.streetaddressenabled', N'true')
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'addresssettings.streetaddressrequired')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'addresssettings.streetaddressrequired', N'true')
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'addresssettings.streetaddress2enabled')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'addresssettings.streetaddress2enabled', N'true')
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'addresssettings.zippostalcodeenabled')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'addresssettings.zippostalcodeenabled', N'true')
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'addresssettings.zippostalcoderequired')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'addresssettings.zippostalcoderequired', N'true')
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'addresssettings.cityenabled')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'addresssettings.cityenabled', N'true')
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'addresssettings.cityrequired')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'addresssettings.cityrequired', N'true')
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'addresssettings.countryenabled')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'addresssettings.countryenabled', N'true')
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'addresssettings.stateprovinceenabled')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'addresssettings.stateprovinceenabled', N'true')
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'addresssettings.phoneenabled')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'addresssettings.phoneenabled', N'true')
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'addresssettings.phonerequired')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'addresssettings.phonerequired', N'true')
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'addresssettings.faxenabled')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'addresssettings.faxenabled', N'true')
+END
 GO

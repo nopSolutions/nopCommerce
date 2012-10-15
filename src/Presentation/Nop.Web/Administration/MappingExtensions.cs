@@ -874,6 +874,18 @@ namespace Nop.Admin
         {
             return Mapper.Map(model, destination);
         }
+        public static CustomerUserSettingsModel.AddressSettingsModel ToModel(this AddressSettings entity)
+        {
+            return Mapper.Map<AddressSettings, CustomerUserSettingsModel.AddressSettingsModel>(entity);
+        }
+        public static AddressSettings ToEntity(this CustomerUserSettingsModel.AddressSettingsModel model)
+        {
+            return Mapper.Map<CustomerUserSettingsModel.AddressSettingsModel, AddressSettings>(model);
+        }
+        public static AddressSettings ToEntity(this CustomerUserSettingsModel.AddressSettingsModel model, AddressSettings destination)
+        {
+            return Mapper.Map(model, destination);
+        }
         #endregion
 
         #region Plugins

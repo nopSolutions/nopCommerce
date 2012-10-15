@@ -514,6 +514,8 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.DownloadableProductsValidateUser, mo => mo.Ignore())
                 .ForMember(dest => dest.OnlineCustomerMinutes, mo => mo.Ignore())
                 .ForMember(dest => dest.StoreLastVisitedPage, mo => mo.Ignore());
+            Mapper.CreateMap<AddressSettings,  CustomerUserSettingsModel.AddressSettingsModel>();
+            Mapper.CreateMap<CustomerUserSettingsModel.AddressSettingsModel, AddressSettings>();
         }
         
         public int Order

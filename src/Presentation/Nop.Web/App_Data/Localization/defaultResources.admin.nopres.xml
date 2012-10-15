@@ -3880,13 +3880,149 @@
                                     <LocaleResource Name="CustomerSettings">
                                         <Value>Customer settings</Value>
                                     </LocaleResource>
-                                      <LocaleResource Name="FormFields">
-                                        <Value>Customer form fields</Value>
-                                        <Children>
-                                            <LocaleResource Name="Description">
-                                                <Value>You can create and manage the customer form fields available during registration below.</Value>
+                                    <LocaleResource Name="CustomerFormFields">
+                                      <Value>Customer form fields</Value>
+                                      <Children>
+                                        <LocaleResource Name="Description">
+                                          <Value>You can create and manage the customer form fields available during registration below.</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="AddressFormFields">
+                                      <Value>Addess form fields</Value>
+                                      <Children>
+                                        <LocaleResource Name="Description">
+                                          <Value>You can create and manage the address form fields available during checkout.</Value>
+                                        </LocaleResource>
+                                        <LocaleResource Name="CompanyEnabled">
+                                          <Value>'Company' enabled</Value>
+                                          <Children>
+                                            <LocaleResource Name="Hint">
+                                              <Value>Set if 'Company' is enabled.</Value>
                                             </LocaleResource>
-                                        </Children>
+                                          </Children>
+                                        </LocaleResource>
+                                        <LocaleResource Name="CompanyRequired">
+                                          <Value>'Company' required</Value>
+                                          <Children>
+                                            <LocaleResource Name="Hint">
+                                              <Value>Check if 'Company' is required.</Value>
+                                            </LocaleResource>
+                                          </Children>
+                                        </LocaleResource>
+                                        <LocaleResource Name="StreetAddressEnabled">
+                                          <Value>'Street address' enabled</Value>
+                                          <Children>
+                                            <LocaleResource Name="Hint">
+                                              <Value>Set if 'Street address' is enabled.</Value>
+                                            </LocaleResource>
+                                          </Children>
+                                        </LocaleResource>
+                                        <LocaleResource Name="StreetAddressRequired">
+                                          <Value>'Street address' required</Value>
+                                          <Children>
+                                            <LocaleResource Name="Hint">
+                                              <Value>Check if 'Street address' is required.</Value>
+                                            </LocaleResource>
+                                          </Children>
+                                        </LocaleResource>
+                                        <LocaleResource Name="StreetAddress2Enabled">
+                                          <Value>'Street address 2' enabled</Value>
+                                          <Children>
+                                            <LocaleResource Name="Hint">
+                                              <Value>Set if 'Street address 2' is enabled.</Value>
+                                            </LocaleResource>
+                                          </Children>
+                                        </LocaleResource>
+                                        <LocaleResource Name="StreetAddress2Required">
+                                          <Value>'Street address 2' required</Value>
+                                          <Children>
+                                            <LocaleResource Name="Hint">
+                                              <Value>Check if 'Street address 2' is required.</Value>
+                                            </LocaleResource>
+                                          </Children>
+                                        </LocaleResource>
+                                        <LocaleResource Name="ZipPostalCodeEnabled">
+                                          <Value>'Zip / postal code' enabled</Value>
+                                          <Children>
+                                            <LocaleResource Name="Hint">
+                                              <Value>Set if 'Zip / postal code' is enabled.</Value>
+                                            </LocaleResource>
+                                          </Children>
+                                        </LocaleResource>
+                                        <LocaleResource Name="ZipPostalCodeRequired">
+                                          <Value>'Zip / postal code' required</Value>
+                                          <Children>
+                                            <LocaleResource Name="Hint">
+                                              <Value>Check if 'Zip / postal code' is required.</Value>
+                                            </LocaleResource>
+                                          </Children>
+                                        </LocaleResource>
+                                        <LocaleResource Name="CityEnabled">
+                                          <Value>'City' enabled</Value>
+                                          <Children>
+                                            <LocaleResource Name="Hint">
+                                              <Value>Set if 'City' is enabled.</Value>
+                                            </LocaleResource>
+                                          </Children>
+                                        </LocaleResource>
+                                        <LocaleResource Name="CityRequired">
+                                          <Value>'City' required</Value>
+                                          <Children>
+                                            <LocaleResource Name="Hint">
+                                              <Value>Check if 'City' is required.</Value>
+                                            </LocaleResource>
+                                          </Children>
+                                        </LocaleResource>
+                                        <LocaleResource Name="CountryEnabled">
+                                          <Value>'Country' enabled</Value>
+                                          <Children>
+                                            <LocaleResource Name="Hint">
+                                              <Value>Set if 'Country' is enabled.</Value>
+                                            </LocaleResource>
+                                          </Children>
+                                        </LocaleResource>
+                                        <LocaleResource Name="StateProvinceEnabled">
+                                          <Value>'State/province' enabled</Value>
+                                          <Children>
+                                            <LocaleResource Name="Hint">
+                                              <Value>Set if 'State/province' is enabled.</Value>
+                                            </LocaleResource>
+                                          </Children>
+                                        </LocaleResource>
+                                        <LocaleResource Name="PhoneEnabled">
+                                          <Value>'Phone number' enabled</Value>
+                                          <Children>
+                                            <LocaleResource Name="Hint">
+                                              <Value>Set if 'Phone number' is enabled.</Value>
+                                            </LocaleResource>
+                                          </Children>
+                                        </LocaleResource>
+                                        <LocaleResource Name="PhoneRequired">
+                                          <Value>'Phone number' required</Value>
+                                          <Children>
+                                            <LocaleResource Name="Hint">
+                                              <Value>Check if 'Phone number' is required.</Value>
+                                            </LocaleResource>
+                                          </Children>
+                                        </LocaleResource>
+                                        <LocaleResource Name="FaxEnabled">
+                                          <Value>'Fax number' enabled</Value>
+                                          <Children>
+                                            <LocaleResource Name="Hint">
+                                              <Value>Set if 'Fax number' is enabled.</Value>
+                                            </LocaleResource>
+                                          </Children>
+                                        </LocaleResource>
+                                        <LocaleResource Name="FaxRequired">
+                                          <Value>'Fax number' required</Value>
+                                          <Children>
+                                            <LocaleResource Name="Hint">
+                                              <Value>Check if 'Fax number' is required.</Value>
+                                            </LocaleResource>
+                                          </Children>
+                                        </LocaleResource>
+                                      </Children>
                                     </LocaleResource>
                                     <LocaleResource Name="DateTimeSettings">
                                         <Value>DateTime settings</Value>
