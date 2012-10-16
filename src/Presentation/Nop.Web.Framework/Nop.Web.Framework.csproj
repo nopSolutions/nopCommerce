@@ -118,6 +118,7 @@
     <Compile Include="Controllers\ParameterBasedOnFormNameAndValueAttribute.cs" />
     <Compile Include="LanguageSeoCodeAttribute.cs" />
     <Compile Include="Events\AdminTabStripCreated.cs" />
+    <Compile Include="Mvc\CommaSeparatedModelBinder.cs" />
     <Compile Include="PublicStoreAllowNavigationAttribute.cs" />
     <Compile Include="Mvc\Routes\GuidConstraint.cs" />
     <Compile Include="Security\AdminValidateIpAddressAttribute.cs" />

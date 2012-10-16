@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Web.ModelBinding;
 using System.Web.Mvc;
 using Nop.Admin.Models.Common;
 using Nop.Admin.Models.Customers;
@@ -283,8 +284,10 @@ namespace Nop.Admin.Controllers
         }
 
         [HttpPost, GridAction(EnableCustomBinding = true)]
-        public ActionResult CustomerList(GridCommand command, CustomerListModel model)
+        public ActionResult CustomerList(GridCommand command, CustomerListModel model,
+            [ModelBinderAttribute(typeof(CommaSeparatedModelBinder))] int[] searchCustomerRoleIds)
         {
+            //we use own own binder for searchCustomerRoleIds property 
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
                 return AccessDeniedView();
 
@@ -296,7 +299,7 @@ namespace Nop.Admin.Controllers
                 searchMonthOfBirth = Convert.ToInt32(model.SearchMonthOfBirth);
 
             var customers = _customerService.GetAllCustomers(null, null,
-                model.SearchCustomerRoleIds, model.SearchEmail, model.SearchUsername,
+                searchCustomerRoleIds, model.SearchEmail, model.SearchUsername,
                 model.SearchFirstName, model.SearchLastName,
                 searchDayOfBirth, searchMonthOfBirth,
                 model.SearchCompany, model.SearchPhone, model.SearchZipPostalCode,
