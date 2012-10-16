@@ -47,15 +47,11 @@ namespace Nop.Web.Controllers
             if (String.IsNullOrEmpty(countryId))
                 throw new ArgumentNullException("countryId");
             
-            var country = _countryService.GetCountryById(Convert.ToInt32(countryId));
-            if (country == null)
-                //no country found
-                return Json(null, JsonRequestBehavior.AllowGet);
-
             string cacheKey = string.Format(ModelCacheEventConsumer.STATEPROVINCES_BY_COUNTRY_MODEL_KEY, countryId, addEmptyStateIfRequired, _workContext.WorkingLanguage.Id);
             var cacheModel = _cacheManager.Get(cacheKey, () =>
             {
-                var states = _stateProvinceService.GetStateProvincesByCountryId(country.Id).ToList();
+                var country = _countryService.GetCountryById(Convert.ToInt32(countryId));
+                var states = _stateProvinceService.GetStateProvincesByCountryId(country != null ? country.Id : 0).ToList();
                 var result = (from s in states
                               select new { id = s.Id, name = s.GetLocalized(x => x.Name) })
                               .ToList();
