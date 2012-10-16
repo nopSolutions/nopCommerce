@@ -273,15 +273,10 @@ namespace Nop.Admin.Controllers
             }
             else
                 model.ShippingOriginAddress.AvailableStates.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "0" });
-            model.ShippingOriginAddress.FirstNameDisabled = true;
-            model.ShippingOriginAddress.LastNameDisabled = true;
-            model.ShippingOriginAddress.EmailDisabled = true;
-            model.ShippingOriginAddress.CompanyDisabled = true;
-            model.ShippingOriginAddress.CityDisabled = true;
-            model.ShippingOriginAddress.Address1Disabled = true;
-            model.ShippingOriginAddress.Address2Disabled = true;
-            model.ShippingOriginAddress.PhoneNumberDisabled = true;
-            model.ShippingOriginAddress.FaxNumberDisabled = true;
+            model.ShippingOriginAddress.CountryEnabled = true;
+            model.ShippingOriginAddress.StateProvinceEnabled = true;
+            model.ShippingOriginAddress.ZipPostalCodeEnabled = true;
+            model.ShippingOriginAddress.ZipPostalCodeRequired = true;
 
             return View(model);
         }
@@ -361,15 +356,10 @@ namespace Nop.Admin.Controllers
             }
             else
                 model.DefaultTaxAddress.AvailableStates.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.OtherNonUS"), Value = "0" });
-            model.DefaultTaxAddress.FirstNameDisabled = true;
-            model.DefaultTaxAddress.LastNameDisabled = true;
-            model.DefaultTaxAddress.EmailDisabled = true;
-            model.DefaultTaxAddress.CompanyDisabled = true;
-            model.DefaultTaxAddress.CityDisabled = true;
-            model.DefaultTaxAddress.Address1Disabled = true;
-            model.DefaultTaxAddress.Address2Disabled = true;
-            model.DefaultTaxAddress.PhoneNumberDisabled = true;
-            model.DefaultTaxAddress.FaxNumberDisabled = true;
+            model.DefaultTaxAddress.CountryEnabled = true;
+            model.DefaultTaxAddress.StateProvinceEnabled = true;
+            model.DefaultTaxAddress.ZipPostalCodeEnabled = true;
+            model.DefaultTaxAddress.ZipPostalCodeRequired = true;
 
             return View(model);
         }

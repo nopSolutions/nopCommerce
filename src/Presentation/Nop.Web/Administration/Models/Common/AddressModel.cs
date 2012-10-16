@@ -80,17 +80,27 @@ namespace Nop.Admin.Models.Common
 
 
 
-        public bool FirstNameDisabled { get; set; }
-        public bool LastNameDisabled { get; set; }
-        public bool EmailDisabled { get; set; }
-        public bool CompanyDisabled { get; set; }
-        public bool CountryDisabled { get; set; }
-        public bool StateProvinceDisabled { get; set; }
-        public bool CityDisabled { get; set; }
-        public bool Address1Disabled { get; set; }
-        public bool Address2Disabled { get; set; }
-        public bool ZipPostalCodeDisabled { get; set; }
-        public bool PhoneNumberDisabled { get; set; }
-        public bool FaxNumberDisabled { get; set; }
+        public bool FirstNameEnabled { get; set; }
+        public bool FirstNameRequired { get; set; }
+        public bool LastNameEnabled { get; set; }
+        public bool LastNameRequired { get; set; }
+        public bool EmailEnabled { get; set; }
+        public bool EmailRequired { get; set; }
+        public bool CompanyEnabled { get; set; }
+        public bool CompanyRequired { get; set; }
+        public bool CountryEnabled { get; set; }
+        public bool StateProvinceEnabled { get; set; }
+        public bool CityEnabled { get; set; }
+        public bool CityRequired { get; set; }
+        public bool StreetAddressEnabled { get; set; }
+        public bool StreetAddressRequired { get; set; }
+        public bool StreetAddress2Enabled { get; set; }
+        public bool StreetAddress2Required { get; set; }
+        public bool ZipPostalCodeEnabled { get; set; }
+        public bool ZipPostalCodeRequired { get; set; }
+        public bool PhoneEnabled { get; set; }
+        public bool PhoneRequired { get; set; }
+        public bool FaxEnabled { get; set; }
+        public bool FaxRequired { get; set; }
     }
 }

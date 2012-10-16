@@ -1,43 +1,56 @@
 ﻿@model AddressModel
 
-<script type="text/javascript">
-     $(function() {
+@if (Model.CountryEnabled && Model.StateProvinceEnabled)
+{
+    <script type="text/javascript">
+        $(function() {
             $("#@Html.FieldIdFor(model => model.CountryId)").change(function() {
                 var selectedItem = $(this).val();
                 var ddlStates = $("#@Html.FieldIdFor(model => model.StateProvinceId)")
                 $.ajax({
-                    cache:false,
+                    cache: false,
                     type: "GET",
                     url: "@(Url.Action("GetStatesByCountryId", "Country"))",
                     data: { "countryId": selectedItem, "addEmptyStateIfRequired": "true" },
-                    success: function (data) {
+                    success: function(data) {
                         ddlStates.html('');
                         $.each(data, function(id, option) {
                             ddlStates.append($('<option></option>').val(option.id).html(option.name));
                         });
                     },
-                    error:function (xhr, ajaxOptions, thrownError){
+                    error: function(xhr, ajaxOptions, thrownError) {
                         alert('Failed to retrieve states.');
-                    }  
+                    }
                 });
             });
         });
-</script>
+    </script>
+}
 @Html.HiddenFor(model => model.Id)
-@Html.HiddenFor(model => model.FirstNameDisabled)
-@Html.HiddenFor(model => model.LastNameDisabled)
-@Html.HiddenFor(model => model.EmailDisabled)
-@Html.HiddenFor(model => model.CompanyDisabled)
-@Html.HiddenFor(model => model.CountryDisabled)
-@Html.HiddenFor(model => model.StateProvinceDisabled)
-@Html.HiddenFor(model => model.CityDisabled)
-@Html.HiddenFor(model => model.Address1Disabled)
-@Html.HiddenFor(model => model.Address2Disabled)
-@Html.HiddenFor(model => model.ZipPostalCodeDisabled)
-@Html.HiddenFor(model => model.PhoneNumberDisabled)
-@Html.HiddenFor(model => model.FaxNumberDisabled)
+@Html.HiddenFor(model => model.FirstNameEnabled)
+@Html.HiddenFor(model => model.FirstNameRequired)
+@Html.HiddenFor(model => model.LastNameEnabled)
+@Html.HiddenFor(model => model.LastNameRequired)
+@Html.HiddenFor(model => model.EmailEnabled)
+@Html.HiddenFor(model => model.EmailRequired)
+@Html.HiddenFor(model => model.CompanyEnabled)
+@Html.HiddenFor(model => model.CompanyRequired)
+@Html.HiddenFor(model => model.CountryEnabled)
+@Html.HiddenFor(model => model.StateProvinceEnabled)
+@Html.HiddenFor(model => model.CityEnabled)
+@Html.HiddenFor(model => model.CityRequired)
+@Html.HiddenFor(model => model.StreetAddressEnabled)
+@Html.HiddenFor(model => model.StreetAddressRequired)
+@Html.HiddenFor(model => model.StreetAddress2Enabled)
+@Html.HiddenFor(model => model.StreetAddress2Required)
+@Html.HiddenFor(model => model.ZipPostalCodeEnabled)
+@Html.HiddenFor(model => model.ZipPostalCodeRequired)
+@Html.HiddenFor(model => model.PhoneEnabled)
+@Html.HiddenFor(model => model.PhoneRequired)
+@Html.HiddenFor(model => model.FaxEnabled)
+@Html.HiddenFor(model => model.FaxRequired)
 <table>
-@if (!Model.FirstNameDisabled)
+@if (Model.FirstNameEnabled)
 {
 <tr>
     <td class="adminTitle">
@@ -49,7 +62,7 @@
     </td>
 </tr>
 }
-@if (!Model.LastNameDisabled)
+@if (Model.LastNameEnabled)
 {
 <tr>
     <td class="adminTitle">
@@ -61,7 +74,7 @@
     </td>
 </tr>
 }
-@if (!Model.EmailDisabled)
+@if (Model.EmailEnabled)
 {
 <tr>
     <td class="adminTitle">
@@ -73,7 +86,7 @@
     </td>
 </tr>
 }
-@if (!Model.CompanyDisabled)
+@if (Model.CompanyEnabled)
 {
 <tr>
     <td class="adminTitle">
@@ -85,7 +98,7 @@
     </td>
 </tr>
 }
-@if (!Model.CountryDisabled)
+@if (Model.CountryEnabled)
 {
 <tr>
     <td class="adminTitle">
@@ -97,7 +110,7 @@
     </td>
 </tr>
 }
-@if (!Model.StateProvinceDisabled)
+@if (Model.CountryEnabled && Model.StateProvinceEnabled)
 {
 <tr>
     <td class="adminTitle">
@@ -109,7 +122,7 @@
     </td>
 </tr>
 }
-@if (!Model.CityDisabled)
+@if (Model.CityEnabled)
 {
 <tr>
     <td class="adminTitle">
@@ -121,7 +134,7 @@
     </td>
 </tr>
 }
-@if (!Model.Address1Disabled)
+@if (Model.StreetAddressEnabled)
 {
 <tr>
     <td class="adminTitle">
@@ -133,7 +146,7 @@
     </td>
 </tr>
 }
-@if (!Model.Address2Disabled)
+@if (Model.StreetAddress2Enabled)
 {
 <tr>
     <td class="adminTitle">
@@ -145,7 +158,7 @@
     </td>
 </tr>
 }
-@if (!Model.ZipPostalCodeDisabled)
+@if (Model.ZipPostalCodeEnabled)
 {
 <tr>
     <td class="adminTitle">
@@ -157,7 +170,7 @@
     </td>
 </tr>
 }
-@if (!Model.PhoneNumberDisabled)
+@if (Model.PhoneEnabled)
 {
 <tr>
     <td class="adminTitle">
@@ -169,7 +182,7 @@
     </td>
 </tr>
 }
-@if (!Model.FaxNumberDisabled)
+@if (Model.FaxEnabled)
 {
 <tr>
     <td class="adminTitle">

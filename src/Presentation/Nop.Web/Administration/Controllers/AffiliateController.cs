@@ -5,6 +5,7 @@ using System.Web.Mvc;
 using Nop.Admin.Models.Affiliates;
 using Nop.Core;
 using Nop.Core.Domain.Affiliates;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Directory;
 using Nop.Services.Affiliates;
 using Nop.Services.Catalog;
@@ -81,6 +82,26 @@ namespace Nop.Admin.Controllers
                     model.Address = affiliate.Address.ToModel();
                 }
             }
+
+            model.Address.FirstNameEnabled = true;
+            model.Address.FirstNameRequired = true;
+            model.Address.LastNameEnabled = true;
+            model.Address.LastNameRequired = true;
+            model.Address.EmailEnabled = true;
+            model.Address.EmailRequired = true;
+            model.Address.CompanyEnabled = true;
+            model.Address.CountryEnabled = true;
+            model.Address.StateProvinceEnabled = true;
+            model.Address.CityEnabled = true;
+            model.Address.CityRequired = true;
+            model.Address.StreetAddressEnabled = true;
+            model.Address.StreetAddressRequired = true;
+            model.Address.StreetAddress2Enabled = true;
+            model.Address.ZipPostalCodeEnabled = true;
+            model.Address.ZipPostalCodeRequired = true;
+            model.Address.PhoneEnabled = true;
+            model.Address.PhoneRequired = true;
+            model.Address.FaxEnabled = true;
 
             //address
             model.Address.AvailableCountries.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });

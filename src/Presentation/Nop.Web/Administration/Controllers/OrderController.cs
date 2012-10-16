@@ -71,6 +71,7 @@ namespace Nop.Admin.Controllers
         private readonly TaxSettings _taxSettings;
         private readonly MeasureSettings _measureSettings;
         private readonly PdfSettings _pdfSettings;
+        private readonly AddressSettings _addressSettings;
         
         #endregion
 
@@ -92,7 +93,7 @@ namespace Nop.Admin.Controllers
             IGiftCardService giftCardService, IDownloadService downloadService,
             IShipmentService shipmentService,
             CatalogSettings catalogSettings, CurrencySettings currencySettings, TaxSettings taxSettings,
-            MeasureSettings measureSettings, PdfSettings pdfSettings)
+            MeasureSettings measureSettings, PdfSettings pdfSettings, AddressSettings addressSettings)
 		{
             this._orderService = orderService;
             this._orderReportService = orderReportService;
@@ -128,6 +129,7 @@ namespace Nop.Admin.Controllers
             this._taxSettings = taxSettings;
             this._measureSettings = measureSettings;
             this._pdfSettings = pdfSettings;
+            this._addressSettings = addressSettings;
 		}
         
         #endregion
@@ -313,10 +315,28 @@ namespace Nop.Admin.Controllers
             #region Billing & shipping info
 
             model.BillingAddress = order.BillingAddress.ToModel();
-            if (order.BillingAddress.Country != null)
-                model.BillingAddress.CountryName = order.BillingAddress.Country.Name;
-            if (order.BillingAddress.StateProvince != null)
-                model.BillingAddress.StateProvinceName = order.BillingAddress.StateProvince.Name;
+            model.BillingAddress.FirstNameEnabled = true;
+            model.BillingAddress.FirstNameRequired = true;
+            model.BillingAddress.LastNameEnabled = true;
+            model.BillingAddress.LastNameRequired = true;
+            model.BillingAddress.EmailEnabled = true;
+            model.BillingAddress.EmailRequired = true;
+            model.BillingAddress.CompanyEnabled = _addressSettings.CompanyEnabled;
+            model.BillingAddress.CompanyRequired = _addressSettings.CompanyRequired;
+            model.BillingAddress.CountryEnabled = _addressSettings.CountryEnabled;
+            model.BillingAddress.StateProvinceEnabled = _addressSettings.StateProvinceEnabled;
+            model.BillingAddress.CityEnabled = _addressSettings.CityEnabled;
+            model.BillingAddress.CityRequired = _addressSettings.CityRequired;
+            model.BillingAddress.StreetAddressEnabled = _addressSettings.StreetAddressEnabled;
+            model.BillingAddress.StreetAddressRequired = _addressSettings.StreetAddressRequired;
+            model.BillingAddress.StreetAddress2Enabled = _addressSettings.StreetAddress2Enabled;
+            model.BillingAddress.StreetAddress2Required = _addressSettings.StreetAddress2Required;
+            model.BillingAddress.ZipPostalCodeEnabled = _addressSettings.ZipPostalCodeEnabled;
+            model.BillingAddress.ZipPostalCodeRequired = _addressSettings.ZipPostalCodeRequired;
+            model.BillingAddress.PhoneEnabled = _addressSettings.PhoneEnabled;
+            model.BillingAddress.PhoneRequired = _addressSettings.PhoneRequired;
+            model.BillingAddress.FaxEnabled = _addressSettings.FaxEnabled;
+            model.BillingAddress.FaxRequired = _addressSettings.FaxRequired;
 
             model.ShippingStatus = order.ShippingStatus.GetLocalizedEnum(_localizationService, _workContext); ;
             if (order.ShippingStatus != ShippingStatus.ShippingNotRequired)
@@ -324,10 +344,28 @@ namespace Nop.Admin.Controllers
                 model.IsShippable = true;
 
                 model.ShippingAddress = order.ShippingAddress.ToModel();
-                if (order.ShippingAddress.Country != null)
-                    model.ShippingAddress.CountryName = order.ShippingAddress.Country.Name;
-                if (order.ShippingAddress.StateProvince != null)
-                    model.ShippingAddress.StateProvinceName = order.ShippingAddress.StateProvince.Name;
+                model.ShippingAddress.FirstNameEnabled = true;
+                model.ShippingAddress.FirstNameRequired = true;
+                model.ShippingAddress.LastNameEnabled = true;
+                model.ShippingAddress.LastNameRequired = true;
+                model.ShippingAddress.EmailEnabled = true;
+                model.ShippingAddress.EmailRequired = true;
+                model.ShippingAddress.CompanyEnabled = _addressSettings.CompanyEnabled;
+                model.ShippingAddress.CompanyRequired = _addressSettings.CompanyRequired;
+                model.ShippingAddress.CountryEnabled = _addressSettings.CountryEnabled;
+                model.ShippingAddress.StateProvinceEnabled = _addressSettings.StateProvinceEnabled;
+                model.ShippingAddress.CityEnabled = _addressSettings.CityEnabled;
+                model.ShippingAddress.CityRequired = _addressSettings.CityRequired;
+                model.ShippingAddress.StreetAddressEnabled = _addressSettings.StreetAddressEnabled;
+                model.ShippingAddress.StreetAddressRequired = _addressSettings.StreetAddressRequired;
+                model.ShippingAddress.StreetAddress2Enabled = _addressSettings.StreetAddress2Enabled;
+                model.ShippingAddress.StreetAddress2Required = _addressSettings.StreetAddress2Required;
+                model.ShippingAddress.ZipPostalCodeEnabled = _addressSettings.ZipPostalCodeEnabled;
+                model.ShippingAddress.ZipPostalCodeRequired = _addressSettings.ZipPostalCodeRequired;
+                model.ShippingAddress.PhoneEnabled = _addressSettings.PhoneEnabled;
+                model.ShippingAddress.PhoneRequired = _addressSettings.PhoneRequired;
+                model.ShippingAddress.FaxEnabled = _addressSettings.FaxEnabled;
+                model.ShippingAddress.FaxRequired = _addressSettings.FaxRequired;
 
                 model.ShippingMethod = order.ShippingMethod;
 
@@ -1703,6 +1741,29 @@ namespace Nop.Admin.Controllers
             var model = new OrderAddressModel();
             model.OrderId = orderId;
             model.Address = address.ToModel();
+            model.Address.FirstNameEnabled = true;
+            model.Address.FirstNameRequired = true;
+            model.Address.LastNameEnabled = true;
+            model.Address.LastNameRequired = true;
+            model.Address.EmailEnabled = true;
+            model.Address.EmailRequired = true;
+            model.Address.CompanyEnabled = _addressSettings.CompanyEnabled;
+            model.Address.CompanyRequired = _addressSettings.CompanyRequired;
+            model.Address.CountryEnabled = _addressSettings.CountryEnabled;
+            model.Address.StateProvinceEnabled = _addressSettings.StateProvinceEnabled;
+            model.Address.CityEnabled = _addressSettings.CityEnabled;
+            model.Address.CityRequired = _addressSettings.CityRequired;
+            model.Address.StreetAddressEnabled = _addressSettings.StreetAddressEnabled;
+            model.Address.StreetAddressRequired = _addressSettings.StreetAddressRequired;
+            model.Address.StreetAddress2Enabled = _addressSettings.StreetAddress2Enabled;
+            model.Address.StreetAddress2Required = _addressSettings.StreetAddress2Required;
+            model.Address.ZipPostalCodeEnabled = _addressSettings.ZipPostalCodeEnabled;
+            model.Address.ZipPostalCodeRequired = _addressSettings.ZipPostalCodeRequired;
+            model.Address.PhoneEnabled = _addressSettings.PhoneEnabled;
+            model.Address.PhoneRequired = _addressSettings.PhoneRequired;
+            model.Address.FaxEnabled = _addressSettings.FaxEnabled;
+            model.Address.FaxRequired = _addressSettings.FaxRequired;
+
             //countries
             model.Address.AvailableCountries.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
             foreach (var c in _countryService.GetAllCountries(true))
@@ -1746,6 +1807,28 @@ namespace Nop.Admin.Controllers
             //If we got this far, something failed, redisplay form
             model.OrderId = order.Id;
             model.Address = address.ToModel();
+            model.Address.FirstNameEnabled = true;
+            model.Address.FirstNameRequired = true;
+            model.Address.LastNameEnabled = true;
+            model.Address.LastNameRequired = true;
+            model.Address.EmailEnabled = true;
+            model.Address.EmailRequired = true;
+            model.Address.CompanyEnabled = _addressSettings.CompanyEnabled;
+            model.Address.CompanyRequired = _addressSettings.CompanyRequired;
+            model.Address.CountryEnabled = _addressSettings.CountryEnabled;
+            model.Address.StateProvinceEnabled = _addressSettings.StateProvinceEnabled;
+            model.Address.CityEnabled = _addressSettings.CityEnabled;
+            model.Address.CityRequired = _addressSettings.CityRequired;
+            model.Address.StreetAddressEnabled = _addressSettings.StreetAddressEnabled;
+            model.Address.StreetAddressRequired = _addressSettings.StreetAddressRequired;
+            model.Address.StreetAddress2Enabled = _addressSettings.StreetAddress2Enabled;
+            model.Address.StreetAddress2Required = _addressSettings.StreetAddress2Required;
+            model.Address.ZipPostalCodeEnabled = _addressSettings.ZipPostalCodeEnabled;
+            model.Address.ZipPostalCodeRequired = _addressSettings.ZipPostalCodeRequired;
+            model.Address.PhoneEnabled = _addressSettings.PhoneEnabled;
+            model.Address.PhoneRequired = _addressSettings.PhoneRequired;
+            model.Address.FaxEnabled = _addressSettings.FaxEnabled;
+            model.Address.FaxRequired = _addressSettings.FaxRequired;
             //countries
             model.Address.AvailableCountries.Add(new SelectListItem() { Text = _localizationService.GetResource("Admin.Address.SelectCountry"), Value = "0" });
             foreach (var c in _countryService.GetAllCountries(true))
