@@ -13,6 +13,7 @@ using GCheckout.Checkout;
 using GCheckout.Util;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Discounts;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
@@ -43,6 +44,7 @@ namespace Nop.Plugin.Payments.GoogleCheckout
         private readonly IWebHelper _webHelper;
         private readonly ITaxService _taxService;
         private readonly IShippingService _shippingService;
+        private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly IProductAttributeFormatter _productAttributeFormatter;
         private readonly IPriceCalculationService _priceCalculationService;
         private readonly IWorkContext _workContext;
@@ -61,7 +63,9 @@ namespace Nop.Plugin.Payments.GoogleCheckout
 
         public GoogleCheckoutPaymentProcessor(ISettingService settingService, 
             IWebHelper webHelper, ITaxService taxService,
-            IShippingService shippingService, IProductAttributeFormatter productAttributeFormatter,
+            IShippingService shippingService, 
+            IOrderTotalCalculationService orderTotalCalculationService,
+            IProductAttributeFormatter productAttributeFormatter,
             IPriceCalculationService priceCalculationService, IWorkContext workContext,
             ICustomerService customerService, IGenericAttributeService genericAttributeService, 
             ICountryService countryService,
@@ -72,6 +76,7 @@ namespace Nop.Plugin.Payments.GoogleCheckout
             this._webHelper = webHelper;
             this._taxService = taxService;
             this._shippingService = shippingService;
+            this._orderTotalCalculationService = orderTotalCalculationService;
             this._productAttributeFormatter = productAttributeFormatter;
             this._priceCalculationService = priceCalculationService;
             this._workContext = workContext;
@@ -590,7 +595,14 @@ namespace Nop.Plugin.Payments.GoogleCheckout
                 //AddCarrierCalculatedShippingOption
                 var shippingOptions = _shippingService.GetShippingOptions(cart, null);
                 foreach (ShippingOption shippingOption in shippingOptions.ShippingOptions)
-                    req.AddFlatRateShippingMethod(shippingOption.Name, _taxService.GetShippingPrice(shippingOption.Rate, _workContext.CurrentCustomer));
+                {
+                    //adjust rate
+                    Discount appliedDiscount = null;
+                    var shippingTotal = _orderTotalCalculationService.AdjustShippingRate(
+                        shippingOption.Rate, cart, out appliedDiscount);
+                    decimal shippingRateBase = _taxService.GetShippingPrice(shippingTotal, _workContext.CurrentCustomer);
+                    req.AddFlatRateShippingMethod(shippingOption.Name, shippingRateBase);
+                }
             }
 
             //add only US, GB states
