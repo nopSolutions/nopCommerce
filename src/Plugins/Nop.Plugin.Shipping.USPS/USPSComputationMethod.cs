@@ -449,12 +449,8 @@ namespace Nop.Plugin.Shipping.USPS
             int total = girth + length;
             if (total <= 84)
                 return USPSPackageSize.Regular;
-            if ((total > 84) && (total <= 108))
-                return USPSPackageSize.Large;
-            if ((total > 108) && (total <= 130))
-                return USPSPackageSize.Oversize;
-            else
-                throw new NopException("Shipping Error: Package too large.");
+            //else
+            return USPSPackageSize.Large;
         }
 
         private List<ShippingOption> ParseResponse(string response, bool isDomestic, ref string error)

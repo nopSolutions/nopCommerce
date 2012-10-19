@@ -8,6 +8,5 @@ namespace Nop.Plugin.Shipping.USPS.Domain
     {
         Regular,
         Large,
-        Oversize
     }
 }
