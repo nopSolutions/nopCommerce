@@ -8,8 +8,10 @@ using Nop.Admin.Models.Catalog;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Directory;
 using Nop.Services.Catalog;
 using Nop.Services.Common;
+using Nop.Services.Directory;
 using Nop.Services.ExportImport;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -52,6 +54,10 @@ namespace Nop.Admin.Controllers
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IPermissionService _permissionService;
         private readonly IAclService _aclService;
+        private readonly ICurrencyService _currencyService;
+        private readonly CurrencySettings _currencySettings;
+        private readonly IMeasureService _measureService;
+        private readonly MeasureSettings _measureSettings;
         private readonly PdfSettings _pdfSettings;
         private readonly AdminAreaSettings _adminAreaSettings;
 
@@ -71,6 +77,8 @@ namespace Nop.Admin.Controllers
             IExportManager exportManager, IImportManager importManager,
             ICustomerActivityService customerActivityService,
             IPermissionService permissionService, IAclService aclService,
+            ICurrencyService currencyService, CurrencySettings currencySettings,
+            IMeasureService measureService, MeasureSettings measureSettings,
             PdfSettings pdfSettings, AdminAreaSettings adminAreaSettings)
         {
             this._productService = productService;
@@ -94,6 +102,10 @@ namespace Nop.Admin.Controllers
             this._customerActivityService = customerActivityService;
             this._permissionService = permissionService;
             this._aclService = aclService;
+            this._currencyService = currencyService;
+            this._currencySettings = currencySettings;
+            this._measureService = measureService;
+            this._measureSettings = measureSettings;
             this._pdfSettings = pdfSettings;
             this._adminAreaSettings = adminAreaSettings;
         }
@@ -377,6 +389,11 @@ namespace Nop.Admin.Controllers
             model.AvailableTaxCategories.Add(new SelectListItem() { Text = "---", Value = "0" });
             foreach (var tc in taxCategories)
                 model.AvailableTaxCategories.Add(new SelectListItem() { Text = tc.Name, Value = tc.Id.ToString(), Selected = variant != null && !setPredefinedValues && tc.Id == variant.TaxCategoryId });
+
+            model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
+            model.BaseWeightIn = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).Name;
+            model.BaseDimensionIn = _measureService.GetMeasureDimensionById(_measureSettings.BaseDimensionId).Name;
+
 
             if (setPredefinedValues)
             {
