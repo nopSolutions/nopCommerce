@@ -19,81 +19,86 @@ namespace Nop.Services.Shipping
         /// <summary>
         /// Gets or sets a customer
         /// </summary>
-        public Customer Customer { get; set; }
+        public virtual Customer Customer { get; set; }
 
         /// <summary>
         /// Gets or sets a shopping cart items
         /// </summary>
-        public IList<ShoppingCartItem> Items { get; set; }
+        public virtual IList<ShoppingCartItem> Items { get; set; }
 
         /// <summary>
         /// Gets or sets a shipping address
         /// </summary>
-        public Address ShippingAddress { get; set; }
+        public virtual Address ShippingAddress { get; set; }
 
         /// <summary>
         /// Shipped from country
         /// </summary>
-        public Country CountryFrom { get; set; }
+        public virtual Country CountryFrom { get; set; }
 
         /// <summary>
         /// Shipped from state/province
         /// </summary>
-        public StateProvince StateProvinceFrom { get; set; }
+        public virtual StateProvince StateProvinceFrom { get; set; }
 
         /// <summary>
         /// Shipped from zip/postal code
         /// </summary>
-        public string ZipPostalCodeFrom { get; set; }
+        public virtual string ZipPostalCodeFrom { get; set; }
 
         #region Methods
+        /// <summary>
+        /// Get dimensions
+        /// </summary>
+        /// <param name="width">Width</param>
+        /// <param name="length">Length</param>
+        /// <param name="height">Height</param>
+        public virtual void GetDimensions(out decimal width, out decimal length, out decimal height)
+        {
+            width = length = height = decimal.Zero;
+            foreach (var shoppingCartItem in this.Items)
+            {
+                var productVariant = shoppingCartItem.ProductVariant;
+                if (productVariant != null)
+                {
+                    width += productVariant.Width * shoppingCartItem.Quantity;
+                    length += productVariant.Length * shoppingCartItem.Quantity;
+                    height += productVariant.Height * shoppingCartItem.Quantity;
+                }
+            }
+        }
 
         /// <summary>
         /// Gets total width
         /// </summary>
         /// <returns>Total width</returns>
-        public decimal GetTotalWidth()
+        public virtual decimal GetTotalWidth()
         {
-            decimal totalWidth = decimal.Zero;
-            foreach (var shoppingCartItem in this.Items)
-            {
-                var productVariant = shoppingCartItem.ProductVariant;
-                if (productVariant != null)
-                    totalWidth += productVariant.Width * shoppingCartItem.Quantity;
-            }
-            return totalWidth;
+            decimal length, width, height = 0;
+            GetDimensions(out width, out length, out height);
+            return width;
         }
 
         /// <summary>
         /// Gets total length
         /// </summary>
         /// <returns>Total length</returns>
-        public decimal GetTotalLength()
+        public virtual decimal GetTotalLength()
         {
-            decimal totalLength = decimal.Zero;
-            foreach (var shoppingCartItem in this.Items)
-            {
-                var productVariant = shoppingCartItem.ProductVariant;
-                if (productVariant != null)
-                    totalLength += productVariant.Length * shoppingCartItem.Quantity;
-            }
-            return totalLength;
+            decimal length, width, height = 0;
+            GetDimensions(out width, out length, out height);
+            return length;
         }
 
         /// <summary>
         /// Gets total height
         /// </summary>
         /// <returns>Total height</returns>
-        public decimal GetTotalHeight()
+        public virtual decimal GetTotalHeight()
         {
-            decimal totalHeight = decimal.Zero;
-            foreach (var shoppingCartItem in this.Items)
-            {
-                var productVariant = shoppingCartItem.ProductVariant;
-                if (productVariant != null)
-                    totalHeight += productVariant.Height * shoppingCartItem.Quantity;
-            }
-            return totalHeight;
+            decimal length, width, height = 0;
+            GetDimensions(out width, out length, out height);
+            return height;
         }
 
         #endregion
