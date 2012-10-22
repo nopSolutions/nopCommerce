@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
@@ -53,17 +54,37 @@ namespace Nop.Services.Shipping
         /// <param name="width">Width</param>
         /// <param name="length">Length</param>
         /// <param name="height">Height</param>
-        public virtual void GetDimensions(out decimal width, out decimal length, out decimal height)
+        /// <param name="useCubeRootMethod">A value indicating whether dimensions are calculated based  on cube root of volume</param>
+        public virtual void GetDimensions(out decimal width, out decimal length, out decimal height, bool useCubeRootMethod = true)
         {
-            width = length = height = decimal.Zero;
-            foreach (var shoppingCartItem in this.Items)
+            if (useCubeRootMethod)
             {
-                var productVariant = shoppingCartItem.ProductVariant;
-                if (productVariant != null)
+                //cube root of volume
+                decimal totalVolume = 0;
+                foreach (var shoppingCartItem in this.Items)
                 {
-                    width += productVariant.Width * shoppingCartItem.Quantity;
-                    length += productVariant.Length * shoppingCartItem.Quantity;
-                    height += productVariant.Height * shoppingCartItem.Quantity;
+                    var productVariant = shoppingCartItem.ProductVariant;
+                    if (productVariant != null)
+                    {
+                        totalVolume += shoppingCartItem.Quantity * productVariant.Height * productVariant.Width * productVariant.Length;
+                    }
+                }
+                decimal dimension = Convert.ToDecimal(Math.Pow(Convert.ToDouble(totalVolume), (double)(1.0 / 3.0)));
+                length = width = height = dimension;
+            }
+            else
+            {
+                //summarize all values (very inaccurate with multiple items)
+                width = length = height = decimal.Zero;
+                foreach (var shoppingCartItem in this.Items)
+                {
+                    var productVariant = shoppingCartItem.ProductVariant;
+                    if (productVariant != null)
+                    {
+                        width += productVariant.Width * shoppingCartItem.Quantity;
+                        length += productVariant.Length * shoppingCartItem.Quantity;
+                        height += productVariant.Height * shoppingCartItem.Quantity;
+                    }
                 }
             }
         }
