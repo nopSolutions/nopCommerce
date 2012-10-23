@@ -109,9 +109,11 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.LocaleStringResources, mo => mo.Ignore());
             //email account
             Mapper.CreateMap<EmailAccount, EmailAccountModel>()
+                .ForMember(dest => dest.Password, mo => mo.Ignore()) 
                 .ForMember(dest => dest.IsDefaultEmailAccount, mo => mo.Ignore()) 
                 .ForMember(dest => dest.SendTestEmailTo, mo => mo.Ignore());
-            Mapper.CreateMap<EmailAccountModel, EmailAccount>();
+            Mapper.CreateMap<EmailAccountModel, EmailAccount>()
+                .ForMember(dest => dest.Password, mo => mo.Ignore());
             //message template
             Mapper.CreateMap<MessageTemplate, MessageTemplateModel>()
                 .ForMember(dest => dest.AllowedTokens, mo => mo.Ignore())

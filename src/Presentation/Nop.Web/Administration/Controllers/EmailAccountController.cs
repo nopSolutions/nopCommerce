@@ -116,6 +116,8 @@ namespace Nop.Admin.Controllers
             if (ModelState.IsValid)
             {
                 var emailAccount = model.ToEntity();
+                //set password manually
+                emailAccount.Password = model.Password;
                 _emailAccountService.InsertEmailAccount(emailAccount);
 
                 SuccessNotification(_localizationService.GetResource("Admin.Configuration.EmailAccounts.Added"));
@@ -164,6 +166,25 @@ namespace Nop.Admin.Controllers
             return View(model);
 		}
 
+        [HttpPost, ActionName("Edit")]
+        [FormValueRequired("changepassword")]
+        public ActionResult ChangePassword(EmailAccountModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
+            var emailAccount = _emailAccountService.GetEmailAccountById(model.Id);
+            if (emailAccount == null)
+                //No email account found with the specified id
+                return RedirectToAction("List");
+
+            //do not validate model
+            emailAccount.Password = model.Password;
+            _emailAccountService.UpdateEmailAccount(emailAccount);
+            SuccessNotification(_localizationService.GetResource("Admin.Configuration.EmailAccounts.Fields.Password.PasswordChanged"));
+            return RedirectToAction("Edit", new { id = emailAccount.Id });
+        }
+        
         [HttpPost, ActionName("Edit")]
         [FormValueRequired("sendtestemail")]
         public ActionResult SendTestEmail(EmailAccountModel model)

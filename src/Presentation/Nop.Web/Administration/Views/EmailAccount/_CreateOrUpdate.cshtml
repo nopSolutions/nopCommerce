@@ -54,8 +54,12 @@
             @Html.NopLabelFor(model => model.Password):
         </td>
         <td class="adminData">
-            @Html.EditorFor(model => model.Password)
+            @Html.PasswordFor(model => model.Password)
             @Html.ValidationMessageFor(model => model.Password)
+            @if (Model.Id > 0)
+            {
+                <input type="submit" name="changepassword" class="t-button" value="@T("Admin.Configuration.EmailAccounts.Fields.Password.Change")" />
+            }
         </td>
     </tr>
     <tr>

@@ -2986,6 +2986,12 @@
                                     <LocaleResource Name="Password">
                                         <Value>Password</Value>
                                         <Children>
+                                            <LocaleResource Name="Change">
+                                                <Value>Change password</Value>
+                                            </LocaleResource>
+                                            <LocaleResource Name="PasswordChanged">
+                                                <Value>The password has been changed successfully.</Value>
+                                            </LocaleResource>
                                             <LocaleResource Name="Hint">
                                                 <Value>This is the password you use to authenticate to your mail server</Value>
                                             </LocaleResource>

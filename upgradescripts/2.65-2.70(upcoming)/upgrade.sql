@@ -359,6 +359,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.CustomerUser.AddressFormFields.FaxRequired.Hint">
     <Value>Check if ''Fax number'' is required.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.EmailAccounts.Fields.Password.Change">
+    <Value>Change password</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.EmailAccounts.Fields.Password.PasswordChanged">
+    <Value>The password has been changed successfully.</Value>
+  </LocaleResource>
 </Language>
 '
 
