@@ -116,6 +116,7 @@
     <Compile Include="CheckAffiliateAttribute.cs" />
     <Compile Include="Controllers\ContollerExtensions.cs" />
     <Compile Include="Controllers\ParameterBasedOnFormNameAndValueAttribute.cs" />
+    <Compile Include="Events\ProductSearchEvent.cs" />
     <Compile Include="LanguageSeoCodeAttribute.cs" />
     <Compile Include="Events\AdminTabStripCreated.cs" />
     <Compile Include="Mvc\CommaSeparatedModelBinder.cs" />

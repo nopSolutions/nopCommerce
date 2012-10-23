@@ -33,6 +33,8 @@ using Nop.Web.Infrastructure.Cache;
 using Nop.Web.Models.Catalog;
 using Nop.Web.Models.Media;
 using Nop.Services.Logging;
+using Nop.Web.Framework.Events;
+using Nop.Services.Events;
 
 namespace Nop.Web.Controllers
 {
@@ -71,6 +73,7 @@ namespace Nop.Web.Controllers
         private readonly IPermissionService _permissionService;
         private readonly IDownloadService _downloadService;
         private readonly ICustomerActivityService _customerActivityService;
+        private readonly IEventPublisher _eventPublisher;
 
         private readonly MediaSettings _mediaSettings;
         private readonly CatalogSettings _catalogSettings;
@@ -102,7 +105,7 @@ namespace Nop.Web.Controllers
             IOrderReportService orderReportService, IGenericAttributeService genericAttributeService,
             IBackInStockSubscriptionService backInStockSubscriptionService, IAclService aclService,
             IPermissionService permissionService, IDownloadService downloadService,
-            ICustomerActivityService customerActivityService,
+            ICustomerActivityService customerActivityService, IEventPublisher eventPublisher,
             MediaSettings mediaSettings, CatalogSettings catalogSettings,
             ShoppingCartSettings shoppingCartSettings, StoreInformationSettings storeInformationSettings,
             LocalizationSettings localizationSettings, CustomerSettings customerSettings, 
@@ -140,6 +143,7 @@ namespace Nop.Web.Controllers
             this._permissionService = permissionService;
             this._downloadService = downloadService;
             this._customerActivityService = customerActivityService;
+            this._eventPublisher = eventPublisher;
 
 
             this._mediaSettings = mediaSettings;
@@ -2944,7 +2948,17 @@ namespace Nop.Web.Controllers
                         false, out filterableSpecificationAttributeOptionIds);
                     model.Products = PrepareProductOverviewModels(products).ToList();
 
-                    model.NoResults = !model.Products.Any();                    
+                    model.NoResults = !model.Products.Any();
+
+                    //event
+                    _eventPublisher.Publish(new ProductSearchEvent()
+                                                {
+                                                    SearchTerm = model.Q,
+                                                    SearchInDescriptions = searchInDescriptions,
+                                                    CategoryIds = categoryIds,
+                                                    ManufacturerId = manufacturerId,
+                                                    WorkingLanguageId = _workContext.WorkingLanguage.Id
+                                                });
                 }
             }
 
