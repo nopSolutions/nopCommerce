@@ -456,7 +456,7 @@ namespace Nop.Services.Catalog
 
                 var pSearchProductTags = _dataProvider.GetParameter();
                 pSearchProductTags.ParameterName = "SearchProductTags";
-                pSearchProductTags.Value = searchDescriptions;
+                pSearchProductTags.Value = searchProductTags;
                 pSearchProductTags.DbType = DbType.Boolean;
 
                 var pUseFullTextSearch = _dataProvider.GetParameter();
