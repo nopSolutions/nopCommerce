@@ -522,9 +522,15 @@ PRIMARY KEY CLUSTERED
 END
 GO
 --new indexes
+IF EXISTS (SELECT 1 from sysindexes WHERE [NAME]=N'IX_UrlRecord_Slug' and id=object_id(N'[UrlRecord]'))
+BEGIN
+	--this drop is only for used of BETA version of 2.70
+	DROP INDEX [IX_UrlRecord_Slug] ON [UrlRecord]
+END
+GO
 IF NOT EXISTS (SELECT 1 from sysindexes WHERE [NAME]=N'IX_UrlRecord_Slug' and id=object_id(N'[UrlRecord]'))
 BEGIN
-	CREATE UNIQUE NONCLUSTERED INDEX [IX_UrlRecord_Slug] ON [UrlRecord] ([Slug] ASC)
+	CREATE NONCLUSTERED INDEX [IX_UrlRecord_Slug] ON [UrlRecord] ([Slug] ASC)
 END
 GO
 
