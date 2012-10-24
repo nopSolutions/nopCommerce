@@ -121,6 +121,7 @@ namespace Nop.Services.Catalog
                         into cGroup
                         orderby cGroup.Key
                         select cGroup.FirstOrDefault();
+                query = query.OrderBy(c => c.ParentCategoryId).ThenBy(c => c.DisplayOrder);
             }
 
             var unsortedCategories = query.ToList();
@@ -169,6 +170,7 @@ namespace Nop.Services.Catalog
                             into cGroup
                             orderby cGroup.Key
                             select cGroup.FirstOrDefault();
+                    query = query.OrderBy(c => c.DisplayOrder);
                 }
 
                 var categories = query.ToList();
@@ -337,6 +339,7 @@ namespace Nop.Services.Catalog
                             into cGroup
                             orderby cGroup.Key
                             select cGroup.FirstOrDefault();
+                    query = query.OrderBy(pc => pc.DisplayOrder);
                 }
 
                 var productCategories = new PagedList<ProductCategory>(query, pageIndex, pageSize);
@@ -385,6 +388,7 @@ namespace Nop.Services.Catalog
                             into cGroup
                             orderby cGroup.Key
                             select cGroup.FirstOrDefault();
+                    query = query.OrderBy(pc => pc.DisplayOrder);
                 }
 
                 var productCategories = query.ToList();
