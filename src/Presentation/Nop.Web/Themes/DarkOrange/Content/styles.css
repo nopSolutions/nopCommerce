@@ -100,6 +100,7 @@ fieldset.form-fields dl dd{padding:3px 0 0 0;}
 /* AJAX LOADING INDICATOR */
 .ajax-loading-block-window{position:fixed;top:50%;left:50%;width:128px;height:128px;overflow:hidden;z-index:1104;}
 .ajax-loading-block-window .loading-image{position:absolute;top:0;left:0;width:128px;height:128px;background-image:url('images/ajax_loader_large.gif');}
+.please-wait{background:url('images/ajax_loader_small.gif') no-repeat;padding-left:20px;}
 
 /* DATA TABLE */
 .data-table{width:100%;border:1px solid;border-collapse:collapse;border-spacing:0;empty-cells:show;}

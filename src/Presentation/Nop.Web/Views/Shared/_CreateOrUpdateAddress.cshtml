@@ -101,9 +101,7 @@
             </td>
             <td>
                 @Html.DropDownListFor(model => model.StateProvinceId, Model.AvailableStates)
-                <span id="states-loading-progress" style="display: none;">@T("Common.Wait...")
-                    <img src='@Url.Content("~/Content/Images/ajax_loader_small.gif")' alt="@T("Common.Wait...")" />
-                </span>
+                <span id="states-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
                 @Html.ValidationMessageFor(model => model.StateProvinceId)
             </td>
         </tr>

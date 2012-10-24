@@ -25,9 +25,7 @@
                 </div>
             }
             <input type="button" value="@T("Polls.Vote")" id="vote-poll-@(Model.Id)" class="button-2 vote-poll-button" />
-            <span id="poll-voting-progress-@(Model.Id)" style="display: none;">@T("Common.Wait...")
-                <img src='@Url.Content("~/Content/Images/ajax_loader_small.gif")' alt="@T("Common.Wait...")" />
-            </span>
+            <span id="poll-voting-progress-@(Model.Id)" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
         </div>
         <div class="clear">
         </div>

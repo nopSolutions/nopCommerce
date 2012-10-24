@@ -41,9 +41,7 @@
             <div class="enter-password-form">
                 @Html.Password("password", null, new { id = "password-" + @Model.Id })
                 <input type="submit" value="@T("Topic.Button")" class="button-1 topic-password-button"/>
-                <span id="authenticate-progress-@Model.Id" style="display: none;">@T("Common.Wait...")
-                    <img src='@Url.Content("~/Content/Images/ajax_loader_small.gif")' alt="@T("Common.Wait...")" />
-                </span>
+                <span id="authenticate-progress-@Model.Id" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
             </div>
             <div class="password-error">
                 <span id="password-error-@Model.Id"></span>

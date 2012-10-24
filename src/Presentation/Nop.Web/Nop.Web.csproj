@@ -880,7 +880,6 @@
     <Content Include="Content\files\Index.htm" />
     <Content Include="Content\fileuploader\fileuploader.css" />
     <Content Include="Content\fileuploader\images\fileuploader-loading.gif" />
-    <Content Include="Content\Images\ajax_loader_small.gif" />
     <Content Include="Content\Images\default-avatar.jpg" />
     <Content Include="Content\Images\flags\ad.png" />
     <Content Include="Content\Images\flags\ae.png" />

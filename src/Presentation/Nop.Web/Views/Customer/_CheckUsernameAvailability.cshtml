@@ -37,6 +37,4 @@
     });
 </script>
 <input type="button" id="check-availability-button" class="button-1 check-username-availability-button" value="@T("Account.CheckUsernameAvailability.Button")" />
-<span id="availability-check-progress" style="display: none;">
-    <img src='@Url.Content("~/Content/Images/ajax_loader_small.gif")' alt="@T("Common.Wait...")" />
-</span>
+<span id="availability-check-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>

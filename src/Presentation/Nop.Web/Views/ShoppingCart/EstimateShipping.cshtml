@@ -54,9 +54,7 @@
                             </td>
                             <td>
                                 @Html.DropDownListFor(model => model.StateProvinceId, Model.AvailableStates, new { @class = "state-input" })
-                                <span id="estimate-shipping-loading-progress" style="display: none;">
-                                    <img src='@Url.Content("~/Content/Images/ajax_loader_small.gif")' alt="@T("Common.Wait...")" />
-                                </span>
+                                <span id="estimate-shipping-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait...")"</span>
                                 @Html.ValidationMessageFor(model => model.StateProvinceId)
                             </td>
                         </tr>
