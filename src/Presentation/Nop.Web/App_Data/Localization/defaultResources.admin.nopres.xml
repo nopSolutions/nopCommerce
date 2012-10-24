@@ -4895,8 +4895,8 @@
                                             <LocaleResource Name="FileSystem">
                                                 <Value>file system</Value>
                                             </LocaleResource>
-                                            <LocaleResource Name="Change">
-                                                <Value>Change</Value>
+                                            <LocaleResource Name="Note">
+                                                <Value>NOTE: Do not forget to backup your database before changing this option</Value>
                                             </LocaleResource>
                                         </Children>
                                     </LocaleResource>
@@ -6775,6 +6775,9 @@
                                     <LocaleResource Name="Password">
                                         <Value>Password</Value>
                                         <Children>
+                                            <LocaleResource Name="Change">
+                                                <Value>Change password</Value>
+                                            </LocaleResource>
                                             <LocaleResource Name="Hint">
                                                 <Value>The customer's password.</Value>
                                             </LocaleResource>

@@ -149,7 +149,7 @@
                 @Html.ValidationMessageFor(model => model.Password)
                 @if (Model.Id > 0)
                 {
-                    <input type="submit" name="changepassword" class="t-button" value="Change password" />
+                    <input type="submit" name="changepassword" class="t-button" value="@T("Admin.Customers.Customers.Fields.Password.Change")" />
                 }
             </td>
         </tr>

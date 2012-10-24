@@ -365,6 +365,12 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.EmailAccounts.Fields.Password.PasswordChanged">
     <Value>The password has been changed successfully.</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.Customers.Fields.Password.Change">
+    <Value>Change password</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.Note">
+    <Value>NOTE: Do not forget to backup your database before changing this option</Value>
+  </LocaleResource>
 </Language>
 '
 
