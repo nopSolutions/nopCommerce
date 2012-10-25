@@ -5,223 +5,61 @@
 @using Nop.Plugin.Shipping.ByWeight.Models;
 @using Nop.Web.Framework;
 @using Telerik.Web.Mvc.UI;
-@using System.Linq;
-<table class="adminContent">
-    <tr>
-        <td>
-            @(Html.Telerik().Grid(Model.Records)
-                    .Name("shipping-byweight-grid")
-                    .DataKeys(keys => keys.Add(x => x.Id).RouteKey("Id"))
-                    .Columns(columns =>
-                    {
-                        columns.Bound(x => x.CountryName).ReadOnly();
-                        columns.Bound(x => x.StateProvinceName).ReadOnly();
-                        columns.Bound(x => x.Zip);
-                        columns.Bound(x => x.ShippingMethodName).ReadOnly();
-                        columns.Bound(x => x.From);
-                        columns.Bound(x => x.To);
-                        columns.Bound(x => x.UsePercentage)
-                            .ClientTemplate("<input type='checkbox' disabled='disabled' name='UsePercentage' <#=UsePercentage ? checked='checked' : ''#> />");
-                        columns.Bound(x => x.ShippingChargePercentage);
-                        columns.Bound(x => x.ShippingChargeAmount);
-                        columns.Command(commands =>
-                        {
-                            commands.Edit().Text(T("Admin.Common.Edit").Text);
-                            commands.Delete().Text(T("Admin.Common.Delete").Text);
-                        }).Width(180);
-
-                    })
-                    .Editable(x =>
-                    {
-                        x.Mode(GridEditMode.InLine);
-                    })
-                    .DataBinding(dataBinding =>
-                    {
-                        dataBinding.Ajax()
-                            .Select("RatesList", "ShippingByWeight", new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Shipping.ByWeight.Controllers" }, { "area", "" } })
-                            .Update("RateUpdate", "ShippingByWeight", new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Shipping.ByWeight.Controllers" }, { "area", "" } })
-                            .Delete("RateDelete", "ShippingByWeight", new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Shipping.ByWeight.Controllers" }, { "area", "" } });
-                    })
-                    .EnableCustomBinding(true))
-        </td>
-    </tr>
-</table>
-<p>
-</p>
-<script type="text/javascript">
-     $(function() {
-            $("#@Html.FieldIdFor(model => model.AddCountryId)").change(function() {
-                var selectedItem = $(this).val();
-                var ddlStates = $("#@Html.FieldIdFor(model => model.AddStateProvinceId)")
-                $.ajax({
-                    cache:false,
-                    type: "GET",
-                    url: "@(Url.Action("GetStatesByCountryId", "Country", new RouteValueDictionary() { { "area", "Admin" } }))",
-                    data: { "countryId": selectedItem, "addAsterisk": "true" },
-                    success: function (data) {
-                        ddlStates.html('');
-                        $.each(data, function(id, option) {
-                            ddlStates.append($('<option></option>').val(option.id).html(option.name));
-                        });
-                    },
-                    error:function (xhr, ajaxOptions, thrownError){
-                        alert('Failed to retrieve states.')
-                    }  
-                });
-            });
-        });
-</script>
-@using (Html.BeginForm())
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "shipping-byweight-form" }))
 {
-    
-    <script type="text/javascript">
-        $(document).ready(function () {
+    <table class="adminContent">
+        <tr>
+            <td>
+                @(Html.Telerik().Grid<ShippingByWeightModel>()
+                  .Name("shipping-byweight-grid")
+                  .DataKeys(keys => keys.Add(x => x.Id).RouteKey("Id"))
+                  .Columns(columns =>
+                  {
+                      columns.Bound(x => x.CountryName).ReadOnly();
+                      columns.Bound(x => x.StateProvinceName).ReadOnly();
+                      columns.Bound(x => x.Zip);
+                      columns.Bound(x => x.ShippingMethodName).ReadOnly();
+                      columns.Bound(x => x.DataHtml)
+                          .Encoded(false);
+                      columns.Bound(x => x.Id)
+                          .Width(50)
+                          .Centered()
+                          .ClientTemplate("<input type='submit' value='" + @T("Admin.Common.Edit").Text + "' onclick=\"" + "javascript:OpenWindow('" + @Url.RouteUrl("Plugin.Shipping.ByWeight.EditPopup") + "?id=<#= Id #>&btnId=btnRefresh&formId=shipping-byweight-form', 800, 400, true); return false;\" class='t-button' />")
+                          .Title(T("Admin.Common.Edit").Text);
+                      columns.Command(commands =>
+                      {
+                          commands.Delete().Text(T("Admin.Common.Delete").Text);
+                      }).Title(T("Admin.Common.Delete").Text).Width(180);
 
-            $("#@Html.FieldIdFor(model => model.AddUsePercentage)").click(toggleAddUsePercentage);
+                  })
+                  .DataBinding(dataBinding =>
+                  {
+                      dataBinding.Ajax()
+                          .Select("RatesList", "ShippingByWeight", new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Shipping.ByWeight.Controllers" }, { "area", "" } })
+                          .Delete("RateDelete", "ShippingByWeight", new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Shipping.ByWeight.Controllers" }, { "area", "" } });
+                  })
+                  .EnableCustomBinding(true))
+            </td>
+        </tr>
+        <tr>
+            <td width="100%">
+                @{
+    var addNewUrl = Url.RouteUrl("Plugin.Shipping.ByWeight.AddPopup") + "?btnId=btnRefresh&formId=shipping-byweight-form";
+                }
+                <input type="submit" id="btnAddNewOption" name="btnAddNewOption" value="@T("Plugins.Shipping.ByWeight.AddRecord")" onclick="javascript:OpenWindow('@(addNewUrl)', 800, 400, true); return false;" class="t-button" />
+                <input type="submit" id="btnRefresh" name="btnRefresh" style="display: none" />
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $('#btnRefresh').click(function () {
+                            //refresh grid
+                            var optionsGrid = $("#shipping-byweight-grid");
+                            optionsGrid.data('tGrid').ajaxRequest();
 
-            toggleAddUsePercentage();
-        });
-
-        function toggleAddUsePercentage() {
-            if ($('#@Html.FieldIdFor(model => model.AddUsePercentage)').is(':checked')) {
-                $('#pnlAddShippingChargePercentage').show();
-                $('#pnlAddShippingChargeAmount').hide();
-            }
-            else {
-                $('#pnlAddShippingChargePercentage').hide();
-                $('#pnlAddShippingChargeAmount').show();
-            }
-        }
-
-        $(function () {
-            $('#addshippingbyweightrecord').click(function () {
-                $.ajax({
-                    cache: false,
-                    type: 'POST',
-                    url: '@Url.RouteUrl("Plugin.Shipping.ByWeight.AddShippingRate")',
-                    data: $(this.form).serialize(),
-                    dataType: 'json',
-                    success: function (data) {
-                        var shippingByweightGrid = $("#shipping-byweight-grid");
-                        shippingByweightGrid.data('tGrid').ajaxRequest();
-                    },
-                    error: function (xhr, ajaxOptions, thrownError) {
-                        alert('Failed to add record.');
-                    }
-                });
-                return false;
-            });
-        });
-
-        $(function () {
-            $('#savegeneralsettings').click(function () {
-                $.ajax({
-                    cache: false,
-                    type: 'POST',
-                    url: '@Url.RouteUrl("Plugin.Shipping.ByWeight.SaveGeneralSettings")',
-                    data: $(this.form).serialize(),
-                    dataType: 'json',
-                    success: function (data) {
-                        alert('Saved');
-                    },
-                    error: function (xhr, ajaxOptions, thrownError) {
-                        alert('Failed to add record.');
-                    }
-                });
-                return false;
-            });
-        });
-    </script>
-    <table class="adminContent" style="border: 1px solid black; padding: 15px;">
-        <tr>
-            <td class="adminTitle" colspan="2">
-                <b>@T("Plugins.Shipping.ByWeight.AddRecord.Hint")</b>
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.AddCountryId):
-            </td>
-            <td class="adminData">
-                @Html.DropDownListFor(model => model.AddCountryId, Model.AvailableCountries)
-                @Html.ValidationMessageFor(model => model.AddCountryId)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-            @Html.NopLabelFor(model => model.AddStateProvinceId):
-            </td>
-            <td class="adminData">
-            @Html.DropDownListFor(model => model.AddStateProvinceId, Model.AvailableStates)
-            @Html.ValidationMessageFor(model => model.AddStateProvinceId)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.AddZip):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.AddZip)
-                @Html.ValidationMessageFor(model => model.AddZip)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.AddShippingMethodId):
-            </td>
-            <td class="adminData">
-                @Html.DropDownListFor(model => model.AddShippingMethodId, Model.AvailableShippingMethods)
-                @Html.ValidationMessageFor(model => model.AddShippingMethodId)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.AddFrom):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.AddFrom) [@Model.BaseWeightIn]
-                @Html.ValidationMessageFor(model => model.AddFrom)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.AddTo):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.AddTo) [@Model.BaseWeightIn]
-                @Html.ValidationMessageFor(model => model.AddTo)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.AddUsePercentage):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.AddUsePercentage)
-                @Html.ValidationMessageFor(model => model.AddUsePercentage)
-            </td>
-        </tr>
-        <tr id="pnlAddShippingChargePercentage">
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.AddShippingChargePercentage):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.AddShippingChargePercentage)
-                @Html.ValidationMessageFor(model => model.AddShippingChargePercentage)
-            </td>
-        </tr>
-        <tr id="pnlAddShippingChargeAmount">
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.AddShippingChargeAmount):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.AddShippingChargeAmount) [@Model.PrimaryStoreCurrencyCode]
-                @Html.ValidationMessageFor(model => model.AddShippingChargeAmount)
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2" align="left">
-                <input type="button" id="addshippingbyweightrecord" class="t-button" value="@T("Plugins.Shipping.ByWeight.AddRecord")" />
+                            //return false to don't reload a page
+                            return false;
+                        });                                
+                    });
+                </script>
             </td>
         </tr>
     </table>
@@ -253,4 +91,24 @@
             </td>
         </tr>
     </table>
+    <script type="text/javascript">
+        $(function () {
+            $('#savegeneralsettings').click(function () {
+                $.ajax({
+                    cache: false,
+                    type: 'POST',
+                    url: '@Url.RouteUrl("Plugin.Shipping.ByWeight.SaveGeneralSettings")',
+                    data: $(this.form).serialize(),
+                    dataType: 'json',
+                    success: function (data) {
+                        alert('Saved');
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert('Failed to add record.');
+                    }
+                });
+                return false;
+            });
+        });
+    </script>
 }

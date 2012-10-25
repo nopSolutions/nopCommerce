@@ -46,7 +46,7 @@
      $(function() {
             $("#@Html.FieldIdFor(model => model.AddCountryId)").change(function() {
                 var selectedItem = $(this).val();
-                var ddlStates = $("#@Html.FieldIdFor(model => model.AddStateProvinceId)")
+                var ddlStates = $("#@Html.FieldIdFor(model => model.AddStateProvinceId)");
                 $.ajax({
                     cache:false,
                     type: "GET",

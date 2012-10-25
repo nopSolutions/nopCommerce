@@ -371,6 +371,9 @@ set @resources='
   <LocaleResource Name="Admin.Configuration.Settings.Media.PicturesStoredIntoDatabase.Note">
     <Value>NOTE: Do not forget to backup your database before changing this option</Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.ByWeight.Fields.DataHtml">
+    <Value>Data</Value>
+  </LocaleResource>
 </Language>
 '
 

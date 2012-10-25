@@ -197,8 +197,8 @@ namespace Nop.Plugin.Shipping.ByWeight
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.LimitMethodsToCreated.Hint", "If you check this option, then your customers will be limited to shipping options configured here. Otherwise, they'll be able to choose any existing shipping options even they've not configured here (zero shipping fee in this case).");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.CalculatePerWeightUnit", "Calculate per weight unit");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.CalculatePerWeightUnit.Hint", "If you check this option, then rates are multiplied per weight unit (lb, kg, etc). This option is used for the fixed rates (without percents).");
+            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.DataHtml", "Data");
             this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.AddRecord", "Add record");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Shipping.ByWeight.AddRecord.Hint", "Adding a new record");
             
             base.Install();
         }
@@ -237,8 +237,8 @@ namespace Nop.Plugin.Shipping.ByWeight
             this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.LimitMethodsToCreated.Hint");
             this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.CalculatePerWeightUnit");
             this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.CalculatePerWeightUnit.Hint");
+            this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.Fields.DataHtml");
             this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.AddRecord");
-            this.DeletePluginLocaleResource("Plugins.Shipping.ByWeight.AddRecord.Hint");
             
             base.Uninstall();
         }

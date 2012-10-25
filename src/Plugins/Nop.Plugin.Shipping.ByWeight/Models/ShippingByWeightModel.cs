@@ -1,10 +1,19 @@
-﻿using Nop.Web.Framework;
+﻿using System.Collections.Generic;
+using System.Web.Mvc;
+using Nop.Web.Framework;
 using Nop.Web.Framework.Mvc;
 
 namespace Nop.Plugin.Shipping.ByWeight.Models
 {
     public class ShippingByWeightModel : BaseNopEntityModel
     {
+        public ShippingByWeightModel()
+        {
+            AvailableCountries = new List<SelectListItem>();
+            AvailableStates = new List<SelectListItem>();
+            AvailableShippingMethods = new List<SelectListItem>();
+        }
+
         [NopResourceDisplayName("Plugins.Shipping.ByWeight.Fields.Country")]
         public int CountryId { get; set; }
         [NopResourceDisplayName("Plugins.Shipping.ByWeight.Fields.Country")]
@@ -37,5 +46,16 @@ namespace Nop.Plugin.Shipping.ByWeight.Models
 
         [NopResourceDisplayName("Plugins.Shipping.ByWeight.Fields.ShippingChargeAmount")]
         public decimal ShippingChargeAmount { get; set; }
+
+        [NopResourceDisplayName("Plugins.Shipping.ByWeight.Fields.DataHtml")]
+        public string DataHtml { get; set; }
+
+        public string PrimaryStoreCurrencyCode { get; set; }
+        public string BaseWeightIn { get; set; }
+
+
+        public IList<SelectListItem> AvailableCountries { get; set; }
+        public IList<SelectListItem> AvailableStates { get; set; }
+        public IList<SelectListItem> AvailableShippingMethods { get; set; }
     }
 }

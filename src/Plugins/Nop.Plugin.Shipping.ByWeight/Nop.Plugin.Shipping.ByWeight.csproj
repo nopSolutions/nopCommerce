@@ -137,6 +137,9 @@
     <Content Include="packages.config">
       <SubType>Designer</SubType>
     </Content>
+    <EmbeddedResource Include="Views\ShippingByWeight\EditPopup.cshtml" />
+    <EmbeddedResource Include="Views\ShippingByWeight\_CreateOrUpdate.cshtml" />
+    <EmbeddedResource Include="Views\ShippingByWeight\AddPopup.cshtml" />
     <None Include="web.config" />
   </ItemGroup>
   <ItemGroup>

@@ -13,15 +13,20 @@ namespace Nop.Plugin.Shipping.ByWeight
                  new { controller = "ShippingByWeight", action = "Configure" },
                  new[] { "Nop.Plugin.Shipping.ByWeight.Controllers" }
             );
-
-            routes.MapRoute("Plugin.Shipping.ByWeight.AddShippingRate",
-                 "Plugins/ShippingByWeight/AddShippingRate",
-                 new { controller = "ShippingByWeight", action = "AddShippingRate" },
-                 new[] { "Nop.Plugin.Shipping.ByWeight.Controllers" }
-            );
             routes.MapRoute("Plugin.Shipping.ByWeight.SaveGeneralSettings",
                  "Plugins/ShippingByWeight/SaveGeneralSettings",
-                 new { controller = "ShippingByWeight", action = "SaveGeneralSettings" },
+                 new { controller = "ShippingByWeight", action = "SaveGeneralSettings", },
+                 new[] { "Nop.Plugin.Shipping.ByWeight.Controllers" }
+            );
+
+            routes.MapRoute("Plugin.Shipping.ByWeight.AddPopup",
+                 "Plugins/ShippingByWeight/AddPopup",
+                 new { controller = "ShippingByWeight", action = "AddPopup" },
+                 new[] { "Nop.Plugin.Shipping.ByWeight.Controllers" }
+            );
+            routes.MapRoute("Plugin.Shipping.ByWeight.EditPopup",
+                 "Plugins/ShippingByWeight/EditPopup",
+                 new { controller = "ShippingByWeight", action = "EditPopup" },
                  new[] { "Nop.Plugin.Shipping.ByWeight.Controllers" }
             );
         }

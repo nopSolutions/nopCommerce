@@ -327,7 +327,6 @@
     <Compile Include="Validators\Localization\LanguageResourceValidator.cs" />
     <Compile Include="Validators\Localization\LanguageValidator.cs" />
     <Compile Include="Validators\Catalog\ProductValidator.cs" />
-    <Compile Include="Views\Shared\TestMenuPlugin1.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\fileuploader.css" />
@@ -904,7 +903,7 @@
     <Content Include="Views\Order\BestsellersBriefReportByAmount.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Shared\_Notifications.cshtml" />
+    <Content Include="Views\Shared\Notifications.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Setting\GeneralCommon.cshtml" />
