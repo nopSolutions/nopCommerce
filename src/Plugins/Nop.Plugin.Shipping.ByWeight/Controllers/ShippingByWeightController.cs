@@ -79,8 +79,8 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult RatesList(GridCommand command)
         {
-            var sbwModel = _shippingByWeightService.GetAll()
-                .Select(x =>
+            var records = _shippingByWeightService.GetAll(command.Page - 1, command.PageSize);
+            var sbwModel = records.Select(x =>
                 {
                     var m = new ShippingByWeightModel()
                     {
@@ -125,7 +125,7 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
             var model = new GridModel<ShippingByWeightModel>
             {
                 Data = sbwModel,
-                Total = sbwModel.Count
+                Total = records.TotalCount
             };
 
             return new JsonResult

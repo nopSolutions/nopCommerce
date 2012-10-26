@@ -1,10 +1,13 @@
 ﻿@{
     Layout = "";
+
+    var gridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSize;
 }
 @model ShippingByWeightListModel
 @using Nop.Plugin.Shipping.ByWeight.Models;
 @using Nop.Web.Framework;
 @using Telerik.Web.Mvc.UI;
+@using Nop.Core.Infrastructure;
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "shipping-byweight-form" }))
 {
     <br />
@@ -54,6 +57,7 @@
                               .Select("RatesList", "ShippingByWeight", new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Shipping.ByWeight.Controllers" }, { "area", "" } })
                               .Delete("RateDelete", "ShippingByWeight", new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Shipping.ByWeight.Controllers" }, { "area", "" } });
                       })
+                      .Pageable(settings => settings.PageSize(gridPageSize).Position(GridPagerPosition.Both))
                       .EnableCustomBinding(true))
             </td>
         </tr>

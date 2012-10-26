@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Plugin.Tax.CountryStateZip.Domain;
@@ -13,7 +14,7 @@ namespace Nop.Plugin.Tax.CountryStateZip.Services
     public partial class TaxRateService : ITaxRateService
     {
         #region Constants
-        private const string TAXRATE_ALL_KEY = "Nop.taxrate.all";
+        private const string TAXRATE_ALL_KEY = "Nop.taxrate.all-{0}-{1}";
         private const string TAXRATE_BY_ID_KEY = "Nop.taxrate.id-{0}";
         private const string TAXRATE_PATTERN_KEY = "Nop.taxrate.";
         #endregion
@@ -61,16 +62,16 @@ namespace Nop.Plugin.Tax.CountryStateZip.Services
         /// Gets all tax rates
         /// </summary>
         /// <returns>Tax rates</returns>
-        public virtual IList<TaxRate> GetAllTaxRates()
+        public virtual IPagedList<TaxRate> GetAllTaxRates(int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            string key = TAXRATE_ALL_KEY;
+            string key = string.Format(TAXRATE_ALL_KEY, pageIndex, pageSize);
             return _cacheManager.Get(key, () =>
             {
                 var query = from tr in _taxRateRepository.Table
                             orderby tr.CountryId, tr.StateProvinceId, tr.Zip, tr.TaxCategoryId
                             select tr;
-                var taxRates = query.ToList();
-                return taxRates;
+                var records = new PagedList<TaxRate>(query, pageIndex, pageSize);
+                return records;
             });
         }
 

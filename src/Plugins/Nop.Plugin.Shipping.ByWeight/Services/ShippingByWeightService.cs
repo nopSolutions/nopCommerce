@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Plugin.Shipping.ByWeight.Domain;
@@ -10,7 +11,7 @@ namespace Nop.Plugin.Shipping.ByWeight.Services
     public partial class ShippingByWeightService : IShippingByWeightService
     {
         #region Constants
-        private const string SHIPPINGBYWEIGHT_ALL_KEY = "Nop.shippingbyweight.all";
+        private const string SHIPPINGBYWEIGHT_ALL_KEY = "Nop.shippingbyweight.all-{0}-{1}";
         private const string SHIPPINGBYWEIGHT_PATTERN_KEY = "Nop.shippingbyweight.";
         #endregion
 
@@ -45,15 +46,16 @@ namespace Nop.Plugin.Shipping.ByWeight.Services
             _cacheManager.RemoveByPattern(SHIPPINGBYWEIGHT_PATTERN_KEY);
         }
 
-        public virtual IList<ShippingByWeightRecord> GetAll()
+        public virtual IPagedList<ShippingByWeightRecord> GetAll(int pageIndex = 0, int pageSize = int.MaxValue)
         {
-            string key = SHIPPINGBYWEIGHT_ALL_KEY;
+            string key = string.Format(SHIPPINGBYWEIGHT_ALL_KEY, pageIndex, pageSize);
             return _cacheManager.Get(key, () =>
             {
                 var query = from sbw in _sbwRepository.Table
                             orderby sbw.CountryId, sbw.StateProvinceId, sbw.Zip, sbw.ShippingMethodId, sbw.From
                             select sbw;
-                var records = query.ToList();
+
+                var records = new PagedList<ShippingByWeightRecord>(query, pageIndex, pageSize);
                 return records;
             });
         }

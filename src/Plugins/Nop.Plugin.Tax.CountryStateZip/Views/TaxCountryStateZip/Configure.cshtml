@@ -1,14 +1,17 @@
 ﻿@{
     Layout = "";
+
+    var gridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSize;
 }
 @model Nop.Plugin.Tax.CountryStateZip.Models.TaxRateListModel
 @using Nop.Web.Framework;
 @using Telerik.Web.Mvc.UI;
-@using System.Linq;
+@using Nop.Plugin.Tax.CountryStateZip.Models;
+@using Nop.Core.Infrastructure;
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid(Model.TaxRates)
+            @(Html.Telerik().Grid<TaxRateModel>()
                     .Name("tax-countrystatezip-grid")
                     .DataKeys(keys => keys.Add(x => x.Id).RouteKey("Id"))
                     .Columns(columns =>
@@ -36,6 +39,7 @@
                             .Update("RateUpdate", "TaxCountryStateZip", new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Tax.CountryStateZip.Controllers" }, { "area", "" } })
                             .Delete("RateDelete", "TaxCountryStateZip", new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Tax.CountryStateZip.Controllers" }, { "area", "" } });
                     })
+                    .Pageable(settings => settings.PageSize(gridPageSize).Position(GridPagerPosition.Both))
                     .EnableCustomBinding(true))
         </td>
     </tr>

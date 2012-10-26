@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Nop.Core;
 using Nop.Plugin.Shipping.ByWeight.Domain;
 
 namespace Nop.Plugin.Shipping.ByWeight.Services
@@ -7,7 +8,7 @@ namespace Nop.Plugin.Shipping.ByWeight.Services
     {
         void DeleteShippingByWeightRecord(ShippingByWeightRecord shippingByWeightRecord);
 
-        IList<ShippingByWeightRecord> GetAll();
+        IPagedList<ShippingByWeightRecord> GetAll(int pageIndex = 0, int pageSize = int.MaxValue);
 
         ShippingByWeightRecord FindRecord(int shippingMethodId,
             int countryId, int stateProvinceId, string zip, decimal weight);

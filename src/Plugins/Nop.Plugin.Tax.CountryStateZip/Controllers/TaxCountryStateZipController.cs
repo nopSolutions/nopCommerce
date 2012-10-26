@@ -60,37 +60,15 @@ namespace Nop.Plugin.Tax.CountryStateZip.Controllers
             var states = _stateProvinceService.GetStateProvincesByCountryId(countries.FirstOrDefault().Id);
             foreach (var s in states)
                 model.AvailableStates.Add(new SelectListItem() { Text = s.Name, Value = s.Id.ToString() });
-            //tax rates
-            model.TaxRates = _taxRateService.GetAllTaxRates()
-                .Select(x =>
-                {
-                    var m = new TaxRateModel()
-                    {
-                        Id = x.Id,
-                        TaxCategoryId = x.TaxCategoryId,
-                        CountryId = x.CountryId,
-                        StateProvinceId = x.StateProvinceId,
-                        Zip = x.Zip,
-                        Percentage = x.Percentage,
-                    };
-                    var tc = _taxCategoryService.GetTaxCategoryById(x.TaxCategoryId);
-                    m.TaxCategoryName = (tc != null) ? tc.Name : "";
-                    var c = _countryService.GetCountryById(x.CountryId);
-                    m.CountryName = (c != null) ? c.Name : "Unavailable";
-                    var s = _stateProvinceService.GetStateProvinceById(x.StateProvinceId);
-                    m.StateProvinceName = (s != null) ? s.Name : "*";
-                    m.Zip = (!String.IsNullOrEmpty(x.Zip)) ? x.Zip : "*";
-                    return m;
-                })
-                .ToList();
-
+            
             return View("Nop.Plugin.Tax.CountryStateZip.Views.TaxCountryStateZip.Configure", model);
         }
 
         [HttpPost, GridAction(EnableCustomBinding = true)]
         public ActionResult RatesList(GridCommand command)
         {
-            var taxRatesModel = _taxRateService.GetAllTaxRates()
+            var records = _taxRateService.GetAllTaxRates(command.Page - 1, command.PageSize);
+            var taxRatesModel = records
                 .Select(x =>
                 {
                     var m = new TaxRateModel()
@@ -115,7 +93,7 @@ namespace Nop.Plugin.Tax.CountryStateZip.Controllers
             var model = new GridModel<TaxRateModel>
             {
                 Data = taxRatesModel,
-                Total = taxRatesModel.Count
+                Total = records.TotalCount
             };
 
             return new JsonResult
