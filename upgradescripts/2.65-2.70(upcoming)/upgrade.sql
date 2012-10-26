@@ -374,6 +374,54 @@ set @resources='
   <LocaleResource Name="Plugins.Shipping.ByWeight.Fields.DataHtml">
     <Value>Data</Value>
   </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.ByWeight.Fields.AdditionalFixedCost">
+    <Value>Additional fixed cost</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.ByWeight.Fields.AdditionalFixedCost.Hint">
+    <Value>Specify an additional fixed cost per shopping cart for this option. Set to 0 if you don''t want an additional fixed cost to be applied.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.ByWeight.Fields.UsePercentage">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.ByWeight.Fields.UsePercentage.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.ByWeight.Fields.ShippingChargePercentage">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.ByWeight.Fields.ShippingChargePercentage.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.ByWeight.Fields.PercentageRateOfSubtotal">
+    <Value>Charge percentage (of subtotal)</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.ByWeight.Fields.PercentageRateOfSubtotal.Hint">
+    <Value>Charge percentage (of subtotal).</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.ByWeight.Fields.ShippingChargeAmount">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.ByWeight.Fields.ShippingChargeAmount.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.ByWeight.Fields.RatePerWeightUnit">
+    <Value>Rate per weight unit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.ByWeight.Fields.RatePerWeightUnit.Hint">
+    <Value>Rate per weight unit.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.ByWeight.Fields.CalculatePerWeightUnit">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.ByWeight.Fields.CalculatePerWeightUnit.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.ByWeight.Formula">
+    <Value>Formula to calculate rates</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.ByWeight.Formula.Value">
+    <Value>[additional fixed cost] + [weight] * [rate per weight unit] + [subtotal] * [charge percentage]</Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -1763,3 +1811,50 @@ BEGIN
 	VALUES (N'addresssettings.faxenabled', N'true')
 END
 GO
+
+
+
+--shipping by weight plugin
+IF EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[ShippingByWeight]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
+BEGIN
+	EXEC ('IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id(''[ShippingByWeight]'') and NAME=''AdditionalFixedCost'')
+	BEGIN
+		ALTER TABLE [ShippingByWeight]
+		ADD [AdditionalFixedCost] decimal(18,2) NULL
+
+		exec(''UPDATE [ShippingByWeight] SET [AdditionalFixedCost] = 0'')
+	END')
+
+	EXEC ('ALTER TABLE [ShippingByWeight] ALTER COLUMN [AdditionalFixedCost] decimal(18,2) NOT NULL')
+	
+	EXEC ('IF EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id(''[ShippingByWeight]'') and NAME=''UsePercentage'')
+	BEGIN
+		ALTER TABLE [ShippingByWeight]
+		DROP COLUMN [UsePercentage]
+	END')
+	
+	--rename ShippingChargePercentage to PercentageRateOfSubtotal
+	EXEC ('IF EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id(''[ShippingByWeight]'') and NAME=''ShippingChargePercentage'')
+	BEGIN
+		ALTER TABLE [ShippingByWeight]
+		ADD [PercentageRateOfSubtotal] decimal(18,2) NULL
+
+		exec(''UPDATE [ShippingByWeight] SET [PercentageRateOfSubtotal] = [ShippingChargePercentage]'')
+		
+		exec(''ALTER TABLE [ShippingByWeight] DROP COLUMN [ShippingChargePercentage]'')
+	END')
+	
+	--rename ShippingChargeAmount to RatePerWeightUnit
+	EXEC ('IF EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id(''[ShippingByWeight]'') and NAME=''ShippingChargeAmount'')
+	BEGIN
+		ALTER TABLE [ShippingByWeight]
+		ADD [RatePerWeightUnit] decimal(18,2) NULL
+
+		exec(''UPDATE [ShippingByWeight] SET [RatePerWeightUnit] = [ShippingChargeAmount]'')
+		
+		exec(''ALTER TABLE [ShippingByWeight] DROP COLUMN [ShippingChargeAmount]'')
+	END')
+END
+GO
+
+

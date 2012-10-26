@@ -72,7 +72,6 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
             var model = new ShippingByWeightListModel();
             //other settings
             model.LimitMethodsToCreated = _shippingByWeightSettings.LimitMethodsToCreated;
-            model.CalculatePerWeightUnit = _shippingByWeightSettings.CalculatePerWeightUnit;
             
             return View("Nop.Plugin.Shipping.ByWeight.Views.ShippingByWeight.Configure", model);
         }
@@ -90,9 +89,9 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
                         CountryId = x.CountryId,
                         From = x.From,
                         To = x.To,
-                        UsePercentage = x.UsePercentage,
-                        ShippingChargePercentage = x.ShippingChargePercentage,
-                        ShippingChargeAmount = x.ShippingChargeAmount,
+                        AdditionalFixedCost = x.AdditionalFixedCost,
+                        PercentageRateOfSubtotal = x.PercentageRateOfSubtotal,
+                        RatePerWeightUnit = x.RatePerWeightUnit,
                     };
                     var shippingMethod = _shippingService.GetShippingMethodById(x.ShippingMethodId);
                     m.ShippingMethodName = (shippingMethod != null) ? shippingMethod.Name : "Unavailable";
@@ -108,14 +107,12 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
                     htmlSb.Append("<br />");
                     htmlSb.AppendFormat("{0}: {1}", _localizationService.GetResource("Plugins.Shipping.ByWeight.Fields.To"), m.To);
                     htmlSb.Append("<br />");
-                    if (m.UsePercentage)
-                    {
-                        htmlSb.AppendFormat("{0}: {1}", _localizationService.GetResource("Plugins.Shipping.ByWeight.Fields.ShippingChargePercentage"), m.ShippingChargePercentage);
-                    }
-                    else
-                    {
-                        htmlSb.AppendFormat("{0}: {1}", _localizationService.GetResource("Plugins.Shipping.ByWeight.Fields.ShippingChargeAmount"), m.ShippingChargeAmount);
-                    }
+                    htmlSb.AppendFormat("{0}: {1}", _localizationService.GetResource("Plugins.Shipping.ByWeight.Fields.AdditionalFixedCost"), m.AdditionalFixedCost);
+                    htmlSb.Append("<br />");
+                    htmlSb.AppendFormat("{0}: {1}", _localizationService.GetResource("Plugins.Shipping.ByWeight.Fields.RatePerWeightUnit"), m.RatePerWeightUnit);
+                    htmlSb.Append("<br />");
+                    htmlSb.AppendFormat("{0}: {1}", _localizationService.GetResource("Plugins.Shipping.ByWeight.Fields.PercentageRateOfSubtotal"), m.PercentageRateOfSubtotal);
+                    
                     htmlSb.Append("</div>");
                     m.DataHtml = htmlSb.ToString();
 
@@ -149,7 +146,6 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
         {
             //save settings
             _shippingByWeightSettings.LimitMethodsToCreated = model.LimitMethodsToCreated;
-            _shippingByWeightSettings.CalculatePerWeightUnit = model.CalculatePerWeightUnit;
             _settingService.SaveSetting(_shippingByWeightSettings);
 
             return Json(new { Result = true });
@@ -161,6 +157,7 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
             var model = new ShippingByWeightModel();
             model.PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode;
             model.BaseWeightIn = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).Name;
+            model.To = 1000000;
 
             var shippingMethods = _shippingService.GetAllShippingMethods();
             if (shippingMethods.Count == 0)
@@ -190,9 +187,9 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
                 ShippingMethodId = model.ShippingMethodId,
                 From = model.From,
                 To = model.To,
-                UsePercentage = model.UsePercentage,
-                ShippingChargeAmount = model.ShippingChargeAmount,
-                ShippingChargePercentage = model.ShippingChargePercentage
+                AdditionalFixedCost = model.AdditionalFixedCost,
+                RatePerWeightUnit = model.RatePerWeightUnit,
+                PercentageRateOfSubtotal = model.PercentageRateOfSubtotal
             };
             _shippingByWeightService.InsertShippingByWeightRecord(sbw);
 
@@ -219,9 +216,9 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
                 ShippingMethodId = sbw.ShippingMethodId,
                 From = sbw.From,
                 To = sbw.To,
-                UsePercentage = sbw.UsePercentage,
-                ShippingChargePercentage = sbw.ShippingChargePercentage,
-                ShippingChargeAmount = sbw.ShippingChargeAmount,
+                AdditionalFixedCost = sbw.AdditionalFixedCost,
+                PercentageRateOfSubtotal = sbw.PercentageRateOfSubtotal,
+                RatePerWeightUnit = sbw.RatePerWeightUnit,
                 PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode,
                 BaseWeightIn = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).Name
             };
@@ -263,9 +260,9 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
             sbw.ShippingMethodId = model.ShippingMethodId;
             sbw.From = model.From;
             sbw.To = model.To;
-            sbw.UsePercentage = model.UsePercentage;
-            sbw.ShippingChargeAmount = model.ShippingChargeAmount;
-            sbw.ShippingChargePercentage = model.ShippingChargePercentage;
+            sbw.AdditionalFixedCost = model.AdditionalFixedCost;
+            sbw.RatePerWeightUnit = model.RatePerWeightUnit;
+            sbw.PercentageRateOfSubtotal = model.PercentageRateOfSubtotal;
             _shippingByWeightService.UpdateShippingByWeightRecord(sbw);
 
             ViewBag.RefreshPage = true;

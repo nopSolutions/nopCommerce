@@ -38,18 +38,18 @@ namespace Nop.Plugin.Shipping.ByWeight.Domain
         public virtual decimal To { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether to use percentage
+        /// Gets or sets the additinal fixed cost
         /// </summary>
-        public virtual bool UsePercentage { get; set; }
+        public virtual decimal AdditionalFixedCost { get; set; }
 
         /// <summary>
-        /// Gets or sets the shipping charge percentage
+        /// Gets or sets the shipping charge percentage (of subtotal)
         /// </summary>
-        public virtual decimal ShippingChargePercentage { get; set; }
+        public virtual decimal PercentageRateOfSubtotal { get; set; }
 
         /// <summary>
-        /// Gets or sets the shipping charge amount
+        /// Gets or sets the shipping charge amount (per weight unit)
         /// </summary>
-        public virtual decimal ShippingChargeAmount { get; set; }
+        public virtual decimal RatePerWeightUnit { get; set; }
     }
 }

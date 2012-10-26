@@ -6,7 +6,5 @@ namespace Nop.Plugin.Shipping.ByWeight
     public class ShippingByWeightSettings : ISettings
     {
         public bool LimitMethodsToCreated { get; set; }
-
-        public bool CalculatePerWeightUnit { get; set; }
     }
 }

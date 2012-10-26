@@ -38,25 +38,6 @@
     });
 </script>
 
-<script type="text/javascript">
-    $(document).ready(function () {
-
-        $("#@Html.FieldIdFor(model => model.UsePercentage)").click(toggleUsePercentage);
-
-        toggleUsePercentage();
-    });
-
-    function toggleUsePercentage() {
-        if ($('#@Html.FieldIdFor(model => model.UsePercentage)').is(':checked')) {
-                $('#pnlShippingChargePercentage').show();
-                $('#pnlShippingChargeAmount').hide();
-            }
-            else {
-                $('#pnlShippingChargePercentage').hide();
-                $('#pnlShippingChargeAmount').show();
-            }
-        }
-</script>
 <table class="adminContent">
     <tr>
         <td class="adminTitle">
@@ -114,29 +95,37 @@
     </tr>
     <tr>
         <td class="adminTitle">
-            @Html.NopLabelFor(model => model.UsePercentage):
+            @Html.NopLabelFor(model => model.AdditionalFixedCost):
         </td>
         <td class="adminData">
-            @Html.EditorFor(model => model.UsePercentage)
-            @Html.ValidationMessageFor(model => model.UsePercentage)
+            @Html.EditorFor(model => model.AdditionalFixedCost) [@Model.PrimaryStoreCurrencyCode]
+            @Html.ValidationMessageFor(model => model.AdditionalFixedCost)
         </td>
     </tr>
-    <tr id="pnlShippingChargePercentage">
+    <tr>
         <td class="adminTitle">
-            @Html.NopLabelFor(model => model.ShippingChargePercentage):
+            @Html.NopLabelFor(model => model.RatePerWeightUnit):
         </td>
         <td class="adminData">
-            @Html.EditorFor(model => model.ShippingChargePercentage)
-            @Html.ValidationMessageFor(model => model.ShippingChargePercentage)
+            @Html.EditorFor(model => model.RatePerWeightUnit) [@Model.PrimaryStoreCurrencyCode]
+            @Html.ValidationMessageFor(model => model.RatePerWeightUnit)
         </td>
     </tr>
-    <tr id="pnlShippingChargeAmount">
+    <tr>
         <td class="adminTitle">
-            @Html.NopLabelFor(model => model.ShippingChargeAmount):
+            @Html.NopLabelFor(model => model.PercentageRateOfSubtotal):
         </td>
         <td class="adminData">
-            @Html.EditorFor(model => model.ShippingChargeAmount) [@Model.PrimaryStoreCurrencyCode]
-                @Html.ValidationMessageFor(model => model.ShippingChargeAmount)
+            @Html.EditorFor(model => model.PercentageRateOfSubtotal)
+            @Html.ValidationMessageFor(model => model.PercentageRateOfSubtotal)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @T("Plugins.Shipping.ByWeight.Formula"):
+        </td>
+        <td class="adminData">
+            @T("Plugins.Shipping.ByWeight.Formula.Value")
         </td>
     </tr>
 </table>

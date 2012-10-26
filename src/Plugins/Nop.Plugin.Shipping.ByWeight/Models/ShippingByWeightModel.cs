@@ -38,14 +38,14 @@ namespace Nop.Plugin.Shipping.ByWeight.Models
         [NopResourceDisplayName("Plugins.Shipping.ByWeight.Fields.To")]
         public decimal To { get; set; }
 
-        [NopResourceDisplayName("Plugins.Shipping.ByWeight.Fields.UsePercentage")]
-        public bool UsePercentage { get; set; }
+        [NopResourceDisplayName("Plugins.Shipping.ByWeight.Fields.AdditionalFixedCost")]
+        public decimal AdditionalFixedCost { get; set; }
 
-        [NopResourceDisplayName("Plugins.Shipping.ByWeight.Fields.ShippingChargePercentage")]
-        public decimal ShippingChargePercentage { get; set; }
+        [NopResourceDisplayName("Plugins.Shipping.ByWeight.Fields.PercentageRateOfSubtotal")]
+        public decimal PercentageRateOfSubtotal { get; set; }
 
-        [NopResourceDisplayName("Plugins.Shipping.ByWeight.Fields.ShippingChargeAmount")]
-        public decimal ShippingChargeAmount { get; set; }
+        [NopResourceDisplayName("Plugins.Shipping.ByWeight.Fields.RatePerWeightUnit")]
+        public decimal RatePerWeightUnit { get; set; }
 
         [NopResourceDisplayName("Plugins.Shipping.ByWeight.Fields.DataHtml")]
         public string DataHtml { get; set; }
