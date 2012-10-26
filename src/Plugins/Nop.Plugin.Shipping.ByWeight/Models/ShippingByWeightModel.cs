@@ -47,6 +47,9 @@ namespace Nop.Plugin.Shipping.ByWeight.Models
         [NopResourceDisplayName("Plugins.Shipping.ByWeight.Fields.RatePerWeightUnit")]
         public decimal RatePerWeightUnit { get; set; }
 
+        [NopResourceDisplayName("Plugins.Shipping.ByWeight.Fields.LowerWeightLimit")]
+        public decimal LowerWeightLimit { get; set; }
+
         [NopResourceDisplayName("Plugins.Shipping.ByWeight.Fields.DataHtml")]
         public string DataHtml { get; set; }
 

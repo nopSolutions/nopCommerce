@@ -92,6 +92,7 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
                         AdditionalFixedCost = x.AdditionalFixedCost,
                         PercentageRateOfSubtotal = x.PercentageRateOfSubtotal,
                         RatePerWeightUnit = x.RatePerWeightUnit,
+                        LowerWeightLimit = x.LowerWeightLimit,
                     };
                     var shippingMethod = _shippingService.GetShippingMethodById(x.ShippingMethodId);
                     m.ShippingMethodName = (shippingMethod != null) ? shippingMethod.Name : "Unavailable";
@@ -110,6 +111,8 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
                     htmlSb.AppendFormat("{0}: {1}", _localizationService.GetResource("Plugins.Shipping.ByWeight.Fields.AdditionalFixedCost"), m.AdditionalFixedCost);
                     htmlSb.Append("<br />");
                     htmlSb.AppendFormat("{0}: {1}", _localizationService.GetResource("Plugins.Shipping.ByWeight.Fields.RatePerWeightUnit"), m.RatePerWeightUnit);
+                    htmlSb.Append("<br />");
+                    htmlSb.AppendFormat("{0}: {1}", _localizationService.GetResource("Plugins.Shipping.ByWeight.Fields.LowerWeightLimit"), m.LowerWeightLimit);
                     htmlSb.Append("<br />");
                     htmlSb.AppendFormat("{0}: {1}", _localizationService.GetResource("Plugins.Shipping.ByWeight.Fields.PercentageRateOfSubtotal"), m.PercentageRateOfSubtotal);
                     
@@ -189,7 +192,8 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
                 To = model.To,
                 AdditionalFixedCost = model.AdditionalFixedCost,
                 RatePerWeightUnit = model.RatePerWeightUnit,
-                PercentageRateOfSubtotal = model.PercentageRateOfSubtotal
+                PercentageRateOfSubtotal = model.PercentageRateOfSubtotal,
+                LowerWeightLimit = model.LowerWeightLimit
             };
             _shippingByWeightService.InsertShippingByWeightRecord(sbw);
 
@@ -219,6 +223,7 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
                 AdditionalFixedCost = sbw.AdditionalFixedCost,
                 PercentageRateOfSubtotal = sbw.PercentageRateOfSubtotal,
                 RatePerWeightUnit = sbw.RatePerWeightUnit,
+                LowerWeightLimit = sbw.LowerWeightLimit,
                 PrimaryStoreCurrencyCode = _currencyService.GetCurrencyById(_currencySettings.PrimaryStoreCurrencyId).CurrencyCode,
                 BaseWeightIn = _measureService.GetMeasureWeightById(_measureSettings.BaseWeightId).Name
             };
@@ -263,6 +268,7 @@ namespace Nop.Plugin.Shipping.ByWeight.Controllers
             sbw.AdditionalFixedCost = model.AdditionalFixedCost;
             sbw.RatePerWeightUnit = model.RatePerWeightUnit;
             sbw.PercentageRateOfSubtotal = model.PercentageRateOfSubtotal;
+            sbw.LowerWeightLimit = model.LowerWeightLimit;
             _shippingByWeightService.UpdateShippingByWeightRecord(sbw);
 
             ViewBag.RefreshPage = true;

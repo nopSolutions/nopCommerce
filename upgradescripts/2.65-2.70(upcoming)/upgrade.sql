@@ -420,7 +420,13 @@ set @resources='
     <Value>Formula to calculate rates</Value>
   </LocaleResource>
   <LocaleResource Name="Plugins.Shipping.ByWeight.Formula.Value">
-    <Value>[additional fixed cost] + [weight] * [rate per weight unit] + [subtotal] * [charge percentage]</Value>
+    <Value>[additional fixed cost] + ([order total weight] - [lower weight limit]) * [rate per weight unit] + [order subtotal] * [charge percentage]</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.ByWeight.Fields.LowerWeightLimit">
+    <Value>Lower weight limit</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.ByWeight.Fields.LowerWeightLimit.Hint">
+    <Value>Lower weight limit. This field can be used for "per extra weight unit" scenarios.</Value>
   </LocaleResource>
 </Language>
 '
@@ -1817,16 +1823,18 @@ GO
 --shipping by weight plugin
 IF EXISTS (SELECT 1 FROM sysobjects WHERE id = OBJECT_ID(N'[ShippingByWeight]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
 BEGIN
+	--new [AdditionalFixedCost] column
 	EXEC ('IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id(''[ShippingByWeight]'') and NAME=''AdditionalFixedCost'')
 	BEGIN
 		ALTER TABLE [ShippingByWeight]
 		ADD [AdditionalFixedCost] decimal(18,2) NULL
 
 		exec(''UPDATE [ShippingByWeight] SET [AdditionalFixedCost] = 0'')
+		
+		EXEC (''ALTER TABLE [ShippingByWeight] ALTER COLUMN [AdditionalFixedCost] decimal(18,2) NOT NULL'')
 	END')
 
-	EXEC ('ALTER TABLE [ShippingByWeight] ALTER COLUMN [AdditionalFixedCost] decimal(18,2) NOT NULL')
-	
+	--drop [UsePercentage] column
 	EXEC ('IF EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id(''[ShippingByWeight]'') and NAME=''UsePercentage'')
 	BEGIN
 		ALTER TABLE [ShippingByWeight]
@@ -1853,6 +1861,18 @@ BEGIN
 		exec(''UPDATE [ShippingByWeight] SET [RatePerWeightUnit] = [ShippingChargeAmount]'')
 		
 		exec(''ALTER TABLE [ShippingByWeight] DROP COLUMN [ShippingChargeAmount]'')
+	END')
+	
+	
+	--new [LowerWeightLimit] column
+	EXEC ('IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id(''[ShippingByWeight]'') and NAME=''LowerWeightLimit'')
+	BEGIN
+		ALTER TABLE [ShippingByWeight]
+		ADD [LowerWeightLimit] decimal(18,2) NULL
+
+		exec(''UPDATE [ShippingByWeight] SET [LowerWeightLimit] = 0'')
+		
+		EXEC (''ALTER TABLE [ShippingByWeight] ALTER COLUMN [LowerWeightLimit] decimal(18,2) NOT NULL'')
 	END')
 END
 GO

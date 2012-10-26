@@ -38,7 +38,7 @@ namespace Nop.Plugin.Shipping.ByWeight.Domain
         public virtual decimal To { get; set; }
 
         /// <summary>
-        /// Gets or sets the additinal fixed cost
+        /// Gets or sets the additional fixed cost
         /// </summary>
         public virtual decimal AdditionalFixedCost { get; set; }
 
@@ -51,5 +51,10 @@ namespace Nop.Plugin.Shipping.ByWeight.Domain
         /// Gets or sets the shipping charge amount (per weight unit)
         /// </summary>
         public virtual decimal RatePerWeightUnit { get; set; }
+
+        /// <summary>
+        /// Gets or sets the lower weight limit
+        /// </summary>
+        public virtual decimal LowerWeightLimit { get; set; }
     }
 }

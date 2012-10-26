@@ -104,6 +104,15 @@
     </tr>
     <tr>
         <td class="adminTitle">
+            @Html.NopLabelFor(model => model.LowerWeightLimit):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.LowerWeightLimit)
+            @Html.ValidationMessageFor(model => model.LowerWeightLimit)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
             @Html.NopLabelFor(model => model.RatePerWeightUnit):
         </td>
         <td class="adminData">
@@ -118,14 +127,6 @@
         <td class="adminData">
             @Html.EditorFor(model => model.PercentageRateOfSubtotal)
             @Html.ValidationMessageFor(model => model.PercentageRateOfSubtotal)
-        </td>
-    </tr>
-    <tr>
-        <td class="adminTitle">
-            @T("Plugins.Shipping.ByWeight.Formula"):
-        </td>
-        <td class="adminData">
-            @T("Plugins.Shipping.ByWeight.Formula.Value")
         </td>
     </tr>
 </table>

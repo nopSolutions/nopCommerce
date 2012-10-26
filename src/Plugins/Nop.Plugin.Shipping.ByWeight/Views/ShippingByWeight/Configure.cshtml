@@ -7,46 +7,63 @@
 @using Telerik.Web.Mvc.UI;
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "shipping-byweight-form" }))
 {
+    <br />
+    <hr />
+    <br />
+    <table>
+        <tr>
+            <td class="adminTitle">
+                <strong>@T("Plugins.Shipping.ByWeight.Formula"):</strong>
+            </td>
+            <td class="adminData">
+                @T("Plugins.Shipping.ByWeight.Formula.Value")
+            </td>
+        </tr>
+    </table>
+    <br />
+    <hr />
+    <br />
     <table class="adminContent">
         <tr>
             <td>
                 @(Html.Telerik().Grid<ShippingByWeightModel>()
-                  .Name("shipping-byweight-grid")
-                  .DataKeys(keys => keys.Add(x => x.Id).RouteKey("Id"))
-                  .Columns(columns =>
-                  {
-                      columns.Bound(x => x.CountryName).ReadOnly();
-                      columns.Bound(x => x.StateProvinceName).ReadOnly();
-                      columns.Bound(x => x.Zip);
-                      columns.Bound(x => x.ShippingMethodName).ReadOnly();
-                      columns.Bound(x => x.DataHtml)
-                          .Encoded(false);
-                      columns.Bound(x => x.Id)
-                          .Width(50)
-                          .Centered()
-                          .ClientTemplate("<input type='submit' value='" + @T("Admin.Common.Edit").Text + "' onclick=\"" + "javascript:OpenWindow('" + @Url.RouteUrl("Plugin.Shipping.ByWeight.EditPopup") + "?id=<#= Id #>&btnId=btnRefresh&formId=shipping-byweight-form', 800, 400, true); return false;\" class='t-button' />")
-                          .Title(T("Admin.Common.Edit").Text);
-                      columns.Command(commands =>
+                      .Name("shipping-byweight-grid")
+                      .DataKeys(keys => keys.Add(x => x.Id).RouteKey("Id"))
+                      .Columns(columns =>
                       {
-                          commands.Delete().Text(T("Admin.Common.Delete").Text);
-                      }).Title(T("Admin.Common.Delete").Text).Width(180);
+                          columns.Bound(x => x.CountryName).ReadOnly();
+                          columns.Bound(x => x.StateProvinceName).ReadOnly();
+                          columns.Bound(x => x.Zip);
+                          columns.Bound(x => x.ShippingMethodName).ReadOnly();
+                          columns.Bound(x => x.DataHtml)
+                              .Encoded(false);
+                          columns.Bound(x => x.Id)
+                              .Width(50)
+                              .Centered()
+                              .ClientTemplate("<input type='submit' value='" + @T("Admin.Common.Edit").Text + "' onclick=\"" + "javascript:OpenWindow('" + @Url.RouteUrl("Plugin.Shipping.ByWeight.EditPopup") + "?id=<#= Id #>&btnId=btnRefresh&formId=shipping-byweight-form', 800, 400, true); return false;\" class='t-button' />")
+                              .Title(T("Admin.Common.Edit").Text);
+                          columns.Command(commands =>
+                          {
+                              commands.Delete().Text(T("Admin.Common.Delete").Text);
+                          }).Title(T("Admin.Common.Delete").Text).Width(180);
 
-                  })
-                  .DataBinding(dataBinding =>
-                  {
-                      dataBinding.Ajax()
-                          .Select("RatesList", "ShippingByWeight", new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Shipping.ByWeight.Controllers" }, { "area", "" } })
-                          .Delete("RateDelete", "ShippingByWeight", new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Shipping.ByWeight.Controllers" }, { "area", "" } });
-                  })
-                  .EnableCustomBinding(true))
+                      })
+                      .DataBinding(dataBinding =>
+                      {
+                          dataBinding.Ajax()
+                              .Select("RatesList", "ShippingByWeight", new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Shipping.ByWeight.Controllers" }, { "area", "" } })
+                              .Delete("RateDelete", "ShippingByWeight", new RouteValueDictionary() { { "Namespaces", "Nop.Plugin.Shipping.ByWeight.Controllers" }, { "area", "" } });
+                      })
+                      .EnableCustomBinding(true))
             </td>
         </tr>
         <tr>
-            <td width="100%">
+            <td>
                 @{
     var addNewUrl = Url.RouteUrl("Plugin.Shipping.ByWeight.AddPopup") + "?btnId=btnRefresh&formId=shipping-byweight-form";
                 }
-                <input type="submit" id="btnAddNewOption" name="btnAddNewOption" value="@T("Plugins.Shipping.ByWeight.AddRecord")" onclick="javascript:OpenWindow('@(addNewUrl)', 800, 400, true); return false;" class="t-button" />
+                <br />
+                <input type="submit" id="btnAddNewOption" name="btnAddNewOption" value="@T("Plugins.Shipping.ByWeight.AddRecord")" onclick="javascript:OpenWindow('@(addNewUrl)    ', 800, 400, true); return false;" class="t-button" />
                 <input type="submit" id="btnRefresh" name="btnRefresh" style="display: none" />
                 <script type="text/javascript">
                     $(document).ready(function () {
@@ -66,7 +83,7 @@
     <br />
     <hr />
     <br />
-    <table class="adminContent" style="border: 1px solid black; padding: 15px;">
+    <table>
         <tr>
             <td class="adminTitle">
                 @Html.NopLabelFor(model => model.LimitMethodsToCreated):
@@ -77,29 +94,33 @@
             </td>
         </tr>
         <tr>
-            <td colspan="2" align="left">
+            <td colspan="2">
+                <br/>
                 <input type="button" id="savegeneralsettings" class="t-button" value="@T("Admin.Common.Save")" />
+                <script type="text/javascript">
+                    $(function () {
+                        $('#savegeneralsettings').click(function () {
+                            $.ajax({
+                                cache: false,
+                                type: 'POST',
+                                url: '@Url.RouteUrl("Plugin.Shipping.ByWeight.SaveGeneralSettings")',
+                                data: $(this.form).serialize(),
+                                dataType: 'json',
+                                success: function (data) {
+                                    alert('Saved');
+                                },
+                                error: function (xhr, ajaxOptions, thrownError) {
+                                    alert('Failed to add record.');
+                                }
+                            });
+                            return false;
+                        });
+                    });
+                </script>
             </td>
         </tr>
     </table>
-    <script type="text/javascript">
-        $(function () {
-            $('#savegeneralsettings').click(function () {
-                $.ajax({
-                    cache: false,
-                    type: 'POST',
-                    url: '@Url.RouteUrl("Plugin.Shipping.ByWeight.SaveGeneralSettings")',
-                    data: $(this.form).serialize(),
-                    dataType: 'json',
-                    success: function (data) {
-                        alert('Saved');
-                    },
-                    error: function (xhr, ajaxOptions, thrownError) {
-                        alert('Failed to add record.');
-                    }
-                });
-                return false;
-            });
-        });
-    </script>
+    <br />
+    <hr />
+    <br />
 }
