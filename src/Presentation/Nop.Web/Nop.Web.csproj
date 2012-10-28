@@ -340,6 +340,7 @@
     <Content Include="App_Data\Localization\Installation\installation.bs-Latn-BA.xml" />
     <Content Include="App_Data\Localization\Installation\installation.cz.xml" />
     <Content Include="App_Data\Localization\Installation\installation.da.xml" />
+    <Content Include="App_Data\Localization\Installation\installation.de.xml" />
     <Content Include="App_Data\Localization\Installation\installation.fr.xml" />
     <Content Include="App_Data\Localization\Installation\installation.gr.xml" />
     <Content Include="App_Data\Localization\Installation\installation.he.xml" />
