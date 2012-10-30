@@ -391,7 +391,7 @@ namespace Nop.Admin.Controllers
             }
             if (!String.IsNullOrWhiteSpace(model.Username) & _customerSettings.UsernamesEnabled)
             {
-                var cust2 = _customerService.GetCustomerByEmail(model.Username);
+                var cust2 = _customerService.GetCustomerByUsername(model.Username);
                 if (cust2 != null)
                     ModelState.AddModelError("", "Username is already registered");
             }
