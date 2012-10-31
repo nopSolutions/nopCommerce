@@ -3895,7 +3895,7 @@
                                       </Children>
                                     </LocaleResource>
                                     <LocaleResource Name="AddressFormFields">
-                                      <Value>Addess form fields</Value>
+                                      <Value>Address form fields</Value>
                                       <Children>
                                         <LocaleResource Name="Description">
                                           <Value>You can create and manage the address form fields available during checkout.</Value>
