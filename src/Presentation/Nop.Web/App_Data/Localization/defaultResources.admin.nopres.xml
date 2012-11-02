@@ -8412,7 +8412,7 @@
                                 <Value>Return request(s)</Value>
                             </LocaleResource>
                             <LocaleResource Name="GiftCards">
-                                <Value>Gift cards(s)</Value>
+                                <Value>Gift card(s)</Value>
                             </LocaleResource>
                         </Children>
                     </LocaleResource>
