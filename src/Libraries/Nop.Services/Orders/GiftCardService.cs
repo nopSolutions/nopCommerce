@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
@@ -74,10 +75,12 @@ namespace Nop.Services.Orders
         /// <param name="endTime">Order end time; null to load all records</param>
         /// <param name="isGiftCardActivated">Value indicating whether gift card is activated; null to load all records</param>
         /// <param name="giftCardCouponCode">Gift card coupon code; null or string.empty to load all records</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
         /// <returns>Gift cards</returns>
-        public virtual IList<GiftCard> GetAllGiftCards(int? purchasedWithOrderId, 
-            DateTime? startTime = null, DateTime? endTime = null,
-            bool? isGiftCardActivated = null, string giftCardCouponCode = "")
+        public virtual IPagedList<GiftCard> GetAllGiftCards(int? purchasedWithOrderId, 
+            DateTime? startTime, DateTime? endTime, bool? isGiftCardActivated, 
+            string giftCardCouponCode, int pageIndex, int pageSize)
         {
             var query = _giftCardRepository.Table;
             if (purchasedWithOrderId.HasValue)
@@ -92,7 +95,7 @@ namespace Nop.Services.Orders
                 query = query.Where(gc => gc.GiftCardCouponCode == giftCardCouponCode);
             query = query.OrderByDescending(gc => gc.CreatedOnUtc);
 
-            var giftCards = query.ToList();
+            var giftCards = new PagedList<GiftCard>(query, pageIndex, pageSize);
             return giftCards;
         }
 
@@ -158,7 +161,7 @@ namespace Nop.Services.Orders
             string[] couponCodes = customer.ParseAppliedGiftCardCouponCodes();
             foreach (var couponCode in couponCodes)
             {
-                var giftCards = GetAllGiftCards(null, null, null, true, couponCode);
+                var giftCards = GetAllGiftCards(null, null, null, true, couponCode, 0, int.MaxValue);
                 foreach (var gc in giftCards)
                 {
                     if (gc.IsGiftCardValid())

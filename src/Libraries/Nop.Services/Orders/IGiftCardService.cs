@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 
@@ -31,9 +32,12 @@ namespace Nop.Services.Orders
         /// <param name="endTime">Order end time; null to load all records</param>
         /// <param name="isGiftCardActivated">Value indicating whether gift card is activated; null to load all records</param>
         /// <param name="giftCardCouponCode">Gift card coupon code; null or string.empty to load all records</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
         /// <returns>Gift cards</returns>
-        IList<GiftCard> GetAllGiftCards(int? purchasedWithOrderId, DateTime? startTime = null, DateTime? endTime = null,
-            bool? isGiftCardActivated = null, string giftCardCouponCode = "");
+        IPagedList<GiftCard> GetAllGiftCards(int? purchasedWithOrderId,
+            DateTime? startTime, DateTime? endTime, bool? isGiftCardActivated,
+            string giftCardCouponCode, int pageIndex, int pageSize);
 
         /// <summary>
         /// Inserts a gift card
