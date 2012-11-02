@@ -189,10 +189,13 @@ namespace Nop.Services.Orders
         /// <param name="customerId">The customer identifier; 0 to load all records</param>
         /// <param name="initialOrderId">The initial order identifier; 0 to load all records</param>
         /// <param name="initialOrderStatus">Initial order status identifier; null to load all records</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Recurring payment collection</returns>
-        IList<RecurringPayment> SearchRecurringPayments(int customerId,
-           int initialOrderId, OrderStatus? initialOrderStatus, bool showHidden = false);
+        IPagedList<RecurringPayment> SearchRecurringPayments(int customerId,
+            int initialOrderId, OrderStatus? initialOrderStatus,
+            int pageIndex, int pageSize, bool showHidden = false);
 
         #endregion
 

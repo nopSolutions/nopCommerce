@@ -305,7 +305,7 @@ namespace Nop.Admin.Controllers
             model.MaxAmountToRefund = order.OrderTotal - order.RefundedAmount;
 
             //recurring payment record
-            var recurringPayment = _orderService.SearchRecurringPayments(0, order.Id, null, true).FirstOrDefault();
+            var recurringPayment = _orderService.SearchRecurringPayments(0, order.Id, null, 0, int.MaxValue, true).FirstOrDefault();
             if (recurringPayment != null)
             {
                 model.RecurringPaymentId = recurringPayment.Id;

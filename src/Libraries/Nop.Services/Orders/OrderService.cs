@@ -478,10 +478,13 @@ namespace Nop.Services.Orders
         /// <param name="customerId">The customer identifier; 0 to load all records</param>
         /// <param name="initialOrderId">The initial order identifier; 0 to load all records</param>
         /// <param name="initialOrderStatus">Initial order status identifier; null to load all records</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Recurring payment collection</returns>
-        public virtual IList<RecurringPayment> SearchRecurringPayments(int customerId,
-            int initialOrderId, OrderStatus? initialOrderStatus, bool showHidden = false)
+        public virtual IPagedList<RecurringPayment> SearchRecurringPayments(int customerId,
+            int initialOrderId, OrderStatus? initialOrderStatus, 
+            int pageIndex, int pageSize, bool showHidden = false)
         {
             int? initialOrderStatusId = null;
             if (initialOrderStatus.HasValue)
@@ -503,8 +506,8 @@ namespace Nop.Services.Orders
                          where query1.Contains(rp.Id)
                          orderby rp.StartDateUtc, rp.Id
                          select rp;
-            
-            var recurringPayments = query2.ToList();
+
+            var recurringPayments = new PagedList<RecurringPayment>(query2, pageIndex, pageSize);
             return recurringPayments;
         }
 
