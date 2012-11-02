@@ -121,17 +121,18 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageReturnRequests))
                 return AccessDeniedView();
 
-            var returnRequests = new List<ReturnRequestModel>();
-            foreach (var rr in _orderService.SearchReturnRequests(0, 0, null).PagedForCommand(command))
+            var returnRequests = _orderService.SearchReturnRequests(0, 0, null, command.Page - 1, command.PageSize);
+            var returnRequestModels = new List<ReturnRequestModel>();
+            foreach (var rr in returnRequests)
             {
                 var m = new ReturnRequestModel();
                 if (PrepareReturnRequestModel(m, rr, false))
-                    returnRequests.Add(m);
+                    returnRequestModels.Add(m);
             }
             var gridModel = new GridModel<ReturnRequestModel>
             {
-                Data = returnRequests,
-                Total = returnRequests.Count,
+                Data = returnRequestModels,
+                Total = returnRequests.TotalCount,
             };
             return new JsonResult
             {

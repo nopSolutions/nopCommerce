@@ -549,9 +549,12 @@ namespace Nop.Services.Orders
         /// <param name="customerId">Customer identifier; null to load all entries</param>
         /// <param name="orderProductVariantId">Order product variant identifier; null to load all entries</param>
         /// <param name="rs">Return request status; null to load all entries</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
         /// <returns>Return requests</returns>
-        public virtual IList<ReturnRequest> SearchReturnRequests(int customerId,
-            int orderProductVariantId, ReturnRequestStatus? rs)
+        public virtual IPagedList<ReturnRequest> SearchReturnRequests(int customerId,
+            int orderProductVariantId, ReturnRequestStatus? rs,
+            int pageIndex, int pageSize)
         {
             var query = _returnRequestRepository.Table;
             if (customerId > 0)
@@ -565,8 +568,9 @@ namespace Nop.Services.Orders
                 query = query.Where(rr => rr.OrderProductVariantId == orderProductVariantId);
 
             query = query.OrderByDescending(rr => rr.CreatedOnUtc).ThenByDescending(rr=>rr.Id);
-            
-            var returnRequests = query.ToList();
+
+
+            var returnRequests = new PagedList<ReturnRequest>(query, pageIndex, pageSize);
             return returnRequests;
         }
 

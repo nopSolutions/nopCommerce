@@ -18,7 +18,7 @@
 <table class="adminContent">
     <tr>
         <td>
-            @(Html.Telerik().Grid<ReturnRequestModel>(Model.Data)
+            @(Html.Telerik().Grid<ReturnRequestModel>()
                     .Name("returnrequests-grid")
                     .Columns(columns =>
                     {
@@ -52,7 +52,7 @@
                             .ClientTemplate("<a href=\"Edit/<#= Id #>\">" + T("Admin.Common.Edit").Text + "</a>")
                             .Title(T("Admin.Common.Edit").Text);
                     })
-                    .Pageable(settings => settings.Total(Model.Total).PageSize(gridPageSize).Position(GridPagerPosition.Both))
+                    .Pageable(settings => settings.PageSize(gridPageSize).Position(GridPagerPosition.Both))
                     .DataBinding(dataBinding => dataBinding.Ajax().Select("List", "ReturnRequest"))
                     .EnableCustomBinding(true))
         </td>

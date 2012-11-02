@@ -77,7 +77,7 @@ namespace Nop.Services.Affiliates
             if (!showHidden)
                 query = query.Where(a => a.Active);
             query = query.Where(a => !a.Deleted);
-            query = query.OrderBy(a => a.Id);
+            query = query.OrderByDescending(a => a.Id);
 
             var affiliates = new PagedList<Affiliate>(query, pageIndex, pageSize);
             return affiliates;
