@@ -126,9 +126,9 @@ var Billing = {
     },
 
     resetSelectedAddress: function () {
-        var selectElement = $('#billing-address-select')
+        var selectElement = $('#billing-address-select');
         if (selectElement) {
-            selectElement.value = '';
+            selectElement.val('');
         }
     },
 
@@ -187,9 +187,9 @@ var Shipping = {
     },
 
     resetSelectedAddress: function () {
-        var selectElement = $('#shipping-address-select')
+        var selectElement = $('#shipping-address-select');
         if (selectElement) {
-            selectElement.value = '';
+            selectElement.val('');
         }
     },
 
