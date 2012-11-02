@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Affiliates;
 using Nop.Services.Events;
@@ -67,15 +68,18 @@ namespace Nop.Services.Affiliates
         /// Gets all affiliates
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
         /// <returns>Affiliate collection</returns>
-        public virtual IList<Affiliate> GetAllAffiliates(bool showHidden = false)
+        public virtual IPagedList<Affiliate> GetAllAffiliates(int pageIndex, int pageSize, bool showHidden = false)
         {
             var query = _affiliateRepository.Table;
             if (!showHidden)
                 query = query.Where(a => a.Active);
             query = query.Where(a => !a.Deleted);
             query = query.OrderBy(a => a.Id);
-            var affiliates = query.ToList();
+
+            var affiliates = new PagedList<Affiliate>(query, pageIndex, pageSize);
             return affiliates;
         }
 

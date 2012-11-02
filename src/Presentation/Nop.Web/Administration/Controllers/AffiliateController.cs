@@ -143,16 +143,16 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageAffiliates))
                 return AccessDeniedView();
 
-            var affiliates = _affiliateService.GetAllAffiliates(true);
+            var affiliates = _affiliateService.GetAllAffiliates(command.Page - 1, command.PageSize, true);
             var gridModel = new GridModel<AffiliateModel>
             {
-                Data = affiliates.PagedForCommand(command).Select(x =>
+                Data = affiliates.Select(x =>
                 {
                     var m = new AffiliateModel();
                     PrepareAffiliateModel(m, x, false);
                     return m;
                 }),
-                Total = affiliates.Count,
+                Total = affiliates.TotalCount,
             };
             return new JsonResult
             {

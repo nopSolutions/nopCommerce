@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Nop.Core;
 using Nop.Core.Domain.Affiliates;
 
 namespace Nop.Services.Affiliates
@@ -25,8 +26,10 @@ namespace Nop.Services.Affiliates
         /// Gets all affiliates
         /// </summary>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
+        /// <param name="pageIndex">Page index</param>
+        /// <param name="pageSize">Page size</param>
         /// <returns>Affiliate collection</returns>
-        IList<Affiliate> GetAllAffiliates(bool showHidden = false);
+        IPagedList<Affiliate> GetAllAffiliates(int pageIndex, int pageSize, bool showHidden = false);
 
         /// <summary>
         /// Inserts an affiliate
