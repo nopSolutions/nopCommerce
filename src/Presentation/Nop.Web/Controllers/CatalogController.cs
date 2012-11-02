@@ -193,7 +193,48 @@ namespace Nop.Web.Controllers
             breadCrumb.Reverse();
             return breadCrumb;
         }
-        
+
+        [NonAction]
+        protected IList<CategoryNavigationModel.CategoryModel> PrepareCategoryNavigationModel(IList<Category> breadCrumb, 
+            int rootCategoryId, int level)
+        {
+            var result = new List<CategoryNavigationModel.CategoryModel>();
+            foreach (var category in _categoryService.GetAllCategoriesByParentCategoryId(rootCategoryId))
+            {
+                var categoryModel = new CategoryNavigationModel.CategoryModel()
+                {
+                    Id = category.Id,
+                    Name = category.GetLocalized(x => x.Name),
+                    SeName = category.GetSeName(),
+                    NumberOfParentCategories = level
+                };
+
+                //show product number for each category
+                if (_catalogSettings.ShowCategoryProductNumber)
+                {
+                    var categoryIds = new List<int>();
+                    categoryIds.Add(category.Id);
+                    //include subcategories
+                    if (_catalogSettings.ShowCategoryProductNumberIncludingSubcategories)
+                        categoryIds.AddRange(GetChildCategoryIds(category.Id));
+                    IList<int> filterableSpecificationAttributeOptionIds = null;
+                    categoryModel.NumberOfProducts = _productService.SearchProducts(categoryIds,
+                        0, null, null, null, 0, string.Empty, false, false, 0, null,
+                        ProductSortingEnum.Position, 0, 1,
+                        false, out filterableSpecificationAttributeOptionIds).TotalCount;
+                }
+
+                //subcategories
+                for (int i = 0; i <= breadCrumb.Count - 1; i++)
+                    if (breadCrumb[i].Id == category.Id)
+                        categoryModel.SubCategories.AddRange(PrepareCategoryNavigationModel(breadCrumb, category.Id, level + 1));
+
+                result.Add(categoryModel);
+            }
+
+            return result;
+        }
+
         [NonAction]
         protected IEnumerable<ProductOverviewModel> PrepareProductOverviewModels(IEnumerable<Product> products, 
             bool preparePriceModel = true, bool preparePictureModel = true,
@@ -411,47 +452,6 @@ namespace Nop.Web.Controllers
                    }).ToList();
                 return model;
             });
-        }
-        
-        [NonAction]
-        protected IList<CategoryNavigationModel> GetChildCategoryNavigationModel(IList<Category> breadCrumb, int rootCategoryId, Category currentCategory, int level)
-        {
-            var result = new List<CategoryNavigationModel>();
-            foreach (var category in _categoryService.GetAllCategoriesByParentCategoryId(rootCategoryId))
-            {
-                var model = new CategoryNavigationModel()
-                {
-                    Id = category.Id,
-                    Name = category.GetLocalized(x => x.Name),
-                    SeName = category.GetSeName(),
-                    IsActive = currentCategory != null && currentCategory.Id == category.Id,
-                    NumberOfParentCategories = level
-                };
-
-                if (_catalogSettings.ShowCategoryProductNumber)
-                {
-                    model.DisplayNumberOfProducts = true;
-                    var categoryIds = new List<int>();
-                    categoryIds.Add(category.Id);
-                    if (_catalogSettings.ShowCategoryProductNumberIncludingSubcategories)
-                    {
-                        //include subcategories
-                        categoryIds.AddRange(GetChildCategoryIds(category.Id));
-                    }
-                    IList<int> filterableSpecificationAttributeOptionIds = null;
-                    model.NumberOfProducts = _productService.SearchProducts(categoryIds,
-                        0, null, null, null, 0, string.Empty, false, false, 0, null,
-                        ProductSortingEnum.Position, 0, 1,
-                        false, out filterableSpecificationAttributeOptionIds).TotalCount;
-                }
-                result.Add(model);
-
-                for (int i = 0; i <= breadCrumb.Count - 1; i++)
-                    if (breadCrumb[i].Id == category.Id)
-                        result.AddRange(GetChildCategoryNavigationModel(breadCrumb, category.Id, currentCategory, level + 1));
-            }
-
-            return result;
         }
         
         [NonAction]
@@ -765,7 +765,7 @@ namespace Nop.Web.Controllers
 
             return model;
         }
-        
+
         #endregion
 
         #region Categories
@@ -1041,6 +1041,7 @@ namespace Nop.Web.Controllers
         [ChildActionOnly]
         public ActionResult CategoryNavigation(int currentCategoryId, int currentProductId)
         {
+            //get current category
             var currentCategory = _categoryService.GetCategoryById(currentCategoryId);
             if (currentCategory == null && currentProductId > 0)
             {
@@ -1048,8 +1049,12 @@ namespace Nop.Web.Controllers
                 if (productCategories.Count > 0)
                     currentCategory = productCategories[0].Category;
             }
+
+            //prepare model
+            var model = new CategoryNavigationModel();
+            model.CurrentCategoryId = currentCategory != null ? currentCategory.Id : 0;
             var breadCrumb = currentCategory != null ? GetCategoryBreadCrumb(currentCategory) : new List<Category>();
-            var model = GetChildCategoryNavigationModel(breadCrumb, 0, currentCategory, 0);
+            model.Categories.AddRange(PrepareCategoryNavigationModel(breadCrumb, 0, 0 ));
 
             return PartialView(model);
         }
