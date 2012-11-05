@@ -20,11 +20,16 @@
             {
                 <text> (@(category.NumberOfProducts.Value))</text>
             }
-        </a></li>
-    foreach (var subCategory in category.SubCategories)
-    {
-        @RenderCategoryLine(subCategory)
-    }
+        </a>
+        @if (category.SubCategories.Count > 0)
+        {
+            <ul class="sublist">
+                @foreach (var subCategory in category.SubCategories)
+                {
+                    @RenderCategoryLine(subCategory)
+                }
+            </ul>
+        }</li>
 }
 @if (Model.Categories.Count > 0)
 {
