@@ -12,6 +12,7 @@ using Nop.Services.Helpers;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
 using Nop.Services.Security;
+using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Telerik.Web.Mvc;
 
@@ -151,12 +152,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
 
-            var discounts = _discountService.GetAllDiscounts(null, true);
-            var gridModel = new GridModel<DiscountModel>
-            {
-                Data = discounts.Select(x => x.ToModel()),
-                Total = discounts.Count()
-            };
+            var gridModel = new GridModel<DiscountModel>();
             return View(gridModel);
         }
 
@@ -169,8 +165,8 @@ namespace Nop.Admin.Controllers
             var discounts = _discountService.GetAllDiscounts(null, true);
             var gridModel = new GridModel<DiscountModel>
             {
-                Data = discounts.Select(x => x.ToModel()),
-                Total = discounts.Count()
+                Data = discounts.PagedForCommand(command).Select(x => x.ToModel()),
+                Total = discounts.Count
             };
             return new JsonResult
             {
