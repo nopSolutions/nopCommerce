@@ -170,6 +170,7 @@ a.eu-cookie-privacyinfo-tag{color:#F93 !important;text-decoration:underline;}
 .block-category-navigation .active > a,.block-manufacturer-navigation .active a{color:#f93;font-weight:700;text-decoration:none;}
 .block-category-navigation .listbox ul .active,.block-manufacturer-navigation .listbox ul .active{font-weight:700;}
 .block-category-navigation .listbox ul .inactive,.block-manufacturer-navigation .listbox ul .inactive{}
+.block-category-navigation ul.sublist{margin:0px 7px 0px 0px;}
 .block-manufacturer-navigation .listbox .view-all a{color:#f93;}
 .block-account-navigation a.active{color:#f93;font-weight:700;text-decoration:none;}
 .block-account-navigation a{white-space:nowrap;}

@@ -3,19 +3,8 @@
 @helper RenderCategoryLine(CategoryNavigationModel.CategoryModel category)
 {
     var categoryPadding = 15;
-    <li class="@(category.Id == Model.CurrentCategoryId ? "active" : "inactive")" 
-        @if (category.NumberOfParentCategories > 0)
-        {
-            if (this.ShouldUseRtlTheme())
-            {
-                <text>style="margin-right: @(category.NumberOfParentCategories * categoryPadding)px"</text>
-            }
-            else
-            {
-                <text>style="margin-left: @(category.NumberOfParentCategories * categoryPadding)px"</text>
-            }
-        }
-        ><a href="@Url.RouteUrl("Category", new { SeName = category.SeName })">@category.Name
+    <li class="@(category.Id == Model.CurrentCategoryId ? "active" : "inactive")">
+        <a href="@Url.RouteUrl("Category", new { SeName = category.SeName })">@category.Name
             @if (category.NumberOfProducts.HasValue)
             {
                 <text> (@(category.NumberOfProducts.Value))</text>
@@ -29,7 +18,8 @@
                     @RenderCategoryLine(subCategory)
                 }
             </ul>
-        }</li>
+        }
+    </li>
 }
 @if (Model.Categories.Count > 0)
 {
