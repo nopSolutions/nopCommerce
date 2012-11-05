@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Routing;
 using System.Xml;
@@ -89,7 +90,44 @@ namespace Nop.Plugin.Feed.Froogle
         #endregion
 
         #region Utilities
+        /// <summary>
+        /// Removes invalid characters
+        /// </summary>
+        /// <param name="input">Input string</param>
+        /// <param name="isHtmlEncoded">A value indicating whether input string is HTML encoded</param>
+        /// <returns>Valid string</returns>
+        private string StripInvalidChars(string input, bool isHtmlEncoded)
+        {
+            if (String.IsNullOrWhiteSpace(input))
+                return input;
 
+            //Microsoft uses a proprietary encoding (called CP-1252) for the bullet symbol and some other special characters, 
+            //whereas most websites and data feeds use UTF-8. When you copy-paste from a Microsoft product into a website, 
+            //some characters may appear as junk. Our system generates data feeds in the UTF-8 character encoding, 
+            //which many shopping engines now require.
+
+            //http://www.atensoftware.com/p90.php?q=182
+
+            if (isHtmlEncoded)
+                input = HttpUtility.HtmlDecode(input);
+
+            input = input.Replace("¼", "");
+            input = input.Replace("½", "");
+            input = input.Replace("¾", "");
+            //input = input.Replace("•", "");
+            //input = input.Replace("”", "");
+            //input = input.Replace("“", "");
+            //input = input.Replace("’", "");
+            //input = input.Replace("‘", "");
+            //input = input.Replace("™", "");
+            //input = input.Replace("®", "");
+            //input = input.Replace("°", "");
+            
+            if (isHtmlEncoded)
+                input = HttpUtility.HtmlEncode(input);
+
+            return input;
+        }
         private Currency GetUsedCurrency()
         {
             var currency = _currencyService.GetCurrencyById(_froogleSettings.CurrencyId);
@@ -198,6 +236,8 @@ namespace Nop.Plugin.Feed.Froogle
                             description = product.Name;
                         if (String.IsNullOrEmpty(description))
                             description = productVariant.FullProductName; //description is required
+                        //resolving character encoding issues in your data feed
+                        description = StripInvalidChars(description, true);
                         writer.WriteCData(description);
                         writer.WriteEndElement(); // description
 
