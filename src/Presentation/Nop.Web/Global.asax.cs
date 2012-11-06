@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Linq;
 using System.Threading;
+using System.Web;
 using System.Web.Hosting;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -209,6 +210,12 @@ namespace Nop.Web
             
             try
             {
+                //ignore 404 HTTP errors
+                var httpException = exc as HttpException;
+                if (httpException != null && httpException.GetHttpCode() == 404)
+                    return;
+
+                //log
                 var logger = EngineContext.Current.Resolve<ILogger>();
                 var workContext = EngineContext.Current.Resolve<IWorkContext>();
                 logger.Error(exc.Message, exc, workContext.CurrentCustomer);
