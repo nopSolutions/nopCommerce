@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using System.Text;
 using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
@@ -98,7 +98,7 @@ namespace Nop.Services.Media
         /// </summary>
         /// <param name="mimeType">Mime type</param>
         /// <returns>ImageCodecInfo</returns>
-        protected virtual  ImageCodecInfo GetImageCodecInfoFromMimeType(string mimeType)
+        protected virtual ImageCodecInfo GetImageCodecInfoFromMimeType(string mimeType)
         {
             var info = ImageCodecInfo.GetImageEncoders();
             foreach (var ici in info)
@@ -112,7 +112,7 @@ namespace Nop.Services.Media
         /// </summary>
         /// <param name="fileExt">File extension</param>
         /// <returns>ImageCodecInfo</returns>
-        protected virtual  ImageCodecInfo GetImageCodecInfoFromExtension(string fileExt)
+        protected virtual ImageCodecInfo GetImageCodecInfoFromExtension(string fileExt)
         {
             fileExt = fileExt.TrimStart(".".ToCharArray()).ToLower().Trim();
             switch (fileExt)
@@ -137,7 +137,7 @@ namespace Nop.Services.Media
         /// <param name="pictureId">Picture identifier</param>
         /// <param name="pictureBinary">Picture binary</param>
         /// <param name="mimeType">MIME type</param>
-        protected virtual  void SavePictureInFile(int pictureId, byte[] pictureBinary, string mimeType)
+        protected virtual void SavePictureInFile(int pictureId, byte[] pictureBinary, string mimeType)
         {
             string lastPart = GetFileExtensionFromMimeType(mimeType);
             string localFilename = string.Format("{0}_0.{1}", pictureId.ToString("0000000"), lastPart);            
@@ -148,7 +148,7 @@ namespace Nop.Services.Media
         /// Delete a picture on file system
         /// </summary>
         /// <param name="picture">Picture</param>
-        protected virtual  void DeletePictureOnFileSystem(Picture picture)
+        protected virtual void DeletePictureOnFileSystem(Picture picture)
         {
             if (picture == null)
                 throw new ArgumentNullException("picture");
@@ -168,7 +168,7 @@ namespace Nop.Services.Media
         /// <param name="originalSize">The original picture size</param>
         /// <param name="targetSize">The target picture size (longest side)</param>
         /// <returns></returns>
-        protected virtual  Size CalculateDimensions(Size originalSize, int targetSize)
+        protected virtual Size CalculateDimensions(Size originalSize, int targetSize)
         {
             var newSize = new Size();
             if (originalSize.Height > originalSize.Width) // portrait 
@@ -188,7 +188,7 @@ namespace Nop.Services.Media
         /// Delete picture thumbs
         /// </summary>
         /// <param name="picture">Picture</param>
-        protected virtual  void DeletePictureThumbs(Picture picture)
+        protected virtual void DeletePictureThumbs(Picture picture)
         {
             string filter = string.Format("{0}*.*", picture.Id.ToString("0000000"));
             string[] currentFiles = System.IO.Directory.GetFiles(this.LocalThumbImagePath, filter);
@@ -201,41 +201,41 @@ namespace Nop.Services.Media
         /// </summary>
         /// <param name="pictureBinary">Picture binary</param>
         /// <param name="mimeType">MIME type</param>
+        /// <param name="maxSize">Maximum image size</param>
         /// <returns>Picture binary or throws an exception</returns>
         protected virtual byte[] ValidatePicture(byte[] pictureBinary, string mimeType)
         {
-            using (var stream = new MemoryStream(pictureBinary))
+            using (var stream1 = new MemoryStream(pictureBinary))
             {
-                var b = new Bitmap(stream);
-                int maxSize = _mediaSettings.MaximumImageSize;
-
-                if ((b.Height > maxSize) || (b.Width > maxSize))
+                using (var b = new Bitmap(stream1))
                 {
+                    var maxSize = _mediaSettings.MaximumImageSize;
+                    if ((b.Height <= maxSize) && (b.Width <= maxSize))
+                        return pictureBinary;
+                    
                     var newSize = CalculateDimensions(b.Size, maxSize);
-                    var newBitMap = new Bitmap(newSize.Width, newSize.Height);
-                    var g = Graphics.FromImage(newBitMap);
-                    g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-                    g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-                    g.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
-                    g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
-                    g.DrawImage(b, 0, 0, newSize.Width, newSize.Height);
+                    using (var newBitMap = new Bitmap(newSize.Width, newSize.Height))
+                    {
+                        using (var g = Graphics.FromImage(newBitMap))
+                        {
+                            g.SmoothingMode = SmoothingMode.HighQuality;
+                            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                            g.CompositingQuality =CompositingQuality.HighQuality;
+                            g.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                            g.DrawImage(b, 0, 0, newSize.Width, newSize.Height);
 
-                    var m = new MemoryStream();
-                    var ep = new EncoderParameters();
-                    ep.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, this.ImageQuality);
-                    ImageCodecInfo ici = GetImageCodecInfoFromMimeType(mimeType);
-                    if (ici == null)
-                        ici = GetImageCodecInfoFromMimeType("image/jpeg");
-                    newBitMap.Save(m, ici, ep);
-                    newBitMap.Dispose();
-                    b.Dispose();
-
-                    return m.GetBuffer();
-                }
-                else
-                {
-                    b.Dispose();
-                    return pictureBinary;
+                            using (var stream2 = new MemoryStream())
+                            {
+                                var ep = new EncoderParameters();
+                                ep.Param[0] = new EncoderParameter(Encoder.Quality, this.ImageQuality);
+                                ImageCodecInfo ici = GetImageCodecInfoFromMimeType(mimeType);
+                                if (ici == null)
+                                    ici = GetImageCodecInfoFromMimeType("image/jpeg");
+                                newBitMap.Save(stream2, ici, ep);
+                                return stream2.GetBuffer();
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -251,27 +251,6 @@ namespace Nop.Services.Media
         /// <returns>Result</returns>
         public virtual string GetPictureSeName(string name)
         {
-            //if (String.IsNullOrEmpty(name))
-            //    return name;
-
-            //string okChars = "abcdefghijklmnopqrstuvwxyz1234567890 _-";
-            //name = name.Trim().ToLowerInvariant();
-
-            //var sb = new StringBuilder();
-            //foreach (char c in name.ToCharArray())
-            //{
-            //    string c2 = c.ToString();
-            //    if (okChars.Contains(c2))
-            //        sb.Append(c2);
-            //}
-            //string name2 = sb.ToString();
-            //name2 = name2.Replace(" ", "_");
-            //name2 = name2.Replace("-", "_");
-            //while (name2.Contains("__"))
-            //    name2 = name2.Replace("__", "_");
-            //return name2.ToLowerInvariant();
-
-            //use SeoExtensions implementation
             return SeoExtensions.GetSeName(name, true, false);
         }
 
@@ -317,30 +296,33 @@ namespace Nop.Services.Media
                         fileExtension);
                     if (!File.Exists(Path.Combine(LocalThumbImagePath, fname)))
                     {
-                        var b = new Bitmap(filePath);
+                        using (var b = new Bitmap(filePath))
+                        {
+                            var newSize = CalculateDimensions(b.Size, targetSize);
 
-                        var newSize = CalculateDimensions(b.Size, targetSize);
+                            if (newSize.Width < 1)
+                                newSize.Width = 1;
+                            if (newSize.Height < 1)
+                                newSize.Height = 1;
 
-                        if (newSize.Width < 1)
-                            newSize.Width = 1;
-                        if (newSize.Height < 1)
-                            newSize.Height = 1;
-
-                        var newBitMap = new Bitmap(newSize.Width, newSize.Height);
-                        var g = Graphics.FromImage(newBitMap);
-                        g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-                        g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-                        g.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
-                        g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
-                        g.DrawImage(b, 0, 0, newSize.Width, newSize.Height);
-                        var ep = new EncoderParameters();
-                        ep.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, this.ImageQuality);
-                        ImageCodecInfo ici = GetImageCodecInfoFromExtension(fileExtension);
-                        if (ici == null)
-                            ici = GetImageCodecInfoFromMimeType("image/jpeg");
-                        newBitMap.Save(Path.Combine(LocalThumbImagePath, fname), ici, ep);
-                        newBitMap.Dispose();
-                        b.Dispose();
+                            using (var newBitMap = new Bitmap(newSize.Width, newSize.Height))
+                            {
+                                using (var g = Graphics.FromImage(newBitMap))
+                                {
+                                    g.SmoothingMode = SmoothingMode.HighQuality;
+                                    g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                                    g.CompositingQuality = CompositingQuality.HighQuality;
+                                    g.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                                    g.DrawImage(b, 0, 0, newSize.Width, newSize.Height);
+                                    var ep = new EncoderParameters();
+                                    ep.Param[0] = new EncoderParameter(Encoder.Quality, this.ImageQuality);
+                                    ImageCodecInfo ici = GetImageCodecInfoFromExtension(fileExtension);
+                                    if (ici == null)
+                                        ici = GetImageCodecInfoFromMimeType("image/jpeg");
+                                    newBitMap.Save(Path.Combine(LocalThumbImagePath, fname), ici, ep);
+                                }
+                            }
+                        }
                     }
                     return (useSsl.HasValue
                                ? _webHelper.GetStoreLocation(useSsl.Value)
@@ -499,20 +481,23 @@ namespace Nop.Services.Media
                             if (newSize.Height < 1)
                                 newSize.Height = 1;
 
-                            var newBitMap = new Bitmap(newSize.Width, newSize.Height);
-                            var g = Graphics.FromImage(newBitMap);
-                            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-                            g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-                            g.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
-                            g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
-                            g.DrawImage(b, 0, 0, newSize.Width, newSize.Height);
-                            var ep = new EncoderParameters();
-                            ep.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, this.ImageQuality);
-                            ImageCodecInfo ici = GetImageCodecInfoFromExtension(lastPart);
-                            if (ici == null)
-                                ici = GetImageCodecInfoFromMimeType("image/jpeg");
-                            newBitMap.Save(Path.Combine(this.LocalThumbImagePath, localFilename), ici, ep);
-                            newBitMap.Dispose();
+                            using (var newBitMap = new Bitmap(newSize.Width, newSize.Height))
+                            {
+                                using (var g = Graphics.FromImage(newBitMap))
+                                {
+                                    g.SmoothingMode = SmoothingMode.HighQuality;
+                                    g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                                    g.CompositingQuality = CompositingQuality.HighQuality;
+                                    g.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                                    g.DrawImage(b, 0, 0, newSize.Width, newSize.Height);
+                                    var ep = new EncoderParameters();
+                                    ep.Param[0] = new EncoderParameter(Encoder.Quality, this.ImageQuality);
+                                    ImageCodecInfo ici = GetImageCodecInfoFromExtension(lastPart);
+                                    if (ici == null)
+                                        ici = GetImageCodecInfoFromMimeType("image/jpeg");
+                                    newBitMap.Save(Path.Combine(this.LocalThumbImagePath, localFilename), ici, ep);
+                                }
+                            }
                             b.Dispose();
                         }
                     }
@@ -540,7 +525,7 @@ namespace Nop.Services.Media
             else
                 return Path.Combine(this.LocalThumbImagePath, Path.GetFileName(url));
         }
-
+        
         /// <summary>
         /// Gets a picture
         /// </summary>
