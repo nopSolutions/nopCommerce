@@ -1161,7 +1161,16 @@ namespace Nop.Web.Controllers
                     {
                         address = model.NewAddress.ToEntity();
                         address.CreatedOnUtc = DateTime.UtcNow;
-                        //some validation
+                        //little hack here (TODO: find a better solution)
+                        //EF does not load navigation properties for newly created entities (such as this "Address").
+                        //we have to load them manually 
+                        //otherwise, "Country" property of "Address" entity will be null in shipping rate computation methods
+                        if (address.CountryId.HasValue)
+                            address.Country = _countryService.GetCountryById(address.CountryId.Value);
+                        if (address.StateProvinceId.HasValue)
+                            address.StateProvince = _stateProvinceService.GetStateProvinceById(address.StateProvinceId.Value);
+
+                        //other null validations
                         if (address.CountryId == 0)
                             address.CountryId = null;
                         if (address.StateProvinceId == 0)
