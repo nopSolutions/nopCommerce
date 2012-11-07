@@ -42,9 +42,15 @@ namespace Nop.Plugin.DiscountRules.HasAllProducts
             if (restrictedProductVariants.Count == 0)
                 return false;
 
-            //cart
-            var cart = request.Customer.ShoppingCartItems.Where(x => x.ShoppingCartType == ShoppingCartType.ShoppingCart);
-            
+            //group products in the cart by product variant ID
+            //it could be the same product variant with distinct product attributes
+            //that's why we get the total quantity of this product variant
+            var cartQuery = from sci in request.Customer.ShoppingCartItems
+                            where sci.ShoppingCartType == ShoppingCartType.ShoppingCart
+                            group sci by sci.ProductVariantId into g
+                            select new { ProductVariantId = g.Key, TotalQuantity = g.Sum(x => x.Quantity) };
+            var cart = cartQuery.ToList();
+
             bool allFound = true;
             foreach (var restrictedPv in restrictedProductVariants)
             {
@@ -73,7 +79,7 @@ namespace Nop.Plugin.DiscountRules.HasAllProducts
                                  //parsing error; exit;
                                  return false;
 
-                             if (sci.ProductVariantId == restrictedPvId && quantityMin <= sci.Quantity && sci.Quantity <=quantityMax)
+                             if (sci.ProductVariantId == restrictedPvId && quantityMin <= sci.TotalQuantity && sci.TotalQuantity <= quantityMax)
                              {
                                  found1 = true;
                                  break;
@@ -92,7 +98,7 @@ namespace Nop.Plugin.DiscountRules.HasAllProducts
                                  //parsing error; exit;
                                  return false;
 
-                             if (sci.ProductVariantId == restrictedPvId && sci.Quantity == quantity)
+                             if (sci.ProductVariantId == restrictedPvId && sci.TotalQuantity == quantity)
                              {
                                  found1 = true;
                                  break;
