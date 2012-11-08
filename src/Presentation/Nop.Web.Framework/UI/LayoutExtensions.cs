@@ -78,15 +78,11 @@ namespace Nop.Web.Framework.UI
             var pageTitleBuilder = EngineContext.Current.Resolve<IPageTitleBuilder>();
             pageTitleBuilder.AppendScriptParts(location, parts);
         }
-        public static MvcHtmlString NopScripts(this HtmlHelper html,  params string[] parts)
-        {
-            return NopScripts(html, ResourceLocation.Head, parts);
-        }
-        public static MvcHtmlString NopScripts(this HtmlHelper html, ResourceLocation location, params string[] parts)
+        public static MvcHtmlString NopScripts(this HtmlHelper html, UrlHelper urlHelper, 
+            ResourceLocation location, bool? bundleFiles = null)
         {
             var pageTitleBuilder = EngineContext.Current.Resolve<IPageTitleBuilder>();
-            html.AppendScriptParts(parts);
-            return MvcHtmlString.Create(pageTitleBuilder.GenerateScripts(location));
+            return MvcHtmlString.Create(pageTitleBuilder.GenerateScripts(urlHelper, location, bundleFiles));
         }
 
 
@@ -109,15 +105,11 @@ namespace Nop.Web.Framework.UI
             var pageTitleBuilder = EngineContext.Current.Resolve<IPageTitleBuilder>();
             pageTitleBuilder.AppendCssFileParts(location, parts);
         }
-        public static MvcHtmlString NopCssFiles(this HtmlHelper html, params string[] parts)
-        {
-            return NopCssFiles(html, ResourceLocation.Head, parts);
-        }
-        public static MvcHtmlString NopCssFiles(this HtmlHelper html, ResourceLocation location, params string[] parts)
+        public static MvcHtmlString NopCssFiles(this HtmlHelper html, UrlHelper urlHelper, 
+            ResourceLocation location)
         {
             var pageTitleBuilder = EngineContext.Current.Resolve<IPageTitleBuilder>();
-            html.AppendCssFileParts(parts);
-            return MvcHtmlString.Create(pageTitleBuilder.GenerateCssFiles(location));
+            return MvcHtmlString.Create(pageTitleBuilder.GenerateCssFiles(urlHelper, location));
         }
 
 

@@ -8,12 +8,12 @@
     var currentVersion = NopVersion.CurrentVersion;
     
     //resources
-    Html.AppendCssFileParts(Url.Content("~/Administration/Content/styles.css"));
-    Html.AppendScriptParts(Url.Content("~/Administration/Scripts/admin.common.js"));
-    Html.AppendScriptParts(Url.Content("~/Administration/Scripts/jquery.validate.unobtrusive.min.js"));
-    Html.AppendScriptParts(Url.Content("~/Administration/Scripts/jquery.validate.min.js"));
-    Html.AppendScriptParts(Url.Content("~/Administration/Scripts/jquery.unobtrusive-ajax.min.js"));
-    Html.AppendScriptParts(Url.Content("~/Administration/Scripts/jquery-1.7.1.min.js"));
+    Html.AppendCssFileParts("~/Administration/Content/styles.css");
+    Html.AppendScriptParts("~/Administration/Scripts/admin.common.js");
+    Html.AppendScriptParts("~/Administration/Scripts/jquery.validate.unobtrusive.min.js");
+    Html.AppendScriptParts("~/Administration/Scripts/jquery.validate.min.js");
+    Html.AppendScriptParts("~/Administration/Scripts/jquery.unobtrusive-ajax.min.js");
+    Html.AppendScriptParts("~/Administration/Scripts/jquery-1.7.1.min.js");
 
     //page title
     string adminPageTitle = "";
@@ -28,8 +28,8 @@
 <head>
     <title>@adminPageTitle</title>
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
-    @Html.NopCssFiles(ResourceLocation.Head)
-    @Html.NopScripts(ResourceLocation.Head)
+    @Html.NopCssFiles(this.Url, ResourceLocation.Head)
+    @Html.NopScripts(this.Url, ResourceLocation.Head)
 </head>
 <body>
     <div class="master-wrapper-page">
@@ -139,7 +139,7 @@
             .jQuery(false)
             .jQueryValidation(false)
             )
-    @Html.NopCssFiles(ResourceLocation.Foot)
-    @Html.NopScripts(ResourceLocation.Foot)
+    @Html.NopCssFiles(this.Url, ResourceLocation.Foot)
+    @Html.NopScripts(this.Url, ResourceLocation.Foot)
 </body>
 </html>

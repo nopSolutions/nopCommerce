@@ -1,4 +1,6 @@
-﻿namespace Nop.Web.Framework.UI
+﻿using System.Web.Mvc;
+
+namespace Nop.Web.Framework.UI
 {
     public partial interface IPageTitleBuilder
     {
@@ -16,11 +18,11 @@
 
         void AddScriptParts(ResourceLocation location, params string[] parts);
         void AppendScriptParts(ResourceLocation location, params string[] parts);
-        string GenerateScripts(ResourceLocation location);
+        string GenerateScripts(UrlHelper urlHelper, ResourceLocation location, bool? bundleFiles = null);
 
         void AddCssFileParts(ResourceLocation location, params string[] parts);
         void AppendCssFileParts(ResourceLocation location, params string[] parts);
-        string GenerateCssFiles(ResourceLocation location);
+        string GenerateCssFiles(UrlHelper urlHelper, ResourceLocation location);
 
 
         void AddCanonicalUrlParts(params string[] parts);

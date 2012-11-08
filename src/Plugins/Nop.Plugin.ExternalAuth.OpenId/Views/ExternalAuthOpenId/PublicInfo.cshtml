@@ -1,14 +1,13 @@
 ﻿@using Nop.Core.Infrastructure
-@using Nop.Core.Infrastructure.DependencyManagement
 @using Nop.Web.Framework.UI
 @{
     Layout = "";
 
 
-    Html.AddCssFileParts(@Url.Content("~/Plugins/ExternalAuth.OpenId/Content/openidstyles.css"));
+    Html.AddCssFileParts("~/Plugins/ExternalAuth.OpenId/Content/openidstyles.css");
 
-    Html.AddScriptParts(@Url.Content("~/Plugins/ExternalAuth.OpenId/Scripts/openid-jquery-1.3b1.js"));
-    Html.AddScriptParts(@Url.Content("~/Plugins/ExternalAuth.OpenId/Scripts/openid-en.js"));
+    Html.AddScriptParts("~/Plugins/ExternalAuth.OpenId/Scripts/openid-jquery-1.3b1.js");
+    Html.AddScriptParts("~/Plugins/ExternalAuth.OpenId/Scripts/openid-en.js");
 
     var storeLocation = EngineContext.Current.Resolve<Nop.Core.IWebHelper>().GetStoreLocation();
 }

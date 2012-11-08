@@ -1,20 +1,18 @@
-﻿@using Nop.Core;
-@using Nop.Core.Infrastructure;
-@using Nop.Core.Infrastructure.DependencyManagement;
+﻿@using Nop.Core.Infrastructure;
 @{
     var displayMiniProfiler = EngineContext.Current.Resolve<Nop.Core.Domain.StoreInformationSettings>().DisplayMiniProfilerInPublicStore;
     
     //resources
-    Html.AppendCssFileParts(Url.Content("~/Content/smoothness/jquery-ui-1.8.17.custom.css"));
+    Html.AppendCssFileParts("~/Content/smoothness/jquery-ui-1.8.17.custom.css");
     
     
-    Html.AppendScriptParts(Url.Content("~/Scripts/public.ajaxcart.js"));
-    Html.AppendScriptParts(Url.Content("~/Scripts/public.common.js"));
-    Html.AppendScriptParts(Url.Content("~/Scripts/jquery-ui.min.js"));
-    Html.AppendScriptParts(Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js"));
-    Html.AppendScriptParts(Url.Content("~/Scripts/jquery.validate.min.js"));
-    Html.AppendScriptParts(Url.Content("~/Scripts/jquery.unobtrusive-ajax.min.js"));
-    Html.AppendScriptParts(Url.Content("~/Scripts/jquery-1.7.1.min.js"));
+    Html.AppendScriptParts("~/Scripts/public.ajaxcart.js");
+    Html.AppendScriptParts("~/Scripts/public.common.js");
+    Html.AppendScriptParts("~/Scripts/jquery-ui.min.js");
+    Html.AppendScriptParts("~/Scripts/jquery.validate.unobtrusive.min.js");
+    Html.AppendScriptParts("~/Scripts/jquery.validate.min.js");
+    Html.AppendScriptParts("~/Scripts/jquery.unobtrusive-ajax.min.js");
+    Html.AppendScriptParts("~/Scripts/jquery-1.7.1.min.js");
 }
 <!DOCTYPE html>
 <html @Html.Partial("LanguageAttributes")>
@@ -26,8 +24,8 @@
     @*This is used so that themes can inject content into the header*@
     @Html.Partial("Head")
     @Html.Widget("head_html_tag")
-    @Html.NopCssFiles(ResourceLocation.Head)
-    @Html.NopScripts(ResourceLocation.Head)
+    @Html.NopCssFiles(this.Url, ResourceLocation.Head)
+    @Html.NopScripts(this.Url, ResourceLocation.Head)
     @Html.NopCanonicalUrls()
     @Html.Action("RssHeaderLink", "News")
     @Html.Action("RssHeaderLink", "Blog")
@@ -42,7 +40,7 @@
 </head>
 <body>
     @RenderBody()
-    @Html.NopCssFiles(ResourceLocation.Foot)
-    @Html.NopScripts(ResourceLocation.Foot)
+    @Html.NopCssFiles(this.Url, ResourceLocation.Foot)
+    @Html.NopScripts(this.Url, ResourceLocation.Foot)
 </body>
 </html>

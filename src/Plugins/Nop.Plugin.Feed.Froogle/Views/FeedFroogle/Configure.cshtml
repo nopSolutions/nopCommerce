@@ -1,14 +1,13 @@
 ﻿@{
     Layout = "";
 
-    Html.AddCssFileParts(Url.Content("~/Plugins/Feed.Froogle/Content/styles.css"));  
+    Html.AddCssFileParts("~/Plugins/Feed.Froogle/Content/styles.css");  
 }
 @model FeedFroogleModel
 @using Nop.Plugin.Feed.Froogle.Models;
 @using Nop.Web.Framework;
-@using Nop.Core.Infrastructure;
-@using Telerik.Web.Mvc;
 @using Telerik.Web.Mvc.UI;
+@using Nop.Web.Framework.UI;
 @using (Html.BeginForm())
 {
     @Html.Telerik().TabStrip().Name("googlebase-configure").Items(x =>

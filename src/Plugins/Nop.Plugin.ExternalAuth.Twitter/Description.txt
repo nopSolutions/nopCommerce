@@ -1,7 +1,7 @@
 ﻿Group: ExternalAuth methods
 FriendlyName: Twitter
 SystemName: ExternalAuth.Twitter
-Version: 1.15
+Version: 1.16
 SupportedVersions: 2.70
 Author: nopCommerce team
 DisplayOrder: 10

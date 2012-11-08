@@ -181,6 +181,7 @@
     <Compile Include="UI\Captcha\CaptchaSettings.cs" />
     <Compile Include="UI\Captcha\HtmlExtensions.cs" />
     <Compile Include="UI\Captcha\CaptchaValidatorAttribute.cs" />
+    <Compile Include="UI\AsIsBundleOrderer.cs" />
     <Compile Include="UI\ResourceLocation.cs" />
     <Compile Include="UI\Editor\NetAdvImageSettings.cs" />
     <Compile Include="UI\Editor\NetAdvImageService.cs" />

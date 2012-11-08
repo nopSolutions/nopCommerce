@@ -18,6 +18,11 @@ namespace Nop.Core.Domain.Seo
         public bool CanonicalUrlsEnabled { get; set; }
 
         /// <summary>
+        /// A value indicating whether JS file bundling and minification is enabled
+        /// </summary>
+        public bool EnableJsBundling { get; set; }
+
+        /// <summary>
         /// Slugs (sename) reserved for some other needs
         /// </summary>
         public List<string> ReservedUrlRecordSlugs { get; set; }

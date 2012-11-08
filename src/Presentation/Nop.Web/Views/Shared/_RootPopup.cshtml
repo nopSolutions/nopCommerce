@@ -1,10 +1,7 @@
-﻿@using Nop.Core;
-@using Nop.Core.Infrastructure;
-@using Nop.Core.Infrastructure.DependencyManagement;
-@{
+﻿@{
     //resources
-    Html.AppendScriptParts(Url.Content("~/Scripts/jquery.unobtrusive-ajax.min.js"));
-    Html.AppendScriptParts(Url.Content("~/Scripts/jquery-1.7.1.min.js"));
+    Html.AppendScriptParts("~/Scripts/jquery.unobtrusive-ajax.min.js");
+    Html.AppendScriptParts("~/Scripts/jquery-1.7.1.min.js");
 }
 <!DOCTYPE html>
 <html @Html.Partial("LanguageAttributes")>
@@ -13,8 +10,8 @@
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
     <meta name="description" content="@(Html.NopMetaDescription())" />
     <meta name="keywords" content="@(Html.NopMetaKeywords())" />
-    @Html.NopCssFiles(ResourceLocation.Head)
-    @Html.NopScripts(ResourceLocation.Head)
+    @Html.NopCssFiles(this.Url, ResourceLocation.Head)
+    @Html.NopScripts(this.Url, ResourceLocation.Head)
     @Html.NopCanonicalUrls()
     @*Favicon - upload favicon.ico file to the root directory*@
     @Html.Action("Favicon", "Common")
@@ -24,7 +21,7 @@
     @Html.Widget("body_start_html_tag_after")
     @RenderBody()
     @Html.Widget("body_end_html_tag_before")
-    @Html.NopCssFiles(ResourceLocation.Foot)
-    @Html.NopScripts(ResourceLocation.Foot)
+    @Html.NopCssFiles(this.Url, ResourceLocation.Foot)
+    @Html.NopScripts(this.Url, ResourceLocation.Foot)
 </body>
 </html>

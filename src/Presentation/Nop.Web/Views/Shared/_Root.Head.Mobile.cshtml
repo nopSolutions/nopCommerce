@@ -1,6 +1,9 @@
-﻿@using Nop.Core;
-@using Nop.Core.Infrastructure;
-@using Nop.Core.Infrastructure.DependencyManagement;
+﻿@{
+    Html.AppendScriptParts("~/Scripts/jquery.mobile-1.1.1.min.js");
+    Html.AppendScriptParts("~/Scripts/jquery.validate.unobtrusive.min.js");
+    Html.AppendScriptParts("~/Scripts/jquery.validate.min.js");
+    Html.AppendScriptParts("~/Scripts/jquery-1.7.1.min.js");
+}
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,10 +14,8 @@
     @Html.Partial("Head")
     @Html.Widget("mobile_head_html_tag")
     @*custom css*@
-    @Html.NopCssFiles(ResourceLocation.Head)
-    <script src="@Url.Content("~/Scripts/jquery-1.7.1.min.js")" type="text/javascript"></script>
-    <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
-    <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+    @Html.NopCssFiles(this.Url, ResourceLocation.Head)
+    @Html.NopScripts(this.Url, ResourceLocation.Head)
     @*do not handle links via ajax by default
     1. automatically update page URLs (for example, when adding a product to the cart
     2. process SSL redirections*@
@@ -24,14 +25,12 @@
             $.mobile.hashListeningEnabled = false;
         });
     </script>
-    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.mobile-1.1.1.min.js")"></script>
-    @Html.NopScripts(ResourceLocation.Head)
     <!--Powered by nopCommerce - http://www.nopCommerce.com-->
     <!--Copyright (c) 2008-2012-->
 </head>
 <body>
     @RenderBody()
-    @Html.NopCssFiles(ResourceLocation.Foot)
-    @Html.NopScripts(ResourceLocation.Foot)
+    @Html.NopCssFiles(this.Url, ResourceLocation.Foot)
+    @Html.NopScripts(this.Url, ResourceLocation.Foot)
 </body>
 </html>

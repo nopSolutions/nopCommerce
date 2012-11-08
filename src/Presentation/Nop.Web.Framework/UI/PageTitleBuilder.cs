@@ -1,13 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Security.Cryptography;
 using System.Text;
+using System.Web;
+using System.Web.Mvc;
+using System.Web.Optimization;
 using Nop.Core.Domain.Seo;
+using Nop.Services.Seo;
 
 namespace Nop.Web.Framework.UI
 {
     public partial class PageTitleBuilder : IPageTitleBuilder
     {
+        #region Fields
+
+        private static readonly object s_lock = new object();
+
         private readonly SeoSettings _seoSettings;
         private readonly List<string> _titleParts;
         private readonly List<string> _metaDescriptionParts;
@@ -15,8 +25,12 @@ namespace Nop.Web.Framework.UI
         private readonly Dictionary<ResourceLocation, List<string>> _scriptParts;
         private readonly Dictionary<ResourceLocation, List<string>> _cssParts;
         private readonly List<string> _canonicalUrlParts;
+        private readonly HttpContextBase _httpContext;
+        #endregion
 
-        public PageTitleBuilder(SeoSettings seoSettings)
+        #region Ctor
+
+        public PageTitleBuilder(SeoSettings seoSettings, HttpContextBase httpContext)
         {
             this._seoSettings = seoSettings;
             this._titleParts = new List<string>();
@@ -25,7 +39,44 @@ namespace Nop.Web.Framework.UI
             this._scriptParts = new Dictionary<ResourceLocation, List<string>>();
             this._cssParts = new Dictionary<ResourceLocation, List<string>>();
             this._canonicalUrlParts = new List<string>();
+            this._httpContext = httpContext;
         }
+
+        #endregion
+
+        #region Utilities
+
+        protected string GetBundleVirtualPath(string prefix, ResourceLocation location, string[] parts)
+        {
+            if (parts == null || parts.Length == 0)
+                throw new ArgumentException("parts");
+
+            //calculate hash
+            var hash = "";
+            using (SHA256 sha = new SHA256Managed())
+            {
+                //concat location and filenames
+                var hashInput = location.ToString();
+                foreach (var part in parts)
+                {
+                    hashInput += part;
+                    hashInput += ",";
+                }
+
+                byte[] input = sha.ComputeHash(Encoding.Unicode.GetBytes(hashInput));
+                hash = HttpServerUtility.UrlTokenEncode(input);
+            }
+            //ensure only valid chars
+            hash = SeoExtensions.GetSeName(hash);
+
+            var sb = new StringBuilder(prefix);
+            sb.Append(hash);
+            return sb.ToString();
+        }
+
+        #endregion
+
+        #region Methods
 
         public void AddTitleParts(params string[] parts)
         {
@@ -145,19 +196,75 @@ namespace Nop.Web.Framework.UI
                     if (!string.IsNullOrEmpty(part))
                         _scriptParts[location].Insert(0, part);
         }
-        public string GenerateScripts(ResourceLocation location)
+        public string GenerateScripts(UrlHelper urlHelper, ResourceLocation location, bool? bundleFiles = null)
         {
             if (!_scriptParts.ContainsKey(location) || _scriptParts[location] == null)
                 return "";
-
-            var result = new StringBuilder();
+            
             //use only distinct rows
-            foreach (var scriptPath in _scriptParts[location].Distinct())
+            var distinctParts = _scriptParts[location].Distinct().ToList();
+            if (distinctParts.Count == 0)
+                return "";
+            
+            if (!bundleFiles.HasValue)
             {
-                result.AppendFormat("<script src=\"{0}\" type=\"text/javascript\"></script>", scriptPath);
-                result.Append(Environment.NewLine);
+                //use setting if not value is specified
+                bundleFiles = _seoSettings.EnableJsBundling;
             }
-            return result.ToString();
+            if (bundleFiles.Value)
+            {
+                //IMPORTANT: Do not use bundling in web farms or Windows Azure
+                string bundleVirtualPath = GetBundleVirtualPath("~/bundles/scripts/", location, distinctParts.ToArray());
+
+                //System.Web.Optimization library does not support dynamic bundles yet.
+                //But we know how System.Web.Optimization library stores cached results.
+                //so let's clear the cache because we add new file references dynamically based on a page
+                //until it's officially supported in System.Web.Optimization we have to "workaround" it manually
+                //var cacheKey = (string)typeof(Bundle)
+                //    .GetMethod("GetCacheKey", BindingFlags.Static | BindingFlags.NonPublic)
+                //    .Invoke(null, new object[] { bundleVirtualPath });
+                //or use the code below
+                //TODO: ...but periodically ensure that cache key which we use is valid (decompile Bundle.GetCacheKey method)
+                //var cacheKey = "System.Web.Optimization.Bundle:" + bundleVirtualPath;
+
+                //if (_httpContext.Cache[cacheKey] != null)
+                //    _httpContext.Cache.Remove(cacheKey);
+
+                //create bundle
+                lock (s_lock)
+                {
+                    var bundleFor = BundleTable.Bundles.GetBundleFor(bundleVirtualPath);
+                    if (bundleFor == null)
+                    {
+                        var bundle = new ScriptBundle(bundleVirtualPath);
+                        //bundle.Transforms.Clear();
+
+                        //"As is" ordering
+                        bundle.Orderer = new AsIsBundleOrderer();
+                        //disable file extension replacements. renders scripts which were specified by a developer
+                        bundle.EnableFileExtensionReplacements = false;
+                        bundle.Include(distinctParts.ToArray());
+                        BundleTable.Bundles.Add(bundle);
+                        //we clear ignore list because System.Web.Optimization library adds ignore patterns such as "*.min", "*.debug".
+                        //we think it's bad decision and should be disabled by default
+                        BundleTable.Bundles.IgnoreList.Clear();
+                    }
+                }
+
+                var result = Scripts.Render(bundleVirtualPath).ToString();
+                return result;
+            }
+            else
+            {
+                //bundling is disabled
+                var result = new StringBuilder();
+                foreach (var path in distinctParts)
+                {
+                    result.AppendFormat("<script src=\"{0}\" type=\"text/javascript\"></script>", urlHelper.Content(path));
+                    result.Append(Environment.NewLine);
+                }
+                return result.ToString();
+            }
         }
 
 
@@ -181,16 +288,20 @@ namespace Nop.Web.Framework.UI
                     if (!string.IsNullOrEmpty(part))
                         _cssParts[location].Insert(0, part);
         }
-        public string GenerateCssFiles(ResourceLocation location)
+        public string GenerateCssFiles(UrlHelper urlHelper, ResourceLocation location)
         {
             if (!_cssParts.ContainsKey(location) || _cssParts[location] == null)
                 return "";
 
-            var result = new StringBuilder();
             //use only distinct rows
-            foreach (var cssPath in _cssParts[location].Distinct())
+            var distinctParts = _cssParts[location].Distinct().ToList();
+            if (distinctParts.Count == 0)
+                return "";
+
+            var result = new StringBuilder();
+            foreach (var path in distinctParts)
             {
-                result.AppendFormat("<link href=\"{0}\" rel=\"stylesheet\" type=\"text/css\" />", cssPath);
+                result.AppendFormat("<link href=\"{0}\" rel=\"stylesheet\" type=\"text/css\" />", urlHelper.Content(path));
                 result.Append(Environment.NewLine);
             }
             return result.ToString();
@@ -221,5 +332,7 @@ namespace Nop.Web.Framework.UI
             }
             return result.ToString();
         }
+
+        #endregion
     }
 }

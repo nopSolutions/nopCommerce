@@ -201,8 +201,8 @@
                         case AttributeControlType.FileUpload:
                             {
                                 //register CSS and JS
-                                Html.AddCssFileParts(Url.Content("~/Content/fileuploader/fileuploader.css"));
-                                Html.AddScriptParts(Url.Content("~/Scripts/fileuploader.js"));
+                                Html.AddCssFileParts("~/Content/fileuploader/fileuploader.css");
+                                Html.AddScriptParts("~/Scripts/fileuploader.js");
 
                                 //ex. ['jpg', 'jpeg', 'png', 'gif'] or []
                                 var allowedFileExtensions = string.Join(", ", attribute.AllowedFileExtensions.Select(x => "'" + x.Trim() + "'").ToList());

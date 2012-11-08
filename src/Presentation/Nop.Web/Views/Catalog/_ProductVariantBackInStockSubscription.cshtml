@@ -6,8 +6,8 @@
         @if (Model.IsCurrentCustomerRegistered)
         {
             //use fancybox to how nice pop-up
-            Html.AddScriptParts(Url.Content("~/Scripts/jquery.fancybox-1.3.4.pack.js"));
-            Html.AddCssFileParts(Url.Content("~/Content/fancybox/jquery.fancybox-1.3.4.css"));
+            Html.AddScriptParts("~/Scripts/jquery.fancybox-1.3.4.pack.js");
+            Html.AddCssFileParts("~/Content/fancybox/jquery.fancybox-1.3.4.css");
             <input type="button" id="back-in-stock-subscribe-@Model.Id" class="button-1 subscribe-button" value="@T("BackInStockSubscriptions.NotifyMeWhenAvailable")" />
             <script type="text/javascript">
 

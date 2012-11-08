@@ -1881,3 +1881,10 @@ END
 GO
 
 
+--bundling
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'seosettings.enablejsbundling')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'seosettings.enablejsbundling', N'true')
+END
+GO
