@@ -46,7 +46,7 @@ namespace Nop.Web.Framework.UI
 
         #region Utilities
 
-        protected string GetBundleVirtualPath(string prefix, ResourceLocation location, string[] parts)
+        protected string GetBundleVirtualPath(string prefix, string postfix, string[] parts)
         {
             if (parts == null || parts.Length == 0)
                 throw new ArgumentException("parts");
@@ -55,8 +55,8 @@ namespace Nop.Web.Framework.UI
             var hash = "";
             using (SHA256 sha = new SHA256Managed())
             {
-                //concat location and filenames
-                var hashInput = location.ToString();
+                // string concatenation
+                var hashInput = "";
                 foreach (var part in parts)
                 {
                     hashInput += part;
@@ -71,6 +71,7 @@ namespace Nop.Web.Framework.UI
 
             var sb = new StringBuilder(prefix);
             sb.Append(hash);
+            sb.Append(postfix);
             return sb.ToString();
         }
 
@@ -214,8 +215,7 @@ namespace Nop.Web.Framework.UI
             if (bundleFiles.Value)
             {
                 //IMPORTANT: Do not use bundling in web farms or Windows Azure
-                string bundleVirtualPath = GetBundleVirtualPath("~/bundles/scripts/", location, distinctParts.ToArray());
-
+                string bundleVirtualPath = GetBundleVirtualPath("~/bundles/scripts/", ".js", distinctParts.ToArray());
                 //System.Web.Optimization library does not support dynamic bundles yet.
                 //But we know how System.Web.Optimization library stores cached results.
                 //so let's clear the cache because we add new file references dynamically based on a page
