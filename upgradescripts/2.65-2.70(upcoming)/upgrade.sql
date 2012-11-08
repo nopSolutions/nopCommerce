@@ -431,6 +431,9 @@ set @resources='
   <LocaleResource Name="Admin.Orders.Products.GiftCards">
     <Value>Gift card(s)</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.ContentManagement.Topics">
+    <Value>Topics (pages)</Value>
+  </LocaleResource>  
 </Language>
 '
 

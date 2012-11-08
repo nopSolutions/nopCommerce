@@ -6388,7 +6388,7 @@
                         </Children>
                     </LocaleResource>
                     <LocaleResource Name="Topics">
-                        <Value>Topics</Value>
+                        <Value>Topics (pages)</Value>
                         <Children>
                             <LocaleResource Name="Info">
                                 <Value>Topic Info</Value>
