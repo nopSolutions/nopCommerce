@@ -1891,3 +1891,10 @@ BEGIN
 	VALUES (N'seosettings.enablejsbundling', N'true')
 END
 GO
+
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'commonsettings.log404errors')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'commonsettings.log404errors', N'true')
+END
+GO

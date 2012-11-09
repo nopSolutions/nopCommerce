@@ -11,6 +11,7 @@ using FluentValidation.Mvc;
 using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain;
+using Nop.Core.Domain.Common;
 using Nop.Core.Infrastructure;
 using Nop.Services.Logging;
 using Nop.Services.Tasks;
@@ -207,14 +208,15 @@ namespace Nop.Web
             
             if (!DataSettingsHelper.DatabaseIsInstalled())
                 return;
-            
+
+            //ignore 404 HTTP errors
+            var httpException = exc as HttpException;
+            if (httpException != null && httpException.GetHttpCode() == 404 &&
+                !EngineContext.Current.Resolve<CommonSettings>().Log404Errors)
+                return;
+
             try
             {
-                //ignore 404 HTTP errors
-                var httpException = exc as HttpException;
-                if (httpException != null && httpException.GetHttpCode() == 404)
-                    return;
-
                 //log
                 var logger = EngineContext.Current.Resolve<ILogger>();
                 var workContext = EngineContext.Current.Resolve<IWorkContext>();

@@ -4465,6 +4465,7 @@ namespace Nop.Services.Installation
                     DisplayJavaScriptDisabledWarning = false,
                     UseFullTextSearch = false,
                     FullTextMode = FulltextSearchMode.ExactMatch,
+                    Log404Errors = true,
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<SeoSettings>>()

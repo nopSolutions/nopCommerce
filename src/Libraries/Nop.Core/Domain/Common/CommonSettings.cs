@@ -31,5 +31,10 @@ namespace Nop.Core.Domain.Common
         /// Gets a sets a Full-Text search mode
         /// </summary>
         public FulltextSearchMode FullTextMode { get; set; }
+
+        /// <summary>
+        /// Gets a sets a value indicating whether 404 errors (page or file not found) should be logged
+        /// </summary>
+        public bool Log404Errors { get; set; }
     }
 }
