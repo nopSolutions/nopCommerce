@@ -2,7 +2,6 @@
 using System.IO;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
-using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Orders;
 
 namespace Nop.Services.ExportImport
@@ -10,7 +9,7 @@ namespace Nop.Services.ExportImport
     /// <summary>
     /// Export manager interface
     /// </summary>
-    public interface IExportManager
+    public partial interface IExportManager
     {
         /// <summary>
         /// Export manufacturer list to xml

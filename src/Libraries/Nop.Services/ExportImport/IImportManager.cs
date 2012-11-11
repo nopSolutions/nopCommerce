@@ -5,7 +5,7 @@ namespace Nop.Services.ExportImport
     /// <summary>
     /// Import manager interface
     /// </summary>
-    public interface IImportManager
+    public partial interface IImportManager
     {
         /// <summary>
         /// Import products from XLSX file

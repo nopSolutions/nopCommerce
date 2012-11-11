@@ -24,7 +24,7 @@ namespace Nop.Services.ExportImport
     /// <summary>
     /// Export manager
     /// </summary>
-public partial class ExportManager : IExportManager
+    public partial class ExportManager : IExportManager
     {
         #region Fields
 
