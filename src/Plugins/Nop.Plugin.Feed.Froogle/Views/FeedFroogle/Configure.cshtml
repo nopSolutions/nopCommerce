@@ -90,47 +90,6 @@
         </tr>
         <tr>
             <td class="adminTitle">
-                @Html.NopLabelFor(model => model.FtpHostname):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.FtpHostname)
-                @Html.ValidationMessageFor(model => model.FtpHostname)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.FtpFilename):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.FtpFilename)
-                @Html.ValidationMessageFor(model => model.FtpFilename)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.FtpUsername):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.FtpUsername)
-                @Html.ValidationMessageFor(model => model.FtpUsername)
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
-                @Html.NopLabelFor(model => model.FtpPassword):
-            </td>
-            <td class="adminData">
-                @Html.EditorFor(model => model.FtpPassword)
-                @Html.ValidationMessageFor(model => model.FtpPassword)
-            </td>
-        </tr>
-        <tr class="adminSeparator">
-            <td colspan="2">
-                <hr />
-            </td>
-        </tr>
-        <tr>
-            <td class="adminTitle">
                 @Html.NopLabelFor(m => m.TaskEnabled):
             </td>
             <td class="adminData">
@@ -175,7 +134,6 @@
             <td colspan="2" width="100%">
                 <input type="submit" name="save" class="t-button" value="@T("Admin.Common.Save")" />
                 <input type="submit" name="generate" class="t-button" value="@T("Plugins.Feed.Froogle.Generate")" />
-                <input type="submit" name="uploadfeed" class="t-button" value="@T("Plugins.Feed.Froogle.Upload")" />
             </td>
         </tr>
         @if (!String.IsNullOrEmpty(Model.GenerateFeedResult))

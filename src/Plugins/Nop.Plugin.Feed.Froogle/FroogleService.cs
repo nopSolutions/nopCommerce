@@ -473,7 +473,6 @@ namespace Nop.Plugin.Feed.Froogle
             {
                 ProductPictureSize = 125,
                 PassShippingInfo = false,
-                FtpHostname = "ftp://uploads.google.com",
                 StaticFileName = string.Format("froogle_{0}.xml", CommonHelper.GenerateRandomDigitCode(10)),
             };
             _settingService.SaveSetting(settings);
@@ -487,15 +486,6 @@ namespace Nop.Plugin.Feed.Froogle
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Currency.Hint", "Select the default currency that will be used to generate the feed.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.DefaultGoogleCategory", "Default Google category");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.DefaultGoogleCategory.Hint", "The default Google category will be useds if other one is not specified.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.FtpHostname", "FTP Hostname");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.FtpHostname.Hint", "Google FTP server hostname.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.FtpFilename", "FTP File name");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.FtpFilename.Hint", "Feed file name.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.FtpUsername", "FTP Username");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.FtpUsername.Hint", "Google FTP account username.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.FtpPassword", "FTP Password");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.FtpPassword.Hint", "Google FTP account password.");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.FtpUploadStatus", "Froogle feed upload status: {0}");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.General", "General");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Generate", "Generate feed");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Override", "Override product settings");
@@ -508,7 +498,6 @@ namespace Nop.Plugin.Feed.Froogle
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Products.Color", "Color");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Products.Size", "Size");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.SuccessResult", "Froogle feed has been successfully generated. {0} to see generated feed");
-            this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.Upload", "Upload feed to Google FTP server");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.TaskEnabled", "Automatically generate a file");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.TaskEnabled.Hint", "Check if you want a file to be automatically generated.");
             this.AddOrUpdatePluginLocaleResource("Plugins.Feed.Froogle.GenerateStaticFileEachMinutes", "A task period (minutes)");
@@ -553,15 +542,6 @@ namespace Nop.Plugin.Feed.Froogle
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Currency.Hint");
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.DefaultGoogleCategory");
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.DefaultGoogleCategory.Hint");
-            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.FtpHostname");
-            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.FtpHostname.Hint");
-            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.FtpFilename");
-            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.FtpFilename.Hint");
-            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.FtpUsername");
-            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.FtpUsername.Hint");
-            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.FtpPassword");
-            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.FtpPassword.Hint");
-            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.FtpUploadStatus");
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.General");
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Generate");
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Override");
@@ -574,7 +554,6 @@ namespace Nop.Plugin.Feed.Froogle
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Products.Color");
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Products.Size");
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.SuccessResult");
-            this.DeletePluginLocaleResource("Plugins.Feed.Froogle.Upload");
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.TaskEnabled");
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.TaskEnabled.Hint");
             this.DeletePluginLocaleResource("Plugins.Feed.Froogle.GenerateStaticFileEachMinutes");

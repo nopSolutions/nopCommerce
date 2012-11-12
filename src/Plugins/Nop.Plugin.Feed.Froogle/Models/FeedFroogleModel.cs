@@ -26,15 +26,6 @@ namespace Nop.Plugin.Feed.Froogle.Models
         public string DefaultGoogleCategory { get; set; }
         public IList<SelectListItem> AvailableGoogleCategories { get; set; }
 
-        [NopResourceDisplayName("Plugins.Feed.Froogle.FtpHostname")]
-        public string FtpHostname { get; set; }
-        [NopResourceDisplayName("Plugins.Feed.Froogle.FtpFilename")]
-        public string FtpFilename { get; set; }
-        [NopResourceDisplayName("Plugins.Feed.Froogle.FtpUsername")]
-        public string FtpUsername { get; set; }
-        [NopResourceDisplayName("Plugins.Feed.Froogle.FtpPassword")]
-        public string FtpPassword { get; set; }
-
         public string GenerateFeedResult { get; set; }
         public string SaveResult { get; set; }
 

@@ -433,7 +433,37 @@ set @resources='
   </LocaleResource>
   <LocaleResource Name="Admin.ContentManagement.Topics">
     <Value>Topics (pages)</Value>
-  </LocaleResource>  
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Feed.Froogle.FtpHostname">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Feed.Froogle.FtpHostname.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Feed.Froogle.FtpFilename">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Feed.Froogle.FtpFilename.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Feed.Froogle.FtpUsername">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Feed.Froogle.FtpUsername.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Feed.Froogle.FtpPassword">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Feed.Froogle.FtpPassword.Hint">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Feed.Froogle.FtpUploadStatus">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Feed.Froogle.Upload">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 
