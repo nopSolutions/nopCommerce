@@ -36,29 +36,7 @@ namespace Nop.Services.Tests.Shipping
             width.ShouldEqual(0);
             height.ShouldEqual(0);
         }
-
-        [Test]
-        public void should_return_zero_with_one_zero_dimension()
-        {
-            var request = new GetShippingOptionRequest();
-            request.Items.Add(new ShoppingCartItem()
-                                  {
-                                      Quantity = 1,
-                                      ProductVariant = new ProductVariant()
-                                                           {
-                                                               Length = 0,
-                                                               Width = 1,
-                                                               Height = 2
-                                                           }
-                                  });
-
-            decimal length, width, height = 0;
-            request.GetDimensions(out width, out length, out height);
-            length.ShouldEqual(0);
-            width.ShouldEqual(0);
-            height.ShouldEqual(0);
-        }
-
+        
         [Test]
         public void can_calculate_with_single_item_and_qty_1()
         {
@@ -131,7 +109,7 @@ namespace Nop.Services.Tests.Shipping
             decimal length, width, height = 0;
             request.GetDimensions(out width, out length, out height);
             Math.Round(length, 2).ShouldEqual(3.78);
-            Math.Round(width, 2).ShouldEqual(3.78);
+            Math.Round(width, 2).ShouldEqual(5);    //preserve max width
             Math.Round(height, 2).ShouldEqual(3.78);
         }
 
