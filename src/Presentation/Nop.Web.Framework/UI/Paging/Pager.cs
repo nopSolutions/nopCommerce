@@ -130,7 +130,7 @@ namespace Nop.Web.Framework.UI.Paging
                             links.Append("&nbsp;");
                         }
 
-                        links.Append(CreatePageLink(1, localizationService.GetResource("Pager.First")));
+                        links.Append(CreatePageLink(1, localizationService.GetResource("Pager.First"), "first-page"));
 
                         if ((showIndividualPages || (showPrevious && (model.PageIndex > 0))) || showLast)
                         {
@@ -142,7 +142,7 @@ namespace Nop.Web.Framework.UI.Paging
                 {
                     if (model.PageIndex > 0)
                     {
-                        links.Append(CreatePageLink(model.PageIndex, localizationService.GetResource("Pager.Previous")));
+                        links.Append(CreatePageLink(model.PageIndex, localizationService.GetResource("Pager.Previous"), "previous-page"));
 
                         if ((showIndividualPages || showLast) || (showNext && ((model.PageIndex + 1) < model.TotalPages)))
                         {
@@ -158,11 +158,11 @@ namespace Nop.Web.Framework.UI.Paging
                     {
                         if (model.PageIndex == i)
                         {
-                            links.AppendFormat("<span>{0}</span>", (i + 1));
+                            links.AppendFormat("<span class=\"current-page\">{0}</span>", (i + 1));
                         }
                         else
                         {
-                            links.Append(CreatePageLink(i + 1, (i + 1).ToString()));
+                            links.Append(CreatePageLink(i + 1, (i + 1).ToString(), "individual-page"));
                         }
                         if (i < lastIndividualPageIndex)
                         {
@@ -179,7 +179,7 @@ namespace Nop.Web.Framework.UI.Paging
                             links.Append("&nbsp;");
                         }
 
-                        links.Append(CreatePageLink(model.PageIndex + 2, localizationService.GetResource("Pager.Next")));
+                        links.Append(CreatePageLink(model.PageIndex + 2, localizationService.GetResource("Pager.Next"), "next-page"));
                     }
                 }
                 if (showLast)
@@ -191,7 +191,7 @@ namespace Nop.Web.Framework.UI.Paging
                             links.Append("&nbsp;...&nbsp;");
                         }
 
-                        links.Append(CreatePageLink(model.TotalPages, localizationService.GetResource("Pager.Last")));
+                        links.Append(CreatePageLink(model.TotalPages, localizationService.GetResource("Pager.Last"), "last-page"));
                     }
                 }
             }
@@ -231,10 +231,12 @@ namespace Nop.Web.Framework.UI.Paging
             }
             return (model.PageIndex + num);
         }
-		protected virtual string CreatePageLink(int pageNumber, string text)
+		protected virtual string CreatePageLink(int pageNumber, string text, string cssClass)
 		{
 			var builder = new TagBuilder("a");
 			builder.SetInnerText(text);
+            if (!String.IsNullOrWhiteSpace(cssClass))
+                builder.AddCssClass(cssClass);
 			builder.MergeAttribute("href", urlBuilder(pageNumber));
 			return builder.ToString(TagRenderMode.Normal);
 		}
