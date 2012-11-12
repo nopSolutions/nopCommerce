@@ -48,6 +48,7 @@ namespace Nop.Services.Shipping
         public virtual string ZipPostalCodeFrom { get; set; }
 
         #region Methods
+
         /// <summary>
         /// Get dimensions
         /// </summary>
@@ -61,16 +62,36 @@ namespace Nop.Services.Shipping
             {
                 //cube root of volume
                 decimal totalVolume = 0;
+                decimal maxProductWidth = 0;
+                decimal maxProductLength = 0;
+                decimal maxProductHeight = 0;
                 foreach (var shoppingCartItem in this.Items)
                 {
                     var productVariant = shoppingCartItem.ProductVariant;
                     if (productVariant != null)
                     {
                         totalVolume += shoppingCartItem.Quantity * productVariant.Height * productVariant.Width * productVariant.Length;
+
+                        if (productVariant.Width > maxProductWidth)
+                            maxProductWidth = productVariant.Width;
+                        if (productVariant.Length > maxProductLength)
+                            maxProductLength = productVariant.Length;
+                        if (productVariant.Height > maxProductHeight)
+                            maxProductHeight = productVariant.Height;
                     }
                 }
                 decimal dimension = Convert.ToDecimal(Math.Pow(Convert.ToDouble(totalVolume), (double)(1.0 / 3.0)));
                 length = width = height = dimension;
+
+                //sometimes we have products with sizes like 1x1x20
+                //that's why let's ensure that a maximum dimension is always preserved
+                //otherwise, shipping rate computation methods can return low rates
+                if (width < maxProductWidth)
+                    width = maxProductWidth;
+                if (length < maxProductLength)
+                    length = maxProductLength;
+                if (height < maxProductHeight)
+                    height = maxProductHeight;
             }
             else
             {
