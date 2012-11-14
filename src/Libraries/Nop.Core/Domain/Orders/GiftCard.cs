@@ -99,42 +99,5 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets the associated order product variant
         /// </summary>
         public virtual OrderProductVariant PurchasedWithOrderProductVariant { get; set; }
-
-        #region Methods
-
-        /// <summary>
-        /// Gets a gift card remaining amount
-        /// </summary>
-        /// <returns>Gift card remaining amount</returns>
-        public virtual decimal GetGiftCardRemainingAmount()
-        {
-            decimal result = this.Amount;
-
-            foreach (var gcuh in this.GiftCardUsageHistory)
-                result -= gcuh.UsedValue;
-
-            if (result < decimal.Zero)
-                result = decimal.Zero;
-
-            return result;
-        }
-
-        /// <summary>
-        /// Is gift card valid
-        /// </summary>
-        /// <returns>Result</returns>
-        public virtual bool IsGiftCardValid()
-        {
-            if (!this.IsGiftCardActivated)
-                return false;
-
-            decimal remainingAmount = GetGiftCardRemainingAmount();
-            if (remainingAmount > decimal.Zero)
-                return true;
-
-            return false;
-        }
-
-        #endregion
     }
 }

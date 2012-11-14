@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web.Mvc;
 using Nop.Admin.Models.ShoppingCart;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;

@@ -1,6 +1,11 @@
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Xml;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
+using Nop.Core.Domain.Orders;
 using Nop.Core.Infrastructure;
 using Nop.Services.Common;
 using Nop.Services.Localization;
@@ -10,89 +15,10 @@ namespace Nop.Services.Customers
     public static class CustomerExtentions
     {
         /// <summary>
-        /// Gets a value indicating whether customer is in a certain customer role
+        /// Get full name
         /// </summary>
         /// <param name="customer">Customer</param>
-        /// <param name="customerRoleSystemName">Customer role system name</param>
-        /// <param name="onlyActiveCustomerRoles">A value indicating whether we should look only in active customer roles</param>
-        /// <returns>Result</returns>
-        public static bool IsInCustomerRole(this Customer customer,
-            string customerRoleSystemName, bool onlyActiveCustomerRoles = true)
-        {
-            if (customer == null)
-                throw new ArgumentNullException("customer");
-
-            if (String.IsNullOrEmpty(customerRoleSystemName))
-                throw new ArgumentNullException("customerRoleSystemName");
-
-            var result = customer.CustomerRoles
-                .Where(cr => !onlyActiveCustomerRoles || cr.Active)
-                .Where(cr => cr.SystemName == customerRoleSystemName)
-                .FirstOrDefault() != null;
-            return result;
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether customer a search engine
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        /// <returns>Result</returns>
-        public static bool IsSearchEngineAccount(this Customer customer)
-        {
-            if (customer == null)
-                throw new ArgumentNullException("customer");
-
-            if (!customer.IsSystemAccount || String.IsNullOrEmpty(customer.SystemName))
-                return false;
-
-            var result = customer.SystemName.Equals(SystemCustomerNames.SearchEngine, StringComparison.InvariantCultureIgnoreCase);
-            return result;
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether customer is administrator
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        /// <param name="onlyActiveCustomerRoles">A value indicating whether we should look only in active customer roles</param>
-        /// <returns>Result</returns>
-        public static bool IsAdmin(this Customer customer, bool onlyActiveCustomerRoles = true)
-        {
-            return IsInCustomerRole(customer, SystemCustomerRoleNames.Administrators, onlyActiveCustomerRoles);
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether customer is a forum moderator
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        /// <param name="onlyActiveCustomerRoles">A value indicating whether we should look only in active customer roles</param>
-        /// <returns>Result</returns>
-        public static bool IsForumModerator(this Customer customer, bool onlyActiveCustomerRoles = true)
-        {
-            return IsInCustomerRole(customer, SystemCustomerRoleNames.ForumModerators, onlyActiveCustomerRoles);
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether customer is registered
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        /// <param name="onlyActiveCustomerRoles">A value indicating whether we should look only in active customer roles</param>
-        /// <returns>Result</returns>
-        public static bool IsRegistered(this Customer customer, bool onlyActiveCustomerRoles = true)
-        {
-            return IsInCustomerRole(customer, SystemCustomerRoleNames.Registered, onlyActiveCustomerRoles);
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether customer is guest
-        /// </summary>
-        /// <param name="customer">Customer</param>
-        /// <param name="onlyActiveCustomerRoles">A value indicating whether we should look only in active customer roles</param>
-        /// <returns>Result</returns>
-        public static bool IsGuest(this Customer customer, bool onlyActiveCustomerRoles = true)
-        {
-            return IsInCustomerRole(customer, SystemCustomerRoleNames.Guests, onlyActiveCustomerRoles);
-        }
-        
+        /// <returns>Customer full name</returns>
         public static string GetFullName(this Customer customer)
         {
             if (customer == null)
@@ -167,6 +93,5 @@ namespace Nop.Services.Customers
 
             return result;
         }
-
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Nop.Core;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Plugins;
 using Nop.Services.Customers;

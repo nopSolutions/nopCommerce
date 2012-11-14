@@ -3,6 +3,7 @@ using System.Linq;
 using System.Web.Mvc;
 using Nop.Admin.Models.Orders;
 using Nop.Core;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Services.Customers;
 using Nop.Services.Helpers;
