@@ -164,14 +164,20 @@ namespace Nop.Web.Controllers
         [NonAction]
         protected List<int> GetChildCategoryIds(int parentCategoryId, bool showHidden = false)
         {
-            var categoriesIds = new List<int>();
-            var categories = _categoryService.GetAllCategoriesByParentCategoryId(parentCategoryId, showHidden);
-            foreach (var category in categories)
-            {
-                categoriesIds.Add(category.Id);
-                categoriesIds.AddRange(GetChildCategoryIds(category.Id, showHidden));
-            }
-            return categoriesIds;
+            var customerRolesIds = _workContext.CurrentCustomer.CustomerRoles
+                .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
+            string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_CHILD_IDENTIFIERS_MODEL_KEY, parentCategoryId, showHidden, string.Join(",", customerRolesIds));
+            return _cacheManager.Get(cacheKey, () =>
+            { 
+                var categoriesIds = new List<int>();
+                var categories = _categoryService.GetAllCategoriesByParentCategoryId(parentCategoryId, showHidden);
+                foreach (var category in categories)
+                {
+                    categoriesIds.Add(category.Id);
+                    categoriesIds.AddRange(GetChildCategoryIds(category.Id, showHidden));
+                }
+                return categoriesIds;
+            });
         }
 
         [NonAction]
@@ -1041,22 +1047,30 @@ namespace Nop.Web.Controllers
         [ChildActionOnly]
         public ActionResult CategoryNavigation(int currentCategoryId, int currentProductId)
         {
-            //get current category
-            var currentCategory = _categoryService.GetCategoryById(currentCategoryId);
-            if (currentCategory == null && currentProductId > 0)
+            var customerRolesIds = _workContext.CurrentCustomer.CustomerRoles
+                .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
+            string cacheKey = string.Format(ModelCacheEventConsumer.CATEGORY_NAVIGATION_MODEL_KEY, currentCategoryId, currentProductId, _workContext.WorkingLanguage.Id, string.Join(",", customerRolesIds));
+            var cacheModel = _cacheManager.Get(cacheKey, () =>
             {
-                var productCategories = _categoryService.GetProductCategoriesByProductId(currentProductId);
-                if (productCategories.Count > 0)
-                    currentCategory = productCategories[0].Category;
+                //get current category
+                var currentCategory = _categoryService.GetCategoryById(currentCategoryId);
+                if (currentCategory == null && currentProductId > 0)
+                {
+                    var productCategories = _categoryService.GetProductCategoriesByProductId(currentProductId);
+                    if (productCategories.Count > 0)
+                        currentCategory = productCategories[0].Category;
+                }
+
+                //prepare model
+                var model = new CategoryNavigationModel();
+                model.CurrentCategoryId = currentCategory != null ? currentCategory.Id : 0;
+                var breadCrumb = currentCategory != null ? GetCategoryBreadCrumb(currentCategory) : new List<Category>();
+                model.Categories.AddRange(PrepareCategoryNavigationModel(breadCrumb, 0, 0));
+                return model;
             }
+            );
 
-            //prepare model
-            var model = new CategoryNavigationModel();
-            model.CurrentCategoryId = currentCategory != null ? currentCategory.Id : 0;
-            var breadCrumb = currentCategory != null ? GetCategoryBreadCrumb(currentCategory) : new List<Category>();
-            model.Categories.AddRange(PrepareCategoryNavigationModel(breadCrumb, 0, 0 ));
-
-            return PartialView(model);
+            return PartialView(cacheModel);
         }
 
         [ChildActionOnly]
@@ -1892,31 +1906,38 @@ namespace Nop.Web.Controllers
             if (!_catalogSettings.CategoryBreadcrumbEnabled)
                 return Content("");
 
-            var model = new ProductDetailsModel.ProductBreadcrumbModel()
+            var customerRolesIds = _workContext.CurrentCustomer.CustomerRoles
+                .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
+            var cacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_BREADCRUMB_MODEL_KEY, product.Id, _workContext.WorkingLanguage.Id, string.Join(",", customerRolesIds));
+            var cacheModel = _cacheManager.Get(cacheKey, () =>
+            {
+                var model = new ProductDetailsModel.ProductBreadcrumbModel()
                 {
                     ProductId = product.Id,
                     ProductName = product.GetLocalized(x => x.Name),
                     ProductSeName = product.GetSeName()
                 };
-            var productCategories = _categoryService.GetProductCategoriesByProductId(product.Id);
-            if (productCategories.Count > 0)
-            {
-                var category = productCategories[0].Category;
-                if (category != null)
+                var productCategories = _categoryService.GetProductCategoriesByProductId(product.Id);
+                if (productCategories.Count > 0)
                 {
-                    foreach (var catBr in GetCategoryBreadCrumb(category))
+                    var category = productCategories[0].Category;
+                    if (category != null)
                     {
-                        model.CategoryBreadcrumb.Add(new CategoryModel()
+                        foreach (var catBr in GetCategoryBreadCrumb(category))
                         {
-                            Id = catBr.Id,
-                            Name = catBr.GetLocalized(x => x.Name),
-                            SeName = catBr.GetSeName()
-                        });
+                            model.CategoryBreadcrumb.Add(new CategoryModel()
+                            {
+                                Id = catBr.Id,
+                                Name = catBr.GetLocalized(x => x.Name),
+                                SeName = catBr.GetSeName()
+                            });
+                        }
                     }
                 }
-            }
+                return model;
+            });
 
-            return PartialView(model);
+            return PartialView(cacheModel);
         }
 
         [ChildActionOnly]
