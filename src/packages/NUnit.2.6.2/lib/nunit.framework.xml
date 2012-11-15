@@ -745,13 +745,14 @@
         </member>
         <member name="P:NUnit.Framework.TestCaseAttribute.Result">
             <summary>
-            Gets or sets the expected result.
+            Gets or sets the expected result. Use
+            ExpectedResult by preference.
             </summary>
             <value>The result.</value>
         </member>
         <member name="P:NUnit.Framework.TestCaseAttribute.ExpectedResult">
             <summary>
-            Gets the expected result.
+            Gets or sets the expected result.
             </summary>
             <value>The result.</value>
         </member>
@@ -842,14 +843,20 @@
         </member>
         <member name="M:NUnit.Framework.TestCaseSourceAttribute.#ctor(System.String)">
             <summary>
-            Construct with the name of the factory - for use with languages
-            that don't support params arrays.
+            Construct with the name of the data source, which must
+            be a property, field or method of the test class itself.
             </summary>
             <param name="sourceName">An array of the names of the factories that will provide data</param>
         </member>
+        <member name="M:NUnit.Framework.TestCaseSourceAttribute.#ctor(System.Type)">
+            <summary>
+            Construct with a Type, which must implement IEnumerable
+            </summary>
+            <param name="sourceType">The Type that will provide data</param>
+        </member>
         <member name="M:NUnit.Framework.TestCaseSourceAttribute.#ctor(System.Type,System.String)">
             <summary>
-            Construct with a Type and name - for use with languages
+            Construct with a Type and name.
             that don't support params arrays.
             </summary>
             <param name="sourceType">The Type that will provide data</param>
@@ -4201,7 +4208,7 @@
             Compares two objects for equality within a tolerance.
             </summary>
         </member>
-        <member name="M:NUnit.Framework.Constraints.NUnitEqualityComparer.ArraysEqual(System.Array,System.Array,NUnit.Framework.Constraints.Tolerance@)">
+        <member name="M:NUnit.Framework.Constraints.NUnitEqualityComparer.ArraysEqual(System.Array,System.Array,NUnit.Framework.Constraints.NUnitEqualityComparer.EnumerableRecursionHelper,NUnit.Framework.Constraints.Tolerance@)">
             <summary>
             Helper method to compare two arrays
             </summary>
