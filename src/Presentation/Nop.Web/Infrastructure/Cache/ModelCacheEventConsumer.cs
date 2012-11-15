@@ -251,6 +251,15 @@ namespace Nop.Web.Infrastructure.Cache
         public const string HOMEPAGE_BESTSELLERS_IDS_PATTERN_KEY = "nop.pres.bestsellers.homepage";
 
         /// <summary>
+        /// Key for "also purchased" product identifiers displayed on the product details page
+        /// </summary>
+        /// <remarks>
+        /// {0} : current product id
+        /// </remarks>
+        public const string PRODUCTS_ALSO_PURCHASED_IDS_KEY = "nop.pres.alsopuchased-{0}";
+        public const string PRODUCTS_ALSO_PURCHASED_IDS_PATTERN_KEY = "nop.pres.alsopuchased";
+
+        /// <summary>
         /// Key for default product picture caching
         /// </summary>
         /// <remarks>
@@ -445,6 +454,7 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(MANUFACTURER_NAVIGATION_PATTERN_KEY); //depends on CatalogSettings.ManufacturersBlockItemsToDisplay
             _cacheManager.RemoveByPattern(CATEGORY_NAVIGATION_PATTERN_KEY); //depends on CatalogSettings.ShowCategoryProductNumber and CatalogSettings.ShowCategoryProductNumberIncludingSubcategories
             _cacheManager.RemoveByPattern(HOMEPAGE_BESTSELLERS_IDS_PATTERN_KEY); //depends on CatalogSettings.NumberOfBestsellersOnHomepage
+            _cacheManager.RemoveByPattern(PRODUCTS_ALSO_PURCHASED_IDS_PATTERN_KEY); //depends on CatalogSettings.ProductsAlsoPurchasedNumber
             _cacheManager.RemoveByPattern(BLOG_PATTERN_KEY); //depends on BlogSettings.NumberOfTags
             _cacheManager.RemoveByPattern(NEWS_PATTERN_KEY); //depends on NewsSettings.MainPageNewsCount
             
@@ -532,12 +542,14 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(PRODUCT_DEFAULTPICTURE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CART_PICTURE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(HOMEPAGE_BESTSELLERS_IDS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(PRODUCTS_ALSO_PURCHASED_IDS_PATTERN_KEY);
         }
         public void HandleEvent(EntityDeleted<Product> eventMessage)
         {
             _cacheManager.RemoveByPattern(CATEGORY_NAVIGATION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(PRODUCT_DEFAULTPICTURE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(HOMEPAGE_BESTSELLERS_IDS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(PRODUCTS_ALSO_PURCHASED_IDS_PATTERN_KEY);
         }
 
         //product variants
@@ -550,11 +562,13 @@ namespace Nop.Web.Infrastructure.Cache
             _cacheManager.RemoveByPattern(CATEGORY_NAVIGATION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(CART_PICTURE_PATTERN_KEY);
             _cacheManager.RemoveByPattern(HOMEPAGE_BESTSELLERS_IDS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(PRODUCTS_ALSO_PURCHASED_IDS_PATTERN_KEY);
         }
         public void HandleEvent(EntityDeleted<ProductVariant> eventMessage)
         {
             _cacheManager.RemoveByPattern(CATEGORY_NAVIGATION_PATTERN_KEY);
             _cacheManager.RemoveByPattern(HOMEPAGE_BESTSELLERS_IDS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(PRODUCTS_ALSO_PURCHASED_IDS_PATTERN_KEY);
         }
 
         //product tags
@@ -674,27 +688,33 @@ namespace Nop.Web.Infrastructure.Cache
         public void HandleEvent(EntityInserted<Order> eventMessage)
         {
             _cacheManager.RemoveByPattern(HOMEPAGE_BESTSELLERS_IDS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(PRODUCTS_ALSO_PURCHASED_IDS_PATTERN_KEY);
         }
         public void HandleEvent(EntityUpdated<Order> eventMessage)
         {
             _cacheManager.RemoveByPattern(HOMEPAGE_BESTSELLERS_IDS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(PRODUCTS_ALSO_PURCHASED_IDS_PATTERN_KEY);
         }
         public void HandleEvent(EntityDeleted<Order> eventMessage)
         {
             _cacheManager.RemoveByPattern(HOMEPAGE_BESTSELLERS_IDS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(PRODUCTS_ALSO_PURCHASED_IDS_PATTERN_KEY);
         }
         //Order product variants
         public void HandleEvent(EntityInserted<OrderProductVariant> eventMessage)
         {
             _cacheManager.RemoveByPattern(HOMEPAGE_BESTSELLERS_IDS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(PRODUCTS_ALSO_PURCHASED_IDS_PATTERN_KEY);
         }
         public void HandleEvent(EntityUpdated<OrderProductVariant> eventMessage)
         {
             _cacheManager.RemoveByPattern(HOMEPAGE_BESTSELLERS_IDS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(PRODUCTS_ALSO_PURCHASED_IDS_PATTERN_KEY);
         }
         public void HandleEvent(EntityDeleted<OrderProductVariant> eventMessage)
         {
             _cacheManager.RemoveByPattern(HOMEPAGE_BESTSELLERS_IDS_PATTERN_KEY);
+            _cacheManager.RemoveByPattern(PRODUCTS_ALSO_PURCHASED_IDS_PATTERN_KEY);
         }
 
         //Pictures

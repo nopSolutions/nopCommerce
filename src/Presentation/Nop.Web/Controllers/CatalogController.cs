@@ -2049,11 +2049,20 @@ namespace Nop.Web.Controllers
             if (!_catalogSettings.ProductsAlsoPurchasedEnabled)
                 return Content("");
 
-            var products = _orderReportService.GetProductsAlsoPurchasedById(productId,
-                _catalogSettings.ProductsAlsoPurchasedNumber);
+            //load and cache report
+            var productIds = _cacheManager.Get(string.Format(ModelCacheEventConsumer.PRODUCTS_ALSO_PURCHASED_IDS_KEY, productId),
+                () =>
+                    _orderReportService
+                    .GetProductsAlsoPurchasedById(productId, _catalogSettings.ProductsAlsoPurchasedNumber)
+                    .Select(x => x.Id)
+                    .ToArray()
+                    );
+
+            //load products
+            var products = _productService.GetProductsByIds(productIds);
             //ACL
             products = products.Where(p => _aclService.Authorize(p)).ToList();
-
+            //prepare model
             var model = PrepareProductOverviewModels(products, true, true, productThumbPictureSize).ToList();
 
             return PartialView(model);
@@ -2179,22 +2188,18 @@ namespace Nop.Web.Controllers
                     //group by products (not product variants)
                     _orderReportService
                     .BestSellersReport(null, null, null, null, null, 0, _catalogSettings.NumberOfBestsellersOnHomepage, groupBy: 2));
-            var products = new List<Product>();
-            foreach (var line in report)
-            {
-                var product = _productService.GetProductById(line.EntityId);
-                //Product founbd and has ACL permission
-                if (product != null && _aclService.Authorize(product))
-                    products.Add(product);
-            }
-            
+
+
+            //load products
+            var products = _productService.GetProductsByIds(report.Select(x => x.EntityId).ToArray());
+            //ACL
+            products = products.Where(p => _aclService.Authorize(p)).ToList();
+            //prepare model
             var model = new HomePageBestsellersModel()
             {
                 UseSmallProductBox = _catalogSettings.UseSmallProductBoxOnHomePage,
+                Products = PrepareProductOverviewModels(products, !_catalogSettings.UseSmallProductBoxOnHomePage, true, productThumbPictureSize).ToList()
             };
-            model.Products = PrepareProductOverviewModels(products, 
-                !_catalogSettings.UseSmallProductBoxOnHomePage, true, productThumbPictureSize)
-                .ToList();
             return PartialView(model);
         }
 
