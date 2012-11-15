@@ -159,6 +159,7 @@ namespace Nop.Web.Framework
         protected void SetCustomerCookie(Guid customerGuid)
         {
             var cookie = new HttpCookie(CustomerCookieName);
+            cookie.HttpOnly = true;
             cookie.Value = customerGuid.ToString();
             if (customerGuid == Guid.Empty)
             {

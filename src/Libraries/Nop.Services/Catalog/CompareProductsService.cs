@@ -135,7 +135,10 @@ namespace Nop.Services.Catalog
 
             var compareCookie = _httpContext.Request.Cookies.Get(COMPARE_PRODUCTS_COOKIE_NAME);
             if (compareCookie == null)
+            {
                 compareCookie = new HttpCookie(COMPARE_PRODUCTS_COOKIE_NAME);
+                compareCookie.HttpOnly = true;
+            }
             compareCookie.Values.Clear();
             int maxProducts = 4;
             int i = 1;

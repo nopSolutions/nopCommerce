@@ -115,7 +115,10 @@ namespace Nop.Services.Catalog
 
             var recentlyViewedCookie = _httpContext.Request.Cookies.Get("NopCommerce.RecentlyViewedProducts");
             if (recentlyViewedCookie == null)
+            {
                 recentlyViewedCookie = new HttpCookie("NopCommerce.RecentlyViewedProducts");
+                recentlyViewedCookie.HttpOnly = true;
+            }
             recentlyViewedCookie.Values.Clear();
             int maxProducts = _catalogSettings.RecentlyViewedProductsNumber;
             if (maxProducts <= 0)
