@@ -1,9 +1,0 @@
-﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Nop.Plugin.Tax.StrikeIron.Properties" GeneratedClassName="Settings">
-  <Profiles />
-  <Settings>
-    <Setting Name="Nop_Plugin_Tax_StrikeIron_TaxDataBasic_TaxDataBasic" Type="(Web Service URL)" Scope="Application">
-      <Value Profile="(Default)">http://ws.strikeiron.com/StrikeIron/TaxDataBasic5/TaxDataBasic</Value>
-    </Setting>
-  </Settings>
-</SettingsFile>
