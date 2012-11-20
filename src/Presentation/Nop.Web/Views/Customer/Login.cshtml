@@ -72,7 +72,7 @@
                     <dt>
                         @Html.LabelFor(m => m.Username): </dt>
                     <dd>
-                        @Html.TextBoxFor(m => m.Username, new { @class = "username" })
+                        @Html.TextBoxFor(m => m.Username, new { @class = "username", autofocus = "autofocus" })
                         @Html.ValidationMessageFor(m => m.Username)
                     </dd>
                     }
@@ -81,7 +81,7 @@
                     <dt>
                         @Html.LabelFor(m => m.Email): </dt>
                     <dd>
-                        @Html.TextBoxFor(m => m.Email, new { @class = "email" })
+                        @Html.TextBoxFor(m => m.Email, new { @class = "email" , autofocus = "autofocus"})
                         @Html.ValidationMessageFor(m => m.Email)
                     </dd>
                     }
