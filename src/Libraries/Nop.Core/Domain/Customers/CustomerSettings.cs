@@ -115,6 +115,11 @@ namespace Nop.Core.Domain.Customers
         /// </summary>
         public bool StoreLastVisitedPage { get; set; }
         
+        /// <summary>
+        /// Gets or sets a value indicating whether deleted customer records should be prefixed suffixed with "-DELETED"
+        /// </summary>
+        public bool SuffixDeletedCustomers { get; set; }
+        
         #region Form fields
 
         /// <summary>

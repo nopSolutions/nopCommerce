@@ -4585,6 +4585,7 @@ namespace Nop.Services.Installation
                     HideNewsletterBlock = false,
                     OnlineCustomerMinutes = 20,
                     StoreLastVisitedPage = true,
+                    SuffixDeletedCustomers = false,
                 });
 
             EngineContext.Current.Resolve<IConfigurationProvider<AddressSettings>>()

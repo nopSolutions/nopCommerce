@@ -1928,3 +1928,11 @@ BEGIN
 	VALUES (N'commonsettings.log404errors', N'true')
 END
 GO
+
+--suffix deleted customers
+IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = N'customersettings.suffixdeletedcustomers')
+BEGIN
+	INSERT [Setting] ([Name], [Value])
+	VALUES (N'customersettings.suffixdeletedcustomers', N'false')
+END
+GO
