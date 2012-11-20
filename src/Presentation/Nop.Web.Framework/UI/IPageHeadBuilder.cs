@@ -2,7 +2,7 @@
 
 namespace Nop.Web.Framework.UI
 {
-    public partial interface IPageTitleBuilder
+    public partial interface IPageHeadBuilder
     {
         void AddTitleParts(params string[] parts);
         void AppendTitleParts(params string[] parts);

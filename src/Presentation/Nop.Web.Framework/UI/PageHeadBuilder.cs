@@ -12,7 +12,7 @@ using Nop.Services.Seo;
 
 namespace Nop.Web.Framework.UI
 {
-    public partial class PageTitleBuilder : IPageTitleBuilder
+    public partial class PageHeadBuilder : IPageHeadBuilder
     {
         #region Fields
 
@@ -30,7 +30,7 @@ namespace Nop.Web.Framework.UI
 
         #region Ctor
 
-        public PageTitleBuilder(SeoSettings seoSettings, HttpContextBase httpContext)
+        public PageHeadBuilder(SeoSettings seoSettings, HttpContextBase httpContext)
         {
             this._seoSettings = seoSettings;
             this._titleParts = new List<string>();

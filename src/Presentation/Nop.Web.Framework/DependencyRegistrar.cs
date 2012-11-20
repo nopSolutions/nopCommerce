@@ -245,7 +245,7 @@ namespace Nop.Web.Framework
 
             builder.RegisterType<DateTimeHelper>().As<IDateTimeHelper>().InstancePerHttpRequest();
             builder.RegisterType<SitemapGenerator>().As<ISitemapGenerator>().InstancePerHttpRequest();
-            builder.RegisterType<PageTitleBuilder>().As<IPageTitleBuilder>().InstancePerHttpRequest();
+            builder.RegisterType<PageHeadBuilder>().As<IPageHeadBuilder>().InstancePerHttpRequest();
 
             builder.RegisterType<ScheduleTaskService>().As<IScheduleTaskService>().InstancePerHttpRequest();
 

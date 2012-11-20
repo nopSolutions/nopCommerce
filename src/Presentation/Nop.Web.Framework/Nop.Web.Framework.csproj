@@ -192,9 +192,9 @@
     <Compile Include="UI\Editor\INetAdvDirectoryService.cs" />
     <Compile Include="UI\Editor\NetAdvImage.cs" />
     <Compile Include="UI\LayoutExtensions.cs" />
-    <Compile Include="UI\IPageTitleBuilder.cs" />
+    <Compile Include="UI\IPageHeadBuilder.cs" />
     <Compile Include="UI\NotifyType.cs" />
-    <Compile Include="UI\PageTitleBuilder.cs" />
+    <Compile Include="UI\PageHeadBuilder.cs" />
     <Compile Include="UI\DataListExtensions.cs" />
     <Compile Include="UI\Paging\BasePageableModel.cs" />
     <Compile Include="UI\Paging\IPageableModel.cs" />
