@@ -897,7 +897,7 @@ namespace Nop.Admin.Controllers
                 _categoryService.InsertProductCategory(productCategory);
             }
             
-            return ProductCategoryList(command, model.ProductId);
+            return ProductCategoryList(command, productId);
         }
 
         [GridAction(EnableCustomBinding = true)]
@@ -995,7 +995,7 @@ namespace Nop.Admin.Controllers
                 _manufacturerService.InsertProductManufacturer(productManufacturer);
             }
             
-            return ProductManufacturerList(command, model.ProductId);
+            return ProductManufacturerList(command, productId);
         }
 
         [GridAction(EnableCustomBinding = true)]
