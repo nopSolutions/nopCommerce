@@ -881,15 +881,22 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
 
-            var productCategory = new ProductCategory()
+            var productId = model.ProductId;
+            var categoryId = Int32.Parse(model.Category); //use Category property (not CategoryId) because appropriate property is stored in it
+              
+            var existingProductCategories = _categoryService.GetProductCategoriesByCategoryId(categoryId, 0, int.MaxValue, true);
+            if (existingProductCategories.FindProductCategory(productId, categoryId) == null)
             {
-                ProductId = model.ProductId,
-                CategoryId = Int32.Parse(model.Category), //use Category property (not CategoryId) because appropriate property is stored in it
-                IsFeaturedProduct = model.IsFeaturedProduct,
-                DisplayOrder = model.DisplayOrder
-            };
-            _categoryService.InsertProductCategory(productCategory);
-
+                var productCategory = new ProductCategory()
+                {
+                    ProductId = productId,
+                    CategoryId = categoryId,
+                    IsFeaturedProduct = model.IsFeaturedProduct,
+                    DisplayOrder = model.DisplayOrder
+                };
+                _categoryService.InsertProductCategory(productCategory);
+            }
+            
             return ProductCategoryList(command, model.ProductId);
         }
 
@@ -972,15 +979,22 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return AccessDeniedView();
 
-            var productManufacturer = new ProductManufacturer()
-            {
-                ProductId = model.ProductId,
-                ManufacturerId = Int32.Parse(model.Manufacturer), //use Manufacturer property (not ManufacturerId) because appropriate property is stored in it
-                IsFeaturedProduct = model.IsFeaturedProduct,
-                DisplayOrder = model.DisplayOrder
-            };
-            _manufacturerService.InsertProductManufacturer(productManufacturer);
+            var productId = model.ProductId;
+            var manufacturerId = Int32.Parse(model.Manufacturer); //use Manufacturer property (not ManufacturerId) because appropriate property is stored in it
 
+            var existingProductmanufacturers = _manufacturerService.GetProductManufacturersByManufacturerId(manufacturerId, 0, int.MaxValue, true);
+            if (existingProductmanufacturers.FindProductManufacturer(productId, manufacturerId) == null)
+            {
+                var productManufacturer = new ProductManufacturer()
+                {
+                    ProductId = productId,
+                    ManufacturerId = manufacturerId,
+                    IsFeaturedProduct = model.IsFeaturedProduct,
+                    DisplayOrder = model.DisplayOrder
+                };
+                _manufacturerService.InsertProductManufacturer(productManufacturer);
+            }
+            
             return ProductManufacturerList(command, model.ProductId);
         }
 
