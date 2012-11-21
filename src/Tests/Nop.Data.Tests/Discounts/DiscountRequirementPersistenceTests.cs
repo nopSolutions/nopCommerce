@@ -15,7 +15,6 @@ namespace Nop.Data.Tests.Discounts
             {
                 DiscountRequirementRuleSystemName = "BillingCountryIs",
                 SpentAmount = 1.1M,
-                BillingCountryId = 2,
                 ShippingCountryId =3,
                 Discount = GetTestDiscount()
             };
@@ -24,7 +23,6 @@ namespace Nop.Data.Tests.Discounts
             fromDb.ShouldNotBeNull();
             fromDb.DiscountRequirementRuleSystemName.ShouldEqual("BillingCountryIs");
             fromDb.SpentAmount.ShouldEqual(1.1M);
-            fromDb.BillingCountryId.ShouldEqual(2);
             fromDb.ShippingCountryId.ShouldEqual(3);
 
 

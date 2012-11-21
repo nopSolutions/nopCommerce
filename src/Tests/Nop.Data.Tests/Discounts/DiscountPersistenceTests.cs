@@ -66,7 +66,6 @@ namespace Nop.Data.Tests.Discounts
                      {
                          DiscountRequirementRuleSystemName = "BillingCountryIs",
                          SpentAmount = 1,
-                         BillingCountryId = 2,
                          ShippingCountryId = 3,
                      }
                 );
