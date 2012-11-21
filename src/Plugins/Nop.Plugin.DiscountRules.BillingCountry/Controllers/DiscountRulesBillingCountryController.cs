@@ -81,12 +81,11 @@ namespace Nop.Plugin.DiscountRules.BillingCountry.Controllers
                 //save new rule
                 discountRequirement = new DiscountRequirement()
                 {
-                    DiscountRequirementRuleSystemName = "DiscountRequirement.BillingCountryIs",
+                    DiscountRequirementRuleSystemName = "DiscountRequirement.BillingCountryIs"
                 };
                 discount.DiscountRequirements.Add(discountRequirement);
                 _discountService.UpdateDiscount(discount);
-
-
+                
                 _settingService.SetSetting(string.Format("DiscountRequirement.BillingCountry-{0}", discountRequirement.Id), countryId);
             }
             return Json(new { Result = true, NewRequirementId = discountRequirement.Id }, JsonRequestBehavior.AllowGet);

@@ -1,6 +1,7 @@
 using System;
 using Nop.Core;
 using Nop.Core.Plugins;
+using Nop.Services.Configuration;
 using Nop.Services.Discounts;
 using Nop.Services.Localization;
 
@@ -8,6 +9,13 @@ namespace Nop.Plugin.DiscountRules.ShippingCountry
 {
     public partial class ShippingCountryDiscountRequirementRule : BasePlugin, IDiscountRequirementRule
     {
+        private readonly ISettingService _settingService;
+
+        public ShippingCountryDiscountRequirementRule(ISettingService settingService)
+        {
+            this._settingService = settingService;
+        }
+
         /// <summary>
         /// Check discount requirement
         /// </summary>
@@ -27,10 +35,12 @@ namespace Nop.Plugin.DiscountRules.ShippingCountry
             if (request.Customer.ShippingAddress == null)
                 return false;
 
-            if (request.DiscountRequirement.ShippingCountryId == 0)
+            var shippingCountryId = _settingService.GetSettingByKey<int>(string.Format("DiscountRequirement.ShippingCountry-{0}", request.DiscountRequirement.Id));
+
+            if (shippingCountryId == 0)
                 return false;
 
-            bool result = request.Customer.ShippingAddress.CountryId == request.DiscountRequirement.ShippingCountryId;
+            bool result = request.Customer.ShippingAddress.CountryId == shippingCountryId;
             return result;
         }
 

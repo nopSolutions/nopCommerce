@@ -19,12 +19,7 @@
         /// Gets or sets the the discount requirement spent amount - customer had spent/purchased x.xx amount (used when requirement is set to "Customer had spent/purchased x.xx amount")
         /// </summary>
         public virtual decimal SpentAmount { get; set; }
-
-        /// <summary>
-        /// Gets or sets the discount requirement - customer's shipping country is... (used when requirement is set to "Shipping country is")
-        /// </summary>
-        public virtual int ShippingCountryId { get; set; }
-
+        
         /// <summary>
         /// Gets or sets the restricted customer role identifier
         /// </summary>

@@ -1973,3 +1973,41 @@ BEGIN
 	EXEC('ALTER TABLE [DiscountRequirement] DROP COLUMN [BillingCountryId]')
 END
 GO
+
+
+
+IF EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[DiscountRequirement]') and NAME='ShippingCountryId')
+BEGIN
+	DECLARE @entity_id int
+	DECLARE cur_existing_entity CURSOR FOR
+	SELECT [Id]
+	FROM [DiscountRequirement]
+	WHERE [DiscountRequirementRuleSystemName] = N'DiscountRequirement.ShippingCountryIs'
+	OPEN cur_existing_entity
+	FETCH NEXT FROM cur_existing_entity INTO @entity_id
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+		DECLARE @settingname nvarchar(1000)	
+		SET @settingname = N'DiscountRequirement.ShippingCountry-' + CAST(@entity_id AS nvarchar(max))
+		
+		DECLARE @shippingcountryid int
+		SET @shippingcountryid = 0
+		SELECT @shippingcountryid = [ShippingCountryId] FROM [DiscountRequirement]
+								WHERE [Id] = @entity_id
+		
+		IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = @settingname)
+		BEGIN
+			INSERT [Setting] ([Name], [Value])
+			VALUES (@settingname, CAST(@shippingcountryid AS nvarchar(max)))
+		END
+
+		--fetch next identifier
+		FETCH NEXT FROM cur_existing_entity INTO @entity_id
+	END
+	CLOSE cur_existing_entity
+	DEALLOCATE cur_existing_entity
+	
+	--drop ShippingCountryId column
+	EXEC('ALTER TABLE [DiscountRequirement] DROP COLUMN [ShippingCountryId]')
+END
+GO
