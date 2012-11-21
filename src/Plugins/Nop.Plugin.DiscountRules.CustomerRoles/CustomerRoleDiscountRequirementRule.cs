@@ -16,6 +16,7 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles
         {
             this._settingService = settingService;
         }
+
         /// <summary>
         /// Check discount requirement
         /// </summary>

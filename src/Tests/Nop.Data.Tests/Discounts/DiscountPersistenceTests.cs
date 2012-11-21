@@ -64,8 +64,7 @@ namespace Nop.Data.Tests.Discounts
                 (
                      new DiscountRequirement()
                      {
-                         DiscountRequirementRuleSystemName = "BillingCountryIs",
-                         SpentAmount = 1,
+                         DiscountRequirementRuleSystemName = "BillingCountryIs"
                      }
                 );
             var fromDb = SaveAndLoadEntity(discount);

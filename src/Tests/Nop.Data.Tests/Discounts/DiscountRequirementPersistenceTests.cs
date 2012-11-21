@@ -14,14 +14,12 @@ namespace Nop.Data.Tests.Discounts
             var discountRequirement = new DiscountRequirement
             {
                 DiscountRequirementRuleSystemName = "BillingCountryIs",
-                SpentAmount = 1.1M,
                 Discount = GetTestDiscount()
             };
 
             var fromDb = SaveAndLoadEntity(discountRequirement);
             fromDb.ShouldNotBeNull();
             fromDb.DiscountRequirementRuleSystemName.ShouldEqual("BillingCountryIs");
-            fromDb.SpentAmount.ShouldEqual(1.1M);
 
 
             fromDb.Discount.ShouldNotBeNull();
