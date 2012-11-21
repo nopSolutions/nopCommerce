@@ -4,6 +4,7 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Plugins;
+using Nop.Services.Configuration;
 using Nop.Services.Discounts;
 using Nop.Services.Localization;
 using Nop.Services.Orders;
@@ -13,10 +14,13 @@ namespace Nop.Plugin.DiscountRules.PurchasedOneProduct
     public partial class PurchasedOneProductDiscountRequirementRule : BasePlugin, IDiscountRequirementRule
     {
         private readonly IOrderService _orderService;
+        private readonly ISettingService _settingService;
 
-        public PurchasedOneProductDiscountRequirementRule(IOrderService orderService)
+        public PurchasedOneProductDiscountRequirementRule(IOrderService orderService,
+            ISettingService settingService)
         {
             this._orderService = orderService;
+            this._settingService = settingService;
         }
 
         /// <summary>
@@ -32,7 +36,9 @@ namespace Nop.Plugin.DiscountRules.PurchasedOneProduct
             if (request.DiscountRequirement == null)
                 throw new NopException("Discount requirement is not set");
 
-            if (String.IsNullOrWhiteSpace(request.DiscountRequirement.RestrictedProductVariantIds))
+            var restrictedProductVariantIdsStr = _settingService.GetSettingByKey<string>(string.Format("DiscountRequirement.RestrictedProductVariantIds-{0}", request.DiscountRequirement.Id));
+
+            if (String.IsNullOrWhiteSpace(restrictedProductVariantIdsStr))
                 return true;
 
             if (request.Customer == null)
@@ -41,7 +47,7 @@ namespace Nop.Plugin.DiscountRules.PurchasedOneProduct
             var restrictedProductVariantIds = new List<int>();
             try
             {
-                restrictedProductVariantIds = request.DiscountRequirement.RestrictedProductVariantIds
+                restrictedProductVariantIds = restrictedProductVariantIdsStr
                     .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
                     .Select(x => Convert.ToInt32(x))
                     .ToList();

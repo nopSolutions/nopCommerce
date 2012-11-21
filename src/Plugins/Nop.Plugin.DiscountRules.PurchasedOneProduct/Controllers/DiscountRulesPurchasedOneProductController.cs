@@ -3,7 +3,7 @@ using System.Linq;
 using System.Web.Mvc;
 using Nop.Core.Domain.Discounts;
 using Nop.Plugin.DiscountRules.PurchasedOneProduct.Models;
-using Nop.Services.Customers;
+using Nop.Services.Configuration;
 using Nop.Services.Discounts;
 using Nop.Web.Framework.Controllers;
 
@@ -13,11 +13,13 @@ namespace Nop.Plugin.DiscountRules.PurchasedOneProduct.Controllers
     public class DiscountRulesPurchasedOneProductController : Controller
     {
         private readonly IDiscountService _discountService;
+        private readonly ISettingService _settingService;
 
         public DiscountRulesPurchasedOneProductController(IDiscountService discountService,
-            ICustomerService customerService)
+            ISettingService settingService)
         {
             this._discountService = discountService;
+            this._settingService = settingService;
         }
 
         public ActionResult Configure(int discountId, int? discountRequirementId)
@@ -34,10 +36,12 @@ namespace Nop.Plugin.DiscountRules.PurchasedOneProduct.Controllers
                     return Content("Failed to load requirement.");
             }
 
+            var restrictedProductVariantIds = _settingService.GetSettingByKey<string>(string.Format("DiscountRequirement.RestrictedProductVariantIds-{0}", discountRequirementId.HasValue ? discountRequirementId.Value : 0));
+
             var model = new RequirementModel();
             model.RequirementId = discountRequirementId.HasValue ? discountRequirementId.Value : 0;
             model.DiscountId = discountId;
-            model.ProductVariants = discountRequirement != null ? discountRequirement.RestrictedProductVariantIds : "";
+            model.ProductVariants = restrictedProductVariantIds;
 
             //add a prefix
             ViewData.TemplateInfo.HtmlFieldPrefix = string.Format("DiscountRulesPurchasedOneProduct{0}", discountRequirementId.HasValue ? discountRequirementId.Value.ToString() : "0");
@@ -59,19 +63,19 @@ namespace Nop.Plugin.DiscountRules.PurchasedOneProduct.Controllers
             if (discountRequirement != null)
             {
                 //update existing rule
-                discountRequirement.RestrictedProductVariantIds = variantIds;
-                _discountService.UpdateDiscount(discount);
+                _settingService.SetSetting(string.Format("DiscountRequirement.RestrictedProductVariantIds-{0}", discountRequirement.Id), variantIds);
             }
             else
             {
                 //save new rule
                 discountRequirement = new DiscountRequirement()
                 {
-                    DiscountRequirementRuleSystemName = "DiscountRequirement.PurchasedOneProduct",
-                    RestrictedProductVariantIds = variantIds,
+                    DiscountRequirementRuleSystemName = "DiscountRequirement.PurchasedOneProduct"
                 };
                 discount.DiscountRequirements.Add(discountRequirement);
                 _discountService.UpdateDiscount(discount);
+                
+                _settingService.SetSetting(string.Format("DiscountRequirement.RestrictedProductVariantIds-{0}", discountRequirement.Id), variantIds);
             }
             return Json(new { Result = true, NewRequirementId = discountRequirement.Id }, JsonRequestBehavior.AllowGet);
         }

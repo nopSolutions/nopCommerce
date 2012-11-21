@@ -3,6 +3,7 @@ using System.Linq;
 using Nop.Core;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Plugins;
+using Nop.Services.Configuration;
 using Nop.Services.Discounts;
 using Nop.Services.Localization;
 
@@ -10,6 +11,13 @@ namespace Nop.Plugin.DiscountRules.HasAllProducts
 {
     public partial class HasAllProductsDiscountRequirementRule : BasePlugin, IDiscountRequirementRule
     {
+        private readonly ISettingService _settingService;
+
+        public HasAllProductsDiscountRequirementRule(ISettingService settingService)
+        {
+            this._settingService = settingService;
+        }
+
         /// <summary>
         /// Check discount requirement
         /// </summary>
@@ -23,7 +31,9 @@ namespace Nop.Plugin.DiscountRules.HasAllProducts
             if (request.DiscountRequirement == null)
                 throw new NopException("Discount requirement is not set");
 
-            if (String.IsNullOrWhiteSpace(request.DiscountRequirement.RestrictedProductVariantIds))
+            var restrictedProductVariantIds = _settingService.GetSettingByKey<string>(string.Format("DiscountRequirement.RestrictedProductVariantIds-{0}", request.DiscountRequirement.Id));
+
+            if (String.IsNullOrWhiteSpace(restrictedProductVariantIds))
                 return true;
 
             if (request.Customer == null)
@@ -35,7 +45,7 @@ namespace Nop.Plugin.DiscountRules.HasAllProducts
             //      {Product variant ID}:{Quantity}. For example, 77:1, 123:2, 156:3
             //3. The comma-separated list of product variant identifiers with quantity range.
             //      {Product variant ID}:{Min quantity}-{Max quantity}. For example, 77:1-3, 123:2-5, 156:3-8
-            var restrictedProductVariants = request.DiscountRequirement.RestrictedProductVariantIds
+            var restrictedProductVariants = restrictedProductVariantIds
                 .Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries)
                 .Select(x => x.Trim())
                 .ToList();

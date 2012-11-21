@@ -1954,8 +1954,10 @@ BEGIN
 		
 		DECLARE @billingcountryid int
 		SET @billingcountryid = 0
-		SELECT @billingcountryid = [BillingCountryId] FROM [DiscountRequirement]
-								WHERE [Id] = @entity_id
+		DECLARE @sql nvarchar(1000)
+		SET @sql = 'SELECT @billingcountryid = [BillingCountryId] FROM [DiscountRequirement] WHERE [Id] = ' + ISNULL(CAST(@entity_id AS nvarchar(max)), '0')
+		EXEC sp_executesql @sql,N'@billingcountryid int OUTPUT',@billingcountryid OUTPUT
+		
 		
 		IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = @settingname)
 		BEGIN
@@ -1992,8 +1994,9 @@ BEGIN
 		
 		DECLARE @shippingcountryid int
 		SET @shippingcountryid = 0
-		SELECT @shippingcountryid = [ShippingCountryId] FROM [DiscountRequirement]
-								WHERE [Id] = @entity_id
+		DECLARE @sql nvarchar(1000)
+		SET @sql = 'SELECT @shippingcountryid = [ShippingCountryId] FROM [DiscountRequirement] WHERE [Id] = ' + ISNULL(CAST(@entity_id AS nvarchar(max)), '0')
+		EXEC sp_executesql @sql,N'@shippingcountryid int OUTPUT',@shippingcountryid OUTPUT
 		
 		IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = @settingname)
 		BEGIN
@@ -2029,9 +2032,11 @@ BEGIN
 		
 		DECLARE @RestrictedToCustomerRoleId int
 		SET @RestrictedToCustomerRoleId = 0
-		SELECT @RestrictedToCustomerRoleId = [RestrictedToCustomerRoleId] FROM [DiscountRequirement]
-								WHERE [Id] = @entity_id
 		
+		DECLARE @sql nvarchar(1000)
+		SET @sql = 'SELECT @RestrictedToCustomerRoleId = [RestrictedToCustomerRoleId] FROM [DiscountRequirement] WHERE [Id] = ' + ISNULL(CAST(@entity_id AS nvarchar(max)), '0')
+		EXEC sp_executesql @sql,N'@RestrictedToCustomerRoleId int OUTPUT',@RestrictedToCustomerRoleId OUTPUT
+				
 		IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = @settingname)
 		BEGIN
 			INSERT [Setting] ([Name], [Value])
@@ -2066,9 +2071,12 @@ BEGIN
 		
 		DECLARE @SpentAmount int
 		SET @SpentAmount = 0
-		SELECT @SpentAmount = [SpentAmount] FROM [DiscountRequirement]
-								WHERE [Id] = @entity_id
-		
+		DECLARE @sql nvarchar(1000)
+		SET @sql = 'SELECT @SpentAmount = [SpentAmount] FROM [DiscountRequirement] WHERE [Id] = ' + ISNULL(CAST(@entity_id AS nvarchar(max)), '0')
+		EXEC sp_executesql @sql,N'@SpentAmount int OUTPUT',@SpentAmount OUTPUT
+				
+				PRINT(@sql)
+				
 		IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = @settingname)
 		BEGIN
 			INSERT [Setting] ([Name], [Value])
@@ -2083,5 +2091,49 @@ BEGIN
 	
 	--drop SpentAmount column
 	EXEC('ALTER TABLE [DiscountRequirement] DROP COLUMN [SpentAmount]')
+END
+GO
+
+
+IF EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[DiscountRequirement]') and NAME='RestrictedProductVariantIds')
+BEGIN
+	DECLARE @entity_id int
+	DECLARE cur_existing_entity CURSOR FOR
+	SELECT [Id]
+	FROM [DiscountRequirement]
+	WHERE [DiscountRequirementRuleSystemName] = N'DiscountRequirement.HasAllProducts'
+	or [DiscountRequirementRuleSystemName] = N'DiscountRequirement.HasOneProduct'
+	or [DiscountRequirementRuleSystemName] = N'DiscountRequirement.PurchasedAllProducts'
+	or [DiscountRequirementRuleSystemName] = N'DiscountRequirement.PurchasedOneProduct'
+	OPEN cur_existing_entity
+	FETCH NEXT FROM cur_existing_entity INTO @entity_id
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+		DECLARE @settingname nvarchar(1000)	
+		SET @settingname = N'DiscountRequirement.RestrictedProductVariantIds-' + CAST(@entity_id AS nvarchar(max))
+		
+		DECLARE @RestrictedProductVariantIds nvarchar(MAX)
+		SET @RestrictedProductVariantIds = 0
+		
+		
+		DECLARE @sql nvarchar(1000)
+		SET @sql = 'SELECT @RestrictedProductVariantIds = [RestrictedProductVariantIds] FROM [DiscountRequirement] WHERE [Id] = ' + ISNULL(CAST(@entity_id AS nvarchar(max)), '0')
+		EXEC sp_executesql @sql,N'@RestrictedProductVariantIds int OUTPUT',@RestrictedProductVariantIds OUTPUT
+		
+		
+		IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = @settingname)
+		BEGIN
+			INSERT [Setting] ([Name], [Value])
+			VALUES (@settingname, @RestrictedProductVariantIds)
+		END
+
+		--fetch next identifier
+		FETCH NEXT FROM cur_existing_entity INTO @entity_id
+	END
+	CLOSE cur_existing_entity
+	DEALLOCATE cur_existing_entity
+	
+	--drop RestrictedProductVariantIds column
+	EXEC('ALTER TABLE [DiscountRequirement] DROP COLUMN [RestrictedProductVariantIds]')
 END
 GO
