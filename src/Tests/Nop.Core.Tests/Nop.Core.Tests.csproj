@@ -64,6 +64,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommonHelperEmailValidatorTests.cs" />
     <Compile Include="Domain\Shipping\ShippingOptionListTypeConverterTests.cs" />
     <Compile Include="Infrastructure\DependencyManagement\AutofacTests.cs" />
     <Compile Include="CommonHelperTests.cs" />
