@@ -48,6 +48,7 @@ namespace Nop.Plugin.DiscountRules.BillingCountry.Controllers
             var model = new RequirementModel();
             model.RequirementId = discountRequirementId.HasValue ? discountRequirementId.Value : 0;
             model.DiscountId = discountId;
+            model.CountryId = billingCountryId;
             //countries
             model.AvailableCountries.Add(new SelectListItem() { Text = _localizationService.GetResource("Plugins.DiscountRules.BillingCountry.Fields.SelectCountry"), Value = "0" });
             foreach (var c in _countryService.GetAllCountries(true))
