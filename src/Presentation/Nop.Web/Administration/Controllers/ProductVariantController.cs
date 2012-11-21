@@ -196,7 +196,7 @@ namespace Nop.Admin.Controllers
             if (model == null)
                 throw new ArgumentNullException("model");
 
-            var discounts = _discountService.GetAllDiscounts(DiscountType.AssignedToSkus, true);
+            var discounts = _discountService.GetAllDiscounts(DiscountType.AssignedToSkus, null, true);
             model.AvailableDiscounts = discounts.ToList();
 
             if (!excludeProperties)
@@ -314,7 +314,7 @@ namespace Nop.Admin.Controllers
                 //locales
                 UpdateLocales(variant, model);
                 //discounts
-                var allDiscounts = _discountService.GetAllDiscounts(DiscountType.AssignedToSkus, true);
+                var allDiscounts = _discountService.GetAllDiscounts(DiscountType.AssignedToSkus, null, true);
                 foreach (var discount in allDiscounts)
                 {
                     if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))
@@ -399,7 +399,7 @@ namespace Nop.Admin.Controllers
                 //locales
                 UpdateLocales(variant, model);
                 //discounts
-                var allDiscounts = _discountService.GetAllDiscounts(DiscountType.AssignedToSkus, true);
+                var allDiscounts = _discountService.GetAllDiscounts(DiscountType.AssignedToSkus, null, true);
                 foreach (var discount in allDiscounts)
                 {
                     if (model.SelectedDiscountIds != null && model.SelectedDiscountIds.Contains(discount.Id))

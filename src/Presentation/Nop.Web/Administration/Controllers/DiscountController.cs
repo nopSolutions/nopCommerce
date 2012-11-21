@@ -162,7 +162,7 @@ namespace Nop.Admin.Controllers
             if (!_permissionService.Authorize(StandardPermissionProvider.ManageDiscounts))
                 return AccessDeniedView();
 
-            var discounts = _discountService.GetAllDiscounts(null, true);
+            var discounts = _discountService.GetAllDiscounts(null, null, true);
             var gridModel = new GridModel<DiscountModel>
             {
                 Data = discounts.PagedForCommand(command).Select(x => x.ToModel()),

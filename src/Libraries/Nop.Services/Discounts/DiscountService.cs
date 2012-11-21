@@ -18,7 +18,7 @@ namespace Nop.Services.Discounts
     public partial class DiscountService : IDiscountService
     {
         #region Constants
-        private const string DISCOUNTS_ALL_KEY = "Nop.discount.all-{0}-{1}";
+        private const string DISCOUNTS_ALL_KEY = "Nop.discount.all-{0}-{1}-{2}";
         private const string DISCOUNTS_BY_ID_KEY = "Nop.discount.id-{0}";
         private const string DISCOUNTS_PATTERN_KEY = "Nop.discount.";
         #endregion
@@ -149,15 +149,16 @@ namespace Nop.Services.Discounts
         /// Gets all discounts
         /// </summary>
         /// <param name="discountType">Discount type; null to load all discount</param>
+        /// <param name="couponCode">Coupon code to find (exactl match)</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Discount collection</returns>
-        public virtual IList<Discount> GetAllDiscounts(DiscountType? discountType, bool showHidden = false)
+        public virtual IList<Discount> GetAllDiscounts(DiscountType? discountType, string couponCode = "", bool showHidden = false)
         { 
             int? discountTypeId = null;
             if (discountType.HasValue)
                 discountTypeId = (int)discountType.Value;
 
-            string key = string.Format(DISCOUNTS_ALL_KEY, showHidden, discountTypeId.HasValue ? discountTypeId.Value : 0);
+            string key = string.Format(DISCOUNTS_ALL_KEY, showHidden, couponCode, discountTypeId.HasValue ? discountTypeId.Value : 0);
             return _cacheManager.Get(key, () =>
             {
                 var query = _discountRepository.Table;
@@ -174,6 +175,12 @@ namespace Nop.Services.Discounts
                 if (discountTypeId.HasValue && discountTypeId.Value > 0)
                 {
                     query = query.Where(d => d.DiscountTypeId == discountTypeId);
+                }
+                if (!String.IsNullOrWhiteSpace(couponCode))
+                {
+                    couponCode = couponCode.Trim();
+
+                    query = query.Where(d => d.CouponCode == couponCode);
                 }
                 query = query.OrderByDescending(d => d.Id);
                 
@@ -260,7 +267,7 @@ namespace Nop.Services.Discounts
         /// <summary>
         /// Get discount by coupon code
         /// </summary>
-        /// <param name="couponCode">CouponCode</param>
+        /// <param name="couponCode">Coupon code</param>
         /// <param name="showHidden">A value indicating whether to show hidden records</param>
         /// <returns>Discount</returns>
         public virtual Discount GetDiscountByCouponCode(string couponCode, bool showHidden = false)
@@ -268,10 +275,7 @@ namespace Nop.Services.Discounts
             if (String.IsNullOrWhiteSpace(couponCode))
                 return null;
 
-            var discounts = GetAllDiscounts(null, showHidden);
-            var discount = discounts.
-                Where(d => !String.IsNullOrEmpty(d.CouponCode) && d.CouponCode.Equals(couponCode, StringComparison.InvariantCultureIgnoreCase))
-                .FirstOrDefault();
+            var discount = GetAllDiscounts(null, couponCode, showHidden).FirstOrDefault();
             return discount;
         }
 
