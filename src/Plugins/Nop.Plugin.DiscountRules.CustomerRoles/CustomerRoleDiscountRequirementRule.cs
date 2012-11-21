@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Plugins;
+using Nop.Services.Configuration;
 using Nop.Services.Discounts;
 using Nop.Services.Localization;
 
@@ -9,6 +10,12 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles
 {
     public partial class CustomerRoleDiscountRequirementRule : BasePlugin, IDiscountRequirementRule
     {
+        private readonly ISettingService _settingService;
+
+        public CustomerRoleDiscountRequirementRule(ISettingService settingService)
+        {
+            this._settingService = settingService;
+        }
         /// <summary>
         /// Check discount requirement
         /// </summary>
@@ -25,11 +32,14 @@ namespace Nop.Plugin.DiscountRules.CustomerRoles
             if (request.Customer == null)
                 return false;
 
-            if (!request.DiscountRequirement.RestrictedToCustomerRoleId.HasValue)
+
+            var restrictedToCustomerRoleId = _settingService.GetSettingByKey<int>(string.Format("DiscountRequirement.MustBeAssignedToCustomerRole-{0}", request.DiscountRequirement.Id));
+
+            if (restrictedToCustomerRoleId == 0)
                 return false;
 
             foreach (var customerRole in request.Customer.CustomerRoles.Where(cr => cr.Active).ToList())
-                if (request.DiscountRequirement.RestrictedToCustomerRoleId == customerRole.Id)
+                if (restrictedToCustomerRoleId == customerRole.Id)
                     return true;
 
             return false;

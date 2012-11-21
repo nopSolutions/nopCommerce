@@ -21,11 +21,6 @@
         public virtual decimal SpentAmount { get; set; }
         
         /// <summary>
-        /// Gets or sets the restricted customer role identifier
-        /// </summary>
-        public virtual int? RestrictedToCustomerRoleId { get; set; }
-
-        /// <summary>
         /// Gets or sets the restricted product variant identifiers (comma separated)
         /// </summary>
         public virtual string RestrictedProductVariantIds { get; set; }
