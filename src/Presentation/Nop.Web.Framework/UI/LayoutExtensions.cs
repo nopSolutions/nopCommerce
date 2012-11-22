@@ -5,78 +5,78 @@ namespace Nop.Web.Framework.UI
 {
     public static class LayoutExtensions
     {
-        public static void AddTitleParts(this HtmlHelper html, params string[] parts)
+        public static void AddTitleParts(this HtmlHelper html, string part)
         {
             var pageHeadBuilder  = EngineContext.Current.Resolve<IPageHeadBuilder>();
-            pageHeadBuilder.AddTitleParts(parts);
+            pageHeadBuilder.AddTitleParts(part);
         }
-        public static void AppendTitleParts(this HtmlHelper html, params string[] parts)
+        public static void AppendTitleParts(this HtmlHelper html, string part)
         {
             var pageHeadBuilder  = EngineContext.Current.Resolve<IPageHeadBuilder>();
-            pageHeadBuilder.AppendTitleParts(parts);
+            pageHeadBuilder.AppendTitleParts(part);
         }
-        public static MvcHtmlString NopTitle(this HtmlHelper html, bool addDefaultTitle, params string[] parts)
+        public static MvcHtmlString NopTitle(this HtmlHelper html, bool addDefaultTitle, string part)
         {
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
-            html.AppendTitleParts(parts);
+            html.AppendTitleParts(part);
             return MvcHtmlString.Create(html.Encode(pageHeadBuilder.GenerateTitle(addDefaultTitle)));
         }
 
 
-        public static void AddMetaDescriptionParts(this HtmlHelper html, params string[] parts)
+        public static void AddMetaDescriptionParts(this HtmlHelper html, string part)
         {
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
-            pageHeadBuilder.AddMetaDescriptionParts(parts);
+            pageHeadBuilder.AddMetaDescriptionParts(part);
         }
-        public static void AppendMetaDescriptionParts(this HtmlHelper html, params string[] parts)
+        public static void AppendMetaDescriptionParts(this HtmlHelper html, string part)
         {
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
-            pageHeadBuilder.AppendMetaDescriptionParts(parts);
+            pageHeadBuilder.AppendMetaDescriptionParts(part);
         }
-        public static MvcHtmlString NopMetaDescription(this HtmlHelper html, params string[] parts)
+        public static MvcHtmlString NopMetaDescription(this HtmlHelper html, string part)
         {
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
-            html.AppendMetaDescriptionParts(parts);
+            html.AppendMetaDescriptionParts(part);
             return MvcHtmlString.Create(html.Encode(pageHeadBuilder.GenerateMetaDescription()));
         }
 
 
-        public static void AddMetaKeywordParts(this HtmlHelper html, params string[] parts)
+        public static void AddMetaKeywordParts(this HtmlHelper html, string part)
         {
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
-            pageHeadBuilder.AddMetaKeywordParts(parts);
+            pageHeadBuilder.AddMetaKeywordParts(part);
         }
-        public static void AppendMetaKeywordParts(this HtmlHelper html, params string[] parts)
+        public static void AppendMetaKeywordParts(this HtmlHelper html, string part)
         {
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
-            pageHeadBuilder.AppendMetaKeywordParts(parts);
+            pageHeadBuilder.AppendMetaKeywordParts(part);
         }
-        public static MvcHtmlString NopMetaKeywords(this HtmlHelper html, params string[] parts)
+        public static MvcHtmlString NopMetaKeywords(this HtmlHelper html, string part)
         {
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
-            html.AppendMetaKeywordParts(parts);
+            html.AppendMetaKeywordParts(part);
             return MvcHtmlString.Create(html.Encode(pageHeadBuilder.GenerateMetaKeywords()));
         }
 
 
 
-        public static void AddScriptParts(this HtmlHelper html, params string[] parts)
+        public static void AddScriptParts(this HtmlHelper html, string part)
         {
-            AddScriptParts(html, ResourceLocation.Head, parts);
+            AddScriptParts(html, ResourceLocation.Head, part);
         }
-        public static void AddScriptParts(this HtmlHelper html, ResourceLocation location, params string[] parts)
+        public static void AddScriptParts(this HtmlHelper html, ResourceLocation location, string part)
         {
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
-            pageHeadBuilder.AddScriptParts(location, parts);
+            pageHeadBuilder.AddScriptParts(location, part);
         }
-        public static void AppendScriptParts(this HtmlHelper html, params string[] parts)
+        public static void AppendScriptParts(this HtmlHelper html, string part)
         {
-            AppendScriptParts(html, ResourceLocation.Head, parts);
+            AppendScriptParts(html, ResourceLocation.Head, part);
         }
-        public static void AppendScriptParts(this HtmlHelper html, ResourceLocation location, params string[] parts)
+        public static void AppendScriptParts(this HtmlHelper html, ResourceLocation location, string part)
         {
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
-            pageHeadBuilder.AppendScriptParts(location, parts);
+            pageHeadBuilder.AppendScriptParts(location, part);
         }
         public static MvcHtmlString NopScripts(this HtmlHelper html, UrlHelper urlHelper, 
             ResourceLocation location, bool? bundleFiles = null)
@@ -87,23 +87,23 @@ namespace Nop.Web.Framework.UI
 
 
 
-        public static void AddCssFileParts(this HtmlHelper html, params string[] parts)
+        public static void AddCssFileParts(this HtmlHelper html, string part)
         {
-            AddCssFileParts(html, ResourceLocation.Head, parts);
+            AddCssFileParts(html, ResourceLocation.Head, part);
         }
-        public static void AddCssFileParts(this HtmlHelper html, ResourceLocation location, params string[] parts)
+        public static void AddCssFileParts(this HtmlHelper html, ResourceLocation location, string part)
         {
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
-            pageHeadBuilder.AddCssFileParts(location, parts);
+            pageHeadBuilder.AddCssFileParts(location, part);
         }
-        public static void AppendCssFileParts(this HtmlHelper html, params string[] parts)
+        public static void AppendCssFileParts(this HtmlHelper html, string part)
         {
-            AppendCssFileParts(html, ResourceLocation.Head, parts);
+            AppendCssFileParts(html, ResourceLocation.Head, part);
         }
-        public static void AppendCssFileParts(this HtmlHelper html, ResourceLocation location, params string[] parts)
+        public static void AppendCssFileParts(this HtmlHelper html, ResourceLocation location, string part)
         {
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
-            pageHeadBuilder.AppendCssFileParts(location, parts);
+            pageHeadBuilder.AppendCssFileParts(location, part);
         }
         public static MvcHtmlString NopCssFiles(this HtmlHelper html, UrlHelper urlHelper, 
             ResourceLocation location)
@@ -114,20 +114,20 @@ namespace Nop.Web.Framework.UI
 
 
 
-        public static void AddCanonicalUrlParts(this HtmlHelper html, params string[] parts)
+        public static void AddCanonicalUrlParts(this HtmlHelper html, string part)
         {
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
-            pageHeadBuilder.AddCanonicalUrlParts(parts);
+            pageHeadBuilder.AddCanonicalUrlParts(part);
         }
-        public static void AppendCanonicalUrlParts(this HtmlHelper html, params string[] parts)
+        public static void AppendCanonicalUrlParts(this HtmlHelper html, string part)
         {
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
-            pageHeadBuilder.AppendCanonicalUrlParts(parts);
+            pageHeadBuilder.AppendCanonicalUrlParts(part);
         }
-        public static MvcHtmlString NopCanonicalUrls(this HtmlHelper html, params string[] parts)
+        public static MvcHtmlString NopCanonicalUrls(this HtmlHelper html, string part)
         {
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
-            html.AppendCanonicalUrlParts(parts);
+            html.AppendCanonicalUrlParts(part);
             return MvcHtmlString.Create(pageHeadBuilder.GenerateCanonicalUrls());
         }
     }

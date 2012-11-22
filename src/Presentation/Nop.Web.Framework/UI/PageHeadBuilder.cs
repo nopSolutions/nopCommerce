@@ -79,19 +79,19 @@ namespace Nop.Web.Framework.UI
 
         #region Methods
 
-        public virtual void AddTitleParts(params string[] parts)
+        public virtual void AddTitleParts(string part)
         {
-            if (parts != null)
-                foreach (string part in parts)
-                    if (!string.IsNullOrEmpty(part))
-                        _titleParts.Add(part);
+            if (string.IsNullOrEmpty(part))
+                return;
+
+            _titleParts.Add(part);
         }
-        public virtual void AppendTitleParts(params string[] parts)
+        public virtual void AppendTitleParts(string part)
         {
-            if (parts != null)
-                foreach (string part in parts)
-                    if (!string.IsNullOrEmpty(part))
-                        _titleParts.Insert(0, part);
+            if (string.IsNullOrEmpty(part))
+                return;
+            
+            _titleParts.Insert(0, part);
         }
         public virtual string GenerateTitle(bool addDefaultTitle)
         {
@@ -133,19 +133,19 @@ namespace Nop.Web.Framework.UI
         }
 
 
-        public virtual void AddMetaDescriptionParts(params string[] parts)
+        public virtual void AddMetaDescriptionParts(string part)
         {
-            if (parts != null)
-                foreach (string part in parts)
-                    if (!string.IsNullOrEmpty(part))
-                        _metaDescriptionParts.Add(part);
+            if (string.IsNullOrEmpty(part))
+                return;
+            
+            _metaDescriptionParts.Add(part);
         }
-        public virtual void AppendMetaDescriptionParts(params string[] parts)
+        public virtual void AppendMetaDescriptionParts(string part)
         {
-            if (parts != null)
-                foreach (string part in parts)
-                    if (!string.IsNullOrEmpty(part))
-                        _metaDescriptionParts.Insert(0, part);
+            if (string.IsNullOrEmpty(part))
+                return;
+            
+            _metaDescriptionParts.Insert(0, part);
         }
         public virtual string GenerateMetaDescription()
         {
@@ -155,19 +155,19 @@ namespace Nop.Web.Framework.UI
         }
 
 
-        public virtual void AddMetaKeywordParts(params string[] parts)
+        public virtual void AddMetaKeywordParts(string part)
         {
-            if (parts != null)
-                foreach (string part in parts)
-                    if (!string.IsNullOrEmpty(part))
-                        _metaKeywordParts.Add(part);
+            if (string.IsNullOrEmpty(part))
+                return;
+            
+            _metaKeywordParts.Add(part);
         }
-        public virtual void AppendMetaKeywordParts(params string[] parts)
+        public virtual void AppendMetaKeywordParts(string part)
         {
-            if (parts != null)
-                foreach (string part in parts)
-                    if (!string.IsNullOrEmpty(part))
-                        _metaKeywordParts.Insert(0, part);
+            if (string.IsNullOrEmpty(part))
+                return;
+
+            _metaKeywordParts.Insert(0, part);
         }
         public virtual string GenerateMetaKeywords()
         {
@@ -177,25 +177,25 @@ namespace Nop.Web.Framework.UI
         }
 
 
-        public virtual void AddScriptParts(ResourceLocation location, params string[] parts)
+        public virtual void AddScriptParts(ResourceLocation location, string part)
         {
             if (!_scriptParts.ContainsKey(location))
                 _scriptParts.Add(location, new List<string>());
 
-            if (parts != null)
-                foreach (string part in parts)
-                    if (!string.IsNullOrEmpty(part))
-                        _scriptParts[location].Add(part);
+            if (string.IsNullOrEmpty(part))
+                return;
+
+            _scriptParts[location].Add(part);
         }
-        public virtual void AppendScriptParts(ResourceLocation location, params string[] parts)
+        public virtual void AppendScriptParts(ResourceLocation location, string part)
         {
             if (!_scriptParts.ContainsKey(location))
                 _scriptParts.Add(location, new List<string>());
 
-            if (parts != null)
-                foreach (string part in parts)
-                    if (!string.IsNullOrEmpty(part))
-                        _scriptParts[location].Insert(0, part);
+            if (string.IsNullOrEmpty(part))
+                return;
+            
+            _scriptParts[location].Insert(0, part);
         }
         public virtual string GenerateScripts(UrlHelper urlHelper, ResourceLocation location, bool? bundleFiles = null)
         {
@@ -268,25 +268,25 @@ namespace Nop.Web.Framework.UI
         }
 
 
-        public virtual void AddCssFileParts(ResourceLocation location, params string[] parts)
+        public virtual void AddCssFileParts(ResourceLocation location, string part)
         {
             if (!_cssParts.ContainsKey(location))
                 _cssParts.Add(location, new List<string>());
 
-            if (parts != null)
-                foreach (string part in parts)
-                    if (!string.IsNullOrEmpty(part))
-                        _cssParts[location].Add(part);
+            if (string.IsNullOrEmpty(part))
+                return;
+
+            _cssParts[location].Add(part);
         }
-        public virtual void AppendCssFileParts(ResourceLocation location, params string[] parts)
+        public virtual void AppendCssFileParts(ResourceLocation location, string part)
         {
             if (!_cssParts.ContainsKey(location))
                 _cssParts.Add(location, new List<string>());
 
-            if (parts != null)
-                foreach (string part in parts)
-                    if (!string.IsNullOrEmpty(part))
-                        _cssParts[location].Insert(0, part);
+            if (string.IsNullOrEmpty(part))
+                return;
+            
+            _cssParts[location].Insert(0, part);
         }
         public virtual string GenerateCssFiles(UrlHelper urlHelper, ResourceLocation location)
         {
@@ -308,19 +308,19 @@ namespace Nop.Web.Framework.UI
         }
 
 
-        public virtual void AddCanonicalUrlParts(params string[] parts)
+        public virtual void AddCanonicalUrlParts(string part)
         {
-            if (parts != null)
-                foreach (string part in parts)
-                    if (!string.IsNullOrEmpty(part))
-                        _canonicalUrlParts.Add(part);
+            if (string.IsNullOrEmpty(part))
+                return;
+                       
+            _canonicalUrlParts.Add(part);
         }
-        public virtual void AppendCanonicalUrlParts(params string[] parts)
+        public virtual void AppendCanonicalUrlParts(string part)
         {
-            if (parts != null)
-                foreach (string part in parts)
-                    if (!string.IsNullOrEmpty(part))
-                        _canonicalUrlParts.Insert(0, part);
+            if (string.IsNullOrEmpty(part))
+                return;
+                       
+            _canonicalUrlParts.Insert(0, part);
         }
         public virtual string GenerateCanonicalUrls()
         {

@@ -4,29 +4,29 @@ namespace Nop.Web.Framework.UI
 {
     public partial interface IPageHeadBuilder
     {
-        void AddTitleParts(params string[] parts);
-        void AppendTitleParts(params string[] parts);
+        void AddTitleParts(string part);
+        void AppendTitleParts(string part);
         string GenerateTitle(bool addDefaultTitle);
 
-        void AddMetaDescriptionParts(params string[] parts);
-        void AppendMetaDescriptionParts(params string[] parts);
+        void AddMetaDescriptionParts(string part);
+        void AppendMetaDescriptionParts(string part);
         string GenerateMetaDescription();
 
-        void AddMetaKeywordParts(params string[] parts);
-        void AppendMetaKeywordParts(params string[] parts);
+        void AddMetaKeywordParts(string part);
+        void AppendMetaKeywordParts(string part);
         string GenerateMetaKeywords();
 
-        void AddScriptParts(ResourceLocation location, params string[] parts);
-        void AppendScriptParts(ResourceLocation location, params string[] parts);
+        void AddScriptParts(ResourceLocation location, string part);
+        void AppendScriptParts(ResourceLocation location, string part);
         string GenerateScripts(UrlHelper urlHelper, ResourceLocation location, bool? bundleFiles = null);
 
-        void AddCssFileParts(ResourceLocation location, params string[] parts);
-        void AppendCssFileParts(ResourceLocation location, params string[] parts);
+        void AddCssFileParts(ResourceLocation location, string part);
+        void AppendCssFileParts(ResourceLocation location, string part);
         string GenerateCssFiles(UrlHelper urlHelper, ResourceLocation location);
 
 
-        void AddCanonicalUrlParts(params string[] parts);
-        void AppendCanonicalUrlParts(params string[] parts);
+        void AddCanonicalUrlParts(string part);
+        void AppendCanonicalUrlParts(string part);
         string GenerateCanonicalUrls();
     }
 }
