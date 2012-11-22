@@ -11,7 +11,7 @@
         </div>
         @(Html.DataList<ProductOverviewModel>(Model, 3,
             @<div class="item-box">
-                <div class="item">
+                <div class="item" data-productid="@item.Id">
                     <div class="product-title">
                         <a href="@Url.RouteUrl("Product", new { SeName = item.SeName })" title="@item.DefaultPictureModel.Title">
                             @item.Name</a>
