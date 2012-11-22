@@ -12,7 +12,7 @@
         addtocartlink = Url.RouteUrl("AddProductToCart", new { productId = Model.Id });
     }    
 }
-<div class="product-item">
+<div class="product-item" data-productid="@Model.Id">
     <h2 class="product-title">
         <a href="@Url.RouteUrl("Product", new { SeName = Model.SeName })">@Model.Name</a>
     </h2>
