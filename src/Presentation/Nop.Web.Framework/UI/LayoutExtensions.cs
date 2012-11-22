@@ -15,7 +15,7 @@ namespace Nop.Web.Framework.UI
             var pageHeadBuilder  = EngineContext.Current.Resolve<IPageHeadBuilder>();
             pageHeadBuilder.AppendTitleParts(part);
         }
-        public static MvcHtmlString NopTitle(this HtmlHelper html, bool addDefaultTitle, string part)
+        public static MvcHtmlString NopTitle(this HtmlHelper html, bool addDefaultTitle, string part = "")
         {
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
             html.AppendTitleParts(part);
@@ -33,7 +33,7 @@ namespace Nop.Web.Framework.UI
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
             pageHeadBuilder.AppendMetaDescriptionParts(part);
         }
-        public static MvcHtmlString NopMetaDescription(this HtmlHelper html, string part)
+        public static MvcHtmlString NopMetaDescription(this HtmlHelper html, string part = "")
         {
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
             html.AppendMetaDescriptionParts(part);
@@ -51,7 +51,7 @@ namespace Nop.Web.Framework.UI
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
             pageHeadBuilder.AppendMetaKeywordParts(part);
         }
-        public static MvcHtmlString NopMetaKeywords(this HtmlHelper html, string part)
+        public static MvcHtmlString NopMetaKeywords(this HtmlHelper html, string part = "")
         {
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
             html.AppendMetaKeywordParts(part);
@@ -60,23 +60,23 @@ namespace Nop.Web.Framework.UI
 
 
 
-        public static void AddScriptParts(this HtmlHelper html, string part)
+        public static void AddScriptParts(this HtmlHelper html, string part, bool excludeFromBundle = false)
         {
-            AddScriptParts(html, ResourceLocation.Head, part);
+            AddScriptParts(html, ResourceLocation.Head, part, excludeFromBundle);
         }
-        public static void AddScriptParts(this HtmlHelper html, ResourceLocation location, string part)
+        public static void AddScriptParts(this HtmlHelper html, ResourceLocation location, string part, bool excludeFromBundle = false)
         {
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
-            pageHeadBuilder.AddScriptParts(location, part);
+            pageHeadBuilder.AddScriptParts(location, part, excludeFromBundle);
         }
-        public static void AppendScriptParts(this HtmlHelper html, string part)
+        public static void AppendScriptParts(this HtmlHelper html, string part, bool excludeFromBundle = false)
         {
-            AppendScriptParts(html, ResourceLocation.Head, part);
+            AppendScriptParts(html, ResourceLocation.Head, part, excludeFromBundle);
         }
-        public static void AppendScriptParts(this HtmlHelper html, ResourceLocation location, string part)
+        public static void AppendScriptParts(this HtmlHelper html, ResourceLocation location, string part, bool excludeFromBundle = false)
         {
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
-            pageHeadBuilder.AppendScriptParts(location, part);
+            pageHeadBuilder.AppendScriptParts(location, part, excludeFromBundle);
         }
         public static MvcHtmlString NopScripts(this HtmlHelper html, UrlHelper urlHelper, 
             ResourceLocation location, bool? bundleFiles = null)
@@ -124,7 +124,7 @@ namespace Nop.Web.Framework.UI
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
             pageHeadBuilder.AppendCanonicalUrlParts(part);
         }
-        public static MvcHtmlString NopCanonicalUrls(this HtmlHelper html, string part)
+        public static MvcHtmlString NopCanonicalUrls(this HtmlHelper html, string part = "")
         {
             var pageHeadBuilder = EngineContext.Current.Resolve<IPageHeadBuilder>();
             html.AppendCanonicalUrlParts(part);

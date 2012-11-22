@@ -22,7 +22,7 @@ namespace Nop.Web.Framework.UI
         private readonly List<string> _titleParts;
         private readonly List<string> _metaDescriptionParts;
         private readonly List<string> _metaKeywordParts;
-        private readonly Dictionary<ResourceLocation, List<string>> _scriptParts;
+        private readonly Dictionary<ResourceLocation, List<ScriptReferenceMeta>> _scriptParts;
         private readonly Dictionary<ResourceLocation, List<string>> _cssParts;
         private readonly List<string> _canonicalUrlParts;
         private readonly HttpContextBase _httpContext;
@@ -36,7 +36,7 @@ namespace Nop.Web.Framework.UI
             this._titleParts = new List<string>();
             this._metaDescriptionParts = new List<string>();
             this._metaKeywordParts = new List<string>();
-            this._scriptParts = new Dictionary<ResourceLocation, List<string>>();
+            this._scriptParts = new Dictionary<ResourceLocation, List<ScriptReferenceMeta>>();
             this._cssParts = new Dictionary<ResourceLocation, List<string>>();
             this._canonicalUrlParts = new List<string>();
             this._httpContext = httpContext;
@@ -177,34 +177,40 @@ namespace Nop.Web.Framework.UI
         }
 
 
-        public virtual void AddScriptParts(ResourceLocation location, string part)
+        public virtual void AddScriptParts(ResourceLocation location, string part, bool excludeFromBundle)
         {
             if (!_scriptParts.ContainsKey(location))
-                _scriptParts.Add(location, new List<string>());
+                _scriptParts.Add(location, new List<ScriptReferenceMeta>());
 
             if (string.IsNullOrEmpty(part))
                 return;
 
-            _scriptParts[location].Add(part);
+            _scriptParts[location].Add(new ScriptReferenceMeta()
+            {
+                ExcludeFromBundle = excludeFromBundle,
+                Part = part
+            });
         }
-        public virtual void AppendScriptParts(ResourceLocation location, string part)
+        public virtual void AppendScriptParts(ResourceLocation location, string part, bool excludeFromBundle)
         {
             if (!_scriptParts.ContainsKey(location))
-                _scriptParts.Add(location, new List<string>());
+                _scriptParts.Add(location, new List<ScriptReferenceMeta>());
 
             if (string.IsNullOrEmpty(part))
                 return;
-            
-            _scriptParts[location].Insert(0, part);
+
+            _scriptParts[location].Insert(0, new ScriptReferenceMeta()
+            {
+                ExcludeFromBundle = excludeFromBundle,
+                Part = part
+            });
         }
         public virtual string GenerateScripts(UrlHelper urlHelper, ResourceLocation location, bool? bundleFiles = null)
         {
             if (!_scriptParts.ContainsKey(location) || _scriptParts[location] == null)
                 return "";
-            
-            //use only distinct rows
-            var distinctParts = _scriptParts[location].Distinct().ToList();
-            if (distinctParts.Count == 0)
+
+            if (_scriptParts.Count == 0)
                 return "";
             
             if (!bundleFiles.HasValue)
@@ -214,51 +220,76 @@ namespace Nop.Web.Framework.UI
             }
             if (bundleFiles.Value)
             {
-                //IMPORTANT: Do not use bundling in web farms or Windows Azure
-                string bundleVirtualPath = GetBundleVirtualPath("~/bundles/scripts/", ".js", distinctParts.ToArray());
-                //System.Web.Optimization library does not support dynamic bundles yet.
-                //But we know how System.Web.Optimization library stores cached results.
-                //so let's clear the cache because we add new file references dynamically based on a page
-                //until it's officially supported in System.Web.Optimization we have to "workaround" it manually
-                //var cacheKey = (string)typeof(Bundle)
-                //    .GetMethod("GetCacheKey", BindingFlags.Static | BindingFlags.NonPublic)
-                //    .Invoke(null, new object[] { bundleVirtualPath });
-                //or use the code below
-                //TODO: ...but periodically ensure that cache key which we use is valid (decompile Bundle.GetCacheKey method)
-                //var cacheKey = "System.Web.Optimization.Bundle:" + bundleVirtualPath;
+                var partsToBundle = _scriptParts[location]
+                    .Where(x => !x.ExcludeFromBundle)
+                    .Select(x => x.Part)
+                    .Distinct()
+                    .ToArray();
+                var partsToDontBundle = _scriptParts[location]
+                    .Where(x => x.ExcludeFromBundle)
+                    .Select(x => x.Part)
+                    .Distinct()
+                    .ToArray();
 
-                //if (_httpContext.Cache[cacheKey] != null)
-                //    _httpContext.Cache.Remove(cacheKey);
 
-                //create bundle
-                lock (s_lock)
+                var result = new StringBuilder();
+
+                if (partsToBundle.Length > 0)
                 {
-                    var bundleFor = BundleTable.Bundles.GetBundleFor(bundleVirtualPath);
-                    if (bundleFor == null)
-                    {
-                        var bundle = new ScriptBundle(bundleVirtualPath);
-                        //bundle.Transforms.Clear();
+                    //IMPORTANT: Do not use bundling in web farms or Windows Azure
+                    string bundleVirtualPath = GetBundleVirtualPath("~/bundles/scripts/", ".js", partsToBundle);
+                    //System.Web.Optimization library does not support dynamic bundles yet.
+                    //But we know how System.Web.Optimization library stores cached results.
+                    //so let's clear the cache because we add new file references dynamically based on a page
+                    //until it's officially supported in System.Web.Optimization we have to "workaround" it manually
+                    //var cacheKey = (string)typeof(Bundle)
+                    //    .GetMethod("GetCacheKey", BindingFlags.Static | BindingFlags.NonPublic)
+                    //    .Invoke(null, new object[] { bundleVirtualPath });
+                    //or use the code below
+                    //TODO: ...but periodically ensure that cache key which we use is valid (decompile Bundle.GetCacheKey method)
+                    //var cacheKey = "System.Web.Optimization.Bundle:" + bundleVirtualPath;
 
-                        //"As is" ordering
-                        bundle.Orderer = new AsIsBundleOrderer();
-                        //disable file extension replacements. renders scripts which were specified by a developer
-                        bundle.EnableFileExtensionReplacements = false;
-                        bundle.Include(distinctParts.ToArray());
-                        BundleTable.Bundles.Add(bundle);
-                        //we clear ignore list because System.Web.Optimization library adds ignore patterns such as "*.min", "*.debug".
-                        //we think it's bad decision and should be disabled by default
-                        BundleTable.Bundles.IgnoreList.Clear();
+                    //if (_httpContext.Cache[cacheKey] != null)
+                    //    _httpContext.Cache.Remove(cacheKey);
+
+                    //create bundle
+                    lock (s_lock)
+                    {
+                        var bundleFor = BundleTable.Bundles.GetBundleFor(bundleVirtualPath);
+                        if (bundleFor == null)
+                        {
+                            var bundle = new ScriptBundle(bundleVirtualPath);
+                            //bundle.Transforms.Clear();
+
+                            //"As is" ordering
+                            bundle.Orderer = new AsIsBundleOrderer();
+                            //disable file extension replacements. renders scripts which were specified by a developer
+                            bundle.EnableFileExtensionReplacements = false;
+                            bundle.Include(partsToBundle);
+                            BundleTable.Bundles.Add(bundle);
+                            //we clear ignore list because System.Web.Optimization library adds ignore patterns such as "*.min", "*.debug".
+                            //we think it's bad decision and should be disabled by default
+                            BundleTable.Bundles.IgnoreList.Clear();
+                        }
                     }
+
+                    //parts to bundle
+                    result.AppendLine(Scripts.Render(bundleVirtualPath).ToString());
                 }
 
-                var result = Scripts.Render(bundleVirtualPath).ToString();
-                return result;
+                //parts to do not bundle
+                foreach (var path in partsToDontBundle)
+                {
+                    result.AppendFormat("<script src=\"{0}\" type=\"text/javascript\"></script>", urlHelper.Content(path));
+                    result.Append(Environment.NewLine);
+                }
+                return result.ToString();
             }
             else
             {
                 //bundling is disabled
                 var result = new StringBuilder();
-                foreach (var path in distinctParts)
+                foreach (var path in _scriptParts[location].Select(x => x.Part).Distinct())
                 {
                     result.AppendFormat("<script src=\"{0}\" type=\"text/javascript\"></script>", urlHelper.Content(path));
                     result.Append(Environment.NewLine);
@@ -331,6 +362,17 @@ namespace Nop.Web.Framework.UI
                 result.Append(Environment.NewLine);
             }
             return result.ToString();
+        }
+
+        #endregion
+
+        #region Nested classes
+
+        private class ScriptReferenceMeta
+        {
+            public bool ExcludeFromBundle { get; set; }
+
+            public string Part { get; set; }
         }
 
         #endregion
