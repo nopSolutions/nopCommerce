@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Xml;
+using Nop.Core;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
@@ -44,19 +45,10 @@ namespace Nop.Services.Customers
         /// Formats the customer name
         /// </summary>
         /// <param name="customer">Source</param>
-        /// <returns>Formatted text</returns>
-        public static string FormatUserName(this Customer customer)
-        {
-            return FormatUserName(customer, false);
-        }
-
-        /// <summary>
-        /// Formats the customer name
-        /// </summary>
-        /// <param name="customer">Source</param>
         /// <param name="stripTooLong">Strip too long customer name</param>
+        /// <param name="maxLength">Maximum customer name length</param>
         /// <returns>Formatted text</returns>
-        public static string FormatUserName(this Customer customer, bool stripTooLong)
+        public static string FormatUserName(this Customer customer, bool stripTooLong = false, int maxLength = 0)
         {
             if (customer == null)
                 return string.Empty;
@@ -82,13 +74,9 @@ namespace Nop.Services.Customers
                     break;
             }
 
-            if (stripTooLong)
+            if (stripTooLong && maxLength > 0)
             {
-                int maxLength = 0; // TODO make this setting configurable
-                if (maxLength > 0 && result.Length > maxLength)
-                {
-                    result = result.Substring(0, maxLength);
-                }
+                result = CommonHelper.EnsureMaximumLength(result, maxLength);
             }
 
             return result;

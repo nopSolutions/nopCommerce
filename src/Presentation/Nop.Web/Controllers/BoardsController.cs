@@ -88,7 +88,7 @@ namespace Nop.Web.Controllers
                 ForumTopicType = topic.ForumTopicType,
                 CustomerId = topic.CustomerId,
                 AllowViewingProfiles = _customerSettings.AllowViewingProfiles,
-                CustomerName = topic.Customer.FormatUserName(true),
+                CustomerName = topic.Customer.FormatUserName(),
                 IsCustomerGuest = topic.Customer.IsGuest()
             };
 
@@ -528,7 +528,7 @@ namespace Nop.Web.Controllers
                         IsCurrentCustomerAllowedToDeletePost = _forumService.IsCustomerAllowedToDeletePost(_workContext.CurrentCustomer, post),
                         CustomerId = post.CustomerId,
                         AllowViewingProfiles = _customerSettings.AllowViewingProfiles,
-                        CustomerName = post.Customer.FormatUserName(true),
+                        CustomerName = post.Customer.FormatUserName(),
                         IsCustomerForumModerator = post.Customer.IsForumModerator(),
                         IsCustomerGuest= post.Customer.IsGuest(),
                         ShowCustomersPostCount = _forumSettings.ShowCustomersPostCount,
@@ -1621,7 +1621,7 @@ namespace Nop.Web.Controllers
                 model.ForumTopicSubject = post.ForumTopic.StripTopicSubject();
                 model.CustomerId = post.CustomerId;
                 model.AllowViewingProfiles = _customerSettings.AllowViewingProfiles;
-                model.CustomerName = post.Customer.FormatUserName(true);
+                model.CustomerName = post.Customer.FormatUserName();
                 model.IsCustomerGuest = post.Customer.IsGuest();
                 //created on string
                 if (_forumSettings.RelativeDateTimeFormattingEnabled)
