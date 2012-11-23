@@ -40,12 +40,15 @@ namespace Nop.Web.Framework.EmbeddedViews
             //GetManifestResourceNames will throw a NotSupportedException when run on a dynamic assembly
             try
             {
-                return assembly.GetManifestResourceNames();
+                if (!assembly.IsDynamic)
+                    return assembly.GetManifestResourceNames();
             }
             catch
             {
-                return new string[] { };
+                // Any exception we fall back to returning an empty array.
             }
+            
+            return new string[] { };
         }
     }
 }
