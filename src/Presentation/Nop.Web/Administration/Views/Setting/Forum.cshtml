@@ -121,11 +121,7 @@
                 @Html.NopLabelFor(model => model.ForumEditor):
             </td>
             <td class="adminData">
-                @(Html.Telerik().DropDownList()
-                    .Name("forumEditor")
-                    .BindTo(Model.ForumEditorValues)
-                    .HtmlAttributes(new { style = "width:255px" })
-                )
+                @Html.DropDownListFor(model => model.ForumEditor, Model.ForumEditorValues)
                 @Html.ValidationMessageFor(model => model.ForumEditor)
             </td>
         </tr>

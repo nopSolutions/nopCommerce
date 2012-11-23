@@ -1,5 +1,4 @@
 ﻿@model TaxSettingsModel
-@using Telerik.Web.Mvc.UI;
 @{
     //page title
     ViewBag.Title = T("Admin.Configuration.Settings.Tax").Text;
@@ -103,10 +102,7 @@
                 @Html.NopLabelFor(model => model.TaxDisplayType):
             </td>
             <td class="adminData">
-                @(Html.Telerik().DropDownList()
-                .Name("taxDisplayType")
-                .BindTo(Model.TaxDisplayTypeValues)
-                )
+                @Html.DropDownListFor(model => model.TaxDisplayType, Model.TaxDisplayTypeValues)
                 @Html.ValidationMessageFor(model => model.TaxDisplayType)
             </td>
         </tr>
@@ -156,10 +152,7 @@
                 @Html.NopLabelFor(model => model.TaxBasedOn):
             </td>
             <td class="adminData">
-                @(Html.Telerik().DropDownList()
-                .Name("taxBasedOn")
-                .BindTo(Model.TaxBasedOnValues)
-                )
+                @Html.DropDownListFor(model => model.TaxBasedOn, Model.TaxBasedOnValues)
                 @Html.ValidationMessageFor(model => model.TaxBasedOn)
             </td>
         </tr>
@@ -201,10 +194,7 @@
                 @Html.NopLabelFor(model => model.ShippingTaxClassId):
             </td>
             <td class="adminData">
-                @(Html.Telerik().DropDownList()
-                .Name("shippingTaxClassId")
-                .BindTo(Model.ShippingTaxCategories)
-                )
+                @Html.DropDownListFor(model => model.ShippingTaxClassId, Model.ShippingTaxCategories)
                 @Html.ValidationMessageFor(model => model.ShippingTaxClassId)
             </td>
         </tr>
@@ -236,10 +226,7 @@
                 @Html.NopLabelFor(model => model.PaymentMethodAdditionalFeeTaxClassId):
             </td>
             <td class="adminData">
-                @(Html.Telerik().DropDownList()
-                .Name("paymentMethodAdditionalFeeTaxClassId")
-                .BindTo(Model.PaymentMethodAdditionalFeeTaxCategories)
-                )
+                @Html.DropDownListFor(model => model.PaymentMethodAdditionalFeeTaxClassId, Model.PaymentMethodAdditionalFeeTaxCategories)
                 @Html.ValidationMessageFor(model => model.PaymentMethodAdditionalFeeTaxClassId)
             </td>
         </tr>
@@ -262,10 +249,7 @@
                 @Html.NopLabelFor(model => model.EuVatShopCountryId):
             </td>
             <td class="adminData">
-                @(Html.Telerik().DropDownList()
-                .Name("euVatShopCountryId")
-                .BindTo(Model.EuVatShopCountries)
-                )
+                @Html.DropDownListFor(model => model.EuVatShopCountryId, Model.EuVatShopCountries)
                 @Html.ValidationMessageFor(model => model.EuVatShopCountryId)
             </td>
         </tr>
