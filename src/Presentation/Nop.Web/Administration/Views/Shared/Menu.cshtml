@@ -17,13 +17,18 @@
     Html.Telerik().Menu().Name("Admin")
     .BindTo("admin", (item, siteMapNode) =>
     {
-        var imageUrl = ((Telerik.Web.Mvc.SiteMapNode)siteMapNode).Attributes["ImageUrl"];
+        item.RouteValues = new RouteValueDictionary() 
+        { 
+            { "area", "Admin" }
+        };
+        
+        var imageUrl = siteMapNode.Attributes["ImageUrl"];
         if (imageUrl != null && !string.IsNullOrEmpty(imageUrl.ToString()))
         {
             item.ImageUrl = imageUrl.ToString();
         }
         
-        var resourceName = ((Telerik.Web.Mvc.SiteMapNode)siteMapNode).Attributes["nopResource"];
+        var resourceName = siteMapNode.Attributes["nopResource"];
         if (resourceName != null && !string.IsNullOrEmpty(resourceName.ToString()))
         {
             item.Text = T(resourceName.ToString()).ToHtmlString();
@@ -36,7 +41,7 @@
 
         if (hideAdminMenuItemsBasedOnPermissions)
         {
-            var permissionNames = ((Telerik.Web.Mvc.SiteMapNode)siteMapNode).Attributes["PermissionNames"];
+            var permissionNames = siteMapNode.Attributes["PermissionNames"];
             if (permissionNames != null && !string.IsNullOrEmpty(permissionNames.ToString()))
             {
                 item.Visible = permissionNames.ToString().Split(new char[] {','}, StringSplitOptions.RemoveEmptyEntries)
