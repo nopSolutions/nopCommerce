@@ -17,7 +17,9 @@
             <div class="loading-image">
             </div>
         </div>
-        @RenderBody()
+        <div class="master-wrapper-main">
+            @RenderBody()
+        </div>
         @Html.Widget("content_after")
         @Html.Action("EuCookieLaw", "Common")
     </div>

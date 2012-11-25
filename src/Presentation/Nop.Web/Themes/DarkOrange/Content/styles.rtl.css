@@ -17,6 +17,7 @@ legend{font-weight:bold;line-height:20px;font-size:16px;}
 /* MASTER PAGE WRAPPERS */
 .master-wrapper-page{margin:10px auto;width:960px;}
 .master-wrapper-content{float:right;width:960px;margin:15px 0 0;text-align:right;background:#555 url(images/bg-container.gif) repeat-x;}
+.master-wrapper-main{}
 /* one column master page */
 .master-wrapper-center-1{float:right;width:940px;color:#000;min-height:600px;padding:10px;background:#FFF;display:inline;text-align:right;direction:rtl;border-radius:5px;}
 /* two column master page */
