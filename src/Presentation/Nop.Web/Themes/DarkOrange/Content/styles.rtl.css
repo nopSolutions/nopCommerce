@@ -161,6 +161,7 @@ a.eu-cookie-privacyinfo-tag{color:#F93 !important;text-decoration:underline;}
 /* NAVIGATIONS */
 .block{margin-bottom:15px;padding-bottom:5px;padding-left:0;color:#FFF;direction:rtl;text-align:right;}
 .block .title{font-size:.9em;font-weight:700;text-transform:uppercase;padding:7px 10px;color:#f93;background:#333;border-radius:5px 5px 0px 0px;}
+.block .title strong{font-weight:700;}
 .block .listbox{font-size:11px;padding:5px 10px 10px;line-height:18px;background:#404040;margin:0;border-radius:0px 0px 5px 5px;}
 .block .listbox ul{margin:0;padding:0 10px 0 0px;color:#3664A5;background-color:inherit;}
 .block a{color:#FFF;font-weight:700;text-decoration:none;}
