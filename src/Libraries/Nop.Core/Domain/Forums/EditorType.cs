@@ -6,11 +6,11 @@
     public enum EditorType
     {
         /// <summary>
-        /// SimpleTextBox
+        /// Simple text box
         /// </summary>
         SimpleTextBox = 10,
         /// <summary>
-        /// BBCode Editor
+        /// BB code editor
         /// </summary>
         BBCodeEditor = 20
     }

@@ -8,12 +8,12 @@ namespace Nop.Core.ComponentModel
 {
     public class GenericListTypeConverter<T> : TypeConverter
     {
-        protected readonly TypeConverter _typeConverter;
+        protected readonly TypeConverter typeConverter;
 
         public GenericListTypeConverter()
         {
-            _typeConverter = TypeDescriptor.GetConverter(typeof(T));
-            if (_typeConverter == null)
+            typeConverter = TypeDescriptor.GetConverter(typeof(T));
+            if (typeConverter == null)
                 throw new InvalidOperationException("No type converter exists for type " + typeof(T).FullName);
         }
 
@@ -35,7 +35,7 @@ namespace Nop.Core.ComponentModel
             if (sourceType == typeof(string))
             {
                 string[] items = GetStringArray(sourceType.ToString());
-                return (items.Count() > 0);
+                return items.Any();
             }
 
             return base.CanConvertFrom(context, sourceType);
@@ -49,7 +49,7 @@ namespace Nop.Core.ComponentModel
                 var result = new List<T>();
                 Array.ForEach(items, s =>
                 {
-                    object item = _typeConverter.ConvertFromInvariantString(s);
+                    object item = typeConverter.ConvertFromInvariantString(s);
                     if (item != null)
                     {
                         result.Add((T)item);

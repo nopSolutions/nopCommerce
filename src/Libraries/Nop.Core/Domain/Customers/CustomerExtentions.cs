@@ -223,8 +223,8 @@ namespace Nop.Core.Domain.Customers
                 {
                     if (node1.Attributes != null && node1.Attributes["Code"] != null)
                     {
-                        string _couponCode = node1.Attributes["Code"].InnerText.Trim();
-                        if (_couponCode.ToLower() == couponCode.ToLower())
+                        string couponCodeAttribute = node1.Attributes["Code"].InnerText.Trim();
+                        if (couponCodeAttribute.ToLower() == couponCode.ToLower())
                         {
                             gcElement = (XmlElement)node1;
                             break;

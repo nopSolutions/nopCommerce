@@ -23,13 +23,18 @@ namespace Nop.Core.Plugins
     /// </summary>
     public class PluginManager
     {
+        #region Const
+
+        private const string InstalledPluginsFilePath = "~/App_Data/InstalledPlugins.txt";
+        private const string PluginsPath = "~/Plugins";
+        private const string ShadowCopyPath = "~/Plugins/bin";
+
+        #endregion
+
         #region Fields
 
         private static readonly ReaderWriterLockSlim Locker = new ReaderWriterLockSlim();
         private static DirectoryInfo _shadowCopyFolder;
-        private static readonly string _installedPluginsFilePath = "~/App_Data/InstalledPlugins.txt";
-        private static readonly string _pluginsPath = "~/Plugins";
-        private static readonly string _shadowCopyPath = "~/Plugins/bin";
         private static bool _clearShadowDirectoryOnStartup;
 
         #endregion
@@ -55,8 +60,8 @@ namespace Nop.Core.Plugins
             {
                 // TODO: Add verbose exception handling / raising here since this is happening on app startup and could
                 // prevent app from starting altogether
-                var pluginFolder = new DirectoryInfo(HostingEnvironment.MapPath(_pluginsPath));
-                _shadowCopyFolder = new DirectoryInfo(HostingEnvironment.MapPath(_shadowCopyPath));
+                var pluginFolder = new DirectoryInfo(HostingEnvironment.MapPath(PluginsPath));
+                _shadowCopyFolder = new DirectoryInfo(HostingEnvironment.MapPath(ShadowCopyPath));
 
                 var referencedPlugins = new List<PluginDescriptor>();
                 var incompatiblePlugins = new List<string>();
@@ -113,7 +118,6 @@ namespace Nop.Core.Plugins
 
                         //set 'Installed' property
                         pluginDescriptor.Installed = installedPluginSystemNames
-                            .ToList()
                             .Where(x => x.Equals(pluginDescriptor.SystemName, StringComparison.InvariantCultureIgnoreCase))
                             .FirstOrDefault() != null;
 
@@ -192,7 +196,7 @@ namespace Nop.Core.Plugins
             if (String.IsNullOrEmpty(systemName))
                 throw new ArgumentNullException("systemName");
 
-            var filePath = HostingEnvironment.MapPath(_installedPluginsFilePath);
+            var filePath = HostingEnvironment.MapPath(InstalledPluginsFilePath);
             if (!File.Exists(filePath))
                 using (File.Create(filePath))
                 {
@@ -202,7 +206,6 @@ namespace Nop.Core.Plugins
 
             var installedPluginSystemNames = PluginFileParser.ParseInstalledPluginsFile(GetInstalledPluginsFilePath());
             bool alreadyMarkedAsInstalled = installedPluginSystemNames
-                                .ToList()
                                 .Where(x => x.Equals(systemName, StringComparison.InvariantCultureIgnoreCase))
                                 .FirstOrDefault() != null;
             if (!alreadyMarkedAsInstalled)
@@ -219,7 +222,7 @@ namespace Nop.Core.Plugins
             if (String.IsNullOrEmpty(systemName))
                 throw new ArgumentNullException("systemName");
 
-            var filePath = HostingEnvironment.MapPath(_installedPluginsFilePath);
+            var filePath = HostingEnvironment.MapPath(InstalledPluginsFilePath);
             if (!File.Exists(filePath))
                 using (File.Create(filePath))
                 {
@@ -229,7 +232,6 @@ namespace Nop.Core.Plugins
 
             var installedPluginSystemNames = PluginFileParser.ParseInstalledPluginsFile(GetInstalledPluginsFilePath());
             bool alreadyMarkedAsInstalled = installedPluginSystemNames
-                                .ToList()
                                 .Where(x => x.Equals(systemName, StringComparison.InvariantCultureIgnoreCase))
                                 .FirstOrDefault() != null;
             if (alreadyMarkedAsInstalled)
@@ -242,7 +244,7 @@ namespace Nop.Core.Plugins
         /// </summary>
         public static void MarkAllPluginsAsUninstalled()
         {
-            var filePath = HostingEnvironment.MapPath(_installedPluginsFilePath);
+            var filePath = HostingEnvironment.MapPath(InstalledPluginsFilePath);
             if (File.Exists(filePath))
                 File.Delete(filePath);
         }
@@ -467,7 +469,7 @@ namespace Nop.Core.Plugins
         /// <returns></returns>
         private static string GetInstalledPluginsFilePath()
         { 
-            var filePath = HostingEnvironment.MapPath(_installedPluginsFilePath);
+            var filePath = HostingEnvironment.MapPath(InstalledPluginsFilePath);
             return filePath;
         }
 

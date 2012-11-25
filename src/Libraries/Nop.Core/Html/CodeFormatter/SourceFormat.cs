@@ -215,7 +215,7 @@ namespace Nop.Core.Html.CodeFormatter
 					sb.Append("<div class=\"csharpcode\">\n");
                 var reader = new StringReader(source);
 				int i = 0;
-				string spaces = "    ";
+				const string spaces = "    ";
 				string line;
 				while ((line = reader.ReadLine()) != null)
 				{
