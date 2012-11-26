@@ -197,7 +197,7 @@ namespace Nop.Services.Orders
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Orders</returns>
-        public virtual IPagedList<Order> GetAllOrders(int affiliateId, int pageIndex, int pageSize)
+        public virtual IPagedList<Order> GetOrdersByAffiliateId(int affiliateId, int pageIndex, int pageSize)
         {
             var query = _orderRepository.Table;
             query = query.Where(o => !o.Deleted);
@@ -206,15 +206,6 @@ namespace Nop.Services.Orders
 
             var orders = new PagedList<Order>(query, pageIndex, pageSize);
             return orders;
-        }
-
-        /// <summary>
-        /// Load all orders
-        /// </summary>
-        /// <returns>Order collection</returns>
-        public virtual IList<Order> LoadAllOrders()
-        {
-            return SearchOrders(null, null, null, null, null, null, null, 0, int.MaxValue);
         }
 
         /// <summary>
@@ -232,22 +223,7 @@ namespace Nop.Services.Orders
             var orders = query.ToList();
             return orders;
         }
-
-        /// <summary>
-        /// Gets all orders by affiliate identifier
-        /// </summary>
-        /// <param name="affiliateId">Affiliate identifier</param>
-        /// <returns>Order collection</returns>
-        public virtual IList<Order> GetOrdersByAffiliateId(int affiliateId)
-        {
-            var query = from o in _orderRepository.Table
-                        orderby o.CreatedOnUtc descending
-                        where !o.Deleted && o.AffiliateId == affiliateId
-                        select o;
-            var orders = query.ToList();
-            return orders;
-        }
-
+        
         /// <summary>
         /// Inserts an order
         /// </summary>

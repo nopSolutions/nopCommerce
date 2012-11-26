@@ -65,13 +65,7 @@ namespace Nop.Services.Orders
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
         /// <returns>Orders</returns>
-        IPagedList<Order> GetAllOrders(int affiliateId, int pageIndex, int pageSize);
-
-        /// <summary>
-        /// Load all orders
-        /// </summary>
-        /// <returns>Order collection</returns>
-        IList<Order> LoadAllOrders();
+        IPagedList<Order> GetOrdersByAffiliateId(int affiliateId, int pageIndex, int pageSize);
 
         /// <summary>
         /// Gets all orders by customer identifier
@@ -79,13 +73,6 @@ namespace Nop.Services.Orders
         /// <param name="customerId">Customer identifier</param>
         /// <returns>Order collection</returns>
         IList<Order> GetOrdersByCustomerId(int customerId);
-
-        /// <summary>
-        /// Gets all orders by affiliate identifier
-        /// </summary>
-        /// <param name="affiliateId">Affiliate identifier</param>
-        /// <returns>Order collection</returns>
-        IList<Order> GetOrdersByAffiliateId(int affiliateId);
 
         /// <summary>
         /// Inserts an order
