@@ -104,10 +104,6 @@
                         Targets="Plugin-CopyToWeb"
                         Properties="
                         PluginProjectName=Nop.Plugin.ExternalAuth.OpenId"/>
-        <MSBuild Projects ="$(MSBuildProjectFullPath)"
-                        Targets="Plugin-CopyToWeb"
-                        Properties="
-                        PluginProjectName=Nop.Plugin.ExternalAuth.Twitter"/>
     </Target>
     
     <!--Feed plugins-->
