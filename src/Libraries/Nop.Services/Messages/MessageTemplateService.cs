@@ -49,6 +49,23 @@ namespace Nop.Services.Messages
         #region Methods
 
         /// <summary>
+        /// Delete a message template
+        /// </summary>
+        /// <param name="messageTemplate">Message template</param>
+        public virtual void DeleteMessageTemplate(MessageTemplate messageTemplate)
+        {
+            if (messageTemplate == null)
+                throw new ArgumentNullException("messageTemplate");
+
+            _messageTemplateRepository.Delete(messageTemplate);
+
+            _cacheManager.RemoveByPattern(MESSAGETEMPLATES_PATTERN_KEY);
+
+            //event notification
+            _eventPublisher.EntityDeleted(messageTemplate);
+        }
+
+        /// <summary>
         /// Inserts a message template
         /// </summary>
         /// <param name="messageTemplate">Message template</param>
