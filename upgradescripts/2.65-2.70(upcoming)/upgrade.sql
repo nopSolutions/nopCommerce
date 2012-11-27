@@ -638,9 +638,9 @@ IF EXISTS (
 		SELECT *
 		FROM sysobjects
 		WHERE id = OBJECT_ID(N'[temp_generate_sename]') AND OBJECTPROPERTY(id,N'IsProcedure') = 1)
-DROP PROCEDURE [temp_generate_sename]
+DROP PROCEDURE [dbo].[temp_generate_sename]
 GO
-CREATE PROCEDURE [temp_generate_sename]
+CREATE PROCEDURE [dbo].[temp_generate_sename]
 (
     @table_name nvarchar(1000),
     @entity_id int,
