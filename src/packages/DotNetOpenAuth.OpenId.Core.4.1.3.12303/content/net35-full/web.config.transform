@@ -1,0 +1,35 @@
+<configuration>
+	<configSections>
+		<section name="uri" type="System.Configuration.UriSection, System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+		<sectionGroup name="dotNetOpenAuth" type="DotNetOpenAuth.Configuration.DotNetOpenAuthSection, DotNetOpenAuth.Core">
+			<section name="openid" type="DotNetOpenAuth.Configuration.OpenIdElement, DotNetOpenAuth.OpenId" requirePermission="false" allowLocation="true" />
+		</sectionGroup>
+	</configSections>
+
+	<uri>
+		<!-- The uri section is necessary to turn on .NET 3.5 support for IDN (international domain names),
+		     which is necessary for OpenID urls with unicode characters in the domain/host name.
+		     It is also required to put the Uri class into RFC 3986 escaping mode, which OpenID and OAuth require. -->
+		<idn enabled="All"/>
+		<iriParsing enabled="true"/>
+	</uri>
+
+	<runtime>
+		<!-- When targeting ASP.NET MVC 3, this assemblyBinding makes MVC 1 and 2 references relink
+		     to MVC 3 so libraries such as DotNetOpenAuth that compile against MVC 1 will work with it.
+		<assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
+			<dependentAssembly>
+				<assemblyIdentity name="System.Web.Mvc" publicKeyToken="31bf3856ad364e35" />
+				<bindingRedirect oldVersion="1.0.0.0-3.0.0.0" newVersion="3.0.0.0" />
+			</dependentAssembly>
+		</assemblyBinding>
+		 -->
+	</runtime>
+
+	<dotNetOpenAuth>
+		<!-- This is an optional configuration section where aspects of dotnetopenauth can be customized. -->
+		<!-- For a complete set of configuration options see http://www.dotnetopenauth.net/developers/code-snippets/configuration-options/ -->
+		<openid>
+		</openid>
+	</dotNetOpenAuth>
+</configuration>

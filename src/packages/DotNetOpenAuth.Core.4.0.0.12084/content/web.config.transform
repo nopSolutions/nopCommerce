@@ -1,0 +1,36 @@
+<configuration>
+	<configSections>
+		<sectionGroup name="dotNetOpenAuth" type="DotNetOpenAuth.Configuration.DotNetOpenAuthSection, DotNetOpenAuth.Core">
+			<section name="messaging" type="DotNetOpenAuth.Configuration.MessagingElement, DotNetOpenAuth.Core" requirePermission="false" allowLocation="true" />
+			<section name="reporting" type="DotNetOpenAuth.Configuration.ReportingElement, DotNetOpenAuth.Core" requirePermission="false" allowLocation="true" />
+		</sectionGroup>
+	</configSections>
+
+	<system.net>
+		<defaultProxy enabled="true" />
+		<settings>
+			<!-- This setting causes .NET to check certificate revocation lists (CRL) 
+			     before trusting HTTPS certificates.  But this setting tends to not 
+			     be allowed in shared hosting environments. -->
+			<!--<servicePointManager checkCertificateRevocationList="true"/>-->
+		</settings>
+	</system.net>
+
+	<runtime>
+		<!-- This prevents the Windows Event Log from frequently logging that HMAC1 is being used (when the other party needs it). -->
+		<legacyHMACWarning enabled="0" />
+	</runtime>
+
+	<dotNetOpenAuth>
+		<messaging>
+			<untrustedWebRequest>
+				<whitelistHosts>
+					<!-- Uncomment to enable communication with localhost (should generally not activate in production!) -->
+					<!--<add name="localhost" />-->
+				</whitelistHosts>
+			</untrustedWebRequest>
+		</messaging>
+		<!-- Allow DotNetOpenAuth to publish usage statistics to library authors to improve the library. -->
+		<reporting enabled="true" />
+	</dotNetOpenAuth>
+</configuration>
