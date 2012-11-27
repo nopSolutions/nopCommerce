@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Web;
 using System.Web.Mvc;
+using Nop.Services.Security;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.UI.Editor;
 
@@ -15,14 +16,17 @@ namespace Nop.Admin.Controllers
     [AdminAuthorize]
     public partial class NetAdvImageController : BaseNopController
     {
+        private readonly IPermissionService _permissionService;
         private readonly INetAdvImageService _imageService;
         private readonly INetAdvDirectoryService _directoryService;
         private readonly HttpContextBase _httpContext;
         
-        public NetAdvImageController(INetAdvImageService imageService, 
+        public NetAdvImageController(IPermissionService permissionService,
+            INetAdvImageService imageService, 
             INetAdvDirectoryService directoryService,
             HttpContextBase httpContext)
         {
+            this._permissionService = permissionService;
             this._imageService = imageService;
             this._directoryService = directoryService;
             this._httpContext = httpContext;
@@ -37,6 +41,9 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public JsonResult Index(string path)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.HtmlEditorManagePictures))
+                return Json(new { success = false, message = "No access to this functionality" }, "application/json");
+
             string filePath = "";
 
             try
@@ -92,30 +99,45 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public JsonResult _GetImages(string path)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.HtmlEditorManagePictures))
+                return Json(new { success = false, message = "No access to this functionality" }, "application/json");
+
             return new JsonResult { Data = _imageService.GetImages(path, HttpContext) };
         }
 
         [HttpPost]
         public JsonResult _DeleteImage(string path, string name)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.HtmlEditorManagePictures))
+                return Json(new { success = false, message = "No access to this functionality" }, "application/json");
+
             return new JsonResult { Data = _imageService.DeleteImage(path, name) };
         }
 
         [HttpPost]
         public JsonResult _MoveDirectory(string path, string destinationPath)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.HtmlEditorManagePictures))
+                return Json(new { success = false, message = "No access to this functionality" }, "application/json");
+
             return new JsonResult { Data = _directoryService.MoveDirectory(path, destinationPath) };
         }
 
         [HttpPost]
         public JsonResult _DeleteDirectory(string path)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.HtmlEditorManagePictures))
+                return Json(new { success = false, message = "No access to this functionality" }, "application/json");
+
             return new JsonResult { Data = _directoryService.DeleteDirectory(path, HttpContext) };
         }
 
         [HttpPost]
         public JsonResult _AddDirectory(string path)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.HtmlEditorManagePictures))
+                return Json(new { success = false, message = "No access to this functionality" }, "application/json");
+
             // If no destination folder was selected, add new folder to root upload path
             if (String.IsNullOrEmpty(path))
                 path = Server.MapPath(NetAdvImageSettings.UploadPath);
@@ -127,6 +149,9 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public JsonResult _GetDirectories()
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.HtmlEditorManagePictures))
+                return Json(new { success = false, message = "No access to this functionality" }, "application/json");
+
             // Ensure the upload directory exists
             _directoryService.CreateUploadDirectory(HttpContext);
 
@@ -136,12 +161,18 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public JsonResult _RenameDirectory(string path, string name)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.HtmlEditorManagePictures))
+                return Json(new { success = false, message = "No access to this functionality" }, "application/json");
+
             return new JsonResult { Data = _directoryService.RenameDirectory(path, name, HttpContext) };
         }
 
         [HttpPost]
         public ActionResult _ExpandDirectoryState(string value)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.HtmlEditorManagePictures))
+                return Json(new { success = false, message = "No access to this functionality" }, "application/json");
+
             // Get or initalize list in session
             if (_httpContext.Session[NetAdvImageSettings.TreeStateSessionKey] == null)
                 _httpContext.Session[NetAdvImageSettings.TreeStateSessionKey] = new List<string>();
@@ -160,6 +191,9 @@ namespace Nop.Admin.Controllers
         [HttpPost]
         public ActionResult _CollapseDirectoryState(string value)
         {
+            if (!_permissionService.Authorize(StandardPermissionProvider.HtmlEditorManagePictures))
+                return Json(new { success = false, message = "No access to this functionality" }, "application/json");
+
             // Get or initalize list in session
             if (_httpContext.Session[NetAdvImageSettings.TreeStateSessionKey] == null)
                 _httpContext.Session[NetAdvImageSettings.TreeStateSessionKey] = new List<string>();

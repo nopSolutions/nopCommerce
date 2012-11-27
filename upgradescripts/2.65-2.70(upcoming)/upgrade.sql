@@ -2137,3 +2137,29 @@ BEGIN
 	EXEC('ALTER TABLE [DiscountRequirement] DROP COLUMN [RestrictedProductVariantIds]')
 END
 GO
+
+
+
+--new 'HTML Editor. Manage files.' permission record
+IF NOT EXISTS (
+		SELECT 1
+		FROM [dbo].[PermissionRecord]
+		WHERE [SystemName] = N'HtmlEditor.ManagePictures')
+BEGIN
+	INSERT [dbo].[PermissionRecord] ([Name], [SystemName], [Category])
+	VALUES (N'Admin area. HTML Editor. Manage pictures', N'HtmlEditor.ManagePictures', N'Configuration')
+
+	DECLARE @PermissionRecordId INT 
+	SET @PermissionRecordId = @@IDENTITY
+
+
+	--add it to admin role be default
+	DECLARE @AdminCustomerRoleId int
+	SELECT @AdminCustomerRoleId = Id
+	FROM [CustomerRole]
+	WHERE IsSystemRole=1 and [SystemName] = N'Administrators'
+
+	INSERT [dbo].[PermissionRecord_Role_Mapping] ([PermissionRecord_Id], [CustomerRole_Id])
+	VALUES (@PermissionRecordId, @AdminCustomerRoleId)
+END
+GO
