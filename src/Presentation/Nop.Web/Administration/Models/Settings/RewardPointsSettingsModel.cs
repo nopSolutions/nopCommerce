@@ -1,11 +1,12 @@
 ﻿using FluentValidation.Attributes;
 using Nop.Admin.Validators.Settings;
 using Nop.Web.Framework;
+using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.Settings
 {
     [Validator(typeof(RewardPointsSettingsValidator))]
-    public partial class RewardPointsSettingsModel
+    public partial class RewardPointsSettingsModel : BaseNopModel
     {
         [NopResourceDisplayName("Admin.Configuration.Settings.RewardPoints.Enabled")]
         public bool Enabled { get; set; }

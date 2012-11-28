@@ -1,9 +1,10 @@
 ﻿using Nop.Admin.Models.Common;
 using Nop.Web.Framework;
+using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.Settings
 {
-    public partial class ShippingSettingsModel
+    public partial class ShippingSettingsModel : BaseNopModel
     {
         [NopResourceDisplayName("Admin.Configuration.Settings.Shipping.FreeShippingOverXEnabled")]
         public bool FreeShippingOverXEnabled { get; set; }

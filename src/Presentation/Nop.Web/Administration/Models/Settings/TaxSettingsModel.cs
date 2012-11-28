@@ -2,10 +2,11 @@
 using System.Web.Mvc;
 using Nop.Admin.Models.Common;
 using Nop.Web.Framework;
+using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.Settings
 {
-    public partial class TaxSettingsModel
+    public partial class TaxSettingsModel : BaseNopModel
     {
         public TaxSettingsModel()
         {

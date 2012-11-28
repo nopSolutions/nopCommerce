@@ -3,11 +3,12 @@ using System.Web.Mvc;
 using FluentValidation.Attributes;
 using Nop.Admin.Validators.Settings;
 using Nop.Web.Framework;
+using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.Settings
 {
     [Validator(typeof(OrderSettingsValidator))]
-    public partial class OrderSettingsModel
+    public partial class OrderSettingsModel : BaseNopModel
     {
         public OrderSettingsModel()
         {

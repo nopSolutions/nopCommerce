@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Web.Mvc;
 using Nop.Web.Framework;
+using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.Settings
 {
-    public partial class CustomerUserSettingsModel
+    public partial class CustomerUserSettingsModel : BaseNopModel
     {
         public CustomerUserSettingsModel()
         {
@@ -19,8 +20,8 @@ namespace Nop.Admin.Models.Settings
         public ExternalAuthenticationSettingsModel ExternalAuthenticationSettings { get; set; }
 
         #region Nested classes
-        
-        public partial class CustomerSettingsModel
+
+        public partial class CustomerSettingsModel : BaseNopModel
         {
             [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.UsernamesEnabled")]
             public bool UsernamesEnabled { get; set; }
@@ -121,7 +122,7 @@ namespace Nop.Admin.Models.Settings
             public bool FaxRequired { get; set; }
         }
 
-        public partial class AddressSettingsModel
+        public partial class AddressSettingsModel : BaseNopModel
         {
             [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.AddressFormFields.CompanyEnabled")]
             public bool CompanyEnabled { get; set; }
@@ -164,8 +165,8 @@ namespace Nop.Admin.Models.Settings
             [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.AddressFormFields.FaxRequired")]
             public bool FaxRequired { get; set; }
         }
-        
-        public partial class DateTimeSettingsModel
+
+        public partial class DateTimeSettingsModel : BaseNopModel
         {
             public DateTimeSettingsModel()
             {
@@ -182,7 +183,7 @@ namespace Nop.Admin.Models.Settings
             public IList<SelectListItem> AvailableTimeZones { get; set; }
         }
 
-        public partial class ExternalAuthenticationSettingsModel
+        public partial class ExternalAuthenticationSettingsModel : BaseNopModel
         {
             [NopResourceDisplayName("Admin.Configuration.Settings.CustomerUser.ExternalAuthenticationAutoRegisterEnabled")]
             public bool AutoRegisterEnabled { get; set; }

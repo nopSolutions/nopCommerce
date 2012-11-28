@@ -1,10 +1,10 @@
 ﻿using System.Web.Mvc;
-using Nop.Core.Domain.Forums;
 using Nop.Web.Framework;
+using Nop.Web.Framework.Mvc;
 
 namespace Nop.Admin.Models.Settings
 {
-    public partial class ForumSettingsModel
+    public partial class ForumSettingsModel : BaseNopModel
     {
         [NopResourceDisplayName("Admin.Configuration.Settings.Forums.ForumsEnabled")]
         public bool ForumsEnabled { get; set; }
