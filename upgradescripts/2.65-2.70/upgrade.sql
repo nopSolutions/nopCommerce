@@ -2118,7 +2118,7 @@ BEGIN
 		
 		DECLARE @sql nvarchar(1000)
 		SET @sql = 'SELECT @RestrictedProductVariantIds = [RestrictedProductVariantIds] FROM [DiscountRequirement] WHERE [Id] = ' + ISNULL(CAST(@entity_id AS nvarchar(max)), '0')
-		EXEC sp_executesql @sql,N'@RestrictedProductVariantIds int OUTPUT',@RestrictedProductVariantIds OUTPUT
+		EXEC sp_executesql @sql,N'@RestrictedProductVariantIds nvarchar(MAX) OUTPUT',@RestrictedProductVariantIds OUTPUT
 		
 		
 		IF NOT EXISTS (SELECT 1 FROM [Setting] WHERE [name] = @settingname)
