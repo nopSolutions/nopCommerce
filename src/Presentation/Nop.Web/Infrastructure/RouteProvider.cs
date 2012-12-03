@@ -211,8 +211,9 @@ namespace Nop.Web.Infrastructure
                             new { controller = "Checkout", action = "Confirm" },
                             new[] { "Nop.Web.Controllers" });
             routes.MapLocalizedRoute("CheckoutCompleted",
-                            "checkout/completed",
-                            new { controller = "Checkout", action = "Completed" },
+                            "checkout/completed/{orderId}",
+                            new { controller = "Checkout", action = "Completed", orderId = UrlParameter.Optional },
+                            new { orderId = @"\d+" },
                             new[] { "Nop.Web.Controllers" });
 
             //orders

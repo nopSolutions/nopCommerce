@@ -144,7 +144,8 @@ namespace Nop.Web.MVC.Tests.Public.Infrastructure
             "~/checkout/paymentmethod".ShouldMapTo<CheckoutController>(c => c.PaymentMethod());
             "~/checkout/paymentinfo".ShouldMapTo<CheckoutController>(c => c.PaymentInfo());
             "~/checkout/confirm".ShouldMapTo<CheckoutController>(c => c.Confirm());
-            "~/checkout/completed".ShouldMapTo<CheckoutController>(c => c.Completed());
+            //"~/checkout/completed".ShouldMapTo<CheckoutController>(c => c.Completed(null));
+            "~/checkout/completed/1".ShouldMapTo<CheckoutController>(c => c.Completed(1));
         }
 
         [Test]

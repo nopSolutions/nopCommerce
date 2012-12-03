@@ -874,7 +874,7 @@ namespace Nop.Web.Controllers
         }
 
 
-        public ActionResult Completed()
+        public ActionResult Completed(int? orderId)
         {
             //validation
             if ((_workContext.CurrentCustomer.IsGuest() && !_orderSettings.AnonymousCheckoutAllowed))
@@ -883,14 +883,24 @@ namespace Nop.Web.Controllers
             //model
             var model = new CheckoutCompletedModel();
 
-            var orders = _orderService.GetOrdersByCustomerId(_workContext.CurrentCustomer.Id);
-            if (orders.Count == 0)
-                return RedirectToRoute("HomePage");
-            else
+            Order order = null;
+            if (orderId.HasValue)
             {
-                var lastOrder = orders[0];
-                model.OrderId = lastOrder.Id;
+                //load order by identifier (if provided)
+                order = _orderService.GetOrderById(orderId.Value);
             }
+            if (order == null)
+            {
+                order = _orderService
+                    .GetOrdersByCustomerId(_workContext.CurrentCustomer.Id)
+                    .FirstOrDefault();
+            }
+            if (order == null || order.Deleted || _workContext.CurrentCustomer.Id != order.CustomerId)
+            {
+                return RedirectToRoute("HomePage");
+            }
+
+            model.OrderId = order.Id;
 
             return View(model);
         }

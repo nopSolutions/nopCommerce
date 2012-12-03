@@ -203,7 +203,7 @@ namespace Nop.Plugin.Payments.PayPalStandard.Controllers
                     }
                 }
 
-                return RedirectToRoute("CheckoutCompleted");
+                return RedirectToRoute("CheckoutCompleted", new { orderId = order.Id});
             }
             else
             {
