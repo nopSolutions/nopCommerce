@@ -1224,13 +1224,29 @@ namespace Nop.Services.Orders
                         #region Notifications & notes
 
                         //notes, messages
-                        order.OrderNotes.Add(new OrderNote()
+                        if (_workContext.OriginalCustomerIfImpersonated != null)
+                        {
+                            //this order is placed by a store administrator impersonating a customer
+                            order.OrderNotes.Add(new OrderNote()
+                            {
+                                Note = string.Format( "Order placed by a store owner ('{0}'. ID = {1}) impersonating the customer.",
+                                    _workContext.OriginalCustomerIfImpersonated.Email, _workContext.OriginalCustomerIfImpersonated.Id),
+                                DisplayToCustomer = false,
+                                CreatedOnUtc = DateTime.UtcNow
+                            });
+                            _orderService.UpdateOrder(order);
+                        }
+                        else
+                        {
+                            order.OrderNotes.Add(new OrderNote()
                             {
                                 Note = "Order placed",
                                 DisplayToCustomer = false,
                                 CreatedOnUtc = DateTime.UtcNow
                             });
-                        _orderService.UpdateOrder(order);
+                            _orderService.UpdateOrder(order);
+                        }
+
 
                         //send email notifications
                         int orderPlacedStoreOwnerNotificationQueuedEmailId = _workflowMessageService.SendOrderPlacedStoreOwnerNotification(order, _localizationSettings.DefaultAdminLanguageId);
