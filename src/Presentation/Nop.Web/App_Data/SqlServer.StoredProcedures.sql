@@ -63,7 +63,7 @@ END
 GO
 
 
-CREATE PROCEDURE [ProductLoadAllPaged]
+CREATE PROCEDURE [dbo].[ProductLoadAllPaged]
 (
 	@CategoryIds		nvarchar(MAX) = null,	--a list of category IDs (comma-separated list). e.g. 1,2,3
 	@ManufacturerId		int = 0,
@@ -112,6 +112,10 @@ BEGIN
 		
 		IF @UseFullTextSearch = 1
 		BEGIN
+			--remove wrong chars (' ")
+			SET @Keywords = REPLACE(@Keywords, '''', '')
+			SET @Keywords = REPLACE(@Keywords, '"', '')
+			
 			--full-text search
 			IF @FullTextMode = 0 
 			BEGIN
@@ -123,9 +127,6 @@ BEGIN
 				--5 - using CONTAINS and OR with <prefix_term>
 				--10 - using CONTAINS and AND with <prefix_term>
 
-				--remove wrong chars (' ")
-				SET @Keywords = REPLACE(@Keywords, '''', '')
-				SET @Keywords = REPLACE(@Keywords, '"', '')
 				--clean multiple spaces
 				WHILE CHARINDEX('  ', @Keywords) > 0 
 					SET @Keywords = REPLACE(@Keywords, '  ', ' ')
