@@ -181,13 +181,13 @@ namespace Nop.Services.Seo
                 //localized value
                 if (loadLocalizedValue)
                 {
-                    result = urlRecordService.FindSlug(entity.Id, entityName, languageId);
+                    result = urlRecordService.GetActiveSlug(entity.Id, entityName, languageId);
                 }
             }
             //set default value if required
             if (String.IsNullOrEmpty(result) && returnDefaultValue)
             {
-                result = urlRecordService.FindSlug(entity.Id, entityName, 0);
+                result = urlRecordService.GetActiveSlug(entity.Id, entityName, 0);
             }
 
             return result;

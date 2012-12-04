@@ -21,6 +21,11 @@ namespace Nop.Core.Domain.Seo
         public virtual string Slug { get; set; }
 
         /// <summary>
+        /// Gets or sets the value indicating whether the record is active
+        /// </summary>
+        public virtual bool IsActive { get; set; }
+
+        /// <summary>
         /// Gets or sets the language identifier
         /// </summary>
         public virtual int LanguageId { get; set; }

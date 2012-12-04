@@ -1,8 +1,4 @@
-using System;
-using System.Linq;
 using Nop.Core;
-using Nop.Core.Caching;
-using Nop.Core.Data;
 using Nop.Core.Domain.Seo;
 
 namespace Nop.Services.Seo
@@ -13,18 +9,12 @@ namespace Nop.Services.Seo
     public partial interface  IUrlRecordService
     {
         /// <summary>
-        /// Deletes an URL record
+        /// Find URL record
         /// </summary>
-        /// <param name="urlRecord">URL record</param>
-        void DeleteUrlRecord(UrlRecord urlRecord);
-
-        /// <summary>
-        /// Gets an URL record
-        /// </summary>
-        /// <param name="urlRecordId">URL record identifier</param>
-        /// <returns>URL record</returns>
-        UrlRecord GetUrlRecordById(int urlRecordId);
-
+        /// <param name="slug">Slug</param>
+        /// <returns>Found URL record</returns>
+        UrlRecord GetBySlug(string slug);
+        
         /// <summary>
         /// Gets all URL records
         /// </summary>
@@ -35,32 +25,13 @@ namespace Nop.Services.Seo
         IPagedList<UrlRecord> GetAllUrlRecords(string slug, int pageIndex, int pageSize);
 
         /// <summary>
-        /// Inserts an URL record
-        /// </summary>
-        /// <param name="urlRecord">URL record</param>
-        void InsertUrlRecord(UrlRecord urlRecord);
-
-        /// <summary>
-        /// Updates the URL record
-        /// </summary>
-        /// <param name="urlRecord">URL record</param>
-        void UpdateUrlRecord(UrlRecord urlRecord);
-
-        /// <summary>
-        /// Find URL record
-        /// </summary>
-        /// <param name="slug">Slug</param>
-        /// <returns>Found URL record</returns>
-        UrlRecord GetBySlug(string slug);
-
-        /// <summary>
         /// Find slug
         /// </summary>
         /// <param name="entityId">Entity identifier</param>
         /// <param name="entityName">Entity name</param>
         /// <param name="languageId">Language identifier</param>
         /// <returns>Found slug</returns>
-        string FindSlug(int entityId, string entityName, int languageId);
+        string GetActiveSlug(int entityId, string entityName, int languageId);
 
         /// <summary>
         /// Save slug

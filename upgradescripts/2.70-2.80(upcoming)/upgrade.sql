@@ -668,3 +668,20 @@ BEGIN
 	DROP TABLE #PageIndex
 END
 GO
+
+
+--URL records enhancements
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[UrlRecord]') and NAME='IsActive')
+BEGIN
+	ALTER TABLE [UrlRecord]
+	ADD [IsActive] bit NULL
+END
+GO
+
+UPDATE [UrlRecord]
+SET [IsActive] = 1
+WHERE [IsActive] IS NULL
+GO
+
+ALTER TABLE [UrlRecord] ALTER COLUMN [IsActive] bit NOT NULL
+GO
