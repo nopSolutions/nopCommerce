@@ -383,11 +383,11 @@ namespace Nop.Services.Catalog
                             select pc;
 
                     //only distinct categories (group by ID)
-                    query = from c in query
-                            group c by c.Id
-                            into cGroup
-                            orderby cGroup.Key
-                            select cGroup.FirstOrDefault();
+                    query = from pc in query
+                            group pc by pc.Id
+                            into pcGroup
+                            orderby pcGroup.Key
+                            select pcGroup.FirstOrDefault();
                     query = query.OrderBy(pc => pc.DisplayOrder);
                 }
 

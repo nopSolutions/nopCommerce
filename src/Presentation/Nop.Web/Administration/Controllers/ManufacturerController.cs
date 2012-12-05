@@ -7,6 +7,7 @@ using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Services.Catalog;
+using Nop.Services.Customers;
 using Nop.Services.ExportImport;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -28,6 +29,7 @@ namespace Nop.Admin.Controllers
         private readonly IManufacturerService _manufacturerService;
         private readonly IManufacturerTemplateService _manufacturerTemplateService;
         private readonly IProductService _productService;
+        private readonly ICustomerService _customerService;
         private readonly IUrlRecordService _urlRecordService;
         private readonly IPictureService _pictureService;
         private readonly ILanguageService _languageService;
@@ -36,6 +38,7 @@ namespace Nop.Admin.Controllers
         private readonly IExportManager _exportManager;
         private readonly IWorkContext _workContext;
         private readonly ICustomerActivityService _customerActivityService;
+        private readonly IAclService _aclService; 
         private readonly IPermissionService _permissionService;
         private readonly AdminAreaSettings _adminAreaSettings;
         private readonly CatalogSettings _catalogSettings;
@@ -46,16 +49,18 @@ namespace Nop.Admin.Controllers
 
         public ManufacturerController(ICategoryService categoryService, IManufacturerService manufacturerService,
             IManufacturerTemplateService manufacturerTemplateService, IProductService productService,
-            IUrlRecordService urlRecordService, IPictureService pictureService,
+            ICustomerService customerService, IUrlRecordService urlRecordService, IPictureService pictureService,
             ILanguageService languageService, ILocalizationService localizationService, ILocalizedEntityService localizedEntityService,
             IExportManager exportManager, IWorkContext workContext,
-            ICustomerActivityService customerActivityService, IPermissionService permissionService,
+            ICustomerActivityService customerActivityService, IAclService aclService, 
+            IPermissionService permissionService,
             AdminAreaSettings adminAreaSettings, CatalogSettings catalogSettings)
         {
             this._categoryService = categoryService;
             this._manufacturerTemplateService = manufacturerTemplateService;
             this._manufacturerService = manufacturerService;
             this._productService = productService;
+            this._customerService = customerService;
             this._urlRecordService = urlRecordService;
             this._pictureService = pictureService;
             this._languageService = languageService;
@@ -64,6 +69,7 @@ namespace Nop.Admin.Controllers
             this._exportManager = exportManager;
             this._workContext = workContext;
             this._customerActivityService = customerActivityService;
+            this._aclService = aclService;
             this._permissionService = permissionService;
             this._adminAreaSettings = adminAreaSettings;
             this._catalogSettings = catalogSettings;
@@ -134,6 +140,52 @@ namespace Nop.Admin.Controllers
             }
         }
 
+        [NonAction]
+        private void PrepareAclModel(ManufacturerModel model, Manufacturer manufacturer, bool excludeProperties)
+        {
+            if (model == null)
+                throw new ArgumentNullException("model");
+
+            model.AvailableCustomerRoles = _customerService
+                .GetAllCustomerRoles(true)
+                .Select(cr => cr.ToModel())
+                .ToList();
+            if (!excludeProperties)
+            {
+                if (manufacturer != null)
+                {
+                    model.SelectedCustomerRoleIds = _aclService.GetCustomerRoleIdsWithAccess(manufacturer);
+                }
+                else
+                {
+                    model.SelectedCustomerRoleIds = new int[0];
+                }
+            }
+        }
+
+        [NonAction]
+        protected void SaveManufacturerAcl(Manufacturer manufacturer, ManufacturerModel model)
+        {
+            var existingAclRecords = _aclService.GetAclRecords(manufacturer);
+            var allCustomerRoles = _customerService.GetAllCustomerRoles(true);
+            foreach (var customerRole in allCustomerRoles)
+            {
+                if (model.SelectedCustomerRoleIds != null && model.SelectedCustomerRoleIds.Contains(customerRole.Id))
+                {
+                    //new role
+                    if (existingAclRecords.Where(acl => acl.CustomerRoleId == customerRole.Id).Count() == 0)
+                        _aclService.InsertAclRecord(manufacturer, customerRole.Id);
+                }
+                else
+                {
+                    //removed role
+                    var aclRecordToDelete = existingAclRecords.Where(acl => acl.CustomerRoleId == customerRole.Id).FirstOrDefault();
+                    if (aclRecordToDelete != null)
+                        _aclService.DeleteAclRecord(aclRecordToDelete);
+                }
+            }
+        }
+
         #endregion
         
         #region List
@@ -191,6 +243,8 @@ namespace Nop.Admin.Controllers
             AddLocales(_languageService, model.Locales);
             //templates
             PrepareTemplatesModel(model);
+            //ACL
+            PrepareAclModel(model, null, false);
             //default values
             model.PageSize = 4;
             model.Published = true;
@@ -220,6 +274,8 @@ namespace Nop.Admin.Controllers
                 UpdateLocales(manufacturer, model);
                 //update picture seo file name
                 UpdatePictureSeoNames(manufacturer);
+                //ACL (customer roles)
+                SaveManufacturerAcl(manufacturer, model);
 
                 //activity log
                 _customerActivityService.InsertActivity("AddNewManufacturer", _localizationService.GetResource("ActivityLog.AddNewManufacturer"), manufacturer.Name);
@@ -231,6 +287,8 @@ namespace Nop.Admin.Controllers
             //If we got this far, something failed, redisplay form
             //templates
             PrepareTemplatesModel(model);
+            //ACL
+            PrepareAclModel(model, null, true);
             return View(model);
         }
 
@@ -257,6 +315,8 @@ namespace Nop.Admin.Controllers
             });
             //templates
             PrepareTemplatesModel(model);
+            //ACL
+            PrepareAclModel(model, manufacturer, false);
 
             return View(model);
         }
@@ -292,6 +352,8 @@ namespace Nop.Admin.Controllers
                 }
                 //update picture seo file name
                 UpdatePictureSeoNames(manufacturer);
+                //ACL
+                SaveManufacturerAcl(manufacturer, model);
 
                 //activity log
                 _customerActivityService.InsertActivity("EditManufacturer", _localizationService.GetResource("ActivityLog.EditManufacturer"), manufacturer.Name);
@@ -304,6 +366,8 @@ namespace Nop.Admin.Controllers
             //If we got this far, something failed, redisplay form
             //templates
             PrepareTemplatesModel(model);
+            //ACL
+            PrepareAclModel(model, manufacturer, true);
 
             return View(model);
         }

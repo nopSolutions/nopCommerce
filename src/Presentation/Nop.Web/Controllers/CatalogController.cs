@@ -1123,6 +1123,10 @@ namespace Nop.Web.Controllers
             if (!manufacturer.Published && !_permissionService.Authorize(StandardPermissionProvider.ManageCatalog))
                 return RedirectToRoute("HomePage");
 
+            //ACL (access control list)
+            if (!_aclService.Authorize(manufacturer))
+                return RedirectToRoute("HomePage");
+
             //'Continue shopping' URL
             _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer, SystemCustomerAttributeNames.LastContinueShoppingPage, _webHelper.GetThisPageUrl(false));
 
@@ -1342,7 +1346,9 @@ namespace Nop.Web.Controllers
         [ChildActionOnly]
         public ActionResult ManufacturerNavigation(int currentManufacturerId)
         {
-            string cacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURER_NAVIGATION_MODEL_KEY, currentManufacturerId, _workContext.WorkingLanguage.Id);
+            var customerRolesIds = _workContext.CurrentCustomer.CustomerRoles
+                .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
+            string cacheKey = string.Format(ModelCacheEventConsumer.MANUFACTURER_NAVIGATION_MODEL_KEY, currentManufacturerId, _workContext.WorkingLanguage.Id, string.Join(",", customerRolesIds));
             var cacheModel = _cacheManager.Get(cacheKey, () =>
                 {
                     var currentManufacturer = _manufacturerService.GetManufacturerById(currentManufacturerId);
@@ -1943,7 +1949,9 @@ namespace Nop.Web.Controllers
         [ChildActionOnly]
         public ActionResult ProductManufacturers(int productId)
         {
-            string cacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_MANUFACTURERS_MODEL_KEY, productId, _workContext.WorkingLanguage.Id);
+            var customerRolesIds = _workContext.CurrentCustomer.CustomerRoles
+                .Where(cr => cr.Active).Select(cr => cr.Id).ToList();
+            string cacheKey = string.Format(ModelCacheEventConsumer.PRODUCT_MANUFACTURERS_MODEL_KEY, productId, _workContext.WorkingLanguage.Id, string.Join(",", customerRolesIds));
             var cacheModel = _cacheManager.Get(cacheKey, () =>
             {
                 var model = _manufacturerService.GetProductManufacturersByProductId(productId)

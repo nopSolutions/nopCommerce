@@ -5,8 +5,20 @@ declare @resources xml
 --a resource will be delete if its value is empty
 set @resources='
 <Language>
-  <LocaleResource Name="">
-    <Value></Value>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Acl">
+    <Value>ACL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.AclCustomerRoles">
+    <Value>Customer roles</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.AclCustomerRoles.Hint">
+    <Value>Select customer roles for which the manufacturers will be shown.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.SubjectToAcl">
+    <Value>Subject to ACL</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.SubjectToAcl.Hint">
+    <Value>Determines whether the manufacturers is subject to ACL (access control list).</Value>
   </LocaleResource>
 </Language>
 '
@@ -684,4 +696,20 @@ WHERE [IsActive] IS NULL
 GO
 
 ALTER TABLE [UrlRecord] ALTER COLUMN [IsActive] bit NOT NULL
+GO
+
+--ACL on manufactures
+IF NOT EXISTS (SELECT 1 FROM syscolumns WHERE id=object_id('[Manufacturer]') and NAME='SubjectToAcl')
+BEGIN
+	ALTER TABLE [Manufacturer]
+	ADD [SubjectToAcl] bit NULL
+END
+GO
+
+UPDATE [Manufacturer]
+SET [SubjectToAcl] = 0
+WHERE [SubjectToAcl] IS NULL
+GO
+
+ALTER TABLE [Manufacturer] ALTER COLUMN [SubjectToAcl] bit NOT NULL
 GO

@@ -175,6 +175,8 @@ namespace Nop.Admin.Infrastructure
                 .ForMember(dest => dest.AvailableManufacturerTemplates, mo => mo.Ignore())
                 .ForMember(dest => dest.Locales, mo => mo.Ignore())
                 .ForMember(dest => dest.SeName, mo => mo.MapFrom(src => src.GetSeName(0, true, false)))
+                .ForMember(dest => dest.AvailableCustomerRoles, mo => mo.Ignore())
+                .ForMember(dest => dest.SelectedCustomerRoleIds, mo => mo.Ignore())
                 .ForMember(dest => dest.CustomProperties, mo => mo.Ignore());
             Mapper.CreateMap<ManufacturerModel, Manufacturer>()
                 .ForMember(dest => dest.CreatedOnUtc, mo => mo.Ignore())

@@ -1,5 +1,6 @@
 using System;
 using Nop.Core.Domain.Localization;
+using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Seo;
 
 namespace Nop.Core.Domain.Catalog
@@ -7,7 +8,7 @@ namespace Nop.Core.Domain.Catalog
     /// <summary>
     /// Represents a manufacturer
     /// </summary>
-    public partial class Manufacturer : BaseEntity, ILocalizedEntity, ISlugSupported
+    public partial class Manufacturer : BaseEntity, ILocalizedEntity, ISlugSupported, IAclSupported 
     {
         /// <summary>
         /// Gets or sets the name
@@ -63,6 +64,11 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the available price ranges
         /// </summary>
         public virtual string PriceRanges { get; set; }
+        
+        /// <summary>
+        /// Gets or sets a value indicating whether the entity is subject to ACL
+ 	    /// </summary>
+ 	    public virtual bool SubjectToAcl { get; set; } 
 
         /// <summary>
         /// Gets or sets a value indicating whether the entity is published

@@ -869,6 +869,9 @@
                     <LocaleResource Name="Manufacturers">
                         <Value>Manufacturers</Value>
                         <Children>
+                            <LocaleResource Name="Acl">
+                              <Value>ACL</Value>
+                            </LocaleResource>
                             <LocaleResource Name="Info">
                                 <Value>Manufacturer Info</Value>
                             </LocaleResource>
@@ -1003,6 +1006,22 @@
                                                 <Value>The manufacturer picture.</Value>
                                             </LocaleResource>
                                         </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="SubjectToAcl">
+                                      <Value>Subject to ACL</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Determines whether the manufacturer is subject to ACL (access control list).</Value>
+                                        </LocaleResource>
+                                      </Children>
+                                    </LocaleResource>
+                                    <LocaleResource Name="AclCustomerRoles">
+                                      <Value>Customer roles</Value>
+                                      <Children>
+                                        <LocaleResource Name="Hint">
+                                          <Value>Select customer roles for which the manufacturer will be shown.</Value>
+                                        </LocaleResource>
+                                      </Children>
                                     </LocaleResource>
                                 </Children>
                             </LocaleResource>
