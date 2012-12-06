@@ -63,7 +63,8 @@ namespace Nop.Admin.Controllers
         private readonly ICustomerActivityService _customerActivityService;
         private readonly IPermissionService _permissionService;
         private readonly IWebHelper _webHelper;
-	    private readonly IFulltextService _fulltextService;
+        private readonly IFulltextService _fulltextService;
+        private readonly IMaintenanceService _maintenanceService;
 
 
         private BlogSettings _blogSettings;
@@ -102,8 +103,8 @@ namespace Nop.Admin.Controllers
             IOrderService orderService, IEncryptionService encryptionService,
             IThemeProvider themeProvider, ICustomerService customerService, 
             ICustomerActivityService customerActivityService, IPermissionService permissionService,
-            IWebHelper webHelper, IFulltextService fulltextService,
-            BlogSettings blogSettings,
+            IWebHelper webHelper, IFulltextService fulltextService, 
+            IMaintenanceService maintenanceService, BlogSettings blogSettings,
             ForumSettings forumSettings, NewsSettings newsSettings,
             ShippingSettings shippingSettings, TaxSettings taxSettings,
             CatalogSettings catalogSettings, RewardPointsSettings rewardPointsSettings,
@@ -133,6 +134,7 @@ namespace Nop.Admin.Controllers
             this._permissionService = permissionService;
             this._webHelper = webHelper;
             this._fulltextService = fulltextService;
+            this._maintenanceService = maintenanceService;
 
             this._blogSettings = blogSettings;
             this._forumSettings = forumSettings;
@@ -485,6 +487,9 @@ namespace Nop.Admin.Controllers
                     model.ReturnRequestReasonsParsed += ",";
             }
 
+            //order ident
+            model.OrderIdent = _maintenanceService.GetTableIdent<Order>();
+
             return View(model);
         }
         [HttpPost]
@@ -508,6 +513,19 @@ namespace Nop.Admin.Controllers
                     _orderSettings.ReturnRequestReasons.Add(returnReason);
 
                 _settingService.SaveSetting(_orderSettings);
+
+                //order ident
+                if (model.OrderIdent.HasValue)
+                {
+                    try
+                    {
+                        _maintenanceService.SetTableIdent<Order>(model.OrderIdent.Value);
+                    }
+                    catch (Exception exc)
+                    {
+                        ErrorNotification(exc.Message);
+                    }
+                }
 
                 //activity log
                 _customerActivityService.InsertActivity("EditSettings", _localizationService.GetResource("ActivityLog.EditSettings"));

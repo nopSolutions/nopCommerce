@@ -146,6 +146,7 @@ namespace Nop.Web.Framework
             builder.RegisterType<AddressService>().As<IAddressService>().InstancePerHttpRequest();
             builder.RegisterType<GenericAttributeService>().As<IGenericAttributeService>().InstancePerHttpRequest();
             builder.RegisterType<FulltextService>().As<IFulltextService>().InstancePerHttpRequest();
+            builder.RegisterType<MaintenanceService>().As<IMaintenanceService>().InstancePerHttpRequest();
 
 
             builder.RegisterGeneric(typeof(ConfigurationProvider<>)).As(typeof(IConfigurationProvider<>));

@@ -20,6 +20,12 @@ set @resources='
   <LocaleResource Name="Admin.Catalog.Manufacturers.Fields.SubjectToAcl.Hint">
     <Value>Determines whether the manufacturers is subject to ACL (access control list).</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.OrderIdent">
+    <Value>Order ID</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.Order.OrderIdent.Hint">
+    <Value>Set the order ID counter. This is useful if you want your orders to start at a certain number. This only affects orders created going forward. The value must be greater than the current maximum order ID.</Value>
+  </LocaleResource>
 </Language>
 '
 

@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Common;
 using Nop.Data;
@@ -7,9 +8,9 @@ using Nop.Data;
 namespace Nop.Services.Common
 {
     /// <summary>
-    /// Full-Text service
+    ///  Maintenance service
     /// </summary>
-    public partial class FulltextService : IFulltextService
+    public partial class MaintenanceService : IMaintenanceService
     {
         #region Fields
 
@@ -26,7 +27,7 @@ namespace Nop.Services.Common
         /// <param name="dataProvider">Data provider</param>
         /// <param name="dbContext">Database Context</param>
         /// <param name="commonSettings">Common settings</param>
-        public FulltextService(IDataProvider dataProvider, IDbContext dbContext,
+        public MaintenanceService(IDataProvider dataProvider, IDbContext dbContext,
             CommonSettings commonSettings)
         {
             this._dataProvider = dataProvider;
@@ -39,49 +40,46 @@ namespace Nop.Services.Common
         #region Methods
 
         /// <summary>
-        /// Gets value indicating whether Full-Text is supported
+        /// Get the current ident value
         /// </summary>
-        /// <returns>Result</returns>
-        public virtual bool IsFullTextSupported()
+        /// <typeparam name="T">Entity</typeparam>
+        /// <returns>Integer ident; null if cannot get the result</returns>
+        public virtual int? GetTableIdent<T>() where T: BaseEntity
         {
             if (_commonSettings.UseStoredProceduresIfSupported && _dataProvider.StoredProceduredSupported)
             {
                 //stored procedures are enabled and supported by the database. 
-                var result = _dbContext.SqlQuery<int>("EXEC [FullText_IsSupported]");
-                return result.FirstOrDefault() > 0;
+
+                //TODO: find a better way to get table name
+                var tableName = typeof(T).Name;
+                var result = _dbContext.SqlQuery<decimal>(string.Format("SELECT IDENT_CURRENT('[{0}]')", tableName));
+                return Convert.ToInt32(result.FirstOrDefault());
             }
             else
             {
                 //stored procedures aren't supported
-                return false;
+                return null;
             }
         }
 
         /// <summary>
-        /// Enable Full-Text support
+        /// Set table ident (is supported)
         /// </summary>
-        public virtual void EnableFullText()
+        /// <typeparam name="T">Entity</typeparam>
+        /// <param name="ident">Ident value</param>
+        public virtual void SetTableIdent<T>(int ident) where T : BaseEntity
         {
             if (_commonSettings.UseStoredProceduresIfSupported && _dataProvider.StoredProceduredSupported)
             {
                 //stored procedures are enabled and supported by the database.
-                _dbContext.ExecuteSqlCommand("EXEC [FullText_Enable]");
-            }
-            else
-            {
-                throw new Exception("Stored procedures are not supported by your database");
-            }
-        }
 
-        /// <summary>
-        /// Disable Full-Text support
-        /// </summary>
-        public virtual void DisableFullText()
-        {
-            if (_commonSettings.UseStoredProceduresIfSupported && _dataProvider.StoredProceduredSupported)
-            {
-                //stored procedures are enabled and supported by the database.
-                _dbContext.ExecuteSqlCommand("EXEC [FullText_Disable]");
+                var currentIdent = GetTableIdent<T>();
+                if (currentIdent.HasValue && ident > currentIdent.Value)
+                {
+                    //TODO: find a better way to get table name
+                    var tableName = typeof(T).Name;
+                    _dbContext.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT([{0}], RESEED, {1})", tableName, ident));
+                }
             }
             else
             {

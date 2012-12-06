@@ -104,6 +104,17 @@
                 @Html.ValidationMessageFor(model => model.GiftCards_Deactivated_OrderStatusId)
             </td>
         </tr>
+        @if (Model.OrderIdent.HasValue)
+        {
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.OrderIdent):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(model => model.OrderIdent)
+                </td>
+            </tr>
+        }
     </table>
 }
 @helper TabReturnRequestSettings()

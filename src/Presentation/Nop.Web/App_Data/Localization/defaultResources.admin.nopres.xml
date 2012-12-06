@@ -5179,6 +5179,14 @@
                                             </LocaleResource>
                                         </Children>
                                     </LocaleResource>
+                                    <LocaleResource Name="OrderIdent">
+                                        <Value>Order ID</Value>
+                                        <Children>
+                                            <LocaleResource Name="Hint">
+                                                <Value>Set the order ID counter. This is useful if you want your orders to start at a certain number. This only affects orders created going forward. The value must be greater than the current maximum order ID.</Value>
+                                            </LocaleResource>
+                                        </Children>
+                                    </LocaleResource>
                                 </Children>
                             </LocaleResource>
                             <LocaleResource Name="RewardPoints">

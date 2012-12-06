@@ -55,5 +55,8 @@ namespace Nop.Admin.Models.Settings
         public IList<SelectListItem> GiftCards_Deactivated_OrderStatuses { get; set; }
 
         public string PrimaryStoreCurrencyCode { get; set; }
+
+        [NopResourceDisplayName("Admin.Configuration.Settings.Order.OrderIdent")]
+        public int? OrderIdent { get; set; }
     }
 }
